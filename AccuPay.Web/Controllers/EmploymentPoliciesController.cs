@@ -17,6 +17,12 @@ namespace AccuPay.Web.Controllers
             _service = service;
         }
 
+        [HttpGet("{id}")]
+        public async Task<EmploymentPolicyDto> GetById(int id)
+        {
+            return await _service.GetById(id);
+        }
+
         [HttpPost]
         public async Task<EmploymentPolicyDto> Create([FromBody] CreateEmploymentPolicyDto dto)
         {

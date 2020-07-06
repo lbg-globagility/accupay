@@ -1,3 +1,12 @@
 <h1 class="mat-headline">Edit Employment Policy</h1>
 
-<app-employment-policy-form></app-employment-policy-form>
+<ng-container *ngIf="employmentPolicy">
+  <app-employment-policy-form
+    [employmentPolicy]="employmentPolicy"
+  ></app-employment-policy-form>
+</ng-container>
+
+<button mat-raised-button type="button" color="primary" (click)="save()">
+  SAVE
+</button>
+<button mat-raised-button type="button" (click)="cancel()">CANCEL</button>

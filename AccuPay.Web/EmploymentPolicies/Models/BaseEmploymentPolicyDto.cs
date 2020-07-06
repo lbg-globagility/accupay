@@ -1,14 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace AccuPay.Web.EmploymentPolicies.Models
 {
-    public class EmploymentPolicyDto
+    public abstract class BaseEmploymentPolicyDto
     {
-        public int Id { get; set; }
-
+        [Required]
         public string Name { get; set; }
 
         public decimal WorkDaysPerYear { get; set; }
 
-        public int GracePeriod { get; set; }
+        public decimal GracePeriod { get; set; }
 
         public bool ComputeNightDiff { get; set; }
 

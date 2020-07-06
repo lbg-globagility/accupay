@@ -13,9 +13,25 @@ export class EmploymentPolicyService {
 
   constructor(private httpClient: HttpClient) {}
 
+  getById(employmentPolicyId: number): Observable<EmploymentPolicy> {
+    return this.httpClient.get<EmploymentPolicy>(
+      `${this.baseUrl}/${employmentPolicyId}`
+    );
+  }
+
   create(employmentPolicy: EmploymentPolicy): Observable<EmploymentPolicy> {
     return this.httpClient.post<EmploymentPolicy>(
       `${this.baseUrl}`,
+      employmentPolicy
+    );
+  }
+
+  update(
+    employmentPolicyId: number,
+    employmentPolicy: EmploymentPolicy
+  ): Observable<EmploymentPolicy> {
+    return this.httpClient.put<EmploymentPolicy>(
+      `${this.baseUrl}/${employmentPolicyId}`,
       employmentPolicy
     );
   }

@@ -1,9 +1,9 @@
 <form [formGroup]="form">
   <mat-card class="mb-4">
-    <h3 class="font-medium mb-4"></h3>
+    <h3 class="font-medium mb-4">Details</h3>
     <mat-card-content>
       <div>
-        <mat-form-field>
+        <mat-form-field appearance="fill">
           <mat-label>Name</mat-label>
           <input matInput type="text" required formControlName="name" />
           <mat-error>Name is required</mat-error>
@@ -11,14 +11,14 @@
       </div>
 
       <div>
-        <mat-form-field>
+        <mat-form-field appearance="fill">
           <mat-label>Work Days Per Year</mat-label>
           <input matInput type="number" formControlName="workDaysPerYear" />
         </mat-form-field>
       </div>
 
       <div>
-        <mat-form-field>
+        <mat-form-field appearance="fill">
           <mat-label>Grace Period</mat-label>
           <input matInput type="number" formControlName="gracePeriod" />
           <span matSuffix>mins</span>

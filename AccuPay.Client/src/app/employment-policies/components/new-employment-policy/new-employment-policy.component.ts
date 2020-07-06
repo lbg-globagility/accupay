@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmploymentPolicyService } from 'src/app/employment-policies/services/employment-policy.service';
-import {
-  EmploymentPolicyForm,
-  EmploymentPolicy,
-} from 'src/app/employment-policies/shared';
+import { EmploymentPolicyFormComponent } from 'src/app/employment-policies/components/employment-policy-form/employment-policy-form.component';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-new-employment-policy',
@@ -16,38 +14,32 @@ import {
   },
 })
 export class NewEmploymentPolicyComponent implements OnInit {
-  form: FormGroup = this.fb.group({
-    name: [, [Validators.required]],
-    workDaysPerYear: [],
-    gracePeriod: [],
-    computeNightDiff: [false],
-    computeNightDiffOT: [false],
-    computeRestDay: [false],
-    computeRestDayOT: [false],
-    computeSpecialHoliday: [false],
-    computeRegularHoliday: [false],
-  });
+  @ViewChild(EmploymentPolicyFormComponent)
+  form: EmploymentPolicyFormComponent;
 
   constructor(
     private employmentPolicyService: EmploymentPolicyService,
-    private fb: FormBuilder,
+    private errorHandler: ErrorHandler,
     private router: Router
   ) {}
 
   ngOnInit(): void {}
 
-  save() {
-    const form = this.form.value as EmploymentPolicyForm;
+  save(): void {
+    if (!this.form.valid) {
+      return;
+    }
 
-    const employmentPolicy: EmploymentPolicy = Object.assign(
-      {},
-      form
-    ) as EmploymentPolicy;
+    const value = this.form.value;
 
-    employmentPolicy.workDaysPerYear = form.workDaysPerYear ?? 0;
-    employmentPolicy.gracePeriod = form.workDaysPerYear ?? 0;
-
-    this.employmentPolicyService.create(employmentPolicy).subscribe();
+    this.employmentPolicyService.create(value).subscribe({
+      next: () => {
+        this.router.navigate(['employment-policies']);
+      },
+      error: (err) => {
+        this.errorHandler.badRequest(err, 'Failed to create employment policy');
+      },
+    });
   }
 
   cancel(): void {

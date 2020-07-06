@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AccuPay.Utilities;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,22 @@ namespace AccuPay.Data.Entities
         public string Name { get; set; }
 
         public ICollection<EmploymentPolicyItem> Items { get; private set; }
+
+        public decimal WorkDaysPerYear => ObjectUtils.ToDecimal(Find("WorkDaysPerYear")?.Value);
+
+        public int GracePeriod => ObjectUtils.ToInteger(Find("GracePeriod")?.Value);
+
+        public bool ComputeNightDiff => ObjectUtils.ToBoolean(Find("ComputeNightDiff")?.Value);
+
+        public bool ComputeNightDiffOT => ObjectUtils.ToBoolean(Find("ComputeNightDiffOT")?.Value);
+
+        public bool ComputeRestDay => ObjectUtils.ToBoolean(Find("ComputeRestDay")?.Value);
+
+        public bool ComputeRestDayOT => ObjectUtils.ToBoolean(Find("ComputeRestDayOT")?.Value);
+
+        public bool ComputeSpecialHoliday => ObjectUtils.ToBoolean(Find("ComputeSpecialHoliday")?.Value);
+
+        public bool ComputeRegularHoliday => ObjectUtils.ToBoolean(Find("ComputeRegularHoliday")?.Value);
 
         public EmploymentPolicy(string name)
             : this()
@@ -35,9 +52,8 @@ namespace AccuPay.Data.Entities
             var existingItem = Items.FirstOrDefault(t => t.EmploymentPolicyTypeId == type.Id);
             if (existingItem is null)
             {
-                var newItem = new EmploymentPolicyItem()
+                var newItem = new EmploymentPolicyItem(type)
                 {
-                    EmploymentPolicyTypeId = type.Id,
                     Value = value
                 };
 
@@ -57,6 +73,12 @@ namespace AccuPay.Data.Entities
         public void SetItem(EmploymentPolicyType type, bool value)
         {
             SetItem(type, value.ToString());
+        }
+
+        private EmploymentPolicyItem Find(string employmentPolicyTypeName)
+        {
+            var item = Items.FirstOrDefault(t => t.Type.Name == employmentPolicyTypeName);
+            return item;
         }
     }
 }

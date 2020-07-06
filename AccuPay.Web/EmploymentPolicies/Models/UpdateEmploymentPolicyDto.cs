@@ -1,10 +1,6 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace AccuPay.Web.EmploymentPolicies.Models
 {
-    public class UpdateEmploymentPolicyDto
+    public class UpdateEmploymentPolicyDto : BaseEmploymentPolicyDto
     {
-        [Required]
-        public string Name { get; set; }
     }
 }

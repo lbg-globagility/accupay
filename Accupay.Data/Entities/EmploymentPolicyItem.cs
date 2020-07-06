@@ -14,6 +14,19 @@ namespace AccuPay.Data.Entities
 
         public int EmploymentPolicyTypeId { get; set; }
 
+        public EmploymentPolicyType Type { get; set; }
+
         public string Value { get; set; }
+
+        public bool IsNew => Id <= 0;
+
+        private EmploymentPolicyItem()
+        {
+        }
+
+        public EmploymentPolicyItem(EmploymentPolicyType type)
+        {
+            Type = type;
+        }
     }
 }

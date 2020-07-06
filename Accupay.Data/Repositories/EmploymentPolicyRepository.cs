@@ -18,7 +18,10 @@ namespace AccuPay.Data.Repositories
 
         public async Task<EmploymentPolicy> GetById(int employmentPolicyId)
         {
-            var employmentPolicy = await _context.EmploymentPolicies.FindAsync(employmentPolicyId);
+            var employmentPolicy = await _context.EmploymentPolicies
+                .Include(t => t.Items)
+                    .ThenInclude(t => t.Type)
+                .FirstOrDefaultAsync(t => t.Id == employmentPolicyId);
 
             return employmentPolicy;
         }
@@ -37,6 +40,10 @@ namespace AccuPay.Data.Repositories
         public async Task Update(EmploymentPolicy employmentPolicy)
         {
             _context.Entry(employmentPolicy).State = EntityState.Modified;
+
+            employmentPolicy.Items.Where(t => t.IsNew).ToList().ForEach(t => _context.Entry(t).State = EntityState.Added);
+            employmentPolicy.Items.Where(t => !t.IsNew).ToList().ForEach(t => _context.Entry(t).State = EntityState.Modified);
+
             await _context.SaveChangesAsync();
         }
 
