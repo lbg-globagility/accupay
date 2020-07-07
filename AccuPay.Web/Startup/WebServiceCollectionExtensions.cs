@@ -10,6 +10,7 @@ using AccuPay.Web.Core.Emails;
 using AccuPay.Web.Core.Views;
 using AccuPay.Web.Divisions;
 using AccuPay.Web.Employees.Services;
+using AccuPay.Web.EmploymentPolicies.Services;
 using AccuPay.Web.Files.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Loans;
@@ -43,6 +44,7 @@ namespace AccuPay.Web
             services.AddScoped<ClientService>();
             services.AddScoped<DivisionService>();
             services.AddScoped<EmployeeService>();
+            services.AddScoped<EmploymentPolicyService>();
             services.AddScoped<LeaveService>();
             services.AddScoped<LoanService>();
             services.AddScoped<RoleService>();
