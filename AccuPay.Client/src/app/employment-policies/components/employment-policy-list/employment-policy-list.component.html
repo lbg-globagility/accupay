@@ -26,12 +26,20 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let employmentPolicy">
-        <a
-          mat-icon-button
-          routerLink="/employment-policies/{{ employmentPolicy.id }}/edit"
-        >
-          <mat-icon matTooltip="Edit">edit</mat-icon>
-        </a>
+        <div class="flex">
+          <a
+            mat-icon-button
+            routerLink="/employment-policies/{{ employmentPolicy.id }}"
+          >
+            <mat-icon matTooltip="View">remove_red_eye</mat-icon>
+          </a>
+          <a
+            mat-icon-button
+            routerLink="/employment-policies/{{ employmentPolicy.id }}/edit"
+          >
+            <mat-icon matTooltip="Edit">edit</mat-icon>
+          </a>
+        </div>
       </td>
     </ng-container>
 

@@ -17,24 +17,45 @@ namespace AccuPay.Web.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Get by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<EmploymentPolicyDto> GetById(int id)
         {
             return await _service.GetById(id);
         }
 
+        /// <summary>
+        /// Create employment policy
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<EmploymentPolicyDto> Create([FromBody] CreateEmploymentPolicyDto dto)
         {
             return await _service.Create(dto);
         }
 
+        /// <summary>
+        /// Update employment policy
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<EmploymentPolicyDto> Update(int id, [FromBody] UpdateEmploymentPolicyDto dto)
         {
             return await _service.Update(id, dto);
         }
 
+        /// <summary>
+        /// List all employment policies
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<PaginatedList<EmploymentPolicyDto>> List([FromQuery] PageOptions options)
         {

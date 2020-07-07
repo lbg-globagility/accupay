@@ -86,6 +86,7 @@ import {
   EditEmploymentPolicyComponent,
   NewEmploymentPolicyComponent,
   EmploymentPolicyListComponent,
+  ViewEmploymentPolicyComponent,
 } from 'src/app/employment-policies/components';
 
 const routes: Routes = [
@@ -126,6 +127,10 @@ const routes: Routes = [
       {
         path: 'employment-policies/new',
         component: NewEmploymentPolicyComponent,
+      },
+      {
+        path: 'employment-policies/:id',
+        component: ViewEmploymentPolicyComponent,
       },
       {
         path: 'employment-policies/:id/edit',

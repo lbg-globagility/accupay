@@ -6,6 +6,7 @@ import {
   NewEmploymentPolicyComponent,
   EditEmploymentPolicyComponent,
 } from 'src/app/employment-policies/components';
+import { ViewEmploymentPolicyComponent } from './components/view-employment-policy/view-employment-policy.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import {
     NewEmploymentPolicyComponent,
     EditEmploymentPolicyComponent,
     EmploymentPolicyFormComponent,
+    ViewEmploymentPolicyComponent,
   ],
   imports: [SharedModule],
 })
