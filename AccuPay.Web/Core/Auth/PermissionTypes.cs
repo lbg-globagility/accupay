@@ -7,6 +7,11 @@ namespace AccuPay.Web.Core.Auth
         public const string EmployeeUpdate = "Employee:update";
         public const string EmployeeDelete = "Employee:delete";
 
+        public const string EmploymentPolicyRead = "EmploymentPolicy:read";
+        public const string EmploymentPolicyCreate = "EmploymentPolicy:create";
+        public const string EmploymentPolicyUpdate = "EmploymentPolicy:update";
+        public const string EmploymentPolicyDelete = "EmploymentPolicy:delete";
+
         public const string DivisionRead = "Division:read";
         public const string DivisionCreate = "Division:create";
         public const string DivisionUpdate = "Division:update";
