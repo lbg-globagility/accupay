@@ -625,57 +625,6 @@ Public Class EmployeeForm
 
     Sub loademployee()
         PopulateEmployeeGrid()
-
-        emp_rcount = dgvEmp.RowCount
-
-        Static x As SByte = 0
-        If x = 0 Then
-            x = 1
-
-            Dim dt_indxwithvalue As New DataTable
-
-            Task.Factory.StartNew(Sub()
-
-                                      Dim all_emp As New SQLQueryToDatatable($"{q_employee} ORDER BY e.LastName, e.FirstName")
-
-                                      Dim catchdt As New DataTable
-                                      catchdt = all_emp.ResultTable
-
-                                      dt_indxwithvalue.Columns.Add("IndexVal", Type.GetType("System.Int32"))
-                                      dt_indxwithvalue.Columns.Add("OutputVal", Type.GetType("System.String"))
-
-                                      Dim colname, empid_str, lname_str As String
-                                      colname = "DataColumnName"
-                                      Dim i As Integer = 0
-
-                                      For Each dr As DataRow In catchdt.Rows
-
-                                          i = 0
-
-                                          empid_str = Convert.ToString(dr(1).ToString)
-                                          lname_str = Convert.ToString(dr(4).ToString)
-
-                                          Simple.Add(empid_str)
-                                          Simple.Add(lname_str)
-
-                                          dt_indxwithvalue.Rows.Add(0, empid_str)
-
-                                          dt_indxwithvalue.Rows.Add(3, lname_str)
-
-                                      Next
-
-                                      txtSimple.AutoCompleteCustomSource = Simple
-
-                                      catchdt.Dispose()
-
-                                      ComboBox1.ValueMember = "IndexVal"
-                                      ComboBox1.DisplayMember = "OutputVal"
-                                      ComboBox1.DataSource = dt_indxwithvalue
-
-                                  End Sub).ContinueWith(Sub()
-                                                            txtSimple.Enabled = True
-                                                        End Sub, TaskScheduler.FromCurrentSynchronizationContext)
-        End If
     End Sub
 
     Private Sub Print201Report()
@@ -2697,21 +2646,6 @@ Public Class EmployeeForm
 
         If TabControl2.SelectedIndex = 0 Then
             PopulateEmployeeGrid()
-        Else
-            Dim sql = $"{q_employee} ORDER BY e.LastName, e.FirstName LIMIT {pagination},100;"
-            If isKPressSimple = 1 Then
-                If txtSimple.Text.Trim.Length = 0 Then
-                    SimpleEmployeeFilter(sql)
-                Else
-                    SearchEmpSimple()
-                End If
-            Else
-                If txtSimple.Text.Trim.Length = 0 Then
-                    SimpleEmployeeFilter(sql)
-                Else
-                    SearchEmpSimple()
-                End If
-            End If
         End If
 
         If dgvEmp.RowCount <> 0 Then
@@ -2890,87 +2824,6 @@ Public Class EmployeeForm
         If e_asc = 13 Then
             SearchEmployee_Click(sender, e)
         End If
-    End Sub
-
-    Dim colName As String
-
-    Sub SearchEmpSimple() ' As String
-        Static s As SByte
-
-        Try
-            search_selIndx = ValNoComma(ComboBox1.SelectedValue)
-            Console.WriteLine(String.Concat("@@@@@@@@@@@@@@@@@ ", search_selIndx))
-        Catch ex As Exception
-            search_selIndx = 0
-            Console.WriteLine(String.Concat("@@@@@ ERROR @@@@@ ", getErrExcptn(ex, Me.Name)))
-        End Try
-        s = 0
-        Select Case search_selIndx
-            Case 0 : colName = "e.EmployeeID='"
-            Case 1 : colName = "e.FirstName='"
-            Case 2 : colName = "e.MiddleName='"
-            Case 3 : colName = "e.LastName='"
-            Case 4 : colName = "e.Surname='"
-            Case 5 : colName = "e.Nickname='"
-            Case 6 : colName = "e.MaritalStatus='"
-            Case 7 : colName = "e.EmployeeID='" 'NoOfDependents
-            Case 8 : colName = "e.Birthdate='"
-                s = 1
-                Dim dict = New Dictionary(Of String, Object) From {{"@birthDate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Birthdate=@birthDate ORDER BY e.LastName, e.FirstName", dict)
-            Case 9 : colName = "e.Startdate='"
-                s = 1
-                Dim dict = New Dictionary(Of String, Object) From {{"@startdate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Startdate=@startdate ORDER BY e.LastName, e.FirstName", dict)
-            Case 10 : colName = "e.JobTitle='"
-            Case 11 : colName = "pos.PositionName='" 'e.PositionID
-            Case 12 : colName = "e.Salutation='"
-            Case 13 : colName = "e.TINNo='"
-            Case 14 : colName = "e.SSSNo='"
-            Case 15 : colName = "e.HDMFNo='"
-            Case 16 : colName = "e.PhilHealthNo='"
-            Case 17 : colName = "e.WorkPhone='"
-            Case 18 : colName = "e.HomePhone='"
-            Case 19 : colName = "e.MobilePhone='" '19
-            Case 20 : colName = "e.HomeAddress='"
-            Case 21 : colName = "e.EmailAddress='"
-            Case 22 : colName = "e.Gender=LEFT('"
-                s = 1
-                Dim dict = New Dictionary(Of String, Object) From {{"@gender", txtSimple.Text}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Gender=@gender ORDER BY e.LastName, e.FirstName", dict)
-            Case 23 : colName = "e.EmploymentStatus='"
-            Case 24 : colName = "pf.PayFrequencyType='"
-
-            Case 25 : colName = "DATE_FORMAT(e.Created,'%m-%d-%Y')='"
-            Case 26 : colName = "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))='" 'e.CreatedBy
-            Case 27 : colName = "DATE_FORMAT(e.LastUpd,'%m-%d-%Y')='"
-            Case 28 : colName = "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))='" 'e.CreatedBy
-
-            Case 29 : colName = "e.EmployeeType='"
-            Case 30 : colName = "e.EmployeeID='"
-
-        End Select
-
-        If s = 0 Then
-            Dim sql = $"{q_employee} ORDER BY e.LastName, e.FirstName LIMIT {pagination},100;"
-            SimpleEmployeeFilter(sql)
-        End If
-    End Sub
-
-    Dim isKPressSimple As SByte
-    Dim colSearchSimple As String
-
-    Private Sub txtSimple_KeyDown(sender As Object, e As KeyEventArgs) Handles txtSimple.KeyDown ',
-        'ComboBox1.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            isKPressSimple = 1
-            SearchEmployee_Click(sender, e)
-            isKPressSimple = 0
-        End If
-    End Sub
-
-    Private Sub txtSimple_TextChanged(sender As Object, e As EventArgs) Handles txtSimple.TextChanged
-        ComboBox1.Text = txtSimple.Text
     End Sub
 
     Sub tsbtnNewDepen_Click(sender As Object, e As EventArgs) Handles tsbtnNewDepen.Click
@@ -3313,8 +3166,6 @@ Public Class EmployeeForm
     Private Sub TabControl2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl2.SelectedIndexChanged
         If TabControl2.SelectedIndex = 0 Then
             TextBox1.Focus()
-        Else
-            txtSimple.Focus()
         End If
     End Sub
 
@@ -3489,11 +3340,6 @@ Public Class EmployeeForm
             Trim(TextBox16.Text) <> "" Or
             Trim(TextBox17.Text) <> "") And
             TabControl2.SelectedIndex = 0 Then
-
-            SearchEmployee_Click(sender, e)
-
-        ElseIf Trim(txtSimple.Text) <> "" And
-        TabControl2.SelectedIndex = 1 Then
 
             SearchEmployee_Click(sender, e)
         Else
