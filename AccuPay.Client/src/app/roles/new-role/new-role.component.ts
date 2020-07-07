@@ -40,7 +40,7 @@ export class NewRoleComponent implements OnInit {
     this.roleService.create(role).subscribe({
       next: () => {
         this.displaySuccess();
-        this.router.navigate(['roles']);
+        this.routeBackToRoles();
       },
       error: (err) =>
         this.errorHandler.badRequest(err, 'Failed to create role'),
@@ -48,7 +48,11 @@ export class NewRoleComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['roles']);
+    this.routeBackToRoles();
+  }
+
+  private routeBackToRoles() {
+    this.router.navigate(['security', 'roles']);
   }
 
   private displaySuccess() {

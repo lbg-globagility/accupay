@@ -29,4 +29,8 @@ export class NewUserComponent implements OnInit {
       (err) => this.errorHandler.badRequest(err, 'Failed to create user.')
     );
   }
+
+  cancel() {
+    this.router.navigate(['security', 'users']);
+  }
 }
