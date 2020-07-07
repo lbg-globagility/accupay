@@ -186,8 +186,8 @@ Public Class DependencyInjectionHelper
     Private Shared Sub ConfigureDbContextOptions(dbContextOptionsBuilder As DbContextOptionsBuilder)
 
         dbContextOptionsBuilder.
-            UseMySql(mysql_conn_text).
-            UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+            UseMySql(mysql_conn_text) '.
+        'UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 
         If Debugger.IsAttached Then
 
