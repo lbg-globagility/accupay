@@ -10,6 +10,7 @@ Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Attributes
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
+Imports OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 
 Public Class ImportEmployeeForm
 
@@ -146,6 +147,15 @@ Public Class ImportEmployeeForm
 
         <ColumnName("ATM No./Account No.")>
         Public Property AtmNumber As String
+
+        <ColumnName("Email Address")>
+        Public Property Email As String
+
+        <ColumnName("Rest Day")>
+        Public Property RestDay As String
+
+        <ColumnName("Grace Period (mins.)")>
+        Public Property LateGracePeriod As Decimal
 
         <Ignore>
         Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
@@ -329,11 +339,37 @@ Public Class ImportEmployeeForm
 
             If Not String.IsNullOrWhiteSpace(em.AtmNumber) Then .AtmNo = em.AtmNumber
 
+            If Not String.IsNullOrWhiteSpace(em.Email) Then .EmailAddress = em.Email
+
+            .DayOfRest = ParseRestDay(em.RestDay)
+
+            .LateGracePeriod = em.LateGracePeriod
+
             .BranchID = em.BranchId
 
         End With
 
     End Sub
+
+    Private Function ParseRestDay(restDay As String) As Integer?
+        If restDay Is Nothing Then Return Nothing
+
+        Dim input = restDay.Trim().ToLower()
+
+        Select Case input
+            Case "sunday" : Return 0
+            Case "monday" : Return 1
+            Case "tuesday" : Return 2
+            Case "wednesday" : Return 3
+            Case "thursday" : Return 4
+            Case "friday" : Return 5
+            Case "saturday" : Return 6
+
+            Case Else
+                Return Nothing
+        End Select
+
+    End Function
 
     Private Async Function FilePathChanged() As Task
 
@@ -344,6 +380,13 @@ Public Class ImportEmployeeForm
                 models = ExcelService(Of EmployeeModel).
                             Read(_filePath).
                             ToList()
+
+                models.ForEach(
+                Sub(model)
+                    If (Not String.IsNullOrWhiteSpace(model.RestDay)) Then
+                        model.RestDay = model.RestDay.Trim().ToUpper()
+                    End If
+                End Sub)
             End Sub)
 
         If parsedSuccessfully = False Then Return

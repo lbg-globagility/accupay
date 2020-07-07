@@ -7,7 +7,6 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
-Imports OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 
 Public Class DefaultShiftAndTimeLogsForm
 
@@ -115,11 +114,10 @@ Public Class DefaultShiftAndTimeLogsForm
                      Next
                  Next
 
-                 Console.WriteLine("1")
+                 'Add a result form to show if there are errors
                  Parallel.ForEach(selectedEmployees,
                     Async Sub(employee)
 
-                        Console.WriteLine("start " & employee.EmployeeNo)
                         Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
                         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
 
@@ -128,7 +126,6 @@ Public Class DefaultShiftAndTimeLogsForm
 
                         Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
                         Await shiftService.BatchApply(employeeShifts, z_OrganizationID, z_User)
-                        Console.WriteLine("end " & employee.EmployeeNo)
 
                     End Sub)
 
