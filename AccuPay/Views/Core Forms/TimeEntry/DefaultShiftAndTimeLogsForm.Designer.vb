@@ -25,19 +25,19 @@ Partial Class DefaultShiftAndTimeLogsForm
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DefaultShiftAndTimeLogsForm))
         Me.EmployeePanel = New System.Windows.Forms.Panel()
+        Me.EmployeeTreeView = New AccuPay.EmployeeTreeView()
         Me.ActionPanel = New System.Windows.Forms.Panel()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.EmployeeDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeNumberColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FirstNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeTreeView = New AccuPay.EmployeeTreeView()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeePanel.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -52,6 +52,16 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeePanel.Padding = New System.Windows.Forms.Padding(20, 10, 10, 0)
         Me.EmployeePanel.Size = New System.Drawing.Size(341, 761)
         Me.EmployeePanel.TabIndex = 0
+        '
+        'EmployeeTreeView
+        '
+        Me.EmployeeTreeView.BackColor = System.Drawing.Color.Transparent
+        Me.EmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeTreeView.Location = New System.Drawing.Point(20, 10)
+        Me.EmployeeTreeView.Name = "EmployeeTreeView"
+        Me.EmployeeTreeView.OrganizationID = 0
+        Me.EmployeeTreeView.Size = New System.Drawing.Size(311, 751)
+        Me.EmployeeTreeView.TabIndex = 316
         '
         'ActionPanel
         '
@@ -81,7 +91,7 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(96, 32)
         Me.SaveButton.TabIndex = 20
-        Me.SaveButton.Text = "&Save"
+        Me.SaveButton.Text = "&Create"
         Me.SaveButton.UseVisualStyleBackColor = True
         '
         'EmployeeDataGrid
@@ -107,6 +117,35 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeeDataGrid.ReadOnly = True
         Me.EmployeeDataGrid.Size = New System.Drawing.Size(667, 719)
         Me.EmployeeDataGrid.TabIndex = 2
+        '
+        'EmployeeNumberColumn
+        '
+        Me.EmployeeNumberColumn.DataPropertyName = "EmployeeNo"
+        Me.EmployeeNumberColumn.HeaderText = "Employee No"
+        Me.EmployeeNumberColumn.Name = "EmployeeNumberColumn"
+        Me.EmployeeNumberColumn.ReadOnly = True
+        '
+        'LastNameColumn
+        '
+        Me.LastNameColumn.DataPropertyName = "LastName"
+        Me.LastNameColumn.FillWeight = 150.0!
+        Me.LastNameColumn.HeaderText = "Last Name"
+        Me.LastNameColumn.Name = "LastNameColumn"
+        Me.LastNameColumn.ReadOnly = True
+        '
+        'FirstNameColumn
+        '
+        Me.FirstNameColumn.DataPropertyName = "FirstName"
+        Me.FirstNameColumn.HeaderText = "First Name"
+        Me.FirstNameColumn.Name = "FirstNameColumn"
+        Me.FirstNameColumn.ReadOnly = True
+        '
+        'EmployeeTypeColumn
+        '
+        Me.EmployeeTypeColumn.DataPropertyName = "EmployeeType"
+        Me.EmployeeTypeColumn.HeaderText = "Employee Type"
+        Me.EmployeeTypeColumn.Name = "EmployeeTypeColumn"
+        Me.EmployeeTypeColumn.ReadOnly = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -140,45 +179,6 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
         Me.DataGridViewTextBoxColumn4.Width = 139
-        '
-        'EmployeeNumberColumn
-        '
-        Me.EmployeeNumberColumn.DataPropertyName = "EmployeeNo"
-        Me.EmployeeNumberColumn.HeaderText = "Employee No"
-        Me.EmployeeNumberColumn.Name = "EmployeeNumberColumn"
-        Me.EmployeeNumberColumn.ReadOnly = True
-        '
-        'LastNameColumn
-        '
-        Me.LastNameColumn.DataPropertyName = "LastName"
-        Me.LastNameColumn.FillWeight = 150.0!
-        Me.LastNameColumn.HeaderText = "Last Name"
-        Me.LastNameColumn.Name = "LastNameColumn"
-        Me.LastNameColumn.ReadOnly = True
-        '
-        'FirstNameColumn
-        '
-        Me.FirstNameColumn.DataPropertyName = "FirstName"
-        Me.FirstNameColumn.HeaderText = "First Name"
-        Me.FirstNameColumn.Name = "FirstNameColumn"
-        Me.FirstNameColumn.ReadOnly = True
-        '
-        'EmployeeTypeColumn
-        '
-        Me.EmployeeTypeColumn.DataPropertyName = "EmployeeType"
-        Me.EmployeeTypeColumn.HeaderText = "Employee Type"
-        Me.EmployeeTypeColumn.Name = "EmployeeTypeColumn"
-        Me.EmployeeTypeColumn.ReadOnly = True
-        '
-        'EmployeeTreeView
-        '
-        Me.EmployeeTreeView.BackColor = System.Drawing.Color.Transparent
-        Me.EmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.EmployeeTreeView.Location = New System.Drawing.Point(20, 10)
-        Me.EmployeeTreeView.Name = "EmployeeTreeView"
-        Me.EmployeeTreeView.OrganizationID = 0
-        Me.EmployeeTreeView.Size = New System.Drawing.Size(311, 751)
-        Me.EmployeeTreeView.TabIndex = 316
         '
         'DefaultShiftAndTimeLogsForm
         '

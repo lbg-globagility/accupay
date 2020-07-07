@@ -1,11 +1,13 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
+Imports OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 
 Public Class DefaultShiftAndTimeLogsForm
 
@@ -57,7 +59,7 @@ Public Class DefaultShiftAndTimeLogsForm
 
         SaveButton.Enabled = selectedEmployees.Count > 0
 
-        SaveButton.Text = $"&Save ({selectedEmployees.Count()})"
+        SaveButton.Text = $"&Create ({selectedEmployees.Count()})"
     End Sub
 
     Private Sub EmployeeDataGrid_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles EmployeeDataGrid.DataError
@@ -65,7 +67,7 @@ Public Class DefaultShiftAndTimeLogsForm
         Console.WriteLine("EmployeeDataGrid_DataError")
     End Sub
 
-    Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+    Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
 
         Const messageTitle As String = "Default Shift & Time Logs"
 
@@ -84,49 +86,60 @@ Public Class DefaultShiftAndTimeLogsForm
             Confirm(Of Boolean)($"This will override the shift and time logs of { employeeCount } employee(s). Are you sure you want to create default data from {GetPayPeriodDescription()}?",
             messageTitle) Then
 
-            Await GenerateDefaultShiftAndTimeLogs(messageTitle, selectedEmployees)
+            GenerateDefaultShiftAndTimeLogs(messageTitle, selectedEmployees)
         End If
 
     End Sub
 
-    Private Async Function GenerateDefaultShiftAndTimeLogs(messageTitle As String, selectedEmployees As IReadOnlyCollection(Of Employee)) As Threading.Tasks.Task
+    Private Sub GenerateDefaultShiftAndTimeLogs(messageTitle As String, selectedEmployees As IReadOnlyCollection(Of Employee))
 
         Me.Cursor = Cursors.WaitCursor
 
-        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-            Async Function()
+        FunctionUtils.TryCatchFunction(messageTitle,
+             Sub()
 
-                Dim shifts As New List(Of ShiftModel)
-                Dim timeLogs As New List(Of TimeLog)
+                 Dim shifts As New List(Of ShiftModel)
+                 Dim timeLogs As New List(Of TimeLog)
 
-                For Each currentDate In Calendar.EachDay(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
+                 For Each currentDate In Calendar.EachDay(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
 
-                    For Each employee In selectedEmployees
+                     For Each employee In selectedEmployees
 
-                        If SkippableDate(currentDate, employee) = False Then
+                         If SkippableDate(currentDate, employee) = False Then
 
-                            shifts.Add(CreateShift(currentDate, employee))
-                            timeLogs.Add(CreateTimeLogs(currentDate, employee))
+                             shifts.Add(CreateShift(currentDate, employee))
+                             timeLogs.Add(CreateTimeLogs(currentDate, employee))
 
-                        End If
+                         End If
 
-                    Next
-                Next
+                     Next
+                 Next
 
-                Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
-                Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+                 Console.WriteLine("1")
+                 Parallel.ForEach(selectedEmployees,
+                    Async Sub(employee)
 
-                Await timeLogService.ChangeManyAsync(addedTimeLogs:=timeLogs)
-                Await shiftService.BatchApply(shifts, z_OrganizationID, z_User)
+                        Console.WriteLine("start " & employee.EmployeeNo)
+                        Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+                        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
 
-                MessageBoxHelper.Information("Default shift and time logs were sucessfully created.", messageTitle)
-                Me.Close()
-            End Function
+                        Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
+                        Await timeLogService.ChangeManyAsync(addedTimeLogs:=employeeTimeLogs.ToList())
+
+                        Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
+                        Await shiftService.BatchApply(employeeShifts, z_OrganizationID, z_User)
+                        Console.WriteLine("end " & employee.EmployeeNo)
+
+                    End Sub)
+
+                 MessageBoxHelper.Information("Default shift and time logs were sucessfully created.", messageTitle)
+                 Me.Close()
+             End Sub
         )
 
         Me.Cursor = Cursors.Default
 
-    End Function
+    End Sub
 
     Private Shared Function SkippableDate(currentDate As Date, employee As Employee) As Boolean
         Return employee.IsDaily = False AndAlso (
@@ -141,7 +154,8 @@ Public Class DefaultShiftAndTimeLogsForm
             .EmployeeID = employee.RowID,
             .LogDate = currentDate,
             .TimeIn = DefaultStartTime,
-            .TimeOut = DefaultEndTime
+            .TimeOut = DefaultEndTime,
+            .BranchID = employee.BranchID
         }
     End Function
 
