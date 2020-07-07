@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Overtimes;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,13 +12,15 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OvertimesController : ControllerBase
+    public class OvertimesController : ApiControllerBase
     {
         private readonly OvertimeService _service;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public OvertimesController(OvertimeService service)
+        public OvertimesController(OvertimeService service, IHostingEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -76,6 +79,14 @@ namespace AccuPay.Web.Controllers
         public ActionResult<ICollection<string>> GetStatusList()
         {
             return _service.GetStatusList();
+        }
+
+
+        [HttpGet("accupay-overtime-template")]
+        [Permission(PermissionTypes.OvertimeRead)]
+        public ActionResult GetOvertimeTemplate()
+        {
+            return GetTemplate(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-overtime-template.xlsx");
         }
     }
 }

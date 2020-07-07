@@ -5,14 +5,19 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { AllowanceType } from 'src/app/allowances/shared/allowance-type';
 import { Allowance } from 'src/app/allowances/shared/allowance';
+import { BasePdfService } from '../core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AllowanceService {
+export class AllowanceService extends BasePdfService {
   baseUrl = 'api/allowances';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly allowanceTemplateFileName = 'accupay-allowance-template.xlsx';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   getAll(
     options: PageOptions,
@@ -47,5 +52,12 @@ export class AllowanceService {
 
   GetFrequencyList(): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.baseUrl}/frequencylist`);
+  }
+
+  getAllowanceTemplate(): Promise<any> {
+    return this.getPDF(
+      this.allowanceTemplateFileName,
+      `${this.baseUrl}/accupay-allowance-template`
+    );
   }
 }

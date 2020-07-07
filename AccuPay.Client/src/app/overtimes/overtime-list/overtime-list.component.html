@@ -55,8 +55,8 @@
       <mat-datepicker #dateToPicker></mat-datepicker>
     </mat-form-field>
   </div>
-  <div class="col-md-2"></div>
-  <div class="col-md-3 flex justify-end">
+  <div class="col-md-1"></div>
+  <div class="col-md-4 flex justify-end">
     <button
       mat-raised-button
       color="accent"
@@ -64,6 +64,18 @@
       (click)="newOvertime()"
     >
       <mat-icon>add</mat-icon>NEW OVERTIME
+    </button>
+    <button
+      [disabled]="isDownloadingTemplate"
+      mat-raised-button
+      (click)="downloadTemplate()"
+      style="margin-left: 8px;"
+      color="primary"
+    >
+      {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
+      <mat-icon *ngIf="isDownloadingTemplate"
+        ><mat-spinner diameter="20" color="accent"> </mat-spinner
+      ></mat-icon>
     </button>
   </div>
 </div>

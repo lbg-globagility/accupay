@@ -57,6 +57,8 @@ export class LeaveListComponent implements OnInit {
     direction: '',
   };
 
+  isDownloadingTemplate: boolean;
+
   constructor(
     private leaveService: LeaveService,
     private dialog: MatDialog,
@@ -165,5 +167,17 @@ export class LeaveListComponent implements OnInit {
           this.errorHandler.badRequest(err, 'Failed to delete leave.'),
       });
     });
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.leaveService
+      .getLeaveTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(err, 'Error downloading leave template.');
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }

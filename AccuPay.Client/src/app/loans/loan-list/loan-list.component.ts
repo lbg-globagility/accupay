@@ -7,6 +7,7 @@ import { Subject } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Loan } from 'src/app/loans/shared/loan';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { LoanService } from 'src/app/loans/loan.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoanHistoryComponent } from '../loan-history/loan-history.component';
@@ -55,8 +56,13 @@ export class LoanListComponent implements OnInit {
   clearSearch = '';
 
   selectedRow: number;
+  isDownloadingTemplate: boolean;
 
-  constructor(private loanService: LoanService, private dialog: MatDialog) {
+  constructor(
+    private loanService: LoanService,
+    private dialog: MatDialog,
+    private errorHandler: ErrorHandler
+  ) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -118,5 +124,17 @@ export class LoanListComponent implements OnInit {
       .afterClosed()
       .pipe(filter((t) => t))
       .subscribe(() => this.getLoanList());
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.loanService
+      .getLoanTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(err, 'Error downloading loan template.');
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }

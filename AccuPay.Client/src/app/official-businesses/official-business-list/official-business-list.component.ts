@@ -56,6 +56,8 @@ export class OfficialBusinessListComponent implements OnInit {
     direction: '',
   };
 
+  isDownloadingTemplate: boolean;
+
   constructor(
     private officialBusinessService: OfficialBusinessService,
     private dialog: MatDialog,
@@ -166,5 +168,20 @@ export class OfficialBusinessListComponent implements OnInit {
       .afterClosed()
       .pipe(filter((t) => t))
       .subscribe(() => this.getOfficialBusinessList());
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.officialBusinessService
+      .getOfficialBusTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(
+          err,
+          'Error downloading official business template.'
+        );
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }

@@ -56,6 +56,8 @@ export class OvertimeListComponent implements OnInit {
     direction: '',
   };
 
+  isDownloadingTemplate: boolean;
+
   constructor(
     private overtimeService: OvertimeService,
     private dialog: MatDialog,
@@ -164,5 +166,20 @@ export class OvertimeListComponent implements OnInit {
           this.errorHandler.badRequest(err, 'Failed to delete overtime.'),
       });
     });
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.overtimeService
+      .getOvertimeTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(
+          err,
+          'Error downloading overtime template.'
+        );
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }
