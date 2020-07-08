@@ -64,7 +64,7 @@ export class PayrollComponent implements OnInit {
     );
 
     this.payperiodService
-      .GetList(options, this.searchTerm)
+      .getList(options, this.searchTerm)
       .subscribe((data) => {
         this.totalPages = data.totalPages;
         this.totalCount = data.totalCount;

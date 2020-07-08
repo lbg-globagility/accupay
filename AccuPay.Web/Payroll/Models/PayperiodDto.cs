@@ -20,6 +20,10 @@ namespace AccuPay.Web.Payroll
 
         public string Status { get; set; }
 
+        public int Month { get; set; }
+
+        public int Year { get; set; }
+
         public void ApplyData(PayPeriod payPeriod)
         {
             Id = payPeriod.RowID;

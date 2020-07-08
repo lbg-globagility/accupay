@@ -73,7 +73,7 @@ export class TimeEntryComponent implements OnInit {
     );
 
     this.payPeriodService
-      .GetList(options, this.searchTerm)
+      .getList(options, this.searchTerm)
       .subscribe((data) => {
         this.totalPages = data.totalPages;
         this.totalCount = data.totalCount;

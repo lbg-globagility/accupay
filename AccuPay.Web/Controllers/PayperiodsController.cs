@@ -37,6 +37,13 @@ namespace AccuPay.Web.Controllers
             return await _payperiodService.List(options);
         }
 
+        [HttpGet("year/{year}")]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult<ICollection<PayperiodDto>>> GetYearlyPayPeriods(int year)
+        {
+            return await _payperiodService.GetYearlyPayPeriods(year);
+        }
+
         [HttpPost]
         [Permission(PermissionTypes.PayPeriodUpdate)]
         public async Task<ActionResult<PayperiodDto>> Start([FromBody] StartPayrollDto dto)
@@ -55,8 +62,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("{id}/calculate")]
         [Permission(PermissionTypes.PayPeriodUpdate)]
-        public async Task<ActionResult<PayrollResultDto>> Calculate([FromServices] PayrollResources resources,
-                                                                    int id)
+        public async Task<ActionResult<PayrollResultDto>> Calculate(
+            [FromServices] PayrollResources resources,
+            int id)
         {
             try
             {

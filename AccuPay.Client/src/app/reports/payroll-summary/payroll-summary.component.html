@@ -4,7 +4,26 @@
       <h1 class="mat-headline">Payroll Summary</h1>
     </mat-card-content>
     <mat-card-content>
-      <app-select-payperiod-range></app-select-payperiod-range>
+      <form [formGroup]="form">
+        <div class="row">
+          <mat-form-field appearance="outline" color="accent" class="col-lg-4">
+            <mat-label>Salary Distribution *</mat-label>
+            <mat-select matInput formControlName="salaryDistribution">
+              <mat-option></mat-option>
+              <mat-option [value]="'All'">All</mat-option>
+              <mat-option [value]="'Cash'">Cash</mat-option>
+              <mat-option [value]="'Direc Depositt'">Direct Deposit</mat-option>
+            </mat-select>
+            <mat-error>Please select a salary distribution filter</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-checkbox class="col-lg-4" formControlName="hideEmptyColumns"
+            >Hide empty columns</mat-checkbox
+          >
+        </div>
+      </form>
     </mat-card-content>
 
     <mat-card-content style="text-align: right;">

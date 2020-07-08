@@ -1,4 +1,7 @@
 ﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Services.Policies;
+using AccuPay.Utilities;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace AccuPay.Data.Services
 {
@@ -37,5 +40,53 @@ namespace AccuPay.Data.Services
         public bool ShowBranch => _settings.GetBoolean("Employee Policy.ShowBranch", false);
 
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
+
+        #region Pay Period Default Dates Policy ("16,31,false,true" means first day is "16", second days is "31", first day "is NOT last day of the month", second day "is last day of the month"
+
+        public DaysSpan DefaultFirstHalfDaysSpan()
+        {
+            var value = _settings.GetString("Pay Period Policy.DefaultFirstHalfDaysSpan");
+
+            return ParseDaysSpan(value, DaysSpan.DefaultFirstHalf);
+        }
+
+        public DaysSpan DefaultEndOfTheMonthDaysSpan()
+        {
+            var value = _settings.GetString("Pay Period Policy.DefaultEndOfTheMonthDaysSpan");
+
+            return ParseDaysSpan(value, DaysSpan.DefaultEndOfTheMonth);
+        }
+
+        private DaysSpan ParseDaysSpan(string policyValue, DaysSpan defaultValue)
+        {
+            if (string.IsNullOrWhiteSpace(policyValue))
+            {
+                return defaultValue;
+            }
+
+            var values = policyValue.Split(',');
+            if (values.Length < 2 || values.Length > 4)
+            {
+                return defaultValue;
+            }
+
+            int? startDay = ObjectUtils.ToNullableInteger(values[0]);
+            int? endDay = ObjectUtils.ToNullableInteger(values[1]);
+
+            if (startDay == null && endDay == null)
+            {
+                return defaultValue;
+            }
+
+            bool startDayIsLastDay = ObjectUtils.ToNullableBoolean(values[0]) ?? false;
+            bool endDayIsLastDay = ObjectUtils.ToNullableBoolean(values[1]) ?? false;
+
+            var startDayValue = DayValue.Create(startDay.Value, startDayIsLastDay);
+            var endDayValue = DayValue.Create(endDay.Value, endDayIsLastDay);
+
+            return DaysSpan.Create(startDayValue, endDayValue);
+        }
+
+        #endregion Pay Period Default Dates Policy ("16,31,false,true" means first day is "16", second days is "31", first day "is NOT last day of the month", second day "is last day of the month"
     }
 }

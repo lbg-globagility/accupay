@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,10 +15,12 @@ namespace AccuPay.Data.Repositories
     public class PayPeriodRepository
     {
         private readonly PayrollContext _context;
+        private readonly PolicyHelper _policy;
 
-        public PayPeriodRepository(PayrollContext context)
+        public PayPeriodRepository(PayrollContext context, PolicyHelper policy)
         {
             _context = context;
+            _policy = policy;
         }
 
         #region CRUD
@@ -233,6 +236,39 @@ namespace AccuPay.Data.Repositories
                     year: year,
                     payFrequencyId: payFrequencyId)
                 .ToListAsync();
+        }
+
+        public async Task<ICollection<PayPeriod>> GetYearlyPayPeriodsAsync(int organizationId, int year)
+        {
+            var yearlyPayPeriods = new List<PayPeriod>();
+
+            var payPeriods = await _context.PayPeriods
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.Year == year)
+                .ToListAsync();
+
+            var months = Enumerable.Range(1, 12);
+
+            foreach (int month in months)
+            {
+                var firstHalf = payPeriods.FirstOrDefault(x => x.Month == month && x.IsSemiMonthly && x.IsFirstHalf);
+                var endOfTheMonth = payPeriods.FirstOrDefault(x => x.Month == month && x.IsSemiMonthly && x.IsEndOfTheMonth);
+
+                if (firstHalf == null)
+                {
+                    firstHalf = PayPeriod.NewPayPeriod(organizationId, month, year, isFirstHalf: true, _policy);
+                }
+
+                if (endOfTheMonth == null)
+                {
+                    endOfTheMonth = PayPeriod.NewPayPeriod(organizationId, month, year, isFirstHalf: false, _policy);
+                }
+
+                yearlyPayPeriods.Add(firstHalf);
+                yearlyPayPeriods.Add(endOfTheMonth);
+            }
+
+            return yearlyPayPeriods;
         }
 
         public async Task<PaginatedListResult<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")

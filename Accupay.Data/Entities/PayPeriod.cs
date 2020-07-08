@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,9 @@ namespace AccuPay.Data.Entities
     {
         private const int IsJanuary = 1;
         private const int IsDecember = 12;
+
+        private const int FirstHalfValue = 1;
+        private const int EndOftheMonthValue = 0;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -61,12 +65,49 @@ namespace AccuPay.Data.Entities
 
         public bool IsSemiMonthly => PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId;
         public bool IsWeekly => PayFrequencyID == PayrollTools.PayFrequencyWeeklyId;
-        public bool IsFirstHalf => Half == 1;
-        public bool IsEndOfTheMonth => Half == 0;
+        public bool IsFirstHalf => Half == FirstHalfValue;
+        public bool IsEndOfTheMonth => Half == EndOftheMonthValue;
 
         public bool IsBetween(DateTime date) => date >= PayFromDate && date <= PayToDate;
 
         public bool IsFirstPayPeriodOfTheYear => IsFirstHalf && Month == IsJanuary;
         public bool IsLastPayPeriodOfTheYear => IsEndOfTheMonth && Month == IsDecember;
+
+        public static PayPeriod NewPayPeriod(int organizationId, int month, int year, bool isFirstHalf, PolicyHelper policy)
+        {
+            var ordinalValue = month * 2;
+
+            var firstHalfDaySpan = policy.DefaultFirstHalfDaysSpan();
+            var endOfTheMonthDaySpan = policy.DefaultEndOfTheMonthDaysSpan();
+
+            DateTime payFromDate, payToDate;
+
+            if (isFirstHalf)
+            {
+                ordinalValue--;
+                payFromDate = firstHalfDaySpan.From.GetDate(month: month, year: year);
+                payToDate = firstHalfDaySpan.To.GetDate(month: month, year: year);
+            }
+            else
+            {
+                payFromDate = endOfTheMonthDaySpan.From.GetDate(month: month, year: year);
+                payToDate = endOfTheMonthDaySpan.To.GetDate(month: month, year: year);
+            }
+
+            return new PayPeriod()
+            {
+                OrganizationID = organizationId,
+                PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId,
+                Month = month,
+                Year = year,
+                Half = isFirstHalf ? FirstHalfValue : EndOftheMonthValue,
+                Status = PayPeriodStatus.Pending,
+                IsClosed = false,
+                OrdinalValue = ordinalValue,
+
+                PayFromDate = payFromDate,
+                PayToDate = payToDate
+            };
+        }
     }
 }

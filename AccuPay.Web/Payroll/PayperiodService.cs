@@ -14,7 +14,6 @@ namespace AccuPay.Web.Payroll
     public class PayperiodService
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
-
         private readonly PayPeriodRepository _payperiodRepository;
         private readonly ICurrentUser _currentUser;
 
@@ -100,6 +99,15 @@ namespace AccuPay.Web.Payroll
             var dtos = paginatedList.List.Select(t => ConvertToDto(t)).ToList();
 
             return new PaginatedList<PayperiodDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        public async Task<List<PayperiodDto>> GetYearlyPayPeriods(int year)
+        {
+            var payPeriods = await _payperiodRepository.GetYearlyPayPeriodsAsync(_currentUser.OrganizationId, year);
+
+            var payPeriodDtos = payPeriods.Select(x => ConvertToDto(x)).ToList();
+
+            return payPeriodDtos;
         }
 
         private PayperiodDto ConvertToDto(PayPeriod t)

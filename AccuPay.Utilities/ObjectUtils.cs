@@ -177,6 +177,26 @@ namespace AccuPay.Utilities
             return output;
         }
 
+        public static bool? ToNullableBoolean(object booleanInput)
+        {
+            bool? defaultOutput = null;
+
+            if (booleanInput == null) return defaultOutput;
+
+            bool? output = defaultOutput;
+
+            try
+            {
+                output = Convert.ToBoolean(booleanInput);
+            }
+            catch (Exception)
+            {
+                output = defaultOutput;
+            }
+
+            return output;
+        }
+
         public static TimeSpan ToTimeSpan(object input)
         {
             TimeSpan defaultOutput = TimeSpan.Zero;

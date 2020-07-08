@@ -79,9 +79,9 @@ namespace AccuPay.Web.Payroll
 
             Salary = new SalaryDto()
             {
-                Id = paystubData.Salary.RowID.Value,
-                BasicAmount = paystubData.Salary.BasicSalary,
-                AllowanceAmount = paystubData.Salary.AllowanceSalary,
+                Id = paystubData.Salary?.RowID.Value,
+                BasicAmount = paystubData.Salary?.BasicSalary ?? 0,
+                AllowanceAmount = paystubData.Salary?.AllowanceSalary ?? 0,
                 HourlyRate = paystubData.HourlyRate,
                 DailyRate = paystubData.DailyRate,
                 SalaryType = paystubData.Paystub.Employee.EmployeeType,
@@ -188,7 +188,7 @@ namespace AccuPay.Web.Payroll
 
         public class SalaryDto
         {
-            public int Id { get; set; }
+            public int? Id { get; set; }
 
             public decimal BasicAmount { get; set; }
 

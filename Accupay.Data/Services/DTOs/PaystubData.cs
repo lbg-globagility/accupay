@@ -20,7 +20,9 @@ namespace AccuPay.Data.Services
 
             Paystub = paystub;
             Salary = currentSalary;
-            BasicRate = paystub.Employee.IsDaily ? currentSalary.BasicSalary : currentSalary.BasicSalary / 2;
+
+            decimal basicSalary = currentSalary?.BasicSalary ?? 0;
+            BasicRate = paystub.Employee.IsDaily ? basicSalary : basicSalary / 2;
 
             DailyRate = PayrollTools.GetDailyRate(currentSalary, paystub.Employee);
             HourlyRate = PayrollTools.GetHourlyRateByDailyRate(DailyRate);

@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PayPeriod } from 'src/app/payroll/shared/payperiod';
-import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Paystub } from 'src/app/payroll/shared/paystub';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PayrollResult } from '../shared/payroll-result';
 import { BasePdfService } from 'src/app/core/shared/services/base-pdf-service';
+import { PaginatedList } from 'src/app/core/shared/paginated-list';
 
 @Injectable({
   providedIn: 'root',
@@ -20,15 +20,24 @@ export class PayPeriodService extends BasePdfService {
     super(httpClient);
   }
 
-  GetList(
+  getList(
     options: PageOptions,
     term = ''
   ): Observable<PaginatedList<PayPeriod>> {
     const params = options ? options.toObject() : null;
     params.term = term;
-    return this.httpClient.get<PaginatedList<PayPeriod>>(`${this.baseUrl}`, {
+
+    return this.httpClient.get<PaginatedList<PayPeriod>>(this.baseUrl, {
       params,
     });
+  }
+
+  getYearlyPayPeriods(year: number): Observable<PayPeriod[]> {
+    if (!year) {
+      year = new Date().getFullYear();
+    }
+
+    return this.httpClient.get<PayPeriod[]>(`${this.baseUrl}/year/${year}`);
   }
 
   start(cutoffStart: Date, cutoffEnd: Date): Observable<void> {
