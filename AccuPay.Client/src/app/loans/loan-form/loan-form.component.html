@@ -145,6 +145,15 @@
                 </mat-option>
               </mat-select>
               <mat-error>Please select a type</mat-error>
+
+              <div
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="newLoanType()"
+              >
+                <mat-icon>add</mat-icon>
+              </div>
             </mat-form-field>
           </div>
 

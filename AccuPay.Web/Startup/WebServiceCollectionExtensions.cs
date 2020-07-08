@@ -13,6 +13,7 @@ using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Files.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Loans;
+using AccuPay.Web.Loans.LoanType;
 using AccuPay.Web.OfficialBusinesses;
 using AccuPay.Web.Organizations;
 using AccuPay.Web.Overtimes;
@@ -45,6 +46,7 @@ namespace AccuPay.Web
             services.AddScoped<EmployeeService>();
             services.AddScoped<LeaveService>();
             services.AddScoped<LoanService>();
+            services.AddScoped<LoanTypeService>();
             services.AddScoped<RoleService>();
             services.AddScoped<OfficialBusinessService>();
             services.AddScoped<OvertimeService>();
