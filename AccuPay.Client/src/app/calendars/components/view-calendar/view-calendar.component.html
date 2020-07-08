@@ -20,6 +20,7 @@
   <app-calendar-month
     [month]="calendarMonth.month"
     [calendarDays]="calendarMonth.days"
+    (dayClick)="changeDay($event)"
   ></app-calendar-month>
 </ng-container>
 

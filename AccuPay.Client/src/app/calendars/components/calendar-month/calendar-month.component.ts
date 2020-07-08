@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { range } from 'src/app/core/functions/dates';
 import { range as rangeOfNumbers } from 'lodash';
 import { CalendarDay } from 'src/app/calendars/shared/calendar-day';
@@ -20,6 +20,9 @@ export class CalendarMonthComponent implements OnInit {
 
   @Input()
   calendarDays: CalendarDay[] = [];
+
+  @Output()
+  dayClick: EventEmitter<CalendarDay> = new EventEmitter();
 
   readonly daysOfWeek: string[] = [
     'Sun',
@@ -65,5 +68,7 @@ export class CalendarMonthComponent implements OnInit {
     return { start, end };
   }
 
-  editDay() {}
+  dayClicked(cell: CalendarCell) {
+    this.dayClick.emit(cell.calendarDay);
+  }
 }
