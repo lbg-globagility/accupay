@@ -80,9 +80,16 @@ import { PayrollSummaryComponent } from './reports/payroll-summary/payroll-summa
 import { PagibigReportComponent } from './reports/pagibig-report/pagibig-report.component';
 import { PhilhealthReportComponent } from './reports/philhealth-report/philhealth-report.component';
 import { SssReportComponent } from 'src/app/reports/sss-report/sss-report.component';
-import { TaxReportComponent } from './reports/tax-report/tax-report.component';
 import { LoanReportBytypeComponent } from './reports/loan-report-bytype/loan-report-bytype.component';
 import { LoanReportByemployeeComponent } from './reports/loan-report-byemployee/loan-report-byemployee.component';
+import { TaxReportComponent } from './reports/tax-report/tax-report.component';
+import { LoanTypeListComponent } from './loan-types/loan-type-list/loan-type-list.component';
+import {
+  EditEmploymentPolicyComponent,
+  NewEmploymentPolicyComponent,
+  EmploymentPolicyListComponent,
+  ViewEmploymentPolicyComponent,
+} from 'src/app/employment-policies/components';
 
 const routes: Routes = [
   {
@@ -114,6 +121,26 @@ const routes: Routes = [
       {
         path: 'employees/:id/edit',
         component: EditEmployeeComponent,
+      },
+      {
+        path: 'employment-policies',
+        component: EmploymentPolicyListComponent,
+      },
+      {
+        path: 'employment-policies/new',
+        component: NewEmploymentPolicyComponent,
+      },
+      {
+        path: 'employment-policies/:id',
+        component: ViewEmploymentPolicyComponent,
+      },
+      {
+        path: 'employment-policies/:id/edit',
+        component: EditEmploymentPolicyComponent,
+      },
+      {
+        path: 'users',
+        component: UserListComponent,
       },
       {
         path: 'employees',
@@ -241,6 +268,10 @@ const routes: Routes = [
       {
         path: 'allowance-types',
         component: AllowanceTypeListComponent,
+      },
+      {
+        path: 'loan-types',
+        component: LoanTypeListComponent,
       },
       {
         path: 'loans',

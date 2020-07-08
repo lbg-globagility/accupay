@@ -3,6 +3,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Loans;
 using AccuPay.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,13 +13,15 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LoansController : ControllerBase
+    public class LoansController : ApiControllerBase
     {
         private readonly LoanService _service;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public LoansController(LoanService service)
+        public LoansController(LoanService service, IHostingEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -97,6 +100,13 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<PaginatedList<LoanHistoryDto>>> GetLoanHistory([FromQuery] PageOptions options, int id)
         {
             return await _service.GetLoanHistory(options, id);
+        }
+
+        [HttpGet("accupay-loan-template")]
+        [Permission(PermissionTypes.LoanRead)]
+        public ActionResult GetLoanTemplate()
+        {
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-loan-template.xlsx");
         }
     }
 }

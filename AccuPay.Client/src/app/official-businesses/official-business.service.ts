@@ -5,14 +5,19 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { Moment } from 'moment';
+import { BasePdfService } from '../core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class OfficialBusinessService {
+export class OfficialBusinessService extends BasePdfService {
   baseUrl = 'api/officialbusinesses';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly OBTemplateFileName = 'accupay-officialbus-template.xlsx';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   getAll(
     options: PageOptions,
@@ -64,5 +69,12 @@ export class OfficialBusinessService {
 
   getStatusList(): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
+  }
+
+  getOfficialBusTemplate(): Promise<any> {
+    return this.getPDF(
+      this.OBTemplateFileName,
+      `${this.baseUrl}/accupay-officialbus-template`
+    );
   }
 }

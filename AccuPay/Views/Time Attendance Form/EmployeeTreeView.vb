@@ -16,7 +16,7 @@ Public Class EmployeeTreeView
 
     Public Event FiltersEmployee(s As Object, e As EventArgs)
 
-    Public Event TickedEmployee(s As Object, e As EventArgs)
+    Public Event EmployeeTicked(s As Object, e As EventArgs)
 
     Private tickedEmployees As IList(Of Employee)
 
@@ -82,7 +82,7 @@ Public Class EmployeeTreeView
         _presenter.TraverseNodes(tickedNode, tickedEmployees)
         tickedEmployeeIDs = tickedEmployees.Select(Function(e) e.RowID.Value).ToList
 
-        RaiseEvent TickedEmployee(Me, New EventArgs)
+        RaiseEvent EmployeeTicked(Me, New EventArgs)
     End Sub
 
     Private Sub SetCheck(node As TreeNode)

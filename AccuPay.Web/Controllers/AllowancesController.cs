@@ -4,6 +4,7 @@ using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Products;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,13 +14,15 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AllowancesController : ControllerBase
+    public class AllowancesController : ApiControllerBase
     {
         private readonly AllowanceService _service;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public AllowancesController(AllowanceService service)
+        public AllowancesController(AllowanceService service, IHostingEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -85,6 +88,13 @@ namespace AccuPay.Web.Controllers
         public ActionResult<ICollection<string>> GetFrequencyList()
         {
             return _service.GetFrequencyList();
+        }
+        
+        [HttpGet("accupay-allowance-template")]
+        [Permission(PermissionTypes.AllowanceRead)]
+        public ActionResult GetAllowanceTemplate()
+        {
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-allowance-template.xlsx");
         }
     }
 }

@@ -3,8 +3,11 @@ using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -12,15 +15,17 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LeavesController : ControllerBase
+    public class LeavesController : ApiControllerBase
     {
         private readonly LeaveService _service;
         private readonly LeaveRepository _repository;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public LeavesController(LeaveService leaveService, LeaveRepository repository)
+        public LeavesController(LeaveService leaveService, LeaveRepository repository, IHostingEnvironment hostingEnvironment)
         {
             _service = leaveService;
             _repository = repository;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -100,6 +105,13 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<PaginatedList<LeaveTransactionDto>>> GetLedger([FromQuery] PageOptions options, string type, int id)
         {
             return await _service.ListTransactions(options, id, type);
+        }
+
+        [HttpGet("accupay-leave-template")]
+        [Permission(PermissionTypes.LeaveRead)]
+        public ActionResult GetLeaveTemplate()
+        {
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-leave-template.xlsx");
         }
     }
 }

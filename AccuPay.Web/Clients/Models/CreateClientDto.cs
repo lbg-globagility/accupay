@@ -1,3 +1,4 @@
+using AccuPay.Web.Organizations;
 using System.ComponentModel.DataAnnotations;
 
 namespace AccuPay.Web.Clients
@@ -16,6 +17,8 @@ namespace AccuPay.Web.Clients
         public string ContactPerson { get; set; }
 
         public UserDto User { get; set; }
+
+        public CreateOrganizationDto Organization { get; set; }
 
         public class UserDto
         {

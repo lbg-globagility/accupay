@@ -6,14 +6,19 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { SelectItem } from 'src/app/core/shared/select-item';
 import { Loan } from 'src/app/loans/shared/loan';
 import { LoanHistory } from './shared/loan-history';
+import { BasePdfService } from '../core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LoanService {
+export class LoanService extends BasePdfService {
   baseUrl = 'api/loans';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly loanTemplateFileName = 'accupay-loan-template.xlsx';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   getAll(options: PageOptions, term = ''): Observable<PaginatedList<Loan>> {
     const params = options ? options.toObject() : null;
@@ -61,6 +66,13 @@ export class LoanService {
       {
         params,
       }
+    );
+  }
+
+  getLoanTemplate(): Promise<any> {
+    return this.getPDF(
+      this.loanTemplateFileName,
+      `${this.baseUrl}/accupay-loan-template`
     );
   }
 }

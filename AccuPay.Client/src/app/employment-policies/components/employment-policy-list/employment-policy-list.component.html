@@ -1,0 +1,63 @@
+<div class="flex">
+  <div class="w-1/2">
+    <h1 class="mat-headline">Employment Policies</h1>
+  </div>
+  <div class="w-1/2 flex justify-end items-start">
+    <a
+      mat-raised-button
+      color="primary"
+      routerLink="/employment-policies/new"
+      class="m-with-icon"
+    >
+      <mat-icon>add</mat-icon>NEW
+    </a>
+  </div>
+</div>
+
+<div class="mat-elevation-z1">
+  <table mat-table [dataSource]="dataSource" class="w-full">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef class="w-full">Name</th>
+      <td mat-cell *matCellDef="let employmentPolicy">
+        {{ employmentPolicy.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let employmentPolicy">
+        <div class="flex">
+          <a
+            mat-icon-button
+            routerLink="/employment-policies/{{ employmentPolicy.id }}"
+          >
+            <mat-icon matTooltip="View">remove_red_eye</mat-icon>
+          </a>
+          <a
+            mat-icon-button
+            routerLink="/employment-policies/{{ employmentPolicy.id }}/edit"
+          >
+            <mat-icon matTooltip="Edit">edit</mat-icon>
+          </a>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+    No leaves were found.
+  </div>
+
+  <mat-paginator
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[10, 5, 25, 100]"
+    [length]="totalCount"
+    [showFirstLastButtons]="true"
+    (page)="onPageChanged($event)"
+  >
+  </mat-paginator>
+</div>

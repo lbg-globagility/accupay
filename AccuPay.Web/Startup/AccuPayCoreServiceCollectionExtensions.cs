@@ -38,6 +38,7 @@ namespace AccuPay.Web
             services.AddScoped<EmployeeDutyScheduleRepository>();
             services.AddScoped<EmployeeQueryBuilder>();
             services.AddScoped<EmployeeRepository>();
+            services.AddScoped<EmploymentPolicyRepository>();
             services.AddScoped<FileRepository>();
             services.AddScoped<FilingStatusTypeRepository>();
             services.AddScoped<JobCategoryRepository>();

@@ -53,6 +53,8 @@ namespace AccuPay.Data
         internal virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
         internal virtual DbSet<Employee> Employees { get; set; }
         internal virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
+        internal virtual DbSet<EmploymentPolicy> EmploymentPolicies { get; set; }
+        internal virtual DbSet<EmploymentPolicyType> EmploymentPolicyTypes { get; set; }
         internal virtual DbSet<File> Files { get; set; }
         internal virtual DbSet<FilingStatusType> FilingStatusTypes { get; set; }
         internal virtual DbSet<JobCategory> JobCategories { get; set; }
@@ -61,6 +63,7 @@ namespace AccuPay.Data
         internal virtual DbSet<LeaveLedger> LeaveLedgers { get; set; }
         internal virtual DbSet<LeaveTransaction> LeaveTransactions { get; set; }
         internal virtual DbSet<ListOfValue> ListOfValues { get; set; }
+        internal virtual DbSet<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
         internal virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
         internal virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
         internal virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }

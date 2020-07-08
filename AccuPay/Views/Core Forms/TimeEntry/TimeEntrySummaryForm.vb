@@ -103,7 +103,7 @@ Public Class TimeEntrySummaryForm
 
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
-        regenerateTimeEntryButton.Visible = False
+        RegenerateTimeEntryButton.Visible = False
 
         Await LoadEmployees()
         Await LoadPayPeriods()
@@ -124,6 +124,8 @@ Public Class TimeEntrySummaryForm
 
         ColumnBranch.Visible = _policy.PayRateCalculationBasis =
                                         PayRateCalculationBasis.Branch
+
+        GenerateDefaultShiftAndTimeLogsButton.Visible = _policy.UseDefaultShiftAndTimeLogs
 
         CheckIfMoneyColumnsAreGoingToBeHidden()
     End Sub
@@ -251,7 +253,7 @@ Public Class TimeEntrySummaryForm
         Dim isPayperiodProcessing = _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 
         tsBtnDeleteTimeEntry.Visible = isPayperiodProcessing
-        regenerateTimeEntryButton.Visible = isPayperiodProcessing
+        RegenerateTimeEntryButton.Visible = isPayperiodProcessing
     End Function
 
     Private Async Function GetPayPeriods(organizationID As Integer,
@@ -892,7 +894,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Async Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles generateTimeEntryButton.Click
+    Private Async Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles GenerateTimeEntryButton.Click
         Dim startDate As Date
         Dim endDate As Date
         Dim result As DialogResult
@@ -926,7 +928,7 @@ Public Class TimeEntrySummaryForm
                 TaskScheduler.FromCurrentSynchronizationContext)
     End Function
 
-    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
+    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
 
         Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
                                                 _selectedPayPeriod.RowID,
@@ -988,7 +990,7 @@ Public Class TimeEntrySummaryForm
                 _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 
         tsBtnDeleteTimeEntry.Visible = isPayPeriodProcessing
-        regenerateTimeEntryButton.Visible = isPayPeriodProcessing
+        RegenerateTimeEntryButton.Visible = isPayPeriodProcessing
 
         Await LoadTimeEntries()
     End Sub
@@ -1552,6 +1554,20 @@ Public Class TimeEntrySummaryForm
         If timeEntry.EntryDate?.DayOfWeek = DayOfWeek.Sunday Then
             gridRow.DefaultCellStyle.ForeColor = Color.Red
         End If
+    End Sub
+
+    Private Sub GenerateDefaultShiftAndTimeLogsButton_Click(sender As Object, e As EventArgs) Handles GenerateDefaultShiftAndTimeLogsButton.Click
+
+        If _selectedPayPeriod Is Nothing Then
+
+            MessageBoxHelper.Warning("Select a pay period first.")
+            Return
+
+        End If
+
+        Dim form = New DefaultShiftAndTimeLogsForm(_selectedPayPeriod)
+        form.ShowDialog()
+
     End Sub
 
 End Class

@@ -9,4 +9,5 @@ export interface CreateClient {
     firstName: string;
     lastName: string;
   };
+  organization: { name: string };
 }

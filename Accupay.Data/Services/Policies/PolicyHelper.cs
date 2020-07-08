@@ -1,7 +1,6 @@
 ﻿using AccuPay.Data.Enums;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace AccuPay.Data.Services
 {
@@ -40,6 +39,9 @@ namespace AccuPay.Data.Services
         public bool ShowBranch => _settings.GetBoolean("Employee Policy.ShowBranch", false);
 
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
+
+        public bool UseDefaultShiftAndTimeLogs => _settings.GetBoolean("Data Policy.UseDefaultShiftAndTimeLogs", false);
+
 
         #region Pay Period Default Dates Policy ("16,31,false,true" means first day is "16", second days is "31", first day "is NOT last day of the month", second day "is last day of the month"
 

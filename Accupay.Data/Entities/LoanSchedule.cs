@@ -65,6 +65,8 @@ namespace AccuPay.Data.Entities
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
+        public virtual ICollection<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
+
         /// <summary>
         /// Recomputes TotalPayPeriod. Call this everytime TotalLoanAmount has changed.
         /// </summary>

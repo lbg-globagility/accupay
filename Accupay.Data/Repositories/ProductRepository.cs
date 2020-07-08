@@ -162,6 +162,26 @@ namespace AccuPay.Data.Repositories
             return newProduct;
         }
 
+        public async Task UpdateLoanTypeAsync(int id, string loanTypeName)
+        {
+            var product = await GetByIdAsync(id);
+
+            product.PartNo = loanTypeName;
+            product.Name = loanTypeName;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteLoanTypeAsync(int id)
+        {
+            var product = await GetByIdAsync(id);
+
+            _context.Entry(product).State = EntityState.Deleted;
+            //_context.Products.Remove(product);
+
+            await _context.SaveChangesAsync();
+        }
+
         #endregion CRUD
 
         #region Queries
@@ -172,6 +192,11 @@ namespace AccuPay.Data.Repositories
         {
             return await _context.Products
                                 .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        public async Task<Product> GetLoanTypeByIdAsync(int id)
+        {
+            return await GetByIdAsync(id);
         }
 
         public async Task<Product> GetOrCreateAdjustmentTypeAsync(string adjustmentTypeName, int organizationId, int userId)
@@ -312,6 +337,28 @@ namespace AccuPay.Data.Repositories
             return await (await GetAdjustmentTypesBaseQuery(organizationId)).
                         Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_ADDITION).
                         ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<Product>> GetPaginatedLoanTypeListAsync(PageOptions options, string searchTerm, int organizationId)
+        {
+            var query = _context.Products
+                .Where(p => p.CategoryEntity.CategoryName == ProductConstant.LOAN_TYPE_CATEGORY)
+                .Where(p => p.OrganizationID == organizationId)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Name, searchTerm) ||
+                    EF.Functions.Like(x.PartNo, searchTerm));
+            }
+
+            var loanTypes = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Product>(loanTypes, count);
         }
 
         #endregion List of entities

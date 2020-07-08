@@ -9,6 +9,7 @@ import { Sort } from '@angular/material/sort';
 import { Allowance } from 'src/app/allowances/shared/allowance';
 import { AllowanceService } from 'src/app/allowances/allowance.service';
 import { Router } from '@angular/router';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-allowance-list',
@@ -52,10 +53,12 @@ export class AllowanceListComponent implements OnInit {
   clearSearch = '';
 
   selectedRow: number;
+  isDownloadingTemplate: boolean;
 
   constructor(
     private allowanceService: AllowanceService,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
@@ -110,5 +113,20 @@ export class AllowanceListComponent implements OnInit {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getAllowanceList();
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.allowanceService
+      .getAllowanceTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(
+          err,
+          'Error downloading allowance template.'
+        );
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }

@@ -7,14 +7,19 @@ import { Leave } from 'src/app/leaves/shared/leave';
 import { Moment } from 'moment';
 import { LeaveTransaction } from './shared/leave-transaction';
 import { LeaveBalance } from './shared/leave-balance';
+import { BasePdfService } from '../core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LeaveService {
+export class LeaveService extends BasePdfService {
   baseUrl = 'api/leaves';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly leaveTemplateFileName = 'accupay-leave-template.xlsx';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   getAll(
     options: PageOptions,
@@ -87,5 +92,12 @@ export class LeaveService {
 
   getStatusList(): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
+  }
+
+  getLeaveTemplate(): Promise<any> {
+    return this.getPDF(
+      this.leaveTemplateFileName,
+      `${this.baseUrl}/accupay-leave-template`
+    );
   }
 }

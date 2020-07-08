@@ -23,11 +23,11 @@ namespace AccuPay.Data.Services
             return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }
 
-        public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog>)> ListByEmployee(
+        public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog>)> ListByEmployeeAsync(
             int organizationId,
             TimeLogsByEmployeePageOptions options)
         {
-            return await _repository.ListByEmployee(organizationId, options);
+            return await _repository.ListByEmployeeAsync(organizationId, options);
         }
 
         public async Task<ICollection<TimeLog>> GetAll(
@@ -42,16 +42,6 @@ namespace AccuPay.Data.Services
                                         IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
         {
             await _repository.SaveImportAsync(timeLogs, timeAttendanceLogs);
-        }
-
-        public async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
-        {
-            return await _repository.GetByIdWithEmployeeAsync(id);
-        }
-
-        public async Task<TimeLog> GetByIdAsync(int id)
-        {
-            return await _repository.GetByIdWithEmployeeAsync(id);
         }
 
         public async Task DeleteAsync(int id)
@@ -84,6 +74,21 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Employee already has a shift for that day.");
 
             await _repository.CreateAsync(timeLog);
+        }
+
+        public async Task ChangeManyAsync(
+            List<TimeLog> addedTimeLogs = null,
+            List<TimeLog> updatedTimeLogs = null,
+            List<TimeLog> deletedTimeLogs = null)
+        {
+            if (addedTimeLogs == null && updatedTimeLogs == null && deletedTimeLogs == null)
+                throw new BusinessLogicException("No logs to be saved.");
+
+            // TODO: validations
+            await _repository.ChangeManyAsync(
+                addedTimeLogs: addedTimeLogs,
+                updatedTimeLogs: updatedTimeLogs,
+                deletedTimeLogs: deletedTimeLogs);
         }
     }
 }

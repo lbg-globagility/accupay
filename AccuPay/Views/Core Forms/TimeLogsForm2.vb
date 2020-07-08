@@ -877,10 +877,11 @@ Public Class TimeLogsForm2
         Next
 
         Try
-            Dim timeLogRepositorySave = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
-            Await timeLogRepositorySave.ChangeManyAsync(addedTimeLogs:=addedTimeLogs,
-                                                     updatedTimeLogs:=updatedTimeLogs,
-                                                     deletedTimeLogs:=deletedTimeLogs)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+            Await dataService.ChangeManyAsync(
+                addedTimeLogs:=addedTimeLogs,
+                updatedTimeLogs:=updatedTimeLogs,
+                deletedTimeLogs:=deletedTimeLogs)
 
             CreateUserActivityRecords(oldRecords, addedTimeLogs, updatedTimeLogs, deletedTimeLogs)
 
@@ -1081,7 +1082,7 @@ Public Class TimeLogsForm2
 
     End Sub
 
-    Private Async Sub EmployeeTreeView1_TickedEmployee(s As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
+    Private Async Sub EmployeeTreeView1_TickedEmployee(s As Object, e As EventArgs) Handles EmployeeTreeView1.EmployeeTicked
 
         Await ReloadAsync()
 

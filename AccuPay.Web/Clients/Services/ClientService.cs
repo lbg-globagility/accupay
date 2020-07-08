@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users.Services;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
@@ -14,17 +15,23 @@ namespace AccuPay.Web.Clients
         private readonly UserManager<AspNetUser> _users;
         private readonly RoleManager<AspNetRole> _roles;
         private readonly UserEmailService _emailService;
+        private OrganizationRepository _organizationRepository;
+        private readonly ICurrentUser _currentUser;
 
         public ClientService(
             ClientRepository clientRepository,
             UserManager<AspNetUser> users,
             RoleManager<AspNetRole> roles,
-            UserEmailService emailService)
+            UserEmailService emailService,
+            OrganizationRepository organizationRepository,
+            ICurrentUser currentUser)
         {
             _clientRepository = clientRepository;
             _users = users;
             _roles = roles;
             _emailService = emailService;
+            _organizationRepository = organizationRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<ClientDto> GetById(int clientId)
@@ -77,6 +84,17 @@ namespace AccuPay.Web.Clients
 
                 await _users.CreateAsync(user);
                 await _emailService.SendInvitation(user);
+            }
+
+            if (dto.Organization != null)
+            {
+                var organization = Organization.NewOrganization(
+                    userId: _currentUser.DesktopUserId,
+                    clientId: client.Id);
+
+                organization.Name = dto.Name;
+
+                await _organizationRepository.Create(organization);
             }
 
             return ConvertToDto(client);

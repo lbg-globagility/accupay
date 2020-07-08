@@ -5,14 +5,19 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
 import { Moment } from 'moment';
+import { BasePdfService } from '../core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class OvertimeService {
+export class OvertimeService extends BasePdfService {
   baseUrl = 'api/overtimes';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly OTTemplateileName = 'accupay-overtime-template.xlsx';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   getAll(
     options: PageOptions,
@@ -52,5 +57,12 @@ export class OvertimeService {
 
   getStatusList(): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
+  }
+
+  getOvertimeTemplate(): Promise<any> {
+    return this.getPDF(
+      this.OTTemplateileName,
+      `${this.baseUrl}/accupay-overtime-template`
+    );
   }
 }

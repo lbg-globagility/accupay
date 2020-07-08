@@ -54,7 +54,7 @@ export class EditRoleComponent implements OnInit {
       next: () => {
         this.savingState.changeToSuccess();
         this.displaySuccess();
-        this.router.navigate(['roles']);
+        this.routeBackToRoles();
       },
       error: (err) => {
         this.savingState.changeToError();
@@ -64,7 +64,11 @@ export class EditRoleComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['roles', this.roleId]);
+    this.routeBackToRoles();
+  }
+
+  private routeBackToRoles() {
+    this.router.navigate(['security', 'roles']);
   }
 
   private displaySuccess() {

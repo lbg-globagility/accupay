@@ -83,6 +83,8 @@ Public Class EmployeeLoansForm
 
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
+        Dim checker = FeatureListChecker.Instance
+        lnkBonusPayment.Visible = checker.HasAccess(Feature.LoanDeductFromBonus)
     End Sub
 
     Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
@@ -991,6 +993,13 @@ Public Class EmployeeLoansForm
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
         Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
+    End Sub
+
+    Private Sub lnkBonusPayment_Click(sender As Object, e As EventArgs) Handles lnkBonusPayment.Click
+        Dim from As New AssignBonusToLoanForm(GetSelectedLoan())
+        If from.ShowDialog() = DialogResult.OK Then
+            EmployeesDataGridView_SelectionChanged(EmployeesDataGridView, New EventArgs)
+        End If
     End Sub
 
 #End Region

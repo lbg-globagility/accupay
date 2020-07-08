@@ -11,6 +11,9 @@ import { Loan } from 'src/app/loans/shared/loan';
 import { LoanService } from 'src/app/loans/loan.service';
 import { SelectItem } from 'src/app/core/shared/select-item';
 import { toNumber, round } from 'lodash';
+import { MatDialog } from '@angular/material/dialog';
+import { NewLoanTypeComponent } from 'src/app/loan-types/new-loan-type/new-loan-type.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-loan-form',
@@ -54,7 +57,8 @@ export class LoanFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,
-    private loanService: LoanService
+    private loanService: LoanService,
+    private dialog: MatDialog
   ) {
     this.form
       .get('deductionPercentage')
@@ -129,5 +133,15 @@ export class LoanFormComponent implements OnInit {
 
       this.form.get('totalLoanAmount').setValue(round(computedAmount, 2));
     };
+  }
+
+  newLoanType() {
+    this.dialog
+      .open(NewLoanTypeComponent)
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe(() => this.loadLoanTypes());
+
+    event.stopPropagation();
   }
 }
