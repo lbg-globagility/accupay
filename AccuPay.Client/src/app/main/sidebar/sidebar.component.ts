@@ -31,6 +31,10 @@ const menuItems: MenuItem[] = [
         label: 'Branches',
         route: '/branches',
       },
+      {
+        label: 'Policies',
+        route: '/employment-policies',
+      },
     ],
   },
   {

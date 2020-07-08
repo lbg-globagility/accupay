@@ -1,0 +1,58 @@
+<div class="flex">
+  <div class="w-1/2"><h1 class="mat-headline">View Employment Policy</h1></div>
+  <div class="w-1/2 flex justify-end items-start">
+    <a
+      mat-raised-button
+      color="primary"
+      routerLink="/employment-policies/{{ employmentPolicy.id }}/edit"
+      class="m-with-icon"
+      ><mat-icon>edit</mat-icon> EDIT</a
+    >
+  </div>
+</div>
+
+<ng-container *ngIf="employmentPolicy">
+  <mat-card>
+    <mat-card-content>
+      <app-display-field label="Name">
+        {{ employmentPolicy.name }}
+      </app-display-field>
+
+      <app-display-field label="Work Days Per Year">
+        {{ employmentPolicy.workDaysPerYear }}
+      </app-display-field>
+
+      <app-display-field label="Grace Period">
+        {{ employmentPolicy.workDaysPerYear }}
+      </app-display-field>
+
+      <app-display-field label="Compute Night Diff">
+        <mat-icon *ngIf="employmentPolicy.computeNightDiff">check</mat-icon>
+      </app-display-field>
+
+      <app-display-field label="Compute Night Diff OT">
+        <mat-icon *ngIf="employmentPolicy.computeNightDiffOT">check</mat-icon>
+      </app-display-field>
+
+      <app-display-field label="Compute Rest Day">
+        <mat-icon *ngIf="employmentPolicy.computeRestDay">check</mat-icon>
+      </app-display-field>
+
+      <app-display-field label="Compute Rest Day OT">
+        <mat-icon *ngIf="employmentPolicy.computeRestDayOT">check</mat-icon>
+      </app-display-field>
+
+      <app-display-field label="Compute Special Holiday">
+        <mat-icon *ngIf="employmentPolicy.computeSpecialHoliday"
+          >check</mat-icon
+        >
+      </app-display-field>
+
+      <app-display-field label="Compute Regular Holiday">
+        <mat-icon *ngIf="employmentPolicy.computeRegularHoliday"
+          >check</mat-icon
+        >
+      </app-display-field>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
