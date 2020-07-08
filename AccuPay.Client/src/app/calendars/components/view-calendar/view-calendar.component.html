@@ -16,10 +16,13 @@
   </div>
 </div>
 
-<ng-container *ngFor="let calendarMonth of calendarMonths">
-  <app-calendar-month
-    [month]="calendarMonth.month"
-    [calendarDays]="calendarMonth.days"
-    (dayClick)="changeDay($event)"
-  ></app-calendar-month>
-</ng-container>
+<div class="row">
+  <div *ngFor="let calendarMonth of calendarMonths" class="col-lg-6">
+    <app-calendar-month
+      [month]="calendarMonth.month"
+      [calendarDays]="calendarMonth.days"
+      (dayClick)="changeDay($event)"
+      class="mb-4"
+    ></app-calendar-month>
+  </div>
+</div>
