@@ -3,6 +3,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shifts.Models;
 using AccuPay.Web.Shifts.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -12,11 +13,16 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ShiftsController : ControllerBase
+    public class ShiftsController : ApiControllerBase
     {
         private readonly ShiftService _service;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ShiftsController(ShiftService shiftService) => _service = shiftService;
+        public ShiftsController(ShiftService shiftService, IHostingEnvironment hostingEnvironment)
+        {
+            _service = shiftService;
+            _hostingEnvironment = hostingEnvironment;
+        }
 
         [HttpGet]
         [Permission(PermissionTypes.ShiftRead)]
@@ -45,7 +51,6 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPut("{id}")]
-
         [Permission(PermissionTypes.ShiftUpdate)]
         public async Task<ActionResult<ShiftDto>> Update(int id, [FromBody] UpdateShiftDto dto)
         {
@@ -77,6 +82,13 @@ namespace AccuPay.Web.Controllers
             await _service.Import(file);
 
             return Ok();
+        }
+
+        [HttpGet("accupay-shiftschedule-template")]
+        [Permission(PermissionTypes.SalaryRead)]
+        public ActionResult GetEmployeeTemplate()
+        {
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-shiftschedule-template.xlsx");
         }
     }
 }

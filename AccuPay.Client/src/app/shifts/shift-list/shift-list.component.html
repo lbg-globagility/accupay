@@ -23,8 +23,8 @@
       </button>
     </mat-form-field>
   </div>
-  <div class="col-md-5"></div>
-  <div class="col-md-4">
+  <div class="col-md-4"></div>
+  <div class="col-md-5">
     <button mat-raised-button color="accent" class="new-btn" routerLink="new">
       NEW SHIFT
     </button>
@@ -42,6 +42,19 @@
       (click)="uploader.click()"
     >
       IMPORT
+    </button>
+
+    <button
+      [disabled]="isDownloadingTemplate"
+      mat-raised-button
+      (click)="downloadTemplate()"
+      style="margin-left: 8px;"
+      color="primary"
+    >
+      {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
+      <mat-icon *ngIf="isDownloadingTemplate"
+        ><mat-spinner diameter="20" color="accent"> </mat-spinner
+      ></mat-icon>
     </button>
   </div>
 </div>

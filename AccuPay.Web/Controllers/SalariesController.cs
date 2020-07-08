@@ -4,6 +4,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
 using AccuPay.Web.Salaries.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -12,15 +13,17 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class SalariesController : ControllerBase
+    public class SalariesController : ApiControllerBase
     {
         private readonly SalaryService _service;
         private readonly SalaryRepository _repository;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public SalariesController(SalaryService salaryService, SalaryRepository repository)
+        public SalariesController(SalaryService salaryService, SalaryRepository repository, IHostingEnvironment hostingEnvironment)
         {
             _service = salaryService;
             _repository = repository;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -84,6 +87,13 @@ namespace AccuPay.Web.Controllers
             await _repository.DeleteAsync(id);
 
             return Ok();
+        }
+
+        [HttpGet("accupay-salary-template")]
+        [Permission(PermissionTypes.SalaryRead)]
+        public ActionResult GetEmployeeTemplate()
+        {
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-salary-template.xlsx");
         }
     }
 }

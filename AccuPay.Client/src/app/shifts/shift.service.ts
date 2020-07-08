@@ -4,14 +4,19 @@ import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Shift } from 'src/app/shifts/shared/shift';
+import { BasePdfService } from '../core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ShiftService {
+export class ShiftService extends BasePdfService {
   baseUrl = 'api/shifts';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly shiftTemplateFileName = 'accupay-shiftschedule-template';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   getAll(options: PageOptions, term = ''): Observable<PaginatedList<Shift>> {
     const params = options ? options.toObject() : null;
@@ -38,10 +43,16 @@ export class ShiftService {
   }
 
   import(file: File): Observable<Shift> {
-
     const formData = new FormData();
     formData.append('file', file);
 
     return this.httpClient.post<Shift>(`${this.baseUrl}/import`, formData);
+  }
+
+  getShifScheduleTemplate(): Promise<any> {
+    return this.getPDF(
+      this.shiftTemplateFileName,
+      `${this.baseUrl}/accupay-shiftschedule-template`
+    );
   }
 }

@@ -9,6 +9,19 @@
     >
       <mat-icon>add</mat-icon>NEW SALARY
     </a>
+
+    <button
+      [disabled]="isDownloadingTemplate"
+      mat-raised-button
+      (click)="downloadTemplate()"
+      style="margin-left: 8px;"
+      color="primary"
+    >
+      {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
+      <mat-icon *ngIf="isDownloadingTemplate"
+        ><mat-spinner diameter="20" color="accent"> </mat-spinner
+      ></mat-icon>
+    </button>
   </div>
 </div>
 

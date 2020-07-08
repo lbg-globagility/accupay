@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-employees',
@@ -37,10 +38,12 @@ export class EmployeesComponent implements OnInit {
   selectedEmployees: Employee[];
 
   selectedEmployee: Employee;
+  isDownloadingTemplate: boolean;
 
   constructor(
     private employeeService: EmployeeService,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
@@ -98,5 +101,20 @@ export class EmployeesComponent implements OnInit {
 
   private resetScroll(): void {
     this.employeesRef.nativeElement.scrollTo(0, 0);
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.employeeService
+      .getEmployeeTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(
+          err,
+          'Error downloading employee template.'
+        );
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }
