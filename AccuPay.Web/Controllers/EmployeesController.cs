@@ -4,6 +4,7 @@ using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,13 +14,15 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController : ApiControllerBase
     {
         private readonly EmployeeService _employeeService;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public EmployeesController(EmployeeService employeeService)
+        public EmployeesController(EmployeeService employeeService, IHostingEnvironment hostingEnvironment)
         {
             _employeeService = employeeService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpPost]
@@ -73,6 +76,13 @@ namespace AccuPay.Web.Controllers
             await _employeeService.GenerateEmployeesImages();
 
             return Ok();
+        }
+
+        [HttpGet("accupay-employeelist-template")]
+        [Permission(PermissionTypes.EmployeeRead)]
+        public ActionResult GetEmployeeTemplate()
+        {
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-employeelist-template.xlsx");
         }
     }
 }

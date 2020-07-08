@@ -35,6 +35,7 @@ export class ViewSalaryComponent implements OnInit {
     'allowanceAmount',
     'totalAmount',
   ];
+  isDownloadingTemplate: boolean;
 
   constructor(
     private salaryService: SalaryService,
@@ -101,5 +102,17 @@ export class ViewSalaryComponent implements OnInit {
 
       this.isLoading.next(true);
     });
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.salaryService
+      .getSalaryTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(err, 'Error downloading salary template.');
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }
