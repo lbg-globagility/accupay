@@ -83,6 +83,12 @@ import { LoanReportBytypeComponent } from './reports/loan-report-bytype/loan-rep
 import { LoanReportByemployeeComponent } from './reports/loan-report-byemployee/loan-report-byemployee.component';
 import { TaxReportComponent } from './reports/tax-report/tax-report.component';
 import { LoanTypeListComponent } from './loan-types/loan-type-list/loan-type-list.component';
+import {
+  EditEmploymentPolicyComponent,
+  NewEmploymentPolicyComponent,
+  EmploymentPolicyListComponent,
+  ViewEmploymentPolicyComponent,
+} from 'src/app/employment-policies/components';
 
 const routes: Routes = [
   {
@@ -114,6 +120,26 @@ const routes: Routes = [
       {
         path: 'employees/:id/edit',
         component: EditEmployeeComponent,
+      },
+      {
+        path: 'employment-policies',
+        component: EmploymentPolicyListComponent,
+      },
+      {
+        path: 'employment-policies/new',
+        component: NewEmploymentPolicyComponent,
+      },
+      {
+        path: 'employment-policies/:id',
+        component: ViewEmploymentPolicyComponent,
+      },
+      {
+        path: 'employment-policies/:id/edit',
+        component: EditEmploymentPolicyComponent,
+      },
+      {
+        path: 'users',
+        component: UserListComponent,
       },
       {
         path: 'employees',

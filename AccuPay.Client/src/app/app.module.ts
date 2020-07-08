@@ -30,6 +30,7 @@ import { AllowanceTypesModule } from './allowance-types/allowance-types.module';
 import { ReportsModule } from './reports/reports.module';
 import { ClientsModule } from 'src/app/clients/clients.module';
 import { LoanTypesModule } from './loan-types/loan-types.module';
+import { EmploymentPoliciesModule } from 'src/app/employment-policies/employment-policies.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -59,6 +60,7 @@ import { LoanTypesModule } from './loan-types/loan-types.module';
     PayrollModule,
     DivisionsModule,
     TimeEntryModule,
+    EmploymentPoliciesModule,
     RolesModule,
     AllowanceTypesModule,
     ReportsModule,
