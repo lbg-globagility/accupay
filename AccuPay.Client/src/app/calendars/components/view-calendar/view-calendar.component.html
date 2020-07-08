@@ -1,0 +1,28 @@
+<div class="flex">
+  <div class="w-1/2">
+    <h1 class="mat-headline">View Calendar / {{ calendar?.name }}</h1>
+  </div>
+  <div class="w-1/2 flex justify-end items-start">
+    <button mat-raised-button (click)="onSave()" color="accent">
+      SAVE
+    </button>
+    <button
+      mat-raised-button
+      color="accent"
+      routerLink="/calendars/{{ calendarId }}/edit"
+    >
+      EDIT
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div *ngFor="let calendarMonth of calendarMonths" class="col-lg-6">
+    <app-calendar-month
+      [month]="calendarMonth.month"
+      [calendarDays]="calendarMonth.days"
+      (dayClick)="changeDay($event)"
+      class="mb-4"
+    ></app-calendar-month>
+  </div>
+</div>
