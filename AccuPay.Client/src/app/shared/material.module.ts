@@ -20,6 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatListModule } from '@angular/material/list';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 import {
   MatMomentDateModule,
@@ -39,6 +40,7 @@ import {
     MatDialogModule,
     // MatDividerModule,
     // MatExpansionModule,
+    MatGridListModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
