@@ -11,6 +11,7 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { LoanService } from 'src/app/loans/loan.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoanHistoryComponent } from '../loan-history/loan-history.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-loan-list',
@@ -61,7 +62,8 @@ export class LoanListComponent implements OnInit {
   constructor(
     private loanService: LoanService,
     private dialog: MatDialog,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private router: Router
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
@@ -136,5 +138,10 @@ export class LoanListComponent implements OnInit {
       .finally(() => {
         this.isDownloadingTemplate = false;
       });
+  }
+
+  routeToNewLoan() {
+    this.router.navigate(['loans', 'new']);
+    // routerLink="loans/new"
   }
 }

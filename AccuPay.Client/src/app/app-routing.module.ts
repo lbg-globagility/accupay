@@ -89,6 +89,7 @@ import {
   EmploymentPolicyListComponent,
   ViewEmploymentPolicyComponent,
 } from 'src/app/employment-policies/components';
+import { LoansComponent } from './loans/loans/loans.component';
 
 const routes: Routes = [
   {
@@ -269,12 +270,23 @@ const routes: Routes = [
         component: AllowanceTypeListComponent,
       },
       {
-        path: 'loan-types',
-        component: LoanTypeListComponent,
-      },
-      {
         path: 'loans',
-        component: LoanListComponent,
+        component: LoansComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'overview',
+            pathMatch: 'full',
+          },
+          {
+            path: 'overview',
+            component: LoanListComponent,
+          },
+          {
+            path: 'types',
+            component: LoanTypeListComponent,
+          },
+        ],
       },
       {
         path: 'loans/new',
@@ -288,7 +300,6 @@ const routes: Routes = [
         path: 'loans/:id/edit',
         component: EditLoanComponent,
       },
-
       {
         path: 'reports',
         component: ReportsComponent,
