@@ -1,0 +1,13 @@
+{{ month | date: "MMM" }}
+
+<mat-grid-list [cols]="7" rowHeight="100px">
+  <mat-grid-tile *ngFor="let dayOfWeek of daysOfWeek">
+    <div>{{ dayOfWeek }}</div></mat-grid-tile
+  >
+  <mat-grid-tile *ngFor="let o of blankOffsets"></mat-grid-tile>
+  <mat-grid-tile *ngFor="let cell of cells" (click)="editDay()">
+    <!-- {{ cell | json }} -->
+    {{ cell.date | date: "d" }}
+    {{ cell.calendarDay?.description }}
+  </mat-grid-tile>
+</mat-grid-list>

@@ -3,10 +3,17 @@ import { CalendarService } from 'src/app/calendars/service/calendar.service';
 import { CalendarDay } from 'src/app/calendars/shared/calendar-day';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { CalendarDayDialogComponent } from 'src/app/calendars/calendar-day-dialog/calendar-day-dialog.component';
+import { CalendarDayDialogComponent } from 'src/app/calendars/components/calendar-day-dialog/calendar-day-dialog.component';
 import { DayType } from 'src/app/calendars/shared/day-type';
-import { filter } from 'rxjs/operators';
+import { filter, tap, map } from 'rxjs/operators';
 import { Calendar } from 'src/app/calendars/shared/calendar';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+
+interface CalendarMonth {
+  month: Date;
+  days: CalendarDay[];
+}
 
 @Component({
   selector: 'app-view-calendar',
@@ -19,9 +26,15 @@ import { Calendar } from 'src/app/calendars/shared/calendar';
 export class ViewCalendarComponent implements OnInit {
   readonly displayedColumns: string[] = ['date', 'description'];
 
+  currentYear: number = 2020;
+
   calendarId: number = +this.route.snapshot.paramMap.get('id');
 
   year: number = new Date().getFullYear();
+
+  months: Date[] = [];
+
+  calendarMonths: CalendarMonth[] = [];
 
   calendarDays: CalendarDay[];
 
@@ -39,26 +52,32 @@ export class ViewCalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCalendar();
-    this.loadDays();
     this.loadDayTypes();
+    this.loadCalendarDays().subscribe(() => this.createListOfMonths());
   }
 
-  private loadCalendar() {
-    this.calendarService
-      .getById(this.calendarId)
-      .subscribe((calendar) => (this.calendar = calendar));
-  }
+  private createListOfMonths(): void {
+    const monthsPerYear = 12;
+    const months = [];
+    const da = [];
+    for (let i = 0; i < monthsPerYear; i++) {
+      const month = new Date(this.year, i, 1);
 
-  private loadDays() {
-    this.calendarService
-      .getDays(this.calendarId, this.year)
-      .subscribe((calendarDays) => (this.calendarDays = calendarDays));
-  }
+      const days = this.calendarDays.filter(
+        (t) => moment(t.date).toDate().getMonth() === month.getMonth()
+      );
 
-  private loadDayTypes() {
-    this.calendarService
-      .getDayTypes()
-      .subscribe((dayTypes) => (this.dayTypes = dayTypes));
+      const da2 = {
+        month,
+        days,
+      };
+
+      da.push(da2);
+
+      months.push(month);
+    }
+    this.months = months;
+    this.calendarMonths = da;
   }
 
   changeDay(calendarDay: CalendarDay) {
@@ -95,5 +114,23 @@ export class ViewCalendarComponent implements OnInit {
           this.changedCalendarDays = [];
         },
       });
+  }
+
+  private loadCalendar(): void {
+    this.calendarService
+      .getById(this.calendarId)
+      .subscribe((calendar) => (this.calendar = calendar));
+  }
+
+  private loadCalendarDays(): Observable<CalendarDay[]> {
+    return this.calendarService
+      .getDays(this.calendarId, this.year)
+      .pipe(tap((calendarDays) => (this.calendarDays = calendarDays)));
+  }
+
+  private loadDayTypes(): void {
+    this.calendarService
+      .getDayTypes()
+      .subscribe((dayTypes) => (this.dayTypes = dayTypes));
   }
 }

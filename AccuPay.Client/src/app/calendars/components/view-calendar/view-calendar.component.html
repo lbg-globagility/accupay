@@ -1,13 +1,27 @@
-<h1 class="mat-headline">View Calendar / {{ calendar?.name }}</h1>
+<div class="flex">
+  <div class="w-1/2">
+    <h1 class="mat-headline">View Calendar / {{ calendar?.name }}</h1>
+  </div>
+  <div class="w-1/2 flex justify-end items-start">
+    <button mat-raised-button (click)="onSave()" color="accent">
+      SAVE
+    </button>
+    <button
+      mat-raised-button
+      color="accent"
+      routerLink="/calendars/{{ calendarId }}/edit"
+    >
+      EDIT
+    </button>
+  </div>
+</div>
 
-<button mat-raised-button (click)="onSave()" color="accent">SAVE</button>
-<button
-  mat-raised-button
-  color="accent"
-  routerLink="/calendars/{{ calendarId }}/edit"
->
-  EDIT
-</button>
+<ng-container *ngFor="let calendarMonth of calendarMonths">
+  <app-calendar-month
+    [month]="calendarMonth.month"
+    [calendarDays]="calendarMonth.days"
+  ></app-calendar-month>
+</ng-container>
 
 <div class="mat-elevation-z1">
   <table mat-table [dataSource]="calendarDays" class="w-full">

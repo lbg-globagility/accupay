@@ -46,10 +46,12 @@ import { PositionListComponent } from './positions/position-list/position-list.c
 import { ViewPositionComponent } from 'src/app/positions/view-position/view-position.component';
 import { NewPositionComponent } from 'src/app/positions/new-position/new-position.component';
 import { EditPositionComponent } from 'src/app/positions/edit-position/edit-position.component';
-import { CalendarListComponent } from 'src/app/calendars/calendar-list/calendar-list.component';
-import { NewCalendarComponent } from 'src/app/calendars/new-calendar/new-calendar.component';
-import { EditCalendarComponent } from 'src/app/calendars/edit-calendar/edit-calendar.component';
-import { ViewCalendarComponent } from 'src/app/calendars/view-calendar/view-calendar.component';
+import {
+  ViewCalendarComponent,
+  CalendarListComponent,
+  NewCalendarComponent,
+  EditCalendarComponent,
+} from 'src/app/calendars/components';
 import { DivisionListComponent } from 'src/app/divisions/division-list/division-list.component';
 import { ViewDivisionComponent } from 'src/app/divisions/view-division/view-division.component';
 import { NewDivisionComponent } from 'src/app/divisions/new-division/new-division.component';
