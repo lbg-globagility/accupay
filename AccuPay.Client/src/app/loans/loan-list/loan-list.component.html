@@ -25,7 +25,12 @@
   </div>
   <div class="col-md-5"></div>
   <div class="col-md-4">
-    <button mat-raised-button color="accent" class="new-btn" routerLink="new">
+    <button
+      mat-raised-button
+      color="accent"
+      class="new-btn"
+      (click)="routeToNewLoan()"
+    >
       NEW LOAN
     </button>
 
