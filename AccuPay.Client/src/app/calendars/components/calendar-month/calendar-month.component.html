@@ -4,7 +4,7 @@
   <mat-grid-tile *ngFor="let dayOfWeek of daysOfWeek">
     <div>{{ dayOfWeek }}</div></mat-grid-tile
   >
-  <mat-grid-tile *ngFor="let o of blankOffsets"></mat-grid-tile>
+  <mat-grid-tile *ngFor="let o of blankCells"></mat-grid-tile>
   <mat-grid-tile *ngFor="let cell of cells" (click)="dayClicked(cell)">
     {{ cell.date | date: "d" }}
     {{ cell.calendarDay?.description }}

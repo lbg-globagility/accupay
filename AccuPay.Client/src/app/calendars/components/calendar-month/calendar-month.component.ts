@@ -34,18 +34,14 @@ export class CalendarMonthComponent implements OnInit {
     'Sat',
   ];
 
-  blankOffsets: [] = [];
+  blankCells: [] = [];
 
   cells: CalendarCell[] = [];
-
-  dates: Date[] = [];
-
-  constructor() {}
 
   ngOnInit(): void {
     const { start, end } = this.getStartAndEndDate();
 
-    this.blankOffsets = rangeOfNumbers(0, start.getDay());
+    this.blankCells = rangeOfNumbers(0, start.getDay());
 
     this.cells = range(start, end).map((date) => {
       const cell: CalendarCell = {
@@ -68,7 +64,7 @@ export class CalendarMonthComponent implements OnInit {
     return { start, end };
   }
 
-  dayClicked(cell: CalendarCell) {
+  dayClicked(cell: CalendarCell): void {
     this.dayClick.emit(cell.calendarDay);
   }
 }

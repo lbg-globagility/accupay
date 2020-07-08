@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarDayDialogComponent } from 'src/app/calendars/components/calendar-day-dialog/calendar-day-dialog.component';
 import { DayType } from 'src/app/calendars/shared/day-type';
-import { filter, tap, map } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { Calendar } from 'src/app/calendars/shared/calendar';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
@@ -26,19 +26,15 @@ interface CalendarMonth {
 export class ViewCalendarComponent implements OnInit {
   readonly displayedColumns: string[] = ['date', 'description'];
 
-  currentYear: number = 2020;
-
   calendarId: number = +this.route.snapshot.paramMap.get('id');
 
   year: number = new Date().getFullYear();
 
-  months: Date[] = [];
-
-  calendarMonths: CalendarMonth[] = [];
+  calendar: Calendar;
 
   calendarDays: CalendarDay[];
 
-  calendar: Calendar;
+  calendarMonths: CalendarMonth[] = [];
 
   dayTypes: DayType[];
 
@@ -58,8 +54,7 @@ export class ViewCalendarComponent implements OnInit {
 
   private createListOfMonths(): void {
     const monthsPerYear = 12;
-    const months = [];
-    const da = [];
+    const calendarMonths = [];
     for (let i = 0; i < monthsPerYear; i++) {
       const month = new Date(this.year, i, 1);
 
@@ -67,53 +62,56 @@ export class ViewCalendarComponent implements OnInit {
         (t) => moment(t.date).toDate().getMonth() === month.getMonth()
       );
 
-      const da2 = {
-        month,
-        days,
-      };
+      const calendarMonth = { month, days };
 
-      da.push(da2);
-
-      months.push(month);
+      calendarMonths.push(calendarMonth);
     }
-    this.months = months;
-    this.calendarMonths = da;
+
+    this.calendarMonths = calendarMonths;
   }
 
-  changeDay(calendarDay: CalendarDay) {
+  changeDay(calendarDay: CalendarDay): void {
     this.dialog
       .open(CalendarDayDialogComponent, {
         data: { calendarDay, dayTypes: this.dayTypes },
       })
       .afterClosed()
       .pipe(filter((t) => t != null))
-      .subscribe((result) => {
-        // Add changed day to change tracker
-        const foundIndex = this.changedCalendarDays.findIndex(
-          (t) => t.id === result.id
-        );
-        if (foundIndex > -1) {
-          this.changedCalendarDays[foundIndex] = result;
-        } else {
-          this.changedCalendarDays.push(result);
-        }
-
-        // Update list of calendar days
-        const index = this.calendarDays.findIndex((t) => t.id === result.id);
-        const newList = this.calendarDays.slice(0);
-        newList[index] = result;
-        this.calendarDays = newList;
+      .subscribe((result: CalendarDay) => {
+        this.addToChangeTracker(result);
+        this.updateCalendarDayList(result);
       });
   }
 
-  onSave() {
+  onSave(): void {
     this.calendarService
       .updateDays(this.calendarId, this.changedCalendarDays)
       .subscribe({
         next: () => {
+          // After save, clear the change tracker
           this.changedCalendarDays = [];
         },
       });
+  }
+
+  private addToChangeTracker(calendarDay: CalendarDay): void {
+    const foundIndex = this.changedCalendarDays.findIndex(
+      (t) => t.id === calendarDay.id
+    );
+    // If the calendar day was found, then update the calendar day, otherwise push the new calendar day
+    if (foundIndex > -1) {
+      this.changedCalendarDays[foundIndex] = calendarDay;
+    } else {
+      this.changedCalendarDays.push(calendarDay);
+    }
+  }
+
+  private updateCalendarDayList(calendarDay: CalendarDay): void {
+    // Create a new list of calendar days to make the calendar rerender
+    const index = this.calendarDays.findIndex((t) => t.id === calendarDay.id);
+    const newList = this.calendarDays.slice(0);
+    newList[index] = calendarDay;
+    this.calendarDays = newList;
   }
 
   private loadCalendar(): void {
