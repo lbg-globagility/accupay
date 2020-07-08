@@ -50,7 +50,7 @@ export class ShiftService extends BasePdfService {
   }
 
   getShifScheduleTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.shiftTemplateFileName,
       `${this.baseUrl}/accupay-shiftschedule-template`
     );

@@ -64,7 +64,7 @@ export class EmployeeService extends BasePdfService {
   }
 
   getEmployeeTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.employeeTemplateFileName,
       `${this.apiRoute}/accupay-employeelist-template`
     );

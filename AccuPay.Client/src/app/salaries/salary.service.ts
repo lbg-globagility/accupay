@@ -58,7 +58,7 @@ export class SalaryService extends BasePdfService {
   }
 
   getSalaryTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.salaryTemplateFileName,
       `${this.baseUrl}/accupay-salary-template`
     );
