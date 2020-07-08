@@ -53,6 +53,7 @@ export class ShiftListComponent implements OnInit {
   clearSearch = '';
 
   selectedRow: number;
+  isDownloadingTemplate: boolean;
 
   constructor(
     private shiftService: ShiftService,
@@ -129,5 +130,20 @@ export class ShiftListComponent implements OnInit {
       timer: 3000,
       showConfirmButton: false,
     });
+  }
+
+  downloadTemplate(): void {
+    this.isDownloadingTemplate = true;
+    this.shiftService
+      .getShifScheduleTemplate()
+      .catch((err) => {
+        this.errorHandler.badRequest(
+          err,
+          'Error downloading shift schedule template.'
+        );
+      })
+      .finally(() => {
+        this.isDownloadingTemplate = false;
+      });
   }
 }

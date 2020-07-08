@@ -5,14 +5,19 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Employee } from '../shared/employee';
 import { HttpClient } from '@angular/common/http';
+import { BasePdfService } from 'src/app/core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EmployeeService {
+export class EmployeeService extends BasePdfService {
   apiRoute = 'api/employees';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly employeeTemplateFileName = 'accupay-employeelist-template.xlsx';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   list2(
     options: PageOptions,
@@ -56,5 +61,12 @@ export class EmployeeService {
 
   create(employee: Employee): Observable<Employee> {
     return this.httpClient.post<Employee>(this.apiRoute, employee);
+  }
+
+  getEmployeeTemplate(): Promise<any> {
+    return this.getPDF(
+      this.employeeTemplateFileName,
+      `${this.apiRoute}/accupay-employeelist-template`
+    );
   }
 }

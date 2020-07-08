@@ -4,14 +4,19 @@ import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Salary } from 'src/app/salaries/shared/salary';
+import { BasePdfService } from '../core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SalaryService {
+export class SalaryService extends BasePdfService {
   baseUrl = 'api/salaries';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly salaryTemplateFileName = 'accupay-salary-template.xlsx';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
 
   list(
     options: PageOptions,
@@ -50,5 +55,12 @@ export class SalaryService {
 
   delete(id: number): Observable<Salary> {
     return this.httpClient.delete<Salary>(`${this.baseUrl}/${id}`);
+  }
+
+  getSalaryTemplate(): Promise<any> {
+    return this.getPDF(
+      this.salaryTemplateFileName,
+      `${this.baseUrl}/accupay-salary-template`
+    );
   }
 }
