@@ -90,12 +90,12 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        internal async Task<EmployeeDutySchedule> GetByIdAsync(int id)
+        public async Task<EmployeeDutySchedule> GetByIdAsync(int id)
         {
             return await _context.EmployeeDutySchedules.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        internal async Task<EmployeeDutySchedule> GetByIdAsync(CompositeKey key)
+        public async Task<EmployeeDutySchedule> GetByIdAsync(CompositeKey key)
         {
             return await _context.EmployeeDutySchedules
                 .Where(x => x.EmployeeID == key.EmployeeId)
@@ -103,7 +103,7 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        internal async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
+        public async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.EmployeeDutySchedules
                 .Include(x => x.Employee)
@@ -163,7 +163,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.EmployeeDutySchedules
                 .Include(x => x.Employee)

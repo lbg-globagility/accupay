@@ -63,6 +63,7 @@ namespace AccuPay.Data
         internal virtual DbSet<LeaveLedger> LeaveLedgers { get; set; }
         internal virtual DbSet<LeaveTransaction> LeaveTransactions { get; set; }
         internal virtual DbSet<ListOfValue> ListOfValues { get; set; }
+        internal virtual DbSet<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
         internal virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
         internal virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
         internal virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }

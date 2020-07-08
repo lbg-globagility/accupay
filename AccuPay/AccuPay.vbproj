@@ -420,6 +420,7 @@
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
+    <Compile Include="Core\PayrollSummaryCategory.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelHelper.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelService.vb" />
@@ -435,7 +436,6 @@
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\Commons\DebugUtility.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
-    <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\PayPeriod\PayPeriodStatusData.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
@@ -722,12 +722,25 @@
     <Compile Include="Views\Core Forms\SelectBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.Designer.vb">
+      <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.Designer.vb">
+      <DependentUpon>AssignBonusToLoanForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Employees\Loans deducted from bonus\LoanPaymentFromBonusModel.vb" />
     <Compile Include="Views\General Forms\DependencyInjectionHelper.vb" />
     <Compile Include="Views\General Forms\UserActivityForm.Designer.vb">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
@@ -2068,8 +2081,14 @@
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
+      <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.resx">
+      <DependentUpon>AssignBonusToLoanForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\UserActivityForm.resx">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
@@ -2767,7 +2786,9 @@
       <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

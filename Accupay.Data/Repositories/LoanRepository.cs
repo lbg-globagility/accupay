@@ -172,6 +172,7 @@ namespace AccuPay.Data.Repositories
             // before the regeneration if the user chose to exclude it this pay period. On payroll regeneration,
             // this loan's balance should be reset and this will not apply to the current payroll.
             var loans = await _context.LoanSchedules
+                .Include(l => l.LoanPaymentFromBonuses)
                 .Where(l => l.OrganizationID == organizationId)
                 .Where(l => l.DedEffectiveDateFrom <= payPeriod.PayToDate)
                 .Where(l => acceptedLoans.Contains(l.DeductionSchedule.Trim().ToUpper()))

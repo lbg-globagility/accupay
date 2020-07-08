@@ -125,8 +125,9 @@ Public Class PayrollSummaDateSelection
 
                 With cboStringParameter
                     .Visible = True
-                    .Items.Add("Cash")
-                    .Items.Add("Direct Deposit")
+                    .Items.Add(PayrollSummaryCategory.All)
+                    .Items.Add(PayrollSummaryCategory.Cash)
+                    .Items.Add(PayrollSummaryCategory.DirectDeposit)
                     .DropDownStyle = ComboBoxStyle.DropDownList
                 End With
 
@@ -409,10 +410,6 @@ Public Class PayrollSummaDateSelection
 
     Private Sub SemiMonthlyTab_Enter(sender As Object, e As EventArgs) Handles SemiMonthlyTab.Enter
         VIEW_payp(, SemiMonthlyTab.Text.Trim)
-    End Sub
-
-    Private Sub WeeklyTab_Enter(sender As Object, e As EventArgs) Handles WeeklyTab.Enter
-        VIEW_payp(, WeeklyTab.Text.Trim)
     End Sub
 
     Private Class PayPeriod
