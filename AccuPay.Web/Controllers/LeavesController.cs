@@ -111,7 +111,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.LeaveRead)]
         public ActionResult GetLeaveTemplate()
         {
-            return GetTemplate(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-leave-template.xlsx");
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-leave-template.xlsx");
         }
     }
 }

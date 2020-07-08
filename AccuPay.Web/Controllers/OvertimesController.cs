@@ -86,7 +86,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.OvertimeRead)]
         public ActionResult GetOvertimeTemplate()
         {
-            return GetTemplate(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-overtime-template.xlsx");
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-overtime-template.xlsx");
         }
     }
 }

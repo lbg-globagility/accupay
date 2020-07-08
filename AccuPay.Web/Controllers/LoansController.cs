@@ -106,7 +106,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.LoanRead)]
         public ActionResult GetLoanTemplate()
         {
-            return GetTemplate(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-loan-template.xlsx");
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-loan-template.xlsx");
         }
     }
 }

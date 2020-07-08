@@ -10,13 +10,11 @@ namespace AccuPay.Web.Controllers
 {
     public class ApiControllerBase : ControllerBase
     {
-
         public ApiControllerBase()
         {
-
         }
 
-        public ActionResult GetTemplate(string path, string fileName)
+        public ActionResult Excel(string path, string fileName)
         {
             var file = Path.Combine(path, fileName);
 
@@ -24,7 +22,7 @@ namespace AccuPay.Web.Controllers
 
             Response.Headers["Content-Disposition"] = new ContentDispositionHeaderValue("attachment")
             {
-                FileName = "Accupay Leave Template"
+                FileName = fileName
             }.ToString();
 
             return result;

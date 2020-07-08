@@ -85,7 +85,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.OfficialBusinessRead)]
         public ActionResult GetOfficialBusTemplate()
         {
-            return GetTemplate(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-officialbus-template.xlsx");
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-officialbus-template.xlsx");
         }
     }
 }

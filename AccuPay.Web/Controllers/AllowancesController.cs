@@ -94,7 +94,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.AllowanceRead)]
         public ActionResult GetAllowanceTemplate()
         {
-            return GetTemplate(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-allowance-template.xlsx");
+            return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-allowance-template.xlsx");
         }
     }
 }
