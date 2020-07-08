@@ -12,7 +12,7 @@
               <mat-option></mat-option>
               <mat-option [value]="'All'">All</mat-option>
               <mat-option [value]="'Cash'">Cash</mat-option>
-              <mat-option [value]="'Direc Depositt'">Direct Deposit</mat-option>
+              <mat-option [value]="'Direct Deposit'">Direct Deposit</mat-option>
             </mat-select>
             <mat-error>Please select a salary distribution filter</mat-error>
           </mat-form-field>
@@ -21,6 +21,12 @@
         <div class="row">
           <mat-checkbox class="col-lg-4" formControlName="hideEmptyColumns"
             >Hide empty columns</mat-checkbox
+          >
+        </div>
+
+        <div class="row">
+          <mat-checkbox class="col-lg-4" formControlName="keepInOneSheet"
+            >Keep all divisions in one sheet</mat-checkbox
           >
         </div>
       </form>

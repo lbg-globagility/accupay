@@ -72,7 +72,7 @@ export class OfficialBusinessService extends BasePdfService {
   }
 
   getOfficialBusTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.OBTemplateFileName,
       `${this.baseUrl}/accupay-officialbus-template`
     );

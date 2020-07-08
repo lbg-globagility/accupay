@@ -95,7 +95,7 @@ export class LeaveService extends BasePdfService {
   }
 
   getLeaveTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.leaveTemplateFileName,
       `${this.baseUrl}/accupay-leave-template`
     );

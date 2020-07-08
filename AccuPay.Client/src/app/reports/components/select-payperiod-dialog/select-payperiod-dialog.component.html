@@ -69,11 +69,12 @@
     mat-raised-button
     color="primary"
     [disabled]="!selection.selected.length"
-    (click)="download()"
+    cdkFocusInitial
+    [mat-dialog-close]="getSelectedPayPeriods()"
   >
     DOWNLOAD
   </button>
-  <button mat-button mat-dialog-close color="primary" cdkFocusInitial>
+  <button mat-button mat-dialog-close color="primary">
     CANCEL
   </button>
 </div>

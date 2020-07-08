@@ -60,7 +60,7 @@ export class OvertimeService extends BasePdfService {
   }
 
   getOvertimeTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.OTTemplateileName,
       `${this.baseUrl}/accupay-overtime-template`
     );

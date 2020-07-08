@@ -55,7 +55,7 @@ export class AllowanceService extends BasePdfService {
   }
 
   getAllowanceTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.allowanceTemplateFileName,
       `${this.baseUrl}/accupay-allowance-template`
     );

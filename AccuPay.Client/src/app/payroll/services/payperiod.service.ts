@@ -79,7 +79,7 @@ export class PayPeriodService extends BasePdfService {
   }
 
   getPayslipPDF(payPeriodId: number): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.payslipFileName,
       `${this.baseUrl}/${payPeriodId}/payslips`
     );

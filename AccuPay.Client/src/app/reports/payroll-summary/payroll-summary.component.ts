@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReportService } from '../report.service';
 import { ErrorHandler } from '../../core/shared/services/error-handler';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
@@ -10,12 +10,13 @@ import { SelectPayperiodDialogComponent } from '../components/select-payperiod-d
   templateUrl: './payroll-summary.component.html',
   styleUrls: ['./payroll-summary.component.scss'],
 })
-export class PayrollSummaryComponent {
+export class PayrollSummaryComponent implements OnInit {
   isDownloading: boolean = false;
 
   form: FormGroup = this.fb.group({
     salaryDistribution: ['All', Validators.required],
     hideEmptyColumns: [true, Validators.required],
+    keepInOneSheet: [true, Validators.required],
   });
 
   constructor(
@@ -25,7 +26,18 @@ export class PayrollSummaryComponent {
     private dialog: MatDialog
   ) {}
 
+  ngOnInit(): void {
+    // only one checkbox is checked even if we add default values
+    // on the FormGroup so we need to manually set the value here
+    this.form.get('hideEmptyColumns').setValue(true);
+    this.form.get('keepInOneSheet').setValue(true);
+  }
+
   generateReport(): void {
+    if (!this.form.valid) {
+      return;
+    }
+
     const dialogRef = this.dialog.open(SelectPayperiodDialogComponent, {
       minWidth: '500px',
       data: {
@@ -34,22 +46,36 @@ export class PayrollSummaryComponent {
       },
     });
 
-    // if (!this.monthForm.date.valid) {
-    //   return;
-    // }
-    // var date = this.monthForm.date.value as Moment;
-    // var month = Number(date.format('M'));
-    // var year = date.year();
-    // let payPeriodFromId = 629;
-    // let payPeriodToId = 629;
-    // this.isDownloading = true;
-    // this.reportService
-    //   .getPayrollSummary(payPeriodFromId, payPeriodToId)
-    //   .catch((err) => {
-    //     this.errorHandler.badRequest(err, 'Error downloading Payroll Summary.');
-    //   })
-    //   .finally(() => {
-    //     this.isDownloading = false;
-    //   });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result || !result.selectedFrom || !result.selectedTo) {
+        return;
+      }
+
+      let payPeriodFromId = result.selectedFrom.id;
+      let payPeriodToId = result.selectedTo.id;
+      let keepInOneSheet = this.form.get('keepInOneSheet').value;
+      let hideEmptyColumns = this.form.get('hideEmptyColumns').value;
+      let salaryDistribution = this.form.get('salaryDistribution').value;
+      this.isDownloading = true;
+
+      this.reportService
+        .getPayrollSummary(
+          payPeriodFromId,
+          payPeriodToId,
+          keepInOneSheet,
+          hideEmptyColumns,
+          salaryDistribution
+        )
+        .catch((err) => {
+          console.log(err);
+          this.errorHandler.badRequest(
+            err,
+            'Error downloading Payroll Summary.'
+          );
+        })
+        .finally(() => {
+          this.isDownloading = false;
+        });
+    });
   }
 }

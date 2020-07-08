@@ -70,7 +70,7 @@ export class LoanService extends BasePdfService {
   }
 
   getLoanTemplate(): Promise<any> {
-    return this.getPDF(
+    return this.getFile(
       this.loanTemplateFileName,
       `${this.baseUrl}/accupay-loan-template`
     );

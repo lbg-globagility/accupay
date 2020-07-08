@@ -2,11 +2,13 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Interfaces;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities;
+using AccuPay.Utilities.Extensions;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -172,6 +174,14 @@ namespace AccuPay.Infrastructure.Reports
                 payPeriodToId: payPeriodToId);
 
             var organization = await _organizationRepository.GetByIdAsync(organizationId);
+
+            var filteredCategories = new string[] { PayrollSummaryCategory.Cash.ToTrimmedLowerCase(), PayrollSummaryCategory.DirectDeposit.ToTrimmedLowerCase() };
+
+            if (filteredCategories.Contains(salaryDistributionType.ToTrimmedLowerCase()) == false)
+            {
+                // this means that this will show all, no filters
+                salaryDistributionType = null;
+            }
 
             if (organization == null)
                 throw new BusinessLogicException("Organization does not exists.");

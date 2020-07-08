@@ -6,7 +6,6 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 

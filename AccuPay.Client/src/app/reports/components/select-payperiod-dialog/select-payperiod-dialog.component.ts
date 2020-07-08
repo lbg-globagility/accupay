@@ -56,7 +56,7 @@ export class SelectPayperiodDialogComponent implements OnInit {
 
     let selectedFrom, selectedTo: PayPeriod;
 
-    ({ selectedFrom, selectedTo } = this.GetSelectedPayPeriods());
+    ({ selectedFrom, selectedTo } = this.getSelectedPayPeriods());
 
     if (selectedFrom == null || selectedTo == null) {
       this.selectedDates = null;
@@ -68,11 +68,7 @@ export class SelectPayperiodDialogComponent implements OnInit {
     }
   }
 
-  download(): void {
-    console.log(this.GetSelectedPayPeriods());
-  }
-
-  private GetSelectedPayPeriods() {
+  getSelectedPayPeriods() {
     let selectedFrom, selectedTo: PayPeriod;
 
     if (this.selection.selected.length == 1) {

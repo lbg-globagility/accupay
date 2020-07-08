@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 export class BasePdfService {
   constructor(protected httpClient: HttpClient) {}
 
-  protected getPDF(pdfFileName: string, url: string): Promise<any> {
+  protected getFile(pdfFileName: string, url: string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.httpClient
         .get(url, {
