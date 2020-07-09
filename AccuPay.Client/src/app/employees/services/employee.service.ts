@@ -69,4 +69,10 @@ export class EmployeeService extends BasePdfService {
       `${this.apiRoute}/accupay-employeelist-template`
     );
   }
+
+  getEmploymentStatuses(): Observable<string[]> {
+    return this.httpClient.get<string[]>(
+      `${this.apiRoute}/employment-statuses`
+    );
+  }
 }

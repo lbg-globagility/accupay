@@ -32,12 +32,6 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Attach(Employee employee)
-        {
-            _context.Employees.Attach(employee);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<PaginatedListResult<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
         {
             var query = _context.Employees
@@ -282,6 +276,15 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ICollection<string>> GetEmploymentStatuses()
+        {
+            var listOfValues = await _context.ListOfValues
+                .Where(t => t.Type == "Employment Status")
+                .ToListAsync();
+
+            return listOfValues.Select(t => t.DisplayValue).ToList();
+        }
+
         #endregion List of entities
 
         #region Single entity
@@ -289,14 +292,13 @@ namespace AccuPay.Data.Repositories
         public Employee GetById(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return builder.GetById(employeeId, null);
+            return builder.IncludePosition().IncludeEmploymentPolicy().GetById(employeeId, null);
         }
 
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            GetByIdAsync(employeeId, null);
+            return await builder.IncludePosition().IncludeEmploymentPolicy().GetByIdAsync(employeeId, null);
         }
 
         public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)

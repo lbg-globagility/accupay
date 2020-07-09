@@ -86,6 +86,12 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
+        public EmployeeQueryBuilder IncludeEmploymentPolicy()
+        {
+            _query = _query.Include(x => x.EmploymentPolicy);
+            return this;
+        }
+
         #endregion Builder Methods
 
         public List<Employee> ToList(int organizationId)

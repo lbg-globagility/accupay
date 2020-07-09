@@ -64,7 +64,7 @@ export class PositionListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.positionService.getAll(options, this.searchTerm).subscribe((data) => {
+    this.positionService.list(options, this.searchTerm).subscribe((data) => {
       this.positions = data.items;
       this.totalCount = data.totalCount;
       this.dataSource = new MatTableDataSource(this.positions);
