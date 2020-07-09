@@ -44,6 +44,6 @@ namespace AccuPay.Web.Employees.Models
 
         public DateTime? RegularizationDate { get; set; }
 
-        public int EmploymentPolicyId { get; set; }
+        public int? EmploymentPolicyId { get; set; }
     }
 }

@@ -298,14 +298,13 @@ namespace AccuPay.Data.Repositories
         public Employee GetById(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return builder.GetById(employeeId, null);
+            return builder.IncludeEmploymentPolicy().GetById(employeeId, null);
         }
 
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            GetByIdAsync(employeeId, null);
+            return await builder.IncludeEmploymentPolicy().GetByIdAsync(employeeId, null);
         }
 
         public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)

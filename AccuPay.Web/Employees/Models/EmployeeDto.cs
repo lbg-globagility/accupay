@@ -82,6 +82,15 @@ namespace AccuPay.Web.Employees.Models
             BPIInsurance = employee.BPIInsurance;
             FullName = employee.FullNameWithMiddleInitialLastNameFirst;
             EmploymentPolicyId = employee.EmploymentPolicyId;
+
+            if (employee.EmploymentPolicy != null)
+            {
+                EmploymentPolicy = new EmploymentPolicyDto()
+                {
+                    Id = employee.EmploymentPolicy.Id,
+                    Name = employee.EmploymentPolicy.Name,
+                };
+            }
         }
 
         public int? Id { get; set; }
@@ -147,5 +156,13 @@ namespace AccuPay.Web.Employees.Models
         public decimal BPIInsurance { get; set; }
         public string FullName { get; set; }
         public int? EmploymentPolicyId { get; set; }
+        public EmploymentPolicyDto EmploymentPolicy { get; set; }
+
+        public class EmploymentPolicyDto
+        {
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+        }
     }
 }

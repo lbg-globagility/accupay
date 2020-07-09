@@ -101,6 +101,8 @@ namespace AccuPay.Data.Entities
         [ForeignKey("PayFrequencyID")]
         public virtual PayFrequency PayFrequency { get; set; }
 
+        public virtual EmploymentPolicy EmploymentPolicy { get; set; }
+
         public virtual ICollection<TimeEntry> TimeEntries { get; set; }
 
         public virtual ICollection<Paystub> Paystubs { get; set; }

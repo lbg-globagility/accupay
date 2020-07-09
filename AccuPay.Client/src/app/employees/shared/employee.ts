@@ -62,4 +62,10 @@ export interface Employee {
   advancementPoints: string;
   bpiInsurance: string;
   fullName: string;
+  position: string;
+  regularizationDate: Date;
+  employmentPolicy: {
+    id: number;
+    name: string;
+  };
 }

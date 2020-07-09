@@ -45,7 +45,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.EmployeeRead)]
         public async Task<ActionResult<EmployeeDto>> GeyById(int id)
         {
-            return await _employeeService.GetById(id); ;
+            return await _employeeService.GetById(id);
         }
 
         [HttpGet("{id}/image")]
