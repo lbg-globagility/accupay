@@ -71,6 +71,7 @@ export class EmployeeFormComponent implements OnInit {
       this.form.patchValue(this.employee);
 
       this.form.patchValue({
+        employmentPolicyId: this.employee.employmentPolicy?.id,
         positionId: this.employee.position?.id,
       });
     }

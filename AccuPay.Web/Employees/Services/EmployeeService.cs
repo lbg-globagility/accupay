@@ -32,7 +32,7 @@ namespace AccuPay.Web.Employees.Services
             _fileRepository = fileRepository;
         }
 
-        public async Task<PaginatedList<EmployeeDto>> PaginatedList(EmployeePageOptions options)
+        public async Task<PaginatedList<EmployeeDto>> List(EmployeePageOptions options)
         {
             var paginatedList = await _employeeRepository.GetPaginatedListAsync(
                 options,
@@ -40,23 +40,18 @@ namespace AccuPay.Web.Employees.Services
 
             var dtos = paginatedList.List.Select(e => EmployeeDto.Convert(e));
 
-            return new PaginatedList<EmployeeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return new PaginatedList<EmployeeDto>(dtos, paginatedList.TotalCount);
         }
 
         public async Task<EmployeeDto> GetById(int id)
         {
-            var employee = await GetEmployeeByIdAsync(id);
+            var employee = await _employeeRepository.GetByIdAsync(id);
             return EmployeeDto.Convert(employee);
         }
 
         public async Task<ICollection<string>> GetEmploymentStatuses()
         {
             return await _employeeRepository.GetEmploymentStatuses();
-        }
-
-        private async Task<Employee> GetEmployeeByIdAsync(int id)
-        {
-            return await _employeeRepository.GetByIdAsync(id);
         }
 
         public async Task<string> GetImagePathById(int id)
@@ -70,42 +65,30 @@ namespace AccuPay.Web.Employees.Services
             {
                 OrganizationID = _currentUser.OrganizationId,
                 CreatedBy = _currentUser.DesktopUserId,
-                EmployeeNo = dto.EmployeeNo,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                MiddleName = dto.MiddleName,
-                BirthDate = dto.Birthdate,
-                HomeAddress = dto.Address,
-                HomePhone = dto.LandlineNo,
-                MobilePhone = dto.MobileNo,
-                EmailAddress = dto.EmailAddress,
-                TinNo = dto.Tin,
-                SssNo = dto.SssNo,
-                PhilHealthNo = dto.PhilHealthNo,
-                HdmfNo = dto.PagIbigNo,
-                EmploymentStatus = dto.EmploymentStatus,
-                StartDate = dto.StartDate,
-                DateRegularized = dto.RegularizationDate,
-                EmploymentPolicyId = dto.EmploymentPolicyId,
-                PositionID = dto.PositionId,
             };
 
-            await Save(employee);
+            Map(dto, employee);
+            await _employeeRepository.SaveAsync(employee);
 
-            employee.OriginalImageId = (await CreateOriginalImageIdAsync(employee)).Id;
-            //employee.OriginalImage = await CreateOriginalImageIdAsync(employee);
-
-            await _employeeRepository.Attach(employee);
+            employee.OriginalImageId = (await CreateOriginalImage(employee)).Id;
+            await _employeeRepository.SaveAsync(employee);
 
             return EmployeeDto.Convert(employee);
         }
 
         public async Task<EmployeeDto> Update(int id, UpdateEmployeeDto dto)
         {
-            var employee = await GetEmployeeByIdAsync(id);
-
+            var employee = await _employeeRepository.GetByIdAsync(id);
             employee.LastUpdBy = _currentUser.DesktopUserId;
+            Map(dto, employee);
 
+            await _employeeRepository.SaveAsync(employee);
+
+            return EmployeeDto.Convert(employee);
+        }
+
+        private void Map(CrudEmployeeDto dto, Employee employee)
+        {
             employee.EmployeeNo = dto.EmployeeNo;
             employee.FirstName = dto.FirstName;
             employee.LastName = dto.LastName;
@@ -127,21 +110,12 @@ namespace AccuPay.Web.Employees.Services
             employee.EmploymentPolicyId = dto.EmploymentPolicyId;
 
             employee.PositionID = dto.PositionId;
-
-            await Save(employee);
-
-            return EmployeeDto.Convert(employee);
         }
 
-        private async Task Save(Employee employee)
-        {
-            await _employeeRepository.SaveAsync(employee);
-        }
-
-        public async Task<File> CreateOriginalImageIdAsync(Employee employee)
+        private async Task<File> CreateOriginalImage(Employee employee)
         {
             using var virtualFile = _generateDefaultImageService.Create(employee);
-            var path = $"Employee/{employee.RowID.Value.ToString()}/{virtualFile.Filename}";
+            var path = $"Employee/{employee.RowID.Value}/{virtualFile.Filename}";
 
             await _filesystem.Move(virtualFile.Stream, path);
 
@@ -166,7 +140,7 @@ namespace AccuPay.Web.Employees.Services
 
             foreach (var employee in employees)
             {
-                employee.OriginalImage = await CreateOriginalImageIdAsync(employee);
+                employee.OriginalImage = await CreateOriginalImage(employee);
 
                 await _employeeRepository.SaveAsync(employee);
             }

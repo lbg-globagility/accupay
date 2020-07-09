@@ -68,7 +68,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.EmployeeRead)]
         public async Task<PaginatedList<EmployeeDto>> List([FromQuery] EmployeePageOptions options)
         {
-            return await _employeeService.PaginatedList(options);
+            return await _employeeService.List(options);
         }
 
         [HttpGet("employee-image")]

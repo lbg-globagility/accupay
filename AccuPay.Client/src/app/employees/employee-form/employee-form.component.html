@@ -112,17 +112,6 @@
               </mat-select>
             </mat-form-field>
             <mat-form-field class="col-lg-6" appearance="fill">
-              <mat-label>Employment Policy</mat-label>
-              <mat-select formControlName="employmentPolicyId">
-                <mat-option
-                  *ngFor="let employmentPolicy of employmentPolicies"
-                  [value]="employmentPolicy.id"
-                >
-                  {{ employmentPolicy.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Start Date</mat-label>
               <input
                 matInput
@@ -137,6 +126,17 @@
               <mat-datepicker #startDate></mat-datepicker>
               <mat-hint>MM/DD/YYYY</mat-hint>
               <mat-error>Start date is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Employment Policy</mat-label>
+              <mat-select formControlName="employmentPolicyId">
+                <mat-option
+                  *ngFor="let employmentPolicy of employmentPolicies"
+                  [value]="employmentPolicy.id"
+                >
+                  {{ employmentPolicy.name }}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
             <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Regularization Date</mat-label>

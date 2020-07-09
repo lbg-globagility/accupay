@@ -32,12 +32,6 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Attach(Employee employee)
-        {
-            _context.Employees.Attach(employee);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<PaginatedListResult<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
         {
             var query = _context.Employees
