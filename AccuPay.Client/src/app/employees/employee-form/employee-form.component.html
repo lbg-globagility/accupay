@@ -37,6 +37,7 @@
                 [for]="birthdate"
               ></mat-datepicker-toggle>
               <mat-datepicker #birthdate></mat-datepicker>
+              <mat-hint>MM/DD/YYYY</mat-hint>
               <mat-error>Birthdate is required</mat-error>
             </mat-form-field>
           </div>
@@ -82,6 +83,63 @@
             <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Pag-IBIG No</mat-label>
               <input matInput formControlName="pagIbigNo" />
+            </mat-form-field>
+          </div>
+
+          <h3 class="font-medium mb-4">Job Details</h3>
+          <div class="row">
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Employment Status</mat-label>
+              <mat-select formControlName="employmentStatus" required>
+                <mat-option
+                  *ngFor="let employmentStatus of employmentStatuses"
+                  [value]="employmentStatus"
+                >
+                  {{ employmentStatus }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Employment status is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Employment Policy</mat-label>
+              <mat-select formControlName="employmentPolicyId">
+                <mat-option
+                  *ngFor="let employmentPolicy of employmentPolicies"
+                  [value]="employmentPolicy.id"
+                >
+                  {{ employmentPolicy.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Start Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="startDate"
+                formControlName="startDate"
+                required
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="startDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #startDate></mat-datepicker>
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-error>Start date is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Regularization Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="regularizationDate"
+                formControlName="regularizationDate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="regularizationDate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #regularizationDate></mat-datepicker>
+              <mat-hint>MM/DD/YYYY</mat-hint>
             </mat-form-field>
           </div>
         </mat-card-content>

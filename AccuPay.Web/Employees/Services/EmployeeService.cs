@@ -50,6 +50,11 @@ namespace AccuPay.Web.Employees.Services
             return EmployeeDto.Convert(employee);
         }
 
+        public async Task<ICollection<string>> GetEmploymentStatuses()
+        {
+            return await _employeeRepository.GetEmploymentStatuses();
+        }
+
         private async Task<Employee> GetEmployeeByIdAsync(int id)
         {
             return await _employeeRepository.GetByIdAsync(id);
@@ -78,7 +83,11 @@ namespace AccuPay.Web.Employees.Services
                 TinNo = dto.Tin,
                 SssNo = dto.SssNo,
                 PhilHealthNo = dto.PhilHealthNo,
-                HdmfNo = dto.PagIbigNo
+                HdmfNo = dto.PagIbigNo,
+                EmploymentStatus = dto.EmploymentStatus,
+                StartDate = dto.StartDate,
+                DateRegularized = dto.RegularizationDate,
+                EmploymentPolicyId = dto.EmploymentPolicyId
             };
 
             await Save(employee);
@@ -91,7 +100,7 @@ namespace AccuPay.Web.Employees.Services
             return EmployeeDto.Convert(employee);
         }
 
-        public async Task<EmployeeDto> Update(int id, EmployeeDto dto)
+        public async Task<EmployeeDto> Update(int id, UpdateEmployeeDto dto)
         {
             var employee = await GetEmployeeByIdAsync(id);
 
@@ -111,6 +120,11 @@ namespace AccuPay.Web.Employees.Services
             employee.SssNo = dto.SssNo;
             employee.PhilHealthNo = dto.PhilHealthNo;
             employee.HdmfNo = dto.PagIbigNo;
+
+            employee.EmploymentStatus = dto.EmploymentStatus;
+            employee.StartDate = dto.StartDate;
+            employee.DateRegularized = dto.RegularizationDate;
+            employee.EmploymentPolicyId = dto.EmploymentPolicyId;
 
             await Save(employee);
 

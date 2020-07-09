@@ -81,6 +81,7 @@ namespace AccuPay.Web.Employees.Models
             AdvancementPoints = employee.AdvancementPoints;
             BPIInsurance = employee.BPIInsurance;
             FullName = employee.FullNameWithMiddleInitialLastNameFirst;
+            EmploymentPolicyId = employee.EmploymentPolicyId;
         }
 
         public int? Id { get; set; }
@@ -145,5 +146,6 @@ namespace AccuPay.Web.Employees.Models
         public int AdvancementPoints { get; set; }
         public decimal BPIInsurance { get; set; }
         public string FullName { get; set; }
+        public int? EmploymentPolicyId { get; set; }
     }
 }

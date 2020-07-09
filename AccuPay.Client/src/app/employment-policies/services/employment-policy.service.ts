@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { EmploymentPolicy } from 'src/app/employment-policies/shared';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,12 @@ export class EmploymentPolicyService {
     return this.httpClient.get<EmploymentPolicy>(
       `${this.baseUrl}/${employmentPolicyId}`
     );
+  }
+
+  getAll(): Observable<EmploymentPolicy[]> {
+    return this.httpClient
+      .get<PaginatedList<EmploymentPolicy>>(`${this.baseUrl}?all=true`)
+      .pipe(map((data) => data.items));
   }
 
   create(employmentPolicy: EmploymentPolicy): Observable<EmploymentPolicy> {

@@ -6,7 +6,9 @@ using AccuPay.Web.Employees.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -34,7 +36,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPut("{id}")]
         [Permission(PermissionTypes.EmployeeUpdate)]
-        public async Task<ActionResult<EmployeeDto>> Update(int id, [FromBody] EmployeeDto dto)
+        public async Task<ActionResult<EmployeeDto>> Update(int id, [FromBody] UpdateEmployeeDto dto)
         {
             return await _employeeService.Update(id, dto);
         }
@@ -83,6 +85,15 @@ namespace AccuPay.Web.Controllers
         public ActionResult GetEmployeeTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-employeelist-template.xlsx");
+        }
+
+        [HttpGet("employment-statuses")]
+        [Permission(PermissionTypes.EmployeeRead)]
+        public async Task<ActionResult<ICollection<string>>> GetEmploymentStatuses()
+        {
+            var employmentStatuses = await _employeeService.GetEmploymentStatuses();
+
+            return employmentStatuses.ToList();
         }
     }
 }

@@ -282,6 +282,15 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ICollection<string>> GetEmploymentStatuses()
+        {
+            var listOfValues = await _context.ListOfValues
+                .Where(t => t.Type == "Employment Status")
+                .ToListAsync();
+
+            return listOfValues.Select(t => t.DisplayValue).ToList();
+        }
+
         #endregion List of entities
 
         #region Single entity

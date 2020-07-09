@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Employee } from '../shared/employee';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { EmployeeService } from 'src/app/employees/services/employee.service';
+import { EmploymentPolicyService } from 'src/app/employment-policies/services/employment-policy.service';
+import { EmploymentPolicy } from 'src/app/employment-policies/shared';
 
 @Component({
   selector: 'app-employee-form',
@@ -34,11 +37,25 @@ export class EmployeeFormComponent implements OnInit {
     sssNo: [],
     philHealthNo: [],
     pagIbigNo: [],
+    employmentStatus: [, Validators.required],
+    employmentPolicyId: [],
+    startDate: [, [Validators.required]],
+    regularizationDate: [],
   });
 
-  constructor(private fb: FormBuilder) {}
+  employmentStatuses: string[] = [];
+
+  employmentPolicies: EmploymentPolicy[] = [];
+
+  constructor(
+    private employeeService: EmployeeService,
+    private employmentPolicyService: EmploymentPolicyService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    this.loadEmploymentStatuses();
+    this.loadEmploymentPolicies();
     this.initForm();
   }
 
@@ -56,5 +73,21 @@ export class EmployeeFormComponent implements OnInit {
 
   getValue(property: string) {
     return this.form.get(property).value;
+  }
+
+  private loadEmploymentStatuses(): void {
+    this.employeeService
+      .getEmploymentStatuses()
+      .subscribe(
+        (employmentStatuses) => (this.employmentStatuses = employmentStatuses)
+      );
+  }
+
+  private loadEmploymentPolicies(): void {
+    this.employmentPolicyService
+      .getAll()
+      .subscribe(
+        (employmentPolicies) => (this.employmentPolicies = employmentPolicies)
+      );
   }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AccuPay.Web.Employees.Models
 {
-    public class CreateEmployeeDto
+    public class UpdateEmployeeDto
     {
         [Required]
         public string EmployeeNo { get; set; }
