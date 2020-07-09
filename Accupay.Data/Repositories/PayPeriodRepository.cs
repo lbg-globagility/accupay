@@ -12,14 +12,12 @@ using System.Threading.Tasks;
 namespace AccuPay.Data.Repositories
 {
     // TODO: use a query builder to prevent using IsSemiMonthly and other entity functions directly since it does not directly translate to sql query.
-    public class PayPeriodRepository
+    public class PayPeriodRepository : SavableRepository<PayPeriod>
     {
-        private readonly PayrollContext _context;
         private readonly PolicyHelper _policy;
 
-        public PayPeriodRepository(PayrollContext context, PolicyHelper policy)
+        public PayPeriodRepository(PayrollContext context, PolicyHelper policy) : base(context)
         {
-            _context = context;
             _policy = policy;
         }
 
@@ -35,34 +33,18 @@ namespace AccuPay.Data.Repositories
             await ToggleCloseAsync(id, isClosed: true);
         }
 
-        public async Task Update(PayPeriod payperiod)
-        {
-            _context.Entry(payperiod).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
         #endregion CRUD
 
         #region Queries
 
         #region Single entity
 
-        public PayPeriod GetById(int id)
-        {
-            return _context.PayPeriods.FirstOrDefault(x => x.RowID == id);
-        }
-
-        public async Task<PayPeriod> GetByIdAsync(int id)
-        {
-            return await _context.PayPeriods.FirstOrDefaultAsync(x => x.RowID == id);
-        }
-
         /// <summary>
         /// Get the latest payperiod that was Closed or Open based on Status property. (Used in Web)
         /// </summary>
         /// <param name="organizationId"></param>
         /// <returns></returns>
-        public async Task<PayPeriod> GetLatest(int organizationId)
+        public async Task<PayPeriod> GetLatestAsync(int organizationId)
         {
             return await _context.PayPeriods
                 .Where(p => p.Status != PayPeriodStatus.Pending)
@@ -113,7 +95,13 @@ namespace AccuPay.Data.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<PayPeriod> GetByDateAsync(DateTime date, int organizationId)
+        /// <summary>
+        /// Gets the pay period based on checking wether the passed date is within that pay period.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetAsync(int organizationId, DateTime date)
         {
             return await _context.PayPeriods
                 .Where(p => p.OrganizationID == organizationId)
@@ -122,13 +110,39 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<PayPeriod> GetByCutoffDates(TimePeriod cutoffDate, int organizationId)
+        /// <summary>
+        /// Gets the pay period based on checking if the passed cutoff start and end date matches the pay period.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="cutoffDate"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetAsync(int organizationId, TimePeriod cutoffDate)
         {
             return await _context.PayPeriods
                 .Where(p => p.OrganizationID == organizationId)
                 .Where(p => p.PayFromDate == cutoffDate.Start)
                 .Where(p => p.PayToDate == cutoffDate.End)
                 .Where(p => p.IsSemiMonthly)
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Gets the pay period based on checking wether the passed organizationId, month, year and it's half type matches the pay period.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <param name="isFirstHalf"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetAsync(int organizationId, int month, int year, bool isFirstHalf)
+        {
+            // better use builder here to use encapsulated IsFirstHalf directly
+            var half = isFirstHalf ? PayPeriod.FirstHalfValue : PayPeriod.EndOftheMonthValue;
+            return await _context.PayPeriods
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.Month == month)
+                .Where(p => p.Year == year)
+                .Where(p => p.Half == half)
                 .FirstOrDefaultAsync();
         }
 

@@ -59,7 +59,7 @@ Public Class TimeEntrySummaryForm
 
     Private ReadOnly _policy As PolicyHelper
 
-    Private ReadOnly _payPeriodService As PayPeriodService
+    Private ReadOnly _payPeriodService As PayPeriodDataService
 
     Private ReadOnly _breakTimeBracketRepository As BreakTimeBracketRepository
 
@@ -77,7 +77,7 @@ Public Class TimeEntrySummaryForm
 
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
 
         _breakTimeBracketRepository = MainServiceProvider.GetRequiredService(Of BreakTimeBracketRepository)
 

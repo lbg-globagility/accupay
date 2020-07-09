@@ -26,7 +26,7 @@ Public Class selectPayPeriod
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private ReadOnly _payPeriodService As PayPeriodService
+    Private ReadOnly _payPeriodService As PayPeriodDataService
 
     Sub New()
 
@@ -34,7 +34,7 @@ Public Class selectPayPeriod
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
     End Sub
 
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load

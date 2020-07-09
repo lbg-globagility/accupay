@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { StartPayrollDialogComponent } from 'src/app/payroll/components/start-payroll-dialog/start-payroll-dialog.component';
-import { filter, mergeMap } from 'rxjs/operators';
+import { filter, flatMap } from 'rxjs/operators';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { LoadingState } from 'src/app/core/states/loading-state';
+import { SelectPayperiodDialogComponent } from '../components/select-payperiod-dialog/select-payperiod-dialog.component';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-payroll',
@@ -19,13 +20,17 @@ import { LoadingState } from 'src/app/core/states/loading-state';
   },
 })
 export class PayrollComponent implements OnInit {
-  latestPayperiod: PayPeriod;
+  @ViewChild('table', { static: true }) table;
+
+  latestPayPeriod: PayPeriod;
 
   readonly displayedColumns = ['cutoff', 'status', 'actions'];
 
   dataSource: MatTableDataSource<PayPeriod>;
 
   loadingState: LoadingState = new LoadingState();
+
+  isStartingPayroll: boolean = false;
 
   pageIndex: number = 0;
   pageSize: number = 10;
@@ -39,8 +44,9 @@ export class PayrollComponent implements OnInit {
   };
 
   constructor(
-    private payperiodService: PayPeriodService,
-    private dialog: MatDialog
+    private payPeriodService: PayPeriodService,
+    private dialog: MatDialog,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -50,9 +56,9 @@ export class PayrollComponent implements OnInit {
   }
 
   loadLatest(): void {
-    this.payperiodService
+    this.payPeriodService
       .getLatest()
-      .subscribe((payperiod) => (this.latestPayperiod = payperiod));
+      .subscribe((payPeriod) => (this.latestPayPeriod = payPeriod));
   }
 
   loadList(): void {
@@ -63,7 +69,7 @@ export class PayrollComponent implements OnInit {
       this.sort.direction
     );
 
-    this.payperiodService
+    this.payPeriodService
       .getList(options, this.searchTerm)
       .subscribe((data) => {
         this.totalPages = data.totalPages;
@@ -81,16 +87,51 @@ export class PayrollComponent implements OnInit {
 
   startPayroll(): void {
     this.dialog
-      .open(StartPayrollDialogComponent)
+      .open(SelectPayperiodDialogComponent, {
+        minWidth: '500px',
+      })
       .afterClosed()
-      .pipe(filter((t) => t != null))
+      .pipe(filter((t) => t))
       .pipe(
-        mergeMap(({ cutoffStart, cutoffEnd }) =>
-          this.payperiodService.start(cutoffStart, cutoffEnd)
-        )
+        flatMap((result) => {
+          var payPeriod = result as PayPeriod;
+          if (!payPeriod) return;
+
+          console.log('payPeriod');
+          console.log(payPeriod);
+
+          this.isStartingPayroll = true;
+
+          return this.payPeriodService.start(
+            payPeriod.month,
+            payPeriod.year,
+            payPeriod.isFirstHalf
+          );
+        })
       )
-      .subscribe({
-        next: () => {},
+      .subscribe(
+        (payPeriod) => {
+          this.latestPayPeriod = payPeriod;
+
+          console.log(this.pageIndex);
+          if (this.pageIndex == 0) {
+            console.log('this.pageIndex');
+
+            this.dataSource.data.pop();
+            this.dataSource.data.unshift(this.latestPayPeriod);
+
+            console.log(this.dataSource.data);
+
+            this.dataSource.data = [...this.dataSource.data];
+          }
+        },
+        (err) =>
+          this.errorHandler.badRequest(err, 'Failed to start pay period.')
+      )
+      .add(() => {
+        this.isStartingPayroll = false;
       });
   }
+
+  closePayroll(payPeriod: PayPeriod): void {}
 }

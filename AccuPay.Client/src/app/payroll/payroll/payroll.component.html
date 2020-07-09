@@ -5,34 +5,50 @@
 </div>
 
 <div *ngIf="loadingState.isSuccess">
-  <button mat-raised-button (click)="startPayroll()" class="mb-1">
-    START PAYROLL
-  </button>
+  <div class="row mb-2">
+    <button
+      [disabled]="isStartingPayroll"
+      mat-raised-button
+      (click)="startPayroll()"
+    >
+      {{ isStartingPayroll ? "STARTING..." : "START NEW PAYROLL" }}
+      <mat-icon *ngIf="isStartingPayroll"
+        ><mat-spinner diameter="20" color="accent"> </mat-spinner
+      ></mat-icon>
+    </button>
+  </div>
 
   <mat-card class="mb-4">
     <div>
-      <h3>Latest payroll</h3>
-      <br />
-      <p>
-        {{ latestPayperiod?.cutoffStart | date }} to
-        {{ latestPayperiod?.cutoffEnd | date }}
-      </p>
-      <p>
+      <h3>
+        Latest payroll
         <app-status
           type="payperiod"
-          [value]="latestPayperiod.status"
+          [value]="latestPayPeriod?.status"
         ></app-status>
+      </h3>
+      <br />
+      <p>
+        {{ latestPayPeriod?.cutoffStart | date }} to
+        {{ latestPayPeriod?.cutoffEnd | date }}
       </p>
     </div>
-    <mat-card-actions align="end">
-      <button mat-button routerLink="/payroll/{{ latestPayperiod?.id }}">
-        VIEW
+    <mat-card-actions>
+      <button
+        mat-button
+        color="primary"
+        routerLink="/payroll/{{ latestPayPeriod?.id }}"
+      >
+        VIEW PAYROLL
+      </button>
+      <button mat-button color="warn" (click)="closePayroll(latestPayPeriod)">
+        CLOSE PAYROLL
       </button>
     </mat-card-actions>
   </mat-card>
 
   <mat-card class="m-no-padding">
-    <h3 class="font-medium p-4">List of payperiods</h3>
+    <h3 class="font-medium p-4">Previous payrolls</h3>
 
     <mat-card-content>
       <table
@@ -42,18 +58,18 @@
       >
         <ng-container matColumnDef="cutoff">
           <th mat-header-cell *matHeaderCellDef>Cutoff</th>
-          <td mat-cell *matCellDef="let payperiod">
-            {{ payperiod.cutoffStart | date }} to
-            {{ payperiod.cutoffEnd | date }}
+          <td mat-cell *matCellDef="let payPeriod">
+            {{ payPeriod.cutoffStart | date }} to
+            {{ payPeriod.cutoffEnd | date }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let payperiod">
+          <td mat-cell *matCellDef="let payPeriod">
             <app-status
               type="payperiod"
-              [value]="payperiod.status"
+              [value]="payPeriod.status"
             ></app-status>
           </td>
         </ng-container>
@@ -61,8 +77,27 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell mat-sort-header *matHeaderCellDef>Actions</th>
           <td mat-cell *matCellDef="let payroll">
-            <button mat-icon-button routerLink="/payroll/{{ payroll.id }}">
+            <button
+              mat-icon-button
+              routerLink="/payroll/{{ payroll.id }}"
+              matTooltip="View payroll"
+            >
               <mat-icon>remove_red_eye</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              *ngIf="payroll.status == 'Open'"
+              matTooltip="Close payroll"
+              (click)="closePayroll(latestPayPeriod)"
+            >
+              <mat-icon>lock_open</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              *ngIf="payroll.status == 'Closed'"
+              matTooltip="Reopen payroll"
+            >
+              <mat-icon>lock</mat-icon>
             </button>
           </td>
         </ng-container>

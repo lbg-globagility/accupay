@@ -190,6 +190,15 @@ namespace AccuPay.Data.Repositories
 
         #endregion Child data
 
+        public async Task<Paystub> GetByIdAsync(int id)
+        {
+            return await _context.Paystubs
+                .Include(x => x.ThirteenthMonthPay)
+                .Include(x => x.Actual)
+                .Where(x => x.RowID == id)
+                .FirstOrDefaultAsync();
+        }
+
         public Paystub GetByCompositeKeyWithActual(EmployeeCompositeKey key)
         {
             return _context.Paystubs

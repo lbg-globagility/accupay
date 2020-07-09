@@ -1,4 +1,7 @@
-﻿using AccuPay.Data.Helpers;
+﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
+using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -6,19 +9,23 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class PayPeriodService
+    public class PayPeriodDataService
     {
         private readonly PayrollContext _context;
+        private readonly PolicyHelper _policy;
         private readonly PayPeriodRepository _repository;
         private readonly SystemOwnerService _systemOwnerService;
 
-        public PayPeriodService(PayrollContext context,
-                                PayPeriodRepository repository,
-                                SystemOwnerService systemOwnerService)
+        public PayPeriodDataService(
+            PayrollContext context,
+            PayPeriodRepository repository,
+            SystemOwnerService systemOwnerService,
+            PolicyHelper policy)
         {
             _context = context;
             _repository = repository;
             _systemOwnerService = systemOwnerService;
+            _policy = policy;
         }
 
         public async Task<FunctionResult> ValidatePayPeriodActionAsync(int? payPeriodId, int organizationId)
@@ -60,6 +67,57 @@ namespace AccuPay.Data.Services
             }
 
             return FunctionResult.Success();
+        }
+
+        public async Task<PayPeriod> StartStatusAsync(int organizationId, int month, int year, bool isFirstHalf, int userId)
+        {
+            var payPeriod = await _repository.GetAsync(
+                organizationId,
+                month: month,
+                year: year,
+                isFirstHalf: isFirstHalf);
+
+            if (payPeriod == null)
+            {
+                payPeriod = PayPeriod.NewPayPeriod(organizationId, month, year, isFirstHalf, _policy);
+                await _repository.CreateAsync(payPeriod);
+            }
+
+            await UpdateStatusAsync(payPeriod, userId, PayPeriodStatus.Open);
+
+            return payPeriod;
+        }
+
+        public async Task CloseStatusAsync(int payPeriodId, int userId)
+        {
+            await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Closed);
+        }
+
+        public async Task UpdateStatusAsync(int payPeriodId, int userId, PayPeriodStatus status)
+        {
+            var payPeriod = await _repository.GetByIdAsync(payPeriodId);
+
+            if (payPeriod == null)
+                throw new BusinessLogicException("Pay Period does not exists");
+
+            payPeriod.Status = status;
+            payPeriod.LastUpdBy = userId;
+
+            await _repository.UpdateAsync(payPeriod);
+        }
+
+        public async Task UpdateStatusAsync(PayPeriod payPeriod, int userId, PayPeriodStatus status)
+        {
+            if (payPeriod?.RowID == null)
+                throw new BusinessLogicException("Pay Period does not exists");
+
+            if ((await _repository.GetByIdAsync(payPeriod.RowID.Value)) == null)
+                throw new BusinessLogicException("Pay Period does not exists");
+
+            payPeriod.Status = status;
+            payPeriod.LastUpdBy = userId;
+
+            await _repository.UpdateAsync(payPeriod);
         }
     }
 }

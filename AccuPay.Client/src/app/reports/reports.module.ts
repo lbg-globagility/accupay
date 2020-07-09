@@ -11,7 +11,7 @@ import { LoanReportByemployeeComponent } from './loan-report-byemployee/loan-rep
 import { TaxReportComponent } from './tax-report/tax-report.component';
 import { ThirtheenthMonthReportComponent } from './thirtheenth-month-report/thirtheenth-month-report.component';
 import { PayrollSummaryComponent } from './payroll-summary/payroll-summary.component';
-import { SelectPayperiodDialogComponent } from './components/select-payperiod-dialog/select-payperiod-dialog.component';
+import { SelectPayperiodRangeDialogComponent } from './components/select-payperiod-range-dialog/select-payperiod-range-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { SelectPayperiodDialogComponent } from './components/select-payperiod-di
     TaxReportComponent,
     ThirtheenthMonthReportComponent,
     PayrollSummaryComponent,
-    SelectPayperiodDialogComponent,
+    SelectPayperiodRangeDialogComponent,
   ],
 
   imports: [SharedModule],

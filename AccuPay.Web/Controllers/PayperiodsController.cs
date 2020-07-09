@@ -1,4 +1,5 @@
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Payroll;
@@ -19,45 +20,39 @@ namespace AccuPay.Web.Controllers
     {
         private readonly PayperiodService _payperiodService;
         private readonly PaystubService _paystubService;
+        private readonly PayPeriodRepository _payPeriodRepository;
 
         public PayperiodsController(
             PayperiodService payperiodService,
             PaystubService paystubService,
+            PayPeriodRepository payPeriodRepository,
             ICurrentUser currentUser,
             IConfiguration configuration) : base(currentUser, configuration)
         {
             _payperiodService = payperiodService;
             _paystubService = paystubService;
+            _payPeriodRepository = payPeriodRepository;
         }
 
         [HttpGet]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<PaginatedList<PayperiodDto>>> List([FromQuery] PageOptions options)
+        public async Task<ActionResult<PaginatedList<PayPeriodDto>>> List([FromQuery] PageOptions options)
         {
             return await _payperiodService.List(options);
         }
 
         [HttpGet("year/{year}")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<ICollection<PayperiodDto>>> GetYearlyPayPeriods(int year)
+        public async Task<ActionResult<ICollection<PayPeriodDto>>> GetYearlyPayPeriods(int year)
         {
             return await _payperiodService.GetYearlyPayPeriods(year);
         }
 
         [HttpPost]
         [Permission(PermissionTypes.PayPeriodUpdate)]
-        public async Task<ActionResult<PayperiodDto>> Start([FromBody] StartPayrollDto dto)
+        public async Task<PayPeriodDto> Start([FromBody] StartPayrollDto dto)
         {
-            try
-            {
-                var result = await _payperiodService.Start(dto);
-
-                return result;
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            return await _payperiodService.Start(dto);
         }
 
         [HttpPost("{id}/calculate")]
@@ -68,6 +63,11 @@ namespace AccuPay.Web.Controllers
         {
             try
             {
+                if ((await _payPeriodRepository.GetByIdAsync(id)) == null)
+                {
+                    return NotFound();
+                }
+
                 var result = await _payperiodService.Calculate(resources, id);
 
                 return result;
@@ -78,16 +78,29 @@ namespace AccuPay.Web.Controllers
             }
         }
 
+        [HttpPost("{id}/close")]
+        [Permission(PermissionTypes.PayPeriodUpdate)]
+        public async Task<ActionResult> Close(int id)
+        {
+            if ((await _payPeriodRepository.GetByIdAsync(id)) == null)
+            {
+                return NotFound();
+            }
+            await _payperiodService.Close(id);
+
+            return Ok();
+        }
+
         [HttpGet("latest")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<PayperiodDto>> GetLatest()
+        public async Task<ActionResult<PayPeriodDto>> GetLatest()
         {
             return await _payperiodService.GetLatest();
         }
 
         [HttpGet("{id}")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<PayperiodDto>> GetById(int id)
+        public async Task<ActionResult<PayPeriodDto>> GetById(int id)
         {
             return await _payperiodService.GetById(id);
         }
