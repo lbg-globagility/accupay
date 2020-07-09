@@ -5,7 +5,6 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Files.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -87,7 +86,8 @@ namespace AccuPay.Web.Employees.Services
                 EmploymentStatus = dto.EmploymentStatus,
                 StartDate = dto.StartDate,
                 DateRegularized = dto.RegularizationDate,
-                EmploymentPolicyId = dto.EmploymentPolicyId
+                EmploymentPolicyId = dto.EmploymentPolicyId,
+                PositionID = dto.PositionId,
             };
 
             await Save(employee);
@@ -125,6 +125,8 @@ namespace AccuPay.Web.Employees.Services
             employee.StartDate = dto.StartDate;
             employee.DateRegularized = dto.RegularizationDate;
             employee.EmploymentPolicyId = dto.EmploymentPolicyId;
+
+            employee.PositionID = dto.PositionId;
 
             await Save(employee);
 

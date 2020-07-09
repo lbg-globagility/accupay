@@ -91,6 +91,15 @@ namespace AccuPay.Web.Employees.Models
                     Name = employee.EmploymentPolicy.Name,
                 };
             }
+
+            if (employee.Position != null)
+            {
+                Position = new PositionDto()
+                {
+                    Id = employee.Position.RowID.Value,
+                    Name = employee.Position.Name
+                };
+            }
         }
 
         public int? Id { get; set; }
@@ -157,8 +166,16 @@ namespace AccuPay.Web.Employees.Models
         public string FullName { get; set; }
         public int? EmploymentPolicyId { get; set; }
         public EmploymentPolicyDto EmploymentPolicy { get; set; }
+        public PositionDto Position { get; set; }
 
         public class EmploymentPolicyDto
+        {
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+        }
+
+        public class PositionDto
         {
             public int Id { get; set; }
 

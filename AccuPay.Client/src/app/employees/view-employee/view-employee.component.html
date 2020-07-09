@@ -90,7 +90,7 @@
           {{ employee.startDate | date }}
         </app-display-field>
         <app-display-field label="Job Position" class="col-lg-3">
-          {{ employee.sssNo | ifEmpty }}
+          {{ employee.position?.name | ifEmpty }}
         </app-display-field>
         <app-display-field label="Regularization Date" class="col-lg-3">
           {{ employee.philHealthNo | ifEmpty }}

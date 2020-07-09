@@ -101,6 +101,17 @@
               <mat-error>Employment status is required</mat-error>
             </mat-form-field>
             <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Job Position</mat-label>
+              <mat-select formControlName="positionId">
+                <mat-option
+                  *ngFor="let position of positions"
+                  [value]="position.id"
+                >
+                  {{ position.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Employment Policy</mat-label>
               <mat-select formControlName="employmentPolicyId">
                 <mat-option
