@@ -1,6 +1,6 @@
 namespace AccuPay.Web.Employees.Models
 {
-    public class CreateEmployeeDto : CrudEmployeeDto
+    public class UpdateEmployeeDto : CrudEmployeeDto
     {
     }
 }

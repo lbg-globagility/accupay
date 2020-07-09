@@ -90,6 +90,7 @@ namespace AccuPay.Data.Entities
         public int AdvancementPoints { get; set; }
         public decimal BPIInsurance { get; set; }
         public int? BranchID { get; set; }
+        public int? EmploymentPolicyId { get; set; }
 
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
@@ -99,6 +100,8 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("PayFrequencyID")]
         public virtual PayFrequency PayFrequency { get; set; }
+
+        public virtual EmploymentPolicy EmploymentPolicy { get; set; }
 
         public virtual ICollection<TimeEntry> TimeEntries { get; set; }
 
