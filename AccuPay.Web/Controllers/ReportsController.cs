@@ -70,11 +70,11 @@ namespace AccuPay.Web.Controllers
             return await GetPDF(path, "tax-report.pdf");
         }
 
-        [HttpGet("thirteenthmonth-report/{dateFrom}/{dateTo}")]
+        [HttpGet("thirteenth-month-report/{dateFrom}/{dateTo}")]
         [Permission(PermissionTypes.PayPeriodRead)]
         public async Task<ActionResult> GetThirteenthMonthReport(DateTime dateFrom, DateTime dateTo)
         {
-            var path = $"thirteenthmonth-report/{_currentUser.OrganizationId}/{dateFrom.ToString(DateFormat)}/{dateTo.ToString(DateFormat)}";
+            var path = $"thirteenth-month-report/{_currentUser.OrganizationId}/{dateFrom.ToString(DateFormat)}/{dateTo.ToString(DateFormat)}";
             return await GetPDF(path, "thirteenth-month-report.pdf");
         }
 
