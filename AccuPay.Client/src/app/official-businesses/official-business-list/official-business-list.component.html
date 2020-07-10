@@ -73,9 +73,7 @@
       color="primary"
     >
       {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
-      <mat-icon *ngIf="isDownloadingTemplate"
-        ><mat-spinner diameter="20" color="accent"> </mat-spinner
-      ></mat-icon>
+      <app-button-spinner [active]="isDownloadingTemplate"></app-button-spinner>
     </button>
   </div>
 </div>

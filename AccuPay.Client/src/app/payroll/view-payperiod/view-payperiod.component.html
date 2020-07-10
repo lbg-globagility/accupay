@@ -21,9 +21,7 @@
       color="primary"
     >
       {{ isDownloadingPayslip ? "DOWNLOADING..." : "DOWNLOAD PAYSLIPS" }}
-      <mat-icon *ngIf="isDownloadingPayslip"
-        ><mat-spinner diameter="20" color="accent"> </mat-spinner
-      ></mat-icon>
+      <app-button-spinner [active]="isDownloadingPayslip"></app-button-spinner>
     </button>
     <button
       [disabled]="isDownloadingSummary"
@@ -33,9 +31,7 @@
       color="primary"
     >
       {{ isDownloadingSummary ? "DOWNLOADING..." : "DOWNLOAD SUMMARY" }}
-      <mat-icon *ngIf="isDownloadingSummary"
-        ><mat-spinner diameter="20" color="accent"> </mat-spinner
-      ></mat-icon>
+      <app-button-spinner [active]="isDownloadingSummary"></app-button-spinner>
     </button>
   </div>
 </div>
