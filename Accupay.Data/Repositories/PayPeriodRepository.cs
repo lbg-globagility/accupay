@@ -54,6 +54,20 @@ namespace AccuPay.Data.Repositories
         }
 
         /// <summary>
+        /// This returns the current pay period with "Open" status.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetCurrentOpenAsync(int organizationId)
+        {
+            return await _context.PayPeriods
+                .Where(p => p.Status == PayPeriodStatus.Open)
+                .Where(p => p.OrganizationID == organizationId)
+                .OrderByDescending(p => p.PayFromDate)
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// This returns the current "PROCESSING" pay period based on IsClosed and paystub count. (Used in desktop)
         /// </summary>
         /// <param name="organizationId"></param>
@@ -106,22 +120,6 @@ namespace AccuPay.Data.Repositories
             return await _context.PayPeriods
                 .Where(p => p.OrganizationID == organizationId)
                 .Where(p => p.IsBetween(date))
-                .Where(p => p.IsSemiMonthly)
-                .FirstOrDefaultAsync();
-        }
-
-        /// <summary>
-        /// Gets the pay period based on checking if the passed cutoff start and end date matches the pay period.
-        /// </summary>
-        /// <param name="organizationId"></param>
-        /// <param name="cutoffDate"></param>
-        /// <returns></returns>
-        public async Task<PayPeriod> GetAsync(int organizationId, TimePeriod cutoffDate)
-        {
-            return await _context.PayPeriods
-                .Where(p => p.OrganizationID == organizationId)
-                .Where(p => p.PayFromDate == cutoffDate.Start)
-                .Where(p => p.PayToDate == cutoffDate.End)
                 .Where(p => p.IsSemiMonthly)
                 .FirstOrDefaultAsync();
         }

@@ -50,12 +50,12 @@ namespace AccuPay.Data.Services
 
             // TODO: this should be queried from _repository
             // remove _context from this class
-            var otherProcessingPayPeriod = await _context.Paystubs.
-                                                        Include(p => p.PayPeriod).
-                                                        Where(p => p.PayPeriod.RowID != payPeriodId).
-                                                        Where(p => p.PayPeriod.IsClosed == false).
-                                                        Where(p => p.PayPeriod.OrganizationID == organizationId).
-                                                        FirstOrDefaultAsync();
+            var otherProcessingPayPeriod = await _context.Paystubs
+                .Include(p => p.PayPeriod)
+                .Where(p => p.PayPeriod.RowID != payPeriodId)
+                .Where(p => p.PayPeriod.IsClosed == false)
+                .Where(p => p.PayPeriod.OrganizationID == organizationId)
+                .FirstOrDefaultAsync();
 
             if (payPeriod.IsClosed)
             {
@@ -102,22 +102,22 @@ namespace AccuPay.Data.Services
         {
             var payPeriod = await _repository.GetByIdAsync(payPeriodId);
 
-            if (payPeriod == null)
-                throw new BusinessLogicException("Pay Period does not exists");
-
-            payPeriod.Status = status;
-            payPeriod.LastUpdBy = userId;
-
-            await _repository.UpdateAsync(payPeriod);
+            await UpdateStatusAsync(payPeriod, userId, status);
         }
 
         public async Task UpdateStatusAsync(PayPeriod payPeriod, int userId, PayPeriodStatus status)
         {
-            if (payPeriod?.RowID == null)
+            if (payPeriod?.RowID == null || payPeriod?.OrganizationID == null)
                 throw new BusinessLogicException("Pay Period does not exists");
 
             if ((await _repository.GetByIdAsync(payPeriod.RowID.Value)) == null)
                 throw new BusinessLogicException("Pay Period does not exists");
+
+            if (status == PayPeriodStatus.Open)
+            {
+                if ((await _repository.GetCurrentOpenAsync(payPeriod.OrganizationID.Value)) != null)
+                    throw new BusinessLogicException("There is currently an \"Open\" pay period. Please finish that pay period first then close it to process new pay periods.");
+            }
 
             payPeriod.Status = status;
             payPeriod.LastUpdBy = userId;
