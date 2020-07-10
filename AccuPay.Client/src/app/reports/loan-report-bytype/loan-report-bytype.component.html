@@ -25,9 +25,7 @@
         color="accent"
       >
         {{ isDownloading ? "DOWNLOADING..." : "DOWNLOAD" }}
-        <mat-icon *ngIf="isDownloading"
-          ><mat-spinner diameter="20" color="accent"> </mat-spinner
-        ></mat-icon>
+        <app-button-spinner [active]="isDownloading"></app-button-spinner>
       </button>
     </mat-card-content>
   </mat-card>
