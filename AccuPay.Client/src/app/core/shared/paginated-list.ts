@@ -1,6 +1,6 @@
-export interface PaginatedList<T> {
-  pageNumber: number;
-  totalPages: number;
-  items: T[];
-  totalCount: number;
+export class PaginatedList<T> {
+  public pageNumber: number;
+  public totalPages: number;
+  public items: T[];
+  public totalCount: number;
 }

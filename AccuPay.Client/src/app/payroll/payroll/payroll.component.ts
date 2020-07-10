@@ -3,7 +3,7 @@ import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, flatMap } from 'rxjs/operators';
+import { filter, flatMap, map } from 'rxjs/operators';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
@@ -11,6 +11,8 @@ import { LoadingState } from 'src/app/core/states/loading-state';
 import { SelectPayperiodDialogComponent } from '../components/select-payperiod-dialog/select-payperiod-dialog.component';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { findIndex } from 'lodash';
+import { PayPeriodViewModel } from './payperiod-viewmodel';
+import { PaginatedList } from 'src/app/core/shared/paginated-list';
 
 @Component({
   selector: 'app-payroll',
@@ -27,11 +29,14 @@ export class PayrollComponent implements OnInit {
 
   readonly displayedColumns = ['cutoff', 'status', 'actions'];
 
-  dataSource: MatTableDataSource<PayPeriod>;
+  dataSource: MatTableDataSource<PayPeriodViewModel>;
 
   loadingState: LoadingState = new LoadingState();
 
   isStartingPayroll: boolean = false;
+  isClosingPayroll: boolean = false;
+  isReopeningPayroll: boolean = false;
+  isUpdatingPayroll: boolean = false;
 
   pageIndex: number = 0;
   pageSize: number = 10;
@@ -72,6 +77,21 @@ export class PayrollComponent implements OnInit {
 
     this.payPeriodService
       .getList(options, this.searchTerm)
+      .pipe(
+        map((payPeriodList) => {
+          let list = new PaginatedList<PayPeriodViewModel>();
+
+          list.pageNumber = payPeriodList.pageNumber;
+          list.totalCount = payPeriodList.totalCount;
+          list.totalPages = payPeriodList.totalPages;
+
+          list.items = payPeriodList.items.map((payPeriod) => {
+            return new PayPeriodViewModel(payPeriod);
+          });
+
+          return list;
+        })
+      )
       .subscribe((data) => {
         this.totalPages = data.totalPages;
         this.totalCount = data.totalCount;
@@ -113,9 +133,11 @@ export class PayrollComponent implements OnInit {
 
           if (this.pageIndex == 0) {
             this.dataSource.data.pop();
-            this.dataSource.data.unshift(this.latestPayPeriod);
+            this.dataSource.data.unshift(
+              new PayPeriodViewModel(this.latestPayPeriod)
+            );
 
-            this.dataSource.data = [...this.dataSource.data];
+            this.refreshDataSource();
           }
         },
         (err) =>
@@ -131,12 +153,23 @@ export class PayrollComponent implements OnInit {
 
     if (!payPeriod?.id) return;
 
-    this.payPeriodService.close(payPeriodId).subscribe(
-      () => {
-        this.updateStatus(payPeriodId, 'Closed');
-      },
-      (err) => this.errorHandler.badRequest(err, 'Failed to close pay period.')
-    );
+    if (payPeriodId == this.latestPayPeriod.id) {
+      this.isClosingPayroll = true;
+    }
+    let currentViewModel = this.getCurrentViewModel(payPeriodId);
+    this.updateIsUpdatingStatus(currentViewModel, true);
+
+    this.isUpdatingPayroll = true;
+    this.payPeriodService
+      .close(payPeriodId)
+      .subscribe(
+        () => {
+          this.updateStatus(payPeriodId, 'Closed');
+        },
+        (err) =>
+          this.errorHandler.badRequest(err, 'Failed to close pay period.')
+      )
+      .add(this.stopLoading(currentViewModel));
   }
 
   reopenPayroll(payPeriod: PayPeriod): void {
@@ -144,26 +177,75 @@ export class PayrollComponent implements OnInit {
 
     if (!payPeriod?.id) return;
 
-    this.payPeriodService.reopen(payPeriodId).subscribe(
-      () => {
-        this.updateStatus(payPeriodId, 'Open');
-      },
-      (err) => this.errorHandler.badRequest(err, 'Failed to reopen pay period.')
-    );
+    if (payPeriodId == this.latestPayPeriod.id) {
+      this.isReopeningPayroll = true;
+    }
+    let currentViewModel = this.getCurrentViewModel(payPeriodId);
+    this.updateIsUpdatingStatus(currentViewModel, true);
+
+    this.isUpdatingPayroll = true;
+    this.payPeriodService
+      .reopen(payPeriodId)
+      .subscribe(
+        () => {
+          this.updateStatus(payPeriodId, 'Open');
+        },
+        (err) =>
+          this.errorHandler.badRequest(err, 'Failed to reopen pay period.')
+      )
+      .add(this.stopLoading(currentViewModel));
   }
 
-  private updateStatus(payPeriodId: number, status: string) {
-    let selectedIndex = findIndex(this.dataSource.data, function (payPeriod) {
-      return payPeriod.id == payPeriodId;
-    });
+  private stopLoading(currentViewModel: PayPeriodViewModel) {
+    return () => {
+      this.isClosingPayroll = false;
+      this.isUpdatingPayroll = false;
+      this.isReopeningPayroll = false;
+      this.updateIsUpdatingStatus(currentViewModel, false);
+    };
+  }
+
+  private updateIsUpdatingStatus(
+    currentViewModel: PayPeriodViewModel,
+    isUpdating: boolean
+  ) {
+    if (currentViewModel) {
+      currentViewModel.isUpdating = isUpdating;
+      this.refreshDataSource();
+    }
+  }
+
+  private updateStatus(payPeriodId: number, status: string): void {
+    let selectedIndex = this.getSelectedIndex(payPeriodId);
 
     if (selectedIndex >= 0) {
-      this.dataSource.data[selectedIndex].status = status;
-      this.dataSource.data = [...this.dataSource.data];
+      this.dataSource.data[selectedIndex].payPeriod.status = status;
+      this.refreshDataSource();
     }
 
     if (payPeriodId == this.latestPayPeriod.id) {
       this.latestPayPeriod.status = status;
     }
+  }
+
+  private refreshDataSource(): void {
+    this.dataSource.data = [...this.dataSource.data];
+  }
+
+  private getSelectedIndex(payPeriodId: number): number {
+    return findIndex(this.dataSource.data, function (vm: PayPeriodViewModel) {
+      return vm.payPeriod.id == payPeriodId;
+    });
+  }
+
+  private getCurrentViewModel(payPeriodId: number): PayPeriodViewModel {
+    if (!payPeriodId) return null;
+
+    let index = this.getSelectedIndex(payPeriodId);
+
+    if (index >= 0) {
+      return this.dataSource.data[index];
+    }
+    return null;
   }
 }
