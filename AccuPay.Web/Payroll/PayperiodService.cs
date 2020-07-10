@@ -83,6 +83,11 @@ namespace AccuPay.Web.Payroll
             await _dataService.CloseStatusAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
         }
 
+        public async Task Reopen(int payPeriodId)
+        {
+            await _dataService.ReopenStatusAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+        }
+
         public async Task<PayPeriodDto> GetById(int payPeriodId)
         {
             var payperiod = await _repository.GetByIdAsync(payPeriodId);

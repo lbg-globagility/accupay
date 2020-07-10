@@ -93,6 +93,11 @@ namespace AccuPay.Data.Services
             await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Closed);
         }
 
+        public async Task ReopenStatusAsync(int payPeriodId, int userId)
+        {
+            await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Open);
+        }
+
         public async Task UpdateStatusAsync(int payPeriodId, int userId, PayPeriodStatus status)
         {
             var payPeriod = await _repository.GetByIdAsync(payPeriodId);

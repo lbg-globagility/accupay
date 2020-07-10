@@ -41,8 +41,21 @@
       >
         VIEW PAYROLL
       </button>
-      <button mat-button color="warn" (click)="closePayroll(latestPayPeriod)">
+      <button
+        mat-button
+        color="warn"
+        (click)="closePayroll(latestPayPeriod)"
+        *ngIf="latestPayPeriod?.status == 'Open'"
+      >
         CLOSE PAYROLL
+      </button>
+      <button
+        mat-button
+        color="accent"
+        (click)="reopenPayroll(latestPayPeriod)"
+        *ngIf="latestPayPeriod?.status == 'Closed'"
+      >
+        REOPEN PAYROLL
       </button>
     </mat-card-actions>
   </mat-card>
@@ -88,7 +101,7 @@
               mat-icon-button
               *ngIf="payroll.status == 'Open'"
               matTooltip="Close payroll"
-              (click)="closePayroll(latestPayPeriod)"
+              (click)="closePayroll(payroll)"
             >
               <mat-icon>lock_open</mat-icon>
             </button>
@@ -96,6 +109,7 @@
               mat-icon-button
               *ngIf="payroll.status == 'Closed'"
               matTooltip="Reopen payroll"
+              (click)="reopenPayroll(payroll)"
             >
               <mat-icon>lock</mat-icon>
             </button>

@@ -78,7 +78,7 @@ namespace AccuPay.Web.Controllers
             }
         }
 
-        [HttpPost("{id}/close")]
+        [HttpPut("{id}/close")]
         [Permission(PermissionTypes.PayPeriodUpdate)]
         public async Task<ActionResult> Close(int id)
         {
@@ -87,6 +87,19 @@ namespace AccuPay.Web.Controllers
                 return NotFound();
             }
             await _payperiodService.Close(id);
+
+            return Ok();
+        }
+
+        [HttpPut("{id}/reopen")]
+        [Permission(PermissionTypes.PayPeriodUpdate)]
+        public async Task<ActionResult> Reopen(int id)
+        {
+            if ((await _payPeriodRepository.GetByIdAsync(id)) == null)
+            {
+                return NotFound();
+            }
+            await _payperiodService.Reopen(id);
 
             return Ok();
         }
