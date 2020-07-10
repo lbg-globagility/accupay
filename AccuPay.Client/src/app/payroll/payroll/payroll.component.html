@@ -12,9 +12,7 @@
       (click)="startNewPayroll()"
     >
       {{ isStartingPayroll ? "STARTING..." : "START NEW PAYROLL" }}
-      <mat-icon *ngIf="isStartingPayroll"
-        ><mat-spinner diameter="20" color="accent"> </mat-spinner
-      ></mat-icon>
+      <app-button-spinner [active]="isStartingPayroll"></app-button-spinner>
     </button>
   </div>
 
@@ -49,9 +47,7 @@
         *ngIf="latestPayPeriod?.status == 'Open'"
       >
         {{ isClosingPayroll ? "CLOSING..." : "CLOSE PAYROLL" }}
-        <mat-icon *ngIf="isClosingPayroll"
-          ><mat-spinner diameter="20" color="accent"> </mat-spinner
-        ></mat-icon>
+        <app-button-spinner [active]="isClosingPayroll"></app-button-spinner>
       </button>
       <button
         [disabled]="isUpdatingPayroll || isReopeningPayroll"
@@ -61,9 +57,7 @@
         *ngIf="latestPayPeriod?.status == 'Closed'"
       >
         {{ isReopeningPayroll ? "REOPENING..." : "REOPEN PAYROLL" }}
-        <mat-icon *ngIf="isReopeningPayroll"
-          ><mat-spinner diameter="20" color="accent"> </mat-spinner
-        ></mat-icon>
+        <app-button-spinner [active]="isReopeningPayroll"></app-button-spinner>
       </button>
     </mat-card-actions>
   </mat-card>
@@ -113,14 +107,7 @@
               (click)="closePayroll(vm.payPeriod)"
             >
               <mat-icon *ngIf="!vm.isUpdating">lock_open</mat-icon>
-              <mat-icon
-                ><mat-spinner
-                  diameter="20"
-                  color="accent"
-                  *ngIf="vm.isUpdating"
-                >
-                </mat-spinner
-              ></mat-icon>
+              <app-button-spinner [active]="vm.isUpdating"></app-button-spinner>
             </button>
             <button
               mat-icon-button
@@ -130,14 +117,7 @@
               (click)="reopenPayroll(vm.payPeriod)"
             >
               <mat-icon *ngIf="!vm.isUpdating">lock</mat-icon>
-              <mat-icon
-                ><mat-spinner
-                  diameter="20"
-                  color="accent"
-                  *ngIf="vm.isUpdating"
-                >
-                </mat-spinner
-              ></mat-icon>
+              <app-button-spinner [active]="vm.isUpdating"></app-button-spinner>
             </button>
           </td>
         </ng-container>
