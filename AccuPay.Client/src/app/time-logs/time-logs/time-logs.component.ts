@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TimeLogService } from 'src/app/time-logs/time-log.service';
 import * as moment from 'moment';
-import { PageOptions } from 'src/app/core/shared/page-options';
 import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
 import { PageEvent } from '@angular/material/paginator';

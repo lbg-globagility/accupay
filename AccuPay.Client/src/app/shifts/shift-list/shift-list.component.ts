@@ -11,10 +11,11 @@ import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { range } from 'src/app/core/functions/dates';
-import { Shift } from '../shared/shift';
+import { EmployeeShifts } from '../shared/employee-shifts';
 import { ShiftsByEmployeePageOptions } from '../shared/shifts-by-employee-page-option';
 import { EditShiftComponent } from '../edit-shift/edit-shift.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Employee } from 'src/app/employees/shared/employee';
 
 interface DateHeader {
   title: string;
@@ -63,7 +64,7 @@ export class ShiftListComponent implements OnInit {
 
   totalCount: number;
 
-  employees: Shift[] = [];
+  employees: EmployeeShifts[] = [];
   isDownloadingTemplate: boolean;
 
   constructor(
@@ -108,7 +109,7 @@ export class ShiftListComponent implements OnInit {
     this.modelChanged.next();
   }
 
-  edit(employeeShift: Shift): void {
+  edit(employeeShift: EmployeeShifts): void {
     const employee = this.employees.find(
       (t) => t.employeeId === employeeShift.employeeId
     );
@@ -162,15 +163,15 @@ export class ShiftListComponent implements OnInit {
     });
   }
 
-  private convertToLocalModels(employeeShifts: Shift[]) {
+  private convertToLocalModels(employeeShifts: EmployeeShifts[]) {
     return employeeShifts.map((t) => this.convertToLocalModel(t));
   }
 
-  private convertToLocalModel(employeeShift: Shift) {
+  private convertToLocalModel(employeeShift: EmployeeShifts) {
     const model: EmployeeDutySchedulesModel = {
       employeeId: employeeShift.employeeId,
-      employeeNo: employeeShift.employeeNumber,
-      fullName: employeeShift.employeeName,
+      employeeNo: employeeShift.employeeNo,
+      fullName: employeeShift.fullName,
       shifts: {},
     };
 

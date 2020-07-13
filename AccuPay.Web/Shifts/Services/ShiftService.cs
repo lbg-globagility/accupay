@@ -207,7 +207,7 @@ namespace AccuPay.Web.Shifts.Services
             {
                 EmployeeId = employee.RowID.Value,
                 EmployeeNo = employee.EmployeeNo,
-                EmployeeName = employee.FullNameWithMiddleInitialLastNameFirst,
+                FullName = employee.FullNameWithMiddleInitialLastNameFirst,
             };
 
             dto.Shifts = shifts
