@@ -5,6 +5,7 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Shift } from 'src/app/shifts/shared/shift';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
+import { ShiftsByEmployeePageOptions } from './shared/shifts-by-employee-page-option';
 
 @Injectable({
   providedIn: 'root',
@@ -54,5 +55,22 @@ export class ShiftService extends BasePdfService {
       this.shiftTemplateFileName,
       `${this.baseUrl}/accupay-shiftschedule-template`
     );
+  }
+
+  listByEmployee(
+    options: ShiftsByEmployeePageOptions
+  ): Observable<PaginatedList<Shift>> {
+    const params = options ? options.toObject() : null;
+
+    return this.httpClient.get<PaginatedList<Shift>>(
+      `${this.baseUrl}/employees`,
+      {
+        params,
+      }
+    );
+  }
+
+  updateMany(shifts: any[]): Observable<void> {
+    return this.httpClient.put<void>(`${this.baseUrl}`, shifts);
   }
 }

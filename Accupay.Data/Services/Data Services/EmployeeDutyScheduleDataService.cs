@@ -3,6 +3,7 @@ using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,6 +100,26 @@ namespace AccuPay.Data.Services
             await _repository.ChangeManyAsync(addedShifts: addedShifts, updatedShifts: updatedShifts);
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
+        }
+
+        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
+        {
+            return await _repository.ListByEmployeeAsync(organizationId, options);
+        }
+
+        public async Task ChangeManyAsync(
+            List<EmployeeDutySchedule> added,
+            List<EmployeeDutySchedule> updated,
+            List<EmployeeDutySchedule> deleted)
+        {
+            if (added == null && updated == null && deleted == null)
+                throw new BusinessLogicException("No shifts to be saved.");
+
+            // TODO: validations
+            await _repository.ChangeManyAsync(
+                addedShifts: added,
+                updatedShifts: updated,
+                deletedShifts: deleted);
         }
     }
 }

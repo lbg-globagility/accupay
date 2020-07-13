@@ -103,6 +103,14 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
+        {
+            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+                .Include(x => x.Employee)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
+                .ToListAsync();
+        }
+
         public async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.EmployeeDutySchedules
@@ -136,6 +144,48 @@ namespace AccuPay.Data.Repositories
             return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
                 .Where(x => x.EmployeeID == employeeId)
                 .ToListAsync();
+        }
+
+        internal async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
+        {
+            // TODO: might want to use employeeRepository for this query
+            var query = _context.Employees
+                .Where(x => x.OrganizationID == organizationId);
+
+            if (options.HasSearchTerm)
+            {
+                var searchTerm = $"%{options.SearchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.LastName, searchTerm));
+            }
+
+            if (options.HasStatus)
+            {
+                if (options.Status == "Active only")
+                {
+                    query = query.Where(e => e.EmploymentStatus != "Resigned" && e.EmploymentStatus != "Terminated");
+                }
+            }
+
+            query = query
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName);
+
+            var employees = await query.Page(options).ToListAsync();
+            var total = await query.CountAsync();
+
+            var employeeIds = employees.Select(x => x.RowID);
+
+            var dutySchedules = await _context.EmployeeDutySchedules
+                .Where(x => employeeIds.Contains(x.EmployeeID))
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => options.DateFrom.Date <= x.DateSched && x.DateSched <= options.DateTo.Date)
+                .ToListAsync();
+
+            return (employees, total, dutySchedules);
         }
 
         public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodAsync(
