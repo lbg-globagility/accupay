@@ -67,10 +67,8 @@ export class ShiftFormComponent implements OnInit {
   }
 
   private loadEmployees(): void {
-    const options = new PageOptions(0, 1000, null, null);
-
-    this.employeeService.list(options).subscribe((data) => {
-      this.employees = data.items;
+    this.employeeService.getAll().subscribe((employees) => {
+      this.employees = employees;
     });
   }
 

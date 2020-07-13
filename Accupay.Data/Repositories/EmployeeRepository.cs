@@ -59,6 +59,11 @@ namespace AccuPay.Data.Repositories
                 }
             }
 
+            if (options.HasPosition)
+            {
+                query = query.Where(e => e.PositionID == options.PositionId);
+            }
+
             var employees = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
