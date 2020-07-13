@@ -147,9 +147,9 @@ namespace AccuPay.Data.Services
             return _divisionRepository.GetAllAsync(organizationId);
         }
 
-        public async Task<PaginatedListResult<Division>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
+        public async Task<PaginatedListResult<Division>> List(PageOptions options, int organizationId, string searchTerm)
         {
-            return await _divisionRepository.GetPaginatedListAsync(options, organizationId, isRoot: false, searchTerm);
+            return await _divisionRepository.List(options, organizationId, searchTerm);
         }
 
         public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)

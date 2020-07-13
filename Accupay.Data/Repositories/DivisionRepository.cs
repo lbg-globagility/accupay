@@ -54,23 +54,17 @@ namespace AccuPay.Data.Repositories
                                 ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<Division>> GetPaginatedListAsync(PageOptions options, int organizationId, bool isRoot, string searchTerm = "")
+        internal async Task<PaginatedListResult<Division>> List(
+            PageOptions options,
+            int organizationId,
+            string searchTerm = "")
         {
             var query = _context.Divisions
-                                .Include(x => x.ParentDivision)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderBy(x => x.ParentDivision.Name)
-                                .ThenBy(x => x.Name)
-                                .AsQueryable();
-
-            if (isRoot)
-            {
-                query = query.Where(x => x.ParentDivisionID == null);
-            }
-            else
-            {
-                query = query.Where(x => x.ParentDivisionID != null);
-            }
+                .Include(x => x.ParentDivision)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderBy(x => x.ParentDivision.Name)
+                .ThenBy(x => x.Name)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

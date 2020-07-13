@@ -25,7 +25,7 @@ namespace AccuPay.Web.Divisions
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _service.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
+            var paginatedList = await _service.List(options, _currentUser.OrganizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 

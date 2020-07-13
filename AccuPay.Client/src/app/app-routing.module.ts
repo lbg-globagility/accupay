@@ -93,6 +93,7 @@ import {
   ViewEmploymentPolicyComponent,
 } from 'src/app/employment-policies/components';
 import { LoansComponent } from './loans/loans/loans.component';
+import { PositionsComponent } from 'src/app/positions/components/positions/positions.component';
 
 const routes: Routes = [
   {
@@ -387,6 +388,10 @@ const routes: Routes = [
       },
       {
         path: 'positions',
+        component: PositionsComponent,
+      },
+      {
+        path: 'positions2',
         component: PositionListComponent,
       },
       {
