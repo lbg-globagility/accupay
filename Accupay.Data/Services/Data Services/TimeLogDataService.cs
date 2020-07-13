@@ -18,7 +18,7 @@ namespace AccuPay.Data.Services
             _repository = repository;
         }
 
-        public async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
+        public async Task<PaginatedList<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
         {
             return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }

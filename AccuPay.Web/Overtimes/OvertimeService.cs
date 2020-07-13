@@ -28,9 +28,7 @@ namespace AccuPay.Web.Overtimes
                 filter.DateFrom,
                 filter.DateTo);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<OvertimeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<OvertimeDto> GetById(int id)

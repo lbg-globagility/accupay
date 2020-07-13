@@ -38,9 +38,7 @@ namespace AccuPay.Web.Leaves
                 filter.DateFrom,
                 filter.DateTo);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<LeaveDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<PaginatedList<LeaveBalanceDto>> GetLeaveBalance(PageOptions options, string searchTerm)
@@ -50,7 +48,7 @@ namespace AccuPay.Web.Leaves
                 _currentUser.OrganizationId,
                 searchTerm);
 
-            var dtos = paginatedList.List.GroupBy(x => x.EmployeeID).Select(x => new LeaveBalanceDto
+            var dtos = paginatedList.Items.GroupBy(x => x.EmployeeID).Select(x => new LeaveBalanceDto
             {
                 EmployeeId = x.Key,
                 Id = x.FirstOrDefault().EmployeeID.Value,
@@ -61,7 +59,7 @@ namespace AccuPay.Web.Leaves
                 VacationLeave = x.FirstOrDefault(y => y.Product.PartNo == ProductConstant.VACATION_LEAVE)?.LastTransaction.Balance ?? 0
             }).ToList();
 
-            return new PaginatedList<LeaveBalanceDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return new PaginatedList<LeaveBalanceDto>(dtos, paginatedList.TotalCount);
         }
 
         public async Task<PaginatedList<LeaveTransactionDto>> ListTransactions(PageOptions options, int id, string type)
@@ -72,9 +70,7 @@ namespace AccuPay.Web.Leaves
                 id,
                 type);
 
-            var dtos = paginatedList.List.Select(x => ConvertToLedgerDto(x));
-
-            return new PaginatedList<LeaveTransactionDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToLedgerDto(x));
         }
 
         public async Task<LeaveDto> GetById(int id)

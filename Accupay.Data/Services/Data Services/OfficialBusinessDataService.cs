@@ -93,11 +93,12 @@ namespace AccuPay.Data.Services
             return await _repository.GetByEmployeeAsync(employeeId);
         }
 
-        public async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options,
-                                                                                       int organizationId,
-                                                                                       string searchTerm = "",
-                                                                                       DateTime? dateFrom = null,
-                                                                                       DateTime? dateTo = null)
+        public async Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(
+            PageOptions options,
+            int organizationId,
+            string searchTerm = "",
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null)
         {
             return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
         }

@@ -50,15 +50,13 @@ namespace AccuPay.Web.AllowanceType
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<PaginatedList<AllowanceTypeDto>> GetPaginatedListAsync(PageOptions options,
+        public async Task<PaginatedList<AllowanceTypeDto>> GetPaginatedListAsync(
+            PageOptions options,
             string searchTerm = "")
         {
             var paginatedList = await _repository.GetPaginatedListAsync(options, searchTerm);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            //return new PaginatedList<AllowanceTypeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
-            return new PaginatedList<AllowanceTypeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         private static void ApplyChanges(AllowanceTypeDto dto, Data.Entities.AllowanceType allowanceType)

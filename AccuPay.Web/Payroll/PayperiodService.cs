@@ -105,9 +105,8 @@ namespace AccuPay.Web.Payroll
         public async Task<PaginatedList<PayPeriodDto>> List(PageOptions options)
         {
             var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId);
-            var dtos = paginatedList.List.Select(t => ConvertToDto(t)).ToList();
 
-            return new PaginatedList<PayPeriodDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(t => ConvertToDto(t));
         }
 
         public async Task<List<PayPeriodDto>> GetYearlyPayPeriods(int year)

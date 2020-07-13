@@ -54,7 +54,7 @@ namespace AccuPay.Data.Repositories
                                 ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<Division>> List(
+        internal async Task<PaginatedList<Division>> List(
             PageOptions options,
             int organizationId,
             string searchTerm = "")
@@ -78,7 +78,7 @@ namespace AccuPay.Data.Repositories
             var divisions = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Division>(divisions, count);
+            return new PaginatedList<Division>(divisions, count);
         }
 
         internal async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)

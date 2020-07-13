@@ -101,7 +101,7 @@ namespace AccuPay.Data.Repositories
                 .ToList();
         }
 
-        public async Task<PaginatedListResult<Salary>> List(
+        public async Task<PaginatedList<Salary>> List(
             PageOptions options,
             int organizationId,
             string searchTerm = "",
@@ -133,7 +133,7 @@ namespace AccuPay.Data.Repositories
             var salaries = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Salary>(salaries, count);
+            return new PaginatedList<Salary>(salaries, count);
         }
 
         public async Task<ICollection<Salary>> GetAll(int organizationId)

@@ -56,7 +56,7 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<PaginatedListResult<AllowanceType>> GetPaginatedListAsync(PageOptions options,
+        public async Task<PaginatedList<AllowanceType>> GetPaginatedListAsync(PageOptions options,
             string searchTerm = "")
         {
             var query = _context.AllowanceTypes
@@ -76,7 +76,7 @@ namespace AccuPay.Data.Repositories
             var allowanceTypes = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<AllowanceType>(allowanceTypes, count);
+            return new PaginatedList<AllowanceType>(allowanceTypes, count);
         }
 
         #endregion List of entities

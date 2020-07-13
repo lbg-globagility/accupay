@@ -567,12 +567,12 @@ namespace AccuPay.Data.Services
 
         #endregion ForceUpdateLeaveAllowanceAsync
 
-        public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type)
+        public async Task<PaginatedList<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type)
         {
             return await _leaveLedgerRepository.ListTransactions(options, organizationId, id, type);
         }
 
-        public async Task<PaginatedListResult<LeaveLedger>> GetLeaveBalances(PageOptions options, int organizationId, string searchTerm)
+        public async Task<PaginatedList<LeaveLedger>> GetLeaveBalances(PageOptions options, int organizationId, string searchTerm)
         {
             var leaveBalances = await _leaveLedgerRepository.GetLeaveBalance(organizationId, searchTerm);
 
@@ -586,7 +586,7 @@ namespace AccuPay.Data.Services
 
             var count = distinctId.Count();
 
-            return new PaginatedListResult<LeaveLedger>(query, count);
+            return new PaginatedList<LeaveLedger>(query, count);
         }
     }
 }

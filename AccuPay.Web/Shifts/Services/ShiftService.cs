@@ -38,15 +38,12 @@ namespace AccuPay.Web.Shifts.Services
 
         public async Task<PaginatedList<ShiftDto>> PaginatedList(PageOptions options, string searchTerm)
         {
-            // TODO: sort and desc in repository
+            var shifts = await _repository.GetPaginatedListAsync(
+                options,
+                _currentUser.OrganizationId,
+                searchTerm);
 
-            var paginatedList = await _repository.GetPaginatedListAsync(options,
-                                                                    _currentUser.OrganizationId,
-                                                                    searchTerm);
-
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<ShiftDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return shifts.Select(x => ConvertToDto(x));
         }
 
         internal async Task<ShiftDto> GetById(int id)

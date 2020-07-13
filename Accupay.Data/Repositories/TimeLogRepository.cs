@@ -170,7 +170,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.TimeLogs
                 .Include(x => x.Employee)
@@ -196,7 +196,7 @@ namespace AccuPay.Data.Repositories
             var timeLogs = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<TimeLog>(timeLogs, count);
+            return new PaginatedList<TimeLog>(timeLogs, count);
         }
 
         public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployeeAsync(

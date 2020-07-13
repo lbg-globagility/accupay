@@ -213,7 +213,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.EmployeeDutySchedules
                 .Include(x => x.Employee)
@@ -237,7 +237,7 @@ namespace AccuPay.Data.Repositories
             var shifts = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<EmployeeDutySchedule>(shifts, count);
+            return new PaginatedList<EmployeeDutySchedule>(shifts, count);
         }
 
         #endregion List of entities

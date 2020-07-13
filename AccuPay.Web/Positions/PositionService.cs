@@ -2,7 +2,6 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Positions
@@ -24,9 +23,7 @@ namespace AccuPay.Web.Positions
 
             var paginatedList = await _service.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<PositionDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<PositionDto> GetById(int id)

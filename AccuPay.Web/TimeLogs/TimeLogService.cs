@@ -41,9 +41,7 @@ namespace AccuPay.Web.TimeLogs
 
             var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<TimeLogDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)

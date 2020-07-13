@@ -36,9 +36,7 @@ namespace AccuPay.Web.Allowances.Services
                 _currentUser.OrganizationId,
                 searchTerm);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<AllowanceDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<AllowanceDto> GetById(int id)

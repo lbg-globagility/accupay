@@ -283,7 +283,7 @@ namespace AccuPay.Data.Repositories
             return yearlyPayPeriods;
         }
 
-        public async Task<PaginatedListResult<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.PayPeriods
                 .Where(t => t.OrganizationID == organizationId)
@@ -304,7 +304,7 @@ namespace AccuPay.Data.Repositories
             var payperiods = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<PayPeriod>(payperiods, count);
+            return new PaginatedList<PayPeriod>(payperiods, count);
         }
 
         #endregion List of entities
