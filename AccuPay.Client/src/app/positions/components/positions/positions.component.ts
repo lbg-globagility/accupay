@@ -12,12 +12,14 @@ import { forkJoin } from 'rxjs';
 
 interface Node {
   name: string;
+  item: Division | Position;
   children?: Node[];
 }
 
 /** Flat node with expandable and level information */
 interface FlatNode {
   expandable: boolean;
+  item: Division | Position;
   name: string;
   items: number;
   level: number;
@@ -27,6 +29,9 @@ interface FlatNode {
   selector: 'app-positions',
   templateUrl: './positions.component.html',
   styleUrls: ['./positions.component.scss'],
+  host: {
+    class: 'block h-full overflow-hidden',
+  },
 })
 export class PositionsComponent implements OnInit {
   divisions: Division[];
@@ -58,11 +63,16 @@ export class PositionsComponent implements OnInit {
     this.loadData();
   }
 
+  selectPosition(item: Position) {
+    console.log(item);
+  }
+
   private transformer(node: Node, level: number): FlatNode {
     return {
       expandable: !!node.children && node.children.length > 0,
       items: node.children.length,
       name: node.name,
+      item: node.item,
       level,
     };
   }
@@ -78,6 +88,7 @@ export class PositionsComponent implements OnInit {
 
   private buildTree(divisions: Division[], positions: Position[]): void {
     const rootNodes: Node[] = [];
+    // Divisions with no parent are the root divisions
     const rootDivisions = divisions.filter((d) => d.parentId == null);
 
     for (const rootDivision of rootDivisions) {
@@ -87,13 +98,13 @@ export class PositionsComponent implements OnInit {
       );
 
       for (const childDivision of childDivisions) {
-        const childNode = this.createDivisionNode(childDivision);
+        const childDivisionNode = this.createDivisionNode(childDivision);
 
-        childNode.children = positions
+        childDivisionNode.children = positions
           .filter((p) => p.divisionId === childDivision.id)
           .map((p) => this.createPositionNode(p));
 
-        rootNode.children.push(childNode);
+        rootNode.children.push(childDivisionNode);
       }
 
       rootNodes.push(rootNode);
@@ -105,6 +116,7 @@ export class PositionsComponent implements OnInit {
   private createDivisionNode(division: Division): Node {
     const node: Node = {
       name: division.name,
+      item: division,
       children: [],
     };
 
@@ -114,6 +126,7 @@ export class PositionsComponent implements OnInit {
   private createPositionNode(position: Position): Node {
     const node: Node = {
       name: position.name,
+      item: position,
       children: [],
     };
 

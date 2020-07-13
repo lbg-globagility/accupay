@@ -1,39 +1,49 @@
-<header class="app-page-header">
-  <h1 class="mat-headline">View Position</h1>
-</header>
+<ng-container *ngIf="position">
+  <header class="flex">
+    <div class="w-1/2">
+      <h1 class="mat-headline">{{ position.name }}</h1>
+    </div>
+    <div class="w-1/2 flex justify-end items-start">
+      <button
+        mat-raised-button
+        color="accent"
+        class="m-with-icon"
+        routerLink="/positions/{{ positionId }}/edit"
+      >
+        <mat-icon>edit</mat-icon>EDIT
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        class="m-with-icon"
+        (click)="confirmDelete()"
+      >
+        <mat-icon>delete</mat-icon>DELETE
+      </button>
+    </div>
+  </header>
 
-<ng-container *ngIf="isLoading | async">
-  <button
-    style="margin-right: 10px;"
-    mat-raised-button
-    color="accent"
-    routerLink="/positions/{{ positionId }}/edit"
-  >
-    EDIT POSITION
-  </button>
-  <button mat-raised-button color="warn" (click)="confirmDelete()">
-    DELETE POSITION
-  </button>
+  <ng-container *ngIf="isLoading | async">
+    <mat-card>
+      <mat-card-content>
+        <div class="row">
+          <!-- Division Name -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Division Name</p>
+              <p class="field-value">{{ position.divisionName }}</p>
+            </div>
+          </div>
 
-  <mat-card>
-    <mat-card-content>
-      <div class="row">
-        <!-- Division Name -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Division Name</p>
-            <p class="field-value">{{ position.divisionName }}</p>
+          <!-- Position Name -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Position Name</p>
+              <p class="field-value">{{ position.name }}</p>
+            </div>
           </div>
         </div>
-
-        <!-- Position Name -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Position Name</p>
-            <p class="field-value">{{ position.name }}</p>
-          </div>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
 </ng-container>

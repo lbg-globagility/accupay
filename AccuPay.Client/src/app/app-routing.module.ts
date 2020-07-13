@@ -389,18 +389,16 @@ const routes: Routes = [
       {
         path: 'positions',
         component: PositionsComponent,
-      },
-      {
-        path: 'positions2',
-        component: PositionListComponent,
+        children: [
+          {
+            path: ':id',
+            component: ViewPositionComponent,
+          },
+        ],
       },
       {
         path: 'positions/new',
         component: NewPositionComponent,
-      },
-      {
-        path: 'positions/:id',
-        component: ViewPositionComponent,
       },
       {
         path: 'positions/:id/edit',
