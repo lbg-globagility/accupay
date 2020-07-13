@@ -1,3 +1,5 @@
+import { ShiftSchedule } from './shift-schedule';
+
 export interface Shift {
   id: number;
   employeeId: number;
@@ -10,4 +12,5 @@ export interface Shift {
   breakStartTime: Date;
   breakLength: number;
   isOffset: boolean;
+  shifts: ShiftSchedule[];
 }

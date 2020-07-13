@@ -172,7 +172,7 @@ Public Class DateRangePickerDialog
 
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
 
         Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(
                                             _currentPayperiod.RowID,

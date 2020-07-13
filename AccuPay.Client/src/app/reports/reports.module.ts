@@ -9,9 +9,9 @@ import { LoanReportBytypeComponent } from './loan-report-bytype/loan-report-byty
 import { SelectDateRangeComponent } from './components/select-date-range/select-date-range.component';
 import { LoanReportByemployeeComponent } from './loan-report-byemployee/loan-report-byemployee.component';
 import { TaxReportComponent } from './tax-report/tax-report.component';
-import { ThirtheenthMonthReportComponent } from './thirtheenth-month-report/thirtheenth-month-report.component';
+import { ThirteenthMonthReportComponent } from './thirteenth-month-report/thirteenth-month-report.component';
 import { PayrollSummaryComponent } from './payroll-summary/payroll-summary.component';
-import { SelectPayperiodDialogComponent } from './components/select-payperiod-dialog/select-payperiod-dialog.component';
+import { SelectPayperiodRangeDialogComponent } from './components/select-payperiod-range-dialog/select-payperiod-range-dialog.component';
 
 @NgModule({
   declarations: [
@@ -24,9 +24,9 @@ import { SelectPayperiodDialogComponent } from './components/select-payperiod-di
     SelectDateRangeComponent,
     LoanReportByemployeeComponent,
     TaxReportComponent,
-    ThirtheenthMonthReportComponent,
+    ThirteenthMonthReportComponent,
     PayrollSummaryComponent,
-    SelectPayperiodDialogComponent,
+    SelectPayperiodRangeDialogComponent,
   ],
 
   imports: [SharedModule],

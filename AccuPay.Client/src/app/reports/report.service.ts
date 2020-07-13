@@ -70,7 +70,7 @@ export class ReportService extends BasePdfService {
   get13thMonthReport(dateFrom: string, dateTo: string) {
     return this.getFile(
       this.thirteenthMonthFileName,
-      `${this.baseUrl}/tax-report/${dateFrom}/${dateTo}`
+      `${this.baseUrl}/thirteenth-month-report/${dateFrom}/${dateTo}`
     );
   }
 

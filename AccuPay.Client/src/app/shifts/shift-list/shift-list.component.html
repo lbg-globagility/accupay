@@ -1,19 +1,19 @@
 <h1 class="mat-headline">Shifts</h1>
 
-<div class="row middle-md">
-  <div class="col-md-3">
-    <mat-form-field color="accent" class="w-full">
-      <mat-icon matPrefix class="m-align-middle">search</mat-icon>
+<div class="row">
+  <div class="col-lg-3">
+    <mat-form-field appearance="standard" class="w-full m-with-icon">
+      <mat-icon matPrefix>search</mat-icon>
       <mat-label>Search</mat-label>
       <input
         matInput
-        (keyup)="applyFilter($event.target.value)"
-        [placeholder]="placeholder"
-        name="shifts"
-        [(ngModel)]="clearSearch"
+        placeholder="Search by employee no, or full name"
+        name="leaves"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilter()"
       />
       <button
-        *ngIf="clearSearch"
+        *ngIf="searchTerm"
         matSuffix
         mat-icon-button
         aria-label="Clear"
@@ -23,11 +23,48 @@
       </button>
     </mat-form-field>
   </div>
-  <div class="col-md-4"></div>
-  <div class="col-md-5">
-    <button mat-raised-button color="accent" class="new-btn" routerLink="new">
-      NEW SHIFT
-    </button>
+  <div class="col-lg-2">
+    <mat-form-field appearance="standard" class="w-full">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="statusFilter" (ngModelChange)="applyFilter()">
+        <mat-option value="Active only">Active only</mat-option>
+        <mat-option value="All">All</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-lg-2">
+    <mat-form-field appearance="standard" class="w-full">
+      <mat-label>From</mat-label>
+      <input
+        matInput
+        [matDatepicker]="dateFromPicker"
+        [(ngModel)]="dateFrom"
+        (ngModelChange)="datesChanged()"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="dateFromPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #dateFromPicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="col-lg-2">
+    <mat-form-field appearance="standard" class="w-full">
+      <mat-label>To</mat-label>
+      <input
+        matInput
+        [matDatepicker]="dateToPicker"
+        [(ngModel)]="dateTo"
+        (ngModelChange)="datesChanged()"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="dateToPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #dateToPicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div class="col-md-4">
     <input
       hidden
       type="file"
@@ -52,83 +89,75 @@
       color="primary"
     >
       {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
-      <mat-icon *ngIf="isDownloadingTemplate"
-        ><mat-spinner diameter="20" color="accent"> </mat-spinner
-      ></mat-icon>
+      <app-button-spinner [active]="isDownloadingTemplate"></app-button-spinner>
     </button>
   </div>
 </div>
 
 <div class="mat-elevation-z1">
-  <table
-    mat-table
-    matSort
-    #table
-    [dataSource]="dataSource"
-    (matSortChange)="sortData($event)"
-    class="w-full"
-  >
-    <ng-container matColumnDef="employeeNumber">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Number</th>
-      <td mat-cell *matCellDef="let shift">
-        {{ shift.employeeNumber | ifEmpty: "-" }}
-      </td>
-    </ng-container>
+  <div class="w-full overflow-x-auto">
+    <table mat-table [dataSource]="dataSource" class="w-full">
+      <ng-container matColumnDef="employee" sticky>
+        <th mat-header-cell *matHeaderCellDef>Employee</th>
+        <td mat-cell *matCellDef="let employee">
+          <div class="flex items-center w-56">
+            <img
+              class="block rounded-full"
+              height="36"
+              appImgFallback
+              src="/api/employees/{{ employee.employeeId }}/image"
+            />
+            <div class="ml-2">
+              <a routerLink="/employees/{{ employee.employeeId }}">
+                <div>{{ employee.fullName }}</div>
+              </a>
+              <div class="text-xs">#{{ employee.employeeNo }}</div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="employeeName">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Name</th>
-      <td mat-cell *matCellDef="let shift">
-        {{ shift.employeeName | ifEmpty: "-" }}
-      </td>
-    </ng-container>
+      <ng-container
+        *ngFor="let header of headers"
+        [matColumnDef]="header.title"
+      >
+        <th mat-header-cell *matHeaderCellDef>
+          <p>{{ header.title }}</p>
+          <p>{{ header.dayOfWeek }}</p>
+        </th>
+        <td mat-cell *matCellDef="let employee">
+          <p class="text-xs whitespace-no-wrap px-2">
+            {{
+              employee.shifts[header.dateOnly]?.startTime
+                | date: "shortTime"
+                | ifEmpty
+            }}
+          </p>
+          <p class="text-xs whitespace-no-wrap px-2">
+            {{
+              employee.shifts[header.dateOnly]?.endTime
+                | date: "shortTime"
+                | ifEmpty
+            }}
+          </p>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="date">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Date</th>
-      <td mat-cell *matCellDef="let shift">
-        {{ shift.date | date }}
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let employee">
+          <button mat-icon-button (click)="edit(employee)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="time">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Time</th>
-      <td mat-cell *matCellDef="let shift">
-        {{ shift.startTime | date: "shortTime" }} -
-        {{ shift.endTime | date: "shortTime" }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="breakTime">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Break Time</th>
-      <td mat-cell *matCellDef="let shift">
-        {{ shift.breakStartTime | date: "shortTime" }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="breakLength">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Break Length</th>
-      <td mat-cell *matCellDef="let shift">
-        {{ shift.breakLength | ifEmpty: "-" }}
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      class="cursor-link"
-      (mouseover)="setHoveredRow(row.id)"
-      [class.active]="row.rowId == selectedRow"
-      (mouseout)="selectedRow = null"
-      routerLink="/shifts/{{ row.id }}"
-    ></tr>
-  </table>
-
-  <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
-    No shift were found.
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
   </div>
 
   <mat-paginator
-    #paginator
     [pageIndex]="pageIndex"
     [pageSize]="pageSize"
     [pageSizeOptions]="[10, 5, 25, 100]"

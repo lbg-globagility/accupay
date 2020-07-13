@@ -7,6 +7,7 @@ import { PayrollResultDetailsComponent } from './components/payroll-result-detai
 import { PaystubDetailsComponent } from './components/paystub-details/paystub-details.component';
 import { LoansBreakdownComponent } from './components/loans-breakdown/loans-breakdown.component';
 import { AdjustmentsBreakdownComponent } from './components/adjustments-breakdown/adjustments-breakdown.component';
+import { SelectPayperiodDialogComponent } from './components/select-payperiod-dialog/select-payperiod-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { AdjustmentsBreakdownComponent } from './components/adjustments-breakdow
     PaystubDetailsComponent,
     LoansBreakdownComponent,
     AdjustmentsBreakdownComponent,
+    SelectPayperiodDialogComponent,
   ],
   imports: [SharedModule],
 })

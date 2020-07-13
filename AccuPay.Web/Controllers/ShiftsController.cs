@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -50,16 +51,13 @@ namespace AccuPay.Web.Controllers
             return await _service.Create(dto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         [Permission(PermissionTypes.ShiftUpdate)]
-        public async Task<ActionResult<ShiftDto>> Update(int id, [FromBody] UpdateShiftDto dto)
+        public async Task<ActionResult<ShiftDto>> Update([FromBody] ICollection<ShiftDto> dtos)
         {
-            var shift = await _service.Update(id, dto);
+            await _service.BatchApply(dtos);
 
-            if (shift == null)
-                return NotFound();
-            else
-                return shift;
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -89,6 +87,14 @@ namespace AccuPay.Web.Controllers
         public ActionResult GetEmployeeTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-shiftschedule-template.xlsx");
+        }
+
+        [HttpGet("employees")]
+        [Permission(PermissionTypes.ShiftRead)]
+        public async Task<ActionResult<PaginatedList<EmployeeShiftsDto>>> ListByEmployee(
+            [FromQuery] ShiftsByEmployeePageOptions options)
+        {
+            return await _service.ListByEmployee(options);
         }
     }
 }

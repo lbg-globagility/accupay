@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
-import { MatDialogRef } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe } from '@angular/common';
 import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 
 @Component({
   selector: 'app-select-payperiod-dialog',
-  templateUrl: './select-payperiod-dialog.component.html',
-  styleUrls: ['./select-payperiod-dialog.component.scss'],
+  templateUrl: './select-payperiod-range-dialog.component.html',
+  styleUrls: ['./select-payperiod-range-dialog.component.scss'],
   providers: [DatePipe],
 })
-export class SelectPayperiodDialogComponent implements OnInit {
+export class SelectPayperiodRangeDialogComponent implements OnInit {
   readonly displayedColumns = ['isSelected', 'dateFrom', 'dateTo', 'status'];
 
   payPeriodDataSource: PayPeriod[];
@@ -20,14 +19,15 @@ export class SelectPayperiodDialogComponent implements OnInit {
   previousYear: number;
   nextYear: number;
 
+  selectedDates: string;
+
   constructor(
     private payperiodService: PayPeriodService,
-    private dialogRef: MatDialogRef<SelectPayperiodDialogComponent>,
     private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
-    var year = new Date().getFullYear();
+    let year = new Date().getFullYear();
     this.loadList(year);
   }
 
@@ -41,12 +41,6 @@ export class SelectPayperiodDialogComponent implements OnInit {
       this.updateTitle();
     });
   }
-
-  onCancel(): void {
-    this.dialogRef.close();
-  }
-
-  selectedDates: string;
 
   updateTitle(): void {
     if (this.selection.selected.length > 2) {

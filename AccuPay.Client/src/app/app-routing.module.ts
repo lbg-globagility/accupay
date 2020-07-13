@@ -82,9 +82,10 @@ import { PayrollSummaryComponent } from './reports/payroll-summary/payroll-summa
 import { PagibigReportComponent } from './reports/pagibig-report/pagibig-report.component';
 import { PhilhealthReportComponent } from './reports/philhealth-report/philhealth-report.component';
 import { SssReportComponent } from 'src/app/reports/sss-report/sss-report.component';
+import { TaxReportComponent } from './reports/tax-report/tax-report.component';
+import { ThirteenthMonthReportComponent } from './reports/thirteenth-month-report/thirteenth-month-report.component';
 import { LoanReportBytypeComponent } from './reports/loan-report-bytype/loan-report-bytype.component';
 import { LoanReportByemployeeComponent } from './reports/loan-report-byemployee/loan-report-byemployee.component';
-import { TaxReportComponent } from './reports/tax-report/tax-report.component';
 import { LoanTypeListComponent } from './loan-types/loan-type-list/loan-type-list.component';
 import {
   EditEmploymentPolicyComponent,
@@ -327,6 +328,10 @@ const routes: Routes = [
           {
             path: 'tax',
             component: TaxReportComponent,
+          },
+          {
+            path: '13th-month',
+            component: ThirteenthMonthReportComponent,
           },
           {
             path: 'loans-by-type',

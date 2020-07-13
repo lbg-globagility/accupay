@@ -6,9 +6,12 @@ namespace AccuPay.Web.Payroll
     public class StartPayrollDto
     {
         [Required]
-        public DateTime CutoffStart { get; set; }
+        public int Month { get; set; }
 
         [Required]
-        public DateTime CutoffEnd { get; set; }
+        public int Year { get; set; }
+
+        [Required]
+        public bool IsFirstHalf { get; set; }
     }
 }

@@ -40,11 +40,30 @@ export class PayPeriodService extends BasePdfService {
     return this.httpClient.get<PayPeriod[]>(`${this.baseUrl}/year/${year}`);
   }
 
-  start(cutoffStart: Date, cutoffEnd: Date): Observable<void> {
-    return this.httpClient.post<void>(`${this.baseUrl}`, {
-      cutoffStart,
-      cutoffEnd,
+  start(
+    month: number,
+    year: number,
+    isFirstHalf: boolean
+  ): Observable<PayPeriod> {
+    return this.httpClient.post<PayPeriod>(`${this.baseUrl}`, {
+      month,
+      year,
+      isFirstHalf,
     });
+  }
+
+  close(payPeriodId: number): Observable<PayPeriod> {
+    return this.httpClient.put<PayPeriod>(
+      `${this.baseUrl}/${payPeriodId}/close`,
+      {}
+    );
+  }
+
+  reopen(payPeriodId: number): Observable<PayPeriod> {
+    return this.httpClient.put<PayPeriod>(
+      `${this.baseUrl}/${payPeriodId}/reopen`,
+      {}
+    );
   }
 
   getLatest(): Observable<PayPeriod> {

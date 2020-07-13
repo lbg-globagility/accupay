@@ -5,7 +5,7 @@ import { Component, OnInit, Input } from '@angular/core';
   templateUrl: './button-spinner.component.html',
   styleUrls: ['./button-spinner.component.scss'],
   host: {
-    class: 'inline-block align-middle',
+    class: 'inline-block',
   },
 })
 export class ButtonSpinnerComponent implements OnInit {
