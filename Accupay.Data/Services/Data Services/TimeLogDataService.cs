@@ -32,21 +32,6 @@ namespace AccuPay.Data.Services
             await _timeLogRepository.SaveImportAsync(timeLogs, timeAttendanceLogs);
         }
 
-        public async Task DeleteAsync(int id)
-        {
-            var timeLog = await _timeLogRepository.GetByIdAsync(id);
-
-            if (timeLog == null)
-                throw new BusinessLogicException("Time log does not exists.");
-
-            if (timeLog.OrganizationID == null)
-                throw new BusinessLogicException("Time log needs to be associated to an organization.");
-
-            await CheckIfDataIsWithinClosedPayroll(timeLog.LogDate, timeLog.OrganizationID.Value);
-
-            await _timeLogRepository.DeleteAsync(timeLog);
-        }
-
         public async Task ChangeManyAsync(
             int organizationId,
             List<TimeLog> addedTimeLogs = null,
@@ -76,9 +61,9 @@ namespace AccuPay.Data.Services
             }
 
             await _timeLogRepository.ChangeManyAsync(
-                addedTimeLogs: addedTimeLogs,
-                updatedTimeLogs: updatedTimeLogs,
-                deletedTimeLogs: deletedTimeLogs);
+                added: addedTimeLogs,
+                updated: updatedTimeLogs,
+                deleted: deletedTimeLogs);
         }
 
         private void SanitizeEntity(TimeLog timeLog)

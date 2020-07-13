@@ -37,7 +37,7 @@ namespace AccuPay.Web.Shifts.Services
 
         internal async Task<PaginatedList<EmployeeShiftsDto>> ListByEmployee(ShiftsByEmployeePageOptions options)
         {
-            var (employees, total, shifts) = await _service.ListByEmployeeAsync(_currentUser.OrganizationId, options);
+            var (employees, total, shifts) = await _repository.ListByEmployeeAsync(_currentUser.OrganizationId, options);
             var dtos = employees.Select(t => ConvertToDto(t, shifts)).ToList();
 
             return new PaginatedList<EmployeeShiftsDto>(dtos, total, ++options.PageIndex, options.PageSize);

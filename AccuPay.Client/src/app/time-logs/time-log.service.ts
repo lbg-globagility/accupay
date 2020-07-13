@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
-import { TimeLog } from 'src/app/time-logs/shared/time-log';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
 import { TimeLogImportResult } from './shared/time-log-import-result';
 import { TimeLogsByEmployeePageOptions } from 'src/app/time-logs/shared/timelogs-by-employee-page-options';

@@ -61,7 +61,7 @@ namespace AccuPay.Data.Services
                 }
             }
 
-            await _repository.ChangeManyAsync(addedShifts: addedShifts, updatedShifts: updatedShifts);
+            await _repository.ChangeManyAsync(added: addedShifts, updated: updatedShifts);
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
         }
@@ -76,14 +76,9 @@ namespace AccuPay.Data.Services
 
             // TODO: validations
             await _repository.ChangeManyAsync(
-                addedShifts: added,
-                updatedShifts: updated,
-                deletedShifts: deleted);
-        }
-
-        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
-        {
-            return await _repository.ListByEmployeeAsync(organizationId, options);
+                added: added,
+                updated: updated,
+                deleted: deleted);
         }
     }
 }

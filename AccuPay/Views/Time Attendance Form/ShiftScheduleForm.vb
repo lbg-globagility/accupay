@@ -920,10 +920,11 @@ Public Class ShiftScheduleForm
             datePeriod)
 
         Try
-            Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-            Await employeeDutyScheduleRepositorySave.ChangeManyAsync(addedShifts:=addedShiftSchedules,
-                                                                updatedShifts:=updatedShiftSchedules,
-                                                                deletedShifts:=deletedShiftSchedules)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+            Await dataService.ChangeManyAsync(
+                added:=addedShiftSchedules,
+                updated:=updatedShiftSchedules,
+                deleted:=deletedShiftSchedules)
 
             For Each ssm In addedShiftSchedules      'for new
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
