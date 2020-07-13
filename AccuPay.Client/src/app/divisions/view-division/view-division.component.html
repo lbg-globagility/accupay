@@ -1,22 +1,30 @@
-<header class="app-page-header">
-  <h1>View Division</h1>
-</header>
-
-<ng-container *ngIf="isLoading | async">
-  <button
-    style="margin-right: 10px;"
-    mat-raised-button
-    color="accent"
-    routerLink="/divisions/{{ divisionId }}/edit"
-  >
-    EDIT DIVISION
-  </button>
-  <button mat-raised-button color="warn" (click)="confirmDelete()">
-    DELETE DIVISION
-  </button>
+<ng-container *ngIf="division">
+  <header class="flex">
+    <div class="w-1/2">
+      <h1 class="mat-headline">{{ division.name }}</h1>
+    </div>
+    <div class="w-1/2 flex justify-end items-start">
+      <button
+        mat-raised-button
+        color="accent"
+        routerLink="/divisions/{{ divisionId }}/edit"
+        class="m-with-icon"
+      >
+        <mat-icon>edit</mat-icon>EDIT
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        class="m-with-icon"
+        (click)="confirmDelete()"
+      >
+        <mat-icon>delete</mat-icon>DELETE
+      </button>
+    </div>
+  </header>
 
   <!-- Division -->
-  <mat-card>
+  <mat-card class="mb-4">
     <mat-card-content>
       <div class="row">
         <!-- Division Parent Name -->

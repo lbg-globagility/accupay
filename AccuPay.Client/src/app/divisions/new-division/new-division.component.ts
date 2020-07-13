@@ -24,14 +24,14 @@ export class NewDivisionComponent {
     this.divisionService.create(division).subscribe(
       (x) => {
         this.displaySuccess();
-        this.router.navigate(['divisions', x.id]);
+        this.router.navigate(['positions', 'divisions', x.id]);
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to create division.')
     );
   }
 
   onCancel(): void {
-    this.router.navigate(['divisions']);
+    this.router.navigate(['positions']);
   }
 
   private displaySuccess() {

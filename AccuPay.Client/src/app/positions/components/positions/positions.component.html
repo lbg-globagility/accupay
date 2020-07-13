@@ -1,5 +1,13 @@
 <div class="flex h-full">
-  <div class="w-1/4 mat-elevation-z1 h-full overflow-y-auto">
+  <div class="w-1/4 mat-elevation-z1 h-full overflow-y-auto bg-white">
+    <div class="px-4 pt-2">
+      <a mat-raised-button color="primary" routerLink="/positions/new">
+        NEW POSITION
+      </a>
+      <a mat-raised-button color="primary" routerLink="/divisions/new">
+        NEW DIVISION
+      </a>
+    </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
       <!-- This is the tree node template for leaf nodes -->
       <mat-tree-node
@@ -29,7 +37,7 @@
             {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
           </mat-icon>
         </button>
-        <button mat-button routerLink="/positions/{{ node.item.id }}">
+        <button mat-button routerLink="/positions/divisions/{{ node.item.id }}">
           {{ node.name }} ({{ node.items }})
         </button>
       </mat-tree-node>
