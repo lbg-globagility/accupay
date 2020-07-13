@@ -32,7 +32,7 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PaginatedListResult<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
+        public async Task<PaginatedList<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
         {
             var query = _context.Employees
                 .Include(e => e.Position)
@@ -67,7 +67,7 @@ namespace AccuPay.Data.Repositories
             var employees = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Employee>(employees, count);
+            return new PaginatedList<Employee>(employees, count);
         }
 
         public async Task SaveManyAsync(List<Employee> employees)
