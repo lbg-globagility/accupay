@@ -70,6 +70,7 @@ export class EditShiftComponent implements OnInit {
         startTime: this.timeParser.parse(dateMoment, data.startTime),
         endTime: this.timeParser.parse(dateMoment, data.endTime),
         breakStartTime: this.timeParser.parse(dateMoment, data.breakStartTime),
+        breakLength: data.breakLength == null ? 0 : data.breakLength,
         isOffset: data.isOffset == null ? false : Boolean(data.isOffset),
       };
 
@@ -80,7 +81,7 @@ export class EditShiftComponent implements OnInit {
 
     // console.log(shifts);
     // console.log(value.shifts);
-    this.shiftService.updateMany(shifts).subscribe({
+    this.shiftService.batchApply(shifts).subscribe({
       next: () => {
         this.savingState.changeToSuccess();
         this.dialogRef.close(true);

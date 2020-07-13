@@ -3,7 +3,6 @@ using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,41 +16,6 @@ namespace AccuPay.Data.Services
         public EmployeeDutyScheduleDataService(EmployeeDutyScheduleRepository repository)
         {
             _repository = repository;
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var shift = await _repository.GetByIdAsync(id);
-
-            if (shift == null)
-                throw new BusinessLogicException("Shift does not exists.");
-
-            await _repository.DeleteAsync(shift);
-        }
-
-        public async Task CreateAsync(EmployeeDutySchedule shift)
-        {
-            if (shift == null)
-                throw new BusinessLogicException("Invalid shift.");
-
-            if (shift.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            var key = new EmployeeDutyScheduleRepository.CompositeKey(shift.EmployeeID.Value, shift.DateSched);
-            var existingShift = await _repository.GetByIdAsync(key);
-
-            if (existingShift != null)
-                throw new BusinessLogicException("Employee already has a shift for that day.");
-
-            await _repository.CreateAsync(shift);
-        }
-
-        public async Task UpdateAsync(EmployeeDutySchedule shift)
-        {
-            if (shift.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            await _repository.UpdateAsync(shift);
         }
 
         public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
@@ -102,11 +66,6 @@ namespace AccuPay.Data.Services
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
         }
 
-        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
-        {
-            return await _repository.ListByEmployeeAsync(organizationId, options);
-        }
-
         public async Task ChangeManyAsync(
             List<EmployeeDutySchedule> added,
             List<EmployeeDutySchedule> updated,
@@ -120,6 +79,11 @@ namespace AccuPay.Data.Services
                 addedShifts: added,
                 updatedShifts: updated,
                 deletedShifts: deleted);
+        }
+
+        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
+        {
+            return await _repository.ListByEmployeeAsync(organizationId, options);
         }
     }
 }

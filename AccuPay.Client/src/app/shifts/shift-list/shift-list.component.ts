@@ -15,7 +15,6 @@ import { EmployeeShifts } from '../shared/employee-shifts';
 import { ShiftsByEmployeePageOptions } from '../shared/shifts-by-employee-page-option';
 import { EditShiftComponent } from '../edit-shift/edit-shift.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Employee } from 'src/app/employees/shared/employee';
 
 interface DateHeader {
   title: string;
