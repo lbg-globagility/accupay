@@ -67,7 +67,7 @@ export class EditTimeLogComponent implements OnInit {
       timeLogs.push(timeLog);
     }
 
-    this.timeLogService.update2(timeLogs).subscribe({
+    this.timeLogService.batchApply(timeLogs).subscribe({
       next: () => {
         this.savingState.changeToSuccess();
         this.dialogRef.close(true);

@@ -11,15 +11,19 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class DivisionDataService : BaseDataService<Division>
+    public class DivisionDataService : BaseSavableDataService<Division>
     {
         private readonly DivisionRepository _divisionRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
         private readonly PayrollContext _context;
 
-        public DivisionDataService(DivisionRepository repository, ListOfValueRepository listOfValueRepository, PayrollContext context) : base(repository)
+        public DivisionDataService(
+            DivisionRepository divisionRepository,
+            ListOfValueRepository listOfValueRepository,
+            PayPeriodRepository payPeriodRepository,
+            PayrollContext context) : base(divisionRepository, payPeriodRepository)
         {
-            _divisionRepository = repository;
+            _divisionRepository = divisionRepository;
             _listOfValueRepository = listOfValueRepository;
             _context = context;
         }

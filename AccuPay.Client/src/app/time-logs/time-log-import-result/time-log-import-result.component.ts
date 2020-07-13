@@ -3,9 +3,9 @@ import { TimeLogImportDetails } from '../shared/time-log-import-details';
 import { TimeLogImportResult } from '../shared/time-log-import-result';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TimeLogService } from '../time-log.service';
-import Swal from 'sweetalert2';
 import { TimeLog } from '../shared/time-log';
 import { PageEvent } from '@angular/material/paginator';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-time-log-import-result',
@@ -40,10 +40,13 @@ export class TimeLogImportResultComponent implements OnInit {
 
   dataSourceInvalid: TimeLogImportDetails[];
 
+  isSaving: boolean = false;
+
   constructor(
     private dialog: MatDialogRef<TimeLogImportResult>,
     private timeLogService: TimeLogService,
-    @Inject(MAT_DIALOG_DATA) private data: any
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private errorHandler: ErrorHandler
   ) {
     this.result = data.result;
   }
@@ -87,10 +90,22 @@ export class TimeLogImportResultComponent implements OnInit {
   }
 
   onSave(): void {
-    this.timeLogService.update2(this.dataSourceSuccess).subscribe({
-      next: (result) => {
-        this.dialog.close(true);
-      },
-    });
+    this.isSaving = true;
+
+    this.timeLogService
+      .batchApply(this.dataSourceSuccess)
+      .subscribe(
+        (result) => {
+          this.dialog.close(true);
+        },
+        (err) =>
+          this.errorHandler.badRequest(
+            err,
+            'Failed to save imported time logs.'
+          )
+      )
+      .add(() => {
+        this.isSaving = false;
+      });
   }
 }

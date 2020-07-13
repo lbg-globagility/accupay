@@ -12,28 +12,28 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class OvertimeDataService : BaseDataService<Overtime>
+    public class OvertimeDataService : BaseSavableDataService<Overtime>
     {
-        private readonly OvertimeRepository _repository;
+        private readonly OvertimeRepository _overtimeRepository;
 
-        public OvertimeDataService(OvertimeRepository repository) : base(repository)
+        public OvertimeDataService(OvertimeRepository overtimeRepository, PayPeriodRepository payPeriodRepository) : base(overtimeRepository, payPeriodRepository)
         {
-            _repository = repository;
+            _overtimeRepository = overtimeRepository;
         }
 
         public async Task DeleteAsync(int overtimeId)
         {
-            var overtime = await _repository.GetByIdAsync(overtimeId);
+            var overtime = await _overtimeRepository.GetByIdAsync(overtimeId);
 
             if (overtime == null)
                 throw new BusinessLogicException("Overtime does not exists.");
 
-            await _repository.DeleteAsync(overtime);
+            await _overtimeRepository.DeleteAsync(overtime);
         }
 
         public async Task DeleteManyAsync(IEnumerable<int> overtimeIds)
         {
-            await _repository.DeleteManyAsync(overtimeIds);
+            await _overtimeRepository.DeleteManyAsync(overtimeIds);
         }
 
         protected override async Task SanitizeEntity(Overtime overtime)
@@ -72,17 +72,17 @@ namespace AccuPay.Data.Services
 
         public async Task<Overtime> GetByIdAsync(int overtimeId)
         {
-            return await _repository.GetByIdAsync(overtimeId);
+            return await _overtimeRepository.GetByIdAsync(overtimeId);
         }
 
         public async Task<Overtime> GetByIdWithEmployeeAsync(int overtimeId)
         {
-            return await _repository.GetByIdWithEmployeeAsync(overtimeId);
+            return await _overtimeRepository.GetByIdWithEmployeeAsync(overtimeId);
         }
 
         public async Task<IEnumerable<Overtime>> GetByEmployeeAsync(int employeeId)
         {
-            return await _repository.GetByEmployeeAsync(employeeId);
+            return await _overtimeRepository.GetByEmployeeAsync(employeeId);
         }
 
         public async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options,
@@ -91,7 +91,7 @@ namespace AccuPay.Data.Services
                                                                                DateTime? dateFrom = null,
                                                                                DateTime? dateTo = null)
         {
-            return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
+            return await _overtimeRepository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
         }
 
         public IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,
@@ -99,7 +99,7 @@ namespace AccuPay.Data.Services
                                                                 TimePeriod timePeriod,
                                                                 OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {
-            return _repository.GetByEmployeeIDsAndDatePeriod(organizationId,
+            return _overtimeRepository.GetByEmployeeIDsAndDatePeriod(organizationId,
                                                             employeeIdList,
                                                             timePeriod,
                                                             overtimeStatus);
@@ -107,7 +107,7 @@ namespace AccuPay.Data.Services
 
         public List<string> GetStatusList()
         {
-            return _repository.GetStatusList();
+            return _overtimeRepository.GetStatusList();
         }
 
         #endregion Queries

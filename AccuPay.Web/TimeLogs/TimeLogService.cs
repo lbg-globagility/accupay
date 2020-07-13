@@ -7,7 +7,6 @@ using AccuPay.Data.ValueObjects;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,43 +34,12 @@ namespace AccuPay.Web.TimeLogs
             _repository = repository;
         }
 
-        public async Task<PaginatedList<TimeLogDto>> PaginatedList(PageOptions options, string searchTerm)
-        {
-            // TODO: sort and desc in repository
-
-            var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
-
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<TimeLogDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
-        }
-
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
         {
-            var (employees, total, timelogs) = await _dataService.ListByEmployeeAsync(_currentUser.OrganizationId, options);
+            var (employees, total, timelogs) = await _repository.ListByEmployeeAsync(_currentUser.OrganizationId, options);
             var dtos = employees.Select(t => ConvertToDto(t, timelogs)).ToList();
 
             return new PaginatedList<EmployeeTimeLogsDto>(dtos, total, ++options.PageIndex, options.PageSize);
-        }
-
-        internal async Task<ActionResult<TimeLogDto>> Create(CreateTimeLogDto dto)
-        {
-            // TODO: validations
-            int userId = 1;
-
-            var timeLog = new TimeLog
-            {
-                OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = userId,
-                EmployeeID = dto.EmployeeId,
-                LogDate = dto.Date
-            };
-
-            ApplyChanges(dto, timeLog);
-
-            await _dataService.CreateAsync(timeLog);
-
-            return ConvertToDto(timeLog);
         }
 
         internal async Task BatchApply(ICollection<UpdateTimeLogDto> dtos)
@@ -131,26 +99,7 @@ namespace AccuPay.Web.TimeLogs
                 }
             }
 
-            await _dataService.ChangeManyAsync(added, updated, deleted);
-        }
-
-        internal async Task<TimeLogDto> GetByIdWithEmployeeAsync(int id)
-        {
-            var timelog = await _repository.GetByIdWithEmployeeAsync(id);
-
-            return ConvertToDto(timelog);
-        }
-
-        internal async Task<TimeLogDto> GetByIdAsync(int id)
-        {
-            var timelog = await _repository.GetByIdAsync(id);
-
-            return ConvertToDto(timelog);
-        }
-
-        internal async Task Delete(int id)
-        {
-            await _dataService.DeleteAsync(id);
+            await _dataService.ChangeManyAsync(_currentUser.OrganizationId, added, updated, deleted);
         }
 
         internal async Task<TimeLogImportResultDto> Import(IFormFile file)
@@ -213,13 +162,6 @@ namespace AccuPay.Web.TimeLogs
                 BranchId = timeLog.BranchID,
                 BranchName = timeLog.Branch?.Name
             };
-        }
-
-        private static void ApplyChanges(CrudTimeLogDto dto, TimeLog timeLog)
-        {
-            timeLog.BranchID = dto.BranchId;
-            timeLog.TimeInFull = dto.StartTime;
-            timeLog.TimeOutFull = dto.EndTime;
         }
 
         private static EmployeeTimeLogsDto ConvertToDto(Employee employee, ICollection<TimeLog> timeLogs)

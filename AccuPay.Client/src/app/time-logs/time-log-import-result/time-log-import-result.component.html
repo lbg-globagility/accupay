@@ -1,6 +1,6 @@
 <h1 class="mat-headline">Import</h1>
 <mat-tab-group>
-  <mat-tab label="Success ({{ result.generatedTimeLogs?.length }})">
+  <mat-tab label="Ok ({{ result.generatedTimeLogs?.length }})">
     <div class="mat-elevation-z1 size">
       <table mat-table [dataSource]="dataSourceSuccess" class="w-full">
         <!-- VALID TABLE -->
@@ -116,9 +116,11 @@
     mat-button
     color="primary"
     (click)="onSave()"
+    [disabled]="isSaving"
     *ngIf="dataSourceSuccess?.length > 0"
   >
-    SAVE
+    {{ isSaving ? "SAVE..." : "SAVE" }}
+    <app-button-spinner [active]="isSaving"></app-button-spinner>
   </button>
   <button mat-button [mat-dialog-close]="false">CANCEL</button>
 </div>

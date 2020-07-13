@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LeaveDataService : BaseDataService<Leave>
+    public class LeaveDataService : BaseSavableDataService<Leave>
     {
         private List<string> VALIDATABLE_TYPES = new List<string>()
         {
@@ -28,7 +28,6 @@ namespace AccuPay.Data.Services
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
         private readonly LeaveRepository _leaveRepository;
         private readonly LeaveLedgerRepository _leaveLedgerRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
         private readonly ShiftScheduleRepository _shiftScheduleRepository;
 
         public LeaveDataService(
@@ -39,7 +38,7 @@ namespace AccuPay.Data.Services
             LeaveRepository leaveRepository,
             LeaveLedgerRepository leaveLedgerRepository,
             PayPeriodRepository payPeriodRepository,
-            ShiftScheduleRepository shiftScheduleRepository) : base(leaveRepository)
+            ShiftScheduleRepository shiftScheduleRepository) : base(leaveRepository, payPeriodRepository)
         {
             _context = context;
             _policy = policy;
@@ -47,7 +46,6 @@ namespace AccuPay.Data.Services
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
             _leaveRepository = leaveRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
-            _payPeriodRepository = payPeriodRepository;
             _shiftScheduleRepository = shiftScheduleRepository;
         }
 

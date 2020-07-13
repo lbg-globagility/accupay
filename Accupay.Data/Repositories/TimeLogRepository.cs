@@ -32,7 +32,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #region CRUD
+        #region Save
 
         public async Task ChangeManyAsync(
             List<TimeLog> addedTimeLogs,
@@ -67,20 +67,15 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        internal async Task UpdateAsync(TimeLog timeLog)
-        {
-            _context.Entry(timeLog).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task DeleteAsync(TimeLog timeLog)
+        public async Task DeleteAsync(TimeLog timeLog)
         {
             _context.Remove(timeLog);
             await _context.SaveChangesAsync();
         }
 
-        internal async Task SaveImportAsync(IReadOnlyCollection<TimeLog> timeLogs,
-                                        IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
+        public async Task SaveImportAsync(
+            IReadOnlyCollection<TimeLog> timeLogs,
+            IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
         {
             string importId = GenerateImportId(_context);
 
@@ -93,8 +88,8 @@ namespace AccuPay.Data.Repositories
                 var minimumDate = timeLog.LogDate.ToMinimumHourValue();
                 var maximumDate = timeLog.LogDate.ToMaximumHourValue();
 
-                _context.TimeAttendanceLogs.
-                    RemoveRange(_context.TimeAttendanceLogs
+                _context.TimeAttendanceLogs
+                    .RemoveRange(_context.TimeAttendanceLogs
                         .Where(t => t.TimeStamp >= minimumDate)
                         .Where(t => t.TimeStamp <= maximumDate));
 
@@ -122,13 +117,7 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CreateAsync(TimeLog timeLog)
-        {
-            _context.TimeLogs.Add(timeLog);
-            await _context.SaveChangesAsync();
-        }
-
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 

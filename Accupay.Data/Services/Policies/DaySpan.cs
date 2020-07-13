@@ -1,4 +1,6 @@
-﻿namespace AccuPay.Data.Services.Policies
+﻿using System;
+
+namespace AccuPay.Data.Services.Policies
 {
     public class DaysSpan
     {
@@ -24,5 +26,16 @@
         public static DaysSpan DefaultFirstHalf => new DaysSpan(DefaultFirstHalfStartDay, DefaultFirstHalfEndDay);
 
         public static DaysSpan DefaultEndOfTheMonth => new DaysSpan(DefaultEndOfTheMonthStartDay, DefaultEndOfTheMonthEndDay);
+
+        public bool IsBetween(DateTime date)
+        {
+            int month = date.Month;
+            int year = date.Year;
+
+            DateTime fromDate = From.GetDate(month: month, year: year);
+            DateTime toDate = To.GetDate(month: month, year: year);
+
+            return date >= fromDate && date <= toDate;
+        }
     }
 }

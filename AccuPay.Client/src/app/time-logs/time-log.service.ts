@@ -16,14 +16,6 @@ export class TimeLogService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getAll(options: PageOptions, term = ''): Observable<PaginatedList<TimeLog>> {
-    const params = options ? options.toObject() : null;
-    params.term = term;
-    return this.httpClient.get<PaginatedList<TimeLog>>(`${this.baseUrl}`, {
-      params,
-    });
-  }
-
   listByEmployee(
     options: TimeLogsByEmployeePageOptions
   ): Observable<PaginatedList<EmployeeTimeLogs>> {
@@ -37,25 +29,8 @@ export class TimeLogService {
     );
   }
 
-  get(id: number): Observable<TimeLog> {
-    return this.httpClient.get<TimeLog>(`${this.baseUrl}/${id}`);
-  }
-
-  delete(id: number): Observable<TimeLog> {
-    return this.httpClient.delete<TimeLog>(`${this.baseUrl}/${id}`);
-  }
-
-  update(timeLog: TimeLog, id: number): Observable<TimeLog> {
-    return this.httpClient.put<TimeLog>(`${this.baseUrl}/${id}`, timeLog);
-  }
-
-  update2(timeLogs: any[]): Observable<void> {
+  batchApply(timeLogs: any[]): Observable<void> {
     return this.httpClient.post<void>(`${this.baseUrl}`, timeLogs);
-  }
-
-  create(timeLog: TimeLog): Observable<TimeLog> {
-    console.log(timeLog);
-    return this.httpClient.post<TimeLog>(`${this.baseUrl}`, timeLog);
   }
 
   import(file: File): Observable<TimeLogImportResult> {

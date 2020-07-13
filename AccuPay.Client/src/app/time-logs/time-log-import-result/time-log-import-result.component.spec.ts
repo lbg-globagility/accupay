@@ -8,9 +8,8 @@ describe('TimeLogImportResultComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TimeLogImportResultComponent ]
-    })
-    .compileComponents();
+      declarations: [TimeLogImportResultComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
