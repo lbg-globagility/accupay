@@ -16,6 +16,7 @@ import { Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { ReportService } from 'src/app/reports/report.service';
+import { LoadingState } from 'src/app/core/states/loading-state';
 
 @Component({
   selector: 'app-view-payperiod',
@@ -55,6 +56,8 @@ export class ViewPayPeriodComponent implements OnInit {
 
   expandedPaystub: Paystub;
 
+  loadingState: LoadingState = new LoadingState();
+
   isDownloadingPayslip: boolean = false;
   isDownloadingSummary: boolean = false;
 
@@ -73,6 +76,8 @@ export class ViewPayPeriodComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadingState.changeToLoading();
+
     this.loadPayPeriod();
     this.loadPaystubs();
   }
@@ -97,6 +102,8 @@ export class ViewPayPeriodComponent implements OnInit {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.expandedPaystub = data[0];
+
+        this.loadingState.changeToSuccess();
       });
   }
 

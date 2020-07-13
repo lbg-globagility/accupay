@@ -5,11 +5,11 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { Moment } from 'moment';
 
 @Component({
-  selector: 'app-thirtheenth-month-report',
-  templateUrl: './thirtheenth-month-report.component.html',
-  styleUrls: ['./thirtheenth-month-report.component.scss'],
+  selector: 'app-thirteenth-month-report',
+  templateUrl: './thirteenth-month-report.component.html',
+  styleUrls: ['./thirteenth-month-report.component.scss'],
 })
-export class ThirtheenthMonthReportComponent {
+export class ThirteenthMonthReportComponent {
   @ViewChild(SelectDateRangeComponent)
   dateRangeForm: SelectDateRangeComponent;
 

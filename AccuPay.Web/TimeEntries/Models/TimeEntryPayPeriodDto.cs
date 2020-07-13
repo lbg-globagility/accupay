@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AccuPay.Web.TimeEntries.Models
 {
-    public class TimeEntryPayPeriodDto : PayperiodDto
+    public class TimeEntryPayPeriodDto : PayPeriodDto
     {
         public int TimeEntryCount { get; set; }
         public int ShiftCount { get; set; }

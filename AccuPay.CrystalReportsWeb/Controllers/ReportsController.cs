@@ -96,7 +96,6 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         [Route("loanbytype-report/{organizationId}/{dateFrom}/{dateTo}/{isPerPage}")]
         public HttpResponseMessage GetLoanByTypeReport(int organizationId, DateTime dateFrom, DateTime dateTo, bool isPerPage)
         {
-
             string pdfFullPath = _reportingService.GenerateLoanByTypeReport(organizationId, dateFrom, dateTo, isPerPage);
 
             return PdfReportResult(pdfFullPath);
@@ -112,7 +111,6 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         [Route("loanbyemployee-report/{organizationId}/{dateFrom}/{dateTo}")]
         public HttpResponseMessage GetLoanByEmployeeReport(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
-
             string pdfFullPath = _reportingService.GenerateLoanByEmployeeReport(organizationId, dateFrom, dateTo);
 
             return PdfReportResult(pdfFullPath);
@@ -128,7 +126,6 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         [Route("tax-report/{organizationId}/{month}/{year}")]
         public HttpResponseMessage GetTaxReport(int organizationId, int month, int year)
         {
-
             string pdfFullPath = _reportingService.GenerateTaxReport(organizationId, month, year);
 
             return PdfReportResult(pdfFullPath);
@@ -141,10 +138,9 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         /// <param name="dateFrom">The start date of the report.</param>
         /// <param name="dateTo">The end date of the report.</param>
         /// <returns></returns>
-        [Route("thirteenthmonth-report/{organizationId}/{dateFrom}/{dateTo}")]
+        [Route("thirteenth-month-report/{organizationId}/{dateFrom}/{dateTo}")]
         public HttpResponseMessage GetThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
-
             string pdfFullPath = _reportingService.GenerateThirteenthMonthReport(organizationId, dateFrom, dateTo);
 
             return PdfReportResult(pdfFullPath);

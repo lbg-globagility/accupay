@@ -1,9 +1,7 @@
 using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
-using AccuPay.Data.ValueObjects;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,31 +12,20 @@ namespace AccuPay.Web.Payroll
     public class PayperiodService
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
-        private readonly PayPeriodRepository _payperiodRepository;
+        private readonly PayPeriodRepository _repository;
+        private readonly PayPeriodDataService _dataService;
         private readonly ICurrentUser _currentUser;
 
         public PayperiodService(
             DbContextOptionsService dbContextOptionsService,
-            PayPeriodRepository payperiodRepository,
+            PayPeriodRepository repository,
+            PayPeriodDataService dataService,
             ICurrentUser currentUser)
         {
             _dbContextOptionsService = dbContextOptionsService;
-            _payperiodRepository = payperiodRepository;
+            _repository = repository;
+            _dataService = dataService;
             _currentUser = currentUser;
-        }
-
-        public async Task<PayperiodDto> Start(StartPayrollDto dto)
-        {
-            var payperiod = await _payperiodRepository.GetByCutoffDates(
-                new TimePeriod(dto.CutoffStart, dto.CutoffEnd),
-                _currentUser.OrganizationId);
-
-            payperiod.Status = PayPeriodStatus.Open;
-            payperiod.LastUpdBy = _currentUser.DesktopUserId;
-
-            await _payperiodRepository.Update(payperiod);
-
-            return ConvertToDto(payperiod);
         }
 
         public async Task<PayrollResultDto> Calculate(PayrollResources resources, int payperiodId)
@@ -79,42 +66,64 @@ namespace AccuPay.Web.Payroll
             return resultDto;
         }
 
-        public async Task<PayperiodDto> GetById(int payperiodId)
+        public async Task<PayPeriodDto> Start(StartPayrollDto dto)
         {
-            var payperiod = await _payperiodRepository.GetByIdAsync(payperiodId);
+            var newPayPeriod = await _dataService.StartStatusAsync(
+                organizationId: _currentUser.OrganizationId,
+                month: dto.Month,
+                year: dto.Year,
+                isFirstHalf: dto.IsFirstHalf,
+                userId: _currentUser.DesktopUserId);
+
+            return ConvertToDto(newPayPeriod);
+        }
+
+        public async Task Close(int payPeriodId)
+        {
+            await _dataService.CloseStatusAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+        }
+
+        public async Task Reopen(int payPeriodId)
+        {
+            await _dataService.ReopenStatusAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+        }
+
+        public async Task<PayPeriodDto> GetById(int payPeriodId)
+        {
+            var payperiod = await _repository.GetByIdAsync(payPeriodId);
 
             return ConvertToDto(payperiod);
         }
 
-        public async Task<PayperiodDto> GetLatest()
+        public async Task<PayPeriodDto> GetLatest()
         {
-            var payperiod = await _payperiodRepository.GetLatest(_currentUser.OrganizationId);
+            var payperiod = await _repository.GetLatestAsync(_currentUser.OrganizationId);
 
             return ConvertToDto(payperiod);
         }
 
-        public async Task<PaginatedList<PayperiodDto>> List(PageOptions options)
+        public async Task<PaginatedList<PayPeriodDto>> List(PageOptions options)
         {
-            var paginatedList = await _payperiodRepository.GetPaginatedListAsync(options, _currentUser.OrganizationId);
+            var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId);
             var dtos = paginatedList.List.Select(t => ConvertToDto(t)).ToList();
 
-            return new PaginatedList<PayperiodDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return new PaginatedList<PayPeriodDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
-        public async Task<List<PayperiodDto>> GetYearlyPayPeriods(int year)
+        public async Task<List<PayPeriodDto>> GetYearlyPayPeriods(int year)
         {
-            var payPeriods = await _payperiodRepository.GetYearlyPayPeriodsAsync(_currentUser.OrganizationId, year);
+            var payPeriods = await _repository.GetYearlyPayPeriodsAsync(_currentUser.OrganizationId, year);
 
             var payPeriodDtos = payPeriods.Select(x => ConvertToDto(x)).ToList();
 
             return payPeriodDtos;
         }
 
-        private PayperiodDto ConvertToDto(PayPeriod t)
+        private PayPeriodDto ConvertToDto(PayPeriod t)
         {
             if (t == null) return null;
 
-            var dto = new PayperiodDto();
+            var dto = new PayPeriodDto();
             dto.ApplyData(t);
 
             return dto;

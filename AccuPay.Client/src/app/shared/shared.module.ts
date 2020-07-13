@@ -15,6 +15,10 @@ import { ExpandableRowComponent } from 'src/app/shared/components/expandable-row
 import { ExpandableRowContainerDirective } from 'src/app/shared/components/expandable-row/expandable-row-container.directive';
 import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expandable-row/expandable-row-trigger.directive';
 import { YesNoPipe } from '../core/pipes/yes-no.pipe';
+import { ButtonSpinnerComponent } from 'src/app/shared/components/button-spinner/button-spinner.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -27,6 +31,7 @@ import { YesNoPipe } from '../core/pipes/yes-no.pipe';
     IfZeroPipe,
     AmountPipe,
     YesNoPipe,
+    ButtonSpinnerComponent,
     DisplayFieldComponent,
     ExpandableRowComponent,
     ExpandableRowContainerDirective,
@@ -41,10 +46,11 @@ import { YesNoPipe } from '../core/pipes/yes-no.pipe';
   imports: [
     CommonModule,
     // MatDialogModule,
-    // MatIconModule,
+    MatIconModule,
     // MatTooltipModule,
     // MatDividerModule,
-    // MatButtonModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
     // MatProgressBarModule,
   ],
   exports: [
@@ -57,6 +63,7 @@ import { YesNoPipe } from '../core/pipes/yes-no.pipe';
     IfZeroPipe,
     AmountPipe,
     YesNoPipe,
+    ButtonSpinnerComponent,
     ImgFallbackDirective,
     DisplayFieldComponent,
     ExpandableRowComponent,

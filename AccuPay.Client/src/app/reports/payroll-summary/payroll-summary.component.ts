@@ -3,7 +3,7 @@ import { ReportService } from '../report.service';
 import { ErrorHandler } from '../../core/shared/services/error-handler';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { SelectPayperiodDialogComponent } from '../components/select-payperiod-dialog/select-payperiod-dialog.component';
+import { SelectPayperiodRangeDialogComponent } from '../components/select-payperiod-range-dialog/select-payperiod-range-dialog.component';
 
 @Component({
   selector: 'app-payroll-summary',
@@ -38,7 +38,7 @@ export class PayrollSummaryComponent implements OnInit {
       return;
     }
 
-    const dialogRef = this.dialog.open(SelectPayperiodDialogComponent, {
+    const dialogRef = this.dialog.open(SelectPayperiodRangeDialogComponent, {
       minWidth: '500px',
       data: {
         title: 'Delete Leave',

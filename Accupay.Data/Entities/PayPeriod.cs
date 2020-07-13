@@ -3,23 +3,18 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("payperiod")]
-    public class PayPeriod : IPayPeriod
+    public class PayPeriod : BaseEntity, IPayPeriod
     {
         private const int IsJanuary = 1;
         private const int IsDecember = 12;
 
-        private const int FirstHalfValue = 1;
-        private const int EndOftheMonthValue = 0;
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
+        public const int FirstHalfValue = 1;
+        public const int EndOftheMonthValue = 0;
 
         public int? OrganizationID { get; set; }
 

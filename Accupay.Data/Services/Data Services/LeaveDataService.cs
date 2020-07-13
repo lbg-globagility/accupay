@@ -357,7 +357,7 @@ namespace AccuPay.Data.Services
             Leave leave,
             int organizationId)
         {
-            var currentPayPeriod = await _payPeriodRepository.GetByDateAsync(leave.StartDate, organizationId);
+            var currentPayPeriod = await _payPeriodRepository.GetAsync(organizationId, leave.StartDate);
 
             if (currentPayPeriod == null)
                 return new List<Leave>();
