@@ -18,41 +18,6 @@ namespace AccuPay.Data.Services
             _repository = repository;
         }
 
-        public async Task DeleteAsync(int id)
-        {
-            var shift = await _repository.GetByIdAsync(id);
-
-            if (shift == null)
-                throw new BusinessLogicException("Shift does not exists.");
-
-            await _repository.DeleteAsync(shift);
-        }
-
-        public async Task CreateAsync(EmployeeDutySchedule shift)
-        {
-            if (shift == null)
-                throw new BusinessLogicException("Invalid shift.");
-
-            if (shift.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            var key = new EmployeeDutyScheduleRepository.CompositeKey(shift.EmployeeID.Value, shift.DateSched);
-            var existingShift = await _repository.GetByIdAsync(key);
-
-            if (existingShift != null)
-                throw new BusinessLogicException("Employee already has a shift for that day.");
-
-            await _repository.CreateAsync(shift);
-        }
-
-        public async Task UpdateAsync(EmployeeDutySchedule shift)
-        {
-            if (shift.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            await _repository.UpdateAsync(shift);
-        }
-
         public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
             IEnumerable<ShiftModel> shiftModels,
             int organizationId,
@@ -99,6 +64,26 @@ namespace AccuPay.Data.Services
             await _repository.ChangeManyAsync(addedShifts: addedShifts, updatedShifts: updatedShifts);
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
+        }
+
+        public async Task ChangeManyAsync(
+            List<EmployeeDutySchedule> added,
+            List<EmployeeDutySchedule> updated,
+            List<EmployeeDutySchedule> deleted)
+        {
+            if (added == null && updated == null && deleted == null)
+                throw new BusinessLogicException("No shifts to be saved.");
+
+            // TODO: validations
+            await _repository.ChangeManyAsync(
+                addedShifts: added,
+                updatedShifts: updated,
+                deletedShifts: deleted);
+        }
+
+        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
+        {
+            return await _repository.ListByEmployeeAsync(organizationId, options);
         }
     }
 }

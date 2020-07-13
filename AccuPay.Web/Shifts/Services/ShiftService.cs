@@ -3,11 +3,13 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shifts.Models;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,62 +35,78 @@ namespace AccuPay.Web.Shifts.Services
             _currentUser = currentUser;
         }
 
-        public async Task<PaginatedList<ShiftDto>> PaginatedList(PageOptions options, string searchTerm)
+        internal async Task<PaginatedList<EmployeeShiftsDto>> ListByEmployee(ShiftsByEmployeePageOptions options)
         {
-            // TODO: sort and desc in repository
+            var (employees, total, shifts) = await _service.ListByEmployeeAsync(_currentUser.OrganizationId, options);
+            var dtos = employees.Select(t => ConvertToDto(t, shifts)).ToList();
 
-            var paginatedList = await _repository.GetPaginatedListAsync(options,
-                                                                    _currentUser.OrganizationId,
-                                                                    searchTerm);
-
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<ShiftDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return new PaginatedList<EmployeeShiftsDto>(dtos, total, ++options.PageIndex, options.PageSize);
         }
 
-        internal async Task<ShiftDto> GetById(int id)
+        internal async Task BatchApply(ICollection<ShiftDto> dtos)
         {
-            var shift = await _repository.GetByIdWithEmployeeAsync(id);
+            var employeeIds = dtos.Select(t => t.EmployeeId).ToList();
+            var dateFrom = dtos.Select(t => t.Date).Min();
+            var dateTo = dtos.Select(t => t.Date).Max();
 
-            return ConvertToDto(shift);
-        }
+            var shifts = await _repository
+                .GetByMultipleEmployeeAndBetweenDatePeriodAsync(_currentUser.OrganizationId, employeeIds, new TimePeriod(dateFrom, dateTo));
 
-        internal async Task<ShiftDto> Create(CreateShiftDto dto)
-        {
-            // TODO: validations
-            var shift = new EmployeeDutySchedule
+            var added = new List<EmployeeDutySchedule>();
+            var updated = new List<EmployeeDutySchedule>();
+            var deleted = new List<EmployeeDutySchedule>();
+
+            foreach (var dto in dtos)
             {
-                OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = _currentUser.DesktopUserId,
-                EmployeeID = dto.EmployeeId,
-                DateSched = dto.Date
-            };
+                var existingShift = shifts
+                    .Where(t => t.DateSched == dto.Date)
+                    .Where(t => t.EmployeeID == dto.EmployeeId)
+                    .FirstOrDefault();
 
-            ApplyChanges(dto, shift);
+                var hasData = dto.StartTime.HasValue && dto.EndTime.HasValue;
 
-            await _service.CreateAsync(shift);
+                if (existingShift is null)
+                {
+                    if (hasData)
+                    {
+                        var newShift = new EmployeeDutySchedule()
+                        {
+                            OrganizationID = _currentUser.OrganizationId,
+                            EmployeeID = dto.EmployeeId,
+                            CreatedBy = _currentUser.DesktopUserId,
+                            LastUpdBy = _currentUser.DesktopUserId,
+                            DateSched = dto.Date,
+                            StartTimeFull = dto.StartTime,
+                            EndTimeFull = dto.EndTime,
+                            ShiftBreakStartTimeFull = dto.BreakStartTime,
+                            BreakLength = dto.BreakLength,
+                            IsRestDay = dto.IsOffset
+                        };
 
-            return ConvertToDto(shift);
-        }
+                        added.Add(newShift);
+                    }
+                }
+                else
+                {
+                    if (hasData)
+                    {
+                        existingShift.StartTimeFull = dto.StartTime;
+                        existingShift.EndTimeFull = dto.EndTime;
+                        existingShift.ShiftBreakStartTimeFull = dto.BreakStartTime;
+                        existingShift.BreakLength = dto.BreakLength;
+                        existingShift.IsRestDay = dto.IsOffset;
+                        existingShift.LastUpdBy = _currentUser.DesktopUserId;
 
-        internal async Task<ShiftDto> Update(int id, UpdateShiftDto dto)
-        {
-            // TODO: validations
-            var shift = await _repository.GetByIdAsync(id);
-            if (shift == null) return null;
+                        updated.Add(existingShift);
+                    }
+                    else
+                    {
+                        deleted.Add(existingShift);
+                    }
+                }
+            }
 
-            shift.LastUpdBy = _currentUser.DesktopUserId;
-
-            ApplyChanges(dto, shift);
-
-            await _service.UpdateAsync(shift);
-
-            return ConvertToDto(shift);
-        }
-
-        public async Task Delete(int id)
-        {
-            await _service.DeleteAsync(id);
+            await _service.ChangeManyAsync(added, updated, deleted);
         }
 
         internal async Task Import(IFormFile file)
@@ -108,35 +126,26 @@ namespace AccuPay.Web.Shifts.Services
             await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
         }
 
-        private static void ApplyChanges(CrudShiftDto dto, EmployeeDutySchedule shift)
+        private static EmployeeShiftsDto ConvertToDto(Employee employee, ICollection<EmployeeDutySchedule> shifts)
         {
-            shift.StartTime = dto.StartTime.TimeOfDay;
-            shift.EndTime = dto.EndTime.TimeOfDay;
-            shift.BreakStartTime = dto.BreakStartTime?.TimeOfDay;
-            shift.BreakLength = dto.BreakLength;
-            shift.IsRestDay = dto.isOffset;
+            var dto = new EmployeeShiftsDto()
+            {
+                EmployeeId = employee.RowID.Value,
+                EmployeeNo = employee.EmployeeNo,
+                FullName = employee.FullNameWithMiddleInitialLastNameFirst,
+            };
 
-            shift.ComputeShiftHours();
+            dto.Shifts = shifts
+                .Where(t => t.EmployeeID.Value == employee.RowID)
+                .Select(t => ConvertToEmployeeSfhitDto(t))
+                .ToList();
+
+            return dto;
         }
 
-        private static ShiftDto ConvertToDto(EmployeeDutySchedule shift)
+        private static EmployeeDutyScheduleDto ConvertToEmployeeSfhitDto(EmployeeDutySchedule dutySchedule)
         {
-            if (shift == null) return null;
-
-            return new ShiftDto()
-            {
-                Id = shift.RowID,
-                EmployeeId = shift.EmployeeID.Value,
-                EmployeeNumber = shift.Employee?.EmployeeNo,
-                EmployeeName = shift.Employee?.FullNameWithMiddleInitialLastNameFirst,
-                EmployeeType = shift.Employee?.EmployeeType,
-                Date = shift.DateSched,
-                StartTime = shift.StartTimeFull,
-                EndTime = shift.EndTimeFull,
-                BreakStartTime = shift.ShiftBreakStartTimeFull,
-                BreakLength = shift.BreakLength,
-                IsOffset = shift.IsRestDay
-            };
+            return EmployeeDutyScheduleDto.Convert(dutySchedule);
         }
     }
 }

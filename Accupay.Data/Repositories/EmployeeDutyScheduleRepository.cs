@@ -31,13 +31,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #region CRUD
-
-        internal async Task DeleteAsync(EmployeeDutySchedule shift)
-        {
-            _context.Remove(shift);
-            await _context.SaveChangesAsync();
-        }
+        #region Save
 
         public async Task ChangeManyAsync(
             List<EmployeeDutySchedule> addedShifts = null,
@@ -72,45 +66,9 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CreateAsync(EmployeeDutySchedule shift)
-        {
-            _context.EmployeeDutySchedules.Add(shift);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task UpdateAsync(EmployeeDutySchedule shift)
-        {
-            _context.Entry(shift).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
-
-        #region Single entity
-
-        public async Task<EmployeeDutySchedule> GetByIdAsync(int id)
-        {
-            return await _context.EmployeeDutySchedules.FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
-        public async Task<EmployeeDutySchedule> GetByIdAsync(CompositeKey key)
-        {
-            return await _context.EmployeeDutySchedules
-                .Where(x => x.EmployeeID == key.EmployeeId)
-                .Where(x => x.DateSched == key.Date)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
-        {
-            return await _context.EmployeeDutySchedules
-                .Include(x => x.Employee)
-                .FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
-        #endregion Single entity
 
         #region List of entities
 
@@ -138,6 +96,56 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
+        {
+            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+                .Include(x => x.Employee)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
+                .ToListAsync();
+        }
+
+        internal async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
+        {
+            // TODO: might want to use employeeRepository for this query
+            var query = _context.Employees
+                .Where(x => x.OrganizationID == organizationId);
+
+            if (options.HasSearchTerm)
+            {
+                var searchTerm = $"%{options.SearchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.LastName, searchTerm));
+            }
+
+            if (options.HasStatus)
+            {
+                if (options.Status == "Active only")
+                {
+                    query = query.Where(e => e.EmploymentStatus != "Resigned" && e.EmploymentStatus != "Terminated");
+                }
+            }
+
+            query = query
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName);
+
+            var employees = await query.Page(options).ToListAsync();
+            var total = await query.CountAsync();
+
+            var employeeIds = employees.Select(x => x.RowID);
+
+            var dutySchedules = await _context.EmployeeDutySchedules
+                .Where(x => employeeIds.Contains(x.EmployeeID))
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => options.DateFrom.Date <= x.DateSched && x.DateSched <= options.DateTo.Date)
+                .ToListAsync();
+
+            return (employees, total, dutySchedules);
+        }
+
         public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodAsync(
             int organizationId,
             int[] employeeIds,
@@ -161,33 +169,6 @@ namespace AccuPay.Data.Repositories
                     datePeriod)
                 .Include(x => x.Employee)
                 .ToListAsync();
-        }
-
-        public async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
-        {
-            var query = _context.EmployeeDutySchedules
-                .Include(x => x.Employee)
-                .Where(x => x.OrganizationID == organizationId)
-                .OrderBy(x => x.Employee.LastName)
-                .ThenBy(x => x.Employee.FirstName)
-                .ThenByDescending(x => x.DateSched)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                searchTerm = $"%{searchTerm}%";
-
-                query = query.Where(x =>
-                    EF.Functions.Like(x.DateSched.ToString(), searchTerm) ||
-                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
-                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
-                    EF.Functions.Like(x.Employee.LastName, searchTerm));
-            }
-
-            var shifts = await query.Page(options).ToListAsync();
-            var count = await query.CountAsync();
-
-            return new PaginatedListResult<EmployeeDutySchedule>(shifts, count);
         }
 
         #endregion List of entities

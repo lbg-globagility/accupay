@@ -1,15 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Shift } from '../shared/shift';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sort } from '@angular/material/sort';
 import { ShiftService } from '../shift.service';
-import { auditTime } from 'rxjs/operators';
+import { auditTime, filter } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
-import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import Swal from 'sweetalert2';
+import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
+import { MatDialog } from '@angular/material/dialog';
+import * as moment from 'moment';
+import { range } from 'src/app/core/functions/dates';
+import { EmployeeShifts } from '../shared/employee-shifts';
+import { ShiftsByEmployeePageOptions } from '../shared/shifts-by-employee-page-option';
+import { EditShiftComponent } from '../edit-shift/edit-shift.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+interface DateHeader {
+  title: string;
+  date: Date;
+  dateOnly: string;
+  dayOfWeek: string;
+}
+
+interface EmployeeDutySchedulesModel {
+  employeeId: number;
+  employeeNo: string;
+  fullName: string;
+  shifts: {};
+}
 
 @Component({
   selector: 'app-shift-list',
@@ -20,44 +39,39 @@ import Swal from 'sweetalert2';
   },
 })
 export class ShiftListComponent implements OnInit {
-  readonly displayedColumns: string[] = [
-    'employeeNumber',
-    'employeeName',
-    'date',
-    'time',
-    'breakTime',
-    'breakLength',
-  ];
+  displayedColumns = ['employee'];
 
-  placeholder: string;
+  dateFrom: Date = new Date();
 
-  searchTerm: string;
+  dateTo: Date = new Date();
 
-  modelChanged: Subject<any>;
-
-  shifts: Shift[];
-
-  totalCount: number;
-
-  dataSource: MatTableDataSource<Shift>;
+  headers: DateHeader[] = [];
 
   pageIndex = 0;
 
   pageSize: number = 10;
 
-  sort: Sort = {
-    active: 'employeeName',
-    direction: '',
-  };
+  modelChanged: Subject<any>;
 
-  clearSearch = '';
+  searchTerm: string = '';
 
-  selectedRow: number;
+  statusFilter: string = 'Active only';
+
+  dataSource: MatTableDataSource<
+    EmployeeDutySchedulesModel
+  > = new MatTableDataSource();
+
+  totalCount: number;
+
+  employees: EmployeeShifts[] = [];
   isDownloadingTemplate: boolean;
 
   constructor(
     private shiftService: ShiftService,
-    private errorHandler: ErrorHandler
+    private payPeriodService: PayPeriodService,
+    private dialog: MatDialog,
+    private errorHandler: ErrorHandler,
+    private snackBar: MatSnackBar
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
@@ -66,48 +80,55 @@ export class ShiftListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getShiftList();
-  }
-
-  getShiftList() {
-    const options = new PageOptions(
-      this.pageIndex,
-      this.pageSize,
-      this.sort.active,
-      this.sort.direction
-    );
-
-    this.shiftService.getAll(options, this.searchTerm).subscribe((data) => {
-      this.shifts = data.items;
-      this.totalCount = data.totalCount;
-      this.dataSource = new MatTableDataSource(this.shifts);
+    this.payPeriodService.getLatest().subscribe((payPeriod) => {
+      this.dateFrom = new Date(payPeriod.cutoffStart);
+      this.dateTo = new Date(payPeriod.cutoffEnd);
+      this.createDateHeaders();
+      this.getShiftList();
     });
   }
 
-  applyFilter(searchTerm: string) {
-    this.searchTerm = searchTerm;
-    this.pageIndex = 0;
+  datesChanged() {
+    this.createDateHeaders();
+    this.getShiftList();
+  }
+
+  applyFilter(): void {
     this.modelChanged.next();
   }
 
-  clearSearchBox() {
-    this.clearSearch = '';
-    this.applyFilter(this.clearSearch);
-  }
-
-  sortData(sort: Sort) {
-    this.sort = sort;
+  clearSearchBox(): void {
+    this.searchTerm = '';
     this.modelChanged.next();
   }
 
-  setHoveredRow(id: number) {
-    this.selectedRow = id;
-  }
-
-  onPageChanged(pageEvent: PageEvent) {
+  onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.getShiftList();
+    this.modelChanged.next();
+  }
+
+  edit(employeeShift: EmployeeShifts): void {
+    const employee = this.employees.find(
+      (t) => t.employeeId === employeeShift.employeeId
+    );
+
+    this.dialog
+      .open(EditShiftComponent, {
+        data: {
+          employee,
+          dateFrom: this.dateFrom,
+          dateTo: this.dateTo,
+        },
+      })
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe(() => {
+        this.getShiftList();
+        this.snackBar.open('Successful update', null, {
+          duration: 2000,
+        });
+      });
   }
 
   onImport(files: FileList) {
@@ -120,6 +141,65 @@ export class ShiftListComponent implements OnInit {
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to import shift.')
     );
+  }
+
+  private getShiftList(): void {
+    const options = new ShiftsByEmployeePageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.dateFrom,
+      this.dateTo,
+      this.searchTerm,
+      this.statusFilter
+    );
+
+    this.shiftService.listByEmployee(options).subscribe((data) => {
+      this.employees = data.items;
+      this.dataSource = new MatTableDataSource(
+        this.convertToLocalModels(data.items)
+      );
+      this.totalCount = data.totalCount;
+    });
+  }
+
+  private convertToLocalModels(employeeShifts: EmployeeShifts[]) {
+    return employeeShifts.map((t) => this.convertToLocalModel(t));
+  }
+
+  private convertToLocalModel(employeeShift: EmployeeShifts) {
+    const model: EmployeeDutySchedulesModel = {
+      employeeId: employeeShift.employeeId,
+      employeeNo: employeeShift.employeeNo,
+      fullName: employeeShift.fullName,
+      shifts: {},
+    };
+
+    for (const shift of employeeShift.shifts) {
+      const dateDate = shift.date.substring(0, 10);
+      model.shifts[dateDate] = {
+        id: shift.id,
+        date: shift.date,
+        startTime: shift.startTime,
+        endTime: shift.endTime,
+      };
+    }
+
+    return model;
+  }
+
+  private createDateHeaders(): void {
+    this.headers = range(this.dateFrom, this.dateTo).map((date) => ({
+      title: moment(date).format('MM/DD'),
+      date,
+      dateOnly: moment(date).format('yyyy-MM-DD'),
+      dayOfWeek: moment(date).format('ddd'),
+    }));
+
+    this.displayedColumns = [
+      'employee',
+      ...this.headers.map((t) => t.title),
+      'actions',
+    ];
   }
 
   private displaySuccess() {
