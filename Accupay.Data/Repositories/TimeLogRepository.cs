@@ -32,7 +32,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #region CRUD
+        #region Save
 
         public async Task ChangeManyAsync(
             List<TimeLog> addedTimeLogs,
@@ -128,7 +128,7 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 

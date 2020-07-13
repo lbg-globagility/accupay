@@ -31,13 +31,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #region CRUD
-
-        internal async Task DeleteAsync(EmployeeDutySchedule shift)
-        {
-            _context.Remove(shift);
-            await _context.SaveChangesAsync();
-        }
+        #region Save
 
         public async Task ChangeManyAsync(
             List<EmployeeDutySchedule> addedShifts = null,
@@ -72,53 +66,9 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CreateAsync(EmployeeDutySchedule shift)
-        {
-            _context.EmployeeDutySchedules.Add(shift);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task UpdateAsync(EmployeeDutySchedule shift)
-        {
-            _context.Entry(shift).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
-
-        #region Single entity
-
-        public async Task<EmployeeDutySchedule> GetByIdAsync(int id)
-        {
-            return await _context.EmployeeDutySchedules.FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
-        public async Task<EmployeeDutySchedule> GetByIdAsync(CompositeKey key)
-        {
-            return await _context.EmployeeDutySchedules
-                .Where(x => x.EmployeeID == key.EmployeeId)
-                .Where(x => x.DateSched == key.Date)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<List<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
-        {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
-                .Include(x => x.Employee)
-                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
-                .ToListAsync();
-        }
-
-        public async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
-        {
-            return await _context.EmployeeDutySchedules
-                .Include(x => x.Employee)
-                .FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
-        #endregion Single entity
 
         #region List of entities
 
@@ -143,6 +93,14 @@ namespace AccuPay.Data.Repositories
         {
             return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
                 .Where(x => x.EmployeeID == employeeId)
+                .ToListAsync();
+        }
+
+        public async Task<List<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
+        {
+            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+                .Include(x => x.Employee)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
                 .ToListAsync();
         }
 
