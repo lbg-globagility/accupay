@@ -29,14 +29,16 @@ export class CalendarDayDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.form.patchValue(this.calendarDay);
+    if (this.calendarDay) {
+      this.form.patchValue(this.calendarDay);
+    }
   }
 
   onOk() {
     const value = this.form.value;
     const oldValue = {
-      dayType: this.calendarDay.dayType,
-      description: this.calendarDay.description,
+      dayType: this.calendarDay?.dayType,
+      description: this.calendarDay?.description,
     };
 
     const hasChanged = JSON.stringify(value) !== JSON.stringify(oldValue);

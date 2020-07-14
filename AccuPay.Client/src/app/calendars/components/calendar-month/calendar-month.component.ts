@@ -61,13 +61,23 @@ export class CalendarMonthComponent implements OnInit {
   getStartAndEndDate(): { start: Date; end: Date } {
     const y = this.month.getFullYear();
     const m = this.month.getMonth();
-    const start = new Date(y, m, 1);
-    const end = new Date(y, m + 1, 0);
+    const start = new Date(Date.UTC(y, m, 1));
+    const end = new Date(Date.UTC(y, m + 1, 0));
 
     return { start, end };
   }
 
   dayClicked(cell: CalendarCell): void {
-    this.dayClick.emit(cell.calendarDay);
+    let { calendarDay } = cell;
+    if (calendarDay == null) {
+      calendarDay = {
+        id: null,
+        date: cell.date,
+        dayType: null,
+        description: null,
+      };
+    }
+
+    this.dayClick.emit(calendarDay);
   }
 }
