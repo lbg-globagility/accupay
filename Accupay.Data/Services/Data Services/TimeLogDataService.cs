@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,8 +72,14 @@ namespace AccuPay.Data.Services
             if (timeLog == null)
                 throw new BusinessLogicException("Invalid data.");
 
+            if (timeLog.OrganizationID == null)
+                throw new BusinessLogicException("Organization is required.");
+
             if (timeLog.EmployeeID == null)
                 throw new BusinessLogicException("Employee is required.");
+
+            if (timeLog.LogDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
             if (timeLog.TimeIn == null && timeLog.TimeOut == null)
                 throw new BusinessLogicException("Time-in and Time-out cannot be both empty.");

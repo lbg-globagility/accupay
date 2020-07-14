@@ -106,7 +106,11 @@ namespace AccuPay.Web.Shifts.Services
                 }
             }
 
-            await _service.ChangeManyAsync(added, updated, deleted);
+            await _service.ChangeManyAsync(
+                organizationId: _currentUser.OrganizationId,
+                added: added,
+                updated: updated,
+                deleted: deleted);
         }
 
         internal async Task Import(IFormFile file)

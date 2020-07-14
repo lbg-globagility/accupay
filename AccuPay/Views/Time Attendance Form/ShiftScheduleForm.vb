@@ -30,8 +30,6 @@ Public Class ShiftScheduleForm
 
     Private _currCell As DataGridViewCell
 
-    Private _balloonToolTips As IList(Of ToolTip)
-
     Private _originalDates As TimePeriod
 
     Private WriteOnly Property ChangesCount As Integer
@@ -295,28 +293,13 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShowSuccessBalloon()
-        Dim infohint As New ToolTip
-        infohint.IsBalloon = True
-        infohint.ToolTipTitle = "Save successfully"
-        infohint.ToolTipIcon = ToolTipIcon.Info
-
-        infohint.Show(String.Empty, btnSave, 3475)
-        infohint.Show("Done.", btnSave, 3475)
-        'infohint.Show("Done.", btnSave, New Point(btnSave.Location.X, btnSave.Location.Y - 76), 3475)
-
-        _balloonToolTips.Add(infohint)
+        InfoBalloon("Successfully saved.",
+                  "Successfully saved.", btnSave, 0, -70)
     End Sub
 
     Private Sub ShowSuccessImportBalloon()
-        Dim infohint As New ToolTip
-        infohint.IsBalloon = True
-        infohint.ToolTipTitle = "Imported successfully"
-        infohint.ToolTipIcon = ToolTipIcon.Info
-
-        infohint.Show(String.Empty, Button2, 3475)
-        infohint.Show("Done.", Button2, 3475)
-
-        _balloonToolTips.Add(infohint)
+        InfoBalloon("Imported successfully.",
+                  "Imported successfully.", DateFilterGroupBox, 0, -70)
     End Sub
 
     Private Sub RecordUpdate(oldRecords As IEnumerable(Of EmployeeDutySchedule), updatedShiftSchedules As List(Of EmployeeDutySchedule))
@@ -464,8 +447,8 @@ Public Class ShiftScheduleForm
         Dim employees = EmployeeTreeView1.GetTickedEmployees
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToArray()
 
-        Dim employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-        Dim empShiftScheds = Await employeeDutyScheduleRepository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
+        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        Dim empShiftScheds = Await repository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
             z_OrganizationID,
             employeeIds,
             datePeriod)
@@ -907,49 +890,54 @@ Public Class ShiftScheduleForm
                 updatedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
             ElseIf ssm.ConsideredDelete Then
                 deletedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
-                ssm.RemoveShift()
             End If
 
-            ssm.CommitChanges()
         Next
 
-        Dim employeeDutyScheduleRepositoryQuery = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-        Dim oldRecords = Await employeeDutyScheduleRepositoryQuery.GetByEmployeeAndDatePeriodAsync(
+        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        Dim oldRecords = Await repository.GetByEmployeeAndDatePeriodAsync(
             z_OrganizationID,
             toSaveListEmployeeIDs,
             datePeriod)
 
-        Try
-            Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
-            Await dataService.ChangeManyAsync(
-                added:=addedShiftSchedules,
-                updated:=updatedShiftSchedules,
-                deleted:=deletedShiftSchedules)
+        Await FunctionUtils.TryCatchFunctionAsync("Save Shift",
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+                Await dataService.ChangeManyAsync(
+                    organizationId:=z_OrganizationID,
+                    added:=addedShiftSchedules,
+                    updated:=updatedShiftSchedules,
+                    deleted:=deletedShiftSchedules)
 
-            For Each ssm In addedShiftSchedules      'for new
-                _userActivityRepo.RecordAdd(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
-            Next
+                For Each ssm In toSaveList
 
-            RecordUpdate(oldRecords, updatedShiftSchedules)
+                    If ssm.ConsideredDelete Then
+                        ssm.RemoveShift()
+                    End If
 
-            For Each ssm In deletedShiftSchedules   'for delete
-                _userActivityRepo.RecordDelete(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
-            Next
+                    ssm.CommitChanges()
+                Next
 
-            ShowSuccessBalloon()
+                For Each ssm In addedShiftSchedules      'for new
+                    _userActivityRepo.RecordAdd(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
+                Next
 
-            For Each row As DataGridViewRow In grid.Rows
-                row.DefaultCellStyle = Nothing
-            Next
+                RecordUpdate(oldRecords, updatedShiftSchedules)
 
-            ZebraliseEmployeeRows()
+                For Each ssm In deletedShiftSchedules   'for delete
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
+                Next
 
-            NoAffectedRows()
-        Catch ex As Exception
-            logger.Error("ShiftScheduleSaving", ex)
-            Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-            MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+                ShowSuccessBalloon()
+
+                For Each row As DataGridViewRow In grid.Rows
+                    row.DefaultCellStyle = Nothing
+                Next
+
+                ZebraliseEmployeeRows()
+
+                NoAffectedRows()
+            End Function)
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
@@ -996,8 +984,6 @@ Public Class ShiftScheduleForm
             dtpDateTo.Value = currentlyWorkedOnPayPeriod.PayToDate
 
         End If
-
-        _balloonToolTips = New List(Of ToolTip)
     End Sub
 
     Private Sub grid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
@@ -1364,12 +1350,6 @@ Public Class ShiftScheduleForm
 
         End Using
 
-    End Sub
-
-    Private Sub ShiftScheduleForm_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        For Each tTip In _balloonToolTips
-            tTip.Dispose()
-        Next
     End Sub
 
 #End Region

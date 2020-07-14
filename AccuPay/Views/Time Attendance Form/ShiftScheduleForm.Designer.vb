@@ -26,6 +26,7 @@ Partial Class ShiftScheduleForm
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ShiftScheduleForm))
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -50,7 +51,6 @@ Partial Class ShiftScheduleForm
         Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ShiftScheduleForm))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.tcSchedule = New System.Windows.Forms.TabControl()
@@ -88,7 +88,7 @@ Partial Class ShiftScheduleForm
         Me.btnReset = New System.Windows.Forms.Button()
         Me.btnSave = New System.Windows.Forms.Button()
         Me.labelAffectedRows = New System.Windows.Forms.Label()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.DateFilterGroupBox = New System.Windows.Forms.GroupBox()
         Me.dtpDateFrom = New System.Windows.Forms.DateTimePicker()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.dtpDateTo = New System.Windows.Forms.DateTimePicker()
@@ -97,6 +97,7 @@ Partial Class ShiftScheduleForm
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.tsBtnImport = New System.Windows.Forms.ToolStripButton()
+        Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.grid = New System.Windows.Forms.DataGridView()
         Me.colId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colEmployeeId = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -140,7 +141,6 @@ Partial Class ShiftScheduleForm
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.tcSchedule.SuspendLayout()
@@ -152,7 +152,7 @@ Partial Class ShiftScheduleForm
         CType(Me.gridWeek, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
+        Me.DateFilterGroupBox.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.grid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip2.SuspendLayout()
@@ -182,7 +182,7 @@ Partial Class ShiftScheduleForm
         Me.Panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Panel3.Controls.Add(Me.tcSchedule)
         Me.Panel3.Controls.Add(Me.Panel2)
-        Me.Panel3.Controls.Add(Me.GroupBox1)
+        Me.Panel3.Controls.Add(Me.DateFilterGroupBox)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel3.Location = New System.Drawing.Point(0, 25)
         Me.Panel3.Name = "Panel3"
@@ -541,19 +541,19 @@ Partial Class ShiftScheduleForm
         Me.labelAffectedRows.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.labelAffectedRows.Visible = False
         '
-        'GroupBox1
+        'DateFilterGroupBox
         '
-        Me.GroupBox1.Controls.Add(Me.dtpDateFrom)
-        Me.GroupBox1.Controls.Add(Me.Label6)
-        Me.GroupBox1.Controls.Add(Me.dtpDateTo)
-        Me.GroupBox1.Controls.Add(Me.Label5)
-        Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Left
-        Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(210, 246)
-        Me.GroupBox1.TabIndex = 348
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Filter Dates"
+        Me.DateFilterGroupBox.Controls.Add(Me.dtpDateFrom)
+        Me.DateFilterGroupBox.Controls.Add(Me.Label6)
+        Me.DateFilterGroupBox.Controls.Add(Me.dtpDateTo)
+        Me.DateFilterGroupBox.Controls.Add(Me.Label5)
+        Me.DateFilterGroupBox.Dock = System.Windows.Forms.DockStyle.Left
+        Me.DateFilterGroupBox.Location = New System.Drawing.Point(0, 0)
+        Me.DateFilterGroupBox.Name = "DateFilterGroupBox"
+        Me.DateFilterGroupBox.Size = New System.Drawing.Size(210, 246)
+        Me.DateFilterGroupBox.TabIndex = 348
+        Me.DateFilterGroupBox.TabStop = False
+        Me.DateFilterGroupBox.Text = "Filter Dates"
         '
         'dtpDateFrom
         '
@@ -625,6 +625,14 @@ Partial Class ShiftScheduleForm
         Me.tsBtnImport.Name = "tsBtnImport"
         Me.tsBtnImport.Size = New System.Drawing.Size(63, 22)
         Me.tsBtnImport.Text = "Import"
+        '
+        'btnUserActivity
+        '
+        Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
+        Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnUserActivity.Name = "btnUserActivity"
+        Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
+        Me.btnUserActivity.Text = "User Activity"
         '
         'grid
         '
@@ -1156,14 +1164,6 @@ Partial Class ShiftScheduleForm
         Me.DataGridViewTextBoxColumn22.Visible = False
         Me.DataGridViewTextBoxColumn22.Width = 32
         '
-        'btnUserActivity
-        '
-        Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
-        Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnUserActivity.Name = "btnUserActivity"
-        Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.btnUserActivity.Text = "User Activity"
-        '
         'ShiftScheduleForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1192,8 +1192,8 @@ Partial Class ShiftScheduleForm
         CType(Me.gridWeek, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
+        Me.DateFilterGroupBox.ResumeLayout(False)
+        Me.DateFilterGroupBox.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         CType(Me.grid, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1232,7 +1232,7 @@ Partial Class ShiftScheduleForm
     Friend WithEvents txtBreakFrom As TimeTextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
-    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents DateFilterGroupBox As GroupBox
     Friend WithEvents btnApply1 As Button
     Friend WithEvents GroupBox2 As GroupBox
     Friend WithEvents GroupBox3 As GroupBox
