@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
+using AccuPay.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -63,7 +64,11 @@ namespace AccuPay.Data.Entities
         public bool IsFirstHalf => Half == FirstHalfValue;
         public bool IsEndOfTheMonth => Half == EndOftheMonthValue;
 
-        public bool IsBetween(DateTime date) => date >= PayFromDate && date <= PayToDate;
+        public bool IsBetween(DateTime date)
+        {
+            date = date.ToMinimumHourValue();
+            return date >= PayFromDate && date <= PayToDate;
+        }
 
         public bool IsFirstPayPeriodOfTheYear => IsFirstHalf && Month == IsJanuary;
         public bool IsLastPayPeriodOfTheYear => IsEndOfTheMonth && Month == IsDecember;

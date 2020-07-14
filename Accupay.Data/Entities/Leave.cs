@@ -6,7 +6,7 @@ using System.Linq;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeleave")]
-    public class Leave : BaseEntity
+    public class Leave : BaseEntity, IPayrollEntity
     {
         public const string StatusApproved = "Approved";
 
@@ -53,6 +53,8 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
+
+        public DateTime? PayrollDate => StartDate;
 
         [NotMapped]
         public bool IsNew { get; set; } // Delete this. This is only used on ImportLeaveForm and other codes may use this and get a wrong result

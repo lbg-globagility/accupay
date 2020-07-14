@@ -16,19 +16,15 @@ namespace AccuPay.Data.Services
     {
         private readonly OvertimeRepository _overtimeRepository;
 
-        public OvertimeDataService(OvertimeRepository overtimeRepository, PayPeriodRepository payPeriodRepository) : base(overtimeRepository, payPeriodRepository)
+        public OvertimeDataService(
+            OvertimeRepository overtimeRepository,
+            PayPeriodRepository payPeriodRepository) :
+
+            base(overtimeRepository,
+                payPeriodRepository,
+                entityDoesNotExistOnDeleteErrorMessage: "Overtime does not exists.")
         {
             _overtimeRepository = overtimeRepository;
-        }
-
-        public async Task DeleteAsync(int overtimeId)
-        {
-            var overtime = await _overtimeRepository.GetByIdAsync(overtimeId);
-
-            if (overtime == null)
-                throw new BusinessLogicException("Overtime does not exists.");
-
-            await _overtimeRepository.DeleteAsync(overtime);
         }
 
         public async Task DeleteManyAsync(IEnumerable<int> overtimeIds)

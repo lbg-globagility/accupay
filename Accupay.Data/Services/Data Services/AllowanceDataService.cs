@@ -17,20 +17,14 @@ namespace AccuPay.Data.Services
         public AllowanceDataService(
             AllowanceRepository allowanceRepository,
             PayPeriodRepository payPeriodRepository,
-            PayrollContext context) : base(allowanceRepository, payPeriodRepository)
+            PayrollContext context) :
+
+            base(allowanceRepository,
+                payPeriodRepository,
+                entityDoesNotExistOnDeleteErrorMessage: "Allowance does not exists.")
         {
             _allowanceRepository = allowanceRepository;
             _context = context;
-        }
-
-        public async Task DeleteAsync(int allowanceId)
-        {
-            var allowance = await _allowanceRepository.GetByIdAsync(allowanceId);
-
-            if (allowance == null)
-                throw new BusinessLogicException("Allowance does not exists.");
-
-            await _allowanceRepository.DeleteAsync(allowance);
         }
 
         protected override async Task SanitizeEntity(Allowance allowance)

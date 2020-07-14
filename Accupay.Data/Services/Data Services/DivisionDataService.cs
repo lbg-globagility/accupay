@@ -21,7 +21,11 @@ namespace AccuPay.Data.Services
             DivisionRepository divisionRepository,
             ListOfValueRepository listOfValueRepository,
             PayPeriodRepository payPeriodRepository,
-            PayrollContext context) : base(divisionRepository, payPeriodRepository)
+            PayrollContext context) :
+
+            base(divisionRepository,
+                payPeriodRepository,
+                entityDoesNotExistOnDeleteErrorMessage: "Division does not exists.")
         {
             _divisionRepository = divisionRepository;
             _listOfValueRepository = listOfValueRepository;
@@ -30,7 +34,7 @@ namespace AccuPay.Data.Services
 
         #region CRUD
 
-        public async Task DeleteAsync(int divisionId)
+        public async override Task DeleteAsync(int divisionId)
         {
             var division = await _divisionRepository.GetByIdWithParentAsync(divisionId);
 

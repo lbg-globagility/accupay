@@ -19,20 +19,14 @@ namespace AccuPay.Data.Services
         public OfficialBusinessDataService(
             OfficialBusinessRepository officialBusinessRepository,
             PayPeriodRepository payPeriodRepository,
-            PayrollContext context) : base(officialBusinessRepository, payPeriodRepository)
+            PayrollContext context) :
+
+            base(officialBusinessRepository,
+                payPeriodRepository,
+                entityDoesNotExistOnDeleteErrorMessage: "Official Business does not exists.")
         {
             _officialBusinessRepository = officialBusinessRepository;
             _context = context;
-        }
-
-        public async Task DeleteAsync(int officialBusinessId)
-        {
-            var officialBusiness = await _officialBusinessRepository.GetByIdAsync(officialBusinessId);
-
-            if (officialBusiness == null)
-                throw new BusinessLogicException("Official Business does not exists.");
-
-            await _officialBusinessRepository.DeleteAsync(officialBusiness);
         }
 
         protected override async Task SanitizeEntity(OfficialBusiness officialBusiness)

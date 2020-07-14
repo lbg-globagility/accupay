@@ -17,6 +17,49 @@ namespace AccuPay.Data.Repositories
             _encryption = encryption;
         }
 
+        #region Save
+
+        protected override void DetachNavigationProperties(User user)
+        {
+            if (user.Position != null)
+            {
+                _context.Entry(user.Position).State = EntityState.Detached;
+            }
+        }
+
+        public async Task SoftDeleteAsync(User user)
+        {
+            user.SetStatus(UserStatus.Inactive);
+
+            await SaveAsync(user);
+        }
+
+        public async Task<string> GetUniqueUsernameAsync(string username, int? clientId = null)
+        {
+            if (clientId.HasValue)
+            {
+                if (await CheckIfUsernameExistsAsync(username))
+                {
+                    username = $"{username} - {clientId}";
+                }
+                else
+                {
+                    return username;
+                }
+            }
+
+            int counter = 0;
+            while (await CheckIfUsernameExistsAsync(username))
+            {
+                username = $"{username} - {clientId}[{counter}]";
+                counter++;
+            }
+
+            return username;
+        }
+
+        #endregion Save
+
         #region User List
 
         public async Task<ICollection<User>> GetAllAsync()
@@ -103,48 +146,5 @@ namespace AccuPay.Data.Repositories
         }
 
         #endregion By User
-
-        #region CRUD
-
-        protected override void DetachNavigationProperties(User user)
-        {
-            if (user.Position != null)
-            {
-                _context.Entry(user.Position).State = EntityState.Detached;
-            }
-        }
-
-        public async Task SoftDeleteAsync(User user)
-        {
-            user.SetStatus(UserStatus.Inactive);
-
-            await SaveAsync(user);
-        }
-
-        public async Task<string> GetUniqueUsernameAsync(string username, int? clientId = null)
-        {
-            if (clientId.HasValue)
-            {
-                if (await CheckIfUsernameExistsAsync(username))
-                {
-                    username = $"{username} - {clientId}";
-                }
-                else
-                {
-                    return username;
-                }
-            }
-
-            int counter = 0;
-            while (await CheckIfUsernameExistsAsync(username))
-            {
-                username = $"{username} - {clientId}[{counter}]";
-                counter++;
-            }
-
-            return username;
-        }
-
-        #endregion CRUD
     }
 }

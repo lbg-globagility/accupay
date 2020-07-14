@@ -17,6 +17,8 @@ namespace AccuPay.Data.Repositories
         {
         }
 
+        #region CRUD
+
         internal async Task DeleteManyAsync(IEnumerable<int> ids)
         {
             var overtimes = await _context.Overtimes
@@ -27,8 +29,6 @@ namespace AccuPay.Data.Repositories
 
             await _context.SaveChangesAsync();
         }
-
-        #region CRUD
 
         protected override void DetachNavigationProperties(Overtime overtime)
         {

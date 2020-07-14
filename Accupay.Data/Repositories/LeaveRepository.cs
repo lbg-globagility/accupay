@@ -16,7 +16,7 @@ namespace AccuPay.Data.Repositories
         {
         }
 
-        #region CRUD
+        #region Save
 
         protected override void DetachNavigationProperties(Leave leave)
         {
@@ -26,7 +26,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 

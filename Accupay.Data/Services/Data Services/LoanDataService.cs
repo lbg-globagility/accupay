@@ -25,7 +25,11 @@ namespace AccuPay.Data.Services
             PayrollContext context,
             SystemOwnerService systemOwnerService,
             ProductRepository productRepository,
-            PayPeriodRepository payPeriodRepository) : base(loanRepository, payPeriodRepository)
+            PayPeriodRepository payPeriodRepository) :
+
+            base(loanRepository,
+                payPeriodRepository,
+                entityDoesNotExistOnDeleteErrorMessage: "Loan does not exists.")
         {
             _loanRepository = loanRepository;
             _context = context;
@@ -34,16 +38,6 @@ namespace AccuPay.Data.Services
         }
 
         #region CRUD
-
-        public async Task DeleteAsync(int loanId)
-        {
-            var loan = await _loanRepository.GetByIdAsync(loanId);
-
-            if (loan == null)
-                throw new BusinessLogicException("Loan does not exists.");
-
-            await _loanRepository.DeleteAsync(loan);
-        }
 
         /// <summary>
         /// 'delete all loans that are not HDMF or SSS. only HDMF or SSS loans are supported in benchmark

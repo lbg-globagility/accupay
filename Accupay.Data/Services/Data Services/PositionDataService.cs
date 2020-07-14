@@ -19,7 +19,11 @@ namespace AccuPay.Data.Services
             PositionRepository positionRepository,
             EmployeeRepository employeeRepository,
             PayPeriodRepository payPeriodRepository,
-            DivisionDataService divisionService) : base(positionRepository, payPeriodRepository)
+            DivisionDataService divisionService) :
+
+            base(positionRepository,
+                payPeriodRepository,
+                entityDoesNotExistOnDeleteErrorMessage: "Position does not exists.")
         {
             _positionRepository = positionRepository;
 
@@ -28,7 +32,7 @@ namespace AccuPay.Data.Services
             _divisionService = divisionService;
         }
 
-        public async Task DeleteAsync(int positionId)
+        public async override Task DeleteAsync(int positionId)
         {
             var position = await _positionRepository.GetByIdAsync(positionId);
 

@@ -13,18 +13,21 @@ namespace AccuPay.Web.Leaves
     {
         private readonly LeaveRepository _leaveRepository;
         private readonly ProductRepository _productRepository;
-        private readonly LeaveDataService _service;
+        private readonly LeaveLedgerRepository _leaveLedgerRepository;
+        private readonly LeaveDataService _dataService;
         private readonly ICurrentUser _currentUser;
 
         public LeaveService(
             LeaveRepository leaveRepository,
             ProductRepository productRepository,
-            LeaveDataService service,
+            LeaveLedgerRepository leaveLedgerRepository,
+            LeaveDataService dataService,
             ICurrentUser currentUser)
         {
             _leaveRepository = leaveRepository;
             _productRepository = productRepository;
-            _service = service;
+            _leaveLedgerRepository = leaveLedgerRepository;
+            _dataService = dataService;
             _currentUser = currentUser;
         }
 
@@ -43,7 +46,7 @@ namespace AccuPay.Web.Leaves
 
         public async Task<PaginatedList<LeaveBalanceDto>> GetLeaveBalance(PageOptions options, string searchTerm)
         {
-            var paginatedList = await _service.GetLeaveBalances(
+            var paginatedList = await _dataService.GetLeaveBalancesAsync(
                 options,
                 _currentUser.OrganizationId,
                 searchTerm);
@@ -64,7 +67,7 @@ namespace AccuPay.Web.Leaves
 
         public async Task<PaginatedList<LeaveTransactionDto>> ListTransactions(PageOptions options, int id, string type)
         {
-            var paginatedList = await _service.ListTransactions(
+            var paginatedList = await _leaveLedgerRepository.ListTransactionsAsync(
                 options,
                 _currentUser.OrganizationId,
                 id,
@@ -90,7 +93,7 @@ namespace AccuPay.Web.Leaves
             };
             ApplyChanges(dto, leave);
 
-            await _service.SaveAsync(leave);
+            await _dataService.SaveAsync(leave);
 
             return ConvertToDto(leave);
         }
@@ -104,14 +107,14 @@ namespace AccuPay.Web.Leaves
 
             ApplyChanges(dto, leave);
 
-            await _service.SaveAsync(leave);
+            await _dataService.SaveAsync(leave);
 
             return ConvertToDto(leave);
         }
 
         public async Task Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _dataService.DeleteAsync(id);
         }
 
         public async Task<List<string>> GetLeaveTypes()

@@ -8,17 +8,36 @@ namespace AccuPay.Data.Services
 {
     public class BaseSavableDataService<T> : BaseDataService where T : BaseEntity
     {
-        private readonly SavableRepository<T> _savableRepository;
+        protected readonly SavableRepository<T> _savableRepository;
 
-        public BaseSavableDataService(SavableRepository<T> savableRepository, PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
+        protected readonly string EntityDoesNotExistOnDeleteErrorMessage = "Entity does not exists.";
+
+        public BaseSavableDataService(
+            SavableRepository<T> savableRepository,
+            PayPeriodRepository payPeriodRepository,
+            string entityDoesNotExistOnDeleteErrorMessage) : base(payPeriodRepository)
         {
             _savableRepository = savableRepository;
+
+            EntityDoesNotExistOnDeleteErrorMessage = string.IsNullOrWhiteSpace(entityDoesNotExistOnDeleteErrorMessage) ?
+                "Entity does not exists." :
+                entityDoesNotExistOnDeleteErrorMessage;
         }
 
         protected bool IsNewEntity(int? id)
         {
             // sometimes it's not int.MinValue
             return id == null || id <= 0;
+        }
+
+        public async virtual Task DeleteAsync(int id)
+        {
+            var entity = await _savableRepository.GetByIdAsync(id);
+
+            if (entity == null)
+                throw new BusinessLogicException(EntityDoesNotExistOnDeleteErrorMessage);
+
+            await _savableRepository.DeleteAsync(entity);
         }
 
         public virtual async Task SaveAsync(T entity)
@@ -38,7 +57,7 @@ namespace AccuPay.Data.Services
             await _savableRepository.SaveManyAsync(entities);
         }
 
-        private async Task ValidateData(T entity)
+        protected async Task ValidateData(T entity)
         {
             if (entity == null)
                 throw new BusinessLogicException("Invalid data.");
