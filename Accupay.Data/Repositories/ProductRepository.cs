@@ -339,7 +339,7 @@ namespace AccuPay.Data.Repositories
                         ToListAsync();
         }
 
-        public async Task<PaginatedListResult<Product>> GetPaginatedLoanTypeListAsync(PageOptions options, string searchTerm, int organizationId)
+        public async Task<PaginatedList<Product>> GetPaginatedLoanTypeListAsync(PageOptions options, string searchTerm, int organizationId)
         {
             var query = _context.Products
                 .Where(p => p.CategoryEntity.CategoryName == ProductConstant.LOAN_TYPE_CATEGORY)
@@ -358,7 +358,7 @@ namespace AccuPay.Data.Repositories
             var loanTypes = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Product>(loanTypes, count);
+            return new PaginatedList<Product>(loanTypes, count);
         }
 
         #endregion List of entities

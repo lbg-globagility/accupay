@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AccuPay.Data.Helpers
 {
@@ -27,6 +28,13 @@ namespace AccuPay.Data.Helpers
             TotalPages = (int)Math.Ceiling(total / (double)pageSize);
             PageNumber = pageNumber;
             TotalCount = total;
+        }
+
+        public PaginatedList<R> Select<R>(Func<T, R> func)
+        {
+            var items = Items.Select(func);
+
+            return new PaginatedList<R>(items, TotalCount);
         }
     }
 }

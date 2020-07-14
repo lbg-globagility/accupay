@@ -287,7 +287,7 @@ namespace AccuPay.Data.Repositories
                 .Where(x => x.PayPeriodID == payPeriodId);
         }
 
-        public async Task<PaginatedListResult<Paystub>> GetPaginatedListAsync(
+        public async Task<PaginatedList<Paystub>> GetPaginatedListAsync(
             PageOptions options,
             int payPeriodId,
             string searchTerm = "")
@@ -310,7 +310,7 @@ namespace AccuPay.Data.Repositories
             var paystubs = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Paystub>(paystubs, count);
+            return new PaginatedList<Paystub>(paystubs, count);
         }
 
         public async Task<ICollection<Paystub>> GetAll(int payPeriodId)

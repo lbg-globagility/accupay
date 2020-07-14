@@ -32,7 +32,7 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PaginatedListResult<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
+        public async Task<PaginatedList<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
         {
             var query = _context.Employees
                 .Include(e => e.Position)
@@ -59,10 +59,15 @@ namespace AccuPay.Data.Repositories
                 }
             }
 
+            if (options.HasPosition)
+            {
+                query = query.Where(e => e.PositionID == options.PositionId);
+            }
+
             var employees = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Employee>(employees, count);
+            return new PaginatedList<Employee>(employees, count);
         }
 
         public async Task SaveManyAsync(List<Employee> employees)
@@ -105,7 +110,7 @@ namespace AccuPay.Data.Repositories
                             ToListAsync(organizationId);
         }
 
-        public async Task<PaginatedListResult<Employee>> GetPaginatedListWithTimeEntryAsync(
+        public async Task<PaginatedList<Employee>> GetPaginatedListWithTimeEntryAsync(
             PageOptions options,
             int organizationId,
             int payPeriodId,
@@ -120,7 +125,7 @@ namespace AccuPay.Data.Repositories
                                                 hasTimeEntries: true,
                                                 searchTerm: searchTerm);
 
-            var employeeIds = paginatedListResult.List.Select(x => x.RowID.Value);
+            var employeeIds = paginatedListResult.Items.Select(x => x.RowID.Value);
             var timeEntries = _context.TimeEntries
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(x => payPeriod.PayFromDate <= x.Date)
@@ -128,7 +133,7 @@ namespace AccuPay.Data.Repositories
                 .Where(x => employeeIds.Contains(x.EmployeeID.Value))
                 .ToList();
 
-            foreach (var employee in paginatedListResult.List)
+            foreach (var employee in paginatedListResult.Items)
             {
                 employee.TimeEntries = timeEntries.Where(x => x.EmployeeID == employee.RowID).ToList();
             }
@@ -136,7 +141,7 @@ namespace AccuPay.Data.Repositories
             return paginatedListResult;
         }
 
-        private async Task<PaginatedListResult<Employee>> BaseGetPaginatedListAsync(
+        private async Task<PaginatedList<Employee>> BaseGetPaginatedListAsync(
             PageOptions options,
             int organizationId,
             PayPeriod payPeriod = null,
@@ -180,7 +185,7 @@ namespace AccuPay.Data.Repositories
             var employees = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Employee>(employees, count);
+            return new PaginatedList<Employee>(employees, count);
         }
 
         public async Task<IEnumerable<Employee>> GetAllWithPayrollAsync(int payPeriodId,

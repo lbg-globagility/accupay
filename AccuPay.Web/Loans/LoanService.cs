@@ -42,9 +42,7 @@ namespace AccuPay.Web.Loans
                 _currentUser.OrganizationId,
                 searchTerm);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<LoanDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<LoanDto> GetById(int id)
@@ -88,9 +86,7 @@ namespace AccuPay.Web.Loans
         {
             var currentLoanTransactions = await _loanRepository.GetLoanTransactionsAsync(options, loanId);
 
-            var dtos = currentLoanTransactions.List.Select(x => LoanHistoryDto.Convert(x));
-
-            return new PaginatedList<LoanHistoryDto>(dtos, currentLoanTransactions.TotalCount, ++options.PageIndex, options.PageSize);
+            return currentLoanTransactions.Select(x => LoanHistoryDto.Convert(x));
         }
 
         public async Task Delete(int id)

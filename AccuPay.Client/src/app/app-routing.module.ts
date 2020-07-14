@@ -92,6 +92,7 @@ import {
   ViewEmploymentPolicyComponent,
 } from 'src/app/employment-policies/components';
 import { LoansComponent } from './loans/loans/loans.component';
+import { PositionsComponent } from 'src/app/positions/components/positions/positions.component';
 
 const routes: Routes = [
   {
@@ -365,36 +366,34 @@ const routes: Routes = [
         component: TimeLogsComponent,
       },
       {
-        path: 'divisions',
-        component: DivisionListComponent,
+        path: 'positions/new',
+        component: NewPositionComponent,
+      },
+      {
+        path: 'positions',
+        component: PositionsComponent,
+        children: [
+          {
+            path: 'divisions/:id',
+            component: ViewDivisionComponent,
+          },
+          {
+            path: ':id',
+            component: ViewPositionComponent,
+          },
+        ],
+      },
+      {
+        path: 'positions/:id/edit',
+        component: EditPositionComponent,
       },
       {
         path: 'divisions/new',
         component: NewDivisionComponent,
       },
       {
-        path: 'divisions/:id',
-        component: ViewDivisionComponent,
-      },
-      {
         path: 'divisions/:id/edit',
         component: EditDivisionComponent,
-      },
-      {
-        path: 'positions',
-        component: PositionListComponent,
-      },
-      {
-        path: 'positions/new',
-        component: NewPositionComponent,
-      },
-      {
-        path: 'positions/:id',
-        component: ViewPositionComponent,
-      },
-      {
-        path: 'positions/:id/edit',
-        component: EditPositionComponent,
       },
       {
         path: 'calendars',

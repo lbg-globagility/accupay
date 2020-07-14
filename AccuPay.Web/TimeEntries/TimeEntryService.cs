@@ -74,9 +74,7 @@ namespace AccuPay.Web.TimeEntries
                 payPeriodId: payPeriodId,
                 searchTerm);
 
-            var dtos = paginatedList.List.Select(x => TimeEntryEmployeeDto.Convert(x));
-
-            return new PaginatedList<TimeEntryEmployeeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => TimeEntryEmployeeDto.Convert(x));
         }
 
         public async Task<ICollection<TimeEntryDto>> GetTimeEntries(int payPeriodId, int employeeId)

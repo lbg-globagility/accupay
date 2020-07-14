@@ -36,14 +36,14 @@ export class EditDivisionComponent implements OnInit {
     this.divisionService.update(division, this.divisionId).subscribe(
       () => {
         this.displaySuccess();
-        this.router.navigate(['divisions', this.divisionId]);
+        this.router.navigate(['positions', 'divisions', this.divisionId]);
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to update division.')
     );
   }
 
   onCancel(): void {
-    this.router.navigate(['divisions', this.divisionId]);
+    this.router.navigate(['positions', 'divisions', this.divisionId]);
   }
 
   private loadDivision(): void {

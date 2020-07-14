@@ -55,7 +55,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<Leave>> GetPaginatedListAsync(
+        public async Task<PaginatedList<Leave>> GetPaginatedListAsync(
             PageOptions options,
             int organizationId,
             string searchTerm = "",
@@ -94,7 +94,7 @@ namespace AccuPay.Data.Repositories
             var leaves = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Leave>(leaves, count);
+            return new PaginatedList<Leave>(leaves, count);
         }
 
         public ICollection<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)

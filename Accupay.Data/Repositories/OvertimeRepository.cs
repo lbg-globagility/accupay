@@ -62,7 +62,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(
+        internal async Task<PaginatedList<Overtime>> GetPaginatedListAsync(
             PageOptions options,
             int organizationId,
             string searchTerm = "",
@@ -100,7 +100,7 @@ namespace AccuPay.Data.Repositories
             var overtimes = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Overtime>(overtimes, count);
+            return new PaginatedList<Overtime>(overtimes, count);
         }
 
         internal async Task<ICollection<Overtime>> GetByEmployeeAndDatePeriod(

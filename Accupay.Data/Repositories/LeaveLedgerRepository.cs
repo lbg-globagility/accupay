@@ -32,7 +32,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type = null)
+        public async Task<PaginatedList<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type = null)
         {
             var query = _context.LeaveTransactions
                 .Include(x => x.Employee)
@@ -46,7 +46,7 @@ namespace AccuPay.Data.Repositories
             var transaction = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<LeaveTransaction>(transaction, count);
+            return new PaginatedList<LeaveTransaction>(transaction, count);
         }
 
         public async Task<IEnumerable<LeaveLedger>> GetLeaveBalance(int organizationId, string searchTerm = null)

@@ -1,8 +1,6 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Loans.LoanType
@@ -44,14 +42,12 @@ namespace AccuPay.Web.Loans.LoanType
 
         internal async Task<PaginatedList<LoanTypeDto>> GetPaginatedListAsync(PageOptions options, string term)
         {
-            var paginatedListResult = await _productRepository.GetPaginatedLoanTypeListAsync(options: options, searchTerm: term, organizationId: _currentUser.OrganizationId);
+            var paginatedListResult = await _productRepository.GetPaginatedLoanTypeListAsync(
+                options: options,
+                searchTerm: term,
+                organizationId: _currentUser.OrganizationId);
 
-            var fsdfs11 = paginatedListResult.List;
-            var convertedList = fsdfs11.Select(p => LoanTypeDto.Convert(p)).ToList();
-
-            var count = paginatedListResult.TotalCount;
-
-            return new PaginatedList<LoanTypeDto>(convertedList, count, ++options.PageIndex, options.PageSize);
+            return paginatedListResult.Select(p => LoanTypeDto.Convert(p));
         }
     }
 }

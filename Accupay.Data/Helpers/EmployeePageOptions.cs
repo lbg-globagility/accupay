@@ -9,5 +9,9 @@
         public string Filter { get; set; }
 
         public bool HasFilter => !string.IsNullOrWhiteSpace(Filter);
+
+        public int? PositionId { get; set; }
+
+        public bool HasPosition => PositionId.HasValue;
     }
 }

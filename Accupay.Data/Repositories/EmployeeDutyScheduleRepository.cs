@@ -163,6 +163,33 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<PaginatedList<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.EmployeeDutySchedules
+                .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderBy(x => x.Employee.LastName)
+                .ThenBy(x => x.Employee.FirstName)
+                .ThenByDescending(x => x.DateSched)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.DateSched.ToString(), searchTerm) ||
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var shifts = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedList<EmployeeDutySchedule>(shifts, count);
+        }
+
         #endregion List of entities
 
         #endregion Queries

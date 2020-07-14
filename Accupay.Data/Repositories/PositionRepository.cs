@@ -66,7 +66,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedList<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Positions
                 .Include(x => x.Division)
@@ -87,7 +87,7 @@ namespace AccuPay.Data.Repositories
             var positions = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Position>(positions, count);
+            return new PaginatedList<Position>(positions, count);
         }
 
         #endregion List of entities

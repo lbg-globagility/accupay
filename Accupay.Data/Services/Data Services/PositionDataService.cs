@@ -108,7 +108,7 @@ namespace AccuPay.Data.Services
             return await _positionRepository.GetAllAsync(organizationId);
         }
 
-        public async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
+        public async Task<PaginatedList<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
         {
             return await _positionRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }
