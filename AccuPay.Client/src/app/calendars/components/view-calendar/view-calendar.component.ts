@@ -28,7 +28,7 @@ export class ViewCalendarComponent implements OnInit {
 
   calendarId: number = +this.route.snapshot.paramMap.get('id');
 
-  year: number = new Date().getFullYear();
+  selectedYear: number = new Date().getFullYear();
 
   calendar: Calendar;
 
@@ -47,8 +47,9 @@ export class ViewCalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadCalendar();
     this.loadDayTypes();
+
+    this.loadCalendar();
     this.loadCalendarDays().subscribe(() => this.createListOfMonths());
   }
 
@@ -76,11 +77,21 @@ export class ViewCalendarComponent implements OnInit {
       });
   }
 
+  goToNextYear(): void {
+    this.selectedYear = this.selectedYear + 1;
+    this.loadCalendarDays().subscribe(() => this.createListOfMonths());
+  }
+
+  goToPreviousYear(): void {
+    this.selectedYear = this.selectedYear - 1;
+    this.loadCalendarDays().subscribe(() => this.createListOfMonths());
+  }
+
   private createListOfMonths(): void {
     const monthsPerYear = 12;
     const calendarMonths = [];
     for (let i = 0; i < monthsPerYear; i++) {
-      const month = new Date(this.year, i, 1);
+      const month = new Date(this.selectedYear, i, 1);
 
       const days = this.calendarDays.filter(
         (t) => moment(t.date).toDate().getMonth() === month.getMonth()
@@ -132,7 +143,7 @@ export class ViewCalendarComponent implements OnInit {
 
   private loadCalendarDays(): Observable<CalendarDay[]> {
     return this.calendarService
-      .getDays(this.calendarId, this.year)
+      .getDays(this.calendarId, this.selectedYear)
       .pipe(tap((calendarDays) => (this.calendarDays = calendarDays)));
   }
 
