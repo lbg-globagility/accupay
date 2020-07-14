@@ -25,10 +25,12 @@ namespace AccuPay.Data.Services
             PayrollContext context,
             SystemOwnerService systemOwnerService,
             ProductRepository productRepository,
-            PayPeriodRepository payPeriodRepository) :
+            PayPeriodRepository payPeriodRepository,
+            PolicyHelper policy) :
 
             base(loanRepository,
                 payPeriodRepository,
+                policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Loan does not exists.")
         {
             _loanRepository = loanRepository;

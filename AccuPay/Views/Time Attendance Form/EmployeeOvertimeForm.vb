@@ -109,8 +109,8 @@ Public Class EmployeeOvertimeForm
 
     Private Sub LoadStatusList()
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-        StatusComboBox.DataSource = service.GetStatusList()
+        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        StatusComboBox.DataSource = repository.GetStatusList()
 
     End Sub
 
@@ -222,8 +222,8 @@ Public Class EmployeeOvertimeForm
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-        Me._currentOvertimes = (Await service.GetByEmployeeAsync(currentEmployee.RowID.Value)).
+        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Me._currentOvertimes = (Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.OTStartDate).
                                 ToList
 
@@ -549,8 +549,8 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-        Dim currentOvertime = Await service.GetByIdAsync(Me._currentOvertime.RowID.Value)
+        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim currentOvertime = Await repository.GetByIdAsync(Me._currentOvertime.RowID.Value)
 
         If currentOvertime Is Nothing Then
 

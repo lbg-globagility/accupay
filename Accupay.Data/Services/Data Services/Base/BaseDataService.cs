@@ -11,19 +11,36 @@ namespace AccuPay.Data.Services
 {
     public class BaseDataService
     {
-        public readonly PayPeriodRepository _payPeriodRepository;
+        private const string ClosedPayPeriodErrorMessage = "Data cannot be modified since it is within a \"Closed\" pay period.";
 
-        public BaseDataService(PayPeriodRepository payPeriodRepository)
+        protected readonly PayPeriodRepository _payPeriodRepository;
+        protected readonly PolicyHelper _policy;
+
+        public BaseDataService(PayPeriodRepository payPeriodRepository, PolicyHelper policy)
         {
             _payPeriodRepository = payPeriodRepository;
+            _policy = policy;
         }
 
         public async Task CheckIfDataIsWithinClosedPayroll(DateTime date, int organizationId)
         {
             var currentPayPeriod = await _payPeriodRepository.GetAsync(organizationId, date);
 
-            if (currentPayPeriod?.Status == PayPeriodStatus.Closed)
-                throw new BusinessLogicException("Data cannot be updated since it is within a \"Closed\" pay period.");
+            if (currentPayPeriod == null) return;
+
+            bool isClosed;
+
+            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
+            {
+                isClosed = currentPayPeriod.IsClosed;
+            }
+            else
+            {
+                isClosed = currentPayPeriod.Status == PayPeriodStatus.Closed;
+            }
+
+            if (isClosed)
+                throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
         }
 
         public async Task CheckIfDataIsWithinClosedPayroll(IEnumerable<DateTime> dates, int organizationId)
@@ -39,7 +56,7 @@ namespace AccuPay.Data.Services
             foreach (var date in dates)
             {
                 if (closedPayPeriods.Any(x => x.IsBetween(date)))
-                    throw new BusinessLogicException("Data cannot be updated since it is within a \"Closed\" pay period.");
+                    throw new BusinessLogicException("Data cannot be modified since it is within a \"Closed\" pay period.");
             }
         }
     }

@@ -19,10 +19,12 @@ namespace AccuPay.Data.Services
         public OfficialBusinessDataService(
             OfficialBusinessRepository officialBusinessRepository,
             PayPeriodRepository payPeriodRepository,
-            PayrollContext context) :
+            PayrollContext context,
+            PolicyHelper policy) :
 
             base(officialBusinessRepository,
                 payPeriodRepository,
+                policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Official Business does not exists.")
         {
             _officialBusinessRepository = officialBusinessRepository;

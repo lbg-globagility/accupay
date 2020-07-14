@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeovertime")]
-    public class Overtime : BaseEntity
+    public class Overtime : BaseEntity, IPayrollEntity
     {
         public const string StatusApproved = "Approved";
 
@@ -46,6 +46,8 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
+
+        public DateTime? PayrollDate => OTStartDate;
 
         public Overtime()
         {

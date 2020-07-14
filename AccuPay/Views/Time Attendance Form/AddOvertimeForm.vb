@@ -16,7 +16,7 @@ Public Class AddOvertimeForm
 
     Private _newOvertime As New Overtime()
 
-    Private _overtimeService As OvertimeDataService
+    Private _overtimeRepository As OvertimeRepository
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -26,7 +26,7 @@ Public Class AddOvertimeForm
 
         _currentEmployee = employee
 
-        _overtimeService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+        _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -46,7 +46,7 @@ Public Class AddOvertimeForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _overtimeService.GetStatusList()
+        StatusComboBox.DataSource = _overtimeRepository.GetStatusList()
 
     End Sub
 
@@ -141,7 +141,8 @@ Public Class AddOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
-                Await _overtimeService.SaveAsync(Me._newOvertime)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Await dataService.SaveAsync(Me._newOvertime)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOvertime.RowID.Value, z_OrganizationID)
 

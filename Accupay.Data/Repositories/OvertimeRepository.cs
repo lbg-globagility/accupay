@@ -17,9 +17,9 @@ namespace AccuPay.Data.Repositories
         {
         }
 
-        #region CRUD
+        #region Save
 
-        internal async Task DeleteManyAsync(IEnumerable<int> ids)
+        public async Task DeleteManyAsync(IEnumerable<int> ids)
         {
             var overtimes = await _context.Overtimes
                 .Where(o => ids.Contains(o.RowID.Value))
@@ -38,13 +38,13 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 
         #region Single entity
 
-        internal async Task<Overtime> GetByIdWithEmployeeAsync(int id)
+        public async Task<Overtime> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Overtimes
                 .Include(x => x.Employee)
@@ -55,14 +55,14 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        internal async Task<ICollection<Overtime>> GetByEmployeeAsync(int employeeId)
+        public async Task<ICollection<Overtime>> GetByEmployeeAsync(int employeeId)
         {
             return await _context.Overtimes
                 .Where(l => l.EmployeeID == employeeId)
                 .ToListAsync();
         }
 
-        internal async Task<PaginatedList<Overtime>> GetPaginatedListAsync(
+        public async Task<PaginatedList<Overtime>> GetPaginatedListAsync(
             PageOptions options,
             int organizationId,
             string searchTerm = "",
@@ -103,7 +103,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Overtime>(overtimes, count);
         }
 
-        internal async Task<ICollection<Overtime>> GetByEmployeeAndDatePeriod(
+        public async Task<ICollection<Overtime>> GetByEmployeeAndDatePeriod(
             int organizationId,
             int employeeId,
             TimePeriod datePeriod,
@@ -117,7 +117,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        internal ICollection<Overtime> GetByEmployeeIDsAndDatePeriod(
+        public ICollection<Overtime> GetByEmployeeIDsAndDatePeriod(
             int organizationId,
             List<int> employeeIdList,
             TimePeriod datePeriod,
@@ -131,7 +131,7 @@ namespace AccuPay.Data.Repositories
                 .ToList();
         }
 
-        internal async Task<ICollection<Overtime>> GetByDatePeriodAsync(
+        public async Task<ICollection<Overtime>> GetByDatePeriodAsync(
             int organizationId,
             TimePeriod datePeriod,
             OvertimeStatus overtimeStatus = OvertimeStatus.All)
@@ -159,7 +159,7 @@ namespace AccuPay.Data.Repositories
 
         #region Others
 
-        internal List<string> GetStatusList()
+        public List<string> GetStatusList()
         {
             return new List<string>()
             {

@@ -22,7 +22,6 @@ namespace AccuPay.Data.Services
         };
 
         private readonly PayrollContext _context;
-        private readonly PolicyHelper _policy;
 
         private readonly EmployeeRepository _employeeRepository;
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
@@ -41,10 +40,10 @@ namespace AccuPay.Data.Services
 
             base(leaveRepository,
                 payPeriodRepository,
+                policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Leave does not exists.")
         {
             _context = context;
-            _policy = policy;
             _employeeRepository = employeeRepository;
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
             _leaveLedgerRepository = leaveLedgerRepository;

@@ -1,27 +1,29 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Overtimes
 {
     public class OvertimeService
     {
+        private readonly OvertimeRepository _repository;
         private readonly OvertimeDataService _service;
         private readonly ICurrentUser _currentUser;
 
-        public OvertimeService(OvertimeDataService service, ICurrentUser currentUser)
+        public OvertimeService(OvertimeRepository repository, OvertimeDataService dataService, ICurrentUser currentUser)
         {
-            _service = service;
+            _repository = repository;
+            _service = dataService;
             _currentUser = currentUser;
         }
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(PageOptions options, OvertimeFilter filter)
         {
-            var paginatedList = await _service.GetPaginatedListAsync(
+            var paginatedList = await _repository.GetPaginatedListAsync(
                 options,
                 _currentUser.OrganizationId,
                 filter.Term,
@@ -33,7 +35,7 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> GetById(int id)
         {
-            var officialBusiness = await _service.GetByIdWithEmployeeAsync(id);
+            var officialBusiness = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
@@ -55,7 +57,7 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Update(int id, UpdateOvertimeDto dto)
         {
-            var overtime = await _service.GetByIdAsync(id);
+            var overtime = await _repository.GetByIdAsync(id);
             if (overtime == null) return null;
 
             overtime.LastUpdBy = _currentUser.DesktopUserId;
@@ -74,7 +76,7 @@ namespace AccuPay.Web.Overtimes
 
         public List<string> GetStatusList()
         {
-            return _service.GetStatusList();
+            return _repository.GetStatusList();
         }
 
         private static void ApplyChanges(CrudOvertimeDto dto, Overtime overtime)

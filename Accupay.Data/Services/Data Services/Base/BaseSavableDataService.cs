@@ -15,7 +15,11 @@ namespace AccuPay.Data.Services
         public BaseSavableDataService(
             SavableRepository<T> savableRepository,
             PayPeriodRepository payPeriodRepository,
-            string entityDoesNotExistOnDeleteErrorMessage) : base(payPeriodRepository)
+            PolicyHelper policy,
+            string entityDoesNotExistOnDeleteErrorMessage) :
+
+            base(payPeriodRepository,
+                policy)
         {
             _savableRepository = savableRepository;
 

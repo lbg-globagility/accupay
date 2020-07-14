@@ -21,10 +21,12 @@ namespace AccuPay.Data.Services
             DivisionRepository divisionRepository,
             ListOfValueRepository listOfValueRepository,
             PayPeriodRepository payPeriodRepository,
-            PayrollContext context) :
+            PayrollContext context,
+            PolicyHelper policy) :
 
             base(divisionRepository,
                 payPeriodRepository,
+                policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Division does not exists.")
         {
             _divisionRepository = divisionRepository;

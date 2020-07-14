@@ -12,10 +12,12 @@ namespace AccuPay.Data.Services
         public BaseSavablePayrollDataService(
             SavableRepository<T> savableRepository,
             PayPeriodRepository payPeriodRepository,
+            PolicyHelper policy,
             string entityDoesNotExistOnDeleteErrorMessage) :
 
             base(savableRepository,
                 payPeriodRepository,
+                policy,
                 entityDoesNotExistOnDeleteErrorMessage)
         {
         }

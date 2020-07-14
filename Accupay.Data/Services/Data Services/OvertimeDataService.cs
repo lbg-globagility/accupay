@@ -1,9 +1,7 @@
 ﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
-using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
@@ -12,16 +10,18 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class OvertimeDataService : BaseSavableDataService<Overtime>
+    public class OvertimeDataService : BaseSavablePayrollDataService<Overtime>
     {
         private readonly OvertimeRepository _overtimeRepository;
 
         public OvertimeDataService(
             OvertimeRepository overtimeRepository,
-            PayPeriodRepository payPeriodRepository) :
+            PayPeriodRepository payPeriodRepository,
+            PolicyHelper policy) :
 
             base(overtimeRepository,
                 payPeriodRepository,
+                policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Overtime does not exists.")
         {
             _overtimeRepository = overtimeRepository;
@@ -41,6 +41,9 @@ namespace AccuPay.Data.Services
 
                 if (overtime.EmployeeID == null)
                     throw new BusinessLogicException("Employee is required.");
+
+                if (overtime.OTStartDate < PayrollTools.SqlServerMinimumDate)
+                    throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
                 if (overtime.OTStartTime == null)
                     throw new BusinessLogicException("Start Time is required.");
@@ -63,50 +66,5 @@ namespace AccuPay.Data.Services
                 overtime.UpdateEndDate();
             });
         }
-
-        #region Queries
-
-        public async Task<Overtime> GetByIdAsync(int overtimeId)
-        {
-            return await _overtimeRepository.GetByIdAsync(overtimeId);
-        }
-
-        public async Task<Overtime> GetByIdWithEmployeeAsync(int overtimeId)
-        {
-            return await _overtimeRepository.GetByIdWithEmployeeAsync(overtimeId);
-        }
-
-        public async Task<IEnumerable<Overtime>> GetByEmployeeAsync(int employeeId)
-        {
-            return await _overtimeRepository.GetByEmployeeAsync(employeeId);
-        }
-
-        public async Task<PaginatedList<Overtime>> GetPaginatedListAsync(
-            PageOptions options,
-            int organizationId,
-            string searchTerm = "",
-            DateTime? dateFrom = null,
-            DateTime? dateTo = null)
-        {
-            return await _overtimeRepository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
-        }
-
-        public IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,
-                                                                List<int> employeeIdList,
-                                                                TimePeriod timePeriod,
-                                                                OvertimeStatus overtimeStatus = OvertimeStatus.All)
-        {
-            return _overtimeRepository.GetByEmployeeIDsAndDatePeriod(organizationId,
-                                                            employeeIdList,
-                                                            timePeriod,
-                                                            overtimeStatus);
-        }
-
-        public List<string> GetStatusList()
-        {
-            return _overtimeRepository.GetStatusList();
-        }
-
-        #endregion Queries
     }
 }

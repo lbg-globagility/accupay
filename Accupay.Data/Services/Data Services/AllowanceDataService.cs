@@ -17,10 +17,12 @@ namespace AccuPay.Data.Services
         public AllowanceDataService(
             AllowanceRepository allowanceRepository,
             PayPeriodRepository payPeriodRepository,
-            PayrollContext context) :
+            PayrollContext context,
+            PolicyHelper policy) :
 
             base(allowanceRepository,
                 payPeriodRepository,
+                policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Allowance does not exists.")
         {
             _allowanceRepository = allowanceRepository;
