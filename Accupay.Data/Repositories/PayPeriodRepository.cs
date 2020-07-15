@@ -79,7 +79,7 @@ namespace AccuPay.Data.Repositories
         {
             var query = CreateBaseQuery(organizationId);
 
-            query = GetClosedPayPeriodQuery(query);
+            query = AddCheckIfClosedPayPeriodQuery(query);
 
             if (dateRange != null)
             {
@@ -93,7 +93,7 @@ namespace AccuPay.Data.Repositories
             return await query.ToListAsync();
         }
 
-        public IQueryable<PayPeriod> GetClosedPayPeriodQuery(IQueryable<PayPeriod> query)
+        public IQueryable<PayPeriod> AddCheckIfClosedPayPeriodQuery(IQueryable<PayPeriod> query)
         {
             if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
             {

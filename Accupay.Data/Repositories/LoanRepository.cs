@@ -106,12 +106,12 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<LoanSchedule>(loanSchedules, count);
         }
 
-        public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int loanId)
+        public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int id)
         {
             var query = _context.LoanTransactions
                 .Include(x => x.PayPeriod)
                 .Include(x => x.LoanSchedule.Employee)
-                .Where(x => x.LoanScheduleID == loanId)
+                .Where(x => x.LoanScheduleID == id)
                 .OrderByDescending(x => x.PayPeriod.PayToDate)
                 .AsQueryable();
 
@@ -133,11 +133,11 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<LoanTransaction>> GetLoanTransactionsWithPayPeriodAsync(int loanScheduleId)
+        public async Task<ICollection<LoanTransaction>> GetLoanTransactionsWithPayPeriodAsync(int id)
         {
             return await _context.LoanTransactions
                 .Include(l => l.PayPeriod)
-                .Where(l => l.LoanScheduleID == loanScheduleId)
+                .Where(l => l.LoanScheduleID == id)
                 .ToListAsync();
         }
 

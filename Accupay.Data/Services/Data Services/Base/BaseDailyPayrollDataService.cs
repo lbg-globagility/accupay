@@ -24,60 +24,48 @@ namespace AccuPay.Data.Services
 
         public async override Task DeleteAsync(int id)
         {
-            var entity = await _savableRepository.GetByIdAsync(id);
+            var entity = await _repository.GetByIdAsync(id);
 
             if (entity == null)
                 throw new BusinessLogicException(EntityDoesNotExistOnDeleteErrorMessage);
 
-            await ValidateDate(entity, checkOldEntity: false);
+            await ValidateDate(entity, entity, checkOldEntity: false);
 
-            await _savableRepository.DeleteAsync(entity);
+            await _repository.DeleteAsync(entity);
         }
 
-        public override async Task SaveAsync(T entity)
+        protected override async Task AdditionalSaveValidation(T entity, T oldEntity)
         {
-            await ValidateData(entity);
-
             if (entity.PayrollDate == null)
                 throw new BusinessLogicException("Payroll Date is required");
 
             if (entity.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required");
 
-            await ValidateDate(entity);
-            await AdditionalSaveValidation(entity);
-
-            await _savableRepository.SaveAsync(entity);
+            await ValidateDate(entity, oldEntity);
         }
 
-        public override async Task SaveManyAsync(List<T> entities)
+        protected override async Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities)
         {
             int? organizationId = null;
             foreach (var entity in entities)
             {
-                await ValidateData(entity);
-
                 if (entity.PayrollDate == null)
                     throw new BusinessLogicException("Payroll Date is required");
 
                 if (entity.OrganizationID == null)
                     throw new BusinessLogicException("Organization is required");
 
-                organizationId = ValidateOrganization(organizationId, entity);
+                organizationId = ValidateOrganization(organizationId, entity.OrganizationID);
             }
 
-            await ValidateDates(entities, organizationId);
-
-            await AdditionalSaveManyValidation(entities);
-
-            await _savableRepository.SaveManyAsync(entities);
+            await ValidateDates(entities, oldEntities, organizationId);
         }
 
-        protected async Task ValidateDate(T entity, bool checkOldEntity = true)
+        protected async Task ValidateDate(T entity, T oldEntity, bool checkOldEntity = true)
         {
             if (checkOldEntity && IsNewEntity(entity.RowID) == false)
             {
-                var oldEntity = await _savableRepository.GetByIdAsync(entity.RowID.Value);
                 if (oldEntity.PayrollDate != entity.PayrollDate)
                 {
                     await CheckIfDataIsWithinClosedPayroll(oldEntity.PayrollDate.Value, oldEntity.OrganizationID.Value);
@@ -87,16 +75,8 @@ namespace AccuPay.Data.Services
             await CheckIfDataIsWithinClosedPayroll(entity.PayrollDate.Value, entity.OrganizationID.Value);
         }
 
-        protected async Task ValidateDates(List<T> entities, int? organizationId)
+        protected async Task ValidateDates(List<T> entities, List<T> oldEntities, int? organizationId)
         {
-            var entityIds = entities
-                .Where(x => IsNewEntity(x.RowID) == false)
-                .Select(x => x.RowID.Value)
-                .Distinct()
-                .ToArray();
-
-            var oldEntities = await _savableRepository.GetManyByIdsAsync(entityIds);
-
             var payrollDates = entities
                 .Select(x => x.PayrollDate.Value)
                 .Distinct()
@@ -105,21 +85,6 @@ namespace AccuPay.Data.Services
             payrollDates.AddRange(oldEntities.Select(x => x.PayrollDate.Value).Distinct());
 
             await CheckIfDataIsWithinClosedPayroll(payrollDates.Distinct(), organizationId.Value);
-        }
-
-        private int? ValidateOrganization(int? organizationId, T entity)
-        {
-            if (organizationId == null)
-            {
-                organizationId = entity.OrganizationID;
-            }
-            else
-            {
-                if (organizationId != entity.OrganizationID)
-                    throw new BusinessLogicException("Cannot save multiple data from different organizations.");
-            }
-
-            return organizationId;
         }
     }
 }

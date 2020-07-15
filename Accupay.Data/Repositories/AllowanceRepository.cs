@@ -151,6 +151,16 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ICollection<AllowanceItem>> GetAllowanceItemsWithPayPeriodAsync(int[] ids)
+        {
+            return await _context
+                .AllowanceItems
+                .AsNoTracking()
+                .Include(x => x.PayPeriod)
+                .Where(x => ids.Contains(x.AllowanceID.Value))
+                .ToListAsync();
+        }
+
         #endregion Others
 
         #endregion Queries

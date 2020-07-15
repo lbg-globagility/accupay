@@ -47,7 +47,7 @@ namespace AccuPay.Data.Services
             await _positionRepository.DeleteAsync(position);
         }
 
-        protected override async Task SanitizeEntity(Position position)
+        protected override async Task SanitizeEntity(Position position, Position oldPosition)
         {
             if (position.DivisionID == null)
                 throw new BusinessLogicException("Division is required.");

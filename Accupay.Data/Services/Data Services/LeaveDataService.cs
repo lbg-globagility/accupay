@@ -50,7 +50,7 @@ namespace AccuPay.Data.Services
             _shiftScheduleRepository = shiftScheduleRepository;
         }
 
-        protected override async Task SanitizeEntity(Leave leave)
+        protected override async Task SanitizeEntity(Leave leave, Leave oldLeave)
         {
             if (leave.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
@@ -115,6 +115,8 @@ namespace AccuPay.Data.Services
         {
             if (leaves.Any() == false) return;
 
+            var oldLeaves = await GetOldEntitiesAsync(leaves);
+
             int organizationId = leaves
                 .Where(x => x.OrganizationID.HasValue)
                 .Select(x => x.OrganizationID.Value)
@@ -122,10 +124,11 @@ namespace AccuPay.Data.Services
 
             foreach (var leave in leaves)
             {
-                await SanitizeEntity(leave);
+                var oldLeave = oldLeaves.Where(x => x.RowID == leave.RowID).FirstOrDefault();
+                await SanitizeEntity(leave, oldLeave);
             }
 
-            await ValidateDates(leaves, organizationId);
+            await ValidateDates(leaves, oldLeaves.ToList(), organizationId);
 
             await SaveLeavesAsync(leaves, organizationId);
         }

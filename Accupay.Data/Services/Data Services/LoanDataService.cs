@@ -59,7 +59,7 @@ namespace AccuPay.Data.Services
                 ssLoanId: ssLoanId);
         }
 
-        protected override async Task SanitizeEntity(LoanSchedule loan)
+        protected override async Task SanitizeEntity(LoanSchedule loan, LoanSchedule oldLoan)
         {
             Validate(loan);
 
@@ -68,16 +68,26 @@ namespace AccuPay.Data.Services
             if (IsNewEntity(loan.RowID))
                 SanitizeInsert(loan);
             else
-                await SanitizeUpdate(loan);
+                SanitizeUpdate(loan, oldLoan);
         }
 
-        private async Task SanitizeUpdate(LoanSchedule newLoan)
+        private static void SanitizeInsert(LoanSchedule loan)
         {
-            var oldLoan = await _loanRepository.GetByIdAsync(newLoan.RowID.Value);
+            if (loan.LoanPayPeriodLeft == 0)
+            {
+                loan.Status = LoanSchedule.STATUS_COMPLETE;
+            }
 
-            var loanTransactionsCount = await _context.LoanTransactions.
-                                            CountAsync(l => l.LoanScheduleID == newLoan.RowID);
+            if (loan.LoanNumber == null)
+            {
+                loan.LoanNumber = "";
+            }
 
+            loan.Created = DateTime.Now;
+        }
+
+        private void SanitizeUpdate(LoanSchedule newLoan, LoanSchedule oldLoan)
+        {
             // if cancelled na yung loan, hindi pwede ma update
             if ((oldLoan.Status == LoanSchedule.STATUS_CANCELLED))
                 throw new BusinessLogicException("Loan schedule is already cancelled!");
@@ -107,21 +117,6 @@ namespace AccuPay.Data.Services
             }
 
             _context.Entry(oldLoan).State = EntityState.Detached;
-        }
-
-        private static void SanitizeInsert(LoanSchedule loan)
-        {
-            if (loan.LoanPayPeriodLeft == 0)
-            {
-                loan.Status = LoanSchedule.STATUS_COMPLETE;
-            }
-
-            if (loan.LoanNumber == null)
-            {
-                loan.LoanNumber = "";
-            }
-
-            loan.Created = DateTime.Now;
         }
 
         private async Task SanitizeProperties(LoanSchedule loan)

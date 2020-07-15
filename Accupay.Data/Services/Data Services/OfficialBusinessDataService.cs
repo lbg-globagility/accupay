@@ -28,7 +28,7 @@ namespace AccuPay.Data.Services
             _context = context;
         }
 
-        protected override async Task SanitizeEntity(OfficialBusiness officialBusiness)
+        protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness)
         {
             if (officialBusiness.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");

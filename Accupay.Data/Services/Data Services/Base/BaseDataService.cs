@@ -81,7 +81,7 @@ namespace AccuPay.Data.Services
 
         public bool CheckIfDataIsWithinClosedPayroll(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
         {
-            var checkQuery = _payPeriodRepository.GetClosedPayPeriodQuery(payPeriods.AsQueryable());
+            var checkQuery = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(payPeriods.AsQueryable());
 
             if (checkQuery.Any())
             {

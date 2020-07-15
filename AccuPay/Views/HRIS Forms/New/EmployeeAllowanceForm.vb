@@ -188,26 +188,26 @@ Public Class EmployeeAllowanceForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                        Async Function()
+            Async Function()
 
-                                            Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                                            Await service.SaveManyAsync(changedAllowances)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                Await dataService.SaveManyAsync(changedAllowances)
 
-                                            For Each item In changedAllowances
-                                                RecordUpdate(item)
-                                            Next
+                For Each item In changedAllowances
+                    RecordUpdate(item)
+                Next
 
-                                            ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
+                ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
 
-                                            Dim currentEmployee = GetSelectedEmployee()
+                Dim currentEmployee = GetSelectedEmployee()
 
-                                            If currentEmployee IsNot Nothing Then
+                If currentEmployee IsNot Nothing Then
 
-                                                Await LoadAllowances(currentEmployee)
+                    Await LoadAllowances(currentEmployee)
 
-                                            End If
+                End If
 
-                                        End Function)
+            End Function)
     End Sub
 
     Private Sub cboallowtype_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowtype.SelectedValueChanged
@@ -369,20 +369,20 @@ Public Class EmployeeAllowanceForm
     Private Async Function DeleteAllowance(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                            Async Function()
-                                                Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                                                Await service.DeleteAsync(Me._currentAllowance.RowID.Value)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                Await dataService.DeleteAsync(Me._currentAllowance.RowID.Value)
 
-                                                _userActivityRepository.RecordDelete(z_User,
-                                                                                     FormEntityName,
-                                                                                     CInt(Me._currentAllowance.RowID),
-                                                                                     z_OrganizationID)
+                _userActivityRepository.RecordDelete(z_User,
+                                                        FormEntityName,
+                                                        CInt(Me._currentAllowance.RowID),
+                                                        z_OrganizationID)
 
-                                                Await LoadAllowances(currentEmployee)
+                Await LoadAllowances(currentEmployee)
 
-                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+                ShowBalloonInfo("Successfully Deleted.", messageTitle)
 
-                                            End Function)
+            End Function)
     End Function
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click

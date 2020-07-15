@@ -32,7 +32,7 @@ namespace AccuPay.Data.Services
             await _overtimeRepository.DeleteManyAsync(overtimeIds);
         }
 
-        protected override async Task SanitizeEntity(Overtime overtime)
+        protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
         {
             await Task.Run(() =>
             {
