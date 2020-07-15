@@ -24,19 +24,22 @@ export class CalendarDayDialogComponent implements OnInit {
     private dialog: MatDialogRef<CalendarDayDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: any
   ) {
+    this.dialog.updateSize('1000px');
     this.calendarDay = data.calendarDay;
     this.dayTypes = data.dayTypes;
   }
 
   ngOnInit(): void {
-    this.form.patchValue(this.calendarDay);
+    if (this.calendarDay) {
+      this.form.patchValue(this.calendarDay);
+    }
   }
 
   onOk() {
     const value = this.form.value;
     const oldValue = {
-      dayType: this.calendarDay.dayType,
-      description: this.calendarDay.description,
+      dayType: this.calendarDay?.dayType,
+      description: this.calendarDay?.description,
     };
 
     const hasChanged = JSON.stringify(value) !== JSON.stringify(oldValue);

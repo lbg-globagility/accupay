@@ -2,6 +2,7 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -71,21 +72,41 @@ namespace AccuPay.Web.Calendars
 
         public async Task UpdateDays(int calendarId, ICollection<CalendarDayDto> dtos)
         {
-            var calendarDayIds = dtos.Select(t => t.Id).ToList();
-            var calendarDays = await _repository.GetCalendarDays(calendarDayIds);
+            var dates = dtos.Select(t => t.Date.Date).ToList();
+            var calendarDays = await _repository.GetCalendarDays(calendarId, dates);
             var dayTypes = await _dayTypeRepository.GetAllAsync();
 
-            foreach (var calendarDay in calendarDays)
+            var added = new Collection<CalendarDay>();
+            var updated = new Collection<CalendarDay>();
+
+            foreach (var dto in dtos)
             {
-                var dto = dtos.First(t => t.Id == calendarDay.RowID);
                 var dayType = dayTypes.First(t => t.Name == dto.DayType);
 
+                var calendarDay = calendarDays.FirstOrDefault(t => t.Date == dto.Date.Date);
+
+                if (calendarDay == null)
+                {
+                    calendarDay = new CalendarDay()
+                    {
+                        CalendarID = calendarId,
+                        Date = dto.Date,
+                        CreatedBy = _currentUser.DesktopUserId,
+                    };
+
+                    added.Add(calendarDay);
+                }
+                else
+                {
+                    calendarDay.UpdatedBy = _currentUser.DesktopUserId;
+                    updated.Add(calendarDay);
+                }
+
+                calendarDay.DayTypeID = dayType.RowID;
                 calendarDay.Description = dto.Description;
-                calendarDay.DayType = dayType;
-                calendarDay.UpdatedBy = _currentUser.DesktopUserId;
             }
 
-            await _repository.UpdateDaysAsync(calendarDays);
+            await _repository.UpdateDaysAsync(added, updated);
         }
 
         public async Task<ICollection<CalendarDto>> List()

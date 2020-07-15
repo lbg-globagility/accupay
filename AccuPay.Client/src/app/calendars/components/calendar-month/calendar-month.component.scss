@@ -3,3 +3,7 @@
 .is-holiday {
   color: colors.$red;
 }
+
+._cell:hover {
+  background: rgba(0, 0, 0, 0.04);
+}

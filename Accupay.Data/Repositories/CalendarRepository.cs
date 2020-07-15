@@ -61,9 +61,14 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateDaysAsync(ICollection<CalendarDay> calendarDays)
+        public async Task UpdateDaysAsync(ICollection<CalendarDay> added, ICollection<CalendarDay> updated)
         {
-            foreach (var calendarDay in calendarDays)
+            foreach (var calendarDay in added)
+            {
+                _context.CalendarDays.Add(calendarDay);
+            }
+
+            foreach (var calendarDay in updated)
             {
                 _context.Entry(calendarDay).State = EntityState.Modified;
             }
@@ -116,10 +121,11 @@ namespace AccuPay.Data.Repositories
             return await GetCalendarDays(calendarId, firstDayOfYear, lastDayOfYear);
         }
 
-        public async Task<ICollection<CalendarDay>> GetCalendarDays(ICollection<int?> calendarDayIds)
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId, ICollection<DateTime> dates)
         {
             var calendarDays = await _context.CalendarDays
-                .Where(t => calendarDayIds.Contains(t.RowID))
+                .Where(t => t.CalendarID == calendarId)
+                .Where(t => dates.Contains(t.Date))
                 .ToListAsync();
 
             return calendarDays;

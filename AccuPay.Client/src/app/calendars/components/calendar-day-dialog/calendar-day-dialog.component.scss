@@ -1,0 +1,15 @@
+@use "styles/sizes";
+
+mat-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin: sizes.$x2 0;
+}
+
+mat-radio-button {
+  margin: sizes.$x1 0;
+}
+
+mat-dialog-content {
+  width: 480px;
+}
