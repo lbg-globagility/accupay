@@ -1,11 +1,17 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports.Employees;
+using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Files.Services;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,18 +24,24 @@ namespace AccuPay.Web.Employees.Services
         private readonly GenerateDefaultImageService _generateDefaultImageService;
         private readonly IFilesystem _filesystem;
         private readonly FileRepository _fileRepository;
+        private readonly EmployeeDataService _service;
+        private readonly EmployeeImportParser _importParser;
 
         public EmployeeService(EmployeeRepository employeeRepository,
             ICurrentUser currentUser,
             GenerateDefaultImageService generateDefaultImageService,
             IFilesystem filesystem,
-            FileRepository fileRepository)
+            FileRepository fileRepository,
+            EmployeeDataService service,
+            EmployeeImportParser importParser)
         {
             _employeeRepository = employeeRepository;
             _currentUser = currentUser;
             _generateDefaultImageService = generateDefaultImageService;
             _filesystem = filesystem;
             _fileRepository = fileRepository;
+            _service = service;
+            _importParser = importParser;
         }
 
         public async Task<PaginatedList<EmployeeDto>> List(EmployeePageOptions options)
@@ -112,14 +124,14 @@ namespace AccuPay.Web.Employees.Services
             employee.PositionID = dto.PositionId;
         }
 
-        private async Task<File> CreateOriginalImage(Employee employee)
+        private async Task<Data.Entities.File> CreateOriginalImage(Employee employee)
         {
             using var virtualFile = _generateDefaultImageService.Create(employee);
             var path = $"Employee/{employee.RowID.Value}/{virtualFile.Filename}";
 
             await _filesystem.Move(virtualFile.Stream, path);
 
-            var file = new File(
+            var file = new Data.Entities.File(
                 key: virtualFile.Filename,
                 path: path,
                 filename: virtualFile.Filename,
@@ -136,14 +148,39 @@ namespace AccuPay.Web.Employees.Services
 
         public async Task GenerateEmployeesImages()
         {
-            var employees = await _employeeRepository.GetEmployeesWithoutImageAsync();
+            var employees = (await _employeeRepository.GetEmployeesWithoutImageAsync()).ToList();
 
             foreach (var employee in employees)
             {
                 employee.OriginalImage = await CreateOriginalImage(employee);
-
-                await _employeeRepository.SaveAsync(employee);
             }
+
+            await _employeeRepository.SaveManyAsync(employees);
+        }
+
+        internal async Task<EmployeeImportParser.EmployeeImportParserOutput> Import(IFormFile file)
+        {
+            if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
+                throw new InvalidFormatException();
+
+            Stream stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            if (stream == null)
+                throw new Exception("Unable to parse excel file.");
+
+            int userId = _currentUser.DesktopUserId;
+            var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
+
+            var employees = await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+
+            foreach (var employee in employees)
+            {
+                employee.OriginalImage = await CreateOriginalImage(employee);
+            }
+            if (employees.Any()) await _employeeRepository.SaveManyAsync(employees);
+
+            return parsedResult;
         }
     }
 }

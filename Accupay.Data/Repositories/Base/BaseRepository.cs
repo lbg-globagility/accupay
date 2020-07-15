@@ -5,7 +5,7 @@
         public bool IsNewEntity(int? id)
         {
             // sometimes it's not int.MinValue
-            return id == null || id <= 0;
+            return id == null || id <= 0 || !id.HasValue;
         }
     }
 }

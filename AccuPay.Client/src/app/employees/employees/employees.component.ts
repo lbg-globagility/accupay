@@ -8,6 +8,8 @@ import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import Swal from 'sweetalert2';
+import { EmployeeImportParserOutput } from '../shared/employee-import-parser-output';
 
 @Component({
   selector: 'app-employees',
@@ -18,6 +20,8 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   },
 })
 export class EmployeesComponent implements OnInit {
+  @ViewChild('uploader') fileInput: ElementRef;
+
   @ViewChild('employeesRef')
   employeesRef: ElementRef;
 
@@ -116,5 +120,57 @@ export class EmployeesComponent implements OnInit {
       .finally(() => {
         this.isDownloadingTemplate = false;
       });
+  }
+
+  onImport(files: FileList) {
+    const file = files[0];
+
+    this.employeeService.import(file).subscribe(
+      (outputParse) => {
+        this.loadEmployees();
+        this.displaySuccess(outputParse);
+        this.clearFile();
+      },
+      (err) => {
+        this.errorHandler.badRequest(err, 'Failed to import shift.');
+        this.clearFile();
+      }
+    );
+  }
+
+  private displaySuccess(outputParse: EmployeeImportParserOutput) {
+    const hasFailedImports =
+      outputParse.invalidRecords && outputParse.invalidRecords.length > 0;
+    const succeeds =
+      outputParse.validRecords && outputParse.validRecords.length > 0;
+
+    if (!hasFailedImports && succeeds) {
+      Swal.fire({
+        title: 'Success',
+        text: 'Successfully imported new employee(s)!',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+      });
+    } else if (hasFailedImports && !succeeds) {
+      Swal.fire({
+        title: 'Failed',
+        text: `${outputParse.invalidRecords.length} employee(s) failed to import.`,
+        icon: 'error',
+        showConfirmButton: true,
+      });
+    } else if (hasFailedImports && succeeds) {
+      Swal.fire({
+        title: 'Oops!',
+        text: `${outputParse.invalidRecords.length} employee(s) were failed to import
+        and the ${outputParse.validRecords.length} employee(s) succeeded.`,
+        icon: 'warning',
+        showConfirmButton: true,
+      });
+    }
+  }
+
+  clearFile() {
+    this.fileInput.nativeElement.value = '';
   }
 }

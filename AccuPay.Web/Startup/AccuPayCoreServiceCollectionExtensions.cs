@@ -3,6 +3,7 @@ using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
+using AccuPay.Data.Services.Imports.Employees;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
@@ -101,6 +102,7 @@ namespace AccuPay.Web
 
             services.AddScoped<AllowanceDataService>();
             services.AddScoped<DivisionDataService>();
+            services.AddScoped<EmployeeDataService>();
             services.AddScoped<EmployeeDutyScheduleDataService>();
             services.AddScoped<LeaveDataService>();
             services.AddScoped<LoanDataService>();
@@ -113,6 +115,7 @@ namespace AccuPay.Web
             services.AddScoped<TimeLogDataService>();
             services.AddScoped<UserDataService>();
 
+            services.AddScoped<EmployeeImportParser>();
             services.AddScoped<ShiftImportParser>();
             services.AddScoped<TimeLogImportParser>();
             services.AddScoped<TimeLogsReader>();
