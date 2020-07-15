@@ -20,12 +20,23 @@ const menuItems: MenuItem[] = [
         route: '/employees',
       },
       {
-        label: 'Positions',
-        route: '/positions',
+        label: 'Salaries',
+        route: '/salaries',
+        icon: 'person',
       },
       {
-        label: 'Branches',
-        route: '/branches',
+        label: 'Allowances',
+        route: '/allowances',
+        icon: 'person',
+      },
+      {
+        label: 'Loans',
+        route: '/loans',
+        icon: 'person',
+      },
+      {
+        label: 'Positions',
+        route: '/positions',
       },
       {
         label: 'Policies',
@@ -66,51 +77,17 @@ const menuItems: MenuItem[] = [
   {
     label: 'Payroll',
     icon: 'payments',
-    items: [
-      {
-        label: 'Payroll',
-        route: '/payroll',
-      },
-      {
-        label: 'Salaries',
-        route: '/salaries',
-        icon: 'person',
-      },
-      {
-        label: 'Allowances',
-        route: '/allowances',
-        icon: 'person',
-      },
-      {
-        label: 'Loans',
-        route: '/loans',
-        icon: 'person',
-      },
-    ],
+    route: '/payroll',
   },
   {
     label: 'Reports',
-    icon: 'list_alt',
+    icon: 'insert_chart_outlined',
     route: '/reports',
   },
   {
     label: 'Security',
     icon: 'security',
     route: '/security',
-    // items: [
-    //   {
-    //     label: 'Users',
-    //     route: '/users',
-    //   },
-    //   {
-    //     label: 'Roles',
-    //     route: '/roles',
-    //   },
-    //   {
-    //     label: 'User Access',
-    //     route: '/user-access',
-    //   },
-    // ],
   },
   {
     label: 'Settings',
@@ -119,6 +96,10 @@ const menuItems: MenuItem[] = [
       {
         label: 'Organizations',
         route: '/organizations',
+      },
+      {
+        label: 'Branches',
+        route: '/branches',
       },
       {
         label: 'Calendars',
