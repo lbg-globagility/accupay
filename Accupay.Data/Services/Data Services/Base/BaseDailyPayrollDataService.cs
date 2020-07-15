@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class BaseSavablePayrollDataService<T> : BaseSavableDataService<T> where T : BaseEntity, IPayrollEntity
+    public class BaseDailyPayrollDataService<T> : BaseSavableDataService<T> where T : BaseEntity, IPayrollEntity
     {
-        public BaseSavablePayrollDataService(
+        public BaseDailyPayrollDataService(
             SavableRepository<T> savableRepository,
             PayPeriodRepository payPeriodRepository,
             PolicyHelper policy,
@@ -45,6 +45,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Organization is required");
 
             await ValidateDate(entity);
+            await AdditionalSaveValidation(entity);
 
             await _savableRepository.SaveAsync(entity);
         }
@@ -66,6 +67,8 @@ namespace AccuPay.Data.Services
             }
 
             await ValidateDates(entities, organizationId);
+
+            await AdditionalSaveManyValidation(entities);
 
             await _savableRepository.SaveManyAsync(entities);
         }

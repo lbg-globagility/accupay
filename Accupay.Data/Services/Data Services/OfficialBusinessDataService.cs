@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class OfficialBusinessDataService : BaseSavablePayrollDataService<OfficialBusiness>
+    public class OfficialBusinessDataService : BaseDailyPayrollDataService<OfficialBusiness>
     {
         private readonly PayrollContext _context;
 

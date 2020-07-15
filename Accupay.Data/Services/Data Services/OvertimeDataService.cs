@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class OvertimeDataService : BaseSavablePayrollDataService<Overtime>
+    public class OvertimeDataService : BaseDailyPayrollDataService<Overtime>
     {
         private readonly OvertimeRepository _overtimeRepository;
 

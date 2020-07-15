@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -47,6 +48,7 @@ namespace AccuPay.Data.Services
         public virtual async Task SaveAsync(T entity)
         {
             await ValidateData(entity);
+            await AdditionalSaveValidation(entity);
 
             await _savableRepository.SaveAsync(entity);
         }
@@ -57,6 +59,8 @@ namespace AccuPay.Data.Services
             {
                 await ValidateData(entity);
             }
+
+            await AdditionalSaveManyValidation(entities);
 
             await _savableRepository.SaveManyAsync(entities);
         }
@@ -72,6 +76,20 @@ namespace AccuPay.Data.Services
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
         protected virtual async Task SanitizeEntity(T entity)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+        }
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
+        protected virtual async Task AdditionalSaveValidation(T entity)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        {
+        }
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
+        protected virtual async Task AdditionalSaveManyValidation(List<T> entities)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
         }

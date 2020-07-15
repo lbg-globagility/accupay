@@ -63,36 +63,29 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
         }
 
+        protected async override Task AdditionalSaveValidation(Allowance allowance)
+        {
+            var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(allowance.RowID.Value);
+            CheckIfDataIsWithinClosedPayroll(payPeriods);
+        }
+
+        protected async override Task AdditionalSaveManyValidation(List<Allowance> entities)
+        {
+            var ids = entities
+                .Where(x => x.RowID.HasValue)
+                .Select(x => x.RowID.Value)
+                .ToArray();
+
+            var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(ids);
+            CheckIfDataIsWithinClosedPayroll(payPeriods);
+        }
+
         #region Queries
 
-        public async Task<Allowance> GetByIdAsync(int allowanceId)
+        public async Task<bool> CheckIfAlreadyUsedInClosedPeriodAsync(int allowanceId)
         {
-            return await _allowanceRepository.GetByIdAsync(allowanceId);
-        }
-
-        public async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int allowanceId)
-        {
-            return await _allowanceRepository.GetByIdWithEmployeeAndProductAsync(allowanceId);
-        }
-
-        public async Task<IEnumerable<Allowance>> GetByEmployeeWithProductAsync(int employeeId)
-        {
-            return await _allowanceRepository.GetByEmployeeWithProductAsync(employeeId);
-        }
-
-        public async Task<PaginatedList<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
-        {
-            return await _allowanceRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
-        }
-
-        public List<string> GetFrequencyList()
-        {
-            return _allowanceRepository.GetFrequencyList();
-        }
-
-        public async Task<bool> CheckIfAlreadyUsedAsync(int allowanceId)
-        {
-            return await _allowanceRepository.CheckIfAlreadyUsedAsync(allowanceId);
+            var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(allowanceId);
+            return CheckIfDataIsWithinClosedPayroll(payPeriods, throwException: false);
         }
 
         #endregion Queries

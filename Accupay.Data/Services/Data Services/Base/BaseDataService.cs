@@ -1,4 +1,5 @@
-﻿using AccuPay.Data.Enums;
+﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -22,11 +23,11 @@ namespace AccuPay.Data.Services
             _policy = policy;
         }
 
-        public async Task CheckIfDataIsWithinClosedPayroll(DateTime date, int organizationId)
+        public async Task<bool> CheckIfDataIsWithinClosedPayroll(DateTime date, int organizationId, bool throwException = true)
         {
             var currentPayPeriod = await _payPeriodRepository.GetAsync(organizationId, date);
 
-            if (currentPayPeriod == null) return;
+            if (currentPayPeriod == null) return false;
 
             bool isClosed;
 
@@ -40,12 +41,22 @@ namespace AccuPay.Data.Services
             }
 
             if (isClosed)
-                throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
+            {
+                if (throwException)
+                {
+                    throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public async Task CheckIfDataIsWithinClosedPayroll(IEnumerable<DateTime> dates, int organizationId)
+        public async Task<bool> CheckIfDataIsWithinClosedPayroll(IEnumerable<DateTime> dates, int organizationId, bool throwException = true)
         {
-            if (!dates.Any()) return;
+            if (!dates.Any()) return false;
 
             var earliestDate = dates.Min();
             var latestDate = dates.Max();
@@ -56,7 +67,33 @@ namespace AccuPay.Data.Services
             foreach (var date in dates)
             {
                 if (closedPayPeriods.Any(x => x.IsBetween(date)))
-                    throw new BusinessLogicException("Data cannot be modified since it is within a \"Closed\" pay period.");
+                {
+                    if (throwException)
+                    {
+                        throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool CheckIfDataIsWithinClosedPayroll(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
+        {
+            var checkQuery = _payPeriodRepository.GetClosedPayPeriodQuery(payPeriods.AsQueryable());
+
+            if (checkQuery.Any())
+            {
+                if (throwException)
+                {
+                    throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

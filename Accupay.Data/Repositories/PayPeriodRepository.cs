@@ -79,14 +79,7 @@ namespace AccuPay.Data.Repositories
         {
             var query = CreateBaseQuery(organizationId);
 
-            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
-            {
-                query = query.Where(p => p.IsClosed);
-            }
-            else
-            {
-                query = query.Where(p => p.Status == PayPeriodStatus.Closed);
-            }
+            query = GetClosedPayPeriodQuery(query);
 
             if (dateRange != null)
             {
@@ -98,6 +91,20 @@ namespace AccuPay.Data.Repositories
             }
 
             return await query.ToListAsync();
+        }
+
+        public IQueryable<PayPeriod> GetClosedPayPeriodQuery(IQueryable<PayPeriod> query)
+        {
+            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
+            {
+                query = query.Where(p => p.IsClosed);
+            }
+            else
+            {
+                query = query.Where(p => p.Status == PayPeriodStatus.Closed);
+            }
+
+            return query;
         }
 
         /// <summary>

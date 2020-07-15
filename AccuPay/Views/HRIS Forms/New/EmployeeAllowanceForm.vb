@@ -331,9 +331,10 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+        Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
 
-        Dim currentAllowance = Await service.GetByIdAsync(Me._currentAllowance.RowID.Value)
+        Dim currentAllowance = Await repository.GetByIdAsync(Me._currentAllowance.RowID.Value)
 
         If currentAllowance Is Nothing Then
 
@@ -348,7 +349,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim allowanceIsAlreadyUsed = Await service.CheckIfAlreadyUsedAsync(Me._currentAllowance.RowID.Value)
+        Dim allowanceIsAlreadyUsed = Await dataService.CheckIfAlreadyUsedInClosedPeriodAsync(Me._currentAllowance.RowID.Value)
 
         If allowanceIsAlreadyUsed Then
 
@@ -434,8 +435,8 @@ Public Class EmployeeAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-        cboallowfreq.DataSource = service.GetFrequencyList()
+        Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        cboallowfreq.DataSource = repository.GetFrequencyList()
 
     End Sub
 
@@ -459,8 +460,8 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-        Dim allowances = (Await service.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
+        Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        Dim allowances = (Await repository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.EffectiveStartDate).
                                 ThenBy(Function(a) a.Type).
                                 ToList

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LeaveDataService : BaseSavablePayrollDataService<Leave>
+    public class LeaveDataService : BaseDailyPayrollDataService<Leave>
     {
         private List<string> VALIDATABLE_TYPES = new List<string>()
         {

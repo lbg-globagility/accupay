@@ -22,7 +22,7 @@ Public Class ImportAllowanceForm
 
     Public IsSaved As Boolean
 
-    Private _allowanceService As AllowanceDataService
+    Private _allowanceRepository As AllowanceRepository
 
     Private _employeeRepository As EmployeeRepository
 
@@ -34,7 +34,7 @@ Public Class ImportAllowanceForm
 
         InitializeComponent()
 
-        _allowanceService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
@@ -48,7 +48,7 @@ Public Class ImportAllowanceForm
 
         Me.IsSaved = False
 
-        Me._allowanceFrequencyList = _allowanceService.GetFrequencyList()
+        Me._allowanceFrequencyList = _allowanceRepository.GetFrequencyList()
 
         Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID)).ToList()
 
@@ -212,7 +212,7 @@ Public Class ImportAllowanceForm
 
         If allowance.EmployeeID Is Nothing Then Return "Employee is required."
 
-        If _allowanceService.GetFrequencyList().Contains(allowance.AllowanceFrequency) = False Then Return "Invalid frequency."
+        If _allowanceRepository.GetFrequencyList().Contains(allowance.AllowanceFrequency) = False Then Return "Invalid frequency."
 
         If allowance.ProductID Is Nothing Then Return "Allowance type is required."
 
@@ -255,15 +255,17 @@ Public Class ImportAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceService.SaveManyAsync(_allowances)
+
+                Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                Await dataService.SaveManyAsync(_allowances)
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In _allowances
                     importList.Add(New UserActivityItem() With
-                        {
+                    {
                         .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = item.RowID.Value
-                        })
+                    })
                 Next
 
                 _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
