@@ -9,6 +9,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-loan',
   templateUrl: './new-loan.component.html',
   styleUrls: ['./new-loan.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewLoanComponent {
   constructor(

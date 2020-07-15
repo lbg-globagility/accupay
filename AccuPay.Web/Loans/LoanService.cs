@@ -136,6 +136,7 @@ namespace AccuPay.Web.Loans
             {
                 Id = loan.RowID.Value,
                 EmployeeNumber = loan.Employee?.EmployeeNo,
+                EmployeeId = loan.Employee?.RowID ?? 0,
                 EmployeeName = loan.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = loan.Employee?.EmployeeType,
                 LoanTypeId = loan.LoanTypeID.Value,

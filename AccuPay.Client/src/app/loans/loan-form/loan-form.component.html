@@ -31,182 +31,142 @@
 <form [formGroup]="form" (ngSubmit)="onSave()">
   <mat-card>
     <mat-card-content>
+      <div class="row" *ngIf="!loan">
+        <mat-form-field appearance="fill" color="accent" class="col-lg-8">
+          <mat-label>Employee *</mat-label>
+          <mat-select matInput formControlName="employeeId">
+            <mat-option></mat-option>
+            <mat-option
+              *ngFor="let employee of employees"
+              [value]="employee.id"
+            >
+              {{ employee.employeeNo }} - {{ employee.lastName }},
+              {{ employee.firstName }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please select an employee</mat-error>
+        </mat-form-field>
+      </div>
+
       <div class="row">
-        <div class="col-md-12">
-          <div class="row" *ngIf="!loan">
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-8"
-            >
-              <mat-label>Employee *</mat-label>
-              <mat-select matInput formControlName="employeeId">
-                <mat-option></mat-option>
-                <mat-option
-                  *ngFor="let employee of employees"
-                  [value]="employee.id"
-                >
-                  {{ employee.employeeNo }} - {{ employee.lastName }},
-                  {{ employee.firstName }}
-                </mat-option>
-              </mat-select>
-              <mat-error>Please select an employee</mat-error>
-            </mat-form-field>
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Loan Number</mat-label>
+          <input
+            matInput
+            type="text"
+            autocomplete="off"
+            formControlName="loanNumber"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Loan Type *</mat-label>
+          <mat-select matInput formControlName="loanTypeId">
+            <mat-option></mat-option>
+            <mat-option *ngFor="let type of loanTypes" [value]="type.id">
+              {{ type.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please select a type</mat-error>
+
+          <div
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="newLoanType()"
+          >
+            <mat-icon>add</mat-icon>
           </div>
+        </mat-form-field>
+      </div>
 
-          <div class="row">
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Loan Amount *</mat-label>
-              <input
-                matInput
-                type="number"
-                autocomplete="off"
-                formControlName="totalLoanAmount"
-              />
-            </mat-form-field>
+      <div class="row">
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Loan Amount *</mat-label>
+          <span matPrefix>₱ &nbsp;</span>
+          <input
+            matInput
+            type="number"
+            autocomplete="off"
+            formControlName="totalLoanAmount"
+          />
+          <mat-error>Loan amount is required</mat-error>
+        </mat-form-field>
 
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Deduction Percentage *</mat-label>
-              <input
-                matInput
-                type="number"
-                autocomplete="off"
-                formControlName="deductionPercentage"
-              />
-            </mat-form-field>
-          </div>
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Deduction Percentage *</mat-label>
+          <input
+            matInput
+            type="number"
+            autocomplete="off"
+            formControlName="deductionPercentage"
+          />
+        </mat-form-field>
+      </div>
 
-          <div class="row">
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Deduction Amount *</mat-label>
-              <input
-                matInput
-                type="number"
-                autocomplete="off"
-                formControlName="deductionAmount"
-              />
-            </mat-form-field>
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Start Date *</mat-label>
-              <input
-                matInput
-                [matDatepicker]="startDate"
-                formControlName="startDate"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="startDate"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #startDate></mat-datepicker>
-            </mat-form-field>
-          </div>
+      <div class="row">
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Deduction Amount *</mat-label>
+          <span matPrefix>₱ &nbsp;</span>
+          <input
+            matInput
+            type="number"
+            autocomplete="off"
+            formControlName="deductionAmount"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Start Date *</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startDate"
+            formControlName="startDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="startDate"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #startDate></mat-datepicker>
+        </mat-form-field>
+      </div>
 
-          <div class="row">
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Loan Number</mat-label>
-              <input
-                matInput
-                type="text"
-                autocomplete="off"
-                formControlName="loanNumber"
-              />
-            </mat-form-field>
+      <div class="row">
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Status *</mat-label>
+          <mat-select matInput formControlName="status">
+            <mat-option></mat-option>
+            <mat-option *ngFor="let status of statusList" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please select a status</mat-error>
+        </mat-form-field>
 
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Deduction Schedule *</mat-label>
+          <mat-select matInput formControlName="deductionSchedule">
+            <mat-option></mat-option>
+            <mat-option
+              *ngFor="let deductionSchedule of deductionSchedules"
+              [value]="deductionSchedule"
             >
-              <mat-label>Loan Type *</mat-label>
-              <mat-select matInput formControlName="loanTypeId">
-                <mat-option></mat-option>
-                <mat-option *ngFor="let type of loanTypes" [value]="type.id">
-                  {{ type.name }}
-                </mat-option>
-              </mat-select>
-              <mat-error>Please select a type</mat-error>
+              {{ deductionSchedule }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Please select a deduction schedule</mat-error>
+        </mat-form-field>
+      </div>
 
-              <div
-                matSuffix
-                mat-icon-button
-                aria-label="Clear"
-                (click)="newLoanType()"
-              >
-                <mat-icon>add</mat-icon>
-              </div>
-            </mat-form-field>
-          </div>
-
-          <div class="row">
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Status *</mat-label>
-              <mat-select matInput formControlName="status">
-                <mat-option></mat-option>
-                <mat-option *ngFor="let status of statusList" [value]="status">
-                  {{ status }}
-                </mat-option>
-              </mat-select>
-              <mat-error>Please select a status</mat-error>
-            </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Deduction Schedule *</mat-label>
-              <mat-select matInput formControlName="deductionSchedule">
-                <mat-option></mat-option>
-                <mat-option
-                  *ngFor="let deductionSchedule of deductionSchedules"
-                  [value]="deductionSchedule"
-                >
-                  {{ deductionSchedule }}
-                </mat-option>
-              </mat-select>
-              <mat-error>Please select a deduction schedule</mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="row">
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Remarks</mat-label>
-              <textarea
-                matInput
-                autocomplete="off"
-                formControlName="comments"
-              ></textarea>
-            </mat-form-field>
-          </div>
-        </div>
+      <div class="row">
+        <mat-form-field appearance="fill" color="accent" class="col-lg-4">
+          <mat-label>Remarks</mat-label>
+          <textarea
+            matInput
+            autocomplete="off"
+            formControlName="comments"
+            matTextareaAutosize
+          ></textarea>
+        </mat-form-field>
       </div>
 
       <button mat-button type="button" color="accent" (click)="onCancel()">
