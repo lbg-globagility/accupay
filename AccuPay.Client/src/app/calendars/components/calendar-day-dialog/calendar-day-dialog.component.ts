@@ -24,6 +24,7 @@ export class CalendarDayDialogComponent implements OnInit {
     private dialog: MatDialogRef<CalendarDayDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: any
   ) {
+    this.dialog.updateSize('1000px');
     this.calendarDay = data.calendarDay;
     this.dayTypes = data.dayTypes;
   }

@@ -14,7 +14,7 @@ interface CalendarCell {
   templateUrl: './calendar-month.component.html',
   styleUrls: ['./calendar-month.component.scss'],
   host: {
-    class: 'block mat-elevation-z1 p-4',
+    class: 'block mat-elevation-z1 p-4 bg-white',
   },
 })
 export class CalendarMonthComponent implements OnInit {
