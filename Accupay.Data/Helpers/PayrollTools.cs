@@ -22,7 +22,8 @@ namespace AccuPay.Data.Helpers
 
         public const int PayFrequencyWeeklyId = 4;
 
-        public static readonly DateTime MinimumMicrosoftDate = new DateTime(1753, 1, 1);
+        // this is also used by the DateTimePickers of windows desktops (WPF, windows forms)
+        public static readonly DateTime SqlServerMinimumDate = new DateTime(1753, 1, 1);
 
         private const int PotentialLastWorkDay = 7;
 

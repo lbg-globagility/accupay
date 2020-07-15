@@ -20,10 +20,6 @@ const menuItems: MenuItem[] = [
         route: '/employees',
       },
       {
-        label: 'Divisions',
-        route: '/divisions',
-      },
-      {
         label: 'Positions',
         route: '/positions',
       },

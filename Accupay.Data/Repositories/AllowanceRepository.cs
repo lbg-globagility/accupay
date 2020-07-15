@@ -69,17 +69,17 @@ namespace AccuPay.Data.Repositories
                             ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedList<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Allowances
-                                .Include(x => x.Employee)
-                                .Include(x => x.Product)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderByDescending(x => x.EffectiveStartDate)
-                                .ThenBy(x => x.Product.PartNo)
-                                .ThenBy(x => x.Employee.LastName)
-                                .ThenBy(x => x.Employee.FirstName)
-                                .AsQueryable();
+                .Include(x => x.Employee)
+                .Include(x => x.Product)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderByDescending(x => x.EffectiveStartDate)
+                .ThenBy(x => x.Product.PartNo)
+                .ThenBy(x => x.Employee.LastName)
+                .ThenBy(x => x.Employee.FirstName)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -95,7 +95,7 @@ namespace AccuPay.Data.Repositories
             var allowances = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<Allowance>(allowances, count);
+            return new PaginatedList<Allowance>(allowances, count);
         }
 
         internal ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId,

@@ -129,7 +129,7 @@ Public Class ImportOBForm
             Return Nothing
         End If
 
-        If record.StartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+        If record.StartDate < Data.Helpers.PayrollTools.SqlServerMinimumDate Then
 
             record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
             Return Nothing

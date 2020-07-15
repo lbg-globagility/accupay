@@ -77,7 +77,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<LoanSchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<LoanSchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.LoanSchedules
                 .Include(x => x.Employee)
@@ -103,10 +103,10 @@ namespace AccuPay.Data.Repositories
             var loanSchedules = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<LoanSchedule>(loanSchedules, count);
+            return new PaginatedList<LoanSchedule>(loanSchedules, count);
         }
 
-        public async Task<PaginatedListResult<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int loanId)
+        public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int loanId)
         {
             var query = _context.LoanTransactions
                 .Include(x => x.PayPeriod)
@@ -118,7 +118,7 @@ namespace AccuPay.Data.Repositories
             var transactions = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<LoanTransaction>(transactions, count);
+            return new PaginatedList<LoanTransaction>(transactions, count);
         }
 
         public async Task<ICollection<LoanSchedule>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId)

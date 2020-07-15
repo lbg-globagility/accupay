@@ -30,9 +30,7 @@ namespace AccuPay.Web.OfficialBusinesses
                 filter.DateFrom,
                 filter.DateTo);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<OfficialBusinessDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<OfficialBusinessDto> GetById(int id)

@@ -150,13 +150,13 @@ Public Class ImportAllowanceForm
             Return Nothing
         End If
 
-        If record.EffectiveStartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+        If record.EffectiveStartDate < Data.Helpers.PayrollTools.SqlServerMinimumDate Then
 
             record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
             Return Nothing
         End If
 
-        If record.EffectiveEndDate IsNot Nothing AndAlso record.EffectiveEndDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+        If record.EffectiveEndDate IsNot Nothing AndAlso record.EffectiveEndDate < Data.Helpers.PayrollTools.SqlServerMinimumDate Then
 
             record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
             Return Nothing

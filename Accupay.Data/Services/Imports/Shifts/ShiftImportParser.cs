@@ -57,6 +57,8 @@ namespace AccuPay.Data.Services.Imports
 
             foreach (var shiftSched in parsedRecords)
             {
+                if (shiftSched.StartDate == DateTime.MinValue) continue;
+
                 var employee = employees
                             .Where(ee => ee.EmployeeNo == shiftSched.EmployeeNo)
                             .FirstOrDefault();
@@ -67,23 +69,10 @@ namespace AccuPay.Data.Services.Imports
                 list.AddRange(CreateShiftImportModel(shiftSched, dates, employee));
             }
 
-            bool isValid(ShiftImportModel x) => x.IsValidToSave && x.IsExistingEmployee;
+            bool isValid(ShiftImportModel x) => x.IsValidToSave;
 
             var validRecords = list.Where(isValid).ToList();
             var invalidRecords = list.Where(ssm => !isValid(ssm)).ToList();
-
-            foreach (var rejectedRecord in invalidRecords)
-            {
-                List<string> reasons = new List<string>();
-
-                if (!rejectedRecord.IsValidToSave)
-                    reasons.Add("no shift");
-
-                if (!rejectedRecord.IsExistingEmployee)
-                    reasons.Add("employee doesn't exists");
-
-                rejectedRecord.Remarks = string.Join("; ", reasons.ToArray());
-            }
 
             return new ShiftImportParserOutput(validRecords: validRecords,
                                                 invalidRecords: invalidRecords);

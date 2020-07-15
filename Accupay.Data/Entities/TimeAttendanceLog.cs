@@ -11,7 +11,7 @@ namespace AccuPay.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
 
-        public int? OrganizationID { get; set; }
+        public int OrganizationID { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }

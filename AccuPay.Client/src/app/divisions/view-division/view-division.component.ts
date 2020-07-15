@@ -7,18 +7,22 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-view-division',
   templateUrl: './view-division.component.html',
   styleUrls: ['./view-division.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewDivisionComponent implements OnInit {
+  divisionId: number = null;
+
   division: Division;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-  divisionId = Number(this.route.snapshot.paramMap.get('id'));
 
   constructor(
     private divisionService: DivisionService,
@@ -29,7 +33,10 @@ export class ViewDivisionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadDivision();
+    this.route.paramMap.subscribe((paramMap) => {
+      this.divisionId = Number(paramMap.get('id'));
+      this.loadDivision();
+    });
   }
 
   confirmDelete(): void {
@@ -40,22 +47,24 @@ export class ViewDivisionComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result !== true) return;
-
-      this.divisionService.delete(this.divisionId).subscribe(
-        () => {
-          this.router.navigate(['divisions']);
-          Swal.fire({
-            title: 'Deleted',
-            text: `The division was successfully deleted.`,
-            icon: 'success',
-            showConfirmButton: true,
-          });
-        },
-        (err) => this.errorHandler.badRequest(err, 'Failed to delete division.')
-      );
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe(() => {
+        this.divisionService.delete(this.divisionId).subscribe(
+          () => {
+            this.router.navigate(['divisions']);
+            Swal.fire({
+              title: 'Deleted',
+              text: `The division was successfully deleted.`,
+              icon: 'success',
+              showConfirmButton: true,
+            });
+          },
+          (err) =>
+            this.errorHandler.badRequest(err, 'Failed to delete division.')
+        );
+      });
   }
 
   private loadDivision(): void {

@@ -11,25 +11,28 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class OfficialBusinessDataService : BaseDataService<OfficialBusiness>
+    public class OfficialBusinessDataService : BaseSavableDataService<OfficialBusiness>
     {
-        private readonly OfficialBusinessRepository _repository;
+        private readonly OfficialBusinessRepository _officialBusinessRepository;
         private readonly PayrollContext _context;
 
-        public OfficialBusinessDataService(OfficialBusinessRepository repository, PayrollContext context) : base(repository)
+        public OfficialBusinessDataService(
+            OfficialBusinessRepository officialBusinessRepository,
+            PayPeriodRepository payPeriodRepository,
+            PayrollContext context) : base(officialBusinessRepository, payPeriodRepository)
         {
-            _repository = repository;
+            _officialBusinessRepository = officialBusinessRepository;
             _context = context;
         }
 
         public async Task DeleteAsync(int officialBusinessId)
         {
-            var officialBusiness = await _repository.GetByIdAsync(officialBusinessId);
+            var officialBusiness = await _officialBusinessRepository.GetByIdAsync(officialBusinessId);
 
             if (officialBusiness == null)
                 throw new BusinessLogicException("Official Business does not exists.");
 
-            await _repository.DeleteAsync(officialBusiness);
+            await _officialBusinessRepository.DeleteAsync(officialBusiness);
         }
 
         protected override async Task SanitizeEntity(OfficialBusiness officialBusiness)
@@ -80,31 +83,32 @@ namespace AccuPay.Data.Services
 
         public async Task<OfficialBusiness> GetByIdAsync(int officialBusinessId)
         {
-            return await _repository.GetByIdAsync(officialBusinessId);
+            return await _officialBusinessRepository.GetByIdAsync(officialBusinessId);
         }
 
         public async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int officialBusinessId)
         {
-            return await _repository.GetByIdWithEmployeeAsync(officialBusinessId);
+            return await _officialBusinessRepository.GetByIdWithEmployeeAsync(officialBusinessId);
         }
 
         public async Task<IEnumerable<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
         {
-            return await _repository.GetByEmployeeAsync(employeeId);
+            return await _officialBusinessRepository.GetByEmployeeAsync(employeeId);
         }
 
-        public async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options,
-                                                                                       int organizationId,
-                                                                                       string searchTerm = "",
-                                                                                       DateTime? dateFrom = null,
-                                                                                       DateTime? dateTo = null)
+        public async Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(
+            PageOptions options,
+            int organizationId,
+            string searchTerm = "",
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null)
         {
-            return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
+            return await _officialBusinessRepository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
         }
 
         public List<string> GetStatusList()
         {
-            return _repository.GetStatusList();
+            return _officialBusinessRepository.GetStatusList();
         }
 
         #endregion Queries

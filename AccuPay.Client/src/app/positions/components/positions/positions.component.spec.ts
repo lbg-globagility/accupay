@@ -1,19 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShiftFormComponent } from './shift-form.component';
+import { PositionsComponent } from './positions.component';
 
-describe('ShiftFormComponent', () => {
-  let component: ShiftFormComponent;
-  let fixture: ComponentFixture<ShiftFormComponent>;
+describe('PositionsComponent', () => {
+  let component: PositionsComponent;
+  let fixture: ComponentFixture<PositionsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ShiftFormComponent],
-    }).compileComponents();
+      declarations: [ PositionsComponent ]
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShiftFormComponent);
+    fixture = TestBed.createComponent(PositionsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

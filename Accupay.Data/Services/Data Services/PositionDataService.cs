@@ -9,13 +9,17 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class PositionDataService : BaseDataService<Position>
+    public class PositionDataService : BaseSavableDataService<Position>
     {
         private readonly PositionRepository _positionRepository;
         private readonly EmployeeRepository _employeeRepository;
         private readonly DivisionDataService _divisionService;
 
-        public PositionDataService(PositionRepository positionRepository, EmployeeRepository employeeRepository, DivisionDataService divisionService) : base(positionRepository)
+        public PositionDataService(
+            PositionRepository positionRepository,
+            EmployeeRepository employeeRepository,
+            PayPeriodRepository payPeriodRepository,
+            DivisionDataService divisionService) : base(positionRepository, payPeriodRepository)
         {
             _positionRepository = positionRepository;
 
@@ -104,7 +108,7 @@ namespace AccuPay.Data.Services
             return await _positionRepository.GetAllAsync(organizationId);
         }
 
-        public async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
+        public async Task<PaginatedList<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
         {
             return await _positionRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }

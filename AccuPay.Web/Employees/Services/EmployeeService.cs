@@ -46,13 +46,11 @@ namespace AccuPay.Web.Employees.Services
 
         public async Task<PaginatedList<EmployeeDto>> List(EmployeePageOptions options)
         {
-            var paginatedList = await _employeeRepository.GetPaginatedListAsync(
+            var employees = await _employeeRepository.GetPaginatedListAsync(
                 options,
                 _currentUser.OrganizationId);
 
-            var dtos = paginatedList.List.Select(e => EmployeeDto.Convert(e));
-
-            return new PaginatedList<EmployeeDto>(dtos, paginatedList.TotalCount);
+            return employees.Select(e => EmployeeDto.Convert(e));
         }
 
         public async Task<EmployeeDto> GetById(int id)

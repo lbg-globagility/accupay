@@ -21,6 +21,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTreeModule } from '@angular/material/tree';
 
 import {
   MatMomentDateModule,
@@ -58,6 +59,7 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatTreeModule,
     MatExpansionModule,
   ],
   providers: [

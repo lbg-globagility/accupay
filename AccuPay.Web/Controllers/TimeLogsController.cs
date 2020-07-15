@@ -4,7 +4,6 @@ using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,13 +21,6 @@ namespace AccuPay.Web.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        [Permission(PermissionTypes.TimeLogRead)]
-        public async Task<ActionResult<PaginatedList<TimeLogDto>>> List([FromQuery] PageOptions options, string term)
-        {
-            return await _service.PaginatedList(options, term);
-        }
-
         [HttpGet("employees")]
         [Permission(PermissionTypes.TimeLogRead)]
         public async Task<ActionResult<PaginatedList<EmployeeTimeLogsDto>>> ListByEmployee(
@@ -37,36 +29,11 @@ namespace AccuPay.Web.Controllers
             return await _service.ListByEmployee(options);
         }
 
-        [HttpGet("{id}")]
-        [Permission(PermissionTypes.TimeLogRead)]
-        public async Task<ActionResult<TimeLogDto>> GetById(int id)
-        {
-            var timelog = await _service.GetByIdWithEmployeeAsync(id);
-
-            if (timelog == null)
-                return NotFound();
-            else
-                return timelog;
-        }
-
         [HttpPost]
         [Permission(PermissionTypes.TimeLogUpdate)]
         public async Task<ActionResult> Update([FromBody] ICollection<UpdateTimeLogDto> dtos)
         {
             await _service.BatchApply(dtos);
-
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        [Permission(PermissionTypes.TimeLogDelete)]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var timelog = await _service.GetByIdAsync(id);
-
-            if (timelog == null) return NotFound();
-
-            await _service.Delete(id);
 
             return Ok();
         }

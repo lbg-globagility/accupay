@@ -1,8 +1,27 @@
 <div class="flex">
-  <div class="w-1/2">
+  <div class="w-1/3">
     <h1 class="mat-headline">View Calendar / {{ calendar?.name }}</h1>
   </div>
-  <div class="w-1/2 flex justify-end items-start">
+  <div class="w-1/3 flex justify-center items-center">
+    <button
+      mat-icon-button
+      matTooltip="Previous year"
+      color="primary"
+      (click)="goToPreviousYear()"
+    >
+      <mat-icon>west</mat-icon>
+    </button>
+    <div class="text-xl">{{ selectedYear }}</div>
+    <button
+      mat-icon-button
+      matTooltip="Next year"
+      color="primary"
+      (click)="goToNextYear()"
+    >
+      <mat-icon>east</mat-icon>
+    </button>
+  </div>
+  <div class="w-1/3 flex justify-end items-start">
     <button mat-raised-button (click)="onSave()" color="accent">
       SAVE
     </button>

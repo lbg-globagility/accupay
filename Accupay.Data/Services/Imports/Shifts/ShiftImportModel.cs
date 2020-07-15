@@ -1,6 +1,8 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
 using System;
+using System.Collections.Generic;
 
 namespace AccuPay.Data.Services.Imports
 {
@@ -8,7 +10,6 @@ namespace AccuPay.Data.Services.Imports
     {
         public string EmployeeNo { get; set; }
         public string FullName { get; set; }
-        public string Remarks { get; set; }
 
         public ShiftImportModel(Employee employee)
         {
@@ -29,16 +30,33 @@ namespace AccuPay.Data.Services.Imports
 
         public DateTime? BreakFromDisplay => TimeUtility.ToDateTime(BreakTime);
 
-        public bool IsValidToSave
+        public bool IsValidToSave => string.IsNullOrWhiteSpace(ErrorMessage);
+
+        public string ErrorMessage
         {
             get
             {
-                var hasShiftTime = StartTime.HasValue && EndTime.HasValue;
+                List<string> reasons = new List<string>();
 
-                return hasShiftTime || IsRestDay;
+                if (EmployeeId == null)
+                    reasons.Add("Employee does not exists");
+
+                if (Date < PayrollTools.SqlServerMinimumDate)
+                    reasons.Add("Date cannot be earlier than January 1, 1753");
+
+                if (StartTime == null)
+                    reasons.Add("Start Time is required");
+
+                if (EndTime == null)
+                    reasons.Add("End Time is required");
+
+                var message = string.Join("; ", reasons.ToArray());
+
+                if (!string.IsNullOrWhiteSpace(message))
+                    message += ".";
+
+                return message;
             }
         }
-
-        public bool IsExistingEmployee => EmployeeId.HasValue;
     }
 }

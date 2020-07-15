@@ -20,7 +20,7 @@ namespace AccuPay.Data.Services.Policies
 
         public DateTime GetDate(int month, int year)
         {
-            var day = IsLastDayOfTheMonth ? DateTime.DaysInMonth(year, month) : Value;
+            int day = IsLastDayOfTheMonth ? DateTime.DaysInMonth(year, month) : Value;
 
             return new DateTime(year, month, day);
         }

@@ -1785,7 +1785,7 @@ Public Class PayStubForm
             'and if there is an existing OPEN payperiod that also has paystubs (PROCESSING pay pay period)
             'Multiple OPEN or CLOSE pay periods are allowed
             'Multiple PROCESSING pay periods are NOT allowed
-            Dim currentProcessingPayPeriod = Await payPeriodRepository.GetCurrentProcessing(z_OrganizationID)
+            Dim currentProcessingPayPeriod = Await payPeriodRepository.GetCurrentOpenAsync(z_OrganizationID)
             Dim hasOtherProcessingPayPeriod = currentProcessingPayPeriod IsNot Nothing AndAlso
                                             currentProcessingPayPeriod.RowID <> payPeriod.RowID.Value
 

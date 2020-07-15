@@ -1,57 +1,20 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
-using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class EmployeeDutyScheduleDataService
+    public class EmployeeDutyScheduleDataService : BaseDataService
     {
-        private readonly EmployeeDutyScheduleRepository _repository;
+        private readonly EmployeeDutyScheduleRepository _shiftRepository;
 
-        public EmployeeDutyScheduleDataService(EmployeeDutyScheduleRepository repository)
+        public EmployeeDutyScheduleDataService(EmployeeDutyScheduleRepository shiftRepository, PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
         {
-            _repository = repository;
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var shift = await _repository.GetByIdAsync(id);
-
-            if (shift == null)
-                throw new BusinessLogicException("Shift does not exists.");
-
-            await _repository.DeleteAsync(shift);
-        }
-
-        public async Task CreateAsync(EmployeeDutySchedule shift)
-        {
-            if (shift == null)
-                throw new BusinessLogicException("Invalid shift.");
-
-            if (shift.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            var key = new EmployeeDutyScheduleRepository.CompositeKey(shift.EmployeeID.Value, shift.DateSched);
-            var existingShift = await _repository.GetByIdAsync(key);
-
-            if (existingShift != null)
-                throw new BusinessLogicException("Employee already has a shift for that day.");
-
-            await _repository.CreateAsync(shift);
-        }
-
-        public async Task UpdateAsync(EmployeeDutySchedule shift)
-        {
-            if (shift.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            await _repository.UpdateAsync(shift);
+            _shiftRepository = shiftRepository;
         }
 
         public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
@@ -66,7 +29,7 @@ namespace AccuPay.Data.Services
 
             var employeeIds = shiftModels.Select(x => x.EmployeeId.Value).Distinct().ToArray();
 
-            var existingShifts = await _repository
+            var existingShifts = await _shiftRepository
                     .GetByEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
 
             List<EmployeeDutySchedule> addedShifts = new List<EmployeeDutySchedule>();
@@ -88,7 +51,6 @@ namespace AccuPay.Data.Services
 
                     existingShift.IsRestDay = shifModel.IsRestDay;
 
-                    existingShift.ComputeShiftHours();
                     updatedShifts.Add(existingShift);
                 }
                 else
@@ -97,17 +59,16 @@ namespace AccuPay.Data.Services
                 }
             }
 
-            await _repository.ChangeManyAsync(addedShifts: addedShifts, updatedShifts: updatedShifts);
+            addedShifts.ForEach(x => SanitizeEntity(x));
+            updatedShifts.ForEach(x => SanitizeEntity(x));
+
+            await _shiftRepository.ChangeManyAsync(added: addedShifts, updated: updatedShifts);
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
         }
 
-        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
-        {
-            return await _repository.ListByEmployeeAsync(organizationId, options);
-        }
-
         public async Task ChangeManyAsync(
+            int organizationId,
             List<EmployeeDutySchedule> added,
             List<EmployeeDutySchedule> updated,
             List<EmployeeDutySchedule> deleted)
@@ -115,11 +76,48 @@ namespace AccuPay.Data.Services
             if (added == null && updated == null && deleted == null)
                 throw new BusinessLogicException("No shifts to be saved.");
 
+            if (added != null)
+            {
+                added.ForEach(x => SanitizeEntity(x));
+                await CheckIfDataIsWithinClosedPayroll(added.Select(x => x.DateSched).Distinct(), organizationId);
+            }
+
+            if (updated != null)
+            {
+                updated.ForEach(x => SanitizeEntity(x));
+                await CheckIfDataIsWithinClosedPayroll(updated.Select(x => x.DateSched).Distinct(), organizationId);
+            }
+
+            if (deleted != null)
+            {
+                await CheckIfDataIsWithinClosedPayroll(deleted.Select(x => x.DateSched).Distinct(), organizationId);
+            }
+
             // TODO: validations
-            await _repository.ChangeManyAsync(
-                addedShifts: added,
-                updatedShifts: updated,
-                deletedShifts: deleted);
+            await _shiftRepository.ChangeManyAsync(
+                added: added,
+                updated: updated,
+                deleted: deleted);
+        }
+
+        private void SanitizeEntity(EmployeeDutySchedule shift)
+        {
+            if (shift == null)
+                throw new BusinessLogicException("Invalid data.");
+
+            if (shift.OrganizationID == null)
+                throw new BusinessLogicException("Organization is required.");
+
+            if (shift.EmployeeID == null)
+                throw new BusinessLogicException("Employee is required.");
+
+            if (shift.StartTime == null)
+                throw new BusinessLogicException("Start Time is required.");
+
+            if (shift.EndTime == null)
+                throw new BusinessLogicException("End Time is required.");
+
+            shift.ComputeShiftHours();
         }
     }
 }

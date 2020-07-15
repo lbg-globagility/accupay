@@ -7,28 +7,44 @@ namespace AccuPay.Data.Services
 {
     public class CalendarCollection
     {
-        private bool _isUsingCalendars;
+        private readonly bool _isUsingCalendars;
 
-        private ICollection<Branch> _branches;
+        private readonly IDictionary<int?, PayratesCalendar> _calendars;
 
-        private IDictionary<int?, PayratesCalendar> _calendars;
+        private readonly ICollection<Branch> _branches;
 
-        private PayratesCalendar _organizationCalendar;
+        private readonly PayratesCalendar _organizationCalendar;
 
-        // for identifying the _organizationCalendar
+        private readonly DefaultRates _defaultRates;
+
+        // For identifying the _organizationCalendar
         public int OrganizationId { get; }
 
-        public CalendarCollection(ICollection<PayRate> payrates, int organizationId)
+        public CalendarCollection(
+            ICollection<PayRate> payrates,
+            int organizationId,
+            DefaultRates defaultRates)
         {
-            _organizationCalendar = new PayratesCalendar(payrates);
+            _defaultRates = defaultRates;
             OrganizationId = organizationId;
             _isUsingCalendars = false;
+            _organizationCalendar = new PayratesCalendar(payrates, _defaultRates);
         }
 
-        public CalendarCollection(ICollection<PayRate> payrates, ICollection<Branch> branches, ICollection<CalendarDay> calendarDays, int organizationId) : this(payrates, organizationId)
+        public CalendarCollection(
+            ICollection<PayRate> payrates,
+            ICollection<Branch> branches,
+            ICollection<CalendarDay> calendarDays,
+            int organizationId,
+            DefaultRates defaultRates)
+            : this(payrates, organizationId, defaultRates)
         {
             _branches = branches;
-            _calendars = calendarDays.GroupBy(t => t.CalendarID).ToDictionary(t => t.Key, t => new PayratesCalendar(t));
+            _calendars = calendarDays
+                .GroupBy(t => t.CalendarID)
+                .ToDictionary(
+                    t => t.Key,
+                    t => new PayratesCalendar(t, _defaultRates));
             _isUsingCalendars = true;
         }
 

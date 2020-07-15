@@ -18,107 +18,44 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public class CompositeKey
-        {
-            public int EmployeeId { get; set; }
-            public DateTime Date { get; set; }
-
-            public CompositeKey(int employeeId, DateTime date)
-            {
-                EmployeeId = employeeId;
-
-                Date = date;
-            }
-        }
-
-        #region CRUD
-
-        internal async Task DeleteAsync(EmployeeDutySchedule shift)
-        {
-            _context.Remove(shift);
-            await _context.SaveChangesAsync();
-        }
+        #region Save
 
         public async Task ChangeManyAsync(
-            List<EmployeeDutySchedule> addedShifts = null,
-            List<EmployeeDutySchedule> updatedShifts = null,
-            List<EmployeeDutySchedule> deletedShifts = null)
+            List<EmployeeDutySchedule> added = null,
+            List<EmployeeDutySchedule> updated = null,
+            List<EmployeeDutySchedule> deleted = null)
         {
-            if (addedShifts != null)
+            if (added != null)
             {
-                addedShifts.ForEach(shift =>
+                added.ForEach(shift =>
                 {
                     _context.Entry(shift).State = EntityState.Added;
                 });
             }
 
-            if (updatedShifts != null)
+            if (updated != null)
             {
-                updatedShifts.ForEach(shift =>
+                updated.ForEach(shift =>
                 {
                     _context.Entry(shift).State = EntityState.Modified;
                 });
             }
 
-            if (deletedShifts != null)
+            if (deleted != null)
             {
-                deletedShifts = deletedShifts
+                deleted = deleted
                     .GroupBy(x => x.RowID)
                     .Select(x => x.FirstOrDefault())
                     .ToList();
-                _context.EmployeeDutySchedules.RemoveRange(deletedShifts);
+                _context.EmployeeDutySchedules.RemoveRange(deleted);
             }
 
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CreateAsync(EmployeeDutySchedule shift)
-        {
-            _context.EmployeeDutySchedules.Add(shift);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task UpdateAsync(EmployeeDutySchedule shift)
-        {
-            _context.Entry(shift).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
-
-        #region Single entity
-
-        public async Task<EmployeeDutySchedule> GetByIdAsync(int id)
-        {
-            return await _context.EmployeeDutySchedules.FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
-        public async Task<EmployeeDutySchedule> GetByIdAsync(CompositeKey key)
-        {
-            return await _context.EmployeeDutySchedules
-                .Where(x => x.EmployeeID == key.EmployeeId)
-                .Where(x => x.DateSched == key.Date)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<List<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
-        {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
-                .Include(x => x.Employee)
-                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
-                .ToListAsync();
-        }
-
-        public async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
-        {
-            return await _context.EmployeeDutySchedules
-                .Include(x => x.Employee)
-                .FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
-        #endregion Single entity
 
         #region List of entities
 
@@ -146,7 +83,20 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        internal async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(int organizationId, ShiftsByEmployeePageOptions options)
+        public async Task<List<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(
+            int organizationId,
+            IEnumerable<int> employeeIds,
+            TimePeriod timePeriod)
+        {
+            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+                .Include(x => x.Employee)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
+                .ToListAsync();
+        }
+
+        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(
+            int organizationId,
+            ShiftsByEmployeePageOptions options)
         {
             // TODO: might want to use employeeRepository for this query
             var query = _context.Employees
@@ -213,7 +163,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.EmployeeDutySchedules
                 .Include(x => x.Employee)
@@ -237,7 +187,7 @@ namespace AccuPay.Data.Repositories
             var shifts = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<EmployeeDutySchedule>(shifts, count);
+            return new PaginatedList<EmployeeDutySchedule>(shifts, count);
         }
 
         #endregion List of entities

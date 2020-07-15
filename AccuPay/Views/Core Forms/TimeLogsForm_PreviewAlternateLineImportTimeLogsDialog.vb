@@ -41,6 +41,8 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         InitializeComponent()
 
+        btnOK.Enabled = Me._logs.Any()
+
         Me.Cancelled = True
     End Sub
 

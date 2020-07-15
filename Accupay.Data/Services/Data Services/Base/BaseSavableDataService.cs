@@ -1,17 +1,18 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class BaseDataService<T> where T : BaseEntity
+    public class BaseSavableDataService<T> : BaseDataService where T : BaseEntity
     {
-        private readonly SavableRepository<T> _repository;
+        private readonly SavableRepository<T> _savableRepository;
 
-        public BaseDataService(SavableRepository<T> repository)
+        public BaseSavableDataService(SavableRepository<T> savableRepository, PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
         {
-            _repository = repository;
+            _savableRepository = savableRepository;
         }
 
         protected bool IsNewEntity(int? id)
@@ -22,19 +23,27 @@ namespace AccuPay.Data.Services
 
         public virtual async Task SaveAsync(T entity)
         {
-            await SanitizeEntity(entity);
+            await ValidateData(entity);
 
-            await _repository.SaveAsync(entity);
+            await _savableRepository.SaveAsync(entity);
         }
 
         public virtual async Task SaveManyAsync(List<T> entities)
         {
             foreach (var entity in entities)
             {
-                await SanitizeEntity(entity);
+                await ValidateData(entity);
             }
 
-            await _repository.SaveManyAsync(entities);
+            await _savableRepository.SaveManyAsync(entities);
+        }
+
+        private async Task ValidateData(T entity)
+        {
+            if (entity == null)
+                throw new BusinessLogicException("Invalid data.");
+
+            await SanitizeEntity(entity);
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously

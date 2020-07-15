@@ -3,7 +3,6 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Salaries.Services
@@ -30,9 +29,7 @@ namespace AccuPay.Web.Salaries.Services
                 searchTerm,
                 employeeId);
 
-            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
-
-            return new PaginatedList<SalaryDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<SalaryDto> GetById(int id)

@@ -19,68 +19,50 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public class CompositeKey
-        {
-            public int EmployeeId { get; set; }
-            public DateTime Date { get; set; }
-
-            public CompositeKey(int employeeId, DateTime date)
-            {
-                EmployeeId = employeeId;
-
-                Date = date;
-            }
-        }
-
-        #region CRUD
+        #region Save
 
         public async Task ChangeManyAsync(
-            List<TimeLog> addedTimeLogs,
-            List<TimeLog> updatedTimeLogs,
-            List<TimeLog> deletedTimeLogs)
+            List<TimeLog> added,
+            List<TimeLog> updated,
+            List<TimeLog> deleted)
         {
-            if (addedTimeLogs != null)
+            if (added != null)
             {
-                addedTimeLogs.ForEach(timeLog =>
+                added.ForEach(timeLog =>
                 {
                     _context.Entry(timeLog).State = EntityState.Added;
                 });
             }
 
-            if (updatedTimeLogs != null)
+            if (updated != null)
             {
-                updatedTimeLogs.ForEach(timeLog =>
+                updated.ForEach(timeLog =>
                 {
                     _context.Entry(timeLog).State = EntityState.Modified;
                 });
             }
 
-            if (deletedTimeLogs != null)
+            if (deleted != null)
             {
-                deletedTimeLogs = deletedTimeLogs
+                deleted = deleted
                     .GroupBy(x => x.RowID)
                     .Select(x => x.FirstOrDefault())
                     .ToList();
-                _context.TimeLogs.RemoveRange(deletedTimeLogs);
+                _context.TimeLogs.RemoveRange(deleted);
             }
 
             await _context.SaveChangesAsync();
         }
 
-        internal async Task UpdateAsync(TimeLog timeLog)
-        {
-            _context.Entry(timeLog).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task DeleteAsync(TimeLog timeLog)
+        public async Task DeleteAsync(TimeLog timeLog)
         {
             _context.Remove(timeLog);
             await _context.SaveChangesAsync();
         }
 
-        internal async Task SaveImportAsync(IReadOnlyCollection<TimeLog> timeLogs,
-                                        IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
+        public async Task SaveImportAsync(
+            IReadOnlyCollection<TimeLog> timeLogs,
+            IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
         {
             string importId = GenerateImportId(_context);
 
@@ -93,8 +75,8 @@ namespace AccuPay.Data.Repositories
                 var minimumDate = timeLog.LogDate.ToMinimumHourValue();
                 var maximumDate = timeLog.LogDate.ToMaximumHourValue();
 
-                _context.TimeAttendanceLogs.
-                    RemoveRange(_context.TimeAttendanceLogs
+                _context.TimeAttendanceLogs
+                    .RemoveRange(_context.TimeAttendanceLogs
                         .Where(t => t.TimeStamp >= minimumDate)
                         .Where(t => t.TimeStamp <= maximumDate));
 
@@ -122,15 +104,16 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        internal async Task CreateAsync(TimeLog timeLog)
-        {
-            _context.TimeLogs.Add(timeLog);
-            await _context.SaveChangesAsync();
-        }
-
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
+
+        public ICollection<TimeLog> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
+        {
+            return CreateBaseQueryByDatePeriod(datePeriod)
+                .Where(x => x.OrganizationID == organizationId)
+                .ToList();
+        }
 
         public async Task<ICollection<TimeLog>> GetByEmployeeAndDateAsync(int employeeId, DateTime date)
         {
@@ -138,13 +121,6 @@ namespace AccuPay.Data.Repositories
                 .Where(x => x.EmployeeID == employeeId)
                 .Where(x => x.LogDate == date)
                 .ToListAsync();
-        }
-
-        public ICollection<TimeLog> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
-        {
-            return CreateBaseQueryByDatePeriod(datePeriod)
-                .Where(x => x.OrganizationID == organizationId)
-                .ToList();
         }
 
         public async Task<ICollection<TimeLog>> GetLatestByEmployeeAndDatePeriodAsync(
@@ -168,35 +144,6 @@ namespace AccuPay.Data.Repositories
                 .Include(x => x.Employee)
                 .Where(x => employeeIds.Contains(x.EmployeeID.Value))
                 .ToListAsync();
-        }
-
-        public async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
-        {
-            var query = _context.TimeLogs
-                .Include(x => x.Employee)
-                .Include(x => x.Branch)
-                .Where(x => x.OrganizationID == organizationId)
-                .OrderBy(x => x.Employee.LastName)
-                .ThenBy(x => x.Employee.FirstName)
-                .ThenByDescending(x => x.LogDate)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                searchTerm = $"%{searchTerm}%";
-
-                query = query.Where(x =>
-                    EF.Functions.Like(x.LogDate.ToString(), searchTerm) ||
-                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
-                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
-                    EF.Functions.Like(x.Employee.LastName, searchTerm) ||
-                    EF.Functions.Like(x.Branch.Name, searchTerm));
-            }
-
-            var timeLogs = await query.Page(options).ToListAsync();
-            var count = await query.CountAsync();
-
-            return new PaginatedListResult<TimeLog>(timeLogs, count);
         }
 
         public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployeeAsync(
@@ -244,25 +191,9 @@ namespace AccuPay.Data.Repositories
             return (employees, total, timeLogs);
         }
 
-        public async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
-        {
-            return await _context.TimeLogs
-                .Include(b => b.Branch)
-                .Include(x => x.Employee)
-                .FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
         public async Task<TimeLog> GetByIdAsync(int id)
         {
             return await _context.TimeLogs.FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
-        public async Task<TimeLog> GetByIdAsync(CompositeKey key)
-        {
-            return await _context.TimeLogs
-                .Where(x => x.EmployeeID == key.EmployeeId)
-                .Where(x => x.LogDate == key.Date)
-                .FirstOrDefaultAsync();
         }
 
         private IQueryable<TimeLog> CreateBaseQueryByDatePeriod(TimePeriod datePeriod)

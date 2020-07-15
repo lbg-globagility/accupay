@@ -193,12 +193,12 @@ Public Class ImportEmployeeForm
             _noLastName = String.IsNullOrWhiteSpace(LastName)
             _noFirstName = String.IsNullOrWhiteSpace(FirstName)
             _noBirthDate = Not BirthDate.HasValue
-            _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
+            _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < Data.Helpers.PayrollTools.SqlServerMinimumDate
             _noGender = String.IsNullOrWhiteSpace(Gender)
             _noMaritalStatus = String.IsNullOrWhiteSpace(MaritalStatus)
             _noJob = String.IsNullOrWhiteSpace(Position)
             _noEmploymentDate = Not DateEmployed.HasValue
-            _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
+            _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < Data.Helpers.PayrollTools.SqlServerMinimumDate
             _noEmploymentStatus = String.IsNullOrWhiteSpace(EmploymentStatus)
 
             Return _noEmployeeNo _

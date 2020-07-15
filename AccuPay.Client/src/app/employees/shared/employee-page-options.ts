@@ -1,15 +1,12 @@
 import { PageOptions } from 'src/app/core/shared/page-options';
 
 export class EmployeePageOptions extends PageOptions {
-  searchTerm: string;
-
-  filter: string;
-
   constructor(
     pageIndex: number,
     pageSize: number,
-    searchTerm?: string,
-    filter?: string
+    private searchTerm?: string,
+    private filter?: string,
+    private positionId?: number
   ) {
     super(pageIndex, pageSize);
     this.searchTerm = searchTerm;
@@ -25,6 +22,10 @@ export class EmployeePageOptions extends PageOptions {
 
     if (this.filter != null) {
       object.filter = this.filter;
+    }
+
+    if (this.positionId) {
+      object.positionId = String(this.positionId);
     }
 
     return object;

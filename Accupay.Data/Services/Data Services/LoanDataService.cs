@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LoanDataService : BaseDataService<LoanSchedule>
+    public class LoanDataService : BaseSavableDataService<LoanSchedule>
     {
         private readonly LoanRepository _loanRepository;
 
@@ -20,10 +20,12 @@ namespace AccuPay.Data.Services
 
         private readonly ProductRepository _productRepository;
 
-        public LoanDataService(LoanRepository loanRepository,
-                                PayrollContext context,
-                                SystemOwnerService systemOwnerService,
-                                ProductRepository productRepository) : base(loanRepository)
+        public LoanDataService(
+            LoanRepository loanRepository,
+            PayrollContext context,
+            SystemOwnerService systemOwnerService,
+            ProductRepository productRepository,
+            PayPeriodRepository payPeriodRepository) : base(loanRepository, payPeriodRepository)
         {
             _loanRepository = loanRepository;
             _context = context;
@@ -50,14 +52,15 @@ namespace AccuPay.Data.Services
         /// <param name="pagibigLoanId"></param>
         /// <param name="ssLoanId"></param>
         /// <returns></returns>
-        public async Task DeleteAllLoansExceptGovernmentLoansAsync(int employeeId,
-                                                                int pagibigLoanId,
-                                                                int ssLoanId)
+        public async Task DeleteAllLoansExceptGovernmentLoansAsync(
+            int employeeId,
+            int pagibigLoanId,
+            int ssLoanId)
         {
-            await _loanRepository
-                    .DeleteAllLoansExceptGovernmentLoansAsync(employeeId: employeeId,
-                                                            pagibigLoanId: pagibigLoanId,
-                                                            ssLoanId: ssLoanId);
+            await _loanRepository.DeleteAllLoansExceptGovernmentLoansAsync(
+                employeeId: employeeId,
+                pagibigLoanId: pagibigLoanId,
+                ssLoanId: ssLoanId);
         }
 
         protected override async Task SanitizeEntity(LoanSchedule loan)

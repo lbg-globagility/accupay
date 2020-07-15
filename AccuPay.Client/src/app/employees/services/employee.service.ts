@@ -7,6 +7,7 @@ import { Employee } from '../shared/employee';
 import { HttpClient } from '@angular/common/http';
 import { BasePdfService } from 'src/app/core/shared/services/base-pdf-service';
 import { EmployeeImportParserOutput } from '../shared/employee-import-parser-output';
+import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 
 @Injectable({
   providedIn: 'root',
@@ -20,21 +21,7 @@ export class EmployeeService extends BasePdfService {
     super(httpClient);
   }
 
-  list2(
-    options: PageOptions,
-    searchTerm: string = ''
-  ): Observable<PaginatedList<Employee>> {
-    const params = options ? options.toObject() : null;
-    if (searchTerm != null) {
-      params.term = searchTerm;
-    }
-
-    return this.httpClient.get<PaginatedList<Employee>>(this.apiRoute, {
-      params,
-    });
-  }
-
-  list(options: PageOptions): Observable<PaginatedList<Employee>> {
+  list(options: EmployeePageOptions): Observable<PaginatedList<Employee>> {
     const params = options ? options.toObject() : null;
 
     return this.httpClient.get<PaginatedList<Employee>>(this.apiRoute, {

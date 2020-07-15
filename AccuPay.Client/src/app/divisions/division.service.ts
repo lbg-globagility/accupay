@@ -27,11 +27,13 @@ export class DivisionService {
   }
 
   getAll(): Observable<Division[]> {
-    return this.httpClient.get<PaginatedList<Division>>(this.baseUrl).pipe(
-      map((data) => {
-        return data.items;
-      })
-    );
+    return this.httpClient
+      .get<PaginatedList<Division>>(`${this.baseUrl}?all=true`)
+      .pipe(
+        map((data) => {
+          return data.items;
+        })
+      );
   }
 
   getAllParents(): Observable<Division[]> {

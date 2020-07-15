@@ -9,25 +9,28 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class AllowanceDataService : BaseDataService<Allowance>
+    public class AllowanceDataService : BaseSavableDataService<Allowance>
     {
-        private readonly AllowanceRepository _repository;
+        private readonly AllowanceRepository _allowanceRepository;
         private readonly PayrollContext _context;
 
-        public AllowanceDataService(AllowanceRepository repository, PayrollContext context) : base(repository)
+        public AllowanceDataService(
+            AllowanceRepository allowanceRepository,
+            PayPeriodRepository payPeriodRepository,
+            PayrollContext context) : base(allowanceRepository, payPeriodRepository)
         {
-            _repository = repository;
+            _allowanceRepository = allowanceRepository;
             _context = context;
         }
 
         public async Task DeleteAsync(int allowanceId)
         {
-            var allowance = await _repository.GetByIdAsync(allowanceId);
+            var allowance = await _allowanceRepository.GetByIdAsync(allowanceId);
 
             if (allowance == null)
                 throw new BusinessLogicException("Allowance does not exists.");
 
-            await _repository.DeleteAsync(allowance);
+            await _allowanceRepository.DeleteAsync(allowance);
         }
 
         protected override async Task SanitizeEntity(Allowance allowance)
@@ -41,7 +44,7 @@ namespace AccuPay.Data.Services
             if (allowance.EmployeeID == null)
                 throw new BusinessLogicException("Employee is required.");
 
-            if (_repository.GetFrequencyList().Contains(allowance.AllowanceFrequency) == false)
+            if (_allowanceRepository.GetFrequencyList().Contains(allowance.AllowanceFrequency) == false)
                 throw new BusinessLogicException("Invalid frequency.");
 
             if (allowance.ProductID == null)
@@ -68,32 +71,32 @@ namespace AccuPay.Data.Services
 
         public async Task<Allowance> GetByIdAsync(int allowanceId)
         {
-            return await _repository.GetByIdAsync(allowanceId);
+            return await _allowanceRepository.GetByIdAsync(allowanceId);
         }
 
         public async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int allowanceId)
         {
-            return await _repository.GetByIdWithEmployeeAndProductAsync(allowanceId);
+            return await _allowanceRepository.GetByIdWithEmployeeAndProductAsync(allowanceId);
         }
 
         public async Task<IEnumerable<Allowance>> GetByEmployeeWithProductAsync(int employeeId)
         {
-            return await _repository.GetByEmployeeWithProductAsync(employeeId);
+            return await _allowanceRepository.GetByEmployeeWithProductAsync(employeeId);
         }
 
-        public async Task<PaginatedListResult<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
-            return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            return await _allowanceRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }
 
         public List<string> GetFrequencyList()
         {
-            return _repository.GetFrequencyList();
+            return _allowanceRepository.GetFrequencyList();
         }
 
         public async Task<bool> CheckIfAlreadyUsedAsync(int allowanceId)
         {
-            return await _repository.CheckIfAlreadyUsedAsync(allowanceId);
+            return await _allowanceRepository.CheckIfAlreadyUsedAsync(allowanceId);
         }
 
         #endregion Queries

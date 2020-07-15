@@ -11,15 +11,19 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class DivisionDataService : BaseDataService<Division>
+    public class DivisionDataService : BaseSavableDataService<Division>
     {
         private readonly DivisionRepository _divisionRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
         private readonly PayrollContext _context;
 
-        public DivisionDataService(DivisionRepository repository, ListOfValueRepository listOfValueRepository, PayrollContext context) : base(repository)
+        public DivisionDataService(
+            DivisionRepository divisionRepository,
+            ListOfValueRepository listOfValueRepository,
+            PayPeriodRepository payPeriodRepository,
+            PayrollContext context) : base(divisionRepository, payPeriodRepository)
         {
-            _divisionRepository = repository;
+            _divisionRepository = divisionRepository;
             _listOfValueRepository = listOfValueRepository;
             _context = context;
         }
@@ -147,9 +151,9 @@ namespace AccuPay.Data.Services
             return _divisionRepository.GetAllAsync(organizationId);
         }
 
-        public async Task<PaginatedListResult<Division>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
+        public async Task<PaginatedList<Division>> List(PageOptions options, int organizationId, string searchTerm)
         {
-            return await _divisionRepository.GetPaginatedListAsync(options, organizationId, isRoot: false, searchTerm);
+            return await _divisionRepository.List(options, organizationId, searchTerm);
         }
 
         public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)

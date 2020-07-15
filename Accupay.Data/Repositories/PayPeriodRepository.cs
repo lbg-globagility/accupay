@@ -2,6 +2,7 @@
 using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -46,40 +47,56 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<PayPeriod> GetLatestAsync(int organizationId)
         {
-            return await _context.PayPeriods
+            return await CreateBaseQuery(organizationId)
                 .Where(p => p.Status != PayPeriodStatus.Pending)
-                .Where(p => p.OrganizationID == organizationId)
                 .OrderByDescending(p => p.PayFromDate)
                 .FirstOrDefaultAsync();
         }
 
-        /// <summary>
-        /// This returns the current pay period with "Open" status.
-        /// </summary>
-        /// <param name="organizationId"></param>
-        /// <returns></returns>
         public async Task<PayPeriod> GetCurrentOpenAsync(int organizationId)
         {
-            return await _context.PayPeriods
-                .Where(p => p.Status == PayPeriodStatus.Open)
-                .Where(p => p.OrganizationID == organizationId)
+            var query = CreateBaseQuery(organizationId);
+
+            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
+            {
+                query = query
+                    .Include(x => x.Paystubs)
+                    .Where(p => p.IsClosed == false)
+                    .Where(p => p.Paystubs.Any());
+            }
+            else
+            {
+                query = query.Where(p => p.Status == PayPeriodStatus.Open);
+            }
+
+            return await query
                 .OrderByDescending(p => p.PayFromDate)
                 .FirstOrDefaultAsync();
         }
 
-        /// <summary>
-        /// This returns the current "PROCESSING" pay period based on IsClosed and paystub count. (Used in desktop)
-        /// </summary>
-        /// <param name="organizationId"></param>
-        /// <returns></returns>
-        public async Task<PayPeriod> GetCurrentProcessing(int organizationId)
+        public async Task<ICollection<PayPeriod>> GetClosedPayPeriodsAsync(int organizationId, TimePeriod dateRange = null)
         {
-            return await _context.PayPeriods
-                .Include(x => x.Paystubs)
-                .Where(p => p.IsClosed == false)
-                .Where(p => p.OrganizationID == organizationId)
-                .Where(p => p.Paystubs.Any())
-                .FirstOrDefaultAsync();
+            var query = CreateBaseQuery(organizationId);
+
+            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
+            {
+                query = query.Where(p => p.IsClosed);
+            }
+            else
+            {
+                query = query.Where(p => p.Status == PayPeriodStatus.Closed);
+            }
+
+            if (dateRange != null)
+            {
+                var cutOff = GetCutOffPeriodUsingDefault(dateRange);
+
+                query = query
+                    .Where(x => x.PayFromDate >= cutOff.Start)
+                    .Where(x => x.PayToDate <= cutOff.End);
+            }
+
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -92,8 +109,7 @@ namespace AccuPay.Data.Repositories
             var currentDay = DateTime.Now;
             var isFirstHalf = currentDay.Day <= 15;
 
-            var query = _context.PayPeriods
-                .Where(p => p.OrganizationID == organizationId)
+            var query = CreateBaseQuery(organizationId)
                 .Where(p => p.Year == currentDay.Year)
                 .Where(p => p.Month == currentDay.Month);
 
@@ -117,10 +133,8 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<PayPeriod> GetAsync(int organizationId, DateTime date)
         {
-            return await _context.PayPeriods
-                .Where(p => p.OrganizationID == organizationId)
+            return await CreateBaseQuery(organizationId)
                 .Where(p => p.IsBetween(date))
-                .Where(p => p.IsSemiMonthly)
                 .FirstOrDefaultAsync();
         }
 
@@ -136,8 +150,7 @@ namespace AccuPay.Data.Repositories
         {
             // better use builder here to use encapsulated IsFirstHalf directly
             var half = isFirstHalf ? PayPeriod.FirstHalfValue : PayPeriod.EndOftheMonthValue;
-            return await _context.PayPeriods
-                .Where(p => p.OrganizationID == organizationId)
+            return await CreateBaseQuery(organizationId)
                 .Where(p => p.Month == month)
                 .Where(p => p.Year == year)
                 .Where(p => p.Half == half)
@@ -173,10 +186,8 @@ namespace AccuPay.Data.Repositories
             if (currentPayPeriodYear == null)
                 return null;
 
-            return await _context.PayPeriods
-                .Where(p => p.OrganizationID == organizationId)
+            return await CreateBaseQuery(organizationId)
                 .Where(p => p.Year == currentPayPeriodYear)
-                .Where(p => p.IsSemiMonthly)
                 .Where(p => p.IsFirstPayPeriodOfTheYear)
                 .FirstOrDefaultAsync();
         }
@@ -188,10 +199,8 @@ namespace AccuPay.Data.Repositories
             if (currentPayPeriodYear == null)
                 return null;
 
-            return await _context.PayPeriods
-                .Where(p => p.OrganizationID == organizationId)
+            return await CreateBaseQuery(organizationId)
                 .Where(p => p.Year == currentPayPeriodYear)
-                .Where(p => p.IsSemiMonthly)
                 .Where(p => p.IsLastPayPeriodOfTheYear)
                 .Select(p => p.PayToDate)
                 .FirstOrDefaultAsync();
@@ -203,9 +212,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<ICollection<PayPeriod>> GetAllSemiMonthlyThatHasPaystubsAsync(int organizationId)
         {
-            return await CreateBaseQueryByPayPrequency(
-                    organizationId: organizationId,
-                    payFrequencyId: PayrollTools.PayFrequencySemiMonthlyId)
+            return await CreateBaseQuery(organizationId)
                 .Where(x => _context.Paystubs.Any(p => p.PayPeriodID == x.RowID))
                 .ToListAsync();
         }
@@ -254,8 +261,7 @@ namespace AccuPay.Data.Repositories
         {
             var yearlyPayPeriods = new List<PayPeriod>();
 
-            var payPeriods = await _context.PayPeriods
-                .Where(x => x.OrganizationID == organizationId)
+            var payPeriods = await CreateBaseQuery(organizationId)
                 .Where(x => x.Year == year)
                 .ToListAsync();
 
@@ -283,12 +289,10 @@ namespace AccuPay.Data.Repositories
             return yearlyPayPeriods;
         }
 
-        public async Task<PaginatedListResult<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
-            var query = _context.PayPeriods
-                .Where(t => t.OrganizationID == organizationId)
+            var query = CreateBaseQuery(organizationId)
                 .Where(t => t.Status != PayPeriodStatus.Pending)
-                .Where(t => t.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId)
                 .OrderByDescending(t => t.PayFromDate)
                 .AsQueryable();
 
@@ -304,7 +308,7 @@ namespace AccuPay.Data.Repositories
             var payperiods = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<PayPeriod>(payperiods, count);
+            return new PaginatedList<PayPeriod>(payperiods, count);
         }
 
         #endregion List of entities
@@ -333,6 +337,13 @@ namespace AccuPay.Data.Repositories
                 .Where(x => x.PayFrequencyID == payFrequencyId);
         }
 
+        private IQueryable<PayPeriod> CreateBaseQuery(int organizationId)
+        {
+            return _context.PayPeriods
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(p => p.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId);
+        }
+
         /// <summary>
         /// Set the IsClosed property of the pay period to the specified status. We could have just
         /// created an UpdateAsync and let the user call that but we want to encapsulate how can client
@@ -354,6 +365,29 @@ namespace AccuPay.Data.Repositories
 
             _context.Entry(payPeriod).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+        private TimePeriod GetCutOffPeriodUsingDefault(TimePeriod dateRange)
+        {
+            var cutOffStartDate = GetCutOffDateUsingDefault(dateRange.Start, isCutOffStart: true);
+            var cutOffEndDate = GetCutOffDateUsingDefault(dateRange.End, isCutOffStart: false);
+
+            return new TimePeriod(cutOffStartDate, cutOffEndDate);
+        }
+
+        private DateTime GetCutOffDateUsingDefault(DateTime date, bool isCutOffStart)
+        {
+            int month = date.Month;
+            int year = date.Year;
+
+            DaysSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
+            DaysSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
+
+            DaysSpan currentDaySpan = firstHalf.IsBetween(date) ? firstHalf : endOfTheMonth;
+
+            return isCutOffStart ?
+                currentDaySpan.From.GetDate(month: month, year: year) :
+                currentDaySpan.To.GetDate(month: month, year: year);
         }
     }
 }

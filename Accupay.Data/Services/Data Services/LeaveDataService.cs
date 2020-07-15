@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LeaveDataService : BaseDataService<Leave>
+    public class LeaveDataService : BaseSavableDataService<Leave>
     {
         private List<string> VALIDATABLE_TYPES = new List<string>()
         {
@@ -28,7 +28,6 @@ namespace AccuPay.Data.Services
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
         private readonly LeaveRepository _leaveRepository;
         private readonly LeaveLedgerRepository _leaveLedgerRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
         private readonly ShiftScheduleRepository _shiftScheduleRepository;
 
         public LeaveDataService(
@@ -39,7 +38,7 @@ namespace AccuPay.Data.Services
             LeaveRepository leaveRepository,
             LeaveLedgerRepository leaveLedgerRepository,
             PayPeriodRepository payPeriodRepository,
-            ShiftScheduleRepository shiftScheduleRepository) : base(leaveRepository)
+            ShiftScheduleRepository shiftScheduleRepository) : base(leaveRepository, payPeriodRepository)
         {
             _context = context;
             _policy = policy;
@@ -47,7 +46,6 @@ namespace AccuPay.Data.Services
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
             _leaveRepository = leaveRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
-            _payPeriodRepository = payPeriodRepository;
             _shiftScheduleRepository = shiftScheduleRepository;
         }
 
@@ -567,12 +565,12 @@ namespace AccuPay.Data.Services
 
         #endregion ForceUpdateLeaveAllowanceAsync
 
-        public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type)
+        public async Task<PaginatedList<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type)
         {
             return await _leaveLedgerRepository.ListTransactions(options, organizationId, id, type);
         }
 
-        public async Task<PaginatedListResult<LeaveLedger>> GetLeaveBalances(PageOptions options, int organizationId, string searchTerm)
+        public async Task<PaginatedList<LeaveLedger>> GetLeaveBalances(PageOptions options, int organizationId, string searchTerm)
         {
             var leaveBalances = await _leaveLedgerRepository.GetLeaveBalance(organizationId, searchTerm);
 
@@ -586,7 +584,7 @@ namespace AccuPay.Data.Services
 
             var count = distinctId.Count();
 
-            return new PaginatedListResult<LeaveLedger>(query, count);
+            return new PaginatedList<LeaveLedger>(query, count);
         }
     }
 }

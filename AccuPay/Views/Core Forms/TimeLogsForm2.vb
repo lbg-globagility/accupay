@@ -3,6 +3,7 @@
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
@@ -254,7 +255,7 @@ Public Class TimeLogsForm2
         Return policy.UseShiftSchedule
     End Function
 
-    Private Async Sub NewTimeEntryAlternateLineImport()
+    Private Async Function NewTimeEntryAlternateLineImport() As Task
         Dim importer = MainServiceProvider.GetRequiredService(Of TimeLogsReader)
         Dim importOutput = importer.Read(thefilepath)
 
@@ -289,12 +290,12 @@ Public Class TimeLogsForm2
 
         HouseKeepingBeforeStartBackgroundWork()
         bgworkTypicalImport.RunWorkerAsync(timeAttendanceHelper)
-    End Sub
+    End Function
 
     Private Sub bgworkTypicalImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkTypicalImport.DoWork
         Dim timeAttendanceHelper = CType(e.Argument, ITimeAttendanceHelper)
 
-        NewTimeEntryAlternateLineImportSave(timeAttendanceHelper)
+        NewTimeEntryAlternateLineImportSave(timeAttendanceHelper).GetAwaiter().GetResult()
 
     End Sub
 
@@ -306,7 +307,15 @@ Public Class TimeLogsForm2
         Handles bgworkTypicalImport.RunWorkerCompleted, bgworkImport.RunWorkerCompleted
 
         If e.Error IsNot Nothing Then
-            MessageBox.Show("Error: " & e.Error.Message)
+            Const MessageTitle As String = "Import Time logs"
+
+            If e.Error.GetType() Is GetType(BusinessLogicException) Then
+
+                MessageBoxHelper.ErrorMessage(e.Error.Message, MessageTitle)
+            Else
+                Debugger.Break()
+                MessageBoxHelper.DefaultErrorMessage(MessageTitle, e.Error)
+            End If
 
         ElseIf e.Cancelled Then
 
@@ -331,34 +340,24 @@ Public Class TimeLogsForm2
         ToolStripProgressBar1.Value = 0
     End Sub
 
-    Private Async Sub NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As ITimeAttendanceHelper)
-        Try
-            Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
-            Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
+    Private Async Function NewTimeEntryAlternateLineImportSave(timeAttendanceHelper As ITimeAttendanceHelper) As Task
+        Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
+        Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
-            Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-            Await timeLogService.SaveImportAsync(timeLogs, timeAttendanceLogs)
+        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+        Await timeLogService.SaveImportAsync(z_OrganizationID, timeLogs, timeAttendanceLogs)
 
-            Dim importList = New List(Of UserActivityItem)
-            For Each log In timeLogs
-                importList.Add(New UserActivityItem() With
-                    {
-                    .Description = $"Imported a new {FormEntityName.ToLower()}.",
-                    .EntityId = CInt(log.RowID)
-                    })
-            Next
+        Dim importList = New List(Of UserActivityItem)
+        For Each log In timeLogs
+            importList.Add(New UserActivityItem() With
+            {
+                .Description = $"Imported a new {FormEntityName.ToLower()}.",
+                .EntityId = log.RowID.Value
+            })
+        Next
 
-            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
-        Catch ex As Exception
-
-            logger.Error("NewTimeEntryAlternateLineImport", ex)
-
-            MessageBoxHelper.DefaultErrorMessage("Import Logs")
-
-            Throw ex
-        End Try
-
-    End Sub
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+    End Function
 
     Private Sub ResetGridRowsDefaultCellStyle()
         For Each row As DataGridViewRow In grid.Rows
@@ -876,64 +875,63 @@ Public Class TimeLogsForm2
 
         Next
 
-        Try
-            Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-            Await dataService.ChangeManyAsync(
-                addedTimeLogs:=addedTimeLogs,
-                updatedTimeLogs:=updatedTimeLogs,
-                deletedTimeLogs:=deletedTimeLogs)
+        Await FunctionUtils.TryCatchFunctionAsync("Save Time Logs",
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+                Await dataService.ChangeManyAsync(
+                    z_OrganizationID,
+                    addedTimeLogs:=addedTimeLogs,
+                    updatedTimeLogs:=updatedTimeLogs,
+                    deletedTimeLogs:=deletedTimeLogs)
 
-            CreateUserActivityRecords(oldRecords, addedTimeLogs, updatedTimeLogs, deletedTimeLogs)
+                CreateUserActivityRecords(oldRecords, addedTimeLogs, updatedTimeLogs, deletedTimeLogs)
 
-            If addedTimeLogs.Any() Then
-                Dim addedTimeLogEmployeeIDs = addedTimeLogs.Select(Function(tl) tl.EmployeeID.Value).ToArray()
-                Dim addedTimeLogMinDate = addedTimeLogs.Min(Function(tl) tl.LogDate)
-                Dim addedTimeLogMaxDate = addedTimeLogs.Max(Function(tl) tl.LogDate)
+                If addedTimeLogs.Any() Then
+                    Dim addedTimeLogEmployeeIDs = addedTimeLogs.Select(Function(tl) tl.EmployeeID.Value).ToArray()
+                    Dim addedTimeLogMinDate = addedTimeLogs.Min(Function(tl) tl.LogDate)
+                    Dim addedTimeLogMaxDate = addedTimeLogs.Max(Function(tl) tl.LogDate)
 
-                Dim addedTimeLogsDatePeriod = New TimePeriod(addedTimeLogMinDate, addedTimeLogMaxDate)
+                    Dim addedTimeLogsDatePeriod = New TimePeriod(addedTimeLogMinDate, addedTimeLogMaxDate)
 
-                Dim newlyAdded = Await timeLogRepositoryQuery.
-                    GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(addedTimeLogEmployeeIDs,
-                                                                        addedTimeLogsDatePeriod)
+                    Dim newlyAdded = Await timeLogRepositoryQuery.
+                        GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(addedTimeLogEmployeeIDs,
+                                                                            addedTimeLogsDatePeriod)
 
-                For Each model In toSaveList
-                    Dim seek = newlyAdded.
-                    Where(Function(tl) tl.EmployeeID.Value = model.EmployeeID).
-                    Where(Function(tl) tl.LogDate = model.DateIn).
-                    FirstOrDefault
+                    For Each model In toSaveList
+                        Dim seek = newlyAdded.
+                        Where(Function(tl) tl.EmployeeID.Value = model.EmployeeID).
+                        Where(Function(tl) tl.LogDate = model.DateIn).
+                        FirstOrDefault
 
-                    If seek IsNot Nothing Then
-                        model.Added(seek.RowID.Value)
+                        If seek IsNot Nothing Then
+                            model.Added(seek.RowID.Value)
 
-                    ElseIf model.ConsideredDelete Then
+                        ElseIf model.ConsideredDelete Then
+                            model.Remove()
+
+                        End If
+
+                        model.Commit()
+                    Next
+                Else
+                    For Each model In toSaveList
                         model.Remove()
+                        model.Commit()
+                    Next
 
-                    End If
+                End If
 
-                    model.Commit()
-                Next
-            Else
-                For Each model In toSaveList
-                    model.Remove()
-                    model.Commit()
-                Next
+                ShowSuccessBalloon()
 
-            End If
+                ResetGridRowsDefaultCellStyle()
 
-            ShowSuccessBalloon()
+                ColoriseSundayRows(grid.Rows)
 
-            ResetGridRowsDefaultCellStyle()
+                ZebraliseEmployeeRows()
 
-            ColoriseSundayRows(grid.Rows)
+                ToSaveCountChanged()
 
-            ZebraliseEmployeeRows()
-
-            ToSaveCountChanged()
-        Catch ex As Exception
-            logger.Error("TimeLogsForm2Saving", ex)
-            Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-            MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+            End Function)
 
     End Sub
 
@@ -1139,9 +1137,7 @@ Public Class TimeLogsForm2
         Console.WriteLine("{0} : {1}", {e.Column.Name, e.Column.Width})
     End Sub
 
-    Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
-
-        Static employeeleaveRowID As Integer = -1
+    Private Async Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
 
         Dim timeLogsFormat_ As TimeLogsFormat? = TimeLogsImportOption()
 
@@ -1158,7 +1154,7 @@ Public Class TimeLogsForm2
                 thefilepath = browsefile.FileName
 
                 If timeLogsFormat_ = TimeLogsFormat.Conventional Then
-                    NewTimeEntryAlternateLineImport()
+                    Await NewTimeEntryAlternateLineImport()
                 Else
                     HouseKeepingBeforeStartBackgroundWork()
                     bgworkImport.RunWorkerAsync()
@@ -1225,9 +1221,9 @@ Public Class TimeLogsForm2
             Next
         Next
 
-        'this should also create TimeAttendanceLogs per log
+        'TODO: this should also create TimeAttendanceLogs per log
         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-        Await timeLogService.SaveImportAsync(timeLogs)
+        Await timeLogService.SaveImportAsync(z_OrganizationID, timeLogs)
 
         Return
 
