@@ -1,6 +1,5 @@
 import Swal from 'sweetalert2';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';

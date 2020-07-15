@@ -186,17 +186,17 @@ Public Class ImportOBForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim service = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await service.SaveManyAsync(Me._officialBusinesses)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Await dataService.SaveManyAsync(Me._officialBusinesses)
 
                 Dim importlist = New List(Of UserActivityItem)
 
                 For Each officialBusiness In Me._officialBusinesses
                     importlist.Add(New UserActivityItem() With
-                        {
+                    {
                         .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = officialBusiness.RowID.Value
-                        })
+                    })
                 Next
 
                 _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)

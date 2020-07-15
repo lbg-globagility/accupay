@@ -81,7 +81,7 @@ namespace AccuPay.Web.Controllers
             return _service.GetStatusList();
         }
 
-        [HttpGet("accupay-officialbus-template")]
+        [HttpGet("accupay-official-business-template")]
         [Permission(PermissionTypes.OfficialBusinessRead)]
         public ActionResult GetOfficialBusTemplate()
         {

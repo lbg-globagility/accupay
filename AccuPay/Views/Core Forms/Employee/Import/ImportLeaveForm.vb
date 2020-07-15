@@ -149,36 +149,36 @@ Public Class ImportLeaveForm
         End If
 
         Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                        Async Function() As Task(Of Boolean)
+            Async Function() As Task(Of Boolean)
 
-                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                            Await leaveService.SaveManyAsync(leaves)
+                Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Await leaveService.SaveManyAsync(leaves)
 
-                            Dim importList = New List(Of UserActivityItem)
-                            Dim entityName = FormEntityName.ToLower()
+                Dim importList = New List(Of UserActivityItem)
+                Dim entityName = FormEntityName.ToLower()
 
-                            For Each item In leaves
+                For Each item In leaves
 
-                                If item.IsNew Then
-                                    importList.Add(New UserActivityItem() With
-                                    {
-                                    .Description = $"Imported a new {entityName}.",
-                                    .EntityId = item.RowID.Value
-                                    })
-                                Else
-                                    importList.Add(New UserActivityItem() With
-                                    {
-                                    .Description = $"Updated a {entityName} on import.",
-                                    .EntityId = item.RowID.Value
-                                    })
-                                End If
+                    If item.IsNew Then
+                        importList.Add(New UserActivityItem() With
+                        {
+                            .Description = $"Imported a new {entityName}.",
+                            .EntityId = item.RowID.Value
+                        })
+                    Else
+                        importList.Add(New UserActivityItem() With
+                        {
+                            .Description = $"Updated a {entityName} on import.",
+                            .EntityId = item.RowID.Value
+                        })
+                    End If
 
-                            Next
+                Next
 
-                            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-                            Return True
-                        End Function)
+                Return True
+            End Function)
 
         Return False
 

@@ -5,15 +5,13 @@ using AccuPay.Data.Repositories;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class OfficialBusinessDataService : BaseSavableDataService<OfficialBusiness>
+    public class OfficialBusinessDataService : BaseSavablePayrollDataService<OfficialBusiness>
     {
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
         private readonly PayrollContext _context;
 
         public OfficialBusinessDataService(
@@ -27,7 +25,6 @@ namespace AccuPay.Data.Services
                 policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Official Business does not exists.")
         {
-            _officialBusinessRepository = officialBusinessRepository;
             _context = context;
         }
 
@@ -42,6 +39,9 @@ namespace AccuPay.Data.Services
             if (officialBusiness.StartDate == null)
                 throw new BusinessLogicException("Start Date is required.");
 
+            if (officialBusiness.StartDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+
             if (officialBusiness.StartTime == null)
                 throw new BusinessLogicException("Start Time is required.");
 
@@ -55,8 +55,8 @@ namespace AccuPay.Data.Services
             }
 
             var doesExistQuery = _context.OfficialBusinesses
-                                    .Where(l => l.EmployeeID == officialBusiness.EmployeeID)
-                                    .Where(l => l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date);
+                .Where(l => l.EmployeeID == officialBusiness.EmployeeID)
+                .Where(l => l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date);
 
             if (IsNewEntity(officialBusiness.RowID) == false)
             {
@@ -74,39 +74,5 @@ namespace AccuPay.Data.Services
 
             officialBusiness.UpdateEndDate();
         }
-
-        #region Queries
-
-        public async Task<OfficialBusiness> GetByIdAsync(int officialBusinessId)
-        {
-            return await _officialBusinessRepository.GetByIdAsync(officialBusinessId);
-        }
-
-        public async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int officialBusinessId)
-        {
-            return await _officialBusinessRepository.GetByIdWithEmployeeAsync(officialBusinessId);
-        }
-
-        public async Task<IEnumerable<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
-        {
-            return await _officialBusinessRepository.GetByEmployeeAsync(employeeId);
-        }
-
-        public async Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(
-            PageOptions options,
-            int organizationId,
-            string searchTerm = "",
-            DateTime? dateFrom = null,
-            DateTime? dateTo = null)
-        {
-            return await _officialBusinessRepository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
-        }
-
-        public List<string> GetStatusList()
-        {
-            return _officialBusinessRepository.GetStatusList();
-        }
-
-        #endregion Queries
     }
 }
