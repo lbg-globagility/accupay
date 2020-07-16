@@ -11,7 +11,10 @@ namespace AccuPay.Data.Services
         private readonly SalaryRepository _salaryRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
 
-        public PaystubDataService(PaystubRepository paystubRepository, SalaryRepository salaryRepository, PayPeriodRepository payPeriodRepository)
+        public PaystubDataService(
+            PaystubRepository paystubRepository,
+            SalaryRepository salaryRepository,
+            PayPeriodRepository payPeriodRepository)
         {
             _paystubRepository = paystubRepository;
             _salaryRepository = salaryRepository;
@@ -20,7 +23,7 @@ namespace AccuPay.Data.Services
 
         public async Task<ICollection<PaystubData>> GetAll(int payPeriodId)
         {
-            var paystubs = await _paystubRepository.GetAll(payPeriodId);
+            var paystubs = await _paystubRepository.GetByPayPeriodFullPaystubAsync(payPeriodId);
 
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
