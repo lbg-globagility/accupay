@@ -100,20 +100,12 @@
       <ng-container matColumnDef="employee" sticky>
         <th mat-header-cell *matHeaderCellDef>Employee</th>
         <td mat-cell *matCellDef="let employee">
-          <div class="flex items-center w-56">
-            <img
-              class="block rounded-full"
-              height="36"
-              appImgFallback
-              src="/api/employees/{{ employee.employeeId }}/image"
-            />
-            <div class="ml-2">
-              <a routerLink="/employees/{{ employee.employeeId }}">
-                <div>{{ employee.fullName }}</div>
-              </a>
-              <div class="text-xs">#{{ employee.employeeNo }}</div>
-            </div>
-          </div>
+          <app-employee-avatar
+            [employeeId]="employee.employeeId"
+            [employeeNo]="employee.employeeNo"
+            [fullName]="employee.fullName"
+            class="w-56"
+          ></app-employee-avatar>
         </td>
       </ng-container>
 
@@ -164,6 +156,5 @@
     [length]="totalCount"
     [showFirstLastButtons]="true"
     (page)="onPageChanged($event)"
-  >
-  </mat-paginator>
+  ></mat-paginator>
 </div>
