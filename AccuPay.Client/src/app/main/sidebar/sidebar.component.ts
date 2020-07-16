@@ -49,7 +49,7 @@ const menuItems: MenuItem[] = [
     icon: 'access_time',
     items: [
       {
-        label: 'Time Entry',
+        label: 'Timesheets',
         route: '/time-entry',
       },
       {
@@ -133,6 +133,10 @@ export class SidebarComponent implements OnInit {
   }
 
   toggle(menuItem: MenuItem): void {
+    this.menuItems
+      .filter((t) => t !== menuItem)
+      .forEach((t) => (t.toggled = false));
+
     menuItem.toggled = !menuItem.toggled;
   }
 }

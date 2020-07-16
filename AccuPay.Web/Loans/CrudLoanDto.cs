@@ -13,10 +13,6 @@ namespace AccuPay.Web.Loans
         public decimal TotalLoanAmount { get; set; }
 
         [Required]
-        [Range(0, 99)]
-        public decimal DeductionPercentage { get; set; }
-
-        [Required]
         public DateTime StartDate { get; set; }
 
         [Required]
