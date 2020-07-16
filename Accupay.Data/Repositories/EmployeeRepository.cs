@@ -72,15 +72,13 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveManyAsync(List<Employee> employees)
         {
-            //var updated = employees.Where(e => !IsNewEntity(e.RowID)).ToList();
-            var updated = employees.Where(e => e.RowID.HasValue).ToList();
+            var updated = employees.Where(e => !IsNewEntity(e.RowID)).ToList();
             if (updated.Any())
             {
                 updated.ForEach(x => _context.Entry(x).State = EntityState.Modified);
             }
 
-            //var added = employees.Where(e => IsNewEntity(e.RowID)).ToList();
-            var added = employees.Where(e => !e.RowID.HasValue).ToList();
+            var added = employees.Where(e => IsNewEntity(e.RowID)).ToList();
             if (added.Any())
             {
                 _context.Employees.AddRange(added);
