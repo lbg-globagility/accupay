@@ -139,7 +139,7 @@ Public Class CalendarsForm
         Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
 
         Await repository.Update(_currentCalendar)
-        Await repository.UpdateDaysAsync(_changeTracker)
+        Await repository.UpdateDaysAsync(Enumerable.Empty(Of CalendarDay).ToList(), _changeTracker)
 
         ClearChangeTracker()
     End Sub
