@@ -44,7 +44,7 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        internal async Task<Allowance> GetEmployeeEcolaAsync(
+        public async Task<Allowance> GetEmployeeEcolaAsync(
             int employeeId,
             int organizationId,
             TimePeriod timePeriod)
@@ -98,7 +98,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Allowance>(allowances, count);
         }
 
-        internal ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId, TimePeriod timePeriod)
+        public ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId, TimePeriod timePeriod)
         {
             return CreateBaseQueryByTimePeriod(
                     organizationId,
@@ -106,7 +106,7 @@ namespace AccuPay.Data.Repositories
                 ToList();
         }
 
-        internal async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId, TimePeriod timePeriod)
+        public async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId, TimePeriod timePeriod)
         {
             return await CreateBaseQueryByTimePeriod(
                     organizationId,

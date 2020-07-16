@@ -21,8 +21,6 @@ namespace AccuPay.Data.Services
             ProductConstant.VACATION_LEAVE
         };
 
-        private readonly PayrollContext _context;
-
         private readonly EmployeeRepository _employeeRepository;
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
         private readonly LeaveLedgerRepository _leaveLedgerRepository;
@@ -40,10 +38,10 @@ namespace AccuPay.Data.Services
 
             base(leaveRepository,
                 payPeriodRepository,
+                context,
                 policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Leave does not exists.")
         {
-            _context = context;
             _employeeRepository = employeeRepository;
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
             _leaveLedgerRepository = leaveLedgerRepository;

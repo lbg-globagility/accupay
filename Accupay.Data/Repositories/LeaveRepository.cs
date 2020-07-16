@@ -32,11 +32,6 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Leave> GetByIdAsync(int id)
-        {
-            return await _context.Leaves.FirstOrDefaultAsync(l => l.RowID == id);
-        }
-
         public async Task<Leave> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Leaves

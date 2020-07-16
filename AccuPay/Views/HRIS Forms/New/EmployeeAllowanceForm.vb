@@ -349,17 +349,13 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim allowanceIsAlreadyUsed = Await dataService.CheckIfAlreadyUsedInClosedPeriodAsync(Me._currentAllowance.RowID.Value)
+        Dim allowanceIsAlreadyUsed = Await dataService.CheckIfAlreadyUsedInClosedPayPeriodAsync(Me._currentAllowance.RowID.Value)
 
         If allowanceIsAlreadyUsed Then
 
-            If MessageBoxHelper.Confirm(Of Boolean) _
-        ("This allowance has already been used. Deleting this might affect previous cutoffs. We suggest changing the End Date instead. Do you want to proceed deletion?", "Confirm Deletion",
-            messageBoxIcon:=MessageBoxIcon.Warning) = False Then
+            MessageBoxHelper.Warning("This allowance has already been used and therefore cannot be deleted. Try changing its End Date instead.")
 
-                Return
-            End If
-
+            Return
         End If
 
         Await DeleteAllowance(currentEmployee, messageTitle)

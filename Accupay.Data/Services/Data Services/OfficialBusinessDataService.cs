@@ -12,8 +12,6 @@ namespace AccuPay.Data.Services
 {
     public class OfficialBusinessDataService : BaseDailyPayrollDataService<OfficialBusiness>
     {
-        private readonly PayrollContext _context;
-
         public OfficialBusinessDataService(
             OfficialBusinessRepository officialBusinessRepository,
             PayPeriodRepository payPeriodRepository,
@@ -22,10 +20,10 @@ namespace AccuPay.Data.Services
 
             base(officialBusinessRepository,
                 payPeriodRepository,
+                context,
                 policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Official Business does not exists.")
         {
-            _context = context;
         }
 
         protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness)

@@ -58,14 +58,16 @@ namespace AccuPay.Data.Entities
         public string LoanName { get; set; }
 
         [ForeignKey("LoanTypeID")]
-        public virtual Product LoanType { get; set; }
+        public Product LoanType { get; set; }
 
-        public virtual ICollection<LoanTransaction> LoanTransactions { get; set; }
+        public ICollection<LoanTransaction> LoanTransactions { get; set; }
 
         [ForeignKey("EmployeeID")]
-        public virtual Employee Employee { get; set; }
+        public Employee Employee { get; set; }
 
-        public virtual ICollection<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
+        public ICollection<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
+
+        public bool HasStarted => TotalBalanceLeft != TotalLoanAmount;
 
         /// <summary>
         /// Recomputes TotalPayPeriod. Call this everytime TotalLoanAmount has changed.

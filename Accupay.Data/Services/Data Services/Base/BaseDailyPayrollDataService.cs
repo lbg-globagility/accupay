@@ -12,26 +12,21 @@ namespace AccuPay.Data.Services
         public BaseDailyPayrollDataService(
             SavableRepository<T> savableRepository,
             PayPeriodRepository payPeriodRepository,
+            PayrollContext context,
             PolicyHelper policy,
             string entityDoesNotExistOnDeleteErrorMessage) :
 
             base(savableRepository,
                 payPeriodRepository,
+                context,
                 policy,
                 entityDoesNotExistOnDeleteErrorMessage)
         {
         }
 
-        public async override Task DeleteAsync(int id)
+        protected override async Task AdditionalDeleteValidation(T entity)
         {
-            var entity = await _repository.GetByIdAsync(id);
-
-            if (entity == null)
-                throw new BusinessLogicException(EntityDoesNotExistOnDeleteErrorMessage);
-
             await ValidateDate(entity, entity, checkOldEntity: false);
-
-            await _repository.DeleteAsync(entity);
         }
 
         protected override async Task AdditionalSaveValidation(T entity, T oldEntity)

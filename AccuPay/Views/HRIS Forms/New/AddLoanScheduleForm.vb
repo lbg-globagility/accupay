@@ -184,9 +184,9 @@ Public Class AddLoanScheduleForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-                Await service.SaveAsync(Me._newLoanSchedule)
+                Await dataService.SaveAsync(Me._newLoanSchedule)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 

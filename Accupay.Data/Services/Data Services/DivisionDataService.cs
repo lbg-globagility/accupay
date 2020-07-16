@@ -15,7 +15,6 @@ namespace AccuPay.Data.Services
     {
         private readonly DivisionRepository _divisionRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
-        private readonly PayrollContext _context;
 
         public DivisionDataService(
             DivisionRepository divisionRepository,
@@ -26,12 +25,12 @@ namespace AccuPay.Data.Services
 
             base(divisionRepository,
                 payPeriodRepository,
+                context,
                 policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Division does not exists.")
         {
             _divisionRepository = divisionRepository;
             _listOfValueRepository = listOfValueRepository;
-            _context = context;
         }
 
         #region CRUD

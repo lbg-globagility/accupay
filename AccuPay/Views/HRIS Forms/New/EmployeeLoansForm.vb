@@ -269,9 +269,9 @@ Public Class EmployeeLoansForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-            Async Function() As Task
-                Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                Await service.SaveManyAsync(changedLoans)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                Await dataService.SaveManyAsync(changedLoans)
 
                 For Each item In changedLoans
                     RecordUpdate(item)
@@ -434,12 +434,9 @@ Public Class EmployeeLoansForm
 
         If currentLoanSchedule.Status = LoanSchedule.STATUS_COMPLETE Then
 
-            If MessageBoxHelper.Confirm(Of Boolean) _
-        ("Loan schedule is already completed. Deleting this might affect previous cutoffs. Do you want to proceed deletion?", "Confirm Deletion",
-            messageBoxIcon:=MessageBoxIcon.Warning) = False Then
+            MessageBoxHelper.Warning("Cannot delete a completed loan.")
 
-                Return
-            End If
+            Return
         Else
 
             Dim loanTransactions = Await repository.
@@ -447,14 +444,11 @@ Public Class EmployeeLoansForm
 
             If loanTransactions.Count > 0 Then
 
-                If MessageBoxHelper.Confirm(Of Boolean) _
-        ("This loan has already started. Deleting this might affect previous cutoffs. Do you want to proceed deletion?", "Confirm Deletion",
-            messageBoxIcon:=MessageBoxIcon.Warning) = False Then
+                MessageBoxHelper.Warning("This loan has already started and therefore cannot be deleted. Try changing its status to ""On Hold"" or ""Cancelled"" instead.")
 
-                    Return
-                End If
-
+                Return
             End If
+
         End If
 
         Await DeleteLoanSchedule(currentEmployee, messageTitle, loanNumberString)
@@ -473,19 +467,20 @@ Public Class EmployeeLoansForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                    Async Function()
-                                        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                                        Await service.DeleteAsync(Me._currentLoan.RowID.Value)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                Await dataService.DeleteAsync(Me._currentLoan.RowID.Value)
 
-                                        _userActivityRepository.RecordDelete(z_User,
-                                                                             FormEntityName,
-                                                                             CInt(Me._currentLoan.RowID),
-                                                                             z_OrganizationID)
+                _userActivityRepository.RecordDelete(
+                    z_User,
+                    FormEntityName,
+                    CInt(Me._currentLoan.RowID),
+                    z_OrganizationID)
 
-                                        Await LoadLoans(currentEmployee)
+                Await LoadLoans(currentEmployee)
 
-                                        ShowBalloonInfo($"Loan {If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)} Successfully Deleted.", messageTitle)
-                                    End Function)
+                ShowBalloonInfo($"Loan {If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)} Successfully Deleted.", messageTitle)
+            End Function)
     End Function
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
@@ -734,9 +729,11 @@ Public Class EmployeeLoansForm
             Me._currentLoan.TotalBalanceLeft < Me._currentLoan.TotalLoanAmount Then
             txtTotalLoanAmount.Enabled = False
             txtLoanInterestPercentage.Enabled = False
+            cboLoanType.Enabled = False
         Else
             txtTotalLoanAmount.Enabled = True
             txtLoanInterestPercentage.Enabled = True
+            cboLoanType.Enabled = True
         End If
 
         txtLoanBalance.DataBindings.Clear()

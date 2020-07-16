@@ -20,10 +20,12 @@ namespace AccuPay.Data.Services
             EmployeeRepository employeeRepository,
             PayPeriodRepository payPeriodRepository,
             DivisionDataService divisionService,
+            PayrollContext context,
             PolicyHelper policy) :
 
             base(positionRepository,
                 payPeriodRepository,
+                context,
                 policy,
                 entityDoesNotExistOnDeleteErrorMessage: "Position does not exists.")
         {

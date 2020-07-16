@@ -27,7 +27,7 @@ namespace AccuPay.Web.Loans.LoanType
 
         internal async Task<Data.Entities.Product> GetByIdAsync(int id)
         {
-            return await _productRepository.GetLoanTypeByIdAsync(id);
+            return await _productRepository.GetByIdAsync(id);
         }
 
         internal async Task UpdateAsync(int id, LoanTypeDto dto)

@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,12 +11,13 @@ namespace AccuPay.Data.Services
     public class BaseSavableDataService<T> : BaseDataService where T : BaseEntity
     {
         protected readonly SavableRepository<T> _repository;
-
+        protected readonly PayrollContext _context;
         protected readonly string EntityDoesNotExistOnDeleteErrorMessage = "Entity does not exists.";
 
         public BaseSavableDataService(
             SavableRepository<T> repository,
             PayPeriodRepository payPeriodRepository,
+            PayrollContext context,
             PolicyHelper policy,
             string entityDoesNotExistOnDeleteErrorMessage) :
 
@@ -23,6 +25,7 @@ namespace AccuPay.Data.Services
                 policy)
         {
             _repository = repository;
+            _context = context;
 
             EntityDoesNotExistOnDeleteErrorMessage = string.IsNullOrWhiteSpace(entityDoesNotExistOnDeleteErrorMessage) ?
                 "Entity does not exists." :
@@ -58,6 +61,7 @@ namespace AccuPay.Data.Services
             await ValidateData(entity, oldEntity);
             await AdditionalSaveValidation(entity, oldEntity);
 
+            DetachOldEntity(oldEntity);
             await _repository.SaveAsync(entity);
         }
 
@@ -73,6 +77,7 @@ namespace AccuPay.Data.Services
 
             await AdditionalSaveManyValidation(entities, oldEntities.ToList());
 
+            DetachOldEntities(oldEntities);
             await _repository.SaveManyAsync(entities);
         }
 
@@ -138,5 +143,28 @@ namespace AccuPay.Data.Services
 
             return currentOrganizationId;
         }
+
+        #region Private Methods
+
+        private void DetachOldEntity(T oldEntity)
+        {
+            if (oldEntity != null)
+            {
+                _context.Entry(oldEntity).State = EntityState.Detached;
+            }
+        }
+
+        private void DetachOldEntities(ICollection<T> oldEntities)
+        {
+            if (oldEntities != null && oldEntities.Count > 0)
+            {
+                foreach (var oldEntity in oldEntities)
+                {
+                    DetachOldEntity(oldEntity);
+                }
+            }
+        }
+
+        #endregion Private Methods
     }
 }
