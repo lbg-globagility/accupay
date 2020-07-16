@@ -72,17 +72,51 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveManyAsync(List<Employee> employees)
         {
-            var updated = employees.Where(e => !IsNewEntity(e.RowID)).ToList();
+            //var updated = employees.Where(e => !IsNewEntity(e.RowID)).ToList();
+            var updated = employees.Where(e => e.RowID.HasValue).ToList();
             if (updated.Any())
             {
                 updated.ForEach(x => _context.Entry(x).State = EntityState.Modified);
             }
 
-            var added = employees.Where(e => IsNewEntity(e.RowID)).ToList();
+            //var added = employees.Where(e => IsNewEntity(e.RowID)).ToList();
+            var added = employees.Where(e => !e.RowID.HasValue).ToList();
             if (added.Any())
             {
                 _context.Employees.AddRange(added);
             }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ChangeManyAsync(List<Employee> added = null,
+                                          List<Employee> updated = null,
+                                          List<Employee> deleted = null)
+        {
+            if (added != null)
+            {
+                added.ForEach(shift =>
+                {
+                    _context.Entry(shift).State = EntityState.Added;
+                });
+            }
+
+            if (updated != null)
+            {
+                updated.ForEach(shift =>
+                {
+                    _context.Entry(shift).State = EntityState.Modified;
+                });
+            }
+
+            if (deleted != null)
+            {
+                deleted = deleted
+                    .GroupBy(x => x.RowID)
+                    .Select(x => x.FirstOrDefault())
+                    .ToList();
+                _context.Employees.RemoveRange(deleted);
+            }
+
             await _context.SaveChangesAsync();
         }
 
