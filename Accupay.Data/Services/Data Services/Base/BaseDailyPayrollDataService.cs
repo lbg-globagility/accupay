@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
+    // this is not for daily employees
+    // might want to rename this class name
     public class BaseDailyPayrollDataService<T> : BaseSavableDataService<T> where T : BaseEntity, IPayrollEntity
     {
         public BaseDailyPayrollDataService(
@@ -14,13 +16,15 @@ namespace AccuPay.Data.Services
             PayPeriodRepository payPeriodRepository,
             PayrollContext context,
             PolicyHelper policy,
-            string entityDoesNotExistOnDeleteErrorMessage) :
+            string entityName,
+            string entityNamePlural = null) :
 
             base(savableRepository,
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage)
+                entityName,
+                entityNamePlural: entityNamePlural)
         {
         }
 

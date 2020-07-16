@@ -141,6 +141,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of OfficialBusinessDataService)
         services.AddTransient(Of OvertimeDataService)
         services.AddTransient(Of PositionDataService)
+        services.AddTransient(Of SalaryDataService)
         services.AddTransient(Of TimeLogDataService)
         services.AddTransient(Of UserDataService)
 

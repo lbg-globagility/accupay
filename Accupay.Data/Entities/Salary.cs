@@ -1,16 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeesalary")]
-    public class Salary
+    public class Salary : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
@@ -50,6 +45,7 @@ namespace AccuPay.Data.Entities
         [Column("EffectiveDateFrom")]
         public DateTime EffectiveFrom { get; set; }
 
+        // TODO: delete this
         [Column("EffectiveDateTo")]
         public DateTime? EffectiveTo { get; set; }
 

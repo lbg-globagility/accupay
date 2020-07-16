@@ -12,14 +12,16 @@ namespace AccuPay.Data.Services
     {
         protected readonly SavableRepository<T> _repository;
         protected readonly PayrollContext _context;
-        protected readonly string EntityDoesNotExistOnDeleteErrorMessage = "Entity does not exists.";
+        protected readonly string EntityName;
+        protected readonly string EntityNamePlural;
 
         public BaseSavableDataService(
             SavableRepository<T> repository,
             PayPeriodRepository payPeriodRepository,
             PayrollContext context,
             PolicyHelper policy,
-            string entityDoesNotExistOnDeleteErrorMessage) :
+            string entityName,
+            string entityNamePlural = null) :
 
             base(payPeriodRepository,
                 policy)
@@ -27,9 +29,8 @@ namespace AccuPay.Data.Services
             _repository = repository;
             _context = context;
 
-            EntityDoesNotExistOnDeleteErrorMessage = string.IsNullOrWhiteSpace(entityDoesNotExistOnDeleteErrorMessage) ?
-                "Entity does not exists." :
-                entityDoesNotExistOnDeleteErrorMessage;
+            EntityName = entityName;
+            EntityNamePlural = entityNamePlural == null ? entityName + "s" : entityNamePlural;
         }
 
         protected bool IsNewEntity(int? id)
@@ -43,7 +44,7 @@ namespace AccuPay.Data.Services
             var entity = await _repository.GetByIdAsync(id);
 
             if (entity == null)
-                throw new BusinessLogicException(EntityDoesNotExistOnDeleteErrorMessage);
+                throw new BusinessLogicException($"{EntityName} does not exists.");
 
             await AdditionalDeleteValidation(entity);
 
@@ -56,6 +57,9 @@ namespace AccuPay.Data.Services
             if (!IsNewEntity(entity.RowID))
             {
                 oldEntity = await _repository.GetByIdAsync(entity.RowID.Value);
+
+                if (oldEntity == null)
+                    throw new BusinessLogicException($"{EntityName} no longer exists.");
             }
 
             await ValidateData(entity, oldEntity);
@@ -72,6 +76,10 @@ namespace AccuPay.Data.Services
             foreach (var entity in entities)
             {
                 var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity.RowID);
+
+                if (oldEntity == null)
+                    throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");
+
                 await ValidateData(entity, oldEntity);
             }
 
@@ -101,6 +109,8 @@ namespace AccuPay.Data.Services
             await SanitizeEntity(entity, oldEntity);
         }
 
+        // TODO: change this to a synchronus method. All validations that needs database
+        // operations (they usually need async methods) should be moved to SaveValidation methods
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
         protected virtual async Task SanitizeEntity(T entity, T oldEntity)

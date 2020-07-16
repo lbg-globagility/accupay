@@ -24,7 +24,7 @@ namespace AccuPay.Data.Services
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage: "Overtime does not exists.")
+                entityName: "Overtime")
         {
             _overtimeRepository = overtimeRepository;
         }

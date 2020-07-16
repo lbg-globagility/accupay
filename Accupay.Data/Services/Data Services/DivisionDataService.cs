@@ -27,13 +27,13 @@ namespace AccuPay.Data.Services
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage: "Division does not exists.")
+                entityName: "Division")
         {
             _divisionRepository = divisionRepository;
             _listOfValueRepository = listOfValueRepository;
         }
 
-        #region CRUD
+        #region Save
 
         public async override Task DeleteAsync(int divisionId)
         {
@@ -78,7 +78,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        #endregion CRUD
+        #endregion Save
 
         public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
         {

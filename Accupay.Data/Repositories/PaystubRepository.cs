@@ -44,7 +44,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #region CRUD
+        #region Save
 
         public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
         {
@@ -137,7 +137,7 @@ namespace AccuPay.Data.Repositories
             _context.Paystubs.Remove(paystub);
         }
 
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 
@@ -244,6 +244,14 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<bool> HasPaystubsAfterDateAsync(DateTime date, int employeeId)
+        {
+            return await _context.Paystubs
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.PayFromDate >= date)
+                .AnyAsync();
+        }
+
         /// <summary>
         /// Get a list of paystub by pay period ID including employee, position and division details.
         /// Also including the entities needed by Thirteenth Month Pay calculations like Thirteenth Month Pay entity
@@ -270,7 +278,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<Paystub>> GetAll(int payPeriodId)
+        public async Task<ICollection<Paystub>> GetAllAsync(int payPeriodId)
         {
             var query = CreateBaseQueryByPayPeriodWithEmployeeDivision(payPeriodId)
                 .OrderBy(x => x.Employee.LastName)

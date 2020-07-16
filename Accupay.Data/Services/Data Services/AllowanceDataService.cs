@@ -1,8 +1,8 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Utilities.Extensions;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace AccuPay.Data.Services
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage: "Allowance does not exists.")
+                entityName: "Allowance")
         {
             _allowanceRepository = allowanceRepository;
             _productRepository = productRepository;
@@ -50,6 +50,9 @@ namespace AccuPay.Data.Services
 
             if (allowance.ProductID == null)
                 throw new BusinessLogicException("Allowance type is required.");
+
+            if (allowance.EffectiveStartDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
             if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
                 throw new BusinessLogicException("Start date cannot be greater than end date.");

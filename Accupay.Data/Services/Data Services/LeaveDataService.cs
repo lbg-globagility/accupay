@@ -40,7 +40,7 @@ namespace AccuPay.Data.Services
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage: "Leave does not exists.")
+                entityName: "Leave")
         {
             _employeeRepository = employeeRepository;
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;

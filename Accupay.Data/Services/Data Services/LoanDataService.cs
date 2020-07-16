@@ -4,7 +4,6 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Extensions;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +32,7 @@ namespace AccuPay.Data.Services
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage: "Loan does not exists.")
+                entityName: "Loan")
         {
             _loanRepository = loanRepository;
             _listOfValueRepository = listOfValueRepository;
@@ -243,6 +242,9 @@ namespace AccuPay.Data.Services
 
             if (loan.LoanTypeID == null)
                 throw new BusinessLogicException("Loan type is required.");
+
+            if (loan.DedEffectiveDateFrom < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
             if (loan.TotalLoanAmount < 0)
                 throw new BusinessLogicException("Total loan amount cannot be less than 0.");

@@ -88,7 +88,8 @@ Namespace Global.AccuPay.Views.Employees
 
             If _currentSalary?.RowID Is Nothing Then Return
 
-            Await _salaryRepository.DeleteAsync(_currentSalary.RowID.Value)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+            Await dataService.DeleteAsync(_currentSalary.RowID.Value)
             _currentSalary = Nothing
             LoadSalaries()
         End Sub
@@ -113,7 +114,8 @@ Namespace Global.AccuPay.Views.Employees
 
                 End If
 
-                Await _salaryRepository.SaveAsync(_currentSalary)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Await dataService.SaveAsync(_currentSalary)
             Catch ex As Exception
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation) ' Remove this
                 Throw
@@ -175,8 +177,8 @@ Namespace Global.AccuPay.Views.Employees
             End If
 
             _salaries = _salaryRepository.GetByEmployee(_employee.RowID.Value).
-                                        OrderByDescending(Function(s) s.EffectiveFrom).
-                                        ToList()
+                OrderByDescending(Function(s) s.EffectiveFrom).
+                ToList()
 
             If _currentSalary Is Nothing OrElse _currentSalary.EmployeeID <> _employee.RowID Then
                 _currentSalary = _salaries.FirstOrDefault()

@@ -93,6 +93,18 @@ namespace AccuPay.Data.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date)
+        {
+            var query = CreateBaseQuery(organizationId);
+
+            query = AddCheckIfClosedPayPeriodQuery(query);
+
+            var cutOffStart = GetCutOffPeriodUsingDefault(new TimePeriod(date, date)).Start;
+            query = query.Where(x => x.PayFromDate >= cutOffStart);
+
+            return await query.AnyAsync();
+        }
+
         public IQueryable<PayPeriod> AddCheckIfClosedPayPeriodQuery(IQueryable<PayPeriod> query)
         {
             if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)

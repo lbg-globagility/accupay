@@ -22,7 +22,8 @@ namespace AccuPay.Data.Services
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage: "Official Business does not exists.")
+                entityName: "Official Business",
+                entityNamePlural: "Official Businesses")
         {
         }
 

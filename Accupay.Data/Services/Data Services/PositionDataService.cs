@@ -27,7 +27,7 @@ namespace AccuPay.Data.Services
                 payPeriodRepository,
                 context,
                 policy,
-                entityDoesNotExistOnDeleteErrorMessage: "Position does not exists.")
+                entityName: "Position")
         {
             _positionRepository = positionRepository;
 

@@ -178,27 +178,24 @@ Public Class ImportSalaryForm
             Return
         End If
 
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync("Import Salary",
+            Async Function()
+                Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+                Await salaryRepository.SaveManyAsync(_salaries.ToList())
 
-            Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
-            Await salaryRepository.SaveManyAsync(_salaries.ToList())
-
-            Dim importList = New List(Of UserActivityItem)
-            For Each item In _salaries
-                importList.Add(New UserActivityItem() With
-                        {
+                Dim importList = New List(Of UserActivityItem)
+                For Each item In _salaries
+                    importList.Add(New UserActivityItem() With
+                    {
                         .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = CInt(item.RowID)
-                        })
-            Next
+                    })
+                Next
 
-            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-            Me.IsSaved = True
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage("Import Salary", ex)
-        End Try
+                Me.IsSaved = True
+            End Function)
 
         Close()
     End Sub

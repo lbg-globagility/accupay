@@ -94,7 +94,7 @@ Namespace Global.AccuPay.JobLevels
         Private Async Function GetEmployeeModels() As Threading.Tasks.Task(Of ICollection(Of EmployeeModel))
 
             Dim fetchEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
-            Dim salaries = Await _salaryRepo.GetAll(z_OrganizationID)
+            Dim salaries = Await _salaryRepo.GetAllAsync(z_OrganizationID)
 
             Dim employees =
                 (From e In fetchEmployees

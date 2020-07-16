@@ -26,8 +26,6 @@ Public Class PromotionTab
 
     Private ReadOnly _positionService As PositionDataService
 
-    Private ReadOnly _salaryRepo As SalaryRepository
-
     Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
@@ -38,7 +36,6 @@ Public Class PromotionTab
 
         If MainServiceProvider IsNot Nothing Then
             _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
-            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
             _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         End If
 
@@ -287,7 +284,8 @@ Public Class PromotionTab
         ElseIf oldPromotion.CompensationToYesNo = "Yes" And
             _currentPromotion.CompensationToYesNo = "No" Then
 
-            Await _salaryRepo.DeleteAsync(_currentPromotion.EmployeeSalaryID.Value)
+            Dim dataServiceDelete = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+            Await dataServiceDelete.DeleteAsync(_currentPromotion.EmployeeSalaryID.Value)
 
             Return
 
@@ -325,7 +323,8 @@ Public Class PromotionTab
 
         End If
 
-        Await _salaryRepo.SaveAsync(promotionSalary)
+        Dim dataServiceSave = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+        Await dataServiceSave.SaveAsync(promotionSalary)
 
         _currentPromotion.EmployeeSalaryID = promotionSalary.RowID.Value
 
