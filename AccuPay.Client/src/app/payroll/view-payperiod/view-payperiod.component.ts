@@ -48,6 +48,7 @@ export class ViewPayPeriodComponent implements OnInit {
   };
 
   pageIndex: number = 0;
+
   pageSize: number = 10;
 
   searchTerm: string;
@@ -99,25 +100,16 @@ export class ViewPayPeriodComponent implements OnInit {
     this.payPeriodService
       .getPaystubs(this.payPeriodId, options, this.searchTerm)
       .subscribe((data) => {
+        this.loadingState.changeToSuccess();
+
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.expandedPaystub = data[0];
-
-        this.loadingState.changeToSuccess();
       });
   }
 
   searchChanged(): void {
     this.dataSource.filter = this.searchTerm;
-  }
-
-  /**
-   * @deprecated
-   */
-  onPageChanged(pageEvent: PageEvent): void {
-    this.pageIndex = pageEvent.pageIndex;
-    this.pageSize = pageEvent.pageSize;
-    this.modelChanged.next();
   }
 
   toggleExpansion(paystub: Paystub): void {
