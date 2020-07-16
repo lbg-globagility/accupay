@@ -1,93 +1,12 @@
 using AccuPay.Data.Services;
 using AccuPay.Web.Employees.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AccuPay.Web.Payroll
 {
     public class PaystubDto : BaseEmployeeDto
     {
-        public static PaystubDto Convert(PaystubData paystubData)
-        {
-            var dto = new PaystubDto();
-            if (paystubData?.Paystub?.Employee == null) return dto;
-
-            dto.ApplyData(paystubData);
-
-            return dto;
-        }
-
-        protected void ApplyData(PaystubData paystubData)
-        {
-            if (paystubData == null) return;
-
-            var paystub = paystubData?.Paystub;
-            var employee = paystubData?.Paystub?.Employee;
-
-            if (paystub?.Employee == null) return;
-
-            base.ApplyData(employee);
-            if (paystub.EmployeeID != paystub?.Employee.RowID) return;
-
-            BasicRate = paystubData.BasicRate;
-
-            Id = paystub.RowID.Value;
-            EmployeeId = paystub.EmployeeID.Value;
-            PayperiodId = paystub.PayPeriodID.Value;
-            BasicHours = paystub.BasicHours;
-            BasicPay = paystub.BasicPay;
-            RegularHours = paystub.RegularHours;
-            RegularPay = paystub.RegularPay;
-            OvertimeHours = paystub.OvertimeHours;
-            OvertimePay = paystub.OvertimePay;
-            NightDiffHours = paystub.NightDiffHours;
-            NightDiffPay = paystub.NightDiffPay;
-            NightDiffOvertimeHours = paystub.NightDiffOvertimeHours;
-            NightDiffOvertimePay = paystub.NightDiffOvertimePay;
-            RestDayHours = paystub.RestDayHours;
-            RestDayPay = paystub.RestDayPay;
-            RestDayOTHours = paystub.RestDayOTHours;
-            RestDayOTPay = paystub.RestDayOTPay;
-            LeaveHours = paystub.LeaveHours;
-            LeavePay = paystub.LeavePay;
-            SpecialHolidayHours = paystub.SpecialHolidayHours;
-            SpecialHolidayPay = paystub.SpecialHolidayPay;
-            SpecialHolidayOTHours = paystub.SpecialHolidayOTHours;
-            SpecialHolidayOTPay = paystub.SpecialHolidayOTPay;
-            RegularHolidayHours = paystub.RegularHolidayHours;
-            RegularHolidayPay = paystub.RegularHolidayPay;
-            RegularHolidayOTHours = paystub.RegularHolidayOTHours;
-            RegularHolidayOTPay = paystub.RegularHolidayOTPay;
-            LateHours = paystub.LateHours;
-            LateDeduction = paystub.LateDeduction;
-            UndertimeHours = paystub.UndertimeHours;
-            UndertimeDeduction = paystub.UndertimeDeduction;
-            AbsentHours = paystub.AbsentHours;
-            AbsenceDeduction = paystub.AbsenceDeduction;
-            GrossPay = paystub.GrossPay;
-            TotalAdjustments = paystub.TotalAdjustments;
-            TotalEarnings = paystub.TotalEarnings;
-            TotalBonus = paystub.TotalBonus;
-            TotalNonTaxableAllowance = paystub.TotalAllowance;
-            TotalTaxableAllowance = paystub.TotalTaxableAllowance;
-            TaxableIncome = paystub.TaxableIncome;
-            WithholdingTax = paystub.WithholdingTax;
-            SssEmployeeShare = paystub.SssEmployeeShare;
-            PhilHealthEmployeeShare = paystub.PhilHealthEmployeeShare;
-            HdmfEmployeeShare = paystub.HdmfEmployeeShare;
-            TotalLoans = paystub.TotalLoans;
-            TotalDeductions = paystub.NetDeductions;
-            NetPay = paystub.NetPay;
-
-            Salary = new SalaryDto()
-            {
-                Id = paystubData.Salary?.RowID.Value,
-                BasicAmount = paystubData.Salary?.BasicSalary ?? 0,
-                AllowanceAmount = paystubData.Salary?.AllowanceSalary ?? 0,
-                HourlyRate = paystubData.HourlyRate,
-                DailyRate = paystubData.DailyRate,
-                SalaryType = paystubData.Paystub.Employee.EmployeeType,
-            };
-        }
-
         public int Id { get; set; }
 
         public int EmployeeId { get; set; }
@@ -186,6 +105,109 @@ namespace AccuPay.Web.Payroll
 
         public SalaryDto Salary { get; set; }
 
+        public ICollection<LoanDto> Loans { get; set; }
+
+        public ICollection<AdjustmentDto> Adjustments { get; set; }
+
+        public static PaystubDto Convert(PaystubData paystubData)
+        {
+            var dto = new PaystubDto();
+            if (paystubData?.Paystub?.Employee == null) return dto;
+
+            dto.ApplyData(paystubData);
+
+            return dto;
+        }
+
+        protected void ApplyData(PaystubData paystubData)
+        {
+            if (paystubData == null) return;
+
+            var paystub = paystubData?.Paystub;
+            var employee = paystubData?.Paystub?.Employee;
+
+            if (paystub?.Employee == null) return;
+
+            base.ApplyData(employee);
+            if (paystub.EmployeeID != paystub?.Employee.RowID) return;
+
+            BasicRate = paystubData.BasicRate;
+
+            Id = paystub.RowID.Value;
+            EmployeeId = paystub.EmployeeID.Value;
+            PayperiodId = paystub.PayPeriodID.Value;
+            BasicHours = paystub.BasicHours;
+            BasicPay = paystub.BasicPay;
+            RegularHours = paystub.RegularHours;
+            RegularPay = paystub.RegularPay;
+            OvertimeHours = paystub.OvertimeHours;
+            OvertimePay = paystub.OvertimePay;
+            NightDiffHours = paystub.NightDiffHours;
+            NightDiffPay = paystub.NightDiffPay;
+            NightDiffOvertimeHours = paystub.NightDiffOvertimeHours;
+            NightDiffOvertimePay = paystub.NightDiffOvertimePay;
+            RestDayHours = paystub.RestDayHours;
+            RestDayPay = paystub.RestDayPay;
+            RestDayOTHours = paystub.RestDayOTHours;
+            RestDayOTPay = paystub.RestDayOTPay;
+            LeaveHours = paystub.LeaveHours;
+            LeavePay = paystub.LeavePay;
+            SpecialHolidayHours = paystub.SpecialHolidayHours;
+            SpecialHolidayPay = paystub.SpecialHolidayPay;
+            SpecialHolidayOTHours = paystub.SpecialHolidayOTHours;
+            SpecialHolidayOTPay = paystub.SpecialHolidayOTPay;
+            RegularHolidayHours = paystub.RegularHolidayHours;
+            RegularHolidayPay = paystub.RegularHolidayPay;
+            RegularHolidayOTHours = paystub.RegularHolidayOTHours;
+            RegularHolidayOTPay = paystub.RegularHolidayOTPay;
+            LateHours = paystub.LateHours;
+            LateDeduction = paystub.LateDeduction;
+            UndertimeHours = paystub.UndertimeHours;
+            UndertimeDeduction = paystub.UndertimeDeduction;
+            AbsentHours = paystub.AbsentHours;
+            AbsenceDeduction = paystub.AbsenceDeduction;
+            GrossPay = paystub.GrossPay;
+            TotalAdjustments = paystub.TotalAdjustments;
+            TotalEarnings = paystub.TotalEarnings;
+            TotalBonus = paystub.TotalBonus;
+            TotalNonTaxableAllowance = paystub.TotalAllowance;
+            TotalTaxableAllowance = paystub.TotalTaxableAllowance;
+            TaxableIncome = paystub.TaxableIncome;
+            WithholdingTax = paystub.WithholdingTax;
+            SssEmployeeShare = paystub.SssEmployeeShare;
+            PhilHealthEmployeeShare = paystub.PhilHealthEmployeeShare;
+            HdmfEmployeeShare = paystub.HdmfEmployeeShare;
+            TotalLoans = paystub.TotalLoans;
+            TotalDeductions = paystub.NetDeductions;
+            NetPay = paystub.NetPay;
+
+            Salary = new SalaryDto()
+            {
+                Id = paystubData.Salary?.RowID.Value,
+                BasicAmount = paystubData.Salary?.BasicSalary ?? 0,
+                AllowanceAmount = paystubData.Salary?.AllowanceSalary ?? 0,
+                HourlyRate = paystubData.HourlyRate,
+                DailyRate = paystubData.DailyRate,
+                SalaryType = paystubData.Paystub.Employee.EmployeeType,
+            };
+
+            Loans = paystub.LoanTransactions
+                ?.Select(t => new LoanDto()
+                {
+                    Description = t?.LoanSchedule.LoanType.Name,
+                    Amount = t.Amount,
+                })
+                .ToList();
+
+            Adjustments = paystub.Adjustments
+                ?.Select(t => new AdjustmentDto()
+                {
+                    Description = t.Product.Name,
+                    Amount = t.Amount,
+                })
+                .ToList();
+        }
+
         public class SalaryDto
         {
             public int? Id { get; set; }
@@ -199,6 +221,20 @@ namespace AccuPay.Web.Payroll
             public decimal DailyRate { get; set; }
 
             public decimal HourlyRate { get; set; }
+        }
+
+        public class LoanDto
+        {
+            public string Description { get; set; }
+
+            public decimal Amount { get; set; }
+        }
+
+        public class AdjustmentDto
+        {
+            public string Description { get; set; }
+
+            public decimal Amount { get; set; }
         }
     }
 }

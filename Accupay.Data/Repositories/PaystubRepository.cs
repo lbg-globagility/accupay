@@ -26,7 +26,6 @@ namespace AccuPay.Data.Repositories
             public EmployeeCompositeKey(int employeeId, int payPeriodId)
             {
                 EmployeeId = employeeId;
-
                 PayPeriodId = payPeriodId;
             }
         }
@@ -40,14 +39,22 @@ namespace AccuPay.Data.Repositories
             public DateCompositeKey(int organizationId, DateTime payFromDate, DateTime payToDate)
             {
                 OrganizationId = organizationId;
-
                 PayFromDate = payFromDate;
-
                 PayToDate = payToDate;
             }
         }
 
         #region CRUD
+
+        public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
+        {
+            foreach (var thirteenthMonthPay in thirteenthMonthPays)
+            {
+                _context.Entry(thirteenthMonthPay).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+        }
 
         public async Task DeleteAsync(EmployeeCompositeKey key, int userId)
         {
@@ -65,37 +72,20 @@ namespace AccuPay.Data.Repositories
                 return;
             }
 
-            await DeleteAsync(id: paystubId.Value,
-                              userId: userId);
-        }
-
-        public async Task DeleteAsync(int id, int userId)
-        {
-            await DeleteAsyncWithContext(id: id, userId: userId);
-
+            await DeleteAsyncWithContext(id: paystubId.Value, userId: userId);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteByPeriodAsync(int payPeriodId, int userId)
         {
             var payStubIds = await _context.Paystubs
-                                            .Where(x => x.PayPeriodID == payPeriodId)
-                                            .Select(x => x.RowID.Value)
-                                            .ToListAsync();
+                .Where(x => x.PayPeriodID == payPeriodId)
+                .Select(x => x.RowID.Value)
+                .ToListAsync();
 
             foreach (int id in payStubIds)
             {
                 await DeleteAsyncWithContext(id: id, userId: userId);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
-        {
-            foreach (var thirteenthMonthPay in thirteenthMonthPays)
-            {
-                _context.Entry(thirteenthMonthPay).State = EntityState.Modified;
             }
 
             await _context.SaveChangesAsync();
@@ -280,39 +270,6 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        private IQueryable<Paystub> CreateBaseQueryByPayPeriodWithEmployeeDivision(int payPeriodId)
-        {
-            return _context.Paystubs
-                .Include(x => x.Employee.Position.Division)
-                .Where(x => x.PayPeriodID == payPeriodId);
-        }
-
-        public async Task<PaginatedList<Paystub>> GetPaginatedListAsync(
-            PageOptions options,
-            int payPeriodId,
-            string searchTerm = "")
-        {
-            var query = CreateBaseQueryByPayPeriodWithEmployeeDivision(payPeriodId)
-                .OrderBy(x => x.Employee.LastName)
-                .ThenBy(x => x.Employee.FirstName)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                searchTerm = $"%{searchTerm}%";
-
-                query = query.Where(x =>
-                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
-                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
-                    EF.Functions.Like(x.Employee.LastName, searchTerm));
-            }
-
-            var paystubs = await query.Page(options).ToListAsync();
-            var count = await query.CountAsync();
-
-            return new PaginatedList<Paystub>(paystubs, count);
-        }
-
         public async Task<ICollection<Paystub>> GetAll(int payPeriodId)
         {
             var query = CreateBaseQueryByPayPeriodWithEmployeeDivision(payPeriodId)
@@ -321,21 +278,6 @@ namespace AccuPay.Data.Repositories
                 .AsQueryable();
 
             return await query.ToListAsync();
-
-            //if (!string.IsNullOrWhiteSpace(searchTerm))
-            //{
-            //    searchTerm = $"%{searchTerm}%";
-
-            //    query = query.Where(x =>
-            //        EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
-            //        EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
-            //        EF.Functions.Like(x.Employee.LastName, searchTerm));
-            //}
-
-            //var paystubs = await query.Page(options).ToListAsync();
-            //var count = await query.CountAsync();
-
-            //return new PaginatedListResult<Paystub>(paystubs, count);
         }
 
         #endregion Queries
@@ -471,18 +413,24 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        private IQueryable<Paystub> CreateBaseQueryByPayPeriodWithEmployeeDivision(int payPeriodId)
+        {
+            return _context.Paystubs
+                .Include(x => x.Employee.Position.Division)
+                .Where(x => x.PayPeriodID == payPeriodId);
+        }
+
         private IQueryable<Paystub> CreateBaseQueryWithFullPaystub()
         {
             return _context.Paystubs
+                .Include(p => p.Employee.Position.Division)
                 .Include(p => p.Adjustments)
                     .ThenInclude(a => a.Product)
                 .Include(p => p.ActualAdjustments)
                     .ThenInclude(a => a.Product)
-
                 .Include(p => p.LoanTransactions)
                     .ThenInclude(a => a.LoanSchedule)
                         .ThenInclude(a => a.LoanType)
-
                 // Allowance not included yet since it is not needed currently
                 .Include(p => p.AllowanceItems)
                 .Include(p => p.ThirteenthMonthPay)

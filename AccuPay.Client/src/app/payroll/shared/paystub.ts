@@ -57,4 +57,12 @@ export interface Paystub {
     dailyRate: number;
     salaryType: string;
   };
+  loans: {
+    description: string;
+    amount: number;
+  }[];
+  adjustments: {
+    description: string;
+    amount: number;
+  }[];
 }

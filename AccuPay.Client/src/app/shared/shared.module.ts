@@ -12,6 +12,7 @@ import { StatusComponent } from 'src/app/shared/components/status/status.compone
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { DisplayFieldComponent } from 'src/app/shared/components/display-field/display-field.component';
 import { ExpandableRowComponent } from 'src/app/shared/components/expandable-row/expandable-row.component';
+import { EmployeeAvatarComponent } from 'src/app/shared/components/employee-avatar/employee-avatar.component';
 import { ExpandableRowContainerDirective } from 'src/app/shared/components/expandable-row/expandable-row-container.directive';
 import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expandable-row/expandable-row-trigger.directive';
 import { YesNoPipe } from '../core/pipes/yes-no.pipe';
@@ -19,6 +20,7 @@ import { ButtonSpinnerComponent } from 'src/app/shared/components/button-spinner
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
     // SanitizerPipe,
     // BytesPipe,
     // CoalescePipe,
+    EmployeeAvatarComponent,
     IfEmptyPipe,
     IfZeroPipe,
     AmountPipe,
@@ -45,16 +48,19 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     // MatDialogModule,
     MatIconModule,
     // MatTooltipModule,
     // MatDividerModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     // MatProgressBarModule,
   ],
   exports: [
     StatusComponent,
+    EmployeeAvatarComponent,
     // LocalePipe,
     // SanitizerPipe,
     // BytesPipe,

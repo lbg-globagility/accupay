@@ -148,10 +148,15 @@
     </div>
     <div class="w-1/2">
       <table class="data-table text-sm">
+        <colgroup>
+          <col class="w-2/4" />
+          <col class="w-1/4" />
+          <col class="w-1/4" />
+        </colgroup>
         <tbody>
           <tr>
             <td>Gross Pay</td>
-            <td>{{ paystub.grossPay | amount: "-" }}</td>
+            <td colspan="2">{{ paystub.grossPay | amount: "-" }}</td>
           </tr>
           <tr>
             <th>Deductions</th>
@@ -159,19 +164,30 @@
           </tr>
           <tr>
             <td>SSS Premium</td>
-            <td>{{ -paystub.sssEmployeeShare | amount: "-" }}</td>
+            <td colspan="2">{{ -paystub.sssEmployeeShare | amount: "-" }}</td>
           </tr>
           <tr>
             <td>PhilHealth</td>
-            <td>{{ -paystub.philHealthEmployeeShare | amount: "-" }}</td>
+            <td colspan="2">
+              {{ -paystub.philHealthEmployeeShare | amount: "-" }}
+            </td>
           </tr>
           <tr>
             <td>Pag-IBIG</td>
-            <td>{{ -paystub.hdmfEmployeeShare | amount: "-" }}</td>
+            <td colspan="2">{{ -paystub.hdmfEmployeeShare | amount: "-" }}</td>
           </tr>
           <tr>
             <td>Tax Withheld</td>
-            <td>{{ -paystub.withholdingTax | amount: "-" }}</td>
+            <td colspan="2">{{ -paystub.withholdingTax | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <th>Loans</th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let loan of paystub.loans">
+            <td>{{ loan.description }}</td>
+            <td>{{ -loan.amount | amount: "-" }}</td>
+            <td></td>
           </tr>
           <tr>
             <td>
@@ -183,11 +199,20 @@
                 Total Loans
               </a>
             </td>
-            <td>{{ -paystub.totalLoans | amount: "-" }}</td>
+            <td colspan="2">{{ -paystub.totalLoans | amount: "-" }}</td>
           </tr>
           <tr>
             <th>Total Deductions</th>
-            <th>{{ -paystub.totalDeductions | amount: "-" }}</th>
+            <th colspan="2">{{ -paystub.totalDeductions | amount: "-" }}</th>
+          </tr>
+          <tr>
+            <th>Adjustments</th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let adjusment of paystub.adjustments">
+            <td>{{ adjusment.description }}</td>
+            <td>{{ -adjusment.amount | amount: "-" }}</td>
+            <td></td>
           </tr>
           <tr>
             <td>
@@ -196,16 +221,18 @@
                 (click)="showAdjustmentsBreakdown()"
                 matTooltip="View adjustments"
               >
-                Total Adjustments
+                Total adjustments
               </a>
             </td>
-            <td>{{ paystub.totalAdjustments | amount: "-" }}</td>
+            <td colspan="2">{{ paystub.totalAdjustments | amount: "-" }}</td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
             <th>NET PAY</th>
-            <td class="text-4xl text-right">₱ {{ paystub.netPay | amount }}</td>
+            <td colspan="2" class="text-4xl text-right">
+              ₱ {{ paystub.netPay | amount }}
+            </td>
           </tr>
         </tfoot>
       </table>

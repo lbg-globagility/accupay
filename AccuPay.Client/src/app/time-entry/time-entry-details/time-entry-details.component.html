@@ -21,22 +21,11 @@
           Employee
         </th>
         <td mat-cell *matCellDef="let employee">
-          <div class="flex items-center">
-            <img
-              class="block rounded-full"
-              height="40"
-              appImgFallback
-              src="/api/employees/{{ employee?.id }}/image"
-            />
-            <div class="ml-2">
-              <a routerLink="/employees/{{ employee.id }}">
-                <div>{{ employee.fullName | ifEmpty }}</div>
-              </a>
-              <div class="text-xs mt-2">
-                #{{ employee.employeeNo | ifEmpty }}
-              </div>
-            </div>
-          </div>
+          <app-employee-avatar
+            [employeeId]="employee.id"
+            [employeeNo]="employee.employeeNo"
+            [fullName]="employee.fullName"
+          ></app-employee-avatar>
         </td>
       </ng-container>
 

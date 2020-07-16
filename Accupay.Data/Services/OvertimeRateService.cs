@@ -58,8 +58,10 @@ namespace AccuPay.Data.Services
             decimal doubleHolidayRestDayNightDifferential = 0;
             decimal doubleHolidayRestDayNightDifferentialOvertime = 0;
 
-            var regularDayRate = payRates.Where(l => l.ParentLIC == regularDayLIC).
-                                        FirstOrDefault()?.DisplayValue;
+            var regularDayRate = payRates
+                .Where(l => l.LIC == regularDayLIC)
+                .FirstOrDefault()?
+                .DisplayValue;
 
             if (string.IsNullOrWhiteSpace(regularDayRate) == false)
             {
@@ -75,9 +77,10 @@ namespace AccuPay.Data.Services
                 restDayNightDifferentialOvertime = ConvertToRate(regularDayRates[7]);
             }
 
-            var specialHolidayRate = payRates.
-                                        Where(l => l.ParentLIC == specialHolidayLIC).
-                                        FirstOrDefault()?.DisplayValue;
+            var specialHolidayRate = payRates
+                .Where(l => l.LIC == specialHolidayLIC)
+                .FirstOrDefault()?
+                .DisplayValue;
 
             if (string.IsNullOrWhiteSpace(specialHolidayRate) == false)
             {
@@ -93,9 +96,10 @@ namespace AccuPay.Data.Services
                 specialHolidayRestDayNightDifferentialOvertime = ConvertToRate(specialHolidayRates[7]);
             }
 
-            var regularHolidayRate = payRates.
-                                        Where(l => l.ParentLIC == regularHolidayLIC).
-                                        FirstOrDefault()?.DisplayValue;
+            var regularHolidayRate = payRates
+                .Where(l => l.LIC == regularHolidayLIC)
+                .FirstOrDefault()?
+                .DisplayValue;
 
             if (string.IsNullOrWhiteSpace(regularHolidayRate) == false)
             {
@@ -111,9 +115,10 @@ namespace AccuPay.Data.Services
                 regularHolidayRestDayNightDifferentialOvertime = ConvertToRate(regularHolidayRates[7]);
             }
 
-            var doubleHolidayRate = payRates.
-                                        Where(l => l.ParentLIC == doubleHolidayLIC).
-                                        FirstOrDefault()?.DisplayValue;
+            var doubleHolidayRate = payRates
+                .Where(l => l.LIC == doubleHolidayLIC)
+                .FirstOrDefault()?
+                .DisplayValue;
 
             if (string.IsNullOrWhiteSpace(doubleHolidayRate) == false)
             {
@@ -129,38 +134,39 @@ namespace AccuPay.Data.Services
                 doubleHolidayRestDayNightDifferentialOvertime = ConvertToRate(doubleHolidayRates[7]);
             }
 
-            return new OvertimeRate(basePay: basePay,
-                                    overtime: overtime,
-                                    nightDifferential: nightDifferential,
-                                    nightDifferentialOvertime: nightDifferentialOvertime,
-                                    restDay: restDay,
-                                    restDayOvertime: restDayOvertime,
-                                    restDayNightDifferential: restDayNightDifferential,
-                                    restDayNightDifferentialOvertime: restDayNightDifferentialOvertime,
-                                    specialHoliday: specialHoliday,
-                                    specialHolidayOvertime: specialHolidayOvertime,
-                                    specialHolidayNightDifferential: specialHolidayNightDifferential,
-                                    specialHolidayNightDifferentialOvertime: specialHolidayNightDifferentialOvertime,
-                                    specialHolidayRestDay: specialHolidayRestDay,
-                                    specialHolidayRestDayOvertime: specialHolidayRestDayOvertime,
-                                    specialHolidayRestDayNightDifferential: specialHolidayRestDayNightDifferential,
-                                    specialHolidayRestDayNightDifferentialOvertime: specialHolidayRestDayNightDifferentialOvertime,
-                                    regularHoliday: regularHoliday,
-                                    regularHolidayOvertime: regularHolidayOvertime,
-                                    regularHolidayNightDifferential: regularHolidayNightDifferential,
-                                    regularHolidayNightDifferentialOvertime: regularHolidayNightDifferentialOvertime,
-                                    regularHolidayRestDay: regularHolidayRestDay,
-                                    regularHolidayRestDayOvertime: regularHolidayRestDayOvertime,
-                                    regularHolidayRestDayNightDifferential: regularHolidayRestDayNightDifferential,
-                                    regularHolidayRestDayNightDifferentialOvertime: regularHolidayRestDayNightDifferentialOvertime,
-                                    doubleHoliday: doubleHoliday,
-                                    doubleHolidayOvertime: doubleHolidayOvertime,
-                                    doubleHolidayNightDifferential: doubleHolidayNightDifferential,
-                                    doubleHolidayNightDifferentialOvertime: doubleHolidayNightDifferentialOvertime,
-                                    doubleHolidayRestDay: doubleHolidayRestDay,
-                                    doubleHolidayRestDayOvertime: doubleHolidayRestDayOvertime,
-                                    doubleHolidayRestDayNightDifferential: doubleHolidayRestDayNightDifferential,
-                                    doubleHolidayRestDayNightDifferentialOvertime: doubleHolidayRestDayNightDifferentialOvertime);
+            return new OvertimeRate(
+                basePay: basePay,
+                overtime: overtime,
+                nightDifferential: nightDifferential,
+                nightDifferentialOvertime: nightDifferentialOvertime,
+                restDay: restDay,
+                restDayOvertime: restDayOvertime,
+                restDayNightDifferential: restDayNightDifferential,
+                restDayNightDifferentialOvertime: restDayNightDifferentialOvertime,
+                specialHoliday: specialHoliday,
+                specialHolidayOvertime: specialHolidayOvertime,
+                specialHolidayNightDifferential: specialHolidayNightDifferential,
+                specialHolidayNightDifferentialOvertime: specialHolidayNightDifferentialOvertime,
+                specialHolidayRestDay: specialHolidayRestDay,
+                specialHolidayRestDayOvertime: specialHolidayRestDayOvertime,
+                specialHolidayRestDayNightDifferential: specialHolidayRestDayNightDifferential,
+                specialHolidayRestDayNightDifferentialOvertime: specialHolidayRestDayNightDifferentialOvertime,
+                regularHoliday: regularHoliday,
+                regularHolidayOvertime: regularHolidayOvertime,
+                regularHolidayNightDifferential: regularHolidayNightDifferential,
+                regularHolidayNightDifferentialOvertime: regularHolidayNightDifferentialOvertime,
+                regularHolidayRestDay: regularHolidayRestDay,
+                regularHolidayRestDayOvertime: regularHolidayRestDayOvertime,
+                regularHolidayRestDayNightDifferential: regularHolidayRestDayNightDifferential,
+                regularHolidayRestDayNightDifferentialOvertime: regularHolidayRestDayNightDifferentialOvertime,
+                doubleHoliday: doubleHoliday,
+                doubleHolidayOvertime: doubleHolidayOvertime,
+                doubleHolidayNightDifferential: doubleHolidayNightDifferential,
+                doubleHolidayNightDifferentialOvertime: doubleHolidayNightDifferentialOvertime,
+                doubleHolidayRestDay: doubleHolidayRestDay,
+                doubleHolidayRestDayOvertime: doubleHolidayRestDayOvertime,
+                doubleHolidayRestDayNightDifferential: doubleHolidayRestDayNightDifferential,
+                doubleHolidayRestDayNightDifferentialOvertime: doubleHolidayRestDayNightDifferentialOvertime);
         }
 
         private decimal ConvertToRate(string input)
