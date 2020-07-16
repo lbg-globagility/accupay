@@ -74,13 +74,13 @@ namespace AccuPay.Data.Services.Imports.Employees
             _noFirstName = string.IsNullOrWhiteSpace(_parsedEmployee.FirstName);
 
             _noBirthDate = !_parsedEmployee.Birthdate.HasValue;
-            _invalidBirthDate = !_noBirthDate && _parsedEmployee.Birthdate.Value < PayrollTools.MinimumMicrosoftDate;
+            _invalidBirthDate = !_noBirthDate && _parsedEmployee.Birthdate.Value < PayrollTools.SqlServerMinimumDate;
 
             _noGender = string.IsNullOrWhiteSpace(_parsedEmployee.Gender);
             _noMaritalStatus = string.IsNullOrWhiteSpace(_parsedEmployee.MaritalStatus);
             //_noJob = string.IsNullOrWhiteSpace(JobPosition);
             _noEmploymentDate = !_parsedEmployee.DateEmployed.HasValue;
-            _invalidEmploymentDate = !_noEmploymentDate && _parsedEmployee.DateEmployed.Value < PayrollTools.MinimumMicrosoftDate;
+            _invalidEmploymentDate = !_noEmploymentDate && _parsedEmployee.DateEmployed.Value < PayrollTools.SqlServerMinimumDate;
             _noEmploymentStatus = string.IsNullOrWhiteSpace(_parsedEmployee.EmploymentStatus);
 
             if (_employeeAlreadyExists)
