@@ -28,7 +28,7 @@ export class ViewCalendarComponent implements OnInit {
 
   calendarId: number = +this.route.snapshot.paramMap.get('id');
 
-  year: number = new Date().getFullYear();
+  selectedYear: number = new Date().getFullYear();
 
   calendar: Calendar;
 
@@ -47,27 +47,10 @@ export class ViewCalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadCalendar();
     this.loadDayTypes();
+
+    this.loadCalendar();
     this.loadCalendarDays().subscribe(() => this.createListOfMonths());
-  }
-
-  private createListOfMonths(): void {
-    const monthsPerYear = 12;
-    const calendarMonths = [];
-    for (let i = 0; i < monthsPerYear; i++) {
-      const month = new Date(this.year, i, 1);
-
-      const days = this.calendarDays.filter(
-        (t) => moment(t.date).toDate().getMonth() === month.getMonth()
-      );
-
-      const calendarMonth = { month, days };
-
-      calendarMonths.push(calendarMonth);
-    }
-
-    this.calendarMonths = calendarMonths;
   }
 
   changeDay(calendarDay: CalendarDay): void {
@@ -94,6 +77,34 @@ export class ViewCalendarComponent implements OnInit {
       });
   }
 
+  goToNextYear(): void {
+    this.selectedYear = this.selectedYear + 1;
+    this.loadCalendarDays().subscribe(() => this.createListOfMonths());
+  }
+
+  goToPreviousYear(): void {
+    this.selectedYear = this.selectedYear - 1;
+    this.loadCalendarDays().subscribe(() => this.createListOfMonths());
+  }
+
+  private createListOfMonths(): void {
+    const monthsPerYear = 12;
+    const calendarMonths = [];
+    for (let i = 0; i < monthsPerYear; i++) {
+      const month = new Date(this.selectedYear, i, 1);
+
+      const days = this.calendarDays.filter(
+        (t) => moment(t.date).toDate().getMonth() === month.getMonth()
+      );
+
+      const calendarMonth = { month, days };
+
+      calendarMonths.push(calendarMonth);
+    }
+
+    this.calendarMonths = calendarMonths;
+  }
+
   private addToChangeTracker(calendarDay: CalendarDay): void {
     const foundIndex = this.changedCalendarDays.findIndex(
       (t) => t.id === calendarDay.id
@@ -108,10 +119,20 @@ export class ViewCalendarComponent implements OnInit {
 
   private updateCalendarDayList(calendarDay: CalendarDay): void {
     // Create a new list of calendar days to make the calendar rerender
-    const index = this.calendarDays.findIndex((t) => t.id === calendarDay.id);
+    const index = this.calendarDays.findIndex(
+      (t) => t.date === calendarDay.date
+    );
+
     const newList = this.calendarDays.slice(0);
-    newList[index] = calendarDay;
     this.calendarDays = newList;
+
+    if (index > 0) {
+      newList[index] = calendarDay;
+    } else {
+      newList.push(calendarDay);
+    }
+
+    this.createListOfMonths();
   }
 
   private loadCalendar(): void {
@@ -122,7 +143,7 @@ export class ViewCalendarComponent implements OnInit {
 
   private loadCalendarDays(): Observable<CalendarDay[]> {
     return this.calendarService
-      .getDays(this.calendarId, this.year)
+      .getDays(this.calendarId, this.selectedYear)
       .pipe(tap((calendarDays) => (this.calendarDays = calendarDays)));
   }
 

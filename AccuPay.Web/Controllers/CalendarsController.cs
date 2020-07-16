@@ -44,9 +44,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpPut("{id}/days")]
         [Permission(PermissionTypes.CalendarUpdate)]
-        public async Task<ActionResult> UpdateDays(int id, [FromBody] ICollection<CalendarDayDto> dtos2)
+        public async Task<ActionResult> UpdateDays(int id, [FromBody] ICollection<CalendarDayDto> dtos)
         {
-            await _service.UpdateDays(id, dtos2);
+            await _service.UpdateDays(id, dtos);
 
             return Ok();
         }

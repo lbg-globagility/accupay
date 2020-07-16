@@ -68,3 +68,8 @@
 @include create-status2("Task", "Unsent", colors.$red);
 @include create-status2("Task", "Open", colors.$green);
 @include create-status2("Task", "Completed", colors.$blue);
+
+@include create-status2("loan", "On hold", colors.$red);
+@include create-status2("loan", "In Progress", colors.$green);
+@include create-status2("loan", "Complete", colors.$blue);
+@include create-status2("loan", "Cancelled", colors.$red);

@@ -5,6 +5,7 @@ using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
@@ -94,6 +95,13 @@ namespace AccuPay.Web.Controllers
             var employmentStatuses = await _employeeService.GetEmploymentStatuses();
 
             return employmentStatuses.ToList();
+        }
+
+        [HttpPost("import")]
+        [Permission(PermissionTypes.EmployeeCreate)]
+        public async Task<Data.Services.Imports.Employees.EmployeeImportParser.EmployeeImportParserOutput> Import([FromForm] IFormFile file)
+        {
+            return await _employeeService.Import(file);
         }
     }
 }

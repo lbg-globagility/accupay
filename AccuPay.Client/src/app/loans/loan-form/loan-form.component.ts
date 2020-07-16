@@ -1,19 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Employee } from 'src/app/employees/shared/employee';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { Loan } from 'src/app/loans/shared/loan';
 import { LoanService } from 'src/app/loans/loan.service';
 import { SelectItem } from 'src/app/core/shared/select-item';
-import { toNumber, round } from 'lodash';
 import { MatDialog } from '@angular/material/dialog';
 import { NewLoanTypeComponent } from 'src/app/loan-types/new-loan-type/new-loan-type.component';
-import { filter } from 'rxjs/operators';
+import { filter, startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-loan-form',
@@ -38,10 +33,6 @@ export class LoanFormComponent implements OnInit {
     startDate: [null, [Validators.required]],
     totalLoanAmount: [null, Validators.required],
     deductionAmount: [null, Validators.required],
-    deductionPercentage: new FormControl(0, {
-      validators: Validators.required,
-      updateOn: 'blur',
-    }),
     status: [null, Validators.required],
     deductionSchedule: [null, Validators.required],
     comments: [null],
@@ -54,21 +45,24 @@ export class LoanFormComponent implements OnInit {
 
   isFormInitialized: boolean = false;
 
+  filteredEmployees: Observable<Employee[]>;
+
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,
     private loanService: LoanService,
     private dialog: MatDialog
-  ) {
-    this.form
-      .get('deductionPercentage')
-      .valueChanges.subscribe(this.recomputeTotalLoanAmount());
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadLoanTypes();
     this.loadLoanStatusList();
     this.loadDeductionSchedules();
+
+    this.filteredEmployees = this.form.get('employeeId').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
 
     if (this.loan != null) {
       this.form.get('employeeId').disable();
@@ -78,6 +72,39 @@ export class LoanFormComponent implements OnInit {
     }
 
     this.isFormInitialized = true;
+  }
+
+  displayEmployee = (employeeId: number) => {
+    const employee = this.employees?.find((t) => t.id === employeeId);
+    if (employee == null) {
+      return null;
+    }
+
+    return `${employee.employeeNo} - ${employee.lastName} ${employee.firstName}`;
+  };
+
+  onSave(): void {
+    if (!this.form.valid) {
+      return;
+    }
+
+    const loan = this.form.value as Loan;
+
+    loan.totalLoanAmount = Number(loan.totalLoanAmount);
+
+    this.save.emit(loan);
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
+  }
+
+  newLoanType(): void {
+    this.dialog
+      .open(NewLoanTypeComponent)
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe(() => this.loadLoanTypes());
   }
 
   private loadLoanTypes(): void {
@@ -104,44 +131,18 @@ export class LoanFormComponent implements OnInit {
     });
   }
 
-  onSave(): void {
-    if (!this.form.valid) {
+  private _filter(value: string) {
+    if (typeof value !== 'string') {
       return;
     }
 
-    const loan = this.form.value as Loan;
+    const filterValue = value.toLowerCase();
 
-    loan.totalLoanAmount = Number(loan.totalLoanAmount);
-
-    this.save.emit(loan);
-  }
-
-  onCancel(): void {
-    this.cancel.emit();
-  }
-
-  private recomputeTotalLoanAmount(): (value: any) => void {
-    return () => {
-      if (!this.isFormInitialized) return;
-
-      const totalAmount = toNumber(this.form.get('totalLoanAmount').value);
-      const deductionPercentage = toNumber(
-        this.form.get('deductionPercentage').value
-      );
-      const computedAmount =
-        totalAmount + totalAmount * 0.01 * deductionPercentage;
-
-      this.form.get('totalLoanAmount').setValue(round(computedAmount, 2));
-    };
-  }
-
-  newLoanType() {
-    this.dialog
-      .open(NewLoanTypeComponent)
-      .afterClosed()
-      .pipe(filter((t) => t))
-      .subscribe(() => this.loadLoanTypes());
-
-    event.stopPropagation();
+    return this.employees?.filter(
+      (employee) =>
+        employee.employeeNo?.toLowerCase().includes(filterValue) ||
+        employee.firstName?.toLowerCase().includes(filterValue) ||
+        employee.lastName?.toLowerCase().includes(filterValue)
+    );
   }
 }

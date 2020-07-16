@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PageOptions } from 'src/app/core/shared/page-options';
@@ -6,6 +6,7 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Employee } from '../shared/employee';
 import { HttpClient } from '@angular/common/http';
 import { BasePdfService } from 'src/app/core/shared/services/base-pdf-service';
+import { EmployeeImportParserOutput } from '../shared/employee-import-parser-output';
 import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 
 @Injectable({
@@ -60,6 +61,16 @@ export class EmployeeService extends BasePdfService {
   getEmploymentStatuses(): Observable<string[]> {
     return this.httpClient.get<string[]>(
       `${this.apiRoute}/employment-statuses`
+    );
+  }
+
+  import(file: File): Observable<EmployeeImportParserOutput> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.httpClient.post<EmployeeImportParserOutput>(
+      `${this.apiRoute}/import`,
+      formData
     );
   }
 }

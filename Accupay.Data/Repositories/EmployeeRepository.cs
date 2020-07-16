@@ -86,6 +86,38 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task ChangeManyAsync(List<Employee> added = null,
+                                          List<Employee> updated = null,
+                                          List<Employee> deleted = null)
+        {
+            if (added != null)
+            {
+                added.ForEach(shift =>
+                {
+                    _context.Entry(shift).State = EntityState.Added;
+                });
+            }
+
+            if (updated != null)
+            {
+                updated.ForEach(shift =>
+                {
+                    _context.Entry(shift).State = EntityState.Modified;
+                });
+            }
+
+            if (deleted != null)
+            {
+                deleted = deleted
+                    .GroupBy(x => x.RowID)
+                    .Select(x => x.FirstOrDefault())
+                    .ToList();
+                _context.Employees.RemoveRange(deleted);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         #endregion CRUD
 
         #region Queries

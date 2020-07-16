@@ -18,6 +18,9 @@ import { TimeEntry } from 'src/app/time-entry/shared/time-entry';
   selector: 'app-time-entry-details',
   templateUrl: './time-entry-details.component.html',
   styleUrls: ['./time-entry-details.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class TimeEntryDetailsComponent implements OnInit {
   payPeriodId = Number(this.route.snapshot.paramMap.get('id'));

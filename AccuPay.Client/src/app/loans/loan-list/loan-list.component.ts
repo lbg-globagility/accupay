@@ -23,13 +23,13 @@ import { Router } from '@angular/router';
 })
 export class LoanListComponent implements OnInit {
   readonly displayedColumns: string[] = [
-    'employeeNumber',
-    'employeeName',
+    'employee',
     'loanType',
-    'deductionSchedule',
     'startDate',
+    'deductionSchedule',
     'totalLoanAmount',
     'totalBalanceLeft',
+    'status',
     'actions',
   ];
 
@@ -114,6 +114,10 @@ export class LoanListComponent implements OnInit {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getLoanList();
+  }
+
+  viewLoan(loan: Loan) {
+    this.router.navigate(['loans', loan.id]);
   }
 
   viewHistory(loan: Loan) {

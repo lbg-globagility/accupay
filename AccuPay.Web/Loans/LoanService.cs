@@ -123,7 +123,6 @@ namespace AccuPay.Web.Loans
             loanSchedule.DedEffectiveDateFrom = dto.StartDate;
             loanSchedule.DeductionAmount = dto.DeductionAmount;
             loanSchedule.Status = dto.Status;
-            loanSchedule.DeductionPercentage = dto.DeductionPercentage;
             loanSchedule.DeductionSchedule = dto.DeductionSchedule;
             loanSchedule.Comments = dto.Comments;
         }
@@ -136,6 +135,7 @@ namespace AccuPay.Web.Loans
             {
                 Id = loan.RowID.Value,
                 EmployeeNumber = loan.Employee?.EmployeeNo,
+                EmployeeId = loan.Employee?.RowID ?? 0,
                 EmployeeName = loan.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = loan.Employee?.EmployeeType,
                 LoanTypeId = loan.LoanTypeID.Value,

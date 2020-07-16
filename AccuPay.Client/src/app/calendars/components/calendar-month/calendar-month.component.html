@@ -7,7 +7,7 @@
   <mat-grid-tile *ngFor="let o of blankCells"></mat-grid-tile>
   <mat-grid-tile *ngFor="let cell of cells" (click)="dayClicked(cell)">
     <div
-      class="w-full h-full text-xs"
+      class="_cell p-2 box-border w-full h-full text-xs cursor-pointer"
       [class.is-holiday]="
         cell.calendarDay?.dayType === 'Regular Holiday' ||
         cell.calendarDay?.dayType === 'Special Non-Working Holiday'

@@ -1,6 +1,8 @@
-﻿using AccuPay.Data.Exceptions;
+﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services.Imports.Employees;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,6 +59,30 @@ namespace AccuPay.Data.Services
                     organizationId: organizationId,
                     balance: model.SickLeaveBalance);
             }
+        }
+
+        public async Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, int organizationId, int userId)
+        {
+            var added = validRecords.Where(e => !e.Employee.RowID.HasValue).Select(e => e.Employee).ToList();
+            added.ForEach(e =>
+            {
+                e.OrganizationID = organizationId;
+                e.CreatedBy = userId;
+            });
+
+            var updated = validRecords.Where(e => e.Employee.RowID.HasValue).Select(e => e.Employee).ToList();
+            updated.ForEach(e =>
+            {
+                e.LastUpdBy = userId;
+            });
+
+            await _employeeRepository.ChangeManyAsync(added: added, updated: updated);
+
+            List<Employee> employees = new List<Employee>();
+            if (added.Any()) employees.AddRange(added);
+            if (updated.Any()) employees.AddRange(updated);
+
+            return employees;
         }
     }
 }
