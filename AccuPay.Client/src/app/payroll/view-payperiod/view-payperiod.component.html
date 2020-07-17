@@ -10,29 +10,32 @@
   </div>
 
   <div class="w-1/2 flex justify-end" *ngIf="loadingState.isSuccess">
-    <button mat-raised-button color="primary" (click)="calculate()">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="calculate()"
+      style="margin-right: 8px;"
+    >
       CALCULATE
     </button>
     <button
-      [disabled]="isDownloadingPayslip"
       mat-raised-button
-      (click)="downloadPayslips()"
-      style="margin-left: 8px;"
       color="primary"
+      [matMenuTriggerFor]="menu"
+      class="m-with-icon"
     >
-      {{ isDownloadingPayslip ? "DOWNLOADING..." : "DOWNLOAD PAYSLIPS" }}
-      <app-button-spinner [active]="isDownloadingPayslip"></app-button-spinner>
+      <mat-icon>more_vert</mat-icon>MORE
     </button>
-    <button
-      [disabled]="isDownloadingSummary"
-      mat-raised-button
-      (click)="downloadSummary()"
-      style="margin-left: 8px;"
-      color="primary"
-    >
-      {{ isDownloadingSummary ? "DOWNLOADING..." : "DOWNLOAD SUMMARY" }}
-      <app-button-spinner [active]="isDownloadingSummary"></app-button-spinner>
-    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="downloadPayslips()">
+        <mat-icon>vertical_align_bottom</mat-icon>
+        <span>Download Payslips</span>
+      </button>
+      <button mat-menu-item (click)="downloadSummary()">
+        <mat-icon>vertical_align_bottom</mat-icon>
+        <span>Download Summary</span>
+      </button>
+    </mat-menu>
   </div>
 </div>
 

@@ -1,35 +1,47 @@
 @use "styles/sizes";
 
-.data-table {
+._table {
   max-width: 400px;
   width: 100%;
 }
 
-.data-table td,
-.data-table th {
+._table td,
+._table th {
   padding: sizes.$x1 0;
 }
 
-.data-table > thead > tr > th:first-child,
-.data-table > tfoot > tr > th:first-child {
+._table > thead > tr > th:first-child,
+._table > tfoot > tr > th:first-child {
   text-align: left;
 }
 
-.data-table > thead > tr > th:last-child,
-.data-table > tfoot > tr > th:last-child,
-.data-table > thead > tr > th,
-.data-table > tfoot > tr > th {
+._table > thead > tr > th:last-child,
+._table > tfoot > tr > th:last-child,
+._table > thead > tr > th,
+._table > tfoot > tr > th {
   text-align: right;
 }
 
-.data-table > tr > td,
-.data-table > tbody > tr > td,
-.data-table > tbody > tr > th {
+._table > tr > td,
+._table > tbody > tr > td,
+._table > tbody > tr > th {
   text-align: right;
 }
 
-.data-table > tr > td:first-child,
-.data-table > tbody > tr > td:first-child,
-.data-table > tbody > tr > th:first-child {
+._table > tr > td:first-child,
+._table > tbody > tr > td:first-child,
+._table > tbody > tr > th:first-child {
   text-align: left;
+}
+
+._border {
+  border-top: thin solid rgba(0, 0, 0, 0.17);
+}
+
+._pad-top {
+  padding-top: sizes.$x2 !important;
+}
+
+._pad-bottom {
+  padding-bottom: sizes.$x2 !important;
 }
