@@ -48,22 +48,11 @@ namespace AccuPay.Data.Services
                 return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
             }
 
-            // TODO: this should be queried from _repository
-            // remove _context from this class
-            var otherProcessingPayPeriod = await _context.Paystubs
-                .Include(p => p.PayPeriod)
-                .Where(p => p.PayPeriod.RowID != payPeriodId)
-                .Where(p => p.PayPeriod.IsClosed == false)
-                .Where(p => p.PayPeriod.OrganizationID == organizationId)
-                .FirstOrDefaultAsync();
+            var currentOpenPayPeriod = await _repository.GetCurrentOpenAsync(organizationId);
 
-            if (payPeriod.IsClosed)
+            if (currentOpenPayPeriod == null || currentOpenPayPeriod?.RowID != payPeriodId)
             {
-                return FunctionResult.Failed("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are \"Processing\" pay periods, make sure to close them first.");
-            }
-            else if (!payPeriod.IsClosed && otherProcessingPayPeriod != null)
-            {
-                return FunctionResult.Failed("There is currently a pay period with \"PROCESSING\" status. Please finish that pay period first then close it to process other open pay periods.");
+                return FunctionResult.Failed("Only open pay periods can be modified.");
             }
 
             return FunctionResult.Success();

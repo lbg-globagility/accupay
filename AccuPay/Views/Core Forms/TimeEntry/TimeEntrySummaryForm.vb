@@ -6,6 +6,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -909,40 +910,48 @@ Public Class TimeEntrySummaryForm
         End Using
 
         If result = DialogResult.OK Then
-            Await GenerateTimeEntries(startDate, endDate)
+            GenerateTimeEntries(startDate, endDate)
         End If
 
         Await LoadTimeEntries()
     End Sub
 
-    Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date) As Task
+    Private Sub GenerateTimeEntries(startDate As Date, endDate As Date)
         Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
         Dim progressDialog = New TimeEntryProgressDialog(generator)
         progressDialog.Show()
 
-        Await Task.Run(Sub() generator.Start(z_OrganizationID, startDate, endDate)).
-            ContinueWith(
+        Dim task1 = Task.Factory.StartNew(Sub() generator.Start(z_OrganizationID, startDate, endDate))
+
+        task1.ContinueWith(
                 Sub() DoneGenerating(progressDialog, generator),
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnRanToCompletion,
                 TaskScheduler.FromCurrentSynchronizationContext)
-    End Function
 
-    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
+        task1.ContinueWith(
+            Sub(t As Task) TimeEntryGeneratorError(t, progressDialog),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+    End Sub
 
-        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
-                                                _selectedPayPeriod.RowID,
-                                                z_OrganizationID)
+    Private Sub TimeEntryGeneratorError(t As Task, dialog As TimeEntryProgressDialog)
 
-        If validate = FunctionResult.Failed Then
+        dialog.Close()
+        dialog.Dispose()
 
-            MessageBoxHelper.Warning(validate.Message)
-            Return
+        Const MessageTitle As String = "Generate Time Entries"
+
+        If t.Exception?.InnerException.GetType() Is GetType(BusinessLogicException) Then
+
+            MessageBoxHelper.ErrorMessage(t.Exception?.InnerException.Message, MessageTitle)
+        Else
+            Debugger.Break()
+            MessageBoxHelper.DefaultErrorMessage(MessageTitle, t.Exception)
         End If
 
-        Await GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
-
-        Await LoadTimeEntries()
     End Sub
 
     Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
@@ -958,6 +967,23 @@ Public Class TimeEntrySummaryForm
 
         MsgBox(msgBoxText)
 
+    End Sub
+
+    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
+
+        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
+                                                _selectedPayPeriod.RowID,
+                                                z_OrganizationID)
+
+        If validate = FunctionResult.Failed Then
+
+            MessageBoxHelper.Warning(validate.Message)
+            Return
+        End If
+
+        GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
+
+        Await LoadTimeEntries()
     End Sub
 
     Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
