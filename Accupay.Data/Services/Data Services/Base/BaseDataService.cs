@@ -23,7 +23,7 @@ namespace AccuPay.Data.Services
             _policy = policy;
         }
 
-        public async Task<bool> CheckIfDataIsWithinClosedPayroll(DateTime date, int organizationId, bool throwException = true)
+        public async Task<bool> CheckIfDataIsWithinClosedPayPeriod(DateTime date, int organizationId, bool throwException = true)
         {
             var currentPayPeriod = await _payPeriodRepository.GetAsync(organizationId, date);
 
@@ -54,7 +54,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<bool> CheckIfDataIsWithinClosedPayroll(IEnumerable<DateTime> dates, int organizationId, bool throwException = true)
+        public async Task<bool> CheckIfDataIsWithinClosedPayPeriod(IEnumerable<DateTime> dates, int organizationId, bool throwException = true)
         {
             if (!dates.Any()) return false;
 
@@ -79,7 +79,25 @@ namespace AccuPay.Data.Services
             return false;
         }
 
-        public bool CheckIfDataIsWithinClosedPayroll(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
+        public bool CheckIfDataIsWithinClosedPayPeriod(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
+        {
+            var checkQuery = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(payPeriods.AsQueryable());
+
+            if (checkQuery.Any())
+            {
+                if (throwException)
+                {
+                    throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckIfDataIsNotInOpenPayPeriod(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
         {
             var checkQuery = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(payPeriods.AsQueryable());
 

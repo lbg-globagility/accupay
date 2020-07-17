@@ -1590,7 +1590,7 @@ Public Class PayStubForm
             Return Nothing
         End If
 
-        Return _paystubRepository.GetByCompositeKeyWithActual(
+        Return _paystubRepository.GetByCompositeKeyWithActualAndThirteenthMonth(
                     New EmployeeCompositeKey(employeeId:=EmployeeRowID, payPeriodId:=paypRowID))
     End Function
 
@@ -1668,10 +1668,14 @@ Public Class PayStubForm
             Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
                     Async Function()
 
-                        Await _paystubRepository.DeleteAsync(New EmployeeCompositeKey(
-                                                                employeeId:=employeeId.Value,
-                                                                payPeriodId:=payPeriodId.Value),
-                                                            z_User)
+                        Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+
+                        Await paystubDataService.DeleteAsync(
+                            New EmployeeCompositeKey(
+                                employeeId:=employeeId.Value,
+                                payPeriodId:=payPeriodId.Value),
+                            userId:=z_User,
+                            organizationId:=z_OrganizationID)
 
                         Await RefreshForm()
 
@@ -1900,8 +1904,11 @@ Public Class PayStubForm
             Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
                   Async Function()
 
-                      Await _paystubRepository.DeleteByPeriodAsync(payPeriodId:=payperiodId.Value,
-                                                                  userId:=z_User)
+                      Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                      Await paystubDataService.DeleteByPeriodAsync(
+                        payPeriodId:=payperiodId.Value,
+                        userId:=z_User,
+                        organizationId:=z_OrganizationID)
 
                       Await RefreshForm()
 

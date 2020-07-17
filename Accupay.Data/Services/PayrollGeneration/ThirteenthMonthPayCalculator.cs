@@ -40,18 +40,19 @@ namespace AccuPay.Data.Services
 
             decimal thirteenthMonthBasicPay;
 
-            var thirteenMonthCalculation = settings.GetEnum("ThirteenthMonthPolicy.CalculationBasis",
-                                                            ThirteenthMonthCalculationBasis.RegularPayAndAllowance);
+            var thirteenMonthCalculation = settings
+                .GetEnum("ThirteenthMonthPolicy.CalculationBasis", ThirteenthMonthCalculationBasis.RegularPayAndAllowance);
 
-            thirteenthMonthBasicPay = GetThirteenMonthBasicPay(paystub,
-                                                                thirteenMonthCalculation,
-                                                                employee,
-                                                                timeEntries,
-                                                                actualTimeEntries,
-                                                                salary,
-                                                                settings,
-                                                                allowanceItems.ToList(),
-                                                                currentSystemOwner);
+            thirteenthMonthBasicPay = GetThirteenMonthBasicPay(
+                paystub,
+                thirteenMonthCalculation,
+                employee,
+                timeEntries,
+                actualTimeEntries,
+                salary,
+                settings,
+                allowanceItems.ToList(),
+                currentSystemOwner);
 
             var thirteenthMonthAmount = thirteenthMonthBasicPay / CalendarConstants.MonthsInAYear;
 
@@ -62,15 +63,16 @@ namespace AccuPay.Data.Services
             return paystub.ThirteenthMonthPay;
         }
 
-        private static decimal GetThirteenMonthBasicPay(Paystub paystub,
-                                                        ThirteenthMonthCalculationBasis thirteenMonthPolicy,
-                                                        Employee employee,
-                                                        IReadOnlyCollection<TimeEntry> timeEntries,
-                                                        IReadOnlyCollection<ActualTimeEntry> actualtimeentries,
-                                                        Salary salary,
-                                                        ListOfValueCollection settings,
-                                                        IReadOnlyCollection<AllowanceItem> allowanceItems,
-                                                        string currentSystemOwner)
+        private static decimal GetThirteenMonthBasicPay(
+            Paystub paystub,
+            ThirteenthMonthCalculationBasis thirteenMonthPolicy,
+            Employee employee,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<ActualTimeEntry> actualtimeentries,
+            Salary salary,
+            ListOfValueCollection settings,
+            IReadOnlyCollection<AllowanceItem> allowanceItems,
+            string currentSystemOwner)
         {
             switch (thirteenMonthPolicy)
             {
@@ -101,23 +103,27 @@ namespace AccuPay.Data.Services
             return AccuMath.CommercialRound(daysWorked * dailyRate);
         }
 
-        private static decimal ComputeByRegularPayAndAllowance(Employee employee,
-                                                            IReadOnlyCollection<TimeEntry> timeEntries,
-                                                            IReadOnlyCollection<ActualTimeEntry> actualtimeentries,
-                                                            Salary salary,
-                                                            ListOfValueCollection settings,
-                                                            IReadOnlyCollection<AllowanceItem> allowanceItems)
+        private static decimal ComputeByRegularPayAndAllowance(
+            Employee employee,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<ActualTimeEntry> actualtimeentries,
+            Salary salary,
+            ListOfValueCollection settings,
+            IReadOnlyCollection<AllowanceItem> allowanceItems)
         {
             var thirteenthMonthAmount = 0M;
 
             if (employee.IsDaily)
             {
-                thirteenthMonthAmount = ComputeByRegularPayAndAllowanceDaily(employee,
-                                                                            timeEntries,
-                                                                            actualtimeentries);
+                thirteenthMonthAmount = ComputeByRegularPayAndAllowanceDaily(
+                    employee,
+                    timeEntries,
+                    actualtimeentries);
             }
             else if (employee.IsMonthly || employee.IsFixed)
             {
+                if (salary == null) return 0;
+
                 var trueSalary = salary.TotalSalary;
                 var basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
 
@@ -143,9 +149,10 @@ namespace AccuPay.Data.Services
 
         // turn this back to private when we can use this class without coupling it with paystub
         // this should only be a calculator class, not an update paystub class
-        public static decimal ComputeByRegularPayAndAllowanceDaily(Employee employee,
-                                                                    IReadOnlyCollection<TimeEntry> timeEntries,
-                                                                    IReadOnlyCollection<ActualTimeEntry> actualtimeentries)
+        public static decimal ComputeByRegularPayAndAllowanceDaily(
+            Employee employee,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<ActualTimeEntry> actualtimeentries)
         {
             decimal thirteenthMonthAmount = 0M;
 
@@ -153,17 +160,17 @@ namespace AccuPay.Data.Services
 
             if (contractualEmployementStatuses.Contains(employee.EmploymentStatus))
             {
-                thirteenthMonthAmount = timeEntries.
-                                            Where(t => !t.IsRestDay).
-                                            Sum(t => t.BasicDayPay + t.LeavePay);
+                thirteenthMonthAmount = timeEntries
+                    .Where(t => !t.IsRestDay)
+                    .Sum(t => t.BasicDayPay + t.LeavePay);
             }
             else
             {
                 foreach (var actualTimeEntry in actualtimeentries)
                 {
-                    var timeEntry = timeEntries.
-                                    Where(t => t.Date == actualTimeEntry.Date).
-                                    FirstOrDefault();
+                    var timeEntry = timeEntries
+                        .Where(t => t.Date == actualTimeEntry.Date)
+                        .FirstOrDefault();
 
                     if (timeEntry == null || timeEntry.IsRestDay)
                     {

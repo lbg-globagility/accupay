@@ -678,17 +678,18 @@ Public Class BenchmarkPaystubForm
         If _currentPayPeriod?.RowID Is Nothing Then Return Nothing
 
         Return Await _paystubRepository.
-                        GetByCompositeKeyFullPaystubAsync(New PaystubRepository.EmployeeCompositeKey(
-                                                        employeeId:=employeeId,
-                                                        payPeriodId:=_currentPayPeriod.RowID.Value
-                                                ))
+            GetByCompositeKeyFullPaystubAsync(
+                New PaystubRepository.EmployeeCompositeKey(
+                        employeeId:=employeeId,
+                        payPeriodId:=_currentPayPeriod.RowID.Value
+                ))
     End Function
 
     Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
         Return gridView.Rows.
-                        Cast(Of DataGridViewRow).
-                        Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
-                                                Any(Function(c) c.Value IsNot Nothing))
+            Cast(Of DataGridViewRow).
+            Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
+                Any(Function(c) c.Value IsNot Nothing))
     End Function
 
     Private Function GetSelectedEmployee() As Employee
@@ -729,18 +730,25 @@ Public Class BenchmarkPaystubForm
         End If
 
         Dim confirmMessage = $"Are you sure you want to delete paystub of '{employee.FullNameLastNameFirst} [{employee.EmployeeNo}]'?"
+        Const MessageTitle As String = "Delete Paystub"
 
         If MessageBoxHelper.Confirm(Of Boolean) _
-               (confirmMessage, "Delete Paystub", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
+               (confirmMessage, MessageTitle, messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
-        Await _paystubRepository.DeleteAsync(New PaystubRepository.EmployeeCompositeKey(
-                                                    employeeId:=employeeId.Value,
-                                                    payPeriodId:=_currentPayPeriod.RowID.Value),
-                                            z_User)
+        Await FunctionUtils.TryCatchFunctionAsync("",
+            Async Function()
+                Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                Await paystubDataService.DeleteAsync(
+                    New PaystubRepository.EmployeeCompositeKey(
+                            employeeId:=employeeId.Value,
+                            payPeriodId:=_currentPayPeriod.RowID.Value),
+                    userId:=z_User,
+                    organizationId:=z_OrganizationID)
 
-        Await RefreshForm(refreshPayPeriod:=False)
+                Await RefreshForm(refreshPayPeriod:=False)
 
-        MessageBoxHelper.Information("Done! " & vbNewLine + vbNewLine & $"Go to Payroll transactions to process the payslip of {employee.FullNameLastNameFirst} [{employee.EmployeeNo}] again.", "Delete Paystub")
+                MessageBoxHelper.Information("Done! " & vbNewLine + vbNewLine & $"Go to Payroll transactions to process the payslip of {employee.FullNameLastNameFirst} [{employee.EmployeeNo}] again.", MessageTitle)
+            End Function)
 
     End Sub
 

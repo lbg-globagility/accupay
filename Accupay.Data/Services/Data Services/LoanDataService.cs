@@ -89,7 +89,7 @@ namespace AccuPay.Data.Services
             // validate start date should not be in a Closed Payroll
             if (CheckIfStartDateNeedsToBeValidated(new List<LoanSchedule>() { oldLoan }, loan))
             {
-                await CheckIfDataIsWithinClosedPayroll(loan.DedEffectiveDateFrom, loan.OrganizationID.Value);
+                await CheckIfDataIsWithinClosedPayPeriod(loan.DedEffectiveDateFrom, loan.OrganizationID.Value);
             }
 
             // validate deduction schedules
@@ -126,7 +126,7 @@ namespace AccuPay.Data.Services
                  .Select(x => x.DedEffectiveDateFrom)
                  .ToArray();
 
-            await CheckIfDataIsWithinClosedPayroll(validatableStartDates, organizationId.Value);
+            await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, organizationId.Value);
 
             // validate deduction schedules and sanitize Loan Name
             var deductionSchedules = _listOfValueRepository

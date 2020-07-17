@@ -33,7 +33,7 @@ namespace AccuPay.Data.Services
             if (timeLogs != null)
             {
                 timeLogs.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayroll(timeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(timeLogs.Select(x => x.LogDate).Distinct(), organizationId);
             }
 
             await _timeLogRepository.SaveImportAsync(timeLogs, timeAttendanceLogs);
@@ -53,18 +53,18 @@ namespace AccuPay.Data.Services
             if (addedTimeLogs != null)
             {
                 addedTimeLogs.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayroll(addedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(addedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
             }
 
             if (updatedTimeLogs != null)
             {
                 updatedTimeLogs.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayroll(updatedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(updatedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
             }
 
             if (deletedTimeLogs != null)
             {
-                await CheckIfDataIsWithinClosedPayroll(deletedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(deletedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
             }
 
             await _timeLogRepository.ChangeManyAsync(

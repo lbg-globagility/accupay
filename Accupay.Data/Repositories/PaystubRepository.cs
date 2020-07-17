@@ -46,33 +46,9 @@ namespace AccuPay.Data.Repositories
 
         #region Save
 
-        public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
+        public async Task DeleteAsync(int id, int userId)
         {
-            foreach (var thirteenthMonthPay in thirteenthMonthPays)
-            {
-                _context.Entry(thirteenthMonthPay).State = EntityState.Modified;
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(EmployeeCompositeKey key, int userId)
-        {
-            int? paystubId = null;
-
-            paystubId = _context.Paystubs
-                .Where(x => x.EmployeeID == key.EmployeeId)
-                .Where(x => x.PayPeriodID == key.PayPeriodId)
-                .Select(x => x.RowID)
-                .FirstOrDefault();
-
-            if (paystubId == null)
-            {
-                // maybe throw an error?
-                return;
-            }
-
-            await DeleteAsyncWithContext(id: paystubId.Value, userId: userId);
+            await DeleteAsyncWithContext(id: id, userId: userId);
             await _context.SaveChangesAsync();
         }
 
@@ -86,6 +62,16 @@ namespace AccuPay.Data.Repositories
             foreach (int id in payStubIds)
             {
                 await DeleteAsyncWithContext(id: id, userId: userId);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
+        {
+            foreach (var thirteenthMonthPay in thirteenthMonthPays)
+            {
+                _context.Entry(thirteenthMonthPay).State = EntityState.Modified;
             }
 
             await _context.SaveChangesAsync();
@@ -189,23 +175,34 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public Paystub GetByCompositeKeyWithActual(EmployeeCompositeKey key)
+        public async Task<Paystub> GetByCompositeKeyAsync(EmployeeCompositeKey key)
         {
-            return _context.Paystubs
+            var query = _context.Paystubs.AsNoTracking();
+
+            query = AddGetByEmployeeCompositeKeyQuery(key, query);
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public Paystub GetByCompositeKeyWithActualAndThirteenthMonth(EmployeeCompositeKey key)
+        {
+            var query = _context.Paystubs
                 .AsNoTracking()
                 .Include(x => x.ThirteenthMonthPay)
                 .Include(x => x.Actual)
-                .Where(x => x.EmployeeID == key.EmployeeId)
-                .Where(x => x.PayPeriodID == key.PayPeriodId)
-                .FirstOrDefault();
+                .AsQueryable();
+
+            query = AddGetByEmployeeCompositeKeyQuery(key, query);
+
+            return query.FirstOrDefault();
         }
 
         public async Task<Paystub> GetByCompositeKeyFullPaystubAsync(EmployeeCompositeKey key)
         {
-            return await CreateBaseQueryWithFullPaystub()
-                .Where(x => x.EmployeeID == key.EmployeeId)
-                .Where(x => x.PayPeriodID == key.PayPeriodId)
-                .FirstOrDefaultAsync();
+            var query = CreateBaseQueryWithFullPaystub();
+            query = AddGetByEmployeeCompositeKeyQuery(key, query);
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetByPayPeriodFullPaystubAsync(int payPeriodId)
@@ -288,7 +285,25 @@ namespace AccuPay.Data.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<Paystub> GetWithPayPeriod(int id)
+        {
+            return await _context.Paystubs
+                .Include(x => x.PayPeriod)
+                .Where(x => x.RowID == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ICollection<Paystub>> GetWithPayPeriod(int[] ids)
+        {
+            return await _context.Paystubs
+                .Include(x => x.PayPeriod)
+                .Where(x => ids.Contains(x.RowID.Value))
+                .ToListAsync();
+        }
+
         #endregion Queries
+
+        #region private methods
 
         /// <summary>
         /// Resets the last transactions of the affected Leave Ledger.
@@ -301,9 +316,10 @@ namespace AccuPay.Data.Repositories
         {
             // update the leaveledgers' last transaction Ids and in turn resets the balance
             var groupedLeaves = toBeDeletedleaveTransactions.GroupBy(x => x.LeaveLedger);
-            var toBeDeletedleaveTransactionIds = toBeDeletedleaveTransactions.
-                                                    Select(x => x.RowID.Value).
-                                                    ToArray();
+            var toBeDeletedleaveTransactionIds = toBeDeletedleaveTransactions
+                .Select(x => x.RowID.Value)
+                .Distinct()
+                .ToArray();
 
             var leaveLedgerIds = groupedLeaves.Select(x => x.Key.RowID.Value).ToArray();
             var allLeaveTransactions = _context.LeaveTransactions
@@ -314,8 +330,7 @@ namespace AccuPay.Data.Repositories
             foreach (var leaveGroup in groupedLeaves)
             {
                 var leaveLedger = leaveGroup.Key;
-                var leaveTransactions = allLeaveTransactions.
-                                            Where(x => x.LeaveLedgerID == leaveLedger.RowID);
+                var leaveTransactions = allLeaveTransactions.Where(x => x.LeaveLedgerID == leaveLedger.RowID);
 
                 // get the last transaction
                 if (leaveTransactions.Any())
@@ -376,11 +391,10 @@ namespace AccuPay.Data.Repositories
                             // the 24 balance as the latest because it is the lowest balance after the credit.
 
                             var debitTransactionsAfterCredit = lastTransactions
-                                                        .Where(x => x.Type.ToTrimmedLowerCase() ==
-                                                            LeaveTransactionType.Debit.ToTrimmedLowerCase())
-                                                        .Where(x => x.Created >= lastCreditTransaction.Created)
-                                                        .OrderBy(x => x.Balance)
-                                                        .FirstOrDefault();
+                                .Where(x => x.Type.ToTrimmedLowerCase() == LeaveTransactionType.Debit.ToTrimmedLowerCase())
+                                .Where(x => x.Created >= lastCreditTransaction.Created)
+                                .OrderBy(x => x.Balance)
+                                .FirstOrDefault();
 
                             if (debitTransactionsAfterCredit != null)
                             {
@@ -406,7 +420,7 @@ namespace AccuPay.Data.Repositories
         /// Returns the deducted amount on the loans based on the passed paystub.
         /// </summary>
         /// <param name="loanTransactions">The loan transactions to be deleted with its LoanSchedule.</param>
-        private static void ResetLoanBalances(ICollection<LoanTransaction> loanTransactions, int userId)
+        private void ResetLoanBalances(ICollection<LoanTransaction> loanTransactions, int userId)
         {
             // update the employeeloanschedules' balance
             var groupedLoans = loanTransactions.GroupBy(x => x.LoanSchedule);
@@ -444,5 +458,16 @@ namespace AccuPay.Data.Repositories
                 .Include(p => p.ThirteenthMonthPay)
                 .Include(p => p.Actual);
         }
+
+        private IQueryable<Paystub> AddGetByEmployeeCompositeKeyQuery(EmployeeCompositeKey key, IQueryable<Paystub> query)
+        {
+            query = query
+                .Where(x => x.EmployeeID == key.EmployeeId)
+                .Where(x => x.PayPeriodID == key.PayPeriodId);
+
+            return query;
+        }
+
+        #endregion private methods
     }
 }

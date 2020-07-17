@@ -85,18 +85,18 @@ namespace AccuPay.Data.Services
             if (added != null)
             {
                 added.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayroll(added.Select(x => x.DateSched).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(added.Select(x => x.DateSched).Distinct(), organizationId);
             }
 
             if (updated != null)
             {
                 updated.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayroll(updated.Select(x => x.DateSched).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(updated.Select(x => x.DateSched).Distinct(), organizationId);
             }
 
             if (deleted != null)
             {
-                await CheckIfDataIsWithinClosedPayroll(deleted.Select(x => x.DateSched).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(deleted.Select(x => x.DateSched).Distinct(), organizationId);
             }
 
             // TODO: validations
