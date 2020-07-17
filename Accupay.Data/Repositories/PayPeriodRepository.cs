@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
@@ -56,23 +56,16 @@ namespace AccuPay.Data.Repositories
 
         public async Task<PayPeriod> GetCurrentOpenAsync(int organizationId)
         {
-            var query = CreateBaseQuery(organizationId);
+            IQueryable<PayPeriod> query = CreateBaseQueryGetCurrentOpen(organizationId);
 
-            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
-            {
-                query = query
-                    .Include(x => x.Paystubs)
-                    .Where(p => p.IsClosed == false)
-                    .Where(p => p.Paystubs.Any());
-            }
-            else
-            {
-                query = query.Where(p => p.Status == PayPeriodStatus.Open);
-            }
+            return await query.FirstOrDefaultAsync();
+        }
 
-            return await query
-                .OrderByDescending(p => p.PayFromDate)
-                .FirstOrDefaultAsync();
+        public PayPeriod GetCurrentOpen(int organizationId)
+        {
+            IQueryable<PayPeriod> query = CreateBaseQueryGetCurrentOpen(organizationId);
+
+            return query.FirstOrDefault();
         }
 
         public async Task<ICollection<PayPeriod>> GetClosedPayPeriodsAsync(int organizationId, TimePeriod dateRange = null)
@@ -364,6 +357,26 @@ namespace AccuPay.Data.Repositories
             return _context.PayPeriods
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(p => p.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId);
+        }
+
+        private IQueryable<PayPeriod> CreateBaseQueryGetCurrentOpen(int organizationId)
+        {
+            var query = CreateBaseQuery(organizationId);
+
+            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
+            {
+                query = query
+                    .Include(x => x.Paystubs)
+                    .Where(p => p.IsClosed == false)
+                    .Where(p => p.Paystubs.Any());
+            }
+            else
+            {
+                query = query.Where(p => p.Status == PayPeriodStatus.Open);
+            }
+
+            query = query.OrderByDescending(p => p.PayFromDate);
+            return query;
         }
 
         /// <summary>

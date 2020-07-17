@@ -1,8 +1,10 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -46,6 +48,7 @@ namespace AccuPay.Data.Services
         private readonly OfficialBusinessRepository _officialBusinessRepository;
         private readonly OrganizationRepository _organizationRepository;
         private readonly OvertimeRepository _overtimeRepository;
+        private readonly PayPeriodRepository _payPeriodRepository;
         private readonly SalaryRepository _salaryRepository;
         private readonly ShiftScheduleRepository _shiftScheduleRepository;
         private readonly TimeAttendanceLogRepository _timeAttendanceLogRepository;
@@ -85,6 +88,7 @@ namespace AccuPay.Data.Services
                                 OfficialBusinessRepository officialBusinessRepository,
                                 OrganizationRepository organizationRepository,
                                 OvertimeRepository overtimeRepository,
+                                PayPeriodRepository payPeriodRepository,
                                 SalaryRepository salaryRepository,
                                 ShiftScheduleRepository shiftScheduleRepository,
                                 TimeAttendanceLogRepository timeAttendanceLogRepository,
@@ -105,6 +109,7 @@ namespace AccuPay.Data.Services
             _officialBusinessRepository = officialBusinessRepository;
             _organizationRepository = organizationRepository;
             _overtimeRepository = overtimeRepository;
+            _payPeriodRepository = payPeriodRepository;
             _salaryRepository = salaryRepository;
             _shiftScheduleRepository = shiftScheduleRepository;
             _timeAttendanceLogRepository = timeAttendanceLogRepository;
@@ -115,8 +120,13 @@ namespace AccuPay.Data.Services
         public void Start(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
         {
             _organizationId = organizationId;
-            _cutoffStart = cutoffStart;
-            _cutoffEnd = cutoffEnd;
+            _cutoffStart = cutoffStart.ToMinimumHourValue();
+            _cutoffEnd = cutoffEnd.ToMinimumHourValue();
+
+            var currentPayPeriod = _payPeriodRepository.GetCurrentOpen(organizationId);
+
+            if (currentPayPeriod?.PayFromDate != cutoffStart || currentPayPeriod?.PayToDate != cutoffEnd)
+                throw new BusinessLogicException("Only open pay periods can generate time entries.");
 
             IList<Employee> employees = null;
             Organization organization = null;
