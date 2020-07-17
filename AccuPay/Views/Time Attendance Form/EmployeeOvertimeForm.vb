@@ -109,8 +109,8 @@ Public Class EmployeeOvertimeForm
 
     Private Sub LoadStatusList()
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-        StatusComboBox.DataSource = service.GetStatusList()
+        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        StatusComboBox.DataSource = repository.GetStatusList()
 
     End Sub
 
@@ -222,8 +222,8 @@ Public Class EmployeeOvertimeForm
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-        Me._currentOvertimes = (Await service.GetByEmployeeAsync(currentEmployee.RowID.Value)).
+        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Me._currentOvertimes = (Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.OTStartDate).
                                 ToList
 
@@ -375,20 +375,21 @@ Public Class EmployeeOvertimeForm
     Private Async Function DeleteOvertime(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                            Async Function()
-                                                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                                                Await service.DeleteAsync(Me._currentOvertime.RowID.Value)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Await dataService.DeleteAsync(Me._currentOvertime.RowID.Value)
 
-                                                _userActivityRepository.RecordDelete(z_User,
-                                                                                     FormEntityName,
-                                                                                     Me._currentOvertime.RowID.Value,
-                                                                                     z_OrganizationID)
+                _userActivityRepository.RecordDelete(
+                    z_User,
+                    FormEntityName,
+                    Me._currentOvertime.RowID.Value,
+                    z_OrganizationID)
 
-                                                Await LoadOvertimes(currentEmployee)
+                Await LoadOvertimes(currentEmployee)
 
-                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+                ShowBalloonInfo("Successfully Deleted.", messageTitle)
 
-                                            End Function)
+            End Function)
     End Function
 
     Private Sub UpdateEndDateDependingOnStartAndEndTimes()
@@ -549,8 +550,8 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-        Dim currentOvertime = Await service.GetByIdAsync(Me._currentOvertime.RowID.Value)
+        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim currentOvertime = Await repository.GetByIdAsync(Me._currentOvertime.RowID.Value)
 
         If currentOvertime Is Nothing Then
 
@@ -565,7 +566,6 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
         Await DeleteOvertime(currentEmployee, messageTitle)
 
     End Sub
@@ -614,25 +614,25 @@ Public Class EmployeeOvertimeForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                        Async Function()
-                                            Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                                            Await service.SaveManyAsync(changedOvertimes)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Await dataService.SaveManyAsync(changedOvertimes)
 
-                                            For Each item In changedOvertimes
-                                                RecordUpdate(item)
-                                            Next
+                For Each item In changedOvertimes
+                    RecordUpdate(item)
+                Next
 
-                                            ShowBalloonInfo($"{changedOvertimes.Count} Overtime(s) Successfully Updated.", messageTitle)
+                ShowBalloonInfo($"{changedOvertimes.Count} Overtime(s) Successfully Updated.", messageTitle)
 
-                                            Dim currentEmployee = GetSelectedEmployee()
+                Dim currentEmployee = GetSelectedEmployee()
 
-                                            If currentEmployee IsNot Nothing Then
+                If currentEmployee IsNot Nothing Then
 
-                                                Await LoadOvertimes(currentEmployee)
+                    Await LoadOvertimes(currentEmployee)
 
-                                            End If
+                End If
 
-                                        End Function)
+            End Function)
     End Sub
 
     Public Function ScrutinizedConflictingOvertime(otList As List(Of Overtime), Optional otStatus As String = "") As List(Of Overtime)

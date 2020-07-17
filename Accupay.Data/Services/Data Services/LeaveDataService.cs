@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LeaveDataService : BaseSavableDataService<Leave>
+    public class LeaveDataService : BaseDailyPayrollDataService<Leave>
     {
         private List<string> VALIDATABLE_TYPES = new List<string>()
         {
@@ -21,12 +21,8 @@ namespace AccuPay.Data.Services
             ProductConstant.VACATION_LEAVE
         };
 
-        private readonly PayrollContext _context;
-        private readonly PolicyHelper _policy;
-
         private readonly EmployeeRepository _employeeRepository;
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
-        private readonly LeaveRepository _leaveRepository;
         private readonly LeaveLedgerRepository _leaveLedgerRepository;
         private readonly ShiftScheduleRepository _shiftScheduleRepository;
 
@@ -38,34 +34,30 @@ namespace AccuPay.Data.Services
             LeaveRepository leaveRepository,
             LeaveLedgerRepository leaveLedgerRepository,
             PayPeriodRepository payPeriodRepository,
-            ShiftScheduleRepository shiftScheduleRepository) : base(leaveRepository, payPeriodRepository)
+            ShiftScheduleRepository shiftScheduleRepository) :
+
+            base(leaveRepository,
+                payPeriodRepository,
+                context,
+                policy,
+                entityName: "Leave")
         {
-            _context = context;
-            _policy = policy;
             _employeeRepository = employeeRepository;
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
-            _leaveRepository = leaveRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
             _shiftScheduleRepository = shiftScheduleRepository;
         }
 
-        public async Task DeleteAsync(int leaveId)
-        {
-            var leave = await _leaveRepository.GetByIdAsync(leaveId);
-
-            if (leave == null)
-                throw new BusinessLogicException("Leave does not exists.");
-
-            await _leaveRepository.DeleteAsync(leave);
-        }
-
-        protected override async Task SanitizeEntity(Leave leave)
+        protected override async Task SanitizeEntity(Leave leave, Leave oldLeave)
         {
             if (leave.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
 
             if (leave.EmployeeID == null)
                 throw new BusinessLogicException("Employee is required.");
+
+            if (leave.StartDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
             if (leave.StartDate == null)
                 throw new BusinessLogicException("Start Date is required.");
@@ -121,6 +113,8 @@ namespace AccuPay.Data.Services
         {
             if (leaves.Any() == false) return;
 
+            var oldLeaves = await GetOldEntitiesAsync(leaves);
+
             int organizationId = leaves
                 .Where(x => x.OrganizationID.HasValue)
                 .Select(x => x.OrganizationID.Value)
@@ -128,13 +122,16 @@ namespace AccuPay.Data.Services
 
             foreach (var leave in leaves)
             {
-                await SanitizeEntity(leave);
+                var oldLeave = oldLeaves.Where(x => x.RowID == leave.RowID).FirstOrDefault();
+                await SanitizeEntity(leave, oldLeave);
             }
 
-            await SaveLeaves(leaves, organizationId);
+            await ValidateDates(leaves, oldLeaves.ToList(), organizationId);
+
+            await SaveLeavesAsync(leaves, organizationId);
         }
 
-        private async Task SaveLeaves(List<Leave> leaves, int organizationId)
+        private async Task SaveLeavesAsync(List<Leave> leaves, int organizationId)
         {
             var leaveRepository = new LeaveRepository(_context);
 
@@ -565,14 +562,9 @@ namespace AccuPay.Data.Services
 
         #endregion ForceUpdateLeaveAllowanceAsync
 
-        public async Task<PaginatedList<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type)
+        public async Task<PaginatedList<LeaveLedger>> GetLeaveBalancesAsync(PageOptions options, int organizationId, string searchTerm)
         {
-            return await _leaveLedgerRepository.ListTransactions(options, organizationId, id, type);
-        }
-
-        public async Task<PaginatedList<LeaveLedger>> GetLeaveBalances(PageOptions options, int organizationId, string searchTerm)
-        {
-            var leaveBalances = await _leaveLedgerRepository.GetLeaveBalance(organizationId, searchTerm);
+            var leaveBalances = await _leaveLedgerRepository.GetLeaveBalancesAsync(organizationId, searchTerm);
 
             var distinctId = leaveBalances.Select(x => x.EmployeeID).Distinct().AsQueryable();
 

@@ -26,7 +26,7 @@ Public Class AddAllowanceForm
 
     Private _productRepository As ProductRepository
 
-    Private _allowanceService As AllowanceDataService
+    Private _allowanceRepository As AllowanceRepository
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -36,7 +36,7 @@ Public Class AddAllowanceForm
 
         _currentEmployee = employee
 
-        _allowanceService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
@@ -155,7 +155,8 @@ Public Class AddAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceService.SaveAsync(Me._newAllowance)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                Await dataService.SaveAsync(Me._newAllowance)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
 
@@ -188,7 +189,7 @@ Public Class AddAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        cboallowfreq.DataSource = _allowanceService.GetFrequencyList()
+        cboallowfreq.DataSource = _allowanceRepository.GetFrequencyList()
 
     End Sub
 

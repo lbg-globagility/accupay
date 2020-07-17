@@ -1,29 +1,31 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.OfficialBusinesses
 {
     public class OfficialBusinessService
     {
-        private readonly OfficialBusinessDataService _service;
+        private readonly OfficialBusinessDataService _dataService;
+        private readonly OfficialBusinessRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public OfficialBusinessService(OfficialBusinessDataService service, ICurrentUser currentUser)
+        public OfficialBusinessService(OfficialBusinessDataService dataService, OfficialBusinessRepository repository, ICurrentUser currentUser)
         {
-            _service = service;
+            _dataService = dataService;
             _currentUser = currentUser;
+            _repository = repository;
         }
 
         public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(PageOptions options, OfficialBusinessFilter filter)
         {
             // TODO: sort and desc in repository
             int organizationId = _currentUser.OrganizationId;
-            var paginatedList = await _service.GetPaginatedListAsync(
+            var paginatedList = await _repository.GetPaginatedListAsync(
                 options,
                 organizationId,
                 filter.Term,
@@ -35,7 +37,7 @@ namespace AccuPay.Web.OfficialBusinesses
 
         public async Task<OfficialBusinessDto> GetById(int id)
         {
-            var officialBusiness = await _service.GetByIdWithEmployeeAsync(id);
+            var officialBusiness = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
@@ -51,33 +53,33 @@ namespace AccuPay.Web.OfficialBusinesses
             };
             ApplyChanges(dto, officialBusiness);
 
-            await _service.SaveAsync(officialBusiness);
+            await _dataService.SaveAsync(officialBusiness);
 
             return ConvertToDto(officialBusiness);
         }
 
         public async Task<OfficialBusinessDto> Update(int id, UpdateOfficialBusinessDto dto)
         {
-            var officialBusiness = await _service.GetByIdAsync(id);
+            var officialBusiness = await _repository.GetByIdAsync(id);
             if (officialBusiness == null) return null;
 
             officialBusiness.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, officialBusiness);
 
-            await _service.SaveAsync(officialBusiness);
+            await _dataService.SaveAsync(officialBusiness);
 
             return ConvertToDto(officialBusiness);
         }
 
         public async Task Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _dataService.DeleteAsync(id);
         }
 
         public List<string> GetStatusList()
         {
-            return _service.GetStatusList();
+            return _repository.GetStatusList();
         }
 
         private static void ApplyChanges(CrudOfficialBusinessDto dto, OfficialBusiness officialBusiness)

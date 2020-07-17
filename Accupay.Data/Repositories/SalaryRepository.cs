@@ -8,71 +8,27 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class SalaryRepository
+    public class SalaryRepository : SavableRepository<Salary>
     {
-        private readonly PayrollContext _context;
-
-        public SalaryRepository(PayrollContext context)
+        public SalaryRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        #region CRUD
+        #region Save
 
-        public async Task DeleteAsync(int id)
+        protected override void DetachNavigationProperties(Salary salary)
         {
-            var salary = await GetByIdAsync(id);
-
-            _context.Salaries.Remove(salary);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task SaveManyAsync(List<Salary> salaries)
-        {
-            foreach (var salary in salaries)
+            if (salary.Employee != null)
             {
-                await SaveWithContextAsync(salary);
-
-                await _context.SaveChangesAsync();
+                _context.Entry(salary.Employee).State = EntityState.Detached;
             }
         }
 
-        public async Task SaveAsync(Salary salary)
-        {
-            await SaveWithContextAsync(salary, deferSave: false);
-        }
-
-        private async Task SaveWithContextAsync(Salary salary, bool deferSave = true)
-        {
-            salary.UpdateTotalSalary();
-
-            SaveFunction(salary);
-
-            if (deferSave == false)
-            {
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private void SaveFunction(Salary salary)
-        {
-            if (salary.RowID == null)
-                _context.Salaries.Add(salary);
-            else
-                _context.Entry(salary).State = EntityState.Modified;
-        }
-
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 
         #region Single entity
-
-        public async Task<Salary> GetByIdAsync(int id)
-        {
-            return await _context.Salaries.FirstOrDefaultAsync(x => x.RowID == id);
-        }
 
         public async Task<Salary> GetByIdWithEmployeeAsync(int id)
         {
@@ -136,7 +92,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Salary>(salaries, count);
         }
 
-        public async Task<ICollection<Salary>> GetAll(int organizationId)
+        public async Task<ICollection<Salary>> GetAllAsync(int organizationId)
         {
             return await _context.Salaries
                 .Where(x => x.OrganizationID == organizationId)

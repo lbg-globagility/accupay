@@ -16,7 +16,7 @@ Public Class AddOfficialBusinessForm
 
     Private _newOfficialBusiness As New OfficialBusiness()
 
-    Private _officialBusinessDataService As OfficialBusinessDataService
+    Private _officialBusinessRepository As OfficialBusinessRepository
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -26,7 +26,7 @@ Public Class AddOfficialBusinessForm
 
         _currentEmployee = employee
 
-        _officialBusinessDataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+        _officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -56,7 +56,7 @@ Public Class AddOfficialBusinessForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _officialBusinessDataService.GetStatusList()
+        StatusComboBox.DataSource = _officialBusinessRepository.GetStatusList()
 
     End Sub
 
@@ -143,7 +143,9 @@ Public Class AddOfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Official Business",
             Async Function()
-                Await _officialBusinessDataService.SaveAsync(Me._newOfficialBusiness)
+
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Await dataService.SaveAsync(Me._newOfficialBusiness)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
 

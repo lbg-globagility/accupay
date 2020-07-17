@@ -1,5 +1,4 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
 using AccuPay.Web.Salaries.Services;
@@ -16,13 +15,11 @@ namespace AccuPay.Web.Controllers
     public class SalariesController : ApiControllerBase
     {
         private readonly SalaryService _service;
-        private readonly SalaryRepository _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public SalariesController(SalaryService salaryService, SalaryRepository repository, IHostingEnvironment hostingEnvironment)
+        public SalariesController(SalaryService salaryService, IHostingEnvironment hostingEnvironment)
         {
             _service = salaryService;
-            _repository = repository;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -80,11 +77,11 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.SalaryDelete)]
         public async Task<ActionResult> Delete(int id)
         {
-            var allowance = await _repository.GetByIdAsync(id);
+            var allowance = await _service.GetById(id);
 
             if (allowance == null) return NotFound();
 
-            await _repository.DeleteAsync(id);
+            await _service.Delete(id);
 
             return Ok();
         }

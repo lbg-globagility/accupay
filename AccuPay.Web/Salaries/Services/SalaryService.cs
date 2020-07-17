@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
 using System.Threading.Tasks;
@@ -10,13 +11,16 @@ namespace AccuPay.Web.Salaries.Services
     public class SalaryService
     {
         private readonly SalaryRepository _repository;
+        private readonly SalaryDataService _dataService;
         private readonly ICurrentUser _currentUser;
 
         public SalaryService(
-            SalaryRepository salaryRepository,
+            SalaryRepository repository,
+            SalaryDataService dataService,
             ICurrentUser currentUser)
         {
-            _repository = salaryRepository;
+            _repository = repository;
+            _dataService = dataService;
             _currentUser = currentUser;
         }
 
@@ -57,7 +61,7 @@ namespace AccuPay.Web.Salaries.Services
 
             ApplyChanges(dto, salary);
 
-            await _repository.SaveAsync(salary);
+            await _dataService.SaveAsync(salary);
 
             return ConvertToDto(salary);
         }
@@ -71,9 +75,14 @@ namespace AccuPay.Web.Salaries.Services
 
             ApplyChanges(dto, salary);
 
-            await _repository.SaveAsync(salary);
+            await _dataService.SaveAsync(salary);
 
             return ConvertToDto(salary);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _dataService.DeleteAsync(id);
         }
 
         private static void ApplyChanges(CrudSalaryDto dto, Salary salary)

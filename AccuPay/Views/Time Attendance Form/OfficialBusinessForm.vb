@@ -106,8 +106,8 @@ Public Class OfficialBusinessForm
 
     Private Sub LoadStatusList()
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-        StatusComboBox.DataSource = service.GetStatusList()
+        Dim repository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        StatusComboBox.DataSource = repository.GetStatusList()
 
     End Sub
 
@@ -219,8 +219,8 @@ Public Class OfficialBusinessForm
     Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-        Me._currentOfficialBusinesses = (Await service.GetByEmployeeAsync(currentEmployee.RowID.Value)).
+        Dim repository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Me._currentOfficialBusinesses = (Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                                 OrderByDescending(Function(a) a.StartDate).
                                                 ToList
 
@@ -396,20 +396,20 @@ Public Class OfficialBusinessForm
     Private Async Function DeleteOfficialBusiness(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                            Async Function()
-                                                Dim service = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                                                Await service.DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Await dataService.DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
 
-                                                _userActivityRepository.RecordDelete(z_User,
-                                                                                     FormEntityName,
-                                                                                     Me._currentOfficialBusiness.RowID.Value,
-                                                                                     z_OrganizationID)
+                _userActivityRepository.RecordDelete(z_User,
+                                                        FormEntityName,
+                                                        Me._currentOfficialBusiness.RowID.Value,
+                                                        z_OrganizationID)
 
-                                                Await LoadOfficialBusinesses(currentEmployee)
+                Await LoadOfficialBusinesses(currentEmployee)
 
-                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+                ShowBalloonInfo("Successfully Deleted.", messageTitle)
 
-                                            End Function)
+            End Function)
     End Function
 
     Private Sub UpdateEndDateDependingOnStartAndEndTimes()
@@ -549,8 +549,8 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-        Dim currentOfficialBusiness = Await service.GetByIdAsync(Me._currentOfficialBusiness.RowID.Value)
+        Dim repository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Dim currentOfficialBusiness = Await repository.GetByIdAsync(Me._currentOfficialBusiness.RowID.Value)
 
         If currentOfficialBusiness Is Nothing Then
 
@@ -565,7 +565,6 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
         Await DeleteOfficialBusiness(currentEmployee, messageTitle)
 
     End Sub
@@ -597,25 +596,25 @@ Public Class OfficialBusinessForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                        Async Function()
-                                            Dim service = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                                            Await service.SaveManyAsync(changedOfficialBusinesses)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Await dataService.SaveManyAsync(changedOfficialBusinesses)
 
-                                            For Each item In changedOfficialBusinesses
-                                                RecordUpdate(item)
-                                            Next
+                For Each item In changedOfficialBusinesses
+                    RecordUpdate(item)
+                Next
 
-                                            ShowBalloonInfo($"{changedOfficialBusinesses.Count} OfficialBusiness(es) Successfully Updated.", messageTitle)
+                ShowBalloonInfo($"{changedOfficialBusinesses.Count} OfficialBusiness(es) Successfully Updated.", messageTitle)
 
-                                            Dim currentEmployee = GetSelectedEmployee()
+                Dim currentEmployee = GetSelectedEmployee()
 
-                                            If currentEmployee IsNot Nothing Then
+                If currentEmployee IsNot Nothing Then
 
-                                                Await LoadOfficialBusinesses(currentEmployee)
+                    Await LoadOfficialBusinesses(currentEmployee)
 
-                                            End If
+                End If
 
-                                        End Function)
+            End Function)
     End Sub
 
     Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _

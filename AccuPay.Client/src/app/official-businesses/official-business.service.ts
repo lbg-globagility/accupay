@@ -74,7 +74,7 @@ export class OfficialBusinessService extends BasePdfService {
   getOfficialBusTemplate(): Promise<any> {
     return this.getFile(
       this.OBTemplateFileName,
-      `${this.baseUrl}/accupay-officialbus-template`
+      `${this.baseUrl}/accupay-official-business-template`
     );
   }
 }

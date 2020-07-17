@@ -111,6 +111,7 @@ namespace AccuPay.Web
             services.AddScoped<PaystubDataService>();
             services.AddScoped<PositionDataService>();
             services.AddScoped<ProductDataService>();
+            services.AddScoped<SalaryDataService>();
             services.AddScoped<TimeEntryDataService>();
             services.AddScoped<TimeLogDataService>();
             services.AddScoped<UserDataService>();

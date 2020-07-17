@@ -29,6 +29,14 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync(x => x.RowID == id);
         }
 
+        public async Task<ICollection<T>> GetManyByIdsAsync(int[] ids)
+        {
+            return await _context.Set<T>()
+                .AsNoTracking()
+                .Where(x => ids.Contains(x.RowID.Value))
+                .ToListAsync();
+        }
+
         public async Task DeleteAsync(T entity)
         {
             _context.Remove(entity);

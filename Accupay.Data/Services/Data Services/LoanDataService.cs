@@ -4,8 +4,8 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Extensions;
-using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,37 +13,34 @@ namespace AccuPay.Data.Services
 {
     public class LoanDataService : BaseSavableDataService<LoanSchedule>
     {
+        private readonly ListOfValueRepository _listOfValueRepository;
         private readonly LoanRepository _loanRepository;
-
-        private readonly PayrollContext _context;
-        private readonly SystemOwnerService _systemOwnerService;
-
         private readonly ProductRepository _productRepository;
+
+        private readonly SystemOwnerService _systemOwnerService;
 
         public LoanDataService(
             LoanRepository loanRepository,
-            PayrollContext context,
-            SystemOwnerService systemOwnerService,
+            ListOfValueRepository listOfValueRepository,
+            PayPeriodRepository payPeriodRepository,
             ProductRepository productRepository,
-            PayPeriodRepository payPeriodRepository) : base(loanRepository, payPeriodRepository)
+            SystemOwnerService systemOwnerService,
+            PayrollContext context,
+            PolicyHelper policy) :
+
+            base(loanRepository,
+                payPeriodRepository,
+                context,
+                policy,
+                entityName: "Loan")
         {
             _loanRepository = loanRepository;
-            _context = context;
-            _systemOwnerService = systemOwnerService;
+            _listOfValueRepository = listOfValueRepository;
             _productRepository = productRepository;
+            _systemOwnerService = systemOwnerService;
         }
 
-        #region CRUD
-
-        public async Task DeleteAsync(int loanId)
-        {
-            var loan = await _loanRepository.GetByIdAsync(loanId);
-
-            if (loan == null)
-                throw new BusinessLogicException("Loan does not exists.");
-
-            await _loanRepository.DeleteAsync(loan);
-        }
+        #region Save
 
         /// <summary>
         /// 'delete all loans that are not HDMF or SSS. only HDMF or SSS loans are supported in benchmark
@@ -63,54 +60,98 @@ namespace AccuPay.Data.Services
                 ssLoanId: ssLoanId);
         }
 
-        protected override async Task SanitizeEntity(LoanSchedule loan)
+        protected override async Task SanitizeEntity(LoanSchedule loan, LoanSchedule oldLoan)
         {
-            Validate(loan);
+            Validate(loan, oldLoan);
 
             await SanitizeProperties(loan);
 
             if (IsNewEntity(loan.RowID))
                 SanitizeInsert(loan);
             else
-                await SanitizeUpdate(loan);
+                SanitizeUpdate(loan, oldLoan);
         }
 
-        private async Task SanitizeUpdate(LoanSchedule newLoan)
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
+        protected override async Task AdditionalDeleteValidation(LoanSchedule loan)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            var oldLoan = await _loanRepository.GetByIdAsync(newLoan.RowID.Value);
+            if (loan.Status == LoanSchedule.STATUS_COMPLETE)
+                throw new BusinessLogicException("Loan is already completed!");
 
-            var loanTransactionsCount = await _context.LoanTransactions.
-                                            CountAsync(l => l.LoanScheduleID == newLoan.RowID);
+            if ((await _loanRepository.GetLoanTransactionsWithPayPeriodAsync(loan.RowID.Value)).Count > 0)
+                throw new BusinessLogicException("This loan has already started and therefore cannot be deleted. Try changing its Status to \"On Hold\" or \"Cancelled\" instead.");
+        }
 
-            // if cancelled na yung loan, hindi pwede ma update
-            if ((oldLoan.Status == LoanSchedule.STATUS_CANCELLED))
-                throw new BusinessLogicException("Loan schedule is already cancelled!");
-
-            if (newLoan.TotalBalanceLeft == 0)
+        protected override async Task AdditionalSaveValidation(LoanSchedule loan, LoanSchedule oldLoan)
+        {
+            // validate start date should not be in a Closed Payroll
+            if (CheckIfStartDateNeedsToBeValidated(new List<LoanSchedule>() { oldLoan }, loan))
             {
-                newLoan.LoanPayPeriodLeft = 0;
-                newLoan.Status = LoanSchedule.STATUS_COMPLETE;
+                await CheckIfDataIsWithinClosedPayroll(loan.DedEffectiveDateFrom, loan.OrganizationID.Value);
             }
 
-            // if nag start ng magbawas ng loan, dapat hindi na pwede ma edit ang TotalLoanAmount
-            if (oldLoan.TotalBalanceLeft != oldLoan.TotalLoanAmount)// || loanTransactionsCount > 0)
+            // validate deduction schedules
+            var deductionSchedules = _listOfValueRepository
+                .ConvertToStringList(await _listOfValueRepository.GetDeductionSchedulesAsync())
+                .Select(x => x.ToTrimmedLowerCase());
+
+            if (deductionSchedules.Contains(loan.DeductionSchedule.ToTrimmedLowerCase()) == false)
+                throw new BusinessLogicException("Deduction schedule is not valid.");
+
+            // sanitize Loan Name
+            if (string.IsNullOrWhiteSpace(loan.LoanName))
             {
-                newLoan.TotalLoanAmount = oldLoan.TotalLoanAmount;
-                newLoan.TotalBalanceLeft = oldLoan.TotalBalanceLeft;
-
-                // recompute NoOfPayPeriod if TotalLoanAmount changed
-                newLoan.RecomputeTotalPayPeriod();
+                loan.LoanName = (await _productRepository
+                    .GetByIdAsync(loan.LoanTypeID.Value))
+                    ?.PartNo;
             }
+        }
 
-            if (newLoan.TotalBalanceLeft > newLoan.TotalLoanAmount)
+        protected async override Task AdditionalSaveManyValidation(List<LoanSchedule> loans, List<LoanSchedule> oldLoans)
+        {
+            // validate start date should not be in a Closed Payroll
+            int? organizationId = null;
+            loans.ForEach(x =>
             {
-                newLoan.TotalBalanceLeft = oldLoan.TotalLoanAmount;
+                organizationId = ValidateOrganization(organizationId, x.OrganizationID);
+            });
 
-                // recompute LoanPayPeriodLeft if TotalBalanceLeft changed
-                newLoan.RecomputePayPeriodLeft();
+            var validatableStartDates = loans
+                 .Where(loan =>
+                 {
+                     return CheckIfStartDateNeedsToBeValidated(oldLoans, loan);
+                 })
+                 .Select(x => x.DedEffectiveDateFrom)
+                 .ToArray();
+
+            await CheckIfDataIsWithinClosedPayroll(validatableStartDates, organizationId.Value);
+
+            // validate deduction schedules and sanitize Loan Name
+            var deductionSchedules = _listOfValueRepository
+                .ConvertToStringList(await _listOfValueRepository.GetDeductionSchedulesAsync())
+                .Select(x => x.ToTrimmedLowerCase());
+
+            var loanTypeIds = loans
+                .Where(x => x.LoanTypeID.HasValue)
+                .Select(x => x.LoanTypeID.Value).Distinct()
+                .ToArray();
+            var loanTypes = await _productRepository.GetManyByIdsAsync(loanTypeIds);
+
+            foreach (var loan in loans)
+            {
+                if (deductionSchedules.Contains(loan.DeductionSchedule.ToTrimmedLowerCase()) == false)
+                    throw new BusinessLogicException("Deduction schedule is not valid.");
+
+                if (string.IsNullOrWhiteSpace(loan.LoanName))
+                {
+                    loan.LoanName = loanTypes
+                        .Where(x => x.RowID == loan.LoanTypeID)
+                        .FirstOrDefault()?
+                        .PartNo;
+                }
             }
-
-            _context.Entry(oldLoan).State = EntityState.Detached;
         }
 
         private static void SanitizeInsert(LoanSchedule loan)
@@ -128,17 +169,42 @@ namespace AccuPay.Data.Services
             loan.Created = DateTime.Now;
         }
 
-        private async Task SanitizeProperties(LoanSchedule loan)
+        private void SanitizeUpdate(LoanSchedule newLoan, LoanSchedule oldLoan)
         {
-            if (string.IsNullOrWhiteSpace(loan.LoanName))
-            {
-                var loanName = (await _productRepository
-                                    .GetByIdAsync(loan.LoanTypeID.Value))
-                                    ?.PartNo;
+            // if cancelled na yung loan, hindi pwede ma update
+            if ((oldLoan.Status == LoanSchedule.STATUS_CANCELLED))
+                throw new BusinessLogicException("Loan is already cancelled!");
 
-                loan.LoanName = loanName;
+            if (newLoan.TotalBalanceLeft == 0)
+            {
+                newLoan.LoanPayPeriodLeft = 0;
+                newLoan.Status = LoanSchedule.STATUS_COMPLETE;
             }
 
+            // if nag start ng magbawas ng loan, dapat hindi na pwede ma edit ang TotalLoanAmount and Loan Type
+            if (oldLoan.HasStarted)// || loanTransactionsCount > 0)
+            {
+                newLoan.TotalLoanAmount = oldLoan.TotalLoanAmount;
+                newLoan.TotalBalanceLeft = oldLoan.TotalBalanceLeft;
+
+                newLoan.LoanTypeID = oldLoan.LoanTypeID;
+
+                // recompute NoOfPayPeriod if TotalLoanAmount changed
+                newLoan.RecomputeTotalPayPeriod();
+            }
+
+            if (newLoan.TotalBalanceLeft > newLoan.TotalLoanAmount)
+            {
+                newLoan.TotalBalanceLeft = oldLoan.TotalLoanAmount;
+
+                // recompute LoanPayPeriodLeft if TotalBalanceLeft changed
+                newLoan.RecomputePayPeriodLeft();
+            }
+        }
+
+        private async Task SanitizeProperties(LoanSchedule loan)
+        {
+            // move this to overriden save validation methods
             await ValidationForBenchmark(loan);
 
             loan.TotalLoanAmount = AccuMath.CommercialRound(loan.TotalLoanAmount);
@@ -163,10 +229,10 @@ namespace AccuPay.Data.Services
             loan.RecomputePayPeriodLeft();
         }
 
-        private static void Validate(LoanSchedule loan)
+        private static void Validate(LoanSchedule loan, LoanSchedule oldLoan)
         {
-            if (loan.Status == LoanSchedule.STATUS_COMPLETE)
-                throw new BusinessLogicException("Loan schedule is already completed!");
+            if ((oldLoan.Status ?? loan.Status) == LoanSchedule.STATUS_COMPLETE)
+                throw new BusinessLogicException("Loan is already completed!");
 
             if (loan.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
@@ -177,13 +243,15 @@ namespace AccuPay.Data.Services
             if (loan.LoanTypeID == null)
                 throw new BusinessLogicException("Loan type is required.");
 
+            if (loan.DedEffectiveDateFrom < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+
             if (loan.TotalLoanAmount < 0)
                 throw new BusinessLogicException("Total loan amount cannot be less than 0.");
 
             if (loan.DeductionAmount < 0)
                 throw new BusinessLogicException("Deduction amount cannot be less than 0.");
 
-            // maybe check if it is a valid deduction schedule?
             if (string.IsNullOrWhiteSpace(loan.DeductionSchedule))
                 throw new BusinessLogicException("Deduction schedule is required.");
         }
@@ -210,11 +278,12 @@ namespace AccuPay.Data.Services
                 // #2
                 if (loan.Status == LoanSchedule.STATUS_IN_PROGRESS)
                 {
-                    var sameActiveLoans = await _loanRepository.GetActiveLoansByLoanNameAsync(loan.LoanName,
-                                                                                            loan.EmployeeID.Value);
+                    var sameActiveLoans = await _loanRepository.GetActiveLoansByLoanNameAsync(
+                        loan.LoanName,
+                        loan.EmployeeID.Value);
 
                     // if insert, check if there are any sameActiveLoans
-                    // if update, check if there are any sameActiveLoans that is not the currently updated loan schedule
+                    // if update, check if there are any sameActiveLoans that is not the currently updated loan
                     if ((loan.RowID == null && sameActiveLoans.Any()) ||
                         (loan.RowID.HasValue &&
                             sameActiveLoans.Where(l => l.RowID != loan.RowID).Any()))
@@ -223,6 +292,20 @@ namespace AccuPay.Data.Services
             }
         }
 
-        #endregion CRUD
+        private bool CheckIfStartDateNeedsToBeValidated(List<LoanSchedule> oldLoans, LoanSchedule loan)
+        {
+            // either a new loan
+            if (IsNewEntity(loan.RowID)) return true;
+
+            // or an existing loan where its Start Date is to be updated
+            var oldLoan = oldLoans.Where(o => o.RowID == loan.RowID).FirstOrDefault();
+
+            if (loan.DedEffectiveDateFrom.ToMinimumHourValue() != oldLoan.DedEffectiveDateFrom.ToMinimumHourValue())
+                return true;
+
+            return false;
+        }
+
+        #endregion Save
     }
 }

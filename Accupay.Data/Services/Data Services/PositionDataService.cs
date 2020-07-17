@@ -19,7 +19,15 @@ namespace AccuPay.Data.Services
             PositionRepository positionRepository,
             EmployeeRepository employeeRepository,
             PayPeriodRepository payPeriodRepository,
-            DivisionDataService divisionService) : base(positionRepository, payPeriodRepository)
+            DivisionDataService divisionService,
+            PayrollContext context,
+            PolicyHelper policy) :
+
+            base(positionRepository,
+                payPeriodRepository,
+                context,
+                policy,
+                entityName: "Position")
         {
             _positionRepository = positionRepository;
 
@@ -28,7 +36,7 @@ namespace AccuPay.Data.Services
             _divisionService = divisionService;
         }
 
-        public async Task DeleteAsync(int positionId)
+        public async override Task DeleteAsync(int positionId)
         {
             var position = await _positionRepository.GetByIdAsync(positionId);
 
@@ -41,7 +49,7 @@ namespace AccuPay.Data.Services
             await _positionRepository.DeleteAsync(position);
         }
 
-        protected override async Task SanitizeEntity(Position position)
+        protected override async Task SanitizeEntity(Position position, Position oldPosition)
         {
             if (position.DivisionID == null)
                 throw new BusinessLogicException("Division is required.");

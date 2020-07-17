@@ -444,17 +444,17 @@ Public Class EmployeeLeavesForm
     Private Async Function DeleteLeave(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                            Async Function()
-                                                Dim service = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                                                Await service.DeleteAsync(Me._currentLeave.RowID.Value)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Await dataService.DeleteAsync(Me._currentLeave.RowID.Value)
 
-                                                _userActivityRepository.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
 
-                                                Await LoadLeaves(currentEmployee)
+                Await LoadLeaves(currentEmployee)
 
-                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+                ShowBalloonInfo("Successfully Deleted.", messageTitle)
 
-                                            End Function)
+            End Function)
     End Function
 
     Private Sub UpdateEndDateDependingOnStartAndEndTimes()
@@ -612,7 +612,6 @@ Public Class EmployeeLeavesForm
             Return
         End If
 
-        'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
         Await DeleteLeave(currentEmployee, messageTitle)
 
     End Sub
@@ -644,25 +643,25 @@ Public Class EmployeeLeavesForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                        Async Function()
-                                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                                            Await leaveService.SaveManyAsync(changedLeaves)
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Await dataService.SaveManyAsync(changedLeaves)
 
-                                            For Each item In changedLeaves
-                                                RecordUpdate(item)
-                                            Next
+                For Each item In changedLeaves
+                    RecordUpdate(item)
+                Next
 
-                                            ShowBalloonInfo($"{changedLeaves.Count} Leave(s) Successfully Updated.", messageTitle)
+                ShowBalloonInfo($"{changedLeaves.Count} Leave(s) Successfully Updated.", messageTitle)
 
-                                            Dim currentEmployee = GetSelectedEmployee()
+                Dim currentEmployee = GetSelectedEmployee()
 
-                                            If currentEmployee IsNot Nothing Then
+                If currentEmployee IsNot Nothing Then
 
-                                                Await LoadLeaves(currentEmployee)
+                    Await LoadLeaves(currentEmployee)
 
-                                            End If
+                End If
 
-                                        End Function)
+            End Function)
     End Sub
 
     Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _

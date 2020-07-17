@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -15,16 +16,12 @@ Public Class AddSalaryForm
 
     Private _employee As Employee
 
-    Private _salaryRepo As SalaryRepository
-
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
 
         _employee = employee
-
-        _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
         _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
@@ -86,7 +83,8 @@ Public Class AddSalaryForm
                     .CreatedBy = z_User
                 End With
 
-                Await _salaryRepo.SaveAsync(newSalary)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Await dataService.SaveAsync(newSalary)
 
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(newSalary.RowID), z_OrganizationID)
 

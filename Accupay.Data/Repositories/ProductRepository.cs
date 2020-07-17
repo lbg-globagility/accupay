@@ -19,7 +19,7 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        #region CRUD
+        #region Save
 
         public async Task DeleteAsync(int id)
         {
@@ -182,55 +182,62 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 
         #region Single entity
 
-        internal async Task<Product> GetByIdAsync(int id)
+        public async Task<Product> GetByIdAsync(int id)
         {
-            return await _context.Products
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.Products.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        public async Task<Product> GetLoanTypeByIdAsync(int id)
+        public async Task<ICollection<Product>> GetManyByIdsAsync(int[] ids)
         {
-            return await GetByIdAsync(id);
+            return await _context.Products
+                .AsNoTracking()
+                .Where(x => ids.Contains(x.RowID.Value))
+                .ToListAsync();
         }
 
         public async Task<Product> GetOrCreateAdjustmentTypeAsync(string adjustmentTypeName, int organizationId, int userId)
         {
-            return await GetOrCreateTypeAsync(categoryName: ProductConstant.ADJUSTMENT_TYPE_CATEGORY,
-                                            typeName: adjustmentTypeName,
-                                            organizationId: organizationId,
-                                            userId: userId);
+            return await GetOrCreateTypeAsync(
+                categoryName: ProductConstant.ADJUSTMENT_TYPE_CATEGORY,
+                typeName: adjustmentTypeName,
+                organizationId: organizationId,
+                userId: userId);
         }
 
         public async Task<Product> GetOrCreateAllowanceTypeAsync(string allowanceTypeName, int organizationId, int userId)
         {
-            return await GetOrCreateTypeAsync(categoryName: ProductConstant.ALLOWANCE_TYPE_CATEGORY,
-                                            typeName: allowanceTypeName,
-                                            organizationId: organizationId,
-                                            userId: userId);
+            return await GetOrCreateTypeAsync(
+                categoryName: ProductConstant.ALLOWANCE_TYPE_CATEGORY,
+                typeName: allowanceTypeName,
+                organizationId: organizationId,
+                userId: userId);
         }
 
         public async Task<Product> GetOrCreateLeaveTypeAsync(string leaveTypeName, int organizationId, int userId)
         {
-            return await GetOrCreateTypeAsync(categoryName: ProductConstant.LEAVE_TYPE_CATEGORY,
-                                               typeName: leaveTypeName,
-                                               organizationId: organizationId,
-                                               userId: userId);
+            return await GetOrCreateTypeAsync(
+                categoryName: ProductConstant.LEAVE_TYPE_CATEGORY,
+                typeName: leaveTypeName,
+                organizationId: organizationId,
+                userId: userId);
         }
 
         public async Task<Product> GetOrCreateLoanTypeAsync(string loanTypeName, int organizationId, int userId)
         {
-            return await GetOrCreateTypeAsync(categoryName: ProductConstant.LOAN_TYPE_CATEGORY,
-                                               typeName: loanTypeName,
-                                               organizationId: organizationId,
-                                               userId: userId);
+            return await GetOrCreateTypeAsync(
+                categoryName: ProductConstant.LOAN_TYPE_CATEGORY,
+                typeName: loanTypeName,
+                organizationId: organizationId,
+                userId: userId);
         }
 
+        // TODO: maybe move this to data service because of the ArgumentException
         private async Task<Product> GetOrCreateTypeAsync(string categoryName, string typeName, int organizationId, int userId)
         {
             var categoryId = (await GetOrCreateCategoryByName(categoryName, organizationId))?.RowID;
@@ -269,7 +276,7 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<IEnumerable<Product>> GetBonusTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetBonusTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.BONUS_TYPE_CATEGORY;
 
@@ -277,7 +284,7 @@ namespace AccuPay.Data.Repositories
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<IEnumerable<Product>> GetDisciplinaryTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetDisciplinaryTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.EMPLOYEE_DISCIPLINARY_CATEGORY;
 
@@ -285,7 +292,7 @@ namespace AccuPay.Data.Repositories
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<IEnumerable<Product>> GetAllowanceTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetAllowanceTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.ALLOWANCE_TYPE_CATEGORY;
 
@@ -293,7 +300,7 @@ namespace AccuPay.Data.Repositories
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<IEnumerable<Product>> GetLeaveTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetLeaveTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.LEAVE_TYPE_CATEGORY;
 
@@ -301,42 +308,42 @@ namespace AccuPay.Data.Repositories
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<IEnumerable<Product>> GetLoanTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetLoanTypesAsync(int organizationId)
         {
-            return await (await GetLoanTypesBaseQuery(organizationId)
-                        ).ToListAsync();
+            return await (await GetLoanTypesBaseQuery(organizationId))
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetGovernmentLoanTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetGovernmentLoanTypesAsync(int organizationId)
         {
             string[] governmentLoans = {
                 ProductConstant.PAG_IBIG_LOAN,
                 ProductConstant.SSS_LOAN
             };
 
-            return await (await GetLoanTypesBaseQuery(organizationId)).
-                                Where(p => governmentLoans.Contains(p.PartNo)
-                        ).ToListAsync();
+            return await (await GetLoanTypesBaseQuery(organizationId))
+                    .Where(p => governmentLoans.Contains(p.PartNo))
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAdjustmentTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetAdjustmentTypesAsync(int organizationId)
         {
-            return await (await GetAdjustmentTypesBaseQuery(organizationId)).
-                            ToListAsync();
+            return await (await GetAdjustmentTypesBaseQuery(organizationId))
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetDeductionAdjustmentTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetDeductionAdjustmentTypesAsync(int organizationId)
         {
-            return await (await GetAdjustmentTypesBaseQuery(organizationId)).
-                        Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_DEDUCTION).
-                        ToListAsync();
+            return await (await GetAdjustmentTypesBaseQuery(organizationId))
+                    .Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_DEDUCTION)
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetAdditionAdjustmentTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetAdditionAdjustmentTypesAsync(int organizationId)
         {
-            return await (await GetAdjustmentTypesBaseQuery(organizationId)).
-                        Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_ADDITION).
-                        ToListAsync();
+            return await (await GetAdjustmentTypesBaseQuery(organizationId))
+                    .Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_ADDITION)
+                .ToListAsync();
         }
 
         public async Task<PaginatedList<Product>> GetPaginatedLoanTypeListAsync(PageOptions options, string searchTerm, int organizationId)
@@ -365,7 +372,9 @@ namespace AccuPay.Data.Repositories
 
         #endregion Queries
 
-        public List<string> ConvertToStringList(IEnumerable<Product> products, string columnName = "PartNo")
+        #region Others
+
+        public List<string> ConvertToStringList(ICollection<Product> products, string columnName = "PartNo")
         {
             List<string> stringList;
             stringList = new List<string>();
@@ -387,39 +396,43 @@ namespace AccuPay.Data.Repositories
             return stringList.OrderBy(s => s).ToList();
         }
 
+        #endregion Others
+
         #region Private helper methods
 
         private async Task<Product> GetProductByNameAndCategory(string productName, int categoryId, int organizationId)
         {
-            return await CreateBaseQueryByCategory(categoryId, organizationId).
-                            Where(p => p.PartNo.Trim().ToLower() == productName.ToTrimmedLowerCase()).
-                            FirstOrDefaultAsync();
+            return await CreateBaseQueryByCategory(categoryId, organizationId)
+                .Where(p => p.PartNo.Trim().ToLower() == productName.ToTrimmedLowerCase())
+                .FirstOrDefaultAsync();
         }
 
         private async Task<bool> CheckIfProductExists(string productName, int categoryId, int organizationId)
         {
-            var product = await GetProductByNameAndCategory(productName,
-                                                    categoryId: categoryId,
-                                                    organizationId: organizationId);
+            var product = await GetProductByNameAndCategory(
+                productName,
+                categoryId: categoryId,
+                organizationId: organizationId);
+
             return product != null;
         }
 
         // this may only apply to "Loan Type" use with caution
         private async Task<Category> GetOrCreateCategoryByName(string categoryName, int organizationId)
         {
-            var categoryProduct = await _context.Categories.
-                                    Where(c => c.OrganizationID == organizationId).
-                                    Where(c => c.CategoryName.Trim().ToLower() == categoryName.ToTrimmedLowerCase()).
-                                    FirstOrDefaultAsync();
+            var categoryProduct = await _context.Categories
+                .Where(c => c.OrganizationID == organizationId)
+                .Where(c => c.CategoryName.Trim().ToLower() == categoryName.ToTrimmedLowerCase())
+                .FirstOrDefaultAsync();
 
             if (categoryProduct == null)
             {
                 // get the existing category with same name to use as CategoryID
                 // this is due to the design of the database wanting the category to have a CategoryID
                 // to maybe group them across different organization but never used them in the application ever
-                var existingCategoryProduct = await _context.Categories.
-                                                Where(c => c.CategoryName == categoryName).
-                                                FirstOrDefaultAsync();
+                var existingCategoryProduct = await _context.Categories
+                    .Where(c => c.CategoryName == categoryName)
+                    .FirstOrDefaultAsync();
 
                 var existingCategoryProductId = existingCategoryProduct?.RowID;
 
@@ -468,17 +481,17 @@ namespace AccuPay.Data.Repositories
 
         internal async Task<bool> CheckIfAlreadyUsedInAllowancesAsync(string allowanceType)
         {
-            return await _context.AllowanceItems.
-                                Include(x => x.Allowance).
-                                Include(x => x.Allowance.Product).
-                                Where(x => x.Allowance.Product.PartNo == allowanceType).
-                                AnyAsync();
+            return await _context.AllowanceItems
+                .Include(x => x.Allowance)
+                .Include(x => x.Allowance.Product)
+                .Where(x => x.Allowance.Product.PartNo == allowanceType)
+                .AnyAsync();
         }
 
-        private async Task<IEnumerable<Product>> GetProductsByCategory(int categoryId, int organizationId)
+        private async Task<ICollection<Product>> GetProductsByCategory(int categoryId, int organizationId)
         {
-            var listOfValues = await CreateBaseQueryByCategory(categoryId, organizationId).
-                                        ToListAsync();
+            var listOfValues = await CreateBaseQueryByCategory(categoryId, organizationId)
+                .ToListAsync();
 
             return listOfValues;
         }
@@ -501,9 +514,9 @@ namespace AccuPay.Data.Repositories
 
         private IQueryable<Product> CreateBaseQueryByCategory(int categoryId, int organizationId)
         {
-            return _context.Products.
-                            Where(p => p.OrganizationID == organizationId).
-                            Where(p => p.CategoryID == categoryId);
+            return _context.Products
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.CategoryID == categoryId);
         }
 
         private static string DetermineAdjustmentTypeString(AdjustmentType adjustmentType)

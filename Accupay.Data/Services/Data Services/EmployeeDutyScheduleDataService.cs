@@ -12,7 +12,13 @@ namespace AccuPay.Data.Services
     {
         private readonly EmployeeDutyScheduleRepository _shiftRepository;
 
-        public EmployeeDutyScheduleDataService(EmployeeDutyScheduleRepository shiftRepository, PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
+        public EmployeeDutyScheduleDataService(
+            EmployeeDutyScheduleRepository shiftRepository,
+            PayPeriodRepository payPeriodRepository,
+            PolicyHelper policy) :
+
+            base(payPeriodRepository,
+                policy)
         {
             _shiftRepository = shiftRepository;
         }

@@ -14,16 +14,19 @@ namespace AccuPay.Web.Allowances.Services
     public class AllowanceService
     {
         private readonly ProductRepository _productRepository;
-        private readonly AllowanceDataService _allowanceService;
+        private readonly AllowanceRepository _allowanceRepository;
+        private readonly AllowanceDataService _dataService;
         private readonly ICurrentUser _currentUser;
 
         public AllowanceService(
-            AllowanceDataService allowanceService,
+            AllowanceDataService dataService,
             ProductRepository productRepository,
+            AllowanceRepository allowanceRepository,
             ICurrentUser currentUser)
         {
             _productRepository = productRepository;
-            _allowanceService = allowanceService;
+            _allowanceRepository = allowanceRepository;
+            _dataService = dataService;
             _currentUser = currentUser;
         }
 
@@ -31,7 +34,7 @@ namespace AccuPay.Web.Allowances.Services
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _allowanceService.GetPaginatedListAsync(
+            var paginatedList = await _allowanceRepository.GetPaginatedListAsync(
                 options,
                 _currentUser.OrganizationId,
                 searchTerm);
@@ -41,7 +44,7 @@ namespace AccuPay.Web.Allowances.Services
 
         public async Task<AllowanceDto> GetById(int id)
         {
-            var allowance = await _allowanceService.GetByIdWithEmployeeAndProductAsync(id);
+            var allowance = await _allowanceRepository.GetByIdWithEmployeeAndProductAsync(id);
 
             return ConvertToDto(allowance);
         }
@@ -56,28 +59,28 @@ namespace AccuPay.Web.Allowances.Services
             };
             ApplyChanges(dto, allowance);
 
-            await _allowanceService.SaveAsync(allowance);
+            await _dataService.SaveAsync(allowance);
 
             return ConvertToDto(allowance);
         }
 
         internal async Task<AllowanceDto> Update(int id, UpdateAllowanceDto dto)
         {
-            var allowance = await _allowanceService.GetByIdAsync(id);
+            var allowance = await _allowanceRepository.GetByIdAsync(id);
             if (allowance == null) return null;
 
             allowance.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, allowance);
 
-            await _allowanceService.SaveAsync(allowance);
+            await _dataService.SaveAsync(allowance);
 
             return ConvertToDto(allowance);
         }
 
         public async Task Delete(int id)
         {
-            await _allowanceService.DeleteAsync(id);
+            await _dataService.DeleteAsync(id);
         }
 
         public async Task<List<ProductDto>> GetAllowanceTypes()
@@ -92,7 +95,7 @@ namespace AccuPay.Web.Allowances.Services
 
         public List<string> GetFrequencyList()
         {
-            return _allowanceService.GetFrequencyList();
+            return _allowanceRepository.GetFrequencyList();
         }
 
         private static void ApplyChanges(CrudAllowanceDto dto, Allowance allowance)

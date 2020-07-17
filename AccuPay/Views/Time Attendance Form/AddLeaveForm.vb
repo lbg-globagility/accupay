@@ -179,8 +179,8 @@ Public Class AddLeaveForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
-                Dim service = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                Await service.SaveAsync(Me._newLeave)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Await dataService.SaveAsync(Me._newLeave)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLeave.RowID.Value, z_OrganizationID)
 

@@ -199,8 +199,8 @@ Public Class SalaryTab
         Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
         _salaries = salaryRepository.GetByEmployee(_employee.RowID.Value).
-                                        OrderByDescending(Function(s) s.EffectiveFrom).
-                                        ToList()
+            OrderByDescending(Function(s) s.EffectiveFrom).
+            ToList()
 
         RemoveHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
         dgvSalaries.DataSource = _salaries
@@ -223,7 +223,6 @@ Public Class SalaryTab
         End If
 
         If _currentSalary Is Nothing Then
-            FormToolsControl(False)
             SelectSalary(_salaries.FirstOrDefault())
         End If
 
@@ -385,14 +384,14 @@ Public Class SalaryTab
 
                 If _currentSalary.RowID.HasValue Then
 
-                    Dim salaryRepositoryQuery = MainServiceProvider.GetRequiredService(Of SalaryRepository)
-                    oldsalary = Await salaryRepositoryQuery.GetByIdAsync(_currentSalary.RowID.Value)
+                    Dim repository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+                    oldsalary = Await repository.GetByIdAsync(_currentSalary.RowID.Value)
                     _currentSalary.LastUpdBy = z_User
 
                 End If
 
-                Dim salaryRepositorySave = MainServiceProvider.GetRequiredService(Of SalaryRepository)
-                Await salaryRepositorySave.SaveAsync(_currentSalary)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Await dataService.SaveAsync(_currentSalary)
 
                 If _isSystemOwnerBenchMark Then
 
@@ -430,73 +429,73 @@ Public Class SalaryTab
 
         If _currentSalary.EffectiveFrom <> oldSalary.EffectiveFrom Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated {entityName} start date from '{oldSalary.EffectiveFrom.ToShortDateString}' to '{_currentSalary.EffectiveFrom.ToShortDateString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated {entityName} start date from '{oldSalary.EffectiveFrom.ToShortDateString}' to '{_currentSalary.EffectiveFrom.ToShortDateString}'."
+            })
         End If
         If _currentSalary.EffectiveTo.ToString <> oldSalary.EffectiveTo.ToString Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated {entityName} end date from '{oldSalary.EffectiveTo?.ToShortDateString}' to '{_currentSalary.EffectiveTo?.ToShortDateString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated {entityName} end date from '{oldSalary.EffectiveTo?.ToShortDateString}' to '{_currentSalary.EffectiveTo?.ToShortDateString}'."
+            })
         End If
         If _currentSalary.BasicSalary <> oldSalary.BasicSalary Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated basic salary from '{oldSalary.BasicSalary.ToString}' to '{_currentSalary.BasicSalary.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated basic salary from '{oldSalary.BasicSalary.ToString}' to '{_currentSalary.BasicSalary.ToString}'."
+            })
         End If
         If _currentSalary.AllowanceSalary <> oldSalary.AllowanceSalary Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated allowance salary from '{oldSalary.AllowanceSalary.ToString}' to '{_currentSalary.AllowanceSalary.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated allowance salary from '{oldSalary.AllowanceSalary.ToString}' to '{_currentSalary.AllowanceSalary.ToString}'."
+            })
         End If
         If _currentSalary.TotalSalary <> oldSalary.TotalSalary Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated total salary from '{oldSalary.TotalSalary.ToString}' to '{_currentSalary.TotalSalary.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated total salary from '{oldSalary.TotalSalary.ToString}' to '{_currentSalary.TotalSalary.ToString}'."
+            })
         End If
         If _currentSalary.AutoComputePhilHealthContribution <> oldSalary.AutoComputePhilHealthContribution Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated {entityName} PhilHealth auto from '{oldSalary.AutoComputePhilHealthContribution.ToString}' to '{_currentSalary.AutoComputePhilHealthContribution.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated {entityName} PhilHealth auto from '{oldSalary.AutoComputePhilHealthContribution.ToString}' to '{_currentSalary.AutoComputePhilHealthContribution.ToString}'."
+            })
         End If
         If _currentSalary.PhilHealthDeduction <> oldSalary.PhilHealthDeduction Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated {entityName} PhilHealth deduction from '{oldSalary.PhilHealthDeduction.ToString}' to '{_currentSalary.PhilHealthDeduction.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated {entityName} PhilHealth deduction from '{oldSalary.PhilHealthDeduction.ToString}' to '{_currentSalary.PhilHealthDeduction.ToString}'."
+            })
         End If
         If _currentSalary.DoPaySSSContribution <> oldSalary.DoPaySSSContribution Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated {entityName} SSS deduction from '{oldSalary.DoPaySSSContribution.ToString}' to '{_currentSalary.DoPaySSSContribution.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated {entityName} SSS deduction from '{oldSalary.DoPaySSSContribution.ToString}' to '{_currentSalary.DoPaySSSContribution.ToString}'."
+            })
         End If
         If _currentSalary.AutoComputeHDMFContribution <> oldSalary.AutoComputeHDMFContribution Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated {entityName} PagIbig auto from '{oldSalary.AutoComputeHDMFContribution.ToString}' to '{_currentSalary.AutoComputeHDMFContribution.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated {entityName} PagIbig auto from '{oldSalary.AutoComputeHDMFContribution.ToString}' to '{_currentSalary.AutoComputeHDMFContribution.ToString}'."
+            })
         End If
         If _currentSalary.HDMFAmount <> oldSalary.HDMFAmount Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldSalary.RowID),
-                        .Description = $"Updated {entityName} PagIbig deduction from '{oldSalary.HDMFAmount.ToString}' to '{_currentSalary.HDMFAmount.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldSalary.RowID),
+                .Description = $"Updated {entityName} PagIbig deduction from '{oldSalary.HDMFAmount.ToString}' to '{_currentSalary.HDMFAmount.ToString}'."
+            })
         End If
 
         If changes.Count > 0 Then
@@ -512,14 +511,15 @@ Public Class SalaryTab
 
         If _ecolaAllowanceId IsNot Nothing Then
 
-            Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+            Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
 
-            Dim ecolaAllowance = Await service.GetByIdAsync(_ecolaAllowanceId.Value)
+            Dim ecolaAllowance = Await repository.GetByIdAsync(_ecolaAllowanceId.Value)
 
             ecolaAllowance.Amount = txtEcola.Text.ToDecimal
             ecolaAllowance.LastUpdBy = z_User
 
-            Await service.SaveAsync(ecolaAllowance)
+            Await dataService.SaveAsync(ecolaAllowance)
 
         End If
     End Function
@@ -529,21 +529,24 @@ Public Class SalaryTab
         If _currentSalary.RowID.HasValue = False Then
 
             MessageBoxHelper.Warning("No selected salary!")
+            Return
 
         End If
 
         Dim result = MsgBox("Are you sure you want to delete this salary?", MsgBoxStyle.YesNo, "Delete Salary")
 
-        If result = MsgBoxResult.Yes Then
+        If result <> MsgBoxResult.Yes Then Return
 
-            Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
-            Await salaryRepository.DeleteAsync(_currentSalary.RowID.Value)
+        Await FunctionUtils.TryCatchFunctionAsync("Delete Salary",
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Await dataService.DeleteAsync(_currentSalary.RowID.Value)
 
-            Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            userActivityRepository.RecordDelete(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
+                Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+                userActivityRepository.RecordDelete(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
 
-            LoadSalaries()
-        End If
+                LoadSalaries()
+            End Function)
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -567,9 +570,11 @@ Public Class SalaryTab
         If _currentSalary Is Nothing Then
             ClearForm()
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         Else
             ChangeMode(FormMode.Editing)
             DisplaySalary()
+            FormToolsControl(True)
         End If
     End Sub
 

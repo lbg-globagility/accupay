@@ -18,11 +18,7 @@ import { EditSalaryComponent } from 'src/app/salaries/edit-salary/edit-salary.co
 import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
-import { ViewOvertimeComponent } from 'src/app/overtimes/view-overtime/view-overtime.component';
-import { NewOvertimeComponent } from 'src/app/overtimes/new-overtime/new-overtime.component';
-import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-overtime.component';
 import { ShiftListComponent } from 'src/app/shifts/shift-list/shift-list.component';
-import { EditShiftComponent } from 'src/app/shifts/edit-shift/edit-shift.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
 import { ViewAllowanceComponent } from 'src/app/allowances/view-allowance/view-allowance.component';
 import { NewAllowanceComponent } from 'src/app/allowances/new-allowance/new-allowance.component';
@@ -202,18 +198,6 @@ const routes: Routes = [
         component: OvertimeListComponent,
       },
       {
-        path: 'overtimes/new',
-        component: NewOvertimeComponent,
-      },
-      {
-        path: 'overtimes/:id',
-        component: ViewOvertimeComponent,
-      },
-      {
-        path: 'overtimes/:id/edit',
-        component: EditOvertimeComponent,
-      },
-      {
         path: 'time-entry',
         component: TimeEntryComponent,
       },
@@ -224,10 +208,6 @@ const routes: Routes = [
       {
         path: 'shifts',
         component: ShiftListComponent,
-      },
-      {
-        path: 'shifts/:id/edit',
-        component: EditShiftComponent,
       },
       {
         path: 'allowances',

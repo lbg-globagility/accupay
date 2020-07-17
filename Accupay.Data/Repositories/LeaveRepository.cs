@@ -16,7 +16,7 @@ namespace AccuPay.Data.Repositories
         {
         }
 
-        #region CRUD
+        #region Save
 
         protected override void DetachNavigationProperties(Leave leave)
         {
@@ -26,16 +26,11 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 
         #region Single entity
-
-        public async Task<Leave> GetByIdAsync(int id)
-        {
-            return await _context.Leaves.FirstOrDefaultAsync(l => l.RowID == id);
-        }
 
         public async Task<Leave> GetByIdWithEmployeeAsync(int id)
         {

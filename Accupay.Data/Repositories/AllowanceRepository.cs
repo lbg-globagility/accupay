@@ -36,40 +36,40 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        internal async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int id)
+        public async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int id)
         {
             return await _context.Allowances
-                                .Include(x => x.Employee)
-                                .Include(x => x.Product)
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+                .Include(x => x.Employee)
+                .Include(x => x.Product)
+                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        internal async Task<Allowance> GetEmployeeEcolaAsync(int employeeId,
-                                                        int organizationId,
-                                                        TimePeriod timePeriod)
+        public async Task<Allowance> GetEmployeeEcolaAsync(
+            int employeeId,
+            int organizationId,
+            TimePeriod timePeriod)
         {
-            return await CreateBaseQueryByTimePeriod(organizationId,
-                                                    timePeriod).
-
-                                Where(a => a.EmployeeID == employeeId).
-                                Where(a => a.Product.PartNo.ToLower() ==
-                                            ProductConstant.ECOLA).
-                                FirstOrDefaultAsync();
+            return await CreateBaseQueryByTimePeriod(
+                    organizationId,
+                    timePeriod)
+                .Where(a => a.EmployeeID == employeeId)
+                .Where(a => a.Product.PartNo.ToLower() == ProductConstant.ECOLA)
+                .FirstOrDefaultAsync();
         }
 
         #endregion Single entity
 
         #region List of entities
 
-        internal async Task<IEnumerable<Allowance>> GetByEmployeeWithProductAsync(int employeeId)
+        public async Task<ICollection<Allowance>> GetByEmployeeWithProductAsync(int employeeId)
         {
-            return await _context.Allowances.
-                            Include(p => p.Product).
-                            Where(l => l.EmployeeID == employeeId).
-                            ToListAsync();
+            return await _context.Allowances
+                .Include(p => p.Product)
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
-        internal async Task<PaginatedList<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Allowances
                 .Include(x => x.Employee)
@@ -98,27 +98,27 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Allowance>(allowances, count);
         }
 
-        internal ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId,
-                                                                TimePeriod timePeriod)
+        public ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId, TimePeriod timePeriod)
         {
-            return CreateBaseQueryByTimePeriod(organizationId,
-                                            timePeriod).
-                                            ToList();
+            return CreateBaseQueryByTimePeriod(
+                    organizationId,
+                    timePeriod).
+                ToList();
         }
 
-        internal async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId,
-                                                                                TimePeriod timePeriod)
+        public async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId, TimePeriod timePeriod)
         {
-            return await CreateBaseQueryByTimePeriod(organizationId,
-                                                    timePeriod).
-                                                    ToListAsync();
+            return await CreateBaseQueryByTimePeriod(
+                    organizationId,
+                    timePeriod).
+                ToListAsync();
         }
 
         #endregion List of entities
 
         #region Others
 
-        internal List<string> GetFrequencyList()
+        public List<string> GetFrequencyList()
         {
             return new List<string>()
             {
@@ -129,9 +129,36 @@ namespace AccuPay.Data.Repositories
             };
         }
 
-        internal async Task<bool> CheckIfAlreadyUsedAsync(int id)
+        public async Task<ICollection<PayPeriod>> GetPayPeriodsAsync(int id)
         {
-            return await _context.AllowanceItems.AnyAsync(a => a.AllowanceID == id);
+            return await _context
+                .AllowanceItems
+                .AsNoTracking()
+                .Include(x => x.PayPeriod)
+                .Where(x => x.AllowanceID == id)
+                .Select(x => x.PayPeriod)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<PayPeriod>> GetPayPeriodsAsync(int[] ids)
+        {
+            return await _context
+                .AllowanceItems
+                .AsNoTracking()
+                .Include(x => x.PayPeriod)
+                .Where(x => ids.Contains(x.AllowanceID.Value))
+                .Select(x => x.PayPeriod)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<AllowanceItem>> GetAllowanceItemsWithPayPeriodAsync(int[] ids)
+        {
+            return await _context
+                .AllowanceItems
+                .AsNoTracking()
+                .Include(x => x.PayPeriod)
+                .Where(x => ids.Contains(x.AllowanceID.Value))
+                .ToListAsync();
         }
 
         #endregion Others
@@ -140,14 +167,13 @@ namespace AccuPay.Data.Repositories
 
         #region Private helper methods
 
-        private IQueryable<Allowance> CreateBaseQueryByTimePeriod(int organizationId,
-                                                                TimePeriod timePeriod)
+        private IQueryable<Allowance> CreateBaseQueryByTimePeriod(int organizationId, TimePeriod timePeriod)
         {
-            return _context.Allowances.
-                    Include(a => a.Product).
-                    Where(a => a.OrganizationID == organizationId).
-                    Where(a => a.EffectiveStartDate <= timePeriod.End).
-                    Where(a => a.EffectiveEndDate == null ? true : timePeriod.Start <= a.EffectiveEndDate);
+            return _context.Allowances
+                    .Include(a => a.Product)
+                    .Where(a => a.OrganizationID == organizationId)
+                    .Where(a => a.EffectiveStartDate <= timePeriod.End)
+                    .Where(a => a.EffectiveEndDate == null ? true : timePeriod.Start <= a.EffectiveEndDate);
         }
 
         #endregion Private helper methods

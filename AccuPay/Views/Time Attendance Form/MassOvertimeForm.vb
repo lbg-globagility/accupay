@@ -234,10 +234,11 @@ Public Class MassOvertimePresenter
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
 
-        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-        Dim overtimes = service.GetByEmployeeIDsAndDatePeriod(z_OrganizationID,
-                                                            employeeIds,
-                                                            New TimePeriod(dateFrom, dateTo))
+        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim overtimes = repository.GetByEmployeeIDsAndDatePeriod(
+            z_OrganizationID,
+            employeeIds,
+            New TimePeriod(dateFrom, dateTo))
 
         Return overtimes.
             GroupBy(Function(o) o.EmployeeID).

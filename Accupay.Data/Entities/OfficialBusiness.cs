@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeofficialbusiness")]
-    public class OfficialBusiness : BaseEntity
+    public class OfficialBusiness : BaseEntity, IPayrollEntity
     {
         public const string StatusApproved = "Approved";
 
@@ -48,7 +48,9 @@ namespace AccuPay.Data.Entities
 
         public string Comments { get; set; }
 
-        public virtual Employee Employee { get; set; }
+        public Employee Employee { get; set; }
+
+        public DateTime? PayrollDate => StartDate;
 
         [NotMapped]
         public DateTime? StartTimeFull

@@ -186,17 +186,17 @@ Public Class ImportOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await service.SaveManyAsync(_overtimes)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Await dataService.SaveManyAsync(_overtimes)
 
                 Dim importlist = New List(Of UserActivityItem)
 
                 For Each overtime In _overtimes
                     importlist.Add(New UserActivityItem() With
-                        {
+                    {
                         .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = CInt(overtime.RowID)
-                        })
+                    })
                 Next
 
                 _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)

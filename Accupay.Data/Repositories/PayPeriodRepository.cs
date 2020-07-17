@@ -4,6 +4,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace AccuPay.Data.Repositories
             _policy = policy;
         }
 
-        #region CRUD
+        #region Save
 
         public async Task OpenAsync(int id)
         {
@@ -34,7 +35,7 @@ namespace AccuPay.Data.Repositories
             await ToggleCloseAsync(id, isClosed: true);
         }
 
-        #endregion CRUD
+        #endregion Save
 
         #region Queries
 
@@ -78,14 +79,7 @@ namespace AccuPay.Data.Repositories
         {
             var query = CreateBaseQuery(organizationId);
 
-            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
-            {
-                query = query.Where(p => p.IsClosed);
-            }
-            else
-            {
-                query = query.Where(p => p.Status == PayPeriodStatus.Closed);
-            }
+            query = AddCheckIfClosedPayPeriodQuery(query);
 
             if (dateRange != null)
             {
@@ -97,6 +91,32 @@ namespace AccuPay.Data.Repositories
             }
 
             return await query.ToListAsync();
+        }
+
+        public async Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date)
+        {
+            var query = CreateBaseQuery(organizationId);
+
+            query = AddCheckIfClosedPayPeriodQuery(query);
+
+            var cutOffStart = GetCutOffPeriodUsingDefault(new TimePeriod(date, date)).Start;
+            query = query.Where(x => x.PayFromDate >= cutOffStart);
+
+            return await query.AnyAsync();
+        }
+
+        public IQueryable<PayPeriod> AddCheckIfClosedPayPeriodQuery(IQueryable<PayPeriod> query)
+        {
+            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
+            {
+                query = query.Where(p => p.IsClosed);
+            }
+            else
+            {
+                query = query.Where(p => p.Status == PayPeriodStatus.Closed);
+            }
+
+            return query;
         }
 
         /// <summary>
@@ -315,6 +335,8 @@ namespace AccuPay.Data.Repositories
 
         #endregion Queries
 
+        #region Private helper methods
+
         private IQueryable<PayPeriod> CreateBaseQueryByMonthYearAndPayPrequency(
             int organizationId,
             int month,
@@ -369,8 +391,8 @@ namespace AccuPay.Data.Repositories
 
         private TimePeriod GetCutOffPeriodUsingDefault(TimePeriod dateRange)
         {
-            var cutOffStartDate = GetCutOffDateUsingDefault(dateRange.Start, isCutOffStart: true);
-            var cutOffEndDate = GetCutOffDateUsingDefault(dateRange.End, isCutOffStart: false);
+            var cutOffStartDate = GetCutOffDateUsingDefault(dateRange.Start.ToMinimumHourValue(), isCutOffStart: true);
+            var cutOffEndDate = GetCutOffDateUsingDefault(dateRange.End.ToMinimumHourValue(), isCutOffStart: false);
 
             return new TimePeriod(cutOffStartDate, cutOffEndDate);
         }
@@ -389,5 +411,7 @@ namespace AccuPay.Data.Repositories
                 currentDaySpan.From.GetDate(month: month, year: year) :
                 currentDaySpan.To.GetDate(month: month, year: year);
         }
+
+        #endregion Private helper methods
     }
 }

@@ -12,7 +12,13 @@ namespace AccuPay.Data.Services
     {
         private readonly TimeLogRepository _timeLogRepository;
 
-        public TimeLogDataService(TimeLogRepository timeLogRepository, PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
+        public TimeLogDataService(
+            TimeLogRepository timeLogRepository,
+            PayPeriodRepository payPeriodRepository,
+            PolicyHelper policy) :
+
+            base(payPeriodRepository,
+                policy)
         {
             _timeLogRepository = timeLogRepository;
         }

@@ -27,7 +27,7 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        internal async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
+        public async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.OfficialBusinesses
                 .Include(x => x.Employee)
@@ -38,14 +38,14 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        internal async Task<ICollection<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
+        public async Task<ICollection<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
         {
             return await _context.OfficialBusinesses
                 .Where(l => l.EmployeeID == employeeId)
                 .ToListAsync();
         }
 
-        internal async Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(
+        public async Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(
             PageOptions options,
             int organizationId,
             string searchTerm = "",
@@ -112,7 +112,7 @@ namespace AccuPay.Data.Repositories
 
         #region Others
 
-        internal List<string> GetStatusList()
+        public List<string> GetStatusList()
         {
             return new List<string>()
             {
