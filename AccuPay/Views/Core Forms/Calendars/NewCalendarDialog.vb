@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -41,14 +42,18 @@ Public Class NewCalendarDialog
             End If
         End If
 
-        Dim calendar = New PayCalendar()
-        calendar.Name = NameTextbox.Text
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Dim calendar = New PayCalendar()
+                calendar.Name = NameTextbox.Text
 
-        Dim copiedCalendar = DirectCast(CopyCalendarComboBox.SelectedItem, PayCalendar)
+                Dim copiedCalendar = DirectCast(CopyCalendarComboBox.SelectedItem, PayCalendar)
 
-        Await _repository.CreateAsync(calendar, copiedCalendar)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
+                Await dataService.CreateAsync(calendar, copiedCalendar)
 
-        DialogResult = DialogResult.OK
+                DialogResult = DialogResult.OK
+            End Function)
     End Sub
 
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click

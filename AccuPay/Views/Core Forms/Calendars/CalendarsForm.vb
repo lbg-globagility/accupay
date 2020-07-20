@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -136,12 +137,15 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
-        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        Await FunctionUtils.TryCatchFunctionAsync("Save Changes",
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
 
-        Await repository.Update(_currentCalendar)
-        Await repository.UpdateDaysAsync(Enumerable.Empty(Of CalendarDay).ToList(), _changeTracker)
+                Await dataService.UpdateAsync(_currentCalendar)
+                Await dataService.UpdateDaysAsync(Enumerable.Empty(Of CalendarDay).ToList(), _changeTracker)
 
-        ClearChangeTracker()
+                ClearChangeTracker()
+            End Function)
     End Sub
 
     Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
@@ -202,15 +206,14 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
-        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
 
-        Try
-            Await repository.Delete(_currentCalendar)
+        Await FunctionUtils.TryCatchFunctionAsync("Delete Calendar",
+        Async Function()
+            Await dataService.DeleteAsync(_currentCalendar)
             LoadCalendars()
             MessageBoxHelper.Information("Calendar has been deleted", "Calendar Deleted", MessageBoxButtons.OK)
-        Catch ex As Exception
-            MessageBoxHelper.ErrorMessage("Failed to delete calendar, calendar might be in use.")
-        End Try
+        End Function)
     End Sub
 
 End Class

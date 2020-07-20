@@ -133,6 +133,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of SystemOwnerService)
 
         services.AddTransient(Of AllowanceDataService)
+        services.AddTransient(Of CalendarDataService)
         services.AddTransient(Of DivisionDataService)
         services.AddTransient(Of EmployeeDataService)
         services.AddTransient(Of EmployeeDutyScheduleDataService)

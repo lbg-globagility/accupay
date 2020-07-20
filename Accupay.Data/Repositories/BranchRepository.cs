@@ -72,5 +72,12 @@ namespace AccuPay.Data.Repositories
         {
             return await _context.Branches.ToListAsync();
         }
+
+        public async Task<bool> HasCalendarAsync(PayCalendar payCalendar)
+        {
+            return await _context.Branches
+                .Where(b => b.CalendarID == payCalendar.RowID)
+                .AnyAsync();
+        }
     }
 }

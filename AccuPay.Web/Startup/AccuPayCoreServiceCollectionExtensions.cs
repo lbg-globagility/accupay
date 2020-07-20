@@ -101,6 +101,7 @@ namespace AccuPay.Web
             services.AddScoped<SystemOwnerService>();
 
             services.AddScoped<AllowanceDataService>();
+            services.AddScoped<CalendarDataService>();
             services.AddScoped<DivisionDataService>();
             services.AddScoped<EmployeeDataService>();
             services.AddScoped<EmployeeDutyScheduleDataService>();

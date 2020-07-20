@@ -85,23 +85,5 @@ namespace AccuPay.Data.Services
                 return false;
             }
         }
-
-        //public bool CheckIfDataIsNotInOpenPayPeriod(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
-        //{
-        //    //var checkQuery = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(payPeriods.AsQueryable());
-
-        //    //if (checkQuery.Any())
-        //    //{
-        //    //    if (throwException)
-        //    //    {
-        //    //        throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
-        //    //    }
-        //    //    return true;
-        //    //}
-        //    //else
-        //    //{
-        //    //    return false;
-        //    //}
-        //}
     }
 }

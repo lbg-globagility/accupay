@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,12 +15,19 @@ namespace AccuPay.Web.Calendars
 
         private readonly DayTypeRepository _dayTypeRepository;
 
+        private readonly CalendarDataService _dataService;
+
         private readonly ICurrentUser _currentUser;
 
-        public CalendarService(CalendarRepository repository, DayTypeRepository dayTypeRepository, ICurrentUser currentUser)
+        public CalendarService(
+            CalendarRepository repository,
+            DayTypeRepository dayTypeRepository,
+            CalendarDataService dataService,
+            ICurrentUser currentUser)
         {
             _repository = repository;
             _dayTypeRepository = dayTypeRepository;
+            _dataService = dataService;
             _currentUser = currentUser;
         }
 
@@ -54,7 +62,7 @@ namespace AccuPay.Web.Calendars
 
             var copiedCalendar = await _repository.GetById(dto.CopiedCalendarId);
 
-            await _repository.CreateAsync(calendar, copiedCalendar);
+            await _dataService.CreateAsync(calendar, copiedCalendar);
 
             return ConvertToDto(calendar);
         }
@@ -65,7 +73,7 @@ namespace AccuPay.Web.Calendars
             calendar.Name = dto.Name;
             calendar.LastUpdBy = _currentUser.DesktopUserId;
 
-            await _repository.Update(calendar);
+            await _dataService.UpdateAsync(calendar);
 
             return ConvertToDto(calendar);
         }
@@ -106,7 +114,7 @@ namespace AccuPay.Web.Calendars
                 calendarDay.Description = dto.Description;
             }
 
-            await _repository.UpdateDaysAsync(added, updated);
+            await _dataService.UpdateDaysAsync(added, updated);
         }
 
         public async Task<ICollection<CalendarDto>> List()

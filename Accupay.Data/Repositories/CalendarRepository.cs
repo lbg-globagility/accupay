@@ -19,9 +19,6 @@ namespace AccuPay.Data.Repositories
 
         public async Task CreateAsync(PayCalendar calendar, PayCalendar copiedCalendar)
         {
-            if (copiedCalendar.RowID == null)
-                throw new Exception("Copied calendar does not exists");
-
             var transaction = await _context.Database.BeginTransactionAsync();
 
             try
@@ -55,7 +52,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task Update(PayCalendar calendar)
+        public async Task UpdateAsync(PayCalendar calendar)
         {
             _context.Entry(calendar).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -76,25 +73,14 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(PayCalendar payCalendar)
+        public async Task DeleteAsync(PayCalendar payCalendar)
         {
-            var isInUse = await _context.Branches
-                .Where(b => b.CalendarID == payCalendar.RowID)
-                .AnyAsync();
-
-            if (isInUse)
-            {
-                throw new Exception("Calendar is currently in use");
-            }
-            else
-            {
-                var calendarDays = await _context.CalendarDays
+            var calendarDays = await _context.CalendarDays
                     .Where(d => d.CalendarID == payCalendar.RowID)
                     .ToListAsync();
 
-                _context.Calendars.Remove(payCalendar);
-                await _context.SaveChangesAsync();
-            }
+            _context.Calendars.Remove(payCalendar);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<ICollection<PayCalendar>> GetAllAsync()
