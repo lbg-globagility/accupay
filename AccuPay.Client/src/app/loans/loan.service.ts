@@ -7,6 +7,7 @@ import { SelectItem } from 'src/app/core/shared/select-item';
 import { Loan } from 'src/app/loans/shared/loan';
 import { LoanHistory } from './shared/loan-history';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
+import { LoanImportParserOutput } from './shared/loam-import-parser-output';
 
 @Injectable({
   providedIn: 'root',
@@ -73,6 +74,16 @@ export class LoanService extends BasePdfService {
     return this.getFile(
       this.loanTemplateFileName,
       `${this.baseUrl}/accupay-loan-template`
+    );
+  }
+
+  import(file: File): Observable<LoanImportParserOutput> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.httpClient.post<LoanImportParserOutput>(
+      `${this.baseUrl}/import`,
+      formData
     );
   }
 }

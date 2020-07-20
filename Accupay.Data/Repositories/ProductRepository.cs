@@ -84,6 +84,24 @@ namespace AccuPay.Data.Repositories
             return await AddProductAsync(loanName, product, organizationId, userId);
         }
 
+        public async Task<List<Product>> AddManyLoanTypeAsync(List<string> loanNames, int organizationId, int userId)
+        {
+            List<Product> products = new List<Product>();
+            foreach (var loanName in loanNames)
+            {
+                var product = new Product()
+                {
+                    Category = ProductConstant.LOAN_TYPE_CATEGORY
+                };
+
+                var addedLoanType = await AddProductAsync(loanName, product, organizationId, userId);
+
+                products.Add(addedLoanType);
+            }
+
+            return products;
+        }
+
         public async Task<Product> AddAdjustmentTypeAsync(string adjustmentName, int organizationId, int userId, AdjustmentType adjustmentType = AdjustmentType.Blank, string comments = "")
         {
             Product product = new Product

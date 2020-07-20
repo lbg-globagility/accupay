@@ -4,6 +4,7 @@ using AccuPay.Web.Loans;
 using AccuPay.Web.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -107,6 +108,13 @@ namespace AccuPay.Web.Controllers
         public ActionResult GetLoanTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-loan-template.xlsx");
+        }
+
+        [HttpPost("import")]
+        [Permission(PermissionTypes.LoanCreate)]
+        public async Task<Data.Services.Imports.Loans.LoanImportParserOutput> Import([FromForm] IFormFile file)
+        {
+            return await _service.Import(file);
         }
     }
 }
