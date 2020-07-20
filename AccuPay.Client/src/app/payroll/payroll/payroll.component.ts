@@ -7,7 +7,6 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { LoadingState } from 'src/app/core/states/loading-state';
-import { PayPeriodViewModel } from './payperiod-viewmodel';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 
 @Component({
@@ -25,7 +24,7 @@ export class PayrollComponent implements OnInit {
 
   readonly displayedColumns = ['cutoff', 'status', 'actions'];
 
-  dataSource: MatTableDataSource<PayPeriodViewModel>;
+  dataSource: MatTableDataSource<PayPeriod>;
 
   loadingState: LoadingState = new LoadingState();
 
@@ -64,21 +63,6 @@ export class PayrollComponent implements OnInit {
 
     this.payPeriodService
       .getList(options, this.searchTerm)
-      .pipe(
-        map((payPeriodList) => {
-          let list = new PaginatedList<PayPeriodViewModel>();
-
-          list.pageNumber = payPeriodList.pageNumber;
-          list.totalCount = payPeriodList.totalCount;
-          list.totalPages = payPeriodList.totalPages;
-
-          list.items = payPeriodList.items.map((payPeriod) => {
-            return new PayPeriodViewModel(payPeriod);
-          });
-
-          return list;
-        })
-      )
       .subscribe((data) => {
         this.totalPages = data.totalPages;
         this.totalCount = data.totalCount;

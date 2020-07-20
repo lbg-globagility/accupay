@@ -14,6 +14,7 @@
       (click)="calculate()"
       style="margin-right: 8px;"
       [disabled]="updatingState.isLoading"
+      *ngIf="payPeriod?.status == 'Open'"
     >
       CALCULATE
     </button>
@@ -45,6 +46,24 @@
       </button>
       <button
         mat-menu-item
+        (click)="deletePayroll()"
+        *ngIf="payPeriod.status == 'Open'"
+        matTooltip="Delete all paystubs for this pay period"
+      >
+        <mat-icon>delete_outline</mat-icon>
+        <span>Delete Payroll</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="cancelPayroll()"
+        *ngIf="payPeriod.status == 'Open'"
+        matTooltip="Delete all paystubs for this pay period and resets its status"
+      >
+        <mat-icon>cancel_presentation</mat-icon>
+        <span>Cancel Payroll</span>
+      </button>
+      <button
+        mat-menu-item
         (click)="closePayroll()"
         *ngIf="payPeriod.status == 'Open'"
       >
@@ -59,7 +78,14 @@
   <mat-spinner></mat-spinner>
 </div>
 
-<div class="flex">
+<div
+  class="app-empty-table"
+  *ngIf="loadingState.isSuccess && dataSource?.data.length <= 0"
+>
+  No paystubs yet.
+</div>
+
+<div class="flex" *ngIf="dataSource?.data.length > 0">
   <div class="w-1/3 bg-white mat-elevation-z1">
     <div class="px-4">
       <mat-form-field appearance="standard">

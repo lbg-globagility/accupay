@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { MatTableDataSource } from '@angular/material/table';
 import { Paystub } from 'src/app/payroll/shared/paystub';
@@ -60,6 +60,7 @@ export class ViewPayPeriodComponent implements OnInit {
     private payPeriodService: PayPeriodService,
     private reportService: ReportService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandler,
     private dialog: MatDialog
@@ -188,6 +189,67 @@ export class ViewPayPeriodComponent implements OnInit {
         confirmButtonColor: 'primary',
       },
       reopenFunction
+    );
+  }
+
+  deletePayroll(): void {
+    let payPeriodId = this.payPeriod?.id;
+
+    if (!this.payPeriod?.id) return;
+
+    let deleteFunction = () => {
+      this.updatingState.changeToLoading();
+      this.snackBar.open('Deleting Payroll...');
+      this.payPeriodService.delete(payPeriodId).subscribe(
+        () => {
+          window.location.reload();
+        },
+        (err) => {
+          this.updatingState.changeToNothing();
+          this.errorHandler.badRequest(err, 'Failed to delete pay period.');
+        }
+      );
+    };
+
+    this.confirmAction(
+      {
+        title: 'Delete Payroll',
+        content: 'Are you sure you want to delete this payroll?',
+        confirmButtonText: 'Delete Payroll',
+        confirmButtonColor: 'primary',
+      },
+      deleteFunction
+    );
+  }
+
+  cancelPayroll(): void {
+    let payPeriodId = this.payPeriod?.id;
+
+    if (!this.payPeriod?.id) return;
+
+    let cancelFunction = () => {
+      this.updatingState.changeToLoading();
+      this.snackBar.open('Cancelling Payroll...');
+      this.payPeriodService.cancel(payPeriodId).subscribe(
+        () => {
+          this.snackBar.dismiss();
+          this.router.navigate(['payroll']);
+        },
+        (err) => {
+          this.updatingState.changeToNothing();
+          this.errorHandler.badRequest(err, 'Failed to cancel pay period.');
+        }
+      );
+    };
+
+    this.confirmAction(
+      {
+        title: 'Cancel Payroll',
+        content: 'Are you sure you want to cancel this payroll?',
+        confirmButtonText: 'Cancel Payroll',
+        confirmButtonColor: 'primary',
+      },
+      cancelFunction
     );
   }
 

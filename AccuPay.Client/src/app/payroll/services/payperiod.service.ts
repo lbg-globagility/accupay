@@ -66,6 +66,20 @@ export class PayPeriodService extends BasePdfService {
     );
   }
 
+  delete(payPeriodId: number): Observable<PayPeriod> {
+    return this.httpClient.put<PayPeriod>(
+      `${this.baseUrl}/${payPeriodId}/delete`,
+      {}
+    );
+  }
+
+  cancel(payPeriodId: number): Observable<PayPeriod> {
+    return this.httpClient.put<PayPeriod>(
+      `${this.baseUrl}/${payPeriodId}/cancel`,
+      {}
+    );
+  }
+
   getLatest(): Observable<PayPeriod> {
     return this.httpClient.get<PayPeriod>(`${this.baseUrl}/latest`);
   }

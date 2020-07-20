@@ -1,4 +1,6 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -13,23 +15,34 @@ namespace AccuPay.Web.Payroll
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
         private readonly PayPeriodRepository _repository;
-        private readonly PayPeriodDataService _dataService;
+        private readonly PayPeriodDataService _payPeriodDataService;
+        private readonly PaystubDataService _paystubDataService;
         private readonly ICurrentUser _currentUser;
 
         public PayperiodService(
             DbContextOptionsService dbContextOptionsService,
             PayPeriodRepository repository,
-            PayPeriodDataService dataService,
+            PayPeriodDataService payPeriodDataService,
+            PaystubDataService paystubDataService,
             ICurrentUser currentUser)
         {
             _dbContextOptionsService = dbContextOptionsService;
             _repository = repository;
-            _dataService = dataService;
+            _payPeriodDataService = payPeriodDataService;
+            _paystubDataService = paystubDataService;
             _currentUser = currentUser;
         }
 
         public async Task<PayrollResultDto> Calculate(PayrollResources resources, int payperiodId)
         {
+            var payPeriod = await _repository.GetByIdAsync(payperiodId);
+
+            if (payPeriod == null || payPeriod?.RowID == null || payPeriod?.OrganizationID == null)
+                throw new BusinessLogicException("Pay Period does not exists");
+
+            if (payPeriod.Status != PayPeriodStatus.Open)
+                throw new BusinessLogicException("Only \"Open\" pay periods can be computed.");
+
             await resources.Load(payperiodId, _currentUser.OrganizationId, _currentUser.DesktopUserId);
 
             var results = new List<PayrollGeneration.Result>();
@@ -68,7 +81,7 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PayPeriodDto> Start(StartPayrollDto dto)
         {
-            var newPayPeriod = await _dataService.StartStatusAsync(
+            var newPayPeriod = await _payPeriodDataService.StartStatusAsync(
                 organizationId: _currentUser.OrganizationId,
                 month: dto.Month,
                 year: dto.Year,
@@ -80,12 +93,25 @@ namespace AccuPay.Web.Payroll
 
         public async Task Close(int payPeriodId)
         {
-            await _dataService.CloseAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+            await _payPeriodDataService.CloseAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
         }
 
         public async Task Reopen(int payPeriodId)
         {
-            await _dataService.ReopenAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+            await _payPeriodDataService.ReopenAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+        }
+
+        public async Task Delete(int payPeriodId)
+        {
+            await _paystubDataService.DeleteByPeriodAsync(
+                payPeriodId: payPeriodId,
+                userId: _currentUser.DesktopUserId,
+                organizationId: _currentUser.OrganizationId);
+        }
+
+        public async Task Cancel(int payPeriodId)
+        {
+            await _payPeriodDataService.CancelAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
         }
 
         public async Task<PayPeriodDto> GetById(int payPeriodId)
