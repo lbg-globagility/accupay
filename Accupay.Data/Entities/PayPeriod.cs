@@ -55,7 +55,6 @@ namespace AccuPay.Data.Entities
         public bool PhHWeeklyAgentContribSched { get; set; }
         public bool HDMFWeeklyAgentContribSched { get; set; }
         public bool WTaxWeeklyAgentContribSched { get; set; }
-        public bool IsClosed { get; set; }
 
         public virtual ICollection<Paystub> Paystubs { get; set; }
 
@@ -102,7 +101,6 @@ namespace AccuPay.Data.Entities
                 Year = year,
                 Half = isFirstHalf ? FirstHalfValue : EndOftheMonthValue,
                 Status = PayPeriodStatus.Pending,
-                IsClosed = false,
                 OrdinalValue = ordinalValue,
 
                 PayFromDate = payFromDate,

@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PayrollResultDetailsComponent } from '../components/payroll-result-details/payroll-result-details.component';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
-import { PageEvent, MatPaginator } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
@@ -34,13 +34,9 @@ export class ViewPayPeriodComponent implements OnInit {
 
   payPeriod: PayPeriod;
 
-  payrollResult: PayrollResult;
-
   readonly displayedColumns = ['employee', 'netPay'];
 
   dataSource: MatTableDataSource<Paystub>;
-
-  totalCount: number;
 
   sort: Sort = {
     active: 'employee',
@@ -53,14 +49,9 @@ export class ViewPayPeriodComponent implements OnInit {
 
   searchTerm: string;
 
-  modelChanged: Subject<any>;
-
   expandedPaystub: Paystub;
 
   loadingState: LoadingState = new LoadingState();
-
-  isDownloadingPayslip: boolean = false;
-  isDownloadingSummary: boolean = false;
 
   constructor(
     private payPeriodService: PayPeriodService,
@@ -69,12 +60,7 @@ export class ViewPayPeriodComponent implements OnInit {
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandler,
     private dialog: MatDialog
-  ) {
-    this.modelChanged = new Subject();
-    this.modelChanged
-      .pipe(auditTime(Constants.ThrottleTime))
-      .subscribe(() => this.loadPaystubs());
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadingState.changeToLoading();
@@ -83,13 +69,63 @@ export class ViewPayPeriodComponent implements OnInit {
     this.loadPaystubs();
   }
 
-  loadPayPeriod(): void {
+  searchChanged(): void {
+    this.dataSource.filter = this.searchTerm;
+  }
+
+  toggleExpansion(paystub: Paystub): void {
+    this.expandedPaystub = paystub;
+  }
+
+  calculate(): void {
+    this.snackBar.open('Calculating payroll');
+
+    this.payPeriodService.calculate(this.payPeriodId).subscribe({
+      next: (result) => {
+        this.loadPaystubs();
+        this.showDetails(result);
+        this.snackBar.dismiss();
+      },
+      error: (err) =>
+        this.errorHandler.badRequest(err, 'Failed to calculate payroll'),
+    });
+  }
+
+  showDetails(result: PayrollResult): void {
+    this.dialog.open(PayrollResultDetailsComponent, {
+      data: { result },
+    });
+  }
+
+  downloadPayslips(): void {
+    this.snackBar.open('Downloading Payslips...');
+
+    this.payPeriodService
+      .getPayslipPDF(this.payPeriodId)
+      .then(() => this.snackBar.dismiss())
+      .catch((err) =>
+        this.errorHandler.badRequest(err, 'Error downloading payslips')
+      );
+  }
+
+  downloadSummary(): void {
+    this.snackBar.open('Downloading Summary...');
+
+    this.reportService
+      .getPayrollSummary(this.payPeriodId, this.payPeriodId)
+      .then(() => this.snackBar.dismiss())
+      .catch((err) =>
+        this.errorHandler.badRequest(err, 'Error downloading payroll summary')
+      );
+  }
+
+  private loadPayPeriod(): void {
     this.payPeriodService
       .getById(this.payPeriodId)
       .subscribe((payPeriod) => (this.payPeriod = payPeriod));
   }
 
-  loadPaystubs(): void {
+  private loadPaystubs(): void {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -105,61 +141,6 @@ export class ViewPayPeriodComponent implements OnInit {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.expandedPaystub = data[0];
-      });
-  }
-
-  searchChanged(): void {
-    this.dataSource.filter = this.searchTerm;
-  }
-
-  toggleExpansion(paystub: Paystub): void {
-    this.expandedPaystub = paystub;
-  }
-
-  calculate(): void {
-    this.snackBar.open('Calculating payroll');
-
-    this.payPeriodService.calculate(this.payPeriodId).subscribe({
-      next: (data) => {
-        this.payrollResult = data;
-        this.loadPaystubs();
-        this.showDetails();
-        this.snackBar.dismiss();
-      },
-      error: (err) =>
-        this.errorHandler.badRequest(err, 'Failed to calculate payroll'),
-    });
-  }
-
-  showDetails(): void {
-    this.dialog.open(PayrollResultDetailsComponent, {
-      data: {
-        result: this.payrollResult,
-      },
-    });
-  }
-
-  downloadPayslips(): void {
-    this.isDownloadingPayslip = true;
-    this.payPeriodService
-      .getPayslipPDF(this.payPeriodId)
-      .catch((err) => {
-        this.errorHandler.badRequest(err, 'Error downloading payslips.');
-      })
-      .finally(() => {
-        this.isDownloadingPayslip = false;
-      });
-  }
-
-  downloadSummary(): void {
-    this.isDownloadingSummary = true;
-    this.reportService
-      .getPayrollSummary(this.payPeriodId, this.payPeriodId)
-      .catch((err) => {
-        this.errorHandler.badRequest(err, 'Error downloading payroll summary.');
-      })
-      .finally(() => {
-        this.isDownloadingSummary = false;
       });
   }
 }

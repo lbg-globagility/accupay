@@ -1,4 +1,4 @@
-﻿Namespace Global.AccuPay.Enums
+﻿Namespace Global.AccuPay.Desktop.Enums
 
     Public Enum ExcelOption As Short
         SeparateEachDepartment = 0

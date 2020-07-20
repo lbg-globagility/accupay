@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
@@ -81,14 +82,14 @@ namespace AccuPay.Data.Services
             // existing allowance into a date on a "Closed" pay period.
             if (CheckIfStartDateNeedsToBeValidated(new List<Allowance>() { oldAllowance }, allowance))
             {
-                await CheckIfDataIsWithinClosedPayroll(allowance.EffectiveStartDate, allowance.OrganizationID.Value);
+                await CheckIfDataIsWithinClosedPayPeriod(allowance.EffectiveStartDate, allowance.OrganizationID.Value);
             }
 
             if (!IsNewEntity(allowance.RowID))
             {
                 // validate entities that are for update
                 var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(allowance.RowID.Value);
-                var alreadyUsedInClosedPayroll = CheckIfDataIsWithinClosedPayroll(payPeriods, throwException: false);
+                var alreadyUsedInClosedPayroll = CheckIfDataIsWithinClosedPayPeriod(payPeriods, throwException: false);
 
                 if (alreadyUsedInClosedPayroll)
                 {
@@ -100,7 +101,7 @@ namespace AccuPay.Data.Services
                     // end date cannot be in a closed pay period
                     if (allowance.EffectiveEndDate.HasValue)
                     {
-                        if (await CheckIfDataIsWithinClosedPayroll(allowance.EffectiveEndDate.Value, allowance.OrganizationID.Value, throwException: false))
+                        if (await CheckIfDataIsWithinClosedPayPeriod(allowance.EffectiveEndDate.Value, allowance.OrganizationID.Value, throwException: false))
                             throw new BusinessLogicException("Cannot update End Date into a date in a Closed Payroll.");
                     }
                 }
@@ -149,15 +150,11 @@ namespace AccuPay.Data.Services
             {
                 var oldAllowance = oldAllowances.Where(x => x.RowID == allowance.RowID).FirstOrDefault();
 
-                var payPeriods = allowanceItems
+                var alreadyUsedInClosedPayroll = allowanceItems
                     .Where(x => x.AllowanceID == allowance.RowID)
+                    .Where(x => x.PayPeriod.Status == PayPeriodStatus.Closed)
                     .Select(x => x.PayPeriod)
-                    .ToList();
-
-                var query = payPeriods.AsQueryable();
-                query = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(query);
-
-                var alreadyUsedInClosedPayroll = query.Any();
+                    .Any();
 
                 if (alreadyUsedInClosedPayroll)
                 {
@@ -174,7 +171,7 @@ namespace AccuPay.Data.Services
                  .Select(x => x.EffectiveEndDate.Value)
                  .ToArray();
 
-            if (await CheckIfDataIsWithinClosedPayroll(endDates, organizationId.Value, throwException: false))
+            if (await CheckIfDataIsWithinClosedPayPeriod(endDates, organizationId.Value, throwException: false))
                 throw new BusinessLogicException("Cannot update End Date into a date in a Closed Payroll.");
         }
 
@@ -196,7 +193,7 @@ namespace AccuPay.Data.Services
                  .Select(x => x.EffectiveStartDate)
                  .ToArray();
 
-            await CheckIfDataIsWithinClosedPayroll(validatableStartDates, organizationId.Value);
+            await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, organizationId.Value);
             return organizationId;
         }
 
@@ -232,7 +229,7 @@ namespace AccuPay.Data.Services
         public async Task<bool> CheckIfAlreadyUsedInClosedPayPeriodAsync(int allowanceId)
         {
             var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(allowanceId);
-            return CheckIfDataIsWithinClosedPayroll(payPeriods, throwException: false);
+            return CheckIfDataIsWithinClosedPayPeriod(payPeriods, throwException: false);
         }
 
         #endregion Queries

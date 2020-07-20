@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
@@ -23,20 +23,6 @@ namespace AccuPay.Data.Repositories
             _policy = policy;
         }
 
-        #region Save
-
-        public async Task OpenAsync(int id)
-        {
-            await ToggleCloseAsync(id, isClosed: false);
-        }
-
-        public async Task CloseAsync(int id)
-        {
-            await ToggleCloseAsync(id, isClosed: true);
-        }
-
-        #endregion Save
-
         #region Queries
 
         #region Single entity
@@ -56,30 +42,22 @@ namespace AccuPay.Data.Repositories
 
         public async Task<PayPeriod> GetCurrentOpenAsync(int organizationId)
         {
-            var query = CreateBaseQuery(organizationId);
+            IQueryable<PayPeriod> query = CreateBaseQueryGetCurrentOpen(organizationId);
 
-            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
-            {
-                query = query
-                    .Include(x => x.Paystubs)
-                    .Where(p => p.IsClosed == false)
-                    .Where(p => p.Paystubs.Any());
-            }
-            else
-            {
-                query = query.Where(p => p.Status == PayPeriodStatus.Open);
-            }
+            return await query.FirstOrDefaultAsync();
+        }
 
-            return await query
-                .OrderByDescending(p => p.PayFromDate)
-                .FirstOrDefaultAsync();
+        public PayPeriod GetCurrentOpen(int organizationId)
+        {
+            IQueryable<PayPeriod> query = CreateBaseQueryGetCurrentOpen(organizationId);
+
+            return query.FirstOrDefault();
         }
 
         public async Task<ICollection<PayPeriod>> GetClosedPayPeriodsAsync(int organizationId, TimePeriod dateRange = null)
         {
-            var query = CreateBaseQuery(organizationId);
-
-            query = AddCheckIfClosedPayPeriodQuery(query);
+            var query = CreateBaseQuery(organizationId)
+                .Where(p => p.Status == PayPeriodStatus.Closed);
 
             if (dateRange != null)
             {
@@ -95,9 +73,8 @@ namespace AccuPay.Data.Repositories
 
         public async Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date)
         {
-            var query = CreateBaseQuery(organizationId);
-
-            query = AddCheckIfClosedPayPeriodQuery(query);
+            var query = CreateBaseQuery(organizationId)
+                .Where(p => p.Status == PayPeriodStatus.Closed);
 
             var cutOffStart = GetCutOffPeriodUsingDefault(new TimePeriod(date, date)).Start;
             query = query.Where(x => x.PayFromDate >= cutOffStart);
@@ -105,25 +82,6 @@ namespace AccuPay.Data.Repositories
             return await query.AnyAsync();
         }
 
-        public IQueryable<PayPeriod> AddCheckIfClosedPayPeriodQuery(IQueryable<PayPeriod> query)
-        {
-            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
-            {
-                query = query.Where(p => p.IsClosed);
-            }
-            else
-            {
-                query = query.Where(p => p.Status == PayPeriodStatus.Closed);
-            }
-
-            return query;
-        }
-
-        /// <summary>
-        /// This returns the current pay period based on date today regardless of the Status and IsClosed property.
-        /// </summary>
-        /// <param name="organizationId"></param>
-        /// <returns></returns>
         public async Task<PayPeriod> GetCurrentPayPeriodAsync(int organizationId)
         {
             var currentDay = DateTime.Now;
@@ -366,27 +324,13 @@ namespace AccuPay.Data.Repositories
                 .Where(p => p.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId);
         }
 
-        /// <summary>
-        /// Set the IsClosed property of the pay period to the specified status. We could have just
-        /// created an UpdateAsync and let the user call that but we want to encapsulate how can client
-        /// codes manipulate PayPeriod data. They can easily change the Organization or PayFrequency or
-        /// dates if we let them update anything. Better solution is set the entity properties to readonly
-        /// and add an entity method like PayPeriod.Close() and PayPeriod.Open() to put the encapsulation
-        /// on the domain level as DDD suggests.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="isClosed"></param>
-        /// <returns></returns>
-        private async Task ToggleCloseAsync(int id, bool isClosed)
+        private IQueryable<PayPeriod> CreateBaseQueryGetCurrentOpen(int organizationId)
         {
-            var payPeriod = await GetByIdAsync(id);
+            var query = CreateBaseQuery(organizationId)
+                .Where(p => p.Status == PayPeriodStatus.Open)
+                .OrderByDescending(p => p.PayFromDate);
 
-            if (payPeriod == null) return;
-
-            payPeriod.IsClosed = isClosed;
-
-            _context.Entry(payPeriod).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return query;
         }
 
         private TimePeriod GetCutOffPeriodUsingDefault(TimePeriod dateRange)

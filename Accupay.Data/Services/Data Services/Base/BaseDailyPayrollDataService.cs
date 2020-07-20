@@ -67,11 +67,11 @@ namespace AccuPay.Data.Services
             {
                 if (oldEntity.PayrollDate != entity.PayrollDate)
                 {
-                    await CheckIfDataIsWithinClosedPayroll(oldEntity.PayrollDate.Value, oldEntity.OrganizationID.Value);
+                    await CheckIfDataIsWithinClosedPayPeriod(oldEntity.PayrollDate.Value, oldEntity.OrganizationID.Value);
                 }
             }
 
-            await CheckIfDataIsWithinClosedPayroll(entity.PayrollDate.Value, entity.OrganizationID.Value);
+            await CheckIfDataIsWithinClosedPayPeriod(entity.PayrollDate.Value, entity.OrganizationID.Value);
         }
 
         protected async Task ValidateDates(List<T> entities, List<T> oldEntities, int? organizationId)
@@ -83,7 +83,7 @@ namespace AccuPay.Data.Services
 
             payrollDates.AddRange(oldEntities.Select(x => x.PayrollDate.Value).Distinct());
 
-            await CheckIfDataIsWithinClosedPayroll(payrollDates.Distinct(), organizationId.Value);
+            await CheckIfDataIsWithinClosedPayPeriod(payrollDates.Distinct(), organizationId.Value);
         }
     }
 }

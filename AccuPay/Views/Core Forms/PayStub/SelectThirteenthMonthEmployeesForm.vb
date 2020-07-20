@@ -33,10 +33,8 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     Sub New(currentPayPeriodId As Integer)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentPayPeriodId = currentPayPeriodId
 
         _employeeModels = New List(Of EmployeeModel)
@@ -69,7 +67,7 @@ Public Class SelectThirteenthMonthEmployeesForm
     Private Async Function ShowEmployees() As Task
 
         Dim paystubs = Await _paystubRepository.
-                                GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(_currentPayPeriodId)
+            GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(_currentPayPeriodId)
 
         Dim employeeModels As New List(Of EmployeeModel)
 
@@ -181,21 +179,23 @@ Public Class SelectThirteenthMonthEmployeesForm
         Await FunctionUtils.TryCatchFunctionAsync("Update 13th Month Amount",
             Async Function()
                 Dim thirteenthMonthPays = _employeeModels.
-                                                Where(Function(m) m.ForSaving).
-                                                Select(Function(m)
+                    Where(Function(m) m.ForSaving).
+                    Select(
+                        Function(m)
 
-                                                           Dim thirteenthMonthPay = m.PaystubObject.
-                                                                                        ThirteenthMonthPay
+                            Dim thirteenthMonthPay = m.PaystubObject.
+                                                    ThirteenthMonthPay
 
-                                                           thirteenthMonthPay.BasicPay = m.NewThirteenthMonthBasicPay
-                                                           thirteenthMonthPay.Amount = m.NewThirteenthMonthAmount
-                                                           thirteenthMonthPay.PaystubID = m.PaystubObject.RowID.Value
-                                                           thirteenthMonthPay.LastUpdBy = z_User
+                            thirteenthMonthPay.BasicPay = m.NewThirteenthMonthBasicPay
+                            thirteenthMonthPay.Amount = m.NewThirteenthMonthAmount
+                            thirteenthMonthPay.PaystubID = m.PaystubObject.RowID.Value
+                            thirteenthMonthPay.LastUpdBy = z_User
 
-                                                           Return thirteenthMonthPay
-                                                       End Function)
+                            Return thirteenthMonthPay
+                        End Function)
 
-                Await _paystubRepository.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                Await dataService.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays)
 
                 _employeeModels.
                         Where(Function(m) m.ForSaving).

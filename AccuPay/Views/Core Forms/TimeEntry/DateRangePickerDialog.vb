@@ -3,13 +3,13 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class DateRangePickerDialog
+Public Class StartNewPayPeriodDialog
 
     Private _payFrequencyId As Integer
 
@@ -25,21 +25,17 @@ Public Class DateRangePickerDialog
 
     Private _end As Date
 
-    Private _rowId As Integer
+    Private _rowId As Integer?
 
     Private _passedPayPeriod As IPayPeriod
 
-    Private ReadOnly _removePayPeriodValidation As Boolean
-
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
+    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing)
 
         InitializeComponent()
 
         _passedPayPeriod = passedPayPeriod
-
-        _removePayPeriodValidation = removePayPeriodValidation
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
@@ -57,7 +53,7 @@ Public Class DateRangePickerDialog
         End Get
     End Property
 
-    Public ReadOnly Property Id As Integer
+    Public ReadOnly Property Id As Integer?
         Get
             Return _rowId
         End Get
@@ -115,14 +111,10 @@ Public Class DateRangePickerDialog
     Private Async Function LoadPayPeriods() As Task
 
         _payperiods = (Await _payPeriodRepository.
-                        GetByYearAndPayPrequencyAsync(
-                                                organizationId:=z_OrganizationID,
-                                                year:=Me.Year,
-                                                payFrequencyId:=_payFrequencyId)).
-                    ToList()
-
-        Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.
-                                GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
+            GetYearlyPayPeriodsAsync(
+                organizationId:=z_OrganizationID,
+                year:=Me.Year)).
+            ToList()
 
         _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
 
@@ -133,19 +125,12 @@ Public Class DateRangePickerDialog
 
             If payperiod.IsClosed Then
                 PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Black
-                payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Closed
+
+            ElseIf payperiod.IsOpen Then
+                PayperiodsDataGridView.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
+                PayperiodsDataGridView.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
             Else
-                'check if this open payperiod is already modified
-                If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = payperiod.RowID) Then
-
-                    PayperiodsDataGridView.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
-                    PayperiodsDataGridView.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
-
-                    payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
-                Else
-                    PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
-
-                End If
+                PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
 
             End If
 
@@ -170,21 +155,29 @@ Public Class DateRangePickerDialog
         _end = payperiod.PayToDate
     End Sub
 
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Async Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
 
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+        Await FunctionUtils.TryCatchFunctionAsync("Start New Pay Period",
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
 
-        Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(
-                                            _currentPayperiod.RowID,
-                                            z_OrganizationID)
+                Me.Cursor = Cursors.WaitCursor
 
-        If _removePayPeriodValidation = False AndAlso validate = FunctionResult.Failed Then
+                Await dataService.StartStatusAsync(
+                    organizationId:=z_OrganizationID,
+                    month:=_currentPayperiod.Month,
+                    year:=_currentPayperiod.Year,
+                    isFirstHalf:=_currentPayperiod.IsFirstHalf,
+                    userId:=z_User)
 
-            MessageBoxHelper.Warning(validate.Message)
-            Return
-        End If
+                Await TimeEntrySummaryForm.LoadPayPeriods()
 
-        DialogResult = DialogResult.OK
+                PayStubForm.VIEW_payperiodofyear(PayStubForm.CurrentYear)
+
+                DialogResult = DialogResult.OK
+            End Function)
+
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
@@ -199,11 +192,9 @@ Public Class DateRangePickerDialog
             Me.PayPeriod = payperiod
         End Sub
 
-        Public Property Status As PayPeriodStatusData.PayPeriodStatus
-
-        Public ReadOnly Property RowID As Integer
+        Public ReadOnly Property RowID As Integer?
             Get
-                Return PayPeriod.RowID.Value
+                Return PayPeriod.RowID
             End Get
         End Property
 
@@ -221,7 +212,19 @@ Public Class DateRangePickerDialog
 
         Public ReadOnly Property IsClosed As Boolean
             Get
-                Return PayPeriod.IsClosed
+                Return PayPeriod.Status = PayPeriodStatus.Closed
+            End Get
+        End Property
+
+        Public ReadOnly Property IsOpen As Boolean
+            Get
+                Return PayPeriod.Status = PayPeriodStatus.Open
+            End Get
+        End Property
+
+        Public ReadOnly Property IsPending As Boolean
+            Get
+                Return PayPeriod.Status = PayPeriodStatus.Pending
             End Get
         End Property
 
@@ -237,7 +240,7 @@ Public Class DateRangePickerDialog
                         halfNo = "2nd Half"
                     End If
 
-                    Return $"{month.ToString("MMM")} {halfNo}"
+                    Return $"{month:MMM} {halfNo}"
                 ElseIf PayPeriod.IsWeekly Then
                     ' Not implemented yet
                     Return String.Empty

@@ -27,31 +27,24 @@ SELECT payp.RowID AS ppRowID
 , pf.PayFrequencyType `TotalCompHDMF`
 ,IF(DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN payp.PayFromDate AND payp.PayToDate,'0',IF(DATE_FORMAT(NOW(),'%Y-%m-%d') > payp.PayFromDate,'-1','1')) 'now_origin'
 ,payp.Half AS eom
-,payp.IsClosed
+,payp.`Status`
 
 FROM payperiod payp
-INNER JOIN (    SELECT ps.RowID, ps.PayPeriodID, FormatNumber AS FormatNum, e.PayFrequencyID FROM paystub ps
+/*INNER JOIN (    SELECT ps.RowID, ps.PayPeriodID, FormatNumber AS FormatNum, e.PayFrequencyID FROM paystub ps
                 INNER JOIN employee e ON e.RowID=ps.EmployeeID
 				    WHERE FormatNumber = 0 AND ps.OrganizationID=payp_OrganizationID
             UNION
                 SELECT ps.RowID, ps.PayPeriodID, FormatNumber AS FormatNum, e.PayFrequencyID FROM paystubbonus ps
                 INNER JOIN employee e ON e.RowID=ps.EmployeeID
                 WHERE FormatNumber = 1 AND ps.OrganizationID=payp_OrganizationID
-                ) payst ON payst.PayPeriodID=payp.RowID
+                ) payst ON payst.PayPeriodID=payp.RowID*/
 INNER JOIN payfrequency pf ON pf.RowID=payp.TotalGrossSalary
 WHERE payp.OrganizationID=payp_OrganizationID
 AND payp.`Year`=YEAR(param_Date)
-AND payp.TotalGrossSalary = payst.PayFrequencyID
-GROUP BY payst.PayPeriodID
+AND payp.TotalGrossSalary = 1#payst.PayFrequencyID
+AND payp.`Status` != 'Pending'
+#GROUP BY payst.PayPeriodID
 ORDER BY payp.PayFromDate DESC,payp.PayToDate DESC;
-
-
-
-
-
-
-
-
 
 END//
 DELIMITER ;

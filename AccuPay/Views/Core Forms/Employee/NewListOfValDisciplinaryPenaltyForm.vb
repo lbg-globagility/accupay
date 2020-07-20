@@ -3,8 +3,8 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Enums
 
 Public Class NewListOfValDisciplinaryPenaltyForm
 

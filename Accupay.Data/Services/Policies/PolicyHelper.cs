@@ -42,9 +42,6 @@ namespace AccuPay.Data.Services
         public PayRateCalculationBasis PayRateCalculationBasis =>
                 _settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
 
-        public PayrollClosingType PayrollClosingType =>
-            _settings.GetEnum("Payroll Policy.PayrollClosingType", PayrollClosingType.Status);
-
         #region Pay Period Default Dates Policy ("16,31,false,true" means first day is "16", second days is "31", first day "is NOT last day of the month", second day "is last day of the month"
 
         public DaysSpan DefaultFirstHalfDaysSpan()
