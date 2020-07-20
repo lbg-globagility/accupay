@@ -7,17 +7,6 @@
     <div class="w-1/2">
       <h1 class="mat-headline">Payroll</h1>
     </div>
-    <div class="w-1/2 flex justify-end items-start">
-      <button
-        mat-raised-button
-        [disabled]="isUpdatingPayroll || isStartingPayroll"
-        color="primary"
-        (click)="startNewPayroll()"
-      >
-        {{ isStartingPayroll ? "STARTING..." : "START NEW PAYROLL" }}
-        <app-button-spinner [active]="isStartingPayroll"></app-button-spinner>
-      </button>
-    </div>
   </header>
 
   <mat-card class="mb-4">
@@ -42,26 +31,6 @@
         routerLink="/payroll/{{ latestPayPeriod?.id }}"
       >
         VIEW PAYROLL
-      </button>
-      <button
-        [disabled]="isUpdatingPayroll || isClosingPayroll"
-        mat-button
-        color="warn"
-        (click)="closePayroll(latestPayPeriod)"
-        *ngIf="latestPayPeriod?.status == 'Open'"
-      >
-        {{ isClosingPayroll ? "CLOSING..." : "CLOSE PAYROLL" }}
-        <app-button-spinner [active]="isClosingPayroll"></app-button-spinner>
-      </button>
-      <button
-        [disabled]="isUpdatingPayroll || isReopeningPayroll"
-        mat-button
-        color="accent"
-        (click)="reopenPayroll(latestPayPeriod)"
-        *ngIf="latestPayPeriod?.status == 'Closed'"
-      >
-        {{ isReopeningPayroll ? "REOPENING..." : "REOPEN PAYROLL" }}
-        <app-button-spinner [active]="isReopeningPayroll"></app-button-spinner>
       </button>
     </mat-card-actions>
   </mat-card>
@@ -102,26 +71,6 @@
               matTooltip="View payroll"
             >
               <mat-icon>remove_red_eye</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              *ngIf="vm.payPeriod.status == 'Open'"
-              [disabled]="isUpdatingPayroll"
-              matTooltip="Close payroll"
-              (click)="closePayroll(vm.payPeriod)"
-            >
-              <mat-icon *ngIf="!vm.isUpdating">lock_open</mat-icon>
-              <app-button-spinner [active]="vm.isUpdating"></app-button-spinner>
-            </button>
-            <button
-              mat-icon-button
-              *ngIf="vm.payPeriod.status == 'Closed'"
-              [disabled]="isUpdatingPayroll"
-              matTooltip="Reopen payroll"
-              (click)="reopenPayroll(vm.payPeriod)"
-            >
-              <mat-icon *ngIf="!vm.isUpdating">lock</mat-icon>
-              <app-button-spinner [active]="vm.isUpdating"></app-button-spinner>
             </button>
           </td>
         </ng-container>

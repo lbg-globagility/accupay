@@ -1,4 +1,24 @@
-<h1 class="mat-headline">Timesheets</h1>
+<header class="flex">
+  <div class="w-1/2">
+    <h1 class="mat-headline">Timesheets</h1>
+  </div>
+  <div
+    class="w-1/2 flex justify-end items-start"
+    *ngIf="loadingState.isSuccess"
+  >
+    <button
+      mat-raised-button
+      [disabled]="startingPayrollState.isLoading"
+      color="primary"
+      (click)="startNewPayroll()"
+    >
+      {{ startingPayrollState.isLoading ? "STARTING..." : "START NEW PAYROLL" }}
+      <app-button-spinner
+        [active]="startingPayrollState.isLoading"
+      ></app-button-spinner>
+    </button>
+  </div>
+</header>
 
 <div *ngIf="loadingState.isLoading" class="flex justify-center">
   <mat-spinner></mat-spinner>

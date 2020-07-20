@@ -3,10 +3,8 @@
     <h1 class="mat-headline">
       Payroll {{ payPeriod?.cutoffStart | date }} to
       {{ payPeriod?.cutoffEnd | date }}
+      <app-status type="payperiod" [value]="payPeriod?.status"></app-status>
     </h1>
-    <!-- <h3 class="font-medium mb-4">
-      {{ payPeriod?.cutoffStart | date }} to {{ payPeriod?.cutoffEnd | date }}
-    </h3> -->
   </div>
 
   <div class="w-1/2 flex justify-end" *ngIf="loadingState.isSuccess">
@@ -15,6 +13,7 @@
       color="primary"
       (click)="calculate()"
       style="margin-right: 8px;"
+      [disabled]="updatingState.isLoading"
     >
       CALCULATE
     </button>
@@ -23,6 +22,7 @@
       color="primary"
       [matMenuTriggerFor]="menu"
       class="m-with-icon"
+      [disabled]="updatingState.isLoading"
     >
       <mat-icon>more_vert</mat-icon>MORE
     </button>
@@ -34,6 +34,22 @@
       <button mat-menu-item (click)="downloadSummary()">
         <mat-icon>vertical_align_bottom</mat-icon>
         <span>Download Summary</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="reopenPayroll()"
+        *ngIf="payPeriod.status == 'Closed'"
+      >
+        <mat-icon>lock_open</mat-icon>
+        <span>Reopen Payroll</span>
+      </button>
+      <button
+        mat-menu-item
+        (click)="closePayroll()"
+        *ngIf="payPeriod.status == 'Open'"
+      >
+        <mat-icon>lock</mat-icon>
+        <span>Close Payroll</span>
       </button>
     </mat-menu>
   </div>

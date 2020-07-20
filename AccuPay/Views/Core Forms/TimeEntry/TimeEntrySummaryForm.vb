@@ -964,9 +964,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
 
-        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
-            _selectedPayPeriod.RowID,
-            z_OrganizationID)
+        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(_selectedPayPeriod.RowID)
 
         If validate = FunctionResult.Failed Then
 
@@ -1532,9 +1530,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
-        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
-                                                _selectedPayPeriod.RowID,
-                                                z_OrganizationID)
+        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(_selectedPayPeriod.RowID)
 
         If validate = FunctionResult.Failed Then
 
