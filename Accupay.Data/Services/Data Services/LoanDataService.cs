@@ -169,6 +169,53 @@ namespace AccuPay.Data.Services
             loan.Created = DateTime.Now;
         }
 
+        public async Task BatchApply(IReadOnlyCollection<Imports.Loans.LoanImportModel> validRecords, int organizationId, int userId)
+        {
+            var loanWithLoanTypeNotYetExists = validRecords
+                .Where(v => v.LoanTypeNotExists)
+                .GroupBy(v => v.LoanName)
+                .Select(v => v.FirstOrDefault().LoanName)
+                .ToList();
+
+            if (loanWithLoanTypeNotYetExists.Any())
+            {
+                var newlyAddedLoanTypes = await _productRepository
+                    .AddManyLoanTypeAsync(loanWithLoanTypeNotYetExists, organizationId: organizationId, userId: userId);
+
+                var validRecordsWithLoanTypeNotYetExists = validRecords.Where(v => v.LoanTypeNotExists).ToList();
+                foreach (var validRecord in validRecordsWithLoanTypeNotYetExists)
+                {
+                    var newlyAddedLoanType = newlyAddedLoanTypes.Where(v => v.PartNo == validRecord.LoanName).FirstOrDefault();
+                    validRecord.LoanTypeId = newlyAddedLoanType.RowID.Value;
+                }
+            }
+
+            List<LoanSchedule> loanSchedules = new List<LoanSchedule>();
+            foreach (var validRecord in validRecords)
+            {
+                var loanSchedule = new LoanSchedule()
+                {
+                    Comments = validRecord.Comments,
+                    CreatedBy = userId,
+                    DedEffectiveDateFrom = validRecord.StartDate,
+                    DeductionAmount = validRecord.DeductionAmount,
+                    DeductionSchedule = validRecord.DeductionSchedule,
+                    EmployeeID = validRecord.EmployeeId,
+                    LoanName = validRecord.LoanName,
+                    LoanNumber = validRecord.LoanNumber,
+                    LoanTypeID = validRecord.LoanTypeId,
+                    OrganizationID = organizationId,
+                    TotalBalanceLeft = validRecord.TotalLoanBalance,
+                    TotalLoanAmount = validRecord.TotalLoanAmount,
+                    Status = LoanSchedule.STATUS_IN_PROGRESS
+                };
+
+                loanSchedules.Add(loanSchedule);
+            }
+
+            await _loanRepository.SaveManyAsync(loanSchedules);
+        }
+
         private void SanitizeUpdate(LoanSchedule newLoan, LoanSchedule oldLoan)
         {
             // if cancelled na yung loan, hindi pwede ma update

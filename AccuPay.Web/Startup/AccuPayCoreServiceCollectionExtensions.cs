@@ -4,6 +4,7 @@ using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Data.Services.Imports.Employees;
+using AccuPay.Data.Services.Imports.Loans;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
@@ -118,6 +119,7 @@ namespace AccuPay.Web
             services.AddScoped<UserDataService>();
 
             services.AddScoped<EmployeeImportParser>();
+            services.AddScoped<LoanImportParser>();
             services.AddScoped<ShiftImportParser>();
             services.AddScoped<TimeLogImportParser>();
             services.AddScoped<TimeLogsReader>();

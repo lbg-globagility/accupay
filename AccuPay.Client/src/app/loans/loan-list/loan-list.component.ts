@@ -1,5 +1,5 @@
 import { auditTime, filter } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Constants } from 'src/app/core/shared/constants';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageOptions } from 'src/app/core/shared/page-options';
@@ -12,6 +12,8 @@ import { LoanService } from 'src/app/loans/loan.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoanHistoryComponent } from '../loan-history/loan-history.component';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { LoanImportParserOutput } from '../shared/loam-import-parser-output';
 
 @Component({
   selector: 'app-loan-list',
@@ -22,6 +24,8 @@ import { Router } from '@angular/router';
   },
 })
 export class LoanListComponent implements OnInit {
+  @ViewChild('uploader') fileInput: ElementRef;
+
   readonly displayedColumns: string[] = [
     'employee',
     'loanType',
@@ -147,5 +151,57 @@ export class LoanListComponent implements OnInit {
   routeToNewLoan() {
     this.router.navigate(['loans', 'new']);
     // routerLink="loans/new"
+  }
+
+  onImport(files: FileList) {
+    const file = files[0];
+
+    this.loanService.import(file).subscribe(
+      (outputParse) => {
+        this.getLoanList();
+        this.displaySuccess(outputParse);
+        this.clearFile();
+      },
+      (err) => {
+        this.errorHandler.badRequest(err, 'Failed to import shift.');
+        this.clearFile();
+      }
+    );
+  }
+
+  private displaySuccess(outputParse: LoanImportParserOutput) {
+    const hasFailedImports =
+      outputParse.invalidRecords && outputParse.invalidRecords.length > 0;
+    const succeeds =
+      outputParse.validRecords && outputParse.validRecords.length > 0;
+
+    if (!hasFailedImports && succeeds) {
+      Swal.fire({
+        title: 'Success',
+        text: 'Successfully imported new loan(s)!',
+        icon: 'success',
+        timer: 3000,
+        showConfirmButton: false,
+      });
+    } else if (hasFailedImports && !succeeds) {
+      Swal.fire({
+        title: 'Failed',
+        text: `${outputParse.invalidRecords.length} loan(s) failed to import.`,
+        icon: 'error',
+        showConfirmButton: true,
+      });
+    } else if (hasFailedImports && succeeds) {
+      Swal.fire({
+        title: 'Oops!',
+        text: `${outputParse.invalidRecords.length} loan(s) were failed to import
+        and the ${outputParse.validRecords.length} loan(s) succeeded.`,
+        icon: 'warning',
+        showConfirmButton: true,
+      });
+    }
+  }
+
+  clearFile() {
+    this.fileInput.nativeElement.value = '';
   }
 }

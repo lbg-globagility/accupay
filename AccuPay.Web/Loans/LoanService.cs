@@ -2,10 +2,15 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports.Loans;
+using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,19 +23,22 @@ namespace AccuPay.Web.Loans
         private readonly ListOfValueRepository _listOfValueRepository;
         private readonly LoanRepository _loanRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly LoanImportParser _importParser;
 
         public LoanService(
             LoanDataService loanService,
             ProductRepository productRepository,
             ListOfValueRepository listOfValueRepository,
             LoanRepository loanRepository,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            LoanImportParser importParser)
         {
             _loanService = loanService;
             _productRepository = productRepository;
             _listOfValueRepository = listOfValueRepository;
             _loanRepository = loanRepository;
             _currentUser = currentUser;
+            _importParser = importParser;
         }
 
         public async Task<PaginatedList<LoanDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -151,6 +159,25 @@ namespace AccuPay.Web.Loans
                 DeductionSchedule = loan.DeductionSchedule,
                 Comments = loan.Comments
             };
+        }
+
+        internal async Task<LoanImportParserOutput> Import(IFormFile file)
+        {
+            if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
+                throw new InvalidFormatException();
+
+            Stream stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            if (stream == null)
+                throw new Exception("Unable to parse excel file.");
+
+            int userId = _currentUser.DesktopUserId;
+            var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
+
+            await _loanService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+
+            return parsedResult;
         }
     }
 }
