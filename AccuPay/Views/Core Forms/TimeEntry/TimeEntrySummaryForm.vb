@@ -216,7 +216,7 @@ Public Class TimeEntrySummaryForm
                 currentCell.Style.BackColor = Color.White
                 currentCell.Style.ForeColor = Color.Black
 
-            ElseIf payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Processing Then
+            ElseIf payperiod.IsOpen Then
 
                 currentCell.Style.SelectionBackColor = Color.Green
                 currentCell.Style.BackColor = Color.Yellow
@@ -251,17 +251,17 @@ Public Class TimeEntrySummaryForm
             Await LoadTimeEntries()
         End If
 
-        Dim isPayperiodProcessing = _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
-
-        tsBtnDeleteTimeEntry.Visible = isPayperiodProcessing
-        RegenerateTimeEntryButton.Visible = isPayperiodProcessing
+        tsBtnDeleteTimeEntry.Visible = _selectedPayPeriod.IsOpen
+        RegenerateTimeEntryButton.Visible = _selectedPayPeriod.IsOpen
     End Function
 
-    Private Async Function GetPayPeriods(organizationID As Integer,
-                                         year As Integer,
-                                         salaryType As Integer) As Task(Of ICollection(Of PayPeriod))
+    Private Async Function GetPayPeriods(
+        organizationID As Integer,
+        year As Integer,
+        salaryType As Integer) As Task(Of ICollection(Of PayPeriod))
+
         Dim sql = <![CDATA[
-            SELECT RowID, PayFromDate, PayToDate, Year, Month, OrdinalValue, IsClosed
+            SELECT RowID, PayFromDate, PayToDate, Year, Month, OrdinalValue, Status
             FROM payperiod
             WHERE payperiod.OrganizationID = @OrganizationID
                 AND payperiod.Year = @Year
@@ -269,9 +269,6 @@ Public Class TimeEntrySummaryForm
         ]]>.Value
 
         Dim payPeriods = New Collection(Of PayPeriod)
-
-        Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.
-                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -286,6 +283,7 @@ Public Class TimeEntrySummaryForm
 
             Dim reader = Await command.ExecuteReaderAsync()
             While Await reader.ReadAsync()
+
                 Dim payPeriod = New PayPeriod() With {
                     .RowID = reader.GetValue(Of Integer?)("RowID"),
                     .PayFromDate = reader.GetValue(Of Date)("PayFromDate"),
@@ -293,21 +291,8 @@ Public Class TimeEntrySummaryForm
                     .Year = reader.GetValue(Of Integer)("Year"),
                     .Month = reader.GetValue(Of Integer)("Month"),
                     .OrdinalValue = reader.GetValue(Of Integer)("OrdinalValue"),
-                    .IsClosed = reader.GetValue(Of Boolean)("IsClosed")
+                    .Status = Enums(Of PayPeriodStatus).Parse(reader.GetValue(Of String)("Status"))
                 }
-
-                If payPeriod.IsClosed Then
-                    payPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Closed
-                Else
-                    'if the pay period is open and has existing paystubs
-                    'its status should be PROCESSING
-                    If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = payPeriod.RowID.Value) Then
-                        payPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
-                    Else
-                        payPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Open
-
-                    End If
-                End If
 
                 payPeriods.Add(payPeriod)
 
@@ -896,11 +881,18 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Async Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles GenerateTimeEntryButton.Click
+
+        Dim currentOpenPayPeriod = Await _payPeriodRepository.GetCurrentOpenAsync(z_OrganizationID)
+        If currentOpenPayPeriod IsNot Nothing Then
+            MessageBoxHelper.Warning(PayPeriodDataService.HasCurrentlyOpenErrorMessage(currentOpenPayPeriod))
+            Return
+        End If
+
         Dim startDate As Date
         Dim endDate As Date
         Dim result As DialogResult
 
-        Using dialog = New DateRangePickerDialog(_selectedPayPeriod)
+        Using dialog = New StartNewPayPeriodDialog(_selectedPayPeriod)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then
@@ -913,7 +905,6 @@ Public Class TimeEntrySummaryForm
             GenerateTimeEntries(startDate, endDate)
         End If
 
-        Await LoadTimeEntries()
     End Sub
 
     Private Sub GenerateTimeEntries(startDate As Date, endDate As Date)
@@ -954,7 +945,7 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
+    Private Async Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
         dialog.Close()
         dialog.Dispose()
 
@@ -963,8 +954,10 @@ Public Class TimeEntrySummaryForm
         If generator.ErrorCount > 0 Then
             Dim errorCount = generator.ErrorCount
             msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
+
         End If
 
+        Await LoadTimeEntries()
         MsgBox(msgBoxText)
 
     End Sub
@@ -972,8 +965,8 @@ Public Class TimeEntrySummaryForm
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
 
         Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
-                                                _selectedPayPeriod.RowID,
-                                                z_OrganizationID)
+            _selectedPayPeriod.RowID,
+            z_OrganizationID)
 
         If validate = FunctionResult.Failed Then
 
@@ -983,7 +976,6 @@ Public Class TimeEntrySummaryForm
 
         GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
-        Await LoadTimeEntries()
     End Sub
 
     Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
@@ -1012,11 +1004,10 @@ Public Class TimeEntrySummaryForm
 
         _selectedPayPeriod = payPeriod
 
-        Dim isPayPeriodProcessing = _selectedPayPeriod IsNot Nothing AndAlso
-                _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
+        Dim isOpen = _selectedPayPeriod IsNot Nothing AndAlso _selectedPayPeriod.IsOpen
 
-        tsBtnDeleteTimeEntry.Visible = isPayPeriodProcessing
-        RegenerateTimeEntryButton.Visible = isPayPeriodProcessing
+        tsBtnDeleteTimeEntry.Visible = isOpen
+        RegenerateTimeEntryButton.Visible = isOpen
 
         Await LoadTimeEntries()
     End Sub
@@ -1092,8 +1083,7 @@ Public Class TimeEntrySummaryForm
         Public Property Year As Integer
         Public Property Month As Integer
         Public Property OrdinalValue As Integer
-        Public Property IsClosed As Boolean
-        Public Property Status As PayPeriodStatusData.PayPeriodStatus
+        Public Property Status As PayPeriodStatus
 
         Public Overrides Function ToString() As String
             Dim dateFrom = PayFromDate.ToString("MMM dd")
@@ -1101,6 +1091,24 @@ Public Class TimeEntrySummaryForm
 
             Return dateFrom + " - " + dateTo
         End Function
+
+        Public ReadOnly Property IsClosed As Boolean
+            Get
+                Return Status = PayPeriodStatus.Closed
+            End Get
+        End Property
+
+        Public ReadOnly Property IsOpen As Boolean
+            Get
+                Return Status = PayPeriodStatus.Open
+            End Get
+        End Property
+
+        Public ReadOnly Property IsPending As Boolean
+            Get
+                Return Status = PayPeriodStatus.Pending
+            End Get
+        End Property
 
     End Class
 

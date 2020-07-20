@@ -436,7 +436,6 @@
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\Commons\DebugUtility.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
-    <Compile Include="Domain\PayPeriod\PayPeriodStatusData.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />

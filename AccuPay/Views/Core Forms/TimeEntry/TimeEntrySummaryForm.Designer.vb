@@ -482,8 +482,8 @@ Partial Class TimeEntrySummaryForm
         Me.GenerateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.cash_register
         Me.GenerateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.GenerateTimeEntryButton.Name = "GenerateTimeEntryButton"
-        Me.GenerateTimeEntryButton.Size = New System.Drawing.Size(141, 22)
-        Me.GenerateTimeEntryButton.Text = "G&enerate Time Entries"
+        Me.GenerateTimeEntryButton.Size = New System.Drawing.Size(137, 22)
+        Me.GenerateTimeEntryButton.Text = "&Start New Pay Period"
         '
         'RegenerateTimeEntryButton
         '
@@ -551,6 +551,7 @@ Partial Class TimeEntrySummaryForm
         Me.tstbnResetLeaveBalance.Name = "tstbnResetLeaveBalance"
         Me.tstbnResetLeaveBalance.Size = New System.Drawing.Size(144, 20)
         Me.tstbnResetLeaveBalance.Text = "Renew Leave Balances"
+        Me.tstbnResetLeaveBalance.Visible = False
         '
         'ToolStripLabel1
         '

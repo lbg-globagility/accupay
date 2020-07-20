@@ -1,6 +1,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -21,8 +22,6 @@ Public Class selectPayPeriod
     Private _currentYear = Date.Now.Year
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
-
-    Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
@@ -111,7 +110,7 @@ Public Class selectPayPeriod
 
     Dim quer_empPayFreq = ""
 
-    Async Sub PayFreq_Changed(sender As Object, e As EventArgs)
+    Sub PayFreq_Changed(sender As Object, e As EventArgs)
 
         quer_empPayFreq = ""
 
@@ -135,7 +134,7 @@ Public Class selectPayPeriod
 
             quer_empPayFreq = senderObj.Text
 
-            Await VIEW_payp(Nothing, senderObj.Text)
+            VIEW_payp(Nothing, senderObj.Text)
 
             dgvpaypers_SelectionChanged(sender, e)
 
@@ -164,14 +163,14 @@ Public Class selectPayPeriod
 
         quer_empPayFreq = senderObj.Text
 
-        Await VIEW_payp(Nothing, senderObj.Text)
+        VIEW_payp(Nothing, senderObj.Text)
 
         dgvpaypers_SelectionChanged(sender, e)
 
     End Sub
 
-    Async Function VIEW_payp(Optional param_Date As Object = Nothing,
-                  Optional PayFreqType As Object = Nothing) As Task
+    Sub VIEW_payp(Optional param_Date As Object = Nothing,
+                  Optional PayFreqType As Object = Nothing)
         Dim params = New Object() {
             orgztnID,
             If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01"),
@@ -182,10 +181,6 @@ Public Class selectPayPeriod
 
         Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", params)
         Dim dt = sql.GetFoundRows.Tables(0)
-
-        Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
-        _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         Dim index As Integer = 0
         Dim currentlyWorkedOnPayPeriodIndex As Integer = 0
@@ -201,12 +196,9 @@ Public Class selectPayPeriod
             dgvpaypers.Rows.Add(row_array)
 
             'Because UpdatePayPeriodStatusLabel() will not execute fully on the first insert of row of dgvpaypers
-            If index = 0 Then UpdatePayPeriodStatusLabel()
+            If index = 0 Then UpdatePayPeriodStatusLabel(dgvpaypers.Rows(0))
 
-            Dim payPeriodData = CreatePayPeriodData(payPeriodsWithPaystubCount, index, drow)
-            If payPeriodData IsNot Nothing Then
-                _payPeriodDataList.Add(payPeriodData)
-            End If
+            HighlightOpenPayPeriod(index, drow)
 
             index += 1
 
@@ -218,56 +210,41 @@ Public Class selectPayPeriod
 
         dgvpaypers.Rows(currentlyWorkedOnPayPeriodIndex).Cells(Column15.Index).Selected = True
 
-    End Function
+    End Sub
 
-    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod),
-                                         index As Integer,
-                                         drow As DataRow) _
-                                         As PayPeriodStatusData
-        Dim payPeriodData As New PayPeriodStatusData
+    Private Sub HighlightOpenPayPeriod(index As Integer, drow As DataRow)
+        Dim status = Enums(Of PayPeriodStatus).Parse(drow("Status"))
 
-        payPeriodData.Index = index
-        payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Open
-
-        If drow("IsClosed") <> 0 Then
-            'the payperiods here are closed
+        If status = PayPeriodStatus.Closed Then
             dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Black
-            payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Closed
+
+        ElseIf status = PayPeriodStatus.Open Then
+
+            dgvpaypers.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
+            dgvpaypers.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
         Else
-
-            'check if this open payperiod is already modified
-            If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = drow("RowID")) Then
-
-                dgvpaypers.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
-                dgvpaypers.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
-
-                payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing
-            Else
-                dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
-
-            End If
+            dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
 
         End If
 
-        Return payPeriodData
-    End Function
+    End Sub
 
-    Private Async Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
+    Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
         _currentYear += 1
-        Await UpdatePages()
+        UpdatePages()
     End Sub
 
-    Private Async Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
+    Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
         _currentYear -= 1
-        Await UpdatePages()
+        UpdatePages()
     End Sub
 
-    Private Async Function UpdatePages() As Task
+    Private Sub UpdatePages()
         Panel2.Enabled = False
         linkNxt.Text = (_currentYear + 1) & " →"
         linkPrev.Text = "← " & (_currentYear - 1)
 
-        Await VIEW_payp(_currentYear, quer_empPayFreq)
+        VIEW_payp(_currentYear, quer_empPayFreq)
         If dgvpaypers.RowCount <> 0 Then
             dgvpaypers_SelectionChanged(Nothing, Nothing)
         Else
@@ -275,7 +252,7 @@ Public Class selectPayPeriod
             ResetPayPeriodStatusLabel()
         End If
         Panel2.Enabled = True
-    End Function
+    End Sub
 
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles OkButton.Click
         dgvpaypers.EndEdit()
@@ -283,12 +260,6 @@ Public Class selectPayPeriod
         If dgvpaypers.RowCount <> 0 Then
 
             Dim currentIndex = dgvpaypers.CurrentRow.Index
-
-            Dim currentPayPeriodData = _payPeriodDataList.FirstOrDefault(Function(p) p.Index = currentIndex)
-
-            If currentPayPeriodData IsNot Nothing Then
-
-            End If
 
             With dgvpaypers.CurrentRow
 
@@ -350,29 +321,32 @@ Public Class selectPayPeriod
 
             lblpapyperiodval.Text = ": from " & dateFrom & " to " & dateTo
 
-            UpdatePayPeriodStatusLabel()
+            UpdatePayPeriodStatusLabel(currentRow)
         Else
             lblpapyperiodval.Text = ""
             ResetPayPeriodStatusLabel()
         End If
     End Sub
 
-    Private Sub UpdatePayPeriodStatusLabel()
-        Dim currentPayPeriodData = _payPeriodDataList.
-                                    FirstOrDefault(Function(p) p.Index = dgvpaypers.CurrentRow.Index)
+    Private Sub UpdatePayPeriodStatusLabel(currentRow As DataGridViewRow)
 
-        If currentPayPeriodData Is Nothing Then Return
+        If currentRow Is Nothing Then Return
 
-        Select Case currentPayPeriodData.Status
-            Case PayPeriodStatusData.PayPeriodStatus.Open
-                PayPeriodStatusLabel.Text = "OPEN"
+        Dim statusColumn = currentRow.Cells("StatusColumn").Value
+        If statusColumn Is Nothing Then Return
+
+        Dim status = Enums(Of PayPeriodStatus).Parse(statusColumn)
+
+        Select Case status
+            Case PayPeriodStatus.Pending
+                PayPeriodStatusLabel.Text = "PENDING"
                 PayPeriodStatusLabel.BackColor = Color.Blue
                 PayPeriodStatusLabel.ForeColor = Color.White
-            Case PayPeriodStatusData.PayPeriodStatus.Processing
-                PayPeriodStatusLabel.Text = "PROCESSING"
+            Case PayPeriodStatus.Open
+                PayPeriodStatusLabel.Text = "OPEN"
                 PayPeriodStatusLabel.BackColor = Color.Green
                 PayPeriodStatusLabel.ForeColor = Color.White
-            Case PayPeriodStatusData.PayPeriodStatus.Closed
+            Case PayPeriodStatus.Closed
                 PayPeriodStatusLabel.Text = "CLOSED"
                 PayPeriodStatusLabel.BackColor = Color.Gray
                 PayPeriodStatusLabel.ForeColor = Color.Black

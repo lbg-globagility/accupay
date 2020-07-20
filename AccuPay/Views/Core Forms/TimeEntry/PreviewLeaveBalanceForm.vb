@@ -53,38 +53,39 @@ Public Class PreviewLeaveBalanceForm
     Private Async Sub btnReset_ClickAsync(sender As Object, e As EventArgs) Handles btnReset.Click
         'RenewLeaveBalance does not update when the payperiod chosen is not the start of the year.
         'Remove the Return statement when that is fixed.
+
         Return
 
-        Dim result As DialogResult
-        Dim isOk As Boolean = False
+        'Dim result As DialogResult
+        'Dim isOk As Boolean = False
 
-        Using dialog = New DateRangePickerDialog(removePayPeriodValidation:=True)
-            result = dialog.ShowDialog()
+        'Using dialog = New StartNewPayPeriodDialog()
+        '    result = dialog.ShowDialog()
 
-            If result = DialogResult.OK Then
-                payPeriodId = dialog.Id
-                periodDateFrom = dialog.Start
-                periodDateTo = dialog.End
-                isOk = True
-            End If
-        End Using
+        '    If result = DialogResult.OK Then
+        '        payPeriodId = dialog.Id
+        '        periodDateFrom = dialog.Start
+        '        periodDateTo = dialog.End
+        '        isOk = True
+        '    End If
+        'End Using
 
-        If isOk Then
+        'If isOk Then
 
-            If policy.ProrateOnFirstAnniversary = False Then
+        '    If policy.ProrateOnFirstAnniversary = False Then
 
-                If policy.LeaveAllowanceAmount = RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.Default Then
+        '        If policy.LeaveAllowanceAmount = RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.Default Then
 
-                    'Await RenewLeaveBalances()
+        '            'Await RenewLeaveBalances()
 
-                    MessageBoxHelper.Information($"Leave balances of the employees of {orgNam} were successfully reset.")
-                End If
-            Else
+        '            MessageBoxHelper.Information($"Leave balances of the employees of {orgNam} were successfully reset.")
+        '        End If
+        '    Else
 
-            End If
+        '    End If
 
-            Await LoadEmployees()
-        End If
+        '    Await LoadEmployees()
+        'End If
 
     End Sub
 

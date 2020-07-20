@@ -43,7 +43,7 @@ IF isotherformat = '0' THEN
         ,PhHContribSched
         ,HDMFContribSched
         ,payp.MinWageValue
-        ,payp.IsClosed
+        ,payp.Status
         FROM payperiod payp
         WHERE payp.OrganizationID=payp_OrganizationID
         AND TotalGrossSalary=1

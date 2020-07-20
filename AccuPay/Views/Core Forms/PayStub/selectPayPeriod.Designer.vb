@@ -24,6 +24,15 @@ Partial Class selectPayPeriod
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpaypers = New System.Windows.Forms.DataGridView()
+        Me.linkNxt = New System.Windows.Forms.LinkLabel()
+        Me.linkPrev = New System.Windows.Forms.LinkLabel()
+        Me.OkButton = New System.Windows.Forms.Button()
+        Me.CloseButton = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblpapyperiodval = New System.Windows.Forms.Label()
+        Me.tstrip = New System.Windows.Forms.ToolStrip()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.PayPeriodStatusLabel = New System.Windows.Forms.Label()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -44,15 +53,7 @@ Partial Class selectPayPeriod
         Me.PhHContribSched = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.HDMFContribSched = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayPeriodMinWageValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.linkNxt = New System.Windows.Forms.LinkLabel()
-        Me.linkPrev = New System.Windows.Forms.LinkLabel()
-        Me.OkButton = New System.Windows.Forms.Button()
-        Me.CloseButton = New System.Windows.Forms.Button()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.lblpapyperiodval = New System.Windows.Forms.Label()
-        Me.tstrip = New System.Windows.Forms.ToolStrip()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.PayPeriodStatusLabel = New System.Windows.Forms.Label()
+        Me.StatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvpaypers, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
@@ -67,7 +68,7 @@ Partial Class selectPayPeriod
         Me.dgvpaypers.BackgroundColor = System.Drawing.Color.White
         Me.dgvpaypers.ColumnHeadersHeight = 38
         Me.dgvpaypers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvpaypers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column15, Me.Column16, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.SSSContribSched, Me.PhHContribSched, Me.HDMFContribSched, Me.PayPeriodMinWageValue})
+        Me.dgvpaypers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column15, Me.Column16, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.SSSContribSched, Me.PhHContribSched, Me.HDMFContribSched, Me.PayPeriodMinWageValue, Me.StatusColumn})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -84,6 +85,106 @@ Partial Class selectPayPeriod
         Me.dgvpaypers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvpaypers.Size = New System.Drawing.Size(416, 373)
         Me.dgvpaypers.TabIndex = 0
+        '
+        'linkNxt
+        '
+        Me.linkNxt.AutoSize = True
+        Me.linkNxt.Dock = System.Windows.Forms.DockStyle.Right
+        Me.linkNxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
+        Me.linkNxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.linkNxt.Location = New System.Drawing.Point(377, 0)
+        Me.linkNxt.Name = "linkNxt"
+        Me.linkNxt.Size = New System.Drawing.Size(39, 15)
+        Me.linkNxt.TabIndex = 2
+        Me.linkNxt.TabStop = True
+        Me.linkNxt.Text = "Next>"
+        '
+        'linkPrev
+        '
+        Me.linkPrev.AutoSize = True
+        Me.linkPrev.Dock = System.Windows.Forms.DockStyle.Left
+        Me.linkPrev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
+        Me.linkPrev.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.linkPrev.Location = New System.Drawing.Point(0, 0)
+        Me.linkPrev.Name = "linkPrev"
+        Me.linkPrev.Size = New System.Drawing.Size(38, 15)
+        Me.linkPrev.TabIndex = 1
+        Me.linkPrev.TabStop = True
+        Me.linkPrev.Text = "<Prev"
+        '
+        'OkButton
+        '
+        Me.OkButton.Location = New System.Drawing.Point(383, 461)
+        Me.OkButton.Name = "OkButton"
+        Me.OkButton.Size = New System.Drawing.Size(75, 35)
+        Me.OkButton.TabIndex = 3
+        Me.OkButton.Text = "OK"
+        Me.OkButton.UseVisualStyleBackColor = True
+        '
+        'CloseButton
+        '
+        Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.CloseButton.Location = New System.Drawing.Point(464, 461)
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(75, 35)
+        Me.CloseButton.TabIndex = 4
+        Me.CloseButton.Text = "Close"
+        Me.CloseButton.UseVisualStyleBackColor = True
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.Label2.Location = New System.Drawing.Point(119, 25)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(63, 15)
+        Me.Label2.TabIndex = 13
+        Me.Label2.Text = "Pay period"
+        '
+        'lblpapyperiodval
+        '
+        Me.lblpapyperiodval.AutoSize = True
+        Me.lblpapyperiodval.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblpapyperiodval.Location = New System.Drawing.Point(178, 25)
+        Me.lblpapyperiodval.Name = "lblpapyperiodval"
+        Me.lblpapyperiodval.Size = New System.Drawing.Size(32, 15)
+        Me.lblpapyperiodval.TabIndex = 14
+        Me.lblpapyperiodval.Text = "-----"
+        '
+        'tstrip
+        '
+        Me.tstrip.AutoSize = False
+        Me.tstrip.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
+        Me.tstrip.CanOverflow = False
+        Me.tstrip.Dock = System.Windows.Forms.DockStyle.None
+        Me.tstrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.tstrip.ImageScalingSize = New System.Drawing.Size(20, 20)
+        Me.tstrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow
+        Me.tstrip.Location = New System.Drawing.Point(10, 43)
+        Me.tstrip.Name = "tstrip"
+        Me.tstrip.Size = New System.Drawing.Size(111, 373)
+        Me.tstrip.TabIndex = 281
+        Me.tstrip.Text = "ToolStrip1"
+        '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.linkNxt)
+        Me.Panel2.Controls.Add(Me.linkPrev)
+        Me.Panel2.Location = New System.Drawing.Point(122, 416)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(416, 29)
+        Me.Panel2.TabIndex = 283
+        '
+        'PayPeriodStatusLabel
+        '
+        Me.PayPeriodStatusLabel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.PayPeriodStatusLabel.Location = New System.Drawing.Point(452, 25)
+        Me.PayPeriodStatusLabel.Name = "PayPeriodStatusLabel"
+        Me.PayPeriodStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.PayPeriodStatusLabel.Size = New System.Drawing.Size(86, 15)
+        Me.PayPeriodStatusLabel.TabIndex = 284
+        Me.PayPeriodStatusLabel.Text = "-----"
+        Me.PayPeriodStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Column1
         '
@@ -234,105 +335,12 @@ Partial Class selectPayPeriod
         Me.PayPeriodMinWageValue.Visible = False
         Me.PayPeriodMinWageValue.Width = 124
         '
-        'linkNxt
+        'StatusColumn
         '
-        Me.linkNxt.AutoSize = True
-        Me.linkNxt.Dock = System.Windows.Forms.DockStyle.Right
-        Me.linkNxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
-        Me.linkNxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.linkNxt.Location = New System.Drawing.Point(377, 0)
-        Me.linkNxt.Name = "linkNxt"
-        Me.linkNxt.Size = New System.Drawing.Size(39, 15)
-        Me.linkNxt.TabIndex = 2
-        Me.linkNxt.TabStop = True
-        Me.linkNxt.Text = "Next>"
-        '
-        'linkPrev
-        '
-        Me.linkPrev.AutoSize = True
-        Me.linkPrev.Dock = System.Windows.Forms.DockStyle.Left
-        Me.linkPrev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!)
-        Me.linkPrev.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.linkPrev.Location = New System.Drawing.Point(0, 0)
-        Me.linkPrev.Name = "linkPrev"
-        Me.linkPrev.Size = New System.Drawing.Size(38, 15)
-        Me.linkPrev.TabIndex = 1
-        Me.linkPrev.TabStop = True
-        Me.linkPrev.Text = "<Prev"
-        '
-        'OkButton
-        '
-        Me.OkButton.Location = New System.Drawing.Point(383, 461)
-        Me.OkButton.Name = "OkButton"
-        Me.OkButton.Size = New System.Drawing.Size(75, 35)
-        Me.OkButton.TabIndex = 3
-        Me.OkButton.Text = "OK"
-        Me.OkButton.UseVisualStyleBackColor = True
-        '
-        'CloseButton
-        '
-        Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.CloseButton.Location = New System.Drawing.Point(464, 461)
-        Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New System.Drawing.Size(75, 35)
-        Me.CloseButton.TabIndex = 4
-        Me.CloseButton.Text = "Close"
-        Me.CloseButton.UseVisualStyleBackColor = True
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.Label2.Location = New System.Drawing.Point(119, 25)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(63, 15)
-        Me.Label2.TabIndex = 13
-        Me.Label2.Text = "Pay period"
-        '
-        'lblpapyperiodval
-        '
-        Me.lblpapyperiodval.AutoSize = True
-        Me.lblpapyperiodval.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.lblpapyperiodval.Location = New System.Drawing.Point(178, 25)
-        Me.lblpapyperiodval.Name = "lblpapyperiodval"
-        Me.lblpapyperiodval.Size = New System.Drawing.Size(32, 15)
-        Me.lblpapyperiodval.TabIndex = 14
-        Me.lblpapyperiodval.Text = "-----"
-        '
-        'tstrip
-        '
-        Me.tstrip.AutoSize = False
-        Me.tstrip.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.tstrip.CanOverflow = False
-        Me.tstrip.Dock = System.Windows.Forms.DockStyle.None
-        Me.tstrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.tstrip.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.tstrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow
-        Me.tstrip.Location = New System.Drawing.Point(10, 43)
-        Me.tstrip.Name = "tstrip"
-        Me.tstrip.Size = New System.Drawing.Size(111, 373)
-        Me.tstrip.TabIndex = 281
-        Me.tstrip.Text = "ToolStrip1"
-        '
-        'Panel2
-        '
-        Me.Panel2.Controls.Add(Me.linkNxt)
-        Me.Panel2.Controls.Add(Me.linkPrev)
-        Me.Panel2.Location = New System.Drawing.Point(122, 416)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(416, 29)
-        Me.Panel2.TabIndex = 283
-        '
-        'PayPeriodStatusLabel
-        '
-        Me.PayPeriodStatusLabel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.PayPeriodStatusLabel.Location = New System.Drawing.Point(452, 25)
-        Me.PayPeriodStatusLabel.Name = "PayPeriodStatusLabel"
-        Me.PayPeriodStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.PayPeriodStatusLabel.Size = New System.Drawing.Size(86, 15)
-        Me.PayPeriodStatusLabel.TabIndex = 284
-        Me.PayPeriodStatusLabel.Text = "-----"
-        Me.PayPeriodStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.StatusColumn.HeaderText = "Status"
+        Me.StatusColumn.Name = "StatusColumn"
+        Me.StatusColumn.ReadOnly = True
+        Me.StatusColumn.Visible = False
         '
         'selectPayPeriod
         '
@@ -371,25 +379,26 @@ Partial Class selectPayPeriod
     Friend WithEvents lblpapyperiodval As System.Windows.Forms.Label
     Friend WithEvents tstrip As System.Windows.Forms.ToolStrip
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
-    Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column15 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column16 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column4 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column7 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column8 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column9 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column10 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column11 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column12 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column13 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column14 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SSSContribSched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PhHContribSched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents HDMFContribSched As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PayPeriodMinWageValue As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents PayPeriodStatusLabel As Label
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents Column3 As DataGridViewTextBoxColumn
+    Friend WithEvents Column15 As DataGridViewTextBoxColumn
+    Friend WithEvents Column16 As DataGridViewTextBoxColumn
+    Friend WithEvents Column4 As DataGridViewTextBoxColumn
+    Friend WithEvents Column5 As DataGridViewTextBoxColumn
+    Friend WithEvents Column6 As DataGridViewTextBoxColumn
+    Friend WithEvents Column7 As DataGridViewTextBoxColumn
+    Friend WithEvents Column8 As DataGridViewTextBoxColumn
+    Friend WithEvents Column9 As DataGridViewTextBoxColumn
+    Friend WithEvents Column10 As DataGridViewTextBoxColumn
+    Friend WithEvents Column11 As DataGridViewTextBoxColumn
+    Friend WithEvents Column12 As DataGridViewTextBoxColumn
+    Friend WithEvents Column13 As DataGridViewTextBoxColumn
+    Friend WithEvents Column14 As DataGridViewTextBoxColumn
+    Friend WithEvents SSSContribSched As DataGridViewTextBoxColumn
+    Friend WithEvents PhHContribSched As DataGridViewTextBoxColumn
+    Friend WithEvents HDMFContribSched As DataGridViewTextBoxColumn
+    Friend WithEvents PayPeriodMinWageValue As DataGridViewTextBoxColumn
+    Friend WithEvents StatusColumn As DataGridViewTextBoxColumn
 End Class

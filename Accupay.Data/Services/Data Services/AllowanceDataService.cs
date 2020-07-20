@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
@@ -149,15 +150,11 @@ namespace AccuPay.Data.Services
             {
                 var oldAllowance = oldAllowances.Where(x => x.RowID == allowance.RowID).FirstOrDefault();
 
-                var payPeriods = allowanceItems
+                var alreadyUsedInClosedPayroll = allowanceItems
                     .Where(x => x.AllowanceID == allowance.RowID)
+                    .Where(x => x.PayPeriod.Status == PayPeriodStatus.Closed)
                     .Select(x => x.PayPeriod)
-                    .ToList();
-
-                var query = payPeriods.AsQueryable();
-                query = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(query);
-
-                var alreadyUsedInClosedPayroll = query.Any();
+                    .Any();
 
                 if (alreadyUsedInClosedPayroll)
                 {

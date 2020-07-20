@@ -29,18 +29,7 @@ namespace AccuPay.Data.Services
 
             if (currentPayPeriod == null) return false;
 
-            bool isClosed;
-
-            if (_policy.PayrollClosingType == PayrollClosingType.IsClosed)
-            {
-                isClosed = currentPayPeriod.IsClosed;
-            }
-            else
-            {
-                isClosed = currentPayPeriod.Status == PayPeriodStatus.Closed;
-            }
-
-            if (isClosed)
+            if (currentPayPeriod.Status == PayPeriodStatus.Closed)
             {
                 if (throwException)
                 {
@@ -81,9 +70,9 @@ namespace AccuPay.Data.Services
 
         public bool CheckIfDataIsWithinClosedPayPeriod(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
         {
-            var checkQuery = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(payPeriods.AsQueryable());
+            var hasClosedPayPeriod = payPeriods.Where(x => x.Status == PayPeriodStatus.Closed).Any();
 
-            if (checkQuery.Any())
+            if (hasClosedPayPeriod)
             {
                 if (throwException)
                 {
@@ -97,22 +86,22 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public bool CheckIfDataIsNotInOpenPayPeriod(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
-        {
-            var checkQuery = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(payPeriods.AsQueryable());
+        //public bool CheckIfDataIsNotInOpenPayPeriod(IEnumerable<PayPeriod> payPeriods, bool throwException = true)
+        //{
+        //    //var checkQuery = _payPeriodRepository.AddCheckIfClosedPayPeriodQuery(payPeriods.AsQueryable());
 
-            if (checkQuery.Any())
-            {
-                if (throwException)
-                {
-                    throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        //    //if (checkQuery.Any())
+        //    //{
+        //    //    if (throwException)
+        //    //    {
+        //    //        throw new BusinessLogicException(ClosedPayPeriodErrorMessage);
+        //    //    }
+        //    //    return true;
+        //    //}
+        //    //else
+        //    //{
+        //    //    return false;
+        //    //}
+        //}
     }
 }
