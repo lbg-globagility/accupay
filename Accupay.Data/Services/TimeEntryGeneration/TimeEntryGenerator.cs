@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
@@ -31,6 +32,7 @@ namespace AccuPay.Data.Services
         private IList<AgencyFee> _agencyFees;
         private IList<ShiftSchedule> _employeeShifts;
         private IList<Salary> _salaries;
+        private ICollection<EmploymentPolicy> _employmentPolicies;
         private IList<EmployeeDutySchedule> _shiftSchedules;
         private List<TimeAttendanceLog> _timeAttendanceLogs;
         private List<BreakTimeBracket> _breakTimeBrackets;
@@ -43,6 +45,7 @@ namespace AccuPay.Data.Services
         private readonly AgencyFeeRepository _agencyFeeRepository;
         private readonly BreakTimeBracketRepository _breakTimeBracketRepository;
         private readonly EmployeeRepository _employeeRepository;
+        private readonly EmploymentPolicyRepository _employmentPolicyRepository;
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
         private readonly LeaveRepository _leaveRepository;
         private readonly OfficialBusinessRepository _officialBusinessRepository;
@@ -75,25 +78,27 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public TimeEntryGenerator(DbContextOptionsService dbContextOptionsService,
-                                CalendarService calendarService,
-                                ListOfValueService listOfValueService,
-                                ActualTimeEntryRepository actualTimeEntryRepository,
-                                AgencyRepository agencyRepository,
-                                AgencyFeeRepository agencyFeeRepository,
-                                BreakTimeBracketRepository breakTimeBracketRepository,
-                                EmployeeRepository employeeRepository,
-                                EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
-                                LeaveRepository leaveRepository,
-                                OfficialBusinessRepository officialBusinessRepository,
-                                OrganizationRepository organizationRepository,
-                                OvertimeRepository overtimeRepository,
-                                PayPeriodRepository payPeriodRepository,
-                                SalaryRepository salaryRepository,
-                                ShiftScheduleRepository shiftScheduleRepository,
-                                TimeAttendanceLogRepository timeAttendanceLogRepository,
-                                TimeEntryRepository timeEntryRepository,
-                                TimeLogRepository timeLogRepository)
+        public TimeEntryGenerator(
+            DbContextOptionsService dbContextOptionsService,
+            CalendarService calendarService,
+            ListOfValueService listOfValueService,
+            ActualTimeEntryRepository actualTimeEntryRepository,
+            AgencyRepository agencyRepository,
+            AgencyFeeRepository agencyFeeRepository,
+            BreakTimeBracketRepository breakTimeBracketRepository,
+            EmployeeRepository employeeRepository,
+            EmploymentPolicyRepository employmentPolicyRepository,
+            EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
+            LeaveRepository leaveRepository,
+            OfficialBusinessRepository officialBusinessRepository,
+            OrganizationRepository organizationRepository,
+            OvertimeRepository overtimeRepository,
+            PayPeriodRepository payPeriodRepository,
+            SalaryRepository salaryRepository,
+            ShiftScheduleRepository shiftScheduleRepository,
+            TimeAttendanceLogRepository timeAttendanceLogRepository,
+            TimeEntryRepository timeEntryRepository,
+            TimeLogRepository timeLogRepository)
         {
             _dbContextOptionsService = dbContextOptionsService;
             _calendarService = calendarService;
@@ -104,6 +109,7 @@ namespace AccuPay.Data.Services
             _agencyFeeRepository = agencyFeeRepository;
             _breakTimeBracketRepository = breakTimeBracketRepository;
             _employeeRepository = employeeRepository;
+            _employmentPolicyRepository = employmentPolicyRepository;
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
             _leaveRepository = leaveRepository;
             _officialBusinessRepository = officialBusinessRepository;
@@ -117,7 +123,7 @@ namespace AccuPay.Data.Services
             _timeLogRepository = timeLogRepository;
         }
 
-        public void Start(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
+        public async Task Start(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
         {
             _organizationId = organizationId;
             _cutoffStart = cutoffStart.ToMinimumHourValue();
@@ -142,10 +148,12 @@ namespace AccuPay.Data.Services
                             GetAllActiveWithPosition(_organizationId).
                             ToList();
 
+            _employmentPolicies = await _employmentPolicyRepository.GetAll();
+
             agencies = _agencyRepository.
                             GetAll(_organizationId).
-
                             ToList();
+
             organization = _organizationRepository.
                             GetById(_organizationId);
 
@@ -260,6 +268,12 @@ namespace AccuPay.Data.Services
 
             var salary = _salaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
 
+            IEmploymentPolicy employmentPolicy = _employmentPolicies.FirstOrDefault(t => t.Id == employee.EmploymentPolicyId);
+            if (employmentPolicy is null)
+            {
+                employmentPolicy = new SubstituteEmploymentPolicy(employee);
+            }
+
             IList<TimeLog> timeLogs = _timeLogs.
                                         Where(t => t.EmployeeID == employee.RowID).
                                         ToList();
@@ -310,7 +324,7 @@ namespace AccuPay.Data.Services
             if (!(timeLogs.Any() || leavesInCutoff.Any() || officialBusinesses.Any()) && (!employee.IsFixed))
                 return;
 
-            var dayCalculator = new DayCalculator(organization, settings, employee);
+            var dayCalculator = new DayCalculator(organization, settings, employee, employmentPolicy);
 
             var timeEntries = new List<TimeEntry>();
             var regularHolidaysList = new List<DateTime>(); // Used for postlegalholidaycheck

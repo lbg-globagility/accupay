@@ -72,17 +72,23 @@ namespace AccuPay.Data.Entities
         public decimal MaternityLeavePerPayPeriod { get; set; }
         public decimal OtherLeavePerPayPeriod { get; set; }
         public bool AlphalistExempted { get; set; }
+        [Obsolete("Moved to employment policy")]
         public decimal WorkDaysPerYear { get; set; }
         public int? DayOfRest { get; set; }
         public string AtmNo { get; set; }
         public string BankName { get; set; }
+        [Obsolete("Moved to employment policy")]
         public bool CalcHoliday { get; set; }
+        [Obsolete("Moved to employment policy")]
         public bool CalcSpecialHoliday { get; set; }
+        [Obsolete("Moved to employment policy")]
         public bool CalcNightDiff { get; set; }
+        [Obsolete("Moved to employment policy")]
         public bool CalcRestDay { get; set; }
         public DateTime? DateRegularized { get; set; }
         public DateTime? DateEvaluated { get; set; }
         public bool RevealInPayroll { get; set; }
+        [Obsolete("Moved to employment policy")]
         public decimal LateGracePeriod { get; set; }
         public decimal OffsetBalance { get; set; }
         public int? AgencyID { get; set; }
