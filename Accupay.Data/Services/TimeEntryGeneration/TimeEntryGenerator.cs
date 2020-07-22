@@ -103,7 +103,6 @@ namespace AccuPay.Data.Services
             _dbContextOptionsService = dbContextOptionsService;
             _calendarService = calendarService;
             _listOfValueService = listOfValueService;
-
             _actualTimeEntryRepository = actualTimeEntryRepository;
             _agencyRepository = agencyRepository;
             _agencyFeeRepository = agencyFeeRepository;
@@ -134,32 +133,26 @@ namespace AccuPay.Data.Services
             if (currentPayPeriod?.PayFromDate != cutoffStart || currentPayPeriod?.PayToDate != cutoffEnd)
                 throw new BusinessLogicException("Only open pay periods can generate time entries.");
 
-            IList<Employee> employees = null;
-            Organization organization = null;
-            IList<Agency> agencies = null;
-            CalendarCollection calendarCollection;
-
             ListOfValueCollection settings = _listOfValueService.Create();
             TimeEntryPolicy timeEntryPolicy = new TimeEntryPolicy(settings);
 
             TimePeriod cuttOffPeriod = new TimePeriod(_cutoffStart, _cutoffEnd);
 
-            employees = _employeeRepository.
-                            GetAllActiveWithPosition(_organizationId).
-                            ToList();
+            ICollection<Employee> employees = _employeeRepository
+                .GetAllActiveWithPosition(_organizationId)
+                .ToList();
 
             _employmentPolicies = await _employmentPolicyRepository.GetAll();
 
-            agencies = _agencyRepository.
-                            GetAll(_organizationId).
-                            ToList();
+            ICollection<Agency> agencies = _agencyRepository
+                .GetAll(_organizationId)
+                .ToList();
 
-            organization = _organizationRepository.
-                            GetById(_organizationId);
+            var organization = _organizationRepository.GetById(_organizationId);
 
-            _salaries = _salaryRepository.
-                            GetByCutOff(_organizationId, _cutoffStart).
-                            ToList();
+            _salaries = _salaryRepository
+                .GetByCutOff(_organizationId, _cutoffStart)
+                .ToList();
 
             var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart);
 
@@ -169,51 +162,51 @@ namespace AccuPay.Data.Services
                 afterCutOff = _cutoffEnd.AddDays(_threeDays);
             }
 
-            _timeEntries = _timeEntryRepository.
-                            GetByDatePeriod(_organizationId, new TimePeriod(previousCutoff, afterCutOff)).
-                            ToList();
+            _timeEntries = _timeEntryRepository
+                .GetByDatePeriod(_organizationId, new TimePeriod(previousCutoff, afterCutOff))
+                .ToList();
 
-            _actualTimeEntries = _actualTimeEntryRepository.
-                            GetByDatePeriod(_organizationId, cuttOffPeriod).
-                            ToList();
+            _actualTimeEntries = _actualTimeEntryRepository
+                .GetByDatePeriod(_organizationId, cuttOffPeriod)
+                .ToList();
 
-            _timeLogs = _timeLogRepository.
-                            GetByDatePeriod(_organizationId, cuttOffPeriod).
-                            ToList();
+            _timeLogs = _timeLogRepository
+                .GetByDatePeriod(_organizationId, cuttOffPeriod)
+                .ToList();
 
-            _leaves = _leaveRepository.
-                            GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod).
-                            ToList();
+            _leaves = _leaveRepository
+                .GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod)
+                .ToList();
 
-            _overtimes = _overtimeRepository.
-                            GetByDatePeriod(_organizationId, cuttOffPeriod, OvertimeStatus.Approved).
-                            ToList();
+            _overtimes = _overtimeRepository
+                .GetByDatePeriod(_organizationId, cuttOffPeriod, OvertimeStatus.Approved)
+                .ToList();
 
-            _officialBusinesses = _officialBusinessRepository.
-                            GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod).
-                            ToList();
+            _officialBusinesses = _officialBusinessRepository
+                .GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod)
+                .ToList();
 
-            _agencyFees = _agencyFeeRepository.
-                            GetByDatePeriod(_organizationId, cuttOffPeriod).
-                            ToList();
+            _agencyFees = _agencyFeeRepository
+                .GetByDatePeriod(_organizationId, cuttOffPeriod)
+                .ToList();
 
-            _employeeShifts = _shiftScheduleRepository.
-                            GetByDatePeriod(_organizationId, cuttOffPeriod).
-                            ToList();
+            _employeeShifts = _shiftScheduleRepository
+                .GetByDatePeriod(_organizationId, cuttOffPeriod)
+                .ToList();
 
-            _shiftSchedules = _employeeDutyScheduleRepository.
-                            GetByDatePeriod(_organizationId, cuttOffPeriod).
-                            ToList();
+            _shiftSchedules = _employeeDutyScheduleRepository
+                .GetByDatePeriod(_organizationId, cuttOffPeriod)
+                .ToList();
 
             if (timeEntryPolicy.ComputeBreakTimeLate)
             {
-                _timeAttendanceLogs = _timeAttendanceLogRepository.
-                                        GetByTimePeriod(_organizationId, cuttOffPeriod).
-                                        ToList();
+                _timeAttendanceLogs = _timeAttendanceLogRepository
+                    .GetByTimePeriod(_organizationId, cuttOffPeriod)
+                    .ToList();
 
-                _breakTimeBrackets = _breakTimeBracketRepository.
-                                        GetAll(_organizationId).
-                                        ToList();
+                _breakTimeBrackets = _breakTimeBracketRepository
+                    .GetAll(_organizationId)
+                    .ToList();
             }
             else
             {
@@ -223,10 +216,11 @@ namespace AccuPay.Data.Services
 
             var payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
 
-            calendarCollection = _calendarService.GetCalendarCollection(
-                                                    new TimePeriod(previousCutoff, _cutoffEnd),
-                                                    payrateCalculationBasis,
-                                                    _organizationId);
+            CalendarCollection calendarCollection = _calendarService
+                .GetCalendarCollection(
+                    new TimePeriod(previousCutoff, _cutoffEnd),
+                    payrateCalculationBasis,
+                    _organizationId);
 
             var progress = new ObservableCollection<int>();
 
@@ -251,20 +245,21 @@ namespace AccuPay.Data.Services
             });
         }
 
-        private void CalculateEmployeeEntries(Employee employee,
-                                            Organization organization,
-                                            ListOfValueCollection settings,
-                                            IList<Agency> agencies,
-                                            TimeEntryPolicy timeEntryPolicy,
-                                            CalendarCollection calendarCollection)
+        private void CalculateEmployeeEntries(
+            Employee employee,
+            Organization organization,
+            ListOfValueCollection settings,
+            ICollection<Agency> agencies,
+            TimeEntryPolicy timeEntryPolicy,
+            CalendarCollection calendarCollection)
         {
-            IList<TimeEntry> previousTimeEntries = _timeEntries.
-                                                        Where(t => t.EmployeeID == employee.RowID).
-                                                        ToList();
+            var previousTimeEntries = _timeEntries
+                .Where(t => t.EmployeeID == employee.RowID)
+                .ToList();
 
-            IList<ActualTimeEntry> actualTimeEntries = _actualTimeEntries.
-                                                        Where(a => a.EmployeeID == employee.RowID).
-                                                        ToList();
+            ICollection<ActualTimeEntry> actualTimeEntries = _actualTimeEntries
+                .Where(a => a.EmployeeID == employee.RowID)
+                .ToList();
 
             var salary = _salaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
 
@@ -274,46 +269,46 @@ namespace AccuPay.Data.Services
                 employmentPolicy = new SubstituteEmploymentPolicy(employee);
             }
 
-            IList<TimeLog> timeLogs = _timeLogs.
-                                        Where(t => t.EmployeeID == employee.RowID).
-                                        ToList();
+            var timeLogs = _timeLogs
+                .Where(t => t.EmployeeID == employee.RowID)
+                .ToList();
 
-            IList<ShiftSchedule> shiftSchedules = _employeeShifts.
-                                        Where(s => s.EmployeeID == employee.RowID).
-                                        ToList();
+            var shiftSchedules = _employeeShifts
+                .Where(s => s.EmployeeID == employee.RowID)
+                .ToList();
 
-            IList<Overtime> overtimesInCutoff = _overtimes.
-                                        Where(o => o.EmployeeID == employee.RowID).
-                                        ToList();
+            var overtimesInCutoff = _overtimes
+                .Where(o => o.EmployeeID == employee.RowID)
+                .ToList();
 
-            IList<OfficialBusiness> officialBusinesses = _officialBusinesses.
-                                        Where(o => o.EmployeeID == employee.RowID).
-                                        ToList();
+            var officialBusinesses = _officialBusinesses
+                .Where(o => o.EmployeeID == employee.RowID)
+                .ToList();
 
-            IList<Leave> leavesInCutoff = _leaves.Where(l => l.EmployeeID == employee.RowID).
-                                        Where(l => l.LeaveType != "Leave w/o Pay").
-                                        ToList();
+            var leavesInCutoff = _leaves.Where(l => l.EmployeeID == employee.RowID)
+                .Where(l => l.LeaveType != "Leave w/o Pay")
+                .ToList();
 
-            IList<AgencyFee> agencyFees = _agencyFees.
-                                        Where(a => a.EmployeeID == employee.RowID).
-                                        ToList();
+            ICollection<AgencyFee> agencyFees = _agencyFees
+                .Where(a => a.EmployeeID == employee.RowID)
+                .ToList();
 
-            var dutyShiftSchedules = _shiftSchedules.
-                                        Where(es => es.EmployeeID == employee.RowID).
-                                        ToList();
+            var dutyShiftSchedules = _shiftSchedules
+                .Where(es => es.EmployeeID == employee.RowID)
+                .ToList();
 
-            IList<TimeAttendanceLog> timeAttendanceLogs = _timeAttendanceLogs.
-                                        Where(t => t.EmployeeID == employee.RowID).
-                                        ToList();
+            var timeAttendanceLogs = _timeAttendanceLogs
+                 .Where(t => t.EmployeeID == employee.RowID)
+                 .ToList();
 
-            IList<BreakTimeBracket> breakTimeBrackets = _breakTimeBrackets.
-                                        Where(b => b.DivisionID == employee.Position?.DivisionID).
-                                        ToList();
+            var breakTimeBrackets = _breakTimeBrackets
+                .Where(b => b.DivisionID == employee.Position?.DivisionID)
+                .ToList();
 
             if (employee.IsActive == false)
             {
-                var currentTimeEntries = previousTimeEntries.
-                                        Where(t => _cutoffStart <= t.Date && t.Date <= _cutoffEnd);
+                var currentTimeEntries = previousTimeEntries
+                    .Where(t => _cutoffStart <= t.Date && t.Date <= _cutoffEnd);
 
                 // TODO: return this as one the list of errors of Time entry generation
                 if (!currentTimeEntries.Any())
@@ -343,20 +338,21 @@ namespace AccuPay.Data.Services
                     var branchId = timelog?.BranchID ?? employee?.BranchID;
                     var payrate = calendarCollection.GetCalendar(branchId).Find(currentDate);
 
-                    var timeEntry = dayCalculator.Compute(currentDate,
-                                                            salary,
-                                                            previousTimeEntries,
-                                                            employeeShift,
-                                                            dutyShiftSched,
-                                                            timelog,
-                                                            overtimes,
-                                                            officialBusiness,
-                                                            leaves,
-                                                            currentTimeAttendanceLogs,
-                                                            breakTimeBrackets,
-                                                            payrate,
-                                                            calendarCollection,
-                                                            branchId);
+                    var timeEntry = dayCalculator.Compute(
+                        currentDate,
+                        salary,
+                        previousTimeEntries,
+                        employeeShift,
+                        dutyShiftSched,
+                        timelog,
+                        overtimes,
+                        officialBusiness,
+                        leaves,
+                        currentTimeAttendanceLogs,
+                        breakTimeBrackets,
+                        payrate,
+                        calendarCollection,
+                        branchId);
 
                     if (payrate.IsRegularHoliday)
                     {
@@ -365,9 +361,9 @@ namespace AccuPay.Data.Services
 
                     // this is for the issue on hasWorkedLastDay on first time entry generation.
                     // since there is no oldTimeEntries yet, hasWorkedLastDay will always be false.
-                    if (previousTimeEntries.Where(x => x.EmployeeID == employee.RowID).
-                                    Where(x => x.Date == currentDate).
-                                    Any() == false)
+                    if (previousTimeEntries.Where(x => x.EmployeeID == employee.RowID)
+                        .Where(x => x.Date == currentDate)
+                        .Any() == false)
                     {
                         previousTimeEntries.Add(timeEntry);
                     }
@@ -422,17 +418,17 @@ namespace AccuPay.Data.Services
                 {
                     foreach (var holidayDate in regularHolidaysList)
                     {
-                        var presentAfterLegalHoliday = PayrollTools.
-                                                        HasWorkAfterLegalHoliday(holidayDate,
-                                                                                _cutoffEnd,
-                                                                                timeEntries,
-                                                                                calendarCollection);
+                        var presentAfterLegalHoliday = PayrollTools.HasWorkAfterLegalHoliday(
+                            holidayDate,
+                            _cutoffEnd,
+                            timeEntries,
+                            calendarCollection);
 
                         if (!presentAfterLegalHoliday)
                         {
-                            var timeEntry = timeEntries.
-                                        Where(t => t.Date == holidayDate).
-                                        FirstOrDefault();
+                            var timeEntry = timeEntries
+                                .Where(t => t.Date == holidayDate)
+                                .FirstOrDefault();
 
                             timeEntry.BasicRegularHolidayPay = 0;
                         }
@@ -452,7 +448,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void AddActualTimeEntriesToContext(PayrollContext context, IList<ActualTimeEntry> actualTimeEntries)
+        private void AddActualTimeEntriesToContext(PayrollContext context, ICollection<ActualTimeEntry> actualTimeEntries)
         {
             foreach (var actualTimeEntry in actualTimeEntries)
             {
@@ -463,7 +459,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void AddAgencyFeesToContext(PayrollContext context, IList<AgencyFee> agencyFees)
+        private void AddAgencyFeesToContext(PayrollContext context, ICollection<AgencyFee> agencyFees)
         {
             foreach (var agencyFee in agencyFees)
             {
