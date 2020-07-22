@@ -81,26 +81,6 @@ namespace AccuPay.Data.Services
             return finalBreakTimeLateHours;
         }
 
-        public decimal ComputeLateMinutes(TimePeriod workPeriod, CurrentShift currentShift, bool computeBreakTimeLate)
-        {
-            var shiftPeriod = currentShift.ShiftPeriod;
-
-            if (workPeriod.EarlierThan(shiftPeriod))
-                return 0;
-
-            var latePeriod = new TimePeriod(shiftPeriod.Start, workPeriod.Start);
-
-            if (currentShift.HasBreaktime && computeBreakTimeLate == false)
-            {
-                var breakPeriod = currentShift.BreakPeriod;
-                var latePeriods = latePeriod.Difference(breakPeriod);
-
-                return latePeriods.Sum(l => l.TotalMinutes);
-            }
-
-            return latePeriod.TotalMinutes;
-        }
-
         public decimal ComputeUndertimeHours(TimePeriod workPeriod, CurrentShift currentShift, bool computeBreakTimeLate)
         {
             var shiftPeriod = currentShift.ShiftPeriod;
@@ -156,19 +136,6 @@ namespace AccuPay.Data.Services
             {
                 overtimeHours = overtimeWorked?.TotalHours;
             }
-
-            return overtimeHours ?? 0;
-        }
-
-        public decimal ComputeOvertimeMinutes(TimePeriod workPeriod, Overtime overtime, CurrentShift shift, TimePeriod breaktime)
-        {
-            var overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift);
-
-            decimal? overtimeHours;
-            if (breaktime != null)
-                overtimeHours = overtimeWorked?.Difference(breaktime).Sum(o => o.TotalMinutes);
-            else
-                overtimeHours = overtimeWorked?.TotalMinutes;
 
             return overtimeHours ?? 0;
         }
