@@ -8,7 +8,7 @@ using System.Linq;
 namespace AccuPay.Data.Entities
 {
     [Table("employmentpolicy")]
-    public class EmploymentPolicy
+    public class EmploymentPolicy : IEmploymentPolicy
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

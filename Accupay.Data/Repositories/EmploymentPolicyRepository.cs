@@ -26,6 +26,16 @@ namespace AccuPay.Data.Repositories
             return employmentPolicy;
         }
 
+        public async Task<ICollection<EmploymentPolicy>> GetAll()
+        {
+            var employmentPolicies = await _context.EmploymentPolicies
+                .Include(t => t.Items)
+                    .ThenInclude(t => t.Type)
+                .ToListAsync();
+
+            return employmentPolicies;
+        }
+
         public async Task<ICollection<EmploymentPolicyType>> GetAllTypes()
         {
             return await _context.EmploymentPolicyTypes.ToListAsync();

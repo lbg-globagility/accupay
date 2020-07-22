@@ -14,28 +14,20 @@ namespace AccuPay.Data.Services
         private readonly ListOfValueCollection _settings;
         private readonly Organization _organization;
         private readonly Employee _employee;
+        private readonly IEmploymentPolicy _employmentPolicy;
         private readonly TimeEntryPolicy _policy;
 
-        private readonly decimal _minutesPerHour = 60;
-        private bool _lateSkipCountRounding = false;
-        private decimal _lateSkipCount = 0;
-        private bool _overtimeSkipCountRounding = false;
-        private decimal _overtimeSkipCount = 0;
-
-        public DayCalculator(Organization organization, ListOfValueCollection settings, Employee employee)
+        public DayCalculator(
+            Organization organization,
+            ListOfValueCollection settings,
+            Employee employee,
+            IEmploymentPolicy employmentPolicy)
         {
             _settings = settings;
             _organization = organization;
             _employee = employee;
             _policy = new TimeEntryPolicy(settings);
-
-            _lateSkipCountRounding = _policy.LateSkipCountRounding;
-            if (_lateSkipCountRounding)
-                _lateSkipCount = Convert.ToDecimal(settings.GetValue("SkipCount"));
-
-            _overtimeSkipCountRounding = _policy.OvertimeSkipCountRounding;
-            if (_overtimeSkipCountRounding)
-                _overtimeSkipCount = Convert.ToDecimal(settings.GetValue("OvertimeSkipCount"));
+            _employmentPolicy = employmentPolicy;
         }
 
         public TimeEntry Compute(DateTime currentDate,
@@ -184,8 +176,6 @@ namespace AccuPay.Data.Services
                             timeEntry.LateHours = 4;
                     }
 
-                    timeEntry = LateSchemeSkipCountHours(timeEntry, currentShift, calculator, coveredPeriod);
-
                     timeEntry.RegularHours = currentShift.WorkingHours -
                                                 (timeEntry.LateHours + timeEntry.UndertimeHours);
 
@@ -205,8 +195,6 @@ namespace AccuPay.Data.Services
                                                 currentDate.Add(TimeSpan.Parse("22:00")));
 
                     timeEntry.OvertimeHours = overtimes.Sum(o => calculator.ComputeOvertimeHours(logPeriod, o, currentShift, nightBreaktime));
-
-                    timeEntry = OvertimeSchemeSkipCountHours(timeEntry, overtimes, currentShift, calculator, logPeriod, nightBreaktime);
 
                     ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
                 }
@@ -244,7 +232,7 @@ namespace AccuPay.Data.Services
 
             if (currentShift.HasShift)
             {
-                var graceTime = _employee.LateGracePeriod;
+                var graceTime = _employmentPolicy.GracePeriod;
 
                 var shiftStart = currentShift.ShiftPeriod.Start;
                 var gracePeriod = new TimePeriod(shiftStart, shiftStart.AddMinutes((double)graceTime));
@@ -446,64 +434,6 @@ namespace AccuPay.Data.Services
             return hours;
         }
 
-        // This OvertimeSchemeSkipCountHours are almost identical. Maybe refactor their common code
-        private TimeEntry LateSchemeSkipCountHours(TimeEntry timeEntry,
-                                                    CurrentShift currentShift,
-                                                    TimeEntryCalculator calculator,
-                                                    TimePeriod coveredPeriod)
-        {
-            if (_lateSkipCountRounding)
-            {
-                var lateMinutes = calculator.ComputeLateMinutes(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate);
-
-                var empGracePeriod = _employee.LateGracePeriod;
-                var hasNoGracePeriod = empGracePeriod == 0;
-                if (!hasNoGracePeriod && lateMinutes > empGracePeriod)
-                {
-                    var properValue = Math.Ceiling(lateMinutes / empGracePeriod);
-                    var lessOne = properValue - 1;
-                    var properLateHours = lessOne * _lateSkipCount;
-
-                    timeEntry.LateHours = properLateHours / _minutesPerHour;
-                }
-            }
-
-            return timeEntry;
-        }
-
-        private TimeEntry OvertimeSchemeSkipCountHours(TimeEntry timeEntry,
-                                                    IList<Overtime> overtimes,
-                                                    CurrentShift currentShift,
-                                                    TimeEntryCalculator calculator,
-                                                    TimePeriod logPeriod,
-                                                    TimePeriod nightBreaktime)
-        {
-            if (_overtimeSkipCountRounding)
-            {
-                var overtimeMinutes = overtimes.Sum(o => calculator.ComputeOvertimeMinutes(logPeriod, o, currentShift, nightBreaktime));
-
-                var empGracePeriod = _employee.LateGracePeriod;
-                var empGracePeriodHrs = empGracePeriod / _minutesPerHour;
-                var hasNoGracePeriod = empGracePeriod == 0;
-                var hasGracePeriod = !hasNoGracePeriod;
-
-                if (hasGracePeriod && overtimeMinutes > empGracePeriod)
-                {
-                    var properValue = Math.Ceiling(overtimeMinutes / empGracePeriod);
-                    var lessOne = properValue - 1;
-                    var properLateHours = lessOne * _overtimeSkipCount;
-
-                    timeEntry.OvertimeHours = properLateHours / _minutesPerHour;
-                }
-                else if (hasGracePeriod && overtimeMinutes <= empGracePeriod)
-                {
-                    timeEntry.OvertimeHours = 0;
-                }
-            }
-
-            return timeEntry;
-        }
-
         private void ComputeNightDiffHours(TimeEntryCalculator calculator,
                                             TimeEntry timeEntry,
                                             CurrentShift currentShift,
@@ -514,7 +444,7 @@ namespace AccuPay.Data.Services
                                             IList<Overtime> overtimes,
                                             TimePeriod nightBreaktime)
         {
-            if (_employee.CalcNightDiff && currentShift.IsNightShift)
+            if (_employmentPolicy.ComputeNightDiff && currentShift.IsNightShift)
             {
                 var nightDiffPeriod = GetNightDiffPeriod(currentDate);
                 var dawnDiffPeriod = GetNightDiffPeriod(previousDay);
@@ -535,8 +465,8 @@ namespace AccuPay.Data.Services
 
         private void ComputeHolidayHours(IPayrate payrate, TimeEntry timeEntry)
         {
-            if (!((_employee.CalcHoliday && payrate.IsRegularHoliday) ||
-                (_employee.CalcSpecialHoliday && payrate.IsSpecialNonWorkingHoliday)))
+            if (!((_employmentPolicy.ComputeRegularHoliday && payrate.IsRegularHoliday) ||
+                (_employmentPolicy.ComputeSpecialHoliday && payrate.IsSpecialNonWorkingHoliday)))
                 return;
 
             if (payrate.IsRegularHoliday)
@@ -561,7 +491,7 @@ namespace AccuPay.Data.Services
                                         TimeEntry timeEntry,
                                         TimePeriod logPeriod)
         {
-            if (!(currentShift.IsRestDay && _employee.CalcRestDay))
+            if (!(currentShift.IsRestDay && _employmentPolicy.ComputeRestDay))
                 return;
 
             if (_policy.IgnoreShiftOnRestDay)
@@ -626,8 +556,8 @@ namespace AccuPay.Data.Services
 
         private bool IsHolidayExempt(IPayrate payrate)
         {
-            var isCalculatingRegularHoliday = payrate.IsRegularHoliday && _employee.CalcHoliday;
-            var isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday && _employee.CalcSpecialHoliday;
+            var isCalculatingRegularHoliday = payrate.IsRegularHoliday && _employmentPolicy.ComputeRegularHoliday;
+            var isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday && _employmentPolicy.ComputeSpecialHoliday;
 
             return !(isCalculatingRegularHoliday || isCalculatingSpecialHoliday);
         }
@@ -711,8 +641,8 @@ namespace AccuPay.Data.Services
                 var nightDiffRate = payrate.NightDiffRate - payrate.RegularRate;
                 var nightDiffOTRate = payrate.NightDiffOTRate - payrate.OvertimeRate;
 
-                var notEntitledForLegalHolidayRate = _employee.CalcHoliday == false && payrate.IsSpecialNonWorkingHoliday;
-                var notEntitledForSpecialNonWorkingHolidayRate = _employee.CalcSpecialHoliday == false && payrate.IsSpecialNonWorkingHoliday;
+                var notEntitledForLegalHolidayRate = _employmentPolicy.ComputeRegularHoliday == false && payrate.IsSpecialNonWorkingHoliday;
+                var notEntitledForSpecialNonWorkingHolidayRate = _employmentPolicy.ComputeSpecialHoliday == false && payrate.IsSpecialNonWorkingHoliday;
 
                 if (notEntitledForLegalHolidayRate || notEntitledForSpecialNonWorkingHolidayRate)
                 {
@@ -753,14 +683,14 @@ namespace AccuPay.Data.Services
 
                 var isHolidayPayInclusive = _employee.IsPremiumInclusive;
 
-                if (_employee.CalcSpecialHoliday && payrate.IsSpecialNonWorkingHoliday)
+                if (_employmentPolicy.ComputeSpecialHoliday && payrate.IsSpecialNonWorkingHoliday)
                 {
                     holidayRate = isHolidayPayInclusive ? holidayRate - 1 : holidayRate;
 
                     timeEntry.SpecialHolidayPay = timeEntry.SpecialHolidayHours * hourlyRate * holidayRate;
                     timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate * holidayRate;
                 }
-                else if (_employee.CalcHoliday && payrate.IsRegularHoliday)
+                else if (_employmentPolicy.ComputeRegularHoliday && payrate.IsRegularHoliday)
                 {
                     timeEntry.RegularHolidayPay = timeEntry.RegularHolidayHours * hourlyRate * (holidayRate - 1);
 

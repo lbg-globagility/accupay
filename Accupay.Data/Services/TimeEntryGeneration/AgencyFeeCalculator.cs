@@ -11,16 +11,16 @@ namespace AccuPay.Data.Services
 
         private readonly Employee _employee;
         private readonly Agency _agency;
-        private readonly IList<AgencyFee> _agencyFees;
+        private readonly ICollection<AgencyFee> _agencyFees;
 
-        public AgencyFeeCalculator(Employee employee, Agency agency, IList<AgencyFee> agencyFees)
+        public AgencyFeeCalculator(Employee employee, Agency agency, ICollection<AgencyFee> agencyFees)
         {
             _employee = employee;
             _agency = agency;
             _agencyFees = agencyFees;
         }
 
-        public IList<AgencyFee> Compute(IList<TimeEntry> timeEntries)
+        public ICollection<AgencyFee> Compute(ICollection<TimeEntry> timeEntries)
         {
             var agencyFees = new List<AgencyFee>();
 
