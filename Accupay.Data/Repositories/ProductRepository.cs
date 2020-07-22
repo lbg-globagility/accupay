@@ -187,6 +187,8 @@ namespace AccuPay.Data.Repositories
             product.PartNo = loanTypeName;
             product.Name = loanTypeName;
 
+            _context.Entry(product).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
         }
 
