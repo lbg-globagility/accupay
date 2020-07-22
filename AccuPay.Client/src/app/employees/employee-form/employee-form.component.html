@@ -102,7 +102,7 @@
             </mat-form-field>
             <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Job Position</mat-label>
-              <mat-select formControlName="positionId">
+              <mat-select formControlName="positionId" required>
                 <mat-option
                   *ngFor="let position of positions"
                   [value]="position.id"
@@ -110,6 +110,7 @@
                   {{ position.name }}
                 </mat-option>
               </mat-select>
+              <mat-error>Position is required</mat-error>
             </mat-form-field>
             <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Start Date</mat-label>
@@ -129,7 +130,7 @@
             </mat-form-field>
             <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Employment Policy</mat-label>
-              <mat-select formControlName="employmentPolicyId">
+              <mat-select formControlName="employmentPolicyId" required>
                 <mat-option
                   *ngFor="let employmentPolicy of employmentPolicies"
                   [value]="employmentPolicy.id"
@@ -137,6 +138,7 @@
                   {{ employmentPolicy.name }}
                 </mat-option>
               </mat-select>
+              <mat-error>Employment policy is required</mat-error>
             </mat-form-field>
             <mat-form-field class="col-lg-6" appearance="fill">
               <mat-label>Regularization Date</mat-label>

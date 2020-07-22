@@ -1,0 +1,9 @@
+INSERT IGNORE INTO `employmentpolicytype` (`Name`)
+VALUES ('WorkDaysPerYear'),
+  ('GracePeriod'),
+  ('ComputeNightDiff'),
+  ('ComputeNightDiffOT'),
+  ('ComputeRestDay'),
+  ('ComputeRestDayOT'),
+  ('ComputeSpecialHoliday'),
+  ('ComputeRegularHoliday');

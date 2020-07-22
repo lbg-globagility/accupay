@@ -40,10 +40,10 @@ export class EmployeeFormComponent implements OnInit {
     philHealthNo: [],
     pagIbigNo: [],
     employmentStatus: [, Validators.required],
-    employmentPolicyId: [],
+    employmentPolicyId: [, [Validators.required]],
     startDate: [, [Validators.required]],
     regularizationDate: [],
-    positionId: [],
+    positionId: [, [Validators.required]],
   });
 
   employmentStatuses: string[] = [];
