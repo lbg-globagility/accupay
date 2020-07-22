@@ -4,6 +4,7 @@ using AccuPay.Web.Salaries.Models;
 using AccuPay.Web.Salaries.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -91,6 +92,13 @@ namespace AccuPay.Web.Controllers
         public ActionResult GetEmployeeTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-salary-template.xlsx");
+        }
+
+        [HttpPost("import")]
+        [Permission(PermissionTypes.SalaryCreate)]
+        public async Task<Data.Services.Imports.Salaries.SalaryImportParser.SalaryImportParserOutput> Import([FromForm] IFormFile file)
+        {
+            return await _service.Import(file);
         }
     }
 }

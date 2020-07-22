@@ -5,6 +5,7 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Salary } from 'src/app/salaries/shared/salary';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
+import { SalaryImportParserOutput } from './shared/salary-import-parser-output';
 
 @Injectable({
   providedIn: 'root',
@@ -61,6 +62,16 @@ export class SalaryService extends BasePdfService {
     return this.getFile(
       this.salaryTemplateFileName,
       `${this.baseUrl}/accupay-salary-template`
+    );
+  }
+
+  import(file: File): Observable<SalaryImportParserOutput> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.httpClient.post<SalaryImportParserOutput>(
+      `${this.baseUrl}/import`,
+      formData
     );
   }
 }

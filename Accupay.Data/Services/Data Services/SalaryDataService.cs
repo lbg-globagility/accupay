@@ -2,6 +2,7 @@
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services.Imports.Salaries;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -14,6 +15,7 @@ namespace AccuPay.Data.Services
     public class SalaryDataService : BaseSavableDataService<Salary>
     {
         private readonly PaystubRepository _paystubRepository;
+        private readonly SalaryRepository _salaryRepository;
 
         public SalaryDataService(
             SalaryRepository salaryRepository,
@@ -30,6 +32,7 @@ namespace AccuPay.Data.Services
                 entityNamePlural: "Salaries")
         {
             _paystubRepository = paystubRepository;
+            _salaryRepository = salaryRepository;
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -104,6 +107,35 @@ namespace AccuPay.Data.Services
             var salaryFirstCutOffStartDate = currentDaySpan.From.GetDate(month: month, year: year);
 
             return await _paystubRepository.HasPaystubsAfterDateAsync(salaryFirstCutOffStartDate, salary.EmployeeID.Value);
+        }
+
+        public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int userId)
+        {
+            List<Salary> added = new List<Salary>();
+            foreach (var validRecord in validRecords)
+            {
+                var salary = new Salary
+                {
+                    OrganizationID = organizationId,
+                    EmployeeID = validRecord.EmployeeId,
+                    CreatedBy = userId,
+                    BasicSalary = validRecord.BasicSalary.Value,
+                    AllowanceSalary = validRecord.AllowanceSalary.Value,
+                    EffectiveFrom = validRecord.EffectiveFrom.Value
+                };
+
+                //salary.DoPaySSSContribution = dto.DoPaySSSContribution;
+                //salary.AutoComputePhilHealthContribution = dto.AutoComputePhilHealthContribution;
+                //salary.PhilHealthDeduction = dto.PhilHealthDeduction;
+                //salary.AutoComputeHDMFContribution = dto.AutoComputeHDMFContribution;
+                //salary.HDMFAmount = dto.HDMFDeduction;
+
+                added.Add(salary);
+            }
+
+            await _salaryRepository.SaveManyAsync(added);
+
+            return added;
         }
     }
 }

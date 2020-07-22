@@ -20,6 +20,22 @@
       {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
       <app-button-spinner [active]="isDownloadingTemplate"></app-button-spinner>
     </button>
+
+    <input
+      hidden
+      type="file"
+      #uploader
+      (change)="onImport($event.target.files)"
+    />
+    <button
+      mat-raised-button
+      color="accent"
+      class="new-btn"
+      style="margin-left: 10px;"
+      (click)="uploader.click()"
+    >
+      IMPORT
+    </button>
   </div>
 </div>
 

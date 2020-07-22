@@ -2,9 +2,15 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports.Salaries;
+using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
 using System.Threading.Tasks;
+using static AccuPay.Data.Services.Imports.Salaries.SalaryImportParser;
 
 namespace AccuPay.Web.Salaries.Services
 {
@@ -12,16 +18,19 @@ namespace AccuPay.Web.Salaries.Services
     {
         private readonly SalaryRepository _repository;
         private readonly SalaryDataService _dataService;
+        private readonly SalaryImportParser _importParser;
         private readonly ICurrentUser _currentUser;
 
         public SalaryService(
             SalaryRepository repository,
             SalaryDataService dataService,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            SalaryImportParser salaryImportParser)
         {
             _repository = repository;
             _dataService = dataService;
             _currentUser = currentUser;
+            _importParser = salaryImportParser;
         }
 
         public async Task<PaginatedList<SalaryDto>> List(PageOptions options, string searchTerm, int employeeId)
@@ -118,6 +127,25 @@ namespace AccuPay.Web.Salaries.Services
                 AutoComputeHDMFContribution = salary.AutoComputeHDMFContribution,
                 HDMFDeduction = salary.HDMFAmount
             };
+        }
+
+        internal async Task<SalaryImportParserOutput> Import(IFormFile file)
+        {
+            if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
+                throw new InvalidFormatException();
+
+            Stream stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            if (stream == null)
+                throw new Exception("Unable to parse excel file.");
+
+            int userId = _currentUser.DesktopUserId;
+            var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
+
+            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+
+            return parsedResult;
         }
     }
 }
