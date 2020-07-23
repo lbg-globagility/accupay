@@ -1,12 +1,15 @@
 <mat-toolbar>
   <mat-toolbar-row>
     <!-- Logo -->
-    <a href="/">AccuPay</a>
-    <!-- <img src="assets/notisphere-blue.png" height="45" /> -->
 
-    <span class="__spacer"></span>
+    <a class="_logo flex items-center" href="/">
+      <img src="assets/logo.png" class="_logo-image" />
+      <span>AccuPay</span>
+    </a>
 
-    <img appImgFallback class="__organization-logo" />
+    <span class="_spacer"></span>
+
+    <img appImgFallback class="_organization-logo" />
 
     <button mat-button [matMenuTriggerFor]="organizationMenu">
       {{ currentOrganization?.name }}

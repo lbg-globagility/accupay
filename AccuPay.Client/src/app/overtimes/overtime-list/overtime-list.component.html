@@ -58,6 +58,7 @@
   <div class="col-md-1"></div>
   <div class="col-md-4 flex justify-end">
     <button
+      *ngxPermissionsOnly="[PermissionTypes.OvertimeCreate]"
       mat-raised-button
       color="accent"
       class="m-with-icon"
@@ -66,6 +67,7 @@
       <mat-icon>add</mat-icon>NEW OVERTIME
     </button>
     <button
+      *ngxPermissionsOnly="[PermissionTypes.OvertimeCreate]"
       [disabled]="isDownloadingTemplate"
       mat-raised-button
       (click)="downloadTemplate()"
@@ -128,12 +130,14 @@
       <th mat-header-cell mat-sort-header *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let overtime">
         <button
+          *ngxPermissionsOnly="[PermissionTypes.OvertimeUpdate]"
           mat-icon-button
           (click)="$event.stopPropagation(); editOvertime(overtime)"
         >
           <mat-icon>edit</mat-icon>
         </button>
         <button
+          *ngxPermissionsOnly="[PermissionTypes.OvertimeDelete]"
           mat-icon-button
           (click)="$event.stopPropagation(); deleteOvertime(overtime)"
         >
