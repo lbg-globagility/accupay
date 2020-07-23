@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { MatTableDataSource } from '@angular/material/table';
 import { Paystub } from 'src/app/payroll/shared/paystub';
@@ -17,6 +17,7 @@ import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { ReportService } from 'src/app/reports/report.service';
 import { LoadingState } from 'src/app/core/states/loading-state';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-view-payperiod',
@@ -53,10 +54,13 @@ export class ViewPayPeriodComponent implements OnInit {
 
   loadingState: LoadingState = new LoadingState();
 
+  updatingState: LoadingState = new LoadingState();
+
   constructor(
     private payPeriodService: PayPeriodService,
     private reportService: ReportService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandler,
     private dialog: MatDialog
@@ -64,6 +68,7 @@ export class ViewPayPeriodComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadingState.changeToLoading();
+    this.updatingState.changeToNothing();
 
     this.loadPayPeriod();
     this.loadPaystubs();
@@ -80,14 +85,18 @@ export class ViewPayPeriodComponent implements OnInit {
   calculate(): void {
     this.snackBar.open('Calculating payroll');
 
+    this.updatingState.changeToLoading();
     this.payPeriodService.calculate(this.payPeriodId).subscribe({
       next: (result) => {
         this.loadPaystubs();
         this.showDetails(result);
         this.snackBar.dismiss();
+        this.updatingState.changeToSuccess();
       },
-      error: (err) =>
-        this.errorHandler.badRequest(err, 'Failed to calculate payroll'),
+      error: (err) => {
+        this.updatingState.changeToNothing();
+        this.errorHandler.badRequest(err, 'Failed to calculate payroll');
+      },
     });
   }
 
@@ -119,6 +128,131 @@ export class ViewPayPeriodComponent implements OnInit {
       );
   }
 
+  closePayroll(): void {
+    let payPeriodId = this.payPeriod?.id;
+
+    if (!this.payPeriod?.id) return;
+
+    let closeFunction = () => {
+      this.snackBar.open('Closing Payroll...');
+      this.updatingState.changeToLoading();
+      this.payPeriodService.close(payPeriodId).subscribe(
+        () => {
+          this.payPeriod.status = 'Closed';
+          this.snackBar.dismiss();
+          this.updatingState.changeToSuccess();
+        },
+        (err) => {
+          this.updatingState.changeToNothing();
+          this.errorHandler.badRequest(err, 'Failed to close pay period.');
+        }
+      );
+    };
+
+    this.confirmAction(
+      {
+        title: 'Close Payroll',
+        content: 'Are you sure you want to close this payroll?',
+        confirmButtonText: 'Close Payroll',
+        confirmButtonColor: 'primary',
+      },
+      closeFunction
+    );
+  }
+
+  reopenPayroll(): void {
+    let payPeriodId = this.payPeriod?.id;
+
+    if (!this.payPeriod?.id) return;
+
+    let reopenFunction = () => {
+      this.updatingState.changeToLoading();
+      this.snackBar.open('Reopening Payroll...');
+      this.payPeriodService.reopen(payPeriodId).subscribe(
+        () => {
+          this.payPeriod.status = 'Open';
+          this.snackBar.dismiss();
+          this.updatingState.changeToSuccess();
+        },
+        (err) => {
+          this.updatingState.changeToNothing();
+          this.errorHandler.badRequest(err, 'Failed to reopen pay period.');
+        }
+      );
+    };
+
+    this.confirmAction(
+      {
+        title: 'Reopen Payroll',
+        content: 'Are you sure you want to reopen this payroll?',
+        confirmButtonText: 'Reopen Payroll',
+        confirmButtonColor: 'primary',
+      },
+      reopenFunction
+    );
+  }
+
+  deletePayroll(): void {
+    let payPeriodId = this.payPeriod?.id;
+
+    if (!this.payPeriod?.id) return;
+
+    let deleteFunction = () => {
+      this.updatingState.changeToLoading();
+      this.snackBar.open('Deleting Payroll...');
+      this.payPeriodService.delete(payPeriodId).subscribe(
+        () => {
+          window.location.reload();
+        },
+        (err) => {
+          this.updatingState.changeToNothing();
+          this.errorHandler.badRequest(err, 'Failed to delete pay period.');
+        }
+      );
+    };
+
+    this.confirmAction(
+      {
+        title: 'Delete Payroll',
+        content: 'Are you sure you want to delete this payroll?',
+        confirmButtonText: 'Delete Payroll',
+        confirmButtonColor: 'primary',
+      },
+      deleteFunction
+    );
+  }
+
+  cancelPayroll(): void {
+    let payPeriodId = this.payPeriod?.id;
+
+    if (!this.payPeriod?.id) return;
+
+    let cancelFunction = () => {
+      this.updatingState.changeToLoading();
+      this.snackBar.open('Cancelling Payroll...');
+      this.payPeriodService.cancel(payPeriodId).subscribe(
+        () => {
+          this.snackBar.dismiss();
+          this.router.navigate(['payroll']);
+        },
+        (err) => {
+          this.updatingState.changeToNothing();
+          this.errorHandler.badRequest(err, 'Failed to cancel pay period.');
+        }
+      );
+    };
+
+    this.confirmAction(
+      {
+        title: 'Cancel Payroll',
+        content: 'Are you sure you want to cancel this payroll?',
+        confirmButtonText: 'Cancel Payroll',
+        confirmButtonColor: 'primary',
+      },
+      cancelFunction
+    );
+  }
+
   private loadPayPeriod(): void {
     this.payPeriodService
       .getById(this.payPeriodId)
@@ -142,5 +276,17 @@ export class ViewPayPeriodComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.expandedPaystub = data[0];
       });
+  }
+
+  private confirmAction(data: any, action: Function): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: data,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== true) return;
+
+      action();
+    });
   }
 }

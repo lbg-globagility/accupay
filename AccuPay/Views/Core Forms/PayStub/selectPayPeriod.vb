@@ -265,8 +265,7 @@ Public Class selectPayPeriod
 
                 Dim payPeriodId = ObjectUtils.ToNullableInteger(.Cells("Column1").Value)
                 Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
-                                            ObjectUtils.ToNullableInteger(.Cells("Column1").Value),
-                                            z_OrganizationID)
+                    ObjectUtils.ToNullableInteger(.Cells("Column1").Value))
 
                 If validate = FunctionResult.Failed Then
 

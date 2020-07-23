@@ -61,21 +61,14 @@ namespace AccuPay.Web.Controllers
             [FromServices] PayrollResources resources,
             int id)
         {
-            try
+            if ((await _payPeriodRepository.GetByIdAsync(id)) == null)
             {
-                if ((await _payPeriodRepository.GetByIdAsync(id)) == null)
-                {
-                    return NotFound();
-                }
-
-                var result = await _payperiodService.Calculate(resources, id);
-
-                return result;
+                return NotFound();
             }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+
+            var result = await _payperiodService.Calculate(resources, id);
+
+            return result;
         }
 
         [HttpPut("{id}/close")]
@@ -100,6 +93,32 @@ namespace AccuPay.Web.Controllers
                 return NotFound();
             }
             await _payperiodService.Reopen(id);
+
+            return Ok();
+        }
+
+        [HttpPut("{id}/delete")]
+        [Permission(PermissionTypes.PayPeriodUpdate)]
+        public async Task<ActionResult> Delete(int id)
+        {
+            if ((await _payPeriodRepository.GetByIdAsync(id)) == null)
+            {
+                return NotFound();
+            }
+            await _payperiodService.Delete(id);
+
+            return Ok();
+        }
+
+        [HttpPut("{id}/cancel")]
+        [Permission(PermissionTypes.PayPeriodUpdate)]
+        public async Task<ActionResult> Cancel(int id)
+        {
+            if ((await _payPeriodRepository.GetByIdAsync(id)) == null)
+            {
+                return NotFound();
+            }
+            await _payperiodService.Cancel(id);
 
             return Ok();
         }

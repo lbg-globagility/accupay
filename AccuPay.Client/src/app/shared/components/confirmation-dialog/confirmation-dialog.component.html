@@ -12,9 +12,9 @@
     mat-flat-button
     [mat-dialog-close]="true"
     cdkFocusInitial
-    color="warn"
+    [color]="confirmButtonColor"
   >
-    DELETE
+    {{ (!confirmButtonText ? "DELETE" : confirmButtonText) | uppercase }}
   </button>
   <button mat-button (click)="onCancel()">CANCEL</button>
 </div>

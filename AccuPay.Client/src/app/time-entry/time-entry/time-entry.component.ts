@@ -8,6 +8,10 @@ import { Subject, BehaviorSubject } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
 import { LoadingState } from 'src/app/core/states/loading-state';
+import { MatDialog } from '@angular/material/dialog';
+import { SelectPayperiodDialogComponent } from 'src/app/payroll/components/select-payperiod-dialog/select-payperiod-dialog.component';
+import { flatMap, filter } from 'rxjs/operators';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-time-entry',
@@ -31,6 +35,7 @@ export class TimeEntryComponent implements OnInit {
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   loadingState: LoadingState = new LoadingState();
+  startingPayrollState: LoadingState = new LoadingState();
 
   sort: Sort = {
     active: 'cutoff',
@@ -48,10 +53,15 @@ export class TimeEntryComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private payPeriodService: PayPeriodService) {}
+  constructor(
+    private payPeriodService: PayPeriodService,
+    private dialog: MatDialog,
+    private errorHandler: ErrorHandler
+  ) {}
 
   ngOnInit(): void {
     this.loadingState.changeToLoading();
+    this.startingPayrollState.changeToNothing();
     this.loadLatest();
     this.loadList();
   }
@@ -86,5 +96,49 @@ export class TimeEntryComponent implements OnInit {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.loadList();
+  }
+
+  startNewPayroll(): void {
+    this.dialog
+      .open(SelectPayperiodDialogComponent, {
+        minWidth: '500px',
+      })
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .pipe(
+        flatMap((result) => {
+          var payPeriod = result as PayPeriod;
+          if (!payPeriod) return;
+
+          this.startingPayrollState.changeToLoading();
+
+          return this.payPeriodService.start(
+            payPeriod.month,
+            payPeriod.year,
+            payPeriod.isFirstHalf
+          );
+        })
+      )
+      .subscribe(
+        (payPeriod) => {
+          this.latestPayPeriod = payPeriod;
+
+          if (this.pageIndex == 0) {
+            this.dataSource.data.pop();
+            this.dataSource.data.unshift(this.latestPayPeriod);
+
+            this.refreshDataSource();
+          }
+          this.startingPayrollState.changeToSuccess();
+        },
+        (err) => {
+          this.startingPayrollState.changeToNothing();
+          this.errorHandler.badRequest(err, 'Failed to start pay period.');
+        }
+      );
+  }
+
+  private refreshDataSource(): void {
+    this.dataSource.data = [...this.dataSource.data];
   }
 }
