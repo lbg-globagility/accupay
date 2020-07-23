@@ -3,7 +3,9 @@ using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services.Imports.Allowances;
 using AccuPay.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +16,11 @@ namespace AccuPay.Data.Services
     {
         private readonly AllowanceRepository _allowanceRepository;
         private readonly ProductRepository _productRepository;
+        private readonly AllowanceTypeRepository _allowanceTypeRepository;
 
         public AllowanceDataService(
             AllowanceRepository allowanceRepository,
+            AllowanceTypeRepository allowanceTypeRepository,
             PayPeriodRepository payPeriodRepository,
             ProductRepository productRepository,
             PayrollContext context,
@@ -30,6 +34,7 @@ namespace AccuPay.Data.Services
         {
             _allowanceRepository = allowanceRepository;
             _productRepository = productRepository;
+            _allowanceTypeRepository = allowanceTypeRepository;
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -128,6 +133,51 @@ namespace AccuPay.Data.Services
             }
 
             await CheckForClosedPayPeriod(allowances, oldAllowances);
+        }
+
+        public async Task BatchApply(IReadOnlyCollection<AllowanceImportModel> validRecords, int organizationId, int userId)
+        {
+            AllowanceType setAllowanceType(IGrouping<string, AllowanceImportModel> a) => new AllowanceType() { DisplayString = a.FirstOrDefault().AllowanceName, Frequency = a.FirstOrDefault().AllowanceFrequency, Name = a.FirstOrDefault().AllowanceName };
+
+            var notYetExistsAllowanceTypes = validRecords
+                .Where(a => a.IsAllowanceTypeNotYetExists)
+                .GroupBy(a => a.AllowanceName)
+                .Select(a => setAllowanceType(a))
+                .ToList();
+
+            if (notYetExistsAllowanceTypes.Any())
+            {
+                var newlyAddedAllowanceTypes = await _allowanceTypeRepository.CreateManyAsync(notYetExistsAllowanceTypes);
+
+                var recordsWithoutAllowanceTypeId = validRecords
+                    .Where(a => a.IsAllowanceTypeNotYetExists);
+
+                foreach (var record in recordsWithoutAllowanceTypeId)
+                {
+                    var newlyAddedAllowanceType = newlyAddedAllowanceTypes.Where(at => at.Name == record.AllowanceName).FirstOrDefault();
+                    record.AllowanceTypeId = newlyAddedAllowanceType.Id;
+                }
+            }
+
+            List<Allowance> allowances = new List<Allowance>();
+            foreach (var record in validRecords)
+            {
+                var allowance = new Allowance()
+                {
+                    AllowanceFrequency = record.AllowanceFrequency,
+                    AllowanceTypeId = record.AllowanceTypeId,
+                    Amount = record.Amount.Value,
+                    EmployeeID = record.EmployeeId,
+                    EffectiveEndDate = record.EffectiveEndDate,
+                    EffectiveStartDate = record.EffectiveStartDate.Value,
+                    OrganizationID = organizationId,
+                    CreatedBy = userId
+                };
+
+                allowances.Add(allowance);
+            }
+
+            await _allowanceRepository.SaveManyAsync(allowances);
         }
 
         private async Task CheckForClosedPayPeriod(List<Allowance> allowances, List<Allowance> oldAllowances)

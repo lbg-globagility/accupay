@@ -1,6 +1,8 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +26,15 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
 
             return allowanceType;
+        }
+
+        internal async Task<List<AllowanceType>> CreateManyAsync(List<AllowanceType> notYetExistsAllowanceTypes)
+        {
+            _context.AllowanceTypes.AddRange(notYetExistsAllowanceTypes);
+
+            await _context.SaveChangesAsync();
+
+            return notYetExistsAllowanceTypes;
         }
 
         public async Task UpdateAsync(AllowanceType allowanceType)
@@ -77,6 +88,12 @@ namespace AccuPay.Data.Repositories
             var count = await query.CountAsync();
 
             return new PaginatedList<AllowanceType>(allowanceTypes, count);
+        }
+
+        public async Task<ICollection<AllowanceType>> GetAllAsync()
+        {
+            return await _context.AllowanceTypes
+                .ToListAsync();
         }
 
         #endregion List of entities

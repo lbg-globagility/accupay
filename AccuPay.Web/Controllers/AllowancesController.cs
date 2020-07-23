@@ -5,6 +5,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Products;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -89,12 +90,19 @@ namespace AccuPay.Web.Controllers
         {
             return _service.GetFrequencyList();
         }
-        
+
         [HttpGet("accupay-allowance-template")]
         [Permission(PermissionTypes.AllowanceRead)]
         public ActionResult GetAllowanceTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-allowance-template.xlsx");
+        }
+
+        [HttpPost("import")]
+        [Permission(PermissionTypes.AllowanceCreate)]
+        public async Task<Data.Services.Imports.Allowances.AllowanceImportParserOutput> Import([FromForm] IFormFile file)
+        {
+            return await _service.Import(file);
         }
     }
 }

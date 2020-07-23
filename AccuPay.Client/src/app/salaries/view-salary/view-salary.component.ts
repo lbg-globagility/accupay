@@ -143,10 +143,17 @@ export class ViewSalaryComponent implements OnInit {
     const succeeds =
       outputParse.validRecords && outputParse.validRecords.length > 0;
 
+    const manySucceed = succeeds ? outputParse.validRecords.length > 1 : false;
+    const manyFailed = hasFailedImports
+      ? outputParse.invalidRecords.length > 1
+      : false;
+
     if (!hasFailedImports && succeeds) {
       Swal.fire({
         title: 'Success',
-        text: 'Successfully imported new employee(s)!',
+        text: `Successfully imported new ${
+          manySucceed ? 'salaries' : 'salary'
+        }!`,
         icon: 'success',
         timer: 3000,
         showConfirmButton: false,
@@ -154,15 +161,21 @@ export class ViewSalaryComponent implements OnInit {
     } else if (hasFailedImports && !succeeds) {
       Swal.fire({
         title: 'Failed',
-        text: `${outputParse.invalidRecords.length} employee(s) failed to import.`,
+        text: `${outputParse.invalidRecords.length} ${
+          manyFailed ? 'salaries' : 'salary'
+        } failed to import.`,
         icon: 'error',
         showConfirmButton: true,
       });
     } else if (hasFailedImports && succeeds) {
       Swal.fire({
         title: 'Oops!',
-        text: `${outputParse.invalidRecords.length} employee(s) were failed to import
-        and the ${outputParse.validRecords.length} employee(s) succeeded.`,
+        text: `${outputParse.invalidRecords.length} ${
+          manyFailed ? 'salaries' : 'salary'
+        } were failed to import
+        and the ${outputParse.validRecords.length} ${
+          manySucceed ? 'salaries' : 'salary'
+        } succeeded.`,
         icon: 'warning',
         showConfirmButton: true,
       });

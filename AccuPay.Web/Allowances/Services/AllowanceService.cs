@@ -2,10 +2,15 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports.Allowances;
+using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Allowances.Models;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Products;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,17 +22,20 @@ namespace AccuPay.Web.Allowances.Services
         private readonly AllowanceRepository _allowanceRepository;
         private readonly AllowanceDataService _dataService;
         private readonly ICurrentUser _currentUser;
+        private readonly AllowanceImportParser _importParser;
 
         public AllowanceService(
             AllowanceDataService dataService,
             ProductRepository productRepository,
             AllowanceRepository allowanceRepository,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            AllowanceImportParser importParser)
         {
             _productRepository = productRepository;
             _allowanceRepository = allowanceRepository;
             _dataService = dataService;
             _currentUser = currentUser;
+            _importParser = importParser;
         }
 
         public async Task<PaginatedList<AllowanceDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -111,20 +119,49 @@ namespace AccuPay.Web.Allowances.Services
         {
             if (allowance == null) return null;
 
-            return new AllowanceDto()
+            var allowanceDto = new AllowanceDto()
             {
                 Id = allowance.RowID.Value,
                 EmployeeId = allowance.EmployeeID.Value,
                 EmployeeNumber = allowance.Employee?.EmployeeNo,
                 EmployeeName = allowance.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = allowance.Employee?.EmployeeType,
-                AllowanceTypeId = allowance.ProductID.Value,
                 AllowanceType = allowance.Type,
                 StartDate = allowance.EffectiveStartDate,
                 Frequency = allowance.AllowanceFrequency,
                 EndDate = allowance.EffectiveEndDate,
                 Amount = allowance.Amount
             };
+
+            if (!allowance.ProductID.HasValue && allowance.AllowanceTypeId.HasValue)
+            {
+                allowanceDto.AllowanceTypeId = allowance.AllowanceType.Id;
+            }
+            else if (allowance.ProductID.HasValue)
+            {
+                allowanceDto.AllowanceTypeId = allowance.ProductID.Value;
+            }
+
+            return allowanceDto;
+        }
+
+        internal async Task<AllowanceImportParserOutput> Import(IFormFile file)
+        {
+            if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
+                throw new InvalidFormatException();
+
+            Stream stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            if (stream == null)
+                throw new Exception("Unable to parse excel file.");
+
+            int userId = _currentUser.DesktopUserId;
+            var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
+
+            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+
+            return parsedResult;
         }
     }
 }

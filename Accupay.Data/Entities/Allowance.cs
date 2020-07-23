@@ -39,16 +39,21 @@ namespace AccuPay.Data.Entities
         [Column("AllowanceAmount")]
         public decimal Amount { get; set; }
 
+        public int? AllowanceTypeId { get; set; }
+
         [ForeignKey("ProductID")]
         public virtual Product Product { get; set; }
 
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
+        [ForeignKey("AllowanceTypeId")]
+        public virtual AllowanceType AllowanceType { get; set; }
+
         [NotMapped]
         public string Type
         {
-            get => Product?.PartNo;
+            get => Product?.PartNo != null ? Product?.PartNo : AllowanceType?.Name;
             set
             {
                 if (Product != null)

@@ -23,8 +23,8 @@
       </button>
     </mat-form-field>
   </div>
-  <div class="col-md-5"></div>
-  <div class="col-md-4">
+  <div class="col-md-4"></div>
+  <div class="col-md-5">
     <button
       mat-raised-button
       color="accent"
@@ -42,6 +42,22 @@
     >
       {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
       <app-button-spinner [active]="isDownloadingTemplate"></app-button-spinner>
+    </button>
+
+    <input
+      hidden
+      type="file"
+      #uploader
+      (change)="onImport($event.target.files)"
+    />
+    <button
+      mat-raised-button
+      color="accent"
+      class="new-btn"
+      style="margin-left: 10px;"
+      (click)="uploader.click()"
+    >
+      IMPORT
     </button>
   </div>
 </div>

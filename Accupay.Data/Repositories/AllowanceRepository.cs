@@ -2,6 +2,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,6 +42,7 @@ namespace AccuPay.Data.Repositories
             return await _context.Allowances
                 .Include(x => x.Employee)
                 .Include(x => x.Product)
+                .Include(x => x.AllowanceType)
                 .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
@@ -74,6 +76,7 @@ namespace AccuPay.Data.Repositories
             var query = _context.Allowances
                 .Include(x => x.Employee)
                 .Include(x => x.Product)
+                .Include(x => x.AllowanceType)
                 .Where(x => x.OrganizationID == organizationId)
                 .OrderByDescending(x => x.EffectiveStartDate)
                 .ThenBy(x => x.Product.PartNo)
@@ -96,6 +99,20 @@ namespace AccuPay.Data.Repositories
             var count = await query.CountAsync();
 
             return new PaginatedList<Allowance>(allowances, count);
+        }
+
+        internal async Task<List<Allowance>> GetByEmployeeIdsBetweenDatesByAllowanceTypesAsync(List<int> employeeIds, List<string> allowanceTypeNames, TimePeriod timePeriod)
+        {
+            var sdfsd = await _context.Allowances
+                .Include(a => a.Employee)
+                .Include(a => a.AllowanceType)
+                .Where(a => employeeIds.Contains(a.EmployeeID.Value))
+                .Where(a => a.EffectiveStartDate >= timePeriod.Start)
+                .Where(a => a.EffectiveEndDate <= timePeriod.End)
+                .Where(a => allowanceTypeNames.Contains(a.AllowanceType.Name))
+                .ToListAsync();
+
+            return sdfsd;
         }
 
         public ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId, TimePeriod timePeriod)
