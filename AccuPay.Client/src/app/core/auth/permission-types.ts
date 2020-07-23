@@ -29,6 +29,11 @@ export enum PermissionTypes {
   EmployeeUpdate = 'Employee:update',
   EmployeeDelete = 'Employee:delete',
 
+  EmploymentPolicyRead = 'EmploymentPolicy:read',
+  EmploymentPolicyCreate = 'EmploymentPolicy:create',
+  EmploymentPolicyUpdate = 'EmploymentPolicy:update',
+  EmploymentPolicyDelete = 'EmploymentPolicy:delete',
+
   LeaveRead = 'Leave:read',
   LeaveCreate = 'Leave:create',
   LeaveUpdate = 'Leave:update',
