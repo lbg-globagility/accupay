@@ -7,17 +7,17 @@ namespace AccuPay.Data.Services
     public class ActualTimeEntryCalculator
     {
         private readonly Salary _salary;
-        private readonly IList<ActualTimeEntry> _actualTimeEntries;
+        private readonly ICollection<ActualTimeEntry> _actualTimeEntries;
         private readonly ActualTimeEntryPolicy _policy;
 
-        public ActualTimeEntryCalculator(Salary salary, IList<ActualTimeEntry> actualTimeEntries, ActualTimeEntryPolicy actualTimeEntryPolicy)
+        public ActualTimeEntryCalculator(Salary salary, ICollection<ActualTimeEntry> actualTimeEntries, ActualTimeEntryPolicy actualTimeEntryPolicy)
         {
             _salary = salary;
             _actualTimeEntries = actualTimeEntries;
             _policy = actualTimeEntryPolicy;
         }
 
-        public IList<ActualTimeEntry> Compute(IList<TimeEntry> timeEntries)
+        public ICollection<ActualTimeEntry> Compute(ICollection<TimeEntry> timeEntries)
         {
             // Changes here should also reflect in BenchmarkPayrollForm.vb
             var actualTimeEntries = new List<ActualTimeEntry>();

@@ -63,6 +63,8 @@ Public Class PayStubForm
 
     Private _systemOwnerService As SystemOwnerService
 
+    Private _payPeriodRepository As PayPeriodRepository
+
     Private _paystubRepository As PaystubRepository
 
     Private _agencyFeeRepository As AgencyFeeRepository
@@ -78,6 +80,8 @@ Public Class PayStubForm
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
         _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
@@ -718,14 +722,25 @@ Public Class PayStubForm
 
     Sub GeneratePayroll()
 
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+        If payPeriodId Is Nothing Then
+            Return
+        End If
+
+        Dim payPeriod = _payPeriodRepository.GetById(payPeriodId)
+        If payPeriod Is Nothing OrElse payPeriod?.RowID Is Nothing OrElse payPeriod?.OrganizationID Is Nothing Then
+            Return
+        End If
+
+        If payPeriod.Status <> PayPeriodStatus.Open Then
+            MessageBoxHelper.Warning("Only ""Open"" pay periods can be computed.")
+            Return
+        End If
+
         Dim resources = MainServiceProvider.GetRequiredService(Of PayrollResources)
 
         Dim loadTask = Task.Factory.StartNew(
             Function()
-                Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
-                If payPeriodId Is Nothing Then
-                    Return Nothing
-                End If
 
                 Dim resourcesTask = resources.Load(payPeriodId:=payPeriodId,
                                                    organizationId:=z_OrganizationID,
@@ -1751,10 +1766,7 @@ Public Class PayStubForm
             Return False
         End If
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
-
-        Dim payPeriod = Await repository.GetByIdAsync(payPeriodId)
+        Dim payPeriod = Await _payPeriodRepository.GetByIdAsync(payPeriodId)
 
         If payPeriod Is Nothing Then
 
@@ -1762,6 +1774,7 @@ Public Class PayStubForm
             Return False
         End If
 
+        Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
         If close Then
 
             Await dataService.CloseAsync(payPeriod.RowID.Value, z_User)
@@ -1945,12 +1958,11 @@ Public Class PayStubForm
 
         FunctionUtils.TryCatchFunction("Print Payslip",
             Sub()
-                Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-                Dim payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
+                Dim payslipBuilder = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
                 Dim payPeriodId = ValNoComma(paypRowID)
 
-                Dim reportDocument = payslipCreator.CreateReportDocument(
+                Dim reportDocument = payslipBuilder.CreateReportDocument(
                     payPeriodId:=payPeriodId,
                     isActual:=isActual)
 

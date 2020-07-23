@@ -32,7 +32,7 @@ namespace AccuPay.Data.Services
             return $"There is currently an \"Open\" pay period. Please finish the pay period {payPeriodString} first then close it to process new pay periods.";
         }
 
-        public async Task<FunctionResult> ValidatePayPeriodActionAsync(int? payPeriodId, int organizationId)
+        public async Task<FunctionResult> ValidatePayPeriodActionAsync(int? payPeriodId)
         {
             if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
             {
