@@ -3513,7 +3513,10 @@ Public Class EmployeeForm
         End If
 
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-        _branches = branchRepository.GetAll()
+        _branches = branchRepository.
+            GetAll().
+            OrderBy(Function(b) b.Name).
+            ToList()
 
         BranchComboBox.Visible = True
         BranchLabel.Visible = True

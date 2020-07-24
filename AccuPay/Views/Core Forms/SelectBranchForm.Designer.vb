@@ -31,7 +31,7 @@ Partial Class SelectBranchForm
         '
         Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CancelDialogButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.CancelDialogButton.Location = New System.Drawing.Point(197, 67)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(262, 67)
         Me.CancelDialogButton.Name = "CancelDialogButton"
         Me.CancelDialogButton.Size = New System.Drawing.Size(75, 35)
         Me.CancelDialogButton.TabIndex = 6
@@ -42,7 +42,7 @@ Partial Class SelectBranchForm
         '
         Me.OkButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.OkButton.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.OkButton.Location = New System.Drawing.Point(116, 67)
+        Me.OkButton.Location = New System.Drawing.Point(181, 67)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(75, 35)
         Me.OkButton.TabIndex = 5
@@ -51,11 +51,14 @@ Partial Class SelectBranchForm
         '
         'BranchComboBox
         '
+        Me.BranchComboBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BranchComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.BranchComboBox.DropDownWidth = 375
         Me.BranchComboBox.FormattingEnabled = True
         Me.BranchComboBox.Location = New System.Drawing.Point(12, 22)
         Me.BranchComboBox.Name = "BranchComboBox"
-        Me.BranchComboBox.Size = New System.Drawing.Size(260, 21)
+        Me.BranchComboBox.Size = New System.Drawing.Size(325, 21)
         Me.BranchComboBox.TabIndex = 7
         '
         'SelectBranchForm
@@ -64,7 +67,7 @@ Partial Class SelectBranchForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(284, 113)
+        Me.ClientSize = New System.Drawing.Size(349, 113)
         Me.Controls.Add(Me.BranchComboBox)
         Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.OkButton)

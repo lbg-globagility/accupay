@@ -23,13 +23,6 @@ Partial Class TimeLogsForm2
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeLogsForm2))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -37,9 +30,15 @@ Partial Class TimeLogsForm2
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.MainSplitContainer = New System.Windows.Forms.SplitContainer()
-        Me.EmployeeTreeView1 = New AccuPay.EmployeeTreeView()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -56,24 +55,6 @@ Partial Class TimeLogsForm2
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.grid = New System.Windows.Forms.DataGridView()
-        Me.colRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colEmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colEmployeeNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colShiftSchedule = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDateIn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTimeIn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDateOut = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDateOutDisplay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDecrement = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.colIncrement = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.colTimeOut = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colBranchID = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.colIsExisting = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colHasChanged = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDelete = New System.Windows.Forms.DataGridViewImageColumn()
-        Me.colRestore = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.btnSave = New System.Windows.Forms.Button()
         Me.btnDiscard = New System.Windows.Forms.Button()
@@ -97,6 +78,25 @@ Partial Class TimeLogsForm2
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeTreeView1 = New AccuPay.EmployeeTreeView()
+        Me.colRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colEmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colEmployeeNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colShiftSchedule = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDateIn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colBranchID = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.colTimeIn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDateOut = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDateOutDisplay = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDecrement = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.colIncrement = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.colTimeOut = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colIsExisting = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colHasChanged = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDelete = New System.Windows.Forms.DataGridViewImageColumn()
+        Me.colRestore = New System.Windows.Forms.DataGridViewImageColumn()
         CType(Me.MainSplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MainSplitContainer.Panel1.SuspendLayout()
         Me.MainSplitContainer.Panel2.SuspendLayout()
@@ -145,16 +145,6 @@ Partial Class TimeLogsForm2
         Me.MainSplitContainer.Size = New System.Drawing.Size(1255, 585)
         Me.MainSplitContainer.SplitterDistance = 352
         Me.MainSplitContainer.TabIndex = 316
-        '
-        'EmployeeTreeView1
-        '
-        Me.EmployeeTreeView1.BackColor = System.Drawing.Color.Transparent
-        Me.EmployeeTreeView1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.EmployeeTreeView1.Location = New System.Drawing.Point(0, 0)
-        Me.EmployeeTreeView1.Name = "EmployeeTreeView1"
-        Me.EmployeeTreeView1.OrganizationID = 0
-        Me.EmployeeTreeView1.Size = New System.Drawing.Size(352, 585)
-        Me.EmployeeTreeView1.TabIndex = 316
         '
         'SplitContainer2
         '
@@ -328,7 +318,7 @@ Partial Class TimeLogsForm2
         Me.grid.AllowUserToResizeRows = False
         Me.grid.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.grid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colRowID, Me.colEmployeeID, Me.colEmployeeNo, Me.colFullName, Me.colShiftSchedule, Me.colDay, Me.colDateIn, Me.colTimeIn, Me.colDateOut, Me.colDateOutDisplay, Me.colDecrement, Me.colIncrement, Me.colTimeOut, Me.colBranchID, Me.colIsExisting, Me.colHasChanged, Me.colDelete, Me.colRestore})
+        Me.grid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colRowID, Me.colEmployeeID, Me.colEmployeeNo, Me.colFullName, Me.colShiftSchedule, Me.colDay, Me.colDateIn, Me.colBranchID, Me.colTimeIn, Me.colDateOut, Me.colDateOutDisplay, Me.colDecrement, Me.colIncrement, Me.colTimeOut, Me.colIsExisting, Me.colHasChanged, Me.colDelete, Me.colRestore})
         Me.grid.Dock = System.Windows.Forms.DockStyle.Fill
         Me.grid.Location = New System.Drawing.Point(0, 31)
         Me.grid.Name = "grid"
@@ -336,197 +326,6 @@ Partial Class TimeLogsForm2
         Me.grid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.grid.Size = New System.Drawing.Size(899, 412)
         Me.grid.TabIndex = 336
-        '
-        'colRowID
-        '
-        Me.colRowID.DataPropertyName = "RowID"
-        Me.colRowID.HeaderText = "RowID"
-        Me.colRowID.Name = "colRowID"
-        Me.colRowID.ReadOnly = True
-        Me.colRowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colRowID.Visible = False
-        '
-        'colEmployeeID
-        '
-        Me.colEmployeeID.DataPropertyName = "EmployeeID"
-        Me.colEmployeeID.HeaderText = "EmployeeID"
-        Me.colEmployeeID.Name = "colEmployeeID"
-        Me.colEmployeeID.ReadOnly = True
-        Me.colEmployeeID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colEmployeeID.Visible = False
-        '
-        'colEmployeeNo
-        '
-        Me.colEmployeeNo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.colEmployeeNo.DataPropertyName = "EmployeeNo"
-        Me.colEmployeeNo.FillWeight = 20.0!
-        Me.colEmployeeNo.HeaderText = "Employee No"
-        Me.colEmployeeNo.MinimumWidth = 10
-        Me.colEmployeeNo.Name = "colEmployeeNo"
-        Me.colEmployeeNo.ReadOnly = True
-        Me.colEmployeeNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colEmployeeNo.Width = 80
-        '
-        'colFullName
-        '
-        Me.colFullName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.colFullName.DataPropertyName = "FullName"
-        Me.colFullName.FillWeight = 50.0!
-        Me.colFullName.HeaderText = "Full Name"
-        Me.colFullName.Name = "colFullName"
-        Me.colFullName.ReadOnly = True
-        Me.colFullName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colFullName.Width = 64
-        '
-        'colShiftSchedule
-        '
-        Me.colShiftSchedule.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
-        Me.colShiftSchedule.DataPropertyName = "ShiftScheduleText"
-        Me.colShiftSchedule.HeaderText = "Shift Schedule"
-        Me.colShiftSchedule.Name = "colShiftSchedule"
-        Me.colShiftSchedule.ReadOnly = True
-        Me.colShiftSchedule.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colShiftSchedule.Width = 87
-        '
-        'colDay
-        '
-        Me.colDay.DataPropertyName = "DateIn"
-        DataGridViewCellStyle1.Format = "ddd"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.colDay.DefaultCellStyle = DataGridViewCellStyle1
-        Me.colDay.FillWeight = 28.62944!
-        Me.colDay.HeaderText = "Day"
-        Me.colDay.Name = "colDay"
-        Me.colDay.ReadOnly = True
-        Me.colDay.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colDay.Width = 34
-        '
-        'colDateIn
-        '
-        Me.colDateIn.DataPropertyName = "DateIn"
-        Me.colDateIn.FillWeight = 28.62944!
-        Me.colDateIn.HeaderText = "Date In"
-        Me.colDateIn.Name = "colDateIn"
-        Me.colDateIn.ReadOnly = True
-        Me.colDateIn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colDateIn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colDateIn.Width = 66
-        '
-        'colTimeIn
-        '
-        Me.colTimeIn.DataPropertyName = "TimeIn"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colTimeIn.DefaultCellStyle = DataGridViewCellStyle2
-        Me.colTimeIn.FillWeight = 28.0!
-        Me.colTimeIn.HeaderText = "Time In"
-        Me.colTimeIn.Name = "colTimeIn"
-        Me.colTimeIn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colTimeIn.Width = 49
-        '
-        'colDateOut
-        '
-        Me.colDateOut.DataPropertyName = "DateOut"
-        Me.colDateOut.HeaderText = "Date Out"
-        Me.colDateOut.Name = "colDateOut"
-        Me.colDateOut.ReadOnly = True
-        Me.colDateOut.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colDateOut.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colDateOut.Visible = False
-        Me.colDateOut.Width = 66
-        '
-        'colDateOutDisplay
-        '
-        Me.colDateOutDisplay.DataPropertyName = "DateOutDisplay"
-        Me.colDateOutDisplay.HeaderText = "Date Out"
-        Me.colDateOutDisplay.Name = "colDateOutDisplay"
-        Me.colDateOutDisplay.ReadOnly = True
-        Me.colDateOutDisplay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colDateOutDisplay.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colDateOutDisplay.Width = 66
-        '
-        'colDecrement
-        '
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle3.NullValue = "-"
-        Me.colDecrement.DefaultCellStyle = DataGridViewCellStyle3
-        Me.colDecrement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.colDecrement.HeaderText = ""
-        Me.colDecrement.Name = "colDecrement"
-        Me.colDecrement.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colDecrement.Width = 23
-        '
-        'colIncrement
-        '
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle4.NullValue = "+"
-        Me.colIncrement.DefaultCellStyle = DataGridViewCellStyle4
-        Me.colIncrement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.colIncrement.HeaderText = ""
-        Me.colIncrement.Name = "colIncrement"
-        Me.colIncrement.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colIncrement.Width = 23
-        '
-        'colTimeOut
-        '
-        Me.colTimeOut.DataPropertyName = "TimeOut"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colTimeOut.DefaultCellStyle = DataGridViewCellStyle5
-        Me.colTimeOut.HeaderText = "Time Out"
-        Me.colTimeOut.Name = "colTimeOut"
-        Me.colTimeOut.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colTimeOut.Width = 59
-        '
-        'colBranchID
-        '
-        Me.colBranchID.DataPropertyName = "BranchID"
-        Me.colBranchID.HeaderText = "Branch"
-        Me.colBranchID.Name = "colBranchID"
-        '
-        'colIsExisting
-        '
-        Me.colIsExisting.DataPropertyName = "IsExisting"
-        Me.colIsExisting.HeaderText = "IsExisting"
-        Me.colIsExisting.Name = "colIsExisting"
-        Me.colIsExisting.ReadOnly = True
-        Me.colIsExisting.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colIsExisting.Visible = False
-        '
-        'colHasChanged
-        '
-        Me.colHasChanged.DataPropertyName = "HasChanged"
-        Me.colHasChanged.HeaderText = "HasChanged"
-        Me.colHasChanged.Name = "colHasChanged"
-        Me.colHasChanged.ReadOnly = True
-        Me.colHasChanged.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colHasChanged.Visible = False
-        '
-        'colDelete
-        '
-        Me.colDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle6.NullValue = Nothing
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Transparent
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Transparent
-        Me.colDelete.DefaultCellStyle = DataGridViewCellStyle6
-        Me.colDelete.HeaderText = ""
-        Me.colDelete.Image = Global.AccuPay.My.Resources.Resources.baseline_delete_forever_black_18dp
-        Me.colDelete.Name = "colDelete"
-        Me.colDelete.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colDelete.ToolTipText = "Delete?"
-        Me.colDelete.Width = 5
-        '
-        'colRestore
-        '
-        Me.colRestore.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle7.NullValue = Nothing
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.Transparent
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.Transparent
-        Me.colRestore.DefaultCellStyle = DataGridViewCellStyle7
-        Me.colRestore.HeaderText = ""
-        Me.colRestore.Image = Global.AccuPay.My.Resources.Resources.baseline_undo_black_18dp
-        Me.colRestore.Name = "colRestore"
-        Me.colRestore.Width = 5
         '
         'Panel1
         '
@@ -651,6 +450,7 @@ Partial Class TimeLogsForm2
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn3.Width = 76
         '
         'DataGridViewTextBoxColumn4
         '
@@ -664,6 +464,7 @@ Partial Class TimeLogsForm2
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
         Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn4.Width = 60
         '
         'DataGridViewTextBoxColumn5
         '
@@ -677,6 +478,7 @@ Partial Class TimeLogsForm2
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
         Me.DataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn5.Width = 82
         '
         'DataGridViewTextBoxColumn6
         '
@@ -774,6 +576,209 @@ Partial Class TimeLogsForm2
         Me.DataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn13.Visible = False
         '
+        'EmployeeTreeView1
+        '
+        Me.EmployeeTreeView1.BackColor = System.Drawing.Color.Transparent
+        Me.EmployeeTreeView1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeTreeView1.Location = New System.Drawing.Point(0, 0)
+        Me.EmployeeTreeView1.Name = "EmployeeTreeView1"
+        Me.EmployeeTreeView1.OrganizationID = 0
+        Me.EmployeeTreeView1.Size = New System.Drawing.Size(352, 585)
+        Me.EmployeeTreeView1.TabIndex = 316
+        '
+        'colRowID
+        '
+        Me.colRowID.DataPropertyName = "RowID"
+        Me.colRowID.HeaderText = "RowID"
+        Me.colRowID.Name = "colRowID"
+        Me.colRowID.ReadOnly = True
+        Me.colRowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colRowID.Visible = False
+        '
+        'colEmployeeID
+        '
+        Me.colEmployeeID.DataPropertyName = "EmployeeID"
+        Me.colEmployeeID.HeaderText = "EmployeeID"
+        Me.colEmployeeID.Name = "colEmployeeID"
+        Me.colEmployeeID.ReadOnly = True
+        Me.colEmployeeID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colEmployeeID.Visible = False
+        '
+        'colEmployeeNo
+        '
+        Me.colEmployeeNo.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.colEmployeeNo.DataPropertyName = "EmployeeNo"
+        Me.colEmployeeNo.FillWeight = 20.0!
+        Me.colEmployeeNo.HeaderText = "Employee No"
+        Me.colEmployeeNo.MinimumWidth = 10
+        Me.colEmployeeNo.Name = "colEmployeeNo"
+        Me.colEmployeeNo.ReadOnly = True
+        Me.colEmployeeNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colEmployeeNo.Width = 80
+        '
+        'colFullName
+        '
+        Me.colFullName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.colFullName.DataPropertyName = "FullName"
+        Me.colFullName.FillWeight = 50.0!
+        Me.colFullName.HeaderText = "Full Name"
+        Me.colFullName.Name = "colFullName"
+        Me.colFullName.ReadOnly = True
+        Me.colFullName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colFullName.Width = 64
+        '
+        'colShiftSchedule
+        '
+        Me.colShiftSchedule.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
+        Me.colShiftSchedule.DataPropertyName = "ShiftScheduleText"
+        Me.colShiftSchedule.HeaderText = "Shift Schedule"
+        Me.colShiftSchedule.Name = "colShiftSchedule"
+        Me.colShiftSchedule.ReadOnly = True
+        Me.colShiftSchedule.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colShiftSchedule.Width = 87
+        '
+        'colDay
+        '
+        Me.colDay.DataPropertyName = "DateIn"
+        DataGridViewCellStyle1.Format = "ddd"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.colDay.DefaultCellStyle = DataGridViewCellStyle1
+        Me.colDay.FillWeight = 28.62944!
+        Me.colDay.HeaderText = "Day"
+        Me.colDay.Name = "colDay"
+        Me.colDay.ReadOnly = True
+        Me.colDay.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colDay.Width = 34
+        '
+        'colDateIn
+        '
+        Me.colDateIn.DataPropertyName = "DateIn"
+        Me.colDateIn.FillWeight = 28.62944!
+        Me.colDateIn.HeaderText = "Date In"
+        Me.colDateIn.Name = "colDateIn"
+        Me.colDateIn.ReadOnly = True
+        Me.colDateIn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colDateIn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colDateIn.Width = 66
+        '
+        'colBranchID
+        '
+        Me.colBranchID.DataPropertyName = "BranchID"
+        Me.colBranchID.DropDownWidth = 375
+        Me.colBranchID.HeaderText = "Branch"
+        Me.colBranchID.Name = "colBranchID"
+        Me.colBranchID.Width = 250
+        '
+        'colTimeIn
+        '
+        Me.colTimeIn.DataPropertyName = "TimeIn"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colTimeIn.DefaultCellStyle = DataGridViewCellStyle2
+        Me.colTimeIn.FillWeight = 28.0!
+        Me.colTimeIn.HeaderText = "Time In"
+        Me.colTimeIn.Name = "colTimeIn"
+        Me.colTimeIn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colTimeIn.Width = 49
+        '
+        'colDateOut
+        '
+        Me.colDateOut.DataPropertyName = "DateOut"
+        Me.colDateOut.HeaderText = "Date Out"
+        Me.colDateOut.Name = "colDateOut"
+        Me.colDateOut.ReadOnly = True
+        Me.colDateOut.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colDateOut.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colDateOut.Visible = False
+        Me.colDateOut.Width = 66
+        '
+        'colDateOutDisplay
+        '
+        Me.colDateOutDisplay.DataPropertyName = "DateOutDisplay"
+        Me.colDateOutDisplay.HeaderText = "Date Out"
+        Me.colDateOutDisplay.Name = "colDateOutDisplay"
+        Me.colDateOutDisplay.ReadOnly = True
+        Me.colDateOutDisplay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colDateOutDisplay.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colDateOutDisplay.Width = 66
+        '
+        'colDecrement
+        '
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.NullValue = "-"
+        Me.colDecrement.DefaultCellStyle = DataGridViewCellStyle3
+        Me.colDecrement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.colDecrement.HeaderText = ""
+        Me.colDecrement.Name = "colDecrement"
+        Me.colDecrement.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colDecrement.Width = 23
+        '
+        'colIncrement
+        '
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle4.NullValue = "+"
+        Me.colIncrement.DefaultCellStyle = DataGridViewCellStyle4
+        Me.colIncrement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.colIncrement.HeaderText = ""
+        Me.colIncrement.Name = "colIncrement"
+        Me.colIncrement.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colIncrement.Width = 23
+        '
+        'colTimeOut
+        '
+        Me.colTimeOut.DataPropertyName = "TimeOut"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colTimeOut.DefaultCellStyle = DataGridViewCellStyle5
+        Me.colTimeOut.HeaderText = "Time Out"
+        Me.colTimeOut.Name = "colTimeOut"
+        Me.colTimeOut.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colTimeOut.Width = 59
+        '
+        'colIsExisting
+        '
+        Me.colIsExisting.DataPropertyName = "IsExisting"
+        Me.colIsExisting.HeaderText = "IsExisting"
+        Me.colIsExisting.Name = "colIsExisting"
+        Me.colIsExisting.ReadOnly = True
+        Me.colIsExisting.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colIsExisting.Visible = False
+        '
+        'colHasChanged
+        '
+        Me.colHasChanged.DataPropertyName = "HasChanged"
+        Me.colHasChanged.HeaderText = "HasChanged"
+        Me.colHasChanged.Name = "colHasChanged"
+        Me.colHasChanged.ReadOnly = True
+        Me.colHasChanged.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colHasChanged.Visible = False
+        '
+        'colDelete
+        '
+        Me.colDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle6.NullValue = Nothing
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Transparent
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Transparent
+        Me.colDelete.DefaultCellStyle = DataGridViewCellStyle6
+        Me.colDelete.HeaderText = ""
+        Me.colDelete.Image = Global.AccuPay.My.Resources.Resources.baseline_delete_forever_black_18dp
+        Me.colDelete.Name = "colDelete"
+        Me.colDelete.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colDelete.ToolTipText = "Delete?"
+        Me.colDelete.Width = 5
+        '
+        'colRestore
+        '
+        Me.colRestore.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle7.NullValue = Nothing
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.Transparent
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.Transparent
+        Me.colRestore.DefaultCellStyle = DataGridViewCellStyle7
+        Me.colRestore.HeaderText = ""
+        Me.colRestore.Image = Global.AccuPay.My.Resources.Resources.baseline_undo_black_18dp
+        Me.colRestore.Name = "colRestore"
+        Me.colRestore.Width = 5
+        '
         'TimeLogsForm2
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -852,6 +857,7 @@ Partial Class TimeLogsForm2
     Friend WithEvents bgworkImport As System.ComponentModel.BackgroundWorker
     Friend WithEvents ToolStripProgressBar1 As ToolStripProgressBar
     Friend WithEvents btnExport As Button
+    Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents colRowID As DataGridViewTextBoxColumn
     Friend WithEvents colEmployeeID As DataGridViewTextBoxColumn
     Friend WithEvents colEmployeeNo As DataGridViewTextBoxColumn
@@ -859,16 +865,15 @@ Partial Class TimeLogsForm2
     Friend WithEvents colShiftSchedule As DataGridViewTextBoxColumn
     Friend WithEvents colDay As DataGridViewTextBoxColumn
     Friend WithEvents colDateIn As DataGridViewTextBoxColumn
+    Friend WithEvents colBranchID As DataGridViewComboBoxColumn
     Friend WithEvents colTimeIn As DataGridViewTextBoxColumn
     Friend WithEvents colDateOut As DataGridViewTextBoxColumn
     Friend WithEvents colDateOutDisplay As DataGridViewTextBoxColumn
     Friend WithEvents colDecrement As DataGridViewButtonColumn
     Friend WithEvents colIncrement As DataGridViewButtonColumn
     Friend WithEvents colTimeOut As DataGridViewTextBoxColumn
-    Friend WithEvents colBranchID As DataGridViewComboBoxColumn
     Friend WithEvents colIsExisting As DataGridViewTextBoxColumn
     Friend WithEvents colHasChanged As DataGridViewTextBoxColumn
     Friend WithEvents colDelete As DataGridViewImageColumn
     Friend WithEvents colRestore As DataGridViewImageColumn
-    Friend WithEvents btnUserActivity As ToolStripButton
 End Class
