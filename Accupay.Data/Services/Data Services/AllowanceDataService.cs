@@ -50,12 +50,9 @@ namespace AccuPay.Data.Services
             if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
                 throw new BusinessLogicException("Start date cannot be greater than end date.");
 
-            if (allowance.Amount < 0)
-                throw new BusinessLogicException("Amount cannot be less than 0.");
-
             var product = await _context.Products
-                                        .Where(p => p.RowID == allowance.ProductID)
-                                        .FirstOrDefaultAsync();
+                .Where(p => p.RowID == allowance.ProductID)
+                .FirstOrDefaultAsync();
 
             if (product == null)
                 throw new BusinessLogicException("The selected allowance type no longer exists.");
