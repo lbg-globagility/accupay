@@ -1742,6 +1742,7 @@ Partial Class EmployeeForm
         'BranchComboBox
         '
         Me.BranchComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.BranchComboBox.DropDownWidth = 400
         Me.BranchComboBox.Location = New System.Drawing.Point(128, 625)
         Me.BranchComboBox.Name = "BranchComboBox"
         Me.BranchComboBox.Size = New System.Drawing.Size(168, 21)

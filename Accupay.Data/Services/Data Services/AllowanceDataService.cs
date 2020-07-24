@@ -62,9 +62,6 @@ namespace AccuPay.Data.Services
 
             if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
                 throw new BusinessLogicException("Start date cannot be greater than end date.");
-
-            if (allowance.Amount < 0)
-                throw new BusinessLogicException("Amount cannot be less than 0.");
         }
 
         protected override async Task AdditionalDeleteValidation(Allowance allowance)
