@@ -427,42 +427,58 @@ const routes: Routes = [
         component: TimeLogsComponent,
       },
       {
-        path: 'positions/new',
-        component: NewPositionComponent,
-      },
-      {
         path: 'positions',
-        component: PositionsComponent,
+        data: { permission: PermissionTypes.PositionRead },
         children: [
           {
-            path: 'divisions/:id',
-            component: ViewDivisionComponent,
+            path: 'new',
+            component: NewPositionComponent,
+            data: { permission: PermissionTypes.PositionCreate },
           },
           {
-            path: ':id',
-            component: ViewPositionComponent,
+            path: '',
+            component: PositionsComponent,
+            children: [
+              {
+                path: 'divisions/:id',
+                component: ViewDivisionComponent,
+              },
+              {
+                path: ':id',
+                component: ViewPositionComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditPositionComponent,
+            data: { permission: PermissionTypes.PositionUpdate },
           },
         ],
       },
       {
-        path: 'positions/:id/edit',
-        component: EditPositionComponent,
-      },
-      {
         path: 'divisions/new',
         component: NewDivisionComponent,
+        data: { permission: PermissionTypes.DivisionCreate },
       },
       {
         path: 'divisions/:id/edit',
         component: EditDivisionComponent,
+        data: { permission: PermissionTypes.DivisionUpdate },
       },
       {
         path: 'payroll',
-        component: PayrollComponent,
-      },
-      {
-        path: 'payroll/:id',
-        component: ViewPayPeriodComponent,
+        data: { permission: PermissionTypes.PayPeriodRead },
+        children: [
+          {
+            path: '',
+            component: PayrollComponent,
+          },
+          {
+            path: ':id',
+            component: ViewPayPeriodComponent,
+          },
+        ],
       },
       {
         path: 'security',
@@ -476,36 +492,54 @@ const routes: Routes = [
           {
             path: 'users',
             component: UserListComponent,
+            data: { permission: PermissionTypes.UserRead },
           },
           {
             path: 'roles',
             component: RoleListComponent,
+            data: { permission: PermissionTypes.RoleRead },
           },
           {
             path: 'user-access',
             component: UserRolesComponent,
+            data: { permission: PermissionTypes.RoleRead },
           },
         ],
       },
       {
-        path: 'users/new',
-        component: NewUserComponent,
+        path: 'users',
+        data: { permission: PermissionTypes.UserRead },
+        children: [
+          {
+            path: 'new',
+            component: NewUserComponent,
+            data: { permission: PermissionTypes.UserCreate },
+          },
+          {
+            path: ':id',
+            component: ViewUserComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditUserComponent,
+            data: { permission: PermissionTypes.UserUpdate },
+          },
+        ],
       },
       {
-        path: 'users/:id',
-        component: ViewUserComponent,
-      },
-      {
-        path: 'users/:id/edit',
-        component: EditUserComponent,
-      },
-      {
-        path: 'roles/new',
-        component: NewRoleComponent,
-      },
-      {
-        path: 'roles/:id/edit',
-        component: EditRoleComponent,
+        path: 'roles',
+        children: [
+          {
+            path: 'new',
+            component: NewRoleComponent,
+            data: { permission: PermissionTypes.RoleCreate },
+          },
+          {
+            path: ':id/edit',
+            component: EditRoleComponent,
+            data: { permission: PermissionTypes.RoleUpdate },
+          },
+        ],
       },
     ],
     canActivate: [AuthGuard],
