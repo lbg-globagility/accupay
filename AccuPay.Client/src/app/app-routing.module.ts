@@ -240,69 +240,81 @@ const routes: Routes = [
       },
       {
         path: 'allowances',
-        component: AllowancesComponent,
+        data: { permission: PermissionTypes.AllowanceRead },
         children: [
           {
+            path: 'new',
+            component: NewAllowanceComponent,
+            data: { permission: PermissionTypes.AllowanceCreate },
+          },
+          {
             path: '',
-            redirectTo: 'overview',
-            pathMatch: 'full',
+            component: AllowancesComponent,
+            children: [
+              {
+                path: '',
+                redirectTo: 'overview',
+                pathMatch: 'full',
+              },
+              {
+                path: 'overview',
+                component: AllowanceListComponent,
+              },
+              {
+                path: 'types',
+                component: AllowanceTypeListComponent,
+              },
+            ],
           },
           {
-            path: 'overview',
-            component: AllowanceListComponent,
+            path: ':id',
+            component: ViewAllowanceComponent,
           },
           {
-            path: 'types',
-            component: AllowanceTypeListComponent,
+            path: ':id/edit',
+            component: EditAllowanceComponent,
+            data: { permission: PermissionTypes.AllowanceUpdate },
           },
         ],
-      },
-      {
-        path: 'allowances/new',
-        component: NewAllowanceComponent,
-      },
-      {
-        path: 'allowances/:id',
-        component: ViewAllowanceComponent,
-      },
-      {
-        path: 'allowances/:id/edit',
-        component: EditAllowanceComponent,
-      },
-      {
-        path: 'allowance-types',
-        component: AllowanceTypeListComponent,
       },
       {
         path: 'loans',
-        component: LoansComponent,
+        data: { permission: PermissionTypes.LoanRead },
         children: [
           {
+            path: 'new',
+            component: NewLoanComponent,
+            data: { permission: PermissionTypes.LoanCreate },
+          },
+          {
             path: '',
-            redirectTo: 'overview',
-            pathMatch: 'full',
+            component: LoansComponent,
+            children: [
+              {
+                path: '',
+                redirectTo: 'overview',
+                pathMatch: 'full',
+              },
+              {
+                path: 'overview',
+                component: LoanListComponent,
+              },
+              {
+                path: 'types',
+                component: LoanTypeListComponent,
+              },
+            ],
           },
           {
-            path: 'overview',
-            component: LoanListComponent,
+            path: ':id',
+            component: ViewLoanComponent,
           },
           {
-            path: 'types',
-            component: LoanTypeListComponent,
+            path: ':id/edit',
+            component: EditLoanComponent,
+            data: { permission: PermissionTypes.LoanUpdate },
           },
         ],
-      },
-      {
-        path: 'loans/new',
-        component: NewLoanComponent,
-      },
-      {
-        path: 'loans/:id',
-        component: ViewLoanComponent,
-      },
-      {
-        path: 'loans/:id/edit',
-        component: EditLoanComponent,
       },
       {
         path: 'reports',
