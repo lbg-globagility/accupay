@@ -99,7 +99,6 @@ Public Class MDIPrimaryForm
         RunLeaveAccrual()
 
         Panel1.Focus()
-        BackgroundWorker1.RunWorkerAsync()
         MyBase.OnLoad(e)
         RestrictDashboardByPrivilege()
         MetroLogin.Hide()
@@ -154,8 +153,7 @@ Public Class MDIPrimaryForm
     Dim busy_bgworks(1) As System.ComponentModel.BackgroundWorker
 
     Private Sub MDIPrimaryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        busy_bgworks(0) = BackgroundWorker1
-        busy_bgworks(1) = bgDashBoardReloader
+        busy_bgworks(0) = bgDashBoardReloader
 
         Dim busy_bgworker = busy_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).Where(Function(x) x.IsBusy)
 
@@ -1050,22 +1048,6 @@ Public Class MDIPrimaryForm
     End Sub
 
     Dim bgwork_errormsg As String = String.Empty
-
-    Private Sub BackgroundWorker1_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker1.DoWork
-        If e.Cancel = False Then
-            Dim n_ExecuteQuery As New ExecuteQuery("CALL EXEC_userupdateleavebalancelog('" & orgztnID & "','" & z_User & "');")
-            bgwork_errormsg = n_ExecuteQuery.ErrorMessage
-        End If
-    End Sub
-
-    Private Sub BackgroundWorker1_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles BackgroundWorker1.RunWorkerCompleted
-        If e.Error IsNot Nothing Then
-            MsgBox(bgwork_errormsg)
-        ElseIf e.Cancelled Then
-            MsgBox("Background work cancelled.",
-                   MsgBoxStyle.Information)
-        End If
-    End Sub
 
     Private Sub setProperDashBoardAccordingToSystemOwner()
         If if_sysowner_is_cinema2k Then
