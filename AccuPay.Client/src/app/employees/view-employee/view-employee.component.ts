@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EmployeeService } from '../services/employee.service';
 import { BehaviorSubject } from 'rxjs';
 import { Employee } from '../shared/employee';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-view-employee',
@@ -13,6 +14,8 @@ import { Employee } from '../shared/employee';
   },
 })
 export class ViewEmployeeComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   id: number;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);

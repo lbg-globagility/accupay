@@ -2,7 +2,10 @@
   <div class="w-1/4 flex flex-col h-full bg-white mat-elevation-z1">
     <!-- Filter and sort -->
     <div class="flex-none">
-      <div class="flex justify-end px-4 pt-4">
+      <div
+        *ngxPermissionsOnly="[PermissionTypes.EmployeeCreate]"
+        class="flex justify-end px-4 pt-4"
+      >
         <a
           mat-raised-button
           color="primary"

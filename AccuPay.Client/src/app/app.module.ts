@@ -1,12 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgxPermissionsModule } from 'ngx-permissions';
+import { NgxPermissionsModule, NgxPermissionsService } from 'ngx-permissions';
 import { AllowancesModule } from 'src/app/allowances/allowances.module';
 import { EmployeesModule } from './employees/employees.module';
 import { LeavesModule } from 'src/app/leaves/leaves.module';
@@ -31,6 +31,8 @@ import { ReportsModule } from './reports/reports.module';
 import { ClientsModule } from 'src/app/clients/clients.module';
 import { LoanTypesModule } from './loan-types/loan-types.module';
 import { EmploymentPoliciesModule } from 'src/app/employment-policies/employment-policies.module';
+import { AccountService } from 'src/app/accounts/services/account.service';
+import { map } from 'rxjs/operators';
 
 @NgModule({
   declarations: [AppComponent],
@@ -70,6 +72,20 @@ import { EmploymentPoliciesModule } from 'src/app/employment-policies/employment
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (as: AccountService, ps: NgxPermissionsService) => () => {
+        return as
+          .getCurrentRole()
+          .pipe(
+            map((role) => as.getPermissions(role)),
+            map((permissions) => ps.loadPermissions(permissions))
+          )
+          .toPromise();
+      },
+      deps: [AccountService, NgxPermissionsService],
       multi: true,
     },
   ],

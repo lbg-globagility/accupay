@@ -10,6 +10,7 @@ import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-opti
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import Swal from 'sweetalert2';
 import { EmployeeImportParserOutput } from '../shared/employee-import-parser-output';
+import { PermissionTypes } from 'src/app/core/auth/permission-types';
 
 @Component({
   selector: 'app-employees',
@@ -24,6 +25,8 @@ export class EmployeesComponent implements OnInit {
 
   @ViewChild('employeesRef')
   employeesRef: ElementRef;
+
+  readonly PermissionTypes = PermissionTypes;
 
   searchTerm: string;
 
