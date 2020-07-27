@@ -97,58 +97,75 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
-        path: 'clients/new',
-        component: NewClientComponent,
-      },
-      {
         path: 'clients',
-        component: ClientsComponent,
         children: [
           {
-            path: ':id',
-            component: ViewClientComponent,
+            path: 'new',
+            component: NewClientComponent,
+          },
+          {
+            path: '',
+            component: ClientsComponent,
+            children: [
+              {
+                path: ':id',
+                component: ViewClientComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditClientComponent,
           },
         ],
       },
       {
-        path: 'clients/:id/edit',
-        component: EditClientComponent,
-      },
-      {
-        path: 'employees/new',
-        component: NewEmployeeComponent,
-      },
-      {
-        path: 'employees/:id/edit',
-        component: EditEmployeeComponent,
+        path: 'employees',
+        data: { permission: PermissionTypes.EmployeeRead },
+        children: [
+          {
+            path: 'new',
+            component: NewEmployeeComponent,
+            data: { permission: PermissionTypes.EmployeeCreate },
+          },
+          {
+            path: '',
+            component: EmployeesComponent,
+            children: [
+              {
+                path: ':id',
+                component: ViewEmployeeComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditEmployeeComponent,
+            data: { permission: PermissionTypes.EmployeeUpdate },
+          },
+        ],
       },
       {
         path: 'employment-policies',
-        component: EmploymentPolicyListComponent,
-      },
-      {
-        path: 'employment-policies/new',
-        component: NewEmploymentPolicyComponent,
-      },
-      {
-        path: 'employment-policies/:id',
-        component: ViewEmploymentPolicyComponent,
-      },
-      {
-        path: 'employment-policies/:id/edit',
-        component: EditEmploymentPolicyComponent,
-      },
-      {
-        path: 'users',
-        component: UserListComponent,
-      },
-      {
-        path: 'employees',
-        component: EmployeesComponent,
+        data: { permission: PermissionTypes.EmploymentPolicyRead },
         children: [
           {
+            path: 'new',
+            component: NewEmploymentPolicyComponent,
+            data: { permission: PermissionTypes.EmploymentPolicyCreate },
+          },
+          {
+            path: '',
+            component: EmploymentPolicyListComponent,
+          },
+          {
             path: ':id',
-            component: ViewEmployeeComponent,
+            component: ViewEmploymentPolicyComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditEmploymentPolicyComponent,
+            data: { permission: PermissionTypes.EmploymentPolicyUpdate },
           },
         ],
       },
@@ -181,6 +198,7 @@ const routes: Routes = [
       {
         path: 'leaves',
         component: LeavesComponent,
+        data: { permission: PermissionTypes.LeaveRead },
         children: [
           {
             path: '',
@@ -200,10 +218,12 @@ const routes: Routes = [
       {
         path: 'official-businesses',
         component: OfficialBusinessListComponent,
+        data: { permission: PermissionTypes.OfficialBusinessRead },
       },
       {
         path: 'overtimes',
         component: OvertimeListComponent,
+        data: { permission: PermissionTypes.OvertimeRead },
       },
       {
         path: 'time-entry',
@@ -216,6 +236,7 @@ const routes: Routes = [
       {
         path: 'shifts',
         component: ShiftListComponent,
+        data: { permission: PermissionTypes.ShiftRead },
       },
       {
         path: 'allowances',
