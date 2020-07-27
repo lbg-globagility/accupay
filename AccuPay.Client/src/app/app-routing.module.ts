@@ -89,6 +89,7 @@ import {
 } from 'src/app/employment-policies/components';
 import { LoansComponent } from './loans/loans/loans.component';
 import { PositionsComponent } from 'src/app/positions/components/positions/positions.component';
+import { PermissionGuard, PermissionTypes } from 'src/app/core/auth';
 
 const routes: Routes = [
   {
@@ -151,24 +152,31 @@ const routes: Routes = [
           },
         ],
       },
-
-      {
-        path: 'salaries/new',
-        component: NewSalaryComponent,
-      },
       {
         path: 'salaries',
-        component: SalariesComponent,
+        data: { permission: PermissionTypes.SalaryRead },
         children: [
           {
-            path: ':employeeId',
-            component: ViewSalaryComponent,
+            path: 'new',
+            component: NewSalaryComponent,
+            data: { permission: PermissionTypes.SalaryCreate },
+          },
+          {
+            path: '',
+            component: SalariesComponent,
+            children: [
+              {
+                path: ':employeeId',
+                component: ViewSalaryComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditSalaryComponent,
+            data: { permission: PermissionTypes.SalaryUpdate },
           },
         ],
-      },
-      {
-        path: 'salaries/:id/edit',
-        component: EditSalaryComponent,
       },
       {
         path: 'leaves',
@@ -444,6 +452,7 @@ const routes: Routes = [
       },
     ],
     canActivate: [AuthGuard],
+    canActivateChild: [PermissionGuard],
   },
   {
     path: 'login',
