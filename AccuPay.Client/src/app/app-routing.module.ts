@@ -356,31 +356,71 @@ const routes: Routes = [
       },
       {
         path: 'organizations',
-        component: OrganizationListComponent,
-      },
-      {
-        path: 'organizations/new',
-        component: NewOrganizationComponent,
-      },
-      {
-        path: 'organizations/:id',
-        component: ViewOrganizationComponent,
-      },
-      {
-        path: 'organizations/:id/edit',
-        component: EditOrganizationComponent,
+        data: { permission: PermissionTypes.OrganizationRead },
+        children: [
+          {
+            path: '',
+            component: OrganizationListComponent,
+          },
+          {
+            path: 'new',
+            component: NewOrganizationComponent,
+            data: { permission: PermissionTypes.OrganizationCreate },
+          },
+          {
+            path: ':id',
+            component: ViewOrganizationComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditOrganizationComponent,
+            data: { permission: PermissionTypes.OrganizationUpdate },
+          },
+        ],
       },
       {
         path: 'branches',
-        component: BranchListComponent,
+        data: { permission: PermissionTypes.BranchRead },
+        children: [
+          {
+            path: '',
+            component: BranchListComponent,
+          },
+          {
+            path: 'new',
+            component: NewBranchComponent,
+            data: { permission: PermissionTypes.BranchCreate },
+          },
+          {
+            path: ':id/edit',
+            component: EditBranchComponent,
+            data: { permission: PermissionTypes.BranchUpdate },
+          },
+        ],
       },
       {
-        path: 'branches/new',
-        component: NewBranchComponent,
-      },
-      {
-        path: 'branches/:id/edit',
-        component: EditBranchComponent,
+        path: 'calendars',
+        data: { permission: PermissionTypes.CalendarRead },
+        children: [
+          {
+            path: '',
+            component: CalendarListComponent,
+          },
+          {
+            path: 'new',
+            component: NewCalendarComponent,
+            data: { permission: PermissionTypes.CalendarCreate },
+          },
+          {
+            path: ':id',
+            component: ViewCalendarComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditCalendarComponent,
+            data: { permission: PermissionTypes.CalendarUpdate },
+          },
+        ],
       },
       {
         path: 'time-logs',
@@ -415,22 +455,6 @@ const routes: Routes = [
       {
         path: 'divisions/:id/edit',
         component: EditDivisionComponent,
-      },
-      {
-        path: 'calendars',
-        component: CalendarListComponent,
-      },
-      {
-        path: 'calendars/new',
-        component: NewCalendarComponent,
-      },
-      {
-        path: 'calendars/:id',
-        component: ViewCalendarComponent,
-      },
-      {
-        path: 'calendars/:id/edit',
-        component: EditCalendarComponent,
       },
       {
         path: 'payroll',
