@@ -964,24 +964,6 @@
     <Compile Include="Views\Core Forms\Employee\SalaryTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Independent filing\LeaveForm.designer.vb">
-      <DependentUpon>LeaveForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Independent filing\LeaveForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\Independent filing\OBFForm.designer.vb">
-      <DependentUpon>OBFForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Independent filing\OBFForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\Independent filing\OverTimeForm.designer.vb">
-      <DependentUpon>OverTimeForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Independent filing\OverTimeForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\JobLevel\JobLevelForm.Designer.vb">
       <DependentUpon>JobLevelForm.vb</DependentUpon>
     </Compile>
@@ -2202,15 +2184,6 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\SalaryTab.resx">
       <DependentUpon>SalaryTab.vb</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Independent filing\LeaveForm.resx">
-      <DependentUpon>LeaveForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Independent filing\OBFForm.resx">
-      <DependentUpon>OBFForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Independent filing\OverTimeForm.resx">
-      <DependentUpon>OverTimeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\JobLevel\JobLevelForm.resx">
       <DependentUpon>JobLevelForm.vb</DependentUpon>
