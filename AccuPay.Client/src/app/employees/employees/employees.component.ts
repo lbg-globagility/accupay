@@ -74,7 +74,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   page(pageEvent: PageEvent): void {
-    console.log(pageEvent);
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.loadEmployees();
