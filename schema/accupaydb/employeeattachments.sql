@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `employeeattachments` (
   `CreatedBy` int(11) NOT NULL,
   `LastUpdBy` int(11) DEFAULT NULL,
   `EmployeeID` int(11) NOT NULL,
-  `Type` varchar(50) DEFAULT NULL COMMENT 'Account, Quote, Order, ListofVal Type = "NOTE_TYPE"',
+  `Type` varchar(50) DEFAULT NULL,
   `LastUpd` datetime DEFAULT CURRENT_TIMESTAMP,
   `Created` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `AttachedFile` mediumblob,

@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS `product` (
   KEY `Index 7` (`OrganizationID`,`Name`),
   KEY `FK_product_category` (`CategoryID`),
   KEY `FK_product_chartofaccounts` (`COAId`),
-  CONSTRAINT `FK_product_account` FOREIGN KEY (`SupplierID`) REFERENCES `account` (`RowID`),
   CONSTRAINT `FK_product_category` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`RowID`),
   CONSTRAINT `FK_product_chartofaccounts` FOREIGN KEY (`COAId`) REFERENCES `chartofaccounts` (`RowID`),
   CONSTRAINT `FK_product_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),

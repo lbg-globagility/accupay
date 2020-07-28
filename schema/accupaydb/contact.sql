@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `contact` (
   `Status` varchar(50) DEFAULT '0' COMMENT 'On Leave,Prospect,Active,Deceased,,Inactive etc.',
   `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Type` varchar(50) DEFAULT NULL COMMENT 'Partners',
-  `AccountID` int(11) DEFAULT NULL COMMENT 'Links to the Account.  A Company can have multiple contacts.',
+  `AccountID` int(11) DEFAULT NULL,
   `EmployeeFlg` varchar(1) DEFAULT NULL COMMENT 'Y if contact is employee',
   `OrganizationID` int(11) DEFAULT NULL COMMENT 'Internal Company',
   `MainPhone` varchar(50) DEFAULT NULL,
