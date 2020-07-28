@@ -15,6 +15,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { Moment } from 'moment';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-overtime-list',
@@ -25,6 +26,8 @@ import { Moment } from 'moment';
   },
 })
 export class OvertimeListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = [
     'employee',
     'date',

@@ -1,4 +1,6 @@
-@import "~@angular/material/theming";
+@use "~@angular/material/theming" as *;
+
+$-bar-height: 48px;
 
 :host {
   display: block;
@@ -7,18 +9,26 @@
 
 mat-toolbar {
   background: white;
-  min-height: 56px;
+  min-height: $-bar-height;
 }
 
 mat-toolbar-row {
-  height: 56px;
+  height: $-bar-height;
 }
 
-.__spacer {
+._logo {
+  height: 40px;
+}
+
+._logo-image {
+  height: 40px;
+}
+
+._spacer {
   flex: 1 1 auto;
 }
 
-.__preview {
+._preview {
   $size: 40px;
   width: $size;
   height: $size;
@@ -28,6 +38,6 @@ mat-toolbar-row {
   margin-right: auto;
 }
 
-.__organization-logo {
+._organization-logo {
   height: 40px;
 }

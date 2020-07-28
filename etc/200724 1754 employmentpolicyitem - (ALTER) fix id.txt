@@ -1,0 +1,2 @@
+ALTER TABLE `employmentpolicyitem`
+	CHANGE COLUMN `Id` `Id` INT(11) NOT NULL AUTO_INCREMENT FIRST;

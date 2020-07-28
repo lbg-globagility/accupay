@@ -89,6 +89,7 @@ import {
 } from 'src/app/employment-policies/components';
 import { LoansComponent } from './loans/loans/loans.component';
 import { PositionsComponent } from 'src/app/positions/components/positions/positions.component';
+import { PermissionGuard, PermissionTypes } from 'src/app/core/auth';
 
 const routes: Routes = [
   {
@@ -96,83 +97,108 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
-        path: 'clients/new',
-        component: NewClientComponent,
-      },
-      {
         path: 'clients',
-        component: ClientsComponent,
         children: [
           {
-            path: ':id',
-            component: ViewClientComponent,
+            path: 'new',
+            component: NewClientComponent,
+          },
+          {
+            path: '',
+            component: ClientsComponent,
+            children: [
+              {
+                path: ':id',
+                component: ViewClientComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditClientComponent,
           },
         ],
-      },
-      {
-        path: 'clients/:id/edit',
-        component: EditClientComponent,
-      },
-      {
-        path: 'employees/new',
-        component: NewEmployeeComponent,
-      },
-      {
-        path: 'employees/:id/edit',
-        component: EditEmployeeComponent,
-      },
-      {
-        path: 'employment-policies',
-        component: EmploymentPolicyListComponent,
-      },
-      {
-        path: 'employment-policies/new',
-        component: NewEmploymentPolicyComponent,
-      },
-      {
-        path: 'employment-policies/:id',
-        component: ViewEmploymentPolicyComponent,
-      },
-      {
-        path: 'employment-policies/:id/edit',
-        component: EditEmploymentPolicyComponent,
-      },
-      {
-        path: 'users',
-        component: UserListComponent,
       },
       {
         path: 'employees',
-        component: EmployeesComponent,
+        data: { permission: PermissionTypes.EmployeeRead },
         children: [
           {
-            path: ':id',
-            component: ViewEmployeeComponent,
+            path: 'new',
+            component: NewEmployeeComponent,
+            data: { permission: PermissionTypes.EmployeeCreate },
+          },
+          {
+            path: '',
+            component: EmployeesComponent,
+            children: [
+              {
+                path: ':id',
+                component: ViewEmployeeComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditEmployeeComponent,
+            data: { permission: PermissionTypes.EmployeeUpdate },
           },
         ],
       },
-
       {
-        path: 'salaries/new',
-        component: NewSalaryComponent,
+        path: 'employment-policies',
+        data: { permission: PermissionTypes.EmploymentPolicyRead },
+        children: [
+          {
+            path: 'new',
+            component: NewEmploymentPolicyComponent,
+            data: { permission: PermissionTypes.EmploymentPolicyCreate },
+          },
+          {
+            path: '',
+            component: EmploymentPolicyListComponent,
+          },
+          {
+            path: ':id',
+            component: ViewEmploymentPolicyComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditEmploymentPolicyComponent,
+            data: { permission: PermissionTypes.EmploymentPolicyUpdate },
+          },
+        ],
       },
       {
         path: 'salaries',
-        component: SalariesComponent,
+        data: { permission: PermissionTypes.SalaryRead },
         children: [
           {
-            path: ':employeeId',
-            component: ViewSalaryComponent,
+            path: 'new',
+            component: NewSalaryComponent,
+            data: { permission: PermissionTypes.SalaryCreate },
+          },
+          {
+            path: '',
+            component: SalariesComponent,
+            children: [
+              {
+                path: ':employeeId',
+                component: ViewSalaryComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditSalaryComponent,
+            data: { permission: PermissionTypes.SalaryUpdate },
           },
         ],
-      },
-      {
-        path: 'salaries/:id/edit',
-        component: EditSalaryComponent,
       },
       {
         path: 'leaves',
         component: LeavesComponent,
+        data: { permission: PermissionTypes.LeaveRead },
         children: [
           {
             path: '',
@@ -192,10 +218,12 @@ const routes: Routes = [
       {
         path: 'official-businesses',
         component: OfficialBusinessListComponent,
+        data: { permission: PermissionTypes.OfficialBusinessRead },
       },
       {
         path: 'overtimes',
         component: OvertimeListComponent,
+        data: { permission: PermissionTypes.OvertimeRead },
       },
       {
         path: 'time-entry',
@@ -208,72 +236,85 @@ const routes: Routes = [
       {
         path: 'shifts',
         component: ShiftListComponent,
+        data: { permission: PermissionTypes.ShiftRead },
       },
       {
         path: 'allowances',
-        component: AllowancesComponent,
+        data: { permission: PermissionTypes.AllowanceRead },
         children: [
           {
+            path: 'new',
+            component: NewAllowanceComponent,
+            data: { permission: PermissionTypes.AllowanceCreate },
+          },
+          {
             path: '',
-            redirectTo: 'overview',
-            pathMatch: 'full',
+            component: AllowancesComponent,
+            children: [
+              {
+                path: '',
+                redirectTo: 'overview',
+                pathMatch: 'full',
+              },
+              {
+                path: 'overview',
+                component: AllowanceListComponent,
+              },
+              {
+                path: 'types',
+                component: AllowanceTypeListComponent,
+              },
+            ],
           },
           {
-            path: 'overview',
-            component: AllowanceListComponent,
+            path: ':id',
+            component: ViewAllowanceComponent,
           },
           {
-            path: 'types',
-            component: AllowanceTypeListComponent,
+            path: ':id/edit',
+            component: EditAllowanceComponent,
+            data: { permission: PermissionTypes.AllowanceUpdate },
           },
         ],
-      },
-      {
-        path: 'allowances/new',
-        component: NewAllowanceComponent,
-      },
-      {
-        path: 'allowances/:id',
-        component: ViewAllowanceComponent,
-      },
-      {
-        path: 'allowances/:id/edit',
-        component: EditAllowanceComponent,
-      },
-      {
-        path: 'allowance-types',
-        component: AllowanceTypeListComponent,
       },
       {
         path: 'loans',
-        component: LoansComponent,
+        data: { permission: PermissionTypes.LoanRead },
         children: [
           {
+            path: 'new',
+            component: NewLoanComponent,
+            data: { permission: PermissionTypes.LoanCreate },
+          },
+          {
             path: '',
-            redirectTo: 'overview',
-            pathMatch: 'full',
+            component: LoansComponent,
+            children: [
+              {
+                path: '',
+                redirectTo: 'overview',
+                pathMatch: 'full',
+              },
+              {
+                path: 'overview',
+                component: LoanListComponent,
+              },
+              {
+                path: 'types',
+                component: LoanTypeListComponent,
+              },
+            ],
           },
           {
-            path: 'overview',
-            component: LoanListComponent,
+            path: ':id',
+            component: ViewLoanComponent,
           },
           {
-            path: 'types',
-            component: LoanTypeListComponent,
+            path: ':id/edit',
+            component: EditLoanComponent,
+            data: { permission: PermissionTypes.LoanUpdate },
           },
         ],
-      },
-      {
-        path: 'loans/new',
-        component: NewLoanComponent,
-      },
-      {
-        path: 'loans/:id',
-        component: ViewLoanComponent,
-      },
-      {
-        path: 'loans/:id/edit',
-        component: EditLoanComponent,
       },
       {
         path: 'reports',
@@ -315,89 +356,129 @@ const routes: Routes = [
       },
       {
         path: 'organizations',
-        component: OrganizationListComponent,
-      },
-      {
-        path: 'organizations/new',
-        component: NewOrganizationComponent,
-      },
-      {
-        path: 'organizations/:id',
-        component: ViewOrganizationComponent,
-      },
-      {
-        path: 'organizations/:id/edit',
-        component: EditOrganizationComponent,
+        data: { permission: PermissionTypes.OrganizationRead },
+        children: [
+          {
+            path: '',
+            component: OrganizationListComponent,
+          },
+          {
+            path: 'new',
+            component: NewOrganizationComponent,
+            data: { permission: PermissionTypes.OrganizationCreate },
+          },
+          {
+            path: ':id',
+            component: ViewOrganizationComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditOrganizationComponent,
+            data: { permission: PermissionTypes.OrganizationUpdate },
+          },
+        ],
       },
       {
         path: 'branches',
-        component: BranchListComponent,
+        data: { permission: PermissionTypes.BranchRead },
+        children: [
+          {
+            path: '',
+            component: BranchListComponent,
+          },
+          {
+            path: 'new',
+            component: NewBranchComponent,
+            data: { permission: PermissionTypes.BranchCreate },
+          },
+          {
+            path: ':id/edit',
+            component: EditBranchComponent,
+            data: { permission: PermissionTypes.BranchUpdate },
+          },
+        ],
       },
       {
-        path: 'branches/new',
-        component: NewBranchComponent,
-      },
-      {
-        path: 'branches/:id/edit',
-        component: EditBranchComponent,
+        path: 'calendars',
+        data: { permission: PermissionTypes.CalendarRead },
+        children: [
+          {
+            path: '',
+            component: CalendarListComponent,
+          },
+          {
+            path: 'new',
+            component: NewCalendarComponent,
+            data: { permission: PermissionTypes.CalendarCreate },
+          },
+          {
+            path: ':id',
+            component: ViewCalendarComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditCalendarComponent,
+            data: { permission: PermissionTypes.CalendarUpdate },
+          },
+        ],
       },
       {
         path: 'time-logs',
         component: TimeLogsComponent,
       },
       {
-        path: 'positions/new',
-        component: NewPositionComponent,
-      },
-      {
         path: 'positions',
-        component: PositionsComponent,
+        data: { permission: PermissionTypes.PositionRead },
         children: [
           {
-            path: 'divisions/:id',
-            component: ViewDivisionComponent,
+            path: 'new',
+            component: NewPositionComponent,
+            data: { permission: PermissionTypes.PositionCreate },
           },
           {
-            path: ':id',
-            component: ViewPositionComponent,
+            path: '',
+            component: PositionsComponent,
+            children: [
+              {
+                path: 'divisions/:id',
+                component: ViewDivisionComponent,
+              },
+              {
+                path: ':id',
+                component: ViewPositionComponent,
+              },
+            ],
+          },
+          {
+            path: ':id/edit',
+            component: EditPositionComponent,
+            data: { permission: PermissionTypes.PositionUpdate },
           },
         ],
       },
       {
-        path: 'positions/:id/edit',
-        component: EditPositionComponent,
-      },
-      {
         path: 'divisions/new',
         component: NewDivisionComponent,
+        data: { permission: PermissionTypes.DivisionCreate },
       },
       {
         path: 'divisions/:id/edit',
         component: EditDivisionComponent,
-      },
-      {
-        path: 'calendars',
-        component: CalendarListComponent,
-      },
-      {
-        path: 'calendars/new',
-        component: NewCalendarComponent,
-      },
-      {
-        path: 'calendars/:id',
-        component: ViewCalendarComponent,
-      },
-      {
-        path: 'calendars/:id/edit',
-        component: EditCalendarComponent,
+        data: { permission: PermissionTypes.DivisionUpdate },
       },
       {
         path: 'payroll',
-        component: PayrollComponent,
-      },
-      {
-        path: 'payroll/:id',
-        component: ViewPayPeriodComponent,
+        data: { permission: PermissionTypes.PayPeriodRead },
+        children: [
+          {
+            path: '',
+            component: PayrollComponent,
+          },
+          {
+            path: ':id',
+            component: ViewPayPeriodComponent,
+          },
+        ],
       },
       {
         path: 'security',
@@ -411,39 +492,58 @@ const routes: Routes = [
           {
             path: 'users',
             component: UserListComponent,
+            data: { permission: PermissionTypes.UserRead },
           },
           {
             path: 'roles',
             component: RoleListComponent,
+            data: { permission: PermissionTypes.RoleRead },
           },
           {
             path: 'user-access',
             component: UserRolesComponent,
+            data: { permission: PermissionTypes.RoleRead },
           },
         ],
       },
       {
-        path: 'users/new',
-        component: NewUserComponent,
+        path: 'users',
+        data: { permission: PermissionTypes.UserRead },
+        children: [
+          {
+            path: 'new',
+            component: NewUserComponent,
+            data: { permission: PermissionTypes.UserCreate },
+          },
+          {
+            path: ':id',
+            component: ViewUserComponent,
+          },
+          {
+            path: ':id/edit',
+            component: EditUserComponent,
+            data: { permission: PermissionTypes.UserUpdate },
+          },
+        ],
       },
       {
-        path: 'users/:id',
-        component: ViewUserComponent,
-      },
-      {
-        path: 'users/:id/edit',
-        component: EditUserComponent,
-      },
-      {
-        path: 'roles/new',
-        component: NewRoleComponent,
-      },
-      {
-        path: 'roles/:id/edit',
-        component: EditRoleComponent,
+        path: 'roles',
+        children: [
+          {
+            path: 'new',
+            component: NewRoleComponent,
+            data: { permission: PermissionTypes.RoleCreate },
+          },
+          {
+            path: ':id/edit',
+            component: EditRoleComponent,
+            data: { permission: PermissionTypes.RoleUpdate },
+          },
+        ],
       },
     ],
     canActivate: [AuthGuard],
+    canActivateChild: [PermissionGuard],
   },
   {
     path: 'login',

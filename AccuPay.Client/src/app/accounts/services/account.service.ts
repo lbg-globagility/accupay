@@ -26,6 +26,30 @@ export class AccountService {
     return this.httpClient.get<Role>(`${this.api}/current-role`);
   }
 
+  getPermissions(role: Role): string[] {
+    const permissions: string[] = [];
+
+    for (const rolePermission of role.rolePermissions) {
+      if (rolePermission.read) {
+        permissions.push(`${rolePermission.permissionName}:read`);
+      }
+
+      if (rolePermission.create) {
+        permissions.push(`${rolePermission.permissionName}:create`);
+      }
+
+      if (rolePermission.update) {
+        permissions.push(`${rolePermission.permissionName}:update`);
+      }
+
+      if (rolePermission.delete) {
+        permissions.push(`${rolePermission.permissionName}:delete`);
+      }
+    }
+
+    return permissions;
+  }
+
   updateOrganization(organization: Organization): Observable<Organization> {
     return this.httpClient.post<Organization>(
       `${this.api}/organization`,
