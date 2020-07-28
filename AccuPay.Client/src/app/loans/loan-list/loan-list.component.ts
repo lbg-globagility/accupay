@@ -14,6 +14,7 @@ import { LoanHistoryComponent } from '../loan-history/loan-history.component';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { LoanImportParserOutput } from '../shared/loam-import-parser-output';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-loan-list',
@@ -24,6 +25,8 @@ import { LoanImportParserOutput } from '../shared/loam-import-parser-output';
   },
 })
 export class LoanListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   @ViewChild('uploader') fileInput: ElementRef;
 
   readonly displayedColumns: string[] = [

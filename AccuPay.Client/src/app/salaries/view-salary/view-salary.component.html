@@ -1,6 +1,9 @@
 <div class="flex items-start">
   <h1 class="mat-headline w-1/2">View Salary</h1>
-  <div class="w-1/2 flex justify-end">
+  <div
+    *ngxPermissionsOnly="[PermissionTypes.SalaryCreate]"
+    class="w-1/2 flex justify-end"
+  >
     <a
       mat-raised-button
       color="primary"
@@ -149,6 +152,7 @@
   </mat-card-content>
   <mat-card-actions align="end">
     <button
+      *ngxPermissionsOnly="[PermissionTypes.SalaryUpdate]"
       mat-button
       color="primary"
       routerLink="/salaries/{{ latestSalary.id }}/edit"

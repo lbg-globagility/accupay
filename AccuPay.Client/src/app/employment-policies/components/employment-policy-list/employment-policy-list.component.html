@@ -2,7 +2,10 @@
   <div class="w-1/2">
     <h1 class="mat-headline">Employment Policies</h1>
   </div>
-  <div class="w-1/2 flex justify-end items-start">
+  <div
+    *ngxPermissionsOnly="[PermissionTypes.EmploymentPolicyCreate]"
+    class="w-1/2 flex justify-end items-start"
+  >
     <a
       mat-raised-button
       color="primary"
@@ -34,6 +37,7 @@
             <mat-icon matTooltip="View">remove_red_eye</mat-icon>
           </a>
           <a
+            *ngxPermissionsOnly="[PermissionTypes.EmploymentPolicyUpdate]"
             mat-icon-button
             routerLink="/employment-policies/{{ employmentPolicy.id }}/edit"
           >
@@ -48,7 +52,7 @@
   </table>
 
   <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
-    No leaves were found.
+    No employment policies were found.
   </div>
 
   <mat-paginator

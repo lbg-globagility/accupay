@@ -11,6 +11,7 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { Employee } from 'src/app/employees/shared/employee';
 import { SalaryImportParserOutput } from '../shared/salary-import-parser-output';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-view-salary',
@@ -18,6 +19,8 @@ import { SalaryImportParserOutput } from '../shared/salary-import-parser-output'
   styleUrls: ['./view-salary.component.scss'],
 })
 export class ViewSalaryComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   @ViewChild('uploader') fileInput: ElementRef;
 
   employeeId: number = Number(this.route.snapshot.paramMap.get('employeeId'));

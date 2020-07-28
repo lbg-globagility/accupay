@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BranchService } from 'src/app/branches/services/branch.service';
 import { Branch } from 'src/app/branches/shared/branch';
 import { MatTableDataSource } from '@angular/material/table';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-branch-list',
@@ -12,6 +13,8 @@ import { MatTableDataSource } from '@angular/material/table';
   },
 })
 export class BranchListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = ['name', 'code', 'actions'];
 
   dataSource: MatTableDataSource<Branch>;

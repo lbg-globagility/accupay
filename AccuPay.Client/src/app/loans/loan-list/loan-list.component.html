@@ -23,7 +23,10 @@
   </div>
   <div class="col-md-5"></div>
   <div class="col-md-4">
-    <div class="flex justify-end items-start">
+    <div
+      *ngxPermissionsOnly="[PermissionTypes.LoanCreate]"
+      class="flex justify-end items-start"
+    >
       <button
         mat-raised-button
         color="primary"
