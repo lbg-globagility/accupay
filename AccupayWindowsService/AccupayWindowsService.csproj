@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GlobagilityShared.EmailSender">
-      <HintPath>..\..\GlobagilityShared\GlobagilityShared.EmailSender\bin\Release\netstandard2.0\GlobagilityShared.EmailSender.dll</HintPath>
+      <HintPath>..\Other Libraries\GlobagilityShared.EmailSender.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -73,9 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Email.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">
