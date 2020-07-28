@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/accounts/services/account.service';
 import { User } from 'src/app/users/shared/user';
 import { UserService } from 'src/app/users/user.service';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-view-user',
@@ -13,6 +14,8 @@ import { UserService } from 'src/app/users/user.service';
   },
 })
 export class ViewUserComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   user: User;
 
   imageUrl: string;

@@ -2,12 +2,13 @@
   <div class="col-lg-9"></div>
   <div class="col-lg-3 flex justify-end">
     <button
+      *ngxPermissionsOnly="[PermissionTypes.RoleCreate]"
       mat-raised-button
       color="primary"
       class="m-with-icon"
       routerLink="/roles/new"
     >
-      <mat-icon>add</mat-icon>NEW ROLE
+      <mat-icon>add</mat-icon>NEW
     </button>
   </div>
 </div>
@@ -22,7 +23,12 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let role">
-        <button mat-icon-button routerLink="/roles/{{ role.id }}/edit">
+        <button
+          *ngxPermissionsOnly="[PermissionTypes.RoleUpdate]"
+          mat-icon-button
+          routerLink="/roles/{{ role.id }}/edit"
+          matTooltip="Edit"
+        >
           <mat-icon>edit</mat-icon>
         </button>
       </td>

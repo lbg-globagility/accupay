@@ -493,7 +493,7 @@ const routes: Routes = [
           {
             path: 'users',
             component: UserListComponent,
-            data: { permission: 'PermissionTypes.UserRead' },
+            data: { permission: PermissionTypes.UserRead },
           },
           {
             path: 'roles',
