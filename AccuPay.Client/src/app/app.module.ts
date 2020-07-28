@@ -32,6 +32,7 @@ import { ClientsModule } from 'src/app/clients/clients.module';
 import { LoanTypesModule } from './loan-types/loan-types.module';
 import { EmploymentPoliciesModule } from 'src/app/employment-policies/employment-policies.module';
 import { AccountService } from 'src/app/accounts/services/account.service';
+import { ErrorsModule } from 'src/app/errors/errors.module';
 import { map } from 'rxjs/operators';
 
 @NgModule({
@@ -47,6 +48,7 @@ import { map } from 'rxjs/operators';
     AllowancesModule,
     ClientsModule,
     EmployeesModule,
+    ErrorsModule,
     LeavesModule,
     LoansModule,
     OfficialBusinessesModule,

@@ -90,6 +90,7 @@ import {
 import { LoansComponent } from './loans/loans/loans.component';
 import { PositionsComponent } from 'src/app/positions/components/positions/positions.component';
 import { PermissionGuard, PermissionTypes } from 'src/app/core/auth';
+import { NotAuthorizedComponent } from 'src/app/errors/not-authorized/not-authorized.component';
 
 const routes: Routes = [
   {
@@ -492,7 +493,7 @@ const routes: Routes = [
           {
             path: 'users',
             component: UserListComponent,
-            data: { permission: PermissionTypes.UserRead },
+            data: { permission: 'PermissionTypes.UserRead' },
           },
           {
             path: 'roles',
@@ -544,6 +545,10 @@ const routes: Routes = [
     ],
     canActivate: [AuthGuard],
     canActivateChild: [PermissionGuard],
+  },
+  {
+    path: 'not-authorized',
+    component: NotAuthorizedComponent,
   },
   {
     path: 'login',

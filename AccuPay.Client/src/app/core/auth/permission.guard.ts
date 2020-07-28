@@ -1,56 +1,47 @@
 import { Injectable } from '@angular/core';
 import {
-  CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   UrlTree,
   CanActivateChild,
+  Router,
 } from '@angular/router';
-import { Observable } from 'rxjs';
 import { NgxPermissionsService } from 'ngx-permissions';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PermissionGuard implements CanActivate, CanActivateChild {
-  constructor(private permissionService: NgxPermissionsService) {}
+/**
+ * Protects routes from unauthorized access by checking the permissions
+ * of the current user
+ */
+export class PermissionGuard implements CanActivateChild {
+  constructor(
+    private permissionService: NgxPermissionsService,
+    private router: Router
+  ) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | boolean
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | UrlTree {
-    return this.checkPermission(route, state);
-  }
-
-  canActivateChild(
+  async canActivateChild(
     childRoute: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | boolean
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | UrlTree {
-    return this.checkPermission(childRoute, state);
-  }
+    _: RouterStateSnapshot
+  ): Promise<boolean | UrlTree> {
+    const permission = childRoute.data.permission;
 
-  private checkPermission(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | boolean
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | UrlTree {
-    const permission = route.data.permission;
+    // If the route has no permission defined, then make the route accessible
+    // to everyone.
+    if (permission == null) {
+      return Promise.resolve(true);
+    }
 
-    if (permission != null) {
-      return this.permissionService.hasPermission(permission);
+    const hasPermission = await this.permissionService.hasPermission(
+      permission
+    );
+
+    // If the user doesn't have the permission, route them to the "not authorized" page.
+    if (!hasPermission) {
+      return this.router.createUrlTree(['not-authorized']);
     } else {
-      return true;
+      return hasPermission;
     }
   }
 }
