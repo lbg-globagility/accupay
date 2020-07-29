@@ -33,7 +33,7 @@ import { LoanTypesModule } from './loan-types/loan-types.module';
 import { EmploymentPoliciesModule } from 'src/app/employment-policies/employment-policies.module';
 import { AccountService } from 'src/app/accounts/services/account.service';
 import { ErrorsModule } from 'src/app/errors/errors.module';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 @NgModule({
   declarations: [AppComponent],
@@ -83,7 +83,8 @@ import { map } from 'rxjs/operators';
           .getCurrentRole()
           .pipe(
             map((role) => as.getPermissions(role)),
-            map((permissions) => ps.loadPermissions(permissions))
+            map((permissions) => ps.loadPermissions(permissions)),
+            catchError(() => Promise.resolve(false))
           )
           .toPromise();
       },
