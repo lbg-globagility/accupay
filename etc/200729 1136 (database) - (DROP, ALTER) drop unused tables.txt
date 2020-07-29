@@ -2,9 +2,21 @@ ALTER TABLE `branch`
 	DROP COLUMN IF EXISTS `AreaID`,
 	DROP FOREIGN KEY IF EXISTS `branch_ibfk_5`;
 
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_employee_area' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_employee_area','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
 ALTER TABLE `employee`
-	DROP COLUMN IF EXISTS `AreaID`,
-	DROP FOREIGN KEY IF EXISTS `FK_employee_area`;
+	DROP COLUMN IF EXISTS `AreaID`;
+
+
 
 ALTER TABLE `employeeleave`
 	DROP COLUMN IF EXISTS  `LeaveHours`;
