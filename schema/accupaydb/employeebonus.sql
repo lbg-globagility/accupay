@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS `employeebonus` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
   `ProductID` int(10) DEFAULT NULL,
@@ -18,20 +18,19 @@ CREATE TABLE IF NOT EXISTS `employeebonus` (
   `EffectiveEndDate` date DEFAULT NULL,
   `TaxableFlag` char(50) DEFAULT NULL,
   `BonusAmount` decimal(10,2) DEFAULT NULL,
-  `RemainingBalance` decimal(11,6) DEFAULT '0.000000',
-  `Remarks` VARCHAR(255) NULL DEFAULT '',
+  `RemainingBalance` decimal(11,6) DEFAULT 0.000000,
   PRIMARY KEY (`RowID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
   KEY `FK_BaseTables_user` (`CreatedBy`),
   KEY `FK_BaseTables_user_2` (`LastUpdBy`),
   KEY `FK_basetables_employee` (`EmployeeID`),
   KEY `FK_employeeallowance_product` (`ProductID`),
-  CONSTRAINT `employeebonus_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `employeebonus_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
   CONSTRAINT `employeebonus_ibfk_2` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `employeebonus_ibfk_3` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `employeebonus_ibfk_4` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `employeebonus_ibfk_5` FOREIGN KEY (`ProductID`) REFERENCES `product` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

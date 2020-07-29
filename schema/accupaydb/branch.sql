@@ -6,26 +6,24 @@
 
 CREATE TABLE IF NOT EXISTS `branch` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `BranchCode` varchar(100) DEFAULT '',
   `BranchName` varchar(100) DEFAULT '',
   `AddressID` int(10) DEFAULT NULL,
-  `AreaID` int(10) DEFAULT NULL,
+  `CalendarID` int(10) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
-  UNIQUE KEY `UniqueColumn` (`OrganizationID`,`BranchCode`),
-  KEY `FK_BaseTables_organization` (`OrganizationID`),
+  UNIQUE KEY `AK_branch_BranchCode` (`BranchCode`),
   KEY `FK_BaseTables_user` (`CreatedBy`),
   KEY `FK_BaseTables_user_2` (`LastUpdBy`),
   KEY `agency_ibfk_5` (`AddressID`),
-  KEY `branch_ibfk_5` (`AreaID`),
-  CONSTRAINT `branch_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
-  CONSTRAINT `branch_ibfk_2` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `branch_ibfk_3` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `branch_ibfk_4` FOREIGN KEY (`AddressID`) REFERENCES `address` (`RowID`)
+  KEY `FK_branch_calendar_CalendarID` (`CalendarID`),
+  CONSTRAINT `FK_branch_address_AddressID` FOREIGN KEY (`AddressID`) REFERENCES `address` (`RowID`),
+  CONSTRAINT `FK_branch_calendar_CalendarID` FOREIGN KEY (`CalendarID`) REFERENCES `calendar` (`RowID`),
+  CONSTRAINT `FK_branch_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `FK_branch_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

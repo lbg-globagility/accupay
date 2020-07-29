@@ -7,13 +7,13 @@
 CREATE TABLE IF NOT EXISTS `agencytotalbill` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `AgencyID` int(10) DEFAULT NULL,
   `PayPeriodID` int(10) DEFAULT NULL,
-  `TotalBilled` decimal(11,2) DEFAULT '0.00',
+  `TotalBilled` decimal(11,2) DEFAULT 0.00,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `UniqueColumn` (`OrganizationID`,`AgencyID`,`PayPeriodID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `agencytotalbill` (
   CONSTRAINT `agencytotalbill_ibfk_2` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `agencytotalbill_ibfk_3` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `agencytotalbill_ibfk_4` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

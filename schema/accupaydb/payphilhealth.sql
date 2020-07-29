@@ -6,8 +6,8 @@
 
 CREATE TABLE IF NOT EXISTS `payphilhealth` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `CreatedBy` int(10) NOT NULL,
   `LastUpdBy` int(10) DEFAULT NULL,
   `SalaryBracket` int(10) DEFAULT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `payphilhealth` (
   `TotalMonthlyPremium` decimal(10,2) DEFAULT NULL,
   `EmployeeShare` decimal(10,2) DEFAULT NULL,
   `EmployerShare` decimal(10,2) DEFAULT NULL,
-  `HiddenData` tinyint(4) DEFAULT '0',
+  `HiddenData` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `SalaryBracket` (`SalaryBracket`),
   KEY `FK_PayPhilHealth_user` (`CreatedBy`),
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `payphilhealth` (
   KEY `Index 2` (`SalaryBracket`),
   CONSTRAINT `FK_PayPhilHealth_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_PayPhilHealth_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1 COMMENT='Philhealth table';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Philhealth table';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

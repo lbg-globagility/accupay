@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS `calendarday` (
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `CalendarID` (`CalendarID`,`Date`),
   KEY `FK_calendarday_daytype` (`DayTypeID`),
-  CONSTRAINT `FK_calendarday_calendar` FOREIGN KEY (`CalendarID`) REFERENCES `calendar` (`RowID`),
-  CONSTRAINT `FK_calendarday_daytype` FOREIGN KEY (`DayTypeID`) REFERENCES `daytype` (`RowID`)
+  CONSTRAINT `FK_calendarday_calendar_CalendarID` FOREIGN KEY (`CalendarID`) REFERENCES `calendar` (`RowID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_calendarday_daytype_DayTypeID` FOREIGN KEY (`DayTypeID`) REFERENCES `daytype` (`RowID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

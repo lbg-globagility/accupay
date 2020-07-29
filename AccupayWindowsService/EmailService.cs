@@ -1,11 +1,13 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
-using AccuPay.Payslip;
+using AccuPay.CrystalReports;
 using GlobagilityShared.EmailSender;
 using System;
 using System.IO;
 using System.ServiceProcess;
 using System.Timers;
+using System.Configuration;
+using AccuPay.Data.Services;
 
 namespace AccupayWindowsService
 {
@@ -34,22 +36,27 @@ namespace AccupayWindowsService
         private const string LogsFolderName = "Logs";
 
         private readonly PaystubEmailRepository _paystubEmailRepository;
-        private readonly PayslipCreator _payslipCreator;
+        private readonly PayslipBuilder _payslipBuilder;
+        private readonly SystemOwnerService _systemOwnerService;
 
-        public EmailService(PaystubEmailRepository paystubEmailRepository,
-                            PayslipCreator payslipCreator)
+        public EmailService(
+            PaystubEmailRepository paystubEmailRepository,
+            PayslipBuilder payslipBuilder,
+            SystemOwnerService systemOwnerService)
         {
             InitializeComponent();
 
             _emailTimer = new Timer();
             _emailSender = new EmailSender(new EmailConfig());
             _paystubEmailRepository = paystubEmailRepository;
-            _payslipCreator = payslipCreator;
+            _payslipBuilder = payslipBuilder;
+            _systemOwnerService = systemOwnerService;
         }
 
         protected override void OnStart(string[] args)
         {
-            WriteToFile("Service has started.");
+            var appVersion = ConfigurationManager.AppSettings["appVersion"];
+            WriteToFile($"Service has started. [version {appVersion}]");
             //Interval in miliseconds
             _emailTimer.Elapsed += new ElapsedEventHandler(OnElapsedTimeEmail);
             _emailTimer.Interval = 30000;
@@ -97,13 +104,12 @@ namespace AccupayWindowsService
                 DateTime payDate = GetPayDate(currentPayPeriod);
                 var employeeIds = new int[] { employeeId.Value };
 
-                var payslipCreator = _payslipCreator.CreateReportDocument(
-                                                        organizationId: organizationId.Value,
-                                                        payPeriodId: currentPayPeriod.RowID.Value,
-                                                        isActual: 0,
-                                                        employeeIds: employeeIds);
+                var payslipBuilder = _payslipBuilder.CreateReportDocument(
+                    payPeriodId: currentPayPeriod.RowID.Value,
+                    isActual: 0,
+                    employeeIds: employeeIds);
 
-                if (payslipCreator.CheckIfEmployeeExists(employeeId.Value) == false)
+                if (payslipBuilder.CheckIfEmployeeExists(employeeId.Value) == false)
                 {
                     validationErrorMessage = $"{errorTitle} Cannot find employee in the payslip report datatable.";
                     WriteToFile(validationErrorMessage);
@@ -113,7 +119,7 @@ namespace AccupayWindowsService
 
                 var employeeNumber = employee.EmployeeNo ?? "";
                 var fileName = $"Payslip-{payDate:yyyy-MM-dd}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.pdf";
-                var pdfFile = CreatePDF(payslipCreator, employee.BirthDate, fileName);
+                var pdfFile = CreatePDF(payslipBuilder, employee.BirthDate, fileName);
 
                 SendEmail(paystubEmail, paystubEmailLog, payDate, employee.EmailAddress, pdfFile, fileName);
             }
@@ -132,10 +138,11 @@ namespace AccupayWindowsService
 
         private bool Validate(PaystubEmail paystubEmail, string errorTitle, PayPeriod currentPayPeriod, int? employeeId, Employee employee, int? organizationId)
         {
-            string validationErrorMessage = GetErrorMessage(errorTitle,
-                                                            currentPayPeriod,
-                                                            employeeId,
-                                                            organizationId);
+            string validationErrorMessage = GetErrorMessage(
+                errorTitle,
+                currentPayPeriod,
+                employeeId,
+                organizationId);
 
             if (string.IsNullOrWhiteSpace(validationErrorMessage) == false)
             {
@@ -164,26 +171,28 @@ namespace AccupayWindowsService
             return new DateTime(currentMonth.Year, currentMonth.Month, day);
         }
 
-        private string CreatePDF(PayslipCreator payslipCreator,
-                                DateTime birthDate,
-                                string fileName)
+        private string CreatePDF(
+            PayslipBuilder payslipBuilder,
+            DateTime birthDate,
+            string fileName)
         {
             string saveFolderPath = GetOrCreateDirectory(PayslipsFolderName);
 
             string password = birthDate.ToString("MMddyyyy");
 
-            payslipCreator.GeneratePDF(saveFolderPath, fileName)
-                            .AddPdfPassword(password);
+            PayslipBuilder builder = (PayslipBuilder)payslipBuilder.GeneratePDF(saveFolderPath, fileName);
+            builder.AddPdfPassword(password);
 
-            return payslipCreator.GetPDF();
+            return builder.GetPDF();
         }
 
-        private void SendEmail(PaystubEmail paystubEmail,
-                                string paystubEmailLog,
-                                DateTime payDate,
-                                string emailAddress,
-                                string pdfFile,
-                                string fileName)
+        private void SendEmail(
+            PaystubEmail paystubEmail,
+            string paystubEmailLog,
+            DateTime payDate,
+            string emailAddress,
+            string pdfFile,
+            string fileName)
         {
             var cutoffDate = payDate.ToString("MMMM d, yyyy");
 
@@ -191,13 +200,18 @@ namespace AccupayWindowsService
 
             var body = $"Please see attached payslip for {cutoffDate}. " +
                 $"\n\n" +
-                $"Your payslip is password-protected to ensure the security of your account. The default password is your date of birth with the following format mmddyyyy. For example, if your birthday is February 2, 1988, your password is \"02021988\"" +
-                $"\n\n" +
-                $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at hrd@cinema2000.com.ph for any inquiries or corrections regarding your salary." +
-                $"\n\n" +
-                $"Thank you," +
-                $"\n" +
-                $"HRD";
+                $"Your payslip is password-protected to ensure the security of your account. The default password is your date of birth with the following format mmddyyyy. For example, if your birthday is February 2, 1988, your password is \"02021988\"";
+
+            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Cinema2000)
+            {
+                body += $"\n\n" +
+                $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at hrd@cinema2000.com.ph for any inquiries or corrections regarding your salary.";
+            }
+
+            body += $"\n\n" +
+            $"Thank you," +
+            $"\n" +
+            $"HRD";
 
             var attachments = new string[] { pdfFile };
 
@@ -210,10 +224,11 @@ namespace AccupayWindowsService
             _paystubEmailRepository.Finish(paystubEmail.RowID, fileName, emailAddress);
         }
 
-        private string GetErrorMessage(string errorTitle,
-                                        PayPeriod currentPayPeriod,
-                                        int? employeeId,
-                                        int? organizationId)
+        private string GetErrorMessage(
+            string errorTitle,
+            PayPeriod currentPayPeriod,
+            int? employeeId,
+            int? organizationId)
         {
             string errorMessage = string.Empty;
 
@@ -240,17 +255,17 @@ namespace AccupayWindowsService
             string fileName = $"ServiceLog_{DateTime.Now.Date.ToShortDateString().Replace('/', '_')}.txt";
 
             string filepath = Path.Combine(path, fileName);
-            if (!File.Exists(filepath))
+            if (!System.IO.File.Exists(filepath))
             {
                 // Create a file to write to.
-                using (StreamWriter sw = File.CreateText(filepath))
+                using (StreamWriter sw = System.IO.File.CreateText(filepath))
                 {
                     sw.WriteLine($"[{DateTime.Now}] {Message}");
                 }
             }
             else
             {
-                using (StreamWriter sw = File.AppendText(filepath))
+                using (StreamWriter sw = System.IO.File.AppendText(filepath))
                 {
                     sw.WriteLine($"[{DateTime.Now}] {Message}");
                 }

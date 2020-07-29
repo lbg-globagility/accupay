@@ -6,8 +6,8 @@
 
 CREATE TABLE IF NOT EXISTS `paypagibig` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `CreatedBy` int(10) NOT NULL,
   `LastUpdBy` int(10) DEFAULT NULL,
   `SalaryRangeFrom` decimal(10,2) DEFAULT NULL,

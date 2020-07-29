@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `category` (
   KEY `FK_category_catalog` (`CatalogID`),
   CONSTRAINT `FK_category_catalog` FOREIGN KEY (`CatalogID`) REFERENCES `catalog` (`RowID`),
   CONSTRAINT `FK_category_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

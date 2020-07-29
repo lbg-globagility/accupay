@@ -7,7 +7,7 @@
 CREATE TABLE IF NOT EXISTS `employeedependents` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `CreatedBy` int(10) DEFAULT NULL,
-  `Created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NULL DEFAULT current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `LastUpd` datetime DEFAULT NULL,
   `OrganizationID` int(10) DEFAULT NULL,
@@ -40,11 +40,11 @@ CREATE TABLE IF NOT EXISTS `employeedependents` (
   KEY `FK_Employee_user_2` (`LastUpdBy`),
   KEY `FK_employeedependents_organization` (`OrganizationID`),
   KEY `FK_employeedependents_employee_RowID` (`ParentEmployeeID`),
-  CONSTRAINT `FK_employeedependents_employee_RowID` FOREIGN KEY (`ParentEmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `FK_employeedependents_employee_RowID` FOREIGN KEY (`ParentEmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
   CONSTRAINT `FK_employeedependents_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `employeedependents_ibfk_4` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `employeedependents_ibfk_5` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='Employee Table';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Employee Table';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

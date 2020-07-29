@@ -8,9 +8,12 @@ CREATE TABLE IF NOT EXISTS `withholdingtaxbatch` (
   `RowID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) unsigned NOT NULL,
   `Year` int(10) unsigned NOT NULL,
+  `Name` varchar(50) NOT NULL DEFAULT '',
+  `CutoffStart` date DEFAULT NULL,
+  `CutoffEnd` date DEFAULT NULL,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `OrganizationYear` (`OrganizationID`,`Year`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

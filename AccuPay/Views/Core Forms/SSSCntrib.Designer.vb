@@ -57,9 +57,6 @@ Partial Class SSSCntrib
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgvPaySSS = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.bgworkImportSSS = New System.ComponentModel.BackgroundWorker()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -74,6 +71,9 @@ Partial Class SSSCntrib
         Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.bgworkImportSSS = New System.ComponentModel.BackgroundWorker()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.dgvPaySSS, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -97,6 +97,7 @@ Partial Class SSSCntrib
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(143, 22)
         Me.ToolStripButton2.Text = "&Save SSS Contribution"
+        Me.ToolStripButton2.Visible = False
         '
         'ToolStripButton3
         '
@@ -105,6 +106,7 @@ Partial Class SSSCntrib
         Me.ToolStripButton3.Name = "ToolStripButton3"
         Me.ToolStripButton3.Size = New System.Drawing.Size(87, 22)
         Me.ToolStripButton3.Text = "Delete Item"
+        Me.ToolStripButton3.Visible = False
         '
         'ToolStripButton4
         '
@@ -122,6 +124,7 @@ Partial Class SSSCntrib
         Me.tsbtnSSSImport.Name = "tsbtnSSSImport"
         Me.tsbtnSSSImport.Size = New System.Drawing.Size(84, 22)
         Me.tsbtnSSSImport.Text = "Import SSS"
+        Me.tsbtnSSSImport.Visible = False
         '
         'ToolStripButton1
         '
@@ -130,6 +133,7 @@ Partial Class SSSCntrib
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(63, 22)
         Me.ToolStripButton1.Text = "Cancel"
+        Me.ToolStripButton1.Visible = False
         '
         'tsbtnAudittrail
         '
@@ -294,36 +298,6 @@ Partial Class SSSCntrib
         Me.dgvPaySSS.Size = New System.Drawing.Size(1127, 353)
         Me.dgvPaySSS.TabIndex = 12
         '
-        'Label25
-        '
-        Me.Label25.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(147, Byte), Integer), CType(CType(185, Byte), Integer))
-        Me.Label25.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
-        Me.Label25.Location = New System.Drawing.Point(0, 0)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(1128, 21)
-        Me.Label25.TabIndex = 137
-        Me.Label25.Text = "SSS CONTRIBUTION TABLE"
-        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Panel1
-        '
-        Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel1.Controls.Add(Me.dgvPaySSS)
-        Me.Panel1.Controls.Add(Me.ToolStrip1)
-        Me.Panel1.Controls.Add(Me.lblforballoon)
-        Me.Panel1.Location = New System.Drawing.Point(0, 22)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1127, 378)
-        Me.Panel1.TabIndex = 138
-        '
-        'bgworkImportSSS
-        '
-        Me.bgworkImportSSS.WorkerReportsProgress = True
-        Me.bgworkImportSSS.WorkerSupportsCancellation = True
-        '
         'Column1
         '
         Me.Column1.HeaderText = "RowID"
@@ -419,6 +393,36 @@ Partial Class SSSCntrib
         Me.Column13.ReadOnly = True
         Me.Column13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.Column13.Visible = False
+        '
+        'Label25
+        '
+        Me.Label25.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(147, Byte), Integer), CType(CType(185, Byte), Integer))
+        Me.Label25.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
+        Me.Label25.Location = New System.Drawing.Point(0, 0)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(1128, 21)
+        Me.Label25.TabIndex = 137
+        Me.Label25.Text = "SSS CONTRIBUTION TABLE"
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Panel1
+        '
+        Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel1.Controls.Add(Me.dgvPaySSS)
+        Me.Panel1.Controls.Add(Me.ToolStrip1)
+        Me.Panel1.Controls.Add(Me.lblforballoon)
+        Me.Panel1.Location = New System.Drawing.Point(0, 22)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1127, 378)
+        Me.Panel1.TabIndex = 138
+        '
+        'bgworkImportSSS
+        '
+        Me.bgworkImportSSS.WorkerReportsProgress = True
+        Me.bgworkImportSSS.WorkerSupportsCancellation = True
         '
         'SSSCntrib
         '

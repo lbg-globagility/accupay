@@ -39,27 +39,6 @@ IF NEW.TimeStampOut IS NULL THEN
     SET NEW.TimeStampOut = TIMESTAMP($dateOut, NEW.TimeOut);
 END IF;
 
-SELECT INSUPD_timeentrylog(
-    NEW.OrganizationID,
-    EmployeeID,
-    NEW.TimeStampIn,
-    1
-)
-FROM employee
-WHERE RowID = NEW.EmployeeID AND
-    OrganizationID = NEW.OrganizationID
-INTO anyint;
-
-SELECT INSUPD_timeentrylog(
-    NEW.OrganizationID,
-    EmployeeID,
-    NEW.TimeStampOut,
-    1)
-FROM employee
-WHERE RowID = NEW.EmployeeID AND
-    OrganizationID = NEW.OrganizationID
-INTO anyint;
-
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
