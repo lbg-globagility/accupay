@@ -9,20 +9,20 @@ CREATE TABLE IF NOT EXISTS `employeeattachments` (
   `CreatedBy` int(11) NOT NULL,
   `LastUpdBy` int(11) DEFAULT NULL,
   `EmployeeID` int(11) NOT NULL,
-  `Type` varchar(50) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT CURRENT_TIMESTAMP,
-  `Created` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `AttachedFile` mediumblob,
+  `Type` varchar(50) DEFAULT NULL COMMENT 'Account, Quote, Order, ListofVal Type = "NOTE_TYPE"',
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `Created` timestamp NULL DEFAULT current_timestamp(),
+  `AttachedFile` mediumblob DEFAULT NULL,
   `FileType` varchar(10) DEFAULT NULL,
   `FileName` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
   KEY `FK_employeeattachments_employee` (`EmployeeID`),
   KEY `FK_employeeattachments_user_2` (`LastUpdBy`),
   KEY `FK_employeeattachments_user` (`CreatedBy`),
-  CONSTRAINT `FK_employeeattachments_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `FK_employeeattachments_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
   CONSTRAINT `FK_employeeattachments_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_employeeattachments_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=latin1 COMMENT='Notes table used to add remarks.';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Notes table used to add remarks.';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

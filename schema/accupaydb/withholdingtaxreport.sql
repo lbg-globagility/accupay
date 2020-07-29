@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS `withholdingtaxreport` (
   `BatchID` int(10) unsigned NOT NULL,
   `EmployeeID` int(10) unsigned NOT NULL,
   `OrganizationID` int(10) unsigned DEFAULT NULL,
-  `Created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) unsigned DEFAULT NULL,
-  `Updated` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `Updated` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `UpdatedBy` int(10) unsigned DEFAULT NULL,
   `Category` varchar(50) DEFAULT NULL,
   `IsMinimumWageEarner` tinyint(1) unsigned DEFAULT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `withholdingtaxreport` (
   `SupplementaryBAmount` decimal(16,6) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `employee_per_batch` (`BatchID`,`EmployeeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

@@ -1,2 +1,0 @@
-DROP TABLE IF EXISTS `timeentrylog`;
-DROP TABLE IF EXISTS `timeentrylogs`;

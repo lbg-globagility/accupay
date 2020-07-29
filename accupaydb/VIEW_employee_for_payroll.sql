@@ -77,12 +77,6 @@ FROM (
     SELECT *
     FROM employee
     WHERE LENGTH(SearchString) = 0 AND OrganizationID=OrganizID
-UNION
-    SELECT e.*
-    FROM employee e
-    INNER JOIN employeesearchstring ess ON ess.EmpPrimaKey=e.RowID AND LOCATE(SearchString,ess.searchstring) > 0
-    WHERE LENGTH(SearchString) > 0 AND e.OrganizationID=OrganizID
-
 ) e
 LEFT JOIN position pos ON pos.RowID=e.PositionID
 ORDER BY RowID DESC

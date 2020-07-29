@@ -6,9 +6,9 @@
 
 CREATE TABLE IF NOT EXISTS `paysocialsecurity` (
   `RowID` int(11) NOT NULL AUTO_INCREMENT,
-  `Created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) NOT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `RangeFromAmount` decimal(10,2) NOT NULL,
   `RangeToAmount` decimal(10,2) NOT NULL,
@@ -16,14 +16,16 @@ CREATE TABLE IF NOT EXISTS `paysocialsecurity` (
   `EmployeeContributionAmount` decimal(10,2) NOT NULL,
   `EmployerContributionAmount` decimal(10,2) NOT NULL,
   `EmployeeECAmount` decimal(10,2) NOT NULL,
-  `HiddenData` tinyint(1) NOT NULL,
+  `HiddenData` tinyint(1) NOT NULL DEFAULT 0,
+  `EffectiveDateFrom` date NOT NULL,
+  `EffectiveDateTo` date NOT NULL,
   PRIMARY KEY (`RowID`),
-  UNIQUE KEY `MonthlySalaryCredit` (`MonthlySalaryCredit`),
-  KEY `FK_PaySocialSecurity_user` (`CreatedBy`),
-  KEY `FK_PaySocialSecurity_user_2` (`LastUpdBy`),
-  CONSTRAINT `FK_PaySocialSecurity_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `FK_PaySocialSecurity_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1 COMMENT='Social Security Table';
+  UNIQUE KEY `AK_paysocialsecurity_MonthlySalaryCredit_EffctvDtFrm_EffctvDtT` (`MonthlySalaryCredit`,`EffectiveDateFrom`,`EffectiveDateTo`),
+  KEY `FK_paypocialsecurity_user_CreatedBy` (`CreatedBy`),
+  KEY `FK_paysocialsecurity_user_LastUpdBy` (`LastUpdBy`),
+  CONSTRAINT `FK_paypocialsecurity_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `FK_paysocialsecurity_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Social Security Table';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

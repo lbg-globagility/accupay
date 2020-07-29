@@ -7,17 +7,17 @@
 CREATE TABLE IF NOT EXISTS `divisionminimumwage` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) DEFAULT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `DivisionID` int(10) DEFAULT NULL,
-  `Amount` decimal(11,2) DEFAULT '0.00',
+  `Amount` decimal(11,2) DEFAULT 0.00,
   `EffectiveDateFrom` date DEFAULT '1900-01-01',
   `EffectiveDateTo` date DEFAULT '1900-01-01',
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `RowID` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
