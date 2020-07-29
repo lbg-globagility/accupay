@@ -68,48 +68,48 @@ Public Class SSSCntrib
 
         u_nem = EXECQUER(USERNameStrPropr & 1)
 
-        view_ID = VIEW_privilege("SSS Contribution Table", orgztnID)
+        'view_ID = VIEW_privilege("SSS Contribution Table", orgztnID)
 
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
+        'Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If formuserprivilege.Count = 0 Then
-            ToolStripButton2.Visible = 0
-            ToolStripButton3.Visible = 0
-            dontUpdate = 1
-            dontCreate = 1
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    ToolStripButton3.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                        'ToolStripButton2.Visible = 0
-                        dontCreate = 1
-                    Else
-                        dontCreate = 0
-                        'ToolStripButton2.Visible = 1
-                    End If
+        'If formuserprivilege.Count = 0 Then
+        '    ToolStripButton2.Visible = 0
+        '    ToolStripButton3.Visible = 0
+        '    dontUpdate = 1
+        '    dontCreate = 1
+        'Else
+        '    For Each drow In formuserprivilege
+        '        If drow("ReadOnly").ToString = "Y" Then
+        '            'ToolStripButton2.Visible = 0
+        '            ToolStripButton3.Visible = 0
+        '            dontUpdate = 1
+        '            Exit For
+        '        Else
+        '            If drow("Creates").ToString = "N" Then
+        '                'ToolStripButton2.Visible = 0
+        '                dontCreate = 1
+        '            Else
+        '                dontCreate = 0
+        '                'ToolStripButton2.Visible = 1
+        '            End If
 
-                    If drow("Deleting").ToString = "N" Then
-                        ToolStripButton3.Visible = 0
-                    Else
-                        ToolStripButton3.Visible = 1
-                    End If
+        '            If drow("Deleting").ToString = "N" Then
+        '                ToolStripButton3.Visible = 0
+        '            Else
+        '                ToolStripButton3.Visible = 1
+        '            End If
 
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
+        '            If drow("Updates").ToString = "N" Then
+        '                dontUpdate = 1
+        '            Else
+        '                dontUpdate = 0
+        '            End If
 
-                End If
+        '        End If
 
-            Next
+        '    Next
 
-        End If
+        'End If
 
     End Sub
 
