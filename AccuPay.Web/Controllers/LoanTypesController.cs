@@ -1,6 +1,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Loans.LoanType;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class LoanTypesController : ControllerBase
     {
         private readonly LoanTypeService _service;
@@ -31,7 +32,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        //[Permission(PermissionTypes.LoanCreate)]
+        [Permission(PermissionTypes.LoanCreate)]
         public async Task<ActionResult<LoanTypeDto>> Create([FromBody] LoanTypeDto dto)
         {
             return await _service.CreateAsync(dto);

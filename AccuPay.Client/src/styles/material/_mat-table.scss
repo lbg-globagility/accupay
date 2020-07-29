@@ -8,6 +8,10 @@
 .mat-header-cell.m-right,
 .mat-cell.m-right,
 .mat-footer-cell.m-right {
+  .mat-sort-header-container {
+    justify-content: flex-end;
+  }
+
   text-align: right;
 }
 

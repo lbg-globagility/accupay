@@ -16,6 +16,9 @@ import { LoanImportParserOutput } from '../shared/loan-import-parser-output';
 import { LoanImportModel } from '../shared/loan-import-model';
 import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
 import { PermissionTypes } from 'src/app/core/auth';
+import { LoanTypeService } from 'src/app/loan-types/service/loan-type.service';
+import { LoanType } from 'src/app/loan-types/shared/loan-type';
+import { LoanPageOptions } from 'src/app/loans/shared/loan-page-options';
 
 @Component({
   selector: 'app-loan-list',
@@ -41,34 +44,33 @@ export class LoanListComponent implements OnInit {
     'actions',
   ];
 
-  placeholder: string;
-
   searchTerm: string;
+
+  loanTypeId: number;
+
+  status: string;
 
   modelChanged: Subject<any>;
 
   loans: Loan[];
 
+  loanTypes: LoanType[] = [];
+
+  statusTypes: string[];
+
   totalCount: number;
 
   dataSource: MatTableDataSource<Loan>;
 
-  pageIndex = 0;
+  pageIndex: number = 0;
 
   pageSize: number = 10;
 
-  sort: Sort = {
-    active: 'startDate',
-    direction: '',
-  };
-
-  clearSearch = '';
-
-  selectedRow: number;
   isDownloadingTemplate: boolean;
 
   constructor(
     private loanService: LoanService,
+    private loanTypeService: LoanTypeService,
     private dialog: MatDialog,
     private errorHandler: ErrorHandler,
     private router: Router
@@ -76,52 +78,29 @@ export class LoanListComponent implements OnInit {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
-      .subscribe(() => this.getLoanList());
+      .subscribe(() => this.loadLoans());
   }
 
   ngOnInit(): void {
-    this.getLoanList();
+    this.loadLoans();
+    this.loadLoanTypes();
+    this.loadStatusTypes();
   }
 
-  getLoanList() {
-    const options = new PageOptions(
-      this.pageIndex,
-      this.pageSize,
-      this.sort.active,
-      this.sort.direction
-    );
-
-    this.loanService.getAll(options, this.searchTerm).subscribe((data) => {
-      this.loans = data.items;
-      this.totalCount = data.totalCount;
-      this.dataSource = new MatTableDataSource(this.loans);
-    });
-  }
-
-  applyFilter(searchTerm: string) {
-    this.searchTerm = searchTerm;
+  applyFilter() {
     this.pageIndex = 0;
     this.modelChanged.next();
   }
 
   clearSearchBox() {
-    this.clearSearch = '';
-    this.applyFilter(this.clearSearch);
-  }
-
-  sortData(sort: Sort) {
-    this.sort = sort;
-    this.modelChanged.next();
-  }
-
-  setHoveredRow(id: number) {
-    this.selectedRow = id;
+    this.searchTerm = '';
+    this.applyFilter();
   }
 
   onPageChanged(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.getLoanList();
+    this.loadLoans();
   }
 
   viewLoan(loan: Loan) {
@@ -137,7 +116,7 @@ export class LoanListComponent implements OnInit {
       })
       .afterClosed()
       .pipe(filter((t) => t))
-      .subscribe(() => this.getLoanList());
+      .subscribe(() => this.loadLoans());
   }
 
   downloadTemplate(): void {
@@ -162,6 +141,7 @@ export class LoanListComponent implements OnInit {
 
     this.loanService.import(file).subscribe(
       (outputParse) => {
+        this.loadLoans();
         this.displaySuccess(outputParse);
         this.clearFile();
       },
@@ -170,6 +150,34 @@ export class LoanListComponent implements OnInit {
         this.clearFile();
       }
     );
+  }
+
+  private loadLoans(): void {
+    const options = new LoanPageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.searchTerm,
+      this.loanTypeId,
+      this.status
+    );
+
+    this.loanService.list(options).subscribe((data) => {
+      this.loans = data.items;
+      this.totalCount = data.totalCount;
+      this.dataSource = new MatTableDataSource(this.loans);
+    });
+  }
+
+  private loadLoanTypes(): void {
+    this.loanTypeService
+      .getAll()
+      .subscribe((loanTypes) => (this.loanTypes = loanTypes));
+  }
+
+  private loadStatusTypes(): void {
+    this.loanService
+      .getStatusList()
+      .subscribe((statusTypes) => (this.statusTypes = statusTypes));
   }
 
   private displaySuccess(outputParse: LoanImportParserOutput) {
