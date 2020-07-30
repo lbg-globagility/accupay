@@ -1,6 +1,6 @@
-﻿Imports MySql.Data.MySqlClient
-Imports System.Linq
-Imports System.Data.Entity
+﻿Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports MySql.Data.MySqlClient
 
 Namespace Routes
 
@@ -53,7 +53,7 @@ Namespace Routes
                     .AddWithValue("@VehicledID", tripTicket.VehicleID)
                     .AddWithValue("@RouteID", tripTicket.RouteID)
                     .AddWithValue("@TicketNo", tripTicket.TicketNo)
-                    .AddWithValue("@TripDate", tripTicket.TripDate)
+                    .AddWithValue("@TripDate", tripTicket.Date)
                     .AddWithValue("@StartAt", tripTicket.TimeFrom)
                     .AddWithValue("@EndAt", tripTicket.TimeTo)
                     .AddWithValue("@DispatchAt", tripTicket.TimeDispatched)
@@ -61,6 +61,7 @@ Namespace Routes
                 End With
             End Using
         End Sub
+
     End Class
 
 End Namespace

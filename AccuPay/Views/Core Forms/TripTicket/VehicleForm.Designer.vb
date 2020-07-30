@@ -129,7 +129,7 @@ Partial Class VehicleForm
         '
         'btnSave
         '
-        Me.btnSave.Image = Global.Payroll.My.Resources.Resources.Save
+        Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(51, 22)
@@ -137,7 +137,7 @@ Partial Class VehicleForm
         '
         'btnCancel
         '
-        Me.btnCancel.Image = Global.Payroll.My.Resources.Resources.cancel1
+        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
@@ -146,7 +146,7 @@ Partial Class VehicleForm
         'tsbtnClose
         '
         Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.Payroll.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
         Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
@@ -156,7 +156,7 @@ Partial Class VehicleForm
         '
         Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.Payroll.My.Resources.Resources.audit_trail_icon
+        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
         Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)

@@ -1,9 +1,9 @@
 ﻿Option Explicit On
 Option Strict On
 
-Imports Payroll.Routes
-Imports System.Data.Entity
-Imports System.Collections.ObjectModel
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports Microsoft.EntityFrameworkCore
 
 Public Class RoutePayRateMatrixForm
     Private routePayRateMatrix As DataTable
@@ -16,7 +16,10 @@ Public Class RoutePayRateMatrixForm
     Private routePayRatesToDelete As IList(Of RoutePayRate)
 
     Public Sub Startup()
-        Me.context = New PayrollContext()
+        Dim builder As DbContextOptionsBuilder = New DbContextOptionsBuilder()
+        builder.UseMySql(mysql_conn_text)
+
+        Me.context = New PayrollContext(builder.Options)
 
         LoadRoutePayRates()
         LoadRoutes()
@@ -41,7 +44,7 @@ Public Class RoutePayRateMatrixForm
     End Sub
 
     ''' <summary>
-    ''' 
+    '''
     ''' </summary>
     Private Sub LoadRoutes()
         Dim query = From r In Me.context.Routes
@@ -64,7 +67,7 @@ Public Class RoutePayRateMatrixForm
         routePayRateMatrix.Columns.Add("Position")
 
         For Each route In Me.routes
-            Dim routeColumn = New DataColumn(route.Name, System.Type.GetType("System.Decimal"))
+            Dim routeColumn = New DataColumn(route.Description, System.Type.GetType("System.Decimal"))
             routeColumn.ExtendedProperties.Add("RouteID", route.RowID)
 
             routePayRateMatrix.Columns.Add(routeColumn)
@@ -87,7 +90,7 @@ Public Class RoutePayRateMatrixForm
         For Each routePayRate In Me.routePayRates
             Dim row = FindRow(routePayRate.Position.Name)
 
-            row(routePayRate.Route.Name) = routePayRate.Rate
+            row(routePayRate.Route.Description) = routePayRate.Rate
         Next
     End Sub
 
@@ -157,4 +160,5 @@ Public Class RoutePayRateMatrixForm
     Private Sub RoutePayRateMatrixForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Startup()
     End Sub
+
 End Class

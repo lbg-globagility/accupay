@@ -5,6 +5,9 @@ Imports Payroll.Routes
 Imports System.Data.Entity
 Imports System.Transactions
 Imports System.ComponentModel
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports Microsoft.EntityFrameworkCore
 
 Public Class TripTicketController
     Implements INotifyPropertyChanged
@@ -35,14 +38,14 @@ Public Class TripTicketController
     Private tripTickets As IList(Of TripTicket)
     Private vehicles As IList(Of Vehicle)
     Private routes As IList(Of Route)
-    Private employees As IList(Of Routes.Employee)
-    Private tripTicketHelpers As IList(Of TripTicketHelper)
+    Private employees As IList(Of Employee)
+    Private tripTicketHelpers As IList(Of TripTicketEmployee)
     Private standardMinimumWage As Decimal
     Private routePayRates As IList(Of RoutePayRate)
 
     Public Property TicketNo As String
         Get
-            Return If(tripTicket Is Nothing, Nothing, tripTicket.TicketNo)
+            Return tripTicket?.TicketNo
         End Get
         Set(value As String)
             tripTicket.TicketNo = value
@@ -62,7 +65,7 @@ Public Class TripTicketController
 
     Public Property TimeFrom As String
         Get
-            Return If(tripTicket Is Nothing, Nothing, tripTicket.TimeFrom.ToString())
+            Return tripTicket?.TimeFrom.ToString()
         End Get
         Set(value As String)
             tripTicket.TimeFrom = TimeSpan.Parse(value)
@@ -72,7 +75,7 @@ Public Class TripTicketController
 
     Public Property TimeTo As String
         Get
-            Return If(tripTicket Is Nothing, Nothing, tripTicket.TimeTo.ToString())
+            Return tripTicket?.TimeTo.ToString()
         End Get
         Set(value As String)
             tripTicket.TimeTo = TimeSpan.Parse(value)
@@ -92,7 +95,7 @@ Public Class TripTicketController
 
     Public Property Route As Route
         Get
-            Return If(tripTicket Is Nothing, Nothing, tripTicket.Route)
+            Return tripTicket?.Route
         End Get
         Set(value As Route)
             tripTicket.Route = value
@@ -112,7 +115,7 @@ Public Class TripTicketController
 
     Public Property Vehicle As Vehicle
         Get
-            Return If(tripTicket Is Nothing, Nothing, tripTicket.Vehicle)
+            Return tripTicket?.Vehicle
         End Get
         Set(value As Vehicle)
             tripTicket.Vehicle = value
@@ -141,7 +144,10 @@ Public Class TripTicketController
 
     Public Sub New(view As TripTicketForm)
         Me.view = view
-        Me.context = New PayrollContext()
+        Dim builder As DbContextOptionsBuilder = New DbContextOptionsBuilder()
+        builder.UseMySql(mysql_conn_text)
+
+        Me.context = New PayrollContext(builder.Options)
 
         Start()
     End Sub
@@ -164,7 +170,7 @@ Public Class TripTicketController
     End Sub
 
     Private Sub LoadTripTicketHelpers(tripTicketID As Integer?)
-        Dim query = From t In Me.context.TripTicketHelpers.Include(
+        Dim query = From t In Me.context.TripTicketEmployees.Include(
                         Function(t) t.Employee
                     )
                     Select t
@@ -230,7 +236,7 @@ Public Class TripTicketController
 
     Private Sub NewTripTicket() Handles view.TripTicketCreated
         Me.tripTicket = New TripTicket()
-        Me.tripTicketHelpers = New List(Of TripTicketHelper)
+        Me.tripTicketHelpers = New List(Of TripTicketEmployee)
         view.ClearDisplay()
         view.DisplayTripTicket(Me.tripTicket)
         view.TripTicketHelpersSource.DataSource = Me.tripTicketHelpers
@@ -252,11 +258,11 @@ Public Class TripTicketController
     Private Sub AddTripTicketHelper(employeeID As Integer?) Handles view.EmployeeWasAdded
         Dim employee = Me.employees.Single(Function(e) CBool(e.RowID = employeeID))
 
-        Dim tripTicketHelper = New TripTicketHelper()
+        Dim tripTicketHelper = New TripTicketEmployee()
         tripTicketHelper.Employee = employee
 
         If Me.tripTicket.IsSpecialOperations Then
-            tripTicketHelper.PaymentAmount = Me.standardMinimumWage
+            'tripTicketHelper.PaymentAmount = Me.standardMinimumWage
         Else
             ApplyPaymentFromPayRateMatrix(tripTicketHelper)
         End If
@@ -289,7 +295,7 @@ Public Class TripTicketController
     ''' </summary>
     Private Sub GiveMinimumWagePayments()
         For Each tripTicketHelper In Me.tripTicketHelpers
-            tripTicketHelper.PaymentAmount = Me.standardMinimumWage
+            'tripTicketHelper.PaymentAmount = Me.standardMinimumWage
         Next
     End Sub
 
@@ -302,7 +308,7 @@ Public Class TripTicketController
         Next
     End Sub
 
-    Private Sub ApplyPaymentFromPayRateMatrix(tripTicketHelper As TripTicketHelper)
+    Private Sub ApplyPaymentFromPayRateMatrix(tripTicketHelper As TripTicketEmployee)
         ' Select pay rate according to employee's position and current route.
         Dim routePayRate = (From r In Me.routePayRates
                             Select r
@@ -313,9 +319,9 @@ Public Class TripTicketController
         ' If the routepayrate doesn't exist, don't pay anything.
         ' Otherwise, pay according to the amount set by the pay rate.
         If routePayRate Is Nothing Then
-            tripTicketHelper.PaymentAmount = 0
+            'tripTicketHelper.PaymentAmount = 0
         Else
-            tripTicketHelper.PaymentAmount = routePayRate.Rate
+            'tripTicketHelper.PaymentAmount = routePayRate.Rate
         End If
     End Sub
 
@@ -351,7 +357,7 @@ Public Class TripTicketController
 
         For Each tripTicketHelper In tripTicketHelpers
             tripTicketHelper.TripTicket = Me.tripTicket
-            context.TripTicketHelpers.Add(tripTicketHelper)
+            context.TripTicketEmployees.Add(tripTicketHelper)
         Next
 
         Me.context.SaveChanges()

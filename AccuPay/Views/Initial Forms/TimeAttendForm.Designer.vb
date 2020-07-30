@@ -128,4 +128,5 @@ Partial Class TimeAttendForm
     Friend WithEvents OfficialBusinessToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LeaveToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OvertimeToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents TripTicketsToolStripMenuItem As ToolStripMenuItem
 End Class

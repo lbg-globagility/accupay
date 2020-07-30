@@ -1,8 +1,8 @@
-﻿
-Imports System.Threading.Tasks
-Imports System.Collections.ObjectModel
-Imports Payroll.Routes
-Imports System.Data.Entity
+﻿Option Strict On
+
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports Microsoft.EntityFrameworkCore
 
 Public Class VehicleForm
 
@@ -13,7 +13,10 @@ Public Class VehicleForm
     Private vehicles As IList(Of Vehicle)
 
     Private Sub Startup()
-        Me.database = New PayrollContext()
+        Dim builder As DbContextOptionsBuilder = New DbContextOptionsBuilder()
+        builder.UseMySql(mysql_conn_text)
+
+        Me.database = New PayrollContext(builder.Options)
 
         dgvVehicles.AutoGenerateColumns = False
         dgvVehicles.DataSource = VehiclesSource
@@ -70,4 +73,5 @@ Public Class VehicleForm
             RemoveVehicle(e.RowIndex)
         End If
     End Sub
+
 End Class

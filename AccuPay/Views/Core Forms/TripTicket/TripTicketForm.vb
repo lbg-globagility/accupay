@@ -1,7 +1,7 @@
 ﻿Option Explicit On
 Option Strict On
 
-Imports Payroll.Routes
+Imports AccuPay.Data.Entities
 
 Public Class TripTicketForm
 
@@ -12,10 +12,15 @@ Public Class TripTicketForm
     End Enum
 
     Public Event TripTicketCreated()
+
     Public Event TripTicketSaved()
+
     Public Event TripTicketCancelChanges()
+
     Public Event EmployeeWasAdded(employeeID As Integer?)
+
     Public Event TripTicketSelected(tripTicketID As Integer?)
+
     Public Event RouteHasChanged(routeID As Integer?)
 
     Public Event SpecialOperationsToggled(isSpecialOperations As Boolean)
@@ -177,7 +182,7 @@ Public Class TripTicketForm
             Return
         End If
 
-        Dim employee = DirectCast(cboEmployees.SelectedItem, Routes.Employee)
+        Dim employee = DirectCast(cboEmployees.SelectedItem, Employee)
         RaiseEvent EmployeeWasAdded(employee.RowID)
 
         cboEmployees.SelectedItem = Nothing

@@ -26,7 +26,7 @@ namespace AccuPay.Data.Entities
 
         public string TicketNo { get; set; }
 
-        public DateTime? TripDate { get; set; }
+        public DateTime? Date { get; set; }
 
         public TimeSpan? TimeFrom { get; set; }
 

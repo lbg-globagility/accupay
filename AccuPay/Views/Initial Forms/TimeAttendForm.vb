@@ -218,4 +218,8 @@ Public Class TimeAttendForm
         previousForm = EmployeeOvertimeForm
     End Sub
 
+    Private Sub TripTicketsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TripTicketsToolStripMenuItem.Click
+        ChangeForm(TripTicketForm, "Employee Time Entry Logs")
+        previousForm = TripTicketForm
+    End Sub
 End Class
