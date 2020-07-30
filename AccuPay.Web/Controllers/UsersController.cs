@@ -53,7 +53,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet]
         [Permission(PermissionTypes.UserRead)]
-        public async Task<ActionResult<PaginatedList<UserDto>>> List([FromForm] PageOptions options, string term)
+        public async Task<ActionResult<PaginatedList<UserDto>>> List([FromQuery] PageOptions options, string term)
         {
             var (users, count) = await _repository.List(options, term);
 

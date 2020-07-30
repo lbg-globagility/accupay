@@ -3,14 +3,25 @@ DROP TEMPORARY TABLE IF EXISTS temp_aspnetusers;
 CREATE TEMPORARY TABLE temp_aspnetusers
 SELECT
 IFNULL((SELECT RowID FROM `user` WHERE AspNetUserId = aspnetusers.Id), @rownumber := @rownumber + 1) AS 'NewId',
+(SELECT `Password` FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'DesktopPassword',
+(SELECT `UserLevel` FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'UserLevel',
+(SELECT IF(`Status` = 'Inactive', NOW(), NULL) FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'DeletedAt',
 aspnetusers.*
 FROM aspnetusers
 ORDER BY newId;
 
 ALTER TABLE `aspnetusers`
-	ADD COLUMN `NewId` INT(11) NULL DEFAULT NULL AFTER `OriginalImageId`;
+	ADD COLUMN `DesktopPassword` VARCHAR(50) NULL DEFAULT NULL AFTER `OriginalImageId`,
+	ADD COLUMN `UserLevel` SMALLINT(1) NOT NULL DEFAULT 0,
+	ADD COLUMN `DeletedAt` TIMESTAMP NULL DEFAULT NULL,
+	ADD COLUMN `NewId` INT(11) NULL DEFAULT NULL AFTER `DesktopPassword`;
 
-UPDATE aspnetusers SET NewId = (SELECT NewId FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id);
+UPDATE aspnetusers
+SET
+	NewId = (SELECT NewId FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id),
+	DesktopPassword = (SELECT DesktopPassword FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id),
+	UserLevel = (SELECT UserLevel FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id),
+	DeletedAt = (SELECT DeletedAt FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id);
 
 
 
