@@ -47,6 +47,15 @@ export class LoanFormComponent implements OnInit {
 
   filteredEmployees: Observable<Employee[]>;
 
+  get valid(): boolean {
+    this.form.markAllAsTouched();
+    return this.form.valid;
+  }
+
+  get value(): any {
+    return this.form.value;
+  }
+
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,

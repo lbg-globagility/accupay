@@ -19,6 +19,7 @@ import { PermissionTypes } from 'src/app/core/auth';
 import { LoanTypeService } from 'src/app/loan-types/service/loan-type.service';
 import { LoanType } from 'src/app/loan-types/shared/loan-type';
 import { LoanPageOptions } from 'src/app/loans/shared/loan-page-options';
+import { NewLoanComponent } from 'src/app/loans/new-loan/new-loan.component';
 
 @Component({
   selector: 'app-loan-list',
@@ -131,9 +132,19 @@ export class LoanListComponent implements OnInit {
       });
   }
 
-  routeToNewLoan() {
-    this.router.navigate(['loans', 'new']);
-    // routerLink="loans/new"
+  newLoan(): void {
+    this.dialog
+      .open(NewLoanComponent)
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe({
+        next: (loan) => {
+          this.loadLoans();
+        },
+        error: (err) => {
+          this.errorHandler.badRequest(err, 'Failed to create new loan');
+        },
+      });
   }
 
   onImport(files: FileList) {
