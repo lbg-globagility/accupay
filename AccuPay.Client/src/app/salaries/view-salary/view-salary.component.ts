@@ -11,6 +11,9 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { Employee } from 'src/app/employees/shared/employee';
 import { SalaryImportParserOutput } from '../shared/salary-import-parser-output';
+import { filter } from 'rxjs/operators';
+import { SalaryImportModel } from '../shared/salary-import-model';
+import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
 
 @Component({
   selector: 'app-view-salary',
@@ -124,9 +127,6 @@ export class ViewSalaryComponent implements OnInit {
 
     this.salaryService.import(file).subscribe(
       (outputParse) => {
-        this.loadSalary();
-        this.loadSalaries();
-
         this.displaySuccess(outputParse);
         this.clearFile();
       },
@@ -138,48 +138,28 @@ export class ViewSalaryComponent implements OnInit {
   }
 
   private displaySuccess(outputParse: SalaryImportParserOutput) {
-    const hasFailedImports =
-      outputParse.invalidRecords && outputParse.invalidRecords.length > 0;
-    const succeeds =
-      outputParse.validRecords && outputParse.validRecords.length > 0;
+    const model: SalaryImportModel = {
+      employeeNo: '',
+      effectiveFrom: new Date(),
+      basicSalary: 0,
+      allowanceSalary: 0,
+      remarks: '',
+    };
 
-    const manySucceed = succeeds ? outputParse.validRecords.length > 1 : false;
-    const manyFailed = hasFailedImports
-      ? outputParse.invalidRecords.length > 1
-      : false;
-
-    if (!hasFailedImports && succeeds) {
-      Swal.fire({
-        title: 'Success',
-        text: `Successfully imported new ${
-          manySucceed ? 'salaries' : 'salary'
-        }!`,
-        icon: 'success',
-        timer: 3000,
-        showConfirmButton: false,
+    this.dialog
+      .open(PostImportParserOutputDialogComponent, {
+        data: {
+          columnHeaders: new SalaryImportParserOutput().columnHeaders,
+          invalidRecords: outputParse.invalidRecords,
+          validRecords: outputParse.validRecords,
+          propertyNames: Object.getOwnPropertyNames(model),
+        },
+      })
+      .afterClosed()
+      .subscribe(() => {
+        this.loadSalary();
+        this.loadSalaries();
       });
-    } else if (hasFailedImports && !succeeds) {
-      Swal.fire({
-        title: 'Failed',
-        text: `${outputParse.invalidRecords.length} ${
-          manyFailed ? 'salaries' : 'salary'
-        } failed to import.`,
-        icon: 'error',
-        showConfirmButton: true,
-      });
-    } else if (hasFailedImports && succeeds) {
-      Swal.fire({
-        title: 'Oops!',
-        text: `${outputParse.invalidRecords.length} ${
-          manyFailed ? 'salaries' : 'salary'
-        } were failed to import
-        and the ${outputParse.validRecords.length} ${
-          manySucceed ? 'salaries' : 'salary'
-        } succeeded.`,
-        icon: 'warning',
-        showConfirmButton: true,
-      });
-    }
   }
 
   clearFile() {

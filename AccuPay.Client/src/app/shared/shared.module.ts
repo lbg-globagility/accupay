@@ -21,6 +21,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PostImportParserOutputDialogComponent } from './import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -45,6 +48,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     // ImageResizerDialogComponent,
     // PreviewDialogComponent,
     ImgFallbackDirective,
+    PostImportParserOutputDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -57,6 +61,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatProgressSpinnerModule,
     MatTooltipModule,
     // MatProgressBarModule,
+    MatTableModule,
+    MatTabsModule,
   ],
   exports: [
     StatusComponent,
@@ -84,5 +90,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DragDropModule,
     MaterialModule,
   ],
+  entryComponents: [PostImportParserOutputDialogComponent],
 })
 export class SharedModule {}

@@ -1,5 +1,8 @@
-export interface LoanImportModel {
+import { ImportModel } from '../../shared/import/import-model';
+
+export class LoanImportModel implements ImportModel {
   employeeNo: string;
+  employeeName: string;
   loanName: string;
   loanNumber: string;
   startDate: Date;
@@ -8,4 +11,5 @@ export interface LoanImportModel {
   deductionAmount: number;
   deductionSchedule: string;
   comments: string;
+  remarks: string;
 }

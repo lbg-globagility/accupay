@@ -1,8 +1,11 @@
-export interface EmployeeImportModel {
+import { ImportModel } from '../../shared/import/import-model';
+
+export class EmployeeImportModel implements ImportModel {
   employeeNo: string;
   firstName: string;
   middleName: string;
   lastName: string;
+  nickname: string;
   tin: string;
   sssNo: string;
   pagIbigNo: string;
@@ -13,10 +16,16 @@ export interface EmployeeImportModel {
   gender: string;
   employeeType: string;
   maritalStatus: string;
+  salutation: string;
   birthdate: Date;
   startDate: Date;
   atmNo: string;
   workDaysPerYear: number;
   jobPosition: string;
+  leaveAllowance: number;
+  sickLeaveAllowance: number;
+  branch: string;
+  currentLeaveBalance: number;
+  currentSickLeaveBalance: number;
   remarks: string;
 }
