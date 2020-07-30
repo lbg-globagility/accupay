@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
@@ -407,7 +407,7 @@ namespace AccuPay.Data.Services
             var thirteenthMonthPayCalculator = new ThirteenthMonthPayCalculator(
                                                         organizationId: paystub.OrganizationID.Value,
                                                         userId: userId);
-            thirteenthMonthPayCalculator.Calculate(employee, paystub, timeEntries, actualTimeEntries, salary, settings, paystub.AllowanceItems, currentSystemOwner);
+            thirteenthMonthPayCalculator.Calculate(employee, paystub, timeEntries, actualTimeEntries, salary, settings, allowanceItems.ToList(), currentSystemOwner);
         }
 
         private bool EligibleForNewBPIInsurance(Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payPeriod)

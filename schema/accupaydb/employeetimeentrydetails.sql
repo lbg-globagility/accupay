@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS `employeetimeentrydetails` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
   `TimeIn` time DEFAULT NULL,
@@ -20,16 +20,20 @@ CREATE TABLE IF NOT EXISTS `employeetimeentrydetails` (
   `ChargeToDivisionID` int(11) DEFAULT NULL,
   `TimeStampIn` datetime DEFAULT NULL,
   `TimeStampOut` datetime DEFAULT NULL,
+  `TimeentrylogsImportID` varchar(50) DEFAULT '',
+  `BranchID` int(11) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
   KEY `FK_BaseTables_user` (`CreatedBy`),
   KEY `FK_BaseTables_user_2` (`LastUpdBy`),
   KEY `FK_employeetimeentrydetails_employee` (`EmployeeID`),
-  CONSTRAINT `FK_employeetimeentrydetails_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
-  CONSTRAINT `employeetimeentrydetails_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
-  CONSTRAINT `employeetimeentrydetails_ibfk_2` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `employeetimeentrydetails_ibfk_3` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13554 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+  KEY `FK_employeetimeentrydetails_branch_BranchID` (`BranchID`),
+  CONSTRAINT `FK_employeetimeentrydetails_branch_BranchID` FOREIGN KEY (`BranchID`) REFERENCES `branch` (`RowID`),
+  CONSTRAINT `FK_employeetimeentrydetails_employee_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_employeetimeentrydetails_organization_OrganizationID` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+  CONSTRAINT `FK_employeetimeentrydetails_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `FK_employeetimeentrydetails_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

@@ -8,11 +8,11 @@ import { auditTime, filter } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import Swal from 'sweetalert2';
 import { EmployeeImportParserOutput } from '../shared/employee-import-parser-output';
 import { EmployeeImportModel } from '../shared/employee-import-model';
 import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { PermissionTypes } from 'src/app/core/auth/permission-types';
 
 @Component({
   selector: 'app-employees',
@@ -27,6 +27,8 @@ export class EmployeesComponent implements OnInit {
 
   @ViewChild('employeesRef')
   employeesRef: ElementRef;
+
+  readonly PermissionTypes = PermissionTypes;
 
   searchTerm: string;
 
@@ -75,7 +77,6 @@ export class EmployeesComponent implements OnInit {
   }
 
   page(pageEvent: PageEvent): void {
-    console.log(pageEvent);
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.loadEmployees();

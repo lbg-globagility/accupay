@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { PermissionTypes } from 'src/app/core/auth';
 
 interface MenuItem {
   label: string;
@@ -18,29 +20,35 @@ const menuItems: MenuItem[] = [
       {
         label: 'Employees',
         route: '/employees',
+        permission: PermissionTypes.EmployeeRead,
       },
       {
         label: 'Salaries',
         route: '/salaries',
         icon: 'person',
+        permission: PermissionTypes.SalaryRead,
       },
       {
         label: 'Allowances',
         route: '/allowances',
         icon: 'person',
+        permission: PermissionTypes.AllowanceRead,
       },
       {
         label: 'Loans',
         route: '/loans',
         icon: 'person',
+        permission: PermissionTypes.LoanRead,
       },
       {
         label: 'Positions',
         route: '/positions',
+        permission: PermissionTypes.PositionRead,
       },
       {
         label: 'Policies',
         route: '/employment-policies',
+        permission: PermissionTypes.EmploymentPolicyRead,
       },
     ],
   },
@@ -51,26 +59,32 @@ const menuItems: MenuItem[] = [
       {
         label: 'Timesheets',
         route: '/time-entry',
+        permission: PermissionTypes.TimeEntryRead,
       },
       {
         label: 'Shifts',
         route: '/shifts',
+        permission: PermissionTypes.ShiftRead,
       },
       {
         label: 'Time Logs',
         route: '/time-logs',
+        permission: PermissionTypes.TimeLogRead,
       },
       {
         label: 'Overtimes',
         route: '/overtimes',
+        permission: PermissionTypes.OvertimeRead,
       },
       {
         label: 'Leaves',
         route: '/leaves',
+        permission: PermissionTypes.LeaveRead,
       },
       {
         label: 'Official Business',
         route: '/official-businesses',
+        permission: PermissionTypes.OfficialBusinessRead,
       },
     ],
   },
@@ -78,6 +92,7 @@ const menuItems: MenuItem[] = [
     label: 'Payroll',
     icon: 'payments',
     route: '/payroll',
+    permission: PermissionTypes.PayPeriodRead,
   },
   {
     label: 'Reports',
@@ -96,14 +111,17 @@ const menuItems: MenuItem[] = [
       {
         label: 'Organizations',
         route: '/organizations',
+        permission: PermissionTypes.OrganizationRead,
       },
       {
         label: 'Branches',
         route: '/branches',
+        permission: PermissionTypes.BranchRead,
       },
       {
         label: 'Calendars',
         route: '/calendars',
+        permission: PermissionTypes.CalendarRead,
       },
     ],
   },
@@ -120,12 +138,12 @@ const menuItems: MenuItem[] = [
   styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit {
-  menuItems: MenuItem[] = menuItems;
+  menuItems: MenuItem[] = [];
 
-  constructor() {}
+  constructor(private permissionService: NgxPermissionsService) {}
 
   ngOnInit(): void {
-    this.menuItems = menuItems;
+    this.menuItems = this.filterByPermission(cloneDeep(menuItems));
   }
 
   isLink(menuItem: MenuItem): boolean {
@@ -138,5 +156,22 @@ export class SidebarComponent implements OnInit {
       .forEach((t) => (t.toggled = false));
 
     menuItem.toggled = !menuItem.toggled;
+  }
+
+  private filterByPermission(items: MenuItem[]): MenuItem[] {
+    return items.filter((item) => {
+      // If the menu has submenus, filter out those.
+      if (item.items?.length > 0) {
+        item.items = this.filterByPermission(item.items);
+      }
+
+      // If the menu has no permission set they should appear, otherwise
+      // check if the user has the required permission.
+      if (item.permission == null) {
+        return true;
+      } else {
+        return this.permissionService.getPermission(item.permission) != null;
+      }
+    });
   }
 }

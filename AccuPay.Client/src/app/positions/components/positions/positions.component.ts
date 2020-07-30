@@ -9,6 +9,7 @@ import {
   MatTreeFlattener,
 } from '@angular/material/tree';
 import { forkJoin } from 'rxjs';
+import { PermissionTypes } from 'src/app/core/auth';
 
 interface Node {
   name: string;
@@ -34,6 +35,8 @@ interface FlatNode {
   },
 })
 export class PositionsComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   divisions: Division[];
 
   positions: Position[];

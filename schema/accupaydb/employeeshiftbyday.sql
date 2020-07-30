@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS `employeeshiftbyday` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
   `ShiftID` int(10) DEFAULT NULL,
@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS `employeeshiftbyday` (
   `NightShift` char(1) DEFAULT NULL,
   `RestDay` char(1) DEFAULT NULL,
   `IsEncodedByDay` char(1) DEFAULT '1',
-  `OrderByValue` int(10) DEFAULT '0',
+  `OrderByValue` int(10) DEFAULT 0,
   `OriginDay` int(10) DEFAULT NULL,
-  `UniqueShift` int(10) DEFAULT '0',
+  `UniqueShift` int(10) DEFAULT 0,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `OrganizationID` (`OrganizationID`,`EmployeeID`,`NameOfDay`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;

@@ -14,22 +14,22 @@ CREATE TABLE IF NOT EXISTS `position_view` (
   `Updates` char(1) DEFAULT NULL,
   `Deleting` char(1) DEFAULT NULL,
   `AllowedToAccess` char(1) DEFAULT 'N',
-  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `CreatedBy` int(11) NOT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `LastUpdBy` int(11) NOT NULL,
+  `Created` datetime NOT NULL DEFAULT current_timestamp(),
+  `CreatedBy` int(11) DEFAULT NULL,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `LastUpdBy` int(11) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
-  UNIQUE KEY `Index 7` (`PositionID`,`ViewID`,`OrganizationID`),
-  KEY `FK_position_view_view` (`ViewID`),
-  KEY `FK_position_view_organization` (`OrganizationID`),
-  KEY `FK_position_view_user` (`CreatedBy`),
-  KEY `FK_position_view_user_2` (`LastUpdBy`),
-  CONSTRAINT `FK_position_view_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
-  CONSTRAINT `FK_position_view_position` FOREIGN KEY (`PositionID`) REFERENCES `position` (`RowID`),
-  CONSTRAINT `FK_position_view_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `FK_position_view_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `FK_position_view_view` FOREIGN KEY (`ViewID`) REFERENCES `view` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=37534 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `AK_position_view_PositionID_ViewID_OrganizationID` (`PositionID`,`ViewID`,`OrganizationID`),
+  KEY `FK_position_view_ViewID` (`ViewID`),
+  KEY `FK_position_view_organization_OrganizationID` (`OrganizationID`),
+  KEY `FK_position_view_user_CreatedBy` (`CreatedBy`),
+  KEY `FK_position_view_user_LastUpdBy` (`LastUpdBy`),
+  CONSTRAINT `FK_position_view_organization_OrganizationID` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+  CONSTRAINT `FK_position_view_position_PositionID` FOREIGN KEY (`PositionID`) REFERENCES `position` (`RowID`) ON DELETE CASCADE,
+  CONSTRAINT `FK_position_view_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `FK_position_view_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+  CONSTRAINT `FK_position_view_view_ViewID` FOREIGN KEY (`ViewID`) REFERENCES `view` (`RowID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

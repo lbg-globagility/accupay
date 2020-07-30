@@ -8,7 +8,18 @@
       <ng-container matColumnDef="user">
         <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
         <mat-cell *matCellDef="let user; let i = index">
-          {{ user.firstName | ifEmpty }}
+          <img
+            class="block rounded-full"
+            width="36"
+            appImgFallback
+            src="/api/users/{{ user.id }}/image"
+          />
+          <div class="ml-2">
+            <a routerLink="/users/{{ user.id }}" matTooltip="Go to profile">
+              <div>{{ user.firstName }} {{ user.lastName }}</div>
+            </a>
+            <p class="text-xs">{{ user.email }}</p>
+          </div>
         </mat-cell>
       </ng-container>
 

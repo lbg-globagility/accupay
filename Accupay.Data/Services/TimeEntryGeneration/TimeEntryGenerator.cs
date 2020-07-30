@@ -122,7 +122,7 @@ namespace AccuPay.Data.Services
             _timeLogRepository = timeLogRepository;
         }
 
-        public async Task Start(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
+        public void Start(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
         {
             _organizationId = organizationId;
             _cutoffStart = cutoffStart.ToMinimumHourValue();
@@ -142,7 +142,7 @@ namespace AccuPay.Data.Services
                 .GetAllActiveWithPosition(_organizationId)
                 .ToList();
 
-            _employmentPolicies = await _employmentPolicyRepository.GetAll();
+            _employmentPolicies = _employmentPolicyRepository.GetAll();
 
             ICollection<Agency> agencies = _agencyRepository
                 .GetAll(_organizationId)

@@ -6,6 +6,7 @@
 
 CREATE TABLE IF NOT EXISTS `listofval` (
   `RowID` int(11) NOT NULL AUTO_INCREMENT,
+  `OrganizationID` int(11) DEFAULT NULL,
   `DisplayValue` varchar(50) DEFAULT NULL,
   `LIC` varchar(50) DEFAULT NULL COMMENT 'Language Independent Code',
   `Type` varchar(50) DEFAULT NULL,
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `listofval` (
   KEY `FK_listofval_user_2` (`CreatedBy`),
   CONSTRAINT `FK_listofval_user` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_listofval_user_2` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=327 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

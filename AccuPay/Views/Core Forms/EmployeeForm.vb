@@ -3513,7 +3513,10 @@ Public Class EmployeeForm
         End If
 
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-        _branches = branchRepository.GetAll()
+        _branches = branchRepository.
+            GetAll().
+            OrderBy(Function(b) b.Name).
+            ToList()
 
         BranchComboBox.Visible = True
         BranchLabel.Visible = True
@@ -3855,163 +3858,6 @@ Public Class EmployeeForm
     End Sub
 
 #End Region 'Certifications
-
-#Region "Medical Profile"
-
-    Dim view_IDMed As Integer
-
-    Dim categMedRec As String = 0
-
-    Dim dontUpdateMed As SByte = 0
-
-    Dim hasErrondateMedRec As SByte = -1
-
-    Dim medrecordEdited As New AutoCompleteStringCollection
-
-    Dim prevsRowMedRec As Integer
-
-    Dim dateColumn As String
-
-    Function VIEW_employeemedrecordID(Optional emedrecord_EmployeeID As Object = Nothing,
-                                      Optional emedrecord_DateFrom As Object = Nothing,
-                                      Optional emedrecord_DateTo As Object = Nothing,
-                                      Optional emedrecord_ProductID As Object = Nothing) As Object
-        Dim param(4, 2) As Object
-
-        param(0, 0) = "emedrecord_EmployeeID"
-        param(1, 0) = "emedrecord_DateFrom"
-        param(2, 0) = "emedrecord_DateTo"
-        param(3, 0) = "emedrecord_ProductID"
-        param(4, 0) = "emedrecord_OrganizationID"
-
-        param(0, 1) = If(emedrecord_EmployeeID Is Nothing, DBNull.Value, CInt(emedrecord_EmployeeID))
-        param(1, 1) = If(emedrecord_DateFrom Is Nothing, DBNull.Value, Format(CDate(emedrecord_DateFrom), "yyyy-MM-dd"))
-        param(2, 1) = If(emedrecord_DateTo Is Nothing, DBNull.Value, Format(CDate(emedrecord_DateTo), "yyyy-MM-dd"))
-        param(3, 1) = If(emedrecord_ProductID Is Nothing, DBNull.Value, CInt(emedrecord_ProductID))
-        param(4, 1) = orgztnID
-
-        Dim returnval = EXEC_INSUPD_PROCEDURE(param,
-                                              "VIEW_employeemedrecordID",
-                                              "empmedrecordID")
-
-        Return returnval
-
-    End Function
-
-    Sub INS_employeemedicalrecord(Optional emedrec_RowID As Object = Nothing,
-                                     Optional emedrec_EmployeeID As Object = Nothing,
-                                     Optional emedrec_DateFrom As Object = Nothing,
-                                     Optional emedrec_DateTo As Object = Nothing,
-                                     Optional emedrec_ProductID As Object = Nothing,
-                                     Optional emedrec_Finding As Object = Nothing)
-
-        'INSERT LANG ITO SA employeemedicalrecord
-
-        Dim _naw As Object = EXECQUER("SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %T');")
-
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-            Dim cmdquer As MySqlCommand
-            cmdquer = New MySqlCommand("INSUPD_employeemedicalrecord", conn)
-            conn.Open()
-
-            With cmdquer
-
-                .Parameters.Clear()
-
-                .CommandType = CommandType.StoredProcedure
-
-                .Parameters.Add("emedrecID", MySqlDbType.Int32)
-
-                .Parameters.AddWithValue("emedrec_RowID", If(emedrec_RowID Is Nothing, DBNull.Value, emedrec_RowID))
-                .Parameters.AddWithValue("emedrec_OrganizationID", orgztnID) 'orgztnID
-                .Parameters.AddWithValue("emedrec_Created", _naw)
-                .Parameters.AddWithValue("emedrec_LastUpd", _naw)
-                .Parameters.AddWithValue("emedrec_CreatedBy", z_User)
-                .Parameters.AddWithValue("emedrec_LastUpdBy", z_User)
-                .Parameters.AddWithValue("emedrec_EmployeeID", If(emedrec_EmployeeID Is Nothing, DBNull.Value, emedrec_EmployeeID))
-                .Parameters.AddWithValue("emedrec_DateFrom", If(emedrec_DateFrom Is Nothing, DBNull.Value, Format(CDate(emedrec_DateFrom), "yyyy-MM-dd")))
-                .Parameters.AddWithValue("emedrec_DateTo", If(emedrec_DateTo Is Nothing, DBNull.Value, Format(CDate(emedrec_DateTo), "yyyy-MM-dd")))
-                .Parameters.AddWithValue("emedrec_ProductID", If(emedrec_ProductID Is Nothing, DBNull.Value, emedrec_ProductID))
-                .Parameters.AddWithValue("emedrec_Finding", emedrec_Finding)
-
-                .Parameters("emedrecID").Direction = ParameterDirection.ReturnValue
-
-                .ExecuteScalar() 'ExecuteNonQuery
-
-            End With
-        Catch ex As Exception
-            MsgBox(ex.Message & " INS_employeemedicalrecord")
-        Finally
-            conn.Close()
-        End Try
-    End Sub
-
-    Function INS_product(Optional p_Name As Object = Nothing,
-                         Optional p_PartNo As Object = Nothing,
-                         Optional p_CategName As Object = Nothing,
-                         Optional p_Status As Object = "Active",
-                         Optional p_IsFixed As Boolean = False) As Object
-
-        Dim return_value = Nothing
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-
-            Dim cmdquer As MySqlCommand
-
-            cmdquer = New MySqlCommand("INSUPD_product", conn)
-
-            conn.Open()
-
-            With cmdquer
-
-                Dim datrd As MySqlDataReader
-
-                .Parameters.Clear()
-
-                .CommandType = CommandType.StoredProcedure
-
-                .Parameters.Add("prod_RowID", MySqlDbType.Int32)
-
-                .Parameters.AddWithValue("p_RowID", DBNull.Value)
-                .Parameters.AddWithValue("p_Name", p_Name)
-                .Parameters.AddWithValue("p_OrganizationID", orgztnID) 'orgztnID
-                .Parameters.AddWithValue("p_PartNo", p_PartNo)
-                .Parameters.AddWithValue("p_LastUpd", DBNull.Value)
-                .Parameters.AddWithValue("p_CreatedBy", z_User)
-                .Parameters.AddWithValue("p_LastUpdBy", z_User)
-                .Parameters.AddWithValue("p_Category", p_CategName)
-                .Parameters.AddWithValue("p_CategoryID", DBNull.Value) 'KELANGAN MA-RETRIEVE KO UNG ROWID SA CATEGORY WHERE CATEGORYNAME = 'MEDICAL RECORD'
-                .Parameters.AddWithValue("p_Status", p_Status)
-                .Parameters.AddWithValue("p_UnitPrice", 0.0)
-                .Parameters.AddWithValue("p_UnitOfMeasure", 0)
-                .Parameters.AddWithValue("p_IsFixed", p_IsFixed)
-                .Parameters.AddWithValue("p_IsIncludedIn13th", 0)
-                .Parameters("prod_RowID").Direction = ParameterDirection.ReturnValue
-
-                datrd = .ExecuteReader()
-                If datrd.Read Then
-                    return_value = datrd(0)
-                End If
-            End With
-        Catch ex As Exception
-            MsgBox(ex.Message & " INSUPD_product")
-        Finally
-            conn.Close()
-        End Try
-        Return return_value
-    End Function
-
-    Public listofEditedmedprod As New AutoCompleteStringCollection
-
-    Dim prevsRowpMed As Integer
-
-    Private Sub tsbtnCancelmedrecord_Click(sender As Object, e As EventArgs)
-        listofEditedmedprod.Clear()
-        dgvEmp_SelectionChanged(sender, e)
-    End Sub
-
-#End Region 'Medical Profile
 
 #Region "Disciplinary Action"
 

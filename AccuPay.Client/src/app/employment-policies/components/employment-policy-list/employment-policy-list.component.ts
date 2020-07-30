@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 import { EmploymentPolicy } from 'src/app/employment-policies/shared/employment-policy';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sort } from '@angular/material/sort';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-employment-policy-list',
@@ -20,6 +21,8 @@ import { Sort } from '@angular/material/sort';
   },
 })
 export class EmploymentPolicyListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = ['name', 'actions'];
 
   searchTerm: string;

@@ -4,6 +4,7 @@
   </header>
 
   <button
+    *ngxPermissionsOnly="[PermissionTypes.UserUpdate]"
     mat-raised-button
     color="accent"
     routerLink="/users/{{ userId }}/edit"

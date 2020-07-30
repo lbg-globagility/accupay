@@ -1,4 +1,4 @@
-﻿using AccuPay.CrystalReports.Payslip;
+﻿using AccuPay.CrystalReports;
 using AccuPay.Data;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -33,18 +33,19 @@ namespace AccupayWindowsService
             services.AddDbContext<PayrollContext>(options =>
             {
                 options
-                    .UseMySql(ConfigurationManager.ConnectionStrings["MyConnection"].ConnectionString)
+                    .UseMySql(ConfigurationManager.ConnectionStrings["accupaydb"].ConnectionString)
                     .EnableSensitiveDataLogging();
             });
 
             services.AddScoped<EmailService>();
             services.AddScoped<PaystubEmailRepository>();
 
-            services.AddScoped<PayPeriodRepository>();
-            services.AddScoped<OrganizationRepository>();
             services.AddScoped<AddressRepository>();
+            services.AddScoped<OrganizationRepository>();
+            services.AddScoped<PayPeriodRepository>();
+            services.AddScoped<PayslipDataService>();
             services.AddScoped<SystemOwnerService>();
-            services.AddScoped<PayslipCreator>();
+            services.AddScoped<PayslipBuilder>();
 
             var serviceProvider = services.BuildServiceProvider();
             return serviceProvider;

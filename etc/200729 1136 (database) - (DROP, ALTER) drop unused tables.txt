@@ -1,0 +1,75 @@
+ALTER TABLE `branch`
+	DROP COLUMN IF EXISTS `AreaID`,
+	DROP FOREIGN KEY IF EXISTS `branch_ibfk_5`;
+
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_employee_area' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_employee_area','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+ALTER TABLE `employee`
+	DROP COLUMN IF EXISTS `AreaID`;
+
+
+
+ALTER TABLE `employeeleave`
+	DROP COLUMN IF EXISTS  `LeaveHours`;
+
+ALTER TABLE `product`
+	DROP COLUMN IF EXISTS `SupplierID`,
+	DROP FOREIGN KEY IF EXISTS `FK_product_account`;
+
+
+DROP TABLE IF EXISTS `accountcontact`;
+DROP TABLE IF EXISTS `accountfinancialinst`;
+DROP TABLE IF EXISTS `attachments`;
+DROP TABLE IF EXISTS `notes`;
+DROP TABLE IF EXISTS `paymentfinancialinstitution`;
+DROP TABLE IF EXISTS `payment`;
+DROP TABLE IF EXISTS `account`;
+
+DROP TABLE IF EXISTS `timeentrylog`;
+DROP TABLE IF EXISTS `timeentrylogs`;
+
+ALTER TABLE `product`
+	DROP COLUMN IF EXISTS `COAId`,
+	DROP FOREIGN KEY IF EXISTS `FK_product_chartofaccounts`;
+
+
+
+DROP TABLE IF EXISTS `accountrating`;
+DROP TABLE IF EXISTS `audittrail_copy`;
+DROP TABLE IF EXISTS `basetables`;
+DROP TABLE IF EXISTS `chartofaccountssummary`;
+DROP TABLE IF EXISTS `employeeadjustments`;
+DROP TABLE IF EXISTS `employeeleave_duplicate`;
+DROP TABLE IF EXISTS `employeeloanhistoitem`;
+DROP TABLE IF EXISTS `employeeloanhistory`;
+DROP TABLE IF EXISTS `employeemedicalrecord`;
+DROP TABLE IF EXISTS `employeesearchstring`;
+DROP TABLE IF EXISTS `employeeskills`;
+DROP TABLE IF EXISTS `employeesuspensiondates`;
+DROP TABLE IF EXISTS `employeetimeentryloglocation`;
+DROP TABLE IF EXISTS `employeetraining`;
+DROP TABLE IF EXISTS `inventorylocation`;
+DROP TABLE IF EXISTS `journalentry`;
+DROP TABLE IF EXISTS `journal`;
+DROP TABLE IF EXISTS `paymentfinancialinstitution`;
+DROP TABLE IF EXISTS `payperioditems`;
+DROP TABLE IF EXISTS `prodinvlocinventory`;
+DROP TABLE IF EXISTS `taxdue`;
+DROP TABLE IF EXISTS `taxitems`;
+DROP TABLE IF EXISTS `taxdefinition`;
+DROP TABLE IF EXISTS `tax`;
+DROP TABLE IF EXISTS `time_table`;
+DROP TABLE IF EXISTS `thirteenthmonthpayactual`;
+DROP TABLE IF EXISTS `userupdateleavebalancelog`;
+DROP TABLE IF EXISTS `financialinstitution`;
+DROP TABLE IF EXISTS `chartofaccounts`;
+DROP TABLE IF EXISTS `allchartofaccounts`;

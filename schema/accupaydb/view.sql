@@ -7,11 +7,11 @@
 CREATE TABLE IF NOT EXISTS `view` (
   `RowID` int(11) NOT NULL AUTO_INCREMENT,
   `ViewName` varchar(100) DEFAULT NULL,
-  `OrganizationID` int(10) DEFAULT '1',
+  `OrganizationID` int(10) DEFAULT 1,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `Index 2` (`OrganizationID`,`ViewName`),
   CONSTRAINT `FK_view_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=577 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

@@ -8,6 +8,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { filter } from 'rxjs/operators';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-view-division',
@@ -18,6 +19,8 @@ import { filter } from 'rxjs/operators';
   },
 })
 export class ViewDivisionComponent implements OnInit {
+  readonly PermsisionTypes = PermissionTypes;
+
   divisionId: number = null;
 
   division: Division;

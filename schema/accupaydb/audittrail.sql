@@ -6,10 +6,10 @@
 
 CREATE TABLE IF NOT EXISTS `audittrail` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` datetime NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `LastUpdBy` int(10) NOT NULL,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `LastUpdBy` int(10) DEFAULT NULL,
   `OrganizationID` int(10) NOT NULL COMMENT 'Internal Company',
   `ViewID` int(10) DEFAULT NULL COMMENT 'The view that the modification is being done',
   `FieldChanged` varchar(100) NOT NULL DEFAULT '0' COMMENT 'What field was changed',
@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS `audittrail` (
   KEY `FK_audittrail_organization` (`OrganizationID`),
   KEY `FK_audittrail_user_2` (`LastUpdBy`),
   CONSTRAINT `audittrail_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
-  CONSTRAINT `audittrail_ibfk_2` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `audittrail_ibfk_3` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=477509 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT COMMENT='Log of changes to the system';
+  CONSTRAINT `audittrail_ibfk_2` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`) ON DELETE CASCADE,
+  CONSTRAINT `audittrail_ibfk_3` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT COMMENT='Log of changes to the system';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

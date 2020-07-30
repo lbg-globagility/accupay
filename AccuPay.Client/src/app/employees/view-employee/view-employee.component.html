@@ -4,6 +4,7 @@
   </div>
   <div class="col-lg-3 flex items-start justify-end">
     <button
+      *ngxPermissionsOnly="[PermissionTypes.EmployeeUpdate]"
       mat-raised-button
       type="button"
       color="accent"

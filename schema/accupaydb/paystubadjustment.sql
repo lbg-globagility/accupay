@@ -7,15 +7,15 @@
 CREATE TABLE IF NOT EXISTS `paystubadjustment` (
   `RowID` bigint(20) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` datetime NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `PayStubID` int(10) DEFAULT NULL,
   `ProductID` int(10) NOT NULL,
   `PayAmount` decimal(10,2) DEFAULT NULL,
   `Comment` varchar(200) DEFAULT NULL,
-  `IsActual` tinyint(1) DEFAULT '0',
+  `IsActual` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`RowID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
   KEY `FK_BaseTables_user` (`CreatedBy`),
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `paystubadjustment` (
   CONSTRAINT `paystubadjustment_ibfk_3` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `paystubadjustment_ibfk_4` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `paystubadjustment_ibfk_5` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

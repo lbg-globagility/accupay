@@ -30,6 +30,7 @@ Partial Class ProdCtrlForm
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.dgvproducts = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.lblforballoon = New System.Windows.Forms.Label()
         Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SupplierID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ProdName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -70,7 +71,6 @@ Partial Class ProdCtrlForm
         Me.TaxVAT = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.WithholdingTax = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.COAId = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblforballoon = New System.Windows.Forms.Label()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.dgvproducts, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -142,6 +142,15 @@ Partial Class ProdCtrlForm
         Me.dgvproducts.Size = New System.Drawing.Size(677, 308)
         Me.dgvproducts.TabIndex = 0
         '
+        'lblforballoon
+        '
+        Me.lblforballoon.AutoSize = True
+        Me.lblforballoon.Location = New System.Drawing.Point(64, 11)
+        Me.lblforballoon.Name = "lblforballoon"
+        Me.lblforballoon.Size = New System.Drawing.Size(39, 13)
+        Me.lblforballoon.TabIndex = 1
+        Me.lblforballoon.Text = "Label1"
+        '
         'RowID
         '
         Me.RowID.HeaderText = "RowID"
@@ -191,6 +200,7 @@ Partial Class ProdCtrlForm
         Me.Status.Name = "Status"
         Me.Status.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Status.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.Status.Visible = False
         Me.Status.Width = 190
         '
         'UnitPrice
@@ -385,15 +395,6 @@ Partial Class ProdCtrlForm
         Me.COAId.Name = "COAId"
         Me.COAId.Visible = False
         '
-        'lblforballoon
-        '
-        Me.lblforballoon.AutoSize = True
-        Me.lblforballoon.Location = New System.Drawing.Point(64, 11)
-        Me.lblforballoon.Name = "lblforballoon"
-        Me.lblforballoon.Size = New System.Drawing.Size(39, 13)
-        Me.lblforballoon.TabIndex = 1
-        Me.lblforballoon.Text = "Label1"
-        '
         'ProdCtrlForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -422,44 +423,44 @@ Partial Class ProdCtrlForm
     Friend WithEvents ToolStripButton4 As System.Windows.Forms.ToolStripButton
     Friend WithEvents dgvproducts As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents lblforballoon As System.Windows.Forms.Label
-    Friend WithEvents RowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SupplierID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ProdName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Description As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PartNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Category As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents CategoryID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Status As System.Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents UnitPrice As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents VATPercent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents FirstBillFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SecondBillFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ThirdBillFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PDCFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents MonthlyBIllFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PenaltyFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents WithholdingTaxPercent As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents CostPrice As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents UnitOfMeasure As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents SKU As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LeadTime As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BarCode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BusinessUnitID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastRcvdFromShipmentDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastRcvdFromShipmentCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents TotalShipmentCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BookPageNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents BrandName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastPurchaseDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastSoldDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents LastSoldCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ReOrderPoint As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents AllocateBelowSafetyFlag As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Strength As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents UnitsBackordered As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents UnitsBackorderAsOf As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DateLastInventoryCount As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents TaxVAT As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents WithholdingTax As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents COAId As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents RowID As DataGridViewTextBoxColumn
+    Friend WithEvents SupplierID As DataGridViewTextBoxColumn
+    Friend WithEvents ProdName As DataGridViewTextBoxColumn
+    Friend WithEvents Description As DataGridViewTextBoxColumn
+    Friend WithEvents PartNo As DataGridViewTextBoxColumn
+    Friend WithEvents Category As DataGridViewTextBoxColumn
+    Friend WithEvents CategoryID As DataGridViewTextBoxColumn
+    Friend WithEvents Status As DataGridViewComboBoxColumn
+    Friend WithEvents UnitPrice As DataGridViewTextBoxColumn
+    Friend WithEvents VATPercent As DataGridViewTextBoxColumn
+    Friend WithEvents FirstBillFlag As DataGridViewTextBoxColumn
+    Friend WithEvents SecondBillFlag As DataGridViewTextBoxColumn
+    Friend WithEvents ThirdBillFlag As DataGridViewTextBoxColumn
+    Friend WithEvents PDCFlag As DataGridViewTextBoxColumn
+    Friend WithEvents MonthlyBIllFlag As DataGridViewTextBoxColumn
+    Friend WithEvents PenaltyFlag As DataGridViewTextBoxColumn
+    Friend WithEvents WithholdingTaxPercent As DataGridViewTextBoxColumn
+    Friend WithEvents CostPrice As DataGridViewTextBoxColumn
+    Friend WithEvents UnitOfMeasure As DataGridViewTextBoxColumn
+    Friend WithEvents SKU As DataGridViewTextBoxColumn
+    Friend WithEvents LeadTime As DataGridViewTextBoxColumn
+    Friend WithEvents BarCode As DataGridViewTextBoxColumn
+    Friend WithEvents BusinessUnitID As DataGridViewTextBoxColumn
+    Friend WithEvents LastRcvdFromShipmentDate As DataGridViewTextBoxColumn
+    Friend WithEvents LastRcvdFromShipmentCount As DataGridViewTextBoxColumn
+    Friend WithEvents TotalShipmentCount As DataGridViewTextBoxColumn
+    Friend WithEvents BookPageNo As DataGridViewTextBoxColumn
+    Friend WithEvents BrandName As DataGridViewTextBoxColumn
+    Friend WithEvents LastPurchaseDate As DataGridViewTextBoxColumn
+    Friend WithEvents LastSoldDate As DataGridViewTextBoxColumn
+    Friend WithEvents LastSoldCount As DataGridViewTextBoxColumn
+    Friend WithEvents ReOrderPoint As DataGridViewTextBoxColumn
+    Friend WithEvents AllocateBelowSafetyFlag As DataGridViewTextBoxColumn
+    Friend WithEvents Strength As DataGridViewTextBoxColumn
+    Friend WithEvents UnitsBackordered As DataGridViewTextBoxColumn
+    Friend WithEvents UnitsBackorderAsOf As DataGridViewTextBoxColumn
+    Friend WithEvents DateLastInventoryCount As DataGridViewTextBoxColumn
+    Friend WithEvents TaxVAT As DataGridViewTextBoxColumn
+    Friend WithEvents WithholdingTax As DataGridViewTextBoxColumn
+    Friend WithEvents COAId As DataGridViewTextBoxColumn
 End Class

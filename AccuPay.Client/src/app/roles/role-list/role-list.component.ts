@@ -6,6 +6,7 @@ import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { RoleService } from 'src/app/roles/services/role.service';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-role-list',
@@ -16,6 +17,8 @@ import { RoleService } from 'src/app/roles/services/role.service';
   },
 })
 export class RoleListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = ['name', 'actions'];
 
   searchTerm: string;

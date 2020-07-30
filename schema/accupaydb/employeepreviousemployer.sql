@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS `employeepreviousemployer` (
   `MainPhone` varchar(50) DEFAULT NULL,
   `FaxNumber` varchar(50) DEFAULT NULL,
   `JobTitle` varchar(50) DEFAULT NULL,
-  `ExperienceFromTo` varchar(50) DEFAULT NULL,
+  `ExperienceFromTo` date NOT NULL,
+  `ExperienceTo` date NOT NULL,
   `BusinessAddress` varchar(1000) DEFAULT NULL,
   `ContactName` varchar(200) DEFAULT NULL,
   `EmailAddress` varchar(50) DEFAULT NULL,
@@ -22,9 +23,9 @@ CREATE TABLE IF NOT EXISTS `employeepreviousemployer` (
   `URL` varchar(50) DEFAULT NULL,
   `TINNo` varchar(50) DEFAULT NULL,
   `JobFunction` varchar(2000) DEFAULT NULL,
-  `Created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NULL DEFAULT current_timestamp(),
   `CreatedBy` int(11) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(11) DEFAULT NULL,
   `OrganizationType` varchar(50) DEFAULT NULL COMMENT 'Commercial Center, Office Building',
   PRIMARY KEY (`RowID`),
@@ -32,13 +33,13 @@ CREATE TABLE IF NOT EXISTS `employeepreviousemployer` (
   KEY `FK_organization_user_2` (`LastUpdBy`),
   KEY `FK_employeepreviousemployer_organization` (`OrganizationID`),
   KEY `FK_employeepreviousemployer_employee` (`EmployeeID`),
-  CONSTRAINT `FK_employeepreviousemployer_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `FK_employeepreviousemployer_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
   CONSTRAINT `FK_employeepreviousemployer_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `FK_employeepreviousemployer_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_employeepreviousemployer_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `employeepreviousemployer_ibfk_3` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `employeepreviousemployer_ibfk_4` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COMMENT='This is the internal Company';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This is the internal Company';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

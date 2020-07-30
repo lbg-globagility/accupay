@@ -12,47 +12,45 @@ namespace AccuPay.Data.Entities
 
         public const string StatusPending = "Pending";
 
-        public virtual int? OrganizationID { get; set; }
+        public int? OrganizationID { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual DateTime Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public virtual int? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public virtual DateTime? LastUpd { get; set; }
+        public DateTime? LastUpd { get; set; }
 
-        public virtual int? LastUpdBy { get; set; }
+        public int? LastUpdBy { get; set; }
 
-        public virtual int? EmployeeID { get; set; }
+        public int? EmployeeID { get; set; }
 
-        public virtual string LeaveType { get; set; }
-
-        public virtual decimal LeaveHours { get; set; }
+        public string LeaveType { get; set; }
 
         [Column("LeaveStartTime")]
-        public virtual TimeSpan? StartTime { get; set; }
+        public TimeSpan? StartTime { get; set; }
 
         [Column("LeaveEndTime")]
-        public virtual TimeSpan? EndTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
 
         [Column("LeaveStartDate")]
-        public virtual DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         // TODO: make this readonly. Domain methods should only be the one to set this.
         [Column("LeaveEndDate")]
-        public virtual DateTime? EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
-        public virtual string Reason { get; set; }
+        public string Reason { get; set; }
 
-        public virtual string Comments { get; set; }
+        public string Comments { get; set; }
 
-        public virtual byte[] Image { get; set; }
+        public byte[] Image { get; set; }
 
-        public virtual string Status { get; set; }
+        public string Status { get; set; }
 
         [ForeignKey("EmployeeID")]
-        public virtual Employee Employee { get; set; }
+        public Employee Employee { get; set; }
 
         public DateTime? PayrollDate => StartDate;
 

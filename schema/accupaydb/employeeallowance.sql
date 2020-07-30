@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS `employeeallowance` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
   `ProductID` int(10) DEFAULT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `employeeallowance` (
   `AllowanceFrequency` varchar(50) DEFAULT NULL COMMENT 'Daily, Monthly, One Time',
   `EffectiveEndDate` date DEFAULT NULL,
   `TaxableFlag` char(50) DEFAULT NULL,
-  `AllowanceAmount` decimal(10,2) NOT NULL DEFAULT '0',
+  `AllowanceAmount` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
   KEY `FK_BaseTables_user` (`CreatedBy`),
@@ -25,11 +25,11 @@ CREATE TABLE IF NOT EXISTS `employeeallowance` (
   KEY `FK_basetables_employee` (`EmployeeID`),
   KEY `FK_employeeallowance_product` (`ProductID`),
   CONSTRAINT `FK_employeeallowance_product` FOREIGN KEY (`ProductID`) REFERENCES `product` (`RowID`),
-  CONSTRAINT `employeeallowance_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `employeeallowance_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
   CONSTRAINT `employeeallowance_ibfk_2` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `employeeallowance_ibfk_3` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `employeeallowance_ibfk_4` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=257 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

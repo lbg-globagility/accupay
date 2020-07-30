@@ -5,7 +5,7 @@ namespace AccuPay.Web.Allowances.Models
 {
     public abstract class CrudAllowanceDto
     {
-        private const double MinimumAmount = 0.01;
+        private const double MinimumAmount = -99999999.99;
         private const double MaximumAmount = 99999999.99;
 
         [Required]

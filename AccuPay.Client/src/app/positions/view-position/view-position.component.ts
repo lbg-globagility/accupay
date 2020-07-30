@@ -11,6 +11,7 @@ import { filter } from 'rxjs/operators';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 import { Employee } from 'src/app/employees/shared/employee';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-view-position',
@@ -21,6 +22,8 @@ import { Employee } from 'src/app/employees/shared/employee';
   },
 })
 export class ViewPositionComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   position: Position;
 
   employees: Employee[] = [];

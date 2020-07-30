@@ -6,12 +6,12 @@
 
 CREATE TABLE IF NOT EXISTS `paywithholdingtax` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `Created` datetime NOT NULL DEFAULT current_timestamp(),
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `CreatedBy` int(10) NOT NULL,
   `LastUpdBy` int(10) DEFAULT NULL,
   `PayFrequencyID` int(10) NOT NULL,
-  `FilingStatusID` int(10) NOT NULL,
+  `FilingStatusID` int(10) DEFAULT NULL,
   `EffectiveDateFrom` date DEFAULT NULL,
   `EffectiveDateTo` date DEFAULT NULL,
   `ExemptionAmount` decimal(10,2) DEFAULT NULL,
@@ -19,15 +19,14 @@ CREATE TABLE IF NOT EXISTS `paywithholdingtax` (
   `TaxableIncomeFromAmount` decimal(10,2) DEFAULT NULL,
   `TaxableIncomeToAmount` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
-  UNIQUE KEY `Index 6` (`FilingStatusID`,`TaxableIncomeToAmount`,`TaxableIncomeFromAmount`,`PayFrequencyID`),
+  UNIQUE KEY `Index 6` (`FilingStatusID`,`TaxableIncomeToAmount`,`TaxableIncomeFromAmount`,`PayFrequencyID`,`EffectiveDateFrom`,`EffectiveDateTo`),
   KEY `FK_PayWithholdingTax_user` (`CreatedBy`),
   KEY `FK_PayWithholdingTax_user_2` (`LastUpdBy`),
   KEY `FK_paywithholdingtax_payfrequency` (`PayFrequencyID`),
   CONSTRAINT `FK_PayWithholdingTax_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_PayWithholdingTax_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `FK_paywithholdingtax_filingstatus` FOREIGN KEY (`FilingStatusID`) REFERENCES `filingstatus` (`RowID`),
   CONSTRAINT `FK_paywithholdingtax_payfrequency` FOREIGN KEY (`PayFrequencyID`) REFERENCES `payfrequency` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=321 DEFAULT CHARSET=latin1 COMMENT='BIR Withholding Tax Table';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='BIR Withholding Tax Table';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

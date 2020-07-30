@@ -12,10 +12,10 @@ import { LoanService } from 'src/app/loans/loan.service';
 import { MatDialog } from '@angular/material/dialog';
 import { LoanHistoryComponent } from '../loan-history/loan-history.component';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { LoanImportParserOutput } from '../shared/loan-import-parser-output';
 import { LoanImportModel } from '../shared/loan-import-model';
 import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-loan-list',
@@ -26,6 +26,8 @@ import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/pos
   },
 })
 export class LoanListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   @ViewChild('uploader') fileInput: ElementRef;
 
   readonly displayedColumns: string[] = [

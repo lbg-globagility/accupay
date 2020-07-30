@@ -5,6 +5,7 @@
     </div>
     <div class="w-1/2 flex justify-end items-start">
       <button
+        *ngxPermissionsOnly="[PermsisionTypes.DivisionUpdate]"
         mat-raised-button
         color="accent"
         routerLink="/divisions/{{ divisionId }}/edit"
@@ -13,6 +14,7 @@
         <mat-icon>edit</mat-icon>EDIT
       </button>
       <button
+        *ngxPermissionsOnly="[PermsisionTypes.DivisionDelete]"
         mat-raised-button
         color="warn"
         class="m-with-icon"

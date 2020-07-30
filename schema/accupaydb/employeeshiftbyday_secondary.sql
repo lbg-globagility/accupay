@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS `employeeshiftbyday_secondary` (
   `NightShift` char(1) DEFAULT NULL,
   `RestDay` char(1) DEFAULT NULL,
   `IsEncodedByDay` char(1) DEFAULT '1',
-  `OrderByValue` int(10) DEFAULT '0',
+  `OrderByValue` int(10) DEFAULT 0,
   `OriginDay` int(10) DEFAULT NULL,
-  `UniqueShift` int(10) DEFAULT '0',
+  `UniqueShift` int(10) DEFAULT 0,
   UNIQUE KEY `OrganizationID` (`OrganizationID`,`EmployeeID`,`ShiftID`,`NameOfDay`,`SampleDate`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 

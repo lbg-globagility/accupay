@@ -4,6 +4,7 @@
   <div class="col-md-9"></div>
   <div class="col-md-3">
     <button
+      *ngxPermissionsOnly="[PermissionTypes.OrganizationCreate]"
       mat-raised-button
       color="accent"
       class="new-btn"
@@ -37,7 +38,6 @@
   </div>
 
   <mat-paginator
-    #paginator
     [pageIndex]="pageIndex"
     [pageSize]="pageSize"
     [pageSizeOptions]="[10, 5, 25, 100]"

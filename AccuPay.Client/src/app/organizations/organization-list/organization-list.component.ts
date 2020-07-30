@@ -5,6 +5,7 @@ import { OrganizationService } from 'src/app/organizations/organization.service'
 import { PageEvent } from '@angular/material/paginator';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { OrganizationPageOptions } from 'src/app/organizations/shared/organization-page-options';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-organization-list',
@@ -15,6 +16,8 @@ import { OrganizationPageOptions } from 'src/app/organizations/shared/organizati
   },
 })
 export class OrganizationListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = ['name'];
 
   pageIndex = 1;

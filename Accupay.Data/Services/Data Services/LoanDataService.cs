@@ -278,7 +278,7 @@ namespace AccuPay.Data.Services
 
         private static void Validate(LoanSchedule loan, LoanSchedule oldLoan)
         {
-            if ((oldLoan.Status ?? loan.Status) == LoanSchedule.STATUS_COMPLETE)
+            if ((oldLoan?.Status ?? loan.Status) == LoanSchedule.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
 
             if (loan.OrganizationID == null)

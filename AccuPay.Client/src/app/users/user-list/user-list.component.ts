@@ -8,6 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { User } from 'src/app/users/shared/user';
 import { UserService } from 'src/app/users/user.service';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-user-list',
@@ -18,11 +19,14 @@ import { UserService } from 'src/app/users/user.service';
   },
 })
 export class UserListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = [
     'image',
     'firstName',
     'lastName',
     'email',
+    'actions',
   ];
 
   placeholder: string;

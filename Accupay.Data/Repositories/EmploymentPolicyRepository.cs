@@ -26,12 +26,12 @@ namespace AccuPay.Data.Repositories
             return employmentPolicy;
         }
 
-        public async Task<ICollection<EmploymentPolicy>> GetAll()
+        public ICollection<EmploymentPolicy> GetAll()
         {
-            var employmentPolicies = await _context.EmploymentPolicies
+            var employmentPolicies = _context.EmploymentPolicies
                 .Include(t => t.Items)
                     .ThenInclude(t => t.Type)
-                .ToListAsync();
+                .ToList();
 
             return employmentPolicies;
         }
@@ -65,7 +65,7 @@ namespace AccuPay.Data.Repositories
         {
             var query = _context.EmploymentPolicies.AsQueryable();
 
-            var employmentPolicies = await query.Page(options).ToListAsync() ;
+            var employmentPolicies = await query.Page(options).ToListAsync();
             var total = await query.CountAsync();
 
             return (employmentPolicies, total);

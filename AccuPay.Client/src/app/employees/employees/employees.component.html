@@ -2,7 +2,10 @@
   <div class="w-1/4 flex flex-col h-full bg-white mat-elevation-z1">
     <!-- Filter and sort -->
     <div class="flex-none">
-      <div class="flex justify-end px-4 pt-4">
+      <div
+        *ngxPermissionsOnly="[PermissionTypes.EmployeeCreate]"
+        class="flex px-4 pt-4"
+      >
         <a
           mat-raised-button
           color="primary"
@@ -13,17 +16,20 @@
         </a>
 
         <button
-          [disabled]="isDownloadingTemplate"
           mat-raised-button
-          (click)="downloadTemplate()"
-          style="margin-left: 8px;"
           color="primary"
+          class="m-with-icon"
+          style="margin-left: 8px;"
+          [matMenuTriggerFor]="moreMenu"
         >
-          {{ isDownloadingTemplate ? "DOWNLOADING..." : "TEMPLATE" }}
-          <app-button-spinner
-            [active]="isDownloadingTemplate"
-          ></app-button-spinner>
+          <mat-icon>more_vert</mat-icon>MORE
         </button>
+        <mat-menu #moreMenu="matMenu">
+          <button mat-menu-item (click)="downloadTemplate()">
+            Download Template
+          </button>
+          <button mat-menu-item (click)="uploader.click()">Import</button>
+        </mat-menu>
 
         <input
           hidden
@@ -31,15 +37,6 @@
           #uploader
           (change)="onImport($event.target.files)"
         />
-        <button
-          mat-raised-button
-          color="accent"
-          class="new-btn"
-          style="margin-left: 10px;"
-          (click)="uploader.click()"
-        >
-          IMPORT
-        </button>
       </div>
       <div class="flex px-4">
         <mat-form-field appearance="standard" class="w-2/3">
