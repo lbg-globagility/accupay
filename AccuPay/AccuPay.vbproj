@@ -728,6 +728,33 @@
     <Compile Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RouteForm.Designer.vb">
+      <DependentUpon>RouteForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RouteForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RoutePayRateMatrixForm.Designer.vb">
+      <DependentUpon>RoutePayRateMatrixForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RoutePayRateMatrixForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RouteTripNotFoundException.vb" />
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketController.vb" />
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketForm.Designer.vb">
+      <DependentUpon>TripTicketForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketRepository.vb" />
+    <Compile Include="Views\Core Forms\TripTicket\VehicleForm.Designer.vb">
+      <DependentUpon>VehicleForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\VehicleForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </Compile>
@@ -2062,6 +2089,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\RouteForm.resx">
+      <DependentUpon>RouteForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\RoutePayRateMatrixForm.resx">
+      <DependentUpon>RoutePayRateMatrixForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\TripTicketForm.resx">
+      <DependentUpon>TripTicketForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\VehicleForm.resx">
+      <DependentUpon>VehicleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
