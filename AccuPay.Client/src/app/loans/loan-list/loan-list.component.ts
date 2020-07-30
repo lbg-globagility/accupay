@@ -20,6 +20,7 @@ import { LoanTypeService } from 'src/app/loan-types/service/loan-type.service';
 import { LoanType } from 'src/app/loan-types/shared/loan-type';
 import { LoanPageOptions } from 'src/app/loans/shared/loan-page-options';
 import { NewLoanComponent } from 'src/app/loans/new-loan/new-loan.component';
+import { EditLoanComponent } from 'src/app/loans/edit-loan/edit-loan.component';
 
 @Component({
   selector: 'app-loan-list',
@@ -137,14 +138,17 @@ export class LoanListComponent implements OnInit {
       .open(NewLoanComponent)
       .afterClosed()
       .pipe(filter((t) => t))
-      .subscribe({
-        next: (loan) => {
-          this.loadLoans();
-        },
-        error: (err) => {
-          this.errorHandler.badRequest(err, 'Failed to create new loan');
-        },
-      });
+      .subscribe(() => this.loadLoans());
+  }
+
+  editLoan(loan: Loan): void {
+    this.dialog
+      .open(EditLoanComponent, {
+        data: { loan },
+      })
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe(() => this.loadLoans());
   }
 
   onImport(files: FileList) {

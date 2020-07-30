@@ -163,6 +163,13 @@
         >
           <mat-icon>list_alt</mat-icon>
         </button>
+        <button
+          mat-icon-button
+          matTooltip="Edit"
+          (click)="$event.stopPropagation(); editLoan(loan)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
       </td>
     </ng-container>
 
