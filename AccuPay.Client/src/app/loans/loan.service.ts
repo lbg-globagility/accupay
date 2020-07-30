@@ -7,7 +7,7 @@ import { SelectItem } from 'src/app/core/shared/select-item';
 import { Loan } from 'src/app/loans/shared/loan';
 import { LoanHistory } from './shared/loan-history';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
-import { LoanImportParserOutput } from './shared/loam-import-parser-output';
+import { LoanImportParserOutput } from './shared/loan-import-parser-output';
 
 @Injectable({
   providedIn: 'root',

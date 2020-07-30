@@ -62,15 +62,17 @@ namespace AccuPay.Data.Services.Imports.Allowances
             if (!_noEmployeeNo) EmployeeNo = parsedAllowance.EmployeeNo;
 
             // This already base on AllownceType not on Product.`Allowance Type`
-            if (!IsAllowanceTypeNotYetExists && !_noAllowanceFrequency)
+            if (!IsAllowanceTypeNotYetExists && !_noAllowanceFrequency && !_noAllowanceName)
             {
                 _fixedAllowanceNotSetToMonthlyFrequency = _allowanceType.IsFixed && AllowanceFrequency != Allowance.FREQUENCY_MONTHLY;
             }
 
             if (_allowance != null)
             {
+                bool isEqualToLowerCase(string dataText, string parsedText) => string.IsNullOrWhiteSpace(parsedText) ? false : dataText.ToLower() == parsedText.ToLower();
+
                 var sameEmployee = _noEmployee ? false : _allowance.EmployeeID == EmployeeId;
-                var sameAllowanceType = _noAllowanceType ? false : _allowance.Type == AllowanceName;
+                var sameAllowanceType = _noAllowanceType ? false : isEqualToLowerCase(_allowance.Type, AllowanceName);
                 var sameEffectiveStartDate = _noEffectiveStartDate ? false : _allowance.EffectiveStartDate == EffectiveStartDate.Value;
                 var sameEffectiveEndDate = _noEffectiveEndDate ? false : _allowance.EffectiveEndDate == EffectiveEndDate.Value;
                 var sameAmount = _noAmount ? false : _allowance.Amount == Amount.Value;

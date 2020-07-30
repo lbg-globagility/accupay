@@ -55,7 +55,9 @@ namespace AccuPay.Data.Services.Imports.Allowances
             var employeeIds = employees.Select(e => e.RowID.Value).ToList();
             var allowanceTypeNames = parsedRecords.GroupBy(p => p.AllowanceName).Select(p => p.FirstOrDefault().AllowanceName).ToList();
             var minStartDate = parsedRecords.Where(p => p.EffectiveStartDate.HasValue).Min(p => p.EffectiveStartDate.Value);
-            var minEndDate = parsedRecords.Where(p => p.EffectiveEndDate.HasValue).Max(p => p.EffectiveEndDate.Value);
+            var minEndDate = parsedRecords.Where(p => p.EffectiveEndDate.HasValue).Any() ? parsedRecords.Where(p => p.EffectiveEndDate.HasValue).Max(p => p.EffectiveEndDate.Value) : DateTime.UtcNow;
+            DateTime[] effectiveDates = { minStartDate, minEndDate };
+            minEndDate = effectiveDates.Max();
             var timePeriod = new TimePeriod(minStartDate, minEndDate);
 
             var allowances = await _allowanceRepository.GetByEmployeeIdsBetweenDatesByAllowanceTypesAsync(employeeIds, allowanceTypeNames, timePeriod);
@@ -70,11 +72,13 @@ namespace AccuPay.Data.Services.Imports.Allowances
                     .Where(at => isEqualToLowerCase(at.Name, parsedRecord.AllowanceName) || isEqualToLowerCase(at.DisplayString, parsedRecord.AllowanceName))
                     .FirstOrDefault();
 
+                var effectiveDate = parsedRecord.EffectiveEndDate == null ? minEndDate : parsedRecord.EffectiveEndDate.Value;
+
                 var allowance = allowances
                     .Where(a => isEqualToLowerCase(a.Employee.EmployeeNo, parsedRecord.EmployeeNo))
                     .Where(a => isEqualToLowerCase(a.Type, parsedRecord.AllowanceName))
                     .Where(a => a.EffectiveStartDate >= parsedRecord.EffectiveStartDate)
-                    .Where(a => a.EffectiveEndDate <= parsedRecord.EffectiveEndDate)
+                    .Where(a => a.EffectiveEndDate <= effectiveDate)
                     .FirstOrDefault();
 
                 list.Add(CreateAllowanceImportModel(parsedRecord, employee, allowance, allowanceType));

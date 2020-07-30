@@ -4,12 +4,14 @@ import { Subject } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { Router } from '@angular/router';
-import { auditTime } from 'rxjs/operators';
+import { auditTime, filter } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import Swal from 'sweetalert2';
 import { EmployeeImportParserOutput } from '../shared/employee-import-parser-output';
+import { EmployeeImportModel } from '../shared/employee-import-model';
+import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { PermissionTypes } from 'src/app/core/auth/permission-types';
 
 @Component({
@@ -50,7 +52,8 @@ export class EmployeesComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private router: Router,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialog
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
@@ -129,7 +132,6 @@ export class EmployeesComponent implements OnInit {
 
     this.employeeService.import(file).subscribe(
       (outputParse) => {
-        this.loadEmployees();
         this.displaySuccess(outputParse);
         this.clearFile();
       },
@@ -141,35 +143,47 @@ export class EmployeesComponent implements OnInit {
   }
 
   private displaySuccess(outputParse: EmployeeImportParserOutput) {
-    const hasFailedImports =
-      outputParse.invalidRecords && outputParse.invalidRecords.length > 0;
-    const succeeds =
-      outputParse.validRecords && outputParse.validRecords.length > 0;
+    const model: EmployeeImportModel = {
+      employeeNo: '',
+      lastName: '',
+      firstName: '',
+      middleName: '',
+      birthdate: new Date(),
+      gender: '',
+      nickname: '',
+      maritalStatus: '',
+      salutation: '',
+      address: '',
+      mobileNo: '',
+      jobPosition: '',
+      tin: '',
+      sssNo: '',
+      philHealthNo: '',
+      pagIbigNo: '',
+      startDate: new Date(),
+      employeeType: '',
+      employmentStatus: '',
+      leaveAllowance: 0,
+      sickLeaveAllowance: 0,
+      workDaysPerYear: 0,
+      branch: '',
+      currentLeaveBalance: 0,
+      currentSickLeaveBalance: 0,
+      atmNo: '',
+      remarks: '',
+    };
 
-    if (!hasFailedImports && succeeds) {
-      Swal.fire({
-        title: 'Success',
-        text: 'Successfully imported new employee(s)!',
-        icon: 'success',
-        timer: 3000,
-        showConfirmButton: false,
-      });
-    } else if (hasFailedImports && !succeeds) {
-      Swal.fire({
-        title: 'Failed',
-        text: `${outputParse.invalidRecords.length} employee(s) failed to import.`,
-        icon: 'error',
-        showConfirmButton: true,
-      });
-    } else if (hasFailedImports && succeeds) {
-      Swal.fire({
-        title: 'Oops!',
-        text: `${outputParse.invalidRecords.length} employee(s) were failed to import
-        and the ${outputParse.validRecords.length} employee(s) succeeded.`,
-        icon: 'warning',
-        showConfirmButton: true,
-      });
-    }
+    this.dialog
+      .open(PostImportParserOutputDialogComponent, {
+        data: {
+          columnHeaders: new EmployeeImportParserOutput().columnHeaders,
+          invalidRecords: outputParse.invalidRecords,
+          validRecords: outputParse.validRecords,
+          propertyNames: Object.getOwnPropertyNames(model),
+        },
+      })
+      .afterClosed()
+      .subscribe(() => this.loadEmployees());
   }
 
   clearFile() {
