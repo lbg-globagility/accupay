@@ -74,7 +74,7 @@ namespace AccuPay.Web.Employees.Services
             var employee = new Employee()
             {
                 OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = _currentUser.DesktopUserId,
+                CreatedBy = _currentUser.UserId,
             };
 
             Map(dto, employee);
@@ -89,7 +89,7 @@ namespace AccuPay.Web.Employees.Services
         public async Task<EmployeeDto> Update(int id, UpdateEmployeeDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
-            employee.LastUpdBy = _currentUser.DesktopUserId;
+            employee.LastUpdBy = _currentUser.UserId;
             Map(dto, employee);
 
             await _employeeRepository.SaveAsync(employee);
@@ -167,7 +167,7 @@ namespace AccuPay.Web.Employees.Services
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
 
-            int userId = _currentUser.DesktopUserId;
+            int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
             var employees = await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);

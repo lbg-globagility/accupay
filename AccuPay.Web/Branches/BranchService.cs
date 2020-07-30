@@ -30,7 +30,7 @@ namespace AccuPay.Web.Branches
             var branch = new Branch();
             branch.Name = dto.Name;
             branch.Code = dto.Code;
-            branch.CreatedBy = _currentUser.DesktopUserId;
+            branch.CreatedBy = _currentUser.UserId;
 
             await _branchRepository.CreateAsync(branch);
 
@@ -42,7 +42,7 @@ namespace AccuPay.Web.Branches
             var branch = await _branchRepository.GetById(id);
             branch.Name = dto.Name;
             branch.Code = dto.Code;
-            branch.LastUpdBy = _currentUser.DesktopUserId;
+            branch.LastUpdBy = _currentUser.UserId;
 
             await _branchRepository.UpdateAsync(branch);
 

@@ -25,12 +25,6 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public UserQueryBuilder ByAspNetUserId(Guid aspNetUserId)
-        {
-            _query = _query.Where(u => u.AspNetUserId == aspNetUserId);
-            return this;
-        }
-
         public UserQueryBuilder ByUsername(string username)
         {
             _query = _query.Where(u => u.Username.Trim().ToLower() == username.ToTrimmedLowerCase());

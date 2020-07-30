@@ -65,7 +65,7 @@ namespace AccuPay.Web.Salaries.Services
             {
                 OrganizationID = _currentUser.OrganizationId,
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.DesktopUserId
+                CreatedBy = _currentUser.UserId
             };
 
             ApplyChanges(dto, salary);
@@ -80,7 +80,7 @@ namespace AccuPay.Web.Salaries.Services
             var salary = await _repository.GetByIdAsync(id);
             if (salary == null) return null;
 
-            salary.LastUpdBy = _currentUser.DesktopUserId;
+            salary.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, salary);
 
@@ -140,7 +140,7 @@ namespace AccuPay.Web.Salaries.Services
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
 
-            int userId = _currentUser.DesktopUserId;
+            int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
             await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);

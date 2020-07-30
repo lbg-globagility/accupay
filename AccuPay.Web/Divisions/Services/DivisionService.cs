@@ -40,7 +40,7 @@ namespace AccuPay.Web.Divisions
         {
             var division = Division.NewDivision(
                 organizationId: _currentUser.OrganizationId,
-                userId: _currentUser.DesktopUserId);
+                userId: _currentUser.UserId);
 
             ApplyChanges(dto, division);
 
@@ -54,7 +54,7 @@ namespace AccuPay.Web.Divisions
             var division = await _service.GetByIdWithParentAsync(id);
             if (division == null) return null;
 
-            division.LastUpdBy = _currentUser.DesktopUserId;
+            division.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, division);
 

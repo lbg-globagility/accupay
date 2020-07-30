@@ -73,8 +73,8 @@ namespace AccuPay.Web.Shifts.Services
                         {
                             OrganizationID = _currentUser.OrganizationId,
                             EmployeeID = dto.EmployeeId,
-                            CreatedBy = _currentUser.DesktopUserId,
-                            LastUpdBy = _currentUser.DesktopUserId,
+                            CreatedBy = _currentUser.UserId,
+                            LastUpdBy = _currentUser.UserId,
                             DateSched = dto.Date,
                             StartTimeFull = dto.StartTime,
                             EndTimeFull = dto.EndTime,
@@ -95,7 +95,7 @@ namespace AccuPay.Web.Shifts.Services
                         existingShift.ShiftBreakStartTimeFull = dto.BreakStartTime;
                         existingShift.BreakLength = dto.BreakLength;
                         existingShift.IsRestDay = dto.IsOffset;
-                        existingShift.LastUpdBy = _currentUser.DesktopUserId;
+                        existingShift.LastUpdBy = _currentUser.UserId;
 
                         updated.Add(existingShift);
                     }
@@ -124,7 +124,7 @@ namespace AccuPay.Web.Shifts.Services
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
 
-            int userId = _currentUser.DesktopUserId;
+            int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
             await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);

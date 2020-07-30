@@ -65,7 +65,7 @@ namespace AccuPay.Web.Loans
             var loanSchedule = new LoanSchedule()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.DesktopUserId,
+                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
                 TotalBalanceLeft = dto.TotalLoanAmount
             };
@@ -81,7 +81,7 @@ namespace AccuPay.Web.Loans
             var loanSchedule = await _loanRepository.GetByIdAsync(id);
             if (loanSchedule == null) return null;
 
-            loanSchedule.LastUpdBy = _currentUser.DesktopUserId;
+            loanSchedule.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, loanSchedule);
 
@@ -172,7 +172,7 @@ namespace AccuPay.Web.Loans
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
 
-            int userId = _currentUser.DesktopUserId;
+            int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
             await _loanService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);

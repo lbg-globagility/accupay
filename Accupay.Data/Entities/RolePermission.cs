@@ -11,7 +11,7 @@ namespace AccuPay.Data.Entities
         public int Id { get; set; }
 
         [Column("RoleId")]
-        public Guid RoleId { get; set; }
+        public int RoleId { get; set; }
 
         public AspNetRole Role { get; set; }
 

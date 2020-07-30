@@ -38,8 +38,6 @@ namespace AccuPay.Data.Entities
 
         public int UserLevel { get; set; }
 
-        public Guid? AspNetUserId { get; set; }
-
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
 

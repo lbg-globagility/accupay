@@ -17,7 +17,7 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public async Task<AspNetUser> GetById(Guid userId)
+        public async Task<AspNetUser> GetById(int userId)
         {
             return await _context.Users.FindAsync(userId);
         }

@@ -13,12 +13,12 @@ namespace AccuPay.Data
         : IdentityDbContext<
             AspNetUser,
             AspNetRole,
-            Guid,
-            IdentityUserClaim<Guid>,
+            int,
+            IdentityUserClaim<int>,
             UserRole,
-            IdentityUserLogin<Guid>,
-            IdentityRoleClaim<Guid>,
-            IdentityUserToken<Guid>>
+            IdentityUserLogin<int>,
+            IdentityRoleClaim<int>,
+            IdentityUserToken<int>>
     {
         //private readonly ILoggerFactory _loggerFactory;
 
@@ -153,16 +153,8 @@ namespace AccuPay.Data
                 .HasConversion(typeof(string));
 
             modelBuilder.Entity<AspNetUser>()
-                .Property(t => t.Id)
-                .HasConversion(new GuidToBigEndianBytesConverter());
-
-            modelBuilder.Entity<AspNetUser>()
                 .Property(t => t.Status)
                 .HasConversion(new EnumToStringConverter<AspNetUserStatus>());
-
-            modelBuilder.Entity<AspNetRole>()
-                .Property(t => t.Id)
-                .HasConversion(new GuidToBigEndianBytesConverter());
 
             modelBuilder.Entity<PayPeriod>()
                 .Property(t => t.Status)
@@ -175,10 +167,6 @@ namespace AccuPay.Data
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(t => new { t.UserId, t.RoleId, t.OrganizationId });
-
-            modelBuilder.Entity<User>()
-                .Property(t => t.AspNetUserId)
-                .HasConversion(new NullableGuidToBigEndianBytesConverter());
         }
     }
 }

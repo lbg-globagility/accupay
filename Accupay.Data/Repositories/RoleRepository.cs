@@ -17,7 +17,7 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public async Task<AspNetRole> GetById(Guid roleId)
+        public async Task<AspNetRole> GetById(int roleId)
         {
             var role = await _context.Roles.Include(t => t.RolePermissions)
                 .FirstOrDefaultAsync(t => t.Id == roleId);
@@ -33,7 +33,7 @@ namespace AccuPay.Data.Repositories
             return roles;
         }
 
-        public async Task<AspNetRole> GetByUserAndOrganization(Guid userId, int organizationId)
+        public async Task<AspNetRole> GetByUserAndOrganization(int userId, int organizationId)
         {
             var userRole = await _context.UserRoles
                 .Where(t => t.UserId == userId && t.OrganizationId == organizationId)

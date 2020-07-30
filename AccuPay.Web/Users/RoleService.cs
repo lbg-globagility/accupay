@@ -29,7 +29,7 @@ namespace AccuPay.Web.Users
             _currentUser = currentUser;
         }
 
-        public async Task<RoleDto> GetById(Guid roleId)
+        public async Task<RoleDto> GetById(int roleId)
         {
             var role = await _roleRepository.GetById(roleId);
 
@@ -108,7 +108,7 @@ namespace AccuPay.Web.Users
             return ConvertToDto(role);
         }
 
-        public async Task<RoleDto> Update(Guid roleId, UpdateRoleDto dto)
+        public async Task<RoleDto> Update(int roleId, UpdateRoleDto dto)
         {
             var role = await _roleRepository.GetById(roleId);
 

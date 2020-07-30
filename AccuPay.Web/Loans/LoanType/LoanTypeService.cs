@@ -18,7 +18,7 @@ namespace AccuPay.Web.Loans.LoanType
 
         internal async Task<LoanTypeDto> CreateAsync(LoanTypeDto dto)
         {
-            var loanType = await _productRepository.AddLoanTypeAsync(dto.Name, _currentUser.OrganizationId, _currentUser.DesktopUserId);
+            var loanType = await _productRepository.AddLoanTypeAsync(dto.Name, _currentUser.OrganizationId, _currentUser.UserId);
 
             dto.Id = loanType.RowID.Value;
 

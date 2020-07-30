@@ -7,12 +7,10 @@ namespace AccuPay.Web.Core.Auth
     /// </summary>
     public interface ICurrentUser
     {
-        Guid UserId { get; }
+        int UserId { get; }
 
         int OrganizationId { get; }
 
         int ClientId { get; }
-
-        int DesktopUserId { get; }
     }
 }

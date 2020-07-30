@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
-    public class AspNetRole : IdentityRole<Guid>
+    public class AspNetRole : IdentityRole<int>
     {
         public int ClientId { get; set; }
 
@@ -16,7 +16,6 @@ namespace AccuPay.Data.Entities
 
         public AspNetRole()
         {
-            Id = Guid.NewGuid();
             RolePermissions = new Collection<RolePermission>();
         }
 
@@ -33,12 +32,16 @@ namespace AccuPay.Data.Entities
             {
                 case "read":
                     return rolePermission.Read;
+
                 case "create":
                     return rolePermission.Create;
+
                 case "update":
                     return rolePermission.Update;
+
                 case "delete":
                     return rolePermission.Delete;
+
                 default:
                     return false;
             }

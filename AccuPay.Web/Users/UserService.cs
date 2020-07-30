@@ -63,8 +63,6 @@ namespace AccuPay.Web.Users
             {
                 await _emailService.SendInvitation(user);
 
-                await _userDataService.CreateAsync(user, _currentUser.DesktopUserId);
-
                 return new UserDto()
                 {
                     Id = user.Id,
@@ -84,7 +82,7 @@ namespace AccuPay.Web.Users
             }
         }
 
-        public async Task<UserDto> Update(Guid id, UpdateUserDto dto)
+        public async Task<UserDto> Update(int id, UpdateUserDto dto)
         {
             var user = await _users.FindByIdAsync(id.ToString());
 
@@ -113,7 +111,7 @@ namespace AccuPay.Web.Users
             }
         }
 
-        public async Task<UserDto> GetById(Guid id)
+        public async Task<UserDto> GetById(int id)
         {
             var user = await _users.FindByIdAsync(id.ToString());
 

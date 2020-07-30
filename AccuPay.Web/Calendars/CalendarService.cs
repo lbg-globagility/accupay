@@ -58,7 +58,7 @@ namespace AccuPay.Web.Calendars
         {
             var calendar = new PayCalendar();
             calendar.Name = dto.Name;
-            calendar.CreatedBy = _currentUser.DesktopUserId;
+            calendar.CreatedBy = _currentUser.UserId;
 
             var copiedCalendar = await _repository.GetById(dto.CopiedCalendarId);
 
@@ -71,7 +71,7 @@ namespace AccuPay.Web.Calendars
         {
             var calendar = await _repository.GetById(id);
             calendar.Name = dto.Name;
-            calendar.LastUpdBy = _currentUser.DesktopUserId;
+            calendar.LastUpdBy = _currentUser.UserId;
 
             await _dataService.UpdateAsync(calendar);
 
@@ -99,14 +99,14 @@ namespace AccuPay.Web.Calendars
                     {
                         CalendarID = calendarId,
                         Date = dto.Date,
-                        CreatedBy = _currentUser.DesktopUserId,
+                        CreatedBy = _currentUser.UserId,
                     };
 
                     added.Add(calendarDay);
                 }
                 else
                 {
-                    calendarDay.UpdatedBy = _currentUser.DesktopUserId;
+                    calendarDay.UpdatedBy = _currentUser.UserId;
                     updated.Add(calendarDay);
                 }
 

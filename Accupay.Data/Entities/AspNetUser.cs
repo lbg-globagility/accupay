@@ -3,11 +3,10 @@ using System;
 
 namespace AccuPay.Data.Entities
 {
-    public class AspNetUser : IdentityUser<Guid>
+    public class AspNetUser : IdentityUser<int>
     {
         public AspNetUser()
         {
-            Id = Guid.NewGuid();
             Status = AspNetUserStatus.Pending;
         }
 
@@ -18,7 +17,7 @@ namespace AccuPay.Data.Entities
         public int ClientId { get; set; }
 
         public AspNetUserStatus Status { get; set; }
-        
+
         public int? OriginalImageId { get; set; }
 
         public virtual File OriginalImage { get; set; }

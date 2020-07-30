@@ -4,7 +4,7 @@ namespace AccuPay.Web.Users
 {
     public class UserDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string FirstName { get; set; }
 

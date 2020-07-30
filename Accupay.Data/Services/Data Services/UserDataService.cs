@@ -26,35 +26,6 @@ namespace AccuPay.Data.Services
             _encryption = encryption;
         }
 
-        public async Task CreateAsync(AspNetUser aspNetUser, int savedByUserId)
-        {
-            var position = await _positionRepository.GetFirstPositionAsync();
-
-            if (position?.RowID == null)
-            {
-                // BusinessLogicException is not used here because we don't want the users to read this error.
-                // At least one position should be added for every database or
-                // create a default position if there is no one.
-                throw new Exception("No default position.");
-            }
-
-            var username = await _userRepository.GetUniqueUsernameAsync(aspNetUser.UserName, aspNetUser.ClientId);
-
-            var user = User.NewUser(organizationId: position.OrganizationID.Value, userId: savedByUserId);
-
-            user.FirstName = aspNetUser.FirstName;
-            user.LastName = aspNetUser.LastName;
-            user.EmailAddress = aspNetUser.Email;
-
-            user.PositionID = position.RowID.Value;
-
-            user.Username = username;
-            user.Password = username;
-
-            user.AspNetUserId = aspNetUser.Id;
-            await CreateAsync(user);
-        }
-
         public async Task CreateAsync(User user)
         {
             await SanitizeEntity(user);

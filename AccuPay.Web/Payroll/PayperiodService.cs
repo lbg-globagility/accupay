@@ -43,14 +43,14 @@ namespace AccuPay.Web.Payroll
             if (payPeriod.Status != PayPeriodStatus.Open)
                 throw new BusinessLogicException("Only \"Open\" pay periods can be computed.");
 
-            await resources.Load(payperiodId, _currentUser.OrganizationId, _currentUser.DesktopUserId);
+            await resources.Load(payperiodId, _currentUser.OrganizationId, _currentUser.UserId);
 
             var results = new List<PayrollGeneration.Result>();
 
             foreach (var employee in resources.Employees)
             {
                 var generation = new PayrollGeneration(_dbContextOptionsService);
-                var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, _currentUser.DesktopUserId);
+                var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, _currentUser.UserId);
 
                 results.Add(result);
             }
@@ -86,32 +86,32 @@ namespace AccuPay.Web.Payroll
                 month: dto.Month,
                 year: dto.Year,
                 isFirstHalf: dto.IsFirstHalf,
-                userId: _currentUser.DesktopUserId);
+                userId: _currentUser.UserId);
 
             return ConvertToDto(newPayPeriod);
         }
 
         public async Task Close(int payPeriodId)
         {
-            await _payPeriodDataService.CloseAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+            await _payPeriodDataService.CloseAsync(payPeriodId: payPeriodId, userId: _currentUser.UserId);
         }
 
         public async Task Reopen(int payPeriodId)
         {
-            await _payPeriodDataService.ReopenAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+            await _payPeriodDataService.ReopenAsync(payPeriodId: payPeriodId, userId: _currentUser.UserId);
         }
 
         public async Task Delete(int payPeriodId)
         {
             await _paystubDataService.DeleteByPeriodAsync(
                 payPeriodId: payPeriodId,
-                userId: _currentUser.DesktopUserId,
+                userId: _currentUser.UserId,
                 organizationId: _currentUser.OrganizationId);
         }
 
         public async Task Cancel(int payPeriodId)
         {
-            await _payPeriodDataService.CancelAsync(payPeriodId: payPeriodId, userId: _currentUser.DesktopUserId);
+            await _payPeriodDataService.CancelAsync(payPeriodId: payPeriodId, userId: _currentUser.UserId);
         }
 
         public async Task<PayPeriodDto> GetById(int payPeriodId)

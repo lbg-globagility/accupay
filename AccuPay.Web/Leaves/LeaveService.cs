@@ -88,7 +88,7 @@ namespace AccuPay.Web.Leaves
             var leave = new Leave()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.DesktopUserId,
+                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, leave);
@@ -103,7 +103,7 @@ namespace AccuPay.Web.Leaves
             var leave = await _leaveRepository.GetByIdAsync(id);
             if (leave == null) return null;
 
-            leave.LastUpdBy = _currentUser.DesktopUserId;
+            leave.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, leave);
 

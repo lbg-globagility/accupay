@@ -13,7 +13,5 @@ namespace AccuPay.Web.Core.Auth
         public const string Email = "email";
 
         public const string OrganizationType = "org_type";
-
-        public const string DesktopUserId = "desktop_user_id";
     }
 }

@@ -101,14 +101,6 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<User> GetByAspNetUserIdAsync(Guid aspNetUserId)
-        {
-            var builder = new UserQueryBuilder(_context);
-            return await builder
-                .ByAspNetUserId(aspNetUserId)
-                .FirstOrDefaultAsync();
-        }
-
         public async Task<User> GetFirstUserAsync()
         {
             var builder = new UserQueryBuilder(_context);

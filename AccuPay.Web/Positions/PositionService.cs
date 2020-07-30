@@ -37,7 +37,7 @@ namespace AccuPay.Web.Positions
         {
             var overtime = new Position()
             {
-                CreatedBy = _currentUser.DesktopUserId,
+                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
@@ -52,7 +52,7 @@ namespace AccuPay.Web.Positions
             var overtime = await _service.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            overtime.LastUpdBy = _currentUser.DesktopUserId;
+            overtime.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, overtime);
 

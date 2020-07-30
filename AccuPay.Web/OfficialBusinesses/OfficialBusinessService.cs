@@ -48,7 +48,7 @@ namespace AccuPay.Web.OfficialBusinesses
             var officialBusiness = new OfficialBusiness()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.DesktopUserId,
+                CreatedBy = _currentUser.UserId,
                 OrganizationID = organizationId,
             };
             ApplyChanges(dto, officialBusiness);
@@ -63,7 +63,7 @@ namespace AccuPay.Web.OfficialBusinesses
             var officialBusiness = await _repository.GetByIdAsync(id);
             if (officialBusiness == null) return null;
 
-            officialBusiness.LastUpdBy = _currentUser.DesktopUserId;
+            officialBusiness.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, officialBusiness);
 

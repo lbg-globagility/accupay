@@ -89,7 +89,7 @@ namespace AccuPay.Web.Clients
             if (dto.Organization != null)
             {
                 var organization = Organization.NewOrganization(
-                    userId: _currentUser.DesktopUserId,
+                    userId: _currentUser.UserId,
                     clientId: client.Id);
 
                 organization.Name = dto.Name;

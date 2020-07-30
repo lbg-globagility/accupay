@@ -62,7 +62,7 @@ namespace AccuPay.Web.Allowances.Services
             var allowance = new Allowance
             {
                 OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = _currentUser.DesktopUserId,
+                CreatedBy = _currentUser.UserId,
                 EmployeeID = dto.EmployeeId
             };
             ApplyChanges(dto, allowance);
@@ -77,7 +77,7 @@ namespace AccuPay.Web.Allowances.Services
             var allowance = await _allowanceRepository.GetByIdAsync(id);
             if (allowance == null) return null;
 
-            allowance.LastUpdBy = _currentUser.DesktopUserId;
+            allowance.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, allowance);
 
@@ -156,7 +156,7 @@ namespace AccuPay.Web.Allowances.Services
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
 
-            int userId = _currentUser.DesktopUserId;
+            int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
             await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);

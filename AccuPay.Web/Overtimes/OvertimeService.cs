@@ -45,7 +45,7 @@ namespace AccuPay.Web.Overtimes
             var overtime = new Overtime()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.DesktopUserId,
+                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
@@ -60,7 +60,7 @@ namespace AccuPay.Web.Overtimes
             var overtime = await _repository.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            overtime.LastUpdBy = _currentUser.DesktopUserId;
+            overtime.LastUpdBy = _currentUser.UserId;
 
             ApplyChanges(dto, overtime);
 

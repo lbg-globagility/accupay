@@ -31,14 +31,14 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet("{id}")]
         [Permission(PermissionTypes.RoleRead)]
-        public async Task<ActionResult<RoleDto>> GetById(Guid id)
+        public async Task<ActionResult<RoleDto>> GetById(int id)
         {
             return await _roleService.GetById(id);
         }
 
         [HttpPut("{id}")]
         [Permission(PermissionTypes.RoleUpdate)]
-        public async Task<ActionResult<RoleDto>> Update(Guid id, [FromBody] UpdateRoleDto dto)
+        public async Task<ActionResult<RoleDto>> Update(int id, [FromBody] UpdateRoleDto dto)
         {
             return await _roleService.Update(id, dto);
         }

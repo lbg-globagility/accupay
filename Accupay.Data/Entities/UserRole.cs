@@ -3,7 +3,7 @@ using System;
 
 namespace AccuPay.Data.Entities
 {
-    public class UserRole : IdentityUserRole<Guid>
+    public class UserRole : IdentityUserRole<int>
     {
         public int OrganizationId { get; set; }
 
@@ -11,7 +11,7 @@ namespace AccuPay.Data.Entities
         {
         }
 
-        public UserRole(Guid userId, Guid roleId, int organizationId)
+        public UserRole(int userId, int roleId, int organizationId)
         {
             UserId = userId;
             RoleId = roleId;
