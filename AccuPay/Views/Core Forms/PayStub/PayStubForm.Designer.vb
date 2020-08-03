@@ -25,7 +25,6 @@ Partial Class PayStubForm
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PayStubForm))
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -34,6 +33,7 @@ Partial Class PayStubForm
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayper = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -53,14 +53,6 @@ Partial Class PayStubForm
         Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.dgvemployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Division = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblGrossIncome = New System.Windows.Forms.Label()
         Me.Last = New System.Windows.Forms.LinkLabel()
@@ -335,6 +327,14 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Division = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -526,7 +526,7 @@ Partial Class PayStubForm
         Me.dgvemployees.BackgroundColor = System.Drawing.Color.White
         Me.dgvemployees.ColumnHeadersHeight = 34
         Me.dgvemployees.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.EmployeeID, Me.FirstName, Me.MiddleName, Me.LastName, Me.EmployeeType, Me.Position, Me.Division})
+        Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.EmployeeID, Me.LastName, Me.FirstName, Me.MiddleName, Me.EmployeeType, Me.Position, Me.Division})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -545,56 +545,6 @@ Partial Class PayStubForm
         Me.dgvemployees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvemployees.Size = New System.Drawing.Size(765, 300)
         Me.dgvemployees.TabIndex = 174
-        '
-        'RowID
-        '
-        Me.RowID.HeaderText = "RowID"
-        Me.RowID.Name = "RowID"
-        Me.RowID.ReadOnly = True
-        '
-        'EmployeeID
-        '
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle2
-        Me.EmployeeID.HeaderText = "Employee ID"
-        Me.EmployeeID.Name = "EmployeeID"
-        Me.EmployeeID.ReadOnly = True
-        '
-        'FirstName
-        '
-        Me.FirstName.HeaderText = "First Name"
-        Me.FirstName.Name = "FirstName"
-        Me.FirstName.ReadOnly = True
-        '
-        'MiddleName
-        '
-        Me.MiddleName.HeaderText = "Middle Name"
-        Me.MiddleName.Name = "MiddleName"
-        Me.MiddleName.ReadOnly = True
-        '
-        'LastName
-        '
-        Me.LastName.HeaderText = "Last Name"
-        Me.LastName.Name = "LastName"
-        Me.LastName.ReadOnly = True
-        '
-        'EmployeeType
-        '
-        Me.EmployeeType.HeaderText = "Employee Type"
-        Me.EmployeeType.Name = "EmployeeType"
-        Me.EmployeeType.ReadOnly = True
-        '
-        'Position
-        '
-        Me.Position.HeaderText = "Position"
-        Me.Position.Name = "Position"
-        Me.Position.ReadOnly = True
-        '
-        'Division
-        '
-        Me.Division.HeaderText = "Division"
-        Me.Division.Name = "Division"
-        Me.Division.ReadOnly = True
         '
         'Label2
         '
@@ -1068,12 +1018,12 @@ Partial Class PayStubForm
         Me.Panel6.Size = New System.Drawing.Size(359, 152)
         Me.Panel6.TabIndex = 534
         '
-        'txttotholidayhrs_U
+        'txtRegularHolidayHours
         '
         Me.txtRegularHolidayHours.AccessibleDescription = "RegularHolidayHours"
         Me.txtRegularHolidayHours.BackColor = System.Drawing.Color.White
         Me.txtRegularHolidayHours.Location = New System.Drawing.Point(117, 9)
-        Me.txtRegularHolidayHours.Name = "txttotholidayhrs_U"
+        Me.txtRegularHolidayHours.Name = "txtRegularHolidayHours"
         Me.txtRegularHolidayHours.ReadOnly = True
         Me.txtRegularHolidayHours.ShortcutsEnabled = False
         Me.txtRegularHolidayHours.Size = New System.Drawing.Size(100, 20)
@@ -1107,12 +1057,12 @@ Partial Class PayStubForm
         Me.Label102.TabIndex = 532
         Me.Label102.Text = "Rest day ot :"
         '
-        'txtSpecHoliOtPay
+        'txtSpecialHolidayOTPay
         '
         Me.txtSpecialHolidayOTPay.AccessibleDescription = "SpecialHolidayOTPay"
         Me.txtSpecialHolidayOTPay.BackColor = System.Drawing.Color.White
         Me.txtSpecialHolidayOTPay.Location = New System.Drawing.Point(243, 78)
-        Me.txtSpecialHolidayOTPay.Name = "txtSpecHoliOtPay"
+        Me.txtSpecialHolidayOTPay.Name = "txtSpecialHolidayOTPay"
         Me.txtSpecialHolidayOTPay.ReadOnly = True
         Me.txtSpecialHolidayOTPay.ShortcutsEnabled = False
         Me.txtSpecialHolidayOTPay.Size = New System.Drawing.Size(100, 20)
@@ -1164,33 +1114,33 @@ Partial Class PayStubForm
         Me.Label96.TabIndex = 532
         Me.Label96.Text = "Rest day :"
         '
-        'txtHoliOtHour
+        'txtRegularHolidayOTHours
         '
         Me.txtRegularHolidayOTHours.AccessibleDescription = "RegularHolidayOTHours"
         Me.txtRegularHolidayOTHours.BackColor = System.Drawing.Color.White
         Me.txtRegularHolidayOTHours.Location = New System.Drawing.Point(117, 32)
-        Me.txtRegularHolidayOTHours.Name = "txtHoliOtHour"
+        Me.txtRegularHolidayOTHours.Name = "txtRegularHolidayOTHours"
         Me.txtRegularHolidayOTHours.ReadOnly = True
         Me.txtRegularHolidayOTHours.ShortcutsEnabled = False
         Me.txtRegularHolidayOTHours.Size = New System.Drawing.Size(100, 20)
         Me.txtRegularHolidayOTHours.TabIndex = 312
         Me.txtRegularHolidayOTHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtRestDayAmount
+        'txtRestDayPay
         '
         Me.txtRestDayPay.AccessibleDescription = "RestDayPay"
         Me.txtRestDayPay.Location = New System.Drawing.Point(243, 101)
-        Me.txtRestDayPay.Name = "txtRestDayAmount"
+        Me.txtRestDayPay.Name = "txtRestDayPay"
         Me.txtRestDayPay.Size = New System.Drawing.Size(100, 20)
         Me.txtRestDayPay.TabIndex = 531
         Me.txtRestDayPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtSpecHoliPay
+        'txtSpecialHolidayPay
         '
         Me.txtSpecialHolidayPay.AccessibleDescription = "SpecialHolidayPay"
         Me.txtSpecialHolidayPay.BackColor = System.Drawing.Color.White
         Me.txtSpecialHolidayPay.Location = New System.Drawing.Point(243, 55)
-        Me.txtSpecialHolidayPay.Name = "txtSpecHoliPay"
+        Me.txtSpecialHolidayPay.Name = "txtSpecialHolidayPay"
         Me.txtSpecialHolidayPay.ReadOnly = True
         Me.txtSpecialHolidayPay.ShortcutsEnabled = False
         Me.txtSpecialHolidayPay.Size = New System.Drawing.Size(100, 20)
@@ -1233,36 +1183,36 @@ Partial Class PayStubForm
         Me.Label101.TabIndex = 301
         Me.Label101.Text = "₱"
         '
-        'txtSpecHoliHour
+        'txtSpecialHolidayHours
         '
         Me.txtSpecialHolidayHours.AccessibleDescription = "SpecialHolidayHours"
         Me.txtSpecialHolidayHours.BackColor = System.Drawing.Color.White
         Me.txtSpecialHolidayHours.Location = New System.Drawing.Point(117, 55)
-        Me.txtSpecialHolidayHours.Name = "txtSpecHoliHour"
+        Me.txtSpecialHolidayHours.Name = "txtSpecialHolidayHours"
         Me.txtSpecialHolidayHours.ReadOnly = True
         Me.txtSpecialHolidayHours.ShortcutsEnabled = False
         Me.txtSpecialHolidayHours.Size = New System.Drawing.Size(100, 20)
         Me.txtSpecialHolidayHours.TabIndex = 312
         Me.txtSpecialHolidayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtHoliOtPay
+        'txtRegularHolidayOTPay
         '
         Me.txtRegularHolidayOTPay.AccessibleDescription = "RegularHolidayOTPay"
         Me.txtRegularHolidayOTPay.BackColor = System.Drawing.Color.White
         Me.txtRegularHolidayOTPay.Location = New System.Drawing.Point(243, 32)
-        Me.txtRegularHolidayOTPay.Name = "txtHoliOtPay"
+        Me.txtRegularHolidayOTPay.Name = "txtRegularHolidayOTPay"
         Me.txtRegularHolidayOTPay.ReadOnly = True
         Me.txtRegularHolidayOTPay.ShortcutsEnabled = False
         Me.txtRegularHolidayOTPay.Size = New System.Drawing.Size(100, 20)
         Me.txtRegularHolidayOTPay.TabIndex = 303
         Me.txtRegularHolidayOTPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtSpecHoliOtHour
+        'txtSpecialHolidayOTHours
         '
         Me.txtSpecialHolidayOTHours.AccessibleDescription = "SpecialHolidayOTHours"
         Me.txtSpecialHolidayOTHours.BackColor = System.Drawing.Color.White
         Me.txtSpecialHolidayOTHours.Location = New System.Drawing.Point(117, 78)
-        Me.txtSpecialHolidayOTHours.Name = "txtSpecHoliOtHour"
+        Me.txtSpecialHolidayOTHours.Name = "txtSpecialHolidayOTHours"
         Me.txtSpecialHolidayOTHours.ReadOnly = True
         Me.txtSpecialHolidayOTHours.ShortcutsEnabled = False
         Me.txtSpecialHolidayOTHours.Size = New System.Drawing.Size(100, 20)
@@ -1278,12 +1228,12 @@ Partial Class PayStubForm
         Me.Label64.TabIndex = 301
         Me.Label64.Text = "₱"
         '
-        'txttotholidayamt_U
+        'txtRegularHolidayPay
         '
         Me.txtRegularHolidayPay.AccessibleDescription = "RegularHolidayPay"
         Me.txtRegularHolidayPay.BackColor = System.Drawing.Color.White
         Me.txtRegularHolidayPay.Location = New System.Drawing.Point(243, 9)
-        Me.txtRegularHolidayPay.Name = "txttotholidayamt_U"
+        Me.txtRegularHolidayPay.Name = "txtRegularHolidayPay"
         Me.txtRegularHolidayPay.ReadOnly = True
         Me.txtRegularHolidayPay.ShortcutsEnabled = False
         Me.txtRegularHolidayPay.Size = New System.Drawing.Size(100, 20)
@@ -1859,10 +1809,10 @@ Partial Class PayStubForm
         Me.Label58.TabIndex = 272
         Me.Label58.Text = "₱"
         '
-        'txtBasicPay
+        'txtBasicRate
         '
         Me.txtBasicRate.Location = New System.Drawing.Point(23, 23)
-        Me.txtBasicRate.Name = "txtBasicPay"
+        Me.txtBasicRate.Name = "txtBasicRate"
         Me.txtBasicRate.ShortcutsEnabled = False
         Me.txtBasicRate.Size = New System.Drawing.Size(100, 20)
         Me.txtBasicRate.TabIndex = 209
@@ -2085,11 +2035,11 @@ Partial Class PayStubForm
         Me.Label83.TabIndex = 287
         Me.Label83.Text = "₱"
         '
-        'txthrsworkamt_U
+        'txtRegularPayActual
         '
         Me.txtRegularPayActual.BackColor = System.Drawing.Color.White
         Me.txtRegularPayActual.Location = New System.Drawing.Point(244, 72)
-        Me.txtRegularPayActual.Name = "txthrsworkamt_U"
+        Me.txtRegularPayActual.Name = "txtRegularPayActual"
         Me.txtRegularPayActual.ReadOnly = True
         Me.txtRegularPayActual.ShortcutsEnabled = False
         Me.txtRegularPayActual.Size = New System.Drawing.Size(100, 20)
@@ -2105,11 +2055,11 @@ Partial Class PayStubForm
         Me.Label84.TabIndex = 286
         Me.Label84.Text = "₱"
         '
-        'txthrswork_U
+        'txtRegularHoursActual
         '
         Me.txtRegularHoursActual.BackColor = System.Drawing.Color.White
         Me.txtRegularHoursActual.Location = New System.Drawing.Point(118, 72)
-        Me.txtRegularHoursActual.Name = "txthrswork_U"
+        Me.txtRegularHoursActual.Name = "txtRegularHoursActual"
         Me.txtRegularHoursActual.ReadOnly = True
         Me.txtRegularHoursActual.ShortcutsEnabled = False
         Me.txtRegularHoursActual.Size = New System.Drawing.Size(100, 20)
@@ -2136,33 +2086,33 @@ Partial Class PayStubForm
         Me.Label70.TabIndex = 318
         Me.Label70.Text = "Total hours"
         '
-        'txttotutamt_U
+        'txtUndertimeDeductionActual
         '
         Me.txtUndertimeDeductionActual.BackColor = System.Drawing.Color.White
         Me.txtUndertimeDeductionActual.Location = New System.Drawing.Point(623, 125)
-        Me.txtUndertimeDeductionActual.Name = "txttotutamt_U"
+        Me.txtUndertimeDeductionActual.Name = "txtUndertimeDeductionActual"
         Me.txtUndertimeDeductionActual.ReadOnly = True
         Me.txtUndertimeDeductionActual.ShortcutsEnabled = False
         Me.txtUndertimeDeductionActual.Size = New System.Drawing.Size(100, 20)
         Me.txtUndertimeDeductionActual.TabIndex = 282
         Me.txtUndertimeDeductionActual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttotnightdiffothrs_U
+        'NightDiffOvertimeHoursActual
         '
         Me.NightDiffOvertimeHoursActual.BackColor = System.Drawing.Color.White
         Me.NightDiffOvertimeHoursActual.Location = New System.Drawing.Point(118, 150)
-        Me.NightDiffOvertimeHoursActual.Name = "txttotnightdiffothrs_U"
+        Me.NightDiffOvertimeHoursActual.Name = "NightDiffOvertimeHoursActual"
         Me.NightDiffOvertimeHoursActual.ReadOnly = True
         Me.NightDiffOvertimeHoursActual.ShortcutsEnabled = False
         Me.NightDiffOvertimeHoursActual.Size = New System.Drawing.Size(100, 20)
         Me.NightDiffOvertimeHoursActual.TabIndex = 316
         Me.NightDiffOvertimeHoursActual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttottardiamt_U
+        'txtLateDeductionActual
         '
         Me.txtLateDeductionActual.BackColor = System.Drawing.Color.White
         Me.txtLateDeductionActual.Location = New System.Drawing.Point(623, 98)
-        Me.txtLateDeductionActual.Name = "txttottardiamt_U"
+        Me.txtLateDeductionActual.Name = "txtLateDeductionActual"
         Me.txtLateDeductionActual.ReadOnly = True
         Me.txtLateDeductionActual.ShortcutsEnabled = False
         Me.txtLateDeductionActual.Size = New System.Drawing.Size(100, 20)
@@ -2178,22 +2128,22 @@ Partial Class PayStubForm
         Me.Label71.TabIndex = 315
         Me.Label71.Text = "Night differential OT :"
         '
-        'txttotabsentamt_U
+        'txtAbsenceDeductionActual
         '
         Me.txtAbsenceDeductionActual.BackColor = System.Drawing.Color.White
         Me.txtAbsenceDeductionActual.Location = New System.Drawing.Point(623, 72)
-        Me.txtAbsenceDeductionActual.Name = "txttotabsentamt_U"
+        Me.txtAbsenceDeductionActual.Name = "txtAbsenceDeductionActual"
         Me.txtAbsenceDeductionActual.ReadOnly = True
         Me.txtAbsenceDeductionActual.ShortcutsEnabled = False
         Me.txtAbsenceDeductionActual.Size = New System.Drawing.Size(100, 20)
         Me.txtAbsenceDeductionActual.TabIndex = 280
         Me.txtAbsenceDeductionActual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttotnightdiffhrs_U
+        'txtNightDiffHoursActual
         '
         Me.txtNightDiffHoursActual.BackColor = System.Drawing.Color.White
         Me.txtNightDiffHoursActual.Location = New System.Drawing.Point(118, 124)
-        Me.txtNightDiffHoursActual.Name = "txttotnightdiffhrs_U"
+        Me.txtNightDiffHoursActual.Name = "txtNightDiffHoursActual"
         Me.txtNightDiffHoursActual.ReadOnly = True
         Me.txtNightDiffHoursActual.ShortcutsEnabled = False
         Me.txtNightDiffHoursActual.Size = New System.Drawing.Size(100, 20)
@@ -2229,11 +2179,11 @@ Partial Class PayStubForm
         Me.Label89.TabIndex = 278
         Me.Label89.Text = "Total hours"
         '
-        'txttotothrs_U
+        'txtOvertimeHoursActual
         '
         Me.txtOvertimeHoursActual.BackColor = System.Drawing.Color.White
         Me.txtOvertimeHoursActual.Location = New System.Drawing.Point(118, 98)
-        Me.txtOvertimeHoursActual.Name = "txttotothrs_U"
+        Me.txtOvertimeHoursActual.Name = "txtOvertimeHoursActual"
         Me.txtOvertimeHoursActual.ReadOnly = True
         Me.txtOvertimeHoursActual.ShortcutsEnabled = False
         Me.txtOvertimeHoursActual.Size = New System.Drawing.Size(100, 20)
@@ -2258,11 +2208,11 @@ Partial Class PayStubForm
         Me.Label73.TabIndex = 311
         Me.Label73.Text = "Overtime :"
         '
-        'txttotut_U
+        'txtUndertimeHoursActual
         '
         Me.txtUndertimeHoursActual.BackColor = System.Drawing.Color.White
         Me.txtUndertimeHoursActual.Location = New System.Drawing.Point(496, 125)
-        Me.txtUndertimeHoursActual.Name = "txttotut_U"
+        Me.txtUndertimeHoursActual.Name = "txtUndertimeHoursActual"
         Me.txtUndertimeHoursActual.ReadOnly = True
         Me.txtUndertimeHoursActual.ShortcutsEnabled = False
         Me.txtUndertimeHoursActual.Size = New System.Drawing.Size(100, 20)
@@ -2287,20 +2237,20 @@ Partial Class PayStubForm
         Me.Label91.TabIndex = 275
         Me.Label91.Text = "Tardiness :"
         '
-        'txtempbasicpay_U
+        'txtBasicRateActual
         '
         Me.txtBasicRateActual.Location = New System.Drawing.Point(23, 23)
-        Me.txtBasicRateActual.Name = "txtempbasicpay_U"
+        Me.txtBasicRateActual.Name = "txtBasicRateActual"
         Me.txtBasicRateActual.ShortcutsEnabled = False
         Me.txtBasicRateActual.Size = New System.Drawing.Size(100, 20)
         Me.txtBasicRateActual.TabIndex = 309
         Me.txtBasicRateActual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttottardi_U
+        'txtLateHoursActual
         '
         Me.txtLateHoursActual.BackColor = System.Drawing.Color.White
         Me.txtLateHoursActual.Location = New System.Drawing.Point(496, 98)
-        Me.txtLateHoursActual.Name = "txttottardi_U"
+        Me.txtLateHoursActual.Name = "txtLateHoursActual"
         Me.txtLateHoursActual.ReadOnly = True
         Me.txtLateHoursActual.ShortcutsEnabled = False
         Me.txtLateHoursActual.Size = New System.Drawing.Size(100, 20)
@@ -2317,11 +2267,11 @@ Partial Class PayStubForm
         Me.Label75.TabIndex = 308
         Me.Label75.Text = "Basic rate :"
         '
-        'txttotabsent_U
+        'txtAbsentHoursActual
         '
         Me.txtAbsentHoursActual.BackColor = System.Drawing.Color.White
         Me.txtAbsentHoursActual.Location = New System.Drawing.Point(496, 72)
-        Me.txtAbsentHoursActual.Name = "txttotabsent_U"
+        Me.txtAbsentHoursActual.Name = "txtAbsentHoursActual"
         Me.txtAbsentHoursActual.ReadOnly = True
         Me.txtAbsentHoursActual.ShortcutsEnabled = False
         Me.txtAbsentHoursActual.Size = New System.Drawing.Size(100, 20)
@@ -2337,33 +2287,33 @@ Partial Class PayStubForm
         Me.Label92.TabIndex = 272
         Me.Label92.Text = "Absent :"
         '
-        'txttotnightdiffotamt_U
+        'txtNightDiffOvertimePayActual
         '
         Me.txtNightDiffOvertimePayActual.BackColor = System.Drawing.Color.White
         Me.txtNightDiffOvertimePayActual.Location = New System.Drawing.Point(244, 150)
-        Me.txtNightDiffOvertimePayActual.Name = "txttotnightdiffotamt_U"
+        Me.txtNightDiffOvertimePayActual.Name = "txtNightDiffOvertimePayActual"
         Me.txtNightDiffOvertimePayActual.ReadOnly = True
         Me.txtNightDiffOvertimePayActual.ShortcutsEnabled = False
         Me.txtNightDiffOvertimePayActual.Size = New System.Drawing.Size(100, 20)
         Me.txtNightDiffOvertimePayActual.TabIndex = 305
         Me.txtNightDiffOvertimePayActual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttotnightdiffamt_U
+        'txtNightDiffPayActual
         '
         Me.txtNightDiffPayActual.BackColor = System.Drawing.Color.White
         Me.txtNightDiffPayActual.Location = New System.Drawing.Point(244, 124)
-        Me.txtNightDiffPayActual.Name = "txttotnightdiffamt_U"
+        Me.txtNightDiffPayActual.Name = "txtNightDiffPayActual"
         Me.txtNightDiffPayActual.ReadOnly = True
         Me.txtNightDiffPayActual.ShortcutsEnabled = False
         Me.txtNightDiffPayActual.Size = New System.Drawing.Size(100, 20)
         Me.txtNightDiffPayActual.TabIndex = 304
         Me.txtNightDiffPayActual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txttototamt_U
+        'txtOvertimePayActual
         '
         Me.txtOvertimePayActual.BackColor = System.Drawing.Color.White
         Me.txtOvertimePayActual.Location = New System.Drawing.Point(244, 98)
-        Me.txtOvertimePayActual.Name = "txttototamt_U"
+        Me.txtOvertimePayActual.Name = "txtOvertimePayActual"
         Me.txtOvertimePayActual.ReadOnly = True
         Me.txtOvertimePayActual.ShortcutsEnabled = False
         Me.txtOvertimePayActual.Size = New System.Drawing.Size(100, 20)
@@ -3522,6 +3472,56 @@ Partial Class PayStubForm
         'ProgressTimer
         '
         '
+        'RowID
+        '
+        Me.RowID.HeaderText = "RowID"
+        Me.RowID.Name = "RowID"
+        Me.RowID.ReadOnly = True
+        '
+        'EmployeeID
+        '
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle2
+        Me.EmployeeID.HeaderText = "Employee ID"
+        Me.EmployeeID.Name = "EmployeeID"
+        Me.EmployeeID.ReadOnly = True
+        '
+        'LastName
+        '
+        Me.LastName.HeaderText = "Last Name"
+        Me.LastName.Name = "LastName"
+        Me.LastName.ReadOnly = True
+        '
+        'FirstName
+        '
+        Me.FirstName.HeaderText = "First Name"
+        Me.FirstName.Name = "FirstName"
+        Me.FirstName.ReadOnly = True
+        '
+        'MiddleName
+        '
+        Me.MiddleName.HeaderText = "Middle Name"
+        Me.MiddleName.Name = "MiddleName"
+        Me.MiddleName.ReadOnly = True
+        '
+        'EmployeeType
+        '
+        Me.EmployeeType.HeaderText = "Employee Type"
+        Me.EmployeeType.Name = "EmployeeType"
+        Me.EmployeeType.ReadOnly = True
+        '
+        'Position
+        '
+        Me.Position.HeaderText = "Position"
+        Me.Position.Name = "Position"
+        Me.Position.ReadOnly = True
+        '
+        'Division
+        '
+        Me.Division.HeaderText = "Division"
+        Me.Division.Name = "Division"
+        Me.Division.ReadOnly = True
+        '
         'PayStubForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3806,14 +3806,6 @@ Partial Class PayStubForm
     Friend WithEvents txtGrandTotalAllow As TextBox
     Friend WithEvents Label106 As Label
     Friend WithEvents Label107 As Label
-    Friend WithEvents RowID As DataGridViewTextBoxColumn
-    Friend WithEvents EmployeeID As DataGridViewTextBoxColumn
-    Friend WithEvents FirstName As DataGridViewTextBoxColumn
-    Friend WithEvents MiddleName As DataGridViewTextBoxColumn
-    Friend WithEvents LastName As DataGridViewTextBoxColumn
-    Friend WithEvents EmployeeType As DataGridViewTextBoxColumn
-    Friend WithEvents Position As DataGridViewTextBoxColumn
-    Friend WithEvents Division As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
@@ -3865,4 +3857,12 @@ Partial Class PayStubForm
     Friend WithEvents RecalculateThirteenthMonthPayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents lblPaidLeavePesoSign As Label
     Friend WithEvents txtLeaveHours As TextBox
+    Friend WithEvents RowID As DataGridViewTextBoxColumn
+    Friend WithEvents EmployeeID As DataGridViewTextBoxColumn
+    Friend WithEvents LastName As DataGridViewTextBoxColumn
+    Friend WithEvents FirstName As DataGridViewTextBoxColumn
+    Friend WithEvents MiddleName As DataGridViewTextBoxColumn
+    Friend WithEvents EmployeeType As DataGridViewTextBoxColumn
+    Friend WithEvents Position As DataGridViewTextBoxColumn
+    Friend WithEvents Division As DataGridViewTextBoxColumn
 End Class
