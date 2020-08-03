@@ -8,6 +8,8 @@ Imports System.ComponentModel
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports Microsoft.EntityFrameworkCore
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 
 Public Class TripTicketController
     Implements INotifyPropertyChanged
@@ -34,14 +36,19 @@ Public Class TripTicketController
 
     Private WithEvents view As TripTicketForm
     Private context As PayrollContext
+    Private _tripTicketRepository As TripTicketRepository
+    Private _vehicleRepository As VehicleRepository
+    Private _routeRepository As RouteRepository
+    Private _employeeRepository As EmployeeRepository
+    Private _routeRateRepository As RouteRateRepository
     Private tripTicket As TripTicket
-    Private tripTickets As IList(Of TripTicket)
-    Private vehicles As IList(Of Vehicle)
-    Private routes As IList(Of Route)
-    Private employees As IList(Of Employee)
-    Private tripTicketHelpers As IList(Of TripTicketEmployee)
+    Private tripTickets As ICollection(Of TripTicket)
+    Private vehicles As ICollection(Of Vehicle)
+    Private routes As ICollection(Of Route)
+    Private employees As ICollection(Of Employee)
+    Private tripTicketHelpers As ICollection(Of TripTicketEmployee)
     Private standardMinimumWage As Decimal
-    Private routePayRates As IList(Of RoutePayRate)
+    Private routePayRates As ICollection(Of RoutePayRate)
 
     Public Property TicketNo As String
         Get
@@ -55,10 +62,10 @@ Public Class TripTicketController
 
     Public Property TripDate As Date
         Get
-            Return If(tripTicket Is Nothing, DateTime.Today(), tripTicket.TripDate.Value)
+            Return If(tripTicket Is Nothing, DateTime.Today(), tripTicket.Date.Value)
         End Get
         Set(value As Date)
-            tripTicket.TripDate = value
+            tripTicket.Date = value
             NotifyPropertyChanged("TripDate")
         End Set
     End Property
@@ -161,69 +168,50 @@ Public Class TripTicketController
         LoadRoutePayRates()
     End Sub
 
-    Private Sub LoadTripTicket(tripTicketID As Integer?)
-        Dim query = From t In Me.context.TripTickets
-                    Select t
-                    Where t.RowID = tripTicketID
+    Private Async Function LoadTripTicket(tripTicketID As Integer?) As Task
+        Me.tripTicket = Await _tripTicketRepository.FindById(tripTicketID)
+    End Function
 
-        Me.tripTicket = query.Single()
-    End Sub
+    Private Async Function LoadTripTicketHelpers(tripTicketID As Integer?) As Task
+        Dim tripTicketEmployees = Await _tripTicketRepository.GetTripTicketEmployees(tripTicketID)
 
-    Private Sub LoadTripTicketHelpers(tripTicketID As Integer?)
-        Dim query = From t In Me.context.TripTicketEmployees.Include(
-                        Function(t) t.Employee
-                    )
-                    Select t
-                    Where t.TripTicketID = tripTicketID
+        Me.tripTicketHelpers = tripTicketEmployees
+    End Function
 
-        Me.tripTicketHelpers = query.ToList()
-    End Sub
+    Private Async Function LoadTripTickets() As Task
+        Dim tripTickets = Await _tripTicketRepository.GetAll()
 
-    Private Sub LoadTripTickets()
-        Dim query = From t In Me.context.TripTickets
-                    Select t
-
-        Me.tripTickets = query.ToList()
+        Me.tripTickets = tripTickets
         view.TripTicketsSource.DataSource = tripTickets
-    End Sub
+    End Function
 
-    Private Sub LoadEmployees()
-        Dim query = From e In Me.context.Employees
-                    Select e
-                    Where e.OrganizationID = z_OrganizationID
-                    Order By e.LastName, e.FirstName
+    Private Async Function LoadEmployees() As Task
+        Dim employees = Await _employeeRepository.GetAllAsync(z_OrganizationID)
 
-        Me.employees = query.ToList()
+        Me.employees = employees.ToList()
         view.cboEmployees.DataSource = Me.employees
         view.cboEmployees.SelectedItem = Nothing
-    End Sub
+    End Function
 
-    Private Sub LoadVehicles()
-        Dim query = From v In Me.context.Vehicles
-                    Select v
-
-        Me.vehicles = query.ToList()
+    Private Async Function LoadVehicles() As Task
+        Me.vehicles = Await _vehicleRepository.GetAll()
 
         view.cboVehicles.DataSource = Me.vehicles
         view.cboVehicles.SelectedIndex = -1
-    End Sub
+    End Function
 
-    Private Sub LoadRoutes()
-        Dim query = From r In Me.context.Routes
-                    Select r
-
-        Me.routes = query.ToList()
+    Private Async Function LoadRoutes() As Task
+        Me.routes = Await _routeRepository.GetAll()
 
         view.cboRoutes.DataSource = Me.routes
         view.cboRoutes.SelectedIndex = -1
-    End Sub
+    End Function
 
-    Private Sub LoadRoutePayRates()
-        Dim query = From p In Me.context.RoutePayRates
-                    Select p
+    Private Async Function LoadRoutePayRates() As Task
+        Dim routeRates = Await _routeRateRepository.GetAll()
 
-        Me.routePayRates = query.ToList()
-    End Sub
+        Me.routePayRates = routeRates
+    End Function
 
     Private Sub LoadMinimumWageRate()
         Dim query = From l In Me.context.ListOfValues
