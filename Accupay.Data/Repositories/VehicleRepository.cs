@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +19,13 @@ namespace AccuPay.Data.Repositories
             var vehicles = await _context.Vehicles.ToListAsync();
 
             return vehicles;
+        }
+
+        public async Task<IEnumerable<Vehicle>> GetAllAsync(int organizationId)
+        {
+            var builder = new VehicleQueryBuilder(_context);
+            return await builder.
+                ToListAsync(organizationId);
         }
     }
 }

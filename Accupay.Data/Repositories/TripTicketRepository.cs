@@ -1,4 +1,5 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,47 @@ namespace AccuPay.Data.Repositories
             //})
 
             _context.SaveChanges();
+        }
+
+        internal async Task SaveImportAsync(List<TripTicket> tripTickets, List<Route> routes, List<Vehicle> vehicles, int organizationId, int userId)
+        {
+            _context.Routes.AddRange(routes);
+
+            _context.Vehicles.AddRange(vehicles);
+
+            await _context.SaveChangesAsync();
+
+            foreach (var tt in tripTickets)
+            {
+                tt.RouteID = routes.FirstOrDefault(r => r.Description == tt.RouteDescription).RowID;
+                tt.Route = null;
+
+                tt.VehicleID = vehicles.FirstOrDefault(v => v.PlateNo == tt.VehiclePlateNo).RowID;
+                tt.Vehicle = null;
+            }
+            _context.TripTickets.AddRange(tripTickets);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TripTicket>> GetAllAsync(int organizationId)
+        {
+            var builder = new TripTicketQueryBuilder(_context);
+            return await builder.
+                ToListAsync(organizationId);
+        }
+
+        public async Task<IEnumerable<TripTicket>> GetByEmployeeIDsByRouteByVehicleBetweenDatesAsync(int organizationId, List<string> routeDesciptions, List<string> vehicleDescriptions, TimePeriod tripDates)
+        {
+            var builder = new TripTicketQueryBuilder(_context);
+            return await builder.
+                IncludeRoute().
+                IncludeVehicle().
+                IncludeTripTicketEmployees().
+                BetweeDates(tripDates).
+                SimilarToRoute(routeDesciptions).
+                SimilarToVehicle(vehicleDescriptions).
+                ToListAsync(organizationId);
         }
     }
 }

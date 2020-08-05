@@ -12,10 +12,12 @@ namespace AccuPay.Data.Entities
 
         public int? OrganizationID { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
         public int? CreatedBy { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpd { get; set; }
 
         public int? LastUpdBy { get; set; }
@@ -23,5 +25,10 @@ namespace AccuPay.Data.Entities
         public string Description { get; set; }
 
         public decimal Distance { get; set; }
+
+        public static Route NewRoute(int organizationId, int userId)
+        {
+            return new Route() { OrganizationID = organizationId, CreatedBy = userId };
+        }
     }
 }

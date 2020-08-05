@@ -30,6 +30,7 @@ Partial Class ReportsList
         Me.lvMainMenu.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lvMainMenu.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lvMainMenu.HideSelection = False
         Me.lvMainMenu.Location = New System.Drawing.Point(8, 8)
         Me.lvMainMenu.MultiSelect = False
         Me.lvMainMenu.Name = "lvMainMenu"

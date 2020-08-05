@@ -40,5 +40,10 @@ namespace AccuPay.Data.Entities
         public string PositionName => Employee.Position?.Name;
 
         public bool IsNew => (RowID ?? 0) <= 0;
+
+        public static TripTicketEmployee NewTripTicketEmployee(int organizationId, int userId)
+        {
+            return new TripTicketEmployee() { OrganizationID = organizationId, CreatedBy = userId };
+        }
     }
 }

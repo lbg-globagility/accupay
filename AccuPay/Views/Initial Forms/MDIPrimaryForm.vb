@@ -167,8 +167,6 @@ Public Class MDIPrimaryForm
                       Return False
                   End Function)
 
-        e.Cancel = (busy_bgworker.Count > 0)
-
         LockTime()
 
         If e.Cancel = False Then
