@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -183,13 +186,13 @@
   <metadata name="EmployeeID.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="LastName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="FirstName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="MiddleName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="LastName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="EmployeeType.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -405,9 +408,8 @@
         C8Nwxprqajmg5uNgISB+ISm5AMhiOu/g4AUMl0+/mJj+nPTwcELWDMJgAhQlb0REtsM0f+ThOb+4vl4a
         pui8vb3/byamH6CY8fn/nxMmDsJg4o6eXi7IySAuKBaO+vhg2ARMcEUgNXf09dOQxRlmT5gg9gUpDTyX
         kZmOrACu8P9/ljfCwhuBaeJC8KNH4EQEFj8YHm75B5qU/zAz/z/i6uqKrBEZH4iIMABa9u6SlZUnTIxh
-        T0KC4W+gRpABP9jYPm9PSlJD1oSOH2tolL9UUiqB8RlSz5zhfCUjs+oLP//rR+rqbciKseFcYEY7XFEh
-        AOODieLnz7m2VlSoxv3/zw6TIA7/ZwAAVYplpqSXsC8AAAAASUVORK5CYII=
-</value>
+        T0KC4W+gRpABP9jYPm9PSlJD1oSOH2tolL9UUiqB8RlSz5zhfCUjs+oLP//rR+rqbciKseFcYEY7XFEh AOODieLnz7m2VlSoxv3/zw6TIA7/ZwAAVYplpqSXsC8AAAAASUVORK5CYII=
+    </value>
   </data>
   <metadata name="tabEarned.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -859,9 +861,8 @@
         nOEg7sTCLe1LY6OsrJHS9W973m7paglznGwsbHXLuOiuvZ3RnG1+MtGLna59p0Uw2duvDF8kIKO2T0Zz
         TkGd73/NHZaO7/aysXd/o1ihAswN8BmfE6nzVjRUzW6ALsgZ6Dd6GLRoTg+jYRYtCUIQR3ae6NPMDdg9
         ihm1OjLDcwOLe4aezQq1UIKA2hu3WQelGJBzHZP6fcopWbEnmmOCNwxW9IaG1jprp716llp2u1AKSN2N
-        CHYgwX8EFYbj9GoZaSYXPerVoqFkTQGgBKGtAyC2QCEIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQCwUIQAW
-        UIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQf/9k=
-</value>
+        CHYgwX8EFYbj9GoZaSYXPerVoqFkTQGgBKGtAyC2QCEIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQCwUIQAW UIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQCEIQf/9k=
+    </value>
   </data>
   <metadata name="ImageList1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>528, 3</value>
@@ -882,9 +883,8 @@
         AezYAANeAc4DRgF/A0MBeANbAcsDXAHJA1kBxwNUAawDTgGYA0kBhwNRAaDcAANZAfUDRwGAA14B1QNg
         AdQDXQHTA10B0gNZAb8DXwHz4AADFAEcA2oB+QNbAcYDXAHRA1wBzwNcAc8DXwHz7AADMwFTA1QBrgNR
         AaADHwEs0AABQgFNAT4HAAE+AwABKAMAAUADAAEQAwABAQEAAQEFAAGAFwAD/wEAAccB/wYAAcMB/wYA
-        AcMB/wYAAeEB/wYAAfAB/wYAAfgBAwYAAfgBAQYAAfwBAQYAAfgHAAH4BwAB+AcAAfgBAQYAAfgBAQYA
-        AfwBAwYAAfwBBwYAAf8BDwYACw==
-</value>
+        AcMB/wYAAeEB/wYAAfAB/wYAAfgBAwYAAfgBAQYAAfwBAQYAAfgHAAH4BwAB+AcAAfgBAQYAAfgBAQYA AfwBAwYAAfwBBwYAAf8BDwYACw==
+    </value>
   </data>
   <metadata name="Button3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

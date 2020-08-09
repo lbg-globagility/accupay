@@ -504,8 +504,6 @@ Public Class MDIPrimaryForm
 
                 If previousForm.Name = "UsersFrom" Then
 
-                ElseIf previousForm.Name = "ListOfValueForm" Then
-
                 ElseIf previousForm.Name = "OrganizatinoForm" Then
 
                 ElseIf previousForm.Name = "UserPrivilegeForm" Then

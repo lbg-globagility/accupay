@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -1764,12 +1765,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DSReportList.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Views\General Forms\ListOfValueForm.Designer.vb">
-      <DependentUpon>ListOfValueForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\ListOfValueForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core\Modules\mdlStoredProcedure.vb" />
     <Compile Include="Core\Modules\mdlValidation.vb" />
     <Compile Include="Views\General Forms\OrganizationForm.Designer.vb">
@@ -2593,9 +2588,6 @@
     <EmbeddedResource Include="Reports\rpt\CrystalReport1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport1.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\ListOfValueForm.resx">
-      <DependentUpon>ListOfValueForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\OrganizationForm.resx">
       <DependentUpon>OrganizationForm.vb</DependentUpon>

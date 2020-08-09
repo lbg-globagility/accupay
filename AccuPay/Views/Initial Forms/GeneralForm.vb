@@ -157,13 +157,6 @@ Public Class GeneralForm
 
     End Sub
 
-    Private Sub ListOfValueToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ListOfValueToolStripMenuItem.Click
-
-        ChangeForm(ListOfValueForm, "List of value")
-        previousForm = ListOfValueForm
-
-    End Sub
-
     Private Sub OrganizationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OrganizationToolStripMenuItem.Click
 
         ChangeForm(OrganizationForm, "Organization")

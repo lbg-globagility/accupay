@@ -27,9 +27,9 @@ SET $skipSearch = NOT(IFNULL($searchTerm, '') > '');
 SELECT
     e.RowID
 	,e.EmployeeID
+	,e.LastName
 	,e.FirstName
 	,e.MiddleName
-	,e.LastName
 	,e.EmployeeType
 	,pos.PositionName
 	,d.Name AS 'DivisionName'

@@ -55,9 +55,9 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PositionNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -86,7 +86,7 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.EmployeeGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.EmployeeGridView.BackgroundColor = System.Drawing.Color.White
         Me.EmployeeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.EmployeeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectedCheckBoxColumn, Me.Column1, Me.Column6, Me.Column2, Me.Column3, Me.Column4, Me.PositionNameColumn, Me.Column7, Me.CurrentThirteenthMonthPayColumn, Me.NewThirteenthMonthPayColumn})
+        Me.EmployeeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectedCheckBoxColumn, Me.Column1, Me.Column3, Me.Column6, Me.Column2, Me.Column4, Me.PositionNameColumn, Me.Column7, Me.CurrentThirteenthMonthPayColumn, Me.NewThirteenthMonthPayColumn})
         DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle7.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -272,6 +272,16 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
         '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "LastName"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column3.FillWeight = 35.99998!
+        Me.Column3.HeaderText = "Last Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
         'Column6
         '
         Me.Column6.DataPropertyName = "FirstName"
@@ -283,22 +293,12 @@ Partial Class SelectThirteenthMonthEmployeesForm
         'Column2
         '
         Me.Column2.DataPropertyName = "MiddleName"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle2
         Me.Column2.FillWeight = 38.99998!
         Me.Column2.HeaderText = "Middle Name"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "LastName"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle2
-        Me.Column3.FillWeight = 35.99998!
-        Me.Column3.HeaderText = "Last Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
         '
         'Column4
         '
@@ -386,9 +386,9 @@ Partial Class SelectThirteenthMonthEmployeesForm
     Friend WithEvents Panel1 As Panel
     Friend WithEvents SelectedCheckBoxColumn As DataGridViewCheckBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column3 As DataGridViewTextBoxColumn
     Friend WithEvents Column6 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As DataGridViewTextBoxColumn
     Friend WithEvents Column4 As DataGridViewTextBoxColumn
     Friend WithEvents PositionNameColumn As DataGridViewTextBoxColumn
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
