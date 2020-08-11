@@ -125,9 +125,9 @@ Public Class PayrollSummaDateSelection
 
                 With cboStringParameter
                     .Visible = True
-                    .Items.Add(PayrollSummaryCategory.All)
-                    .Items.Add(PayrollSummaryCategory.Cash)
-                    .Items.Add(PayrollSummaryCategory.DirectDeposit)
+                    .Items.Add(EmployeePayrollCategory.All)
+                    .Items.Add(EmployeePayrollCategory.Cash)
+                    .Items.Add(EmployeePayrollCategory.DirectDeposit)
                     .DropDownStyle = ComboBoxStyle.DropDownList
                 End With
 

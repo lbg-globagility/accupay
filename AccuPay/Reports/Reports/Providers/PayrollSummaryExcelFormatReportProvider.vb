@@ -155,7 +155,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
         Dim salaryDistribution = payrollSelector.cboStringParameter.Text
 
-        Dim dividedCategories = {PayrollSummaryCategory.Cash, PayrollSummaryCategory.DirectDeposit}
+        Dim dividedCategories = {EmployeePayrollCategory.Cash, EmployeePayrollCategory.DirectDeposit}
         If dividedCategories.Contains(salaryDistribution) = False Then
 
             salaryDistribution = Nothing

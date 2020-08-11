@@ -1,4 +1,4 @@
-﻿Public Class PayrollSummaryCategory
+﻿Public Class EmployeePayrollCategory
 
     Public Const All As String = "All"
 
