@@ -2,6 +2,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,8 +11,11 @@ namespace AccuPay.Data.Repositories
 {
     public class PositionRepository : SavableRepository<Position>
     {
-        public PositionRepository(PayrollContext context) : base(context)
+        private readonly DivisionRepository _divisionRepository;
+
+        public PositionRepository(PayrollContext context, DivisionRepository divisionRepository) : base(context)
         {
+            _divisionRepository = divisionRepository;
         }
 
         protected override void DetachNavigationProperties(Position entity)
@@ -93,5 +97,30 @@ namespace AccuPay.Data.Repositories
         #endregion List of entities
 
         #endregion Queries
+
+        #region CRUD
+
+        internal async Task<List<Position>> CreateManyAsync(List<string> jobNames, int organizationId, int userId)
+        {
+            var division = await _divisionRepository.GetOrCreateDefaultDivisionAsync(organizationId, userId);
+
+            var jobs = new List<Position>();
+            foreach (var jobName in jobNames)
+            {
+                jobs.Add(new Position()
+                {
+                    Name = jobName,
+                    DivisionID = division.RowID,
+                    OrganizationID = organizationId,
+                    CreatedBy = userId
+                });
+            }
+
+            if (jobs.Any()) await SaveManyAsync(jobs);
+
+            return jobs;
+        }
+
+        #endregion CRUD
     }
 }

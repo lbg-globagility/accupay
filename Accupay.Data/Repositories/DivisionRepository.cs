@@ -1,6 +1,8 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,6 +36,68 @@ namespace AccuPay.Data.Repositories
             return await _context.Divisions
                                 .Include(x => x.ParentDivision)
                                 .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        internal async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    var defaultParentDivision = await _context.Divisions.
+                                            Where(x => x.OrganizationID == organizationId).
+                                            Where(x => x.Name.Trim().ToLower() == Division.DefaultLocationName.ToTrimmedLowerCase()).
+                                            Where(x => x.IsRoot).
+                                            FirstOrDefaultAsync();
+
+                    if (defaultParentDivision == null)
+                    {
+                        defaultParentDivision = Division.NewDivision(
+                                                            organizationId: organizationId,
+                                                            userId: userId);
+
+                        defaultParentDivision.Name = Division.DefaultLocationName;
+                        defaultParentDivision.ParentDivisionID = null;
+                        defaultParentDivision.LastUpdBy = userId;
+
+                        //await SanitizeEntity(defaultParentDivision, null);
+                        await SaveAsync(defaultParentDivision);
+                        // querying the new default parent division from here can already
+                        // get the new row data. This can replace the context.local in leaverepository
+                    }
+                    if (defaultParentDivision?.RowID == null)
+                        throw new Exception("Cannot create default division location.");
+
+                    var defaultDivision = await _context.Divisions.
+                                                    Where(x => x.OrganizationID == organizationId).
+                                                    Where(x => x.Name.Trim().ToLower() == Division.DefaultDivisionName.ToTrimmedLowerCase()).
+                                                    Where(x => x.ParentDivisionID == defaultParentDivision.RowID).
+                                                    FirstOrDefaultAsync();
+
+                    if (defaultDivision == null)
+                    {
+                        defaultDivision = Division.NewDivision(
+                                                            organizationId: organizationId,
+                                                            userId: userId);
+
+                        defaultDivision.Name = Division.DefaultDivisionName;
+                        defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
+                        defaultDivision.LastUpdBy = userId;
+
+                        //await SanitizeEntity(defaultDivision, null);
+                        await SaveAsync(defaultDivision);
+                    }
+
+                    transaction.Commit();
+
+                    return defaultDivision;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         #endregion Single entity

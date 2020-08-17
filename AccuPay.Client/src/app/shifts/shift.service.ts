@@ -13,7 +13,7 @@ import { EmployeeShifts } from './shared/employee-shifts';
 export class ShiftService extends BasePdfService {
   baseUrl = 'api/shifts';
 
-  readonly shiftTemplateFileName = 'accupay-shiftschedule-template';
+  readonly shiftTemplateFileName = 'accupay-shiftschedule-template.xlsx';
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);

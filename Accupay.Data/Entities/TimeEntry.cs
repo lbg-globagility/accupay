@@ -69,6 +69,10 @@ namespace AccuPay.Data.Entities
 
         public int? BranchID { get; set; }
 
+        public int CreatedBy { get; set; }
+
+        public int? LastUpdBy { get; set; }
+
         public void SetLeaveHours(string leaveType, decimal leaveHours)
         {
             switch (leaveType.ToTrimmedLowerCase())

@@ -11,13 +11,14 @@ namespace AccuPay.Data.Services.Imports.Employees
     public class EmployeeImportParser
     {
         private readonly EmployeeRepository _employeeRepository;
+        private readonly PositionRepository _positionRepository;
         private readonly IExcelParser<EmployeeRowRecord> _parser;
         private const string WORKSHEETNAME = "Employees";
 
-        public EmployeeImportParser(EmployeeRepository employeeRepository, IExcelParser<EmployeeRowRecord> excelParser)
+        public EmployeeImportParser(EmployeeRepository employeeRepository, PositionRepository positionRepository, IExcelParser<EmployeeRowRecord> excelParser)
         {
             _employeeRepository = employeeRepository;
-
+            _positionRepository = positionRepository;
             _parser = excelParser;
         }
 
@@ -50,7 +51,11 @@ namespace AccuPay.Data.Services.Imports.Employees
                             .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
                             ).ToList();
 
+            var jobs = await _positionRepository.GetAllAsync(organizationId);
+
             var list = new List<EmployeeImportModel>();
+
+            bool isEqualToLowerCase(string dataText, string parsedText) => string.IsNullOrWhiteSpace(parsedText) ? false : dataText.ToLower() == parsedText.ToLower();
 
             foreach (var parsedEmployee in parsedRecords)
             {
@@ -58,7 +63,9 @@ namespace AccuPay.Data.Services.Imports.Employees
                             .Where(ee => ee.EmployeeNo == parsedEmployee.EmployeeNo)
                             .FirstOrDefault();
 
-                list.Add(CreateEmployeeImportModel(employee, parsedEmployee));
+                var job = jobs.FirstOrDefault(j => isEqualToLowerCase(j.Name, parsedEmployee.JobPosition));
+
+                list.Add(CreateEmployeeImportModel(employee, parsedEmployee, job));
             }
 
             bool isInvalid(EmployeeImportModel x) => x.InvalidToSave;
@@ -75,9 +82,9 @@ namespace AccuPay.Data.Services.Imports.Employees
                                                   invalidRecords: invalidRecords);
         }
 
-        private EmployeeImportModel CreateEmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee)
+        private EmployeeImportModel CreateEmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee, Position job)
         {
-            return new EmployeeImportModel(employee, parsedEmployee);
+            return new EmployeeImportModel(employee, parsedEmployee, job);
         }
 
         public class EmployeeImportParserOutput
