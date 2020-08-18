@@ -855,6 +855,8 @@ namespace AccuPay.Data.Services
             sickLeaveBalance = new PaystubItem()
             {
                 OrganizationID = paystub.OrganizationID,
+                Created = DateTime.Now,
+                CreatedBy = userId,
                 ProductID = sickLeaveProduct.RowID,
                 PayAmount = newBalance2,
                 Paystub = paystub
