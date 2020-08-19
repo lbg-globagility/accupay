@@ -15,12 +15,12 @@ namespace AccuPay.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }
 
-        //public Guid CreatedById { get; set; }
+        public int CreatedById { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedAt { get; set; }
 
-        //public Guid UpdatedById { get; set; }
+        public int? UpdatedById { get; set; }
 
         public string Key { get; set; }
 

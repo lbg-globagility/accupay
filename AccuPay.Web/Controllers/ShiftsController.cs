@@ -52,7 +52,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("accupay-shiftschedule-template")]
-        [Permission(PermissionTypes.SalaryRead)]
+        [Permission(PermissionTypes.ShiftCreate)]
         public ActionResult GetEmployeeTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-shiftschedule-template.xlsx");

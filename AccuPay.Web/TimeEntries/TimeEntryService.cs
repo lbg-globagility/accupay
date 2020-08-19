@@ -63,7 +63,7 @@ namespace AccuPay.Web.TimeEntries
             //    await Task.Run(() => generator.Start(_currentUser.OrganizationId, payPeriod.PayFromDate, payPeriod.PayToDate));
             //}
 
-            _generator.Start(_currentUser.OrganizationId, payPeriod.PayFromDate, payPeriod.PayToDate);
+            _generator.Start(_currentUser.OrganizationId, _currentUser.UserId, payPeriod.PayFromDate, payPeriod.PayToDate);
         }
 
         public async Task<PaginatedList<TimeEntryEmployeeDto>> PaginatedEmployeeList(int payPeriodId, PageOptions options, string searchTerm)

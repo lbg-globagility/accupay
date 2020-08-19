@@ -24,18 +24,22 @@ namespace AccuPay.Data.Services.Imports.Employees
         private bool _invalidEmploymentDate;
         private bool _noEmploymentStatus;
         private bool _employeeAlreadyExists;
-
+        private int? _jobPositionId;
+        private readonly bool _jobNotYetExists;
         private readonly Employee _employee;
         private readonly EmployeeRowRecord _parsedEmployee;
+        private readonly Position _job;
 
-        public EmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee)
+        public EmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee, Position job)
         {
             _employeeAlreadyExists = employee != null;
+            _jobNotYetExists = _job == null;
 
             _employee = employee;
             _parsedEmployee = parsedEmployee;
+            _job = job;
 
-            ApplyData(_employee, _parsedEmployee);
+            ApplyData(_employee, _parsedEmployee, _job);
         }
 
         public string Remarks { get; internal set; }
@@ -62,7 +66,7 @@ namespace AccuPay.Data.Services.Imports.Employees
 
         public bool IsExistingEmployee { get; internal set; }
 
-        private void ApplyData(Employee _employee, EmployeeRowRecord _parsedEmployee)
+        private void ApplyData(Employee _employee, EmployeeRowRecord _parsedEmployee, Position _job)
         {
             _noEmployeeNo = string.IsNullOrWhiteSpace(_parsedEmployee.EmployeeNo);
             _noEmployeeType = string.IsNullOrWhiteSpace(_parsedEmployee.EmployeeType);
@@ -78,7 +82,7 @@ namespace AccuPay.Data.Services.Imports.Employees
 
             _noGender = string.IsNullOrWhiteSpace(_parsedEmployee.Gender);
             _noMaritalStatus = string.IsNullOrWhiteSpace(_parsedEmployee.MaritalStatus);
-            //_noJob = string.IsNullOrWhiteSpace(JobPosition);
+            _noJob = string.IsNullOrWhiteSpace(_parsedEmployee.JobPosition);
             _noEmploymentDate = !_parsedEmployee.DateEmployed.HasValue;
             _invalidEmploymentDate = !_noEmploymentDate && _parsedEmployee.DateEmployed.Value < PayrollTools.SqlServerMinimumDate;
             _noEmploymentStatus = string.IsNullOrWhiteSpace(_parsedEmployee.EmploymentStatus);
@@ -182,6 +186,19 @@ namespace AccuPay.Data.Services.Imports.Employees
             Remarks = string.Join("; ", errors.ToArray());
         }
 
+        public bool JobNotYetExists
+        {
+            get
+            {
+                return _jobNotYetExists;
+            }
+        }
+
+        internal void SetPositionId(int? rowID)
+        {
+            _jobPositionId = rowID;
+        }
+
         public Employee Employee
         {
             get
@@ -214,7 +231,8 @@ namespace AccuPay.Data.Services.Imports.Employees
                     SssNo = SssNo,
                     TinNo = Tin,
                     VacationLeaveAllowance = _parsedEmployee.VacationLeaveAllowanceAnnual.HasValue ? _parsedEmployee.SickLeaveAllowanceAnnual.Value : 0,
-                    WorkDaysPerYear = WorkDaysPerYear
+                    WorkDaysPerYear = WorkDaysPerYear,
+                    PositionID = _jobPositionId
                 };
 
                 if (Birthdate.HasValue) employee.BirthDate = Birthdate.Value;

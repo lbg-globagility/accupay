@@ -14,12 +14,14 @@ namespace AccuPay.Data.Services
         private readonly EmployeeRepository _employeeRepository;
         private readonly LeaveLedgerRepository _leaveLedgerRepository;
         private readonly ProductRepository _productRepository;
+        private readonly PositionRepository _positionRepository;
 
-        public EmployeeDataService(EmployeeRepository employeeRepository, LeaveLedgerRepository leaveLedgerRepository, ProductRepository productRepository)
+        public EmployeeDataService(EmployeeRepository employeeRepository, LeaveLedgerRepository leaveLedgerRepository, ProductRepository productRepository, PositionRepository positionRepository)
         {
             _employeeRepository = employeeRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
             _productRepository = productRepository;
+            _positionRepository = positionRepository;
         }
 
         public async Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId)
@@ -61,8 +63,15 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, int organizationId, int userId)
+        public async Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, List<string> jobNames, int organizationId, int userId)
         {
+            var jobs = await _positionRepository.CreateManyAsync(jobNames, organizationId, userId);
+            foreach (var parsedEmployee in validRecords.Where(t => t.JobNotYetExists))
+            {
+                var job = jobs.FirstOrDefault(j => j.Name == parsedEmployee.JobPosition);
+                parsedEmployee.SetPositionId(job.RowID);
+            }
+
             var added = validRecords.Where(e => !e.Employee.RowID.HasValue).Select(e => e.Employee).ToList();
             added.ForEach(e =>
             {

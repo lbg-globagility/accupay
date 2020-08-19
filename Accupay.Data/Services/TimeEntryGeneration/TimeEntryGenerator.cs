@@ -122,7 +122,7 @@ namespace AccuPay.Data.Services
             _timeLogRepository = timeLogRepository;
         }
 
-        public void Start(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
+        public void Start(int organizationId, int userId, DateTime cutoffStart, DateTime cutoffEnd)
         {
             _organizationId = organizationId;
             _cutoffStart = cutoffStart.ToMinimumHourValue();
@@ -232,7 +232,7 @@ namespace AccuPay.Data.Services
             {
                 try
                 {
-                    CalculateEmployeeEntries(employee, organization, settings, agencies, timeEntryPolicy, calendarCollection);
+                    CalculateEmployeeEntries(employee, organization, userId, settings, agencies, timeEntryPolicy, calendarCollection);
                 }
                 catch (Exception ex)
                 {
@@ -248,6 +248,7 @@ namespace AccuPay.Data.Services
         private void CalculateEmployeeEntries(
             Employee employee,
             Organization organization,
+            int userId,
             ListOfValueCollection settings,
             ICollection<Agency> agencies,
             TimeEntryPolicy timeEntryPolicy,
@@ -396,8 +397,8 @@ namespace AccuPay.Data.Services
 
             using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
             {
-                AddTimeEntriesToContext(context, timeEntries);
-                AddActualTimeEntriesToContext(context, actualTimeEntries);
+                AddTimeEntriesToContext(userId, context, timeEntries);
+                AddActualTimeEntriesToContext(userId, context, actualTimeEntries);
                 AddAgencyFeesToContext(context, agencyFees);
                 context.SaveChanges();
             }
@@ -437,18 +438,24 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void AddTimeEntriesToContext(PayrollContext context, IList<TimeEntry> timeEntries)
+        private void AddTimeEntriesToContext(int userId, PayrollContext context, IList<TimeEntry> timeEntries)
         {
             foreach (var timeEntry in timeEntries)
             {
                 if (timeEntry.RowID.HasValue)
+                {
+                    timeEntry.LastUpdBy = userId;
                     context.Entry(timeEntry).State = EntityState.Modified;
+                }
                 else
+                {
+                    timeEntry.CreatedBy = userId;
                     context.TimeEntries.Add(timeEntry);
+                }
             }
         }
 
-        private void AddActualTimeEntriesToContext(PayrollContext context, ICollection<ActualTimeEntry> actualTimeEntries)
+        private void AddActualTimeEntriesToContext(int userId, PayrollContext context, ICollection<ActualTimeEntry> actualTimeEntries)
         {
             foreach (var actualTimeEntry in actualTimeEntries)
             {

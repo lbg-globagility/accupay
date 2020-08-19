@@ -136,8 +136,8 @@ namespace AccuPay.Web.Employees.Services
                 mediaType: "image/jpeg",
                 size: virtualFile.Size);
 
-            //file.CreatedById = _currentUser.UserId;
-            //file.UpdatedById = file.CreatedById;
+            file.CreatedById = _currentUser.UserId;
+            file.UpdatedById = file.CreatedById;
 
             await _fileRepository.Create(file);
 
@@ -170,7 +170,14 @@ namespace AccuPay.Web.Employees.Services
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            var employees = await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            var parsedEmployees = parsedResult.ValidRecords;
+            var jobNames = parsedEmployees
+                .Where(e => e.JobNotYetExists)
+                .GroupBy(e => e.JobPosition)
+                .Select(e => e.FirstOrDefault().JobPosition)
+                .ToList();
+
+            var employees = await _service.BatchApply(parsedResult.ValidRecords, jobNames, _currentUser.OrganizationId, userId);
 
             foreach (var employee in employees)
             {
