@@ -34,4 +34,34 @@
         <Folder Include="Core\Configurations\" />
         <Folder Include="Files\Exceptions\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="ImportTemplates\accupay-allowance-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-employeelist-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-employeeshift-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-leave-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-loan-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-officialbus-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-overtime-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-salary-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="ImportTemplates\accupay-shiftschedule-template.xlsx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>
