@@ -155,7 +155,13 @@ Public Class MDIPrimaryForm
     Private Sub MDIPrimaryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         busy_bgworks(0) = bgDashBoardReloader
 
-        Dim busy_bgworker = busy_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).Where(Function(x) x.IsBusy)
+        Dim busy_bgworker = busy_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).
+            Where(Function(x)
+                      If x IsNot Nothing Then
+                          Return x.IsBusy
+                      End If
+                      Return False
+                  End Function)
 
         e.Cancel = (busy_bgworker.Count > 0)
 
