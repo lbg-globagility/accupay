@@ -15,6 +15,7 @@ import { EmployeeShifts } from '../shared/employee-shifts';
 import { ShiftsByEmployeePageOptions } from '../shared/shifts-by-employee-page-option';
 import { EditShiftComponent } from '../edit-shift/edit-shift.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { PermissionTypes } from 'src/app/core/auth';
 
 interface DateHeader {
   title: string;
@@ -39,6 +40,8 @@ interface EmployeeDutySchedulesModel {
   },
 })
 export class ShiftListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   displayedColumns = ['employee'];
 
   dateFrom: Date = new Date();
