@@ -19,6 +19,11 @@ export enum PermissionTypes {
   CalendarUpdate = 'Calendar:update',
   CalendarDelete = 'Calendar:delete',
 
+  ClientRead = 'Client:read',
+  ClientCreate = 'Client:create',
+  ClientUpdate = 'Client:update',
+  ClientDelete = 'Client:delete',
+
   DivisionRead = 'Division:read',
   DivisionCreate = 'Division:create',
   DivisionUpdate = 'Division:update',

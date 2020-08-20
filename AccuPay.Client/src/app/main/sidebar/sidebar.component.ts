@@ -129,6 +129,7 @@ const menuItems: MenuItem[] = [
     label: 'Clients',
     icon: 'business',
     route: '/clients',
+    permission: PermissionTypes.ClientRead,
   },
 ];
 

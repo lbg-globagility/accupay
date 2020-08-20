@@ -64,19 +64,28 @@
       class="m-with-icon"
       (click)="newOvertime()"
     >
-      <mat-icon>add</mat-icon>NEW OVERTIME
+      <mat-icon>add</mat-icon>NEW
     </button>
+
     <button
       *ngxPermissionsOnly="[PermissionTypes.OvertimeCreate]"
-      [disabled]="isDownloadingTemplate"
       mat-raised-button
-      (click)="downloadTemplate()"
-      style="margin-left: 8px;"
       color="primary"
+      class="m-with-icon"
+      style="margin-left: 8px;"
+      [matMenuTriggerFor]="moreMenu"
     >
-      {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
-      <app-button-spinner [active]="isDownloadingTemplate"></app-button-spinner>
+      <mat-icon>more_vert</mat-icon>
+      MORE
     </button>
+    <mat-menu #moreMenu="matMenu">
+      <button mat-menu-item matTooltip="'Import' is still under construction">
+        Import
+      </button>
+      <button mat-menu-item (click)="downloadTemplate()">
+        Download Template
+      </button>
+    </mat-menu>
   </div>
 </div>
 

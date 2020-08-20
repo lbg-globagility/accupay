@@ -2,6 +2,11 @@ namespace AccuPay.Web.Core.Auth
 {
     public static class PermissionTypes
     {
+        public const string ClientRead = "Client:read";
+        public const string ClientCreate = "Client:create";
+        public const string ClientUpdate = "Client:update";
+        public const string ClientDelete = "Client:delete";
+
         public const string EmployeeRead = "Employee:read";
         public const string EmployeeCreate = "Employee:create";
         public const string EmployeeUpdate = "Employee:update";

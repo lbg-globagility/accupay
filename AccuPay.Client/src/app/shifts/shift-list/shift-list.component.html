@@ -1,7 +1,7 @@
 <h1 class="mat-headline">Shifts</h1>
 
-<div class="row">
-  <div class="col-lg-3">
+<div class="row middle-md">
+  <div class="col-lg-2">
     <mat-form-field appearance="standard" class="w-full m-with-icon">
       <mat-icon matPrefix>search</mat-icon>
       <mat-label>Search</mat-label>
@@ -64,33 +64,30 @@
       <mat-datepicker #dateToPicker></mat-datepicker>
     </mat-form-field>
   </div>
-  <div class="col-md-4">
+  <div class="col-lg-4 flex justify-end">
+    <button
+      *ngxPermissionsOnly="[PermissionTypes.ShiftUpdate]"
+      mat-raised-button
+      color="primary"
+      class="m-with-icon"
+      [matMenuTriggerFor]="moreMenu"
+    >
+      <mat-icon>more_vert</mat-icon>
+      MORE
+    </button>
+    <mat-menu #moreMenu="matMenu">
+      <button mat-menu-item (click)="uploader.click()">Import</button>
+      <button mat-menu-item (click)="downloadTemplate()">
+        Download Template
+      </button>
+    </mat-menu>
+
     <input
       hidden
       type="file"
       #uploader
       (change)="onImport($event.target.files)"
     />
-    <button
-      mat-raised-button
-      color="accent"
-      class="new-btn"
-      style="margin-left: 10px;"
-      (click)="uploader.click()"
-    >
-      IMPORT
-    </button>
-
-    <button
-      [disabled]="isDownloadingTemplate"
-      mat-raised-button
-      (click)="downloadTemplate()"
-      style="margin-left: 8px;"
-      color="primary"
-    >
-      {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
-      <app-button-spinner [active]="isDownloadingTemplate"></app-button-spinner>
-    </button>
   </div>
 </div>
 
@@ -138,7 +135,11 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let employee">
-          <button mat-icon-button (click)="edit(employee)">
+          <button
+            *ngxPermissionsOnly="[PermissionTypes.ClientUpdate]"
+            mat-icon-button
+            (click)="edit(employee)"
+          >
             <mat-icon>edit</mat-icon>
           </button>
         </td>

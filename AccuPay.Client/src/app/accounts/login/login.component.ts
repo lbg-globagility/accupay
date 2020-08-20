@@ -1,8 +1,11 @@
 import { AuthService } from 'src/app/core/auth/auth.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AccountService } from '../services/account.service';
+import { NgxPermissionsService } from 'ngx-permissions';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +25,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private accountService: AccountService,
+    private permissionService: NgxPermissionsService,
     private router: Router
   ) {}
 
@@ -43,18 +48,27 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(email, password).subscribe(
       () => {
-        if (this.authService.redirectUrl != null) {
-          const attemptedUrl = this.authService.redirectUrl;
-          this.authService.redirectUrl = null;
-          this.router.navigateByUrl(attemptedUrl);
-        } else {
-          this.router.navigate(['']);
-        }
+        this.loadRole().subscribe(() => {
+          if (this.authService.redirectUrl != null) {
+            const attemptedUrl = this.authService.redirectUrl;
+            this.authService.redirectUrl = null;
+            this.router.navigateByUrl(attemptedUrl);
+          } else {
+            this.router.navigate(['']);
+          }
+        });
       },
       (error) => {
         this.loginError = error;
         this.loggingIn.next(false);
       }
+    );
+  }
+
+  private loadRole(): Observable<void> {
+    return this.accountService.getCurrentRole().pipe(
+      map((role) => this.accountService.getPermissions(role)),
+      map((permissions) => this.permissionService.loadPermissions(permissions))
     );
   }
 }
