@@ -93,7 +93,7 @@ export class TimeLogImportResultComponent implements OnInit {
     this.isSaving = true;
 
     this.timeLogService
-      .batchApply(this.dataSourceSuccess)
+      .batchApply(this.result.generatedTimeLogs)
       .subscribe(
         (result) => {
           this.dialog.close(true);
