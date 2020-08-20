@@ -2,8 +2,13 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports.Overtimes;
+using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Overtimes
@@ -13,12 +18,17 @@ namespace AccuPay.Web.Overtimes
         private readonly OvertimeRepository _repository;
         private readonly OvertimeDataService _service;
         private readonly ICurrentUser _currentUser;
+        private readonly OvertimeImportParser _importParser;
+        private readonly OvertimeDataService _dataService;
 
-        public OvertimeService(OvertimeRepository repository, OvertimeDataService dataService, ICurrentUser currentUser)
+        public OvertimeService(OvertimeRepository repository, OvertimeDataService dataService, ICurrentUser currentUser,
+            OvertimeImportParser importParser, OvertimeDataService overtimeDataService)
         {
             _repository = repository;
             _service = dataService;
             _currentUser = currentUser;
+            _importParser = importParser;
+            _dataService = overtimeDataService;
         }
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(PageOptions options, OvertimeFilter filter)
@@ -108,6 +118,25 @@ namespace AccuPay.Web.Overtimes
                 Reason = overtime.Reason,
                 Comments = overtime.Comments
             };
+        }
+
+        internal async Task<OvertimeImportParserOutput> Import(IFormFile file)
+        {
+            if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
+                throw new InvalidFormatException();
+
+            Stream stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            if (stream == null)
+                throw new Exception("Unable to parse excel file.");
+
+            int userId = _currentUser.UserId;
+            var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
+
+            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+
+            return parsedResult;
         }
     }
 }

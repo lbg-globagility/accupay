@@ -3,6 +3,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Overtimes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -81,12 +82,18 @@ namespace AccuPay.Web.Controllers
             return _service.GetStatusList();
         }
 
-
         [HttpGet("accupay-overtime-template")]
         [Permission(PermissionTypes.OvertimeRead)]
         public ActionResult GetOvertimeTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-overtime-template.xlsx");
+        }
+
+        [HttpPost("import")]
+        [Permission(PermissionTypes.OvertimeCreate)]
+        public async Task<Data.Services.Imports.Overtimes.OvertimeImportParserOutput> Import([FromForm] IFormFile file)
+        {
+            return await _service.Import(file);
         }
     }
 }

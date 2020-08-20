@@ -2,6 +2,7 @@
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services.Imports.Overtimes;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,29 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
 
             overtime.UpdateEndDate();
+        }
+
+        public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int userId)
+        {
+            List<Overtime> overtimes = new List<Overtime>();
+
+            foreach (var ot in validRecords)
+            {
+                overtimes.Add(new Overtime()
+                {
+                    CreatedBy = userId,
+                    EmployeeID = ot.EmployeeID,
+                    OrganizationID = organizationId,
+                    OTEndTimeFull = ot.EndTime.Value,
+                    OTStartDate = ot.StartDate.Value,
+                    OTStartTimeFull = ot.StartTime.Value,
+                    Status = Overtime.StatusPending
+                });
+            }
+
+            await _overtimeRepository.SaveManyAsync(overtimes);
+
+            return overtimes;
         }
     }
 }

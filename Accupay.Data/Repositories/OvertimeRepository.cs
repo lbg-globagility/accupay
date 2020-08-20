@@ -103,6 +103,19 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Overtime>(overtimes, count);
         }
 
+        internal async Task<List<Overtime>> GetByEmployeeIdsBetweenDatesAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
+        {
+            var result = await _context.Overtimes
+                .Include(ot => ot.Employee)
+                .Where(ot => ot.OrganizationID == organizationId)
+                .Where(ot => employeeIds.Contains(ot.EmployeeID.Value))
+                .Where(ot => ot.OTStartDate >= timePeriod.Start)
+                .Where(ot => ot.OTStartDate <= timePeriod.End)
+                .ToListAsync();
+
+            return result;
+        }
+
         public async Task<ICollection<Overtime>> GetByEmployeeAndDatePeriod(
             int organizationId,
             int employeeId,

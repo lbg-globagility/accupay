@@ -1,5 +1,5 @@
 import { auditTime, filter } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Constants } from 'src/app/core/shared/constants';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageOptions } from 'src/app/core/shared/page-options';
@@ -16,6 +16,9 @@ import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { Moment } from 'moment';
 import { PermissionTypes } from 'src/app/core/auth';
+import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
+import { OvertimeImportParserOutput } from '../shared/overtime-import-parser-output';
+import { OvertimeImportModel } from '../shared/overetime-import-model';
 
 @Component({
   selector: 'app-overtime-list',
@@ -26,6 +29,8 @@ import { PermissionTypes } from 'src/app/core/auth';
   },
 })
 export class OvertimeListComponent implements OnInit {
+  @ViewChild('uploader') fileInput: ElementRef;
+
   readonly PermissionTypes = PermissionTypes;
 
   readonly displayedColumns: string[] = [
@@ -184,5 +189,47 @@ export class OvertimeListComponent implements OnInit {
       .finally(() => {
         this.isDownloadingTemplate = false;
       });
+  }
+
+  onImport(files: FileList) {
+    const file = files[0];
+
+    this.overtimeService.import(file).subscribe(
+      (outputParse) => {
+        this.displaySuccess(outputParse);
+        this.clearFile();
+      },
+      (err) => {
+        this.errorHandler.badRequest(err, 'Failed to import overtime(s).');
+        this.clearFile();
+      }
+    );
+  }
+
+  private displaySuccess(outputParse: OvertimeImportParserOutput) {
+    const model: OvertimeImportModel = {
+      employeeNo: '',
+      fullName: '',
+      startDate: new Date(),
+      startTime: new Date(),
+      endTime: new Date(),
+      remarks: '',
+    };
+
+    this.dialog
+      .open(PostImportParserOutputDialogComponent, {
+        data: {
+          columnHeaders: new OvertimeImportParserOutput().columnHeaders,
+          invalidRecords: outputParse.invalidRecords,
+          validRecords: outputParse.validRecords,
+          propertyNames: Object.getOwnPropertyNames(model),
+        },
+      })
+      .afterClosed()
+      .subscribe(() => this.loadOvertimes());
+  }
+
+  clearFile() {
+    this.fileInput.nativeElement.value = '';
   }
 }

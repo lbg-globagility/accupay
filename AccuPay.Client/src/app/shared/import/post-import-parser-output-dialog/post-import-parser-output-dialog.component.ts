@@ -48,6 +48,10 @@ export class PostImportParserOutputDialogComponent implements OnInit {
   getValue(obj: any, propertyName: string) {
     const value = obj[propertyName];
 
+    if (propertyName.includes('Time') || propertyName.includes('time')) {
+      return moment(value).toDate().toLocaleTimeString();
+    }
+
     if (this.isDate(value)) {
       return moment(value).toDate().toLocaleDateString();
     }

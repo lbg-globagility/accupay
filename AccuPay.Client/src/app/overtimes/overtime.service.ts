@@ -6,6 +6,7 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
 import { Moment } from 'moment';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
+import { OvertimeImportParserOutput } from './shared/overtime-import-parser-output';
 
 @Injectable({
   providedIn: 'root',
@@ -63,6 +64,16 @@ export class OvertimeService extends BasePdfService {
     return this.getFile(
       this.OTTemplateileName,
       `${this.baseUrl}/accupay-overtime-template`
+    );
+  }
+
+  import(file: File): Observable<OvertimeImportParserOutput> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.httpClient.post<OvertimeImportParserOutput>(
+      `${this.baseUrl}/import`,
+      formData
     );
   }
 }
