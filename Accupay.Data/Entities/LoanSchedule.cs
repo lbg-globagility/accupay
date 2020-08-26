@@ -84,11 +84,13 @@ namespace AccuPay.Data.Entities
         {
             LoanPayPeriodLeft = ComputePayPeriod(TotalBalanceLeft);
 
-            if (Status == STATUS_IN_PROGRESS && LoanPayPeriodLeft == 0)
+            if ((Status == STATUS_IN_PROGRESS && LoanPayPeriodLeft == 0) ||
+                (Status == STATUS_IN_PROGRESS && TotalBalanceLeft <= 0))
             {
                 Status = STATUS_COMPLETE;
             }
-            else if (Status == STATUS_COMPLETE && LoanPayPeriodLeft > 0)
+            else if (Status == STATUS_COMPLETE && LoanPayPeriodLeft > 0 ||
+                (Status == STATUS_IN_PROGRESS && TotalBalanceLeft > 0))
             {
                 Status = STATUS_IN_PROGRESS;
             }
