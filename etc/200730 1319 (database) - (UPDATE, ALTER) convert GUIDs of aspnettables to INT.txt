@@ -163,7 +163,7 @@ ALTER TABLE `user`
 	DROP COLUMN IF EXISTS `AspNetUserId`,
 	DROP FOREIGN KEY IF EXISTS `FK_user_aspnetusers_AspNetUserId`;
 
-SET @sql = CONCAT('ALTER TABLE `aspnetusers` AUTO_INCREMENT = ', @rownumber + 1);
+SET @sql = CONCAT('ALTER TABLE `aspnetusers` AUTO_INCREMENT = ', IFNULL(@rownumber, 0) + 1);
 PREPARE st FROM @sql;
 EXECUTE st;
 
@@ -179,7 +179,7 @@ ALTER TABLE `aspnetusers`
 	DROP COLUMN `NewId`;
 	
 
-SET @sql = CONCAT('ALTER TABLE `aspnetroles` AUTO_INCREMENT = ', @rownumberRole + 1);
+SET @sql = CONCAT('ALTER TABLE `aspnetroles` AUTO_INCREMENT = ', IFNULL(@rownumberRole, 0) + 1);
 PREPARE st FROM @sql;
 EXECUTE st;
 
