@@ -91,6 +91,7 @@ import { LoansComponent } from './loans/loans/loans.component';
 import { PositionsComponent } from 'src/app/positions/components/positions/positions.component';
 import { PermissionGuard, PermissionTypes } from 'src/app/core/auth';
 import { NotAuthorizedComponent } from 'src/app/errors/not-authorized/not-authorized.component';
+import { SelfServeComponent } from './self-service/self-serve/self-serve.component';
 
 const routes: Routes = [
   {
@@ -541,6 +542,11 @@ const routes: Routes = [
             data: { permission: PermissionTypes.RoleUpdate },
           },
         ],
+      },
+      {
+        path: 'selfserve',
+        component: SelfServeComponent,
+        data: { permission: PermissionTypes.SelfserveLeaveCreate },
       },
     ],
     canActivate: [AuthGuard],

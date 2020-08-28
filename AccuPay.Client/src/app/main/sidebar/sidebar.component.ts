@@ -131,6 +131,11 @@ const menuItems: MenuItem[] = [
     route: '/clients',
     permission: PermissionTypes.ClientRead,
   },
+  {
+    label: 'Self-serve',
+    route: '/selfserve',
+    permission: PermissionTypes.SelfserveLeaveCreate,
+  },
 ];
 
 @Component({

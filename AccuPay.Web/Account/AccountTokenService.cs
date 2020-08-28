@@ -32,7 +32,8 @@ namespace AccuPay.Web.Account
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(CustomClaimTypes.CompanyId, organization.RowID.ToString()),
-                new Claim(CustomClaimTypes.ClientId, user.ClientId.ToString())
+                new Claim(CustomClaimTypes.ClientId, user.ClientId.ToString()),
+                new Claim(CustomClaimTypes.EmployeeId, user.EmployeeId.HasValue ? user.EmployeeId.ToString(): string.Empty)
             };
 
             return _tokenService.Encode(

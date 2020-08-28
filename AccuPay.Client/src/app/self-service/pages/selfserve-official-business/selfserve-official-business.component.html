@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>New Official Business</h1>
+
+<div mat-dialog-content>
+  <app-selfserve-official-business-form
+    [officialBusiness]="officialBusiness"
+    (save)="onSave()"
+  ></app-selfserve-official-business-form>
+</div>
+
+<div mat-card-actions align="end">
+  <button
+    mat-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="savingState.isLoading"
+  >
+    SAVE
+  </button>
+  <button mat-button [mat-dialog-close]="false">CANCEL</button>
+</div>

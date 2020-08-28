@@ -1,0 +1,17 @@
+<mat-card>
+  <mat-card-content>
+    <mat-grid-list cols="2" rowHeight="2:1">
+      <mat-grid-tile *ngFor="let item of menuItems">
+        <!-- *ngxPermissionsOnly="[item.permission]" -->
+        <button
+          mat-button
+          class="btn"
+          color="primary"
+          (click)="executeCommand(item.command)"
+        >
+          {{ item.label }}
+        </button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card-content>
+</mat-card>

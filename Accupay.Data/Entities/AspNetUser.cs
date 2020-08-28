@@ -21,5 +21,7 @@ namespace AccuPay.Data.Entities
         public int? OriginalImageId { get; set; }
 
         public virtual File OriginalImage { get; set; }
+
+        public int? EmployeeId { get; set; }
     }
 }

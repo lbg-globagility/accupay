@@ -1,0 +1,1 @@
+INSERT INTO `aspnetroles` (`ConcurrencyStamp`, `Name`, `NormalizedName`, `IsAdmin`, `CreatedAt`, `CreatedById`, `UpdatedAt`, `UpdatedById`, `ClientId`, `NewId`) VALUES (NULL, 'Selfserve', NULL, 0, CURRENT_TIMESTAMP(), 0, CURRENT_TIMESTAMP(), NULL, 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();

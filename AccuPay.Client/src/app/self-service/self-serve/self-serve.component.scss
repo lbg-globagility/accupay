@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+mat-card {
+  min-width: 500px;
+}
+
+.btn {
+  text-transform: uppercase;
+}

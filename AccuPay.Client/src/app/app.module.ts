@@ -34,6 +34,7 @@ import { EmploymentPoliciesModule } from 'src/app/employment-policies/employment
 import { AccountService } from 'src/app/accounts/services/account.service';
 import { ErrorsModule } from 'src/app/errors/errors.module';
 import { map, catchError } from 'rxjs/operators';
+import { SelfServiceModule } from './self-service/self-service.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -69,6 +70,7 @@ import { map, catchError } from 'rxjs/operators';
     AllowanceTypesModule,
     ReportsModule,
     LoanTypesModule,
+    SelfServiceModule,
   ],
   providers: [
     {

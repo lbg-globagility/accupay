@@ -12,5 +12,7 @@ namespace AccuPay.Web.Core.Auth
         int OrganizationId { get; }
 
         int ClientId { get; }
+
+        public int? EmployeeId { get; }
     }
 }

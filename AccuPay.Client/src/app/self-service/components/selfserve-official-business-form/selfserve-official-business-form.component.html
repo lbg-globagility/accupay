@@ -1,0 +1,60 @@
+<form [formGroup]="form">
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-12">
+      <mat-label>Date *</mat-label>
+      <input matInput [matDatepicker]="startDate" formControlName="startDate" />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="startDate"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #startDate></mat-datepicker>
+      <mat-error>Please select a date</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Start Time *</mat-label>
+      <input
+        matInput
+        type="time"
+        autocomplete="off"
+        formControlName="startTime"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>End Time *</mat-label>
+      <input
+        matInput
+        type="time"
+        autocomplete="off"
+        formControlName="endTime"
+      />
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Reason</mat-label>
+      <textarea
+        matInput
+        matTextareaAutosize
+        autocomplete="off"
+        formControlName="reason"
+      >
+      </textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Comments</mat-label>
+      <textarea
+        matInput
+        matTextareaAutosize
+        autocomplete="off"
+        formControlName="comments"
+      >
+      </textarea>
+    </mat-form-field>
+  </div>
+</form>
