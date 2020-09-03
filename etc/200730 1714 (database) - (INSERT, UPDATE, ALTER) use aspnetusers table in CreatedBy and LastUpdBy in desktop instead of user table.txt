@@ -200,12 +200,53 @@ WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
 UPDATE branch
 SET LastUpdBy = @DefaultUserId
 WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
-ALTER TABLE `branch`
-	DROP FOREIGN KEY `FK_branch_user_CreatedBy`;
+
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'FK_branch_user_CreatedBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key FK_branch_user_CreatedBy','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+set @var2=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'FK_branch_user_LastUpdBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key FK_branch_user_LastUpdBy','select 1');
+
+prepare stmt2 from @var2;
+execute stmt2;
+deallocate prepare stmt2;
+
+set @var3=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'branch_ibfk_2' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key branch_ibfk_2','select 1');
+
+prepare stmt3 from @var3;
+execute stmt3;
+deallocate prepare stmt3;
+
+set @var4=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'branch_ibfk_3' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key branch_ibfk_3','select 1');
+
+prepare stmt4 from @var4;
+execute stmt4;
+deallocate prepare stmt4;
+
 ALTER TABLE `branch`
 	ADD CONSTRAINT `FK_branch_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
-ALTER TABLE `branch`
-	DROP FOREIGN KEY `FK_branch_user_LastUpdBy`;
 ALTER TABLE `branch`
 	ADD CONSTRAINT `FK_branch_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
 
@@ -260,12 +301,52 @@ WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
 UPDATE employee
 SET LastUpdBy = @DefaultUserId
 WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
-ALTER TABLE `employee`
-	DROP FOREIGN KEY `FK_Employee_user_CreatedBy`;
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user_CreatedBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user_CreatedBy','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+set @var2=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user_LastUpdBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user_LastUpdBy','select 1');
+
+prepare stmt2 from @var2;
+execute stmt2;
+deallocate prepare stmt2;
+
+set @var3=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user','select 1');
+
+prepare stmt3 from @var3;
+execute stmt3;
+deallocate prepare stmt3;
+
+set @var4=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user_2' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user_2','select 1');
+
+prepare stmt4 from @var4;
+execute stmt4;
+deallocate prepare stmt4;
+	
 ALTER TABLE `employee`
 	ADD CONSTRAINT `FK_employee_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
-ALTER TABLE `employee`
-	DROP FOREIGN KEY `FK_Employee_user_LastUpdBy`;
 ALTER TABLE `employee`
 	ADD CONSTRAINT `FK_employee_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
 
@@ -755,14 +836,55 @@ WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
 UPDATE paystub
 SET LastUpdBy = @DefaultUserId
 WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
-ALTER TABLE `paystub`
-	DROP FOREIGN KEY `FK_paystub_user_CreatedBy`;
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'FK_paystub_user_CreatedBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key FK_paystub_user_CreatedBy','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+set @var2=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'FK-paystub_user_LastUpdBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key FK-paystub_user_LastUpdBy','select 1');
+
+prepare stmt2 from @var2;
+execute stmt2;
+deallocate prepare stmt2;
+
+set @var3=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'paystub_ibfk_2' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key paystub_ibfk_2','select 1');
+
+prepare stmt3 from @var3;
+execute stmt3;
+deallocate prepare stmt3;
+
+set @var4=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'paystub_ibfk_3' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key paystub_ibfk_3','select 1');
+
+prepare stmt4 from @var4;
+execute stmt4;
+deallocate prepare stmt4;
+	
 ALTER TABLE `paystub`
 	ADD CONSTRAINT `FK_paystub_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
 ALTER TABLE `paystub`
-	DROP FOREIGN KEY `FK-paystub_user_LastUpdBy`;
-ALTER TABLE `paystub`
-	ADD CONSTRAINT `FK-FK_paystub_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+	ADD CONSTRAINT `FK_paystub_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
 
 UPDATE paystubadjustment
 SET CreatedBy = @DefaultUserId
@@ -967,18 +1089,3 @@ ALTER TABLE `useractivity`
 	DROP FOREIGN KEY `FK_useractivity_user_UserId`;
 ALTER TABLE `useractivity`
 	ADD CONSTRAINT `FK_useractivity_aspnetusers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
