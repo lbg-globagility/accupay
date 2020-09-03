@@ -728,6 +728,12 @@
     <Compile Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\NewTripTicketDialog.Designer.vb">
+      <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\NewTripTicketDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\TripTicket\RouteForm.Designer.vb">
       <DependentUpon>RouteForm.vb</DependentUpon>
     </Compile>
@@ -2089,6 +2095,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\NewTripTicketDialog.resx">
+      <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TripTicket\RouteForm.resx">
       <DependentUpon>RouteForm.vb</DependentUpon>

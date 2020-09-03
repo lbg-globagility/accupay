@@ -22,15 +22,10 @@ Partial Class VehicleForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(VehicleForm))
         Me.dgvVehicles = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.colVehiclesRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colVehiclesBodyNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colVehiclesPlateNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colVehiclesTruckType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colVehiclesRemove = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
@@ -42,6 +37,10 @@ Partial Class VehicleForm
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colVehiclesBodyNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colVehiclesPlateNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colVehiclesTruckType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colVehiclesRemove = New System.Windows.Forms.DataGridViewButtonColumn()
         CType(Me.dgvVehicles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -55,24 +54,24 @@ Partial Class VehicleForm
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgvVehicles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvVehicles.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvVehicles.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvVehicles.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvVehicles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvVehicles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colVehiclesRowID, Me.colVehiclesBodyNo, Me.colVehiclesPlateNo, Me.colVehiclesTruckType, Me.colVehiclesRemove})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvVehicles.DefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvVehicles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colVehiclesBodyNo, Me.colVehiclesPlateNo, Me.colVehiclesTruckType, Me.colVehiclesRemove})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvVehicles.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvVehicles.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvVehicles.Location = New System.Drawing.Point(12, 127)
         Me.dgvVehicles.MultiSelect = False
@@ -82,39 +81,6 @@ Partial Class VehicleForm
         Me.dgvVehicles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvVehicles.Size = New System.Drawing.Size(848, 312)
         Me.dgvVehicles.TabIndex = 103
-        '
-        'colVehiclesRowID
-        '
-        Me.colVehiclesRowID.DataPropertyName = "RowID"
-        Me.colVehiclesRowID.HeaderText = "RowID"
-        Me.colVehiclesRowID.Name = "colVehiclesRowID"
-        '
-        'colVehiclesBodyNo
-        '
-        Me.colVehiclesBodyNo.DataPropertyName = "BodyNo"
-        Me.colVehiclesBodyNo.HeaderText = "Body No"
-        Me.colVehiclesBodyNo.Name = "colVehiclesBodyNo"
-        '
-        'colVehiclesPlateNo
-        '
-        Me.colVehiclesPlateNo.DataPropertyName = "PlateNo"
-        Me.colVehiclesPlateNo.HeaderText = "Plate No"
-        Me.colVehiclesPlateNo.Name = "colVehiclesPlateNo"
-        '
-        'colVehiclesTruckType
-        '
-        Me.colVehiclesTruckType.DataPropertyName = "TruckType"
-        Me.colVehiclesTruckType.HeaderText = "Truck Type"
-        Me.colVehiclesTruckType.Name = "colVehiclesTruckType"
-        '
-        'colVehiclesRemove
-        '
-        Me.colVehiclesRemove.HeaderText = ""
-        Me.colVehiclesRemove.Name = "colVehiclesRemove"
-        Me.colVehiclesRemove.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colVehiclesRemove.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.colVehiclesRemove.Text = "Remove"
-        Me.colVehiclesRemove.UseColumnTextForButtonValue = True
         '
         'ToolStrip1
         '
@@ -206,6 +172,33 @@ Partial Class VehicleForm
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.Width = 164
         '
+        'colVehiclesBodyNo
+        '
+        Me.colVehiclesBodyNo.DataPropertyName = "BodyNo"
+        Me.colVehiclesBodyNo.HeaderText = "Body No"
+        Me.colVehiclesBodyNo.Name = "colVehiclesBodyNo"
+        '
+        'colVehiclesPlateNo
+        '
+        Me.colVehiclesPlateNo.DataPropertyName = "PlateNo"
+        Me.colVehiclesPlateNo.HeaderText = "Plate No"
+        Me.colVehiclesPlateNo.Name = "colVehiclesPlateNo"
+        '
+        'colVehiclesTruckType
+        '
+        Me.colVehiclesTruckType.DataPropertyName = "TruckType"
+        Me.colVehiclesTruckType.HeaderText = "Truck Type"
+        Me.colVehiclesTruckType.Name = "colVehiclesTruckType"
+        '
+        'colVehiclesRemove
+        '
+        Me.colVehiclesRemove.HeaderText = ""
+        Me.colVehiclesRemove.Name = "colVehiclesRemove"
+        Me.colVehiclesRemove.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colVehiclesRemove.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.colVehiclesRemove.Text = "Remove"
+        Me.colVehiclesRemove.UseColumnTextForButtonValue = True
+        '
         'VehicleForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -230,13 +223,12 @@ Partial Class VehicleForm
     Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnImportEmployee As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsprogbarempimport As System.Windows.Forms.ToolStripProgressBar
-    Friend WithEvents colVehiclesRowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colVehiclesBodyNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colVehiclesPlateNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colVehiclesTruckType As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colVehiclesRemove As System.Windows.Forms.DataGridViewButtonColumn
     Friend WithEvents DataGridViewTextBoxColumn1 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn4 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents colVehiclesBodyNo As DataGridViewTextBoxColumn
+    Friend WithEvents colVehiclesPlateNo As DataGridViewTextBoxColumn
+    Friend WithEvents colVehiclesTruckType As DataGridViewTextBoxColumn
+    Friend WithEvents colVehiclesRemove As DataGridViewButtonColumn
 End Class

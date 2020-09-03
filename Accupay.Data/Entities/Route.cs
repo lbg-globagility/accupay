@@ -16,7 +16,7 @@ namespace AccuPay.Data.Entities
 
         public int? CreatedBy { get; set; }
 
-        public DateTime LastUpd { get; set; }
+        public DateTime? LastUpd { get; set; }
 
         public int? LastUpdBy { get; set; }
 

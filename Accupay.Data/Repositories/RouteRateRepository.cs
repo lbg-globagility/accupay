@@ -1,6 +1,7 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
@@ -14,11 +15,38 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public async Task<ICollection<RoutePayRate>> GetAll()
+        public async Task<ICollection<RoutePayRate>> GetAll(int? routeId)
         {
-            var routes = await _context.RoutePayRates.ToListAsync();
+            var routeRates = await _context.RoutePayRates
+                .Where(t => t.RouteID == routeId)
+                .ToListAsync();
 
-            return routes;
+            return routeRates;
+        }
+
+        public async Task<ICollection<RoutePayRate>> GetAllAsync()
+        {
+            var routeRates = await _context.RoutePayRates.ToListAsync();
+
+            return routeRates;
+        }
+
+        public ICollection<RoutePayRate> GetAll()
+        {
+            var routeRates = _context.RoutePayRates.ToList();
+
+            return routeRates;
+        }
+
+        public async Task SaveMany(ICollection<RoutePayRate> routeRates)
+        {
+            var added = routeRates.Where(t => t.IsNew);
+            var updated = routeRates.Where(t => !t.IsNew);
+
+            added.ToList().ForEach(t => _context.RoutePayRates.Add(t));
+            updated.ToList().ForEach(t => _context.Entry(t).State = EntityState.Modified);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

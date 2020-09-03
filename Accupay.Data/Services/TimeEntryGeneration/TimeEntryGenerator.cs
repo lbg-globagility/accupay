@@ -36,6 +36,8 @@ namespace AccuPay.Data.Services
         private IList<EmployeeDutySchedule> _shiftSchedules;
         private List<TimeAttendanceLog> _timeAttendanceLogs;
         private List<BreakTimeBracket> _breakTimeBrackets;
+        private ICollection<TripTicket> _tripTickets;
+        private ICollection<RoutePayRate> _routeRates;
         private readonly DbContextOptionsService _dbContextOptionsService;
         private readonly CalendarService _calendarService;
         private readonly ListOfValueService _listOfValueService;
@@ -57,7 +59,8 @@ namespace AccuPay.Data.Services
         private readonly TimeAttendanceLogRepository _timeAttendanceLogRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
         private readonly TimeLogRepository _timeLogRepository;
-
+        private readonly TripTicketRepository _tripTicketRepository;
+        private readonly RouteRateRepository _routeRateRepository;
         private int _total;
 
         private int _finished;
@@ -98,7 +101,9 @@ namespace AccuPay.Data.Services
             ShiftScheduleRepository shiftScheduleRepository,
             TimeAttendanceLogRepository timeAttendanceLogRepository,
             TimeEntryRepository timeEntryRepository,
-            TimeLogRepository timeLogRepository)
+            TimeLogRepository timeLogRepository,
+                                TripTicketRepository tripTicketRepository,
+                                RouteRateRepository routeRateRepository)
         {
             _dbContextOptionsService = dbContextOptionsService;
             _calendarService = calendarService;
@@ -120,6 +125,8 @@ namespace AccuPay.Data.Services
             _timeAttendanceLogRepository = timeAttendanceLogRepository;
             _timeEntryRepository = timeEntryRepository;
             _timeLogRepository = timeLogRepository;
+            _tripTicketRepository = tripTicketRepository;
+            _routeRateRepository = routeRateRepository;
         }
 
         public void Start(int organizationId, int userId, DateTime cutoffStart, DateTime cutoffEnd)
@@ -197,6 +204,10 @@ namespace AccuPay.Data.Services
             _shiftSchedules = _employeeDutyScheduleRepository
                 .GetByDatePeriod(_organizationId, cuttOffPeriod)
                 .ToList();
+
+            _tripTickets = _tripTicketRepository.GetByDateRange(cutoffStart, cutoffEnd);
+
+            _routeRates = _routeRateRepository.GetAll();
 
             if (timeEntryPolicy.ComputeBreakTimeLate)
             {
@@ -306,6 +317,11 @@ namespace AccuPay.Data.Services
                 .Where(b => b.DivisionID == employee.Position?.DivisionID)
                 .ToList();
 
+            var tripTickets = _tripTickets.Where(
+                t => t.Employees
+                    .Any(u => u.EmployeeID == employee.RowID))
+                .ToList();
+
             if (employee.IsActive == false)
             {
                 var currentTimeEntries = previousTimeEntries
@@ -335,6 +351,7 @@ namespace AccuPay.Data.Services
                     var officialBusiness = officialBusinesses.FirstOrDefault(o => o.StartDate.Value == currentDate);
                     var dutyShiftSched = dutyShiftSchedules.FirstOrDefault(es => es.DateSched == currentDate);
                     var currentTimeAttendanceLogs = timeAttendanceLogs.Where(l => l.WorkDay == currentDate).ToList();
+                    var tripTicketsForDate = tripTickets.Where(t => t.Date == currentDate).ToList();
 
                     var branchId = timelog?.BranchID ?? employee?.BranchID;
                     var payrate = calendarCollection.GetCalendar(branchId).Find(currentDate);
@@ -353,7 +370,9 @@ namespace AccuPay.Data.Services
                         breakTimeBrackets,
                         payrate,
                         calendarCollection,
-                        branchId);
+                        branchId,
+                                                            tripTicketsForDate,
+                                                            _routeRates);
 
                     if (payrate.IsRegularHoliday)
                     {

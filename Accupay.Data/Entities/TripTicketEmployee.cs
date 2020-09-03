@@ -8,15 +8,18 @@ namespace AccuPay.Data.Entities
     public class TripTicketEmployee
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
 
         public int? OrganizationID { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
         public int? CreatedBy { get; set; }
 
-        public DateTime LastUpd { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime? LastUpd { get; set; }
 
         public int? LastUpdBy { get; set; }
 
@@ -34,6 +37,8 @@ namespace AccuPay.Data.Entities
 
         public string FullName => Employee.FullName;
 
-        public string PositionName => Employee.Position.Name;
+        public string PositionName => Employee.Position?.Name;
+
+        public bool IsNew => (RowID ?? 0) <= 0;
     }
 }

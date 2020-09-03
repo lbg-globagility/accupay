@@ -43,7 +43,9 @@ namespace AccuPay.Data.Services
                                 IList<BreakTimeBracket> breakTimeBrackets,
                                 IPayrate payrate,
                                 CalendarCollection calendarCollection,
-                                int? branchId)
+                                int? branchId,
+                                ICollection<TripTicket> tripTickets,
+                                ICollection<RoutePayRate> routeRates)
         {
             var timeEntry = oldTimeEntries.Where(t => t.Date == currentDate).SingleOrDefault();
 
@@ -81,7 +83,7 @@ namespace AccuPay.Data.Services
 
             var hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries.ToList(), calendarCollection);
 
-            ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate);
+            ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate, tripTickets, routeRates);
             ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay);
 
             return timeEntry;
@@ -97,7 +99,9 @@ namespace AccuPay.Data.Services
                                 IList<BreakTimeBracket> breakTimeBrackets,
                                 CurrentShift currentShift,
                                 bool hasWorkedLastDay,
-                                IPayrate payrate)
+                                IPayrate payrate,
+                                ICollection<TripTicket> tripTickets,
+                                ICollection<RoutePayRate> routeRates)
         {
             var previousDay = currentDate.AddDays(-1);
             var calculator = new TimeEntryCalculator();
@@ -206,6 +210,31 @@ namespace AccuPay.Data.Services
                                         timeEntry.RestDayHours +
                                         timeEntry.RegularHolidayHours +
                                         timeEntry.SpecialHolidayHours;
+            }
+
+
+            if (tripTickets.Any())
+            {
+                var tripTicketPay = 0m;
+
+                foreach (var tripTicket in tripTickets)
+                {
+                    var tripTicketEmployee = tripTicket.Employees.FirstOrDefault(t => t.EmployeeID == _employee.RowID);
+
+                    var routeRate = routeRates
+                        .Where(t => t.PositionID == _employee.PositionID)
+                        .Where(t => t.RouteID == tripTicket.RouteID)
+                        .FirstOrDefault();
+
+                    if (routeRate is null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        tripTicketPay += routeRate.Rate * tripTicketEmployee.NoOfTrips;
+                    }
+                }
             }
 
             ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves);

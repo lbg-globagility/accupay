@@ -1,164 +1,136 @@
 ﻿Option Explicit On
 Option Strict On
 
-Imports AccuPay.Data
+Imports System.Collections.ObjectModel
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class RoutePayRateMatrixForm
-    Private routePayRateMatrix As DataTable
-    Private context As PayrollContext
 
-    Private routes As IList(Of Route)
-    Private routePayRates As IList(Of RoutePayRate)
-    Private positions As IList(Of Position)
+    Private _routes As ICollection(Of Route)
+    Private _routeRates As ICollection(Of RoutePayRate)
+    Private _positions As ICollection(Of Position)
 
-    Private routePayRatesToDelete As IList(Of RoutePayRate)
+    Private ReadOnly _routeRepository As RouteRepository
+    Private ReadOnly _routeRateRepository As RouteRateRepository
+    Private ReadOnly _positionRepository As PositionRepository
 
-    Public Sub Startup()
-        Dim builder As DbContextOptionsBuilder = New DbContextOptionsBuilder()
-        builder.UseMySql(mysql_conn_text)
+    Private _selectedRoute As Route
 
-        Me.context = New PayrollContext(builder.Options)
+    Public Sub New()
+        InitializeComponent()
 
-        LoadRoutePayRates()
-        LoadRoutes()
-        LoadPositions()
-
-        routePayRatesToDelete = New List(Of RoutePayRate)
-
-        InitializeRoutePayRateHeaders()
-        FillInPositions()
-        FillInExistingRoutePayRates()
+        _routeRepository = MainServiceProvider.GetRequiredService(Of RouteRepository)
+        _routeRateRepository = MainServiceProvider.GetRequiredService(Of RouteRateRepository)
+        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
     End Sub
-
-    ''' <summary>
-    ''' Load all existing company positions
-    ''' </summary>
-    Private Sub LoadPositions()
-        Dim query = From p In Me.context.Positions
-                    Select p
-                    Where p.OrganizationID = z_OrganizationID
-
-        Me.positions = query.ToList()
-    End Sub
-
-    ''' <summary>
-    '''
-    ''' </summary>
-    Private Sub LoadRoutes()
-        Dim query = From r In Me.context.Routes
-                    Select r
-
-        Me.routes = query.ToList()
-    End Sub
-
-    Private Sub LoadRoutePayRates()
-        Dim query = From r In Me.context.RoutePayRates
-                    Select r
-                    Where r.OrganizationID = z_OrganizationID
-
-        Me.routePayRates = query.ToList()
-    End Sub
-
-    Private Sub InitializeRoutePayRateHeaders()
-        routePayRateMatrix = New DataTable()
-        routePayRateMatrix.Columns.Add("PositionID").ColumnMapping = MappingType.Hidden
-        routePayRateMatrix.Columns.Add("Position")
-
-        For Each route In Me.routes
-            Dim routeColumn = New DataColumn(route.Description, System.Type.GetType("System.Decimal"))
-            routeColumn.ExtendedProperties.Add("RouteID", route.RowID)
-
-            routePayRateMatrix.Columns.Add(routeColumn)
-        Next
-
-        dgvRoutePayRateMatrix.DataSource = routePayRateMatrix
-    End Sub
-
-    Private Sub FillInPositions()
-        For Each position In Me.positions
-            Dim row = routePayRateMatrix.NewRow()
-            row(0) = position.RowID
-            row(1) = position.Name
-
-            routePayRateMatrix.Rows.Add(row)
-        Next
-    End Sub
-
-    Private Sub FillInExistingRoutePayRates()
-        For Each routePayRate In Me.routePayRates
-            Dim row = FindRow(routePayRate.Position.Name)
-
-            row(routePayRate.Route.Description) = routePayRate.Rate
-        Next
-    End Sub
-
-    Private Function FindRow(positionName As String) As DataRow
-        For Each row As DataRow In Me.routePayRateMatrix.Rows
-            Dim rowPositionname = row("Position").ToString()
-            If rowPositionname = positionName Then
-                Return row
-            End If
-        Next
-
-        Return Nothing
-    End Function
-
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        dgvRoutePayRateMatrix.EndEdit()
-
-        For Each positionRow As DataRow In routePayRateMatrix.Rows
-            Dim position = positionRow("Position").ToString()
-            Dim positionID = ConvertToType(Of Integer?)(positionRow("PositionID"))
-
-            For Each column As DataColumn In routePayRateMatrix.Columns
-                If column.ToString = "Position" Or column.ToString = "PositionID" Then
-                    Continue For
-                End If
-
-                Dim routeName = column.ToString()
-                Dim routeID = ConvertToType(Of Integer?)(column.ExtendedProperties("RouteID"))
-                Dim rate = ConvertToType(Of Decimal)(positionRow(routeName))
-
-                Dim routePayRate = FindRoutePayRate(routeID, positionID)
-                Dim isPayRateMissing = routePayRate Is Nothing
-                Dim rateIsNonZero = rate > 0D
-
-                If isPayRateMissing And rateIsNonZero Then
-                    routePayRate = New RoutePayRate() With {
-                        .OrganizationID = z_OrganizationID,
-                        .RouteID = routeID,
-                        .PositionID = positionID,
-                        .Rate = rate
-                    }
-
-                    Me.routePayRates.Add(routePayRate)
-                End If
-            Next
-        Next
-
-        PersistToDatabase()
-    End Sub
-
-    Private Sub PersistToDatabase()
-        For Each routePayRate In Me.routePayRates
-            If routePayRate.RowID Is Nothing Then
-                Me.context.RoutePayRates.Add(routePayRate)
-            End If
-        Next
-
-        Me.context.SaveChanges()
-    End Sub
-
-    Private Function FindRoutePayRate(routeID As Integer?, positionID As Integer?) As RoutePayRate
-        Return (From r In Me.routePayRates
-                Select r
-                Where r.RouteID = routeID And r.PositionID = positionID).FirstOrDefault()
-    End Function
 
     Private Sub RoutePayRateMatrixForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        RouteDataGridView.AutoGenerateColumns = False
+        RouteRatesDataGridView.AutoGenerateColumns = False
+
         Startup()
     End Sub
+
+    Public Async Sub Startup()
+        Await LoadRoutes()
+        Await LoadPositions()
+
+        RouteDataGridView.DataSource = _routes
+    End Sub
+
+    Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+        RouteRatesDataGridView.EndEdit()
+
+        Dim changedRouteRates = New Collection(Of RoutePayRate)
+
+        For Each positionRow As DataGridViewRow In RouteRatesDataGridView.Rows
+            Dim model = DirectCast(positionRow.DataBoundItem, RouteRateModel)
+
+            Dim position = model.Position
+            Dim routeRate = model.RouteRate
+
+            Dim isRouteRateNotExist = routeRate Is Nothing
+            Dim rateIsNotZero = model.Rate > 0D
+
+            If isRouteRateNotExist And rateIsNotZero Then
+                routeRate = New RoutePayRate() With {
+                    .OrganizationID = z_OrganizationID,
+                    .CreatedBy = z_User,
+                    .RouteID = _selectedRoute.RowID,
+                    .PositionID = position.RowID
+                }
+            End If
+
+            If routeRate IsNot Nothing Then
+                routeRate.Rate = model.Rate
+
+                changedRouteRates.Add(routeRate)
+            End If
+        Next
+
+        Await _routeRateRepository.SaveMany(changedRouteRates)
+    End Sub
+
+    Private Async Sub RouteDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles RouteDataGridView.SelectionChanged
+        Dim route = DirectCast(RouteDataGridView.CurrentRow.DataBoundItem, Route)
+
+        If route Is Nothing Then Return
+        If route Is _selectedRoute Then Return
+
+        _selectedRoute = route
+        Await LoadRouteRates()
+
+        Dim models = New Collection(Of RouteRateModel)
+
+        For Each position In _positions
+            Dim routeRate = _routeRates.FirstOrDefault(Function(t) t.PositionID.Value = position.RowID.Value)
+            Dim model = New RouteRateModel(position, routeRate)
+
+            models.Add(model)
+        Next
+
+        RouteRatesDataGridView.DataSource = models
+    End Sub
+
+    Private Async Function LoadPositions() As Task
+        Me._positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
+    End Function
+
+    Private Async Function LoadRoutes() As Task
+        Me._routes = Await _routeRepository.GetAll()
+
+    End Function
+
+    Private Async Function LoadRouteRates() As Task
+        If _selectedRoute Is Nothing Then Return
+
+        Me._routeRates = Await _routeRateRepository.GetAll(_selectedRoute.RowID)
+    End Function
+
+    Private Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
+
+    End Sub
+
+    Public Class RouteRateModel
+
+        Public ReadOnly Property Position As Position
+
+        Public ReadOnly Property RouteRate As RoutePayRate
+
+        Public ReadOnly Property PositionName As String
+
+        Public Property Rate As Decimal
+
+        Public Sub New(position As Position, routeRate As RoutePayRate)
+            Me.Position = position
+            Me.RouteRate = routeRate
+            PositionName = position.Name
+            Rate = If(routeRate?.Rate, 0D)
+        End Sub
+
+    End Class
 
 End Class

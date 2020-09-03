@@ -83,7 +83,7 @@ Public Class TripTicketForm
 
     Public Sub DisplayTripTicket(tripTicket As TripTicket)
         txtTicketNo.DataBindings.Clear()
-        txtTicketNo.DataBindings.Add("Text", controller, "TimeTo")
+        txtTicketNo.DataBindings.Add("Text", controller, "TicketNo")
 
         txtTimeFrom.DataBindings.Clear()
         txtTimeFrom.DataBindings.Add("Text", controller, "TimeFrom")
@@ -160,7 +160,10 @@ Public Class TripTicketForm
     End Sub
 
     Private Sub btnNewTripTicket_Click(sender As Object, e As EventArgs) Handles btnNewTripTicket.Click
-        RaiseEvent TripTicketCreated()
+        Dim dialog = New NewTripTicketDialog()
+        dialog.ShowDialog()
+
+        'RaiseEvent TripTicketCreated()
     End Sub
 
     Private Sub btnSaveTripTicket_Click(sender As Object, e As EventArgs) Handles btnSaveTripTicket.Click
@@ -213,7 +216,8 @@ Public Class TripTicketForm
     End Sub
 
     Private Sub lnkRoutePayMatrix_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnkRoutePayMatrix.LinkClicked
-        RoutePayRateMatrixForm.ShowDialog()
+        Dim dialog = New RoutePayRateMatrixForm()
+        dialog.ShowDialog()
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -229,6 +233,14 @@ Public Class TripTicketForm
 
         txtPlateNo.Text = vehicle.PlateNo
         txtTruckType.Text = vehicle.TruckType
+    End Sub
+
+    Private Sub EmployeeOvertimeForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
+    End Sub
+
+    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
+        Close()
     End Sub
 
 End Class

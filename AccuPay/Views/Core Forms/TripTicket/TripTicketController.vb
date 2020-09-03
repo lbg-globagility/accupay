@@ -1,15 +1,11 @@
 ﻿Option Explicit On
 Option Strict On
 
-Imports Payroll.Routes
-Imports System.Data.Entity
-Imports System.Transactions
 Imports System.ComponentModel
-Imports AccuPay.Data
-Imports AccuPay.Data.Entities
-Imports Microsoft.EntityFrameworkCore
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TripTicketController
     Implements INotifyPropertyChanged
@@ -34,78 +30,84 @@ Public Class TripTicketController
 
     End Class
 
-    Private WithEvents view As TripTicketForm
-    Private context As PayrollContext
-    Private _tripTicketRepository As TripTicketRepository
-    Private _vehicleRepository As VehicleRepository
-    Private _routeRepository As RouteRepository
-    Private _employeeRepository As EmployeeRepository
-    Private _routeRateRepository As RouteRateRepository
-    Private tripTicket As TripTicket
-    Private tripTickets As ICollection(Of TripTicket)
-    Private vehicles As ICollection(Of Vehicle)
-    Private routes As ICollection(Of Route)
-    Private employees As ICollection(Of Employee)
-    Private tripTicketHelpers As ICollection(Of TripTicketEmployee)
+    Private WithEvents View As TripTicketForm
+
+    Private ReadOnly _tripTicketRepository As TripTicketRepository
+    Private ReadOnly _vehicleRepository As VehicleRepository
+    Private ReadOnly _routeRepository As RouteRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _routeRateRepository As RouteRateRepository
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+
+    Private _tripTicket As TripTicket
+    Private _tripTickets As ICollection(Of TripTicket)
+    Private _vehicles As ICollection(Of Vehicle)
+    Private _routes As ICollection(Of Route)
+    Private _employees As ICollection(Of Employee)
+    Private _tripTicketHelpers As ICollection(Of TripTicketEmployee)
     Private standardMinimumWage As Decimal
-    Private routePayRates As ICollection(Of RoutePayRate)
+    Private _routeRates As ICollection(Of RoutePayRate)
 
     Public Property TicketNo As String
         Get
-            Return tripTicket?.TicketNo
+            Return _tripTicket?.TicketNo
         End Get
         Set(value As String)
-            tripTicket.TicketNo = value
+            _tripTicket.TicketNo = value
             NotifyPropertyChanged("TicketNo")
         End Set
     End Property
 
     Public Property TripDate As Date
         Get
-            Return If(tripTicket Is Nothing, DateTime.Today(), tripTicket.Date.Value)
+            Return If(_tripTicket Is Nothing, DateTime.Today(), _tripTicket.Date.Value)
         End Get
         Set(value As Date)
-            tripTicket.Date = value
+            _tripTicket.Date = value
             NotifyPropertyChanged("TripDate")
         End Set
     End Property
 
     Public Property TimeFrom As String
         Get
-            Return tripTicket?.TimeFrom.ToString()
+            Return _tripTicket?.TimeFrom.ToString()
         End Get
         Set(value As String)
-            tripTicket.TimeFrom = TimeSpan.Parse(value)
+            If String.IsNullOrWhiteSpace(value) Then Return
+
+            _tripTicket.TimeFrom = TimeSpan.Parse(value)
             NotifyPropertyChanged("TimeFrom")
         End Set
     End Property
 
     Public Property TimeTo As String
         Get
-            Return tripTicket?.TimeTo.ToString()
+            Return _tripTicket?.TimeTo.ToString()
         End Get
         Set(value As String)
-            tripTicket.TimeTo = TimeSpan.Parse(value)
+            If String.IsNullOrWhiteSpace(value) Then Return
+
+            _tripTicket.TimeTo = TimeSpan.Parse(value)
             NotifyPropertyChanged("TimeTo")
         End Set
     End Property
 
     Public Property TimeDispatched As String
         Get
-            Return If(tripTicket Is Nothing, Nothing, tripTicket.TimeDispatched.ToString())
+            Return If(_tripTicket Is Nothing, Nothing, _tripTicket.TimeDispatched.ToString())
         End Get
         Set(value As String)
-            tripTicket.TimeDispatched = TimeSpan.Parse(value)
+            _tripTicket.TimeDispatched = TimeSpan.Parse(value)
             NotifyPropertyChanged("TimeDispatched")
         End Set
     End Property
 
     Public Property Route As Route
         Get
-            Return tripTicket?.Route
+            Return _tripTicket?.Route
         End Get
         Set(value As Route)
-            tripTicket.Route = value
+            _tripTicket.Route = value
             NotifyPropertyChanged("Route")
             NotifyPropertyChanged("Distance")
         End Set
@@ -113,19 +115,19 @@ Public Class TripTicketController
 
     Public ReadOnly Property Distance As String
         Get
-            If tripTicket Is Nothing Then : Return Nothing : End If
-            If tripTicket.Route Is Nothing Then : Return Nothing : End If
+            If _tripTicket Is Nothing Then : Return Nothing : End If
+            If _tripTicket.Route Is Nothing Then : Return Nothing : End If
 
-            Return CStr(tripTicket.Route.Distance)
+            Return CStr(_tripTicket.Route.Distance)
         End Get
     End Property
 
     Public Property Vehicle As Vehicle
         Get
-            Return tripTicket?.Vehicle
+            Return _tripTicket?.Vehicle
         End Get
         Set(value As Vehicle)
-            tripTicket.Vehicle = value
+            _tripTicket.Vehicle = value
             NotifyPropertyChanged("Vehicle")
             NotifyPropertyChanged("PlateNo")
         End Set
@@ -133,156 +135,160 @@ Public Class TripTicketController
 
     Public ReadOnly Property PlateNo As String
         Get
-            If tripTicket Is Nothing Then : Return Nothing : End If
-            If tripTicket.Vehicle Is Nothing Then : Return Nothing : End If
+            If _tripTicket Is Nothing Then : Return Nothing : End If
+            If _tripTicket.Vehicle Is Nothing Then : Return Nothing : End If
 
-            Return tripTicket.Vehicle.PlateNo
+            Return _tripTicket.Vehicle.PlateNo
         End Get
     End Property
 
     Public ReadOnly Property TruckType As String
         Get
-            If tripTicket Is Nothing Then : Return Nothing : End If
-            If tripTicket.Vehicle Is Nothing Then : Return Nothing : End If
+            If _tripTicket Is Nothing Then : Return Nothing : End If
+            If _tripTicket.Vehicle Is Nothing Then : Return Nothing : End If
 
-            Return tripTicket.Vehicle.TruckType
+            Return _tripTicket.Vehicle.TruckType
         End Get
     End Property
 
     Public Sub New(view As TripTicketForm)
-        Me.view = view
-        Dim builder As DbContextOptionsBuilder = New DbContextOptionsBuilder()
-        builder.UseMySql(mysql_conn_text)
+        Me.View = view
 
-        Me.context = New PayrollContext(builder.Options)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
+        _routeRepository = MainServiceProvider.GetRequiredService(Of RouteRepository)
+        _routeRateRepository = MainServiceProvider.GetRequiredService(Of RouteRateRepository)
+        _vehicleRepository = MainServiceProvider.GetRequiredService(Of VehicleRepository)
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
         Start()
     End Sub
 
-    Public Sub Start()
-        LoadTripTickets()
-        LoadVehicles()
-        LoadRoutes()
-        LoadEmployees()
-        LoadMinimumWageRate()
-        LoadRoutePayRates()
+    Public Async Sub Start()
+        Await LoadTripTickets()
+        Await LoadVehicles()
+        Await LoadRoutes()
+        Await LoadEmployees()
+        Await LoadMinimumWageRate()
+        Await LoadRoutePayRates()
     End Sub
 
     Private Async Function LoadTripTicket(tripTicketID As Integer?) As Task
-        Me.tripTicket = Await _tripTicketRepository.FindById(tripTicketID)
+        _tripTicket = Await _tripTicketRepository.FindById(tripTicketID)
     End Function
 
     Private Async Function LoadTripTicketHelpers(tripTicketID As Integer?) As Task
         Dim tripTicketEmployees = Await _tripTicketRepository.GetTripTicketEmployees(tripTicketID)
 
-        Me.tripTicketHelpers = tripTicketEmployees
+        _tripTicketHelpers = tripTicketEmployees
     End Function
 
     Private Async Function LoadTripTickets() As Task
         Dim tripTickets = Await _tripTicketRepository.GetAll()
 
-        Me.tripTickets = tripTickets
-        view.TripTicketsSource.DataSource = tripTickets
+        _tripTickets = tripTickets
+        View.TripTicketsSource.DataSource = tripTickets
     End Function
 
     Private Async Function LoadEmployees() As Task
-        Dim employees = Await _employeeRepository.GetAllAsync(z_OrganizationID)
+        Dim employees = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
 
-        Me.employees = employees.ToList()
-        view.cboEmployees.DataSource = Me.employees
-        view.cboEmployees.SelectedItem = Nothing
+        _employees = employees.ToList()
+        View.cboEmployees.DataSource = _employees
+        View.cboEmployees.SelectedItem = Nothing
     End Function
 
     Private Async Function LoadVehicles() As Task
-        Me.vehicles = Await _vehicleRepository.GetAll()
+        _vehicles = Await _vehicleRepository.GetAll()
 
-        view.cboVehicles.DataSource = Me.vehicles
-        view.cboVehicles.SelectedIndex = -1
+        View.cboVehicles.DataSource = _vehicles
+        View.cboVehicles.SelectedIndex = -1
     End Function
 
     Private Async Function LoadRoutes() As Task
-        Me.routes = Await _routeRepository.GetAll()
+        _routes = Await _routeRepository.GetAll()
 
-        view.cboRoutes.DataSource = Me.routes
-        view.cboRoutes.SelectedIndex = -1
+        View.cboRoutes.DataSource = _routes
+        View.cboRoutes.SelectedIndex = -1
     End Function
 
     Private Async Function LoadRoutePayRates() As Task
-        Dim routeRates = Await _routeRateRepository.GetAll()
+        Dim routeRates = Await _routeRateRepository.GetAllAsync()
 
-        Me.routePayRates = routeRates
+        _routeRates = routeRates
     End Function
 
-    Private Sub LoadMinimumWageRate()
-        Dim query = From l In Me.context.ListOfValues
-                    Select l
-                    Where l.Type = "Minimum Wage Rate"
+    Private Async Function LoadMinimumWageRate() As Task
+        Dim listOfValue = (Await _listOfValueRepository.
+            GetFilteredListOfValuesAsync(Function(t) t.Type = "Minimum Wage Rate")).
+            FirstOrDefault()
 
-        Dim listOfValue = query.Single()
         Me.standardMinimumWage = CDec(listOfValue.DisplayValue)
+    End Function
+
+    Private Sub NewTripTicket() Handles View.TripTicketCreated
+        _tripTicket = New TripTicket()
+        _tripTicketHelpers = New List(Of TripTicketEmployee)
+        View.ClearDisplay()
+        View.DisplayTripTicket(_tripTicket)
+        View.TripTicketHelpersSource.DataSource = _tripTicketHelpers
     End Sub
 
-    Private Sub NewTripTicket() Handles view.TripTicketCreated
-        Me.tripTicket = New TripTicket()
-        Me.tripTicketHelpers = New List(Of TripTicketEmployee)
-        view.ClearDisplay()
-        view.DisplayTripTicket(Me.tripTicket)
-        view.TripTicketHelpersSource.DataSource = Me.tripTicketHelpers
+    Private Sub CancelChanges() Handles View.TripTicketCancelChanges
+        'Me.context.Entry(Me._tripTicket).Reload()
     End Sub
 
-    Private Sub CancelChanges() Handles view.TripTicketCancelChanges
-        Me.context.Entry(Me.tripTicket).Reload()
+    Private Async Sub SelectTripTicket(tripTicketID As Integer?) Handles View.TripTicketSelected
+        Await LoadTripTicket(tripTicketID)
+        Await LoadTripTicketHelpers(tripTicketID)
+
+        View.ClearDisplay()
+        View.DisplayTripTicket(_tripTicket)
+        View.TripTicketHelpersSource.DataSource = _tripTicketHelpers
     End Sub
 
-    Private Sub SelectTripTicket(tripTicketID As Integer?) Handles view.TripTicketSelected
-        LoadTripTicket(tripTicketID)
-        LoadTripTicketHelpers(tripTicketID)
-
-        view.ClearDisplay()
-        view.DisplayTripTicket(Me.tripTicket)
-        view.TripTicketHelpersSource.DataSource = Me.tripTicketHelpers
-    End Sub
-
-    Private Sub AddTripTicketHelper(employeeID As Integer?) Handles view.EmployeeWasAdded
-        Dim employee = Me.employees.Single(Function(e) CBool(e.RowID = employeeID))
+    Private Sub AddTripTicketHelper(employeeID As Integer?) Handles View.EmployeeWasAdded
+        Dim employee = _employees.Single(Function(e) CBool(e.RowID = employeeID))
 
         Dim tripTicketHelper = New TripTicketEmployee()
+        tripTicketHelper.OrganizationID = z_OrganizationID
+        tripTicketHelper.CreatedBy = z_User
         tripTicketHelper.Employee = employee
 
-        If Me.tripTicket.IsSpecialOperations Then
+        If _tripTicket.IsSpecialOperations Then
             'tripTicketHelper.PaymentAmount = Me.standardMinimumWage
         Else
             ApplyPaymentFromPayRateMatrix(tripTicketHelper)
         End If
 
-        view.TripTicketHelpersSource.Add(tripTicketHelper)
+        View.TripTicketHelpersSource.Add(tripTicketHelper)
     End Sub
 
     ''' <summary>
     ''' Change payment policy according to whether special operations has been toggled.
     ''' </summary>
-    Private Sub SwitchSpecialOperations(isSpecialOperations As Boolean) Handles view.SpecialOperationsToggled
+    Private Sub SwitchSpecialOperations(isSpecialOperations As Boolean) Handles View.SpecialOperationsToggled
         ' If IsSpecialOperations switch didn't actually change, don't do anything.
-        If Me.tripTicket.IsSpecialOperations = isSpecialOperations Then
+        If _tripTicket.IsSpecialOperations = isSpecialOperations Then
             Return
         End If
 
-        Me.tripTicket.IsSpecialOperations = isSpecialOperations
+        _tripTicket.IsSpecialOperations = isSpecialOperations
 
-        If Me.tripTicket.IsSpecialOperations Then
+        If _tripTicket.IsSpecialOperations Then
             GiveMinimumWagePayments()
         Else
             GivePayRateMatrixPayments()
         End If
 
-        view.dgvTripTicketHelpers.Refresh()
+        View.dgvTripTicketHelpers.Refresh()
     End Sub
 
     ''' <summary>
     ''' Set all helpers payment to the minimum wage rate.
     ''' </summary>
     Private Sub GiveMinimumWagePayments()
-        For Each tripTicketHelper In Me.tripTicketHelpers
+        For Each tripTicketHelper In _tripTicketHelpers
             'tripTicketHelper.PaymentAmount = Me.standardMinimumWage
         Next
     End Sub
@@ -291,17 +297,17 @@ Public Class TripTicketController
     ''' Give all helpers payment according to the pay rate matrix.
     ''' </summary>
     Private Sub GivePayRateMatrixPayments()
-        For Each tripTicketHelper In Me.tripTicketHelpers
+        For Each tripTicketHelper In _tripTicketHelpers
             ApplyPaymentFromPayRateMatrix(tripTicketHelper)
         Next
     End Sub
 
     Private Sub ApplyPaymentFromPayRateMatrix(tripTicketHelper As TripTicketEmployee)
         ' Select pay rate according to employee's position and current route.
-        Dim routePayRate = (From r In Me.routePayRates
+        Dim routePayRate = (From r In _routeRates
                             Select r
                             Where r.PositionID = tripTicketHelper.Employee.PositionID And
-                                r.RouteID = Me.tripTicket.RouteID
+                                r.RouteID = Me._tripTicket.RouteID
                             ).FirstOrDefault()
 
         ' If the routepayrate doesn't exist, don't pay anything.
@@ -313,18 +319,18 @@ Public Class TripTicketController
         End If
     End Sub
 
-    Private Sub UpdateRoute(routeID As Integer?) Handles view.RouteHasChanged
-        If Me.tripTicket Is Nothing Then
+    Private Sub UpdateRoute(routeID As Integer?) Handles View.RouteHasChanged
+        If _tripTicket Is Nothing Then
             Return
         End If
 
-        Me.tripTicket.RouteID = routeID
+        _tripTicket.RouteID = routeID
         GivePayRateMatrixPayments()
 
-        view.dgvTripTicketHelpers.Refresh()
+        View.dgvTripTicketHelpers.Refresh()
     End Sub
 
-    Private Sub SaveTripTicket() Handles view.TripTicketSaved
+    Private Sub SaveTripTicket() Handles View.TripTicketSaved
         ApplyChanges()
         Persist()
     End Sub
@@ -334,21 +340,15 @@ Public Class TripTicketController
         'Me.tripTicket.TimeFrom = view.TimeFrom
         'Me.tripTicket.TimeTo = view.TimeTo
         'Me.tripTicket.TimeDispatched = view.TimeDispatched
-        Me.tripTicket.TripDate = view.TripDate
-        Me.tripTicket.VehicleID = view.VehicleID
-        Me.tripTicket.RouteID = view.RouteID
-        Me.tripTicket.LastUpd = DateTime.Now()
+        _tripTicket.Date = View.TripDate
+        _tripTicket.VehicleID = View.VehicleID
+        _tripTicket.RouteID = View.RouteID
+        _tripTicket.LastUpd = DateTime.Now()
     End Sub
 
     Private Sub Persist()
-        Me.context.TripTickets.Add(Me.tripTicket)
-
-        For Each tripTicketHelper In tripTicketHelpers
-            tripTicketHelper.TripTicket = Me.tripTicket
-            context.TripTicketEmployees.Add(tripTicketHelper)
-        Next
-
-        Me.context.SaveChanges()
+        _tripTicket.Employees = _tripTicketHelpers
+        _tripTicketRepository.Update(_tripTicket)
     End Sub
 
 End Class
