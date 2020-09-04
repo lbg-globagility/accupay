@@ -344,4 +344,23 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     End Class
 
+    Private Sub UncheckAllButton_Click(sender As Object, e As EventArgs) Handles UncheckAllButton.Click
+
+        For Each model In _employeeModels
+            model.IsSelected = False
+        Next
+
+        EmployeeGridView.EndEdit()
+        EmployeeGridView.Refresh()
+        UpdateSaveButton()
+    End Sub
+
+    Private Sub EmployeeGridView_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) _
+        Handles EmployeeGridView.CellMouseUp
+
+        EmployeeGridView.EndEdit()
+        EmployeeGridView.Refresh()
+        UpdateSaveButton()
+    End Sub
+
 End Class

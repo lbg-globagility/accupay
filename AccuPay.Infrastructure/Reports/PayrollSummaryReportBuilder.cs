@@ -175,7 +175,10 @@ namespace AccuPay.Infrastructure.Reports
 
             var organization = await _organizationRepository.GetByIdAsync(organizationId);
 
-            var filteredCategories = new string[] { PayrollSummaryCategory.Cash.ToTrimmedLowerCase(), PayrollSummaryCategory.DirectDeposit.ToTrimmedLowerCase() };
+            var filteredCategories = new string[] {
+                PayrollSummaryCategory.Cash.ToTrimmedLowerCase(),
+                PayrollSummaryCategory.DirectDeposit.ToTrimmedLowerCase(),
+                PayrollSummaryCategory.All.ToTrimmedLowerCase() };
 
             if (filteredCategories.Contains(salaryDistributionType.ToTrimmedLowerCase()) == false)
             {

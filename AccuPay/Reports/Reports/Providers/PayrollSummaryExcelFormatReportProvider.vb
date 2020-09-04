@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports System.IO
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Interfaces
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -29,6 +30,14 @@ Public Class PayrollSummaryExcelFormatReportProvider
         If payrollSelector Is Nothing Then Return
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
+        Dim salaryDistribution = payrollSelector.cboStringParameter.Text
+
+        Dim dividedCategories = {PayrollSummaryCategory.Cash, PayrollSummaryCategory.DirectDeposit, PayrollSummaryCategory.All}
+        If dividedCategories.Contains(salaryDistribution) = False Then
+
+            salaryDistribution = Nothing
+
+        End If
 
         Dim hideEmptyColumns = payrollSelector.chkHideEmptyColumns.Checked
 
@@ -51,7 +60,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 organizationId:=z_OrganizationID,
                 payPeriodFromId:=payrollSelector.PayPeriodFromID.Value,
                 payPeriodToId:=payrollSelector.PayPeriodToID.Value,
-                salaryDistributionType:=payrollSelector.cboStringParameter.Text,
+                salaryDistributionType:=salaryDistribution,
                 isActual:=IsActual,
                 saveFilePath:=saveFilePath)
 
