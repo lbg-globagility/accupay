@@ -174,7 +174,7 @@ Public Class PaystubPresenter
         Public Async Function GetLoanTransactions(paystubId As Integer?) As Task(Of IList(Of LoanTransaction))
             If paystubId Is Nothing Then Return Nothing
 
-            Return (Await _paystubRepository.GetLoanTransanctionsAsync(paystubId.Value)).ToList()
+            Return (Await _paystubRepository.GetLoanTransactionsAsync(paystubId.Value)).ToList()
         End Function
 
         Public Async Function GetAdjustments(paystubId As Integer?) As Task(Of IList(Of Adjustment))

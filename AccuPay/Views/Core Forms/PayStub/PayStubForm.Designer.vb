@@ -53,6 +53,14 @@ Partial Class PayStubForm
         Me.StatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.dgvemployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Division = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblGrossIncome = New System.Windows.Forms.Label()
         Me.Last = New System.Windows.Forms.LinkLabel()
@@ -277,6 +285,15 @@ Partial Class PayStubForm
         Me.PrintPayrollSummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayDetailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayDeclaredAllToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayDeclaredCashToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayActualAllToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayActualCashToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExportNetPayActualDirectDepositToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CostCenterReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -299,14 +316,6 @@ Partial Class PayStubForm
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
         Me.CancelPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Division = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -3052,7 +3061,7 @@ Partial Class PayStubForm
         '
         'ManagePayrollToolStripDropDownButton
         '
-        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.CostCenterReportToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.CancelPayrollToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
+        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.ExportNetPayDetailsToolStripMenuItem, Me.CostCenterReportToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.CancelPayrollToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
         Me.ManagePayrollToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
         Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
@@ -3112,16 +3121,74 @@ Partial Class PayStubForm
         'PayrollSummaryDeclaredToolStripMenuItem
         '
         Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PayrollSummaryDeclaredToolStripMenuItem.Tag = "0"
         Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayrollSummaryActualToolStripMenuItem
         '
         Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PayrollSummaryActualToolStripMenuItem.Tag = "1"
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
+        '
+        'ExportNetPayDetailsToolStripMenuItem
+        '
+        Me.ExportNetPayDetailsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportNetPayDeclaredToolStripMenuItem, Me.ExportNetPayActualToolStripMenuItem})
+        Me.ExportNetPayDetailsToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.userid
+        Me.ExportNetPayDetailsToolStripMenuItem.Name = "ExportNetPayDetailsToolStripMenuItem"
+        Me.ExportNetPayDetailsToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
+        Me.ExportNetPayDetailsToolStripMenuItem.Text = "Export Net Pay Details"
+        '
+        'ExportNetPayDeclaredToolStripMenuItem
+        '
+        Me.ExportNetPayDeclaredToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportNetPayDeclaredAllToolStripMenuItem, Me.ExportNetPayDeclaredCashToolStripMenuItem, Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem})
+        Me.ExportNetPayDeclaredToolStripMenuItem.Name = "ExportNetPayDeclaredToolStripMenuItem"
+        Me.ExportNetPayDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportNetPayDeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'ExportNetPayDeclaredAllToolStripMenuItem
+        '
+        Me.ExportNetPayDeclaredAllToolStripMenuItem.Name = "ExportNetPayDeclaredAllToolStripMenuItem"
+        Me.ExportNetPayDeclaredAllToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ExportNetPayDeclaredAllToolStripMenuItem.Text = "All"
+        '
+        'ExportNetPayDeclaredCashToolStripMenuItem
+        '
+        Me.ExportNetPayDeclaredCashToolStripMenuItem.Name = "ExportNetPayDeclaredCashToolStripMenuItem"
+        Me.ExportNetPayDeclaredCashToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ExportNetPayDeclaredCashToolStripMenuItem.Text = "Cash"
+        '
+        'ExportNetPayDeclaredDirectDepositToolStripMenuItem
+        '
+        Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem.Name = "ExportNetPayDeclaredDirectDepositToolStripMenuItem"
+        Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem.Text = "Direct Deposit"
+        '
+        'ExportNetPayActualToolStripMenuItem
+        '
+        Me.ExportNetPayActualToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportNetPayActualAllToolStripMenuItem, Me.ExportNetPayActualCashToolStripMenuItem, Me.ExportNetPayActualDirectDepositToolStripMenuItem})
+        Me.ExportNetPayActualToolStripMenuItem.Name = "ExportNetPayActualToolStripMenuItem"
+        Me.ExportNetPayActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportNetPayActualToolStripMenuItem.Text = "Actual"
+        '
+        'ExportNetPayActualAllToolStripMenuItem
+        '
+        Me.ExportNetPayActualAllToolStripMenuItem.Name = "ExportNetPayActualAllToolStripMenuItem"
+        Me.ExportNetPayActualAllToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ExportNetPayActualAllToolStripMenuItem.Text = "All"
+        '
+        'ExportNetPayActualCashToolStripMenuItem
+        '
+        Me.ExportNetPayActualCashToolStripMenuItem.Name = "ExportNetPayActualCashToolStripMenuItem"
+        Me.ExportNetPayActualCashToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ExportNetPayActualCashToolStripMenuItem.Text = "Cash"
+        '
+        'ExportNetPayActualDirectDepositToolStripMenuItem
+        '
+        Me.ExportNetPayActualDirectDepositToolStripMenuItem.Name = "ExportNetPayActualDirectDepositToolStripMenuItem"
+        Me.ExportNetPayActualDirectDepositToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ExportNetPayActualDirectDepositToolStripMenuItem.Text = "Direct Deposit"
         '
         'CostCenterReportToolStripMenuItem
         '
@@ -3616,4 +3683,13 @@ Partial Class PayStubForm
     Friend WithEvents EmployeeType As DataGridViewTextBoxColumn
     Friend WithEvents Position As DataGridViewTextBoxColumn
     Friend WithEvents Division As DataGridViewTextBoxColumn
+    Friend WithEvents ExportNetPayDetailsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayDeclaredAllToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayDeclaredCashToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayDeclaredDirectDepositToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayActualToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayActualAllToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayActualCashToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ExportNetPayActualDirectDepositToolStripMenuItem As ToolStripMenuItem
 End Class

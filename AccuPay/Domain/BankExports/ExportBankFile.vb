@@ -22,9 +22,11 @@ Public Class ExportBankFile
 
     Public Async Function Extract() As Task
 
-        Dim paystubDateKey = New PaystubRepository.DateCompositeKey(z_OrganizationID,
-                                                                    payFromDate:=_cutoffStart,
-                                                                    payToDate:=_cutoffEnd)
+        Dim paystubDateKey = New PaystubRepository.DateCompositeKey(
+            z_OrganizationID,
+            payFromDate:=_cutoffStart,
+            payToDate:=_cutoffEnd)
+
         Dim paystubs = Await _paystubRepository.GetAllWithEmployeeAsync(paystubDateKey)
 
         Dim sortedPaystubs = paystubs.

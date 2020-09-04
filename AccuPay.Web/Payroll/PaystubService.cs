@@ -35,7 +35,7 @@ namespace AccuPay.Web.Payroll
 
         public async Task<List<LoanTransactionDto>> GetLoanTransactions(int paystubId)
         {
-            var loanTransactions = await repository.GetLoanTransanctionsAsync(paystubId);
+            var loanTransactions = await repository.GetLoanTransactionsAsync(paystubId);
 
             return loanTransactions.Select(x => LoanTransactionDto.Convert(x)).ToList();
         }

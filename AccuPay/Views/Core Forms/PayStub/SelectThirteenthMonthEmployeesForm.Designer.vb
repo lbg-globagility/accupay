@@ -23,6 +23,12 @@ Partial Class SelectThirteenthMonthEmployeesForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -30,15 +36,19 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectThirteenthMonthEmployeesForm))
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.EmployeeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PositionNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CurrentThirteenthMonthPayColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.NewThirteenthMonthPayColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.RecalculateButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
@@ -53,16 +63,7 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PositionNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CurrentThirteenthMonthPayColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.NewThirteenthMonthPayColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UncheckAllButton = New System.Windows.Forms.Button()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
@@ -102,6 +103,98 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.EmployeeGridView.Size = New System.Drawing.Size(1084, 392)
         Me.EmployeeGridView.TabIndex = 16
         '
+        'SelectedCheckBoxColumn
+        '
+        Me.SelectedCheckBoxColumn.DataPropertyName = "IsSelected"
+        Me.SelectedCheckBoxColumn.FillWeight = 12.94994!
+        Me.SelectedCheckBoxColumn.HeaderText = ""
+        Me.SelectedCheckBoxColumn.Name = "SelectedCheckBoxColumn"
+        Me.SelectedCheckBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeNumber"
+        Me.Column1.FillWeight = 35.99998!
+        Me.Column1.HeaderText = "Employee Number"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "LastName"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column3.FillWeight = 35.99998!
+        Me.Column3.HeaderText = "Last Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "FirstName"
+        Me.Column6.FillWeight = 50.99996!
+        Me.Column6.HeaderText = "First Name"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "MiddleName"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle2
+        Me.Column2.FillWeight = 38.99998!
+        Me.Column2.HeaderText = "Middle Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EmployeeType"
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle3
+        Me.Column4.FillWeight = 30.99998!
+        Me.Column4.HeaderText = "Employee Type"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'PositionNameColumn
+        '
+        Me.PositionNameColumn.DataPropertyName = "PositionName"
+        DataGridViewCellStyle4.NullValue = "(No email address.)"
+        Me.PositionNameColumn.DefaultCellStyle = DataGridViewCellStyle4
+        Me.PositionNameColumn.FillWeight = 60.9736!
+        Me.PositionNameColumn.HeaderText = "Position"
+        Me.PositionNameColumn.Name = "PositionNameColumn"
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "DivisionName"
+        Me.Column7.FillWeight = 38.99998!
+        Me.Column7.HeaderText = "Division"
+        Me.Column7.MinimumWidth = 120
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'CurrentThirteenthMonthPayColumn
+        '
+        Me.CurrentThirteenthMonthPayColumn.DataPropertyName = "CurrentThirteenthMonthAmount"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle5.Format = "N2"
+        DataGridViewCellStyle5.NullValue = Nothing
+        Me.CurrentThirteenthMonthPayColumn.DefaultCellStyle = DataGridViewCellStyle5
+        Me.CurrentThirteenthMonthPayColumn.FillWeight = 40.99998!
+        Me.CurrentThirteenthMonthPayColumn.HeaderText = "Current 13th Month Pay"
+        Me.CurrentThirteenthMonthPayColumn.Name = "CurrentThirteenthMonthPayColumn"
+        '
+        'NewThirteenthMonthPayColumn
+        '
+        Me.NewThirteenthMonthPayColumn.DataPropertyName = "NewThirteenthMonthPayDescription"
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.NewThirteenthMonthPayColumn.DefaultCellStyle = DataGridViewCellStyle6
+        Me.NewThirteenthMonthPayColumn.FillWeight = 35.99998!
+        Me.NewThirteenthMonthPayColumn.HeaderText = "New 13th Month Pay"
+        Me.NewThirteenthMonthPayColumn.Name = "NewThirteenthMonthPayColumn"
+        '
         'CancelDialogButton
         '
         Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -135,6 +228,7 @@ Partial Class SelectThirteenthMonthEmployeesForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.UncheckAllButton)
         Me.Panel1.Controls.Add(Me.SaveButton)
         Me.Panel1.Controls.Add(Me.CancelDialogButton)
         Me.Panel1.Controls.Add(Me.RecalculateButton)
@@ -256,97 +350,15 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 177
         '
-        'SelectedCheckBoxColumn
+        'UncheckAllButton
         '
-        Me.SelectedCheckBoxColumn.DataPropertyName = "IsSelected"
-        Me.SelectedCheckBoxColumn.FillWeight = 12.94994!
-        Me.SelectedCheckBoxColumn.HeaderText = ""
-        Me.SelectedCheckBoxColumn.Name = "SelectedCheckBoxColumn"
-        Me.SelectedCheckBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeNumber"
-        Me.Column1.FillWeight = 35.99998!
-        Me.Column1.HeaderText = "Employee Number"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "LastName"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
-        Me.Column3.FillWeight = 35.99998!
-        Me.Column3.HeaderText = "Last Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "FirstName"
-        Me.Column6.FillWeight = 50.99996!
-        Me.Column6.HeaderText = "First Name"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "MiddleName"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle2
-        Me.Column2.FillWeight = 38.99998!
-        Me.Column2.HeaderText = "Middle Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EmployeeType"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle3
-        Me.Column4.FillWeight = 30.99998!
-        Me.Column4.HeaderText = "Employee Type"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'PositionNameColumn
-        '
-        Me.PositionNameColumn.DataPropertyName = "PositionName"
-        DataGridViewCellStyle4.NullValue = "(No email address.)"
-        Me.PositionNameColumn.DefaultCellStyle = DataGridViewCellStyle4
-        Me.PositionNameColumn.FillWeight = 60.9736!
-        Me.PositionNameColumn.HeaderText = "Position"
-        Me.PositionNameColumn.Name = "PositionNameColumn"
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "DivisionName"
-        Me.Column7.FillWeight = 38.99998!
-        Me.Column7.HeaderText = "Division"
-        Me.Column7.MinimumWidth = 120
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'CurrentThirteenthMonthPayColumn
-        '
-        Me.CurrentThirteenthMonthPayColumn.DataPropertyName = "CurrentThirteenthMonthAmount"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.Format = "N2"
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.CurrentThirteenthMonthPayColumn.DefaultCellStyle = DataGridViewCellStyle5
-        Me.CurrentThirteenthMonthPayColumn.FillWeight = 40.99998!
-        Me.CurrentThirteenthMonthPayColumn.HeaderText = "Current 13th Month Pay"
-        Me.CurrentThirteenthMonthPayColumn.Name = "CurrentThirteenthMonthPayColumn"
-        '
-        'NewThirteenthMonthPayColumn
-        '
-        Me.NewThirteenthMonthPayColumn.DataPropertyName = "NewThirteenthMonthPayDescription"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.NewThirteenthMonthPayColumn.DefaultCellStyle = DataGridViewCellStyle6
-        Me.NewThirteenthMonthPayColumn.FillWeight = 35.99998!
-        Me.NewThirteenthMonthPayColumn.HeaderText = "New 13th Month Pay"
-        Me.NewThirteenthMonthPayColumn.Name = "NewThirteenthMonthPayColumn"
+        Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
+        Me.UncheckAllButton.Name = "UncheckAllButton"
+        Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
+        Me.UncheckAllButton.TabIndex = 10
+        Me.UncheckAllButton.Text = "&Uncheck All"
+        Me.UncheckAllButton.UseVisualStyleBackColor = True
         '
         'SelectThirteenthMonthEmployeesForm
         '
@@ -394,4 +406,5 @@ Partial Class SelectThirteenthMonthEmployeesForm
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents CurrentThirteenthMonthPayColumn As DataGridViewTextBoxColumn
     Friend WithEvents NewThirteenthMonthPayColumn As DataGridViewTextBoxColumn
+    Friend WithEvents UncheckAllButton As Button
 End Class
