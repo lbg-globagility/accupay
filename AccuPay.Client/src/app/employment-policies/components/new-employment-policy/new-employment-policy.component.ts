@@ -34,9 +34,9 @@ export class NewEmploymentPolicyComponent implements OnInit {
     const value = this.form.value;
 
     this.employmentPolicyService.create(value).subscribe({
-      next: () => {
+      next: (employmentPolicy) => {
         this.displaySuccess();
-        this.router.navigate(['employment-policies']);
+        this.router.navigate(['employment-policies', employmentPolicy.id]);
       },
       error: (err) => {
         this.errorHandler.badRequest(err, 'Failed to create employment policy');
@@ -51,7 +51,7 @@ export class NewEmploymentPolicyComponent implements OnInit {
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully created a new leave!',
+      // text: 'Successfully created a new leave!',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
