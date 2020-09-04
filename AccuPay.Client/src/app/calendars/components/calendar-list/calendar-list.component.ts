@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarService } from 'src/app/calendars/service/calendar.service';
 import { Calendar } from 'src/app/calendars/shared/calendar';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-calendar-list',
@@ -11,6 +12,8 @@ import { Calendar } from 'src/app/calendars/shared/calendar';
   },
 })
 export class CalendarListComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = ['name', 'actions'];
 
   calendars: Calendar[];

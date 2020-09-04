@@ -16,6 +16,7 @@ import { TimeLogImportResultComponent } from '../time-log-import-result/time-log
 import Swal from 'sweetalert2';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { TimeLogsByEmployeePageOptions } from 'src/app/time-logs/shared/timelogs-by-employee-page-options';
+import { PermissionTypes } from 'src/app/core/auth';
 
 interface DateHeader {
   title: string;
@@ -40,6 +41,8 @@ interface EmployeeTimeLogsModel {
   },
 })
 export class TimeLogsComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   displayedColumns = ['employee'];
 
   dateFrom: Date = new Date();

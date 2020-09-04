@@ -7,6 +7,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { Loan } from 'src/app/loans/shared/loan';
 import { LoanService } from 'src/app/loans/loan.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-view-loan',
@@ -14,6 +15,8 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   styleUrls: ['./view-loan.component.scss'],
 })
 export class ViewLoanComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   loan: Loan;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);

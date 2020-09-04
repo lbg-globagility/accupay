@@ -4,14 +4,20 @@
 
 <ng-container *ngIf="isLoading | async">
   <button
-    style="margin-right: 10px;"
+    *ngxPermissionsOnly="PermissionTypes.LoanUpdate"
+    style="margin-right: 10px"
     mat-raised-button
     color="accent"
     routerLink="/loans/{{ loanId }}/edit"
   >
     EDIT LOAN
   </button>
-  <button mat-raised-button color="warn" (click)="confirmDelete()">
+  <button
+    *ngxPermissionsOnly="PermissionTypes.LoanDelete"
+    mat-raised-button
+    color="warn"
+    (click)="confirmDelete()"
+  >
     DELETE LOAN
   </button>
 
