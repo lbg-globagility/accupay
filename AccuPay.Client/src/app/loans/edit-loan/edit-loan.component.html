@@ -1,9 +1,10 @@
-<h1>Edit Loan</h1>
+<h1 mat-dialog-title>Edit Loan</h1>
 
-<ng-container *ngIf="isLoading | async">
-  <app-loan-form
-    [loan]="loan"
-    (save)="onSave($event)"
-    (cancel)="onCancel()"
-  ></app-loan-form>
-</ng-container>
+<div mat-dialog-content>
+  <app-loan-form [loan]="loan"></app-loan-form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" (click)="save()">SAVE</button>
+  <button mat-button mat-dialog-close>CANCEL</button>
+</div>

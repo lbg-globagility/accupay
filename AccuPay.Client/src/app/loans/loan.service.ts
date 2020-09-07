@@ -8,6 +8,7 @@ import { Loan } from 'src/app/loans/shared/loan';
 import { LoanHistory } from './shared/loan-history';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
 import { LoanImportParserOutput } from './shared/loan-import-parser-output';
+import { LoanPageOptions } from 'src/app/loans/shared/loan-page-options';
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +22,8 @@ export class LoanService extends BasePdfService {
     super(httpClient);
   }
 
-  getAll(options: PageOptions, term = ''): Observable<PaginatedList<Loan>> {
+  list(options: LoanPageOptions): Observable<PaginatedList<Loan>> {
     const params = options ? options.toObject() : null;
-    params.term = term;
     return this.httpClient.get<PaginatedList<Loan>>(`${this.baseUrl}`, {
       params,
     });

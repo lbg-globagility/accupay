@@ -41,14 +41,11 @@ namespace AccuPay.Web.Loans
             _importParser = importParser;
         }
 
-        public async Task<PaginatedList<LoanDto>> PaginatedList(PageOptions options, string searchTerm)
+        public async Task<PaginatedList<LoanDto>> PaginatedList(LoanPageOptions options)
         {
-            // TODO: sort and desc in repository
-
             var paginatedList = await _loanRepository.GetPaginatedListAsync(
                 options,
-                _currentUser.OrganizationId,
-                searchTerm);
+                _currentUser.OrganizationId);
 
             return paginatedList.Select(x => ConvertToDto(x));
         }

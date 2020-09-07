@@ -77,7 +77,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedList<LoanSchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<LoanSchedule>> GetPaginatedListAsync(LoanPageOptions options, int organizationId)
         {
             var query = _context.LoanSchedules
                 .Include(x => x.Employee)
@@ -89,15 +89,25 @@ namespace AccuPay.Data.Repositories
                 .ThenBy(x => x.Employee.FirstName)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (options.HasSearchTerm)
             {
-                searchTerm = $"%{searchTerm}%";
+                var searchTerm = $"%{options.SearchTerm}%";
 
                 query = query.Where(x =>
                     EF.Functions.Like(x.LoanType.PartNo, searchTerm) ||
                     EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
                     EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
                     EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            if (options.HasLoanTypeId)
+            {
+                query = query.Where(t => t.LoanTypeID == options.LoanTypeId);
+            }
+            
+            if (options.HasStatus)
+            {
+                query = query.Where(t => t.Status == options.Status);
             }
 
             var loanSchedules = await query.Page(options).ToListAsync();

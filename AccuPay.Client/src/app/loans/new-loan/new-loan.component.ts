@@ -1,37 +1,44 @@
 import Swal from 'sweetalert2';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Loan } from 'src/app/loans/shared/loan';
 import { LoanService } from 'src/app/loans/loan.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { LoanFormComponent } from 'src/app/loans/loan-form/loan-form.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-new-loan',
   templateUrl: './new-loan.component.html',
   styleUrls: ['./new-loan.component.scss'],
   host: {
-    class: 'block p-4',
+    class: 'block',
   },
 })
 export class NewLoanComponent {
+  @ViewChild(LoanFormComponent)
+  form: LoanFormComponent;
+
   constructor(
     private loanService: LoanService,
     private router: Router,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialogRef<NewLoanComponent>
   ) {}
 
-  onSave(loan: Loan): void {
+  save(): void {
+    if (!this.form.valid) {
+      return;
+    }
+
+    const loan = this.form.value;
+
     this.loanService.create(loan).subscribe(
       (result) => {
         this.displaySuccess();
-        this.router.navigate(['loans', result.id]);
+        this.dialog.close(result);
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to create loan.')
     );
-  }
-
-  onCancel(): void {
-    this.router.navigate(['loans']);
   }
 
   private displaySuccess() {

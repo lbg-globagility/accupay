@@ -27,9 +27,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet]
         [Permission(PermissionTypes.LoanRead)]
-        public async Task<ActionResult<PaginatedList<LoanDto>>> List([FromQuery] PageOptions options, string term)
+        public async Task<ActionResult<PaginatedList<LoanDto>>> List([FromQuery] LoanPageOptions options)
         {
-            return await _service.PaginatedList(options, term);
+            return await _service.PaginatedList(options);
         }
 
         [HttpGet("{id}")]
