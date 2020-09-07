@@ -2,10 +2,8 @@ import { auditTime, filter } from 'rxjs/operators';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Constants } from 'src/app/core/shared/constants';
 import { MatTableDataSource } from '@angular/material/table';
-import { PageOptions } from 'src/app/core/shared/page-options';
 import { Subject } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
-import { Sort } from '@angular/material/sort';
 import { Loan } from 'src/app/loans/shared/loan';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { LoanService } from 'src/app/loans/loan.service';
@@ -21,6 +19,8 @@ import { LoanType } from 'src/app/loan-types/shared/loan-type';
 import { LoanPageOptions } from 'src/app/loans/shared/loan-page-options';
 import { NewLoanComponent } from 'src/app/loans/new-loan/new-loan.component';
 import { EditLoanComponent } from 'src/app/loans/edit-loan/edit-loan.component';
+import { ViewLoanComponent } from 'src/app/loans/view-loan/view-loan.component';
+import { ViewLoanDialogComponent } from 'src/app/loans/view-loan-dialog/view-loan-dialog.component';
 
 @Component({
   selector: 'app-loan-list',
@@ -106,7 +106,12 @@ export class LoanListComponent implements OnInit {
   }
 
   viewLoan(loan: Loan) {
-    this.router.navigate(['loans', loan.id]);
+    // this.router.navigate(['loans', loan.id]);
+    this.dialog
+      .open(ViewLoanDialogComponent, {
+        data: { loan },
+      })
+      .afterClosed();
   }
 
   viewHistory(loan: Loan) {
@@ -220,7 +225,7 @@ export class LoanListComponent implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe(() => this.getLoanList());
+      .subscribe(() => this.loadLoans());
   }
 
   clearFile() {

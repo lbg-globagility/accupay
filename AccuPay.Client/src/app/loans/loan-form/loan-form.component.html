@@ -1,34 +1,30 @@
-<mat-card *ngIf="loan">
-  <mat-card-content>
-    <div class="row">
-      <!-- Employee Name -->
+<ng-container *ngIf="loan">
+  <!-- <mat-card-content> -->
+  <div class="row">
+    <!-- Employee Name -->
 
-      <div class="col-lg-4 mb-4">
-        <app-display-field label="Employee Name">
-          {{ loan.employeeName }}
-        </app-display-field>
-        <div class="field">
-          <p class="field-label">Employee Name</p>
-          <p class="field-value">{{ loan.employeeName }}</p>
-        </div>
-      </div>
-
-      <!-- Employee Number -->
-      <div class="col-lg-4 mb-4">
-        <app-display-field label="Employee No">
-          {{ loan.employeeNumber }}
-        </app-display-field>
-      </div>
-
-      <!-- Employee Type -->
-      <div class="col-lg-4 mb-4">
-        <app-display-field label="Employee Type">
-          {{ loan.employeeType }}
-        </app-display-field>
-      </div>
+    <div class="col-lg-4 mb-4">
+      <app-display-field label="Employee Name">
+        {{ loan.employeeName }}
+      </app-display-field>
     </div>
-  </mat-card-content>
-</mat-card>
+
+    <!-- Employee Number -->
+    <div class="col-lg-4 mb-4">
+      <app-display-field label="Employee No">
+        {{ loan.employeeNumber }}
+      </app-display-field>
+    </div>
+
+    <!-- Employee Type -->
+    <div class="col-lg-4 mb-4">
+      <app-display-field label="Employee Type">
+        {{ loan.employeeType }}
+      </app-display-field>
+    </div>
+  </div>
+  <!-- </mat-card-content> -->
+</ng-container>
 
 <form [formGroup]="form" (ngSubmit)="onSave()">
   <div class="row" *ngIf="!loan">
@@ -85,7 +81,7 @@
         mat-icon-button
         color="primary"
         matTooltip="New loan type"
-        (click)="newLoanType()"
+        (click)="$event.stopPropagation(); newLoanType()"
       >
         <mat-icon>add</mat-icon>
       </button>
