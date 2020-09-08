@@ -11,11 +11,13 @@ Public Class MetroLogin
     Private err_count As Integer
     Private freq As String
 
-    Private _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As PolicyHelper
 
-    Private _userRepository As UserRepository
+    Private ReadOnly _organizationRepository As OrganizationRepository
 
-    Private _organizationRepository As OrganizationRepository
+    Private ReadOnly _roleRepository As RoleRepository
+
+    Private ReadOnly _userRepository As UserRepository
 
     Private ReadOnly _encryptor As IEncryption
 
@@ -27,9 +29,11 @@ Public Class MetroLogin
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
-
         _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+
+        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
 
         _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
     End Sub
@@ -186,6 +190,8 @@ Public Class MetroLogin
         err_count = 0
 
         z_User = user.RowID.Value
+
+        USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
         loadUserPrivileges(z_User, z_OrganizationID)
 

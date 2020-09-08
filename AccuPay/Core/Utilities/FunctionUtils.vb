@@ -38,14 +38,23 @@ Namespace Global.AccuPay.Desktop.Utilities
         Public Shared Async Function TryCatchFunctionAsync(
             messageTitle As String,
             action As Func(Of Task),
-            Optional baseExceptionErrorMessage As String = Nothing) As Task
+            Optional baseExceptionErrorMessage As String = Nothing,
+            Optional errorCallBack As Action = Nothing) As Task
             Try
 
                 Await action()
             Catch ex As ArgumentException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+
+                If errorCallBack IsNot Nothing Then
+                    errorCallBack()
+                End If
             Catch ex As BusinessLogicException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+
+                If errorCallBack IsNot Nothing Then
+                    errorCallBack()
+                End If
             Catch ex As Exception
                 Debugger.Break()
 
@@ -55,6 +64,10 @@ Namespace Global.AccuPay.Desktop.Utilities
                 Else
 
                     MessageBoxHelper.ErrorMessage(baseExceptionErrorMessage, messageTitle)
+                End If
+
+                If errorCallBack IsNot Nothing Then
+                    errorCallBack()
                 End If
 
             End Try

@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -431,6 +430,7 @@
     <Compile Include="Core\Utilities\Helper\SaveFileDialogHelper.vb" />
     <Compile Include="Core\Utilities\Helper\TemplatesHelper.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
+    <Compile Include="Core\Utilities\PermissionHelper.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
@@ -1724,10 +1724,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\txtPlaceHolder.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\userprivil.Designer.vb">
-      <DependentUpon>userprivil.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\UserPrivilegeForm.Designer.vb">
+      <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\userprivil.vb">
+    <Compile Include="Views\Core Forms\UserPrivilegeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
@@ -2573,8 +2573,8 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
       <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\userprivil.resx">
-      <DependentUpon>userprivil.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\UserPrivilegeForm.resx">
+      <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\viewtotallow.resx">
       <DependentUpon>viewtotallow.vb</DependentUpon>

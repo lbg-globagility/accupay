@@ -1,5 +1,6 @@
 ﻿Imports System.Data.OleDb
 Imports System.IO
+Imports AccuPay.Data.Entities
 Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
 Imports Microsoft.Extensions.DependencyInjection
@@ -80,6 +81,8 @@ Module myModule
     Public FormLeftTimeAttend As New List(Of String)
 
     Public position_view_table As New DataTable
+
+    Public USER_ROLES As AspNetRole
 
     Public userFirstName As String = Nothing
 

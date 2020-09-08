@@ -74,7 +74,7 @@ export class EditRoleComponent implements OnInit {
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully created a new role!',
+      text: 'Successfully updated the role!',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,

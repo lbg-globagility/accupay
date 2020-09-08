@@ -17,6 +17,27 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
+        public async Task UpdateAsync(AspNetRole role)
+        {
+            _context.Entry(role).State = EntityState.Modified;
+            role.RolePermissions.ToList().ForEach(t => _context.Entry(t).State = EntityState.Modified);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserRolesAsync(
+            ICollection<UserRole> added,
+            ICollection<UserRole> deleted)
+        {
+            _context.UserRoles.RemoveRange(deleted);
+
+            foreach (var userRole in added)
+            {
+                _context.UserRoles.Add(userRole);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<AspNetRole> GetById(int roleId)
         {
             var role = await _context.Roles.Include(t => t.RolePermissions)
@@ -49,13 +70,6 @@ namespace AccuPay.Data.Repositories
             return role;
         }
 
-        public async Task Update(AspNetRole role)
-        {
-            _context.Entry(role).State = EntityState.Modified;
-            role.RolePermissions.ToList().ForEach(t => _context.Entry(t).State = EntityState.Modified);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<ICollection<UserRole>> GetUserRoles(int organizationId)
         {
             var userRoles = await _context.UserRoles
@@ -63,19 +77,6 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
 
             return userRoles;
-        }
-
-        public async Task UpdateUserRoles(ICollection<UserRole> added,
-                                          ICollection<UserRole> deleted)
-        {
-            _context.UserRoles.RemoveRange(deleted);
-
-            foreach (var userRole in added)
-            {
-                _context.UserRoles.Add(userRole);
-            }
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task<(ICollection<AspNetRole> roles, int total)> List(PageOptions options, int clientId)

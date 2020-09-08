@@ -30,6 +30,17 @@ namespace AccuPay.Data.Helpers
             }
         }
 
+        public static PageOptions AllData
+        {
+            get
+            {
+                var options = new PageOptions();
+                options.All = true;
+
+                return options;
+            }
+        }
+
         public PageOptions()
             : this(0)
         {

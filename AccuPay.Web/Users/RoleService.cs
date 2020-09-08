@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -16,16 +17,19 @@ namespace AccuPay.Web.Users
         private readonly RoleManager<AspNetRole> _roles;
         private readonly RoleRepository _roleRepository;
         private readonly PermissionRepository _permissionRepository;
+        private readonly RoleDataService _roleDataService;
         private readonly ICurrentUser _currentUser;
 
         public RoleService(RoleManager<AspNetRole> roles,
                            RoleRepository roleRepository,
                            PermissionRepository permissionRepository,
+                           RoleDataService roleDataService,
                            ICurrentUser currentUser)
         {
             _roles = roles;
             _roleRepository = roleRepository;
             _permissionRepository = permissionRepository;
+            _roleDataService = roleDataService;
             _currentUser = currentUser;
         }
 
@@ -88,7 +92,7 @@ namespace AccuPay.Web.Users
                 }
             }
 
-            await _roleRepository.UpdateUserRoles(added, deleted);
+            await _roleDataService.UpdateUserRolesAsync(added, deleted);
         }
 
         public async Task<RoleDto> Create(CreateRoleDto dto)
@@ -112,16 +116,11 @@ namespace AccuPay.Web.Users
         {
             var role = await _roleRepository.GetById(roleId);
 
-            if (role.IsAdmin)
-            {
-                throw new Exception("`Admin` roles cannot be modified.");
-            }
-
             role.Name = dto.Name;
 
             await MapRolePermissions(role, dto.RolePermissions);
 
-            await _roleRepository.Update(role);
+            await _roleDataService.UpdateAsync(role);
 
             return ConvertToDto(role);
         }
