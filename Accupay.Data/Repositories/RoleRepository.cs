@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class RoleRepository
+    public class RoleRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -20,7 +20,13 @@ namespace AccuPay.Data.Repositories
         public async Task UpdateAsync(AspNetRole role)
         {
             _context.Entry(role).State = EntityState.Modified;
-            role.RolePermissions.ToList().ForEach(t => _context.Entry(t).State = EntityState.Modified);
+            role.RolePermissions.ToList().ForEach(t =>
+            {
+                if (IsNewEntity(t.Id))
+                    _context.Entry(t).State = EntityState.Added;
+                else
+                    _context.Entry(t).State = EntityState.Modified;
+            });
             await _context.SaveChangesAsync();
         }
 

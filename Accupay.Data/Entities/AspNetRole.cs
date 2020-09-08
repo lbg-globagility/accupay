@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AccuPay.Utilities.Extensions;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,9 +20,15 @@ namespace AccuPay.Data.Entities
             RolePermissions = new Collection<RolePermission>();
         }
 
+        public RolePermission GetPermission(string permissionName)
+        {
+            return RolePermissions
+                .FirstOrDefault(p => p.Permission?.Name.ToTrimmedLowerCase() == permissionName.ToTrimmedLowerCase());
+        }
+
         public bool HasPermission(string permissionName, string action)
         {
-            var rolePermission = RolePermissions.FirstOrDefault(p => p.Permission.Name == permissionName);
+            var rolePermission = GetPermission(permissionName);
 
             if (rolePermission is null)
             {
@@ -47,7 +54,7 @@ namespace AccuPay.Data.Entities
             }
         }
 
-        public void SetPermission(Permission permission, bool read, bool create, bool update, bool delete)
+        public void SetPermission(Permission permission, bool read = false, bool create = false, bool update = false, bool delete = false)
         {
             var rolePermission = RolePermissions.FirstOrDefault(p => p.PermissionId == permission.Id);
 
@@ -55,6 +62,7 @@ namespace AccuPay.Data.Entities
             {
                 rolePermission = new RolePermission();
                 rolePermission.PermissionId = permission.Id;
+                rolePermission.Permission = permission;
 
                 RolePermissions.Add(rolePermission);
             }

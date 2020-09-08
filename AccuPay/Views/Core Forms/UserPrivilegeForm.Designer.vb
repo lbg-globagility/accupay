@@ -24,7 +24,11 @@ Partial Class UserPrivilegeForm
     Private Sub InitializeComponent()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.RoleGrid = New System.Windows.Forms.DataGridView()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.RoleNameTextBox = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelButton = New System.Windows.Forms.ToolStripButton()
@@ -32,11 +36,6 @@ Partial Class UserPrivilegeForm
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.RolePermissionGrid = New System.Windows.Forms.DataGridView()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ReadColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.CreateColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.UpdateColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.DeleteColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.AllReadCheckBox = New System.Windows.Forms.CheckBox()
         Me.AllCreateCheckBox = New System.Windows.Forms.CheckBox()
         Me.AllDeleteCheckBox = New System.Windows.Forms.CheckBox()
@@ -54,16 +53,17 @@ Partial Class UserPrivilegeForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.RoleNameTextBox = New System.Windows.Forms.TextBox()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ReadColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.CreateColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.UpdateColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DeleteColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         CType(Me.RoleGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
+        Me.Panel3.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.RolePermissionGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
-        Me.Panel3.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label25
@@ -96,6 +96,14 @@ Partial Class UserPrivilegeForm
         Me.RoleGrid.Size = New System.Drawing.Size(306, 277)
         Me.RoleGrid.TabIndex = 109
         '
+        'Column2
+        '
+        Me.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Column2.DataPropertyName = "DisplayName"
+        Me.Column2.HeaderText = "Roles"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
         'Panel1
         '
         Me.Panel1.AutoScroll = True
@@ -113,6 +121,32 @@ Partial Class UserPrivilegeForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(910, 451)
         Me.Panel1.TabIndex = 6
+        '
+        'Panel3
+        '
+        Me.Panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel3.Controls.Add(Me.RoleNameTextBox)
+        Me.Panel3.Controls.Add(Me.Label1)
+        Me.Panel3.Location = New System.Drawing.Point(13, 29)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(806, 30)
+        Me.Panel3.TabIndex = 372
+        '
+        'RoleNameTextBox
+        '
+        Me.RoleNameTextBox.Location = New System.Drawing.Point(83, 4)
+        Me.RoleNameTextBox.Name = "RoleNameTextBox"
+        Me.RoleNameTextBox.Size = New System.Drawing.Size(235, 20)
+        Me.RoleNameTextBox.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(13, 6)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(63, 13)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Role Name:"
         '
         'ToolStrip1
         '
@@ -185,49 +219,6 @@ Partial Class UserPrivilegeForm
         Me.RolePermissionGrid.Name = "RolePermissionGrid"
         Me.RolePermissionGrid.Size = New System.Drawing.Size(806, 510)
         Me.RolePermissionGrid.TabIndex = 0
-        '
-        'Column10
-        '
-        Me.Column10.DataPropertyName = "Name"
-        Me.Column10.HeaderText = "Permission"
-        Me.Column10.Name = "Column10"
-        Me.Column10.Width = 250
-        '
-        'ReadColumn
-        '
-        Me.ReadColumn.DataPropertyName = "Read"
-        Me.ReadColumn.HeaderText = "Read"
-        Me.ReadColumn.Name = "ReadColumn"
-        Me.ReadColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ReadColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.ReadColumn.Width = 127
-        '
-        'CreateColumn
-        '
-        Me.CreateColumn.DataPropertyName = "Create"
-        Me.CreateColumn.HeaderText = "Create"
-        Me.CreateColumn.Name = "CreateColumn"
-        Me.CreateColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.CreateColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.CreateColumn.Width = 127
-        '
-        'UpdateColumn
-        '
-        Me.UpdateColumn.DataPropertyName = "Update"
-        Me.UpdateColumn.HeaderText = "Update"
-        Me.UpdateColumn.Name = "UpdateColumn"
-        Me.UpdateColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.UpdateColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.UpdateColumn.Width = 128
-        '
-        'DeleteColumn
-        '
-        Me.DeleteColumn.DataPropertyName = "Delete"
-        Me.DeleteColumn.HeaderText = "Delete"
-        Me.DeleteColumn.Name = "DeleteColumn"
-        Me.DeleteColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeleteColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.DeleteColumn.Width = 127
         '
         'AllReadCheckBox
         '
@@ -358,41 +349,50 @@ Partial Class UserPrivilegeForm
         Me.Panel2.Size = New System.Drawing.Size(325, 451)
         Me.Panel2.TabIndex = 157
         '
-        'Panel3
+        'Column10
         '
-        Me.Panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel3.Controls.Add(Me.RoleNameTextBox)
-        Me.Panel3.Controls.Add(Me.Label1)
-        Me.Panel3.Location = New System.Drawing.Point(13, 29)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(806, 30)
-        Me.Panel3.TabIndex = 372
+        Me.Column10.DataPropertyName = "DisplayName"
+        Me.Column10.HeaderText = "Permission"
+        Me.Column10.Name = "Column10"
+        Me.Column10.Width = 250
         '
-        'Label1
+        'ReadColumn
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 6)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(63, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Role Name:"
+        Me.ReadColumn.DataPropertyName = "Read"
+        Me.ReadColumn.HeaderText = "Read"
+        Me.ReadColumn.Name = "ReadColumn"
+        Me.ReadColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ReadColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.ReadColumn.Width = 127
         '
-        'RoleNameTextBox
+        'CreateColumn
         '
-        Me.RoleNameTextBox.Location = New System.Drawing.Point(83, 4)
-        Me.RoleNameTextBox.Name = "RoleNameTextBox"
-        Me.RoleNameTextBox.Size = New System.Drawing.Size(235, 20)
-        Me.RoleNameTextBox.TabIndex = 1
+        Me.CreateColumn.DataPropertyName = "Create"
+        Me.CreateColumn.HeaderText = "Create"
+        Me.CreateColumn.Name = "CreateColumn"
+        Me.CreateColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.CreateColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.CreateColumn.Width = 127
         '
-        'Column2
+        'UpdateColumn
         '
-        Me.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Column2.DataPropertyName = "DisplayName"
-        Me.Column2.HeaderText = "Roles"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
+        Me.UpdateColumn.DataPropertyName = "Update"
+        Me.UpdateColumn.HeaderText = "Update"
+        Me.UpdateColumn.Name = "UpdateColumn"
+        Me.UpdateColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.UpdateColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.UpdateColumn.Width = 128
         '
-        'userprivil
+        'DeleteColumn
+        '
+        Me.DeleteColumn.DataPropertyName = "Delete"
+        Me.DeleteColumn.HeaderText = "Delete"
+        Me.DeleteColumn.Name = "DeleteColumn"
+        Me.DeleteColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeleteColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DeleteColumn.Width = 127
+        '
+        'UserPrivilegeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -406,16 +406,16 @@ Partial Class UserPrivilegeForm
         Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "userprivil"
+        Me.Name = "UserPrivilegeForm"
         CType(Me.RoleGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel3.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         CType(Me.RolePermissionGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -447,13 +447,13 @@ Partial Class UserPrivilegeForm
     Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
     Friend WithEvents Panel2 As Panel
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents RoleNameTextBox As TextBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column10 As DataGridViewTextBoxColumn
     Friend WithEvents ReadColumn As DataGridViewCheckBoxColumn
     Friend WithEvents CreateColumn As DataGridViewCheckBoxColumn
     Friend WithEvents UpdateColumn As DataGridViewCheckBoxColumn
     Friend WithEvents DeleteColumn As DataGridViewCheckBoxColumn
-    Friend WithEvents Panel3 As Panel
-    Friend WithEvents RoleNameTextBox As TextBox
-    Friend WithEvents Label1 As Label
-    Friend WithEvents Column2 As DataGridViewTextBoxColumn
 End Class

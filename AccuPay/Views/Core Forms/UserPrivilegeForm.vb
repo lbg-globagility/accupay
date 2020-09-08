@@ -84,10 +84,10 @@ Public Class UserPrivilegeForm
             Dim role = Await _roleRepository.GetById(selectedRole.Id)
 
             rolePermissionModels.ForEach(
-                Sub(permission)
+                Sub(model)
 
-                    Dim rolePermission = role.RolePermissions.FirstOrDefault(Function(p) p.PermissionId = permission.Id)
-                    permission.UpdateRolePermission(rolePermission)
+                    Dim rolePermission = role.RolePermissions.FirstOrDefault(Function(p) p.PermissionId = model.Permission.Id)
+                    model.UpdateRolePermission(rolePermission, role)
 
                 End Sub)
 
@@ -95,7 +95,7 @@ Public Class UserPrivilegeForm
 
         UpdateBatchCheckBox(rolePermissionModels)
 
-        RolePermissionGrid.DataSource = rolePermissionModels.OrderBy(Function(r) r.Name).ToList()
+        RolePermissionGrid.DataSource = rolePermissionModels.OrderBy(Function(m) m.Permission.Name).ToList()
 
     End Function
 
@@ -304,8 +304,7 @@ Public Class UserPrivilegeForm
 
     Public Class RolePermissionViewModel
 
-        Public Property Id As Integer
-        Public Property Name As String
+        Public Property Permission As Permission
 
         Public Property RolePermission As RolePermission
 
@@ -318,9 +317,14 @@ Public Class UserPrivilegeForm
         Public Property Delete As Boolean
 
         Sub New(permission As Permission)
-            Id = permission.Id
-            Name = permission.Name
+            Me.Permission = permission
         End Sub
+
+        Public ReadOnly Property DisplayName As String
+            Get
+                Return Permission.Name
+            End Get
+        End Property
 
         Public ReadOnly Property HasChanged As Boolean
             Get
@@ -345,7 +349,14 @@ Public Class UserPrivilegeForm
             Return models
         End Function
 
-        Public Sub UpdateRolePermission(rolePermission As RolePermission)
+        Public Sub UpdateRolePermission(rolePermission As RolePermission, role As AspNetRole)
+
+            If rolePermission Is Nothing Then
+                role.SetPermission(Permission)
+
+                rolePermission = role.GetPermission(Permission.Name)
+            End If
+
             Me.RolePermission = rolePermission
             Me.RolePermission.Role = Nothing
             Me.RolePermission.Permission = Nothing
