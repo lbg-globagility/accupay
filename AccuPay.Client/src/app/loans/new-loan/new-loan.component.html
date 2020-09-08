@@ -1,5 +1,10 @@
-<h1 class="mat-headline">New Loan</h1>
+<h1 mat-dialog-title>New Loan</h1>
 
-<ng-container>
-  <app-loan-form (save)="onSave($event)" (cancel)="onCancel()"></app-loan-form>
-</ng-container>
+<div mat-dialog-content>
+  <app-loan-form></app-loan-form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" (click)="save()">SAVE</button>
+  <button mat-flat-button mat-dialog-close>CANCEL</button>
+</div>

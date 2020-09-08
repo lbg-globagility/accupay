@@ -85,7 +85,7 @@ export class LoanTypeListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.service.getList(options, this.searchTerm).subscribe((data) => {
+    this.service.list(options, this.searchTerm).subscribe((data) => {
       this.totalCount = data.totalCount;
       this.dataSource = new MatTableDataSource(data.items);
     });
