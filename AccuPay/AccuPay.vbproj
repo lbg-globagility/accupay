@@ -734,6 +734,12 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\RoleUserControl.Designer.vb">
+      <DependentUpon>RoleUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\RoleUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.Designer.vb">
       <DependentUpon>AssignBonusToLoanForm.vb</DependentUpon>
     </Compile>
@@ -2062,6 +2068,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\RoleUserControl.resx">
+      <DependentUpon>RoleUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.resx">
       <DependentUpon>AssignBonusToLoanForm.vb</DependentUpon>
