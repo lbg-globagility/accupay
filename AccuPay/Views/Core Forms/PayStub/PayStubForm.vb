@@ -1,4 +1,5 @@
 Imports System.Collections.Concurrent
+Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.CrystalReports
@@ -14,6 +15,8 @@ Imports AccuPay.Utilities
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
+Imports OfficeOpenXml
+Imports OfficeOpenXml.Style
 
 Public Class PayStubForm
 
@@ -2016,12 +2019,127 @@ Public Class PayStubForm
 
     Private Sub RecalculateThirteenthMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RecalculateThirteenthMonthPayToolStripMenuItem.Click
 
-        Dim payPeriodId = ValNoComma(paypRowID)
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(ValNoComma(paypRowID))
+
+        If payPeriodId Is Nothing Then Return
 
         Dim form As New SelectThirteenthMonthEmployeesForm(payPeriodId)
 
         form.ShowDialog()
 
+    End Sub
+
+    Private Async Sub ExportNetPayDetailsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles _
+        ExportNetPayActualAllToolStripMenuItem.Click,
+        ExportNetPayActualCashToolStripMenuItem.Click,
+        ExportNetPayActualDirectDepositToolStripMenuItem.Click,
+        ExportNetPayDeclaredAllToolStripMenuItem.Click,
+        ExportNetPayDeclaredCashToolStripMenuItem.Click,
+        ExportNetPayDeclaredDirectDepositToolStripMenuItem.Click
+
+        Dim datePeriod = GetPayPeriodDates()
+        If datePeriod Is Nothing Then Return
+
+        Dim paystubDateKey = New DateCompositeKey(
+            z_OrganizationID,
+            payFromDate:=datePeriod.Start,
+            payToDate:=datePeriod.End)
+
+        Dim paystubs = Await _paystubRepository.GetAllWithEmployeeAsync(paystubDateKey)
+
+        If paystubs?.Count = 0 Then
+
+            MessageBoxHelper.Warning($"No paystub for payroll {datePeriod.Start.ToShortDateString()} to {datePeriod.End.ToShortDateString()} yet.")
+            Return
+        End If
+
+        Dim paystubFilter = paystubs.
+            OrderBy(Function(p) p.Employee.LastName).
+            ThenBy(Function(p) p.Employee.FirstName).
+            AsQueryable()
+
+        Dim payrollCategory = PayrollSummaryCategory.All
+        Dim isActual = True
+
+        If sender Is ExportNetPayActualAllToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.All
+            isActual = True
+
+        ElseIf sender Is ExportNetPayActualCashToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.Cash
+            isActual = True
+            paystubFilter = paystubFilter.Where(Function(p) String.IsNullOrWhiteSpace(p.Employee.AtmNo))
+
+        ElseIf sender Is ExportNetPayActualDirectDepositToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.DirectDeposit
+            isActual = True
+            paystubFilter = paystubFilter.Where(Function(p) Not String.IsNullOrWhiteSpace(p.Employee.AtmNo))
+
+        ElseIf sender Is ExportNetPayDeclaredAllToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.All
+            isActual = False
+
+        ElseIf sender Is ExportNetPayDeclaredCashToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.Cash
+            isActual = False
+            paystubFilter = paystubFilter.Where(Function(p) String.IsNullOrWhiteSpace(p.Employee.AtmNo))
+
+        ElseIf sender Is ExportNetPayDeclaredDirectDepositToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.DirectDeposit
+            isActual = False
+            paystubFilter = paystubFilter.Where(Function(p) Not String.IsNullOrWhiteSpace(p.Employee.AtmNo))
+        End If
+
+        paystubs = paystubFilter.ToList()
+
+        Try
+
+            ExportNetPayDetails(datePeriod, paystubs, payrollCategory, isActual)
+        Catch ex As IOException
+
+            MessageBoxHelper.ErrorMessage(ex.Message)
+        Catch ex As Exception
+
+            MessageBoxHelper.DefaultErrorMessage()
+
+        End Try
+
+    End Sub
+
+    Private Shared Sub ExportNetPayDetails(datePeriod As TimePeriod, paystubs As ICollection(Of Paystub), payrollCategory As String, isActual As Boolean)
+        Dim saveFileDialog = New SaveFileDialog()
+        saveFileDialog.FileName = $"{z_CompanyName}NetPay{payrollCategory}Report{datePeriod.Start.ToShortDateString().Replace("/", "-")}TO{datePeriod.End.ToShortDateString().Replace("/", "-")}"
+        saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx"
+
+        If saveFileDialog.ShowDialog() = DialogResult.OK Then
+            Dim fileName = saveFileDialog.FileName
+            Dim file = New FileInfo(fileName)
+
+            If file.Exists() Then
+
+                file.Delete()
+            End If
+
+            Using excelPackage = New ExcelPackage(file)
+                Dim worksheet = excelPackage.Workbook.Worksheets.Add("NetPay")
+
+                Dim i = 1
+                For Each paystub In paystubs
+                    worksheet.Cells($"A{i}").Value = $"{paystub.Employee.LastName}, {paystub.Employee.FirstName}"
+                    worksheet.Cells($"B{i}").Value = paystub.Employee.AtmNo
+                    worksheet.Cells($"C{i}").Value = If(isActual, paystub.Actual.NetPay, paystub.NetPay)
+
+                    worksheet.Cells($"C{i}").Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
+                    worksheet.Cells($"C{i}").Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+
+                    i += 1
+
+                Next
+
+                excelPackage.Save()
+                Process.Start(fileName)
+            End Using
+        End If
     End Sub
 
 End Class

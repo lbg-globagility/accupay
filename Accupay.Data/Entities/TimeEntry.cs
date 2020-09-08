@@ -69,7 +69,7 @@ namespace AccuPay.Data.Entities
 
         public int? BranchID { get; set; }
 
-        public int CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
 
         public int? LastUpdBy { get; set; }
 

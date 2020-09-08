@@ -551,7 +551,7 @@ namespace AccuPay.Data.Services
             if (!_policy.AbsencesOnHoliday)
                 return true;
 
-            return ((!_policy.RequiredToWorkLastDay) || hasWorkedLastDay);
+            return ((!_policy.RequiredToWorkTheDayBeforeHoliday) || hasWorkedLastDay);
         }
 
         private bool IsHolidayExempt(IPayrate payrate)
@@ -707,7 +707,7 @@ namespace AccuPay.Data.Services
                     var isEntitledToHolidayPay = (isHolidayPayInclusive == false) &&
                                                     (hasWorkedLastDay ||
                                                     isPaidToday ||
-                                                    _policy.RequiredToWorkLastDayForHolidayPay == false);
+                                                    _policy.RequiredToWorkTheDayBeforeHoliday == false);
 
                     if (isEntitledToHolidayPay)
                     {

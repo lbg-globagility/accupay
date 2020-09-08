@@ -9,6 +9,8 @@ import { filter, tap } from 'rxjs/operators';
 import { Calendar } from 'src/app/calendars/shared/calendar';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
+import Swal from 'sweetalert2';
+import { PermissionTypes } from 'src/app/core/auth';
 
 interface CalendarMonth {
   month: Date;
@@ -24,6 +26,8 @@ interface CalendarMonth {
   },
 })
 export class ViewCalendarComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   readonly displayedColumns: string[] = ['date', 'description'];
 
   calendarId: number = +this.route.snapshot.paramMap.get('id');
@@ -71,6 +75,7 @@ export class ViewCalendarComponent implements OnInit {
       .updateDays(this.calendarId, this.changedCalendarDays)
       .subscribe({
         next: () => {
+          this.displaySuccess();
           // After save, clear the change tracker
           this.changedCalendarDays = [];
         },
@@ -103,6 +108,16 @@ export class ViewCalendarComponent implements OnInit {
     }
 
     this.calendarMonths = calendarMonths;
+  }
+
+  private displaySuccess() {
+    Swal.fire({
+      title: 'Success',
+      text: 'Calendar saved',
+      icon: 'success',
+      timer: 3000,
+      showConfirmButton: false,
+    });
   }
 
   private addToChangeTracker(calendarDay: CalendarDay): void {

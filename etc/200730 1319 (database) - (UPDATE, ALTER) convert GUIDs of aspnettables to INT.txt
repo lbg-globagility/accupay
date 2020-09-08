@@ -1,10 +1,12 @@
 
+SET @rownumber = IFNULL((SELECT RowID FROM user ORDER BY RowID DESC LIMIT 1), 1);
+
 DROP TEMPORARY TABLE IF EXISTS temp_aspnetusers;
 CREATE TEMPORARY TABLE temp_aspnetusers
 SELECT
 IFNULL((SELECT RowID FROM `user` WHERE AspNetUserId = aspnetusers.Id), @rownumber := @rownumber + 1) AS 'NewId',
 (SELECT `Password` FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'DesktopPassword',
-(SELECT `UserLevel` FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'UserLevel',
+IFNULL((SELECT `UserLevel` FROM `user` WHERE AspNetUserId = aspnetusers.Id), 0) AS 'UserLevel',
 (SELECT IF(`Status` = 'Inactive', NOW(), NULL) FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'DeletedAt',
 aspnetusers.*
 FROM aspnetusers
@@ -25,7 +27,7 @@ SET
 
 
 
-SET @rownumberRole = 0;
+SET @rownumberRole = 0; 
 
 DROP TEMPORARY TABLE IF EXISTS temp_aspnetroles;
 CREATE TEMPORARY TABLE temp_aspnetroles
@@ -69,47 +71,61 @@ CREATE TEMPORARY TABLE temp_aspnetroleclaims
 SELECT * FROM aspnetroleclaims;
 
 
-
-
-UPDATE aspnetuserclaims SET UserId = NULL;
 ALTER TABLE `aspnetuserclaims`
     DROP FOREIGN KEY `FK_AspNetUserClaims_AspNetUsers`;
 ALTER TABLE `aspnetuserclaims`
-	CHANGE COLUMN `UserId` `UserId` INT(11) NOT NULL AFTER `ClaimValue`;
+	DROP COLUMN `UserId`;
+ALTER TABLE `aspnetuserclaims`
+	ADD COLUMN `UserId` INT(11) NOT NULL AFTER `ClaimValue`;
 
-UPDATE aspnetuserlogins SET UserId = NULL;
 ALTER TABLE `aspnetuserlogins`
     DROP FOREIGN KEY `FK_AspNetUserLogins_AspNetUsers`;
 ALTER TABLE `aspnetuserlogins`
-	CHANGE COLUMN `UserId` `UserId` INT(11) NOT NULL AFTER `ProviderDisplayName`;
+	DROP COLUMN `UserId`;
+ALTER TABLE `aspnetuserlogins`
+	ADD COLUMN `UserId` INT(11) NOT NULL AFTER `ProviderDisplayName`;
 
-UPDATE aspnetuserroles SET UserId = NULL;
+ALTER TABLE aspnetuserroles
+	ADD COLUMN `Old_UserId` BINARY(16) NOT NULL,
+	ADD COLUMN `Old_RoleId` BINARY(16) NOT NULL;
+UPDATE aspnetuserroles SET Old_UserId = UserId, Old_RoleId = RoleId;
 ALTER TABLE `aspnetuserroles`
+	DROP PRIMARY KEY,
     DROP FOREIGN KEY `FK_AspNetUserRoles_AspNetRoles`,
+	DROP INDEX `UserId_OrganizationId`,
     DROP FOREIGN KEY `FK_AspNetUserRoles_AspNetUsers`;
 ALTER TABLE `aspnetuserroles`
-	CHANGE COLUMN `UserId` `UserId` INT(11) NOT NULL FIRST;
+	DROP COLUMN `UserId`,
+	DROP COLUMN `RoleId`;
 ALTER TABLE `aspnetuserroles`
-	CHANGE COLUMN `RoleId` `RoleId` INT(11) NOT NULL AFTER `UserId`;
-
-UPDATE aspnetusertokens SET UserId = NULL;
+	ADD COLUMN `UserId` INT(11) NOT NULL FIRST,
+	ADD COLUMN `RoleId` INT(11) NOT NULL AFTER `UserId`;
+	
+ALTER TABLE aspnetusertokens
+	ADD COLUMN `Old_UserId` BINARY(16) NOT NULL;
+UPDATE aspnetusertokens SET Old_UserId = UserId;
 ALTER TABLE `aspnetusertokens`
+	DROP PRIMARY KEY,
     DROP FOREIGN KEY `FK_AspNetUserTokens_AspNetUsers`;
 ALTER TABLE `aspnetusertokens`
-	CHANGE COLUMN `UserId` `UserId` INT(11) NOT NULL FIRST;
+	DROP COLUMN `UserId`;
+ALTER TABLE `aspnetusertokens`
+	ADD COLUMN `UserId` INT(11) NOT NULL FIRST;
 
-UPDATE rolepermission SET RoleId = NULL;
 ALTER TABLE `rolepermission`
-    DROP FOREIGN KEY `FK_rolepermission_aspnetroles`;
+    DROP FOREIGN KEY `FK_rolepermission_aspnetroles`,
+    DROP INDEX `RoleId_PermissionId`;
 ALTER TABLE `rolepermission`
-	CHANGE COLUMN `RoleId` `RoleId` INT(11) NOT NULL AFTER `Id`;
+	DROP COLUMN `RoleId`;
+ALTER TABLE `rolepermission`
+	ADD COLUMN `RoleId` INT(11) NOT NULL AFTER `Id`;
 
-UPDATE aspnetroleclaims SET RoleId = NULL;
 ALTER TABLE `aspnetroleclaims`
     DROP FOREIGN KEY `FK_AspNetRoleClaims_AspNetRoles`;
 ALTER TABLE `aspnetroleclaims`
-	CHANGE COLUMN `RoleId` `RoleId` INT(11) NOT NULL AFTER `ClaimValue`;
-	
+	DROP COLUMN `RoleId`;
+ALTER TABLE `aspnetroleclaims`
+	ADD COLUMN `RoleId` INT(11) NOT NULL AFTER `ClaimValue`;
 	
 
 
@@ -127,15 +143,15 @@ SET aspnetuserlogins.UserId = (SELECT NewId FROM temp_aspnetusers WHERE temp_asp
 
 UPDATE aspnetuserroles
 INNER JOIN temp_aspnetuserroles
-ON aspnetuserroles.UserId = temp_aspnetuserroles.UserId
-AND aspnetuserroles.RoleId = temp_aspnetuserroles.RoleId 
+ON aspnetuserroles.Old_UserId = temp_aspnetuserroles.UserId
+AND aspnetuserroles.Old_RoleId = temp_aspnetuserroles.RoleId 
 AND aspnetuserroles.OrganizationId = temp_aspnetuserroles.OrganizationId 
 SET aspnetuserroles.UserId = (SELECT NewId FROM temp_aspnetusers WHERE temp_aspnetuserroles.UserId = temp_aspnetusers.Id),
 	aspnetuserroles.RoleId = (SELECT NewId FROM temp_aspnetroles WHERE temp_aspnetuserroles.RoleId = temp_aspnetroles.Id);
 
 UPDATE aspnetusertokens
 INNER JOIN temp_aspnetusertokens
-ON aspnetusertokens.UserId = temp_aspnetusertokens.UserId
+ON aspnetusertokens.Old_UserId = temp_aspnetusertokens.UserId
 AND aspnetusertokens.LoginProvider = temp_aspnetusertokens.LoginProvider 
 AND aspnetusertokens.Name = temp_aspnetusertokens.Name 
 SET aspnetusertokens.UserId = (SELECT NewId FROM temp_aspnetusers WHERE temp_aspnetusertokens.UserId = temp_aspnetusers.Id);
@@ -150,7 +166,6 @@ INNER JOIN temp_aspnetroleclaims
 ON aspnetroleclaims.Id = temp_aspnetroleclaims.Id
 SET aspnetroleclaims.RoleId = (SELECT NewId FROM temp_aspnetroles WHERE temp_aspnetroleclaims.RoleId = temp_aspnetroles.Id);
 
-
 SELECT * FROM aspnetuserclaims;
 SELECT * FROM aspnetuserlogins;
 SELECT * FROM aspnetuserroles;
@@ -163,14 +178,16 @@ ALTER TABLE `user`
 	DROP COLUMN IF EXISTS `AspNetUserId`,
 	DROP FOREIGN KEY IF EXISTS `FK_user_aspnetusers_AspNetUserId`;
 
-SET @sql = CONCAT('ALTER TABLE `aspnetusers` AUTO_INCREMENT = ', @rownumber + 1);
+SET @sql = CONCAT('ALTER TABLE `aspnetusers` AUTO_INCREMENT = ', IFNULL(@rownumber, 0) + 1);
 PREPARE st FROM @sql;
 EXECUTE st;
 
 ALTER TABLE `aspnetusers`
 	DROP PRIMARY KEY,
-	CHANGE COLUMN `Id` `Id` INT NOT NULL FIRST;
-	
+	DROP COLUMN `Id`;
+
+ALTER TABLE `aspnetusers`
+	ADD COLUMN `Id` INT NOT NULL FIRST;
 UPDATE aspnetusers SET Id = NewId;
 
 ALTER TABLE `aspnetusers`
@@ -179,14 +196,16 @@ ALTER TABLE `aspnetusers`
 	DROP COLUMN `NewId`;
 	
 
-SET @sql = CONCAT('ALTER TABLE `aspnetroles` AUTO_INCREMENT = ', @rownumberRole + 1);
+SET @sql = CONCAT('ALTER TABLE `aspnetroles` AUTO_INCREMENT = ', IFNULL(@rownumberRole, 0) + 1);
 PREPARE st FROM @sql;
 EXECUTE st;
 
 ALTER TABLE `aspnetroles`
 	DROP PRIMARY KEY,
-	CHANGE COLUMN `Id` `Id` INT NOT NULL FIRST;
-	
+	DROP COLUMN `Id`;
+
+ALTER TABLE `aspnetroles`
+	ADD COLUMN `Id` INT NOT NULL FIRST;
 UPDATE aspnetroles SET Id = NewId;
 
 ALTER TABLE `aspnetroles`
@@ -194,16 +213,32 @@ ALTER TABLE `aspnetroles`
 	ADD PRIMARY KEY (  `Id` ),
 	DROP COLUMN `NewId`;
 
+ALTER TABLE aspnetuserroles
+	DROP COLUMN `Old_UserId`,
+	DROP COLUMN `Old_RoleId`;
+ALTER TABLE aspnetusertokens
+	DROP COLUMN `Old_UserId`;
 
 ALTER TABLE aspnetuserclaims
 	ADD CONSTRAINT `FK_AspNetUserClaims_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`);
 ALTER TABLE aspnetuserlogins
 	ADD CONSTRAINT `FK_AspNetUserLogins_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`);
+
 ALTER TABLE aspnetuserroles
 	ADD CONSTRAINT `FK_AspNetUserRoles_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`)  ON DELETE CASCADE,
 	ADD CONSTRAINT `FK_AspNetUserRoles_AspNetRoles` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`);
+ALTER TABLE `aspnetuserroles`
+	ADD PRIMARY KEY (`UserId`, `RoleId`, `OrganizationId`);
+ALTER TABLE `aspnetuserroles`
+	ADD UNIQUE INDEX `AK_AspNetUserRoles_UserId_OrganizationId` (`UserId`, `OrganizationId`);
+
+ALTER TABLE `aspnetusertokens`
+	ADD PRIMARY KEY (`UserId`, `LoginProvider`, `Name`);
 ALTER TABLE aspnetusertokens
 	ADD CONSTRAINT `FK_AspNetUserTokens_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `rolepermission`
+	ADD UNIQUE INDEX `AK_rolepermission_RoleId_PermissionId` (`RoleId`, `PermissionId`);
 ALTER TABLE rolepermission
 	ADD CONSTRAINT `FK_rolepermission_aspnetroles` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`);
 ALTER TABLE aspnetroleclaims
@@ -245,9 +280,11 @@ ALTER TABLE `aspnetusertokens`
 	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
 
 ALTER TABLE `file`
-	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
-	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
-
+	DROP COLUMN `CreatedById`,
+	DROP COLUMN `UpdatedById`;
+ALTER TABLE `file`
+	ADD COLUMN `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	ADD COLUMN `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
 
 ALTER TABLE `aspnetroles`
 	ADD CONSTRAINT `FK_aspnetroles_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);

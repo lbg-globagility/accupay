@@ -18,6 +18,7 @@ import { Constants } from 'src/app/core/shared/constants';
 import { ReportService } from 'src/app/reports/report.service';
 import { LoadingState } from 'src/app/core/states/loading-state';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { PermissionTypes } from 'src/app/core/auth';
 
 @Component({
   selector: 'app-view-payperiod',
@@ -28,6 +29,8 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
   },
 })
 export class ViewPayPeriodComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
 

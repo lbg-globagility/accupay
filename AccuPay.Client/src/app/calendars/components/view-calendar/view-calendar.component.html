@@ -22,10 +22,17 @@
     </button>
   </div>
   <div class="w-1/3 flex justify-end items-start">
-    <button mat-raised-button (click)="onSave()" color="accent">
+    <button
+      *ngxPermissionsOnly="PermissionTypes.CalendarUpdate"
+      mat-raised-button
+      (click)="onSave()"
+      color="accent"
+      style="margin-right: 8px"
+    >
       SAVE
     </button>
     <button
+      *ngxPermissionsOnly="PermissionTypes.CalendarUpdate"
       mat-raised-button
       color="accent"
       routerLink="/calendars/{{ calendarId }}/edit"

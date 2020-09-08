@@ -3,6 +3,7 @@ import { range } from 'src/app/core/functions/dates';
 import { range as rangeOfNumbers } from 'lodash';
 import { CalendarDay } from 'src/app/calendars/shared/calendar-day';
 import * as moment from 'moment';
+import { PermissionTypes } from 'src/app/core/auth';
 
 interface CalendarCell {
   date: Date;
@@ -18,6 +19,8 @@ interface CalendarCell {
   },
 })
 export class CalendarMonthComponent implements OnInit {
+  readonly PermissionTypes = PermissionTypes;
+
   @Input()
   month: Date = new Date();
 

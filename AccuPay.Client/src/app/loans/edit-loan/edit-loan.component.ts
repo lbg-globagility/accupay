@@ -1,10 +1,10 @@
 import Swal from 'sweetalert2';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { Loan } from 'src/app/loans/shared/loan';
 import { LoanService } from 'src/app/loans/loan.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { LoanFormComponent } from 'src/app/loans/loan-form/loan-form.component';
 
 @Component({
   selector: 'app-edit-loan',
@@ -12,42 +12,32 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   styleUrls: ['./edit-loan.component.scss'],
 })
 export class EditLoanComponent implements OnInit {
+  @ViewChild(LoanFormComponent)
+  form: LoanFormComponent;
+
   loan: Loan;
-
-  isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
-  loanId = Number(this.route.snapshot.paramMap.get('id'));
 
   constructor(
     private loanService: LoanService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private errorHandler: ErrorHandler
-  ) {}
-
-  ngOnInit(): void {
-    this.loadLoan();
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialogRef<EditLoanComponent>,
+    @Inject(MAT_DIALOG_DATA) data: any
+  ) {
+    this.loan = data.loan;
   }
 
-  onSave(loan: Loan): void {
-    this.loanService.update(loan, this.loanId).subscribe(
-      () => {
+  ngOnInit(): void {}
+
+  save(): void {
+    const loan = this.form.value;
+
+    this.loanService.update(loan, this.loan.id).subscribe({
+      next: (result) => {
         this.displaySuccess();
-        this.router.navigate(['loans', this.loanId]);
+        this.dialog.close(result);
       },
-      (err) => this.errorHandler.badRequest(err, 'Failed to update loan.')
-    );
-  }
-
-  onCancel(): void {
-    this.router.navigate(['loans', this.loanId]);
-  }
-
-  private loadLoan(): void {
-    this.loanService.get(this.loanId).subscribe((data) => {
-      this.loan = data;
-
-      this.isLoading.next(true);
+      error: (err) =>
+        this.errorHandler.badRequest(err, 'Failed to update loan.'),
     });
   }
 

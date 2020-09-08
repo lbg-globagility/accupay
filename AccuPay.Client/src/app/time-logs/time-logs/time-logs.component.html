@@ -64,7 +64,7 @@
       <mat-datepicker #dateToPicker></mat-datepicker>
     </mat-form-field>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <input
       hidden
       type="file"
@@ -72,10 +72,10 @@
       (change)="onImport($event.target.files)"
     />
     <button
+      *ngxPermissionsOnly="PermissionTypes.TimeLogCreate"
       mat-raised-button
       color="accent"
-      class="new-btn"
-      style="margin-left: 10px;"
+      style="margin-left: 10px"
       (click)="uploader.click()"
     >
       IMPORT
@@ -127,7 +127,11 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let employee">
-          <button mat-icon-button (click)="edit(employee)">
+          <button
+            *ngxPermissionsOnly="PermissionTypes.TimeLogUpdate"
+            mat-icon-button
+            (click)="edit(employee)"
+          >
             <mat-icon>edit</mat-icon>
           </button>
         </td>
