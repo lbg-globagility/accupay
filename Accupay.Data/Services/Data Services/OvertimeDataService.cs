@@ -15,6 +15,7 @@ namespace AccuPay.Data.Services
     public class OvertimeDataService : BaseDataService<Overtime>
     {
         private readonly OvertimeRepository _repository;
+        private bool nullableStartTime;
 
         public OvertimeDataService(OvertimeRepository repository) : base(repository)
         {
@@ -46,8 +47,9 @@ namespace AccuPay.Data.Services
                 if (overtime.EmployeeID == null)
                     throw new BusinessLogicException("Employee is required.");
 
-                if (overtime.OTStartTime == null)
-                    throw new BusinessLogicException("Start Time is required.");
+                if (!nullableStartTime)
+                    if (overtime.OTStartTime == null)
+                        throw new BusinessLogicException("Start Time is required.");
 
                 if (overtime.OTEndTime == null)
                     throw new BusinessLogicException("End Time is required.");
@@ -58,7 +60,9 @@ namespace AccuPay.Data.Services
                     throw new BusinessLogicException("Status is not valid.");
                 }
 
-                overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
+                if (overtime.OTStartTime.HasValue)
+                    overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
+
                 overtime.OTEndTime = overtime.OTEndTime.Value.StripSeconds();
 
                 if (overtime.OTStartTime == overtime.OTEndTime)
@@ -111,5 +115,14 @@ namespace AccuPay.Data.Services
         }
 
         #endregion Queries
+
+        #region Other Methods
+
+        public void CheckMassOvertimeFeature(bool isMassOvertime)
+        {
+            nullableStartTime = isMassOvertime;
+        }
+
+        #endregion Other Methods
     }
 }

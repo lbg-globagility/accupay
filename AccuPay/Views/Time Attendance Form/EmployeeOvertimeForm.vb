@@ -28,6 +28,8 @@ Public Class EmployeeOvertimeForm
     Private _employeeRepository As EmployeeRepository
 
     Private _userActivityRepository As UserActivityRepository
+    Private featureChecker As FeatureListChecker
+    Private isMassOvertimeEnabled As Boolean
 
     Sub New()
 
@@ -50,6 +52,9 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        featureChecker = FeatureListChecker.Instance
+        isMassOvertimeEnabled = featureChecker.HasAccess(Feature.MassOvertime)
+        StartTimePicker.ShowCheckBox = isMassOvertimeEnabled
 
         InitializeComponentSettings()
 
@@ -354,6 +359,7 @@ Public Class EmployeeOvertimeForm
         EndDatePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
+        If isMassOvertimeEnabled Then StartTimePicker.Checked = _currentOvertime.OTStartTime.HasValue
         StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndTimePicker.DataBindings.Clear()
@@ -616,6 +622,8 @@ Public Class EmployeeOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
                                             Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+
+                                            service.CheckMassOvertimeFeature(isMassOvertimeEnabled)
                                             Await service.SaveManyAsync(changedOvertimes)
 
                                             For Each item In changedOvertimes
