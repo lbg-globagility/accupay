@@ -1,7 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +15,16 @@ namespace AccuPay.Data.Repositories
         public RoleRepository(PayrollContext context)
         {
             _context = context;
+        }
+
+        #region Save
+
+        public async Task CreateAsync(AspNetRole role)
+        {
+            _context.Entry(role).State = EntityState.Added;
+            role.RolePermissions.ToList().ForEach(t => _context.Entry(t).State = EntityState.Added);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(AspNetRole role)
@@ -44,12 +54,32 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        #endregion Save
+
         public async Task<AspNetRole> GetById(int roleId)
         {
             var role = await _context.Roles.Include(t => t.RolePermissions)
                 .FirstOrDefaultAsync(t => t.Id == roleId);
 
             return role;
+        }
+
+        /// <summary>
+        /// Check for duplicate role name.
+        /// </summary>
+        /// <param name="name">The name of the role to be checked.</param>
+        /// <param name="excludeId">If not null, checks for duplicate role name that has an Id that is not equal to excludeId.</param>
+        /// <returns></returns>
+        public async Task<bool> CheckForDuplicateAsync(string name, int? excludeId = null)
+        {
+            var query = _context.Roles.Where(t => t.Name.Trim().ToLower() == name.ToTrimmedLowerCase());
+
+            if (excludeId != null)
+            {
+                query = query.Where(t => t.Id != excludeId);
+            }
+
+            return await query.AnyAsync();
         }
 
         public async Task<ICollection<AspNetRole>> GetAll()

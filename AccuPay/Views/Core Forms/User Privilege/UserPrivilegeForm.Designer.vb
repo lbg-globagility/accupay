@@ -40,10 +40,10 @@ Partial Class UserPrivilegeForm
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.RoleUserControl = New AccuPay.RoleUserControl()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.NewRoleButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         CType(Me.RoleGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -184,12 +184,20 @@ Partial Class UserPrivilegeForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveButton, Me.CancelButton, Me.CloseButton, Me.tsbtnAudittrail})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewRoleButton, Me.SaveButton, Me.CancelButton, Me.CloseButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(325, 21)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(910, 25)
         Me.ToolStrip1.TabIndex = 159
         Me.ToolStrip1.Text = "ToolStrip1"
+        '
+        'NewRoleButton
+        '
+        Me.NewRoleButton.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.NewRoleButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.NewRoleButton.Name = "NewRoleButton"
+        Me.NewRoleButton.Size = New System.Drawing.Size(77, 22)
+        Me.NewRoleButton.Text = "New Role"
         '
         'SaveButton
         '
@@ -215,17 +223,6 @@ Partial Class UserPrivilegeForm
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
         'UserPrivilegeForm
         '
@@ -272,5 +269,5 @@ Partial Class UserPrivilegeForm
     Friend WithEvents SaveButton As ToolStripButton
     Friend WithEvents CancelButton As ToolStripButton
     Friend WithEvents CloseButton As ToolStripButton
-    Friend WithEvents tsbtnAudittrail As ToolStripButton
+    Friend WithEvents NewRoleButton As ToolStripButton
 End Class

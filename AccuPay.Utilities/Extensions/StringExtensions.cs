@@ -35,7 +35,7 @@ namespace AccuPay.Utilities.Extensions
             // query all data then filter this in memory.
 
             // ALTHOUGH this will work to variables but not to database columns.
-            // Ex: .Where(x => x.Trim()?.ToUpper() == str.ToTrimmedLowerCase()) is valid
+            // Ex: .Where(x => x.Trim()?.ToLower() == str.ToTrimmedLowerCase()) is valid
             // Best practice is to use this on the variables since lambda does not allow a
             // null propagating operator.
             // Using Trim() and ToUpper() to null variable will crash the system

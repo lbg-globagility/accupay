@@ -31,7 +31,7 @@ Public Class AddSalaryForm
         txtEmployeeID.Text = _employee.EmployeeIdWithPositionAndEmployeeType
         pbEmployee.Image = ConvByteToImage(_employee.Image)
 
-        txtPayFrequency.Text = _employee.PayFrequency.Type
+        txtPayFrequency.Text = _employee.PayFrequency?.Type
         txtSalaryType.Text = _employee.EmployeeType
 
         ClearForm()

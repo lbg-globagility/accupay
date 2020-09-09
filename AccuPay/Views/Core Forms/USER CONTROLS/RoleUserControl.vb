@@ -14,8 +14,6 @@ Public Class RoleUserControl
 
     Private ReadOnly _permissionRepository As PermissionRepository
 
-    Private ReadOnly _roleRepository As RoleRepository
-
     Private _permissions As List(Of Permission)
 
     Sub New()
@@ -26,8 +24,6 @@ Public Class RoleUserControl
         If MainServiceProvider IsNot Nothing Then
 
             _permissionRepository = MainServiceProvider.GetRequiredService(Of PermissionRepository)
-
-            _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
         End If
 
         _permissions = New List(Of Permission)
@@ -71,7 +67,10 @@ Public Class RoleUserControl
         Dim rolePermissionModels = CType(RolePermissionGrid.DataSource, List(Of RolePermissionViewModel))
 
         _currentRole.Name = RoleNameTextBox.Text.Trim()
-        _currentRole.RolePermissions = rolePermissionModels.Select(Function(r) r.GetUpdatedRolePermission()).ToList()
+        _currentRole.RolePermissions = rolePermissionModels.
+            Select(Function(r) r.GetUpdatedRolePermission(_currentRole)).
+            Where(Function(r) r IsNot Nothing).
+            ToList()
 
         Return _currentRole
     End Function
@@ -99,10 +98,17 @@ Public Class RoleUserControl
     End Sub
 
     Private Async Function GetPermissions() As Task
+
+        If _permissions.Any Then Return
+
         _permissions = (Await _permissionRepository.GetAll()).ToList()
     End Function
 
     Private Async Function UpdateRolePermissionGrid() As Task
+
+        If _permissions.Any() = False Then
+            Await GetPermissions()
+        End If
 
         Dim rolePermissionModels = RolePermissionViewModel.TransformList(_permissions)
 
@@ -110,15 +116,21 @@ Public Class RoleUserControl
 
             RoleNameTextBox.Text = _currentRole.Name
 
-            Dim role = Await _roleRepository.GetById(_currentRole.Id)
+            'This does not update when roleRepository is used as instance field
+            Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+            Dim role = Await roleRepository.GetById(_currentRole.Id)
 
-            rolePermissionModels.ForEach(
-                Sub(model)
+            If role IsNot Nothing Then
 
-                    Dim rolePermission = role.RolePermissions.FirstOrDefault(Function(p) p.PermissionId = model.Permission.Id)
-                    model.UpdateRolePermission(rolePermission, role)
+                rolePermissionModels.ForEach(
+                    Sub(model)
 
-                End Sub)
+                        Dim rolePermission = role.RolePermissions.FirstOrDefault(Function(p) p.PermissionId = model.Permission.Id)
+                        model.UpdateRolePermission(rolePermission, role)
+
+                    End Sub)
+
+            End If
 
         End If
 
@@ -279,9 +291,7 @@ Public Class RoleUserControl
         Public Sub UpdateRolePermission(rolePermission As RolePermission, role As AspNetRole)
 
             If rolePermission Is Nothing Then
-                role.SetPermission(Permission)
-
-                rolePermission = role.GetPermission(Permission.Name)
+                rolePermission = CreateRolePermission(role)
             End If
 
             Me.RolePermission = rolePermission
@@ -294,6 +304,12 @@ Public Class RoleUserControl
             Me.Delete = Me.RolePermission.Delete
         End Sub
 
+        Private Function CreateRolePermission(role As AspNetRole) As RolePermission
+            role.SetPermission(Permission)
+
+            Return role.GetPermission(Permission.Name)
+        End Function
+
         Public Sub CommitPermissions()
             Me.RolePermission.Read = Me.Read
             Me.RolePermission.Create = Me.Create
@@ -301,13 +317,24 @@ Public Class RoleUserControl
             Me.RolePermission.Delete = Me.Delete
         End Sub
 
-        Public Function GetUpdatedRolePermission() As RolePermission
+        Public Function GetUpdatedRolePermission(role As AspNetRole) As RolePermission
             Dim updateRolePermission = Me.RolePermission.CloneJson()
 
-            updateRolePermission.Read = Me.Read
-            updateRolePermission.Create = Me.Create
-            updateRolePermission.Update = Me.Update
-            updateRolePermission.Delete = Me.Delete
+            If updateRolePermission Is Nothing Then
+
+                updateRolePermission = CreateRolePermission(role)
+                updateRolePermission.Read = Me.Read
+                updateRolePermission.Create = Me.Create
+                updateRolePermission.Update = Me.Update
+                updateRolePermission.Delete = Me.Delete
+            Else
+
+                updateRolePermission.Read = Me.Read
+                updateRolePermission.Create = Me.Create
+                updateRolePermission.Update = Me.Update
+                updateRolePermission.Delete = Me.Delete
+
+            End If
 
             Return updateRolePermission
         End Function

@@ -740,6 +740,12 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\RoleUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\User Privilege\NewRoleForm.Designer.vb">
+      <DependentUpon>NewRoleForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\User Privilege\NewRoleForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.Designer.vb">
       <DependentUpon>AssignBonusToLoanForm.vb</DependentUpon>
     </Compile>
@@ -1730,10 +1736,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\txtPlaceHolder.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\UserPrivilegeForm.Designer.vb">
+    <Compile Include="Views\Core Forms\User Privilege\UserPrivilegeForm.Designer.vb">
       <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\UserPrivilegeForm.vb">
+    <Compile Include="Views\Core Forms\User Privilege\UserPrivilegeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
@@ -2071,6 +2077,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\RoleUserControl.resx">
       <DependentUpon>RoleUserControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\User Privilege\NewRoleForm.resx">
+      <DependentUpon>NewRoleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.resx">
       <DependentUpon>AssignBonusToLoanForm.vb</DependentUpon>
@@ -2582,7 +2591,7 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
       <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\UserPrivilegeForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\User Privilege\UserPrivilegeForm.resx">
       <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\viewtotallow.resx">

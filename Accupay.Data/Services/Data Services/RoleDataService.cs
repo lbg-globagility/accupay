@@ -17,12 +17,33 @@ namespace AccuPay.Data.Services
             _repository = repository;
         }
 
+        public async Task CreateAsync(AspNetRole role)
+        {
+            await SanitizeEntity(role);
+            await _repository.CreateAsync(role);
+        }
+
         public async Task UpdateAsync(AspNetRole role)
         {
             if (role.IsAdmin)
                 throw new BusinessLogicException("`Admin` roles cannot be modified.");
 
+            await SanitizeEntity(role);
             await _repository.UpdateAsync(role);
+        }
+
+        private async Task SanitizeEntity(AspNetRole role)
+        {
+            if (role.ClientId == 0)
+                throw new BusinessLogicException("Client is required.");
+
+            if (string.IsNullOrWhiteSpace(role.Name))
+                throw new BusinessLogicException("Name is required.");
+
+            if (await _repository.CheckForDuplicateAsync(role.Name, role.Id))
+                throw new BusinessLogicException("Name already exists.");
+
+            role.NormalizedName = role.Name.Trim().ToUpper();
         }
 
         public async Task UpdateUserRolesAsync(

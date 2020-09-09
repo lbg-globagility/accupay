@@ -88,7 +88,7 @@ Public Class SalaryTab
             EnableSalaryGrid()
         End If
 
-        txtPayFrequency.Text = employee.PayFrequency.Type
+        txtPayFrequency.Text = employee.PayFrequency?.Type
         txtSalaryType.Text = employee.EmployeeType
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType

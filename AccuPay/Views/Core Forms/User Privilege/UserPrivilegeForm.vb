@@ -71,6 +71,21 @@ Public Class UserPrivilegeForm
         Await RoleUserControl.SetRole(GetSelectedRole())
     End Sub
 
+    Private Async Sub NewRoleButton_Click(sender As Object, e As EventArgs) Handles NewRoleButton.Click
+
+        Dim dialog As New NewRoleForm()
+        dialog.ShowDialog()
+
+        If dialog.IsSaved AndAlso dialog.NewRole IsNot Nothing Then
+
+            Await RefreshRoleGrid(dialog.NewRole)
+
+            InfoBalloon("New role has been successfully created.", "Role Created", lblforballoon, 0, -69)
+
+        End If
+
+    End Sub
+
     Private Async Sub SaveButtonClicked(sender As Object, e As EventArgs) Handles SaveButton.Click
 
         lblforballoon.Focus()
@@ -90,15 +105,11 @@ Public Class UserPrivilegeForm
                 Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleDataService)
                 Await roleRepository.UpdateAsync(currentRole)
 
-                Dim selectedRoleModel = CType(RoleGrid.CurrentRow.DataBoundItem, RoleViewModel)
-                selectedRoleModel.UpdateDisplayName(currentRole.Name)
-                RoleGrid.Refresh()
-
-                RoleUserControl.CommitPermissionChanges()
+                Await RefreshRoleGrid(currentRole)
 
                 USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
-                InfoBalloon("User privilege has been successfully saved.", "Successfully save", lblforballoon, 0, -69)
+                InfoBalloon("User privilege has been successfully saved.", "Role Permissions Saved", lblforballoon, 0, -69)
             End Function,
             errorCallBack:=
             Sub()
@@ -106,11 +117,38 @@ Public Class UserPrivilegeForm
             End Sub)
     End Sub
 
+    Private Async Function RefreshRoleGrid(currentRole As AspNetRole) As Task
+
+        RemoveHandler RoleGrid.SelectionChanged, AddressOf RoleGridSelectionChanged
+
+        Await PopulateRoleGrid()
+        Dim roles = CType(RoleGrid.DataSource, List(Of RoleViewModel))
+
+        If roles.Any Then
+
+            Dim currentRoleModel = roles.FirstOrDefault(Function(r) r.Role.Id = currentRole.Id)
+
+            If currentRoleModel IsNot Nothing Then
+
+                Dim currentRoleIndex = roles.IndexOf(currentRoleModel)
+
+                RoleGrid.CurrentCell = RoleGrid.Rows(currentRoleIndex).Cells(0)
+
+            End If
+
+        End If
+
+        Await RoleUserControl.SetRole(currentRole)
+
+        AddHandler RoleGrid.SelectionChanged, AddressOf RoleGridSelectionChanged
+
+    End Function
+
     Private Async Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         Await RoleUserControl.SetRole(GetSelectedRole())
     End Sub
 
-    Private Sub tsbtnCloseUserPrivil_Click(sender As Object, e As EventArgs)
+    Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         Me.Close()
     End Sub
 
