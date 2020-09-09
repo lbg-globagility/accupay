@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-timeout',
   templateUrl: './timeout.component.html',
-  styleUrls: ['./timeout.component.scss']
+  styleUrls: ['./timeout.component.scss'],
 })
 export class TimeoutComponent implements OnInit {
   email: string;
@@ -23,7 +23,7 @@ export class TimeoutComponent implements OnInit {
   ) {}
 
   form: FormGroup = this.fb.group({
-    password: [null, Validators.required]
+    password: [null, Validators.required],
   });
 
   ngOnInit() {
@@ -31,7 +31,7 @@ export class TimeoutComponent implements OnInit {
   }
 
   getEmailAddress(): void {
-    this.authService.getAccount().subscribe(account => {
+    this.authService.getAccount().subscribe((account) => {
       this.email = account.email;
     });
   }
@@ -48,17 +48,15 @@ export class TimeoutComponent implements OnInit {
 
     this.authService.login(this.email, password).subscribe(
       () => {
-        if (this.authService.redirectUrl != null) {
-          const redirectUrl = decodeURI(this.authService.redirectUrl);
-
-          this.authService.redirectUrl = null;
-
-          this.router.navigateByUrl(redirectUrl);
-        } else {
-          this.router.navigate(['dashboard']);
-        }
+        // if (this.authService.redirectUrl != null) {
+        //   const redirectUrl = decodeURI(this.authService.redirectUrl);
+        //   this.authService.redirectUrl = null;
+        //   this.router.navigateByUrl(redirectUrl);
+        // } else {
+        //   this.router.navigate(['dashboard']);
+        // }
       },
-      error => {
+      (error) => {
         this.loginError = error;
         this.loggingIn.next(false);
       }

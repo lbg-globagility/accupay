@@ -1,9 +1,11 @@
 import * as jwt_decode from 'jwt-decode';
 import { Account } from 'src/app/accounts/shared/account';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap, flatMap } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, ReplaySubject, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Role } from 'src/app/roles/shared/role';
+import { NgxPermissionsService } from 'ngx-permissions';
 
 const TOKEN_KEY = 'token';
 
@@ -13,33 +15,32 @@ const TOKEN_KEY = 'token';
 export class AuthService {
   private baseUrl = 'api/account';
 
-  redirectUrl: string;
+  private redirectUrl: string;
 
-  private accountSource$ = new ReplaySubject<Account>(1);
+  private currentUser$ = new BehaviorSubject<Account>(null);
 
-  public account$ = this.accountSource$.asObservable();
+  constructor(
+    private httpClient: HttpClient,
+    private permissionService: NgxPermissionsService
+  ) {}
 
-  constructor(private httpClient: HttpClient) {}
+  get currentUser(): Account {
+    return this.currentUser$.getValue();
+  }
 
-  login(email: string, password: string): Observable<string> {
+  login(email: string, password: string): Observable<any> {
     const credentials = { email, password };
 
     return this.httpClient
-      .post<LoginResult>('/api/account/login', credentials)
+      .post<LoginResult>(`${this.baseUrl}/login`, credentials)
       .pipe(
         map(({ token }) => {
-          const hasToken = token != null;
-
-          if (hasToken) {
+          if (token != null) {
             localStorage.setItem(TOKEN_KEY, token);
           }
-
-          this.getAccount().subscribe((account) => {
-            this.accountSource$.next(account);
-          });
-
-          return null;
         }),
+        flatMap(() => this.getAccount()),
+        flatMap(() => this.getCurrentRole()),
         catchError((response: HttpErrorResponse) => {
           if (400 <= response.status && response.status < 500) {
             return throwError('BadCredentials');
@@ -57,15 +58,11 @@ export class AuthService {
       })
       .pipe(
         map(({ token }) => {
-          const hasToken = token != null;
-
-          if (hasToken) {
+          if (token != null) {
             localStorage.setItem(TOKEN_KEY, token);
           }
 
-          this.getAccount().subscribe((account) => {
-            this.accountSource$.next(account);
-          });
+          this.getAccount().subscribe();
 
           return null;
         }),
@@ -79,52 +76,25 @@ export class AuthService {
       );
   }
 
-  loginWithCognito(idToken: string) {
-    let credentials = null;
-
-    try {
-      credentials = jwt_decode(idToken);
-    } catch (err) {
-      return throwError('Invalid format');
-    }
-
-    return this.httpClient
-      .post<LoginResult>('/api/account/login/cognito', credentials)
-      .pipe(
-        map(({ token }) => {
-          const hasToken = token != null;
-
-          if (hasToken) {
-            localStorage.setItem(TOKEN_KEY, token);
-          }
-
-          this.getAccount().subscribe((account) => {
-            this.accountSource$.next(account);
-          });
-
-          return null;
-        }),
-        catchError((err: HttpErrorResponse) => {
-          if (400 <= err.status && err.status < 500) {
-            return throwError('Incorrect credentials');
-          } else {
-            return throwError('Server error');
-          }
-        })
-      );
-  }
-
   logout(): void {
-    this.accountSource$.next(null);
+    this.currentUser$.next(null);
 
     localStorage.removeItem(TOKEN_KEY);
   }
 
   getAccount(): Observable<Account> {
-    return this.httpClient.get<Account>('/api/account');
+    return this.httpClient
+      .get<Account>(`${this.baseUrl}`)
+      .pipe(tap((account) => this.currentUser$.next(account)));
   }
 
-  getClaims(): UserClaims {
+  getCurrentRole(): Observable<Role> {
+    return this.httpClient
+      .get<Role>(`${this.baseUrl}/current-role`)
+      .pipe(tap((role) => this.loadPermissions(role)));
+  }
+
+  private getClaims(): UserClaims {
     const token = this.getToken();
     const jwt = jwt_decode(token);
     const loginClaim = this.mapTokenToClaims(jwt);
@@ -132,16 +102,18 @@ export class AuthService {
     return loginClaim;
   }
 
+  hasAttemptedUrl(): boolean {
+    return this.redirectUrl != null;
+  }
+
   storeUrlAttempt(url: string): void {
     this.redirectUrl = url;
   }
 
-  getPermissions(): Observable<string[]> {
-    const token = this.getToken();
-    const payload = jwt_decode(token);
-    const permissions = this.readPermissions(payload);
-
-    return of(permissions);
+  popUrlAttempt(): string {
+    const redirectUrl = this.redirectUrl;
+    this.redirectUrl = null;
+    return redirectUrl;
   }
 
   isTokenValid(): boolean {
@@ -169,34 +141,42 @@ export class AuthService {
     return localStorage.getItem(TOKEN_KEY);
   }
 
-  private readPermissions(payload: any): string[] {
-    if (payload == null) {
-      return [];
-    }
-
-    const permission = payload.permission;
-
-    if (typeof permission === 'string') {
-      return [permission];
-    }
-
-    if (Array.isArray(permission)) {
-      return permission;
-    }
-
-    return [];
-  }
-
   private mapTokenToClaims(claims): UserClaims {
     return {
       userId: claims['sub'],
       expiration: claims['exp'],
+      employeeId: claims['employeeId'],
     };
+  }
+
+  private loadPermissions(role: Role): void {
+    const permissions: string[] = [];
+
+    for (const rolePermission of role.rolePermissions) {
+      if (rolePermission.read) {
+        permissions.push(`${rolePermission.permissionName}:read`);
+      }
+
+      if (rolePermission.create) {
+        permissions.push(`${rolePermission.permissionName}:create`);
+      }
+
+      if (rolePermission.update) {
+        permissions.push(`${rolePermission.permissionName}:update`);
+      }
+
+      if (rolePermission.delete) {
+        permissions.push(`${rolePermission.permissionName}:delete`);
+      }
+    }
+
+    this.permissionService.loadPermissions(permissions);
   }
 }
 
 export interface UserClaims {
   userId: string;
+  employeeId: number;
   expiration: number;
 }
 
