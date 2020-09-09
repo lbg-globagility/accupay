@@ -54,32 +54,21 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(AspNetRole role)
+        {
+            _context.Remove(role);
+            await _context.SaveChangesAsync();
+        }
+
         #endregion Save
 
         public async Task<AspNetRole> GetById(int roleId)
         {
-            var role = await _context.Roles.Include(t => t.RolePermissions)
+            var role = await _context.Roles
+                .Include(t => t.RolePermissions)
                 .FirstOrDefaultAsync(t => t.Id == roleId);
 
             return role;
-        }
-
-        /// <summary>
-        /// Check for duplicate role name.
-        /// </summary>
-        /// <param name="name">The name of the role to be checked.</param>
-        /// <param name="excludeId">If not null, checks for duplicate role name that has an Id that is not equal to excludeId.</param>
-        /// <returns></returns>
-        public async Task<bool> CheckForDuplicateAsync(string name, int? excludeId = null)
-        {
-            var query = _context.Roles.Where(t => t.Name.Trim().ToLower() == name.ToTrimmedLowerCase());
-
-            if (excludeId != null)
-            {
-                query = query.Where(t => t.Id != excludeId);
-            }
-
-            return await query.AnyAsync();
         }
 
         public async Task<ICollection<AspNetRole>> GetAll()
@@ -124,6 +113,36 @@ namespace AccuPay.Data.Repositories
             var total = await query.CountAsync();
 
             return (roles, total);
+        }
+
+        /// <summary>
+        /// Check for duplicate role name.
+        /// </summary>
+        /// <param name="name">The name of the role to be checked.</param>
+        /// <param name="excludeId">If not null, checks for duplicate role name that has an Id that is not equal to excludeId.</param>
+        /// <returns></returns>
+        public async Task<bool> CheckForDuplicateAsync(string name, int? excludeId = null)
+        {
+            var query = _context.Roles.Where(t => t.Name.Trim().ToLower() == name.ToTrimmedLowerCase());
+
+            if (excludeId != null)
+            {
+                query = query.Where(t => t.Id != excludeId);
+            }
+
+            return await query.AnyAsync();
+        }
+
+        public async Task<bool> HasUsersAsync(int roleId)
+        {
+            return await (
+                from role in _context.Roles
+                join userRole in _context.UserRoles
+                on role.Id
+                equals userRole.RoleId
+                where role.Id == roleId
+                select userRole.UserId
+            ).AnyAsync();
         }
     }
 }

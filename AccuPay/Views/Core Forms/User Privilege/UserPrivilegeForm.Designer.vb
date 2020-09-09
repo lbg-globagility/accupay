@@ -44,6 +44,7 @@ Partial Class UserPrivilegeForm
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
+        Me.DeleteButton = New System.Windows.Forms.ToolStripButton()
         CType(Me.RoleGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -184,7 +185,7 @@ Partial Class UserPrivilegeForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewRoleButton, Me.SaveButton, Me.CancelButton, Me.CloseButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewRoleButton, Me.SaveButton, Me.DeleteButton, Me.CancelButton, Me.CloseButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(325, 21)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(910, 25)
@@ -196,16 +197,16 @@ Partial Class UserPrivilegeForm
         Me.NewRoleButton.Image = Global.AccuPay.My.Resources.Resources._new
         Me.NewRoleButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.NewRoleButton.Name = "NewRoleButton"
-        Me.NewRoleButton.Size = New System.Drawing.Size(77, 22)
-        Me.NewRoleButton.Text = "New Role"
+        Me.NewRoleButton.Size = New System.Drawing.Size(51, 22)
+        Me.NewRoleButton.Text = "New"
         '
         'SaveButton
         '
         Me.SaveButton.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.SaveButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.SaveButton.Name = "SaveButton"
-        Me.SaveButton.Size = New System.Drawing.Size(125, 22)
-        Me.SaveButton.Text = "&Save User Privilege"
+        Me.SaveButton.Size = New System.Drawing.Size(51, 22)
+        Me.SaveButton.Text = "&Save"
         '
         'CancelButton
         '
@@ -223,6 +224,14 @@ Partial Class UserPrivilegeForm
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
+        '
+        'DeleteButton
+        '
+        Me.DeleteButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteButton.Name = "DeleteButton"
+        Me.DeleteButton.Size = New System.Drawing.Size(60, 22)
+        Me.DeleteButton.Text = "Delete"
         '
         'UserPrivilegeForm
         '
@@ -270,4 +279,5 @@ Partial Class UserPrivilegeForm
     Friend WithEvents CancelButton As ToolStripButton
     Friend WithEvents CloseButton As ToolStripButton
     Friend WithEvents NewRoleButton As ToolStripButton
+    Friend WithEvents DeleteButton As ToolStripButton
 End Class

@@ -204,7 +204,7 @@ Public Class RoleUserControl
         BatchUpdateRolePermissionGrid(checkAllDelete:=AllDeleteCheckBox.Checked)
     End Sub
 
-    Private Sub RolePermissionGrid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs)
+    Private Sub RolePermissionGrid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles RolePermissionGrid.CellContentClick
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
 

@@ -25,15 +25,35 @@ namespace AccuPay.Data.Services
 
         public async Task UpdateAsync(AspNetRole role)
         {
+            await SanitizeEntity(role);
+
             if (role.IsAdmin)
                 throw new BusinessLogicException("`Admin` roles cannot be modified.");
 
-            await SanitizeEntity(role);
             await _repository.UpdateAsync(role);
+        }
+
+        public async Task DeleteAsync(int roleId)
+        {
+            var role = await _repository.GetById(roleId);
+
+            if (role == null)
+                throw new BusinessLogicException("Role does not exists.");
+
+            if (role.IsAdmin)
+                throw new BusinessLogicException("`Admin` roles cannot be deleted.");
+
+            if (await _repository.HasUsersAsync(role.Id))
+                throw new BusinessLogicException("Role already has users therefore cannot be deleted.");
+
+            await _repository.DeleteAsync(role);
         }
 
         private async Task SanitizeEntity(AspNetRole role)
         {
+            if (role == null)
+                throw new BusinessLogicException("Invalid data.");
+
             if (role.ClientId == 0)
                 throw new BusinessLogicException("Client is required.");
 
