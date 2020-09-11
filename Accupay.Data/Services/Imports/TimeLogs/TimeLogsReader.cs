@@ -16,7 +16,20 @@ namespace AccuPay.Data.Services
 
         public ImportOutput Read(string filename)
         {
-            var fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            FileStream fileStream;
+
+            try
+            {
+                fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            }
+            catch (FileNotFoundException)
+            {
+                return new ImportOutput
+                {
+                    IsImportSuccess = false,
+                    ErrorMessage = FileNotFoundError
+                };
+            }
 
             return Read(fileStream);
         }

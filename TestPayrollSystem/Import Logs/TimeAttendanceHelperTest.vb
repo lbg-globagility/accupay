@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.Imports
 
 <TestFixture>
 Public Class TimeAttendanceHelperTest
@@ -12,7 +13,7 @@ Public Class TimeAttendanceHelperTest
     Public Sub ShouldImport() _
         Implements ITimeAnalyzer.ShouldImport
 
-        Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
+        Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
         Dim employees As List(Of Employee) = GetSampleEmployees()
@@ -42,7 +43,7 @@ Public Class TimeAttendanceHelperTest
     Public Sub ShouldImport_WithoutShifts() _
         Implements ITimeAnalyzer.ShouldImport_WithoutShifts
 
-        Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
+        Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
         Dim employeeShifts As New List(Of ShiftSchedule)
         Dim employees As List(Of Employee) = GetSampleEmployees()
@@ -69,7 +70,7 @@ Public Class TimeAttendanceHelperTest
     Public Sub ShouldImport_WithNextShiftScheduleWithoutShift() _
         Implements ITimeAnalyzer.ShouldImport_WithNextShiftScheduleWithoutShift
 
-        Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
+        Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift()
         Dim employees As List(Of Employee) = GetSampleEmployees()

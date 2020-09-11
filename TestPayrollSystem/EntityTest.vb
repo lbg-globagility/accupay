@@ -11,27 +11,27 @@ Public Class EntityTest
 
     <Test>
     Public Sub Test1()
-        Dim repo As New UserActivityRepository
-        'Dim userActivities = repo.List(11, "Employee")
+        'Dim repo As New UserActivityRepository
+        ''Dim userActivities = repo.List(11, "Employee")
 
-        Assert.IsTrue(UserActivityRepository.CheckIfFirstLetterIsVowel("employee"))
+        'Assert.IsTrue(UserActivityRepository.CheckIfFirstLetterIsVowel("employee"))
 
-        'Dim repo As New UserActivityRepository()
+        ''Dim repo As New UserActivityRepository()
 
-        'repo.RecordAdd(1, "a")
-        'repo.RecordDelete(1, "a")
-        'repo.RecordAdd(1, "")
-        'repo.RecordDelete(1, "")
-        'repo.RecordAdd(1, "Employee")
-        'repo.RecordDelete(1, "Employee")
-        'repo.RecordAdd(1, "Paystub")
-        'repo.RecordDelete(1, "Paystub")
+        ''repo.RecordAdd(1, "a")
+        ''repo.RecordDelete(1, "a")
+        ''repo.RecordAdd(1, "")
+        ''repo.RecordDelete(1, "")
+        ''repo.RecordAdd(1, "Employee")
+        ''repo.RecordDelete(1, "Employee")
+        ''repo.RecordAdd(1, "Paystub")
+        ''repo.RecordDelete(1, "Paystub")
 
-        'Assert.AreEqual(4, repo.List.Count)
+        ''Assert.AreEqual(4, repo.List.Count)
 
-        'Dim answer = True
+        ''Dim answer = True
 
-        'Assert.AreEqual(True, answer)
+        ''Assert.AreEqual(True, answer)
     End Sub
 
     <Test>
@@ -41,27 +41,27 @@ Public Class EntityTest
         '                GetByMultipleEmployeeAndDatePeriodAsync(2, {1}, New TimePeriod(New Date(2020, 2, 1), New Date(2020, 2, 1))).
         '                ToList()
 
-        Dim date1 = New Date(2020, 5, 31)
-        Dim date2 = New Date(2020, 5, 30)
+        'Dim date1 = New Date(2020, 5, 31)
+        'Dim date2 = New Date(2020, 5, 30)
 
-        Dim date3 = date1.AddMonths(1)
-        Dim date4 = date2.AddMonths(1)
+        'Dim date3 = date1.AddMonths(1)
+        'Dim date4 = date2.AddMonths(1)
 
-        Dim repo1 As New UserActivityRepository()
+        'Dim repo1 As New UserActivityRepository()
 
-        Dim count1 = repo1.GetAll(2, "EMPLOYEE")
-        Dim count1u = count1.Where(Function(c) c.User Is Nothing).ToList
+        'Dim count1 = repo1.GetAll(2, "EMPLOYEE")
+        'Dim count1u = count1.Where(Function(c) c.User Is Nothing).ToList
 
-        'for checking if we can access the accupay.data repository without error
-        Dim repo4 As New EmployeeRepository()
+        ''for checking if we can access the accupay.data repository without error
+        'Dim repo4 As New EmployeeRepository()
 
-        Dim count4 = repo4.GetAllAsync(2)
+        'Dim count4 = repo4.GetAllAsync(2)
 
-        Dim branchRepo As New BranchRepository()
+        'Dim branchRepo As New BranchRepository()
 
-        Dim count2 = branchRepo.GetAll().Count
+        'Dim count2 = branchRepo.GetAll().Count
 
-        Assert.IsTrue(count2 > 0)
+        'Assert.IsTrue(count2 > 0)
     End Sub
 
     <Test>
