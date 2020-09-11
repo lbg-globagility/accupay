@@ -124,7 +124,7 @@ Public Class UserPrivilegeForm
 
                 Await RefreshRoleGrid(currentRole)
 
-                USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
+                USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
                 InfoBalloon("Role has been successfully saved.", "Role Saved", LabelForBalloon, 0, -69)
             End Function,
@@ -158,7 +158,7 @@ Public Class UserPrivilegeForm
 
                 Await RefreshRoleGrid(currentRole)
 
-                USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
+                USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
                 InfoBalloon("Role has been successfully deleted.", "Role Deleted", LabelForBalloon, 0, -69)
             End Function)

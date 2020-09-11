@@ -82,7 +82,7 @@ Module myModule
 
     Public position_view_table As New DataTable
 
-    Public USER_ROLES As AspNetRole
+    Public USER_ROLE As AspNetRole
 
     Public userFirstName As String = Nothing
 

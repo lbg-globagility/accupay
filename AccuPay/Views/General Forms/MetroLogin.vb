@@ -8,8 +8,8 @@ Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MetroLogin
-    Private err_count As Integer
-    Private freq As String
+
+    Private Const UnauthorizedOrganizationMessage As String = "You are not authorized to access this organization."
 
     Private ReadOnly _policyHelper As PolicyHelper
 
@@ -186,14 +186,22 @@ Public Class MetroLogin
             Return
         End If
 
-        z_User = user.Id
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=user.Id, organizationId:=z_OrganizationID)
 
-        USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
+        If USER_ROLE Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage(UnauthorizedOrganizationMessage)
+            enableButton()
+            Return
+
+        End If
+
+        z_User = user.Id
 
         loadUserPrivileges(z_User, z_OrganizationID)
 
         userFirstName = user.FirstName
-        z_postName = USER_ROLES.Name
+        z_postName = USER_ROLE.Name
 
         If dbnow Is Nothing Then dbnow = EXECQUER(CURDATE_MDY)
         If numofdaysthisyear = 0 Then numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
@@ -242,7 +250,7 @@ Public Class MetroLogin
                 Return True
             Else
 
-                MessageBoxHelper.ErrorMessage("You are not authorized to access this organization.")
+                MessageBoxHelper.ErrorMessage(UnauthorizedOrganizationMessage)
                 Return False
 
             End If

@@ -88,8 +88,8 @@ Namespace Desktop.Helpers
         Private Shared Async Function rolePermission(permissionName As String, userRole As AspNetRole) As Task(Of RolePermission)
             If userRole Is Nothing Then
                 Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
-                USER_ROLES = Await roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
-                userRole = USER_ROLES
+                USER_ROLE = Await roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
+                userRole = USER_ROLE
             End If
 
             Return userRole?.RolePermissions?.Where(Function(r) r.Permission.Name = permissionName).FirstOrDefault()
