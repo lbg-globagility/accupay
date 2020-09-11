@@ -58,7 +58,7 @@ namespace AccuPay.Data.Services
 
             var existingUserName = await _userRepository.GetByUserNameAsync(user.UserName);
             if (existingUserName != null && existingUserName.Id != user.Id)
-                throw new BusinessLogicException("Username already exists.");
+                throw new BusinessLogicException("Username is already used by an existing or a deleted user.");
 
             user.Email = user.Email?.Trim();
             user.NormalizedEmail = user.Email?.ToUpper();

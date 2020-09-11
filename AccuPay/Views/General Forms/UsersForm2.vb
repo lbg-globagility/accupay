@@ -105,7 +105,37 @@ Public Class UsersForm2
             End Function)
     End Sub
 
-    Private Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    Private Async Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+
+        Dim currentUser = GetSelectedUser()
+
+        If currentUser Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected user!")
+            Return
+
+        End If
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete the user `{currentUser.UserName}`?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync("Delete User",
+            Async Function()
+                Dim userService = MainServiceProvider.GetRequiredService(Of UserDataService)
+
+                Await userService.SoftDeleteAsync(currentUser.Id)
+
+                RemoveHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
+
+                Await PopulateUserGrid()
+
+                AddHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
+
+                InfoBalloon("User has been successfully deleted.", "User Deleted", LabelForBalloon, 0, -69)
+            End Function)
 
     End Sub
 

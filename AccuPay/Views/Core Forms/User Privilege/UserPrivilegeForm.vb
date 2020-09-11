@@ -129,7 +129,7 @@ Public Class UserPrivilegeForm
         End If
 
         If MessageBoxHelper.Confirm(Of Boolean) _
-        ($"Are you sure you want to delete the role {currentRole.Name}?", "Confirm Deletion") = False Then
+        ($"Are you sure you want to delete the role `{currentRole.Name}`?", "Confirm Deletion") = False Then
 
             Return
         End If
