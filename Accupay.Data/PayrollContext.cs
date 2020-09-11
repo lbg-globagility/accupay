@@ -20,13 +20,6 @@ namespace AccuPay.Data
             IdentityRoleClaim<int>,
             IdentityUserToken<int>>
     {
-        //private readonly ILoggerFactory _loggerFactory;
-
-        //internal static readonly LoggerFactory DbCommandConsoleLoggerFactory = new LoggerFactory(new[] {
-        //    new ConsoleLoggerProvider((category, level) => category == DbLoggerCategory.Database.Command.Name &&
-        //                                            level == LogLevel.Information, true)
-        //});
-
         internal virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
         internal virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
         internal virtual DbSet<Address> Addresses { get; set; }
@@ -100,26 +93,15 @@ namespace AccuPay.Data
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 
+        /// <summary>
+        /// Used for adding UserRole that can use the key constraint with OrganizationId
+        /// </summary>
+        internal virtual DbSet<UserRole> UserRoleTable { get; set; }
+
         public PayrollContext(DbContextOptions options)
             : base(options)
         {
         }
-
-        //public PayrollContext()
-        //{
-        //}
-
-        //public PayrollContext(ILoggerFactory loggerFactory)
-        //{
-        //    _loggerFactory = loggerFactory;
-        //}
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseMySql(new DataBaseConnection().GetStringMySQLConnectionString()).
-        //                    UseLoggerFactory(_loggerFactory).
-        //                    EnableSensitiveDataLogging();
-        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

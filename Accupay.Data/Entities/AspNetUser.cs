@@ -21,5 +21,11 @@ namespace AccuPay.Data.Entities
         public int? OriginalImageId { get; set; }
 
         public virtual File OriginalImage { get; set; }
+
+        public int UserLevel { get; set; }
+
+        public string DesktopPassword { get; set; }
+
+        public DateTime? DeletedAt { get; set; }
     }
 }

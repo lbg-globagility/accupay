@@ -11,7 +11,7 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UserPrivilegeForm
 
-    Private ReadOnly _aspNetUserRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Private ReadOnly _roleRepository As RoleRepository
 
@@ -19,7 +19,7 @@ Public Class UserPrivilegeForm
 
         InitializeComponent()
 
-        _aspNetUserRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 
@@ -55,7 +55,7 @@ Public Class UserPrivilegeForm
 
     Private Async Function PopulateRoleGrid() As Task
 
-        Dim user = Await _aspNetUserRepository.GetById(z_User)
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
         Dim userRole = Await _roleRepository.GetByUserAndOrganization(user.Id, z_OrganizationID)
 
@@ -80,7 +80,7 @@ Public Class UserPrivilegeForm
 
             Await RefreshRoleGrid(dialog.NewRole)
 
-            InfoBalloon("New role has been successfully created.", "Role Created", lblforballoon, 0, -69)
+            InfoBalloon("New role has been successfully created.", "Role Created", LabelForBalloon, 0, -69)
 
         End If
 
@@ -88,7 +88,7 @@ Public Class UserPrivilegeForm
 
     Private Async Sub SaveButtonClicked(sender As Object, e As EventArgs) Handles SaveButton.Click
 
-        lblforballoon.Focus()
+        LabelForBalloon.Focus()
 
         If RoleUserControl.HasChanged = False Then
 
@@ -109,7 +109,7 @@ Public Class UserPrivilegeForm
 
                 USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
-                InfoBalloon("Role has been successfully saved.", "Role Saved", lblforballoon, 0, -69)
+                InfoBalloon("Role has been successfully saved.", "Role Saved", LabelForBalloon, 0, -69)
             End Function,
             errorCallBack:=
             Sub()
@@ -143,7 +143,7 @@ Public Class UserPrivilegeForm
 
                 USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
-                InfoBalloon("Role has been successfully deleted.", "Role Deleted", lblforballoon, 0, -69)
+                InfoBalloon("Role has been successfully deleted.", "Role Deleted", LabelForBalloon, 0, -69)
             End Function)
 
     End Sub
@@ -187,9 +187,9 @@ Public Class UserPrivilegeForm
 
     End Function
 
-    Private Sub userprivil_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+    Private Sub UserPrivilegeForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        InfoBalloon(, , lblforballoon, , , 1)
+        InfoBalloon(, , LabelForBalloon, , , 1)
 
         If previousForm IsNot Nothing Then
             If previousForm.Name = Me.Name Then

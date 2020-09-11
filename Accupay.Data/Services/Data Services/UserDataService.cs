@@ -9,48 +9,32 @@ namespace AccuPay.Data.Services
 {
     public class UserDataService
     {
-        private readonly UserRepository _userRepository;
-        private readonly PositionRepository _positionRepository;
-        private readonly PositionViewRepository _positionViewRepository;
+        private readonly AspNetUserRepository _userRepository;
         private readonly IEncryption _encryption;
 
         public UserDataService(
-            UserRepository userRepository,
-            PositionRepository positionRepository,
-            PositionViewRepository positionViewRepository,
+            AspNetUserRepository userRepository,
             IEncryption encryption)
         {
             _userRepository = userRepository;
-            _positionRepository = positionRepository;
-            _positionViewRepository = positionViewRepository;
             _encryption = encryption;
         }
 
-        public async Task CreateAsync(User user)
+        public async Task CreateAsync(AspNetUser user)
         {
             await SanitizeEntity(user);
-
-            await _positionViewRepository.FillUserPositionViewAsync(
-                positionId: user.PositionID,
-                organizationId: user.OrganizationID,
-                savedByUserId: user.CreatedBy.Value);
 
             await _userRepository.CreateAsync(user);
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task UpdateAsync(AspNetUser user)
         {
             await SanitizeEntity(user);
-
-            await _positionViewRepository.FillUserPositionViewAsync(
-                positionId: user.PositionID,
-                organizationId: user.OrganizationID,
-                savedByUserId: user.LastUpdBy.Value);
 
             await _userRepository.UpdateAsync(user);
         }
 
-        private async Task SanitizeEntity(User user)
+        private async Task SanitizeEntity(AspNetUser user, bool isEncrypted = true)
         {
             if (user == null)
                 throw new BusinessLogicException("Invalid user.");
@@ -61,18 +45,26 @@ namespace AccuPay.Data.Services
             if (string.IsNullOrWhiteSpace(user.LastName))
                 throw new BusinessLogicException("Last name is required.");
 
-            if (string.IsNullOrWhiteSpace(user.Username))
+            if (string.IsNullOrWhiteSpace(user.UserName))
                 throw new BusinessLogicException("Username is required.");
 
-            if (string.IsNullOrWhiteSpace(user.Password))
+            if (string.IsNullOrWhiteSpace(user.DesktopPassword))
                 throw new BusinessLogicException("Password is required.");
 
-            var existingUsername = await _userRepository.GetByUsernameAsync(user.Username);
-            if (existingUsername != null && existingUsername.RowID != user.RowID)
-                throw new BusinessLogicException("Password already exists.");
+            if (!isEncrypted)
+            {
+                user.DesktopPassword = _encryption.Encrypt(user.DesktopPassword);
+            }
 
-            user.Username = _encryption.Encrypt(user.Username);
-            user.Password = _encryption.Encrypt(user.Password);
+            var existingUserName = await _userRepository.GetByUserNameAsync(user.UserName);
+            if (existingUserName != null && existingUserName.Id != user.Id)
+                throw new BusinessLogicException("Username already exists.");
+
+            user.Email = user.Email?.Trim();
+            user.NormalizedEmail = user.Email?.ToUpper();
+
+            user.UserName = user.UserName.Trim();
+            user.NormalizedUserName = user.UserName.ToUpper();
         }
 
         public async Task SoftDeleteAsync(int id)

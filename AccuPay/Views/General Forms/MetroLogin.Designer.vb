@@ -28,8 +28,8 @@ Partial Class MetroLogin
         Me.MetroStyleManager1 = New MetroFramework.Components.MetroStyleManager(Me.components)
         Me.MetroLabel2 = New MetroFramework.Controls.MetroLabel()
         Me.MetroLabel1 = New MetroFramework.Controls.MetroLabel()
-        Me.txtbxPword = New MetroFramework.Controls.MetroTextBox()
-        Me.txtbxUserID = New MetroFramework.Controls.MetroTextBox()
+        Me.PasswordTextBox = New MetroFramework.Controls.MetroTextBox()
+        Me.UserNameTextBox = New MetroFramework.Controls.MetroTextBox()
         Me.cbxorganiz = New MetroFramework.Controls.MetroComboBox()
         Me.btnlogin = New MetroFramework.Controls.MetroButton()
         Me.MetroLabel3 = New MetroFramework.Controls.MetroLabel()
@@ -63,30 +63,30 @@ Partial Class MetroLogin
         '
         'txtbxPword
         '
-        Me.txtbxPword.Lines = New String(-1) {}
-        Me.txtbxPword.Location = New System.Drawing.Point(23, 140)
-        Me.txtbxPword.MaxLength = 32767
-        Me.txtbxPword.Name = "txtbxPword"
-        Me.txtbxPword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(9679)
-        Me.txtbxPword.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.txtbxPword.SelectedText = ""
-        Me.txtbxPword.Size = New System.Drawing.Size(213, 23)
-        Me.txtbxPword.TabIndex = 1
-        Me.txtbxPword.UseSelectable = True
-        Me.txtbxPword.UseSystemPasswordChar = True
+        Me.PasswordTextBox.Lines = New String(-1) {}
+        Me.PasswordTextBox.Location = New System.Drawing.Point(23, 140)
+        Me.PasswordTextBox.MaxLength = 32767
+        Me.PasswordTextBox.Name = "txtbxPword"
+        Me.PasswordTextBox.PasswordChar = Global.Microsoft.VisualBasic.ChrW(9679)
+        Me.PasswordTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None
+        Me.PasswordTextBox.SelectedText = ""
+        Me.PasswordTextBox.Size = New System.Drawing.Size(213, 23)
+        Me.PasswordTextBox.TabIndex = 1
+        Me.PasswordTextBox.UseSelectable = True
+        Me.PasswordTextBox.UseSystemPasswordChar = True
         '
         'txtbxUserID
         '
-        Me.txtbxUserID.Lines = New String(-1) {}
-        Me.txtbxUserID.Location = New System.Drawing.Point(23, 92)
-        Me.txtbxUserID.MaxLength = 32767
-        Me.txtbxUserID.Name = "txtbxUserID"
-        Me.txtbxUserID.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
-        Me.txtbxUserID.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.txtbxUserID.SelectedText = ""
-        Me.txtbxUserID.Size = New System.Drawing.Size(213, 23)
-        Me.txtbxUserID.TabIndex = 0
-        Me.txtbxUserID.UseSelectable = True
+        Me.UserNameTextBox.Lines = New String(-1) {}
+        Me.UserNameTextBox.Location = New System.Drawing.Point(23, 92)
+        Me.UserNameTextBox.MaxLength = 32767
+        Me.UserNameTextBox.Name = "txtbxUserID"
+        Me.UserNameTextBox.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.UserNameTextBox.ScrollBars = System.Windows.Forms.ScrollBars.None
+        Me.UserNameTextBox.SelectedText = ""
+        Me.UserNameTextBox.Size = New System.Drawing.Size(213, 23)
+        Me.UserNameTextBox.TabIndex = 0
+        Me.UserNameTextBox.UseSelectable = True
         '
         'cbxorganiz
         '
@@ -150,8 +150,8 @@ Partial Class MetroLogin
         Me.Controls.Add(Me.MetroLabel3)
         Me.Controls.Add(Me.MetroLabel2)
         Me.Controls.Add(Me.MetroLabel1)
-        Me.Controls.Add(Me.txtbxPword)
-        Me.Controls.Add(Me.txtbxUserID)
+        Me.Controls.Add(Me.PasswordTextBox)
+        Me.Controls.Add(Me.UserNameTextBox)
         Me.Controls.Add(Me.cbxorganiz)
         Me.Controls.Add(Me.btnlogin)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -172,8 +172,8 @@ Partial Class MetroLogin
     Friend WithEvents MetroStyleManager1 As MetroFramework.Components.MetroStyleManager
     Friend WithEvents MetroLabel2 As MetroFramework.Controls.MetroLabel
     Friend WithEvents MetroLabel1 As MetroFramework.Controls.MetroLabel
-    Friend WithEvents txtbxPword As MetroFramework.Controls.MetroTextBox
-    Friend WithEvents txtbxUserID As MetroFramework.Controls.MetroTextBox
+    Friend WithEvents PasswordTextBox As MetroFramework.Controls.MetroTextBox
+    Friend WithEvents UserNameTextBox As MetroFramework.Controls.MetroTextBox
     Friend WithEvents cbxorganiz As MetroFramework.Controls.MetroComboBox
     Friend WithEvents btnlogin As MetroFramework.Controls.MetroButton
     Friend WithEvents MetroLabel3 As MetroFramework.Controls.MetroLabel

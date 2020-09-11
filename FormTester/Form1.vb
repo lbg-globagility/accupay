@@ -1,9 +1,8 @@
 ﻿Option Strict On
 
 Imports System.IO
-
-'Imports AccuPay.Payslip
-Imports AccuPay.CrystalReports.Payslip
+Imports AccuPay.CrystalReports
+Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports CrystalDecisions.Shared
 Imports GlobagilityShared.EmailSender
@@ -13,17 +12,17 @@ Imports PdfSharp.Pdf.Security
 
 Public Class Form1
 
-    Private ReadOnly payslipCreator As PayslipCreator
+    Private ReadOnly _payslipBuilder As PayslipBuilder
     Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+    Private ReadOnly _encryptor As IEncryption
 
-    Sub New(payslipCreator As PayslipCreator, paystubEmailRepositoryrepo As PaystubEmailRepository)
+    Sub New(payslipBuilder As PayslipBuilder, paystubEmailRepositoryrepo As PaystubEmailRepository, encryptor As IEncryption)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        Me.payslipCreator = payslipCreator
+        _payslipBuilder = payslipBuilder
         _paystubEmailRepository = paystubEmailRepositoryrepo
+        _encryptor = encryptor
     End Sub
 
     Private Sub PrintPayslipButton_Click(sender As Object, e As EventArgs) Handles PrintPayslipButton.Click
@@ -85,9 +84,8 @@ Public Class Form1
 
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
-        Dim reportDocument = payslipCreator.
-                CreateReportDocument(2,
-                                     currentPayPeriod.RowID.Value,
+        Dim reportDocument = _payslipBuilder.
+                CreateReportDocument(currentPayPeriod.RowID.Value,
                                      isActual:=0,
                                      employeeIds:=employeeIds).
                 GetReportDocument()
@@ -155,12 +153,14 @@ Public Class Form1
         Dim fileName = FileNameTextBox.Text
         Dim password = PasswordTextBox.Text
 
-        Return payslipCreator.
-                CreateReportDocument(2,
-                                     currentPayPeriod.RowID.Value,
-                                     isActual:=0,
-                                     employeeIds:=employeeIds).
-                GeneratePDF(saveFolderPath, fileName).
+        Dim builder = CType(_payslipBuilder.
+                CreateReportDocument(
+                    currentPayPeriod.RowID.Value,
+                    isActual:=0,
+                    employeeIds:=employeeIds).
+                GeneratePDF(saveFolderPath, fileName), PayslipBuilder)
+
+        Return builder.
                 AddPdfPassword(password).
                 GetPDF()
     End Function
@@ -180,25 +180,24 @@ Public Class Form1
 
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
-        payslipCreator.CreateReportDocument(2,
-                                            currentPayPeriod.RowID.Value,
+        _payslipBuilder.CreateReportDocument(currentPayPeriod.RowID.Value,
                                             isActual:=0,
                                             employeeIds:=employeeIds)
 
-        Dim employee = payslipCreator.GetFirstEmployee()
+        Dim employee = _payslipBuilder.GetFirstEmployee()
 
         If employee Is Nothing Then
             Return
         End If
 
         Dim saveFolderPath = "E:\Downloads"
-        Dim fileName = $"Payslip-{currentPayPeriod.PayToDate.ToString("yyyy-MM-dd")}-11.pdf"
+        Dim fileName = $"Payslip-{currentPayPeriod.PayToDate:yyyy-MM-dd}-11.pdf"
         Dim password = CDate(employee("Birthdate")).ToString("MMddyyyy")
 
-        payslipCreator.GeneratePDF(saveFolderPath, fileName).
-                        AddPdfPassword(password)
+        Dim builder = CType(_payslipBuilder.GeneratePDF(saveFolderPath, fileName), PayslipBuilder)
+        builder.AddPdfPassword(password)
 
-        Dim pdfFile = payslipCreator.GetPDF()
+        Dim pdfFile = _payslipBuilder.GetPDF()
 
         Dim emailSender As New EmailSender(New EmailConfig())
 
@@ -226,6 +225,32 @@ HRD"
         Dim paystubEmail = _paystubEmailRepository.FirstOnQueueWithPaystubDetails()
 
         MessageBox.Show(paystubEmail.PaystubID.ToString())
+
+    End Sub
+
+    Private Sub EncryptButton_Click(sender As Object, e As EventArgs) Handles EncryptButton.Click
+
+        Try
+
+            EncryptOutputTextBox.Text = _encryptor.Encrypt(EncryptInputTextBox.Text)
+        Catch ex As Exception
+
+            MessageBox.Show("Cannot encrypt data.")
+
+        End Try
+
+    End Sub
+
+    Private Sub DecryptButton_Click(sender As Object, e As EventArgs) Handles DecryptButton.Click
+
+        Try
+
+            EncryptOutputTextBox.Text = _encryptor.Decrypt(EncryptInputTextBox.Text)
+        Catch ex As Exception
+
+            MessageBox.Show("Cannot decrypt data.")
+
+        End Try
 
     End Sub
 

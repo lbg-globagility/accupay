@@ -169,8 +169,8 @@ Public Class GeneralForm
 
     Private Async Sub UserToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserToolStripMenuItem.Click
 
-        Await ChangeForm(UsersForm, PermissionConstant.USER)
-        previousForm = UsersForm
+        Await ChangeForm(UsersForm2, PermissionConstant.USER)
+        previousForm = UsersForm2
 
     End Sub
 

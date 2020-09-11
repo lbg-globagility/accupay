@@ -192,77 +192,77 @@ Public Class UsersForm
     End Sub
 
     Private Async Function SaveUser() As Threading.Tasks.Task
-        Dim enableSaveButton = Sub()
-                                   btnSave.Enabled = True
-                               End Sub
-        Dim disableSaveButton = Sub()
-                                    btnSave.Enabled = False
-                                End Sub
+        'Dim enableSaveButton = Sub()
+        '                           btnSave.Enabled = True
+        '                       End Sub
+        'Dim disableSaveButton = Sub()
+        '                            btnSave.Enabled = False
+        '                        End Sub
 
-        Dim usernameExistsAlready = Sub()
-                                        Dim userIDErrorMessage = "User ID Already exist."
-                                        myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
-                                        txtUserName.Focus()
-                                        enableSaveButton()
-                                    End Sub
+        'Dim usernameExistsAlready = Sub()
+        '                                Dim userIDErrorMessage = "User ID Already exist."
+        '                                myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
+        '                                txtUserName.Focus()
+        '                                enableSaveButton()
+        '                            End Sub
 
-        disableSaveButton()
+        'disableSaveButton()
 
-        Dim hasWorry = ValidateRequiredFields()
-        If hasWorry Then
-            enableSaveButton()
-            Return
-        End If
+        'Dim hasWorry = ValidateRequiredFields()
+        'If hasWorry Then
+        '    enableSaveButton()
+        '    Return
+        'End If
 
-        Dim passwordConfirmed = txtPassword.Text = txtConfirmPassword.Text
+        'Dim passwordConfirmed = txtPassword.Text = txtConfirmPassword.Text
 
-        If Not passwordConfirmed Then
-            myBalloon("Password does not match.", "Save failed", lblSaveMsg, , -100)
-            txtConfirmPassword.Focus()
-            enableSaveButton()
-            Return
-        End If
+        'If Not passwordConfirmed Then
+        '    myBalloon("Password does not match.", "Save failed", lblSaveMsg, , -100)
+        '    txtConfirmPassword.Focus()
+        '    enableSaveButton()
+        '    Return
+        'End If
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
+        'Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
 
-        If isNew Then
-            If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
-                usernameExistsAlready()
-                Return
-            End If
+        'If isNew Then
+        '    If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
+        '        usernameExistsAlready()
+        '        Return
+        '    End If
 
-            Dim newUser = User.NewUser(z_OrganizationID, z_User)
+        '    Dim newUser = User.NewUser(z_OrganizationID, z_User)
 
-            ApplyChanges(newUser)
-            Await dataService.CreateAsync(newUser)
+        '    ApplyChanges(newUser)
+        '    Await dataService.CreateAsync(newUser)
 
-            myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
+        '    myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
 
-            FillUsers()
+        '    FillUsers()
 
-            btnNew.Enabled = True
-            dgvUserList.Enabled = True
-        Else
-            Dim userBoundItem = GetUserBoundItem()
-            If userBoundItem Is Nothing Then Return
+        '    btnNew.Enabled = True
+        '    dgvUserList.Enabled = True
+        'Else
+        '    Dim userBoundItem = GetUserBoundItem()
+        '    If userBoundItem Is Nothing Then Return
 
-            Dim user = Await _userRepository.GetByIdWithPositionAsync(userBoundItem.RowID)
+        '    Dim user = Await _userRepository.GetByIdWithPositionAsync(userBoundItem.RowID)
 
-            If _encryptor.Encrypt(txtUserName.Text) <> user.Username Then
-                If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
-                    usernameExistsAlready()
-                    Return
-                End If
-            End If
+        '    If _encryptor.Encrypt(txtUserName.Text) <> user.Username Then
+        '        If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
+        '            usernameExistsAlready()
+        '            Return
+        '        End If
+        '    End If
 
-            ApplyChanges(user)
-            user.LastUpdBy = z_User
-            Await dataService.UpdateAsync(user)
+        '    ApplyChanges(user)
+        '    user.LastUpdBy = z_User
+        '    Await dataService.UpdateAsync(user)
 
-            myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
-        End If
+        '    myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
+        'End If
 
-        enableSaveButton()
+        'enableSaveButton()
     End Function
 
     Private Function GetUserBoundItem() As UserBoundItem

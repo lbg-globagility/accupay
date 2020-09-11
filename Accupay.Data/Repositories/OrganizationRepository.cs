@@ -49,6 +49,7 @@ namespace AccuPay.Data.Repositories
         public async Task<(ICollection<Organization> organizations, int total)> List(OrganizationPageOptions options, int clientId)
         {
             var query = _context.Organizations
+                .AsNoTracking()
                 .Where(o => o.IsInActive == false);
 
             if (options.HasClientId)

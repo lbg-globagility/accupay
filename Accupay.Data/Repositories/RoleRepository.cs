@@ -40,20 +40,6 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateUserRolesAsync(
-            ICollection<UserRole> added,
-            ICollection<UserRole> deleted)
-        {
-            _context.UserRoles.RemoveRange(deleted);
-
-            foreach (var userRole in added)
-            {
-                _context.UserRoles.Add(userRole);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task DeleteAsync(AspNetRole role)
         {
             _context.Remove(role);
@@ -62,6 +48,54 @@ namespace AccuPay.Data.Repositories
 
         #endregion Save
 
+        #region User Roles
+
+        public async Task UpdateUserRolesAsync(
+            ICollection<UserRole> added,
+            ICollection<UserRole> deleted)
+        {
+            _context.UserRoleTable.RemoveRange(deleted);
+
+            foreach (var userRole in added)
+            {
+                _context.UserRoleTable.Add(userRole);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Get user roles by organization.
+        /// </summary>
+        /// <param name="organizationId">The Id of the organization.</param>
+        /// <returns></returns>
+        public async Task<ICollection<UserRole>> GetUserRoles(int organizationId)
+        {
+            return await BaseGetUserRoles(organizationId);
+        }
+
+        /// <summary>
+        /// Get ALL user roles.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ICollection<UserRole>> GetUserRoles()
+        {
+            return await BaseGetUserRoles();
+        }
+
+        private async Task<ICollection<UserRole>> BaseGetUserRoles(int? organizationId = null)
+        {
+            var query = _context.UserRoles
+                .AsNoTracking();
+
+            if (organizationId != null)
+                query = query.Where(t => t.OrganizationId == organizationId);
+
+            return await query.ToListAsync();
+        }
+
+        #endregion User Roles
+
         public async Task<AspNetRole> GetById(int roleId)
         {
             var role = await _context.Roles
@@ -69,14 +103,6 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync(t => t.Id == roleId);
 
             return role;
-        }
-
-        public async Task<ICollection<AspNetRole>> GetAll()
-        {
-            var roles = await _context.Roles.Include(t => t.RolePermissions)
-                .ToListAsync();
-
-            return roles;
         }
 
         public async Task<AspNetRole> GetByUserAndOrganization(int userId, int organizationId)
@@ -95,18 +121,10 @@ namespace AccuPay.Data.Repositories
             return role;
         }
 
-        public async Task<ICollection<UserRole>> GetUserRoles(int organizationId)
-        {
-            var userRoles = await _context.UserRoles
-                .Where(t => t.OrganizationId == organizationId)
-                .ToListAsync();
-
-            return userRoles;
-        }
-
         public async Task<(ICollection<AspNetRole> roles, int total)> List(PageOptions options, int clientId)
         {
             var query = _context.Roles
+                .AsNoTracking()
                 .Where(t => t.ClientId == clientId);
 
             var roles = await query.Page(options).ToListAsync();

@@ -20,11 +20,12 @@ namespace AccuPay.Web.Users
         private readonly RoleDataService _roleDataService;
         private readonly ICurrentUser _currentUser;
 
-        public RoleService(RoleManager<AspNetRole> roles,
-                           RoleRepository roleRepository,
-                           PermissionRepository permissionRepository,
-                           RoleDataService roleDataService,
-                           ICurrentUser currentUser)
+        public RoleService(
+            RoleManager<AspNetRole> roles,
+            RoleRepository roleRepository,
+            PermissionRepository permissionRepository,
+            RoleDataService roleDataService,
+            ICurrentUser currentUser)
         {
             _roles = roles;
             _roleRepository = roleRepository;
@@ -62,37 +63,11 @@ namespace AccuPay.Web.Users
 
         public async Task UpdateUserRoles(ICollection<UpdateUserRoleDto> dtos)
         {
-            var userRoles = await _roleRepository.GetUserRoles(_currentUser.OrganizationId);
-            var roles = await _roleRepository.GetAll();
+            var updatedUserRoles = dtos
+                .Select(x => x.ToUserRole(_currentUser.OrganizationId))
+                .ToList();
 
-            var added = new Collection<UserRole>();
-            var deleted = new Collection<UserRole>();
-
-            foreach (var dto in dtos)
-            {
-                var existingUserRole = userRoles.FirstOrDefault(u => u.UserId == dto.UserId);
-
-                if (existingUserRole?.RoleId != dto?.RoleId)
-                {
-                    if (existingUserRole != null)
-                    {
-                        deleted.Add(existingUserRole);
-                    }
-
-                    if (dto.RoleId.HasValue)
-                    {
-                        var role = roles.FirstOrDefault(r => r.Id == dto.RoleId);
-
-                        var newUserRole = new UserRole(dto.UserId,
-                                                           role.Id,
-                                                           _currentUser.OrganizationId);
-
-                        added.Add(newUserRole);
-                    }
-                }
-            }
-
-            await _roleDataService.UpdateUserRolesAsync(added, deleted);
+            await _roleDataService.UpdateUserRolesAsync(updatedUserRoles, _currentUser.ClientId);
         }
 
         public async Task<RoleDto> Create(CreateRoleDto dto)

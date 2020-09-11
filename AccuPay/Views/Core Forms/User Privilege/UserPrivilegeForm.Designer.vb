@@ -25,7 +25,7 @@ Partial Class UserPrivilegeForm
         Me.Label25 = New System.Windows.Forms.Label()
         Me.RoleGrid = New System.Windows.Forms.DataGridView()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblforballoon = New System.Windows.Forms.Label()
+        Me.LabelForBalloon = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -42,9 +42,9 @@ Partial Class UserPrivilegeForm
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.NewRoleButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
+        Me.DeleteButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
-        Me.DeleteButton = New System.Windows.Forms.ToolStripButton()
         CType(Me.RoleGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -88,14 +88,14 @@ Partial Class UserPrivilegeForm
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
         '
-        'lblforballoon
+        'LabelForBalloon
         '
-        Me.lblforballoon.AutoSize = True
-        Me.lblforballoon.Location = New System.Drawing.Point(468, 38)
-        Me.lblforballoon.Name = "lblforballoon"
-        Me.lblforballoon.Size = New System.Drawing.Size(79, 13)
-        Me.lblforballoon.TabIndex = 156
-        Me.lblforballoon.Text = "label for baloon"
+        Me.LabelForBalloon.AutoSize = True
+        Me.LabelForBalloon.Location = New System.Drawing.Point(468, 38)
+        Me.LabelForBalloon.Name = "LabelForBalloon"
+        Me.LabelForBalloon.Size = New System.Drawing.Size(79, 13)
+        Me.LabelForBalloon.TabIndex = 156
+        Me.LabelForBalloon.Text = "label for baloon"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -208,6 +208,14 @@ Partial Class UserPrivilegeForm
         Me.SaveButton.Size = New System.Drawing.Size(51, 22)
         Me.SaveButton.Text = "&Save"
         '
+        'DeleteButton
+        '
+        Me.DeleteButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteButton.Name = "DeleteButton"
+        Me.DeleteButton.Size = New System.Drawing.Size(60, 22)
+        Me.DeleteButton.Text = "Delete"
+        '
         'CancelButton
         '
         Me.CancelButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
@@ -225,14 +233,6 @@ Partial Class UserPrivilegeForm
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
         '
-        'DeleteButton
-        '
-        Me.DeleteButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DeleteButton.Name = "DeleteButton"
-        Me.DeleteButton.Size = New System.Drawing.Size(60, 22)
-        Me.DeleteButton.Text = "Delete"
-        '
         'UserPrivilegeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -243,7 +243,7 @@ Partial Class UserPrivilegeForm
         Me.Controls.Add(Me.RoleUserControl)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Label25)
-        Me.Controls.Add(Me.lblforballoon)
+        Me.Controls.Add(Me.LabelForBalloon)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True
         Me.MaximizeBox = False
@@ -259,7 +259,7 @@ Partial Class UserPrivilegeForm
     End Sub
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents RoleGrid As System.Windows.Forms.DataGridView
-    Friend WithEvents lblforballoon As System.Windows.Forms.Label
+    Friend WithEvents LabelForBalloon As System.Windows.Forms.Label
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn

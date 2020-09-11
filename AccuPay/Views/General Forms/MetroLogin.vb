@@ -17,7 +17,7 @@ Public Class MetroLogin
 
     Private ReadOnly _roleRepository As RoleRepository
 
-    Private ReadOnly _userRepository As UserRepository
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Private ReadOnly _encryptor As IEncryption
 
@@ -33,7 +33,7 @@ Public Class MetroLogin
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
         _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
     End Sub
@@ -77,8 +77,8 @@ Public Class MetroLogin
     End Sub
 
     Public Sub AssignDefaultCredentials()
-        txtbxUserID.Text = "admin"
-        txtbxPword.Text = "admin"
+        UserNameTextBox.Text = "admin"
+        PasswordTextBox.Text = "admin"
     End Sub
 
     Private Sub cbxorganiz_DropDown(sender As Object, e As EventArgs) Handles cbxorganiz.DropDown
@@ -125,8 +125,8 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub Login_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtbxPword.KeyPress,
-                                                                                    txtbxUserID.KeyPress,
+    Private Sub Login_KeyPress(sender As Object, e As KeyPressEventArgs) Handles PasswordTextBox.KeyPress,
+                                                                                    UserNameTextBox.KeyPress,
                                                                                     cbxorganiz.KeyPress
 
         Dim e_asc = Asc(e.KeyChar)
@@ -147,7 +147,6 @@ Public Class MetroLogin
                                 btnlogin.Enabled = False
                             End Sub
         Dim showError = Sub()
-                            err_count += 1 'increments the failed log in attempt
                             WarnBalloon("Please input your correct credentials.", "Invalid credentials", btnlogin, btnlogin.Width - 18, -69)
                             enableButton()
                         End Sub
@@ -164,17 +163,17 @@ Public Class MetroLogin
                                  End Sub
         disableButton()
 
-        Dim username As String = _encryptor.Encrypt(txtbxUserID.Text)
-        Dim passkey As String = _encryptor.Encrypt(txtbxPword.Text)
+        Dim username As String = UserNameTextBox.Text
+        Dim passkey As String = _encryptor.Encrypt(PasswordTextBox.Text)
 
-        Dim user = Await _userRepository.GetByUsernameWithPositionAsync(username)
+        Dim user = Await _userRepository.GetByUserNameAsync(username)
 
         If user Is Nothing Then
             showError()
             Return
         End If
 
-        Dim passwordMatch = user.Password = passkey
+        Dim passwordMatch = user.DesktopPassword = passkey
         If Not passwordMatch Then
             showError()
             Return
@@ -187,16 +186,14 @@ Public Class MetroLogin
             Return
         End If
 
-        err_count = 0
-
-        z_User = user.RowID.Value
+        z_User = user.Id
 
         USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
         loadUserPrivileges(z_User, z_OrganizationID)
 
         userFirstName = user.FirstName
-        z_postName = user.Position.Name
+        z_postName = USER_ROLES.Name
 
         If dbnow Is Nothing Then dbnow = EXECQUER(CURDATE_MDY)
         If numofdaysthisyear = 0 Then numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
@@ -259,7 +256,7 @@ Public Class MetroLogin
     Function UserAuthentication(Optional pass_word As Object = Nothing)
         Dim n_ReadSQLFunction As New ReadSQLFunction("UserAuthentication",
                                                      "returnvaue",
-                                                     _encryptor.Encrypt(txtbxUserID.Text),
+                                                     _encryptor.Encrypt(UserNameTextBox.Text),
                                                      pass_word,
                                                      orgztnID)
 

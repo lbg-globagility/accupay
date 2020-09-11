@@ -29,7 +29,7 @@ namespace AccuPay.Data.Services
             paystub.SssEmployeeShare = 0;
             paystub.SssEmployerShare = 0;
 
-            // If salary is is set not to pay sss, return.
+            // If salary is set not to pay sss, return.
             if (!salary.DoPaySSSContribution)
                 return;
 

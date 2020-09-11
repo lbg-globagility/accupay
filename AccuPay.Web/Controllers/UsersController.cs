@@ -55,19 +55,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.UserRead)]
         public async Task<ActionResult<PaginatedList<UserDto>>> List([FromQuery] PageOptions options, string term)
         {
-            var (users, count) = await _repository.List(options, term);
-
-            var dtos = users.Select(t =>
-                new UserDto()
-                {
-                    Id = t.Id,
-                    FirstName = t.FirstName,
-                    LastName = t.LastName,
-                    Email = t.Email
-                }
-            );
-
-            return new PaginatedList<UserDto>(dtos, count, 1, 1);
+            return await _service.List(options, term);
         }
 
         [HttpGet("user-image")]

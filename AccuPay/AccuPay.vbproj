@@ -740,6 +740,12 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\RoleUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\UserUserControl.Designer.vb">
+      <DependentUpon>UserUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\UserUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\User Privilege\NewRoleForm.Designer.vb">
       <DependentUpon>NewRoleForm.vb</DependentUpon>
     </Compile>
@@ -758,6 +764,12 @@
       <DependentUpon>UserActivityForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\General Forms\UserActivityForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\General Forms\UsersForm2.Designer.vb">
+      <DependentUpon>UsersForm2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\General Forms\UsersForm2.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\AddLeaveForm.Designer.vb">
@@ -2078,6 +2090,9 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\RoleUserControl.resx">
       <DependentUpon>RoleUserControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\UserUserControl.resx">
+      <DependentUpon>UserUserControl.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\User Privilege\NewRoleForm.resx">
       <DependentUpon>NewRoleForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -2086,6 +2101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\UserActivityForm.resx">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\General Forms\UsersForm2.resx">
+      <DependentUpon>UsersForm2.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\AddLeaveForm.resx">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>

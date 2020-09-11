@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
@@ -7,6 +8,7 @@ using AccuPay.Web.Core.Files;
 using AccuPay.Web.Files.Services;
 using AccuPay.Web.Users.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +48,23 @@ namespace AccuPay.Web.Users
             _filesystem = filesystem;
             _fileRepository = fileRepository;
             _userDataService = userDataService;
+        }
+
+        public async Task<ActionResult<PaginatedList<UserDto>>> List(PageOptions options, string term)
+        {
+            var (users, count) = await _repository.List(options, _currentUser.ClientId, term);
+
+            var dtos = users.Select(t =>
+                new UserDto()
+                {
+                    Id = t.Id,
+                    FirstName = t.FirstName,
+                    LastName = t.LastName,
+                    Email = t.Email
+                }
+            );
+
+            return new PaginatedList<UserDto>(dtos, count, 1, 1);
         }
 
         public async Task<UserDto> Create(CreateUserDto dto)

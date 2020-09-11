@@ -266,11 +266,11 @@ Public Class MDIPrimaryForm
 
                     .Show()
 
-                    .txtbxUserID.Clear()
+                    .UserNameTextBox.Clear()
 
-                    .txtbxPword.Clear()
+                    .PasswordTextBox.Clear()
 
-                    .txtbxUserID.Focus()
+                    .UserNameTextBox.Focus()
 
                     .PhotoImages.Image = Nothing
 

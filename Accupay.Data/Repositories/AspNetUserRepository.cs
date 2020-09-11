@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,70 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public async Task<AspNetUser> GetById(int userId)
+        #region Save
+
+        public async Task CreateAsync(AspNetUser user)
         {
-            return await _context.Users.FindAsync(userId);
+            _context.Entry(user).State = EntityState.Added;
+
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<(ICollection<AspNetUser>, int)> List(PageOptions options, string searchTerm = "")
+        public async Task UpdateAsync(AspNetUser user)
         {
-            var query = _context.Users.AsQueryable();
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SoftDeleteAsync(AspNetUser user)
+        {
+            user.DeletedAt = DateTime.Now;
+            await UpdateAsync(user);
+        }
+
+        #endregion Save
+
+        public async Task<AspNetUser> GetByIdAsync(int userId)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == userId);
+        }
+
+        public async Task<AspNetUser> GetByUserNameAsync(string userName)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .Where(x => x.UserName == userName)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ICollection<UserRoleData>> GetUserRolesAsync(int userId)
+        {
+            return await (
+                from user in _context.Users
+                join userRole in _context.UserRoles
+                on user.Id
+                equals userRole.UserId
+                join role in _context.Roles
+                on userRole.RoleId
+                equals role.Id
+                where user.Id == userId
+                select new UserRoleData()
+                {
+                    OrganizationId = userRole.OrganizationId,
+                    User = user,
+                    Role = role
+                })
+                .ToListAsync();
+        }
+
+        public async Task<(ICollection<AspNetUser> users, int total)> List(PageOptions options, int clientId, string searchTerm = "")
+        {
+            var query = _context.Users
+                .AsNoTracking()
+                .Where(x => x.ClientId == clientId)
+                .Where(x => x.DeletedAt == null);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

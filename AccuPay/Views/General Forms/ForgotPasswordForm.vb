@@ -84,7 +84,7 @@ Public Class ForgotPasswordForm
 
         MetroLogin.BringToFront()
 
-        MetroLogin.txtbxUserID.Focus()
+        MetroLogin.UserNameTextBox.Focus()
 
     End Sub
 
