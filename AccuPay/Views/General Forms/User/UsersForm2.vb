@@ -141,7 +141,11 @@ Public Class UsersForm2
             Async Function()
                 Dim userService = MainServiceProvider.GetRequiredService(Of UserDataService)
 
-                Await userService.SoftDeleteAsync(currentUser.Id)
+                Await userService.SoftDeleteAsync(
+                    id:=currentUser.Id,
+                    deletedByUserId:=z_User,
+                    clientId:=Z_Client
+                )
 
                 RemoveHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
 

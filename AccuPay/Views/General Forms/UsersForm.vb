@@ -449,7 +449,7 @@ Public Class UsersForm
 
             Dim user = GetUserBoundItem()
             Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
-            Await dataService.SoftDeleteAsync(user.RowID)
+            'Await dataService.SoftDeleteAsync(user.RowID)
 
             dgvUserList.ClearSelection()
 

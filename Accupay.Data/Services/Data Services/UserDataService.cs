@@ -1,8 +1,8 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Interfaces;
 using AccuPay.Data.Repositories;
-using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
@@ -34,10 +34,13 @@ namespace AccuPay.Data.Services
             await _userRepository.UpdateAsync(user);
         }
 
-        private async Task SanitizeEntity(AspNetUser user, bool isEncrypted = true)
+        private async Task SanitizeEntity(AspNetUser user)
         {
             if (user == null)
                 throw new BusinessLogicException("Invalid user.");
+
+            if (user.ClientId == 0)
+                throw new BusinessLogicException("Client is required.");
 
             if (string.IsNullOrWhiteSpace(user.FirstName))
                 throw new BusinessLogicException("First name is required.");
@@ -51,10 +54,7 @@ namespace AccuPay.Data.Services
             if (string.IsNullOrWhiteSpace(user.DesktopPassword))
                 throw new BusinessLogicException("Password is required.");
 
-            if (!isEncrypted)
-            {
-                user.DesktopPassword = _encryption.Encrypt(user.DesktopPassword);
-            }
+            user.DesktopPassword = _encryption.Encrypt(user.DesktopPassword);
 
             var existingUserName = await _userRepository.GetByUserNameAsync(user.UserName);
             if (existingUserName != null && existingUserName.Id != user.Id)
@@ -67,12 +67,21 @@ namespace AccuPay.Data.Services
             user.NormalizedUserName = user.UserName.ToUpper();
         }
 
-        public async Task SoftDeleteAsync(int id)
+        public async Task SoftDeleteAsync(int id, int deletedByUserId, int clientId)
         {
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
                 throw new BusinessLogicException("User does not exists.");
+
+            if (id == deletedByUserId)
+                throw new BusinessLogicException("Cannot delete own account.");
+
+            if (user.DeletedAt != null)
+                return;
+
+            if ((await _userRepository.List(PageOptions.AllData, clientId)).users.Count == 1)
+                throw new BusinessLogicException("Cannot delete user. There should be at least one user.");
 
             await _userRepository.SoftDeleteAsync(user);
         }
