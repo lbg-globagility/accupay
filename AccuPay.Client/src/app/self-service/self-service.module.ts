@@ -13,6 +13,11 @@ import { SelfserveTimeEntryComponent } from './pages/selfserve-time-entry/selfse
 import { TimeEntryModule } from '../time-entry/time-entry.module';
 import { MatChipsModule } from '@angular/material/chips';
 import { PayperiodSelectComponent } from './components/payperiod-select/payperiod-select.component';
+import { TopbarComponent } from './components/topbar/topbar.component';
+import { SelfServiceDashboardComponent } from './components/self-service-dashboard/self-service-dashboard.component';
+import { SelfServiceLeavesComponent } from './components/self-service-leaves/self-service-leaves.component';
+import { SelfServiceOvertimesComponent } from './components/self-service-overtimes/self-service-overtimes.component';
+import { SelfServiceTimesheetsComponent } from './components/self-service-timesheets/self-service-timesheets.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +31,11 @@ import { PayperiodSelectComponent } from './components/payperiod-select/payperio
     SelfserveOfficialBusinessComponent,
     SelfserveTimeEntryComponent,
     PayperiodSelectComponent,
+    TopbarComponent,
+    SelfServiceDashboardComponent,
+    SelfServiceLeavesComponent,
+    SelfServiceOvertimesComponent,
+    SelfServiceTimesheetsComponent,
   ],
   imports: [MatChipsModule, SharedModule, LeavesModule, TimeEntryModule],
 })

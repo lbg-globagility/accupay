@@ -27,25 +27,25 @@ const menuItems: MenuItem[] = [
   {
     label: 'File a Leave',
     icon: '',
-    permission: PermissionTypes.SelfserveLeaveCreate,
+    // permission: PermissionTypes.SelfserveLeaveCreate,
     command: SelfserveCommand.FileLeave,
   },
   {
     label: 'File an Overtime',
     icon: '',
-    permission: PermissionTypes.SelfserveLeaveCreate,
+    // permission: PermissionTypes.SelfserveLeaveCreate,
     command: SelfserveCommand.FileOveretime,
   },
   {
     label: 'File an Official business',
     icon: '',
-    permission: PermissionTypes.SelfserveLeaveCreate,
+    // permission: PermissionTypes.SelfserveLeaveCreate,
     command: SelfserveCommand.FileOfficialBusiness,
   },
   {
     label: 'View Timesheet',
     icon: '',
-    permission: PermissionTypes.SelfserveLeaveRead,
+    // permission: PermissionTypes.SelfserveLeaveRead,
     command: SelfserveCommand.ViewTimeEntry,
   },
 ];
@@ -128,4 +128,6 @@ export class SelfServeComponent implements OnInit {
       .afterClosed()
       .subscribe(() => {});
   }
+
+  logout(): void {}
 }
