@@ -54,11 +54,11 @@ namespace AccuPay.Data.Repositories
             ICollection<UserRole> added,
             ICollection<UserRole> deleted)
         {
-            _context.UserRoleTable.RemoveRange(deleted);
+            _context.UserRoles.RemoveRange(deleted);
 
             foreach (var userRole in added)
             {
-                _context.UserRoleTable.Add(userRole);
+                _context.UserRoles.Add(userRole);
             }
 
             await _context.SaveChangesAsync();

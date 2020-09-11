@@ -100,7 +100,7 @@ namespace AccuPay.Data.Services
                         deleted.Add(existingUserRole);
                     }
 
-                    if (updatedUserRole.RoleId.HasValue)
+                    if (updatedUserRole.RoleId.HasValue && updatedUserRole.RoleId != 0)
                     {
                         var user = users.FirstOrDefault(x => x.Id == updatedUserRole.UserId);
                         if (user == null)

@@ -90,11 +90,6 @@ namespace AccuPay.Data
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 
-        /// <summary>
-        /// Used for adding UserRole that can use the key constraint with OrganizationId
-        /// </summary>
-        internal virtual DbSet<UserRole> UserRoleTable { get; set; }
-
         public PayrollContext(DbContextOptions options)
             : base(options)
         {

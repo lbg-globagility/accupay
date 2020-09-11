@@ -47,6 +47,8 @@ Public Class UsersForm2
 
                 Dim currentUser = users.FirstOrDefault(Function(u) u.Id = selectedUser.Id)
 
+                selectedUser = currentUser
+
                 Dim currentUserIndex = users.IndexOf(currentUser)
 
                 UserGrid.CurrentCell = UserGrid.Rows(currentUserIndex).Cells(0)
@@ -107,8 +109,13 @@ Public Class UsersForm2
 
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Async Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
 
+        RemoveHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
+
+        Await PopulateUserGrid(GetSelectedUser())
+
+        AddHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
