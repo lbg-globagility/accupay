@@ -13,8 +13,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UserUserControl
 
-    Private ReadOnly _organizationRepository As OrganizationRepository
-
     Private ReadOnly _encryptor As IEncryption
 
     Private _organizations As ICollection(Of Organization)
@@ -26,8 +24,6 @@ Public Class UserUserControl
         InitializeComponent()
 
         If MainServiceProvider IsNot Nothing Then
-
-            _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
 
             _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
         End If
@@ -48,7 +44,8 @@ Public Class UserUserControl
     Private Async Function GetOrganizations() As Task
         If _organizations IsNot Nothing AndAlso _organizations.Count > 0 Then Return
 
-        _organizations = (Await _organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)).organizations.
+        Dim organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        _organizations = (Await organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)).organizations.
             OrderBy(Function(o) o.Name).
             ToList()
     End Function
@@ -114,7 +111,7 @@ Public Class UserUserControl
 
         Dim models As New List(Of UserRoleViewModel)
 
-        If _organizations IsNot Nothing AndAlso _organizations.Count > 0 Then
+        If _organizations Is Nothing OrElse _organizations.Count = 0 Then
             Await GetOrganizations()
         End If
 
@@ -136,7 +133,7 @@ Public Class UserUserControl
         UserRoleGrid.DataSource = models
     End Function
 
-    Public Function GetUserRoles() As List(Of UserRoleIdData)
+    Public Function GetUserRoles(Optional allowNullUserId As Boolean = False) As List(Of UserRoleIdData)
 
         UserRoleGrid.EndEdit()
 
@@ -144,7 +141,7 @@ Public Class UserUserControl
 
         Return userRoles.
             Where(Function(r) r.HasChanged).
-            Select(Function(r) r.ToUserRole()).
+            Select(Function(r) r.ToUserRole(allowNullUserId)).
             Where(Function(r) r IsNot Nothing).
             ToList()
 
@@ -255,9 +252,9 @@ Public Class UserUserControl
             Me.RoleId = _originalRoleId
         End Sub
 
-        Public Function ToUserRole() As UserRoleIdData
+        Public Function ToUserRole(allowNullUserId As Boolean) As UserRoleIdData
 
-            If _userId Is Nothing OrElse _organization.RowID Is Nothing Then
+            If (Not allowNullUserId AndAlso _userId Is Nothing) OrElse _organization.RowID Is Nothing Then
                 Return Nothing
             End If
 

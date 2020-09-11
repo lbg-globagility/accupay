@@ -746,10 +746,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\UserUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\User Privilege\NewRoleForm.Designer.vb">
+    <Compile Include="Views\General Forms\User Privilege\NewRoleForm.Designer.vb">
       <DependentUpon>NewRoleForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\User Privilege\NewRoleForm.vb">
+    <Compile Include="Views\General Forms\User Privilege\NewRoleForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.Designer.vb">
@@ -759,17 +759,23 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Employees\Loans deducted from bonus\LoanPaymentFromBonusModel.vb" />
-    <Compile Include="Views\General Forms\DependencyInjectionHelper.vb" />
+    <Compile Include="Core\DependencyInjectionHelper.vb" />
     <Compile Include="Views\General Forms\UserActivityForm.Designer.vb">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\General Forms\UserActivityForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\UsersForm2.Designer.vb">
+    <Compile Include="Views\General Forms\User\NewUserForm.Designer.vb">
+      <DependentUpon>NewUserForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\General Forms\User\NewUserForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\General Forms\User\UsersForm2.Designer.vb">
       <DependentUpon>UsersForm2.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\General Forms\UsersForm2.vb">
+    <Compile Include="Views\General Forms\User\UsersForm2.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\AddLeaveForm.Designer.vb">
@@ -1748,10 +1754,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\txtPlaceHolder.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\User Privilege\UserPrivilegeForm.Designer.vb">
+    <Compile Include="Views\General Forms\User Privilege\UserPrivilegeForm.Designer.vb">
       <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\User Privilege\UserPrivilegeForm.vb">
+    <Compile Include="Views\General Forms\User Privilege\UserPrivilegeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
@@ -2093,7 +2099,7 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\UserUserControl.resx">
       <DependentUpon>UserUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\User Privilege\NewRoleForm.resx">
+    <EmbeddedResource Include="Views\General Forms\User Privilege\NewRoleForm.resx">
       <DependentUpon>NewRoleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.resx">
@@ -2102,7 +2108,10 @@
     <EmbeddedResource Include="Views\General Forms\UserActivityForm.resx">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\UsersForm2.resx">
+    <EmbeddedResource Include="Views\General Forms\User\NewUserForm.resx">
+      <DependentUpon>NewUserForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\General Forms\User\UsersForm2.resx">
       <DependentUpon>UsersForm2.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\AddLeaveForm.resx">
@@ -2609,7 +2618,7 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
       <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\User Privilege\UserPrivilegeForm.resx">
+    <EmbeddedResource Include="Views\General Forms\User Privilege\UserPrivilegeForm.resx">
       <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\viewtotallow.resx">

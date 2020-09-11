@@ -67,7 +67,22 @@ Public Class UsersForm2
 
     End Function
 
-    Private Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
+    Private Async Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
+
+        Dim dialog As New NewUserForm()
+        dialog.ShowDialog()
+
+        If dialog.IsSaved AndAlso dialog.NewUser IsNot Nothing Then
+
+            RemoveHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
+
+            Await PopulateUserGrid(dialog.NewUser)
+
+            AddHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
+
+            InfoBalloon("New user has been successfully created.", "User Created", LabelForBalloon, 0, -69)
+
+        End If
 
     End Sub
 

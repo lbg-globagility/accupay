@@ -42,10 +42,10 @@ Public Class NewRoleForm
 
                 USER_ROLES = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
 
-                IsSaved = True
+                Me.IsSaved = True
+                Me.NewRole = currentRole
 
                 Me.Close()
-                Me.NewRole = currentRole
 
             End Function)
 
