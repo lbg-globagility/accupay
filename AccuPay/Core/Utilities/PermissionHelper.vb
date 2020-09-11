@@ -17,10 +17,26 @@ Namespace Desktop.Helpers
             Optional policyHelper As PolicyHelper = Nothing) _
             As Task(Of Boolean)
 
-            Dim roleData = Await GetRole(permissionName, userRole, policyHelper)
+            Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper)
 
             If roleData.Success Then
                 Return roleData.RolePermission.Read
+            Else
+                Return False
+            End If
+
+        End Function
+
+        Public Shared Async Function AllowCreate(
+            permissionName As String,
+            Optional userRole As AspNetRole = Nothing,
+            Optional policyHelper As PolicyHelper = Nothing) _
+            As Task(Of Boolean)
+
+            Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper)
+
+            If roleData.Success Then
+                Return roleData.RolePermission.Create
             Else
                 Return False
             End If
@@ -33,17 +49,17 @@ Namespace Desktop.Helpers
             Optional policyHelper As PolicyHelper = Nothing) _
             As Task(Of Boolean)
 
-            Dim roleData = Await GetRole(permissionName, userRole, policyHelper)
+            Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper)
 
             If roleData.Success Then
                 Return roleData.RolePermission.Update
             Else
-                Return Nothing
+                Return False
             End If
 
         End Function
 
-        Public Shared Async Function GetRole(
+        Public Shared Async Function GetRoleAsync(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
             Optional policyHelper As PolicyHelper = Nothing) _

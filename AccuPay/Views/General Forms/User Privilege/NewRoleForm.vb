@@ -27,7 +27,7 @@ Public Class NewRoleForm
             .ClientId = Z_Client
         }
 
-        Await RoleUserControl.SetRole(currentRole)
+        Await RoleUserControl.SetRole(currentRole, Desktop.Enums.FormMode.Creating)
 
     End Sub
 

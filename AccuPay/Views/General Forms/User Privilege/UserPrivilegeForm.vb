@@ -29,12 +29,29 @@ Public Class UserPrivilegeForm
 
         RoleGrid.AutoGenerateColumns = False
 
-        If Await PermissionHelper.AllowUpdate(PermissionConstant.ROLE) Then
-            SaveButton.Visible = True
-            CancelButton.Visible = True
-        Else
-            SaveButton.Visible = False
-            CancelButton.Visible = False
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.ROLE)
+
+        NewButton.Visible = False
+        SaveButton.Visible = False
+        CancelButton.Visible = False
+        DeleteButton.Visible = False
+
+        If role.Success Then
+
+            If role.RolePermission.Create Then
+                NewButton.Visible = True
+
+            End If
+
+            If role.RolePermission.Update Then
+                SaveButton.Visible = True
+                CancelButton.Visible = True
+            End If
+
+            If role.RolePermission.Delete Then
+                DeleteButton.Visible = True
+
+            End If
 
         End If
 
@@ -71,7 +88,7 @@ Public Class UserPrivilegeForm
         Await RoleUserControl.SetRole(GetSelectedRole())
     End Sub
 
-    Private Async Sub NewRoleButton_Click(sender As Object, e As EventArgs) Handles NewRoleButton.Click
+    Private Async Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
 
         Dim dialog As New NewRoleForm()
         dialog.ShowDialog()

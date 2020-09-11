@@ -20,21 +20,21 @@ namespace AccuPay.Data.Services
             _encryption = encryption;
         }
 
-        public async Task CreateAsync(AspNetUser user)
+        public async Task CreateAsync(AspNetUser user, bool isEncrypted = false)
         {
-            await SanitizeEntity(user);
+            await SanitizeEntity(user, isEncrypted);
 
             await _userRepository.CreateAsync(user);
         }
 
-        public async Task UpdateAsync(AspNetUser user)
+        public async Task UpdateAsync(AspNetUser user, bool isEncrypted = false)
         {
-            await SanitizeEntity(user);
+            await SanitizeEntity(user, isEncrypted);
 
             await _userRepository.UpdateAsync(user);
         }
 
-        private async Task SanitizeEntity(AspNetUser user)
+        private async Task SanitizeEntity(AspNetUser user, bool isEncrypted)
         {
             if (user == null)
                 throw new BusinessLogicException("Invalid user.");
@@ -54,7 +54,10 @@ namespace AccuPay.Data.Services
             if (string.IsNullOrWhiteSpace(user.DesktopPassword))
                 throw new BusinessLogicException("Password is required.");
 
-            user.DesktopPassword = _encryption.Encrypt(user.DesktopPassword);
+            if (!isEncrypted)
+            {
+                user.DesktopPassword = _encryption.Encrypt(user.DesktopPassword);
+            }
 
             var existingUserName = await _userRepository.GetByUserNameAsync(user.UserName);
             if (existingUserName != null && existingUserName.Id != user.Id)

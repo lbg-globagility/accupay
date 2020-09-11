@@ -17,7 +17,7 @@ Public Class NewUserForm
             .ClientId = Z_Client
         }
 
-        Await UserUserControl.SetUser(currentUser)
+        Await UserUserControl.SetUser(currentUser, Desktop.Enums.FormMode.Creating)
 
     End Sub
 
@@ -34,7 +34,7 @@ Public Class NewUserForm
                 Dim userService = MainServiceProvider.GetRequiredService(Of UserDataService)
                 Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
 
-                Await userService.CreateAsync(currentUser)
+                Await userService.CreateAsync(currentUser, isEncrypted:=True)
 
                 For Each userRole In userRoles
 

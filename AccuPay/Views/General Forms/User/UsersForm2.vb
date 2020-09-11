@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -22,6 +23,32 @@ Public Class UsersForm2
     Private Async Sub UsersForm2_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         UserGrid.AutoGenerateColumns = False
+
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.USER)
+
+        NewButton.Visible = False
+        SaveButton.Visible = False
+        CancelButton.Visible = False
+        DeleteButton.Visible = False
+
+        If role.Success Then
+
+            If role.RolePermission.Create Then
+                NewButton.Visible = True
+
+            End If
+
+            If role.RolePermission.Update Then
+                SaveButton.Visible = True
+                CancelButton.Visible = True
+            End If
+
+            If role.RolePermission.Delete Then
+                DeleteButton.Visible = True
+
+            End If
+
+        End If
 
         Await PopulateUserGrid()
 
@@ -106,7 +133,7 @@ Public Class UsersForm2
                 Dim userService = MainServiceProvider.GetRequiredService(Of UserDataService)
                 Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
 
-                Await userService.UpdateAsync(user)
+                Await userService.UpdateAsync(user, isEncrypted:=True)
 
                 Await roleService.UpdateUserRolesAsync(userRoles, Z_Client)
 

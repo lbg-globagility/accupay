@@ -40,7 +40,7 @@ Partial Class UserPrivilegeForm
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.RoleUserControl = New AccuPay.RoleUserControl()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.NewRoleButton = New System.Windows.Forms.ToolStripButton()
+        Me.NewButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
         Me.DeleteButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelButton = New System.Windows.Forms.ToolStripButton()
@@ -185,7 +185,7 @@ Partial Class UserPrivilegeForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewRoleButton, Me.SaveButton, Me.DeleteButton, Me.CancelButton, Me.CloseButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.DeleteButton, Me.CancelButton, Me.CloseButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(325, 21)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(910, 25)
@@ -194,11 +194,11 @@ Partial Class UserPrivilegeForm
         '
         'NewRoleButton
         '
-        Me.NewRoleButton.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.NewRoleButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.NewRoleButton.Name = "NewRoleButton"
-        Me.NewRoleButton.Size = New System.Drawing.Size(51, 22)
-        Me.NewRoleButton.Text = "New"
+        Me.NewButton.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.NewButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.NewButton.Name = "NewRoleButton"
+        Me.NewButton.Size = New System.Drawing.Size(51, 22)
+        Me.NewButton.Text = "New"
         '
         'SaveButton
         '
@@ -278,6 +278,6 @@ Partial Class UserPrivilegeForm
     Friend WithEvents SaveButton As ToolStripButton
     Friend WithEvents CancelButton As ToolStripButton
     Friend WithEvents CloseButton As ToolStripButton
-    Friend WithEvents NewRoleButton As ToolStripButton
+    Friend WithEvents NewButton As ToolStripButton
     Friend WithEvents DeleteButton As ToolStripButton
 End Class

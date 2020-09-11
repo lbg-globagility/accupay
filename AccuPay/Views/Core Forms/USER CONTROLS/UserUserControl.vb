@@ -7,6 +7,8 @@ Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Enums
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -15,9 +17,13 @@ Public Class UserUserControl
 
     Private ReadOnly _encryptor As IEncryption
 
+    Private ReadOnly _policyHelper As PolicyHelper
+
     Private _organizations As ICollection(Of Organization)
 
     Private _currentUser As AspNetUser
+    
+    Private _formMode As FormMode
 
     Sub New()
 
@@ -26,6 +32,8 @@ Public Class UserUserControl
         If MainServiceProvider IsNot Nothing Then
 
             _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
+
+            _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
         End If
 
     End Sub
@@ -34,11 +42,39 @@ Public Class UserUserControl
 
         UserRoleGrid.AutoGenerateColumns = False
 
+        UserLevelComboBox.Visible = _policyHelper.UseUserLevel
+        UserLevelLabel.Visible = _policyHelper.UseUserLevel
+
         Await GetOrganizations()
 
         PopulateUserLeveComboBox()
 
         Await PopulateRoleComboBox()
+    End Sub
+
+    Public Async Function SetUser(user As AspNetUser, Optional formMode As FormMode = FormMode.Editing) As Task
+
+        _currentUser = user
+
+        _formMode = formMode
+
+        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.AllowCreate(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) OrElse
+           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.AllowUpdate(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) Then
+
+            SetFormToReadOnly()
+        End If
+
+        PopulateUserFields(user)
+
+        Await PopulateUserRoleGrid(user)
+
+    End Function
+
+    Private Sub SetFormToReadOnly()
+
+        UserRoleGrid.ReadOnly = True
+        DetailsGroup.Enabled = False
+
     End Sub
 
     Private Async Function GetOrganizations() As Task
@@ -75,16 +111,6 @@ Public Class UserUserControl
         RoleColumn.ValueMember = "Id"
 
         RoleColumn.DataSource = roles
-    End Function
-
-    Public Async Function SetUser(user As AspNetUser) As Task
-
-        _currentUser = user
-
-        PopulateUserFields(user)
-
-        Await PopulateUserRoleGrid(user)
-
     End Function
 
     Private Sub PopulateUserFields(user As AspNetUser)

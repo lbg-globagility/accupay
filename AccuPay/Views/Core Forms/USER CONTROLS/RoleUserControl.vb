@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -11,6 +12,8 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class RoleUserControl
 
     Private _currentRole As AspNetRole
+
+    Private _formMode As FormMode
 
     Private ReadOnly _permissionRepository As PermissionRepository
 
@@ -34,18 +37,20 @@ Public Class RoleUserControl
 
         RolePermissionGrid.AutoGenerateColumns = False
 
-        If (Await PermissionHelper.AllowUpdate(PermissionConstant.ROLE)) = False Then
-
-            SetFormToReadOnly()
-
-        End If
-
         Await GetPermissions()
 
     End Sub
 
-    Public Async Function SetRole(role As AspNetRole) As Task
+    Public Async Function SetRole(role As AspNetRole, Optional formMode As FormMode = FormMode.Editing) As Task
         _currentRole = role
+
+        _formMode = formMode
+
+        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.AllowCreate(PermissionConstant.ROLE)) = False) OrElse
+           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.AllowUpdate(PermissionConstant.ROLE)) = False) Then
+
+            SetFormToReadOnly()
+        End If
 
         Await UpdateRolePermissionGrid()
     End Function
