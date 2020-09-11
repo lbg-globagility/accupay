@@ -545,13 +545,16 @@ namespace AccuPay.Data.Services
             if (_employee.IsDaily)
                 return true;
 
-            if (IsHolidayExempt(payrate))
-                return true;
-
             if (!_policy.AbsencesOnHoliday)
                 return true;
 
-            return ((!_policy.RequiredToWorkLastDay) || hasWorkedLastDay);
+            // if there are employees that will always be marked absent if they did not worked on holiday,
+            // IsHolidayExempt should be used but there should be another policy that will be added for those cases.
+            // It should be: if (_policy.AbsentOnHolidayNoMatterWhat_butCHangethisName && IsHolidayExempt(payrate))
+            //if (IsHolidayExempt(payrate))
+            //    return false;
+
+            return ((!_policy.RequiredToWorkTheDayBeforeHoliday) || hasWorkedLastDay);
         }
 
         private bool IsHolidayExempt(IPayrate payrate)
@@ -707,7 +710,7 @@ namespace AccuPay.Data.Services
                     var isEntitledToHolidayPay = (isHolidayPayInclusive == false) &&
                                                     (hasWorkedLastDay ||
                                                     isPaidToday ||
-                                                    _policy.RequiredToWorkLastDayForHolidayPay == false);
+                                                    _policy.RequiredToWorkTheDayBeforeHoliday == false);
 
                     if (isEntitledToHolidayPay)
                     {

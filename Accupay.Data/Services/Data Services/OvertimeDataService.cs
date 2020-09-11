@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
@@ -14,6 +14,7 @@ namespace AccuPay.Data.Services
     public class OvertimeDataService : BaseDailyPayrollDataService<Overtime>
     {
         private readonly OvertimeRepository _overtimeRepository;
+        private bool nullableStartTime;
 
         public OvertimeDataService(
             OvertimeRepository overtimeRepository,
@@ -49,8 +50,9 @@ namespace AccuPay.Data.Services
             if (overtime.OTStartDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
-            if (overtime.OTStartTime == null)
-                throw new BusinessLogicException("Start Time is required.");
+            if (!nullableStartTime)
+                if (overtime.OTStartTime == null)
+                    throw new BusinessLogicException("Start Time is required.");
 
             if (overtime.OTEndTime == null)
                 throw new BusinessLogicException("End Time is required.");
@@ -61,7 +63,9 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Status is not valid.");
             }
 
-            overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
+            if (overtime.OTStartTime.HasValue)
+                overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
+
             overtime.OTEndTime = overtime.OTEndTime.Value.StripSeconds();
 
             if (overtime.OTStartTime == overtime.OTEndTime)
@@ -92,5 +96,14 @@ namespace AccuPay.Data.Services
 
             return overtimes;
         }
+
+        #region Other Methods
+
+        public void CheckMassOvertimeFeature(bool isMassOvertime)
+        {
+            nullableStartTime = isMassOvertime;
+        }
+
+        #endregion Other Methods
     }
 }

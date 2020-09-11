@@ -29,6 +29,8 @@ export class AccountService {
   getPermissions(role: Role): string[] {
     const permissions: string[] = [];
 
+    if (role?.rolePermissions == null) return permissions;
+
     for (const rolePermission of role.rolePermissions) {
       if (rolePermission.read) {
         permissions.push(`${rolePermission.permissionName}:read`);

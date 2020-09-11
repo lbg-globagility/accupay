@@ -24,11 +24,8 @@
         public bool AbsencesOnHoliday =>
                         _settings.GetBoolean("Payroll Policy.holiday.allowabsence");
 
-        public bool RequiredToWorkLastDay =>
+        public bool RequiredToWorkTheDayBeforeHoliday =>
                         _settings.GetBoolean("Payroll Policy.HolidayLastWorkingDayOrAbsent");
-
-        public bool RequiredToWorkLastDayForHolidayPay =>
-                        _settings.GetBoolean("HolidayPolicy.WorkLastDayForHolidayPay");
 
         public bool HasNightBreaktime =>
                         _settings.GetBoolean("OvertimePolicy.NightBreaktime");

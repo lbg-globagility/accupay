@@ -1,0 +1,1091 @@
+
+INSERT INTO aspnetusers
+(
+	`Id`,
+	`AccessFailedCount`,
+	`ConcurrencyStamp`,
+	`Email`,
+	`EmailConfirmed`,
+	`LockoutEnabled`,
+	`LockoutEnd`,
+	`NormalizedEmail`,
+	`NormalizedUserName`,
+	`PasswordHash`,
+	`PhoneNumber`,
+	`PhoneNumberConfirmed`,
+	`SecurityStamp`,
+	`TwoFactorEnabled`,
+	`UserName`,
+	`FirstName`,
+	`LastName`,
+	`Status`,
+	`CreatedAt`,
+	`CreatedById`,
+	`UpdatedAt`,
+	`UpdatedById`,
+	`ClientId`,
+	`OriginalImageId`,
+	`DesktopPassword`
+)
+SELECT
+	user.RowID,
+	0,
+	NULL,
+	user.EmailAddress,
+	b'0',
+	b'1',
+	NULL,
+	UPPER(TRIM(user.EmailAddress)),
+	NULL,
+	NULL,
+	NULL,
+	b'0',
+	NULL,
+	b'0',
+	user.UserID,
+	user.FirstName,
+	user.LastName,
+	'Pending',
+	NOW(),
+	NULL,
+	NULL,
+	NULL,
+	1,
+	NULL,
+	user.Password
+FROM user
+LEFT JOIN aspnetusers
+ON user.RowID = aspnetusers.Id
+WHERE aspnetusers.Id IS NULL;
+
+SET @DefaultUserId = (SELECT Id FROM aspnetusers LIMIT 1);
+
+ALTER TABLE `division`
+	DROP FOREIGN KEY `division_ibfk_4`,
+	DROP FOREIGN KEY `division_ibfk_5`;
+
+ALTER TABLE `employeeeducation`
+	DROP FOREIGN KEY `employeeeducation_ibfk_5`,
+	DROP FOREIGN KEY `employeeeducation_ibfk_6`;
+
+ALTER TABLE `employeepreviousemployer`
+	DROP FOREIGN KEY `employeepreviousemployer_ibfk_3`,
+	DROP FOREIGN KEY `employeepreviousemployer_ibfk_4`;
+
+
+
+UPDATE address
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE address
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `address`
+	DROP FOREIGN KEY `FK_address_user`;
+ALTER TABLE `address`
+	ADD CONSTRAINT `FK_address_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `address`
+	DROP FOREIGN KEY `FK_address_user_2`;
+ALTER TABLE `address`
+	ADD CONSTRAINT `FK_address_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE agency
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE agency
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `agency`
+	DROP FOREIGN KEY `agency_ibfk_3`;
+ALTER TABLE `agency`
+	ADD CONSTRAINT `FK_agency_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `agency`
+	DROP FOREIGN KEY `agency_ibfk_4`;
+ALTER TABLE `agency`
+	ADD CONSTRAINT `FK_agency_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE agencyfee
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE agencyfee
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `agencyfee`
+	DROP FOREIGN KEY `agencyfee_ibfk_3`;
+ALTER TABLE `agencyfee`
+	ADD CONSTRAINT `FK_agencyfee_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `agencyfee`
+	DROP FOREIGN KEY `agencyfee_ibfk_4`;
+ALTER TABLE `agencyfee`
+	ADD CONSTRAINT `FK_agencyfee_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE agencytotalbill
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE agencytotalbill
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `agencytotalbill`
+	DROP FOREIGN KEY `agencytotalbill_ibfk_3`;
+ALTER TABLE `agencytotalbill`
+	ADD CONSTRAINT `FK_agencytotalbill_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `agencytotalbill`
+	DROP FOREIGN KEY `agencytotalbill_ibfk_4`;
+ALTER TABLE `agencytotalbill`
+	ADD CONSTRAINT `FK_agencytotalbill_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE allowanceitem
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE allowanceitem
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `allowanceitem`
+	DROP FOREIGN KEY `allowanceitem_ibfk_2`;
+ALTER TABLE `allowanceitem`
+	ADD CONSTRAINT `FK_allowanceitem_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `allowanceitem`
+	DROP FOREIGN KEY `allowanceitem_ibfk_3`;
+ALTER TABLE `allowanceitem`
+	ADD CONSTRAINT `FK_allowanceitem_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE annualunusedleave
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE annualunusedleave
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `annualunusedleave`
+	DROP FOREIGN KEY `FK_annualunusedleave_user_2`;
+ALTER TABLE `annualunusedleave`
+	ADD CONSTRAINT `FK_annualunusedleave_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `annualunusedleave`
+	DROP FOREIGN KEY `FK_annualunusedleave_user_3`;
+ALTER TABLE `annualunusedleave`
+	ADD CONSTRAINT `FK_annualunusedleave_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE audittrail
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE audittrail
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `audittrail`
+	DROP FOREIGN KEY `audittrail_ibfk_2`;
+ALTER TABLE `audittrail`
+	ADD CONSTRAINT `FK_audittrail_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE;
+ALTER TABLE `audittrail`
+	DROP FOREIGN KEY `audittrail_ibfk_3`;
+ALTER TABLE `audittrail`
+	ADD CONSTRAINT `FK_audittrail_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE;
+
+UPDATE bonusloandeduction
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE bonusloandeduction
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `bonusloandeduction`
+	DROP FOREIGN KEY `bonusloandeduction_ibfk_2`;
+ALTER TABLE `bonusloandeduction`
+	ADD CONSTRAINT `FK_bonusloandeduction_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `bonusloandeduction`
+	DROP FOREIGN KEY `bonusloandeduction_ibfk_3`;
+ALTER TABLE `bonusloandeduction`
+	ADD CONSTRAINT `FK_bonusloandeduction_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE branch
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE branch
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'FK_branch_user_CreatedBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key FK_branch_user_CreatedBy','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+set @var2=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'FK_branch_user_LastUpdBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key FK_branch_user_LastUpdBy','select 1');
+
+prepare stmt2 from @var2;
+execute stmt2;
+deallocate prepare stmt2;
+
+set @var3=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'branch_ibfk_2' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key branch_ibfk_2','select 1');
+
+prepare stmt3 from @var3;
+execute stmt3;
+deallocate prepare stmt3;
+
+set @var4=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'branch' AND
+            CONSTRAINT_NAME   = 'branch_ibfk_3' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE branch
+            drop foreign key branch_ibfk_3','select 1');
+
+prepare stmt4 from @var4;
+execute stmt4;
+deallocate prepare stmt4;
+
+ALTER TABLE `branch`
+	ADD CONSTRAINT `FK_branch_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `branch`
+	ADD CONSTRAINT `FK_branch_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE breaktimebracket
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE breaktimebracket
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `breaktimebracket`
+	DROP FOREIGN KEY `FK_breaktimebracket_user_CreatedBy`;
+ALTER TABLE `breaktimebracket`
+	ADD CONSTRAINT `FK_breaktimebracket_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `breaktimebracket`
+	DROP FOREIGN KEY `FK_breaktimebracket_user_LastUpdBy`;
+ALTER TABLE `breaktimebracket`
+	ADD CONSTRAINT `FK_breaktimebracket_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE contact
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE contact
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `contact`
+	DROP FOREIGN KEY `FK_contact_user`;
+ALTER TABLE `contact`
+	ADD CONSTRAINT `FK_contact_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `contact`
+	DROP FOREIGN KEY `FK_contact_user_2`;
+ALTER TABLE `contact`
+	ADD CONSTRAINT `FK_contact_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE division
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE division
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `division`
+	DROP FOREIGN KEY `division_ibfk_2`;
+ALTER TABLE `division`
+	ADD CONSTRAINT `FK_division_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `division`
+	DROP FOREIGN KEY `division_ibfk_3`;
+ALTER TABLE `division`
+	ADD CONSTRAINT `FK_division_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employee
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employee
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user_CreatedBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user_CreatedBy','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+set @var2=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user_LastUpdBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user_LastUpdBy','select 1');
+
+prepare stmt2 from @var2;
+execute stmt2;
+deallocate prepare stmt2;
+
+set @var3=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user','select 1');
+
+prepare stmt3 from @var3;
+execute stmt3;
+deallocate prepare stmt3;
+
+set @var4=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'employee' AND
+            CONSTRAINT_NAME   = 'FK_Employee_user_2' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE employee
+            drop foreign key FK_Employee_user_2','select 1');
+
+prepare stmt4 from @var4;
+execute stmt4;
+deallocate prepare stmt4;
+	
+ALTER TABLE `employee`
+	ADD CONSTRAINT `FK_employee_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employee`
+	ADD CONSTRAINT `FK_employee_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeallowance
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeallowance
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeallowance`
+	DROP FOREIGN KEY `employeeallowance_ibfk_3`;
+ALTER TABLE `employeeallowance`
+	ADD CONSTRAINT `FK_employeeallowance_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeallowance`
+	DROP FOREIGN KEY `employeeallowance_ibfk_4`;
+ALTER TABLE `employeeallowance`
+	ADD CONSTRAINT `FK_employeeallowance_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeattachments
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeattachments
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeattachments`
+	DROP FOREIGN KEY `FK_employeeattachments_user`;
+ALTER TABLE `employeeattachments`
+	ADD CONSTRAINT `FK_employeeattachments_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeattachments`
+	DROP FOREIGN KEY `FK_employeeattachments_user_2`;
+ALTER TABLE `employeeattachments`
+	ADD CONSTRAINT `FK_employeeattachments_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeawards
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeawards
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeawards`
+	DROP FOREIGN KEY `employeeawards_ibfk_3`;
+ALTER TABLE `employeeawards`
+	ADD CONSTRAINT `FK_employeeawards_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeawards`
+	DROP FOREIGN KEY `employeeawards_ibfk_4`;
+ALTER TABLE `employeeawards`
+	ADD CONSTRAINT `FK_employeeawards_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeebonus
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeebonus
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeebonus`
+	DROP FOREIGN KEY `employeebonus_ibfk_3`;
+ALTER TABLE `employeebonus`
+	ADD CONSTRAINT `FK_employeebonus_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeebonus`
+	DROP FOREIGN KEY `employeebonus_ibfk_4`;
+ALTER TABLE `employeebonus`
+	ADD CONSTRAINT `FK_employeebonus_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+    
+UPDATE employeecertification
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeecertification
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeecertification`
+	DROP FOREIGN KEY `employeecertification_ibfk_3`;
+ALTER TABLE `employeecertification`
+	ADD CONSTRAINT `FK_employeecertification_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeecertification`
+	DROP FOREIGN KEY `employeecertification_ibfk_4`;
+ALTER TABLE `employeecertification`
+	ADD CONSTRAINT `FK_employeecertification_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeechecklist
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeechecklist
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeechecklist`
+	DROP FOREIGN KEY `employeechecklist_ibfk_3`;
+ALTER TABLE `employeechecklist`
+	ADD CONSTRAINT `FK_employeechecklist_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeechecklist`
+	DROP FOREIGN KEY `employeechecklist_ibfk_4`;
+ALTER TABLE `employeechecklist`
+	ADD CONSTRAINT `FK_employeechecklist_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeedependents
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeedependents
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeedependents`
+	DROP FOREIGN KEY `employeedependents_ibfk_4`;
+ALTER TABLE `employeedependents`
+	ADD CONSTRAINT `FK_employeedependents_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeedependents`
+	DROP FOREIGN KEY `employeedependents_ibfk_5`;
+ALTER TABLE `employeedependents`
+	ADD CONSTRAINT `FK_employeedependents_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeedisciplinaryaction
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeedisciplinaryaction
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeedisciplinaryaction`
+	DROP FOREIGN KEY `employeedisciplinaryaction_ibfk_4`;
+ALTER TABLE `employeedisciplinaryaction`
+	ADD CONSTRAINT `FK_employeedisciplinaryaction_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeedisciplinaryaction`
+	DROP FOREIGN KEY `employeedisciplinaryaction_ibfk_5`;
+ALTER TABLE `employeedisciplinaryaction`
+	ADD CONSTRAINT `FK_employeedisciplinaryaction_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeeducation
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeeducation
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeeducation`
+	DROP FOREIGN KEY `employeeeducation_ibfk_2`;
+ALTER TABLE `employeeeducation`
+	ADD CONSTRAINT `FK_employeeeducation_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeeducation`
+	DROP FOREIGN KEY `employeeeducation_ibfk_3`;
+ALTER TABLE `employeeeducation`
+	ADD CONSTRAINT `FK_employeeeducation_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeleave
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeleave
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeleave`
+	DROP FOREIGN KEY `employeeleave_ibfk_3`;
+ALTER TABLE `employeeleave`
+	ADD CONSTRAINT `FK_employeeleave_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeleave`
+	DROP FOREIGN KEY `employeeleave_ibfk_4`;
+ALTER TABLE `employeeleave`
+	ADD CONSTRAINT `FK_employeeleave_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeloanschedule
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeloanschedule
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeloanschedule`
+	DROP FOREIGN KEY `employeeloanschedule_ibfk_2`;
+ALTER TABLE `employeeloanschedule`
+	ADD CONSTRAINT `FK_employeeloanschedule_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeloanschedule`
+	DROP FOREIGN KEY `employeeloanschedule_ibfk_3`;
+ALTER TABLE `employeeloanschedule`
+	ADD CONSTRAINT `FK_employeeloanschedule_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeofficialbusiness
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeofficialbusiness
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeofficialbusiness`
+	DROP FOREIGN KEY `employeeofficialbusiness_ibfk_3`;
+ALTER TABLE `employeeofficialbusiness`
+	ADD CONSTRAINT `FK_employeeofficialbusiness_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeofficialbusiness`
+	DROP FOREIGN KEY `employeeofficialbusiness_ibfk_4`;
+ALTER TABLE `employeeofficialbusiness`
+	ADD CONSTRAINT `FK_employeeofficialbusiness_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeoffset
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeoffset
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeoffset`
+	DROP FOREIGN KEY `employeeoffset_ibfk_3`;
+ALTER TABLE `employeeoffset`
+	ADD CONSTRAINT `FK_employeeoffset_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeoffset`
+	DROP FOREIGN KEY `employeeoffset_ibfk_4`;
+ALTER TABLE `employeeoffset`
+	ADD CONSTRAINT `FK_employeeoffset_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeovertime
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeovertime
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeovertime`
+	DROP FOREIGN KEY `employeeovertime_ibfk_3`;
+ALTER TABLE `employeeovertime`
+	ADD CONSTRAINT `FK_employeeovertime_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE;
+ALTER TABLE `employeeovertime`
+	DROP FOREIGN KEY `employeeovertime_ibfk_4`;
+ALTER TABLE `employeeovertime`
+	ADD CONSTRAINT `FK_employeeovertime_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE;
+
+UPDATE employeepreviousemployer
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeepreviousemployer
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeepreviousemployer`
+	DROP FOREIGN KEY `FK_employeepreviousemployer_user`;
+ALTER TABLE `employeepreviousemployer`
+	ADD CONSTRAINT `FK_employeepreviousemployer_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeepreviousemployer`
+	DROP FOREIGN KEY `FK_employeepreviousemployer_user_2`;
+ALTER TABLE `employeepreviousemployer`
+	ADD CONSTRAINT `FK_employeepreviousemployer_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeepromotions
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeepromotions
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeepromotions`
+	DROP FOREIGN KEY `employeepromotions_ibfk_3`;
+ALTER TABLE `employeepromotions`
+	ADD CONSTRAINT `FK_employeepromotions_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeepromotions`
+	DROP FOREIGN KEY `employeepromotions_ibfk_4`;
+ALTER TABLE `employeepromotions`
+	ADD CONSTRAINT `FK_employeepromotions_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeesalary
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeesalary
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeesalary`
+	DROP FOREIGN KEY `FK_EmployeeSalary_user`;
+ALTER TABLE `employeesalary`
+	ADD CONSTRAINT `FK_employeesalary_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeesalary`
+	DROP FOREIGN KEY `FK_EmployeeSalary_user_2`;
+ALTER TABLE `employeesalary`
+	ADD CONSTRAINT `FK_employeesalary_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeeshift
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeeshift
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeeshift`
+	DROP FOREIGN KEY `employeeshift_ibfk_2`;
+ALTER TABLE `employeeshift`
+	ADD CONSTRAINT `FK_employeeshift_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeeshift`
+	DROP FOREIGN KEY `employeeshift_ibfk_3`;
+ALTER TABLE `employeeshift`
+	ADD CONSTRAINT `FK_employeeshift_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeetimeattendancelog
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeetimeattendancelog
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeetimeattendancelog`
+	DROP FOREIGN KEY `FK_employeetimeattendancelog_user_CreatedBy`;
+ALTER TABLE `employeetimeattendancelog`
+	ADD CONSTRAINT `FK_employeetimeattendancelog_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeetimeattendancelog`
+	DROP FOREIGN KEY `FK_employeetimeattendancelog_user_LastUpdBy`;
+ALTER TABLE `employeetimeattendancelog`
+	ADD CONSTRAINT `FK_employeetimeattendancelog_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeetimeentry
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeetimeentry
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeetimeentry`
+	DROP FOREIGN KEY `FK_employeetimeentry_user_CreatedBy`;
+ALTER TABLE `employeetimeentry`
+	ADD CONSTRAINT `FK_employeetimeentry_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeetimeentry`
+	DROP FOREIGN KEY `FK_employeetimeentry_user_LastUpdBy`;
+ALTER TABLE `employeetimeentry`
+	ADD CONSTRAINT `FK_employeetimeentry_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE employeetimeentrydetails
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employeetimeentrydetails
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employeetimeentrydetails`
+	DROP FOREIGN KEY `FK_employeetimeentrydetails_user_CreatedBy`;
+ALTER TABLE `employeetimeentrydetails`
+	ADD CONSTRAINT `FK_employeetimeentrydetails_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employeetimeentrydetails`
+	DROP FOREIGN KEY `FK_employeetimeentrydetails_user_LastUpdBy`;
+ALTER TABLE `employeetimeentrydetails`
+	ADD CONSTRAINT `FK_employeetimeentrydetails_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE filingstatus
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE filingstatus
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `filingstatus`
+	DROP FOREIGN KEY `FK_FilingStatus_user`;
+ALTER TABLE `filingstatus`
+	ADD CONSTRAINT `FK_filingstatus_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `filingstatus`
+	DROP FOREIGN KEY `FK_FilingStatus_user_2`;
+ALTER TABLE `filingstatus`
+	ADD CONSTRAINT `FK_filingstatus_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE leaveledger
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE leaveledger
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `leaveledger`
+	DROP FOREIGN KEY `FK_leaveledger_user`;
+ALTER TABLE `leaveledger`
+	ADD CONSTRAINT `FK_leaveledger_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `leaveledger`
+	DROP FOREIGN KEY `FK_leaveledger_user_2`;
+ALTER TABLE `leaveledger`
+	ADD CONSTRAINT `FK_leaveledger_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE leavetransaction
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE leavetransaction
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `leavetransaction`
+	DROP FOREIGN KEY `FK_leavetransaction_user_CreatedBy`;
+ALTER TABLE `leavetransaction`
+	ADD CONSTRAINT `FK_leavetransaction_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `leavetransaction`
+	DROP FOREIGN KEY `FK_leavetransaction_user_LastUpdBy`;
+ALTER TABLE `leavetransaction`
+	ADD CONSTRAINT `FK_leavetransaction_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE listofval
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE listofval
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `listofval`
+	DROP FOREIGN KEY `FK_listofval_user`;
+ALTER TABLE `listofval`
+	ADD CONSTRAINT `FK_listofval_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `listofval`
+	DROP FOREIGN KEY `FK_listofval_user_2`;
+ALTER TABLE `listofval`
+	ADD CONSTRAINT `FK_listofval_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE organization
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE organization
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `organization`
+	DROP FOREIGN KEY `FK_organization_user`;
+ALTER TABLE `organization`
+	ADD CONSTRAINT `FK_organization_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `organization`
+	DROP FOREIGN KEY `FK_organization_user_2`;
+ALTER TABLE `organization`
+	ADD CONSTRAINT `FK_organization_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE payfrequency
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE payfrequency
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `payfrequency`
+	DROP FOREIGN KEY `FK_PayFrequency_user`;
+ALTER TABLE `payfrequency`
+	ADD CONSTRAINT `FK_payfrequency_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `payfrequency`
+	DROP FOREIGN KEY `FK_PayFrequency_user_2`;
+ALTER TABLE `payfrequency`
+	ADD CONSTRAINT `FK_payfrequency_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE paypagibig
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE paypagibig
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `paypagibig`
+	DROP FOREIGN KEY `paypagibig_ibfk_1`;
+ALTER TABLE `paypagibig`
+	ADD CONSTRAINT `FK_paypagibig_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `paypagibig`
+	DROP FOREIGN KEY `paypagibig_ibfk_2`;
+ALTER TABLE `paypagibig`
+	ADD CONSTRAINT `FK_paypagibig_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE payperiod
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE payperiod
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `payperiod`
+	DROP FOREIGN KEY `payperiod_ibfk_2`;
+ALTER TABLE `payperiod`
+	ADD CONSTRAINT `FK_payperiod_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `payperiod`
+	DROP FOREIGN KEY `payperiod_ibfk_3`;
+ALTER TABLE `payperiod`
+	ADD CONSTRAINT `FK_payperiod_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE payphilhealth
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE payphilhealth
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `payphilhealth`
+	DROP FOREIGN KEY `FK_PayPhilHealth_user`;
+ALTER TABLE `payphilhealth`
+	ADD CONSTRAINT `FK_payphilhealth_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `payphilhealth`
+	DROP FOREIGN KEY `FK_PayPhilHealth_user_2`;
+ALTER TABLE `payphilhealth`
+	ADD CONSTRAINT `FK_payphilhealth_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE payrate
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE payrate
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `payrate`
+	DROP FOREIGN KEY `payrate_ibfk_2`;
+ALTER TABLE `payrate`
+	ADD CONSTRAINT `FK_payrate_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `payrate`
+	DROP FOREIGN KEY `payrate_ibfk_3`;
+ALTER TABLE `payrate`
+	ADD CONSTRAINT `FK_payrate_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE paysocialsecurity
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE paysocialsecurity
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `paysocialsecurity`
+	DROP FOREIGN KEY `FK_paypocialsecurity_user_CreatedBy`;
+ALTER TABLE `paysocialsecurity`
+	ADD CONSTRAINT `FK_paysocialsecurity_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `paysocialsecurity`
+	DROP FOREIGN KEY `FK_paysocialsecurity_user_LastUpdBy`;
+ALTER TABLE `paysocialsecurity`
+	ADD CONSTRAINT `FK_paysocialsecurity_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE paystub
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE paystub
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'FK_paystub_user_CreatedBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key FK_paystub_user_CreatedBy','select 1');
+
+prepare stmt from @var;
+execute stmt;
+deallocate prepare stmt;
+
+set @var2=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'FK-paystub_user_LastUpdBy' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key FK-paystub_user_LastUpdBy','select 1');
+
+prepare stmt2 from @var2;
+execute stmt2;
+deallocate prepare stmt2;
+
+set @var3=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'paystub_ibfk_2' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key paystub_ibfk_2','select 1');
+
+prepare stmt3 from @var3;
+execute stmt3;
+deallocate prepare stmt3;
+
+set @var4=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
+            CONSTRAINT_SCHEMA = DATABASE() AND
+            TABLE_NAME        = 'paystub' AND
+            CONSTRAINT_NAME   = 'paystub_ibfk_3' AND
+            CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
+            drop foreign key paystub_ibfk_3','select 1');
+
+prepare stmt4 from @var4;
+execute stmt4;
+deallocate prepare stmt4;
+	
+ALTER TABLE `paystub`
+	ADD CONSTRAINT `FK_paystub_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `paystub`
+	ADD CONSTRAINT `FK_paystub_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+
+UPDATE paystubadjustment
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE paystubadjustment
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `paystubadjustment`
+	DROP FOREIGN KEY `paystubadjustment_ibfk_4`;
+ALTER TABLE `paystubadjustment`
+	ADD CONSTRAINT `FK_paystubadjustment_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `paystubadjustment`
+	DROP FOREIGN KEY `paystubadjustment_ibfk_5`;
+ALTER TABLE `paystubadjustment`
+	ADD CONSTRAINT `FK_paystubadjustment_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE paystubadjustmentactual
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE paystubadjustmentactual
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `paystubadjustmentactual`
+	DROP FOREIGN KEY `paystubadjustmentactual_ibfk_4`;
+ALTER TABLE `paystubadjustmentactual`
+	ADD CONSTRAINT `FK_paystubadjustmentactual_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `paystubadjustmentactual`
+	DROP FOREIGN KEY `paystubadjustmentactual_ibfk_5`;
+ALTER TABLE `paystubadjustmentactual`
+	ADD CONSTRAINT `FK_paystubadjustmentactual_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE paystubbonus
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE paystubbonus
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `paystubbonus`
+	DROP FOREIGN KEY IF EXISTS `paystubbonus_ibfk_5`;
+ALTER TABLE `paystubbonus`
+	ADD CONSTRAINT `FK_paystubbonus_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `paystubbonus`
+	DROP FOREIGN KEY IF EXISTS `paystubbonus_ibfk_6`;
+ALTER TABLE `paystubbonus`
+	ADD CONSTRAINT `FK_paystubbonus_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE paystubemail
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `paystubemail`
+	DROP FOREIGN KEY `FK_paystubemail_user_CreatedBy`;
+ALTER TABLE `paystubemail`
+	ADD CONSTRAINT `FK_paystubemail_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE paystubemailhistory
+SET SentBy = @DefaultUserId
+WHERE SentBy IS NOT NULL AND SentBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `paystubemailhistory`
+	DROP FOREIGN KEY `FK_paystubemailhistory_user_SentBy`;
+ALTER TABLE `paystubemailhistory`
+	ADD CONSTRAINT `FK_paystubemailhistory_aspnetusers_SentBy` FOREIGN KEY (`SentBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE position_view
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE position_view
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `position_view`
+	DROP FOREIGN KEY `FK_position_view_user_CreatedBy`;
+ALTER TABLE `position_view`
+	ADD CONSTRAINT `FK_position_view_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `position_view`
+	DROP FOREIGN KEY `FK_position_view_user_LastUpdBy`;
+ALTER TABLE `position_view`
+	ADD CONSTRAINT `FK_position_view_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE position
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE position
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `position`
+	DROP FOREIGN KEY `FK_position_user`;
+ALTER TABLE `position`
+	ADD CONSTRAINT `FK_position_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `position`
+	DROP FOREIGN KEY `FK_position_user_2`;
+ALTER TABLE `position`
+	ADD CONSTRAINT `FK_position_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE product
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE product
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `product`
+	DROP FOREIGN KEY `FK_product_user`;
+ALTER TABLE `product`
+	ADD CONSTRAINT `FK_product_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `product`
+	DROP FOREIGN KEY `FK_product_user_2`;
+ALTER TABLE `product`
+	ADD CONSTRAINT `FK_product_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE shift
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE shift
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `shift`
+	DROP FOREIGN KEY `shift_ibfk_2`;
+ALTER TABLE `shift`
+	ADD CONSTRAINT `FK_shift_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `shift`
+	DROP FOREIGN KEY `shift_ibfk_3`;
+ALTER TABLE `shift`
+	ADD CONSTRAINT `FK_shift_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE shiftschedules
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE shiftschedules
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `shiftschedules`
+	DROP FOREIGN KEY `FK_shiftschedules_user_CreatedBy`;
+ALTER TABLE `shiftschedules`
+	ADD CONSTRAINT `FK_shiftschedules_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `shiftschedules`
+	DROP FOREIGN KEY `FK_shiftschedules_user_LastUpdBy`;
+ALTER TABLE `shiftschedules`
+	ADD CONSTRAINT `FK_shiftschedules_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE systemowner
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE systemowner
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `systemowner`
+	DROP FOREIGN KEY `systemowner_ibfk_3`;
+ALTER TABLE `systemowner`
+	ADD CONSTRAINT `FK_systemowner_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `systemowner`
+	DROP FOREIGN KEY `systemowner_ibfk_4`;
+ALTER TABLE `systemowner`
+	ADD CONSTRAINT `FK_systemowner_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE thirteenthmonthpay
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE thirteenthmonthpay
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `thirteenthmonthpay`
+	DROP FOREIGN KEY `thirteenthmonthpay_ibfk_3`;
+ALTER TABLE `thirteenthmonthpay`
+	ADD CONSTRAINT `FK_thirteenthmonthpay_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `thirteenthmonthpay`
+	DROP FOREIGN KEY `thirteenthmonthpay_ibfk_4`;
+ALTER TABLE `thirteenthmonthpay`
+	ADD CONSTRAINT `FK_thirteenthmonthpay_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE timeentry
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE timeentry
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `timeentry`
+	DROP FOREIGN KEY `timeentry_ibfk_2`;
+ALTER TABLE `timeentry`
+	ADD CONSTRAINT `FK_timeentry_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `timeentry`
+	DROP FOREIGN KEY `timeentry_ibfk_3`;
+ALTER TABLE `timeentry`
+	ADD CONSTRAINT `FK_timeentry_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE user
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE user
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `user`
+	DROP FOREIGN KEY `FK_user_user_CreatedBy`;
+ALTER TABLE `user`
+	ADD CONSTRAINT `FK_user_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `user`
+	DROP FOREIGN KEY `FK_user_user_LastUpdBy`;
+ALTER TABLE `user`
+	ADD CONSTRAINT `FK_user_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE useractivity
+SET UserId = @DefaultUserId
+WHERE UserId IS NOT NULL AND UserId NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `useractivity`
+	DROP FOREIGN KEY `FK_useractivity_user_UserId`;
+ALTER TABLE `useractivity`
+	ADD CONSTRAINT `FK_useractivity_aspnetusers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE;

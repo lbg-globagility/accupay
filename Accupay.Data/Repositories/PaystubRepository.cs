@@ -152,7 +152,7 @@ namespace AccuPay.Data.Repositories
             return paystub.Adjustments;
         }
 
-        public async Task<IEnumerable<LoanTransaction>> GetLoanTransanctionsAsync(int paystubId)
+        public async Task<IEnumerable<LoanTransaction>> GetLoanTransactionsAsync(int paystubId)
         {
             var paystub = await _context.Paystubs
                 .Include(x => x.LoanTransactions)
@@ -224,9 +224,11 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Paystub>> GetAllWithEmployeeAsync(DateCompositeKey key)
+        public async Task<ICollection<Paystub>> GetAllWithEmployeeAsync(DateCompositeKey key)
         {
             return await _context.Paystubs
+                .Include(x => x.Employee)
+                .Include(x => x.Actual)
                 .Where(x => x.PayFromDate == key.PayFromDate)
                 .Where(x => x.PayToDate == key.PayToDate)
                 .Where(x => x.OrganizationID == key.OrganizationId)

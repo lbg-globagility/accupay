@@ -1,10 +1,16 @@
-<h1 class="mat-headline">Calendars</h1>
-
-<div class="row middle-md">
-  <div class="col-md-6"></div>
-  <div class="col-md-3">
-    <button mat-raised-button color="accent" routerLink="new">
-      NEW CALENDAR
+<div class="row middle-lg">
+  <div class="col-lg-6">
+    <h1 class="mat-headline">Calendars</h1>
+  </div>
+  <div class="col-lg-6 flex justify-end">
+    <button
+      *ngxPermissionsOnly="PermissionTypes.CalendarCreate"
+      mat-raised-button
+      color="accent"
+      routerLink="new"
+      class="m-with-icon"
+    >
+      <mat-icon>add</mat-icon>NEW
     </button>
   </div>
 </div>

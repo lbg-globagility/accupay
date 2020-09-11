@@ -44,7 +44,10 @@ export class EditEmploymentPolicyComponent implements OnInit {
       .subscribe({
         next: () => {
           this.displaySuccess();
-          this.router.navigate(['employment-policies']);
+          this.router.navigate([
+            'employment-policies',
+            this.employmentPolicyId,
+          ]);
         },
         error: (err) =>
           this.errorHandler.badRequest(
@@ -69,7 +72,7 @@ export class EditEmploymentPolicyComponent implements OnInit {
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully created a new leave!',
+      // text: 'Updated employment policy',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,

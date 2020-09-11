@@ -2,9 +2,19 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 
 <TestFixture>
 Public Class ListOfValueCollectionTest
+    Inherits ServiceProvider
+
+    Private ReadOnly _listOfValueService As ListOfValueService
+
+    Sub New()
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+
+    End Sub
 
     <TestCase("true")>
     <TestCase("1")>
@@ -44,7 +54,7 @@ Public Class ListOfValueCollectionTest
     End Sub
 
     Private Function CreateListOfValue(value As String) As ListOfValueCollection
-        Return ListOfValueCollection.Create(New List(Of ListOfValue) From {
+        Return _listOfValueService.Create(New List(Of ListOfValue) From {
             New ListOfValue() With {
                 .Type = "sampletype",
                 .LIC = "samplelic",
