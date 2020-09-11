@@ -1,11 +1,8 @@
-﻿using AccuPay.Data.Data.EntityFrameworkCore;
-using AccuPay.Data.Entities;
+﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System;
 
 namespace AccuPay.Data
 {
@@ -14,11 +11,11 @@ namespace AccuPay.Data
             AspNetUser,
             AspNetRole,
             int,
-            IdentityUserClaim<int>,
+            UserClaim,
             UserRole,
-            IdentityUserLogin<int>,
-            IdentityRoleClaim<int>,
-            IdentityUserToken<int>>
+            UserLogin,
+            RoleClaim,
+            UserToken>
     {
         internal virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
         internal virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
@@ -105,7 +102,7 @@ namespace AccuPay.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            //base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Paystub>().
             HasOne(x => x.ThirteenthMonthPay).
@@ -134,21 +131,68 @@ namespace AccuPay.Data
                 .IsUnicode(false)
                 .HasConversion(typeof(string));
 
-            modelBuilder.Entity<AspNetUser>()
-                .Property(t => t.Status)
-                .HasConversion(new EnumToStringConverter<AspNetUserStatus>());
-
             modelBuilder.Entity<PayPeriod>()
                 .Property(t => t.Status)
                 .HasConversion(new EnumToStringConverter<PayPeriodStatus>());
+
+            modelBuilder.Entity<AspNetUser>(b =>
+            {
+                b.ToTable("AspNetUsers");
+                b.HasKey(u => u.Id);
+                b.HasIndex(u => u.NormalizedUserName).HasName("UserNameIndex").IsUnique();
+                b.HasIndex(u => u.NormalizedEmail).HasName("EmailIndex");
+                b.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
+                b.Property(u => u.UserName).HasMaxLength(256);
+                b.Property(u => u.NormalizedUserName).HasMaxLength(256);
+                b.Property(u => u.Email).HasMaxLength(256);
+                b.Property(u => u.NormalizedEmail).HasMaxLength(256);
+                b.Property(t => t.Status).HasConversion(new EnumToStringConverter<AspNetUserStatus>());
+            });
+
+            modelBuilder.Entity<AspNetRole>(b =>
+            {
+                b.ToTable("AspNetRoles");
+                b.HasKey(r => r.Id);
+                b.HasIndex(r => r.NormalizedName).HasName("RoleNameIndex").IsUnique();
+                b.Property(r => r.ConcurrencyStamp).IsConcurrencyToken();
+                b.Property(u => u.Name).HasMaxLength(256);
+                b.Property(u => u.NormalizedName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<UserRole>(b =>
+            {
+                b.ToTable("AspNetUserRoles");
+                b.HasKey(t => new { t.UserId, t.RoleId, t.OrganizationId });
+            });
+
+            modelBuilder.Entity<UserClaim>(b =>
+            {
+                b.ToTable("AspNetUserClaims");
+                b.HasKey(uc => uc.Id);
+            });
+
+            modelBuilder.Entity<RoleClaim>(b =>
+            {
+                b.ToTable("AspNetRoleClaims");
+                b.HasKey(rc => rc.Id);
+            });
+
+            modelBuilder.Entity<UserLogin>(b =>
+            {
+                b.ToTable("AspNetUserLogins");
+                b.HasKey(l => new { l.LoginProvider, l.ProviderKey });
+            });
+
+            modelBuilder.Entity<UserToken>(b =>
+            {
+                b.ToTable("AspNetUserTokens");
+                b.HasKey(l => new { l.UserId, l.LoginProvider, l.Name });
+            });
 
             modelBuilder.Entity<RolePermission>()
                 .HasOne(t => t.Role)
                 .WithMany(t => t.RolePermissions)
                 .HasForeignKey(t => t.RoleId);
-
-            modelBuilder.Entity<UserRole>()
-                .HasKey(t => new { t.UserId, t.RoleId, t.OrganizationId });
         }
     }
 }
