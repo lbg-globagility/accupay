@@ -67,7 +67,7 @@ export class SelfserveLeaveComponent implements OnInit {
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully created a new leave!',
+      text: 'Request has been sent for approval',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,

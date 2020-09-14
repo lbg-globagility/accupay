@@ -95,6 +95,27 @@ namespace AccuPay.Web.Leaves
             return ConvertToDto(leave);
         }
 
+        public async Task<LeaveDto> Create(SelfServiceCreateLeaveDto dto)
+        {
+            var leave = new Leave()
+            {
+                EmployeeID = _currentUser.EmployeeId,
+                CreatedBy = _currentUser.UserId,
+                OrganizationID = _currentUser.OrganizationId,
+            };
+
+            leave.LeaveType = dto.LeaveType;
+            leave.StartDate = dto.StartDate;
+            leave.StartTime = dto.StartTime?.TimeOfDay;
+            leave.EndTime = dto.EndTime?.TimeOfDay;
+            leave.Reason = dto.Reason;
+            leave.Status = Leave.StatusPending;
+
+            await _dataService.SaveAsync(leave);
+
+            return ConvertToDto(leave);
+        }
+
         public async Task<LeaveDto> Update(int id, UpdateLeaveDto dto)
         {
             var leave = await _leaveRepository.GetByIdAsync(id);

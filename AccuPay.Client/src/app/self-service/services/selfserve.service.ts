@@ -16,7 +16,7 @@ export class SelfserveService {
   constructor(protected httpClient: HttpClient) {}
 
   createLeave(leave: Leave): Observable<Leave> {
-    return this.httpClient.post<Leave>(`${this.apiRoute}/leave`, leave);
+    return this.httpClient.post<Leave>(`/api/self-service/leaves`, leave);
   }
 
   getLeaveTypes(): Observable<string[]> {

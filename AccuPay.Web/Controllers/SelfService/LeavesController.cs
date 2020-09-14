@@ -28,11 +28,9 @@ namespace AccuPay.Web.Controllers.SelfService
             return dtos;
         }
 
-        [HttpPost("leave")]
-        public async Task<ActionResult<LeaveDto>> CreateLeave([FromBody] CreateLeaveDto dto)
+        [HttpPost]
+        public async Task<ActionResult<LeaveDto>> CreateLeave([FromBody] SelfServiceCreateLeaveDto dto)
         {
-            dto.EmployeeId = _currentUser.EmployeeId.Value;
-
             return await _leaveService.Create(dto);
         }
 
