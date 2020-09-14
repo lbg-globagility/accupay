@@ -4,10 +4,12 @@ Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Exceptions
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -30,8 +32,6 @@ Public Class TimeLogsForm2
 
     Private thefilepath As String
 
-    Private _useShiftSchedulePolicy As Boolean
-
     Private _originalDates As TimePeriod
 
     Private ReadOnly _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
@@ -45,6 +45,8 @@ Public Class TimeLogsForm2
     Private ReadOnly _shiftScheduleRepository As ShiftScheduleRepository
 
     Private ReadOnly _userActivityRepo As UserActivityRepository
+
+    Private _currentRolePermission As RolePermission
 
     Public Enum TimeLogsFormat
         Optimized = 0
@@ -247,13 +249,6 @@ Public Class TimeLogsForm2
         InfoBalloon("Imported successfully.",
                   "Imported successfully.", btnImport, 0, -70)
     End Sub
-
-    Private Function GetShiftSchedulePolicy() As Boolean
-        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
-        Dim settings = listOfValueService.Create()
-        Dim policy = New TimeEntryPolicy(settings)
-        Return policy.UseShiftSchedule
-    End Function
 
     Private Async Function NewTimeEntryAlternateLineImport() As Task
         Dim importer = MainServiceProvider.GetRequiredService(Of TimeLogsReader)
@@ -769,11 +764,11 @@ Public Class TimeLogsForm2
 
         grid.AutoGenerateColumns = False
 
+        Await CheckRolePermissions()
+
         EmployeeTreeView1.SwitchOrganization(z_OrganizationID)
 
         BindGridCurrentCellChanged()
-
-        _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
         Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
@@ -788,6 +783,34 @@ Public Class TimeLogsForm2
 
     End Sub
 
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.TIMELOG)
+
+        btnImport.Visible = True
+        btnDeleteAll.Visible = True
+        ActionPanel.Visible = True
+        grid.ReadOnly = False
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If Not _currentRolePermission.Create AndAlso Not _currentRolePermission.Update Then
+
+                btnImport.Visible = False
+
+                If Not _currentRolePermission.Delete Then
+
+                    btnDeleteAll.Visible = False
+                    ActionPanel.Visible = False
+                    grid.ReadOnly = True
+
+                End If
+
+            End If
+        End If
+    End Function
+
     Private Async Function PopulateBranchComboBox() As Task
 
         colBranchID.ValueMember = "RowID"
@@ -795,8 +818,8 @@ Public Class TimeLogsForm2
 
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
         colBranchID.DataSource = (Await branchRepository.GetAllAsync).
-                                    OrderBy(Function(b) b.Name).
-                                    ToList
+            OrderBy(Function(b) b.Name).
+            ToList
 
     End Function
 
@@ -814,6 +837,13 @@ Public Class TimeLogsForm2
         Dim models = GridRowToTimeLogModels(grid)
 
         Dim toSaveList = models.Where(Function(tlm) tlm.HasChanged).ToList()
+
+        If Not toSaveList.Any() Then
+
+            MessageBoxHelper.Warning("No unsaved changes!")
+            Return
+        End If
+
         Dim toSaveListEmployeeIDs = toSaveList.Select(Function(tlm) tlm.EmployeeID).ToArray()
 
         Dim datePeriod = New TimePeriod(dtpDateFrom.Value.Date, dtpDateTo.Value.Date)
@@ -874,6 +904,43 @@ Public Class TimeLogsForm2
             End If
 
         Next
+
+        If Not addedTimeLogs.Any() AndAlso
+            Not updatedTimeLogs.Any() AndAlso
+            Not deletedTimeLogs.Any() Then
+
+            MessageBoxHelper.Warning("No valid time logs to save.")
+            Return
+
+        End If
+
+        Dim allowedActions As New List(Of String)
+        If _currentRolePermission.Create Then allowedActions.Add("CREATE")
+        If _currentRolePermission.Update Then allowedActions.Add("UPDATE")
+        If _currentRolePermission.Delete Then allowedActions.Add("DELETE")
+
+        Dim allowedActionsMessage = $"You are only allowed to perform ({ _
+            String.Join(", ", allowedActions.ToArray())}) actions."
+
+        Const UnathorizedActionTitle As String = "Unauthorized Action"
+
+        If addedTimeLogs.Any() AndAlso Not _currentRolePermission.Create Then
+
+            MessageBoxHelper.Warning("You are prohibited to create new time logs. " & allowedActionsMessage, UnathorizedActionTitle)
+            Return
+        End If
+
+        If updatedTimeLogs.Any() AndAlso Not _currentRolePermission.Update Then
+
+            MessageBoxHelper.Warning("You are prohibited to update existing time logs. " & allowedActionsMessage, UnathorizedActionTitle)
+            Return
+        End If
+
+        If deletedTimeLogs.Any() AndAlso Not _currentRolePermission.Delete Then
+
+            MessageBoxHelper.Warning("You are prohibited to delete existing time logs. " & allowedActionsMessage, UnathorizedActionTitle)
+            Return
+        End If
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Time Logs",
             Async Function()

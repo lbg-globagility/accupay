@@ -18,6 +18,8 @@ Public Class EmployeeShiftMassUpdate
 
     Dim ChiledDiv As New DataTable
 
+    Private emp_ft_col As String = New ExecuteQuery("SELECT GROUP_CONCAT(CONCAT('e.',ii.COLUMN_NAME)) AS Result FROM information_schema.STATISTICS ii WHERE ii.INDEX_TYPE='FULLTEXT' AND ii.TABLE_SCHEMA='" & sys_db & "' AND ii.TABLE_NAME='employee' ORDER BY ii.SEQ_IN_INDEX;").Result
+
     Private Sub fillemployeelist()
         'If dgvEmplist.Rows.Count = 0 Then
         'ElseCOALESCE(StreetAddress1,' ')
@@ -27,7 +29,7 @@ Public Class EmployeeShiftMassUpdate
 
         Dim concat_includedEmployees = String.Join(",", includedEmployees.ToArray())
         '                                                                                           e.EmployeeID,e.FirstName,e.LastName
-        Dim minimum_search As String = If(txtEmpSearchBox.Text.Trim.Length = 0, "", " AND MATCH(" & TimeAttendForm.emp_ft_col & ") AGAINST('" & txtEmpSearchBox.Text.Trim & "' IN BOOLEAN MODE)")
+        Dim minimum_search As String = If(txtEmpSearchBox.Text.Trim.Length = 0, "", " AND MATCH(" & emp_ft_col & ") AGAINST('" & txtEmpSearchBox.Text.Trim & "' IN BOOLEAN MODE)")
         '                                                                       OR
         Dim addtnl_query As String = If(concat_includedEmployees.Length > 0, " AND e.RowID IN (" & concat_includedEmployees & ")", "")
 
@@ -132,18 +134,7 @@ Public Class EmployeeShiftMassUpdate
 
         e.Cancel = (Not btnSave.Enabled)
 
-        'myBalloon(, , lblSaveMsg, , , 1)
-
-        'If previousForm IsNot Nothing Then
-        '    If previousForm.Name = Me.Name Then
-        '        previousForm = Nothing
-        '    End If
-        'End If
-
         TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
-
-        'ShiftList.Close()
-        'ShiftList.Dispose()
 
     End Sub
 
@@ -154,8 +145,6 @@ Public Class EmployeeShiftMassUpdate
         txtEmpSearchBox.Focus()
 
     End Sub
-
-    Dim view_ID As Integer = Nothing
 
     Private Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         fillemployeelist()
@@ -169,43 +158,6 @@ Public Class EmployeeShiftMassUpdate
 
         enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p')) FROM shift WHERE OrganizationID='" & orgztnID & "' ORDER BY TimeFrom,TimeTo;",
                        cboshiftlist)
-
-        view_ID = VIEW_privilege("Employee Shift", orgztnID)
-
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
-
-        If formuserprivilege.Count = 0 Then
-
-            btnSave.Visible = 0
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    btnSave.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                    Else
-
-                    End If
-
-                    If drow("Deleting").ToString = "N" Then
-                    Else
-
-                    End If
-
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
-
-                End If
-
-            Next
-
-        End If
 
     End Sub
 

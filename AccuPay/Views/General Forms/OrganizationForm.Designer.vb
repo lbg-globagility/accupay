@@ -160,7 +160,6 @@ Partial Class OrganizationForm
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelButton = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.dgvCompanyList = New System.Windows.Forms.DataGridView()
         Me.c_rowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_companyname = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -1513,7 +1512,7 @@ Partial Class OrganizationForm
         'ToolStrip1
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.CancelButton, Me.btnClose, Me.tsbtnAudittrail})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.CancelButton, Me.btnClose})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1011, 25)
@@ -1577,17 +1576,6 @@ Partial Class OrganizationForm
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "&Close"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
         'dgvCompanyList
         '
@@ -1830,7 +1818,6 @@ Partial Class OrganizationForm
     Friend WithEvents lblhdmfdeductsched As System.Windows.Forms.Label
     Public WithEvents cbosssdeductsched As System.Windows.Forms.ComboBox
     Friend WithEvents Label65 As System.Windows.Forms.Label
-    Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label143 As System.Windows.Forms.Label
     Friend WithEvents txtGracePeriod As System.Windows.Forms.TextBox
     Friend WithEvents Label66 As System.Windows.Forms.Label

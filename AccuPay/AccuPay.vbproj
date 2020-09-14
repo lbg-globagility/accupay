@@ -1765,7 +1765,6 @@
     <Compile Include="Domain\Commons\FileObserver.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
-    <Compile Include="Domain\Commons\UserAccessRights.vb" />
     <Compile Include="Views\Core Forms\viewtotallow.Designer.vb">
       <DependentUpon>viewtotallow.vb</DependentUpon>
     </Compile>

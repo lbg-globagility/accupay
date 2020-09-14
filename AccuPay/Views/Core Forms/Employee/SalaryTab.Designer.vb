@@ -58,7 +58,6 @@ Partial Class SalaryTab
         Me.UserActivitySalaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
-        Me.OverlapWarningLabel = New System.Windows.Forms.Label()
         Me.txtEcola = New System.Windows.Forms.TextBox()
         Me.lblEcolaPeroSign = New System.Windows.Forms.Label()
         Me.lblEcola = New System.Windows.Forms.Label()
@@ -232,7 +231,6 @@ Partial Class SalaryTab
         '
         Me.grpSalary.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grpSalary.Controls.Add(Me.OverlapWarningLabel)
         Me.grpSalary.Controls.Add(Me.txtEcola)
         Me.grpSalary.Controls.Add(Me.lblEcolaPeroSign)
         Me.grpSalary.Controls.Add(Me.lblEcola)
@@ -271,16 +269,6 @@ Partial Class SalaryTab
         Me.grpSalary.TabIndex = 183
         Me.grpSalary.TabStop = False
         Me.grpSalary.Text = "Salary"
-        '
-        'OverlapWarningLabel
-        '
-        Me.OverlapWarningLabel.BackColor = System.Drawing.Color.LemonChiffon
-        Me.OverlapWarningLabel.Location = New System.Drawing.Point(8, 136)
-        Me.OverlapWarningLabel.Name = "OverlapWarningLabel"
-        Me.OverlapWarningLabel.Size = New System.Drawing.Size(824, 32)
-        Me.OverlapWarningLabel.TabIndex = 290
-        Me.OverlapWarningLabel.Text = "Two or more salaries have overlapping dates"
-        Me.OverlapWarningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtEcola
         '
@@ -1030,7 +1018,6 @@ Partial Class SalaryTab
     Friend WithEvents chkPaySSS As CheckBox
     Friend WithEvents chkPayPhilHealth As CheckBox
     Friend WithEvents ChkPagIbig As CheckBox
-    Friend WithEvents OverlapWarningLabel As Label
     Friend WithEvents c_fromdate As DataGridViewTextBoxColumn
     Friend WithEvents c_todate As DataGridViewTextBoxColumn
     Friend WithEvents c_EmpSal As DataGridViewTextBoxColumn

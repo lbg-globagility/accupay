@@ -2,9 +2,11 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports log4net
@@ -31,6 +33,8 @@ Public Class ShiftScheduleForm
     Private _currCell As DataGridViewCell
 
     Private _originalDates As TimePeriod
+
+    Private _currentRolePermission As RolePermission
 
     Private WriteOnly Property ChangesCount As Integer
         Set(value As Integer)
@@ -666,9 +670,13 @@ Public Class ShiftScheduleForm
 
         Public ReadOnly Property IsNew As Boolean
             Get
-                Return (_eds?.RowID).GetValueOrDefault() = 0 And IsValidToSave
+                Return HasNewId() And IsValidToSave
             End Get
         End Property
+
+        Private Function HasNewId() As Boolean
+            Return (_eds?.RowID).GetValueOrDefault() <= 0
+        End Function
 
         Public ReadOnly Property IsUpdate As Boolean
             Get
@@ -678,7 +686,7 @@ Public Class ShiftScheduleForm
 
         Public ReadOnly Property ConsideredDelete As Boolean
             Get
-                Dim _deleteable = Not IsValidToSave And IsExist
+                Dim _deleteable = Not HasNewId() AndAlso Not IsValidToSave AndAlso IsExist
 
                 Return _deleteable
             End Get
@@ -872,7 +880,11 @@ Public Class ShiftScheduleForm
         Dim saveList = ConvertGridRowsToShiftScheduleModels(grid)
 
         Dim toSaveList = saveList.Where(Function(ssm) ssm.HasChanged)
-        If Not toSaveList.Any Then Return
+        If Not toSaveList.Any() Then
+
+            MessageBoxHelper.Warning("No unsaved changes!")
+            Return
+        End If
 
         Dim toSaveListEmployeeIDs = toSaveList.Select(Function(tlm) tlm.EmployeeId.Value).ToArray()
 
@@ -893,6 +905,43 @@ Public Class ShiftScheduleForm
             End If
 
         Next
+
+        If Not addedShiftSchedules.Any() AndAlso
+            Not updatedShiftSchedules.Any() AndAlso
+            Not deletedShiftSchedules.Any() Then
+
+            MessageBoxHelper.Warning("No valid shifts to save.")
+            Return
+
+        End If
+
+        Dim allowedActions As New List(Of String)
+        If _currentRolePermission.Create Then allowedActions.Add("CREATE")
+        If _currentRolePermission.Update Then allowedActions.Add("UPDATE")
+        If _currentRolePermission.Delete Then allowedActions.Add("DELETE")
+
+        Dim allowedActionsMessage = $"You are only allowed to perform ({ _
+            String.Join(", ", allowedActions.ToArray())}) actions."
+
+        Const UnathorizedActionTitle As String = "Unauthorized Action"
+
+        If addedShiftSchedules.Any() AndAlso Not _currentRolePermission.Create Then
+
+            MessageBoxHelper.Warning("You are prohibited to create new shifts. " & allowedActionsMessage, UnathorizedActionTitle)
+            Return
+        End If
+
+        If updatedShiftSchedules.Any() AndAlso Not _currentRolePermission.Update Then
+
+            MessageBoxHelper.Warning("You are prohibited to update existing shifts. " & allowedActionsMessage, UnathorizedActionTitle)
+            Return
+        End If
+
+        If deletedShiftSchedules.Any() AndAlso Not _currentRolePermission.Delete Then
+
+            MessageBoxHelper.Warning("You are prohibited to delete existing shifts. " & allowedActionsMessage, UnathorizedActionTitle)
+            Return
+        End If
 
         Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
         Dim oldRecords = Await repository.GetByEmployeeAndDatePeriodAsync(
@@ -958,6 +1007,8 @@ Public Class ShiftScheduleForm
 
         LoadShiftScheduleConfigurablePolicy()
 
+        Await CheckRolePermissions()
+
         organizationId = z_OrganizationID
 
         Dim grids = {grid, gridWeek}
@@ -985,6 +1036,34 @@ Public Class ShiftScheduleForm
 
         End If
     End Sub
+
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.SHIFT)
+
+        tsBtnImport.Visible = True
+        tcSchedule.Visible = True
+        ActionPanel.Visible = True
+        grid.ReadOnly = False
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If Not _currentRolePermission.Create AndAlso Not _currentRolePermission.Update Then
+
+                tsBtnImport.Visible = False
+
+                If Not _currentRolePermission.Delete Then
+
+                    tcSchedule.Visible = False
+                    ActionPanel.Visible = False
+                    grid.ReadOnly = True
+
+                End If
+
+            End If
+        End If
+    End Function
 
     Private Sub grid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
 

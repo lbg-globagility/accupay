@@ -2,8 +2,10 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -29,6 +31,8 @@ Public Class EmployeeLeavesForm
     Private _userActivityRepository As UserActivityRepository
 
     Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Private _currentRolePermission As RolePermission
 
     Sub New()
 
@@ -56,6 +60,8 @@ Public Class EmployeeLeavesForm
 
         InitializeComponentSettings()
 
+        Await CheckRolePermissions()
+
         LoadStatusList()
         Await LoadLeaveTypes()
 
@@ -66,13 +72,48 @@ Public Class EmployeeLeavesForm
 
     End Sub
 
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.LEAVE)
+
+        NewToolStripButton.Visible = False
+        ImportToolStripButton.Visible = False
+        SaveToolStripButton.Visible = False
+        CancelToolStripButton.Visible = False
+        DeleteToolStripButton.Visible = False
+        DetailsTabLayout.Enabled = False
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If _currentRolePermission.Create Then
+                NewToolStripButton.Visible = True
+                ImportToolStripButton.Visible = True
+
+            End If
+
+            If _currentRolePermission.Update Then
+                SaveToolStripButton.Visible = True
+                CancelToolStripButton.Visible = True
+                DetailsTabLayout.Enabled = True
+            End If
+
+            If _currentRolePermission.Delete Then
+                DeleteToolStripButton.Visible = True
+
+            End If
+
+        End If
+    End Function
+
     Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
-        _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployees(SearchTextBox.Text.ToLower())
+        _textBoxDelayedAction.ProcessAsync(
+            Async Function()
+                Await FilterEmployees(SearchTextBox.Text.ToLower())
 
-                                               Return True
-                                           End Function)
+                Return True
+            End Function)
     End Sub
 
     Private Sub EmployeeLeavesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -139,8 +180,8 @@ Public Class EmployeeLeavesForm
     Private Async Function LoadEmployees() As Task
 
         Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
-                            OrderBy(Function(e) e.LastName).
-                            ToList
+            OrderBy(Function(e) e.LastName).
+            ToList
 
     End Function
 
@@ -231,8 +272,8 @@ Public Class EmployeeLeavesForm
 
         Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
         Me._currentLeaves = (Await leaveRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
-                                OrderByDescending(Function(a) a.StartDate).
-                                ToList
+            OrderByDescending(Function(a) a.StartDate).
+            ToList
 
         Me._changedLeaves = Me._currentLeaves.CloneListJson()
 
@@ -269,11 +310,12 @@ Public Class EmployeeLeavesForm
         SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance.ToString()
 
         VacationLeaveBalanceTextBox.Text = (Await _employeeRepository.
-                                            GetVacationLeaveBalance(currentEmployee.RowID.Value)).
-                                            ToString()
+            GetVacationLeaveBalance(currentEmployee.RowID.Value)).
+            ToString()
+
         SickLeaveBalanceTextBox.Text = (Await _employeeRepository.
-                                            GetSickLeaveBalance(currentEmployee.RowID.Value)).
-                                            ToString()
+            GetSickLeaveBalance(currentEmployee.RowID.Value)).
+            ToString()
 
         Await LoadLeaves(currentEmployee)
     End Function
@@ -309,7 +351,10 @@ Public Class EmployeeLeavesForm
         StatusComboBox.DataBindings.Clear()
         StatusComboBox.DataBindings.Add("Text", Me._currentLeave, "Status")
 
-        DetailsTabLayout.Enabled = True
+        If _currentRolePermission.Update Then
+
+            DetailsTabLayout.Enabled = True
+        End If
 
     End Sub
 
@@ -318,8 +363,8 @@ Public Class EmployeeLeavesForm
         Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypesAsync(z_OrganizationID))
 
         leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
-                                                Where(Function(a) a.PartNo.Trim <> String.Empty).
-                                                ToList
+            Where(Function(a) a.PartNo.Trim <> String.Empty).
+            ToList
 
         Dim leaveTypes = _productRepository.ConvertToStringList(leaveList)
 
@@ -377,59 +422,59 @@ Public Class EmployeeLeavesForm
 
         If newLeave.StartDate <> oldLeave.StartDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldLeave.RowID.Value,
-                        .Description = $"Updated {entityName} start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'."
-                        })
+           {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'."
+            })
         End If
         If newLeave.EndDate <> oldLeave.EndDate Then
             changes.Add(New UserActivityItem() With
-                       {
-                       .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Updated {entityName} end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'."
-                       })
+            {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'."
+            })
         End If
         If newLeave.StartTime.ToString <> oldLeave.StartTime.ToString Then
             changes.Add(New UserActivityItem() With
-                       {
-                       .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Updated {entityName} start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'."
-                       })
+            {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'."
+            })
         End If
         If newLeave.EndTime.ToString <> oldLeave.EndTime.ToString Then
             changes.Add(New UserActivityItem() With
-                       {
-                       .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Updated {entityName} end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'."
-                       })
+            {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'."
+            })
         End If
         If newLeave.Reason <> oldLeave.Reason Then
             changes.Add(New UserActivityItem() With
-                       {
-                       .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Updated {entityName} reason from '{oldLeave.Reason}' to '{newLeave.Reason}'."
-                       })
+            {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} reason from '{oldLeave.Reason}' to '{newLeave.Reason}'."
+            })
         End If
         If newLeave.Comments <> oldLeave.Comments Then
             changes.Add(New UserActivityItem() With
-                       {
-                       .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Updated {entityName} comments from '{oldLeave.Comments}' to '{newLeave.Comments}'."
-                       })
+            {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} comments from '{oldLeave.Comments}' to '{newLeave.Comments}'."
+            })
         End If
         If newLeave.LeaveType <> oldLeave.LeaveType Then
             changes.Add(New UserActivityItem() With
-                       {
-                       .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Updated {entityName} type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'."
-                       })
+            {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'."
+            })
         End If
         If newLeave.Status <> oldLeave.Status Then
             changes.Add(New UserActivityItem() With
-                       {
-                       .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Updated {entityName} status from '{oldLeave.Status}' to '{newLeave.Status}'."
-                       })
+            {
+                .EntityId = oldLeave.RowID.Value,
+                .Description = $"Updated {entityName} status from '{oldLeave.Status}' to '{newLeave.Status}'."
+            })
         End If
 
         If changes.Count > 0 Then

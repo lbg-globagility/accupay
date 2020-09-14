@@ -108,33 +108,35 @@ Public Class ImportedShiftSchedulesForm
             Async Function()
 
                 Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
-                Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(_dataSourceOk,
-                                                                                organizationId:=z_OrganizationID,
-                                                                                userId:=z_User)
+                Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(
+                    _dataSourceOk,
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User)
 
                 Dim importList = New List(Of UserActivityItem)
                 Dim entityName = FormEntityName.ToLower()
 
                 For Each schedule In result.AddedList
                     importList.Add(New UserActivityItem() With
-                            {
-                            .Description = $"Imported a new {entityName}.",
-                            .EntityId = schedule.RowID
-                            })
+                    {
+                        .Description = $"Imported a new {entityName}.",
+                        .EntityId = schedule.RowID
+                    })
                 Next
                 For Each schedule In result.UpdatedList
                     importList.Add(New UserActivityItem() With
-                            {
-                            .Description = $"Updated a {entityName} on import.",
-                            .EntityId = schedule.RowID
-                            })
+                    {
+                        .Description = $"Updated a {entityName} on import.",
+                        .EntityId = schedule.RowID
+                    })
                 Next
 
-                _userActivityRepository.CreateRecord(z_User,
-                                                     FormEntityName,
-                                                     z_OrganizationID,
-                                                     UserActivityRepository.RecordTypeImport,
-                                                     importList)
+                _userActivityRepository.CreateRecord(
+                    z_User,
+                    FormEntityName,
+                    z_OrganizationID,
+                    UserActivityRepository.RecordTypeImport,
+                    importList)
 
                 Me.IsSaved = True
                 DialogResult = DialogResult.OK

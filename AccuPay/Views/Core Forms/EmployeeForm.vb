@@ -3458,7 +3458,7 @@ Public Class EmployeeForm
 
     Dim emp_ralation As New AutoCompleteStringCollection
 
-    Async Sub tbpEmployee_Enter(sender As Object, e As EventArgs)
+    Sub tbpEmployee_Enter(sender As Object, e As EventArgs)
 
         UpdateTabPageText()
 
@@ -4246,49 +4246,6 @@ Public Class EmployeeForm
 
     Private Sub Print201ReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Print201ReportToolStripMenuItem.Click
         Print201Report()
-    End Sub
-
-    Private Sub tabctrlemp_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tabctrlemp.Selecting
-
-        Dim view_name As String = String.Empty
-
-        Try
-            view_name = e.TabPage.AccessibleDescription.Trim
-        Catch ex As Exception
-            view_name = String.Empty
-        Finally
-            If view_name.Length > 0 Then
-
-                Dim view_row_id = VIEW_privilege(view_name, orgztnID)
-
-                Dim formuserprivilege = position_view_table.Select("ViewID = " & view_row_id)
-
-                Dim bool_result As Boolean = False
-
-                bool_result = (formuserprivilege.Count = 0)
-
-                If bool_result = False Then
-
-                    For Each drow In formuserprivilege
-                        bool_result = (drow("ReadOnly").ToString = "Y")
-
-                        If bool_result = False Then
-
-                            bool_result = (drow("Creates").ToString = "N" _
-                                           And drow("Deleting").ToString = "N" _
-                                           And drow("Updates").ToString = "N")
-
-                        End If
-
-                    Next
-
-                End If
-
-                e.Cancel = bool_result
-
-            End If
-        End Try
-
     End Sub
 
     Dim indentifyGender As Dictionary(Of Gender, String) =

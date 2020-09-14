@@ -54,10 +54,9 @@ Partial Class PayRateForm
         Me.txtnightdiffrate = New System.Windows.Forms.TextBox()
         Me.txtnightdiffotrate = New System.Windows.Forms.TextBox()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnsavepayrate = New System.Windows.Forms.ToolStripButton()
+        Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
+        Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -282,20 +281,20 @@ Partial Class PayRateForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnsavepayrate, Me.ToolStripButton1, Me.ToolStripButton2, Me.tsbtnAudittrail})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveToolStripButton, Me.ToolStripButton1, Me.CancelToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1119, 25)
         Me.ToolStrip1.TabIndex = 14
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'tsbtnsavepayrate
+        'SaveToolStripButton
         '
-        Me.tsbtnsavepayrate.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.tsbtnsavepayrate.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnsavepayrate.Name = "tsbtnsavepayrate"
-        Me.tsbtnsavepayrate.Size = New System.Drawing.Size(96, 22)
-        Me.tsbtnsavepayrate.Text = "&Save pay rate"
+        Me.SaveToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.SaveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SaveToolStripButton.Name = "SaveToolStripButton"
+        Me.SaveToolStripButton.Size = New System.Drawing.Size(96, 22)
+        Me.SaveToolStripButton.Text = "&Save pay rate"
         '
         'ToolStripButton1
         '
@@ -306,24 +305,13 @@ Partial Class PayRateForm
         Me.ToolStripButton1.Size = New System.Drawing.Size(56, 22)
         Me.ToolStripButton1.Text = "Close"
         '
-        'ToolStripButton2
+        'CancelToolStripButton
         '
-        Me.ToolStripButton2.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(63, 22)
-        Me.ToolStripButton2.Text = "Cancel"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
+        Me.CancelToolStripButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.CancelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CancelToolStripButton.Name = "CancelToolStripButton"
+        Me.CancelToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.CancelToolStripButton.Text = "Cancel"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -664,9 +652,9 @@ Partial Class PayRateForm
     Friend WithEvents txtnightdiffrate As System.Windows.Forms.TextBox
     Friend WithEvents txtnightdiffotrate As System.Windows.Forms.TextBox
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents tsbtnsavepayrate As System.Windows.Forms.ToolStripButton
+    Friend WithEvents SaveToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton2 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents CancelToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents Label13 As System.Windows.Forms.Label
@@ -688,7 +676,6 @@ Partial Class PayRateForm
     Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column6 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column7 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents Panel2 As System.Windows.Forms.Panel

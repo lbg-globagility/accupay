@@ -157,6 +157,16 @@ Public Class SalaryTab
         ChangeMode(FormMode.Disabled)
         LoadSalaries()
 
+        Await CheckRolePermissions()
+
+        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+
+        ToggleBenchmarkEcola()
+
+        AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
+    End Sub
+
+    Private Async Function CheckRolePermissions() As Task
         Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.SALARY)
 
         btnNew.Visible = False
@@ -186,14 +196,7 @@ Public Class SalaryTab
             End If
 
         End If
-
-        OverlapWarningLabel.Visible = False
-        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-
-        ToggleBenchmarkEcola()
-
-        AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
-    End Sub
+    End Function
 
     Private Sub ChangeMode(mode As FormMode)
         _mode = mode
@@ -277,45 +280,6 @@ Public Class SalaryTab
         End If
 
     End Sub
-
-    <Obsolete("Remove if it's been decided that Effective Date To is really going to be gone")>
-    Private Sub ValidateSalaryRanges(salaries As List(Of Salary))
-        If salaries.Count <= 1 Then
-            OverlapWarningLabel.Visible = False
-        End If
-
-        For Each a In salaries
-            Dim nextIndex = salaries.IndexOf(a) + 1
-
-            For Each b In salaries.GetRange(nextIndex, salaries.Count - nextIndex)
-
-                If IsOverlapping(a, b) Then
-                    OverlapWarningLabel.Visible = True
-                    Return
-                End If
-
-            Next
-        Next
-
-        OverlapWarningLabel.Visible = False
-    End Sub
-
-    <Obsolete("Remove if it's been decided that Effective Date To is really going to be gone")>
-    Private Function IsOverlapping(a As Salary, b As Salary) As Boolean
-        If a.IsIndefinite And (Not b.IsIndefinite) Then
-            Return b.EffectiveTo.Value >= a.EffectiveFrom
-        End If
-
-        If b.IsIndefinite And (Not a.IsIndefinite) Then
-            Return a.EffectiveTo.Value >= b.EffectiveFrom
-        End If
-
-        If (Not a.IsIndefinite) And (Not b.IsIndefinite) Then
-            Return a.EffectiveFrom <= b.EffectiveTo.Value And b.EffectiveFrom <= a.EffectiveTo.Value
-        End If
-
-        Return True
-    End Function
 
     Private Sub ClearForm()
         dtpEffectiveFrom.Value = Date.Today

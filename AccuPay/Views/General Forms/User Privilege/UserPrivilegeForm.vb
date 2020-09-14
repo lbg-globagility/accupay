@@ -29,6 +29,17 @@ Public Class UserPrivilegeForm
 
         RoleGrid.AutoGenerateColumns = False
 
+        Await CheckRolePermissions()
+
+        Await PopulateRoleGrid()
+
+        Await RoleUserControl.SetRole(GetSelectedRole())
+
+        AddHandler RoleGrid.SelectionChanged, AddressOf RoleGridSelectionChanged
+
+    End Sub
+
+    Private Async Function CheckRolePermissions() As Task
         Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.ROLE)
 
         NewButton.Visible = False
@@ -54,14 +65,7 @@ Public Class UserPrivilegeForm
             End If
 
         End If
-
-        Await PopulateRoleGrid()
-
-        Await RoleUserControl.SetRole(GetSelectedRole())
-
-        AddHandler RoleGrid.SelectionChanged, AddressOf RoleGridSelectionChanged
-
-    End Sub
+    End Function
 
     Private Function GetSelectedRole() As AspNetRole
         If RoleGrid.RowCount = 0 Then Return Nothing

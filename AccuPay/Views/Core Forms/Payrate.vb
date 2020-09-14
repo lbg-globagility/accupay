@@ -1,10 +1,10 @@
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayRateForm
-    Dim view_ID As Integer = Nothing
-
     Dim _now
 
     Private Sub Payrate_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -52,31 +52,13 @@ Public Class PayRateForm
 
         addhandlr(sender, e)
 
-        view_ID = VIEW_privilege("Pay rate", orgztnID)
+        SaveToolStripButton.Visible = False
+        CancelToolStripButton.Visible = False
+        Dim role = PermissionHelper.GetRole(PermissionConstant.CALENDAR)
 
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
-
-        If formuserprivilege.Count = 0 Then
-
-            tsbtnsavepayrate.Visible = 0
-            dontUpdate = 1
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    tsbtnsavepayrate.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
-
-                End If
-
-            Next
+        If role.Success AndAlso role.RolePermission.Update Then
+            SaveToolStripButton.Visible = True
+            CancelToolStripButton.Visible = True
 
         End If
 
@@ -651,12 +633,7 @@ Public Class PayRateForm
         Me.Close()
     End Sub
 
-    Dim dontUpdate As SByte = 0
-
-    Private Sub tsbtnsavepayrate_Click(sender As Object, e As EventArgs) Handles tsbtnsavepayrate.Click
-        If dontUpdate = 1 Then
-            Exit Sub
-        End If
+    Private Sub tsbtnsavepayrate_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         rmvhandlr()
 
         Dim curr_rowindx, curr_colindx As Integer
@@ -863,7 +840,7 @@ Public Class PayRateForm
         End If
     End Sub
 
-    Private Sub ToolStripButton2_Click(sender As Object, e As EventArgs) Handles ToolStripButton2.Click
+    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
         tbleditedpayrate.Rows.Clear()
     End Sub
 

@@ -1,8 +1,12 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.IO
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
@@ -39,9 +43,11 @@ Public Class EmployeeShiftEntryForm
 
     Dim ArrayWeekFormat() As String
 
-    Private _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private _shiftRepository As ShiftRepository
+    Private ReadOnly _shiftRepository As ShiftRepository
+
+    Private _currentRolePermission As RolePermission
 
     Sub New()
 
@@ -72,8 +78,6 @@ Public Class EmployeeShiftEntryForm
         dgvWeek.Rows.Clear()
         dgvWeek.Rows.Add()
         LoadDivision()
-
-        setProperInterfaceBaseOnSystemOwner()
 
         MyBase.OnLoad(e)
     End Sub
@@ -261,53 +265,75 @@ Public Class EmployeeShiftEntryForm
         ShiftList.Dispose()
     End Sub
 
-    Dim view_ID As Integer = Nothing
-
     Private Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         fillemplyeelist()
         fillemployeeshift()
         fillemployeeshiftSelected()
         LoadShifts()
 
-        view_ID = VIEW_privilege("Employee Shift", orgztnID)
+        SetProperInterfaceBaseOnSystemOwner()
+        CheckRolePermission()
+    End Sub
 
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
+    Private Sub CheckRolePermission()
+        Dim role = PermissionHelper.GetRole(PermissionConstant.SHIFT)
 
-        If formuserprivilege.Count = 0 Then
+        btnNew.Visible = False
+        tsbtnImportEmpShift.Visible = False
+        btnSave.Visible = False
+        btnCancel.Visible = False
+        btnDelete.Visible = False
 
-            btnNew.Visible = 0
-            btnSave.Visible = 0
-            btnDelete.Visible = 0
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    btnNew.Visible = 0
-                    btnSave.Visible = 0
-                    btnDelete.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                        btnNew.Visible = 0
-                    Else
-                        btnNew.Visible = 1
-                    End If
+        If role.Success Then
+            _currentRolePermission = role.RolePermission
 
-                    If drow("Deleting").ToString = "N" Then
-                        btnDelete.Visible = 0
-                    Else
-                        btnDelete.Visible = 1
-                    End If
+            If _currentRolePermission.Create Then
+                btnNew.Visible = True
+                tsbtnImportEmpShift.Visible = True
 
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
-                End If
-            Next
+            End If
+
+            If _currentRolePermission.Update OrElse _currentRolePermission.Create Then
+                btnSave.Visible = True
+                btnCancel.Visible = True
+            End If
+
+            If _currentRolePermission.Delete Then
+                btnDelete.Visible = True
+
+            End If
+
         End If
+
+        If Not role.Success OrElse
+            _currentRolePermission.Create = False OrElse
+            _currentRolePermission.Update = False OrElse
+            _currentRolePermission.Delete = False Then
+
+            tsbtnBulkEditShift.Visible = False
+
+        End If
+    End Sub
+
+    Private Sub SetProperInterfaceBaseOnSystemOwner()
+
+        Dim isOwnerCinema2000 As Boolean =
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
+
+        If isOwnerCinema2000 Then
+            TabPage2.Text = String.Empty
+
+            AddHandler CustomColoredTabControl1.Selecting, AddressOf CustomColoredTabControl1_SelectingTabPage
+
+            Dim isNotOwnerCinema2000 As Boolean = Not isOwnerCinema2000
+
+            ByDayToolStripMenuItem.Visible = isNotOwnerCinema2000
+
+            tsbtnBulkEditShift.Visible = isNotOwnerCinema2000
+        Else
+
+        End If
+
     End Sub
 
     Private Sub LoadShifts()
@@ -398,6 +424,13 @@ Public Class EmployeeShiftEntryForm
                              " WHERE RowID='" & dgvEmpList.CurrentRow.Cells("c_ID").Value &
                              "';")
 
+                    If ObjectUtils.ToNullableDateTime(empshiftmaxdate) Is Nothing OrElse
+                        CDate(empshiftmaxdate) < Data.Helpers.PayrollTools.SqlServerMinimumDate Then
+
+                        empshiftmaxdate = Date.Now
+
+                    End If
+
                     dtpDateFrom.MinDate = CDate(empshiftmaxdate).ToShortDateString
 
                 End If
@@ -433,6 +466,16 @@ Public Class EmployeeShiftEntryForm
 
         Select Case CustomColoredTabControl1.SelectedIndex
             Case 0
+
+                Dim isCreateNew = IsNew = 1
+
+                If (isCreateNew AndAlso Not _currentRolePermission.Create) OrElse
+                (Not isCreateNew AndAlso Not _currentRolePermission.Update) Then
+
+                    MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                    Return
+                End If
+
                 Dim shiftModel = DirectCast(cboshiftlist.SelectedItem, ShiftModel)
 
                 Dim shiftId = If(shiftModel?.Shift?.RowID Is Nothing, 0, shiftModel.Shift.RowID)
@@ -486,9 +529,7 @@ Public Class EmployeeShiftEntryForm
 
                     myBalloon("Successfully Save", "Saving...", lblSaveMsg, , -100)
                 Else
-                    If dontUpdate = 1 Then
-                        Exit Sub
-                    ElseIf dgvEmpShiftList.RowCount = 0 Then
+                    If dgvEmpShiftList.RowCount = 0 Then
                         Exit Sub
                     End If
 
@@ -512,6 +553,13 @@ Public Class EmployeeShiftEntryForm
                 End If
 
             Case 1
+
+                If Not _currentRolePermission.Create OrElse
+                    Not _currentRolePermission.Update Then
+
+                    MessageBoxHelper.Warning("You need Create and Update permissions to perform this action.", "Unauthorized Action")
+                    Return
+                End If
 
                 Dim customArrayWeekFormat As String = ""
 
@@ -1280,27 +1328,6 @@ Public Class EmployeeShiftEntryForm
         e.Cancel =
             (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 _
             And CustomColoredTabControl1.SelectedIndex = 1)
-
-    End Sub
-
-    Private Sub setProperInterfaceBaseOnSystemOwner()
-
-        Dim _bool As Boolean =
-            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
-
-        If _bool Then
-            TabPage2.Text = String.Empty
-
-            AddHandler CustomColoredTabControl1.Selecting, AddressOf CustomColoredTabControl1_SelectingTabPage
-
-            Dim opposite_bool As Boolean = (Not _bool)
-
-            ByDayToolStripMenuItem.Visible = opposite_bool
-
-            tsbtnBulkEditShift.Visible = opposite_bool
-        Else
-
-        End If
 
     End Sub
 

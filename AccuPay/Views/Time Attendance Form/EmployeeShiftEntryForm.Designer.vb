@@ -118,7 +118,6 @@ Partial Class EmployeeShiftEntryForm
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.btnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImportEmpShift = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.tsbtnBulkEditShift = New System.Windows.Forms.ToolStripButton()
@@ -869,7 +868,7 @@ Partial Class EmployeeShiftEntryForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnCancel, Me.btnClose, Me.btnAudittrail, Me.tsbtnImportEmpShift, Me.ToolStripProgressBar1, Me.tsbtnBulkEditShift})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnCancel, Me.btnClose, Me.tsbtnImportEmpShift, Me.ToolStripProgressBar1, Me.tsbtnBulkEditShift})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(928, 25)
@@ -946,17 +945,6 @@ Partial Class EmployeeShiftEntryForm
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
-        '
-        'btnAudittrail
-        '
-        Me.btnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.btnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.btnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnAudittrail.Name = "btnAudittrail"
-        Me.btnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.btnAudittrail.Text = "ToolStripButton1"
-        Me.btnAudittrail.ToolTipText = "Show audit trails"
         '
         'tsbtnImportEmpShift
         '
@@ -1359,7 +1347,6 @@ Partial Class EmployeeShiftEntryForm
     Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents btnCancel As System.Windows.Forms.ToolStripButton
     Friend WithEvents btnClose As System.Windows.Forms.ToolStripButton
-    Friend WithEvents btnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents lblSaveMsg As System.Windows.Forms.Label
     Friend WithEvents lblShiftEntry As System.Windows.Forms.LinkLabel
     Friend WithEvents lblShiftID As System.Windows.Forms.Label

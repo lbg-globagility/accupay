@@ -24,6 +24,14 @@ Public Class UsersForm2
 
         UserGrid.AutoGenerateColumns = False
 
+        Await CheckRolePermissions()
+
+        Await PopulateUserGrid()
+
+        AddHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
+    End Sub
+
+    Private Async Function CheckRolePermissions() As Task
         Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.USER)
 
         NewButton.Visible = False
@@ -49,11 +57,7 @@ Public Class UsersForm2
             End If
 
         End If
-
-        Await PopulateUserGrid()
-
-        AddHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
-    End Sub
+    End Function
 
     Private Async Function PopulateUserGrid(Optional selectedUser As AspNetUser = Nothing) As Task
 

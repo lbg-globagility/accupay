@@ -2,8 +2,10 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -28,6 +30,8 @@ Public Class OfficialBusinessForm
 
     Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
+    Private _currentRolePermission As RolePermission
+
     Sub New()
 
         InitializeComponent()
@@ -51,6 +55,8 @@ Public Class OfficialBusinessForm
 
         InitializeComponentSettings()
 
+        Await CheckRolePermissions()
+
         LoadStatusList()
 
         Await LoadEmployees()
@@ -60,13 +66,48 @@ Public Class OfficialBusinessForm
 
     End Sub
 
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.OFFICIALBUSINESS)
+
+        NewToolStripButton.Visible = False
+        ImportToolStripButton.Visible = False
+        SaveToolStripButton.Visible = False
+        CancelToolStripButton.Visible = False
+        DeleteToolStripButton.Visible = False
+        DetailsTabLayout.Enabled = False
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If _currentRolePermission.Create Then
+                NewToolStripButton.Visible = True
+                ImportToolStripButton.Visible = True
+
+            End If
+
+            If _currentRolePermission.Update Then
+                SaveToolStripButton.Visible = True
+                CancelToolStripButton.Visible = True
+                DetailsTabLayout.Enabled = True
+            End If
+
+            If _currentRolePermission.Delete Then
+                DeleteToolStripButton.Visible = True
+
+            End If
+
+        End If
+    End Function
+
     Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
-        _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployees(SearchTextBox.Text.ToLower())
+        _textBoxDelayedAction.ProcessAsync(
+            Async Function()
+                Await FilterEmployees(SearchTextBox.Text.ToLower())
 
-                                               Return True
-                                           End Function)
+                Return True
+            End Function)
     End Sub
 
     Private Sub OfficialBusinessForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -132,8 +173,8 @@ Public Class OfficialBusinessForm
     Private Async Function LoadEmployees() As Task
 
         Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
-                            OrderBy(Function(e) e.LastName).
-                            ToList
+            OrderBy(Function(e) e.LastName).
+            ToList
 
     End Function
 
@@ -221,8 +262,8 @@ Public Class OfficialBusinessForm
 
         Dim repository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
         Me._currentOfficialBusinesses = (Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
-                                                OrderByDescending(Function(a) a.StartDate).
-                                                ToList
+            OrderByDescending(Function(a) a.StartDate).
+            ToList
 
         Me._changedOfficialBusinesses = Me._currentOfficialBusinesses.CloneListJson()
 
@@ -285,52 +326,52 @@ Public Class OfficialBusinessForm
 
         If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Updated {entityName} start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldOfficialBusiness.RowID.Value,
+                .Description = $"Updated {entityName} start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'."
+            })
         End If
         If newOfficialBusiness.EndDate <> oldOfficialBusiness.EndDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Updated {entityName} end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldOfficialBusiness.RowID.Value,
+                .Description = $"Updated {entityName} end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'."
+            })
         End If
         If newOfficialBusiness.StartTime <> oldOfficialBusiness.StartTime Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Updated {entityName} start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'."
-                        })
+            {
+                .EntityId = oldOfficialBusiness.RowID.Value,
+                .Description = $"Updated {entityName} start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'."
+            })
         End If
         If newOfficialBusiness.EndTime <> oldOfficialBusiness.EndTime Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Updated {entityName} end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'."
-                        })
+            {
+                .EntityId = oldOfficialBusiness.RowID.Value,
+                .Description = $"Updated {entityName} end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'."
+            })
         End If
         If newOfficialBusiness.Reason <> oldOfficialBusiness.Reason Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Updated {entityName} reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'."
-                        })
+            {
+                .EntityId = oldOfficialBusiness.RowID.Value,
+                .Description = $"Updated {entityName} reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'."
+            })
         End If
         If newOfficialBusiness.Comments <> oldOfficialBusiness.Comments Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Updated {entityName} comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'."
-                        })
+            {
+                .EntityId = oldOfficialBusiness.RowID.Value,
+                .Description = $"Updated {entityName} comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'."
+            })
         End If
         If newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Updated {entityName} status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'."
-                        })
+            {
+                .EntityId = oldOfficialBusiness.RowID.Value,
+                .Description = $"Updated {entityName} status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'."
+            })
         End If
 
         _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
@@ -389,7 +430,10 @@ Public Class OfficialBusinessForm
         StatusComboBox.DataBindings.Clear()
         StatusComboBox.DataBindings.Add("Text", Me._currentOfficialBusiness, "Status")
 
-        DetailsTabLayout.Enabled = True
+        If _currentRolePermission.Update Then
+
+            DetailsTabLayout.Enabled = True
+        End If
 
     End Sub
 

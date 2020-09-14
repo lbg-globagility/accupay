@@ -58,6 +58,10 @@ Public Class TimeEntrySummaryForm
 
     Private _formHasLoaded As Boolean = False
 
+    Private _regenerateTimeEntryButtonHidden As Boolean
+
+    Private _tsBtnDeleteTimeEntryHidden As Boolean
+
     Private ReadOnly _policy As PolicyHelper
 
     Private ReadOnly _payPeriodService As PayPeriodDataService
@@ -67,6 +71,8 @@ Public Class TimeEntrySummaryForm
     Private ReadOnly _employeeRepository As EmployeeRepository
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _roleRepository As RoleRepository
 
     Private ReadOnly _timeAttendanceLogRepository As TimeAttendanceLogRepository
 
@@ -85,6 +91,8 @@ Public Class TimeEntrySummaryForm
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 
         _timeAttendanceLogRepository = MainServiceProvider.GetRequiredService(Of TimeAttendanceLogRepository)
 
@@ -116,6 +124,8 @@ Public Class TimeEntrySummaryForm
 
         UpdateFormBaseOnPolicy()
 
+        Await CheckRolePermissions()
+
         LoadYears()
     End Sub
 
@@ -123,8 +133,7 @@ Public Class TimeEntrySummaryForm
 
         actualButton.Visible = _policy.ShowActual
 
-        ColumnBranch.Visible = _policy.PayRateCalculationBasis =
-                                        PayRateCalculationBasis.Branch
+        ColumnBranch.Visible = _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch
 
         GenerateDefaultShiftAndTimeLogsButton.Visible = _policy.UseDefaultShiftAndTimeLogs
 
@@ -139,16 +148,46 @@ Public Class TimeEntrySummaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        If _policy.UseUserLevel = False Then
-
-            Return
-
-        End If
+        If _policy.UseUserLevel = False Then Return
 
         _hideMoneyColumns = user.UserLevel <> UserLevel.One AndAlso
-                                user.UserLevel <> UserLevel.Two AndAlso
-                                user.UserLevel <> UserLevel.Three
+            user.UserLevel <> UserLevel.Two AndAlso
+            user.UserLevel <> UserLevel.Three
     End Sub
+
+    Private Async Function CheckRolePermissions() As Task
+
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+
+        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
+        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
+        Dim timeEntryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMEENTRY).FirstOrDefault()
+        Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
+
+        If timeLogPermission Is Nothing OrElse
+            timeLogPermission.Create = False OrElse
+            timeLogPermission.Update = False OrElse
+            shiftPermission Is Nothing OrElse
+            shiftPermission.Create = False OrElse
+            shiftPermission.Update = False Then
+
+            GenerateDefaultShiftAndTimeLogsButton.Visible = False
+        End If
+
+        If timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Update = False Then
+            RegenerateTimeEntryButton.Visible = False
+            _regenerateTimeEntryButtonHidden = True
+        End If
+
+        If timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Delete = False Then
+            tsBtnDeleteTimeEntry.Visible = False
+            _tsBtnDeleteTimeEntryHidden = True
+        End If
+
+        GenerateTimeEntryButton.Visible =
+            If(timeEntryPermission?.Create, False) AndAlso
+            If(payPeriodPermission?.Create, False)
+    End Function
 
     Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
 
@@ -185,9 +224,6 @@ Public Class TimeEntrySummaryForm
     Public Async Function LoadPayPeriods() As Task
 
         If _formHasLoaded = False Then Return
-
-        'tsBtnDeleteTimeEntry.Visible = False
-        'regenerateTimeEntryButton.Visible = False
 
         Dim numOfRows = 2
 
@@ -251,8 +287,15 @@ Public Class TimeEntrySummaryForm
             Await LoadTimeEntries()
         End If
 
-        tsBtnDeleteTimeEntry.Visible = _selectedPayPeriod.IsOpen
-        RegenerateTimeEntryButton.Visible = _selectedPayPeriod.IsOpen
+        If Not _tsBtnDeleteTimeEntryHidden Then
+            tsBtnDeleteTimeEntry.Visible = _selectedPayPeriod.IsOpen
+
+        End If
+
+        If Not _regenerateTimeEntryButtonHidden Then
+            RegenerateTimeEntryButton.Visible = _selectedPayPeriod.IsOpen
+        End If
+
     End Function
 
     Private Async Function GetPayPeriods(
@@ -1008,8 +1051,14 @@ Public Class TimeEntrySummaryForm
 
         Dim isOpen = _selectedPayPeriod IsNot Nothing AndAlso _selectedPayPeriod.IsOpen
 
-        tsBtnDeleteTimeEntry.Visible = isOpen
-        RegenerateTimeEntryButton.Visible = isOpen
+        If Not _tsBtnDeleteTimeEntryHidden Then
+            tsBtnDeleteTimeEntry.Visible = isOpen
+
+        End If
+
+        If Not _regenerateTimeEntryButtonHidden Then
+            RegenerateTimeEntryButton.Visible = isOpen
+        End If
 
         Await LoadTimeEntries()
     End Sub

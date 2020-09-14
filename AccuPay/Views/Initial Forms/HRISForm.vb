@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -36,39 +38,11 @@ Public Class HRISForm
         _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
 
         curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
+
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
     End Sub
 
-    Private Sub PrepareFormForBenchmark()
-
-        If if_sysowner_is_benchmark Then
-            CheckListToolStripMenuItem.Visible = False
-            AwardsToolStripMenuItem.Visible = False
-            CertificatesToolStripMenuItem.Visible = False
-            EducBGToolStripMenuItem.Visible = False
-            PrevEmplyrToolStripMenuItem.Visible = False
-            PromotionToolStripMenuItem.Visible = False
-            DisciplinaryActionToolStripMenuItem.Visible = False
-            BonusToolStripMenuItem.Visible = False
-            AttachmentToolStripMenuItem.Visible = False
-            OffSetToolStripMenuItem.Visible = False
-            JobLevelToolStripMenuItem.Visible = False
-            EmployeeExperimentalToolStripMenuItem.Visible = False
-
-            DeductionsToolStripMenuItem.Visible = True
-            OtherIncomeToolStripMenuItem.Visible = True
-        End If
-
-    End Sub
-
     Private Async Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        Dim user = Await _userRepository.GetByIdAsync(z_User)
-
-        If user Is Nothing Then
-            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            Return
-        End If
 
         OffSetToolStripMenuItem.Visible =
             (curr_sys_owner_name = SystemOwnerService.Cinema2000)
@@ -101,7 +75,7 @@ Public Class HRISForm
 
         EmployeeToolStripMenuItem.Visible = If(employeePermission?.Read, False) OrElse If(salaryPermission?.Read, False)
 
-        PersonalinfoToolStripMenuItem.Visible = If(employeePermission?.Read, False)
+        PersonalInfoToolStripMenuItem.Visible = If(employeePermission?.Read, False)
 
         Dim employeeUpdatable = If(employeePermission?.Read, False) AndAlso If(employeePermission?.Update, False)
 
@@ -114,7 +88,7 @@ Public Class HRISForm
         BonusToolStripMenuItem.Visible = employeeUpdatable
         AttachmentToolStripMenuItem.Visible = employeeUpdatable
 
-        'Job, Points, Offset will only override the visibility if Read is False
+        'Job, Points, Offset will only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If Not employeeUpdatable Then
             OffSetToolStripMenuItem.Visible = False
@@ -130,6 +104,59 @@ Public Class HRISForm
 
         DivisionToolStripMenuItem.Visible = If(divisionPermission?.Read, False) OrElse If(positionPermission?.Read, False)
     End Function
+
+    Private Async Sub PrepareFormForUserLevelAuthorizations()
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
+
+        If user Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            Return
+        End If
+
+        If _policyHelper.UseUserLevel = False Then Return
+
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+            DivisionToolStripMenuItem.Visible = False
+
+            CheckListToolStripMenuItem.Visible = False
+            AwardsToolStripMenuItem.Visible = False
+            CertificatesToolStripMenuItem.Visible = False
+            EducBGToolStripMenuItem.Visible = False
+            PrevEmplyrToolStripMenuItem.Visible = False
+            PromotionToolStripMenuItem.Visible = False
+            DisciplinaryActionToolStripMenuItem.Visible = False
+            EmpSalToolStripMenuItem.Visible = False
+            BonusToolStripMenuItem.Visible = False
+            AttachmentToolStripMenuItem.Visible = False
+            OffSetToolStripMenuItem.Visible = False
+
+        End If
+
+    End Sub
+
+    Private Sub PrepareFormForBenchmark()
+
+        If if_sysowner_is_benchmark Then
+            CheckListToolStripMenuItem.Visible = False
+            AwardsToolStripMenuItem.Visible = False
+            CertificatesToolStripMenuItem.Visible = False
+            EducBGToolStripMenuItem.Visible = False
+            PrevEmplyrToolStripMenuItem.Visible = False
+            PromotionToolStripMenuItem.Visible = False
+            DisciplinaryActionToolStripMenuItem.Visible = False
+            BonusToolStripMenuItem.Visible = False
+            AttachmentToolStripMenuItem.Visible = False
+            OffSetToolStripMenuItem.Visible = False
+            JobLevelToolStripMenuItem.Visible = False
+            EmployeeExperimentalToolStripMenuItem.Visible = False
+
+            DeductionsToolStripMenuItem.Visible = True
+            OtherIncomeToolStripMenuItem.Visible = True
+        End If
+
+    End Sub
 
     Private Async Function ChangeForm(ByVal passedForm As Form, Optional permissionNames As String() = Nothing) As Task
 
@@ -201,7 +228,7 @@ Public Class HRISForm
         EmployeeForm.tbpempchklist.Focus()
     End Sub
 
-    Private Async Sub PersonalinfoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PersonalinfoToolStripMenuItem.Click
+    Private Async Sub PersonalinfoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PersonalInfoToolStripMenuItem.Click
 
         Dim index = EmployeeForm.GetEmployeeProfileTabPageIndex
 
@@ -341,36 +368,6 @@ Public Class HRISForm
 
     Private Sub HRISForm_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
         'Label1.Text = Me.Width & " PanelHRIS " & PanelHRIS.Width
-    End Sub
-
-    Private Async Sub PrepareFormForUserLevelAuthorizations()
-        Dim user = Await _userRepository.GetByIdAsync(z_User)
-
-        If user Is Nothing Then
-
-            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-        End If
-
-        If _policyHelper.UseUserLevel = False Then Return
-
-        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
-
-            DivisionToolStripMenuItem.Visible = False
-
-            CheckListToolStripMenuItem.Visible = False
-            AwardsToolStripMenuItem.Visible = False
-            CertificatesToolStripMenuItem.Visible = False
-            EducBGToolStripMenuItem.Visible = False
-            PrevEmplyrToolStripMenuItem.Visible = False
-            PromotionToolStripMenuItem.Visible = False
-            DisciplinaryActionToolStripMenuItem.Visible = False
-            EmpSalToolStripMenuItem.Visible = False
-            BonusToolStripMenuItem.Visible = False
-            AttachmentToolStripMenuItem.Visible = False
-            OffSetToolStripMenuItem.Visible = False
-
-        End If
-
     End Sub
 
     Private Sub PanelHRIS_ControlRemoved(sender As Object, e As ControlEventArgs) Handles PanelHRIS.ControlRemoved
