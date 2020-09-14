@@ -19,7 +19,7 @@ Public Class ShiftEntryForm
 
     Dim SecondSelector As String = ""
 
-    Private _curentRolePermission As RolePermission
+    Private _currentRolePermission As RolePermission
 
     Property ShiftRowID As Object
         Get
@@ -123,18 +123,18 @@ Public Class ShiftEntryForm
 
         If role.Success Then
 
-            _curentRolePermission = role.RolePermission
+            _currentRolePermission = role.RolePermission
 
-            If _curentRolePermission.Create Then
+            If _currentRolePermission.Create Then
                 tsbtnNewShift.Visible = True
 
             End If
 
-            If _curentRolePermission.Update OrElse _curentRolePermission.Create Then
+            If _currentRolePermission.Update OrElse _currentRolePermission.Create Then
                 tsbtnSaveShift.Visible = True
             End If
 
-            If _curentRolePermission.Delete Then
+            If _currentRolePermission.Delete Then
                 btnDelete.Visible = True
 
             End If
@@ -267,7 +267,7 @@ Public Class ShiftEntryForm
 
         If IsNew = 1 Then
 
-            If _curentRolePermission.Create = False Then
+            If _currentRolePermission.Create = False Then
                 MessageBoxHelper.DefaultUnauthorizedActionMessage()
                 Return
             End If
@@ -361,7 +361,7 @@ Public Class ShiftEntryForm
             'fillshiftentry()
             'Me.Hide()
         Else
-            If _curentRolePermission.Update = False Then
+            If _currentRolePermission.Update = False Then
                 MessageBoxHelper.DefaultUnauthorizedActionMessage()
                 Return
             End If

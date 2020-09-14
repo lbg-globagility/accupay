@@ -41,6 +41,7 @@ Public Class GeneralForm
 
         If user Is Nothing Then
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            Return
         End If
 
         CheckPolicyPermissions()
@@ -87,7 +88,7 @@ Public Class GeneralForm
     End Sub
 
     Private Async Function CheckRolePermissions() As Task
-        Await ReloadRolePermissions()
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
 
         Dim userPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.USER).FirstOrDefault()
         Dim organizationPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ORGANIZATION).FirstOrDefault()
@@ -100,7 +101,7 @@ Public Class GeneralForm
         OrganizationToolStripMenuItem.Visible = If(organizationPermission?.Read, False)
         UserPrivilegeToolStripMenuItem.Visible = If(rolePermission?.Read, False)
 
-        'Branch, Calendar and Duty Shift will override the visibility only if Read is False
+        'Branch, Calendar and Duty Shift will only override the visibility if Read is False
         'since they are already checked by other policies above
         If branchPermission Is Nothing OrElse branchPermission.Read = False Then
             BranchToolStripMenuItem.Visible = False
@@ -120,7 +121,7 @@ Public Class GeneralForm
 
         If permissionName IsNot Nothing Then
 
-            If Await PermissionHelper.AllowRead(permissionName, policyHelper:=_policyHelper) = False Then
+            If Await PermissionHelper.DoesAllowReadAsync(permissionName, policyHelper:=_policyHelper) = False Then
                 MessageBoxHelper.DefaultUnauthorizedFormMessage()
                 Return
             End If
@@ -131,7 +132,7 @@ Public Class GeneralForm
 
     End Function
 
-    Private Function ShowForm(passedForm As Form) As Form
+    Private Sub ShowForm(passedForm As Form)
         Try
             Application.DoEvents()
             Dim FName As String = passedForm.Name
@@ -160,8 +161,7 @@ Public Class GeneralForm
             Next
         End Try
 
-        Return passedForm
-    End Function
+    End Sub
 
     Private Sub GeneralForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
@@ -230,7 +230,7 @@ Public Class GeneralForm
 
     Private Async Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
 
-        If Await PermissionHelper.AllowRead(PermissionConstant.BRANCH, policyHelper:=_policyHelper) = False Then
+        If Await PermissionHelper.DoesAllowReadAsync(PermissionConstant.BRANCH, policyHelper:=_policyHelper) = False Then
             MessageBoxHelper.DefaultUnauthorizedFormMessage()
             Return
         End If
@@ -242,8 +242,7 @@ Public Class GeneralForm
 
     Private Sub PanelGeneral_ControlRemoved(sender As Object, e As ControlEventArgs) Handles PanelGeneral.ControlRemoved
         Dim listOfForms = PanelGeneral.Controls.Cast(Of Form)()
-        For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
-            'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
+        For Each pb As Form In listOfForms
             pb.Enabled = True
             Exit For
         Next
@@ -260,11 +259,5 @@ Public Class GeneralForm
         MyBase.OnLoad(e)
 
     End Sub
-
-    Private Async Function ReloadRolePermissions() As Task
-
-        USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
-
-    End Function
 
 End Class

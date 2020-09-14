@@ -186,7 +186,7 @@ Public Class MetroLogin
             Return
         End If
 
-        USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=user.Id, organizationId:=z_OrganizationID)
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=user.Id, organizationId:=z_OrganizationID)
 
         If USER_ROLE Is Nothing Then
 

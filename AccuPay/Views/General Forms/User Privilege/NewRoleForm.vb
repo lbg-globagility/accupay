@@ -40,7 +40,7 @@ Public Class NewRoleForm
                 Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleDataService)
                 Await roleRepository.CreateAsync(currentRole)
 
-                USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
+                USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
 
                 Me.IsSaved = True
                 Me.NewRole = currentRole

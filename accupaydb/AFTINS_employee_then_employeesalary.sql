@@ -311,15 +311,6 @@ IF div_RowID IS NOT NULL THEN
 
 END IF;
 
-SET @int_any = 0;
-
-SELECT `string_chopchop`(RowID, EmployeeID)
-,`string_chopchop`(RowID, FirstName)
-,`string_chopchop`(RowID, LastName)
-,`string_chopchop`(RowID, MiddleName)
-,`string_chopchop`(RowID, Nickname)
-FROM employee WHERE RowID=NEW.RowID INTO @int_any,@int_any,@int_any,@int_any,@int_any;
-
 CALL AUTOINS_leaveledger(NEW.OrganizationID, NEW.RowID, NEW.CreatedBy);
 
 END//

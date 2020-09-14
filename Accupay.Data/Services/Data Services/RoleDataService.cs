@@ -43,7 +43,7 @@ namespace AccuPay.Data.Services
 
         public async Task DeleteAsync(int roleId)
         {
-            var role = await _roleRepository.GetById(roleId);
+            var role = await _roleRepository.GetByIdAsync(roleId);
 
             if (role == null)
                 throw new BusinessLogicException("Role does not exists.");

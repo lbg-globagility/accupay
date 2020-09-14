@@ -3,8 +3,10 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -38,6 +40,10 @@ Public Class EmployeeForm
 
     Private _systemOwnerService As SystemOwnerService
 
+    Private _laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
+
+    Private _currentRolePermission As RolePermission
+
     Sub New()
 
         InitializeComponent()
@@ -50,6 +56,156 @@ Public Class EmployeeForm
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
         MyBase.OnLoad(e)
+    End Sub
+
+    Dim paytypestring As String
+
+    Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        AddHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
+
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_laglobal = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
+
+        PrepareForm()
+
+        previousForm = Me
+
+        loademployee()
+
+        u_nem = EXECQUER(USERNameStrPropr & z_User)
+
+        paytypestring = EXECQUER("SELECT PayFrequencyType FROM payfrequency pfq LEFT JOIN organization org ON org.PayFrequencyID=pfq.RowID WHERE org.RowID='" & orgztnID & "' LIMIT 1;")
+
+        AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+    End Sub
+
+    Private Sub PrepareForm()
+        CheckRolePermissions()
+        PrepareFormForUserLevelAuthorizations()
+        PrepareFormForBenchmark()
+        PreperateFormForLaGlobal()
+    End Sub
+
+    Private Sub CheckRolePermissions()
+
+        Dim employeePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.EMPLOYEE).FirstOrDefault()
+        Dim salaryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SALARY).FirstOrDefault()
+
+        If employeePermission Is Nothing OrElse employeePermission.Read = False Then
+
+            RemoveTab(tbpEmployee)
+
+        End If
+
+        If employeePermission Is Nothing OrElse
+            employeePermission.Read = False OrElse
+            employeePermission.Update = False Then
+
+            RemoveTab(tbpempchklist)
+            RemoveTab(tbpAwards)
+            RemoveTab(tbpCertifications)
+            RemoveTab(tbpEducBG)
+            RemoveTab(tbpPrevEmp)
+            RemoveTab(tbpDiscipAct)
+            RemoveTab(tbpBonus)
+            RemoveTab(tbpAttachment)
+
+        End If
+
+        If salaryPermission Is Nothing OrElse salaryPermission.Read = False Then
+
+            RemoveTab(tbpSalary)
+        End If
+
+    End Sub
+
+    Private Sub RemoveTab(page As TabPage)
+
+        If tabctrlemp.TabPages.Contains(page) Then
+
+            tabctrlemp.TabPages.Remove(page)
+        End If
+
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        Dim user = userRepository.GetById(z_User)
+
+        If user Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            Return
+        End If
+
+        If _policy.UseUserLevel = False Then
+
+            Return
+
+        End If
+
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+            RemoveTab(tbpempchklist)
+            RemoveTab(tbpAwards)
+            RemoveTab(tbpCertifications)
+            RemoveTab(tbpEducBG)
+            RemoveTab(tbpPrevEmp)
+            RemoveTab(tbpDiscipAct)
+            RemoveTab(tbpSalary)
+            RemoveTab(tbpBonus)
+            RemoveTab(tbpAttachment)
+
+        End If
+
+    End Sub
+
+    Private Sub PrepareFormForBenchmark()
+        If if_sysowner_is_benchmark Then
+
+            'only salary and employee tabs should be visible
+
+            RemoveTab(tbpempchklist)
+            RemoveTab(tbpAwards)
+            RemoveTab(tbpCertifications)
+            RemoveTab(tbpEducBG)
+            RemoveTab(tbpPrevEmp)
+            RemoveTab(tbpDiscipAct)
+            RemoveTab(tbpBonus)
+            RemoveTab(tbpAttachment)
+
+            TabControl3.Visible = False
+            LeaveGroupBox.Visible = True
+
+        End If
+
+        If dbnow = Nothing Then
+            dbnow = EXECQUER(CURDATE_MDY)
+        End If
+    End Sub
+
+    Private Sub PreperateFormForLaGlobal()
+
+        If if_sysowner_is_laglobal = False Then
+            ActiveEmployeeChecklistReportToolStripMenuItem.Visible = False
+            BPIInsuranceAmountReportToolStripMenuItem.Visible = False
+            EmploymentContractToolStripMenuItem.Visible = False
+            EndOfContractReportToolStripMenuItem.Visible = False
+            MonthlyBirthdayReportToolStripMenuItem.Visible = False
+            DeploymentEndorsementToolStripMenuItem.Visible = False
+            WorkOrderToolStripMenuItem.Visible = False
+        End If
+
+        _laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
+            {ActiveEmployeeChecklistReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport},
+            {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsurancePaymentReport},
+            {EmploymentContractToolStripMenuItem.Name, LaGlobalEmployeeReportName.EmploymentContractPage},
+            {EndOfContractReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyEndofContractReport},
+            {MonthlyBirthdayReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyBirthdayReport},
+            {DeploymentEndorsementToolStripMenuItem.Name, LaGlobalEmployeeReportName.SmDeploymentEndorsement},
+            {WorkOrderToolStripMenuItem.Name, LaGlobalEmployeeReportName.WorkOrder}}
     End Sub
 
 #Region "Employee Check list"
@@ -82,6 +238,9 @@ Public Class EmployeeForm
     Dim chkliststring As New AutoCompleteStringCollection
 
     Sub VIEW_employeechecklist(ByVal emp_rowid As Object)
+
+        'Fix this to handle if there is no employee checklist record.
+
         Static once As Integer = -1
         Static emp_row_id As String = Nothing
         chkliststring.Clear()
@@ -111,12 +270,6 @@ Public Class EmployeeForm
                     field_count = (datread.FieldCount / 2) - 2
 
                     If datread.Read Then
-                        For i = 0 To field_count
-                            chkliststring.Add(datread.GetString(text_indx).ToString & "@" &
-                                              datread.GetString(text_indx + 1).ToString)
-                            text_indx += 2
-                        Next
-                    Else
                         For i = 0 To field_count
                             chkliststring.Add(datread.GetString(text_indx).ToString & "@" &
                                               datread.GetString(text_indx + 1).ToString)
@@ -488,7 +641,7 @@ Public Class EmployeeForm
     End Function
 
     Public Function GetSalaryTabPageIndex() As Integer
-        Return tabctrlemp.TabPages.IndexOf(tbpNewSalary)
+        Return tabctrlemp.TabPages.IndexOf(tbpSalary)
     End Function
 
     Sub ctrlAttachment(ByVal lnk_lablesender As LinkLabel)
@@ -642,14 +795,21 @@ Public Class EmployeeForm
     End Sub
 
     Dim empBDate As String
-    Dim dontUpdateEmp As SByte = 0
 
     Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
-        'dgvEmp.CurrentRow.Cells("RowID").Value
-        If (tsbtnNewEmp.Enabled = True AndAlso
+        Dim isNew = tsbtnNewEmp.Enabled = False
+
+        If (isNew AndAlso Not _currentRolePermission.Create) OrElse
+                (Not isNew AndAlso Not _currentRolePermission.Update) Then
+
+            MessageBoxHelper.DefaultUnauthorizedActionMessage()
+            Return
+        End If
+
+        If (Not isNew AndAlso
             (dgvEmp.CurrentRow Is Nothing OrElse
             String.IsNullOrWhiteSpace(dgvEmp.CurrentRow.Cells("RowID").Value))) Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
@@ -657,10 +817,10 @@ Public Class EmployeeForm
             WarnBalloon("Please select an employee to update.", "No employee selected", lblforballoon, 0, -69)
             Return
 
-        ElseIf (tsbtnNewEmp.Enabled = False AndAlso
+        ElseIf (isNew AndAlso
         EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
             Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1) OrElse
-       (tsbtnNewEmp.Enabled = True AndAlso
+       (Not isNew AndAlso
         EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
             Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & " AND RowID <> " & dgvEmp.CurrentRow.Cells("RowID").Value & "); ") = 1) Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
@@ -680,7 +840,7 @@ Public Class EmployeeForm
         ElseIf Trim(cboEmpStat.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             cboEmpStat.Focus()
-            WarnBalloon("Please input an Employee status.", "Invalid Employee status", lblforballoon, 0, -69)
+            WarnBalloon("Please select an employee status.", "Invalid employee status", lblforballoon, 0, -69)
             Exit Sub
         ElseIf Trim(txtFName.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
@@ -695,17 +855,22 @@ Public Class EmployeeForm
         ElseIf Trim(cboMaritStat.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             cboMaritStat.Focus()
-            WarnBalloon("Please input marital status.", "Invalid marital status", lblforballoon, 0, -69)
+            WarnBalloon("Please select a marital status.", "Invalid marital status", lblforballoon, 0, -69)
             Exit Sub
         ElseIf Trim(cboPayFreq.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             cboPayFreq.Focus()
-            WarnBalloon("Please input a pay frequency.", "Invalid Pay Frequency", lblforballoon, 0, -69)
+            WarnBalloon("Please select a pay frequency.", "Invalid pay frequency", lblforballoon, 0, -69)
+            Exit Sub
+        ElseIf Trim(cboPosit.Text) = "" Then
+            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+            cboPosit.Focus()
+            WarnBalloon("Please select a position.", "Invalid Position", lblforballoon, 0, -69)
             Exit Sub
         ElseIf String.IsNullOrWhiteSpace(txtWorkDaysPerYear.Text) OrElse ObjectUtils.ToDecimal(txtWorkDaysPerYear.Text) <= 0 Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             txtWorkDaysPerYear.Focus()
-            WarnBalloon("Please input a valid work days per year.", "Invalid Work Days per Year", lblforballoon, 0, -69)
+            WarnBalloon("Please input a valid work days per year.", "Invalid work days per year", lblforballoon, 0, -69)
             Exit Sub
 
         ElseIf rdbDirectDepo.Checked Then
@@ -740,7 +905,7 @@ Public Class EmployeeForm
 
         Dim employee_RowID = Nothing
 
-        If tsbtnNewEmp.Enabled = False Then
+        If isNew Then
             employee_RowID = DBNull.Value
         Else
             If dgvEmp.RowCount <> 0 Then
@@ -777,7 +942,7 @@ Public Class EmployeeForm
             Dim regularizationDate = If(dtpRegularizationDate.Checked, dtpRegularizationDate.Value, DBNull.Value)
             Dim evaluationDate = If(dtpEvaluationDate.Checked, dtpEvaluationDate.Value, DBNull.Value)
 
-            If tsbtnNewEmp.Enabled = True Then 'Means update and oldEmployee is needed for UserActivity
+            If Not isNew Then 'Means update and oldEmployee is needed for UserActivity
                 oldEmployee = GetOldEmployee(employee_RowID)
 
             End If
@@ -849,7 +1014,7 @@ Public Class EmployeeForm
                            ValNoComma(BPIinsuranceText.Text))
             succeed = new_eRowID IsNot Nothing
 
-            Dim employeeId = If(tsbtnNewEmp.Enabled = False, new_eRowID, employee_RowID)
+            Dim employeeId = If(isNew, new_eRowID, employee_RowID)
 
             'this is during edit
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
@@ -871,7 +1036,7 @@ Public Class EmployeeForm
         End Try
 
         Dim dgvEmp_RowIndex = 0
-        If tsbtnNewEmp.Enabled = False Then 'INSERT employee
+        If isNew Then 'INSERT employee
 
             employee_RowID = new_eRowID
 
@@ -900,12 +1065,6 @@ Public Class EmployeeForm
 
             If dgvEmp.CurrentRow Is Nothing Then Exit Sub
 
-            If dontUpdateEmp = 1 Then
-                tsbtnNewEmp.Enabled = True
-                AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-                Exit Sub
-            End If
-
             For Each drow As DataRow In employeepix.Rows
                 If drow("RowID").ToString = dgvEmp.CurrentRow.Cells("RowID").Value Then
                     drow("Image") = Nothing
@@ -926,7 +1085,7 @@ Public Class EmployeeForm
 
         With dgvEmp.Rows(dgvEmp_RowIndex)
 
-            If tsbtnNewEmp.Enabled = False Then
+            If isNew Then
 
                 .Cells("RowID").Value = employee_RowID
 
@@ -1134,14 +1293,14 @@ Public Class EmployeeForm
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} number of dependents from '{oldEmployee.NoOfDependents.ToString}' to '{txtNumDepen.Text}'."
+                        .Description = $"Updated {entityName} number of dependents from '{oldEmployee.NoOfDependents}' to '{txtNumDepen.Text}'."
                         })
         End If
         If oldEmployee.PayFrequency?.Type <> cboPayFreq.Text Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} pay frequency from '{oldEmployee.PayFrequency.Type}' to '{cboPayFreq.Text}'."
+                        .Description = $"Updated {entityName} pay frequency from '{oldEmployee.PayFrequency?.Type}' to '{cboPayFreq.Text}'."
                         })
         End If
         If oldEmployee.DayOfRest Is Nothing And cboDayOfRest.Text <> "" Then
@@ -1820,87 +1979,6 @@ Public Class EmployeeForm
         Return CInt(_divisor)
     End Function
 
-    Dim view_ID As Object
-    Dim paytypestring As String
-
-    Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        AddHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
-
-        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-        if_sysowner_is_laglobal = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
-
-        If if_sysowner_is_benchmark Then
-
-            'only salary and employee tabs should be visible
-
-            tabctrlemp.TabPages.Remove(tbpempchklist)
-            tabctrlemp.TabPages.Remove(tbpAwards)
-            tabctrlemp.TabPages.Remove(tbpCertifications)
-            tabctrlemp.TabPages.Remove(tbpDiscipAct)
-            tabctrlemp.TabPages.Remove(tbpEducBG)
-            tabctrlemp.TabPages.Remove(tbpPrevEmp)
-            tabctrlemp.TabPages.Remove(tbpBonus)
-            tabctrlemp.TabPages.Remove(tbpAttachment)
-
-            TabControl3.Visible = False
-            LeaveGroupBox.Visible = True
-
-        End If
-
-        If dbnow = Nothing Then
-            dbnow = EXECQUER(CURDATE_MDY)
-        End If
-
-        previousForm = Me
-        'dbconn()
-        view_ID = VIEW_privilege("Employee Personal Profile", orgztnID)
-
-        loademployee()
-
-        u_nem = EXECQUER(USERNameStrPropr & z_User)
-
-        paytypestring = EXECQUER("SELECT PayFrequencyType FROM payfrequency pfq LEFT JOIN organization org ON org.PayFrequencyID=pfq.RowID WHERE org.RowID='" & orgztnID & "' LIMIT 1;")
-
-        PrepareFormForUserLevelAuthorizations()
-
-        InitializeLaGlobalReportList()
-
-        AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-    End Sub
-
-    Private Async Sub PrepareFormForUserLevelAuthorizations()
-
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
-        Dim user = Await userRepository.GetByIdAsync(z_User)
-
-        If user Is Nothing Then
-
-            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-        End If
-
-        If _policy.UseUserLevel = False Then
-
-            Return
-
-        End If
-
-        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
-
-            tabctrlemp.TabPages.Remove(tbpempchklist)
-            tabctrlemp.TabPages.Remove(tbpAwards)
-            tabctrlemp.TabPages.Remove(tbpCertifications)
-            tabctrlemp.TabPages.Remove(tbpEducBG)
-            tabctrlemp.TabPages.Remove(tbpPrevEmp)
-            tabctrlemp.TabPages.Remove(tbpDiscipAct)
-            tabctrlemp.TabPages.Remove(tbpNewSalary)
-            tabctrlemp.TabPages.Remove(tbpBonus)
-            tabctrlemp.TabPages.Remove(tbpAttachment)
-
-        End If
-
-    End Sub
-
     Private Sub Employee_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
 
         InfoBalloon(, , lblforballoon1, , , 1)
@@ -2090,7 +2168,7 @@ Public Class EmployeeForm
 
                     Await AttachmentTab.SetEmployee(employee)
 
-                ElseIf selectedTab Is tbpNewSalary Then
+                ElseIf selectedTab Is tbpSalary Then
 
                     Await SalaryTab.SetEmployee(employee)
                 End If
@@ -2129,23 +2207,50 @@ Public Class EmployeeForm
         listofEditDepen.Clear()
     End Sub
 
+    Private Function GetDbString(input As Object) As String
+
+        If IsDBNull(input) OrElse input Is Nothing Then
+            Return Nothing
+        Else
+            Return input.ToString()
+        End If
+
+    End Function
+
+    Private Function GetDbDate(input As Object) As Date
+
+        Dim defaultOutput = Format(CDate(dbnow), machineShortDateFormat)
+
+        If IsDBNull(input) Then Return defaultOutput
+
+        Dim dateOutput = ObjectUtils.ToNullableDateTime(input)
+
+        If dateOutput Is Nothing Then Return defaultOutput
+
+        If dateOutput < Data.Helpers.PayrollTools.SqlServerMinimumDate Then Return defaultOutput
+
+        Return dateOutput
+    End Function
+
     Private Sub SetEmployee()
         txtNName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column5").Value), "", dgvEmp.CurrentRow.Cells("Column5").Value)
         txtDivisionName.Text = dgvEmp.CurrentRow.Cells("Column7").Value
 
-        If dgvEmp.CurrentRow.Cells("Column6").Value Is Nothing Then
-            dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-        Else
-            dtpempbdate.Value = Format(CDate(dgvEmp.CurrentRow.Cells("Column6").Value), machineShortDateFormat)
-        End If
+        dtpempbdate.Value = GetDbDate(dgvEmp.CurrentRow.Cells("Column6").Value)
+        dtpempstartdate.Value = GetDbDate(dgvEmp.CurrentRow.Cells("colstartdate").Value)
 
-        txtTIN.Text = dgvEmp.CurrentRow.Cells("Column10").Value : txtSSS.Text = dgvEmp.CurrentRow.Cells("Column11").Value
-        txtHDMF.Text = dgvEmp.CurrentRow.Cells("Column12").Value : txtPIN.Text = dgvEmp.CurrentRow.Cells("Column13").Value
-        txtWorkPhne.Text = dgvEmp.CurrentRow.Cells("Column15").Value : txtHomePhne.Text = dgvEmp.CurrentRow.Cells("Column16").Value
-        txtMobPhne.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column17").Value), "", dgvEmp.CurrentRow.Cells("Column17").Value) : txtHomeAddr.Text = dgvEmp.CurrentRow.Cells("Column18").Value
-        txtemail.Text = dgvEmp.CurrentRow.Cells("Column14").Value
+        txtTIN.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column10").Value)
+        txtSSS.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column11").Value)
+        txtHDMF.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column12").Value)
+        txtPIN.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column13").Value)
+        txtWorkPhne.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column15").Value)
+        txtHomePhne.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column16").Value)
+        txtMobPhne.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column17").Value)
+        txtHomeAddr.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column18").Value)
+        txtemail.Text = GetDbString(dgvEmp.CurrentRow.Cells("Column14").Value)
 
-        Dim payFrequency = _payFrequencies.Where(Function(p) p.Type = dgvEmp.CurrentRow.Cells("Column22").Value).FirstOrDefault
+        Dim payFrequency = _payFrequencies.Where(Function(p) p.IsSemiMonthly).FirstOrDefault
+
         If payFrequency Is Nothing Then
             cboPayFreq.SelectedIndex = -1
         Else
@@ -2161,32 +2266,17 @@ Public Class EmployeeForm
             cboEmpStat.Text = dgvEmp.CurrentRow.Cells("Column20").Value
         End If
 
-        reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)  ': cboPosit.Text = dgvEmp.CurrentRow.Cells("Column8").Value
+        reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)
 
         cboPosit.Text = dgvEmp.CurrentRow.Cells("Column8").Value
 
         AddHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
 
-        If IsDBNull(dgvEmp.CurrentRow.Cells("Column9").Value) OrElse dgvEmp.CurrentRow.Cells("Column9").Value = "" Then
-            cboSalut.SelectedIndex = -1
-            cboSalut.Text = ""
-        Else
-            cboSalut.Text = dgvEmp.CurrentRow.Cells("Column9").Value
-        End If
-        '"UndertimeOverride" = "Column23" : "OvertimeOverride" = "Column24"
-        '"Creation date" = "Column25" : "Created by" = "Column26"
-        '"Last update" = "Column27" : "Last Update by" = "Column28"
-        If dgvEmp.CurrentRow.Cells("Column31").Value = "" Then
-            cboMaritStat.SelectedIndex = -1
-            cboMaritStat.Text = ""
-        Else
-            cboMaritStat.Text = dgvEmp.CurrentRow.Cells("Column31").Value
-        End If
+        SetComboBoxValue(dgvEmp.CurrentRow.Cells("Column9").Value, cboSalut)
 
-        cboEmpType.SelectedIndex = -1
-        cboEmpType.Text = ""
+        SetComboBoxValue(dgvEmp.CurrentRow.Cells("Column31").Value, cboMaritStat)
 
-        cboEmpType.Text = dgvEmp.CurrentRow.Cells("Column34").Value
+        SetComboBoxValue(dgvEmp.CurrentRow.Cells("Column34").Value, cboEmpType)
 
         txtNumDepen.Text = Val(dgvEmp.CurrentRow.Cells("Column32").Value)
 
@@ -2202,7 +2292,6 @@ Public Class EmployeeForm
         Gender_CheckedChanged(radioGender, New EventArgs)
 
         noCurrCellChange = 0
-        dtpempstartdate.Value = CDate(dgvEmp.CurrentRow.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
 
         pbemppic.Image = Nothing
         pbemppic.Image = EmployeeImage
@@ -2314,6 +2403,15 @@ Public Class EmployeeForm
         BPIinsuranceText.Text = dgvEmp.CurrentRow.Cells("BPIInsuranceColumn").Value
 
         AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+    End Sub
+
+    Private Sub SetComboBoxValue(dbValue As Object, comboBox As ComboBox)
+        If IsDBNull(dbValue) OrElse dbValue = "" Then
+            comboBox.SelectedIndex = -1
+            comboBox.Text = ""
+        Else
+            comboBox.Text = dbValue
+        End If
     End Sub
 
     Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
@@ -3009,7 +3107,7 @@ Public Class EmployeeForm
             Exit Sub
         End If
 
-        If dontUpdateEmp = 1 Then
+        If _currentRolePermission.Update = False Then
             listofEditDepen.Clear()
         End If
 
@@ -3418,17 +3516,11 @@ Public Class EmployeeForm
 
             dtpempstartdate.Value = dbnow 'Format(CDate(dbnow), machineShortDateFormat)
 
-            view_ID = VIEW_privilege("Employee Personal Profile", orgztnID)
-
-            'For Each strval In cboSalut.Items
-            '    Colmn2.Items.Add(strval)
-            'Next
-
             enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee Relationship' ORDER BY OrderBy;",
                            emp_ralation)
 
             Dim payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
-            Dim payFrequencies = Await payFrequencyRepository.GetAllAsync()
+            Dim payFrequencies = payFrequencyRepository.GetAll()
             _payFrequencies = payFrequencies.Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly).ToList()
 
             cboPayFreq.ValueMember = "RowID"
@@ -3438,50 +3530,31 @@ Public Class EmployeeForm
 
             For Each strval In emp_ralation
                 Colmn7.Items.Add(strval)
-                'MsgBox(strval)
             Next
 
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
+            Dim role = PermissionHelper.GetRole(PermissionConstant.EMPLOYEE)
 
-            If formuserprivilege.Count = 0 Then
+            tsbtnNewEmp.Visible = False
+            tsbtnImport.Visible = False
+            tsbtnNewDepen.Visible = False
+            tsbtnSaveEmp.Visible = False
+            tsbtnCancel.Visible = False
 
-                tsbtnNewEmp.Visible = 0
-                tsbtnSaveEmp.Visible = 0
+            If role.Success Then
+                _currentRolePermission = role.RolePermission
 
-                tsbtnNewDepen.Visible = 0
-                tsbtnSaveDepen.Visible = 0
+                If _currentRolePermission.Create Then
+                    tsbtnNewEmp.Visible = True
+                    tsbtnNewDepen.Visible = True
+                    tsbtnImport.Visible = True
 
-                dontUpdateEmp = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        'ToolStripButton2.Visible = 0
-                        tsbtnNewEmp.Visible = 0
-                        tsbtnSaveEmp.Visible = 0
+                End If
 
-                        tsbtnNewDepen.Visible = 0
-                        tsbtnSaveDepen.Visible = 0
-
-                        dontUpdateEmp = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            tsbtnNewEmp.Visible = 0
-                            tsbtnNewDepen.Visible = 0
-                        Else
-                            tsbtnNewEmp.Visible = 1
-                            tsbtnNewDepen.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateEmp = 1
-                        Else
-                            dontUpdateEmp = 0
-                        End If
-
-                    End If
-
-                Next
+                If _currentRolePermission.Update OrElse _currentRolePermission.Create Then
+                    tsbtnSaveEmp.Visible = True
+                    tsbtnCancel.Visible = True
+                    tsbtnSaveDepen.Visible = True
+                End If
 
             End If
 
@@ -3905,11 +3978,11 @@ Public Class EmployeeForm
 
 #Region "Salary"
 
-    Sub tbpNewSalary_Enter(sender As Object, e As EventArgs) Handles tbpNewSalary.Enter
+    Sub tbpNewSalary_Enter(sender As Object, e As EventArgs) Handles tbpSalary.Enter
 
         UpdateTabPageText()
 
-        tbpNewSalary.Text = "SALARY               "
+        tbpSalary.Text = "SALARY               "
         Label25.Text = "SALARY"
 
         dgvEmp_SelectionChanged(sender, e)
@@ -3966,7 +4039,7 @@ Public Class EmployeeForm
         tbpPrevEmp.Text = "PREV EMP"
         tbpBonus.Text = "BONUS"
         tbpAttachment.Text = "ATTACH"
-        tbpNewSalary.Text = "SALARY"
+        tbpSalary.Text = "SALARY"
 
     End Sub
 
@@ -4245,12 +4318,12 @@ Public Class EmployeeForm
         Dim currentRow = dgvEmp.CurrentRow
         If currentRow IsNot Nothing Then
             With currentRow
-                If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
+                If Not IsDBNull(.Cells(Column9.Name).Value) AndAlso Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
 
                     cboSalut.Text = CStr(.Cells(Column9.Name).Value)
                 End If
 
-                If CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
+                If IsDBNull(.Cells(Column9.Name).Value) OrElse CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
                     cboSalut.SelectedIndex = 0
                     cboSalut.Text = String.Empty
                 End If
@@ -4267,8 +4340,6 @@ Public Class EmployeeForm
         Male
         Female
     End Enum
-
-    Private _laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
 
     Private Async Sub LaGlobalEmployeeReportMenu_Click(sender As ToolStripMenuItem, e As EventArgs) Handles ActiveEmployeeChecklistReportToolStripMenuItem.Click,
         BPIInsuranceAmountReportToolStripMenuItem.Click,
@@ -4316,28 +4387,6 @@ Public Class EmployeeForm
 
         Dim report = New LaGlobalEmployeeReports(employee)
         report.Print(selectedReport)
-    End Sub
-
-    Private Sub InitializeLaGlobalReportList()
-
-        If if_sysowner_is_laglobal = False Then
-            ActiveEmployeeChecklistReportToolStripMenuItem.Visible = False
-            BPIInsuranceAmountReportToolStripMenuItem.Visible = False
-            EmploymentContractToolStripMenuItem.Visible = False
-            EndOfContractReportToolStripMenuItem.Visible = False
-            MonthlyBirthdayReportToolStripMenuItem.Visible = False
-            DeploymentEndorsementToolStripMenuItem.Visible = False
-            WorkOrderToolStripMenuItem.Visible = False
-        End If
-
-        _laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
-            {ActiveEmployeeChecklistReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport},
-            {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsurancePaymentReport},
-            {EmploymentContractToolStripMenuItem.Name, LaGlobalEmployeeReportName.EmploymentContractPage},
-            {EndOfContractReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyEndofContractReport},
-            {MonthlyBirthdayReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyBirthdayReport},
-            {DeploymentEndorsementToolStripMenuItem.Name, LaGlobalEmployeeReportName.SmDeploymentEndorsement},
-            {WorkOrderToolStripMenuItem.Name, LaGlobalEmployeeReportName.WorkOrder}}
     End Sub
 
 End Class

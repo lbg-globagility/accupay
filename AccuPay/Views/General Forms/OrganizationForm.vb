@@ -5,12 +5,14 @@ Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 
 Public Class OrganizationForm
+
     Dim payFreq As New AutoCompleteStringCollection
+
     Dim isNew As Integer = 0
 
     Dim govdeducsched As New AutoCompleteStringCollection
 
-    Private _curentRolePermission As RolePermission
+    Private _currentRolePermission As RolePermission
 
     Private Async Sub OrganizationForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         fillorganizationtype()
@@ -38,14 +40,14 @@ Public Class OrganizationForm
         CancelButton.Visible = False
 
         If role.Success Then
-            _curentRolePermission = role.RolePermission
+            _currentRolePermission = role.RolePermission
 
-            If _curentRolePermission.Create Then
+            If _currentRolePermission.Create Then
                 NewButton.Visible = True
 
             End If
 
-            If _curentRolePermission.Update OrElse _curentRolePermission.Create Then
+            If _currentRolePermission.Update OrElse _currentRolePermission.Create Then
                 SaveButton.Visible = True
                 CancelButton.Visible = True
             End If
@@ -388,7 +390,7 @@ Public Class OrganizationForm
 
         If isNew = 1 Then
 
-            If _curentRolePermission.Create = False Then
+            If _currentRolePermission.Create = False Then
                 MessageBoxHelper.DefaultUnauthorizedActionMessage()
                 Return
             End If
@@ -433,7 +435,7 @@ Public Class OrganizationForm
                           I_IsAgency:=IsAgencyCheckBox.Checked)
             Else
 
-                If _curentRolePermission.Update = False Then
+                If _currentRolePermission.Update = False Then
                     MessageBoxHelper.DefaultUnauthorizedActionMessage()
                     Return
                 End If
@@ -477,7 +479,7 @@ Public Class OrganizationForm
             End If
         Else
 
-            If _curentRolePermission.Update = False Then
+            If _currentRolePermission.Update = False Then
                 MessageBoxHelper.DefaultUnauthorizedActionMessage()
                 Return
             End If

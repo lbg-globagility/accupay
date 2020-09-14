@@ -96,7 +96,7 @@ namespace AccuPay.Data.Repositories
 
         #endregion User Roles
 
-        public async Task<AspNetRole> GetById(int roleId)
+        public async Task<AspNetRole> GetByIdAsync(int roleId)
         {
             var role = await _context.Roles
                 .Include(t => t.RolePermissions)
@@ -105,7 +105,23 @@ namespace AccuPay.Data.Repositories
             return role;
         }
 
-        public async Task<AspNetRole> GetByUserAndOrganization(int userId, int organizationId)
+        public AspNetRole GetByUserAndOrganization(int userId, int organizationId)
+        {
+            var userRole = _context.UserRoles
+                .Where(t => t.UserId == userId && t.OrganizationId == organizationId)
+                .FirstOrDefault();
+
+            if (userRole is null) return null;
+
+            var role = _context.Roles
+                .Include(t => t.RolePermissions)
+                    .ThenInclude(t => t.Permission)
+                .FirstOrDefault(t => t.Id == userRole.RoleId);
+
+            return role;
+        }
+
+        public async Task<AspNetRole> GetByUserAndOrganizationAsync(int userId, int organizationId)
         {
             var userRole = await _context.UserRoles
                 .Where(t => t.UserId == userId && t.OrganizationId == organizationId)

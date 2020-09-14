@@ -22,7 +22,7 @@ Public Class UserUserControl
     Private _organizations As ICollection(Of Organization)
 
     Private _currentUser As AspNetUser
-    
+
     Private _formMode As FormMode
 
     Sub New()
@@ -58,8 +58,8 @@ Public Class UserUserControl
 
         _formMode = formMode
 
-        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.AllowCreate(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) OrElse
-           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.AllowUpdate(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) Then
+        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.DoesAllowCreateAsync(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) OrElse
+           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.DoesAllowUpdateAsync(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) Then
 
             SetFormToReadOnly()
         End If

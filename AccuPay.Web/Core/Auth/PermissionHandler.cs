@@ -17,7 +17,7 @@ namespace AccuPay.Web.Core.Auth
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
-            var role = await _roleRepository.GetByUserAndOrganization(_currentUser.UserId, _currentUser.OrganizationId);
+            var role = await _roleRepository.GetByUserAndOrganizationAsync(_currentUser.UserId, _currentUser.OrganizationId);
 
             if (role is null) return;
 

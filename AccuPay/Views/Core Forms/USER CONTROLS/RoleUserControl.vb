@@ -46,8 +46,8 @@ Public Class RoleUserControl
 
         _formMode = formMode
 
-        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.AllowCreate(PermissionConstant.ROLE)) = False) OrElse
-           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.AllowUpdate(PermissionConstant.ROLE)) = False) Then
+        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.DoesAllowCreateAsync(PermissionConstant.ROLE)) = False) OrElse
+           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.DoesAllowUpdateAsync(PermissionConstant.ROLE)) = False) Then
 
             SetFormToReadOnly()
         End If
@@ -123,7 +123,7 @@ Public Class RoleUserControl
 
             'This does not update when roleRepository is used as instance field
             Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
-            Dim role = Await roleRepository.GetById(_currentRole.Id)
+            Dim role = Await roleRepository.GetByIdAsync(_currentRole.Id)
 
             If role IsNot Nothing Then
 

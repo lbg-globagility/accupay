@@ -25,7 +25,7 @@ Public Class UserPrivilegeForm
 
     End Sub
 
-    Private Async Sub userprivil_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub UserPrivilegeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         RoleGrid.AutoGenerateColumns = False
 
@@ -74,7 +74,7 @@ Public Class UserPrivilegeForm
 
         Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-        Dim userRole = Await _roleRepository.GetByUserAndOrganization(user.Id, z_OrganizationID)
+        Dim userRole = Await _roleRepository.GetByUserAndOrganizationAsync(user.Id, z_OrganizationID)
 
         Dim list = Await _roleRepository.List(PageOptions.AllData, Z_Client)
 
@@ -124,7 +124,7 @@ Public Class UserPrivilegeForm
 
                 Await RefreshRoleGrid(currentRole)
 
-                USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
+                USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
 
                 InfoBalloon("Role has been successfully saved.", "Role Saved", LabelForBalloon, 0, -69)
             End Function,
@@ -158,7 +158,7 @@ Public Class UserPrivilegeForm
 
                 Await RefreshRoleGrid(currentRole)
 
-                USER_ROLE = Await _roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
+                USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
 
                 InfoBalloon("Role has been successfully deleted.", "Role Deleted", LabelForBalloon, 0, -69)
             End Function)

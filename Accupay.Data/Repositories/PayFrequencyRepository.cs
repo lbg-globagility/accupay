@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
@@ -11,10 +12,15 @@ namespace AccuPay.Data.Repositories
 
         public PayFrequencyRepository(PayrollContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
-        public async Task<IEnumerable<PayFrequency>> GetAllAsync()
+        public ICollection<PayFrequency> GetAll()
+        {
+            return _context.PayFrequencies.ToList();
+        }
+
+        public async Task<ICollection<PayFrequency>> GetAllAsync()
         {
             return await _context.PayFrequencies.ToListAsync();
         }

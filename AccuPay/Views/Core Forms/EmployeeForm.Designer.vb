@@ -315,7 +315,7 @@ Partial Class EmployeeForm
         Me.BonusTab = New AccuPay.BonusTab()
         Me.tbpAttachment = New System.Windows.Forms.TabPage()
         Me.AttachmentTab = New AccuPay.AttachmentTab()
-        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
+        Me.tbpSalary = New System.Windows.Forms.TabPage()
         Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.Label331 = New System.Windows.Forms.Label()
@@ -951,7 +951,7 @@ Partial Class EmployeeForm
         Me.tbpPrevEmp.SuspendLayout
         Me.tbpBonus.SuspendLayout
         Me.tbpAttachment.SuspendLayout
-        Me.tbpNewSalary.SuspendLayout
+        Me.tbpSalary.SuspendLayout
         Me.Panel11.SuspendLayout
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).BeginInit
@@ -1372,7 +1372,7 @@ Partial Class EmployeeForm
         Me.tabctrlemp.Controls.Add(Me.tbpPrevEmp)
         Me.tabctrlemp.Controls.Add(Me.tbpBonus)
         Me.tabctrlemp.Controls.Add(Me.tbpAttachment)
-        Me.tabctrlemp.Controls.Add(Me.tbpNewSalary)
+        Me.tabctrlemp.Controls.Add(Me.tbpSalary)
         Me.tabctrlemp.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.tabctrlemp.ItemSize = New System.Drawing.Size(152, 25)
         Me.tabctrlemp.Location = New System.Drawing.Point(360, 2)
@@ -3452,16 +3452,16 @@ Partial Class EmployeeForm
         Me.AttachmentTab.Size = New System.Drawing.Size(854, 480)
         Me.AttachmentTab.TabIndex = 0
         '
-        'tbpNewSalary
+        'tbpSalary
         '
-        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
-        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
-        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
-        Me.tbpNewSalary.Name = "tbpNewSalary"
-        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
-        Me.tbpNewSalary.TabIndex = 19
-        Me.tbpNewSalary.Text = "SALARY"
-        Me.tbpNewSalary.UseVisualStyleBackColor = True
+        Me.tbpSalary.AccessibleDescription = "Employee Salary"
+        Me.tbpSalary.Controls.Add(Me.SalaryTab)
+        Me.tbpSalary.Location = New System.Drawing.Point(4, 4)
+        Me.tbpSalary.Name = "tbpSalary"
+        Me.tbpSalary.Size = New System.Drawing.Size(860, 486)
+        Me.tbpSalary.TabIndex = 19
+        Me.tbpSalary.Text = "SALARY"
+        Me.tbpSalary.UseVisualStyleBackColor = True
         '
         'SalaryTab
         '
@@ -9055,7 +9055,7 @@ Partial Class EmployeeForm
         Me.tbpPrevEmp.ResumeLayout(False)
         Me.tbpBonus.ResumeLayout(False)
         Me.tbpAttachment.ResumeLayout(False)
-        Me.tbpNewSalary.ResumeLayout(False)
+        Me.tbpSalary.ResumeLayout(False)
         Me.Panel11.ResumeLayout(False)
         Me.Panel11.PerformLayout
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit
@@ -9738,7 +9738,7 @@ Partial Class EmployeeForm
     Friend WithEvents chkbxRevealInPayroll As CheckBox
     Friend WithEvents Label366 As Label
     Friend WithEvents txtWorkHoursPerWeek As TextBox
-    Friend WithEvents tbpNewSalary As TabPage
+    Friend WithEvents tbpSalary As TabPage
     Friend WithEvents SalaryTab As SalaryTab
     Friend WithEvents BonusTab As BonusTab
     Friend WithEvents AwardTab As AwardTab

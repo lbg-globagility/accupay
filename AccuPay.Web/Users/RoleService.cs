@@ -36,14 +36,14 @@ namespace AccuPay.Web.Users
 
         public async Task<RoleDto> GetById(int roleId)
         {
-            var role = await _roleRepository.GetById(roleId);
+            var role = await _roleRepository.GetByIdAsync(roleId);
 
             return ConvertToDto(role);
         }
 
         public async Task<RoleDto> GetCurrentRole()
         {
-            var role = await _roleRepository.GetByUserAndOrganization(_currentUser.UserId, _currentUser.OrganizationId);
+            var role = await _roleRepository.GetByUserAndOrganizationAsync(_currentUser.UserId, _currentUser.OrganizationId);
 
             if (role is null)
             {
@@ -89,7 +89,7 @@ namespace AccuPay.Web.Users
 
         public async Task<RoleDto> Update(int roleId, UpdateRoleDto dto)
         {
-            var role = await _roleRepository.GetById(roleId);
+            var role = await _roleRepository.GetByIdAsync(roleId);
 
             role.Name = dto.Name;
 

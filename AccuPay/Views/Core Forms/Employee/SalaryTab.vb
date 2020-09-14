@@ -3,9 +3,11 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -147,13 +149,43 @@ Public Class SalaryTab
 
     End Sub
 
-    Private Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If DesignMode Then
             Return
         End If
 
         ChangeMode(FormMode.Disabled)
         LoadSalaries()
+
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.SALARY)
+
+        btnNew.Visible = False
+        btnImport.Visible = False
+        btnSave.Visible = False
+        btnCancel.Visible = False
+        btnDelete.Visible = False
+        grpSalary.Enabled = False
+
+        If role.Success Then
+
+            If role.RolePermission.Create Then
+                btnNew.Visible = True
+                btnImport.Visible = True
+
+            End If
+
+            If role.RolePermission.Update Then
+                btnSave.Visible = True
+                btnCancel.Visible = True
+                grpSalary.Enabled = True
+            End If
+
+            If role.RolePermission.Delete Then
+                btnDelete.Visible = True
+
+            End If
+
+        End If
 
         OverlapWarningLabel.Visible = False
         _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
