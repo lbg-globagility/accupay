@@ -37,7 +37,7 @@ Partial Class AddBranchForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.DetailsGroupBox = New System.Windows.Forms.GroupBox()
-        Me.BranchGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.BranchGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -45,7 +45,7 @@ Partial Class AddBranchForm
         Me.AllowanceDetailsTabLayout.SuspendLayout()
         Me.CalendarPanel.SuspendLayout()
         Me.DetailsGroupBox.SuspendLayout()
-        CType(Me.BranchGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.BranchGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'DeleteButton
@@ -180,7 +180,7 @@ Partial Class AddBranchForm
         Me.Label2.Location = New System.Drawing.Point(20, 0)
         Me.Label2.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(75, 13)
+        Me.Label2.Size = New System.Drawing.Size(74, 13)
         Me.Label2.TabIndex = 365
         Me.Label2.Text = "Branch Name"
         '
@@ -198,17 +198,17 @@ Partial Class AddBranchForm
         '
         'BranchGridView
         '
-        Me.BranchGridView.AllowUserToAddRows = False
-        Me.BranchGridView.AllowUserToDeleteRows = False
-        Me.BranchGridView.AllowUserToOrderColumns = True
-        Me.BranchGridView.AllowUserToResizeRows = False
-        Me.BranchGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.BranchGrid.AllowUserToAddRows = False
+        Me.BranchGrid.AllowUserToDeleteRows = False
+        Me.BranchGrid.AllowUserToOrderColumns = True
+        Me.BranchGrid.AllowUserToResizeRows = False
+        Me.BranchGrid.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BranchGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.BranchGridView.BackgroundColor = System.Drawing.Color.White
-        Me.BranchGridView.ColumnHeadersHeight = 34
-        Me.BranchGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.BranchGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID})
+        Me.BranchGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.BranchGrid.BackgroundColor = System.Drawing.Color.White
+        Me.BranchGrid.ColumnHeadersHeight = 34
+        Me.BranchGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.BranchGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -216,16 +216,16 @@ Partial Class AddBranchForm
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.BranchGridView.DefaultCellStyle = DataGridViewCellStyle1
-        Me.BranchGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.BranchGridView.Location = New System.Drawing.Point(12, 8)
-        Me.BranchGridView.MultiSelect = False
-        Me.BranchGridView.Name = "BranchGridView"
-        Me.BranchGridView.ReadOnly = True
-        Me.BranchGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.BranchGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.BranchGridView.Size = New System.Drawing.Size(352, 222)
-        Me.BranchGridView.TabIndex = 146
+        Me.BranchGrid.DefaultCellStyle = DataGridViewCellStyle1
+        Me.BranchGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.BranchGrid.Location = New System.Drawing.Point(12, 8)
+        Me.BranchGrid.MultiSelect = False
+        Me.BranchGrid.Name = "BranchGridView"
+        Me.BranchGrid.ReadOnly = True
+        Me.BranchGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.BranchGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.BranchGrid.Size = New System.Drawing.Size(352, 222)
+        Me.BranchGrid.TabIndex = 146
         '
         'cemp_EmployeeID
         '
@@ -262,7 +262,7 @@ Partial Class AddBranchForm
         Me.Controls.Add(Me.EditButton)
         Me.Controls.Add(Me.AddButton)
         Me.Controls.Add(Me.DetailsGroupBox)
-        Me.Controls.Add(Me.BranchGridView)
+        Me.Controls.Add(Me.BranchGrid)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
@@ -276,7 +276,7 @@ Partial Class AddBranchForm
         Me.CalendarPanel.ResumeLayout(False)
         Me.CalendarPanel.PerformLayout()
         Me.DetailsGroupBox.ResumeLayout(False)
-        CType(Me.BranchGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.BranchGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -293,7 +293,7 @@ Partial Class AddBranchForm
     Friend WithEvents AllowanceDetailsTabLayout As TableLayoutPanel
     Friend WithEvents DetailsGroupBox As GroupBox
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents BranchGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents BranchGrid As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents cemp_EmployeeID As DataGridViewTextBoxColumn
     Friend WithEvents CalendarPanel As Panel
     Friend WithEvents CalendarComboBox As ComboBox

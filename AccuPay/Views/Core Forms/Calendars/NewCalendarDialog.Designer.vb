@@ -71,10 +71,10 @@ Partial Class NewCalendarDialog
         Me.CreateButton.Text = "Create Calendar"
         Me.CreateButton.UseVisualStyleBackColor = True
         '
-        'CancelFormButton
+        'CancelDialogButton
         '
         Me.CancelDialogButton.Location = New System.Drawing.Point(200, 128)
-        Me.CancelDialogButton.Name = "CancelFormButton"
+        Me.CancelDialogButton.Name = "CancelDialogButton"
         Me.CancelDialogButton.Size = New System.Drawing.Size(80, 24)
         Me.CancelDialogButton.TabIndex = 5
         Me.CancelDialogButton.Text = "Cancel"
@@ -94,6 +94,7 @@ Partial Class NewCalendarDialog
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "NewCalendarDialog"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "New Calendar"
         Me.ResumeLayout(False)
         Me.PerformLayout()

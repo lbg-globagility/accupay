@@ -21,9 +21,15 @@ Namespace Global.AccuPay.Desktop.Utilities
                    title)
         End Sub
 
-        Public Shared Sub DefaultUnauthorizedMessage(ByVal Optional title As String = MessageTitle, ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
+        Public Shared Sub DefaultUnauthorizedFormMessage(ByVal Optional title As String = MessageTitle, ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
 
             MessageBox.Show("You are not authorized to access that form.", title, messageBoxButtons, MessageBoxIcon.Warning)
+
+        End Sub
+
+        Public Shared Sub DefaultUnauthorizedActionMessage(ByVal Optional title As String = MessageTitle, ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
+
+            MessageBox.Show("You are not authorized to perform that action.", title, messageBoxButtons, MessageBoxIcon.Warning)
 
         End Sub
 

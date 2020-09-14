@@ -190,7 +190,6 @@ INSERT INTO product
     ,DateLastInventoryCount
     ,TaxVAT
     ,WithholdingTax
-    ,COAId
     ,ActiveData
 )  SELECT
     p.Name
@@ -240,7 +239,6 @@ INSERT INTO product
     ,p.DateLastInventoryCount
     ,p.TaxVAT
     ,p.WithholdingTax
-    ,p.COAId
     ,p.ActiveData
 FROM product p
 LEFT JOIN category c ON c.CategoryName=p.Category

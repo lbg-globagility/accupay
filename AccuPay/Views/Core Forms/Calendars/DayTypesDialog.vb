@@ -1,7 +1,10 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DayTypesDialog
@@ -22,6 +25,19 @@ Public Class DayTypesDialog
     End Sub
 
     Private Async Sub DayTypesDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.CALENDAR)
+
+        SaveButton.Visible = False
+        DayTypeControl.Enabled = False
+
+        If role.Success AndAlso role.RolePermission.Update Then
+
+            SaveButton.Visible = True
+            DayTypeControl.Enabled = True
+
+        End If
+
         _dayTypes = Await _repository.GetAllAsync()
         DayTypesGridView.DataSource = _dayTypes
     End Sub
@@ -33,8 +49,21 @@ Public Class DayTypesDialog
     End Sub
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
-        Dim dayType = DayTypeControl.DayType
-        Await _repository.SaveAsync(dayType)
+
+        Const title As String = "Save Day Type"
+        Await FunctionUtils.TryCatchFunctionAsync(title,
+            Async Function()
+
+                Dim dayType = DayTypeControl.DayType
+                Await _repository.SaveAsync(dayType)
+
+                myBalloon("Day type saved!", title, DetailsGroupBox, 0, -50)
+            End Function)
+
+    End Sub
+
+    Private Sub EmployeeLeavesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        myBalloon(, , DetailsGroupBox, , , 1)
     End Sub
 
 End Class

@@ -1,8 +1,60 @@
 ﻿Imports System.IO
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 
 Public Class OrganizationForm
     Dim payFreq As New AutoCompleteStringCollection
     Dim isNew As Integer = 0
+
+    Dim govdeducsched As New AutoCompleteStringCollection
+
+    Private _curentRolePermission As RolePermission
+
+    Private Async Sub OrganizationForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        fillorganizationtype()
+        fillpersonalstatus()
+        fillstatus()
+        filltype()
+        filladdress()
+        fillOrganizationList(False)
+        fillorgitems()
+        loadPayFreqType()
+
+        enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Government deduction schedule' AND Active='Yes' ORDER BY OrderBy;", govdeducsched)
+
+        For Each strval In govdeducsched
+            cbophhdeductsched.Items.Add(strval)
+            cbosssdeductsched.Items.Add(strval)
+            cbohdmfdeductsched.Items.Add(strval)
+            cboTaxDeductSched.Items.Add(strval)
+        Next
+
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.ORGANIZATION)
+
+        NewButton.Visible = False
+        SaveButton.Visible = False
+        CancelButton.Visible = False
+
+        If role.Success Then
+            _curentRolePermission = role.RolePermission
+
+            If _curentRolePermission.Create Then
+                NewButton.Visible = True
+
+            End If
+
+            If _curentRolePermission.Update OrElse _curentRolePermission.Create Then
+                SaveButton.Visible = True
+                CancelButton.Visible = True
+            End If
+        Else
+            SplitContainer1.Panel1.Enabled = False
+
+        End If
+
+    End Sub
 
     Private Sub cleartextbox()
         txtcompAltEmailTxt.Clear()
@@ -260,25 +312,25 @@ Public Class OrganizationForm
                     If .Item("ndiffshiftstart").ToString <> "" Then
                         nightdiffshiftfrom.Value = .Item("ndiffshiftstart")
                     Else
-                        nightdiffshiftfrom.Value = Format(CDate(currenttimestamp), "hh:mm tt")
+                        nightdiffshiftfrom.Value = CDate(currenttimestamp)
                     End If
 
                     If .Item("ndiffshiftend").ToString <> "" Then
                         nightdiffshiftto.Value = .Item("ndiffshiftend")
                     Else
-                        nightdiffshiftto.Value = Format(CDate(currenttimestamp), "hh:mm tt")
+                        nightdiffshiftto.Value = CDate(currenttimestamp)
                     End If
 
                     If .Item("nightshiftstart").ToString <> "" Then
                         nightshiftfrom.Value = .Item("nightshiftstart") 'Format(CDate(.Item("nightshiftstart")), "MM-dd-yyyy hh:mm tt")
                     Else
-                        nightshiftfrom.Value = Format(CDate(currenttimestamp), "hh:mm tt")
+                        nightshiftfrom.Value = CDate(currenttimestamp)
                     End If
 
                     If .Item("nightshiftend").ToString <> "" Then
                         nightshiftto.Value = .Item("nightshiftend") 'Format(CDate(.Item("nightshiftend")), "MM-dd-yyyy hh:mm tt")
                     Else
-                        nightshiftto.Value = Format(CDate(currenttimestamp), "hh:mm tt")
+                        nightshiftto.Value = CDate(currenttimestamp)
                     End If
 
                     txtmindayperyear.Text = .Item("WorkDaysPerYear").ToString
@@ -302,29 +354,29 @@ Public Class OrganizationForm
 
     'End Sub
 
-    Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
+    Private Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
         isNew = 1
         cleartextbox()
-        btnSave.Enabled = True
+        SaveButton.Enabled = True
         dgvCompanyList.Enabled = False
-        btnNew.Enabled = False
+        NewButton.Enabled = False
 
         txtcompanyName.Focus()
 
     End Sub
 
-    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
 
         isNew = 0
         cleartextbox()
         'btnSave.Enabled = False
         dgvCompanyList.Enabled = True
-        btnNew.Enabled = True
+        NewButton.Enabled = True
+
+        fillorgitems()
     End Sub
 
-    Dim dontUpdate As SByte = 0
-
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+    Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
 
         Z_ErrorProvider.Dispose()
         If Not SetWarningIfEmpty(txtcompanyName) Then
@@ -332,7 +384,14 @@ Public Class OrganizationForm
             Exit Sub
         End If
 
+        Dim success As Boolean
+
         If isNew = 1 Then
+
+            If _curentRolePermission.Create = False Then
+                MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                Return
+            End If
 
             Dim caddrID As String = getStringItem("Select max(RoWID) from address where concat(StreetAddress1,' ', StreetAddress2,'',',',' ',CityTown,',',' ',Country) = '" & cmbaddressCB.Text & "'")
             Dim getcaddrid As Integer = Val(caddrID)
@@ -352,7 +411,7 @@ Public Class OrganizationForm
             Dim getaddrid As Integer = ValNoComma(address_RowID)
 
             If txtfilename.Text = Nothing Then
-                SP_Organization(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
+                success = SP_Organization(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                           txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text, z_datetime,
                           z_User, z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text,
                           Val(txtvlallow.Text),
@@ -373,6 +432,12 @@ Public Class OrganizationForm
                           cboTaxDeductSched.Text,
                           I_IsAgency:=IsAgencyCheckBox.Checked)
             Else
+
+                If _curentRolePermission.Update = False Then
+                    MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                    Return
+                End If
+
                 Dim fs As FileStream
                 Dim br As BinaryReader
                 Dim FileName As String = txtfilename.Text
@@ -385,12 +450,11 @@ Public Class OrganizationForm
                 fs.Close()
 
                 If cmbprimaryAddress.SelectedIndex = -1 Then
-                    getaddrid = 0
                 End If
 
                 getaddrid = ValNoComma(address_RowID)
 
-                SP_OrganizationWithImage(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
+                success = SP_OrganizationWithImage(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                       txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text, z_datetime,
                       z_User, z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, ImageData,
                           Val(txtvlallow.Text),
@@ -411,13 +475,11 @@ Public Class OrganizationForm
                           cboTaxDeductSched.Text,
                           I_IsAgency:=IsAgencyCheckBox.Checked)
             End If
-
-            dgvCompanyList.Enabled = True
-            myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
-            txtfilename.Clear()
         Else
-            If dontUpdate = 1 Then
-                Exit Sub
+
+            If _curentRolePermission.Update = False Then
+                MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                Return
             End If
 
             Z_ErrorProvider.Dispose()
@@ -445,13 +507,12 @@ Public Class OrganizationForm
             Dim getaddrid As Integer = Val(addrID)
 
             If cmbprimaryAddress.SelectedIndex = -1 Then
-                getaddrid = 0
             End If
 
             getaddrid = ValNoComma(address_RowID)
 
             If txtfilename.Text = Nothing Then
-                SP_OrganizationUpdate(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
+                success = SP_OrganizationUpdate(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                           txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text,
                            z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, dgvCompanyList.CurrentRow.Cells(c_rowID.Index).Value,
                           Val(txtvlallow.Text),
@@ -471,9 +532,6 @@ Public Class OrganizationForm
                           txtZIP.Text,
                           cboTaxDeductSched.Text,
                             I_IsAgency:=IsAgencyCheckBox.Checked)
-                myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
-                txtfilename.Clear()
-                dgvCompanyList.Enabled = True
             Else
                 Dim fs As FileStream
                 Dim br As BinaryReader
@@ -488,7 +546,7 @@ Public Class OrganizationForm
 
                 getaddrid = ValNoComma(address_RowID)
 
-                SP_OrganizationWithImageUpdate(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
+                success = SP_OrganizationWithImageUpdate(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                       txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text,
                        z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, ImageData, dgvCompanyList.CurrentRow.Cells(c_rowID.Index).Value,
                           Val(txtvlallow.Text),
@@ -508,9 +566,6 @@ Public Class OrganizationForm
                           txtZIP.Text,
                           cboTaxDeductSched.Text,
                             I_IsAgency:=IsAgencyCheckBox.Checked)
-                myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
-                txtfilename.Clear()
-                dgvCompanyList.Enabled = True
             End If
 
             If dgvCompanyList.CurrentRow.Cells(c_rowID.Index).Value = orgztnID Then
@@ -520,30 +575,37 @@ Public Class OrganizationForm
 
         End If
 
-        SetWarningIfEmpty(txtcompanyName, "Hide this Error Provider")
-        SetWarningIfEmpty(txtcompMainPhoneTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(cmbprimaryAddress, "Hide this Error Provider")
-        SetWarningIfEmpty(txtcompEmailTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(txtorgTinNumTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(cmborganizationTypeCB, "Hide this Error Provider")
-        SetWarningIfEmpty(cmbsalutationCB, "Hide this Error Provider")
-        SetWarningIfEmpty(txtfirstNameTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(txtlastNameTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(txtjobTitleTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(cmbaddressCB, "Hide this Error Provider")
-        SetWarningIfEmpty(cmbgenderCB, "Hide this Error Provider")
-        SetWarningIfEmpty(txtmobilePhoneTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(txttinNumTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(txtcontMainPhoneTxt, "Hide this Error Provider")
-        SetWarningIfEmpty(cmbstatusCB, "Hide this Error Provider")
-        SetWarningIfEmpty(txtemailAddTxt, "Hide this Error Provider")
+        If success Then
+            dgvCompanyList.Enabled = True
+            myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
+            txtfilename.Clear()
 
-        fillOrganizationList()
+            SetWarningIfEmpty(txtcompanyName, "Hide this Error Provider")
+            SetWarningIfEmpty(txtcompMainPhoneTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(cmbprimaryAddress, "Hide this Error Provider")
+            SetWarningIfEmpty(txtcompEmailTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(txtorgTinNumTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(cmborganizationTypeCB, "Hide this Error Provider")
+            SetWarningIfEmpty(cmbsalutationCB, "Hide this Error Provider")
+            SetWarningIfEmpty(txtfirstNameTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(txtlastNameTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(txtjobTitleTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(cmbaddressCB, "Hide this Error Provider")
+            SetWarningIfEmpty(cmbgenderCB, "Hide this Error Provider")
+            SetWarningIfEmpty(txtmobilePhoneTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(txttinNumTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(txtcontMainPhoneTxt, "Hide this Error Provider")
+            SetWarningIfEmpty(cmbstatusCB, "Hide this Error Provider")
+            SetWarningIfEmpty(txtemailAddTxt, "Hide this Error Provider")
 
-        If btnNew.Enabled = False Then
-            btnNew.Enabled = True
+            fillOrganizationList()
 
-            isNew = 0
+            If NewButton.Enabled = False Then
+                NewButton.Enabled = True
+
+                isNew = 0
+            End If
+
         End If
 
     End Sub
@@ -584,27 +646,6 @@ Public Class OrganizationForm
         TextboxTestNumeric(sender, 30, 2)
     End Sub
 
-    'Private Sub lblAddOrgType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddOrgType.Click
-    '    AddListOfValueForm.lblName.Text = "Organization Type"
-    '    AddListOfValueForm.ShowDialog()
-
-    'End Sub
-
-    'Private Sub lblAddType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddType.Click
-    '    AddListOfValueForm.lblName.Text = "Type"
-    '    AddListOfValueForm.ShowDialog()
-    'End Sub
-
-    'Private Sub lblAddStatus_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddStatus.Click
-    '    AddListOfValueForm.lblName.Text = "Status"
-    '    AddListOfValueForm.ShowDialog()
-    'End Sub
-
-    'Private Sub lblPT_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblPT.Click
-    '    AddListOfValueForm.lblName.Text = "Personal Title"
-    '    AddListOfValueForm.ShowDialog()
-    'End Sub
-
     Private Sub OrganizationForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
             hintInfo.Dispose()
@@ -621,70 +662,6 @@ Public Class OrganizationForm
         End If
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
-
-    End Sub
-
-    Dim govdeducsched As New AutoCompleteStringCollection
-
-    Dim view_ID As Integer = Nothing
-
-    Private Sub OrganizationForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-        fillorganizationtype()
-        fillpersonalstatus()
-        fillstatus()
-        filltype()
-        filladdress()
-        fillOrganizationList(False)
-        fillorgitems()
-        loadPayFreqType()
-
-        enlistTheLists("SELECT DisplayValue FROM listofval WHERE `Type`='Government deduction schedule' AND Active='Yes' ORDER BY OrderBy;", govdeducsched)
-
-        For Each strval In govdeducsched
-            cbophhdeductsched.Items.Add(strval)
-            cbosssdeductsched.Items.Add(strval)
-            cbohdmfdeductsched.Items.Add(strval)
-            cboTaxDeductSched.Items.Add(strval)
-        Next
-
-        view_ID = VIEW_privilege("Organization", orgztnID)
-
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
-
-        If formuserprivilege.Count = 0 Then
-
-            btnNew.Visible = 0
-            btnSave.Visible = 0
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    btnNew.Visible = 0
-                    btnSave.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                        btnNew.Visible = 0
-                    Else
-                        btnNew.Visible = 1
-                    End If
-
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
-
-                End If
-
-            Next
-
-        End If
-
-        If dgvCompanyList.RowCount <> 0 Then
-            dgvCompanyList_CellClick(sender, New DataGridViewCellEventArgs(c_companyname.Index, 0))
-        End If
 
     End Sub
 

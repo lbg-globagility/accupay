@@ -222,7 +222,7 @@ Public Class ProdCtrlForm
             ',PDCFlag,MonthlyBIllFlag,PenaltyFlag,WithholdingTaxPercent,CostPrice,UnitOfMeasure
             ',SKU,LeadTime,BarCode,BusinessUnitID,LastRcvdFromShipmentDate,LastRcvdFromShipmentCount
             ',TotalShipmentCount,BookPageNo,BrandName,LastPurchaseDate,LastSoldDate,LastSoldCount,ReOrderPoint
-            ',AllocateBelowSafetyFlag,Strength,UnitsBackordered,UnitsBackorderAsOf,DateLastInventoryCount,TaxVAT,WithholdingTax,COAId,
+            ',AllocateBelowSafetyFlag,Strength,UnitsBackordered,UnitsBackorderAsOf,DateLastInventoryCount,TaxVAT,WithholdingTax,
 
         Next
 

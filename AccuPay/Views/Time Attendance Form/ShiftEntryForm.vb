@@ -1,22 +1,25 @@
-﻿Public Class ShiftEntryForm
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
+
+Public Class ShiftEntryForm
 
     Private IsNew As Integer
 
     Private my_RowID = Nothing
 
-    Private view_ID As Integer = Nothing
-
     Private UpKey As SByte = 0
 
     Private DownKey As SByte = 0
-
-    Private dontUpdate As SByte = 0
 
     Private my_TimeFrom = Nothing
 
     Private my_TimeTo = Nothing
 
     Dim SecondSelector As String = ""
+
+    Private _curentRolePermission As RolePermission
 
     Property ShiftRowID As Object
         Get
@@ -105,62 +108,36 @@
         GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
-    Private Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If Not dgvshiftentry.Rows.Count = 0 Then
             dtpTimeFrom.Text = dgvshiftentry.CurrentRow.Cells(c_timef.Index).Value
             dtpTimeTo.Text = dgvshiftentry.CurrentRow.Cells(c_timet.Index).Value
         End If
         fillshiftentry()
 
-        view_ID = VIEW_privilege("Duty shifting", orgztnID)
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.SHIFT)
 
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
+        tsbtnNewShift.Visible = False
+        tsbtnSaveShift.Visible = False
+        btnDelete.Visible = False
 
-        If formuserprivilege.Count = 0 Then
+        If role.Success Then
 
-            tsbtnNewShift.Visible = 0
-            tsbtnSaveShift.Visible = 0
+            _curentRolePermission = role.RolePermission
 
-            'btnNew.Visible = 0
-            'btnSave.Visible = 0
-            'btnDelete.Visible = 0
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    'btnNew.Visible = 0
-                    tsbtnNewShift.Visible = 0
+            If _curentRolePermission.Create Then
+                tsbtnNewShift.Visible = True
 
-                    'btnSave.Visible = 0
-                    tsbtnSaveShift.Visible = 0
+            End If
 
-                    btnDelete.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                        'btnNew.Visible = 0
-                        tsbtnNewShift.Visible = 0
-                    Else
-                        'btnNew.Visible = 1
-                        tsbtnNewShift.Visible = 1
-                    End If
+            If _curentRolePermission.Update OrElse _curentRolePermission.Create Then
+                tsbtnSaveShift.Visible = True
+            End If
 
-                    'If drow("Deleting").ToString = "N" Then
-                    btnDelete.Visible = 0
-                    'Else
-                    '    btnDelete.Visible = 1
-                    'End If
+            If _curentRolePermission.Delete Then
+                btnDelete.Visible = True
 
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
-
-                End If
-
-            Next
+            End If
 
         End If
 
@@ -290,6 +267,11 @@
 
         If IsNew = 1 Then
 
+            If _curentRolePermission.Create = False Then
+                MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                Return
+            End If
+
             ' /test fix bugs
 
             Dim timeFrom12Hour = dtpTimeFrom.Value.ToString("hh:mm")
@@ -379,8 +361,9 @@
             'fillshiftentry()
             'Me.Hide()
         Else
-            If dontUpdate = 1 Then
-                Exit Sub
+            If _curentRolePermission.Update = False Then
+                MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                Return
             End If
 
             ' /test fix bugs

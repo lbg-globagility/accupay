@@ -69,6 +69,10 @@ Public Class GeneralForm
         If _policyHelper.ShowBranch = False Then
             BranchToolStripMenuItem.Visible = False
         End If
+
+        If _policyHelper.UseShiftSchedule = True Then
+            DutyShiftingToolStripMenuItem.Visible = False
+        End If
     End Sub
 
     Private Sub CheckUserLevelPermissions(user As Data.Entities.User)
@@ -95,9 +99,8 @@ Public Class GeneralForm
         UserToolStripMenuItem.Visible = If(userPermission?.Read, False)
         OrganizationToolStripMenuItem.Visible = If(organizationPermission?.Read, False)
         UserPrivilegeToolStripMenuItem.Visible = If(rolePermission?.Read, False)
-        DutyShiftingToolStripMenuItem.Visible = If(shiftPermission?.Read, False)
 
-        'Branch and Calendar will override the visibility only if Read is False
+        'Branch, Calendar and Duty Shift will override the visibility only if Read is False
         'since they are already checked by other policies above
         If branchPermission Is Nothing OrElse branchPermission.Read = False Then
             BranchToolStripMenuItem.Visible = False
@@ -107,6 +110,10 @@ Public Class GeneralForm
             CalendarsToolStripMenuItem.Visible = False
             PayRateToolStripMenuItem.Visible = False
         End If
+
+        If shiftPermission Is Nothing OrElse shiftPermission.Read = False Then
+            DutyShiftingToolStripMenuItem.Visible = False
+        End If
     End Function
 
     Async Function ChangeForm(passedForm As Form, Optional permissionName As String = Nothing) As Task
@@ -114,7 +121,7 @@ Public Class GeneralForm
         If permissionName IsNot Nothing Then
 
             If Await PermissionHelper.AllowRead(permissionName, policyHelper:=_policyHelper) = False Then
-                MessageBoxHelper.DefaultUnauthorizedMessage()
+                MessageBoxHelper.DefaultUnauthorizedFormMessage()
                 Return
             End If
 
@@ -224,7 +231,7 @@ Public Class GeneralForm
     Private Async Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
 
         If Await PermissionHelper.AllowRead(PermissionConstant.BRANCH, policyHelper:=_policyHelper) = False Then
-            MessageBoxHelper.DefaultUnauthorizedMessage()
+            MessageBoxHelper.DefaultUnauthorizedFormMessage()
             Return
         End If
 

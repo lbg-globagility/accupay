@@ -3,9 +3,11 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -48,9 +50,37 @@ Public Class AddBranchForm
 
         Me.LastAddedBranchId = Nothing
 
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.BRANCH)
+
+        AddButton.Visible = False
+        EditButton.Visible = False
+        DeleteButton.Visible = False
+
+        If role.Success Then
+
+            If role.RolePermission.Create Then
+                AddButton.Visible = True
+
+            End If
+
+            If role.RolePermission.Update Then
+                EditButton.Visible = True
+            End If
+
+            If role.RolePermission.Delete Then
+                DeleteButton.Visible = True
+
+            End If
+
+        End If
+
         ShowCalendar()
 
         Await RefreshForm()
+
+        PopulateForm()
+
+        AddHandler BranchGrid.SelectionChanged, AddressOf BranchGrid_SelectionChanged
 
     End Sub
 
@@ -68,21 +98,21 @@ Public Class AddBranchForm
 
     Private Async Function RefreshForm() As Task
 
-        Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
-        _branches = (Await _branchRepository.GetAllAsync()).
-                        OrderBy(Function(b) b.Name).
-                        ToList
+        _branches = (Await branchRepository.GetAllAsync()).
+            OrderBy(Function(b) b.Name).
+            ToList
 
         _calendars = (Await _calendarRepository.GetAllAsync()).
-                        OrderBy(Function(c) c.Name).
-                        ToList
+            OrderBy(Function(c) c.Name).
+            ToList
 
         NameTextBox.Clear()
         DetailsGroupBox.Enabled = False
 
-        BranchGridView.AutoGenerateColumns = False
-        BranchGridView.DataSource = _branches
+        BranchGrid.AutoGenerateColumns = False
+        BranchGrid.DataSource = _branches
 
         CalendarComboBox.DataSource = _calendars
 
@@ -91,23 +121,23 @@ Public Class AddBranchForm
 
     Private Function GetSelectedBranch() As Branch
 
-        If BranchGridView.CurrentRow Is Nothing Then
+        If BranchGrid.CurrentRow Is Nothing Then
 
             Return Nothing
 
         End If
 
-        If CheckIfGridViewHasValue(BranchGridView) = False Then Return Nothing
+        If CheckIfGridViewHasValue(BranchGrid) = False Then Return Nothing
 
-        Return CType(BranchGridView.CurrentRow?.DataBoundItem, Branch)
+        Return CType(BranchGrid.CurrentRow?.DataBoundItem, Branch)
 
     End Function
 
     Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
         Return gridView.Rows.
-                        Cast(Of DataGridViewRow).
-                        Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
-                                                Any(Function(c) c.Value IsNot Nothing))
+            Cast(Of DataGridViewRow).
+            Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
+                Any(Function(c) c.Value IsNot Nothing))
     End Function
 
     Private Function GetControlWithError() As Control
@@ -154,10 +184,21 @@ Public Class AddBranchForm
 
         End If
 
-        _currentBranch = branch
+        _currentFormType = FormMode.Editing
 
         DetailsGroupBox.Text = "Edit Branch"
         DetailsGroupBox.Enabled = True
+
+        NameTextBox.Focus()
+
+    End Sub
+
+    Private Sub PopulateForm()
+        Dim branch = GetSelectedBranch()
+
+        If branch Is Nothing Then Return
+
+        _currentBranch = branch
 
         NameTextBox.Text = _currentBranch.Name
 
@@ -167,11 +208,6 @@ Public Class AddBranchForm
             CalendarComboBox.SelectedValue = _currentBranch.CalendarID
 
         End If
-
-        _currentFormType = FormMode.Editing
-
-        NameTextBox.Focus()
-
     End Sub
 
     Private Async Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
@@ -197,21 +233,21 @@ Public Class AddBranchForm
         Dim confirmMessage = $"Are you sure you want to delete branch: '{branch.Name}'?"
 
         If MessageBoxHelper.Confirm(Of Boolean) _
-               (confirmMessage, "Delete Branch", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
+            (confirmMessage, "Delete Branch", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
         Await FunctionUtils.TryCatchFunctionAsync("Delete Branch",
-                Async Function()
+            Async Function()
 
-                    Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-                    Await _branchRepository.DeleteAsync(branch)
+                Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+                Await branchRepository.DeleteAsync(branch)
 
-                    Await RefreshForm()
+                Await RefreshForm()
 
-                    Me.HasChanges = True
-                    Me.LastAddedBranchId = Nothing
+                Me.HasChanges = True
+                Me.LastAddedBranchId = Nothing
 
-                    MessageBoxHelper.Information($"Branch: '{branch.Name}' successfully deleted.")
-                End Function)
+                MessageBoxHelper.Information($"Branch: '{branch.Name}' successfully deleted.")
+            End Function)
 
     End Sub
 
@@ -236,40 +272,40 @@ Public Class AddBranchForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync("Save branch",
-                                Async Function()
+            Async Function()
 
-                                    Dim branchName = NameTextBox.Text.Trim
-                                    Dim calendar = DirectCast(CalendarComboBox.SelectedItem, PayCalendar)
+                Dim branchName = NameTextBox.Text.Trim
+                Dim calendar = DirectCast(CalendarComboBox.SelectedItem, PayCalendar)
 
-                                    Me.LastAddedBranchId = Await SaveBranch(branchName, calendar)
-                                    Dim successMesage = ""
+                Me.LastAddedBranchId = Await SaveBranch(branchName, calendar)
+                Dim successMesage = ""
 
-                                    If Me.LastAddedBranchId IsNot Nothing Then
+                If Me.LastAddedBranchId IsNot Nothing Then
 
-                                        Me.HasChanges = True
+                    Me.HasChanges = True
 
-                                        If _currentFormType = FormMode.Creating Then
+                    If _currentFormType = FormMode.Creating Then
 
-                                            successMesage = $"Branch: '{branchName}' successfully added."
-                                        Else
+                        successMesage = $"Branch: '{branchName}' successfully added."
+                    Else
 
-                                            Me.LastAddedBranchId = Nothing
-                                            successMesage = $"Branch: '{branchName}' successfully updated."
-                                        End If
+                        Me.LastAddedBranchId = Nothing
+                        successMesage = $"Branch: '{branchName}' successfully updated."
+                    End If
 
-                                    End If
+                End If
 
-                                    Await RefreshForm()
+                Await RefreshForm()
 
-                                    MessageBoxHelper.Information(successMesage)
+                MessageBoxHelper.Information(successMesage)
 
-                                End Function)
+            End Function)
 
     End Sub
 
     Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
 
-        Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
         Dim branch As New Branch
         If _currentFormType = FormMode.Creating Then
@@ -279,7 +315,7 @@ Public Class AddBranchForm
             branch.Name = NameTextBox.Text
             branch.CalendarID = calendar?.RowID
 
-            branch.RowID = Await _branchRepository.CreateAsync(branch)
+            branch.RowID = Await branchRepository.CreateAsync(branch)
 
         ElseIf _currentFormType = FormMode.Editing Then
 
@@ -289,12 +325,18 @@ Public Class AddBranchForm
             branch.CalendarID = calendar?.RowID
             branch.LastUpdBy = z_User
 
-            Await _branchRepository.UpdateAsync(branch)
+            Await branchRepository.UpdateAsync(branch)
 
         End If
 
         Return branch.RowID
 
     End Function
+
+    Private Sub BranchGrid_SelectionChanged(sender As Object, e As EventArgs)
+
+        PopulateForm()
+
+    End Sub
 
 End Class

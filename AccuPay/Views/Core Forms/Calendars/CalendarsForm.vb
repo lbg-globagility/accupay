@@ -3,8 +3,10 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -33,6 +35,7 @@ Public Class CalendarsForm
     Private ReadOnly _changeTracker As ICollection(Of CalendarDay)
 
     Private _nameHasChanged As Boolean
+    Private _currentPermission As RolePermission
 
     Public Sub New()
         Editor = New CalendarDayEditorControl()
@@ -67,7 +70,36 @@ Public Class CalendarsForm
         CalendarPanel.ResumeLayout()
     End Sub
 
-    Private Sub CalendarsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub CalendarsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.CALENDAR)
+
+        NewToolStripButton.Visible = False
+        SaveToolStripButton.Visible = False
+        CancelToolStripButton.Visible = False
+        DeleteToolStripButton.Visible = False
+
+        If role.Success Then
+
+            _currentPermission = role.RolePermission
+
+            If _currentPermission.Create Then
+                NewToolStripButton.Visible = True
+
+            End If
+
+            If _currentPermission.Update Then
+                SaveToolStripButton.Visible = True
+                CancelToolStripButton.Visible = True
+            End If
+
+            If _currentPermission.Delete Then
+                DeleteToolStripButton.Visible = True
+
+            End If
+
+        End If
+
         _currentYear = Date.Today.Year
         MonthSelectorControl.Year = _currentYear
         LoadCalendars()
@@ -115,6 +147,9 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub MonthControl_DayClick(sender As CalendarMonthControl, calendarDay As CalendarDay)
+
+        If _currentPermission.Update = False Then Return
+
         Dim p = PointToClient(MousePosition)
 
         _currentMonthControl = sender
@@ -131,9 +166,12 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
+
         Dim dialog = New NewCalendarDialog()
-        dialog.ShowDialog()
-        LoadCalendars()
+        If dialog.ShowDialog() = DialogResult.OK Then
+            LoadCalendars()
+
+        End If
     End Sub
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
@@ -145,6 +183,8 @@ Public Class CalendarsForm
                 Await dataService.UpdateDaysAsync(Enumerable.Empty(Of CalendarDay).ToList(), _changeTracker)
 
                 ClearChangeTracker()
+
+                ShowBalloonInfo("Changes have been saved.", "Changes Saved")
             End Function)
     End Sub
 
@@ -189,7 +229,6 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-        GeneralForm.listGeneralForm.Remove(Me.Name)
         Close()
     End Sub
 
@@ -206,14 +245,32 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete the calendar `{_currentCalendar.Name}`?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
         Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
 
         Await FunctionUtils.TryCatchFunctionAsync("Delete Calendar",
         Async Function()
             Await dataService.DeleteAsync(_currentCalendar)
             LoadCalendars()
-            MessageBoxHelper.Information("Calendar has been deleted", "Calendar Deleted", MessageBoxButtons.OK)
+            ShowBalloonInfo("Calendar has been deleted.", "Calendar Deleted")
         End Function)
+    End Sub
+
+    Private Sub ShowBalloonInfo(content As String, title As String)
+        myBalloon(content, title, MonthSelectorControl, 0, -100)
+    End Sub
+
+    Private Sub EmployeeLeavesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        myBalloon(, , MonthSelectorControl, , , 1)
+
+        GeneralForm.listGeneralForm.Remove(Me.Name)
+
     End Sub
 
 End Class
