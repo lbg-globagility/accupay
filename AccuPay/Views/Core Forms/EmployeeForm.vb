@@ -74,7 +74,9 @@ Public Class EmployeeForm
 
         loademployee()
 
-        u_nem = EXECQUER(USERNameStrPropr & z_User)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim user = userRepository.GetById(z_User)
+        u_nem = user?.FullName
 
         paytypestring = EXECQUER("SELECT PayFrequencyType FROM payfrequency pfq LEFT JOIN organization org ON org.PayFrequencyID=pfq.RowID WHERE org.RowID='" & orgztnID & "' LIMIT 1;")
 
@@ -137,7 +139,7 @@ Public Class EmployeeForm
 
     Private Sub PrepareFormForUserLevelAuthorizations()
 
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
         Dim user = userRepository.GetById(z_User)
 
         If user Is Nothing Then
@@ -679,89 +681,6 @@ Public Class EmployeeForm
     Dim payFreq As New AutoCompleteStringCollection
     Dim dbnow, u_nem, positID, payFreqID As String
     Dim emp_rcount As Integer
-
-    Public q_employee As String = "SELECT e.RowID," &
-        "e.EmployeeID 'Employee ID'," &
-        "e.LastName 'Last Name'," &
-        "e.FirstName 'First Name'," &
-        "e.MiddleName 'Middle Name'," &
-        "e.Surname," &
-        "e.Nickname," &
-        "e.MaritalStatus 'Marital Status'," &
-        "COALESCE(e.NoOfDependents,0) 'No. Of Dependents'," &
-        "e.Birthdate," &
-        "e.Startdate," &
-        "IFNULL(d.Name,'') `Job Title`," &
-        "COALESCE(pos.PositionName,'') 'Position'," &
-        "e.Salutation," &
-        "e.TINNo 'TIN'," &
-        "e.SSSNo 'SSS No.'," &
-        "e.HDMFNo 'PAGIBIG No.'," &
-        "e.PhilHealthNo 'PhilHealth No.'," &
-        "e.WorkPhone 'Work Phone No.'," &
-        "e.HomePhone 'Home Phone No.'," &
-        "e.MobilePhone 'Mobile Phone No.'," &
-        "e.HomeAddress 'Home address'," &
-        "e.EmailAddress 'Email address'," &
-        "IF(e.Gender='M','Male','Female') 'Gender'," &
-        "e.EmploymentStatus 'Employment Status'," &
-        "IFNULL(pf.PayFrequencyType,'') 'Pay Frequency'," &
-        "e.UndertimeOverride," &
-        "e.OvertimeOverride," &
-        "DATE_FORMAT(e.Created,'%m-%d-%Y') 'Creation Date'," &
-        "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
-        "COALESCE(DATE_FORMAT(e.LastUpd,'%m-%d-%Y'),'') 'Last Update'," &
-        "IFNULL((SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=e.LastUpdBy),'') 'LastUpdate by'" &
-        ",COALESCE(pos.RowID,'') 'PositionID'" &
-        ",IFNULL(e.PayFrequencyID,'') 'PayFrequencyID'" &
-        ",e.EmployeeType" &
-        ",e.LeaveBalance" &
-        ",e.SickLeaveBalance" &
-        ",e.MaternityLeaveBalance" &
-        ",e.LeaveAllowance" &
-        ",e.SickLeaveAllowance" &
-        ",e.MaternityLeaveAllowance" &
-        ",e.LeavePerPayPeriod" &
-        ",e.SickLeavePerPayPeriod" &
-        ",e.MaternityLeavePerPayPeriod" &
-        ",COALESCE(fstat.RowID,3) 'fstatRowID'" &
-        ",e.AlphaListExempted" &
-        ",e.WorkDaysPerYear" &
-        ",CHAR_TO_DAYOFWEEK(e.DayOfRest) 'DayOfRest'" &
-        ",e.ATMNo" &
-        ",e.BankName" &
-        ",IFNULL(e.OtherLeavePerPayPeriod,0) 'OtherLeavePerPayPeriod'" &
-        ",IFNULL(e.OtherLeaveAllowance,0) 'OtherLeaveAllowance'" &
-        ",IFNULL(e.OtherLeaveBalance,0) 'OtherLeaveBalance'" &
-        ",e.CalcHoliday" &
-        ",e.CalcSpecialHoliday" &
-        ",e.CalcNightDiff" &
-        ",e.CalcNightDiffOT" &
-        ",e.CalcRestDay" &
-        ",e.CalcRestDayOT" &
-        ",IFNULL(e.LateGracePeriod,0) AS LateGracePeriod" &
-        ",IFNULL(e.RevealInPayroll,1) AS RevealInPayroll" &
-        ",IFNULL(e.OffsetBalance,0) AS OffsetBalance" &
-        ",IFNULL(ag.AgencyName,'') AS AgencyName" &
-        ",IFNULL(ag.RowID,'') AS ag_RowID" &
-        ",e.DateEvaluated" &
-        ",e.DateRegularized" &
-        " " &
-        "FROM employee e " &
-        "LEFT JOIN user u ON e.CreatedBy=u.RowID " &
-        "LEFT JOIN position pos ON e.PositionID=pos.RowID " &
-        "LEFT JOIN division d ON d.RowID=pos.DivisionID " &
-        "LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID " &
-        "LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents " &
-        "LEFT JOIN agency ag ON ag.RowID=e.AgencyID " &
-        "WHERE e.OrganizationID=" & orgztnID
-
-    Dim _by As String = "(SELECT CONCAT(CONCAT(UCASE(LEFT(FirstName, 1)), SUBSTRING(FirstName, 2)),' ',CONCAT(UCASE(LEFT(LastName, 1)), SUBSTRING(LastName, 2)))  FROM user WHERE RowID="
-
-    Public q_empldependents As String = "SELECT  edep.RowID, edep.ParentEmployeeID, COALESCE(edep.Salutation,''),  `FirstName`,  COALESCE(edep.MiddleName,''),  edep.LastName,  COALESCE(edep.Surname,''),  edep.RelationToEmployee,  COALESCE(edep.TINNo,''),  COALESCE(edep.SSSNo,''),  COALESCE(edep.HDMFNo,''),  COALESCE(PhilHealthNo,''),  COALESCE(EmailAddress,''),  COALESCE(edep.WorkPhone,''),  COALESCE(edep.HomePhone,''),  COALESCE(edep.MobilePhone,''),  COALESCE(HomeAddress,''),  COALESCE(Nickname,''),  COALESCE(edep.JobTitle,''), COALESCE(edep.Gender,''),  IF(edep.ActiveFlag='Y','TRUE','FALSE'),  COALESCE(DATE_FORMAT(edep.Birthdate,'%m-%d-%Y'),'')," &
-        _by & "edep.CreatedBy), DATE_FORMAT(edep.Created,'%m-%d-%Y')," & _by & "edep.LastUpdBy),  COALESCE(DATE_FORMAT(edep.LastUpd,'%m-%d-%Y'),'') FROM employeedependents edep WHERE edep.OrganizationID=" & orgztnID & " AND edep.ParentEmployeeID="
-
-    Public q_salut As String = "SELECT DisplayValue FROM listofval lov WHERE lov.Type='Salutation' AND Active='Yes'"
 
     Public q_empstat As String = "SELECT DisplayValue FROM listofval lov WHERE lov.Type='Employment Status' AND Active='Yes'"
 

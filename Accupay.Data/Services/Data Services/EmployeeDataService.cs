@@ -27,14 +27,16 @@ namespace AccuPay.Data.Services
         public async Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId)
         {
             var vacationLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(ProductConstant.VACATION_LEAVE,
-                                                organizationId: organizationId,
-                                                userId: userId);
+                    GetOrCreateLeaveTypeAsync(
+                        ProductConstant.VACATION_LEAVE,
+                        organizationId: organizationId,
+                        userId: userId);
 
             var sickLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(ProductConstant.SICK_LEAVE,
-                                                organizationId: organizationId,
-                                                userId: userId);
+                    GetOrCreateLeaveTypeAsync(
+                        ProductConstant.SICK_LEAVE,
+                        organizationId: organizationId,
+                        userId: userId);
 
             if (vacationLeaveProduct?.RowID == null || sickLeaveProduct?.RowID == null)
                 throw new BusinessLogicException("Error accessing leave type data.");
@@ -65,6 +67,9 @@ namespace AccuPay.Data.Services
 
         public async Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, List<string> jobNames, int organizationId, int userId)
         {
+            // TODO: create a SanitizeEntity method
+            // should:
+            // 1. Set TerminationDate to null if IsActive = true
             var jobs = await _positionRepository.CreateManyAsync(jobNames, organizationId, userId);
             foreach (var parsedEmployee in validRecords.Where(t => t.JobNotYetExists))
             {

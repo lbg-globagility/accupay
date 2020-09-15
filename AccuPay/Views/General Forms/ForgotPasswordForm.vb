@@ -21,9 +21,7 @@ Public Class ForgotPasswordForm
 
         End If
 
-        Dim encryptedUsername = _encryptor.Encrypt(txtUserID.Text)
-
-        Dim emailadd As String = getStringItem("Select EmailAddress from user where UserID = '" & encryptedUsername & "'")
+        Dim emailadd As String = getStringItem("Select Email from aspnetusers where UserName = '" & txtUserID.Text & "'")
         Dim getemailadd As String = emailadd
 
         If emailadd = "" Then
@@ -32,7 +30,7 @@ Public Class ForgotPasswordForm
         End If
 
         Try
-            Dim pw As String = getStringItem("Select Password from user where userid = '" & encryptedUsername & "'")
+            Dim pw As String = getStringItem("Select DesktopPassword from aspnetusers where userid = '" & txtUserID.Text & "'")
 
             Dim getpw As String = _encryptor.Decrypt(pw)
 

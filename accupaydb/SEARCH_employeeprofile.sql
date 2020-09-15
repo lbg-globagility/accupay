@@ -105,8 +105,8 @@ FROM (SELECT * FROM employee WHERE OrganizationID=og_id AND EmployeeID  =emp_id 
         SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0
         ) e
 
-LEFT JOIN `user` u              ON e.CreatedBy=u.RowID
-LEFT JOIN `user` uu             ON e.LastUpdBy=uu.RowID
+LEFT JOIN `aspnetusers` u              ON e.CreatedBy=u.Id
+LEFT JOIN `aspnetusers` uu             ON e.LastUpdBy=uu.Id
 LEFT JOIN `position` pos        ON e.PositionID=pos.RowID
 LEFT JOIN payfrequency pf       ON e.PayFrequencyID=pf.RowID
 LEFT JOIN filingstatus fstat    ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents

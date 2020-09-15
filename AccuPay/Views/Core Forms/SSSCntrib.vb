@@ -1,4 +1,6 @@
 ﻿Imports System.Data.OleDb
+Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SSSCntrib
 
@@ -15,9 +17,9 @@ Public Class SSSCntrib
     "DATE_FORMAT(sss.Created,'%m-%d-%Y') 'Creation Date'," &
     "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
     "COALESCE(DATE_FORMAT(sss.LastUpd,'%m-%d-%Y'),'') 'Last Update'," &
-    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=sss.LastUpdBy) 'LastUpdate by' " &
+    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM aspnetusers WHERE Id=sss.LastUpdBy) 'LastUpdate by' " &
     "FROM paysocialsecurity sss " &
-    "INNER JOIN user u ON sss.CreatedBy=u.RowID" &
+    "INNER JOIN aspnetusers u ON sss.CreatedBy=u.Id" &
     " WHERE sss.MonthlySalaryCredit!=0" &
     " AND sss.HiddenData='0'" &
     " AND EffectiveDateFrom='2019-04-01' AND EffectiveDateTo='2022-12-01'"
@@ -58,7 +60,9 @@ Public Class SSSCntrib
 
         _now = EXECQUER(CURDATE_MDY)
 
-        u_nem = EXECQUER(USERNameStrPropr & 1)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim user = userRepository.GetById(z_User)
+        u_nem = user?.FullName
 
     End Sub
 

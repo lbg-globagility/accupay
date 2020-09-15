@@ -2,6 +2,7 @@ Imports System.Configuration
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
@@ -34,21 +35,21 @@ Public Class MDIPrimaryForm
     Private if_sysowner_is_cinema2k As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
-    Private _listOfValueService As ListOfValueService
+    Private ReadOnly _policyHelper As PolicyHelper
 
-    Private _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private _userRepository As UserRepository
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
         if_sysowner_is_cinema2k = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
@@ -57,7 +58,7 @@ Public Class MDIPrimaryForm
         PrepareFormForBenchmark()
     End Sub
 
-    Protected Overrides Sub OnLoad(e As EventArgs)
+    Protected Overrides Async Sub OnLoad(e As EventArgs)
         With ExemptedForms
             .Add("MDIPrimaryForm")
             .Add("MetroLogin")
@@ -100,7 +101,7 @@ Public Class MDIPrimaryForm
 
         Panel1.Focus()
         MyBase.OnLoad(e)
-        RestrictDashboardByPrivilege()
+        Await RestrictDashboardByPermission()
         MetroLogin.Hide()
     End Sub
 
@@ -173,7 +174,7 @@ Public Class MDIPrimaryForm
 
             If prompt = MsgBoxResult.Yes Then
 
-                position_view_table = Nothing
+                USER_ROLE = Nothing
 
                 e.Cancel = False
 
@@ -250,13 +251,6 @@ Public Class MDIPrimaryForm
                     End If
 
                 Next
-
-                Dim n_ExecuteQuery As _
-                    New ExecuteQuery("UPDATE user" &
-                                     " SET InSession='0'" &
-                                     ",LastUpd=CURRENT_TIMESTAMP()" &
-                                     ",LastUpdBy='" & z_User & "'" &
-                                     " WHERE RowID='" & z_User & "';")
 
                 If openform_count >= 5 Then
                     Thread.Sleep(1175)
@@ -335,13 +329,7 @@ Public Class MDIPrimaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = _listOfValueService.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-
-            Return
-
-        End If
+        If Not _policyHelper.UseUserLevel Then Return
 
         If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
@@ -512,8 +500,6 @@ Public Class MDIPrimaryForm
 
                 ElseIf previousForm.Name = "OrganizatinoForm" Then
 
-                ElseIf previousForm.Name = "UserPrivilegeForm" Then
-
                 ElseIf previousForm.Name = "PhilHealht" Then
 
                 ElseIf previousForm.Name = "SSSCntrib" Then
@@ -521,8 +507,6 @@ Public Class MDIPrimaryForm
                 ElseIf previousForm.Name = "Payrate" Then
 
                 ElseIf previousForm.Name = "ShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "userprivil" Then
 
                 ElseIf previousForm.Name = "Revised_Withholding_Tax_Tables" Then
 
@@ -924,7 +908,7 @@ Public Class MDIPrimaryForm
         End If
     End Sub
 
-    Private Async Sub RestrictDashboardByPrivilege()
+    Private Async Function RestrictDashboardByPermission() As Task
 
         Dim user = Await _userRepository.GetByIdAsync(z_User)
 
@@ -933,72 +917,58 @@ Public Class MDIPrimaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = _listOfValueService.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-
-            RestrictByPosition()
-        Else
+        If _policyHelper.UseUserLevel Then
 
             RestrictByUserLevel()
+        Else
+
+            RestrictByRole()
 
         End If
 
-    End Sub
+    End Function
 
-    Private Sub RestrictByPosition()
-        Dim sql = $"
-            SELECT v.ViewName 'Name', (pv.AllowedToAccess = 'Y') 'HasAccess'
-            FROM position_view pv
-            INNER JOIN view v
-            ON v.RowID = pv.ViewID
-            INNER JOIN position p
-            ON p.RowID = pv.PositionID
-            INNER JOIN user u
-            ON u.PositionID = p.RowID
-            WHERE u.RowID = {z_User} AND
-                pv.OrganizationID = {orgztnID};
-        "
+    Private Sub RestrictByRole()
 
-        Dim privileges = New SqlToDataTable(sql).Read()
+        Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
+        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
+        Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
+        Dim employeePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.EMPLOYEE).FirstOrDefault()
+        Dim officialBusinessPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OFFICIALBUSINESS).FirstOrDefault()
+        Dim overtimePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OVERTIME).FirstOrDefault()
+        Dim leavePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LEAVE).FirstOrDefault()
 
-        If Not HasPrivilege(privileges, "Employee Loan Schedule") Then
+        If loanPermission Is Nothing OrElse loanPermission.Read = False Then
             LoanBalanceCollapsibleGroupBox.Visible = False
         End If
 
-        If Not HasPrivilege(privileges, "Employee Time Entry Logs") Then
+        If timeLogPermission Is Nothing OrElse timeLogPermission.Read = False Then
             CollapsibleGroupBox3.Visible = False
         End If
 
-        If Not HasPrivilege(privileges, "Employee Pay Slip") Then
+        If payPeriodPermission Is Nothing OrElse payPeriodPermission.Read = False Then
             NegativePayslipsCollapsibleGroupBox.Visible = False
         End If
 
-        If Not HasPrivilege(privileges, "Employee Personal Profile") Then
+        If employeePermission Is Nothing OrElse employeePermission.Read = False Then
             BirthdayCollapsibleGroupBox.Visible = False
             UnqualifiedCollapsibleGroupBox.Visible = False
             CollapsibleGroupBox5.Visible = False
         End If
 
-        If Not HasPrivilege(privileges, "Official Business filing") Then
+        If officialBusinessPermission Is Nothing OrElse officialBusinessPermission.Read = False Then
             PendingOfficialBusinessCollapsibleGroupBox.Visible = False
         End If
 
-        If Not HasPrivilege(privileges, "Employee Overtime") Then
+        If overtimePermission Is Nothing OrElse overtimePermission.Read = False Then
             PendingOvertimeCollapsibleGroupBox.Visible = False
         End If
 
-        If Not HasPrivilege(privileges, "Employee Leave") Then
+        If leavePermission Is Nothing OrElse leavePermission.Read = False Then
             CollapsibleGroupBox4.Visible = False
             CollapsibleGroupBox6.Visible = False
         End If
     End Sub
-
-    Private Function HasPrivilege(privilegeTable As DataTable, name As String) As Boolean
-        Dim privilege = privilegeTable.Select($"Name = '{name}'").FirstOrDefault()
-
-        Return If(privilege Is Nothing, False, CBool(privilege("HasAccess")))
-    End Function
 
     Private Sub NotifyIcon1_Click(sender As Object, e As EventArgs)
         ToolStripButton0_Click(sender, e)
@@ -1160,93 +1130,5 @@ Public Class DashBoardDataExtractor
         Return returnvalue
 
     End Function
-
-End Class
-
-Public Class UserLog
-
-    Dim syslogViewID = Nothing
-
-    Dim new_conn As New MySqlConnection
-
-    Sub New()
-
-        new_conn.ConnectionString = db_connectinstring
-
-        syslogViewID = EXECQUER("SELECT RowID FROM `view` WHERE ViewName='Login Form' AND OrganizationID='" & orgztnID & "';")
-
-    End Sub
-
-    Sub Inn()
-
-        INS_audittrail("System Log",
-                       "",
-                       "IN",
-                       "",
-                       "Log")
-
-    End Sub
-
-    Sub Out()
-
-        EXECQUER("UPDATE `audittrail`" &
-                 " SET NewValue='OUT'" &
-                 " WHERE CreatedBy='" & z_User & "'" &
-                 " AND OrganizationID='" & orgztnID & "'" &
-                 " AND NewValue=''" &
-                 " AND ViewID='" & syslogViewID & "';")
-
-    End Sub
-
-    Sub INS_audittrail(Optional au_FieldChanged = Nothing,
-                       Optional au_ChangedRowID = Nothing,
-                       Optional au_OldValue = Nothing,
-                       Optional au_NewValue = Nothing,
-                       Optional au_ActionPerformed = Nothing)
-
-        Try
-            If new_conn.State = ConnectionState.Open Then : new_conn.Close() : End If
-
-            cmd = New MySqlCommand("INS_audittrail", new_conn)
-
-            new_conn.Open()
-
-            With cmd
-                .Parameters.Clear()
-
-                .CommandType = CommandType.StoredProcedure
-
-                .Parameters.AddWithValue("au_CreatedBy", z_User)
-
-                .Parameters.AddWithValue("au_LastUpdBy", z_User)
-
-                .Parameters.AddWithValue("au_OrganizationID", orgztnID)
-
-                .Parameters.AddWithValue("au_ViewID", syslogViewID)
-
-                .Parameters.AddWithValue("au_FieldChanged", Trim(au_FieldChanged))
-
-                .Parameters.AddWithValue("au_ChangedRowID", au_ChangedRowID)
-
-                .Parameters.AddWithValue("au_OldValue", Trim(au_OldValue))
-
-                .Parameters.AddWithValue("au_NewValue", Trim(au_NewValue))
-
-                .Parameters.AddWithValue("au_ActionPerformed", Trim(au_ActionPerformed))
-
-                Dim datread As MySqlDataReader
-
-                datread = .ExecuteReader()
-
-            End With
-        Catch ex As Exception
-            MsgBox(ex.Message & " " & "INS_audittrail", , "Error")
-        Finally
-            new_conn.Close()
-            cmd.Dispose()
-
-        End Try
-
-    End Sub
 
 End Class

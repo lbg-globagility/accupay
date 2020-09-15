@@ -17,7 +17,7 @@ Public Class TimeAttendForm
 
     Private ReadOnly _roleRepository As RoleRepository
 
-    Private ReadOnly _userRepository As UserRepository
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Sub New()
 
@@ -27,7 +27,7 @@ Public Class TimeAttendForm
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
     End Sub
 

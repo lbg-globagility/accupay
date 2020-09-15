@@ -439,7 +439,7 @@ namespace AccuPay.Data.Repositories
 
             Func<Employee, bool> matchCriteria = (Employee employee) =>
             {
-                var containsEmployeeId = employee.EmployeeNo.ToLower().Contains(searchValue);
+                var containsEmployeeId = employee.EmployeeNo != null && employee.EmployeeNo.ToLower().Contains(searchValue);
                 var containsFullName = (employee.FirstName.ToLower() + " " + employee.LastName.ToLower()).Contains(searchValue);
 
                 var reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower();

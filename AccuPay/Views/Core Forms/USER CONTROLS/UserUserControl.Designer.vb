@@ -24,7 +24,9 @@ Partial Class UserUserControl
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.UserRoleGrid = New System.Windows.Forms.DataGridView()
-        Me.UserPrivilegeLabel = New System.Windows.Forms.Label()
+        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RoleColumn = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.UserRoleLabel = New System.Windows.Forms.Label()
         Me.DetailsGroup = New System.Windows.Forms.GroupBox()
         Me.UserLevelComboBox = New System.Windows.Forms.ComboBox()
         Me.UserLevelLabel = New System.Windows.Forms.Label()
@@ -47,8 +49,6 @@ Partial Class UserUserControl
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RoleColumn = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.UserRoleGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsGroup.SuspendLayout()
@@ -57,7 +57,7 @@ Partial Class UserUserControl
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.UserRoleGrid)
-        Me.Panel1.Controls.Add(Me.UserPrivilegeLabel)
+        Me.Panel1.Controls.Add(Me.UserRoleLabel)
         Me.Panel1.Controls.Add(Me.DetailsGroup)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
@@ -81,15 +81,32 @@ Partial Class UserUserControl
         Me.UserRoleGrid.Size = New System.Drawing.Size(769, 321)
         Me.UserRoleGrid.TabIndex = 160
         '
-        'UserPrivilegeLabel
+        'Modules
         '
-        Me.UserPrivilegeLabel.AutoSize = True
-        Me.UserPrivilegeLabel.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
-        Me.UserPrivilegeLabel.Location = New System.Drawing.Point(8, 206)
-        Me.UserPrivilegeLabel.Name = "UserPrivilegeLabel"
-        Me.UserPrivilegeLabel.Size = New System.Drawing.Size(145, 24)
-        Me.UserPrivilegeLabel.TabIndex = 161
-        Me.UserPrivilegeLabel.Text = "USER ROLES"
+        Me.Modules.DataPropertyName = "OrganizationName"
+        Me.Modules.HeaderText = "Organization"
+        Me.Modules.Name = "Modules"
+        Me.Modules.ReadOnly = True
+        Me.Modules.Width = 450
+        '
+        'RoleColumn
+        '
+        Me.RoleColumn.DataPropertyName = "RoleId"
+        Me.RoleColumn.HeaderText = "Role"
+        Me.RoleColumn.Name = "RoleColumn"
+        Me.RoleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.RoleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.RoleColumn.Width = 250
+        '
+        'UserRoleLabel
+        '
+        Me.UserRoleLabel.AutoSize = True
+        Me.UserRoleLabel.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
+        Me.UserRoleLabel.Location = New System.Drawing.Point(8, 206)
+        Me.UserRoleLabel.Name = "UserRoleLabel"
+        Me.UserRoleLabel.Size = New System.Drawing.Size(145, 24)
+        Me.UserRoleLabel.TabIndex = 161
+        Me.UserRoleLabel.Text = "USER ROLES"
         '
         'DetailsGroup
         '
@@ -312,23 +329,6 @@ Partial Class UserUserControl
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 150
         '
-        'Modules
-        '
-        Me.Modules.DataPropertyName = "OrganizationName"
-        Me.Modules.HeaderText = "Organization"
-        Me.Modules.Name = "Modules"
-        Me.Modules.ReadOnly = True
-        Me.Modules.Width = 450
-        '
-        'RoleColumn
-        '
-        Me.RoleColumn.DataPropertyName = "RoleId"
-        Me.RoleColumn.HeaderText = "Role"
-        Me.RoleColumn.Name = "RoleColumn"
-        Me.RoleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.RoleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.RoleColumn.Width = 250
-        '
         'UserUserControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -347,7 +347,7 @@ Partial Class UserUserControl
 
     Friend WithEvents Panel1 As Panel
     Friend WithEvents UserRoleGrid As DataGridView
-    Friend WithEvents UserPrivilegeLabel As Label
+    Friend WithEvents UserRoleLabel As Label
     Friend WithEvents DetailsGroup As GroupBox
     Friend WithEvents UserLevelComboBox As ComboBox
     Friend WithEvents UserLevelLabel As Label

@@ -1,0 +1,25 @@
+DROP TABLE IF EXISTS `position_view`;
+
+SET @DefaultUserId = (SELECT Id FROM aspnetusers LIMIT 1);
+UPDATE paywithholdingtax
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE paywithholdingtax
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE paywithholdingtax
+	DROP FOREIGN KEY `FK_PayWithholdingTax_user`;
+ALTER TABLE paywithholdingtax
+	ADD CONSTRAINT `FK_paywithholdingtax_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE paywithholdingtax
+	DROP FOREIGN KEY `FK_PayWithholdingTax_user_2`;
+ALTER TABLE paywithholdingtax
+	ADD CONSTRAINT `FK_paywithholdingtax_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE paywithholdingtax
+	DROP FOREIGN KEY `FK_paywithholdingtax_payfrequency`;
+ALTER TABLE paywithholdingtax
+	ADD CONSTRAINT `FK_paywithholdingtax_payfrequency_PayFrequencyID` FOREIGN KEY (`PayFrequencyID`) REFERENCES `payfrequency` (`RowID`);
+	
+
+
+DROP TABLE IF EXISTS `user`;

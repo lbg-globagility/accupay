@@ -90,8 +90,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PermissionRepository)
         services.AddTransient(Of PhilHealthBracketRepository)
         services.AddTransient(Of PositionRepository)
-        services.AddTransient(Of PositionViewQueryBuilder)
-        services.AddTransient(Of PositionViewRepository)
         services.AddTransient(Of PreviousEmployerRepository)
         services.AddTransient(Of ProductRepository)
         services.AddTransient(Of PromotionRepository)
@@ -104,8 +102,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeEntryRepository)
         services.AddTransient(Of TimeLogRepository)
         services.AddTransient(Of UserActivityRepository)
-        services.AddTransient(Of UserQueryBuilder)
-        services.AddTransient(Of UserRepository)
         services.AddTransient(Of WithholdingTaxBracketRepository)
 
         services.AddTransient(Of CalendarService)

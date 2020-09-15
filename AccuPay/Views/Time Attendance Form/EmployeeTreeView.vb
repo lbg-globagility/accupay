@@ -298,7 +298,7 @@ Public Class EmployeeTreeView
                     Dim contains = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(needle)
                     Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
                     Dim containsReverseName = reverseName.Contains(needle)
-                    Dim hasThisKindOfEmployeeNo = employee.EmployeeNo.Contains(needle)
+                    Dim hasThisKindOfEmployeeNo = employee.EmployeeNo IsNot Nothing AndAlso employee.EmployeeNo.Contains(needle)
 
                     Return contains Or containsReverseName Or hasThisKindOfEmployeeNo
                 End Function

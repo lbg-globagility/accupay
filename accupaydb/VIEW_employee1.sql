@@ -30,7 +30,7 @@ IF SearchString = '' THEN
 	,CONCAT('ID# ', e.EmployeeID, ', ', e.EmployeeType, ' salary') 'Details'
 	,IFNULL(e.Image,'') 'Image' 
 	FROM employee e 
-	LEFT JOIN user u ON e.CreatedBy=u.RowID 
+	LEFT JOIN aspnetusers u ON e.CreatedBy=u.Id 
 	LEFT JOIN position pos ON e.PositionID=pos.RowID 
 	LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID 
 	LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents
@@ -57,7 +57,7 @@ ELSE
 	,CONCAT('ID# ', e.EmployeeID, ', ', e.EmployeeType, ' salary') 'Details'
 	,IFNULL(e.Image,'') 'Image' 
 	FROM employee e 
-	LEFT JOIN user u ON e.CreatedBy=u.RowID 
+	LEFT JOIN aspnetusers u ON e.CreatedBy=u.Id 
 	LEFT JOIN position pos ON e.PositionID=pos.RowID 
 	LEFT JOIN payfrequency pf ON e.PayFrequencyID=pf.RowID 
 	LEFT JOIN filingstatus fstat ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents

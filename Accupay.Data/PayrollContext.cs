@@ -70,9 +70,7 @@ namespace AccuPay.Data
         internal virtual DbSet<Permission> Permissions { get; set; }
         internal virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
         internal virtual DbSet<Position> Positions { get; set; }
-        internal virtual DbSet<PositionView> PositionViews { get; set; }
         internal virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
-        internal virtual DbSet<Privilege> Privileges { get; set; }
         internal virtual DbSet<Product> Products { get; set; }
         internal virtual DbSet<Promotion> Promotions { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
@@ -84,9 +82,7 @@ namespace AccuPay.Data
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
         internal virtual DbSet<TimeAttendanceLog> TimeAttendanceLogs { get; set; }
         internal virtual DbSet<TimeLog> TimeLogs { get; set; }
-        internal virtual DbSet<User> OldUsers { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
-        internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 

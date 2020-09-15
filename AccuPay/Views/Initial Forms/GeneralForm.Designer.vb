@@ -26,7 +26,7 @@ Partial Class GeneralForm
         Me.UserToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OrganizationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BranchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UserPrivilegeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UserRoleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GovernmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SSSTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DutyShiftingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -40,7 +40,7 @@ Partial Class GeneralForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserPrivilegeToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.DutyShiftingToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserRoleToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.DutyShiftingToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -67,9 +67,9 @@ Partial Class GeneralForm
         '
         'UserPrivilegeToolStripMenuItem
         '
-        Me.UserPrivilegeToolStripMenuItem.Name = "UserPrivilegeToolStripMenuItem"
-        Me.UserPrivilegeToolStripMenuItem.Size = New System.Drawing.Size(68, 20)
-        Me.UserPrivilegeToolStripMenuItem.Text = "User Role"
+        Me.UserRoleToolStripMenuItem.Name = "UserPrivilegeToolStripMenuItem"
+        Me.UserRoleToolStripMenuItem.Size = New System.Drawing.Size(68, 20)
+        Me.UserRoleToolStripMenuItem.Text = "User Role"
         '
         'GovernmentToolStripMenuItem
         '
@@ -138,7 +138,7 @@ Partial Class GeneralForm
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents UserToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OrganizationToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents UserPrivilegeToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents UserRoleToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PanelGeneral As System.Windows.Forms.Panel
     Friend WithEvents GovernmentToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SSSTableToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

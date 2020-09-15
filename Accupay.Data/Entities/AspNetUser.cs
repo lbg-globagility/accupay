@@ -27,5 +27,7 @@ namespace AccuPay.Data.Entities
         public string DesktopPassword { get; set; }
 
         public DateTime? DeletedAt { get; set; }
+
+        public string FullName => $"{FirstName} {LastName}".Trim();
     }
 }

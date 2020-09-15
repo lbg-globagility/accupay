@@ -142,15 +142,15 @@ namespace AccuPay.Data.Entities
 
         public bool IsUnderAgency => AgencyID.HasValue;
 
-        public string FullName => $"{FirstName} {LastName}";
+        public string FullName => $"{FirstName} {LastName}".Trim();
 
-        public string FullNameLastNameFirst => $"{LastName}, {FirstName}";
+        public string FullNameLastNameFirst => $"{LastName}, {FirstName}".Trim();
 
         public string FullNameWithMiddleInitialLastNameFirst =>
-            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ".")}";
+            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ".")}".Trim();
 
         public string FullNameWithMiddleInitial =>
-            $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}";
+            $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}".Trim();
 
         public string EmployeeIdWithPositionAndEmployeeType
             => $"ID# {EmployeeNo}, {Position?.Name}, {EmployeeType} Salary";

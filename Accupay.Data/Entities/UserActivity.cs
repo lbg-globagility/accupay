@@ -20,7 +20,7 @@ namespace AccuPay.Data.Entities
 
         public int UserId { get; set; }
         public int OrganizationID { get; set; }
-        public User User { get; set; }
+        public AspNetUser User { get; set; }
         public string EntityName { get; set; }
         public string RecordType { get; set; }
         public virtual ICollection<UserActivityItem> ActivityItems { get; set; }

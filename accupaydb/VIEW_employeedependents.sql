@@ -35,10 +35,10 @@ SELECT edep.RowID
 ,COALESCE(DATE_FORMAT(edep.Birthdate,'%m/%d/%Y'),'') 'Birthdate'
 ,CONCAT(u.FirstName,' ',u.LastName) 'CreatedBy'
 ,DATE_FORMAT(edep.Created,'%m-%d-%Y') 'Created'
-,COALESCE((SELECT CONCAT(FirstName,' ',LastName) FROM user WHERE RowID=edep.LastUpdBy),'') 'LastUpdBy'
+,COALESCE((SELECT CONCAT(FirstName,' ',LastName) FROM aspnetusers WHERE Id=edep.LastUpdBy),'') 'LastUpdBy'
 ,COALESCE(DATE_FORMAT(edep.LastUpd,'%m-%d-%Y'),'') 'LastUpd'
 FROM employeedependents edep
-LEFT JOIN user u ON u.RowID=edep.CreatedBy
+LEFT JOIN aspnetusers u ON u.Id=edep.CreatedBy
 WHERE edep.OrganizationID=edep_OrganizationID
 AND edep.ParentEmployeeID=edep_ParentEmployeeID;
 

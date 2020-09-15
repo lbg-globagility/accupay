@@ -9,28 +9,9 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTINS_organization` AFTER INSERT ON `organization` FOR EACH ROW BEGIN
 
-
-
-DECLARE indx INT(11) DEFAULT 0;
-
-DECLARE view_count INT(11);
-
-DECLARE view_name VARCHAR(50);
-
-DECLARE view_ID INT(11);
-
-DECLARE userPositionID INT(11);
-
 DECLARE INS_audit_ID INT(11);
 
 DECLARE view_RowID INT(11);
-
-DECLARE orgIDOfCreator INT(11);
-
-
-SELECT p.RowID FROM user u LEFT JOIN position p ON p.RowID=u.PositionID WHERE u.RowID=NEW.CreatedBy LIMIT 1 INTO userPositionID;
-
-
 
 INSERT INTO `view`
 (
@@ -115,9 +96,6 @@ DUPLICATE
 KEY
 UPDATE
     LastUpd=CURRENT_TIMESTAMP();
-
-    SELECT OrganizationID FROM user WHERE RowID=NEW.CreatedBy LIMIT 1 INTO orgIDOfCreator;
-
 
 INSERT INTO category
 (
@@ -301,126 +279,79 @@ UPDATE
 	LastUpd=CURRENT_TIMESTAMP()
 	,LastUpdBy=NEW.CreatedBy;
 
-INSERT INTO position_view
-(
-    PositionID
-    ,ViewID
-    ,Creates
-    ,OrganizationID
-    ,ReadOnly
-    ,Updates
-    ,Deleting
-    ,Created
-    ,CreatedBy
-    ,LastUpdBy
-) SELECT
-    pos.RowID
-    ,v.RowID
-    ,'N'
-    ,NEW.RowID
-    ,'Y'
-    ,'N'
-    ,'N'
-    ,CURRENT_TIMESTAMP()
-    ,NEW.CreatedBy
-    ,NEW.CreatedBy
-    FROM `view` v
-    LEFT JOIN (SELECT * FROM position GROUP BY PositionName) pos ON pos.RowID > 0 AND pos.RowID != IFNULL(userPositionID,0)
-    WHERE v.OrganizationID=NEW.RowID
-UNION
-    SELECT
-    pos.RowID
-    ,v.RowID
-    ,'Y'
-    ,NEW.RowID
-    ,'N'
-    ,'Y'
-    ,'Y'
-    ,CURRENT_TIMESTAMP()
-    ,NEW.CreatedBy
-    ,NEW.CreatedBy
-    FROM `view` v
-    INNER JOIN position pos ON pos.RowID = IFNULL(userPositionID,0)
-    WHERE v.OrganizationID=NEW.RowID
-ON
-DUPLICATE
-KEY
-UPDATE
-    LastUpd=CURRENT_TIMESTAMP();
+    SELECT RowID FROM `view` WHERE ViewName='Organization' AND OrganizationID=New.RowID INTO view_RowID;
 
-    SELECT RowID FROM `view` WHERE ViewName='Organization' AND OrganizationID=orgIDOfCreator INTO view_RowID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'Name',NEW.RowID,'',NEW.Name,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'Name',NEW.RowID,'',NEW.Name,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'TradeName',NEW.RowID,'',NEW.TradeName,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'TradeName',NEW.RowID,'',NEW.TradeName,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PrimaryAddressID',NEW.RowID,'',NEW.PrimaryAddressID,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'PrimaryAddressID',NEW.RowID,'',NEW.PrimaryAddressID,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PrimaryContactID',NEW.RowID,'',NEW.PrimaryContactID,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'PrimaryContactID',NEW.RowID,'',NEW.PrimaryContactID,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PremiseAddressID',NEW.RowID,'',NEW.PremiseAddressID,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'PremiseAddressID',NEW.RowID,'',NEW.PremiseAddressID,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'MainPhone',NEW.RowID,'',NEW.MainPhone,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'MainPhone',NEW.RowID,'',NEW.MainPhone,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'FaxNumber',NEW.RowID,'',NEW.FaxNumber,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'FaxNumber',NEW.RowID,'',NEW.FaxNumber,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'EmailAddress',NEW.RowID,'',NEW.EmailAddress,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'EmailAddress',NEW.RowID,'',NEW.EmailAddress,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'AltEmailAddress',NEW.RowID,'',NEW.AltEmailAddress,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'AltEmailAddress',NEW.RowID,'',NEW.AltEmailAddress,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'AltPhone',NEW.RowID,'',NEW.AltPhone,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'AltPhone',NEW.RowID,'',NEW.AltPhone,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'URL',NEW.RowID,'',NEW.URL,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'URL',NEW.RowID,'',NEW.URL,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'TINNo',NEW.RowID,'',NEW.TINNo,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'TINNo',NEW.RowID,'',NEW.TINNo,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'BankAccountNo',NEW.RowID,'',NEW.BankAccountNo,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'BankAccountNo',NEW.RowID,'',NEW.BankAccountNo,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'BankName',NEW.RowID,'',NEW.BankName,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'BankName',NEW.RowID,'',NEW.BankName,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'OrganizationType',NEW.RowID,'',NEW.OrganizationType,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'OrganizationType',NEW.RowID,'',NEW.OrganizationType,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'TotalFloorArea',NEW.RowID,'',NEW.TotalFloorArea,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'TotalFloorArea',NEW.RowID,'',NEW.TotalFloorArea,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'MinimumWater',NEW.RowID,'',NEW.MinimumWater,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'MinimumWater',NEW.RowID,'',NEW.MinimumWater,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'VacationLeaveDays',NEW.RowID,'',NEW.VacationLeaveDays,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'VacationLeaveDays',NEW.RowID,'',NEW.VacationLeaveDays,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'SickLeaveDays',NEW.RowID,'',NEW.SickLeaveDays,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'SickLeaveDays',NEW.RowID,'',NEW.SickLeaveDays,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'MaternityLeaveDays',NEW.RowID,'',NEW.MaternityLeaveDays,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'MaternityLeaveDays',NEW.RowID,'',NEW.MaternityLeaveDays,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'OthersLeaveDays',NEW.RowID,'',NEW.OthersLeaveDays,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'OthersLeaveDays',NEW.RowID,'',NEW.OthersLeaveDays,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'STPFlag',NEW.RowID,'',NEW.STPFlag,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'STPFlag',NEW.RowID,'',NEW.STPFlag,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PayFrequencyID',NEW.RowID,'',NEW.PayFrequencyID,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'PayFrequencyID',NEW.RowID,'',NEW.PayFrequencyID,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PhilhealthDeductionSchedule',NEW.RowID,'',NEW.PhilhealthDeductionSchedule,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'PhilhealthDeductionSchedule',NEW.RowID,'',NEW.PhilhealthDeductionSchedule,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'SSSDeductionSchedule',NEW.RowID,'',NEW.SSSDeductionSchedule,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'SSSDeductionSchedule',NEW.RowID,'',NEW.SSSDeductionSchedule,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PagIbigDeductionSchedule',NEW.RowID,'',NEW.PagIbigDeductionSchedule,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'PagIbigDeductionSchedule',NEW.RowID,'',NEW.PagIbigDeductionSchedule,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'ReportText',NEW.RowID,'',NEW.ReportText,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'ReportText',NEW.RowID,'',NEW.ReportText,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'NightDifferentialTimeFrom',NEW.RowID,'',NEW.NightDifferentialTimeFrom,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'NightDifferentialTimeFrom',NEW.RowID,'',NEW.NightDifferentialTimeFrom,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'NightDifferentialTimeTo',NEW.RowID,'',NEW.NightDifferentialTimeTo,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'NightDifferentialTimeTo',NEW.RowID,'',NEW.NightDifferentialTimeTo,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'NightShiftTimeFrom',NEW.RowID,'',NEW.NightShiftTimeFrom,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'NightShiftTimeFrom',NEW.RowID,'',NEW.NightShiftTimeFrom,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'NightShiftTimeTo',NEW.RowID,'',NEW.NightShiftTimeTo,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'NightShiftTimeTo',NEW.RowID,'',NEW.NightShiftTimeTo,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'AllowNegativeLeaves',NEW.RowID,'',NEW.AllowNegativeLeaves,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'AllowNegativeLeaves',NEW.RowID,'',NEW.AllowNegativeLeaves,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'LimitedAccess',NEW.RowID,'',NEW.LimitedAccess,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'LimitedAccess',NEW.RowID,'',NEW.LimitedAccess,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'WorkDaysPerYear',NEW.RowID,'',NEW.WorkDaysPerYear,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'WorkDaysPerYear',NEW.RowID,'',NEW.WorkDaysPerYear,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'RDOCode',NEW.RowID,'',NEW.RDOCode,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'RDOCode',NEW.RowID,'',NEW.RDOCode,'Insert') INTO INS_audit_ID;
-
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,orgIDOfCreator,view_RowID,'ZIPCode',NEW.RowID,'',NEW.ZIPCode,'Insert') INTO INS_audit_ID;
+SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'ZIPCode',NEW.RowID,'',NEW.ZIPCode,'Insert') INTO INS_audit_ID;
 
     UPDATE product p LEFT JOIN product pp ON pp.PartNo=SUBSTRING_INDEX(p.PartNo,' ',1) AND pp.OrganizationID=NEW.RowID SET
     p.LastSoldCount=pp.RowID

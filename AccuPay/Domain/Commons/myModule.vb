@@ -6,7 +6,6 @@ Imports CrystalDecisions.Shared
 Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
-Imports Excel = Microsoft.Office.Interop.Excel
 
 Module myModule
     Public conn As New MySqlConnection
@@ -60,8 +59,6 @@ Module myModule
 
     Public CURDATE_MDY As String = "SELECT CURDATE();" '"SELECT DATE_FORMAT(CURDATE(),'%m-%d-%Y')"
 
-    Public USERNameStrPropr As String = "SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) FROM user u WHERE RowID="
-
     Public Width_resolution As Integer = My.Computer.Screen.Bounds.Width
 
     Public Height_resolution As Integer = My.Computer.Screen.Bounds.Height
@@ -79,8 +76,6 @@ Module myModule
     Public FormLeftPayroll As New List(Of String)
 
     Public FormLeftTimeAttend As New List(Of String)
-
-    Public position_view_table As New DataTable
 
     Public USER_ROLE As AspNetRole
 
@@ -1505,27 +1500,6 @@ Module myModule
         fsmakefile = Nothing
 
         Return retrnPath
-
-    End Function
-
-    Function VIEW_privilege(ByVal vw_ViewName As String,
-                            ByVal vw_org As String) As Object
-
-        'Dim params(2, 2) As Object
-
-        'params(0, 0) = "vw_ViewName"
-        'params(1, 0) = "vw_OrganizationID"
-
-        'params(0, 1) = vw_ViewName
-        'params(1, 1) = vw_org
-
-        'Dim view_RowID As Object
-
-        'view_RowID = EXEC_INSUPD_PROCEDURE(params, _
-        '                       "VIEW_privilege", _
-        '                       "view_RowID")
-
-        Return New ReadSQLFunction("VIEW_privilege", "view_RowID", vw_ViewName, orgztnID).ReturnValue
 
     End Function
 

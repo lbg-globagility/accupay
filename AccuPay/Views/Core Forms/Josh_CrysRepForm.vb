@@ -24,7 +24,6 @@ Public Class Josh_CrysRepForm
         Dim paramDiscreteValue3 As New ParameterDiscreteValue
         Dim paramDiscreteValue4 As New ParameterDiscreteValue
 
-
         paramField.Name = "EmployeeName"
         paramDiscreteValue.Value = Me.employeeName
         paramField.CurrentValues.Add(paramDiscreteValue)
@@ -54,6 +53,7 @@ Public Class Josh_CrysRepForm
         '\Lambert Form
         rpt.Load(Application.StartupPath + "\Core Forms\rpt\discplinaryActions.rpt")
 
+        'use Entity framework here. The view that is called below is already deleted.
         adapter.SelectCommand = New MySqlCommand("SELECT * FROM VW_DisciplinaryMemoUserDetails WHERE UserID = " & z_User)
 
         adapter.SelectCommand.Connection = getConn()

@@ -199,7 +199,7 @@ END IF;
 
 
 
-SELECT OrganizationID FROM user WHERE RowID=NEW.CreatedBy INTO OrganizID;
+SELECT OrganizationID FROM employee WHERE RowID=NEW.EmployeeID INTO OrganizID;
 
 SELECT RowID FROM `view` WHERE ViewName='Employee Attachment' AND OrganizationID=OrganizID LIMIT 1 INTO viewID;
 

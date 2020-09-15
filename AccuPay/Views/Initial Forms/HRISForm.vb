@@ -23,7 +23,7 @@ Public Class HRISForm
 
     Private ReadOnly _roleRepository As RoleRepository
 
-    Private ReadOnly _userRepository As UserRepository
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Sub New()
 
@@ -35,7 +35,7 @@ Public Class HRISForm
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
         curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
 

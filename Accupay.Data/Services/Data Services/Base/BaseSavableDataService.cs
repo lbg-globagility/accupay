@@ -77,7 +77,7 @@ namespace AccuPay.Data.Services
             {
                 var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity.RowID);
 
-                if (oldEntity == null)
+                if (!IsNewEntity(entity.RowID) && oldEntity == null)
                     throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");
 
                 await ValidateData(entity, oldEntity);

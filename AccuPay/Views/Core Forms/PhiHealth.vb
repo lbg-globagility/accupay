@@ -1,4 +1,6 @@
 ﻿Imports System.Data.OleDb
+Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class PhiHealth
@@ -14,9 +16,9 @@ Public Class PhiHealth
     "DATE_FORMAT(phh.Created,'%m-%d-%Y') 'Creation Date'," &
     "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
     "COALESCE(DATE_FORMAT(phh.LastUpd,'%m-%d-%Y'),'') 'Last Update'," &
-    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=phh.LastUpdBy) 'LastUpdate by'" &
+    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM aspnetusers WHERE Id=phh.LastUpdBy) 'LastUpdate by'" &
     " FROM payphilhealth phh" &
-    " INNER JOIN user u ON phh.CreatedBy=u.RowID" &
+    " INNER JOIN aspnetusers u ON phh.CreatedBy=u.Id" &
     " WHERE phh.HiddenData='0'"
 
     Dim _editRowID As New List(Of String)
@@ -55,7 +57,9 @@ Public Class PhiHealth
 
         _now = EXECQUER(CURDATE_MDY)
 
-        u_nem = EXECQUER(USERNameStrPropr & 1)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim user = userRepository.GetById(z_User)
+        u_nem = user?.FullName
 
     End Sub
 

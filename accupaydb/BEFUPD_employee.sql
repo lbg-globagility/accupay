@@ -9,62 +9,6 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `BEFUPD_employee` BEFORE UPDATE ON `employee` FOR EACH ROW BEGIN
 
-DECLARE anyvchar VARCHAR(150);
-
-DECLARE terminate_date DATE;
-
-DECLARE first_date DATE;
-
-DECLARE eom_payp CHAR(1);
-
-DECLARE loan_num INT(11);
-
-DECLARE loan_typeID INT(11);
-
-DECLARE ps_RowID INT(11);
-
-DECLARE payp_ID INT(11);
-
-DECLARE IsDepartmentChanged CHAR(1);
-DECLARE hasPrivilege CHAR(1);
-SELECT EXISTS(SELECT pv.RowID FROM position_view pv INNER JOIN user u ON u.RowID=NEW.LastUpdBy INNER JOIN position p ON p.RowID=u.PositionID WHERE pv.PositionID=p.RowID AND pv.OrganizationID=NEW.OrganizationID AND pv.Updates='Y') INTO hasPrivilege;
-IF hasPrivilege='1' AND OLD.EmploymentStatus NOT IN ('Resigned','Terminated') AND NEW.EmploymentStatus IN ('Resigned','Terminated') AND NEW.TerminationDate IS NOT NULL AND NEW.StartDate < NEW.TerminationDate THEN
-    SET anyvchar = '';
-
-
-
-    SELECT RowID,PayFromDate,PayToDate,`Half` FROM payperiod WHERE OrganizationID=NEW.OrganizationID AND TotalGrossSalary=NEW.PayFrequencyID AND NEW.TerminationDate BETWEEN PayFromDate AND PayToDate INTO payp_ID,first_date,terminate_date,eom_payp;
-
-
-
-
-
-    SELECT COUNT(RowID) FROM employeeloanschedule WHERE OrganizationID=NEW.OrganizationID AND EmployeeID=NEW.RowID INTO loan_num;
-
-    SELECT RowID FROM product WHERE OrganizationID=NEW.OrganizationID AND `Category`='Loan Type' AND PartNo='CASH ADVANCE' INTO loan_typeID;
-
-    INSERT INTO employeeloanschedule(OrganizationID,Created,CreatedBy,EmployeeID,LoanNumber,DedEffectiveDateFrom,DedEffectiveDateTo,TotalLoanAmount,DeductionSchedule,TotalBalanceLeft,DeductionAmount,`Status`,LoanTypeID,DeductionPercentage,NoOfPayPeriod,LoanPayPeriodLeft,Comments) VALUES (NEW.OrganizationID,CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.RowID,(loan_num + 1),first_date,terminate_date,1500.0,IF(eom_payp='0', 'End of the month', 'First half'),1500.0,1500.0,'In progress',loan_typeID,0.0,1,1,'deposit for transpo allowance') ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP(),LastUpdBy=NEW.LastUpdBy;
-
-    SELECT RowID FROM paystub WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID AND PayPeriodID=payp_ID INTO ps_RowID;
-
-    IF ps_RowID > 0 THEN
-
-        UPDATE paystubitem psi
-        SET psi.PayAmount=psi.PayAmount + 1500.0
-        ,psi.LastUpd=CURRENT_TIMESTAMP()
-        ,psi.LastUpdBy=NEW.LastUpdBy
-        WHERE psi.ProductID=loan_typeID
-        AND psi.OrganizationID=NEW.OrganizationID
-        AND psi.PayStubID=ps_RowID;
-
-    END IF;
-
-ELSE
-
-    SET NEW.TerminationDate = NULL;
-
-END IF;
-
 SET NEW.Salutation=IFNULL(NEW.Salutation,'');
 SET NEW.FirstName=IFNULL(NEW.FirstName,'');
 SET NEW.MiddleName=IFNULL(NEW.MiddleName,'');
@@ -129,21 +73,6 @@ SET NEW.BankName=IFNULL(NEW.BankName,'');
 
 IF NEW.PositionID IS NULL THEN SET NEW.PositionID = OLD.PositionID; END IF;
 
-IF OLD.PositionID != NEW.PositionID THEN
-
-    SELECT (pos.DivisionId != IFNULL(pot.DivisionId,0))
-    FROM position pos
-    LEFT JOIN position pot ON pot.RowID=NEW.PositionID
-    WHERE pos.RowID=OLD.PositionID
-    INTO IsDepartmentChanged;
-
-    IF IsDepartmentChanged = '1' THEN
-
-        SET IsDepartmentChanged = '1';
-
-    END IF;
-
-END IF;
 SET NEW.BranchID = IF(IFNULL(NEW.BranchID,0)=0,NULL,NEW.BranchID);
 END//
 DELIMITER ;

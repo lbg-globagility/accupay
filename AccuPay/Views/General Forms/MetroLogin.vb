@@ -150,17 +150,7 @@ Public Class MetroLogin
                             WarnBalloon("Please input your correct credentials.", "Invalid credentials", btnlogin, btnlogin.Width - 18, -69)
                             enableButton()
                         End Sub
-        Dim loadUserPrivileges = Sub(userId As Integer, organizationId As Integer)
-                                     position_view_table =
-                        New SQLQueryToDatatable(String.Concat("SELECT pv.*",
-                                                              " FROM position_view pv",
-                                                              " INNER JOIN `user` u ON u.RowID=", userId,
-                                                              " INNER JOIN `position` pos ON pos.RowID=u.PositionID",
-                                                              " INNER JOIN `position` p ON p.PositionName=pos.PositionName AND p.OrganizationID=pv.OrganizationID",
-                                                              " WHERE pv.PositionID=p.RowID",
-                                                              " AND pv.OrganizationID='", organizationId, "';")).ResultTable
 
-                                 End Sub
         disableButton()
 
         Dim username As String = UserNameTextBox.Text
@@ -188,7 +178,7 @@ Public Class MetroLogin
 
         USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=user.Id, organizationId:=z_OrganizationID)
 
-        If USER_ROLE Is Nothing Then
+        If Not _policyHelper.UseUserLevel AndAlso USER_ROLE Is Nothing Then
 
             MessageBoxHelper.ErrorMessage(UnauthorizedOrganizationMessage)
             enableButton()
@@ -197,8 +187,6 @@ Public Class MetroLogin
         End If
 
         z_User = user.Id
-
-        loadUserPrivileges(z_User, z_OrganizationID)
 
         userFirstName = user.FirstName
         z_postName = USER_ROLE.Name
@@ -259,19 +247,6 @@ Public Class MetroLogin
 
         Return False
 
-    End Function
-
-    Function UserAuthentication(Optional pass_word As Object = Nothing)
-        Dim n_ReadSQLFunction As New ReadSQLFunction("UserAuthentication",
-                                                     "returnvaue",
-                                                     _encryptor.Encrypt(UserNameTextBox.Text),
-                                                     pass_word,
-                                                     orgztnID)
-
-        Dim returnobj = n_ReadSQLFunction.ReturnValue
-        Dim returnvalue = ValNoComma(returnobj)
-
-        Return returnvalue
     End Function
 
     Private Sub cbxorganiz_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxorganiz.SelectedIndexChanged

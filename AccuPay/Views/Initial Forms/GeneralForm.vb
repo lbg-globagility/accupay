@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -19,7 +20,7 @@ Public Class GeneralForm
 
     Private ReadOnly _roleRepository As RoleRepository
 
-    Private ReadOnly _userRepository As UserRepository
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Sub New()
 
@@ -31,7 +32,7 @@ Public Class GeneralForm
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
     End Sub
 
@@ -84,7 +85,7 @@ Public Class GeneralForm
         AgencyToolStripMenuItem.Visible = showAgencyForm
     End Sub
 
-    Private Sub CheckUserLevelPermissions(user As Data.Entities.User)
+    Private Sub CheckUserLevelPermissions(user As AspNetUser)
         If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
 
             UserToolStripMenuItem.Visible = False
@@ -92,7 +93,7 @@ Public Class GeneralForm
 
         End If
 
-        UserPrivilegeToolStripMenuItem.Visible = False
+        UserRoleToolStripMenuItem.Visible = False
     End Sub
 
     Private Async Function CheckRolePermissions() As Task
@@ -108,7 +109,7 @@ Public Class GeneralForm
 
         UserToolStripMenuItem.Visible = If(userPermission?.Read, False)
         OrganizationToolStripMenuItem.Visible = If(organizationPermission?.Read, False)
-        UserPrivilegeToolStripMenuItem.Visible = If(rolePermission?.Read, False)
+        UserRoleToolStripMenuItem.Visible = If(rolePermission?.Read, False)
 
         'Branch, Calendar, Agency and Duty Shift only overrides the visibility if Read is False
         'since they are already checked by other policies above
@@ -201,7 +202,7 @@ Public Class GeneralForm
 
     End Sub
 
-    Private Async Sub SupplierToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserPrivilegeToolStripMenuItem.Click
+    Private Async Sub UserRoleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserRoleToolStripMenuItem.Click
 
         Await ChangeForm(UserRoleForm, PermissionConstant.ROLE)
         previousForm = UserRoleForm

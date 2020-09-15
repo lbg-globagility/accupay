@@ -39,7 +39,7 @@ namespace AccuPay.Data.Services
         public async Task DeleteAsync(PayCalendar payCalendar)
         {
             if (await _branchRepository.HasCalendarAsync(payCalendar))
-                throw new Exception("Calendar is currently in use.");
+                throw new BusinessLogicException("Calendar is currently in use.");
 
             await _calendarRepository.DeleteAsync(payCalendar);
         }

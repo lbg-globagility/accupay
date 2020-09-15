@@ -76,7 +76,7 @@ Public Class TimeEntrySummaryForm
 
     Private ReadOnly _timeAttendanceLogRepository As TimeAttendanceLogRepository
 
-    Private ReadOnly _userRepository As UserRepository
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Sub New()
 
@@ -96,7 +96,7 @@ Public Class TimeEntrySummaryForm
 
         _timeAttendanceLogRepository = MainServiceProvider.GetRequiredService(Of TimeAttendanceLogRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
     End Sub
 
