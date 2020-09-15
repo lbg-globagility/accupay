@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Utilities.Extensions
@@ -15,6 +16,8 @@ Public Class RoleUserControl
 
     Private _formMode As FormMode
 
+    Private ReadOnly _systemOwnerService As SystemOwnerService
+
     Private ReadOnly _permissionRepository As PermissionRepository
 
     Private _permissions As List(Of Permission)
@@ -25,6 +28,8 @@ Public Class RoleUserControl
 
         'For issues in designer And also defensive programming
         If MainServiceProvider IsNot Nothing Then
+
+            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
             _permissionRepository = MainServiceProvider.GetRequiredService(Of PermissionRepository)
         End If
@@ -104,9 +109,28 @@ Public Class RoleUserControl
 
     Private Async Function GetPermissions() As Task
 
-        If _permissions.Any Then Return
+        If _permissions.Any() Then Return
 
-        _permissions = (Await _permissionRepository.GetAll()).ToList()
+        Dim permissions = (Await _permissionRepository.GetAll(forDesktopOnly:=True)).ToList()
+
+        Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
+        Dim showAgency = currentSystemOwner = SystemOwnerService.Hyundai OrElse
+            currentSystemOwner = SystemOwnerService.Goldwings
+
+        If Not showAgency Then
+            Dim agencyPermission = permissions.
+                Where(Function(p) p.Name = PermissionConstant.AGENCY).
+                FirstOrDefault()
+
+            If agencyPermission IsNot Nothing Then
+
+                permissions.Remove(agencyPermission)
+
+            End If
+        End If
+
+        _permissions = permissions
+
     End Function
 
     Private Async Function UpdateRolePermissionGrid() As Task

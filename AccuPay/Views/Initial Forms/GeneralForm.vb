@@ -56,6 +56,9 @@ Public Class GeneralForm
     End Sub
 
     Private Sub CheckPolicyPermissions()
+
+        ShowAgency()
+
         If _policyHelper.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
 
             CalendarsToolStripMenuItem.Visible = True
@@ -70,6 +73,15 @@ Public Class GeneralForm
         BranchToolStripMenuItem.Visible = _policyHelper.ShowBranch
         DutyShiftingToolStripMenuItem.Visible = Not _policyHelper.UseShiftSchedule
 
+    End Sub
+
+    Private Sub ShowAgency()
+        Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
+
+        Dim showAgencyForm = currentSystemOwner = SystemOwnerService.Hyundai OrElse
+            currentSystemOwner = SystemOwnerService.Goldwings
+
+        AgencyToolStripMenuItem.Visible = showAgencyForm
     End Sub
 
     Private Sub CheckUserLevelPermissions(user As Data.Entities.User)
@@ -92,12 +104,13 @@ Public Class GeneralForm
         Dim rolePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ROLE).FirstOrDefault()
         Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
         Dim calendarPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.CALENDAR).FirstOrDefault()
+        Dim agencyPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.AGENCY).FirstOrDefault()
 
         UserToolStripMenuItem.Visible = If(userPermission?.Read, False)
         OrganizationToolStripMenuItem.Visible = If(organizationPermission?.Read, False)
         UserPrivilegeToolStripMenuItem.Visible = If(rolePermission?.Read, False)
 
-        'Branch, Calendar and Duty Shift only overrides the visibility if Read is False
+        'Branch, Calendar, Agency and Duty Shift only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If branchPermission Is Nothing OrElse branchPermission.Read = False Then
             BranchToolStripMenuItem.Visible = False
@@ -110,6 +123,10 @@ Public Class GeneralForm
 
         If shiftPermission Is Nothing OrElse shiftPermission.Read = False Then
             DutyShiftingToolStripMenuItem.Visible = False
+        End If
+
+        If agencyPermission Is Nothing OrElse agencyPermission.Read = False Then
+            AgencyToolStripMenuItem.Visible = False
         End If
     End Function
 
@@ -186,8 +203,8 @@ Public Class GeneralForm
 
     Private Async Sub SupplierToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserPrivilegeToolStripMenuItem.Click
 
-        Await ChangeForm(UserPrivilegeForm, PermissionConstant.ROLE)
-        previousForm = UserPrivilegeForm
+        Await ChangeForm(UserRoleForm, PermissionConstant.ROLE)
+        previousForm = UserRoleForm
 
     End Sub
 
@@ -219,7 +236,7 @@ Public Class GeneralForm
 
     Private Async Sub AgencyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AgencyToolStripMenuItem.Click
 
-        Await ChangeForm(AgencyForm)
+        Await ChangeForm(AgencyForm, PermissionConstant.AGENCY)
         previousForm = AgencyForm
 
     End Sub
@@ -242,18 +259,6 @@ Public Class GeneralForm
             pb.Enabled = True
             Exit For
         Next
-    End Sub
-
-    Protected Overrides Sub OnLoad(e As EventArgs)
-
-        Dim ownr() As String =
-            Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
-
-        AgencyToolStripMenuItem.Visible =
-            ownr.Contains(_systemOwnerService.GetCurrentSystemOwner())
-
-        MyBase.OnLoad(e)
-
     End Sub
 
 End Class

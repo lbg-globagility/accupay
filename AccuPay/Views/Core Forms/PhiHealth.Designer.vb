@@ -34,9 +34,6 @@ Partial Class PhiHealth
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.dgvPhHlth = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.bgworkImportSSS = New System.ComponentModel.BackgroundWorker()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -49,6 +46,9 @@ Partial Class PhiHealth
         Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.bgworkImportSSS = New System.ComponentModel.BackgroundWorker()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.dgvPhHlth, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -72,6 +72,7 @@ Partial Class PhiHealth
         Me.ToolStripButton2.Name = "ToolStripButton2"
         Me.ToolStripButton2.Size = New System.Drawing.Size(180, 22)
         Me.ToolStripButton2.Text = "&Save PhilHealth Contribution"
+        Me.ToolStripButton2.Visible = False
         '
         'ToolStripButton3
         '
@@ -80,6 +81,7 @@ Partial Class PhiHealth
         Me.ToolStripButton3.Name = "ToolStripButton3"
         Me.ToolStripButton3.Size = New System.Drawing.Size(87, 22)
         Me.ToolStripButton3.Text = "Delete Item"
+        Me.ToolStripButton3.Visible = False
         '
         'ToolStripButton4
         '
@@ -97,6 +99,7 @@ Partial Class PhiHealth
         Me.tsbtnPhilHealthImport.Name = "tsbtnPhilHealthImport"
         Me.tsbtnPhilHealthImport.Size = New System.Drawing.Size(121, 22)
         Me.tsbtnPhilHealthImport.Text = "Import PhilHealth"
+        Me.tsbtnPhilHealthImport.Visible = False
         '
         'ToolStripButton1
         '
@@ -105,6 +108,7 @@ Partial Class PhiHealth
         Me.ToolStripButton1.Name = "ToolStripButton1"
         Me.ToolStripButton1.Size = New System.Drawing.Size(63, 22)
         Me.ToolStripButton1.Text = "Cancel"
+        Me.ToolStripButton1.Visible = False
         '
         'tsbtnAudittrail
         '
@@ -156,35 +160,6 @@ Partial Class PhiHealth
         Me.dgvPhHlth.Name = "dgvPhHlth"
         Me.dgvPhHlth.Size = New System.Drawing.Size(1100, 371)
         Me.dgvPhHlth.TabIndex = 6
-        '
-        'Label25
-        '
-        Me.Label25.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(164, Byte), Integer), CType(CType(196, Byte), Integer))
-        Me.Label25.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
-        Me.Label25.Location = New System.Drawing.Point(0, 0)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(1101, 21)
-        Me.Label25.TabIndex = 136
-        Me.Label25.Text = "PHILHEALTH PREMIUM CONTRIBUTION TABLE"
-        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Panel1
-        '
-        Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel1.Controls.Add(Me.dgvPhHlth)
-        Me.Panel1.Controls.Add(Me.ToolStrip1)
-        Me.Panel1.Location = New System.Drawing.Point(0, 21)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1100, 396)
-        Me.Panel1.TabIndex = 137
-        '
-        'bgworkImportSSS
-        '
-        Me.bgworkImportSSS.WorkerReportsProgress = True
-        Me.bgworkImportSSS.WorkerSupportsCancellation = True
         '
         'Column1
         '
@@ -267,6 +242,35 @@ Partial Class PhiHealth
         Me.Column12.ReadOnly = True
         Me.Column12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.Column12.Visible = False
+        '
+        'Label25
+        '
+        Me.Label25.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(164, Byte), Integer), CType(CType(196, Byte), Integer))
+        Me.Label25.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Label25.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
+        Me.Label25.Location = New System.Drawing.Point(0, 0)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(1101, 21)
+        Me.Label25.TabIndex = 136
+        Me.Label25.Text = "PHILHEALTH PREMIUM CONTRIBUTION TABLE"
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Panel1
+        '
+        Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Panel1.Controls.Add(Me.dgvPhHlth)
+        Me.Panel1.Controls.Add(Me.ToolStrip1)
+        Me.Panel1.Location = New System.Drawing.Point(0, 21)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1100, 396)
+        Me.Panel1.TabIndex = 137
+        '
+        'bgworkImportSSS
+        '
+        Me.bgworkImportSSS.WorkerReportsProgress = True
+        Me.bgworkImportSSS.WorkerSupportsCancellation = True
         '
         'PhiHealth
         '

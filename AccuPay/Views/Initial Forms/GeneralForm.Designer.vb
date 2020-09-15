@@ -40,7 +40,7 @@ Partial Class GeneralForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.UserPrivilegeToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.DutyShiftingToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserPrivilegeToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.DutyShiftingToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -68,8 +68,8 @@ Partial Class GeneralForm
         'UserPrivilegeToolStripMenuItem
         '
         Me.UserPrivilegeToolStripMenuItem.Name = "UserPrivilegeToolStripMenuItem"
-        Me.UserPrivilegeToolStripMenuItem.Size = New System.Drawing.Size(90, 20)
-        Me.UserPrivilegeToolStripMenuItem.Text = "User Privilege"
+        Me.UserPrivilegeToolStripMenuItem.Size = New System.Drawing.Size(68, 20)
+        Me.UserPrivilegeToolStripMenuItem.Text = "User Role"
         '
         'GovernmentToolStripMenuItem
         '
@@ -81,7 +81,7 @@ Partial Class GeneralForm
         'SSSTableToolStripMenuItem
         '
         Me.SSSTableToolStripMenuItem.Name = "SSSTableToolStripMenuItem"
-        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(159, 22)
+        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(121, 22)
         Me.SSSTableToolStripMenuItem.Text = "SSS table"
         '
         'DutyShiftingToolStripMenuItem
@@ -99,7 +99,7 @@ Partial Class GeneralForm
         '
         'AgencyToolStripMenuItem
         '
-        Me.AgencyToolStripMenuItem.AccessibleDescription = "Hyundai;Goldwings;Fourlinq"
+        Me.AgencyToolStripMenuItem.AccessibleDescription = "Hyundai;Goldwings"
         Me.AgencyToolStripMenuItem.Name = "AgencyToolStripMenuItem"
         Me.AgencyToolStripMenuItem.Size = New System.Drawing.Size(59, 20)
         Me.AgencyToolStripMenuItem.Text = "Agency"

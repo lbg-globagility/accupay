@@ -1,18 +1,12 @@
-﻿Imports Femiani.Forms.UI.Input
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
+Imports Femiani.Forms.UI.Input
 
 Public Class AgencyForm
 
-    Public ReadOnly Property ViewIdentification As Object
-
-        Get
-
-            'agencyview_ID = VIEW_privilege("Agency", orgztnID)
-
-            Return agencyview_ID
-
-        End Get
-
-    End Property
+    Private _currentRolePermission As RolePermission
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -30,74 +24,42 @@ Public Class AgencyForm
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 
-    Dim agencyview_ID = VIEW_privilege("Agency", orgztnID)
-
-    Dim dontUpdateAgency = Nothing
-
     Private Sub Agency_Load(sender As Object, e As EventArgs) Handles Me.Load
-        If agencyview_ID = Nothing Then
-            agencyview_ID = VIEW_privilege("Agency", orgztnID)
-        End If
 
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & agencyview_ID)
+        Dim role = PermissionHelper.GetRole(PermissionConstant.AGENCY)
 
-        If formuserprivilege.Count = 0 Then
+        tsbtnNewAgency.Visible = False
+        tsbtnSaveAgency.Visible = False
+        tsbtnCancel.Visible = False
+        tsbtnSaveEmp.Visible = False
+        tsbtnCancelEmp.Visible = False
+        AgencyFormPanel.Enabled = False
+        dgvemployee.ReadOnly = True
 
-            tsbtnNewAgency.Visible = 0
-            tsbtnSaveAgency.Visible = 0
+        If role.Success Then
+            _currentRolePermission = role.RolePermission
 
-            tsbtnNewAgency.Visible = 0
-            tsbtnSaveAgency.Visible = 0
+            If _currentRolePermission.Create Then
+                tsbtnNewAgency.Visible = True
 
-            dontUpdateAgency = 1
-        Else
+            End If
 
-            For Each drow In formuserprivilege
+            If _currentRolePermission.Update OrElse _currentRolePermission.Create Then
+                tsbtnSaveAgency.Visible = True
+                tsbtnCancel.Visible = True
+                AgencyFormPanel.Enabled = True
+            End If
 
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    tsbtnNewAgency.Visible = 0
-                    tsbtnSaveEmp.Visible = 0
+            If _currentRolePermission.Update Then
+                tsbtnSaveEmp.Visible = True
+                tsbtnCancelEmp.Visible = True
+                dgvemployee.ReadOnly = False
 
-                    tsbtnNewAgency.Visible = 0
-                    tsbtnSaveAgency.Visible = 0
-
-                    dontUpdateAgency = 1
-
-                    Exit For
-                Else
-
-                    If drow("Creates").ToString = "N" Then
-                        tsbtnNewAgency.Visible = 0
-
-                        tsbtnNewAgency.Visible = 0
-                    Else
-                        tsbtnNewAgency.Visible = 1
-
-                        tsbtnNewAgency.Visible = 1
-
-                    End If
-
-                    'If drow("Deleting").ToString = "N" Then
-                    '    btnDelete.Visible = 0
-                    'Else
-                    '    btnDelete.Visible = 1
-                    'End If
-
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdateAgency = 1
-                    Else
-                        dontUpdateAgency = 0
-
-                    End If
-
-                End If
-
-            Next
+            End If
 
         End If
 
@@ -123,6 +85,12 @@ Public Class AgencyForm
     End Sub
 
     Private Sub dgvemployee_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvemployee.KeyDown
+
+        If Not _currentRolePermission.Update Then
+
+            e.Handled = True
+            Return
+        End If
 
         If e.KeyValue = 46 _
             And dgvemployee.CurrentRow.IsNewRow = False Then 'Delete Key
@@ -187,6 +155,8 @@ Public Class AgencyForm
 
     Private Sub btnEmpID_Click(sender As Object, e As EventArgs) Handles btnEmpID.Click
 
+        If Not _currentRolePermission.Update Then Return
+
         Dim n_EmployeeSelection As New EmployeeSelection
 
         If n_EmployeeSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -245,8 +215,6 @@ Public Class AgencyForm
 
     End Sub
 
-    Dim empview_ID = Nothing
-
     Private Sub TabPage2_Enter(sender As Object, e As EventArgs) Handles tbpEmployee.Enter
 
         tabctrlIndex = CustomColoredTabControl1.SelectedIndex
@@ -302,51 +270,6 @@ Public Class AgencyForm
                 PositionID.DisplayMember = positionnames.Columns(1).ColumnName
 
                 PositionID.DataSource = positionnames
-
-            End If
-
-            empview_ID = VIEW_privilege("Employee Personal Profile", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & empview_ID)
-
-            If formuserprivilege.Count = 0 Then
-
-                tsbtnSaveEmp.Visible = False
-            Else
-
-                For Each drow In formuserprivilege
-
-                    If drow("ReadOnly").ToString = "Y" Then
-                        'ToolStripButton2.Visible = 0
-
-                        tsbtnSaveEmp.Visible = False
-
-                        Exit For
-                    Else
-                        'If drow("Creates").ToString = "N" Then
-                        '    tsbtnNewEmp.Visible = 0
-                        '    tsbtnNewDepen.Visible = 0
-                        'Else
-                        '    tsbtnNewEmp.Visible = 1
-                        '    tsbtnNewDepen.Visible = 1
-                        'End If
-
-                        'If drow("Deleting").ToString = "N" Then
-                        '    btnDelete.Visible = 0
-                        'Else
-                        '    btnDelete.Visible = 1
-                        'End If
-
-                        If drow("Updates").ToString = "N" Then
-                            tsbtnSaveEmp.Visible = False
-                        Else
-                            tsbtnSaveEmp.Visible = True
-
-                        End If
-
-                    End If
-
-                Next
 
             End If
 
@@ -424,7 +347,7 @@ Public Class AgencyForm
 
                 If dgvagency.RowCount = 0 Then
 
-                    clearObjControl(Panel2)
+                    clearObjControl(AgencyFormPanel)
 
                     address_RowID = Nothing
                 Else
@@ -630,7 +553,7 @@ Public Class AgencyForm
 
         txtagencyname.Focus()
 
-        clearObjControl(Panel2)
+        clearObjControl(AgencyFormPanel)
 
         tsbtnNewAgency.Enabled = False
 
@@ -642,11 +565,17 @@ Public Class AgencyForm
 
         If tsbtnNewAgency.Enabled = False Then
 
+            If Not _currentRolePermission.Create Then
+
+                MessageBoxHelper.DefaultUnauthorizedActionMessage("Create Agency")
+                Return
+
+            End If
+
             Dim ag_rowID =
                 INSUPD_agency(, txtagencyname.Text,
                     txtagencyfee.Text,
                     address_RowID)
-            'txtTIN
 
             dgvagency.Rows.Add(ag_rowID,
                                txtagencyname.Text,
@@ -656,6 +585,14 @@ Public Class AgencyForm
 
             tsbtnNewAgency.Enabled = True
         Else
+
+            If Not _currentRolePermission.Update Then
+
+                MessageBoxHelper.DefaultUnauthorizedActionMessage("Update Agency")
+                Return
+
+            End If
+
             With dgvagency.CurrentRow
 
                 INSUPD_agency(.Cells("agRowID").Value,

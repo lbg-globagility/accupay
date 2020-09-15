@@ -3,6 +3,7 @@
     public class PermissionConstant
     {
         public const string ACCOUNT = "Account";
+        public const string AGENCY = "Agency";
         public const string ALLOWANCE = "Allowance";
         public const string BRANCH = "Branch";
         public const string CALENDAR = "Calendar";

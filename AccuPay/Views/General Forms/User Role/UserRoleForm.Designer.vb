@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class UserPrivilegeForm
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+Partial Class UserRoleForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class UserPrivilegeForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.RoleGrid = New System.Windows.Forms.DataGridView()
@@ -59,7 +59,7 @@ Partial Class UserPrivilegeForm
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(1235, 21)
         Me.Label25.TabIndex = 108
-        Me.Label25.Text = "USER PRIVILEGE"
+        Me.Label25.Text = "USER ROLES"
         Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'RoleGrid
@@ -192,11 +192,11 @@ Partial Class UserPrivilegeForm
         Me.ToolStrip1.TabIndex = 159
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'NewRoleButton
+        'NewButton
         '
         Me.NewButton.Image = Global.AccuPay.My.Resources.Resources._new
         Me.NewButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.NewButton.Name = "NewRoleButton"
+        Me.NewButton.Name = "NewButton"
         Me.NewButton.Size = New System.Drawing.Size(51, 22)
         Me.NewButton.Text = "New"
         '
@@ -233,7 +233,7 @@ Partial Class UserPrivilegeForm
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
         '
-        'UserPrivilegeForm
+        'UserRoleForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -248,7 +248,7 @@ Partial Class UserPrivilegeForm
         Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "UserPrivilegeForm"
+        Me.Name = "UserRoleForm"
         CType(Me.RoleGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)

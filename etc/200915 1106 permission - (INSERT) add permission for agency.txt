@@ -1,0 +1,5 @@
+ALTER TABLE `permission`
+	ADD COLUMN `ForDesktopOnly` BIT NOT NULL DEFAULT 0 AFTER `Name`;
+
+INSERT INTO `permission` (`Name`, `ForDesktopOnly`)
+VALUES ('Agency', True);

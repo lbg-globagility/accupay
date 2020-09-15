@@ -22,7 +22,6 @@ Public Class PhiHealth
     Dim _editRowID As New List(Of String)
     Dim e_rindx, e_cindx, charcnt, _curCol, PhHlth_rcount As Integer
     Dim _cellVal, _now, u_nem As String
-    Dim view_ID As Object
 
     Sub loadPhiHealth()
         dgvPhHlth.Rows.Clear()
@@ -49,9 +48,6 @@ Public Class PhiHealth
     Dim dontCreate As SByte = 0
 
     Private Sub PhiHealth_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'dbconn()
-
-        'view_ID = VIEW_privilege(Me.Text, orgztnID)
 
         loadPhiHealth()
 
@@ -60,49 +56,6 @@ Public Class PhiHealth
         _now = EXECQUER(CURDATE_MDY)
 
         u_nem = EXECQUER(USERNameStrPropr & 1)
-
-        view_ID = VIEW_privilege("PhilHealth Contribution Table", orgztnID)
-
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
-
-        If formuserprivilege.Count = 0 Then
-            ToolStripButton2.Visible = 0
-            ToolStripButton3.Visible = 0
-            dontUpdate = 1
-            dontCreate = 1
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    ToolStripButton3.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                        'ToolStripButton2.Visible = 0
-                        dontCreate = 1
-                    Else
-                        dontCreate = 0
-                        'ToolStripButton2.Visible = 1
-                    End If
-
-                    If drow("Deleting").ToString = "N" Then
-                        ToolStripButton3.Visible = 0
-                    Else
-                        ToolStripButton3.Visible = 1
-                    End If
-
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
-
-                End If
-
-            Next
-
-        End If
 
     End Sub
 
@@ -314,61 +267,6 @@ Public Class PhiHealth
     Private Sub dgvPhHlth_KeyDown(sender As Object, e As KeyEventArgs) 'Handles dgvPhHlth.KeyDown
         If (e.Control AndAlso Keys.S) Then
             Button1_Click(sender, e)
-        End If
-    End Sub
-
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
-        Dim result = MessageBox.Show("Do you want to Delete this Item ?", "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation)
-        If result = DialogResult.No Then
-            Exit Sub
-        ElseIf result = DialogResult.Yes Then
-            If dgvPhHlth.RowCount <> 0 Then
-                dgvPhHlth.EndEdit(True)
-                With dgvPhHlth.CurrentRow
-                    If .Cells("Column1").Value <> "" Then
-
-                        INS_audittrail("SalaryRangeFrom",
-                                       .Cells("Column1").Value,
-                                       .Cells("Column3").Value,
-                                       "",
-                                       "Delete")
-
-                        INS_audittrail("SalaryRangeTo",
-                                       .Cells("Column1").Value,
-                                       .Cells("Column4").Value,
-                                       "",
-                                       "Delete")
-
-                        INS_audittrail("SalaryBase",
-                                       .Cells("Column1").Value,
-                                       .Cells("Column5").Value,
-                                       "",
-                                       "Delete")
-
-                        INS_audittrail("TotalMonthlyPremium",
-                                       .Cells("Column1").Value,
-                                       .Cells("Column8").Value,
-                                       "",
-                                       "Delete")
-
-                        INS_audittrail("EmployeeShare",
-                                       .Cells("Column1").Value,
-                                       .Cells("Column6").Value,
-                                       "",
-                                       "Delete")
-
-                        INS_audittrail("EmployerShare",
-                                       .Cells("Column1").Value,
-                                       .Cells("Column7").Value,
-                                       "",
-                                       "Delete")
-
-                        EXECQUER("DELETE FROM payphilhealth WHERE RowID=" & .Cells("Column1").Value)
-
-                    End If
-                    dgvPhHlth.Rows.Remove(dgvPhHlth.CurrentRow)
-                End With
-            End If
         End If
     End Sub
 
@@ -586,122 +484,11 @@ Public Class PhiHealth
 
     End Function
 
-    Sub INS_audittrail(Optional au_FieldChanged = Nothing,
-                       Optional au_ChangedRowID = Nothing,
-                       Optional au_OldValue = Nothing,
-                       Optional au_NewValue = Nothing,
-                       Optional au_ActionPerformed = Nothing)
-
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-
-            cmd = New MySqlCommand("INS_audittrail", conn)
-
-            conn.Open()
-
-            With cmd
-                .Parameters.Clear()
-
-                .CommandType = CommandType.StoredProcedure
-
-                '.Parameters.Add(returnName, MySql_DbType)
-
-                .Parameters.AddWithValue("au_CreatedBy", z_User)
-
-                .Parameters.AddWithValue("au_LastUpdBy", z_User)
-
-                .Parameters.AddWithValue("au_OrganizationID", orgztnID)
-
-                .Parameters.AddWithValue("au_ViewID", view_ID)
-
-                .Parameters.AddWithValue("au_FieldChanged", Trim(au_FieldChanged))
-
-                .Parameters.AddWithValue("au_ChangedRowID", au_ChangedRowID)
-
-                .Parameters.AddWithValue("au_OldValue", Trim(au_OldValue))
-
-                .Parameters.AddWithValue("au_NewValue", Trim(au_NewValue))
-
-                .Parameters.AddWithValue("au_ActionPerformed", Trim(au_ActionPerformed))
-
-                '.Parameters(returnName).Direction = ParameterDirection.ReturnValue
-
-                Dim datread As MySqlDataReader
-
-                datread = .ExecuteReader()
-
-            End With
-        Catch ex As Exception
-            MsgBox(ex.Message & " " & "INS_audittrail", , "Error")
-        Finally
-            conn.Close()
-            cmd.Dispose()
-
-        End Try
-
-    End Sub
-
     Private Sub bgworkImportSSS_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkImportSSS.DoWork
 
         backgroundworking = 1
 
         Dim bgworkindx = 0
-
-        'For Each dgvrow As DataGridViewRow In dgvPhHlth.Rows
-
-        '    'SELECT  `RowID`,  `Created`,  `LastUpd`,  `CreatedBy`,  `LastUpdBy`,  `SalaryBracket`,  `SalaryRangeFrom`,  `SalaryRangeTo`,  `SalaryBase`
-        '    ',  `TotalMonthlyPremium`,  `EmployeeShare`,  `EmployerShare` FROM `payroll`.`payphilhealth`
-
-        '    If dgvrow.IsNewRow = False Then
-
-        '        INS_audittrail("SalaryRangeFrom", _
-        '                       dgvrow.Cells("Column1").Value, _
-        '                       dgvrow.Cells("Column3").Value, _
-        '                       "", _
-        '                       "Delete")
-
-        '        INS_audittrail("SalaryRangeTo", _
-        '                       dgvrow.Cells("Column1").Value, _
-        '                       dgvrow.Cells("Column4").Value, _
-        '                       "", _
-        '                       "Delete")
-
-        '        INS_audittrail("SalaryBase", _
-        '                       dgvrow.Cells("Column1").Value, _
-        '                       dgvrow.Cells("Column5").Value, _
-        '                       "", _
-        '                       "Delete")
-
-        '        INS_audittrail("TotalMonthlyPremium", _
-        '                       dgvrow.Cells("Column1").Value, _
-        '                       dgvrow.Cells("Column8").Value, _
-        '                       "", _
-        '                       "Delete")
-
-        '        INS_audittrail("EmployeeShare", _
-        '                       dgvrow.Cells("Column1").Value, _
-        '                       dgvrow.Cells("Column6").Value, _
-        '                       "", _
-        '                       "Delete")
-
-        '        INS_audittrail("EmployerShare", _
-        '                       dgvrow.Cells("Column1").Value, _
-        '                       dgvrow.Cells("Column7").Value, _
-        '                       "", _
-        '                       "Delete")
-
-        '    End If
-
-        '    bgworkImportSSS.ReportProgress(CInt(50 * (bgworkindx / dgvPhHlth.RowCount)), "")
-
-        '    bgworkindx += 1
-
-        'Next
-
-        'Dim maxsssrowid = EXECQUER("SELECT MAX(RowID) FROM payphilhealth;")
-
-        'EXECQUER("DELETE FROM payphilhealth;" & _
-        '         "ALTER TABLE payphilhealth AUTO_INCREMENT = " & Val(maxsssrowid) & ";")
 
         Dim arrayrow As New ArrayList
 

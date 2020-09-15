@@ -36,9 +36,9 @@ Public Class EmployeeForm
 
     Private _payFrequencies As New List(Of PayFrequency)
 
-    Private _policy As PolicyHelper
+    Private ReadOnly _policy As PolicyHelper
 
-    Private _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
     Private _laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
 
@@ -49,6 +49,7 @@ Public Class EmployeeForm
         InitializeComponent()
 
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
     End Sub

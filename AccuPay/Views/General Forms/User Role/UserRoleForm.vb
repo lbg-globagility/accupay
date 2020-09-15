@@ -9,7 +9,7 @@ Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class UserPrivilegeForm
+Public Class UserRoleForm
 
     Private ReadOnly _userRepository As AspNetUserRepository
 
@@ -25,7 +25,7 @@ Public Class UserPrivilegeForm
 
     End Sub
 
-    Private Async Sub UserPrivilegeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub UserRoleForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         RoleGrid.AutoGenerateColumns = False
 
@@ -208,7 +208,7 @@ Public Class UserPrivilegeForm
 
     End Function
 
-    Private Sub UserPrivilegeForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+    Private Sub UserRoleForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         InfoBalloon(, , LabelForBalloon, , , 1)
 

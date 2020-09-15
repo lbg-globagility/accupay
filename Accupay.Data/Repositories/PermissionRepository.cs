@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
@@ -14,9 +15,16 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public async Task<ICollection<Permission>> GetAll()
+        public async Task<ICollection<Permission>> GetAll(bool forDesktopOnly = false)
         {
-            return await _context.Permissions.ToListAsync();
+            var query = _context.Permissions.AsQueryable();
+
+            if (!forDesktopOnly)
+            {
+                query = query.Where(x => x.ForDesktopOnly == false);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

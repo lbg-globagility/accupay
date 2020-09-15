@@ -746,10 +746,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\UserUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\User Privilege\NewRoleForm.Designer.vb">
+    <Compile Include="Views\General Forms\User Role\NewRoleForm.Designer.vb">
       <DependentUpon>NewRoleForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\General Forms\User Privilege\NewRoleForm.vb">
+    <Compile Include="Views\General Forms\User Role\NewRoleForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.Designer.vb">
@@ -1742,10 +1742,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\txtPlaceHolder.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\User Privilege\UserPrivilegeForm.Designer.vb">
-      <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
+    <Compile Include="Views\General Forms\User Role\UserRoleForm.Designer.vb">
+      <DependentUpon>UserRoleForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\General Forms\User Privilege\UserPrivilegeForm.vb">
+    <Compile Include="Views\General Forms\User Role\UserRoleForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
@@ -1842,12 +1842,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>rptRF-1.rpt</DependentUpon>
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\UsersForm.Designer.vb">
-      <DependentUpon>UsersForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\UsersForm.vb">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.designer.vb">
       <DependentUpon>EmployeeShiftMassUpdate.vb</DependentUpon>
@@ -2086,7 +2080,7 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\UserUserControl.resx">
       <DependentUpon>UserUserControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\User Privilege\NewRoleForm.resx">
+    <EmbeddedResource Include="Views\General Forms\User Role\NewRoleForm.resx">
       <DependentUpon>NewRoleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Employees\Loans deducted from bonus\AssignBonusToLoanForm.resx">
@@ -2599,8 +2593,8 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
       <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\User Privilege\UserPrivilegeForm.resx">
-      <DependentUpon>UserPrivilegeForm.vb</DependentUpon>
+    <EmbeddedResource Include="Views\General Forms\User Role\UserRoleForm.resx">
+      <DependentUpon>UserRoleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\viewtotallow.resx">
       <DependentUpon>viewtotallow.vb</DependentUpon>
@@ -2644,9 +2638,6 @@
     <EmbeddedResource Include="Reports\rpt\rptRF-1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptRF-1.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\UsersForm.resx">
-      <DependentUpon>UsersForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.resx">
       <DependentUpon>EmployeeShiftMassUpdate.vb</DependentUpon>

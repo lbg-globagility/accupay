@@ -302,48 +302,6 @@ Module mdlStoredProcedure
         Return F_return
     End Function
 
-    Public Function I_AuditTrail(ByVal Created As DateTime,
-                                ByVal CreatedBy As Integer,
-                                ByVal LastUpd As DateTime,
-                                ByVal LastUpdBy As Integer,
-                                ByVal OrgID As Integer,
-                                ByVal ViewID As Integer,
-                                ByVal FieldChanged As String,
-                                ByVal ChangedRowID As Integer,
-                                ByVal OldValue As String,
-                                ByVal NewValue As String,
-                                ByVal ActionPerformed As String) As Boolean
-
-        Dim F_return As Boolean = False
-        Dim SQL_command As MySqlCommand =
-                  New MySqlCommand("I_audittrail", connection)
-        With SQL_command
-            Try
-
-                .Connection.Open()
-                .Parameters.AddWithValue("I_Created", Created)
-                .Parameters.AddWithValue("I_CreatedBy", CreatedBy)
-                .Parameters.AddWithValue("I_LastUpd", LastUpd)
-                .Parameters.AddWithValue("I_LastUpdBy", LastUpdBy)
-                .Parameters.AddWithValue("I_OrganizationID", OrgID)
-                .Parameters.AddWithValue("I_ViewID", ViewID)
-                .Parameters.AddWithValue("I_FieldChanged", FieldChanged)
-                .Parameters.AddWithValue("I_ChangedRowID", ChangedRowID)
-                .Parameters.AddWithValue("I_OldValue", OldValue)
-                .Parameters.AddWithValue("I_NewValue", NewValue)
-                .Parameters.AddWithValue("I_ActionPerformed", ActionPerformed)
-
-                .CommandType = CommandType.StoredProcedure
-                F_return = (.ExecuteNonQuery > 0)
-            Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.Critical, "Error")
-            Finally
-                connection.Close()
-            End Try
-        End With
-        Return F_return
-    End Function
-
     Public Function I_address(ByVal I_StreetAddress1 As String,
       ByVal I_StreetAddress2 As String,
       ByVal I_CityTown As String,

@@ -29,9 +29,30 @@ Partial Class AgencyForm
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.dgvagency = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.autcomptxtagency = New Femiani.Forms.UI.Input.AutoCompleteTextBox()
+        Me.btnRefresh = New System.Windows.Forms.Button()
+        Me.Last = New System.Windows.Forms.LinkLabel()
+        Me.Nxt = New System.Windows.Forms.LinkLabel()
+        Me.Prev = New System.Windows.Forms.LinkLabel()
+        Me.First = New System.Windows.Forms.LinkLabel()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.bgworksearchbox = New System.ComponentModel.BackgroundWorker()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.agRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.agName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.agFee = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.agAddress = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.agAddressID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.agIsActive = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CustomColoredTabControl1 = New AccuPay.CustomColoredTabControl()
         Me.tbpAgency = New System.Windows.Forms.TabPage()
-        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.AgencyFormPanel = New System.Windows.Forms.Panel()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.txtTIN = New System.Windows.Forms.TextBox()
@@ -73,26 +94,11 @@ Partial Class AgencyForm
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.tstxtsearch = New System.Windows.Forms.ToolStripTextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.autcomptxtagency = New Femiani.Forms.UI.Input.AutoCompleteTextBox()
-        Me.btnRefresh = New System.Windows.Forms.Button()
-        Me.Last = New System.Windows.Forms.LinkLabel()
-        Me.Nxt = New System.Windows.Forms.LinkLabel()
-        Me.Prev = New System.Windows.Forms.LinkLabel()
-        Me.First = New System.Windows.Forms.LinkLabel()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.bgworksearchbox = New System.ComponentModel.BackgroundWorker()
-        Me.agRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.agName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.agFee = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.agAddress = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.agAddressID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.agIsActive = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvagency, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CustomColoredTabControl1.SuspendLayout()
         Me.tbpAgency.SuspendLayout()
-        Me.Panel2.SuspendLayout()
+        Me.AgencyFormPanel.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.tbpEmployee.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -158,6 +164,173 @@ Partial Class AgencyForm
         Me.dgvagency.Size = New System.Drawing.Size(321, 255)
         Me.dgvagency.TabIndex = 337
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(9, 48)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(61, 13)
+        Me.Label1.TabIndex = 335
+        Me.Label1.Text = "Search box"
+        '
+        'autcomptxtagency
+        '
+        Me.autcomptxtagency.Enabled = False
+        Me.autcomptxtagency.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.autcomptxtagency.Location = New System.Drawing.Point(12, 64)
+        Me.autcomptxtagency.Name = "autcomptxtagency"
+        Me.autcomptxtagency.PopupBorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.autcomptxtagency.PopupOffset = New System.Drawing.Point(12, 0)
+        Me.autcomptxtagency.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight
+        Me.autcomptxtagency.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText
+        Me.autcomptxtagency.PopupWidth = 300
+        Me.autcomptxtagency.Size = New System.Drawing.Size(324, 25)
+        Me.autcomptxtagency.TabIndex = 334
+        '
+        'btnRefresh
+        '
+        Me.btnRefresh.Location = New System.Drawing.Point(261, 105)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(75, 23)
+        Me.btnRefresh.TabIndex = 333
+        Me.btnRefresh.Text = "Refresh"
+        Me.btnRefresh.UseVisualStyleBackColor = True
+        '
+        'Last
+        '
+        Me.Last.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Last.AutoSize = True
+        Me.Last.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Last.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Last.Location = New System.Drawing.Point(295, 439)
+        Me.Last.Name = "Last"
+        Me.Last.Size = New System.Drawing.Size(44, 15)
+        Me.Last.TabIndex = 332
+        Me.Last.TabStop = True
+        Me.Last.Text = "Last>>"
+        '
+        'Nxt
+        '
+        Me.Nxt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Nxt.AutoSize = True
+        Me.Nxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Nxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Nxt.Location = New System.Drawing.Point(250, 439)
+        Me.Nxt.Name = "Nxt"
+        Me.Nxt.Size = New System.Drawing.Size(39, 15)
+        Me.Nxt.TabIndex = 331
+        Me.Nxt.TabStop = True
+        Me.Nxt.Text = "Next>"
+        '
+        'Prev
+        '
+        Me.Prev.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Prev.AutoSize = True
+        Me.Prev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Prev.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Prev.Location = New System.Drawing.Point(62, 439)
+        Me.Prev.Name = "Prev"
+        Me.Prev.Size = New System.Drawing.Size(38, 15)
+        Me.Prev.TabIndex = 330
+        Me.Prev.TabStop = True
+        Me.Prev.Text = "<Prev"
+        '
+        'First
+        '
+        Me.First.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.First.AutoSize = True
+        Me.First.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.First.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.First.Location = New System.Drawing.Point(12, 439)
+        Me.First.Name = "First"
+        Me.First.Size = New System.Drawing.Size(44, 15)
+        Me.First.TabIndex = 329
+        Me.First.TabStop = True
+        Me.First.Text = "<<First"
+        '
+        'bgworksearchbox
+        '
+        Me.bgworksearchbox.WorkerReportsProgress = True
+        Me.bgworksearchbox.WorkerSupportsCancellation = True
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Fee"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Address"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "agAddressID"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.Visible = False
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "agIsActive"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        Me.DataGridViewTextBoxColumn6.Visible = False
+        '
+        'agRowID
+        '
+        Me.agRowID.HeaderText = "RowID"
+        Me.agRowID.Name = "agRowID"
+        Me.agRowID.ReadOnly = True
+        Me.agRowID.Visible = False
+        '
+        'agName
+        '
+        Me.agName.HeaderText = "Name"
+        Me.agName.Name = "agName"
+        Me.agName.ReadOnly = True
+        '
+        'agFee
+        '
+        Me.agFee.HeaderText = "Fee"
+        Me.agFee.Name = "agFee"
+        Me.agFee.ReadOnly = True
+        '
+        'agAddress
+        '
+        Me.agAddress.HeaderText = "Address"
+        Me.agAddress.Name = "agAddress"
+        Me.agAddress.ReadOnly = True
+        '
+        'agAddressID
+        '
+        Me.agAddressID.HeaderText = "agAddressID"
+        Me.agAddressID.Name = "agAddressID"
+        Me.agAddressID.ReadOnly = True
+        Me.agAddressID.Visible = False
+        '
+        'agIsActive
+        '
+        Me.agIsActive.HeaderText = "agIsActive"
+        Me.agIsActive.Name = "agIsActive"
+        Me.agIsActive.ReadOnly = True
+        Me.agIsActive.Visible = False
+        '
         'CustomColoredTabControl1
         '
         Me.CustomColoredTabControl1.Alignment = System.Windows.Forms.TabAlignment.Bottom
@@ -176,7 +349,7 @@ Partial Class AgencyForm
         '
         'tbpAgency
         '
-        Me.tbpAgency.Controls.Add(Me.Panel2)
+        Me.tbpAgency.Controls.Add(Me.AgencyFormPanel)
         Me.tbpAgency.Controls.Add(Me.ToolStrip1)
         Me.tbpAgency.Location = New System.Drawing.Point(4, 4)
         Me.tbpAgency.Name = "tbpAgency"
@@ -186,26 +359,26 @@ Partial Class AgencyForm
         Me.tbpAgency.Text = "AGENCY               "
         Me.tbpAgency.UseVisualStyleBackColor = True
         '
-        'Panel2
+        'AgencyFormPanel
         '
-        Me.Panel2.Controls.Add(Me.CheckBox1)
-        Me.Panel2.Controls.Add(Me.Label6)
-        Me.Panel2.Controls.Add(Me.txtTIN)
-        Me.Panel2.Controls.Add(Me.btnSelectAddress)
-        Me.Panel2.Controls.Add(Me.Label5)
-        Me.Panel2.Controls.Add(Me.txtbxAddress)
-        Me.Panel2.Controls.Add(Me.Label3)
-        Me.Panel2.Controls.Add(Me.txtagencyfee)
-        Me.Panel2.Controls.Add(Me.Label4)
-        Me.Panel2.Controls.Add(Me.Label2)
-        Me.Panel2.Controls.Add(Me.txtagencyname)
-        Me.Panel2.Controls.Add(Me.Label212)
-        Me.Panel2.Controls.Add(Me.Label7)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 28)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(662, 399)
-        Me.Panel2.TabIndex = 1
+        Me.AgencyFormPanel.Controls.Add(Me.CheckBox1)
+        Me.AgencyFormPanel.Controls.Add(Me.Label6)
+        Me.AgencyFormPanel.Controls.Add(Me.txtTIN)
+        Me.AgencyFormPanel.Controls.Add(Me.btnSelectAddress)
+        Me.AgencyFormPanel.Controls.Add(Me.Label5)
+        Me.AgencyFormPanel.Controls.Add(Me.txtbxAddress)
+        Me.AgencyFormPanel.Controls.Add(Me.Label3)
+        Me.AgencyFormPanel.Controls.Add(Me.txtagencyfee)
+        Me.AgencyFormPanel.Controls.Add(Me.Label4)
+        Me.AgencyFormPanel.Controls.Add(Me.Label2)
+        Me.AgencyFormPanel.Controls.Add(Me.txtagencyname)
+        Me.AgencyFormPanel.Controls.Add(Me.Label212)
+        Me.AgencyFormPanel.Controls.Add(Me.Label7)
+        Me.AgencyFormPanel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AgencyFormPanel.Location = New System.Drawing.Point(3, 28)
+        Me.AgencyFormPanel.Name = "AgencyFormPanel"
+        Me.AgencyFormPanel.Size = New System.Drawing.Size(662, 399)
+        Me.AgencyFormPanel.TabIndex = 1
         '
         'CheckBox1
         '
@@ -286,11 +459,11 @@ Partial Class AgencyForm
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label4.Location = New System.Drawing.Point(76, 85)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(19, 23)
+        Me.Label4.Size = New System.Drawing.Size(18, 24)
         Me.Label4.TabIndex = 364
         Me.Label4.Text = "*"
         '
@@ -314,11 +487,11 @@ Partial Class AgencyForm
         'Label212
         '
         Me.Label212.AutoSize = True
-        Me.Label212.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label212.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label212.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label212.Location = New System.Drawing.Point(50, 59)
         Me.Label212.Name = "Label212"
-        Me.Label212.Size = New System.Drawing.Size(19, 23)
+        Me.Label212.Size = New System.Drawing.Size(18, 24)
         Me.Label212.TabIndex = 361
         Me.Label212.Text = "*"
         '
@@ -601,135 +774,7 @@ Partial Class AgencyForm
         Me.tstxtsearch.Name = "tstxtsearch"
         Me.tstxtsearch.Size = New System.Drawing.Size(150, 25)
         '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(9, 48)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(61, 13)
-        Me.Label1.TabIndex = 335
-        Me.Label1.Text = "Search box"
-        '
-        'autcomptxtagency
-        '
-        Me.autcomptxtagency.Enabled = False
-        Me.autcomptxtagency.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.autcomptxtagency.Location = New System.Drawing.Point(12, 64)
-        Me.autcomptxtagency.Name = "autcomptxtagency"
-        Me.autcomptxtagency.PopupBorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.autcomptxtagency.PopupOffset = New System.Drawing.Point(12, 0)
-        Me.autcomptxtagency.PopupSelectionBackColor = System.Drawing.SystemColors.Highlight
-        Me.autcomptxtagency.PopupSelectionForeColor = System.Drawing.SystemColors.HighlightText
-        Me.autcomptxtagency.PopupWidth = 300
-        Me.autcomptxtagency.Size = New System.Drawing.Size(324, 25)
-        Me.autcomptxtagency.TabIndex = 334
-        '
-        'btnRefresh
-        '
-        Me.btnRefresh.Location = New System.Drawing.Point(261, 105)
-        Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(75, 23)
-        Me.btnRefresh.TabIndex = 333
-        Me.btnRefresh.Text = "Refresh"
-        Me.btnRefresh.UseVisualStyleBackColor = True
-        '
-        'Last
-        '
-        Me.Last.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Last.AutoSize = True
-        Me.Last.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Last.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Last.Location = New System.Drawing.Point(295, 439)
-        Me.Last.Name = "Last"
-        Me.Last.Size = New System.Drawing.Size(44, 15)
-        Me.Last.TabIndex = 332
-        Me.Last.TabStop = True
-        Me.Last.Text = "Last>>"
-        '
-        'Nxt
-        '
-        Me.Nxt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Nxt.AutoSize = True
-        Me.Nxt.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Nxt.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Nxt.Location = New System.Drawing.Point(250, 439)
-        Me.Nxt.Name = "Nxt"
-        Me.Nxt.Size = New System.Drawing.Size(39, 15)
-        Me.Nxt.TabIndex = 331
-        Me.Nxt.TabStop = True
-        Me.Nxt.Text = "Next>"
-        '
-        'Prev
-        '
-        Me.Prev.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Prev.AutoSize = True
-        Me.Prev.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Prev.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Prev.Location = New System.Drawing.Point(62, 439)
-        Me.Prev.Name = "Prev"
-        Me.Prev.Size = New System.Drawing.Size(38, 15)
-        Me.Prev.TabIndex = 330
-        Me.Prev.TabStop = True
-        Me.Prev.Text = "<Prev"
-        '
-        'First
-        '
-        Me.First.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.First.AutoSize = True
-        Me.First.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.First.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.First.Location = New System.Drawing.Point(12, 439)
-        Me.First.Name = "First"
-        Me.First.Size = New System.Drawing.Size(44, 15)
-        Me.First.TabIndex = 329
-        Me.First.TabStop = True
-        Me.First.Text = "<<First"
-        '
-        'bgworksearchbox
-        '
-        Me.bgworksearchbox.WorkerReportsProgress = True
-        Me.bgworksearchbox.WorkerSupportsCancellation = True
-        '
-        'agRowID
-        '
-        Me.agRowID.HeaderText = "RowID"
-        Me.agRowID.Name = "agRowID"
-        Me.agRowID.ReadOnly = True
-        Me.agRowID.Visible = False
-        '
-        'agName
-        '
-        Me.agName.HeaderText = "Name"
-        Me.agName.Name = "agName"
-        Me.agName.ReadOnly = True
-        '
-        'agFee
-        '
-        Me.agFee.HeaderText = "Fee"
-        Me.agFee.Name = "agFee"
-        Me.agFee.ReadOnly = True
-        '
-        'agAddress
-        '
-        Me.agAddress.HeaderText = "Address"
-        Me.agAddress.Name = "agAddress"
-        Me.agAddress.ReadOnly = True
-        '
-        'agAddressID
-        '
-        Me.agAddressID.HeaderText = "agAddressID"
-        Me.agAddressID.Name = "agAddressID"
-        Me.agAddressID.ReadOnly = True
-        Me.agAddressID.Visible = False
-        '
-        'agIsActive
-        '
-        Me.agIsActive.HeaderText = "agIsActive"
-        Me.agIsActive.Name = "agIsActive"
-        Me.agIsActive.ReadOnly = True
-        Me.agIsActive.Visible = False
-        '
-        'Agency
+        'AgencyForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -739,7 +784,7 @@ Partial Class AgencyForm
         Me.Controls.Add(Me.Label25)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True
-        Me.Name = "Agency"
+        Me.Name = "AgencyForm"
         Me.Text = "Agency"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
@@ -747,8 +792,8 @@ Partial Class AgencyForm
         Me.CustomColoredTabControl1.ResumeLayout(False)
         Me.tbpAgency.ResumeLayout(False)
         Me.tbpAgency.PerformLayout()
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
+        Me.AgencyFormPanel.ResumeLayout(False)
+        Me.AgencyFormPanel.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.tbpEmployee.ResumeLayout(False)
@@ -773,7 +818,7 @@ Partial Class AgencyForm
     Friend WithEvents CustomColoredTabControl1 As Global.AccuPay.CustomColoredTabControl
     Friend WithEvents tbpAgency As System.Windows.Forms.TabPage
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents Panel2 As System.Windows.Forms.Panel
+    Friend WithEvents AgencyFormPanel As System.Windows.Forms.Panel
     Friend WithEvents tsbtnNewAgency As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnSaveAgency As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnCancel As System.Windows.Forms.ToolStripButton
@@ -823,4 +868,10 @@ Partial Class AgencyForm
     Friend WithEvents agAddress As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents agAddressID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents agIsActive As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
 End Class
