@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -25,13 +26,15 @@ Public Class EmployeeAllowanceForm
 
     Private _changedAllowances As List(Of Allowance)
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _productRepository As ProductRepository
+    Private ReadOnly _productRepository As ProductRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+    Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Private _currentRolePermission As RolePermission
 
     Sub New()
 
@@ -59,6 +62,8 @@ Public Class EmployeeAllowanceForm
 
         InitializeComponentSettings()
 
+        Await CheckRolePermissions()
+
         LoadFrequencyList()
         Await LoadAllowanceTypes()
 
@@ -69,13 +74,48 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.ALLOWANCE)
+
+        NewToolStripButton.Visible = False
+        ImportToolStripButton.Visible = False
+        SaveToolStripButton.Visible = False
+        CancelToolStripButton.Visible = False
+        DeleteToolStripButton.Visible = False
+        DetailsTabLayout.Enabled = False
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If _currentRolePermission.Create Then
+                NewToolStripButton.Visible = True
+                ImportToolStripButton.Visible = True
+
+            End If
+
+            If _currentRolePermission.Update Then
+                SaveToolStripButton.Visible = True
+                CancelToolStripButton.Visible = True
+                DetailsTabLayout.Enabled = True
+            End If
+
+            If _currentRolePermission.Delete Then
+                DeleteToolStripButton.Visible = True
+
+            End If
+
+        End If
+    End Function
+
     Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
-        _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployees(SearchTextBox.Text.ToLower())
+        _textBoxDelayedAction.ProcessAsync(
+            Async Function()
+                Await FilterEmployees(SearchTextBox.Text.ToLower())
 
-                                               Return True
-                                           End Function)
+                Return True
+            End Function)
 
     End Sub
 
@@ -369,10 +409,11 @@ Public Class EmployeeAllowanceForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
                 Await dataService.DeleteAsync(Me._currentAllowance.RowID.Value)
 
-                _userActivityRepository.RecordDelete(z_User,
-                                                        FormEntityName,
-                                                        CInt(Me._currentAllowance.RowID),
-                                                        z_OrganizationID)
+                _userActivityRepository.RecordDelete(
+                    z_User,
+                    FormEntityName,
+                    CInt(Me._currentAllowance.RowID),
+                    z_OrganizationID)
 
                 Await LoadAllowances(currentEmployee)
 
@@ -458,18 +499,18 @@ Public Class EmployeeAllowanceForm
 
         Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
         Dim allowances = (Await repository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
-                                OrderByDescending(Function(a) a.EffectiveStartDate).
-                                ThenBy(Function(a) a.Type).
-                                ToList
+            OrderByDescending(Function(a) a.EffectiveStartDate).
+            ThenBy(Function(a) a.Type).
+            ToList
 
         'only get the items with effective end dates first
         Me._currentAllowances = allowances.Where(Function(a) a.EffectiveEndDate IsNot Nothing).ToList
 
         'then add the items with no effective end dates at the beginning
         Me._currentAllowances.InsertRange(0, allowances.
-                                Where(Function(a) a.EffectiveEndDate Is Nothing).
-                                OrderByDescending(Function(a) a.EffectiveStartDate).
-                                ToList)
+            Where(Function(a) a.EffectiveEndDate Is Nothing).
+            OrderByDescending(Function(a) a.EffectiveStartDate).
+            ToList)
 
         Me._changedAllowances = Me._currentAllowances.CloneListJson()
 
@@ -486,8 +527,8 @@ Public Class EmployeeAllowanceForm
         'if the selected allowance has a soft deleted allowance type.
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
-                                                Where(Function(a) a.PartNo.Trim <> String.Empty).
-                                                ToList
+            Where(Function(a) a.PartNo.Trim <> String.Empty).
+            ToList
 
         PopulateAllowanceTypeCombobox()
 
@@ -523,7 +564,10 @@ Public Class EmployeeAllowanceForm
         cboallowfreq.DataBindings.Clear()
         cboallowfreq.DataBindings.Add("Text", Me._currentAllowance, "AllowanceFrequency")
 
-        DetailsTabLayout.Enabled = True
+        If _currentRolePermission.Update Then
+
+            DetailsTabLayout.Enabled = True
+        End If
 
     End Sub
 
@@ -616,38 +660,38 @@ Public Class EmployeeAllowanceForm
 
         If newAllowance.Type <> oldAllowance.Type Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Updated {entityName} type from '{oldAllowance.Type}' to '{newAllowance.Type}'."
-                        })
+            {
+                .EntityId = CInt(oldAllowance.RowID),
+                .Description = $"Updated {entityName} type from '{oldAllowance.Type}' to '{newAllowance.Type}'."
+            })
         End If
         If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Updated {entityName} frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}'."
-                        })
+            {
+                .EntityId = CInt(oldAllowance.RowID),
+                .Description = $"Updated {entityName} frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}'."
+            })
         End If
         If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Updated {entityName} start date from '{oldAllowance.EffectiveStartDate.ToShortDateString}' to '{newAllowance.EffectiveStartDate.ToShortDateString}'."
-                        })
+            {
+                .EntityId = CInt(oldAllowance.RowID),
+                .Description = $"Updated {entityName} start date from '{oldAllowance.EffectiveStartDate.ToShortDateString}' to '{newAllowance.EffectiveStartDate.ToShortDateString}'."
+            })
         End If
         If newAllowance.EffectiveEndDate.ToString <> oldAllowance.EffectiveEndDate.ToString Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Updated {entityName} end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString}' to '{newAllowance.EffectiveEndDate?.ToShortDateString}'."
-                        })
+            {
+                .EntityId = CInt(oldAllowance.RowID),
+                .Description = $"Updated {entityName} end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString}' to '{newAllowance.EffectiveEndDate?.ToShortDateString}'."
+            })
         End If
         If newAllowance.Amount <> oldAllowance.Amount Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Updated {entityName} amount from '{oldAllowance.Amount.ToString}' to '{newAllowance.Amount.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldAllowance.RowID),
+                .Description = $"Updated {entityName} amount from '{oldAllowance.Amount.ToString}' to '{newAllowance.Amount.ToString}'."
+            })
         End If
 
         _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
@@ -658,8 +702,8 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadEmployees() As Task
 
         Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
-                            OrderBy(Function(e) e.LastName).
-                            ToList
+            OrderBy(Function(e) e.LastName).
+            ToList
 
     End Function
 

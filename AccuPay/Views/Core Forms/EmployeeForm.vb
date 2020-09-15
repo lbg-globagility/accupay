@@ -81,7 +81,12 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub PrepareForm()
-        CheckRolePermissions()
+
+        If Not _policy.UseUserLevel Then
+
+            CheckRolePermissions()
+        End If
+
         PrepareFormForUserLevelAuthorizations()
         PrepareFormForBenchmark()
         PreperateFormForLaGlobal()
@@ -140,11 +145,7 @@ Public Class EmployeeForm
             Return
         End If
 
-        If _policy.UseUserLevel = False Then
-
-            Return
-
-        End If
+        If Not _policy.UseUserLevel Then Return
 
         If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
@@ -674,11 +675,9 @@ Public Class EmployeeForm
 #Region "Personal Profile"
 
     Public positn As New AutoCompleteStringCollection
-    Public Simple As New AutoCompleteStringCollection
-    Public SimpleDummy As New AutoCompleteStringCollection
     Dim payFreq As New AutoCompleteStringCollection
-    Dim dbnow, u_nem, positID, payFreqID, yrold18 As String
-    Dim emp_rcount, salutn_count, viewid As Integer
+    Dim dbnow, u_nem, positID, payFreqID As String
+    Dim emp_rcount As Integer
 
     Public q_employee As String = "SELECT e.RowID," &
         "e.EmployeeID 'Employee ID'," &

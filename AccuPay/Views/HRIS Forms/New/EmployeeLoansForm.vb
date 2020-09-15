@@ -2,8 +2,10 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -27,15 +29,15 @@ Public Class EmployeeLoansForm
 
     Private _currentLoanTransactions As List(Of LoanTransaction)
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _productRepository As ProductRepository
+    Private ReadOnly _productRepository As ProductRepository
 
-    Private _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+    Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
     Private Const LOAN_HISTORY_TAB_TEXT As String = "Loan History"
 
@@ -44,6 +46,8 @@ Public Class EmployeeLoansForm
     Private loanAmountBeforeTextChange As Decimal
 
     Private loanInterestPercentageBeforeTextChange As Decimal
+
+    Private _currentRolePermission As RolePermission
 
     Sub New()
 
@@ -74,6 +78,8 @@ Public Class EmployeeLoansForm
 
         InitializeComponentSettings()
 
+        Await CheckRolePermissions()
+
         LoadLoanStatus()
         Await LoadLoanTypes()
         Await LoadDeductionSchedules()
@@ -87,13 +93,48 @@ Public Class EmployeeLoansForm
         lnkBonusPayment.Visible = checker.HasAccess(Feature.LoanDeductFromBonus)
     End Sub
 
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.LOAN)
+
+        NewToolStripButton.Visible = False
+        ImportToolStripButton.Visible = False
+        SaveToolStripButton.Visible = False
+        CancelToolStripButton.Visible = False
+        DeleteToolStripButton.Visible = False
+        DetailsTabLayout.Enabled = False
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If _currentRolePermission.Create Then
+                NewToolStripButton.Visible = True
+                ImportToolStripButton.Visible = True
+
+            End If
+
+            If _currentRolePermission.Update Then
+                SaveToolStripButton.Visible = True
+                CancelToolStripButton.Visible = True
+                DetailsTabLayout.Enabled = True
+            End If
+
+            If _currentRolePermission.Delete Then
+                DeleteToolStripButton.Visible = True
+
+            End If
+
+        End If
+    End Function
+
     Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
-        _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployees(SearchTextBox.Text.ToLower())
+        _textBoxDelayedAction.ProcessAsync(
+            Async Function()
+                Await FilterEmployees(SearchTextBox.Text.ToLower())
 
-                                               Return True
-                                           End Function)
+                Return True
+            End Function)
 
     End Sub
 
@@ -455,9 +496,10 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Async Function DeleteLoanSchedule(currentEmployee As Employee,
-                                              messageTitle As String,
-                                              loanNumberString As String) As Task
+    Private Async Function DeleteLoanSchedule(
+        currentEmployee As Employee,
+        messageTitle As String,
+        loanNumberString As String) As Task
 
         If Me._currentLoan Is Nothing OrElse
             Me._currentLoan.RowID Is Nothing Then
@@ -592,9 +634,9 @@ Public Class EmployeeLoansForm
         Dim loanSchedules = Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)
 
         loanSchedules = loanSchedules.
-                                OrderByDescending(Function(l) l.DedEffectiveDateFrom).
-                                ThenBy(Function(l) l.LoanName).
-                                ToList()
+            OrderByDescending(Function(l) l.DedEffectiveDateFrom).
+            ThenBy(Function(l) l.LoanName).
+            ToList()
 
         Dim statusFilter = CreateStatusFilter()
 
@@ -606,10 +648,11 @@ Public Class EmployeeLoansForm
         End If
 
         Me._changedLoans = Me._currentloans.CloneListJson()
-        Me._changedLoans.ForEach(Sub(loan)
-                                     loan.RecomputePayPeriodLeft()
-                                     loan.RecomputeTotalPayPeriod()
-                                 End Sub)
+        Me._changedLoans.ForEach(
+            Sub(loan)
+                loan.RecomputePayPeriodLeft()
+                loan.RecomputeTotalPayPeriod()
+            End Sub)
 
         chkInProgressFilter.Text = $"{LoanSchedule.STATUS_IN_PROGRESS} ({loanSchedules.Where(Function(l) l.Status = LoanSchedule.STATUS_IN_PROGRESS).Count()})"
         chkOnHoldFilter.Text = $"{LoanSchedule.STATUS_ON_HOLD} ({loanSchedules.Where(Function(l) l.Status = LoanSchedule.STATUS_ON_HOLD).Count()})"
@@ -634,14 +677,15 @@ Public Class EmployeeLoansForm
             Return Nothing
         End If
 
-        Dim whereFunction = Function(loanSchedule As LoanSchedule) As Boolean
+        Dim whereFunction =
+            Function(loanSchedule As LoanSchedule) As Boolean
 
-                                Return (inProgressChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS) OrElse
-                                   (onHoldChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_ON_HOLD) OrElse
-                                   (cancelledChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_CANCELLED) OrElse
-                                   (completeChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_COMPLETE)
+                Return (inProgressChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS) OrElse
+                    (onHoldChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_ON_HOLD) OrElse
+                    (cancelledChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_CANCELLED) OrElse
+                    (completeChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_COMPLETE)
 
-                            End Function
+            End Function
 
         Return whereFunction
     End Function
@@ -715,7 +759,10 @@ Public Class EmployeeLoansForm
             unEditable = IsUnEditable()
         End If
 
-        DetailsTabLayout.Enabled = Not unEditable
+        If _currentRolePermission.Update Then
+
+            DetailsTabLayout.Enabled = Not unEditable
+        End If
 
         txtLoanNumber.DataBindings.Clear()
         txtLoanNumber.DataBindings.Add("Text", Me._currentLoan, "LoanNumber")
@@ -898,66 +945,66 @@ Public Class EmployeeLoansForm
 
         If newLoanSchedule.LoanName <> oldLoanSchedule.LoanName Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}'."
+            })
         End If
         If newLoanSchedule.LoanNumber <> oldLoanSchedule.LoanNumber Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}'."
+            })
         End If
         If newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} total amount from '{oldLoanSchedule.TotalLoanAmount.ToString}' to '{newLoanSchedule.TotalLoanAmount.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} total amount from '{oldLoanSchedule.TotalLoanAmount.ToString}' to '{newLoanSchedule.TotalLoanAmount.ToString}'."
+            })
         End If
         If newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} date from '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} date from '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString}'."
+            })
         End If
         If newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} deduction amount from '{oldLoanSchedule.DeductionAmount.ToString}' to '{newLoanSchedule.DeductionAmount.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} deduction amount from '{oldLoanSchedule.DeductionAmount.ToString}' to '{newLoanSchedule.DeductionAmount.ToString}'."
+            })
         End If
         If newLoanSchedule.Status <> oldLoanSchedule.Status Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}'."
+            })
         End If
         If newLoanSchedule.DeductionPercentage <> oldLoanSchedule.DeductionPercentage Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} interest percentage from '{oldLoanSchedule.DeductionPercentage.ToString}' to '{newLoanSchedule.DeductionPercentage.ToString}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} interest percentage from '{oldLoanSchedule.DeductionPercentage.ToString}' to '{newLoanSchedule.DeductionPercentage.ToString}'."
+            })
         End If
         If newLoanSchedule.DeductionSchedule <> oldLoanSchedule.DeductionSchedule Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}'."
+            })
         End If
         If newLoanSchedule.Comments <> oldLoanSchedule.Comments Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Updated {entityName} comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}'."
-                        })
+            {
+                .EntityId = CInt(oldLoanSchedule.RowID),
+                .Description = $"Updated {entityName} comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}'."
+            })
         End If
 
         _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
@@ -968,8 +1015,8 @@ Public Class EmployeeLoansForm
     Private Async Function LoadEmployees() As Task
 
         Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
-                            OrderBy(Function(e) e.LastName).
-                            ToList
+            OrderBy(Function(e) e.LastName).
+            ToList
 
     End Function
 

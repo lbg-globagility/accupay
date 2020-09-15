@@ -360,7 +360,6 @@
     <Compile Include="Core Forms\Commons\ReadSQLProcedureToDatatable.vb" />
     <Compile Include="Core Forms\Commons\SQLQueryToDatatable.vb" />
     <Compile Include="Core Forms\Commons\TrapDecimalKey.vb" />
-    <Compile Include="Core Forms\Commons\UserAccessRights.vb" />
     <Compile Include="Modules\mdlStoredProcedure.vb" />
     <Compile Include="Modules\mdlValidation.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

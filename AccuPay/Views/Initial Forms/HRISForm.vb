@@ -53,7 +53,10 @@ Public Class HRISForm
             PointsToolStripMenuItem.Visible = False
         End If
 
-        Await CheckRolePermissions()
+        If Not _policyHelper.UseUserLevel Then
+
+            Await CheckRolePermissions()
+        End If
 
         PrepareFormForUserLevelAuthorizations()
 
@@ -88,7 +91,7 @@ Public Class HRISForm
         BonusToolStripMenuItem.Visible = employeeUpdatable
         AttachmentToolStripMenuItem.Visible = employeeUpdatable
 
-        'Job, Points, Offset will only overrides the visibility if Read is False
+        'Job, Points, Offset only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If Not employeeUpdatable Then
             OffSetToolStripMenuItem.Visible = False
@@ -114,7 +117,7 @@ Public Class HRISForm
             Return
         End If
 
-        If _policyHelper.UseUserLevel = False Then Return
+        If Not _policyHelper.UseUserLevel Then Return
 
         If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 

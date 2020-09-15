@@ -37,7 +37,10 @@ Public Class TimeAttendForm
 
         LoadShiftSchedulePolicy()
 
-        Await CheckRolePermissions()
+        If Not _policyHelper.UseUserLevel Then
+
+            Await CheckRolePermissions()
+        End If
 
         PrepareFormForUserLevelAuthorizations()
     End Sub
@@ -88,7 +91,7 @@ Public Class TimeAttendForm
             Return
         End If
 
-        If _policyHelper.UseUserLevel = False Then Return
+        If Not _policyHelper.UseUserLevel Then Return
 
         If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 

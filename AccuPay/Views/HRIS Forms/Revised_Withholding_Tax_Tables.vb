@@ -65,8 +65,6 @@ Public Class Revised_Withholding_Tax_Tables
         GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
-    Dim view_ID As Object
-
     Dim dontUpdate As SByte = 0
 
     Dim dontCreate As SByte = 0
@@ -74,51 +72,6 @@ Public Class Revised_Withholding_Tax_Tables
     Private Sub Revised_Withholding_Tax_Tables_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         fillpaytype()
         fillFilingStatus()
-
-        view_ID = VIEW_privilege("Withholding Tax Table", orgztnID)
-
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
-
-        If formuserprivilege.Count = 0 Then
-            btnSave.Visible = 0
-            tsbtnNewTax.Visible = 0
-            tsbtnSaveTax.Visible = 0
-            dontUpdate = 1
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    'ToolStripButton2.Visible = 0
-                    btnSave.Visible = 0
-                    tsbtnNewTax.Visible = 0
-                    tsbtnSaveTax.Visible = 0
-                    dontUpdate = 1
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                        'ToolStripButton2.Visible = 0
-                        dontCreate = 1
-                    Else
-                        dontCreate = 0
-                        'ToolStripButton2.Visible = 1
-                    End If
-
-                    'If drow("Deleting").ToString = "N" Then
-                    '    ToolStripButton3.Visible = 0
-                    'Else
-                    '    ToolStripButton3.Visible = 1
-                    'End If
-
-                    If drow("Updates").ToString = "N" Then
-                        dontUpdate = 1
-                    Else
-                        dontUpdate = 0
-                    End If
-
-                End If
-
-            Next
-
-        End If
 
     End Sub
 
@@ -154,11 +107,11 @@ Public Class Revised_Withholding_Tax_Tables
 
     End Sub
 
-    Private Sub tsbtnNewTax_Click(sender As Object, e As EventArgs) Handles tsbtnNewTax.Click
+    Private Sub tsbtnNewTax_Click(sender As Object, e As EventArgs) Handles tsbtnNewTax.Click, ToolStripButton1.Click
 
     End Sub
 
-    Private Sub tsbtnSaveTax_Click(sender As Object, e As EventArgs) Handles tsbtnSaveTax.Click
+    Private Sub tsbtnSaveTax_Click(sender As Object, e As EventArgs) Handles tsbtnSaveTax.Click, ToolStripButton2.Click
 
         dgvlisttaxableamt.EndEdit(True)
 

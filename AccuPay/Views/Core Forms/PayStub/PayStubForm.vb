@@ -34,8 +34,6 @@ Public Class PayStubForm
 
     Dim employeepicture As New DataTable
 
-    Dim viewID As Integer = Nothing
-
     Public paypFrom As String = Nothing
     Public paypTo As String = Nothing
     Public paypRowID As String = Nothing
@@ -122,8 +120,6 @@ Public Class PayStubForm
 
         dgvAdjustments.AutoGenerateColumns = False
 
-        viewID = VIEW_privilege("Employee Pay Slip", orgztnID)
-
         RefreshForm()
 
         dgvpayper.Focus()
@@ -133,30 +129,6 @@ Public Class PayStubForm
 
         If dgvemployees.RowCount <> 0 Then
             dgvemployees.Item("EmployeeID", 0).Selected = 1
-        End If
-
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & viewID)
-
-        If formuserprivilege.Count = 0 Then
-
-            ManagePayrollToolStripDropDownButton.Visible = 0
-        Else
-            For Each drow In formuserprivilege
-                If drow("ReadOnly").ToString = "Y" Then
-                    ManagePayrollToolStripDropDownButton.Visible = 0
-
-                    Exit For
-                Else
-                    If drow("Creates").ToString = "N" Then
-                        ManagePayrollToolStripDropDownButton.Visible = 0
-                    Else
-                        ManagePayrollToolStripDropDownButton.Visible = 1
-                    End If
-
-                End If
-
-            Next
-
         End If
 
         cboProducts.ValueMember = "ProductID"

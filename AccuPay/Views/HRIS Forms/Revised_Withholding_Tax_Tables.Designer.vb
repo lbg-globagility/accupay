@@ -24,6 +24,11 @@ Partial Class Revised_Withholding_Tax_Tables
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Revised_Withholding_Tax_Tables))
         Me.dgvlisttaxableamt = New System.Windows.Forms.DataGridView()
+        Me.c_Taxincomeframt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_taxincometoamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_ExemptionAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_ExemptionExcessAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cmbPayType = New System.Windows.Forms.ComboBox()
         Me.dgvfilingstatus = New System.Windows.Forms.DataGridView()
         Me.c_FilingStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -43,11 +48,8 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.bgworkimporttax = New System.ComponentModel.BackgroundWorker()
-        Me.c_Taxincomeframt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_taxincometoamt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_ExemptionAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_ExemptionExcessAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvlisttaxableamt, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvfilingstatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
@@ -67,6 +69,32 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.dgvlisttaxableamt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvlisttaxableamt.Size = New System.Drawing.Size(463, 420)
         Me.dgvlisttaxableamt.TabIndex = 0
+        '
+        'c_Taxincomeframt
+        '
+        Me.c_Taxincomeframt.HeaderText = "Taxable income from amount"
+        Me.c_Taxincomeframt.Name = "c_Taxincomeframt"
+        '
+        'c_taxincometoamt
+        '
+        Me.c_taxincometoamt.HeaderText = "Taxable income to amount"
+        Me.c_taxincometoamt.Name = "c_taxincometoamt"
+        '
+        'c_ExemptionAmount
+        '
+        Me.c_ExemptionAmount.HeaderText = "Exemption Amount"
+        Me.c_ExemptionAmount.Name = "c_ExemptionAmount"
+        '
+        'c_ExemptionExcessAmount
+        '
+        Me.c_ExemptionExcessAmount.HeaderText = "Exemption Excess Amount"
+        Me.c_ExemptionExcessAmount.Name = "c_ExemptionExcessAmount"
+        '
+        'c_rowID
+        '
+        Me.c_rowID.HeaderText = "RowID"
+        Me.c_rowID.Name = "c_rowID"
+        Me.c_rowID.Visible = False
         '
         'cmbPayType
         '
@@ -132,7 +160,7 @@ Partial Class Revised_Withholding_Tax_Tables
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewTax, Me.tsbtnSaveTax, Me.tsbtnimportwtax, Me.tsbtnCancelTax, Me.tsbtnCloseTax, Me.tsbtnAudittrail, Me.ToolStripProgressBar1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewTax, Me.ToolStripButton2, Me.ToolStripButton1, Me.tsbtnSaveTax, Me.tsbtnimportwtax, Me.tsbtnCancelTax, Me.tsbtnCloseTax, Me.tsbtnAudittrail, Me.ToolStripProgressBar1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1065, 25)
@@ -144,24 +172,27 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.tsbtnNewTax.Image = Global.AccuPay.My.Resources.Resources._new
         Me.tsbtnNewTax.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnNewTax.Name = "tsbtnNewTax"
-        Me.tsbtnNewTax.Size = New System.Drawing.Size(72, 22)
+        Me.tsbtnNewTax.Size = New System.Drawing.Size(71, 22)
         Me.tsbtnNewTax.Text = "&New Tax"
+        Me.tsbtnNewTax.Visible = False
         '
         'tsbtnSaveTax
         '
         Me.tsbtnSaveTax.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.tsbtnSaveTax.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnSaveTax.Name = "tsbtnSaveTax"
-        Me.tsbtnSaveTax.Size = New System.Drawing.Size(72, 22)
+        Me.tsbtnSaveTax.Size = New System.Drawing.Size(71, 22)
         Me.tsbtnSaveTax.Text = "&Save Tax"
+        Me.tsbtnSaveTax.Visible = False
         '
         'tsbtnimportwtax
         '
         Me.tsbtnimportwtax.Image = CType(resources.GetObject("tsbtnimportwtax.Image"), System.Drawing.Image)
         Me.tsbtnimportwtax.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnimportwtax.Name = "tsbtnimportwtax"
-        Me.tsbtnimportwtax.Size = New System.Drawing.Size(150, 22)
+        Me.tsbtnimportwtax.Size = New System.Drawing.Size(151, 22)
         Me.tsbtnimportwtax.Text = "Import Withholding tax"
+        Me.tsbtnimportwtax.Visible = False
         '
         'tsbtnCancelTax
         '
@@ -170,6 +201,7 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.tsbtnCancelTax.Name = "tsbtnCancelTax"
         Me.tsbtnCancelTax.Size = New System.Drawing.Size(63, 22)
         Me.tsbtnCancelTax.Text = "Cancel"
+        Me.tsbtnCancelTax.Visible = False
         '
         'tsbtnCloseTax
         '
@@ -239,31 +271,23 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.bgworkimporttax.WorkerReportsProgress = True
         Me.bgworkimporttax.WorkerSupportsCancellation = True
         '
-        'c_Taxincomeframt
+        'ToolStripButton1
         '
-        Me.c_Taxincomeframt.HeaderText = "Taxable income from amount"
-        Me.c_Taxincomeframt.Name = "c_Taxincomeframt"
+        Me.ToolStripButton1.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(71, 22)
+        Me.ToolStripButton1.Text = "&New Tax"
+        Me.ToolStripButton1.Visible = False
         '
-        'c_taxincometoamt
+        'ToolStripButton2
         '
-        Me.c_taxincometoamt.HeaderText = "Taxable income to amount"
-        Me.c_taxincometoamt.Name = "c_taxincometoamt"
-        '
-        'c_ExemptionAmount
-        '
-        Me.c_ExemptionAmount.HeaderText = "Exemption Amount"
-        Me.c_ExemptionAmount.Name = "c_ExemptionAmount"
-        '
-        'c_ExemptionExcessAmount
-        '
-        Me.c_ExemptionExcessAmount.HeaderText = "Exemption Excess Amount"
-        Me.c_ExemptionExcessAmount.Name = "c_ExemptionExcessAmount"
-        '
-        'c_rowID
-        '
-        Me.c_rowID.HeaderText = "RowID"
-        Me.c_rowID.Name = "c_rowID"
-        Me.c_rowID.Visible = False
+        Me.ToolStripButton2.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(71, 22)
+        Me.ToolStripButton2.Text = "&Save Tax"
+        Me.ToolStripButton2.Visible = False
         '
         'Revised_Withholding_Tax_Tables
         '
@@ -309,5 +333,6 @@ Partial Class Revised_Withholding_Tax_Tables
     Friend WithEvents c_ExemptionAmount As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_ExemptionExcessAmount As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_rowID As System.Windows.Forms.DataGridViewTextBoxColumn
-
+    Friend WithEvents ToolStripButton2 As ToolStripButton
+    Friend WithEvents ToolStripButton1 As ToolStripButton
 End Class

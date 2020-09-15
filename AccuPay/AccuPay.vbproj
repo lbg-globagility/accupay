@@ -1327,18 +1327,6 @@
     <Compile Include="Views\Core Forms\Dataset\memoUserDetailsDataset.vb">
       <DependentUpon>memoUserDetailsDataset.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\EmployeeBonusControl.Designer.vb">
-      <DependentUpon>EmployeeBonusControl.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmployeeBonusControl.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmployeeBonusForm.designer.vb">
-      <DependentUpon>EmployeeBonusForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmployeeBonusForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\EmployeeSelection.designer.vb">
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
     </Compile>
@@ -2372,12 +2360,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\CrysVwr.resx">
       <DependentUpon>CrysVwr.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\EmployeeBonusControl.resx">
-      <DependentUpon>EmployeeBonusControl.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\EmployeeBonusForm.resx">
-      <DependentUpon>EmployeeBonusForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\EmployeeSelection.resx">
       <DependentUpon>EmployeeSelection.vb</DependentUpon>

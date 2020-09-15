@@ -124,7 +124,10 @@ Public Class TimeEntrySummaryForm
 
         UpdateFormBaseOnPolicy()
 
-        Await CheckRolePermissions()
+        If Not _policy.UseUserLevel Then
+
+            Await CheckRolePermissions()
+        End If
 
         LoadYears()
     End Sub
@@ -148,7 +151,7 @@ Public Class TimeEntrySummaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        If _policy.UseUserLevel = False Then Return
+        If Not _policy.UseUserLevel Then Return
 
         _hideMoneyColumns = user.UserLevel <> UserLevel.One AndAlso
             user.UserLevel <> UserLevel.Two AndAlso

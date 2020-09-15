@@ -24,11 +24,11 @@ Public Class OfficialBusinessForm
 
     Private _changedOfficialBusinesses As List(Of OfficialBusiness)
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+    Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
     Private _currentRolePermission As RolePermission
 

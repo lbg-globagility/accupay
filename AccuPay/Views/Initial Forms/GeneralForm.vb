@@ -46,7 +46,7 @@ Public Class GeneralForm
 
         CheckPolicyPermissions()
 
-        If _policyHelper.UseUserLevel = True Then
+        If _policyHelper.UseUserLevel Then
             CheckUserLevelPermissions(user)
         Else
 
@@ -97,7 +97,7 @@ Public Class GeneralForm
         OrganizationToolStripMenuItem.Visible = If(organizationPermission?.Read, False)
         UserPrivilegeToolStripMenuItem.Visible = If(rolePermission?.Read, False)
 
-        'Branch, Calendar and Duty Shift will only overrides the visibility if Read is False
+        'Branch, Calendar and Duty Shift only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If branchPermission Is Nothing OrElse branchPermission.Read = False Then
             BranchToolStripMenuItem.Visible = False

@@ -25,11 +25,11 @@ Public Class EmployeeOvertimeForm
 
     Private _changedOvertimes As List(Of Overtime)
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+    Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
     Private featureChecker As FeatureListChecker
 

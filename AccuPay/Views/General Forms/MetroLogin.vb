@@ -222,7 +222,7 @@ Public Class MetroLogin
             Return False
         End If
 
-        If _policyHelper.UseUserLevel = False Then
+        If Not _policyHelper.UseUserLevel Then
             Return True
         End If
 

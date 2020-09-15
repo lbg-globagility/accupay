@@ -1,4 +1,11 @@
+Option Strict On
+
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayrollForm
@@ -7,9 +14,11 @@ Public Class PayrollForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Dim _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As PolicyHelper
+
+    Private ReadOnly _roleRepository As RoleRepository
 
     Sub New()
 
@@ -18,111 +27,17 @@ Public Class PayrollForm
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
     End Sub
 
-    Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
+    Private Async Sub PayrollForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        SetProperInterfaceBaseOnCurrentSystemOwner()
 
-        reloadViewPrivilege()
+        If Not _policyHelper.UseUserLevel Then
 
-        Dim view_ID = ValNoComma(VIEW_privilege(ViewName, orgztnID))
-
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
-
-        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
-
-            For Each drow In formuserprivilege
-                'If drow("ReadOnly").ToString = "Y" Then
-                If drow("AllowedToAccess").ToString = "N" Then
-
-                    'ChangeForm(Formname)
-                    'previousForm = Formname
-
-                    'Exit For
-                    Exit Sub
-                Else
-                    If drow("Creates").ToString = "Y" _
-                        Or drow("Updates").ToString = "Y" _
-                        Or drow("Deleting").ToString = "Y" _
-                        Or drow("ReadOnly").ToString = "Y" Then
-                        'And drow("Updates").ToString = "Y" Then
-
-                        'ChangeForm(Formname)
-                        'previousForm = Formname
-                        Exit For
-                    Else
-                        Exit Sub
-                    End If
-
-                End If
-
-            Next
-        Else
-            Exit Sub
+            Await CheckRolePermissions()
         End If
-
-        Try
-            Application.DoEvents()
-            Dim FName As String = Formname.Name
-            Formname.KeyPreview = True
-            Formname.TopLevel = False
-            Formname.Enabled = True
-            If listPayrollForm.Contains(FName) Then
-                'Formname.Show()
-                'Formname.BringToFront()
-                'Formname.Focus()
-            Else
-                PanelPayroll.Controls.Add(Formname)
-                listPayrollForm.Add(Formname.Name)
-                Formname.Refresh()
-                'Formname.Location = New Point((PanelPayroll.Width / 2) - (Formname.Width / 2), (PanelPayroll.Height / 2) - (Formname.Height / 2))
-                'Formname.Anchor = AnchorStyles.Top And AnchorStyles.Bottom And AnchorStyles.Right And AnchorStyles.Left
-                'Formname.WindowState = FormWindowState.Maximized
-                Formname.Dock = DockStyle.Fill
-            End If
-            Formname.Show()
-            Formname.BringToFront()
-            Formname.Focus()
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name))
-        End Try
-
-    End Sub
-
-    Sub PayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayrollToolStripMenuItem.Click
-        'ChangeForm(PayrollGenerateForm)
-
-        If if_sysowner_is_benchmark Then
-
-            ChangeForm(BenchmarkPayrollForm, "Benchmark - Payroll Form")
-            previousForm = BenchmarkPayrollForm
-        Else
-
-            ChangeForm(PayStubForm, "Employee Pay Slip")
-            previousForm = PayStubForm
-
-        End If
-
-    End Sub
-
-    Private Sub BonusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
-        ChangeForm(BonusGenerator, "Employee Pay Slip")
-        previousForm = BonusGenerator
-
-    End Sub
-
-    Private Sub PayrollForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
-        For Each objctrl As Control In PanelPayroll.Controls
-            If TypeOf objctrl Is Form Then
-                DirectCast(objctrl, Form).Close()
-
-            End If
-        Next
-
-    End Sub
-
-    Private Sub PayrollForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        setProperInterfaceBaseOnCurrentSystemOwner()
 
         If Not Debugger.IsAttached Then
             PaystubExperimentalToolStripMenuItem.Visible = False
@@ -130,45 +45,29 @@ Public Class PayrollForm
         End If
     End Sub
 
-    Sub reloadViewPrivilege()
+    Private Async Function CheckRolePermissions() As Task
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
 
-        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
-                                             " RowID" &
-                                             " FROM position_view" &
-                                             " WHERE OrganizationID='" & orgztnID & "'" &
-                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" &
-                                             " OR DATE_FORMAT(LastUpd,@@date_format) = CURDATE()));")
+        Dim allowancePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ALLOWANCE).FirstOrDefault()
+        Dim loanBusinessPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
+        Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
 
-        If hasPositionViewUpdate = "1" Then
+        AllowanceToolStripMenuItem.Visible = If(allowancePermission?.Read, False)
+        LoanToolStripMenuItem.Visible = If(loanBusinessPermission?.Read, False)
 
-            position_view_table = retAsDatTbl("SELECT *" &
-                                              " FROM position_view" &
-                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" &
-                                              " AND OrganizationID='" & orgztnID & "';")
+        'Payroll only overrides the visibility if Read is False
+        'since they are already checked by other policies above
+        If payPeriodPermission Is Nothing OrElse payPeriodPermission.Read = False Then
 
+            PayrollToolStripMenuItem.Visible = False
+            BenchmarkPaystubToolStripMenuItem.Visible = False
+            BonusToolStripMenuItem.Visible = False
+            WithholdingTaxToolStripMenuItem.Visible = False
         End If
 
-    End Sub
+    End Function
 
-    Private Sub PanelPayroll_ControlRemoved(sender As Object, e As ControlEventArgs) Handles PanelPayroll.ControlRemoved
-        Dim listOfForms = PanelPayroll.Controls.Cast(Of Form)()
-        For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
-            'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
-            pb.Enabled = True
-            Exit For
-        Next
-    End Sub
-
-    Private Sub PanelPayroll_Paint(sender As Object, e As PaintEventArgs) Handles PanelPayroll.Paint
-
-    End Sub
-
-    Private Sub WithholdingTaxToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WithholdingTaxToolStripMenuItem.Click
-        ChangeForm(WithholdingTax, "Employee Pay Slip")
-        previousForm = WithholdingTax
-    End Sub
-
-    Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
+    Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
 
         Dim showBonusForm As Boolean =
             (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Goldwings)
@@ -195,24 +94,112 @@ Public Class PayrollForm
 
     End Sub
 
-    Private Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
-        ChangeForm(PaystubView, "Employee Pay Slip")
+    Private Async Function ChangeForm(ByVal passedForm As Form, Optional permissionName As String = Nothing) As Task
+
+        If permissionName IsNot Nothing Then
+
+            If Await PermissionHelper.DoesAllowReadAsync(permissionName, policyHelper:=_policyHelper) = False Then
+                MessageBoxHelper.DefaultUnauthorizedFormMessage()
+                Return
+            End If
+
+        End If
+
+        ShowForm(passedForm)
+
+    End Function
+
+    Private Sub ShowForm(passedForm As Form)
+        Try
+            Application.DoEvents()
+            Dim FName As String = passedForm.Name
+            passedForm.KeyPreview = True
+            passedForm.TopLevel = False
+            passedForm.Enabled = True
+            If listPayrollForm.Contains(FName) Then
+            Else
+                PanelPayroll.Controls.Add(passedForm)
+                listPayrollForm.Add(passedForm.Name)
+                passedForm.Refresh()
+
+                passedForm.Dock = DockStyle.Fill
+            End If
+            passedForm.Show()
+            passedForm.BringToFront()
+            passedForm.Focus()
+        Catch ex As Exception
+            MsgBox(getErrExcptn(ex, Me.Name))
+        End Try
+
+    End Sub
+
+    Private Async Sub PayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayrollToolStripMenuItem.Click
+        If if_sysowner_is_benchmark Then
+
+            Await ChangeForm(BenchmarkPayrollForm, PermissionConstant.PAYPERIOD)
+            previousForm = BenchmarkPayrollForm
+        Else
+
+            Await ChangeForm(PayStubForm, PermissionConstant.PAYPERIOD)
+            previousForm = PayStubForm
+
+        End If
+
+    End Sub
+
+    Private Async Sub BonusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
+        Await ChangeForm(BonusGenerator, PermissionConstant.PAYPERIOD)
+        previousForm = BonusGenerator
+
+    End Sub
+
+    Private Async Sub WithholdingTaxToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WithholdingTaxToolStripMenuItem.Click
+        Await ChangeForm(WithholdingTax, PermissionConstant.PAYPERIOD)
+        previousForm = WithholdingTax
+    End Sub
+
+    Private Async Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
+        Await ChangeForm(PaystubView, PermissionConstant.PAYPERIOD)
         previousForm = PaystubView
     End Sub
 
-    Private Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
-        ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
+    Private Async Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
+        Await ChangeForm(EmployeeAllowanceForm, PermissionConstant.ALLOWANCE)
         previousForm = EmployeeAllowanceForm
     End Sub
 
-    Private Sub LoanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanToolStripMenuItem.Click
-        ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
+    Private Async Sub LoanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanToolStripMenuItem.Click
+        Await ChangeForm(EmployeeLoansForm, PermissionConstant.LOAN)
         previousForm = EmployeeLoansForm
     End Sub
 
-    Private Sub BenchmarkPaystubToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BenchmarkPaystubToolStripMenuItem.Click
-        ChangeForm(BenchmarkPaystubForm, "Benchmark - Paystub")
+    Private Async Sub BenchmarkPaystubToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BenchmarkPaystubToolStripMenuItem.Click
+        Await ChangeForm(BenchmarkPaystubForm, PermissionConstant.PAYPERIOD)
         previousForm = BenchmarkPaystubForm
+    End Sub
+
+    Private Sub PayrollForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+
+        For Each objctrl As Control In PanelPayroll.Controls
+            If TypeOf objctrl Is Form Then
+                DirectCast(objctrl, Form).Close()
+
+            End If
+        Next
+
+    End Sub
+
+    Private Sub PanelPayroll_ControlRemoved(sender As Object, e As ControlEventArgs) Handles PanelPayroll.ControlRemoved
+        Dim listOfForms = PanelPayroll.Controls.Cast(Of Form)()
+        For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
+            'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
+            pb.Enabled = True
+            Exit For
+        Next
+    End Sub
+
+    Private Sub PanelPayroll_Paint(sender As Object, e As PaintEventArgs) Handles PanelPayroll.Paint
+
     End Sub
 
 End Class

@@ -24,13 +24,13 @@ Public Class EmployeeLeavesForm
 
     Private _changedLeaves As List(Of Leave)
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _productRepository As ProductRepository
+    Private ReadOnly _productRepository As ProductRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+    Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
     Private _currentRolePermission As RolePermission
 
