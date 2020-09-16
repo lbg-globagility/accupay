@@ -92,6 +92,9 @@ import { PositionsComponent } from 'src/app/positions/components/positions/posit
 import { PermissionGuard, PermissionTypes } from 'src/app/core/auth';
 import { NotAuthorizedComponent } from 'src/app/errors/not-authorized/not-authorized.component';
 import { SelfServeComponent } from './self-service/self-serve/self-serve.component';
+import { SelfServiceLeavesComponent } from 'src/app/self-service/components/self-service-leaves/self-service-leaves.component';
+import { SelfServiceTimesheetsComponent } from 'src/app/self-service/components/self-service-timesheets/self-service-timesheets.component';
+import { SelfServiceOvertimesComponent } from 'src/app/self-service/components/self-service-overtimes/self-service-overtimes.component';
 
 const routes: Routes = [
   {
@@ -543,14 +546,31 @@ const routes: Routes = [
           },
         ],
       },
-      {
-        path: 'selfserve',
-        component: SelfServeComponent,
-        data: { permission: PermissionTypes.SelfserveLeaveCreate },
-      },
     ],
     canActivate: [AuthGuard],
     canActivateChild: [PermissionGuard],
+  },
+  {
+    path: 'self-service',
+    component: MainComponent,
+    children: [
+      {
+        path: '',
+        component: SelfServeComponent,
+      },
+      {
+        path: 'leaves',
+        component: SelfServiceLeavesComponent,
+      },
+      {
+        path: 'overtimes',
+        component: SelfServiceOvertimesComponent,
+      },
+      {
+        path: 'timesheets',
+        component: SelfServiceTimesheetsComponent,
+      },
+    ],
   },
   {
     path: 'not-authorized',

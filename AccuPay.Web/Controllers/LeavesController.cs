@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -30,9 +28,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet]
         [Permission(PermissionTypes.LeaveRead)]
-        public async Task<ActionResult<PaginatedList<LeaveDto>>> List([FromQuery] PageOptions options, [FromQuery] LeaveFilter filter)
+        public async Task<ActionResult<PaginatedList<LeaveDto>>> List([FromQuery] LeavePageOptions options)
         {
-            return await _service.PaginatedList(options, filter);
+            return await _service.PaginatedList(options);
         }
 
         [HttpGet("{id}")]

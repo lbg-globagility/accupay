@@ -1,0 +1,20 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <!-- Logo -->
+
+    <a class="_logo flex items-center" href="/">
+      <img src="assets/logo.png" class="_logo-image" />
+      <span>AccuPay</span>
+    </a>
+
+    <span class="_spacer"></span>
+
+    <img appImgFallback class="_organization-logo" />
+
+    <button mat-button [matMenuTriggerFor]="accountMenu">John Doe</button>
+    <mat-menu #accountMenu="matMenu">
+      <button mat-menu-item routerLink="/myaccount">My Account</button>
+      <button mat-menu-item (click)="logout()">Log Out</button>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>

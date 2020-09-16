@@ -54,24 +54,14 @@
   </div>
 
   <div class="row">
-    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-12">
       <mat-label>Reason</mat-label>
       <textarea
         matInput
         matTextareaAutosize
+        matAutosizeMinRows="3"
         autocomplete="off"
         formControlName="reason"
-      >
-      </textarea>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
-      <mat-label>Comments</mat-label>
-      <textarea
-        matInput
-        matTextareaAutosize
-        autocomplete="off"
-        formControlName="comments"
       >
       </textarea>
     </mat-form-field>

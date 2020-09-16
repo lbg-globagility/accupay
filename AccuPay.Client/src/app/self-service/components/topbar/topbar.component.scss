@@ -1,0 +1,43 @@
+@use "~@angular/material/theming" as *;
+
+$-bar-height: 48px;
+
+:host {
+  display: block;
+  @include mat-elevation(1);
+}
+
+mat-toolbar {
+  background: white;
+  min-height: $-bar-height;
+}
+
+mat-toolbar-row {
+  height: $-bar-height;
+}
+
+._logo {
+  height: 40px;
+}
+
+._logo-image {
+  height: 40px;
+}
+
+._spacer {
+  flex: 1 1 auto;
+}
+
+._preview {
+  $size: 40px;
+  width: $size;
+  height: $size;
+
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+._organization-logo {
+  height: 40px;
+}

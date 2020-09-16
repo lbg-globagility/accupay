@@ -23,15 +23,12 @@ export class SelfserveLeaveFormComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     id: [null],
-    employeeId: [null],
-    startDate: [null, [Validators.required]],
+    startDate: [null, Validators.required],
     leaveType: [null, Validators.required],
     isWholeDay: [true],
     startTime: [null, Validators.required],
     endTime: [null, Validators.required],
-    status: [null, Validators.required],
     reason: [null],
-    comments: [null],
   });
 
   leaveTypes: string[];
@@ -52,7 +49,7 @@ export class SelfserveLeaveFormComponent implements OnInit {
     this.loadLeaveStatusList();
 
     if (this.leave != null) {
-      this.form.get('employeeId').disable();
+      // this.form.get('employeeId').disable();
       this.form.patchValue(this.leave);
     }
     this.form.patchValue({

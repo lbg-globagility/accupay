@@ -31,15 +31,12 @@ namespace AccuPay.Web.Leaves
             _currentUser = currentUser;
         }
 
-        public async Task<PaginatedList<LeaveDto>> PaginatedList(PageOptions options, LeaveFilter filter)
+        public async Task<PaginatedList<LeaveDto>> PaginatedList(LeavePageOptions options)
         {
             // TODO: sort and desc in repository
             var paginatedList = await _leaveRepository.GetPaginatedListAsync(
                 options,
-                _currentUser.OrganizationId,
-                filter.Term,
-                filter.DateFrom,
-                filter.DateTo);
+                _currentUser.OrganizationId);
 
             return paginatedList.Select(x => ConvertToDto(x));
         }

@@ -102,6 +102,22 @@ namespace AccuPay.Web.Account
             return registerDto;
         }
 
+        public async Task<UserDto> GetInformation()
+        {
+            var user = await _users.FindByIdAsync(_currentUser.UserId.ToString());
+
+            var userDto = new UserDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Type = user.EmployeeId.HasValue ? "Employee": "Admin"
+            };
+
+            return userDto;
+        }
+
         public async Task<UserDto> Register(VerifyRegistrationDto dto)
         {
             var claims = _userTokenService.DecodeRegistrationToken(dto.Token);
