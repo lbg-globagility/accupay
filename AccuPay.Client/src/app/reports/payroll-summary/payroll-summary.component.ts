@@ -38,13 +38,7 @@ export class PayrollSummaryComponent implements OnInit {
       return;
     }
 
-    const dialogRef = this.dialog.open(SelectPayperiodRangeDialogComponent, {
-      minWidth: '500px',
-      data: {
-        title: 'Delete Leave',
-        content: 'Are you sure you want to delete this leave?',
-      },
-    });
+    const dialogRef = this.dialog.open(SelectPayperiodRangeDialogComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
       if (!result || !result.selectedFrom || !result.selectedTo) {

@@ -32,8 +32,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
         Dim salaryDistribution = payrollSelector.cboStringParameter.Text
 
-        Dim dividedCategories = {PayrollSummaryCategory.Cash, PayrollSummaryCategory.DirectDeposit, PayrollSummaryCategory.All}
-        If dividedCategories.Contains(salaryDistribution) = False Then
+        Dim distributionTypes = {PayrollSummaryCategory.Cash, PayrollSummaryCategory.DirectDeposit, PayrollSummaryCategory.All}
+        If distributionTypes.Contains(salaryDistribution) = False Then
 
             salaryDistribution = Nothing
 

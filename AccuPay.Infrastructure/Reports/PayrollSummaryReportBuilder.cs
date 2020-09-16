@@ -175,12 +175,12 @@ namespace AccuPay.Infrastructure.Reports
 
             var organization = await _organizationRepository.GetByIdAsync(organizationId);
 
-            var filteredCategories = new string[] {
+            var distributionTypes = new string[] {
                 PayrollSummaryCategory.Cash.ToTrimmedLowerCase(),
                 PayrollSummaryCategory.DirectDeposit.ToTrimmedLowerCase(),
                 PayrollSummaryCategory.All.ToTrimmedLowerCase() };
 
-            if (filteredCategories.Contains(salaryDistributionType.ToTrimmedLowerCase()) == false)
+            if (distributionTypes.Contains(salaryDistributionType.ToTrimmedLowerCase()) == false)
             {
                 // this means that this will show all, no filters
                 salaryDistributionType = null;
@@ -253,7 +253,7 @@ namespace AccuPay.Infrastructure.Reports
             }
             else
             {
-                payPeriodTo = await _payPeriodRepository.GetByIdAsync(payPeriodFromId);
+                payPeriodTo = await _payPeriodRepository.GetByIdAsync(payPeriodToId);
             }
 
             if (payPeriodTo == null)
