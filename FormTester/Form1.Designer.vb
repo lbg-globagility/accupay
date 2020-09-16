@@ -44,11 +44,12 @@ Partial Class Form1
         Me.OfficialPayslipButton = New System.Windows.Forms.Button()
         Me.QueryPaystubButton = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.EncryptButton = New System.Windows.Forms.Button()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.EncryptOutputTextBox = New System.Windows.Forms.TextBox()
         Me.EncryptInputTextBox = New System.Windows.Forms.TextBox()
         Me.DecryptButton = New System.Windows.Forms.Button()
-        Me.EncryptOutputTextBox = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
+        Me.EncryptButton = New System.Windows.Forms.Button()
+        Me.CapitalizeButton = New System.Windows.Forms.Button()
         Me.tableLayoutPanel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -250,6 +251,7 @@ Partial Class Form1
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.CapitalizeButton)
         Me.GroupBox1.Controls.Add(Me.Label7)
         Me.GroupBox1.Controls.Add(Me.EncryptOutputTextBox)
         Me.GroupBox1.Controls.Add(Me.EncryptInputTextBox)
@@ -257,19 +259,27 @@ Partial Class Form1
         Me.GroupBox1.Controls.Add(Me.EncryptButton)
         Me.GroupBox1.Location = New System.Drawing.Point(55, 412)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(351, 113)
+        Me.GroupBox1.Size = New System.Drawing.Size(351, 144)
         Me.GroupBox1.TabIndex = 11
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Desktop Encryption"
         '
-        'EncryptButton
+        'Label7
         '
-        Me.EncryptButton.Location = New System.Drawing.Point(168, 58)
-        Me.EncryptButton.Name = "EncryptButton"
-        Me.EncryptButton.Size = New System.Drawing.Size(75, 23)
-        Me.EncryptButton.TabIndex = 12
-        Me.EncryptButton.Text = "Encrypt"
-        Me.EncryptButton.UseVisualStyleBackColor = True
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(6, 90)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(40, 13)
+        Me.Label7.TabIndex = 16
+        Me.Label7.Text = "Result:"
+        '
+        'EncryptOutputTextBox
+        '
+        Me.EncryptOutputTextBox.Location = New System.Drawing.Point(52, 87)
+        Me.EncryptOutputTextBox.Name = "EncryptOutputTextBox"
+        Me.EncryptOutputTextBox.ReadOnly = True
+        Me.EncryptOutputTextBox.Size = New System.Drawing.Size(272, 20)
+        Me.EncryptOutputTextBox.TabIndex = 15
         '
         'EncryptInputTextBox
         '
@@ -287,28 +297,29 @@ Partial Class Form1
         Me.DecryptButton.Text = "Decrypt"
         Me.DecryptButton.UseVisualStyleBackColor = True
         '
-        'EncryptOutputTextBox
+        'EncryptButton
         '
-        Me.EncryptOutputTextBox.Location = New System.Drawing.Point(52, 87)
-        Me.EncryptOutputTextBox.Name = "EncryptOutputTextBox"
-        Me.EncryptOutputTextBox.ReadOnly = True
-        Me.EncryptOutputTextBox.Size = New System.Drawing.Size(272, 20)
-        Me.EncryptOutputTextBox.TabIndex = 15
+        Me.EncryptButton.Location = New System.Drawing.Point(168, 58)
+        Me.EncryptButton.Name = "EncryptButton"
+        Me.EncryptButton.Size = New System.Drawing.Size(75, 23)
+        Me.EncryptButton.TabIndex = 12
+        Me.EncryptButton.Text = "Encrypt"
+        Me.EncryptButton.UseVisualStyleBackColor = True
         '
-        'Label7
+        'CapitalizeButton
         '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(6, 90)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(40, 13)
-        Me.Label7.TabIndex = 16
-        Me.Label7.Text = "Result:"
+        Me.CapitalizeButton.Location = New System.Drawing.Point(249, 113)
+        Me.CapitalizeButton.Name = "CapitalizeButton"
+        Me.CapitalizeButton.Size = New System.Drawing.Size(75, 23)
+        Me.CapitalizeButton.TabIndex = 17
+        Me.CapitalizeButton.Text = "Capitalize"
+        Me.CapitalizeButton.UseVisualStyleBackColor = True
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(485, 537)
+        Me.ClientSize = New System.Drawing.Size(485, 568)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.QueryPaystubButton)
         Me.Controls.Add(Me.OfficialPayslipButton)
@@ -360,4 +371,5 @@ Partial Class Form1
     Friend WithEvents EncryptInputTextBox As TextBox
     Friend WithEvents DecryptButton As Button
     Friend WithEvents EncryptButton As Button
+    Friend WithEvents CapitalizeButton As Button
 End Class

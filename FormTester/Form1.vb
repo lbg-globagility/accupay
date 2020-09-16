@@ -254,4 +254,8 @@ HRD"
 
     End Sub
 
+    Private Sub CapitalizeButton_Click(sender As Object, e As EventArgs) Handles CapitalizeButton.Click
+        EncryptOutputTextBox.Text = EncryptOutputTextBox.Text.ToUpper()
+    End Sub
+
 End Class

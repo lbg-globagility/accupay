@@ -852,7 +852,7 @@ set @var2=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
             TABLE_NAME        = 'paystub' AND
             CONSTRAINT_NAME   = 'FK-paystub_user_LastUpdBy' AND
             CONSTRAINT_TYPE   = 'FOREIGN KEY') = true,'ALTER TABLE paystub
-            drop foreign key FK-paystub_user_LastUpdBy','select 1');
+            drop foreign key `FK-paystub_user_LastUpdBy`','select 1');
 
 prepare stmt2 from @var2;
 execute stmt2;

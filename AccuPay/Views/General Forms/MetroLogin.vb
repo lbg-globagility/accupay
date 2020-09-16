@@ -187,6 +187,7 @@ Public Class MetroLogin
         End If
 
         z_User = user.Id
+        Z_Client = user.ClientId
 
         userFirstName = user.FirstName
         z_postName = USER_ROLE.Name

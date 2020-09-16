@@ -1,7 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 
 Module mdlValidation
-    Public ReadOnly Z_Client As Integer = 1
+    Public Z_Client As Integer
     Public z_OrganizationID As Integer
     Public z_User As Integer
     Public Z_UserName As String
