@@ -1037,7 +1037,6 @@
       <DependentUpon>FiledLeaveReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Providers\AgencyFeeReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\AttendanceSheetReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\EmployeeIdentificationNumberReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\EmployeeOffenseReportProvider.vb" />
@@ -1052,7 +1051,6 @@
     <Compile Include="Reports\Reports\Providers\PayrollLedgerReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PayrollSummaryExcelFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PhilHealthReportProvider.vb" />
-    <Compile Include="Reports\Reports\Providers\PostEmploymentClearanceReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\IReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\SalaryIncreaseHistoryReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\SSSMonthlyReportProvider.vb" />

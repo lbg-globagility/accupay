@@ -18,6 +18,14 @@ namespace AccuPay.CrystalReports
         {
             _reportDocument = new ThirteenthMonthSummary();
 
+            var objText = (TextObject)_reportDocument.ReportDefinition.Sections[1].ReportObjects["PeriodDate"];
+
+            objText.Text = string.Concat(
+                "Salary from ",
+                dateFrom.ToShortDateString(),
+                " to ",
+                dateTo.ToShortDateString());
+
             _reportDocument.SetDataSource(_dataService.GetData(organizationId, dateFrom, dateTo));
 
             return this;

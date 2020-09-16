@@ -33,8 +33,7 @@ Public Class ReportsList
             New SalaryIncreaseHistoryReportProvider(),
             New EmploymentRecordReportProvider(),
             New EmployeeProfilesReportProvider(),
-            New PostEmploymentClearanceReportProvider(),
-            New LeaveLedgerReportProvider() With {.IsNewReport = True},
+            New LeaveLedgerReportProvider(),
             New FiledLeaveReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
             New LoanSummaryByTypeReportProvider(),
@@ -46,7 +45,6 @@ Public Class ReportsList
             New ThirteenthMonthSummaryReportProvider(),
             New AttendanceSheetReportProvider(),
             New LateUTAbsentSummaryReportProvider(),
-            New AgencyFeeReportProvider(),
             New PayrollLedgerExcelFormatReportProvider(),
             New LoanLedgerReportProvider(),
             New Cinema2000TardinessReportProvider()
