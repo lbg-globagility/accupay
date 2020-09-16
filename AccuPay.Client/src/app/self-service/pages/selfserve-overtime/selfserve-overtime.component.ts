@@ -6,6 +6,7 @@ import { Overtime } from 'src/app/overtimes/shared/overtime';
 import { LoadingState } from 'src/app/core/states/loading-state';
 import { SelfserveOvertimeFormComponent } from '../../components/selfserve-overtime-form/selfserve-overtime-form.component';
 import Swal from 'sweetalert2';
+import { SelfServiceOvertimeService } from 'src/app/self-service/services/self-service-overtime.service';
 
 @Component({
   selector: 'app-selfserve-overtime',
@@ -16,12 +17,10 @@ export class SelfserveOvertimeComponent implements OnInit {
   @ViewChild(SelfserveOvertimeFormComponent)
   overtimeForm: SelfserveOvertimeFormComponent;
 
-  overtime: Overtime;
-
   savingState: LoadingState = new LoadingState();
 
   constructor(
-    private service: SelfserveService,
+    private service: SelfServiceOvertimeService,
     private errorHandler: ErrorHandler,
     private dialog: MatDialogRef<SelfserveOvertimeComponent>
   ) {}
@@ -37,7 +36,7 @@ export class SelfserveOvertimeComponent implements OnInit {
 
     const overtime = this.overtimeForm.value;
 
-    this.service.createOvertime(overtime).subscribe({
+    this.service.create(overtime).subscribe({
       next: (result) => {
         this.savingState.changeToSuccess();
         this.displaySuccess();
@@ -53,10 +52,8 @@ export class SelfserveOvertimeComponent implements OnInit {
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully created a new overtime!',
+      text: 'Overtime request has been sent for approval',
       icon: 'success',
-      timer: 3000,
-      showConfirmButton: false,
     });
   }
 }

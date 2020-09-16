@@ -94,7 +94,7 @@ import { NotAuthorizedComponent } from 'src/app/errors/not-authorized/not-author
 import { SelfServeComponent } from './self-service/self-serve/self-serve.component';
 import { SelfServiceLeavesComponent } from 'src/app/self-service/components/self-service-leaves/self-service-leaves.component';
 import { SelfServiceTimesheetsComponent } from 'src/app/self-service/components/self-service-timesheets/self-service-timesheets.component';
-import { SelfServiceOvertimesComponent } from 'src/app/self-service/components/self-service-overtimes/self-service-overtimes.component';
+import { SelfServiceOvertimesComponent } from 'src/app/self-service/overtimes/self-service-overtimes/self-service-overtimes.component';
 
 const routes: Routes = [
   {

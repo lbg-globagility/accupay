@@ -16,8 +16,8 @@ import { PayperiodSelectComponent } from './components/payperiod-select/payperio
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { SelfServiceDashboardComponent } from './components/self-service-dashboard/self-service-dashboard.component';
 import { SelfServiceLeavesComponent } from './components/self-service-leaves/self-service-leaves.component';
-import { SelfServiceOvertimesComponent } from './components/self-service-overtimes/self-service-overtimes.component';
 import { SelfServiceTimesheetsComponent } from './components/self-service-timesheets/self-service-timesheets.component';
+import { SelfServiceOvertimesComponent } from 'src/app/self-service/overtimes/self-service-overtimes/self-service-overtimes.component';
 
 @NgModule({
   declarations: [

@@ -15,22 +15,11 @@ export class SelfserveOvertimeFormComponent implements OnInit {
   @Input()
   overtime: Overtime;
 
-  @Output()
-  save: EventEmitter<Overtime> = new EventEmitter();
-
-  @Output()
-  cancel: EventEmitter<Overtime> = new EventEmitter();
-
-  savingState: LoadingState = new LoadingState();
-
   form: FormGroup = this.fb.group({
-    startTime: [null],
-    endTime: [null],
-    startDate: [null, [Validators.required]],
-    endDate: [null],
-    status: ['Pending', [Validators.required]],
+    startDate: [null, Validators.required],
+    startTime: [null, Validators.required],
+    endTime: [null, Validators.required],
     reason: [null],
-    comments: [null],
   });
 
   constructor(private fb: FormBuilder, private timeParser: TimeParser) {}
