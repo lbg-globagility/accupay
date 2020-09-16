@@ -12,16 +12,19 @@ namespace AccuPay.Data.Services
         private readonly PolicyHelper _policy;
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly PaystubRepository _paystubRepository;
+        private readonly TimeEntryRepository _timeEntryRepository;
         private readonly SystemOwnerService _systemOwnerService;
 
         public PayPeriodDataService(
             PayPeriodRepository payPeriodRepository,
             PaystubRepository paystubRepository,
+            TimeEntryRepository timeEntryRepository,
             SystemOwnerService systemOwnerService,
             PolicyHelper policy)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
+            _timeEntryRepository = timeEntryRepository;
             _systemOwnerService = systemOwnerService;
             _policy = policy;
         }
@@ -92,7 +95,10 @@ namespace AccuPay.Data.Services
         public async Task CancelAsync(int payPeriodId, int userId)
         {
             await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Pending);
+
             await _paystubRepository.DeleteByPeriodAsync(payPeriodId, userId);
+
+            await _timeEntryRepository.DeleteByPayPeriodAsync(payPeriodId);
         }
 
         public async Task UpdateStatusAsync(int payPeriodId, int userId, PayPeriodStatus status)
@@ -105,10 +111,10 @@ namespace AccuPay.Data.Services
         public async Task UpdateStatusAsync(PayPeriod payPeriod, int userId, PayPeriodStatus status)
         {
             if (payPeriod?.RowID == null || payPeriod?.OrganizationID == null)
-                throw new BusinessLogicException("Pay Period does not exists");
+                throw new BusinessLogicException("Pay Period does not exists.");
 
             if ((await _payPeriodRepository.GetByIdAsync(payPeriod.RowID.Value)) == null)
-                throw new BusinessLogicException("Pay Period does not exists");
+                throw new BusinessLogicException("Pay Period does not exists.");
 
             if (status == PayPeriodStatus.Open)
             {

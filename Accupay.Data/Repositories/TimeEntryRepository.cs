@@ -16,6 +16,56 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
+        public async Task DeleteByEmployeeAsync(int employeeId, int payPeriodId)
+        {
+            var payPeriod = await _context.PayPeriods
+                .FirstOrDefaultAsync(x => x.RowID == payPeriodId);
+
+            if (payPeriod == null) return;
+
+            var timeEntries = await _context.TimeEntries
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.Date >= payPeriod.PayFromDate)
+                .Where(x => x.Date <= payPeriod.PayToDate)
+                .ToListAsync();
+
+            var actualTimeEntries = await _context.ActualTimeEntries
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.Date >= payPeriod.PayFromDate)
+                .Where(x => x.Date <= payPeriod.PayToDate)
+                .ToListAsync();
+
+            _context.RemoveRange(timeEntries);
+            _context.RemoveRange(actualTimeEntries);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteByPayPeriodAsync(int payPeriodId)
+        {
+            var payPeriod = await _context.PayPeriods
+                .FirstOrDefaultAsync(x => x.RowID == payPeriodId);
+
+            if (payPeriod == null) return;
+
+            var timeEntries = await _context.TimeEntries
+                .Where(x => x.OrganizationID == payPeriod.OrganizationID)
+                .Where(x => x.Date >= payPeriod.PayFromDate)
+                .Where(x => x.Date <= payPeriod.PayToDate)
+                .ToListAsync();
+
+            var actualTimeEntries = await _context.ActualTimeEntries
+                .Where(x => x.OrganizationID == payPeriod.OrganizationID)
+                .Where(x => x.Date >= payPeriod.PayFromDate)
+                .Where(x => x.Date <= payPeriod.PayToDate)
+                .ToListAsync();
+
+            _context.RemoveRange(timeEntries);
+            _context.RemoveRange(actualTimeEntries);
+
+            await _context.SaveChangesAsync();
+        }
+
         public ICollection<TimeEntry> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
             return CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToList();

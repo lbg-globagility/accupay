@@ -416,7 +416,7 @@ Public Class PayStubForm
         GeneratePayrollToolStripMenuItem.Visible = enable
         RecalculateThirteenthMonthPayToolStripMenuItem.Visible = enable
         CancelPayrollToolStripMenuItem.Visible = enable
-        DeletePayrollToolStripMenuItem.Visible = enable
+        DeletePaystubsToolStripMenuItem.Visible = enable
         ReopenPayrollToolStripMenuItem.Visible = enable
         ClosePayrollToolStripMenuItem.Visible = enable
         'OthersToolStripMenuItem.Visible = enable
@@ -1829,8 +1829,8 @@ Public Class PayStubForm
         'cashOut.Execute()
     End Sub
 
-    Private Async Sub DeletePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeletePayrollToolStripMenuItem.Click
-        DeletePayrollToolStripMenuItem.Enabled = False
+    Private Async Sub DeletePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeletePaystubsToolStripMenuItem.Click
+        DeletePaystubsToolStripMenuItem.Enabled = False
 
         Dim toBeDeletedPaypFrom = paypFrom
         Dim toBeDeletedPaypTo = paypTo
@@ -1870,7 +1870,7 @@ Public Class PayStubForm
 
         End If
 
-        DeletePayrollToolStripMenuItem.Enabled = True
+        DeletePaystubsToolStripMenuItem.Enabled = True
     End Sub
 
     Private Async Sub CancelPayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CancelPayrollToolStripMenuItem.Click
@@ -1888,7 +1888,7 @@ Public Class PayStubForm
 
         End If
 
-        Dim prompt = MessageBox.Show($"Are you sure you want to cancel the payroll and delete ALL paystubs of employees for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}'?",
+        Dim prompt = MessageBox.Show($"Are you sure you want to cancel the payroll and delete ALL paystubs and time entries of employees for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}'?",
                                      "Cancel payroll",
                                      MessageBoxButtons.YesNoCancel,
                                      MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)

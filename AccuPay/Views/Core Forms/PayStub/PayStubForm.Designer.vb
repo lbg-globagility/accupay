@@ -296,7 +296,7 @@ Partial Class PayStubForm
         Me.CostCenterReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CancelPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeletePaystubsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OthersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -3059,7 +3059,7 @@ Partial Class PayStubForm
         '
         'ManagePayrollToolStripDropDownButton
         '
-        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.ExportNetPayDetailsToolStripMenuItem, Me.CostCenterReportToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.CancelPayrollToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
+        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.ExportNetPayDetailsToolStripMenuItem, Me.CostCenterReportToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.DeletePaystubsToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.CancelPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
         Me.ManagePayrollToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
         Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
@@ -3204,19 +3204,19 @@ Partial Class PayStubForm
         '
         'CancelPayrollToolStripMenuItem
         '
-        Me.CancelPayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.CancelPayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.CancelPayrollToolStripMenuItem.Name = "CancelPayrollToolStripMenuItem"
         Me.CancelPayrollToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
         Me.CancelPayrollToolStripMenuItem.Text = "Cancel Payroll"
         Me.CancelPayrollToolStripMenuItem.ToolTipText = "Delete all paystubs and reset the pay period to ""PENDING"""
         '
-        'DeletePayrollToolStripMenuItem
+        'DeletePaystubsToolStripMenuItem
         '
-        Me.DeletePayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.DeletePayrollToolStripMenuItem.Name = "DeletePayrollToolStripMenuItem"
-        Me.DeletePayrollToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
-        Me.DeletePayrollToolStripMenuItem.Text = "Delete Payroll"
-        Me.DeletePayrollToolStripMenuItem.ToolTipText = "Delete all paystubs"
+        Me.DeletePaystubsToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.DeletePaystubsToolStripMenuItem.Name = "DeletePaystubsToolStripMenuItem"
+        Me.DeletePaystubsToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
+        Me.DeletePaystubsToolStripMenuItem.Text = "Delete Paystubs"
+        Me.DeletePaystubsToolStripMenuItem.ToolTipText = "Delete all paystubs"
         '
         'ClosePayrollToolStripMenuItem
         '
@@ -3637,7 +3637,7 @@ Partial Class PayStubForm
     Friend WithEvents OthersToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Include13thMonthPayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CashOutUnusedLeavesToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DeletePayrollToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeletePaystubsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManagePayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManagePrintPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManageEmailPayslipsToolStripMenuItem As ToolStripMenuItem

@@ -1,4 +1,6 @@
-﻿using AccuPay.Data.Repositories;
+﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Exceptions;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,30 +10,56 @@ namespace AccuPay.Data.Services
 {
     public class TimeEntryDataService
     {
-        private readonly TimeEntryRepository _timeEntryRepository;
-        private readonly EmployeeDutyScheduleRepository _shiftRepository;
-        private readonly TimeLogRepository _timeLogRepository;
-        private readonly OvertimeRepository _overtimeRepository;
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
-        private readonly LeaveRepository _leaveRepository;
         private readonly BranchRepository _branchRepository;
+        private readonly EmployeeRepository _employeeRepository;
+        private readonly EmployeeDutyScheduleRepository _shiftRepository;
+        private readonly LeaveRepository _leaveRepository;
+        private readonly OfficialBusinessRepository _officialBusinessRepository;
+        private readonly OvertimeRepository _overtimeRepository;
+        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly TimeEntryRepository _timeEntryRepository;
+        private readonly TimeLogRepository _timeLogRepository;
 
         public TimeEntryDataService(
-            TimeEntryRepository timeEntryRepository,
+            BranchRepository branchRepository,
+            EmployeeRepository employeeRepository,
             EmployeeDutyScheduleRepository shiftRepository,
-            TimeLogRepository timeLogRepository,
-            OvertimeRepository overtimeRepository,
-            OfficialBusinessRepository officialBusinessRepository,
             LeaveRepository leaveRepository,
-            BranchRepository branchRepository)
+            OfficialBusinessRepository officialBusinessRepository,
+            OvertimeRepository overtimeRepository,
+            PayPeriodRepository payPeriodRepository,
+            TimeEntryRepository timeEntryRepository,
+            TimeLogRepository timeLogRepository)
         {
-            _timeEntryRepository = timeEntryRepository;
-            _shiftRepository = shiftRepository;
-            _timeLogRepository = timeLogRepository;
-            _overtimeRepository = overtimeRepository;
-            _officialBusinessRepository = officialBusinessRepository;
-            _leaveRepository = leaveRepository;
             _branchRepository = branchRepository;
+            _employeeRepository = employeeRepository;
+            _leaveRepository = leaveRepository;
+            _shiftRepository = shiftRepository;
+            _officialBusinessRepository = officialBusinessRepository;
+            _overtimeRepository = overtimeRepository;
+            _payPeriodRepository = payPeriodRepository;
+            _timeEntryRepository = timeEntryRepository;
+            _timeLogRepository = timeLogRepository;
+        }
+
+        public async Task DeleteByEmployeeAsync(int employeeId, int payPeriodId)
+        {
+            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
+            if (payPeriod == null)
+                throw new BusinessLogicException("Pay Period does not exists.");
+
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            if (employee == null)
+                throw new BusinessLogicException("Employee does not exists.");
+
+            if (payPeriod.Status != PayPeriodStatus.Open)
+            {
+                throw new BusinessLogicException("Cannot delete time entries that is not on an 'Open' pay period.");
+            }
+
+            await _timeEntryRepository.DeleteByEmployeeAsync(
+                employeeId: employeeId,
+                payPeriodId: payPeriodId);
         }
 
         public async Task<ICollection<TimeEntryData>> GetEmployeeTimeEntries(int organizationId, int employeeId, TimePeriod datePeriod)

@@ -22,7 +22,7 @@ namespace AccuPay.Data.Repositories
         public async Task DeleteManyAsync(IEnumerable<int> ids)
         {
             var overtimes = await _context.Overtimes
-                .Where(o => ids.Contains(o.RowID.Value))
+                .Where(x => ids.Contains(x.RowID.Value))
                 .ToListAsync();
 
             _context.RemoveRange(overtimes);
