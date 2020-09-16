@@ -52,7 +52,6 @@ Partial Class SalaryTab
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton31 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
         Me.btnImport = New System.Windows.Forms.ToolStripButton()
         Me.UserActivitySalaryToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -135,7 +134,7 @@ Partial Class SalaryTab
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnImport, Me.UserActivitySalaryToolStripButton})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripProgressBar2, Me.btnImport, Me.UserActivitySalaryToolStripButton})
         Me.ToolStrip5.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(856, 25)
@@ -182,17 +181,6 @@ Partial Class SalaryTab
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
-        '
-        'ToolStripButton31
-        '
-        Me.ToolStripButton31.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton31.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton31.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton31.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton31.Name = "ToolStripButton31"
-        Me.ToolStripButton31.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton31.Text = "ToolStripButton1"
-        Me.ToolStripButton31.ToolTipText = "Show audit trails"
         '
         'ToolStripProgressBar2
         '
@@ -960,7 +948,6 @@ Partial Class SalaryTab
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
-    Friend WithEvents ToolStripButton31 As ToolStripButton
     Friend WithEvents pbEmployee As PictureBox
     Friend WithEvents btnNew As ToolStripButton
     Friend WithEvents ToolStripProgressBar2 As ToolStripProgressBar

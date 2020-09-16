@@ -30,10 +30,9 @@ Partial Class CalendarsForm
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.DayTypesToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.DayTypesToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.MainPanel = New System.Windows.Forms.Panel()
         Me.CalendarLabel = New System.Windows.Forms.Label()
@@ -61,7 +60,7 @@ Partial Class CalendarsForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ToolStripSeparator1, Me.DeleteToolStripButton, Me.DayTypesToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripSeparator1, Me.DeleteToolStripButton, Me.DayTypesToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(849, 25)
@@ -106,28 +105,10 @@ Partial Class CalendarsForm
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
         '
-        'ToolStripButton25
-        '
-        Me.ToolStripButton25.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton25.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton25.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton25.Name = "ToolStripButton25"
-        Me.ToolStripButton25.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton25.Text = "ToolStripButton1"
-        Me.ToolStripButton25.ToolTipText = "Show audit trails"
-        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
-        'DayTypesToolStripButton
-        '
-        Me.DayTypesToolStripButton.Image = Global.AccuPay.My.Resources.Resources.application_view_list_icon
-        Me.DayTypesToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DayTypesToolStripButton.Name = "DayTypesToolStripButton"
-        Me.DayTypesToolStripButton.Size = New System.Drawing.Size(79, 22)
-        Me.DayTypesToolStripButton.Text = "Day Types"
         '
         'DeleteToolStripButton
         '
@@ -136,6 +117,14 @@ Partial Class CalendarsForm
         Me.DeleteToolStripButton.Name = "DeleteToolStripButton"
         Me.DeleteToolStripButton.Size = New System.Drawing.Size(60, 22)
         Me.DeleteToolStripButton.Text = "Delete"
+        '
+        'DayTypesToolStripButton
+        '
+        Me.DayTypesToolStripButton.Image = Global.AccuPay.My.Resources.Resources.application_view_list_icon
+        Me.DayTypesToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DayTypesToolStripButton.Name = "DayTypesToolStripButton"
+        Me.DayTypesToolStripButton.Size = New System.Drawing.Size(79, 22)
+        Me.DayTypesToolStripButton.Text = "Day Types"
         '
         'FormTitleLabel
         '
@@ -360,7 +349,6 @@ Partial Class CalendarsForm
     Friend WithEvents ToolStripSeparator9 As ToolStripSeparator
     Friend WithEvents CancelToolStripButton As ToolStripButton
     Friend WithEvents CloseButton As ToolStripButton
-    Friend WithEvents ToolStripButton25 As ToolStripButton
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn

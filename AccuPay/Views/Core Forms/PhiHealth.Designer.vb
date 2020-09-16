@@ -30,7 +30,6 @@ Partial Class PhiHealth
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnPhilHealthImport = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.dgvPhHlth = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -58,7 +57,7 @@ Partial Class PhiHealth
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.ToolStripButton3, Me.ToolStripButton4, Me.tsbtnPhilHealthImport, Me.ToolStripButton1, Me.tsbtnAudittrail, Me.ToolStripProgressBar1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.ToolStripButton3, Me.ToolStripButton4, Me.tsbtnPhilHealthImport, Me.ToolStripButton1, Me.ToolStripProgressBar1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1100, 25)
@@ -109,17 +108,6 @@ Partial Class PhiHealth
         Me.ToolStripButton1.Size = New System.Drawing.Size(63, 22)
         Me.ToolStripButton1.Text = "Cancel"
         Me.ToolStripButton1.Visible = False
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
         'ToolStripProgressBar1
         '
@@ -301,7 +289,6 @@ Partial Class PhiHealth
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnPhilHealthImport As System.Windows.Forms.ToolStripButton
     Friend WithEvents bgworkImportSSS As System.ComponentModel.BackgroundWorker
     Friend WithEvents ToolStripProgressBar1 As System.Windows.Forms.ToolStripProgressBar

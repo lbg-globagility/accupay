@@ -38,18 +38,17 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.btnSave = New System.Windows.Forms.Button()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnNewTax = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSaveTax = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnimportwtax = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCancelTax = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCloseTax = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.bgworkimporttax = New System.ComponentModel.BackgroundWorker()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvlisttaxableamt, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvfilingstatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
@@ -160,7 +159,7 @@ Partial Class Revised_Withholding_Tax_Tables
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewTax, Me.ToolStripButton2, Me.ToolStripButton1, Me.tsbtnSaveTax, Me.tsbtnimportwtax, Me.tsbtnCancelTax, Me.tsbtnCloseTax, Me.tsbtnAudittrail, Me.ToolStripProgressBar1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewTax, Me.ToolStripButton2, Me.ToolStripButton1, Me.tsbtnSaveTax, Me.tsbtnimportwtax, Me.tsbtnCancelTax, Me.tsbtnCloseTax, Me.ToolStripProgressBar1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1065, 25)
@@ -175,6 +174,24 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.tsbtnNewTax.Size = New System.Drawing.Size(71, 22)
         Me.tsbtnNewTax.Text = "&New Tax"
         Me.tsbtnNewTax.Visible = False
+        '
+        'ToolStripButton2
+        '
+        Me.ToolStripButton2.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton2.Name = "ToolStripButton2"
+        Me.ToolStripButton2.Size = New System.Drawing.Size(71, 22)
+        Me.ToolStripButton2.Text = "&Save Tax"
+        Me.ToolStripButton2.Visible = False
+        '
+        'ToolStripButton1
+        '
+        Me.ToolStripButton1.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(71, 22)
+        Me.ToolStripButton1.Text = "&New Tax"
+        Me.ToolStripButton1.Visible = False
         '
         'tsbtnSaveTax
         '
@@ -211,17 +228,6 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.tsbtnCloseTax.Name = "tsbtnCloseTax"
         Me.tsbtnCloseTax.Size = New System.Drawing.Size(56, 22)
         Me.tsbtnCloseTax.Text = "Close"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
         'ToolStripProgressBar1
         '
@@ -271,24 +277,6 @@ Partial Class Revised_Withholding_Tax_Tables
         Me.bgworkimporttax.WorkerReportsProgress = True
         Me.bgworkimporttax.WorkerSupportsCancellation = True
         '
-        'ToolStripButton1
-        '
-        Me.ToolStripButton1.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(71, 22)
-        Me.ToolStripButton1.Text = "&New Tax"
-        Me.ToolStripButton1.Visible = False
-        '
-        'ToolStripButton2
-        '
-        Me.ToolStripButton2.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(71, 22)
-        Me.ToolStripButton2.Text = "&Save Tax"
-        Me.ToolStripButton2.Visible = False
-        '
         'Revised_Withholding_Tax_Tables
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -322,7 +310,6 @@ Partial Class Revised_Withholding_Tax_Tables
     Friend WithEvents tsbtnCancelTax As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnCloseTax As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents tsbtnimportwtax As System.Windows.Forms.ToolStripButton

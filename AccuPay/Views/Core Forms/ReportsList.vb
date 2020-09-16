@@ -23,9 +23,6 @@ Public Class ReportsList
 
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        'Removed since there is no audit trail anymore. Is this report really needed?
-        'New EmployeeIdentificationNumberReportProvider()
-
         'This has errors
         'New EmployeeOffenseReportProvider(),
 

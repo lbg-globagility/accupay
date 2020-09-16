@@ -47,7 +47,6 @@ Partial Class ShiftEntryForm
         Me.tsbtnSaveShift = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCancelShift = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCloseShift = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.chkHidden = New System.Windows.Forms.CheckBox()
         Me.Button1 = New System.Windows.Forms.Button()
@@ -226,7 +225,7 @@ Partial Class ShiftEntryForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewShift, Me.tsbtnSaveShift, Me.tsbtnCancelShift, Me.tsbtnCloseShift, Me.tsbtnAudittrail})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewShift, Me.tsbtnSaveShift, Me.tsbtnCancelShift, Me.tsbtnCloseShift})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(665, 25)
@@ -265,17 +264,6 @@ Partial Class ShiftEntryForm
         Me.tsbtnCloseShift.Name = "tsbtnCloseShift"
         Me.tsbtnCloseShift.Size = New System.Drawing.Size(56, 22)
         Me.tsbtnCloseShift.Text = "Close"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
         'Panel1
         '
@@ -516,7 +504,6 @@ Partial Class ShiftEntryForm
     Friend WithEvents tsbtnSaveShift As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnCancelShift As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnCloseShift As System.Windows.Forms.ToolStripButton
-    Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label

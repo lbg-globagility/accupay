@@ -48,7 +48,6 @@ Partial Class JobLevelForm
         Me.DeleteCategoryButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelCategoryButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -227,7 +226,7 @@ Partial Class JobLevelForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewCategoryButton, Me.SaveCategoryButton, Me.DeleteCategoryButton, Me.CancelCategoryButton, Me.ToolStripButton4, Me.tsbtnAudittrail})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewCategoryButton, Me.SaveCategoryButton, Me.DeleteCategoryButton, Me.CancelCategoryButton, Me.ToolStripButton4})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(794, 25)
@@ -274,17 +273,6 @@ Partial Class JobLevelForm
         Me.ToolStripButton4.Name = "ToolStripButton4"
         Me.ToolStripButton4.Size = New System.Drawing.Size(56, 22)
         Me.ToolStripButton4.Text = "Close"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -377,7 +365,6 @@ Partial Class JobLevelForm
     Friend WithEvents DeleteCategoryButton As ToolStripButton
     Friend WithEvents CancelCategoryButton As ToolStripButton
     Friend WithEvents ToolStripButton4 As ToolStripButton
-    Friend WithEvents tsbtnAudittrail As ToolStripButton
     Friend WithEvents CategoryNameTextBox As TextBox
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn

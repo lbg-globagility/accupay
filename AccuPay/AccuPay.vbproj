@@ -982,12 +982,6 @@
     <Compile Include="Views\Core Forms\Employee\JobPointsTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Employee\PersonalProfileTab.Designer.vb">
-      <DependentUpon>PersonalProfileTab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\PersonalProfileTab.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\Employee\SalaryTab.Designer.vb">
       <DependentUpon>SalaryTab.vb</DependentUpon>
     </Compile>
@@ -2195,9 +2189,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\JobPointsTab.resx">
       <DependentUpon>JobPointsTab.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\PersonalProfileTab.resx">
-      <DependentUpon>PersonalProfileTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\SalaryTab.resx">
       <DependentUpon>SalaryTab.vb</DependentUpon>

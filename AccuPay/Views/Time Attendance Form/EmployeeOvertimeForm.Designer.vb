@@ -23,10 +23,10 @@ Partial Class EmployeeOvertimeForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeOvertimeForm))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeOvertimeForm))
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
@@ -39,8 +39,8 @@ Partial Class EmployeeOvertimeForm
         Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
@@ -96,7 +96,6 @@ Partial Class EmployeeOvertimeForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -176,7 +175,7 @@ Partial Class EmployeeOvertimeForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ImportToolStripButton, Me.UserActivityToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.CloseButton, Me.ImportToolStripButton, Me.UserActivityToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -234,16 +233,6 @@ Partial Class EmployeeOvertimeForm
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
         '
-        'ToolStripButton25
-        '
-        Me.ToolStripButton25.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton25.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton25.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton25.Name = "ToolStripButton25"
-        Me.ToolStripButton25.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton25.Text = "ToolStripButton1"
-        Me.ToolStripButton25.ToolTipText = "Show audit trails"
-        '
         'ImportToolStripButton
         '
         Me.ImportToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Add
@@ -252,6 +241,14 @@ Partial Class EmployeeOvertimeForm
         Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
         Me.ImportToolStripButton.Text = "Import"
         Me.ImportToolStripButton.ToolTipText = "Import loans"
+        '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'pnlSearch
         '
@@ -828,14 +825,6 @@ Partial Class EmployeeOvertimeForm
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         '
-        'UserActivityToolStripButton
-        '
-        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
-        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
-        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivityToolStripButton.Text = "User Activity"
-        '
         'EmployeeOvertimeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -888,7 +877,6 @@ Partial Class EmployeeOvertimeForm
     Friend WithEvents ToolStripSeparator10 As ToolStripSeparator
     Friend WithEvents CancelToolStripButton As ToolStripButton
     Friend WithEvents CloseButton As ToolStripButton
-    Friend WithEvents ToolStripButton25 As ToolStripButton
     Friend WithEvents ImportToolStripButton As ToolStripButton
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn

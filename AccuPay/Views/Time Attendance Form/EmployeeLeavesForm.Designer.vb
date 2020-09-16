@@ -40,7 +40,6 @@ Partial Class EmployeeLeavesForm
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.LeaveHistoryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pnlSearch = New System.Windows.Forms.Panel()
@@ -50,6 +49,14 @@ Partial Class EmployeeLeavesForm
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
         Me.LeaveGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl4 = New System.Windows.Forms.TabControl()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
         Me.Label131 = New System.Windows.Forms.Label()
@@ -66,6 +73,8 @@ Partial Class EmployeeLeavesForm
         Me.Label14 = New System.Windows.Forms.Label()
         Me.SickLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.StartTimePicker = New AccuPay.NullableTimePicker()
+        Me.EndTimePicker = New AccuPay.NullableTimePicker()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusComboBox = New System.Windows.Forms.ComboBox()
@@ -90,6 +99,9 @@ Partial Class EmployeeLeavesForm
         Me.LeaveTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.ShowAllCheckBox = New System.Windows.Forms.CheckBox()
         Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -102,19 +114,6 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StartTimePicker = New AccuPay.NullableTimePicker()
-        Me.EndTimePicker = New AccuPay.NullableTimePicker()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -196,7 +195,7 @@ Partial Class EmployeeLeavesForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.LeaveHistoryToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ImportToolStripButton, Me.UserActivityToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.LeaveHistoryToolStripButton, Me.CloseButton, Me.ImportToolStripButton, Me.UserActivityToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -261,16 +260,6 @@ Partial Class EmployeeLeavesForm
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
-        '
-        'ToolStripButton25
-        '
-        Me.ToolStripButton25.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton25.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton25.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton25.Name = "ToolStripButton25"
-        Me.ToolStripButton25.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton25.Text = "ToolStripButton1"
-        Me.ToolStripButton25.ToolTipText = "Show audit trails"
         '
         'ImportToolStripButton
         '
@@ -384,6 +373,62 @@ Partial Class EmployeeLeavesForm
         Me.LeaveGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.LeaveGridView.Size = New System.Drawing.Size(784, 250)
         Me.LeaveGridView.TabIndex = 6
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "LeaveType"
+        Me.Column8.HeaderText = "Leave type"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "StartTime"
+        Me.Column2.HeaderText = "Start time"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EndTime"
+        Me.Column4.HeaderText = "End time"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "StartDate"
+        Me.Column1.HeaderText = "Start date"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "EndDate"
+        Me.Column3.HeaderText = "End date"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Status"
+        Me.Column7.HeaderText = "Status"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Reason"
+        Me.Column5.HeaderText = "Reason"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "Comments"
+        Me.Column6.HeaderText = "Comments"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
         '
         'TabControl4
         '
@@ -577,6 +622,24 @@ Partial Class EmployeeLeavesForm
         Me.DetailsTabLayout.Size = New System.Drawing.Size(526, 193)
         Me.DetailsTabLayout.TabIndex = 4
         '
+        'StartTimePicker
+        '
+        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
+        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.StartTimePicker.Name = "StartTimePicker"
+        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.StartTimePicker.TabIndex = 8
+        Me.StartTimePicker.Value = New Date(2020, 2, 18, 13, 57, 0, 0)
+        '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
+        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 8
+        Me.EndTimePicker.Value = New Date(2020, 2, 18, 13, 55, 0, 0)
+        '
         'Panel5
         '
         Me.Panel5.Controls.Add(Me.Label10)
@@ -625,7 +688,7 @@ Partial Class EmployeeLeavesForm
         Me.Label7.Location = New System.Drawing.Point(383, 0)
         Me.Label7.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(60, 13)
+        Me.Label7.Size = New System.Drawing.Size(61, 13)
         Me.Label7.TabIndex = 516
         Me.Label7.Text = "Leave Type"
         '
@@ -843,6 +906,27 @@ Partial Class EmployeeLeavesForm
         Me.EmployeesDataGridView.Size = New System.Drawing.Size(352, 415)
         Me.EmployeesDataGridView.TabIndex = 2
         '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
+        '
         'LeaveListBindingSource
         '
         '
@@ -940,101 +1024,6 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         Me.DataGridViewTextBoxColumn11.ReadOnly = True
         '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "LeaveType"
-        Me.Column8.HeaderText = "Leave type"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "StartTime"
-        Me.Column2.HeaderText = "Start time"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EndTime"
-        Me.Column4.HeaderText = "End time"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "StartDate"
-        Me.Column1.HeaderText = "Start date"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "EndDate"
-        Me.Column3.HeaderText = "End date"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Status"
-        Me.Column7.HeaderText = "Status"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Reason"
-        Me.Column5.HeaderText = "Reason"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "Comments"
-        Me.Column6.HeaderText = "Comments"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'StartTimePicker
-        '
-        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
-        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.StartTimePicker.Name = "StartTimePicker"
-        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.StartTimePicker.TabIndex = 8
-        Me.StartTimePicker.Value = New Date(2020, 2, 18, 13, 57, 0, 0)
-        '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
-        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 8
-        Me.EndTimePicker.Value = New Date(2020, 2, 18, 13, 55, 0, 0)
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
-        '
         'EmployeeLeavesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1091,7 +1080,6 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents ToolStripSeparator10 As ToolStripSeparator
     Friend WithEvents CancelToolStripButton As ToolStripButton
     Friend WithEvents CloseButton As ToolStripButton
-    Friend WithEvents ToolStripButton25 As ToolStripButton
     Friend WithEvents ImportToolStripButton As ToolStripButton
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn

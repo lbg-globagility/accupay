@@ -1760,71 +1760,40 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub Employee_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        Dim result = Windows.Forms.DialogResult.Yes
+        e.Cancel = False
 
-        Dim prompt = Nothing
+        RemoveHandler txtBDate.Leave, AddressOf txtBDate_Leave
+        InfoBalloon(, , lblforballoon1, , , 1)
 
-        Select Case tabIndx
-            Case GetEmployeeProfileTabPageIndex()
-                If tsbtnNewEmp.Enabled = False Or
-                    listofEditDepen.Count <> 0 Then
-                End If
-            Case GetDisciplinaryActionTabPageIndex()
-                If btnNew.Enabled = False Then
-                End If
-            Case GetEducationalBackgroundTabPageIndex()
-                If btnNewEduc.Enabled = False Then
-                End If
-            Case GetPreviousEmployerTabPageIndex()
-                If btnNewPrevEmp.Enabled = False Then
-                End If
+        InfoBalloon(, , lblforballoon, , , 1)
+        WarnBalloon(, , lblforballoon, , , 1)
 
-        End Select
+        WarnBalloon(, , txtEmpID, , , 1)
+        WarnBalloon(, , txtFName, , , 1)
+        WarnBalloon(, , txtLName, , , 1)
+        WarnBalloon(, , cboattatype, , , 1)
 
-        If result = DialogResult.Cancel Then
-            e.Cancel = True
-        ElseIf result = DialogResult.No Then
-            e.Cancel = True
-        ElseIf result = DialogResult.Yes Then
-            e.Cancel = False
+        myBalloon(, , lblforballoon, , , 1)
+        InfoBalloon(, , Label235, , , 1)
 
-            RemoveHandler txtBDate.Leave, AddressOf txtBDate_Leave
-            InfoBalloon(, , lblforballoon1, , , 1)
-
-            InfoBalloon(, , lblforballoon, , , 1)
-            WarnBalloon(, , lblforballoon, , , 1)
-
-            WarnBalloon(, , txtEmpID, , , 1)
-            WarnBalloon(, , txtFName, , , 1)
-            WarnBalloon(, , txtLName, , , 1)
-            WarnBalloon(, , cboattatype, , , 1)
-
-            myBalloon(, , lblforballoon, , , 1)
-            InfoBalloon(, , Label235, , , 1)
-
-            If previousForm IsNot Nothing Then
-                If previousForm.Name = Me.Name Then
-                    previousForm = Nothing
-                End If
+        If previousForm IsNot Nothing Then
+            If previousForm.Name = Me.Name Then
+                previousForm = Nothing
             End If
-
-            HRISForm.listHRISForm.Remove(Me.Name)
-
         End If
 
-        If e.Cancel = False Then
+        HRISForm.listHRISForm.Remove(Me.Name)
 
-            Dim liveThreads = threadArrayList.Cast(Of Thread).Where(Function(i) i.IsAlive)
+        Dim liveThreads = threadArrayList.Cast(Of Thread).Where(Function(i) i.IsAlive)
 
-            For Each ilist As Thread In liveThreads
-                'If ilist.IsAlive Then
-                ilist.Abort()
-                'End If
-            Next
+        For Each ilist As Thread In liveThreads
+            'If ilist.IsAlive Then
+            ilist.Abort()
+            'End If
+        Next
 
-            threadArrayList.Clear()
+        threadArrayList.Clear()
 
-        End If
     End Sub
 
     Private Sub txtBDate_Leave(sender As Object, e As EventArgs)
