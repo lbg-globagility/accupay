@@ -11,15 +11,21 @@ namespace AccuPay.Data.Services
     public class PaystubDataService
     {
         private readonly PaystubRepository _paystubRepository;
+        private readonly PaystubEmailRepository _paystubEmailRepository;
+        private readonly PaystubEmailHistoryRepository _paystubEmailHistoryRepository;
         private readonly SalaryRepository _salaryRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
 
         public PaystubDataService(
             PaystubRepository paystubRepository,
+            PaystubEmailRepository paystubEmailRepository,
+            PaystubEmailHistoryRepository paystubEmailHistoryRepository,
             SalaryRepository salaryRepository,
             PayPeriodRepository payPeriodRepository)
         {
             _paystubRepository = paystubRepository;
+            _paystubEmailRepository = paystubEmailRepository;
+            _paystubEmailHistoryRepository = paystubEmailHistoryRepository;
             _salaryRepository = salaryRepository;
             _payPeriodRepository = payPeriodRepository;
         }
@@ -34,8 +40,11 @@ namespace AccuPay.Data.Services
 
             var salaries = await _salaryRepository.GetByMultipleEmployeeAsync(employeeIds, payPeriod.PayFromDate);
 
-            var paystubsWithSalary = paystubs.Select(x =>
-                new PaystubData(x, salaries.FirstOrDefault(s => s.EmployeeID == x.EmployeeID))).ToList();
+            var paystubsWithSalary = paystubs
+                .Select(paystub => new PaystubData(
+                    paystub,
+                    salaries.FirstOrDefault(s => s.EmployeeID == paystub.EmployeeID)
+                )).ToList();
 
             return paystubsWithSalary;
         }
@@ -49,23 +58,49 @@ namespace AccuPay.Data.Services
 
             var payPeriodId = (await _paystubRepository.GetWithPayPeriod(paystub.RowID.Value))?.PayPeriod?.RowID;
 
-            var currentOpenPayPeriod = await _payPeriodRepository.GetCurrentOpenAsync(organizationId);
+            await ValidateIfPayPeriodIsOpenAsync(
+                organizationId: organizationId,
+                payPeriodId: payPeriodId);
 
-            if (currentOpenPayPeriod == null || currentOpenPayPeriod?.RowID != payPeriodId)
-                throw new BusinessLogicException("Only open pay periods can be modified.");
-
-            await _paystubRepository.DeleteAsync(paystub.RowID.Value, userId);
+            await _paystubRepository.DeleteAsync(
+                id: paystub.RowID.Value,
+                userId: userId);
         }
 
         public async Task DeleteByPeriodAsync(int payPeriodId, int userId, int organizationId)
         {
-            // TODO: extract this to be reusable
-            var currentOpenPayPeriod = await _payPeriodRepository.GetCurrentOpenAsync(organizationId);
+            await ValidateIfPayPeriodIsOpenAsync(
+                organizationId: organizationId,
+                payPeriodId: payPeriodId);
 
-            if (currentOpenPayPeriod == null || currentOpenPayPeriod?.RowID != payPeriodId)
-                throw new BusinessLogicException("Only open pay periods can be modified.");
+            await _paystubRepository.DeleteByPeriodAsync(
+                payPeriodId: payPeriodId,
+                userId: userId);
+        }
 
-            await _paystubRepository.DeleteByPeriodAsync(payPeriodId, userId);
+        public async Task DeletePaystubEmailsByPeriodAsync(int payPeriodId, int organizationId)
+        {
+            await ValidateIfPayPeriodIsOpenAsync(
+                organizationId: organizationId,
+                payPeriodId: payPeriodId);
+
+            await _paystubEmailRepository.DeleteByPayPeriodAsync(payPeriodId);
+            await _paystubEmailHistoryRepository.DeleteByPayPeriodAsync(payPeriodId);
+        }
+
+        public async Task DeletePaystubEmailsByEmployeeAndPeriodAsync(int employeeId, int payPeriodId, int organizationId)
+        {
+            await ValidateIfPayPeriodIsOpenAsync(
+                organizationId: organizationId,
+                payPeriodId: payPeriodId);
+
+            await _paystubEmailRepository.DeleteByEmployeeAndPayPeriodAsync(
+                employeeId: employeeId,
+                payPeriodId: payPeriodId);
+
+            await _paystubEmailHistoryRepository.DeleteByEmployeeAndPayPeriodAsync(
+                employeeId: employeeId,
+                payPeriodId: payPeriodId);
         }
 
         public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
@@ -83,6 +118,14 @@ namespace AccuPay.Data.Services
             // validate payperiod
 
             await _paystubRepository.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays);
+        }
+
+        private async Task ValidateIfPayPeriodIsOpenAsync(int organizationId, int? payPeriodId)
+        {
+            var currentOpenPayPeriod = await _payPeriodRepository.GetCurrentOpenAsync(organizationId);
+
+            if (currentOpenPayPeriod == null || currentOpenPayPeriod?.RowID != payPeriodId)
+                throw new BusinessLogicException("Only open pay periods can be modified.");
         }
     }
 }

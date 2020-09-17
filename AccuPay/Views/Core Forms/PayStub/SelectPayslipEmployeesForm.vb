@@ -16,38 +16,31 @@ Public Class SelectPayslipEmployeesForm
 
     Private ReadOnly _isEmail As Boolean
 
-    Private Const Declared As String = "Declared"
-
-    Private Const Actual As String = "Actual"
-
-    Private _payslipTypes As List(Of String)
-
     Private _employeeModels As List(Of EmployeeModel)
 
     Private _currentPayPeriod As PayPeriod
 
-    Private _payslipCreator As PayslipBuilder
+    Private ReadOnly _payslipCreator As PayslipBuilder
 
-    Private _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As PolicyHelper
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As PaystubRepository
 
-    Private _paystubEmailRepository As PaystubEmailRepository
+    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
 
-    Private _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
+    Private ReadOnly _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
 
     Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
 
         InitializeComponent()
 
         _isEmail = isEmail
+
         _currentPayPeriodId = currentPayPeriodId
 
         _employeeModels = New List(Of EmployeeModel)
-
-        _payslipTypes = New List(Of String) From {Declared, Actual}
 
         _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
@@ -67,26 +60,30 @@ Public Class SelectPayslipEmployeesForm
 
         EmployeeGridView.AutoGenerateColumns = False
 
-        PayslipTypeComboBox.DataSource = _payslipTypes
-
-        SendEmailsButton.Visible = _isEmail
-        RefreshEmailStatusButton.Visible = _isEmail
-        RefreshEmailServiceButton.Visible = _isEmail
+        SendEmailToolStripButton.Visible = _isEmail
+        ManageEmailToolStripDropDownButton.Visible = _isEmail
+        RefreshEmailServiceToolStripButton.Visible = _isEmail
 
         EmailAddressColumn.Visible = _isEmail
         EmailStatusColumn.Visible = _isEmail
+        ResetEmailButtonColumn.Visible = _isEmail
         ErrorLogMessageColumn.Visible = _isEmail
 
         _currentPayPeriod = Await _payPeriodRepository.GetByIdAsync(_currentPayPeriodId)
 
         Await ShowEmployees()
 
-        If Not _policyHelper.ShowActual Then
+        If _policyHelper.ShowActual Then
 
-            PayslipTypeLabel.Visible = False
-            PayslipTypeComboBox.Visible = False
-            PayslipTypeComboBox.Text = Declared
+            RemoveHandler PreviewToolStripButton.Click, AddressOf PreviewButton_Click
+            RemoveHandler SendEmailToolStripButton.Click, AddressOf SendEmailButton_Click
+        Else
 
+            PreviewDeclaredToolStripMenuItem.Visible = False
+            PreviewActualToolStripMenuItem.Visible = False
+
+            SendEmailDeclaredToolStripMenuItem.Visible = False
+            SendEmailActualToolStripMenuItem.Visible = False
         End If
 
     End Sub
@@ -94,16 +91,17 @@ Public Class SelectPayslipEmployeesForm
     Private Async Function ShowEmployees() As Task
 
         Dim employees = Await _paystubRepository.
-                                GetByPayPeriodWithEmployeeDivisionAsync(_currentPayPeriodId)
+            GetByPayPeriodWithEmployeeDivisionAsync(_currentPayPeriodId)
 
         Dim employeeModels As New List(Of EmployeeModel)
 
         For Each paystub In employees
             employeeModels.Add(New EmployeeModel With {
                 .EmployeeId = paystub.EmployeeID.Value,
-                .EmailAddress = If(String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress),
-                                    Nothing,
-                                    paystub.Employee.EmailAddress),
+                .EmailAddress = If(
+                    String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress),
+                    Nothing,
+                    paystub.Employee.EmailAddress),
                 .PaystubId = paystub.RowID.Value,
                 .IsSelected = If(Not _isEmail, True, (Not String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress))),
                 .EmployeeNumber = paystub.Employee.EmployeeNo,
@@ -124,7 +122,7 @@ Public Class SelectPayslipEmployeesForm
 
         Await RefreshEmailStatus()
 
-        EnableDisableButtons()
+        EnableDisableActionButtons()
 
     End Function
 
@@ -146,11 +144,11 @@ Public Class SelectPayslipEmployeesForm
             Dim checkBoxCell = row.Cells(SelectedCheckBoxColumn.Index)
 
             Dim history = paystubEmailHistories.
-                            FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
+                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
 
             Dim queue = paystubEmails.
-                            OrderByDescending(Function(h) h.Created).
-                            FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
+                OrderByDescending(Function(h) h.Created).
+                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
 
             checkBoxCell.Style.BackColor = Color.White
             checkBoxCell.ReadOnly = False
@@ -223,26 +221,30 @@ Public Class SelectPayslipEmployeesForm
 
     End Function
 
-    Private Sub EnableDisableButtons()
+    Private Sub EnableDisableActionButtons()
         Dim selectedEmployeesCount = _employeeModels.Where(Function(e) e.IsSelected).Count
 
-        PreviewButton.Enabled = selectedEmployeesCount > 0
-        SendEmailsButton.Enabled = selectedEmployeesCount > 0
+        PreviewToolStripButton.Enabled = selectedEmployeesCount > 0
+        SendEmailToolStripButton.Enabled = selectedEmployeesCount > 0
 
-        SendEmailsButton.Text = $"&Send Emails ({selectedEmployeesCount})"
-
+        StatusLabel.Text = $"{selectedEmployeesCount} employee(s) selected."
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
+    Private Sub CloseDialogButton_Click(sender As Object, e As EventArgs) Handles CloseDialogButton.Click
         Me.Close()
     End Sub
 
-    Private Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles PreviewButton.Click
+    Private Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles _
+        PreviewToolStripButton.Click,
+        PreviewDeclaredToolStripMenuItem.Click,
+        PreviewActualToolStripMenuItem.Click
+
+        Dim isActual = sender Is PreviewActualToolStripMenuItem
+
+        DisableAllButtons()
 
         FunctionUtils.TryCatchFunction("Print Payslip",
             Sub()
-                Dim isActual = PayslipTypeComboBox.Text = Actual
-
                 Dim employeeIds = _employeeModels.
                     Where(Function(m) m.IsSelected).
                     Select(Function(m) m.EmployeeId).
@@ -257,52 +259,68 @@ Public Class SelectPayslipEmployeesForm
                 crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
                 crvwr.Show()
             End Sub)
+
+        DisableAllButtons(disable:=False)
+
     End Sub
 
-    Private Async Sub ProceedButton_Click(sender As Object, e As EventArgs) Handles SendEmailsButton.Click
+    Private Async Sub SendEmailButton_Click(sender As Object, e As EventArgs) Handles _
+        SendEmailToolStripButton.Click,
+        SendEmailActualToolStripMenuItem.Click,
+        SendEmailDeclaredToolStripMenuItem.Click
 
         Dim employees = _employeeModels.Where(Function(m) m.IsSelected).ToList
 
         If employees.Count = 0 Then Return
 
+        Dim isActual = sender Is SendEmailActualToolStripMenuItem
+
+        Dim confirm = MessageBoxHelper.Confirm(Of Boolean)($"Send email to {employees.Count} employee(s)?")
+
+        If Not confirm Then Return
+
         Dim paystubEmails As New List(Of PaystubEmail)
 
         For Each employee In employees
             paystubEmails.Add(New PaystubEmail() With {
-                    .CreatedBy = z_User,
-                    .PaystubID = employee.PaystubId,
-                    .Status = PaystubEmail.StatusWaiting
-                })
+                .CreatedBy = z_User,
+                .PaystubID = employee.PaystubId,
+                .Status = PaystubEmail.StatusWaiting
+            })
         Next
 
         Await _paystubEmailRepository.CreateManyAsync(paystubEmails)
 
         Await RefreshEmailStatus()
 
-        EnableDisableButtons()
+        EnableDisableActionButtons()
 
         MessageBoxHelper.Information($"{employees.Count} email(s) were added to queue. You can click refresh to check the updated status of the emails.")
 
     End Sub
 
-    Private Async Sub RefreshEmailStatusButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailStatusButton.Click
+    Private Async Sub RefreshEmailStatusButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailStatusToolStripMenuItem.Click
         Await RefreshEmailStatus()
 
-        EnableDisableButtons()
+        EnableDisableActionButtons()
     End Sub
 
-    Private Sub EmployeesDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles EmployeeGridView.CellMouseUp
+    Private Sub EmployeeGridView_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) _
+        Handles EmployeeGridView.CellMouseUp
 
-        EnableDisableButtons()
+        EmployeeGridView.EndEdit()
+        EmployeeGridView.Refresh()
+        EnableDisableActionButtons()
     End Sub
 
-    Private Async Sub RefreshEmailServiceButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailServiceButton.Click
+    Private Async Sub RefreshEmailServiceToolStripButton_Click(sender As Object, e As EventArgs) Handles _
+        RefreshEmailServiceToolStripButton.Click
 
         Dim serviceName = StringConfig.AccupayEmailServiceName
         Dim globagilityHelpDescription = $"Please restart the {serviceName} manually or contact Globagility Inc. for assistance."
 
         Try
-            Me.Cursor = Cursors.WaitCursor
+            DisableAllButtons()
             'TODO: getting the IP Address should be from a static class and also will be used by other
             'functions that are needing the values from registry
 
@@ -324,8 +342,97 @@ Public Class SelectPayslipEmployeesForm
         Catch ex As Exception
             MessageBoxHelper.ErrorMessage($"An error occured trying to restart the service. {globagilityHelpDescription}")
         Finally
-            Me.Cursor = Cursors.Default
+            DisableAllButtons(disable:=False)
+
         End Try
+
+    End Sub
+
+    Private Sub DisableAllButtons(Optional disable As Boolean = True)
+        ToolStrip1.Enabled = Not disable
+        UncheckAllButton.Enabled = Not disable
+        CloseDialogButton.Enabled = Not disable
+
+        If disable Then
+
+            Me.Cursor = Cursors.WaitCursor
+        Else
+
+            Me.Cursor = Cursors.Default
+
+        End If
+
+    End Sub
+
+    Private Sub UncheckAllButton_Click(sender As Object, e As EventArgs) Handles UncheckAllButton.Click
+        For Each model In _employeeModels
+            model.IsSelected = False
+        Next
+
+        EmployeeGridView.EndEdit()
+        EmployeeGridView.Refresh()
+        EnableDisableActionButtons()
+
+    End Sub
+
+    Private Async Sub ResetEmailsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ResetEmailsToolStripMenuItem.Click
+
+        DisableAllButtons()
+
+        Dim confirm = MessageBoxHelper.Confirm(Of Boolean)($"Reset ALL email status back to unsent?")
+
+        If Not confirm Then Return
+
+        Await FunctionUtils.TryCatchFunctionAsync("Reset Emails",
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+
+                Await dataService.DeletePaystubEmailsByPeriodAsync(
+                    payPeriodId:=_currentPayPeriod.RowID.Value,
+                    organizationId:=z_OrganizationID
+                )
+
+                Await RefreshEmailStatus()
+            End Function)
+
+        DisableAllButtons(disable:=False)
+
+    End Sub
+
+    Private Async Sub EmployeeGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles EmployeeGridView.CellContentClick
+
+        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+
+        If e.ColumnIndex = ResetEmailButtonColumn.Index Then
+
+            Dim employee = CType(EmployeeGridView.CurrentRow.DataBoundItem, EmployeeModel)
+
+            If employee Is Nothing OrElse _currentPayPeriod?.RowID Is Nothing Then
+                Return
+            End If
+
+            Dim confirm = MessageBoxHelper.Confirm(Of Boolean)($"Reset email status of employee [{employee.EmployeeNumber}] back to unsent?")
+
+            If Not confirm Then Return
+
+            DisableAllButtons()
+
+            Await FunctionUtils.TryCatchFunctionAsync("Reset Email",
+                Async Function()
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+
+                    Await dataService.DeletePaystubEmailsByEmployeeAndPeriodAsync(
+                        employeeId:=employee.EmployeeId,
+                        payPeriodId:=_currentPayPeriod.RowID.Value,
+                        organizationId:=z_OrganizationID
+                    )
+
+                    Await RefreshEmailStatus()
+                End Function
+            )
+
+            DisableAllButtons(disable:=False)
+        End If
 
     End Sub
 
@@ -346,24 +453,5 @@ Public Class SelectPayslipEmployeesForm
         Public Property SentDateTime As Date?
         Public Property ErrorLogMessage As String
     End Class
-
-    Private Sub UncheckAllButton_Click(sender As Object, e As EventArgs) Handles UncheckAllButton.Click
-        For Each model In _employeeModels
-            model.IsSelected = False
-        Next
-
-        EmployeeGridView.EndEdit()
-        EmployeeGridView.Refresh()
-        EnableDisableButtons()
-
-    End Sub
-
-    Private Sub EmployeeGridView_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) _
-        Handles EmployeeGridView.CellMouseUp
-
-        EmployeeGridView.EndEdit()
-        EmployeeGridView.Refresh()
-        EnableDisableButtons()
-    End Sub
 
 End Class

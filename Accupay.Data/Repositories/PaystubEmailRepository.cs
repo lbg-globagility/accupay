@@ -21,8 +21,8 @@ namespace AccuPay.Data.Repositories
         // Methods like this should not exist on the repository
         public void SetStatusToFailed(int paystubEmailId, string errorLogMessage)
         {
-            var paystubEmail = _context.PaystubEmails.
-                                    FirstOrDefault(x => x.RowID == paystubEmailId);
+            var paystubEmail = _context.PaystubEmails
+                .FirstOrDefault(x => x.RowID == paystubEmailId);
 
             if (paystubEmail != null)
             {
@@ -34,8 +34,8 @@ namespace AccuPay.Data.Repositories
 
         public void SetStatusToProcessing(int paystubEmailId)
         {
-            var paystubEmail = _context.PaystubEmails.
-                                    FirstOrDefault(x => x.RowID == paystubEmailId);
+            var paystubEmail = _context.PaystubEmails
+                .FirstOrDefault(x => x.RowID == paystubEmailId);
 
             if (paystubEmail != null)
             {
@@ -47,8 +47,8 @@ namespace AccuPay.Data.Repositories
 
         public void Finish(int id, string fileName, string emailAddress)
         {
-            var paystubEmail = _context.PaystubEmails.
-                                    FirstOrDefault(x => x.RowID == id);
+            var paystubEmail = _context.PaystubEmails
+                .FirstOrDefault(x => x.RowID == id);
 
             if (paystubEmail != null)
             {
@@ -83,9 +83,34 @@ namespace AccuPay.Data.Repositories
         public async Task<IEnumerable<PaystubEmail>> GetByPaystubIdsAsync(int[] paystubIds)
         {
             return await _context.PaystubEmails
-                                .Where(x => paystubIds.Contains(x.PaystubID))
-                                .AsNoTracking()
-                                .ToListAsync();
+                .Where(x => paystubIds.Contains(x.PaystubID))
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task DeleteByEmployeeAndPayPeriodAsync(int employeeId, int payPeriodId)
+        {
+            var emails = await _context.PaystubEmails
+                .Where(x => x.Paystub.EmployeeID == employeeId)
+                .Where(x => x.Paystub.PayPeriodID == payPeriodId)
+                .ToListAsync();
+
+            if (!emails.Any()) return;
+
+            _context.PaystubEmails.RemoveRange(emails);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteByPayPeriodAsync(int payPeriodId)
+        {
+            var emails = await _context.PaystubEmails
+                .Where(x => x.Paystub.PayPeriodID == payPeriodId)
+                .ToListAsync();
+
+            if (!emails.Any()) return;
+
+            _context.PaystubEmails.RemoveRange(emails);
+            await _context.SaveChangesAsync();
         }
     }
 }
