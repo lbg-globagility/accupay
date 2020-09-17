@@ -175,6 +175,13 @@ Public Class PayStubForm
         PayslipDeclaredToolStripMenuItem.Visible = showActual
         PayslipActualToolStripMenuItem.Visible = showActual
 
+        ExportNetPayDeclaredAllToolStripMenuItem.Visible = showActual
+        ExportNetPayDeclaredCashToolStripMenuItem.Visible = showActual
+        ExportNetPayDeclaredDirectDepositToolStripMenuItem.Visible = showActual
+        ExportNetPayActualAllToolStripMenuItem.Visible = showActual
+        ExportNetPayActualCashToolStripMenuItem.Visible = showActual
+        ExportNetPayActualDirectDepositToolStripMenuItem.Visible = showActual
+
         If showActual = False Then
 
             Dim str_empty As String = String.Empty
@@ -184,10 +191,17 @@ Public Class PayStubForm
             TabPage4.Text = str_empty
 
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+
+            AddHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
+            AddHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
         Else
 
             RemoveHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
             RemoveHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
+
+            RemoveHandler ExportNetPayAllToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
+            RemoveHandler ExportNetPayCashToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
+            RemoveHandler ExportNetPayDirectDepositToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
 
         End If
 
@@ -374,7 +388,7 @@ Public Class PayStubForm
 
     Private Sub ShowPayrollActions(showPayrollActions As Boolean, Optional payrollStatus As PayPeriodStatus? = Nothing)
 
-        DeleteToolStripDropDownButton.Visible = showPayrollActions
+        DeletePaystubColumn.Visible = showPayrollActions
 
         If payrollStatus Is Nothing Then
 
@@ -1002,15 +1016,11 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles PayrollSummaryDeclaredToolStripMenuItem.Click, PayrollSummaryActualToolStripMenuItem.Click
+    Private Sub PayrollSummaryDeclaredAndActualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles PayrollSummaryDeclaredToolStripMenuItem.Click, PayrollSummaryActualToolStripMenuItem.Click
 
-        Dim psefr As New PayrollSummaryExcelFormatReportProvider
-
-        Dim is_actual = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
-
-        psefr.IsActual = is_actual
-
-        psefr.Run()
+        Dim isActual = sender Is PayrollSummaryActualToolStripMenuItem
+        ShowPayrollSummary(isActual)
 
     End Sub
 
@@ -1166,9 +1176,23 @@ Public Class PayStubForm
 
     End Sub
 
+    Private Async Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
+
+        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+
+        If e.ColumnIndex = DeletePaystubColumn.Index Then
+
+            Await DeletePaystub()
+
+        End If
+
+    End Sub
+
     Private Sub dgAdjustments_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellContentClick
-        If TypeOf dgvAdjustments.Columns(e.ColumnIndex) Is DataGridViewLinkColumn _
-            AndAlso e.RowIndex >= 0 Then
+
+        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+
+        If TypeOf dgvAdjustments.Columns(e.ColumnIndex) Is DataGridViewLinkColumn Then
             Dim n_ExecuteQuery As New ExecuteQuery("SELECT PartNo FROM product WHERE RowID='" & dgvAdjustments.Item("cboProducts", e.RowIndex).Value & "' LIMIT 1;")
             Dim item_name As String = n_ExecuteQuery.Result
             Dim prompt = MessageBox.Show("Are you sure you want to delete '" & item_name & "'" & If(item_name.ToLower.Contains("adjustment"), "", " adjustment") & " ?",
@@ -1604,8 +1628,7 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Async Sub tsbtnDelEmpPayroll_Click(sender As Object, e As EventArgs) Handles DeleteToolStripDropDownButton.Click
-
+    Private Async Function DeletePaystub() As Task
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
         If employeeId Is Nothing OrElse payPeriodId Is Nothing OrElse currentEmployeeNumber = Nothing Then
@@ -1619,8 +1642,6 @@ Public Class PayStubForm
         Dim toBeDeletedPaypFrom = paypFrom
         Dim toBeDeletedPaypTo = paypTo
 
-        DeleteToolStripDropDownButton.Enabled = False
-
         Dim prompt = MessageBox.Show("Are you sure you want to delete the '" & CDate(toBeDeletedPaypFrom).ToShortDateString &
                                      "' to '" & CDate(toBeDeletedPaypTo).ToShortDateString &
                                      "' payroll of employee '" & toBeDeletedEmployeeNumber & "' ?",
@@ -1630,30 +1651,31 @@ Public Class PayStubForm
 
         If prompt = Windows.Forms.DialogResult.Yes Then
 
+            Me.Cursor = Cursors.WaitCursor
+
             Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
-                    Async Function()
+                Async Function()
 
-                        Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
 
-                        Await paystubDataService.DeleteAsync(
-                            New EmployeeCompositeKey(
-                                employeeId:=employeeId.Value,
-                                payPeriodId:=payPeriodId.Value),
-                            userId:=z_User,
-                            organizationId:=z_OrganizationID)
+                    Await paystubDataService.DeleteAsync(
+                        New EmployeeCompositeKey(
+                            employeeId:=employeeId.Value,
+                            payPeriodId:=payPeriodId.Value),
+                        userId:=z_User,
+                        organizationId:=z_OrganizationID)
 
-                        RefreshForm()
+                    RefreshForm()
 
-                        Await TimeEntrySummaryForm.LoadPayPeriods()
+                    Await TimeEntrySummaryForm.LoadPayPeriods()
 
-                        MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeNumber} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
-                    End Function)
+                    MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeNumber} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
+                End Function)
 
+            Me.Cursor = Cursors.Default
         End If
 
-        DeleteToolStripDropDownButton.Enabled = True
-
-    End Sub
+    End Function
 
     Private Sub dgvemployees_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgvemployees.RowsRemoved
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
@@ -1914,7 +1936,7 @@ Public Class PayStubForm
         CancelPayrollToolStripMenuItem.Enabled = True
     End Sub
 
-    Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
+    Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
         If _policy.ShowActual = False Then
 
@@ -1949,18 +1971,22 @@ Public Class PayStubForm
             "Error generating payslips.")
     End Sub
 
-    Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click
+    Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs)
 
         If _policy.ShowActual = False Then
 
-            Dim psefr As New PayrollSummaryExcelFormatReportProvider
-
-            psefr.IsActual = False
-
-            psefr.Run()
+            ShowPayrollSummary(isActual:=False)
 
         End If
 
+    End Sub
+
+    Private Shared Sub ShowPayrollSummary(isActual As Boolean)
+        Dim reportProvider As New PayrollSummaryExcelFormatReportProvider With {
+            .IsActual = isActual
+        }
+
+        reportProvider.Run()
     End Sub
 
     Private Sub ManageEmailPayslipsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -2002,12 +2028,17 @@ Public Class PayStubForm
     End Sub
 
     Private Async Sub ExportNetPayDetailsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles _
-        ExportNetPayActualAllToolStripMenuItem.Click,
-        ExportNetPayActualCashToolStripMenuItem.Click,
-        ExportNetPayActualDirectDepositToolStripMenuItem.Click,
+        ExportNetPayAllToolStripMenuItem.Click,
+        ExportNetPayCashToolStripMenuItem.Click,
+        ExportNetPayDirectDepositToolStripMenuItem.Click,
+ _
         ExportNetPayDeclaredAllToolStripMenuItem.Click,
         ExportNetPayDeclaredCashToolStripMenuItem.Click,
-        ExportNetPayDeclaredDirectDepositToolStripMenuItem.Click
+        ExportNetPayDeclaredDirectDepositToolStripMenuItem.Click,
+ _
+        ExportNetPayActualAllToolStripMenuItem.Click,
+        ExportNetPayActualCashToolStripMenuItem.Click,
+        ExportNetPayActualDirectDepositToolStripMenuItem.Click
 
         Dim datePeriod = GetPayPeriodDates()
         If datePeriod Is Nothing Then Return
@@ -2033,7 +2064,21 @@ Public Class PayStubForm
         Dim payrollCategory = PayrollSummaryCategory.All
         Dim isActual = True
 
-        If sender Is ExportNetPayActualAllToolStripMenuItem Then
+        If sender Is ExportNetPayDeclaredAllToolStripMenuItem OrElse sender Is ExportNetPayAllToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.All
+            isActual = False
+
+        ElseIf sender Is ExportNetPayDeclaredCashToolStripMenuItem OrElse sender Is ExportNetPayCashToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.Cash
+            isActual = False
+            paystubFilter = paystubFilter.Where(Function(p) String.IsNullOrWhiteSpace(p.Employee.AtmNo))
+
+        ElseIf sender Is ExportNetPayDeclaredDirectDepositToolStripMenuItem OrElse sender Is ExportNetPayDirectDepositToolStripMenuItem Then
+            payrollCategory = PayrollSummaryCategory.DirectDeposit
+            isActual = False
+            paystubFilter = paystubFilter.Where(Function(p) Not String.IsNullOrWhiteSpace(p.Employee.AtmNo))
+
+        ElseIf sender Is ExportNetPayActualAllToolStripMenuItem Then
             payrollCategory = PayrollSummaryCategory.All
             isActual = True
 
@@ -2047,19 +2092,6 @@ Public Class PayStubForm
             isActual = True
             paystubFilter = paystubFilter.Where(Function(p) Not String.IsNullOrWhiteSpace(p.Employee.AtmNo))
 
-        ElseIf sender Is ExportNetPayDeclaredAllToolStripMenuItem Then
-            payrollCategory = PayrollSummaryCategory.All
-            isActual = False
-
-        ElseIf sender Is ExportNetPayDeclaredCashToolStripMenuItem Then
-            payrollCategory = PayrollSummaryCategory.Cash
-            isActual = False
-            paystubFilter = paystubFilter.Where(Function(p) String.IsNullOrWhiteSpace(p.Employee.AtmNo))
-
-        ElseIf sender Is ExportNetPayDeclaredDirectDepositToolStripMenuItem Then
-            payrollCategory = PayrollSummaryCategory.DirectDeposit
-            isActual = False
-            paystubFilter = paystubFilter.Where(Function(p) Not String.IsNullOrWhiteSpace(p.Employee.AtmNo))
         End If
 
         paystubs = paystubFilter.ToList()

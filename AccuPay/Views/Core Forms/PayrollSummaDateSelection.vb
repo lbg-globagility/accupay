@@ -368,10 +368,11 @@ Public Class PayrollSummaDateSelection
         dgvpayperiod.EndEdit()
 
         If PayPeriodFromID Is Nothing Then
+            WarnBalloon("Please select a pay period. ", "Invalid Pay Period", linkPrev, 30, -470)
             Exit Sub
         ElseIf cboStringParameter.Visible Then
             If cboStringParameter.Text = String.Empty Then
-                WarnBalloon("Please input " & TextBox1.Text, "Invalid " & TextBox1.Text, cboStringParameter, cboStringParameter.Width - 17, -69)
+                WarnBalloon("Please select a " & TextBox1.Text, "Invalid " & TextBox1.Text, cboStringParameter, cboStringParameter.Width - 17, -69)
                 Exit Sub
             End If
         End If
