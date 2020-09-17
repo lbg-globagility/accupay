@@ -1,17 +1,16 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { LoadingState } from 'src/app/core/states/loading-state';
+import { Component, OnInit, Input } from '@angular/core';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
-import { FormBuilder, Form, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import { cloneDeep } from 'lodash';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-selfserve-overtime-form',
-  templateUrl: './selfserve-overtime-form.component.html',
-  styleUrls: ['./selfserve-overtime-form.component.scss'],
+  selector: 'app-selfservice-overtime-form',
+  templateUrl: './selfservice-overtime-form.component.html',
+  styleUrls: ['./selfservice-overtime-form.component.scss'],
 })
-export class SelfserveOvertimeFormComponent implements OnInit {
+export class SelfserviceOvertimeFormComponent implements OnInit {
   @Input()
   overtime: Overtime;
 

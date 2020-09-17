@@ -1,17 +1,17 @@
-<h1 mat-dialog-title>Request Overtime</h1>
+<h1 mat-dialog-title>Request Leave</h1>
 
 <div mat-dialog-content>
-  <app-selfserve-overtime-form></app-selfserve-overtime-form>
+  <app-selfservice-leave-form></app-selfservice-leave-form>
 </div>
 
 <div mat-card-actions align="end">
   <button
-    mat-flat-button
+    mat-button
     color="primary"
     (click)="onSave()"
     [disabled]="savingState.isLoading"
   >
-    SEND REQUEST
+    SAVE
   </button>
   <button mat-button [mat-dialog-close]="false">CANCEL</button>
 </div>

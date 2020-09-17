@@ -15,29 +15,6 @@ export class SelfserveService {
 
   constructor(protected httpClient: HttpClient) {}
 
-  createLeave(leave: Leave): Observable<Leave> {
-    return this.httpClient.post<Leave>(`/api/self-service/leaves`, leave);
-  }
-
-  getLeaveTypes(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiRoute}/leave-types`);
-  }
-
-  getLeaveStatuses(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiRoute}/leave-statuses`);
-  }
-
-  createOvertime(overtime: Overtime): Observable<Overtime> {
-    return this.httpClient.post<Overtime>(
-      `${this.apiRoute}/overtime`,
-      overtime
-    );
-  }
-
-  getOvertimeStatuses(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiRoute}/overtime-statuses`);
-  }
-
   createOfficialBusiness(ob: OfficialBusiness): Observable<OfficialBusiness> {
     return this.httpClient.post<OfficialBusiness>(
       `${this.apiRoute}/official-business`,

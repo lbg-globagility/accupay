@@ -3,17 +3,17 @@ import { SelfServiceLeaveService } from 'src/app/self-service/services';
 import { MatTableDataSource } from '@angular/material/table';
 import { Leave } from 'src/app/leaves/shared/leave';
 import { MatDialog } from '@angular/material/dialog';
-import { SelfserveLeaveComponent } from 'src/app/self-service/pages/selfserve-leave/selfserve-leave.component';
+import { SelfserviceNewLeaveComponent } from 'src/app/self-service/leaves/components/selfservice-new-leave/selfservice-new-leave.component';
 
 @Component({
-  selector: 'app-self-service-leaves',
-  templateUrl: './self-service-leaves.component.html',
-  styleUrls: ['./self-service-leaves.component.scss'],
+  selector: 'app-selfservice-leaves',
+  templateUrl: './selfservice-leaves.component.html',
+  styleUrls: ['./selfservice-leaves.component.scss'],
   host: {
     class: 'block p-4',
   },
 })
-export class SelfServiceLeavesComponent implements OnInit {
+export class SelfserviceLeavesComponent implements OnInit {
   readonly displayedColumns: string[] = ['type', 'date', 'time', 'status'];
 
   dataSource: MatTableDataSource<Leave>;
@@ -34,6 +34,6 @@ export class SelfServiceLeavesComponent implements OnInit {
   }
 
   createLeave(): void {
-    this.dialog.open(SelfserveLeaveComponent).afterClosed().subscribe();
+    this.dialog.open(SelfserviceNewLeaveComponent).afterClosed().subscribe();
   }
 }

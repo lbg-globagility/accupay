@@ -1,28 +1,27 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelfserveService } from '../../services/selfserve.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
 import { LoadingState } from 'src/app/core/states/loading-state';
-import { SelfserveOvertimeFormComponent } from '../../components/selfserve-overtime-form/selfserve-overtime-form.component';
 import Swal from 'sweetalert2';
 import { SelfServiceOvertimeService } from 'src/app/self-service/services/self-service-overtime.service';
+import { SelfserviceOvertimeFormComponent } from 'src/app/self-service/overtimes/components/selfservice-overtime-form/selfservice-overtime-form.component';
 
 @Component({
-  selector: 'app-selfserve-overtime',
-  templateUrl: './selfserve-overtime.component.html',
-  styleUrls: ['./selfserve-overtime.component.scss'],
+  selector: 'app-selfservice-new-overtime',
+  templateUrl: './selfservice-new-overtime.component.html',
+  styleUrls: ['./selfservice-new-overtime.component.scss'],
 })
-export class SelfserveOvertimeComponent implements OnInit {
-  @ViewChild(SelfserveOvertimeFormComponent)
-  overtimeForm: SelfserveOvertimeFormComponent;
+export class SelfserviceNewOvertimeComponent implements OnInit {
+  @ViewChild(SelfserviceOvertimeFormComponent)
+  overtimeForm: SelfserviceOvertimeFormComponent;
 
   savingState: LoadingState = new LoadingState();
 
   constructor(
     private service: SelfServiceOvertimeService,
     private errorHandler: ErrorHandler,
-    private dialog: MatDialogRef<SelfserveOvertimeComponent>
+    private dialog: MatDialogRef<SelfserviceNewOvertimeComponent>
   ) {}
 
   ngOnInit(): void {}

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { PermissionTypes } from 'src/app/core/auth';
 import { MatDialog } from '@angular/material/dialog';
-import { SelfserveLeaveComponent } from '../pages/selfserve-leave/selfserve-leave.component';
-import { SelfserveOvertimeComponent } from '../pages/selfserve-overtime/selfserve-overtime.component';
 import { SelfserveOfficialBusinessComponent } from '../pages/selfserve-official-business/selfserve-official-business.component';
 import { SelfserveTimeEntryComponent } from '../pages/selfserve-time-entry/selfserve-time-entry.component';
 import { cloneDeep } from 'lodash';
 import { NgxPermissionsService } from 'ngx-permissions';
+import { SelfserviceNewLeaveComponent } from 'src/app/self-service/leaves/components';
+import { SelfserviceNewOvertimeComponent } from 'src/app/self-service/overtimes/components';
 
 enum SelfserveCommand {
   FileLeave = 0,
@@ -103,14 +103,14 @@ export class SelfServeComponent implements OnInit {
 
   createLeave() {
     this.dialog
-      .open(SelfserveLeaveComponent)
+      .open(SelfserviceNewLeaveComponent)
       .afterClosed()
       .subscribe(() => {});
   }
 
   createOvertime() {
     this.dialog
-      .open(SelfserveOvertimeComponent)
+      .open(SelfserviceNewOvertimeComponent)
       .afterClosed()
       .subscribe(() => {});
   }

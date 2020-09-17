@@ -6,18 +6,18 @@ import { SelfServiceOvertimeService } from 'src/app/self-service/services/self-s
 import { Observable } from 'rxjs';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { MatDialog } from '@angular/material/dialog';
-import { SelfserveOvertimeComponent } from 'src/app/self-service/pages/selfserve-overtime/selfserve-overtime.component';
 import { PageEvent } from '@angular/material/paginator';
+import { SelfserviceNewOvertimeComponent } from '../selfservice-new-overtime/selfservice-new-overtime.component';
 
 @Component({
-  selector: 'app-self-service-overtimes',
-  templateUrl: './self-service-overtimes.component.html',
-  styleUrls: ['./self-service-overtimes.component.scss'],
+  selector: 'app-selfservice-overtimes',
+  templateUrl: './selfservice-overtimes.component.html',
+  styleUrls: ['./selfservice-overtimes.component.scss'],
   host: {
     class: 'block p-4',
   },
 })
-export class SelfServiceOvertimesComponent implements OnInit {
+export class SelfserviceOvertimesComponent implements OnInit {
   readonly displayedColumns: string[] = ['date', 'time', 'status', 'actions'];
 
   pageIndex: number = 0;
@@ -38,7 +38,7 @@ export class SelfServiceOvertimesComponent implements OnInit {
   }
 
   create(): void {
-    this.dialog.open(SelfserveOvertimeComponent);
+    this.dialog.open(SelfserviceNewOvertimeComponent);
   }
 
   onPageChanged(pageEvent: PageEvent): void {

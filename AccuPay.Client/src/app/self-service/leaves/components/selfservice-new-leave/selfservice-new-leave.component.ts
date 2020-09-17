@@ -1,43 +1,26 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Leave } from 'src/app/leaves/shared/leave';
 import { LoadingState } from 'src/app/core/states/loading-state';
-import { SelfserveService } from '../../services/selfserve.service';
-import { SelfserveLeaveFormComponent } from '../../components/selfserve-leave-form/selfserve-leave-form.component';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { MatDialogRef } from '@angular/material/dialog';
+import { SelfserviceLeaveFormComponent } from 'src/app/self-service/leaves/components/selfservice-leave-form/selfservice-leave-form.component';
+import { SelfServiceLeaveService } from 'src/app/self-service/services';
 
 @Component({
-  selector: 'app-selfserve-leave',
-  templateUrl: './selfserve-leave.component.html',
-  styleUrls: ['./selfserve-leave.component.scss'],
+  selector: 'app-selfservice-new-leave',
+  templateUrl: './selfservice-new-leave.component.html',
+  styleUrls: ['./selfservice-new-leave.component.scss'],
 })
-export class SelfserveLeaveComponent implements OnInit {
-  @ViewChild(SelfserveLeaveFormComponent)
-  leaveForm: SelfserveLeaveFormComponent;
-
-  leave: Leave = {
-    comments: null,
-    employeeId: null,
-    employeeName: null,
-    employeeNumber: null,
-    employeeType: null,
-    endDate: null,
-    endTime: null,
-    id: null,
-    leaveType: null,
-    reason: null,
-    startDate: null,
-    startTime: null,
-    status: 'Pending',
-  };
+export class SelfserviceNewLeaveComponent implements OnInit {
+  @ViewChild(SelfserviceLeaveFormComponent)
+  leaveForm: SelfserviceLeaveFormComponent;
 
   savingState: LoadingState = new LoadingState();
 
   constructor(
-    private service: SelfserveService,
+    private service: SelfServiceLeaveService,
     private errorHandler: ErrorHandler,
-    private dialog: MatDialogRef<SelfserveLeaveComponent>
+    private dialog: MatDialogRef<SelfserviceNewLeaveComponent>
   ) {}
 
   ngOnInit(): void {}
@@ -51,7 +34,7 @@ export class SelfserveLeaveComponent implements OnInit {
 
     const leave = this.leaveForm.value;
 
-    this.service.createLeave(leave).subscribe({
+    this.service.create(leave).subscribe({
       next: (result) => {
         this.savingState.changeToSuccess();
         this.displaySuccess();

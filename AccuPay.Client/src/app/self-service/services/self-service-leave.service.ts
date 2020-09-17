@@ -19,4 +19,12 @@ export class SelfServiceLeaveService {
   list(): Observable<PaginatedList<Leave>> {
     return this.httpClient.get<PaginatedList<Leave>>(`${this.baseUrl}`);
   }
+
+  getLeaveTypes(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/leave-types`);
+  }
+
+  getLeaveStatuses(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/leave-statuses`);
+  }
 }

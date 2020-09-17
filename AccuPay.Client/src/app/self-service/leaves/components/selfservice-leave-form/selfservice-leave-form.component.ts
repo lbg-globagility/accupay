@@ -4,14 +4,14 @@ import { Leave } from 'src/app/leaves/shared/leave';
 import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
-import { SelfserveService } from '../../services/selfserve.service';
+import { SelfServiceLeaveService } from 'src/app/self-service/services';
 
 @Component({
-  selector: 'app-selfserve-leave-form',
-  templateUrl: './selfserve-leave-form.component.html',
-  styleUrls: ['./selfserve-leave-form.component.scss'],
+  selector: 'app-selfservice-leave-form',
+  templateUrl: './selfservice-leave-form.component.html',
+  styleUrls: ['./selfservice-leave-form.component.scss'],
 })
-export class SelfserveLeaveFormComponent implements OnInit {
+export class SelfserviceLeaveFormComponent implements OnInit {
   @Input()
   leave: Leave;
 
@@ -22,7 +22,6 @@ export class SelfserveLeaveFormComponent implements OnInit {
   cancel: EventEmitter<any> = new EventEmitter();
 
   form: FormGroup = this.fb.group({
-    id: [null],
     startDate: [null, Validators.required],
     leaveType: [null, Validators.required],
     isWholeDay: [true],
@@ -32,11 +31,10 @@ export class SelfserveLeaveFormComponent implements OnInit {
   });
 
   leaveTypes: string[];
-  statusList: string[];
 
   constructor(
     private fb: FormBuilder,
-    private service: SelfserveService,
+    private service: SelfServiceLeaveService,
     private timeParser: TimeParser
   ) {}
 
@@ -46,7 +44,6 @@ export class SelfserveLeaveFormComponent implements OnInit {
     });
 
     this.loadLeaveTypes();
-    this.loadLeaveStatusList();
 
     if (this.leave != null) {
       // this.form.get('employeeId').disable();
@@ -92,12 +89,6 @@ export class SelfserveLeaveFormComponent implements OnInit {
   private loadLeaveTypes(): void {
     this.service.getLeaveTypes().subscribe((data) => {
       this.leaveTypes = data;
-    });
-  }
-
-  private loadLeaveStatusList(): void {
-    this.service.getLeaveStatuses().subscribe((data) => {
-      this.statusList = data;
     });
   }
 
