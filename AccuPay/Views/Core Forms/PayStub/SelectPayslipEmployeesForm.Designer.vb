@@ -38,8 +38,9 @@ Partial Class SelectPayslipEmployeesForm
         Me.RefreshEmailServiceButton = New System.Windows.Forms.Button()
         Me.RefreshEmailStatusButton = New System.Windows.Forms.Button()
         Me.PreviewButton = New System.Windows.Forms.Button()
-        Me.PayslipTypePanel = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.ActionPanel = New System.Windows.Forms.Panel()
+        Me.UncheckAllButton = New System.Windows.Forms.Button()
+        Me.PayslipTypeLabel = New System.Windows.Forms.Label()
         Me.PayslipTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SendEmailsButton = New System.Windows.Forms.Button()
@@ -66,9 +67,9 @@ Partial Class SelectPayslipEmployeesForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UncheckAllButton = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
-        Me.PayslipTypePanel.SuspendLayout()
+        Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -77,7 +78,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.Panel1.Controls.Add(Me.RefreshEmailServiceButton)
         Me.Panel1.Controls.Add(Me.RefreshEmailStatusButton)
         Me.Panel1.Controls.Add(Me.PreviewButton)
-        Me.Panel1.Controls.Add(Me.PayslipTypePanel)
+        Me.Panel1.Controls.Add(Me.ActionPanel)
         Me.Panel1.Controls.Add(Me.CancelDialogButton)
         Me.Panel1.Controls.Add(Me.SendEmailsButton)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -122,25 +123,36 @@ Partial Class SelectPayslipEmployeesForm
         '
         'PayslipTypePanel
         '
-        Me.PayslipTypePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PayslipTypePanel.Controls.Add(Me.UncheckAllButton)
-        Me.PayslipTypePanel.Controls.Add(Me.Label1)
-        Me.PayslipTypePanel.Controls.Add(Me.PayslipTypeComboBox)
-        Me.PayslipTypePanel.Dock = System.Windows.Forms.DockStyle.Left
-        Me.PayslipTypePanel.Location = New System.Drawing.Point(0, 0)
-        Me.PayslipTypePanel.Name = "PayslipTypePanel"
-        Me.PayslipTypePanel.Size = New System.Drawing.Size(456, 50)
-        Me.PayslipTypePanel.TabIndex = 6
+        Me.ActionPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.ActionPanel.Controls.Add(Me.Button1)
+        Me.ActionPanel.Controls.Add(Me.UncheckAllButton)
+        Me.ActionPanel.Controls.Add(Me.PayslipTypeLabel)
+        Me.ActionPanel.Controls.Add(Me.PayslipTypeComboBox)
+        Me.ActionPanel.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ActionPanel.Location = New System.Drawing.Point(0, 0)
+        Me.ActionPanel.Name = "PayslipTypePanel"
+        Me.ActionPanel.Size = New System.Drawing.Size(456, 50)
+        Me.ActionPanel.TabIndex = 6
         '
-        'Label1
+        'UncheckAllButton
         '
-        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(242, 19)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(70, 13)
-        Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Payslip Type:"
+        Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
+        Me.UncheckAllButton.Name = "UncheckAllButton"
+        Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
+        Me.UncheckAllButton.TabIndex = 9
+        Me.UncheckAllButton.Text = "&Uncheck All"
+        Me.UncheckAllButton.UseVisualStyleBackColor = True
+        '
+        'PayslipTypeLabel
+        '
+        Me.PayslipTypeLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.PayslipTypeLabel.AutoSize = True
+        Me.PayslipTypeLabel.Location = New System.Drawing.Point(242, 19)
+        Me.PayslipTypeLabel.Name = "PayslipTypeLabel"
+        Me.PayslipTypeLabel.Size = New System.Drawing.Size(70, 13)
+        Me.PayslipTypeLabel.TabIndex = 6
+        Me.PayslipTypeLabel.Text = "Payslip Type:"
         '
         'PayslipTypeComboBox
         '
@@ -414,13 +426,13 @@ Partial Class SelectPayslipEmployeesForm
         '
         'Button1
         '
-        Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
-        Me.UncheckAllButton.Name = "Button1"
-        Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
-        Me.UncheckAllButton.TabIndex = 9
-        Me.UncheckAllButton.Text = "&Uncheck All"
-        Me.UncheckAllButton.UseVisualStyleBackColor = True
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.Location = New System.Drawing.Point(120, 15)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(103, 23)
+        Me.Button1.TabIndex = 10
+        Me.Button1.Text = "Reset &All"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'SelectPayslipEmployeesForm
         '
@@ -437,8 +449,8 @@ Partial Class SelectPayslipEmployeesForm
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Select Employees Form"
         Me.Panel1.ResumeLayout(False)
-        Me.PayslipTypePanel.ResumeLayout(False)
-        Me.PayslipTypePanel.PerformLayout()
+        Me.ActionPanel.ResumeLayout(False)
+        Me.ActionPanel.PerformLayout()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -447,8 +459,8 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents Panel1 As Panel
     Friend WithEvents CancelDialogButton As Button
     Friend WithEvents SendEmailsButton As Button
-    Friend WithEvents PayslipTypePanel As Panel
-    Friend WithEvents Label1 As Label
+    Friend WithEvents ActionPanel As Panel
+    Friend WithEvents PayslipTypeLabel As Label
     Friend WithEvents PayslipTypeComboBox As ComboBox
     Friend WithEvents PreviewButton As Button
     Friend WithEvents EmployeeGridView As DevComponents.DotNetBar.Controls.DataGridViewX
@@ -477,4 +489,5 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents EmailStatusColumn As DataGridViewTextBoxColumn
     Friend WithEvents ErrorLogMessageColumn As DataGridViewTextBoxColumn
     Friend WithEvents UncheckAllButton As Button
+    Friend WithEvents Button1 As Button
 End Class

@@ -713,16 +713,19 @@ Public Class PayStubForm
 
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
         If payPeriodId Is Nothing Then
+            GeneratePayrollToolStripMenuItem.Enabled = True
             Return
         End If
 
         Dim payPeriod = _payPeriodRepository.GetById(payPeriodId)
         If payPeriod Is Nothing OrElse payPeriod?.RowID Is Nothing OrElse payPeriod?.OrganizationID Is Nothing Then
+            GeneratePayrollToolStripMenuItem.Enabled = True
             Return
         End If
 
         If payPeriod.Status <> PayPeriodStatus.Open Then
             MessageBoxHelper.Warning("Only ""Open"" pay periods can be computed.")
+            GeneratePayrollToolStripMenuItem.Enabled = True
             Return
         End If
 
@@ -758,10 +761,12 @@ Public Class PayStubForm
     End Sub
 
     Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
+        GeneratePayrollToolStripMenuItem.Enabled = True
         ThreadingPayrollGeneration(t.Result)
     End Sub
 
     Private Sub LoadingPayrollDataOnError(t As Task)
+        GeneratePayrollToolStripMenuItem.Enabled = True
         _logger.Error("Error loading one of the payroll data.", t.Exception)
         MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
         Me.Enabled = True
@@ -1803,15 +1808,7 @@ Public Class PayStubForm
 
     Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripMenuItem.Click
 
-        'Dim form As New selectPayPeriod
-
-        'Dim result = form.ShowDialog()
-
-        'If result <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
-
-        'paypRowID = form.PayPeriod.RowID
-        'paypFrom = form.PayPeriod.PayFromDate
-        'paypTo = form.PayPeriod.PayToDate
+        GeneratePayrollToolStripMenuItem.Enabled = False
 
         GeneratePayroll()
 

@@ -81,11 +81,10 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowEmployees()
 
-        Dim showActual = _policyHelper.ShowActual
+        If Not _policyHelper.ShowActual Then
 
-        If showActual = False Then
-
-            PayslipTypePanel.Visible = False
+            PayslipTypeLabel.Visible = False
+            PayslipTypeComboBox.Visible = False
             PayslipTypeComboBox.Text = Declared
 
         End If
@@ -303,6 +302,7 @@ Public Class SelectPayslipEmployeesForm
         Dim globagilityHelpDescription = $"Please restart the {serviceName} manually or contact Globagility Inc. for assistance."
 
         Try
+            Me.Cursor = Cursors.WaitCursor
             'TODO: getting the IP Address should be from a static class and also will be used by other
             'functions that are needing the values from registry
 
@@ -323,7 +323,8 @@ Public Class SelectPayslipEmployeesForm
             ''by the AccuPayWindowService project.
         Catch ex As Exception
             MessageBoxHelper.ErrorMessage($"An error occured trying to restart the service. {globagilityHelpDescription}")
-
+        Finally
+            Me.Cursor = Cursors.Default
         End Try
 
     End Sub
