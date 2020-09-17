@@ -153,7 +153,7 @@ Public Class MDIPrimaryForm
 
     Dim busy_bgworks(1) As System.ComponentModel.BackgroundWorker
 
-    Private Sub MDIPrimaryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+    Private Async Sub MDIPrimaryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         busy_bgworks(0) = bgDashBoardReloader
 
         Dim busy_bgworker = busy_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).
@@ -268,9 +268,9 @@ Public Class MDIPrimaryForm
 
                     .PhotoImages.Image = Nothing
 
-                    .cbxorganiz.SelectedIndex = -1
+                    .OrganizationComboBox.SelectedIndex = -1
 
-                    .ReloadOrganization()
+                    Await MetroLogin.ReloadOrganizationAsync()
 
                     If Debugger.IsAttached Then
                         .AssignDefaultCredentials()

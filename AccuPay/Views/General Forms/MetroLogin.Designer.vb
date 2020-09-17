@@ -30,7 +30,7 @@ Partial Class MetroLogin
         Me.MetroLabel1 = New MetroFramework.Controls.MetroLabel()
         Me.PasswordTextBox = New MetroFramework.Controls.MetroTextBox()
         Me.UserNameTextBox = New MetroFramework.Controls.MetroTextBox()
-        Me.cbxorganiz = New MetroFramework.Controls.MetroComboBox()
+        Me.OrganizationComboBox = New MetroFramework.Controls.MetroComboBox()
         Me.btnlogin = New MetroFramework.Controls.MetroButton()
         Me.MetroLabel3 = New MetroFramework.Controls.MetroLabel()
         Me.PhotoImages = New System.Windows.Forms.PictureBox()
@@ -90,15 +90,15 @@ Partial Class MetroLogin
         '
         'cbxorganiz
         '
-        Me.cbxorganiz.FontSize = MetroFramework.MetroComboBoxSize.Small
-        Me.cbxorganiz.FormattingEnabled = True
-        Me.cbxorganiz.ItemHeight = 19
-        Me.cbxorganiz.Location = New System.Drawing.Point(23, 220)
-        Me.cbxorganiz.MaxDropDownItems = 1
-        Me.cbxorganiz.Name = "cbxorganiz"
-        Me.cbxorganiz.Size = New System.Drawing.Size(213, 25)
-        Me.cbxorganiz.TabIndex = 2
-        Me.cbxorganiz.UseSelectable = True
+        Me.OrganizationComboBox.FontSize = MetroFramework.MetroComboBoxSize.Small
+        Me.OrganizationComboBox.FormattingEnabled = True
+        Me.OrganizationComboBox.ItemHeight = 19
+        Me.OrganizationComboBox.Location = New System.Drawing.Point(23, 220)
+        Me.OrganizationComboBox.MaxDropDownItems = 1
+        Me.OrganizationComboBox.Name = "cbxorganiz"
+        Me.OrganizationComboBox.Size = New System.Drawing.Size(213, 25)
+        Me.OrganizationComboBox.TabIndex = 2
+        Me.OrganizationComboBox.UseSelectable = True
         '
         'btnlogin
         '
@@ -152,7 +152,7 @@ Partial Class MetroLogin
         Me.Controls.Add(Me.MetroLabel1)
         Me.Controls.Add(Me.PasswordTextBox)
         Me.Controls.Add(Me.UserNameTextBox)
-        Me.Controls.Add(Me.cbxorganiz)
+        Me.Controls.Add(Me.OrganizationComboBox)
         Me.Controls.Add(Me.btnlogin)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
@@ -174,7 +174,7 @@ Partial Class MetroLogin
     Friend WithEvents MetroLabel1 As MetroFramework.Controls.MetroLabel
     Friend WithEvents PasswordTextBox As MetroFramework.Controls.MetroTextBox
     Friend WithEvents UserNameTextBox As MetroFramework.Controls.MetroTextBox
-    Friend WithEvents cbxorganiz As MetroFramework.Controls.MetroComboBox
+    Friend WithEvents OrganizationComboBox As MetroFramework.Controls.MetroComboBox
     Friend WithEvents btnlogin As MetroFramework.Controls.MetroButton
     Friend WithEvents MetroLabel3 As MetroFramework.Controls.MetroLabel
     Friend WithEvents PhotoImages As System.Windows.Forms.PictureBox
