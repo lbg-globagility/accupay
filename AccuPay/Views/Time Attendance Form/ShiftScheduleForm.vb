@@ -1219,21 +1219,17 @@ Public Class ShiftScheduleForm
 
     End Sub
 
-    Private Async Sub DateFilter_LeaveAsync(sender As Object, e As EventArgs) _
-        Handles dtpDateFrom.Leave, dtpDateTo.Leave
+    Private Async Sub FilterButton_Click(sender As Object, e As EventArgs) Handles FilterButton.Click
 
         If _originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
             Return
         End If
 
-        Dim dtp = DirectCast(sender, DateTimePicker)
-
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
 
         If start > finish Then
-            If dtp.Name = dtpDateFrom.Name Then dtpDateTo.Value = start
-            If dtp.Name = dtpDateTo.Name Then dtpDateFrom.Value = finish
+            dtpDateTo.Value = start
 
         End If
 

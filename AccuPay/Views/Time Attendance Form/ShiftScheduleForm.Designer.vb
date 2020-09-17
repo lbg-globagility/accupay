@@ -78,6 +78,7 @@ Partial Class ShiftScheduleForm
         Me.btnSave = New System.Windows.Forms.Button()
         Me.labelAffectedRows = New System.Windows.Forms.Label()
         Me.DateFilterGroupBox = New System.Windows.Forms.GroupBox()
+        Me.FilterButton = New System.Windows.Forms.Button()
         Me.dtpDateFrom = New System.Windows.Forms.DateTimePicker()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.dtpDateTo = New System.Windows.Forms.DateTimePicker()
@@ -297,7 +298,7 @@ Partial Class ShiftScheduleForm
         Me.Label7.BackColor = System.Drawing.Color.Transparent
         Me.Label7.Location = New System.Drawing.Point(72, 32)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(18, 13)
+        Me.Label7.Size = New System.Drawing.Size(19, 13)
         Me.Label7.TabIndex = 346
         Me.Label7.Text = "To"
         '
@@ -446,6 +447,7 @@ Partial Class ShiftScheduleForm
         '
         'DateFilterGroupBox
         '
+        Me.DateFilterGroupBox.Controls.Add(Me.FilterButton)
         Me.DateFilterGroupBox.Controls.Add(Me.dtpDateFrom)
         Me.DateFilterGroupBox.Controls.Add(Me.Label6)
         Me.DateFilterGroupBox.Controls.Add(Me.dtpDateTo)
@@ -457,6 +459,15 @@ Partial Class ShiftScheduleForm
         Me.DateFilterGroupBox.TabIndex = 348
         Me.DateFilterGroupBox.TabStop = False
         Me.DateFilterGroupBox.Text = "Filter Dates"
+        '
+        'FilterButton
+        '
+        Me.FilterButton.Location = New System.Drawing.Point(66, 75)
+        Me.FilterButton.Name = "FilterButton"
+        Me.FilterButton.Size = New System.Drawing.Size(75, 23)
+        Me.FilterButton.TabIndex = 347
+        Me.FilterButton.Text = "&Filter"
+        Me.FilterButton.UseVisualStyleBackColor = True
         '
         'dtpDateFrom
         '
@@ -472,7 +483,7 @@ Partial Class ShiftScheduleForm
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.Location = New System.Drawing.Point(104, 31)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(18, 13)
+        Me.Label6.Size = New System.Drawing.Size(19, 13)
         Me.Label6.TabIndex = 346
         Me.Label6.Text = "To"
         '
@@ -1299,4 +1310,5 @@ Partial Class ShiftScheduleForm
     Friend WithEvents Column9 As DataGridViewTextBoxColumn
     Friend WithEvents Column10 As DataGridViewTextBoxColumn
     Friend WithEvents btnUserActivity As ToolStripButton
+    Friend WithEvents FilterButton As Button
 End Class
