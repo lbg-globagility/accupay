@@ -13,5 +13,10 @@
 
             return AccuMath.CommercialRound(input, decimalPlace).ToString(format);
         }
+
+        public static decimal Round(this decimal input, int decimalPlace = 2)
+        {
+            return AccuMath.CommercialRound(input, decimalPlace);
+        }
     }
 }

@@ -3,6 +3,7 @@
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -34,6 +35,8 @@ Public Class TimeLogsForm2
 
     Private _originalDates As TimePeriod
 
+    Private ReadOnly _policyHelper As PolicyHelper
+
     Private ReadOnly _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
     Private ReadOnly _employeeRepository As EmployeeRepository
@@ -58,6 +61,8 @@ Public Class TimeLogsForm2
     Sub New()
 
         InitializeComponent()
+
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
         _employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
 
@@ -780,6 +785,12 @@ Public Class TimeLogsForm2
         End If
 
         Await PopulateBranchComboBox()
+
+        If _policyHelper.PayRateCalculationBasis <> PayRateCalculationBasis.Branch Then
+
+            colBranchID.Visible = False
+
+        End If
 
     End Sub
 

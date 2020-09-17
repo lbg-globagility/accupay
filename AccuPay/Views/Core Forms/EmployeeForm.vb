@@ -3470,7 +3470,7 @@ Public Class EmployeeForm
 
         _branches = New List(Of Branch)
 
-        If _policy.ShowBranch = False Then
+        If _policy.PayRateCalculationBasis <> PayRateCalculationBasis.Branch Then
 
             BranchComboBox.Visible = False
             BranchLabel.Visible = False
@@ -3496,7 +3496,7 @@ Public Class EmployeeForm
 
     Private Sub ShowBPIInsurance()
 
-        If _policy.ShowBranch = False Then
+        If _policy.UseBPIInsurance = False Then
 
             BPIinsuranceText.Visible = False
             BPIinsuranceLabel.Visible = False

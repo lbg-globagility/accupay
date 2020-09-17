@@ -27,6 +27,7 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeePanel = New System.Windows.Forms.Panel()
         Me.EmployeeTreeView = New AccuPay.EmployeeTreeView()
         Me.ActionPanel = New System.Windows.Forms.Panel()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.EmployeeDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -34,6 +35,15 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FirstNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DefaultDetailsPanel = New System.Windows.Forms.Panel()
+        Me.DefaultBreakLengthNumeric = New System.Windows.Forms.NumericUpDown()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.DefaultBreakTimePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.DefaultEndTimePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.DefaultStartTimePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -41,6 +51,8 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeePanel.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.DefaultDetailsPanel.SuspendLayout()
+        CType(Me.DefaultBreakLengthNumeric, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'EmployeePanel
@@ -50,7 +62,7 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeePanel.Location = New System.Drawing.Point(0, 0)
         Me.EmployeePanel.Name = "EmployeePanel"
         Me.EmployeePanel.Padding = New System.Windows.Forms.Padding(20, 10, 10, 0)
-        Me.EmployeePanel.Size = New System.Drawing.Size(341, 761)
+        Me.EmployeePanel.Size = New System.Drawing.Size(240, 749)
         Me.EmployeePanel.TabIndex = 0
         '
         'EmployeeTreeView
@@ -60,23 +72,39 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeeTreeView.Location = New System.Drawing.Point(20, 10)
         Me.EmployeeTreeView.Name = "EmployeeTreeView"
         Me.EmployeeTreeView.OrganizationID = 0
-        Me.EmployeeTreeView.Size = New System.Drawing.Size(311, 751)
+        Me.EmployeeTreeView.Size = New System.Drawing.Size(210, 739)
         Me.EmployeeTreeView.TabIndex = 316
         '
         'ActionPanel
         '
+        Me.ActionPanel.Controls.Add(Me.Button1)
         Me.ActionPanel.Controls.Add(Me.CancelDialogButton)
         Me.ActionPanel.Controls.Add(Me.SaveButton)
         Me.ActionPanel.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.ActionPanel.Location = New System.Drawing.Point(341, 719)
+        Me.ActionPanel.Location = New System.Drawing.Point(240, 707)
         Me.ActionPanel.Name = "ActionPanel"
-        Me.ActionPanel.Size = New System.Drawing.Size(667, 42)
+        Me.ActionPanel.Size = New System.Drawing.Size(905, 42)
         Me.ActionPanel.TabIndex = 1
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.BackColor = System.Drawing.Color.Red
+        Me.Button1.Enabled = False
+        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button1.ForeColor = System.Drawing.Color.White
+        Me.Button1.Location = New System.Drawing.Point(587, 5)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(96, 32)
+        Me.Button1.TabIndex = 22
+        Me.Button1.Text = "&Delete"
+        Me.Button1.UseVisualStyleBackColor = False
         '
         'CancelDialogButton
         '
         Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelDialogButton.Location = New System.Drawing.Point(559, 5)
+        Me.CancelDialogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.CancelDialogButton.Location = New System.Drawing.Point(797, 5)
         Me.CancelDialogButton.Name = "CancelDialogButton"
         Me.CancelDialogButton.Size = New System.Drawing.Size(96, 32)
         Me.CancelDialogButton.TabIndex = 21
@@ -87,11 +115,12 @@ Partial Class DefaultShiftAndTimeLogsForm
         '
         Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SaveButton.Enabled = False
-        Me.SaveButton.Location = New System.Drawing.Point(454, 5)
+        Me.SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.SaveButton.Location = New System.Drawing.Point(692, 5)
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(96, 32)
         Me.SaveButton.TabIndex = 20
-        Me.SaveButton.Text = "&Create"
+        Me.SaveButton.Text = "C&reate"
         Me.SaveButton.UseVisualStyleBackColor = True
         '
         'EmployeeDataGrid
@@ -112,10 +141,10 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle1
         Me.EmployeeDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
         Me.EmployeeDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.EmployeeDataGrid.Location = New System.Drawing.Point(341, 0)
+        Me.EmployeeDataGrid.Location = New System.Drawing.Point(240, 32)
         Me.EmployeeDataGrid.Name = "EmployeeDataGrid"
         Me.EmployeeDataGrid.ReadOnly = True
-        Me.EmployeeDataGrid.Size = New System.Drawing.Size(667, 719)
+        Me.EmployeeDataGrid.Size = New System.Drawing.Size(905, 675)
         Me.EmployeeDataGrid.TabIndex = 2
         '
         'EmployeeNumberColumn
@@ -146,6 +175,100 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeeTypeColumn.HeaderText = "Employee Type"
         Me.EmployeeTypeColumn.Name = "EmployeeTypeColumn"
         Me.EmployeeTypeColumn.ReadOnly = True
+        '
+        'DefaultDetailsPanel
+        '
+        Me.DefaultDetailsPanel.Controls.Add(Me.DefaultBreakLengthNumeric)
+        Me.DefaultDetailsPanel.Controls.Add(Me.Label4)
+        Me.DefaultDetailsPanel.Controls.Add(Me.DefaultBreakTimePicker)
+        Me.DefaultDetailsPanel.Controls.Add(Me.Label3)
+        Me.DefaultDetailsPanel.Controls.Add(Me.DefaultEndTimePicker)
+        Me.DefaultDetailsPanel.Controls.Add(Me.Label2)
+        Me.DefaultDetailsPanel.Controls.Add(Me.DefaultStartTimePicker)
+        Me.DefaultDetailsPanel.Controls.Add(Me.Label1)
+        Me.DefaultDetailsPanel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.DefaultDetailsPanel.Location = New System.Drawing.Point(240, 0)
+        Me.DefaultDetailsPanel.Name = "DefaultDetailsPanel"
+        Me.DefaultDetailsPanel.Size = New System.Drawing.Size(905, 32)
+        Me.DefaultDetailsPanel.TabIndex = 3
+        '
+        'DefaultBreakLengthNumeric
+        '
+        Me.DefaultBreakLengthNumeric.Location = New System.Drawing.Point(820, 6)
+        Me.DefaultBreakLengthNumeric.Name = "DefaultBreakLengthNumeric"
+        Me.DefaultBreakLengthNumeric.Size = New System.Drawing.Size(50, 22)
+        Me.DefaultBreakLengthNumeric.TabIndex = 8
+        Me.DefaultBreakLengthNumeric.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(680, 9)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(132, 13)
+        Me.Label4.TabIndex = 6
+        Me.Label4.Text = "Default Break Length:"
+        '
+        'DefaultBreakTimePicker
+        '
+        Me.DefaultBreakTimePicker.CustomFormat = "  hh:mm tt"
+        Me.DefaultBreakTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.DefaultBreakTimePicker.Location = New System.Drawing.Point(583, 5)
+        Me.DefaultBreakTimePicker.Name = "DefaultBreakTimePicker"
+        Me.DefaultBreakTimePicker.ShowUpDown = True
+        Me.DefaultBreakTimePicker.Size = New System.Drawing.Size(88, 22)
+        Me.DefaultBreakTimePicker.TabIndex = 5
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(455, 9)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(120, 13)
+        Me.Label3.TabIndex = 4
+        Me.Label3.Text = "Default Break Time:"
+        '
+        'DefaultEndTimePicker
+        '
+        Me.DefaultEndTimePicker.CustomFormat = "  hh:mm tt"
+        Me.DefaultEndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.DefaultEndTimePicker.Location = New System.Drawing.Point(340, 5)
+        Me.DefaultEndTimePicker.Name = "DefaultEndTimePicker"
+        Me.DefaultEndTimePicker.ShowUpDown = True
+        Me.DefaultEndTimePicker.Size = New System.Drawing.Size(88, 22)
+        Me.DefaultEndTimePicker.TabIndex = 3
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(230, 9)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(102, 13)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "Default Time To:"
+        '
+        'DefaultStartTimePicker
+        '
+        Me.DefaultStartTimePicker.CustomFormat = "  hh:mm tt"
+        Me.DefaultStartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.DefaultStartTimePicker.Location = New System.Drawing.Point(124, 5)
+        Me.DefaultStartTimePicker.Name = "DefaultStartTimePicker"
+        Me.DefaultStartTimePicker.ShowUpDown = True
+        Me.DefaultStartTimePicker.Size = New System.Drawing.Size(88, 22)
+        Me.DefaultStartTimePicker.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(5, 9)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(114, 13)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Default Time From:"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -184,10 +307,12 @@ Partial Class DefaultShiftAndTimeLogsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1008, 761)
+        Me.ClientSize = New System.Drawing.Size(1145, 749)
         Me.Controls.Add(Me.EmployeeDataGrid)
+        Me.Controls.Add(Me.DefaultDetailsPanel)
         Me.Controls.Add(Me.ActionPanel)
         Me.Controls.Add(Me.EmployeePanel)
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "DefaultShiftAndTimeLogsForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -195,6 +320,9 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeePanel.ResumeLayout(False)
         Me.ActionPanel.ResumeLayout(False)
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.DefaultDetailsPanel.ResumeLayout(False)
+        Me.DefaultDetailsPanel.PerformLayout()
+        CType(Me.DefaultBreakLengthNumeric, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -213,4 +341,14 @@ Partial Class DefaultShiftAndTimeLogsForm
     Friend WithEvents LastNameColumn As DataGridViewTextBoxColumn
     Friend WithEvents FirstNameColumn As DataGridViewTextBoxColumn
     Friend WithEvents EmployeeTypeColumn As DataGridViewTextBoxColumn
+    Friend WithEvents Button1 As Button
+    Friend WithEvents DefaultDetailsPanel As Panel
+    Friend WithEvents DefaultStartTimePicker As DateTimePicker
+    Friend WithEvents Label1 As Label
+    Friend WithEvents DefaultEndTimePicker As DateTimePicker
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label4 As Label
+    Friend WithEvents DefaultBreakTimePicker As DateTimePicker
+    Friend WithEvents Label3 As Label
+    Friend WithEvents DefaultBreakLengthNumeric As NumericUpDown
 End Class

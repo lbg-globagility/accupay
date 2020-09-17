@@ -62,16 +62,17 @@ Public Class GeneralForm
 
         If _policyHelper.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
 
+            BranchToolStripMenuItem.Visible = True
             CalendarsToolStripMenuItem.Visible = True
             PayRateToolStripMenuItem.Visible = False
         Else
 
+            BranchToolStripMenuItem.Visible = False
             CalendarsToolStripMenuItem.Visible = False
             PayRateToolStripMenuItem.Visible = True
 
         End If
 
-        BranchToolStripMenuItem.Visible = _policyHelper.ShowBranch
         DutyShiftingToolStripMenuItem.Visible = Not _policyHelper.UseShiftSchedule
 
     End Sub

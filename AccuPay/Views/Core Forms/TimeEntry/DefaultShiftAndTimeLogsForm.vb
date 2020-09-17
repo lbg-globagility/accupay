@@ -6,6 +6,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
+Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DefaultShiftAndTimeLogsForm
@@ -32,7 +33,13 @@ Public Class DefaultShiftAndTimeLogsForm
 
         EmployeeDataGrid.AutoGenerateColumns = False
 
-        Me.Text = Me.Text & $" ({GetPayPeriodDescription()})"
+        Dim currentDate = Date.Now.ToMinimumHourValue()
+        DefaultStartTimePicker.Value = currentDate.AddSeconds(DefaultStartTime.TotalSeconds)
+        DefaultEndTimePicker.Value = currentDate.AddSeconds(DefaultEndTime.TotalSeconds)
+        DefaultBreakTimePicker.Value = currentDate.AddSeconds(DefaultShiftBreakTime.TotalSeconds)
+        DefaultBreakLengthNumeric.Value = DefaultShiftBreakLength
+
+        Me.Text &= $" ({GetPayPeriodDescription()})"
 
     End Sub
 
@@ -150,25 +157,30 @@ Public Class DefaultShiftAndTimeLogsForm
             .CreatedBy = z_User,
             .EmployeeID = employee.RowID,
             .LogDate = currentDate,
-            .TimeIn = DefaultStartTime,
-            .TimeOut = DefaultEndTime,
+            .TimeIn = DefaultStartTimePicker.Value.TimeOfDay,
+            .TimeOut = DefaultEndTimePicker.Value.TimeOfDay,
             .BranchID = employee.BranchID
         }
     End Function
 
     Private Function CreateShift(currentDate As Date, employee As Employee) As ShiftModel
+
         Dim shift = New ShiftModel With {
             .EmployeeId = employee.RowID,
             .Date = currentDate,
-            .StartTime = DefaultStartTime,
-            .EndTime = DefaultEndTime,
-            .BreakTime = DefaultShiftBreakTime,
-            .BreakLength = DefaultShiftBreakLength,
+            .StartTime = DefaultStartTimePicker.Value.TimeOfDay,
+            .EndTime = DefaultEndTimePicker.Value.TimeOfDay,
+            .BreakTime = DefaultBreakTimePicker.Value.TimeOfDay,
+            .BreakLength = DefaultBreakLengthNumeric.Value.Round(),
             .IsRestDay = False
         }
 
         Return shift
 
     End Function
+
+    Private Sub DefaultBreakLengthNumeric_Leave(sender As Object, e As EventArgs) Handles DefaultBreakLengthNumeric.Leave
+        DefaultBreakLengthNumeric.Value = DefaultBreakLengthNumeric.Value.Round()
+    End Sub
 
 End Class
