@@ -54,16 +54,15 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public EmployeeQueryBuilder IncludePayFrequency()
+        public EmployeeQueryBuilder IncludeAgency()
         {
-            _query = _query.Include(x => x.PayFrequency);
+            _query = _query.Include(x => x.Agency);
             return this;
         }
 
-        public EmployeeQueryBuilder IncludePosition()
+        public EmployeeQueryBuilder IncludeBranch()
         {
-            // Note: No need to call WithPosition if WithDivision is already called.
-            _query = _query.Include(x => x.Position);
+            _query = _query.Include(x => x.Branch);
             return this;
         }
 
@@ -74,9 +73,9 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public EmployeeQueryBuilder IncludeBranch()
+        public EmployeeQueryBuilder IncludeEmploymentPolicy()
         {
-            _query = _query.Include(x => x.Branch);
+            _query = _query.Include(x => x.EmploymentPolicy);
             return this;
         }
 
@@ -86,9 +85,16 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public EmployeeQueryBuilder IncludeEmploymentPolicy()
+        public EmployeeQueryBuilder IncludePayFrequency()
         {
-            _query = _query.Include(x => x.EmploymentPolicy);
+            _query = _query.Include(x => x.PayFrequency);
+            return this;
+        }
+
+        public EmployeeQueryBuilder IncludePosition()
+        {
+            // Note: No need to call WithPosition if WithDivision is already called.
+            _query = _query.Include(x => x.Position);
             return this;
         }
 

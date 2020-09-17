@@ -113,6 +113,9 @@ namespace AccuPay.Data.Entities
         [ForeignKey("BranchID")]
         public virtual Branch Branch { get; set; }
 
+        [ForeignKey("AgencyID")]
+        public virtual Agency Agency { get; set; }
+
         [ForeignKey("PayFrequencyID")]
         public virtual PayFrequency PayFrequency { get; set; }
 

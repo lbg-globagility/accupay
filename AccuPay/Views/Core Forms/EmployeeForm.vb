@@ -28,7 +28,7 @@ Public Class EmployeeForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Private if_sysowner_is_laglobal As Boolean
+    Private _currentSystemOwner As String
 
     Private threadArrayList As New List(Of Thread)
 
@@ -65,8 +65,9 @@ Public Class EmployeeForm
 
         AddHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
 
-        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-        if_sysowner_is_laglobal = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
+        _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
+
+        if_sysowner_is_benchmark = _currentSystemOwner = SystemOwnerService.Benchmark
 
         PrepareForm()
 
@@ -93,7 +94,20 @@ Public Class EmployeeForm
         PrepareFormForUserLevelAuthorizations()
         PrepareFormForBenchmark()
         PreperateFormForLaGlobal()
+
+        ShowAgencyComboBox()
     End Sub
+
+    Private Sub ShowAgencyComboBox()
+        Dim show = ShowAgency()
+        AgencyLabel.Visible = show
+        cboAgency.Visible = show
+    End Sub
+
+    Private Function ShowAgency() As Boolean
+        Return _currentSystemOwner = SystemOwnerService.Hyundai OrElse
+            _currentSystemOwner = SystemOwnerService.Goldwings
+    End Function
 
     Private Sub CheckRolePermissions()
 
@@ -192,7 +206,7 @@ Public Class EmployeeForm
 
     Private Sub PreperateFormForLaGlobal()
 
-        If if_sysowner_is_laglobal = False Then
+        If _currentSystemOwner = SystemOwnerService.LAGlobal Then
             ActiveEmployeeChecklistReportToolStripMenuItem.Visible = False
             BPIInsuranceAmountReportToolStripMenuItem.Visible = False
             EmploymentContractToolStripMenuItem.Visible = False
@@ -1350,13 +1364,6 @@ Public Class EmployeeForm
                         .Description = $"Updated {entityName} BPI insurance from '{oldEmployee.BPIInsurance.ToString}' to '{BPIinsuranceText.Text}'."
                         })
         End If
-        'If oldEmployee.Position.Division.Name <> txtDivisionName.Text Then
-        '    changes.Add(New UserActivityItem() With
-        '                {
-        '                .EntityId = oldEmployee.RowID,
-        '                .Description = $"Updated employee division from '{oldEmployee.Position.Division.Name}' to '{txtDivisionName.Text}'."
-        '                })
-        'End If
         If oldEmployee.Position?.Name <> cboPosit.Text Then
             changes.Add(New UserActivityItem() With
                         {
@@ -1364,13 +1371,13 @@ Public Class EmployeeForm
                         .Description = $"Updated {entityName} position from '{oldEmployee.Position?.Name}' to '{cboPosit.Text}'."
                         })
         End If
-        'If oldEmployee.Agency.Name <> cboAgency.Text Then
-        '    changes.Add(New UserActivityItem() With
-        '                {
-        '                .EntityId = oldEmployee.RowID,
-        '                .Description = $"Updated employee agency from '{oldEmployee.Agency.Name'} to '{cboAgency.Text}'."
-        '                })
-        'End If
+        If ShowAgency() AndAlso oldEmployee.Agency?.Name <> cboAgency.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Updated employee agency from '{oldEmployee.Agency?.Name} to '{cboAgency.Text}'."
+                        })
+        End If
         If oldEmployee.BirthDate <> dtpempbdate.Value Then
             changes.Add(New UserActivityItem() With
                         {
