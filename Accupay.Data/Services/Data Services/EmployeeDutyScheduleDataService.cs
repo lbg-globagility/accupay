@@ -75,9 +75,9 @@ namespace AccuPay.Data.Services
 
         public async Task ChangeManyAsync(
             int organizationId,
-            List<EmployeeDutySchedule> added,
-            List<EmployeeDutySchedule> updated,
-            List<EmployeeDutySchedule> deleted)
+            List<EmployeeDutySchedule> added = null,
+            List<EmployeeDutySchedule> updated = null,
+            List<EmployeeDutySchedule> deleted = null)
         {
             if (added == null && updated == null && deleted == null)
                 throw new BusinessLogicException("No shifts to be saved.");
@@ -99,7 +99,6 @@ namespace AccuPay.Data.Services
                 await CheckIfDataIsWithinClosedPayPeriod(deleted.Select(x => x.DateSched).Distinct(), organizationId);
             }
 
-            // TODO: validations
             await _shiftRepository.ChangeManyAsync(
                 added: added,
                 updated: updated,

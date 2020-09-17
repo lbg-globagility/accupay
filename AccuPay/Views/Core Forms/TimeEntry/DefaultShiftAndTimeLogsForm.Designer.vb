@@ -25,16 +25,11 @@ Partial Class DefaultShiftAndTimeLogsForm
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(DefaultShiftAndTimeLogsForm))
         Me.EmployeePanel = New System.Windows.Forms.Panel()
-        Me.EmployeeTreeView = New AccuPay.EmployeeTreeView()
         Me.ActionPanel = New System.Windows.Forms.Panel()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.DeleteButton = New System.Windows.Forms.Button()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.EmployeeDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.EmployeeNumberColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DefaultDetailsPanel = New System.Windows.Forms.Panel()
         Me.DefaultBreakLengthNumeric = New System.Windows.Forms.NumericUpDown()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -48,6 +43,11 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeNumberColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeTreeView = New AccuPay.EmployeeTreeView()
         Me.EmployeePanel.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -62,49 +62,39 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeePanel.Location = New System.Drawing.Point(0, 0)
         Me.EmployeePanel.Name = "EmployeePanel"
         Me.EmployeePanel.Padding = New System.Windows.Forms.Padding(20, 10, 10, 0)
-        Me.EmployeePanel.Size = New System.Drawing.Size(240, 749)
+        Me.EmployeePanel.Size = New System.Drawing.Size(323, 749)
         Me.EmployeePanel.TabIndex = 0
-        '
-        'EmployeeTreeView
-        '
-        Me.EmployeeTreeView.BackColor = System.Drawing.Color.Transparent
-        Me.EmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.EmployeeTreeView.Location = New System.Drawing.Point(20, 10)
-        Me.EmployeeTreeView.Name = "EmployeeTreeView"
-        Me.EmployeeTreeView.OrganizationID = 0
-        Me.EmployeeTreeView.Size = New System.Drawing.Size(210, 739)
-        Me.EmployeeTreeView.TabIndex = 316
         '
         'ActionPanel
         '
-        Me.ActionPanel.Controls.Add(Me.Button1)
+        Me.ActionPanel.Controls.Add(Me.DeleteButton)
         Me.ActionPanel.Controls.Add(Me.CancelDialogButton)
         Me.ActionPanel.Controls.Add(Me.SaveButton)
         Me.ActionPanel.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.ActionPanel.Location = New System.Drawing.Point(240, 707)
+        Me.ActionPanel.Location = New System.Drawing.Point(323, 707)
         Me.ActionPanel.Name = "ActionPanel"
-        Me.ActionPanel.Size = New System.Drawing.Size(905, 42)
+        Me.ActionPanel.Size = New System.Drawing.Size(822, 42)
         Me.ActionPanel.TabIndex = 1
         '
-        'Button1
+        'DeleteButton
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.BackColor = System.Drawing.Color.Red
-        Me.Button1.Enabled = False
-        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.Button1.ForeColor = System.Drawing.Color.White
-        Me.Button1.Location = New System.Drawing.Point(587, 5)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(96, 32)
-        Me.Button1.TabIndex = 22
-        Me.Button1.Text = "&Delete"
-        Me.Button1.UseVisualStyleBackColor = False
+        Me.DeleteButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DeleteButton.BackColor = System.Drawing.Color.Red
+        Me.DeleteButton.Enabled = False
+        Me.DeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.DeleteButton.ForeColor = System.Drawing.Color.White
+        Me.DeleteButton.Location = New System.Drawing.Point(504, 5)
+        Me.DeleteButton.Name = "DeleteButton"
+        Me.DeleteButton.Size = New System.Drawing.Size(96, 32)
+        Me.DeleteButton.TabIndex = 22
+        Me.DeleteButton.Text = "&Delete"
+        Me.DeleteButton.UseVisualStyleBackColor = False
         '
         'CancelDialogButton
         '
         Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CancelDialogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.CancelDialogButton.Location = New System.Drawing.Point(797, 5)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(714, 5)
         Me.CancelDialogButton.Name = "CancelDialogButton"
         Me.CancelDialogButton.Size = New System.Drawing.Size(96, 32)
         Me.CancelDialogButton.TabIndex = 21
@@ -116,7 +106,7 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SaveButton.Enabled = False
         Me.SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.SaveButton.Location = New System.Drawing.Point(692, 5)
+        Me.SaveButton.Location = New System.Drawing.Point(609, 5)
         Me.SaveButton.Name = "SaveButton"
         Me.SaveButton.Size = New System.Drawing.Size(96, 32)
         Me.SaveButton.TabIndex = 20
@@ -141,40 +131,11 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle1
         Me.EmployeeDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
         Me.EmployeeDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.EmployeeDataGrid.Location = New System.Drawing.Point(240, 32)
+        Me.EmployeeDataGrid.Location = New System.Drawing.Point(323, 32)
         Me.EmployeeDataGrid.Name = "EmployeeDataGrid"
         Me.EmployeeDataGrid.ReadOnly = True
-        Me.EmployeeDataGrid.Size = New System.Drawing.Size(905, 675)
+        Me.EmployeeDataGrid.Size = New System.Drawing.Size(822, 675)
         Me.EmployeeDataGrid.TabIndex = 2
-        '
-        'EmployeeNumberColumn
-        '
-        Me.EmployeeNumberColumn.DataPropertyName = "EmployeeNo"
-        Me.EmployeeNumberColumn.HeaderText = "Employee No"
-        Me.EmployeeNumberColumn.Name = "EmployeeNumberColumn"
-        Me.EmployeeNumberColumn.ReadOnly = True
-        '
-        'LastNameColumn
-        '
-        Me.LastNameColumn.DataPropertyName = "LastName"
-        Me.LastNameColumn.FillWeight = 150.0!
-        Me.LastNameColumn.HeaderText = "Last Name"
-        Me.LastNameColumn.Name = "LastNameColumn"
-        Me.LastNameColumn.ReadOnly = True
-        '
-        'FirstNameColumn
-        '
-        Me.FirstNameColumn.DataPropertyName = "FirstName"
-        Me.FirstNameColumn.HeaderText = "First Name"
-        Me.FirstNameColumn.Name = "FirstNameColumn"
-        Me.FirstNameColumn.ReadOnly = True
-        '
-        'EmployeeTypeColumn
-        '
-        Me.EmployeeTypeColumn.DataPropertyName = "EmployeeType"
-        Me.EmployeeTypeColumn.HeaderText = "Employee Type"
-        Me.EmployeeTypeColumn.Name = "EmployeeTypeColumn"
-        Me.EmployeeTypeColumn.ReadOnly = True
         '
         'DefaultDetailsPanel
         '
@@ -187,9 +148,9 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.DefaultDetailsPanel.Controls.Add(Me.DefaultStartTimePicker)
         Me.DefaultDetailsPanel.Controls.Add(Me.Label1)
         Me.DefaultDetailsPanel.Dock = System.Windows.Forms.DockStyle.Top
-        Me.DefaultDetailsPanel.Location = New System.Drawing.Point(240, 0)
+        Me.DefaultDetailsPanel.Location = New System.Drawing.Point(323, 0)
         Me.DefaultDetailsPanel.Name = "DefaultDetailsPanel"
-        Me.DefaultDetailsPanel.Size = New System.Drawing.Size(905, 32)
+        Me.DefaultDetailsPanel.Size = New System.Drawing.Size(822, 32)
         Me.DefaultDetailsPanel.TabIndex = 3
         '
         'DefaultBreakLengthNumeric
@@ -303,6 +264,45 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
         Me.DataGridViewTextBoxColumn4.Width = 139
         '
+        'EmployeeNumberColumn
+        '
+        Me.EmployeeNumberColumn.DataPropertyName = "EmployeeNo"
+        Me.EmployeeNumberColumn.HeaderText = "Employee No"
+        Me.EmployeeNumberColumn.Name = "EmployeeNumberColumn"
+        Me.EmployeeNumberColumn.ReadOnly = True
+        '
+        'LastNameColumn
+        '
+        Me.LastNameColumn.DataPropertyName = "LastName"
+        Me.LastNameColumn.FillWeight = 150.0!
+        Me.LastNameColumn.HeaderText = "Last Name"
+        Me.LastNameColumn.Name = "LastNameColumn"
+        Me.LastNameColumn.ReadOnly = True
+        '
+        'FirstNameColumn
+        '
+        Me.FirstNameColumn.DataPropertyName = "FirstName"
+        Me.FirstNameColumn.HeaderText = "First Name"
+        Me.FirstNameColumn.Name = "FirstNameColumn"
+        Me.FirstNameColumn.ReadOnly = True
+        '
+        'EmployeeTypeColumn
+        '
+        Me.EmployeeTypeColumn.DataPropertyName = "EmployeeType"
+        Me.EmployeeTypeColumn.HeaderText = "Employee Type"
+        Me.EmployeeTypeColumn.Name = "EmployeeTypeColumn"
+        Me.EmployeeTypeColumn.ReadOnly = True
+        '
+        'EmployeeTreeView
+        '
+        Me.EmployeeTreeView.BackColor = System.Drawing.Color.Transparent
+        Me.EmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeTreeView.Location = New System.Drawing.Point(20, 10)
+        Me.EmployeeTreeView.Name = "EmployeeTreeView"
+        Me.EmployeeTreeView.OrganizationID = 0
+        Me.EmployeeTreeView.Size = New System.Drawing.Size(293, 739)
+        Me.EmployeeTreeView.TabIndex = 316
+        '
         'DefaultShiftAndTimeLogsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -317,6 +317,7 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.Name = "DefaultShiftAndTimeLogsForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Default Shift and Time Logs Form"
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.EmployeePanel.ResumeLayout(False)
         Me.ActionPanel.ResumeLayout(False)
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
@@ -341,7 +342,7 @@ Partial Class DefaultShiftAndTimeLogsForm
     Friend WithEvents LastNameColumn As DataGridViewTextBoxColumn
     Friend WithEvents FirstNameColumn As DataGridViewTextBoxColumn
     Friend WithEvents EmployeeTypeColumn As DataGridViewTextBoxColumn
-    Friend WithEvents Button1 As Button
+    Friend WithEvents DeleteButton As Button
     Friend WithEvents DefaultDetailsPanel As Panel
     Friend WithEvents DefaultStartTimePicker As DateTimePicker
     Friend WithEvents Label1 As Label

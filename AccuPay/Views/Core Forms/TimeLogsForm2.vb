@@ -958,9 +958,9 @@ Public Class TimeLogsForm2
                 Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
                 Await dataService.ChangeManyAsync(
                     z_OrganizationID,
-                    addedTimeLogs:=addedTimeLogs,
-                    updatedTimeLogs:=updatedTimeLogs,
-                    deletedTimeLogs:=deletedTimeLogs)
+                    added:=addedTimeLogs,
+                    updated:=updatedTimeLogs,
+                    deleted:=deletedTimeLogs)
 
                 CreateUserActivityRecords(oldRecords, addedTimeLogs, updatedTimeLogs, deletedTimeLogs)
 
