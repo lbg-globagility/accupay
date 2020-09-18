@@ -58,6 +58,7 @@ namespace AccuPay.Data.Repositories
                 paystubEmailHistory.SentDateTime = DateTime.Now;
                 paystubEmailHistory.SentBy = paystubEmail.CreatedBy;
                 paystubEmailHistory.EmailAddress = emailAddress;
+                paystubEmailHistory.IsActual = paystubEmail.IsActual;
 
                 _context.PaystubEmailHistories.Add(paystubEmailHistory);
                 _context.PaystubEmails.Remove(paystubEmail);

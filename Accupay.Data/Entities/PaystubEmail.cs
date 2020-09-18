@@ -8,7 +8,9 @@ namespace AccuPay.Data.Entities
     [Table("paystubemail")]
     public class PaystubEmail
     {
+        // TODO: make the statuses enum, to be make them strongly-typed
         public const string StatusWaiting = "WAITING";
+
         public const string StatusProcessing = "PROCESSING";
         public const string StatusFailed = "FAILED";
 
@@ -25,6 +27,7 @@ namespace AccuPay.Data.Entities
         public DateTime? ProcessingStarted { get; set; }
         public string ErrorLogMessage { get; set; }
         public string Status { get; set; }
+        public bool IsActual { get; set; }
 
         [ForeignKey("PaystubID")]
         public virtual Paystub Paystub { get; set; }

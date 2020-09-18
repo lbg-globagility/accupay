@@ -7,8 +7,6 @@ namespace AccuPay.Data.Entities
     [Table("paystubemailhistory")]
     public class PaystubEmailHistory
     {
-        public const string StatusSent = "SENT";
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RowID { get; set; }
@@ -22,6 +20,7 @@ namespace AccuPay.Data.Entities
         public DateTime? SentDateTime { get; set; }
         public string ReferenceNumber { get; set; }
         public string EmailAddress { get; set; }
+        public bool IsActual { get; set; }
 
         [ForeignKey("PaystubID")]
         public virtual Paystub Paystub { get; set; }

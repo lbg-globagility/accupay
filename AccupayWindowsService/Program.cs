@@ -38,11 +38,15 @@ namespace AccupayWindowsService
             });
 
             services.AddScoped<EmailService>();
-            services.AddScoped<PaystubEmailRepository>();
+
+            services.AddScoped<PolicyHelper>();
+            services.AddScoped<ListOfValueService>();
 
             services.AddScoped<AddressRepository>();
             services.AddScoped<OrganizationRepository>();
+            services.AddScoped<PaystubEmailRepository>();
             services.AddScoped<PayPeriodRepository>();
+
             services.AddScoped<PayslipDataService>();
             services.AddScoped<SystemOwnerService>();
             services.AddScoped<PayslipBuilder>();

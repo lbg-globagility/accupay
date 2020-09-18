@@ -12,6 +12,8 @@ Imports Microsoft.Win32
 
 Public Class SelectPayslipEmployeesForm
 
+    Public Const StatusSent As String = "SENT"
+
     Private ReadOnly _currentPayPeriodId As Integer
 
     Private ReadOnly _isEmail As Boolean
@@ -65,6 +67,7 @@ Public Class SelectPayslipEmployeesForm
         RefreshEmailServiceToolStripButton.Visible = _isEmail
 
         EmailAddressColumn.Visible = _isEmail
+        PayslipTypeColumn.Visible = _isEmail
         EmailStatusColumn.Visible = _isEmail
         ResetEmailButtonColumn.Visible = _isEmail
         ErrorLogMessageColumn.Visible = _isEmail
@@ -112,6 +115,7 @@ Public Class SelectPayslipEmployeesForm
                 .PositionName = paystub.Employee.Position?.Name,
                 .DivisionName = paystub.Employee.Position?.Division?.Name,
                 .FullName = paystub.Employee.FullNameWithMiddleInitialLastNameFirst,
+                .PayslipType = "-",
                 .EmailStatus = "-"
             })
         Next
@@ -153,13 +157,15 @@ Public Class SelectPayslipEmployeesForm
             checkBoxCell.Style.BackColor = Color.White
             checkBoxCell.ReadOnly = False
 
+            employee.PayslipType = "-"
             employee.EmailStatus = "-"
             employee.ErrorLogMessage = Nothing
 
             If history IsNot Nothing Then
 
                 employee.IsSelected = False
-                employee.EmailStatus = PaystubEmailHistory.StatusSent
+                employee.PayslipType = SetPayslipType(history.IsActual)
+                employee.EmailStatus = StatusSent
                 employee.SentDateTime = history.SentDateTime
                 employee.EmailAddress = history.EmailAddress
 
@@ -171,6 +177,7 @@ Public Class SelectPayslipEmployeesForm
             ElseIf queue IsNot Nothing Then
 
                 employee.IsSelected = False
+                employee.PayslipType = SetPayslipType(queue.IsActual)
                 employee.EmailStatus = queue.Status
 
                 Select Case employee.EmailStatus
@@ -219,6 +226,10 @@ Public Class SelectPayslipEmployeesForm
 
         Next
 
+    End Function
+
+    Private Shared Function SetPayslipType(isActual As Boolean) As String
+        Return If(isActual, "Actual", "Declared")
     End Function
 
     Private Sub EnableDisableActionButtons()
@@ -285,7 +296,8 @@ Public Class SelectPayslipEmployeesForm
             paystubEmails.Add(New PaystubEmail() With {
                 .CreatedBy = z_User,
                 .PaystubID = employee.PaystubId,
-                .Status = PaystubEmail.StatusWaiting
+                .Status = PaystubEmail.StatusWaiting,
+                .IsActual = isActual
             })
         Next
 
@@ -449,6 +461,7 @@ Public Class SelectPayslipEmployeesForm
         Public Property EmployeeType As String
         Public Property PositionName As String
         Public Property DivisionName As String
+        Public Property PayslipType As String
         Public Property EmailStatus As String
         Public Property SentDateTime As Date?
         Public Property ErrorLogMessage As String

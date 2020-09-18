@@ -66,7 +66,7 @@ namespace AccuPay.CrystalReports
             {
                 return payslipList.Where(x => x.Field<int>(GoldwingsEmployeeIdColumn) == employeeId).Any();
             }
-            else if (_currentSystemOwner == SystemOwnerService.Goldwings)
+            else if (_currentSystemOwner == SystemOwnerService.Cinema2000)
             {
                 return payslipList.Where(x => x.Field<int>(CinemaEmployeeIdColumn) == employeeId).Any();
             }

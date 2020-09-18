@@ -22,10 +22,13 @@ namespace AccupayWindowsService
 
     //  TYPE THE COMMANDS BELOW ON COMMAND PROMPT AS ADMINISTRATOR TO INSTALL (Only use the command if there is already an existing AccupayWindowsService installed.)
     //  cd C:\Windows\Microsoft.NET\Framework\v4.0.30319
-    //  installUtil /u E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
-    //  installUtil E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+    //  installUtil /u C:\AccupayWindowsService\AccupayWindowsService.exe
+    //  installUtil C:\AccupayWindowsService\AccupayWindowsService.exe
     //
     // Dont forget to start the service!
+
+    // If there are errors in installing this to Windows Service, try to run this from Visual Studio. It will show the errors if there is any. If there
+    // is not, it will just say 'Cannot start service from the command line or a debugger.' and that means that there is no error in trying to start the service.
 
     public partial class EmailService : ServiceBase
     {
@@ -106,7 +109,7 @@ namespace AccupayWindowsService
 
                 var payslipBuilder = _payslipBuilder.CreateReportDocument(
                     payPeriodId: currentPayPeriod.RowID.Value,
-                    isActual: 0,
+                    isActual: (sbyte)(paystubEmail.IsActual ? 1 : 0),
                     employeeIds: employeeIds);
 
                 if (payslipBuilder.CheckIfEmployeeExists(employeeId.Value) == false)
