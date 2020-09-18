@@ -15,13 +15,6 @@ export class SelfserveService {
 
   constructor(protected httpClient: HttpClient) {}
 
-  createOfficialBusiness(ob: OfficialBusiness): Observable<OfficialBusiness> {
-    return this.httpClient.post<OfficialBusiness>(
-      `${this.apiRoute}/official-business`,
-      ob
-    );
-  }
-
   getOfficialBusinessStatusList(): Observable<string[]> {
     return this.httpClient.get<string[]>(
       `${this.apiRoute}/official-business-statuses`

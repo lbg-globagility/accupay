@@ -25,9 +25,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet]
         [Permission(PermissionTypes.OfficialBusinessRead)]
-        public async Task<ActionResult<PaginatedList<OfficialBusinessDto>>> List([FromQuery] PageOptions options, [FromQuery] OfficialBusinessFilter filter)
+        public async Task<ActionResult<PaginatedList<OfficialBusinessDto>>> List([FromQuery] OfficialBusinessPageOptions options)
         {
-            return await _service.PaginatedList(options, filter);
+            return await _service.PaginatedList(options);
         }
 
         [HttpGet("{id}")]

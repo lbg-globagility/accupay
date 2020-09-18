@@ -14,6 +14,10 @@ export const selfServiceMenu: MenuItem[] = [
     route: '/self-service/overtimes',
   },
   {
+    label: 'Official Businesses',
+    route: '/self-service/official-businesses',
+  },
+  {
     label: 'Timesheets',
     route: '/self-service/timesheets',
   },

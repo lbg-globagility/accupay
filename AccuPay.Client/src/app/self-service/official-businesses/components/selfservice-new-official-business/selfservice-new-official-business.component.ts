@@ -1,29 +1,26 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { LoadingState } from 'src/app/core/states/loading-state';
-import { SelfserveService } from '../../services/selfserve.service';
 import { MatDialogRef } from '@angular/material/dialog';
-import Swal from 'sweetalert2';
-import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import { SelfserveOfficialBusinessFormComponent } from '../../components/selfserve-official-business-form/selfserve-official-business-form.component';
+import { LoadingState } from 'src/app/core/states/loading-state';
+import Swal from 'sweetalert2';
+import { SelfserviceOfficialBusinessService } from 'src/app/self-service/services/selfservice-official-business.service';
+import { SelfserviceOfficialBusinessFormComponent } from 'src/app/self-service/official-businesses/components/selfservice-official-business-form/selfservice-official-business-form.component';
 
 @Component({
-  selector: 'app-selfserve-official-business',
-  templateUrl: './selfserve-official-business.component.html',
-  styleUrls: ['./selfserve-official-business.component.scss'],
+  selector: 'app-selfservice-new-official-business',
+  templateUrl: './selfservice-new-official-business.component.html',
+  styleUrls: ['./selfservice-new-official-business.component.scss'],
 })
-export class SelfserveOfficialBusinessComponent implements OnInit {
-  @ViewChild(SelfserveOfficialBusinessFormComponent)
-  officialBusinessForm: SelfserveOfficialBusinessFormComponent;
-
-  officialBusiness: OfficialBusiness;
+export class SelfserviceNewOfficialBusinessComponent implements OnInit {
+  @ViewChild(SelfserviceOfficialBusinessFormComponent)
+  officialBusinessForm: SelfserviceOfficialBusinessFormComponent;
 
   savingState: LoadingState = new LoadingState();
 
   constructor(
-    private service: SelfserveService,
+    private service: SelfserviceOfficialBusinessService,
     private errorHandler: ErrorHandler,
-    private dialog: MatDialogRef<SelfserveOfficialBusinessComponent>
+    private dialog: MatDialogRef<SelfserviceOfficialBusinessFormComponent>
   ) {}
 
   ngOnInit(): void {}
@@ -37,7 +34,7 @@ export class SelfserveOfficialBusinessComponent implements OnInit {
 
     const officialBusiness = this.officialBusinessForm.value;
 
-    this.service.createOfficialBusiness(officialBusiness).subscribe({
+    this.service.create(officialBusiness).subscribe({
       next: (result) => {
         this.savingState.changeToSuccess();
         this.displaySuccess();

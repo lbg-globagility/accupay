@@ -45,12 +45,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(
-            PageOptions options,
-            int organizationId,
-            string searchTerm = "",
-            DateTime? dateFrom = null,
-            DateTime? dateTo = null)
+        public async Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(OfficialBusinessPageOptions options, int organizationId)
         {
             var query = _context.OfficialBusinesses
                 .Include(x => x.Employee)
@@ -61,9 +56,14 @@ namespace AccuPay.Data.Repositories
                 .ThenBy(x => x.Employee.FirstName)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (options.HasEmployeeId)
             {
-                searchTerm = $"%{searchTerm}%";
+                query = query.Where(t => t.EmployeeID == options.EmployeeId);
+            }
+
+            if (options.HasSearchTerm)
+            {
+                var searchTerm = $"%{options.Term}%";
 
                 query = query.Where(x =>
                     EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
@@ -71,13 +71,13 @@ namespace AccuPay.Data.Repositories
                     EF.Functions.Like(x.Employee.LastName, searchTerm));
             }
 
-            if (dateFrom.HasValue)
+            if (options.HasDateFrom)
             {
-                query = query.Where(x => dateFrom.Value.Date <= x.StartDate);
+                query = query.Where(x => options.DateFrom.Value.Date <= x.StartDate);
             }
-            if (dateTo.HasValue)
+            if (options.HasDateTo)
             {
-                query = query.Where(x => x.StartDate <= dateTo.Value.Date);
+                query = query.Where(x => x.StartDate <= options.DateTo.Value.Date);
             }
 
             var officialBusinesses = await query.Page(options).ToListAsync();

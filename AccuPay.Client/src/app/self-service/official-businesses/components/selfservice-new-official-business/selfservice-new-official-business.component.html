@@ -1,20 +1,17 @@
-<h1 mat-dialog-title>New Official Business</h1>
+<h1 mat-dialog-title>Request Official Business</h1>
 
 <div mat-dialog-content>
-  <app-selfserve-official-business-form
-    [officialBusiness]="officialBusiness"
-    (save)="onSave()"
-  ></app-selfserve-official-business-form>
+  <app-selfservice-official-business-form></app-selfservice-official-business-form>
 </div>
 
 <div mat-card-actions align="end">
   <button
-    mat-button
+    mat-flat-button
     color="primary"
     (click)="onSave()"
     [disabled]="savingState.isLoading"
   >
-    SAVE
+    REQUEST OB
   </button>
   <button mat-button [mat-dialog-close]="false">CANCEL</button>
 </div>

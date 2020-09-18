@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { SelfServeComponent } from './self-serve/self-serve.component';
-import { SelfserveOfficialBusinessFormComponent } from './components/selfserve-official-business-form/selfserve-official-business-form.component';
 import { SelfserveTimeEntryFormComponent } from './components/selfserve-time-entry-form/selfserve-time-entry-form.component';
 import { LeavesModule } from '../leaves/leaves.module';
-import { SelfserveOfficialBusinessComponent } from './pages/selfserve-official-business/selfserve-official-business.component';
 import { SelfserveTimeEntryComponent } from './pages/selfserve-time-entry/selfserve-time-entry.component';
 import { TimeEntryModule } from '../time-entry/time-entry.module';
 import { MatChipsModule } from '@angular/material/chips';
@@ -22,6 +20,11 @@ import {
   SelfserviceOvertimeFormComponent,
   SelfserviceOvertimesComponent,
 } from 'src/app/self-service/overtimes/components';
+import {
+  SelfserviceNewOfficialBusinessComponent,
+  SelfserviceOfficialBusinessesComponent,
+  SelfserviceOfficialBusinessFormComponent,
+} from 'src/app/self-service/official-businesses/components';
 
 @NgModule({
   declarations: [
@@ -30,16 +33,17 @@ import {
     SelfserviceLeavesComponent,
     SelfserviceNewLeaveComponent,
     SelfserviceOvertimeFormComponent,
-    SelfserveOfficialBusinessFormComponent,
     SelfserveTimeEntryFormComponent,
     SelfserviceNewOvertimeComponent,
-    SelfserveOfficialBusinessComponent,
     SelfserveTimeEntryComponent,
     PayperiodSelectComponent,
     TopbarComponent,
     SelfServiceDashboardComponent,
     SelfserviceOvertimesComponent,
     SelfServiceTimesheetsComponent,
+    SelfserviceOfficialBusinessesComponent,
+    SelfserviceOfficialBusinessFormComponent,
+    SelfserviceNewOfficialBusinessComponent,
   ],
   imports: [MatChipsModule, SharedModule, LeavesModule, TimeEntryModule],
 })
