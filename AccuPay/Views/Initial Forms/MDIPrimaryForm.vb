@@ -33,6 +33,7 @@ Public Class MDIPrimaryForm
 
     Private if_sysowner_is_benchmark As Boolean
     Private if_sysowner_is_cinema2k As Boolean
+    Private if_sysowner_is_goldwings As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
     Private ReadOnly _policyHelper As PolicyHelper
@@ -51,9 +52,11 @@ Public Class MDIPrimaryForm
 
         _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
-        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-        if_sysowner_is_cinema2k = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
-        if_sysowner_is_hyundai = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
+        Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
+        if_sysowner_is_benchmark = currentSystemOwner = SystemOwnerService.Benchmark
+        if_sysowner_is_cinema2k = currentSystemOwner = SystemOwnerService.Cinema2000
+        if_sysowner_is_goldwings = currentSystemOwner = SystemOwnerService.Goldwings
+        if_sysowner_is_hyundai = currentSystemOwner = SystemOwnerService.Hyundai
 
         PrepareFormForBenchmark()
     End Sub
@@ -301,22 +304,22 @@ Public Class MDIPrimaryForm
         If dbnow = Nothing Then
             dbnow = EXECQUER(CURDATE_MDY)
         End If
-        TimeToolStripButton.Text = "Time &&" & vbNewLine & "Attendance"
-        TimeToolStripButton.ToolTipText = "Time & Attendance"
+        TimeAndAttendanceToolStripButton.Text = "Time &&" & vbNewLine & "Attendance"
+        TimeAndAttendanceToolStripButton.ToolTipText = "Time & Attendance"
         '123, 24
         lblTime.Text = TimeOfDay
         lblUser.Text = userFirstName &
                        If(userLastName = Nothing, "", " " & userLastName)
         lblPosition.Text = z_postName
-        ToolStripButton0_Click(sender, e)
+        HomeToolStripButton_Click(sender, e)
         PictureBox1.Image = ImageList1.Images(1)
         LoadVersionNo()
     End Sub
 
     Private Sub PrepareFormForBenchmark()
         If if_sysowner_is_benchmark Then
-            ToolStripButton0.Visible = False
-            TimeToolStripButton.Visible = False
+            HomeToolStripButton.Visible = False
+            TimeAndAttendanceToolStripButton.Visible = False
         End If
     End Sub
 
@@ -343,7 +346,7 @@ Public Class MDIPrimaryForm
 
             If user.UserLevel = UserLevel.Five Then
 
-                TimeToolStripButton.Visible = False
+                TimeAndAttendanceToolStripButton.Visible = False
 
             End If
 
@@ -371,7 +374,7 @@ Public Class MDIPrimaryForm
 
     Dim isHome As SByte = 0
 
-    Private Sub ToolStripButton0_Click(sender As Object, e As EventArgs) Handles ToolStripButton0.Click
+    Private Sub HomeToolStripButton_Click(sender As Object, e As EventArgs) Handles HomeToolStripButton.Click
 
         isHome = 1
 
@@ -385,19 +388,19 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(255, 255, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        ToolStripButton0.Font = selectedButtonFont
+        HomeToolStripButton.Font = selectedButtonFont
 
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
@@ -409,7 +412,7 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
+    Sub GeneralToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
 
         isHome = 0
 
@@ -423,9 +426,9 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
@@ -433,16 +436,16 @@ Public Class MDIPrimaryForm
 
         GeneralToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
         refresh_previousForm(0, sender, e)
     End Sub
 
-    Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles TimeToolStripButton.Click
+    Sub TimeAndAttendanceToolStripButton_Click(sender As Object, e As EventArgs) Handles TimeAndAttendanceToolStripButton.Click
 
         isHome = 0
 
@@ -456,17 +459,17 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        TimeToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
-        TimeToolStripButton.Font = selectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
@@ -579,20 +582,20 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
         PayrollToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
         PayrollToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
         refresh_previousForm(3, sender, e)
@@ -613,9 +616,9 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
@@ -623,9 +626,9 @@ Public Class MDIPrimaryForm
 
         HrisToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
@@ -684,20 +687,20 @@ Public Class MDIPrimaryForm
         HRISForm.Hide()
         TimeAttendForm.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
         ReportsToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
         ReportsToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
     End Sub
 
@@ -930,48 +933,124 @@ Public Class MDIPrimaryForm
 
     Private Sub RestrictByRole()
 
-        Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
-        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
-        Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
+        'General
+        Dim userPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.USER).FirstOrDefault()
+        Dim organizationPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ORGANIZATION).FirstOrDefault()
+        Dim branchPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.BRANCH).FirstOrDefault()
+        Dim rolePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ROLE).FirstOrDefault()
+        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
+        Dim calendarPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.CALENDAR).FirstOrDefault()
+        Dim agencyPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.AGENCY).FirstOrDefault()
+
+        If Not CheckReadPermission(userPermission) AndAlso
+            Not CheckReadPermission(organizationPermission) AndAlso
+            Not CheckReadPermission(branchPermission) AndAlso
+            Not CheckReadPermission(rolePermission) AndAlso
+            Not CheckReadPermission(shiftPermission) AndAlso
+            Not CheckReadPermission(calendarPermission) Then
+
+            GeneralToolStripButton.Visible = False
+
+            Dim isAgencyAndHasReadPermission = (
+                if_sysowner_is_hyundai OrElse
+                if_sysowner_is_goldwings) AndAlso
+                CheckReadPermission(agencyPermission)
+
+            If isAgencyAndHasReadPermission Then
+                GeneralToolStripButton.Visible = True
+            End If
+
+        End If
+
+        'HRIS
         Dim employeePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.EMPLOYEE).FirstOrDefault()
+        Dim salaryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SALARY).FirstOrDefault()
+        Dim divisionPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.DIVISION).FirstOrDefault()
+        Dim positionPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.POSITION).FirstOrDefault()
+
+        If Not CheckReadPermission(employeePermission) AndAlso
+            Not CheckReadPermission(salaryPermission) AndAlso
+            Not CheckReadPermission(divisionPermission) AndAlso
+            Not CheckReadPermission(positionPermission) Then
+
+            HrisToolStripButton.Visible = False
+        End If
+
+        'Time & Attendance
+        Dim leavePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LEAVE).FirstOrDefault()
         Dim officialBusinessPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OFFICIALBUSINESS).FirstOrDefault()
         Dim overtimePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OVERTIME).FirstOrDefault()
-        Dim leavePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LEAVE).FirstOrDefault()
+        'shiftPermission
+        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
+        Dim timeEntryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMEENTRY).FirstOrDefault()
 
-        If loanPermission Is Nothing OrElse loanPermission.Read = False Then
+        If Not CheckReadPermission(leavePermission) AndAlso
+            Not CheckReadPermission(officialBusinessPermission) AndAlso
+            Not CheckReadPermission(overtimePermission) AndAlso
+            Not CheckReadPermission(shiftPermission) AndAlso
+            Not CheckReadPermission(timeLogPermission) AndAlso
+            Not CheckReadPermission(timeEntryPermission) Then
+
+            TimeAndAttendanceToolStripButton.Visible = False
+        End If
+
+        'Payroll
+        Dim allowancePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ALLOWANCE).FirstOrDefault()
+        Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
+        Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
+
+        If Not CheckReadPermission(allowancePermission) AndAlso
+            Not CheckReadPermission(loanPermission) AndAlso
+            Not CheckReadPermission(payPeriodPermission) Then
+
+            PayrollToolStripButton.Visible = False
+        End If
+
+        ShowOrHideDashboardWidgets(loanPermission, timeLogPermission, payPeriodPermission, employeePermission, officialBusinessPermission, overtimePermission, leavePermission)
+    End Sub
+
+    Private Shared Function CheckReadPermission(userPermission As Data.Entities.RolePermission) As Boolean
+        Return userPermission IsNot Nothing AndAlso userPermission.Read
+    End Function
+
+    Private Sub ShowOrHideDashboardWidgets(loanPermission As Data.Entities.RolePermission, timeLogPermission As Data.Entities.RolePermission, payPeriodPermission As Data.Entities.RolePermission, employeePermission As Data.Entities.RolePermission, officialBusinessPermission As Data.Entities.RolePermission, overtimePermission As Data.Entities.RolePermission, leavePermission As Data.Entities.RolePermission)
+
+        'TODO: stop querying for dashboard data if user has no read permission for that
+
+        If Not CheckReadPermission(loanPermission) Then
             LoanBalanceCollapsibleGroupBox.Visible = False
         End If
 
-        If timeLogPermission Is Nothing OrElse timeLogPermission.Read = False Then
+        If Not CheckReadPermission(timeLogPermission) Then
             CollapsibleGroupBox3.Visible = False
         End If
 
-        If payPeriodPermission Is Nothing OrElse payPeriodPermission.Read = False Then
+        If Not CheckReadPermission(payPeriodPermission) Then
             NegativePayslipsCollapsibleGroupBox.Visible = False
         End If
 
-        If employeePermission Is Nothing OrElse employeePermission.Read = False Then
+        If Not CheckReadPermission(employeePermission) Then
             BirthdayCollapsibleGroupBox.Visible = False
             UnqualifiedCollapsibleGroupBox.Visible = False
             CollapsibleGroupBox5.Visible = False
         End If
 
-        If officialBusinessPermission Is Nothing OrElse officialBusinessPermission.Read = False Then
+        If Not CheckReadPermission(officialBusinessPermission) Then
             PendingOfficialBusinessCollapsibleGroupBox.Visible = False
         End If
 
-        If overtimePermission Is Nothing OrElse overtimePermission.Read = False Then
+        If Not CheckReadPermission(overtimePermission) Then
             PendingOvertimeCollapsibleGroupBox.Visible = False
         End If
 
-        If leavePermission Is Nothing OrElse leavePermission.Read = False Then
+        If Not CheckReadPermission(leavePermission) Then
             CollapsibleGroupBox4.Visible = False
             CollapsibleGroupBox6.Visible = False
         End If
     End Sub
 
     Private Sub NotifyIcon1_Click(sender As Object, e As EventArgs)
-        ToolStripButton0_Click(sender, e)
+        HomeToolStripButton_Click(sender, e)
     End Sub
 
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean

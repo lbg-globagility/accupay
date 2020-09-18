@@ -49,11 +49,11 @@ Public Class PayrollForm
         USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
 
         Dim allowancePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ALLOWANCE).FirstOrDefault()
-        Dim loanBusinessPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
+        Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
         Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
 
         AllowanceToolStripMenuItem.Visible = If(allowancePermission?.Read, False)
-        LoanToolStripMenuItem.Visible = If(loanBusinessPermission?.Read, False)
+        LoanToolStripMenuItem.Visible = If(loanPermission?.Read, False)
 
         'Payroll only overrides the visibility if Read is False
         'since they are already checked by other policies above

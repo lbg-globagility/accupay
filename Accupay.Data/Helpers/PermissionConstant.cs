@@ -9,6 +9,7 @@
         public const string CALENDAR = "Calendar";
         public const string DIVISION = "Division";
         public const string EMPLOYEE = "Employee";
+        public const string EMPLOYMENTPOLICY = "EmploymentPolicy";
         public const string LEAVE = "Leave";
         public const string LOAN = "Loan";
         public const string OFFICIALBUSINESS = "OfficialBusiness";

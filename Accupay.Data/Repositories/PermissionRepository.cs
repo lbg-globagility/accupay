@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,16 @@ namespace AccuPay.Data.Repositories
 
         public async Task<ICollection<Permission>> GetAll(bool forDesktopOnly = false)
         {
+            // TODO: delete Account Permission
             var query = _context.Permissions.AsQueryable();
 
-            if (!forDesktopOnly)
+            if (forDesktopOnly)
+            {
+                query = query
+                    .Where(x => x.Name != PermissionConstant.ACCOUNT)
+                    .Where(x => x.Name != PermissionConstant.EMPLOYMENTPOLICY);
+            }
+            else
             {
                 query = query.Where(x => x.ForDesktopOnly == false);
             }

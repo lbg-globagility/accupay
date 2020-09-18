@@ -129,10 +129,10 @@ Partial Class MDIPrimaryForm
         Me.lblVersionValue = New System.Windows.Forms.ToolStripLabel()
         Me.systemprogressbar = New System.Windows.Forms.ToolStripProgressBar()
         Me.Showmainbutton = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripButton0 = New System.Windows.Forms.ToolStripButton()
+        Me.HomeToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.GeneralToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.HrisToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.TimeToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.TimeAndAttendanceToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.PayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ReportsToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
@@ -1238,7 +1238,7 @@ Partial Class MDIPrimaryForm
         Me.Showmainbutton.Dock = System.Windows.Forms.DockStyle.Left
         Me.Showmainbutton.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.Showmainbutton.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton0, Me.GeneralToolStripButton, Me.HrisToolStripButton, Me.TimeToolStripButton, Me.PayrollToolStripButton, Me.ReportsToolStripButton})
+        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HomeToolStripButton, Me.GeneralToolStripButton, Me.HrisToolStripButton, Me.TimeAndAttendanceToolStripButton, Me.PayrollToolStripButton, Me.ReportsToolStripButton})
         Me.Showmainbutton.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow
         Me.Showmainbutton.Location = New System.Drawing.Point(0, 0)
         Me.Showmainbutton.Name = "Showmainbutton"
@@ -1246,19 +1246,19 @@ Partial Class MDIPrimaryForm
         Me.Showmainbutton.TabIndex = 39
         Me.Showmainbutton.Text = "ToolStrip1"
         '
-        'ToolStripButton0
+        'HomeToolStripButton
         '
-        Me.ToolStripButton0.AutoSize = False
-        Me.ToolStripButton0.Image = CType(resources.GetObject("ToolStripButton0.Image"), System.Drawing.Image)
-        Me.ToolStripButton0.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton0.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
-        Me.ToolStripButton0.Name = "ToolStripButton0"
-        Me.ToolStripButton0.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-        Me.ToolStripButton0.Size = New System.Drawing.Size(85, 80)
-        Me.ToolStripButton0.Text = "Home"
-        Me.ToolStripButton0.TextAlign = System.Drawing.ContentAlignment.BottomCenter
-        Me.ToolStripButton0.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        Me.ToolStripButton0.ToolTipText = "Home"
+        Me.HomeToolStripButton.AutoSize = False
+        Me.HomeToolStripButton.Image = CType(resources.GetObject("HomeToolStripButton.Image"), System.Drawing.Image)
+        Me.HomeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.HomeToolStripButton.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+        Me.HomeToolStripButton.Name = "HomeToolStripButton"
+        Me.HomeToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
+        Me.HomeToolStripButton.Size = New System.Drawing.Size(85, 80)
+        Me.HomeToolStripButton.Text = "Home"
+        Me.HomeToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.HomeToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.HomeToolStripButton.ToolTipText = "Home"
         '
         'GeneralToolStripButton
         '
@@ -1291,16 +1291,16 @@ Partial Class MDIPrimaryForm
         '
         'TimeToolStripButton
         '
-        Me.TimeToolStripButton.AutoSize = False
-        Me.TimeToolStripButton.Image = CType(resources.GetObject("TimeToolStripButton.Image"), System.Drawing.Image)
-        Me.TimeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.TimeToolStripButton.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
-        Me.TimeToolStripButton.Name = "TimeToolStripButton"
-        Me.TimeToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-        Me.TimeToolStripButton.Size = New System.Drawing.Size(85, 80)
-        Me.TimeToolStripButton.Text = "Time"
-        Me.TimeToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter
-        Me.TimeToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.TimeAndAttendanceToolStripButton.AutoSize = False
+        Me.TimeAndAttendanceToolStripButton.Image = CType(resources.GetObject("TimeToolStripButton.Image"), System.Drawing.Image)
+        Me.TimeAndAttendanceToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.TimeAndAttendanceToolStripButton.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+        Me.TimeAndAttendanceToolStripButton.Name = "TimeToolStripButton"
+        Me.TimeAndAttendanceToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
+        Me.TimeAndAttendanceToolStripButton.Size = New System.Drawing.Size(85, 80)
+        Me.TimeAndAttendanceToolStripButton.Text = "Time"
+        Me.TimeAndAttendanceToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.TimeAndAttendanceToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'PayrollToolStripButton
         '
@@ -1458,9 +1458,9 @@ Partial Class MDIPrimaryForm
     Friend WithEvents ToolStripLabel7 As System.Windows.Forms.ToolStripLabel
     Friend WithEvents Showmainbutton As System.Windows.Forms.ToolStrip
     Friend WithEvents GeneralToolStripButton As System.Windows.Forms.ToolStripButton
-    Friend WithEvents TimeToolStripButton As System.Windows.Forms.ToolStripButton
+    Friend WithEvents TimeAndAttendanceToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
-    Friend WithEvents ToolStripButton0 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents HomeToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents systemprogressbar As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents PayrollToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents HrisToolStripButton As System.Windows.Forms.ToolStripButton

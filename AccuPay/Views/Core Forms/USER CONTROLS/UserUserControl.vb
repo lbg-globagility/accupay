@@ -80,10 +80,25 @@ Public Class UserUserControl
     Private Async Function GetOrganizations() As Task
         If _organizations IsNot Nothing AndAlso _organizations.Count > 0 Then Return
 
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim userRoles = Await userRepository.GetUserRolesAsync(z_User)
+
+        Dim allowedOrganizations = userRoles.
+            GroupBy(Function(o) o.OrganizationId).
+            Select(Function(o) o.Key).
+            ToArray()
+
+        ' TODO: check also if in that organization, the user has a role with permission to create and update Role
+
         Dim organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
-        _organizations = (Await organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)).organizations.
+        Dim organizations = (Await organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)).organizations.
             OrderBy(Function(o) o.Name).
             ToList()
+
+        _organizations = organizations.
+            Where(Function(o) allowedOrganizations.Contains(o.RowID.Value)).
+            ToList()
+
     End Function
 
     Private Sub UserRoleGrid_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles UserRoleGrid.DataError
