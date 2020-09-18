@@ -23,9 +23,7 @@ namespace AccuPay.Data.Repositories
 
             if (forDesktopOnly)
             {
-                query = query
-                    .Where(x => x.Name != PermissionConstant.ACCOUNT)
-                    .Where(x => x.Name != PermissionConstant.EMPLOYMENTPOLICY);
+                query = query.Where(x => x.Name != PermissionConstant.EMPLOYMENTPOLICY);
             }
             else
             {
