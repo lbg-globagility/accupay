@@ -96,6 +96,7 @@ import { SelfServiceTimesheetsComponent } from 'src/app/self-service/components/
 import { SelfserviceLeavesComponent } from 'src/app/self-service/leaves/components';
 import { SelfserviceOvertimesComponent } from 'src/app/self-service/overtimes/components';
 import { SelfserviceOfficialBusinessesComponent } from 'src/app/self-service/official-businesses/components';
+import { SelfserviceDashboardComponent } from 'src/app/self-service/dashboard/components/selfservice-dashboard/selfservice-dashboard.component';
 
 const routes: Routes = [
   {
@@ -557,7 +558,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: SelfServeComponent,
+        component: SelfserviceDashboardComponent,
       },
       {
         path: 'leaves',

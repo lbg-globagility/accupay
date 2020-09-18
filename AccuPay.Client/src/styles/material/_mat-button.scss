@@ -15,6 +15,13 @@
   }
 }
 
+.mat-button-base.m-vertical .mat-button-wrapper {
+  display: inline-flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .mat-button-toggle {
   background-color: white !important;
   color: colors.$accent !important;
