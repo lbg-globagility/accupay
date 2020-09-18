@@ -192,12 +192,12 @@ Public Class PayStubForm
 
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
 
-            AddHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
-            AddHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
+            PrintPayrollSummaryToolStripDropDownButton.Visible = False
+            PrintPayrollSummaryToolStripButton.Visible = True
         Else
 
-            RemoveHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
-            RemoveHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
+            PrintPayrollSummaryToolStripDropDownButton.Visible = True
+            PrintPayrollSummaryToolStripButton.Visible = False
 
             RemoveHandler ExportNetPayAllToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
             RemoveHandler ExportNetPayCashToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
@@ -219,7 +219,7 @@ Public Class PayStubForm
     Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
         ClosePayrollToolStripMenuItem.Visible = False
         ReopenPayrollToolStripMenuItem.Visible = False
-        GeneratePayrollToolStripMenuItem.Visible = False
+        GeneratePayrollToolStripButton.Visible = False
 
         Dim hasValue = (MDIPrimaryForm.systemprogressbar.Value > 0)
         If hasValue Then
@@ -427,7 +427,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub EnablePayrollToolStripItem(Optional enable As Boolean = True)
-        GeneratePayrollToolStripMenuItem.Visible = enable
+        GeneratePayrollToolStripButton.Visible = enable
         RecalculateThirteenthMonthPayToolStripMenuItem.Visible = enable
         CancelPayrollToolStripMenuItem.Visible = enable
         DeletePaystubsToolStripMenuItem.Visible = enable
@@ -713,19 +713,19 @@ Public Class PayStubForm
 
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
         If payPeriodId Is Nothing Then
-            GeneratePayrollToolStripMenuItem.Enabled = True
+            GeneratePayrollToolStripButton.Enabled = True
             Return
         End If
 
         Dim payPeriod = _payPeriodRepository.GetById(payPeriodId)
         If payPeriod Is Nothing OrElse payPeriod?.RowID Is Nothing OrElse payPeriod?.OrganizationID Is Nothing Then
-            GeneratePayrollToolStripMenuItem.Enabled = True
+            GeneratePayrollToolStripButton.Enabled = True
             Return
         End If
 
         If payPeriod.Status <> PayPeriodStatus.Open Then
             MessageBoxHelper.Warning("Only ""Open"" pay periods can be computed.")
-            GeneratePayrollToolStripMenuItem.Enabled = True
+            GeneratePayrollToolStripButton.Enabled = True
             Return
         End If
 
@@ -761,12 +761,12 @@ Public Class PayStubForm
     End Sub
 
     Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
-        GeneratePayrollToolStripMenuItem.Enabled = True
+        GeneratePayrollToolStripButton.Enabled = True
         ThreadingPayrollGeneration(t.Result)
     End Sub
 
     Private Sub LoadingPayrollDataOnError(t As Task)
-        GeneratePayrollToolStripMenuItem.Enabled = True
+        GeneratePayrollToolStripButton.Enabled = True
         _logger.Error("Error loading one of the payroll data.", t.Exception)
         MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
         Me.Enabled = True
@@ -1021,8 +1021,10 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Sub PayrollSummaryDeclaredAndActualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles PayrollSummaryDeclaredToolStripMenuItem.Click, PayrollSummaryActualToolStripMenuItem.Click
+    Private Sub PayrollSummaryDeclaredAndActualToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles _
+        PrintPayrollSummaryToolStripButton.Click,
+        PayrollSummaryDeclaredToolStripMenuItem.Click,
+        PayrollSummaryActualToolStripMenuItem.Click
 
         Dim isActual = sender Is PayrollSummaryActualToolStripMenuItem
         ShowPayrollSummary(isActual)
@@ -1806,9 +1808,24 @@ Public Class PayStubForm
         dgvpayper_SelectionChanged(Nothing, Nothing)
     End Sub
 
-    Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripMenuItem.Click
+    Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
 
-        GeneratePayrollToolStripMenuItem.Enabled = False
+        Dim payperiodId As Integer? = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If payperiodId Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected pay period.", "Delete Payroll")
+            Return
+
+        End If
+
+        Dim confirm = MessageBoxHelper.Confirm(Of Boolean)(
+            $"Generate payroll for '{CDate(paypFrom).ToShortDateString}' to '{CDate(paypTo).ToShortDateString}'?",
+            "Generate Payroll")
+
+        If Not confirm Then Return
+
+        GeneratePayrollToolStripButton.Enabled = False
 
         GeneratePayroll()
 
@@ -1966,16 +1983,6 @@ Public Class PayStubForm
 
             End Sub,
             "Error generating payslips.")
-    End Sub
-
-    Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        If _policy.ShowActual = False Then
-
-            ShowPayrollSummary(isActual:=False)
-
-        End If
-
     End Sub
 
     Private Shared Sub ShowPayrollSummary(isActual As Boolean)

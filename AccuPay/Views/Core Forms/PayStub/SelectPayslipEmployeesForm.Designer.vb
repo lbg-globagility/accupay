@@ -23,18 +23,12 @@ Partial Class SelectPayslipEmployeesForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectPayslipEmployeesForm))
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectPayslipEmployeesForm))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.ActionPanel = New System.Windows.Forms.Panel()
         Me.UncheckAllButton = New System.Windows.Forms.Button()
@@ -42,26 +36,18 @@ Partial Class SelectPayslipEmployeesForm
         Me.EmployeeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.StatusLabel = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.PreviewToolStripButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.PreviewToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.PreviewDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PreviewActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SendEmailToolStripButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.SendEmailToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.SendEmailDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SendEmailActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PreviewToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.SendEmailToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ManageEmailToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.ResetEmailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailStatusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailServiceToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -158,21 +144,21 @@ Partial Class SelectPayslipEmployeesForm
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1234, 25)
         Me.ToolStrip1.TabIndex = 15
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'PreviewToolStripButton
+        'PreviewToolStripDropDownButton
         '
-        Me.PreviewToolStripButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewDeclaredToolStripMenuItem, Me.PreviewActualToolStripMenuItem})
-        Me.PreviewToolStripButton.Image = CType(resources.GetObject("PreviewToolStripButton.Image"), System.Drawing.Image)
-        Me.PreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PreviewToolStripButton.Name = "PreviewToolStripButton"
-        Me.PreviewToolStripButton.Size = New System.Drawing.Size(77, 22)
-        Me.PreviewToolStripButton.Text = "&Preview"
+        Me.PreviewToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewDeclaredToolStripMenuItem, Me.PreviewActualToolStripMenuItem})
+        Me.PreviewToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.documents7
+        Me.PreviewToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PreviewToolStripDropDownButton.Name = "PreviewToolStripDropDownButton"
+        Me.PreviewToolStripDropDownButton.Size = New System.Drawing.Size(77, 22)
+        Me.PreviewToolStripDropDownButton.Text = "&Preview"
         '
         'PreviewDeclaredToolStripMenuItem
         '
@@ -186,14 +172,14 @@ Partial Class SelectPayslipEmployeesForm
         Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PreviewActualToolStripMenuItem.Text = "Actual"
         '
-        'SendEmailToolStripButton
+        'SendEmailToolStripDropDownButton
         '
-        Me.SendEmailToolStripButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SendEmailDeclaredToolStripMenuItem, Me.SendEmailActualToolStripMenuItem})
-        Me.SendEmailToolStripButton.Image = CType(resources.GetObject("SendEmailToolStripButton.Image"), System.Drawing.Image)
-        Me.SendEmailToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.SendEmailToolStripButton.Name = "SendEmailToolStripButton"
-        Me.SendEmailToolStripButton.Size = New System.Drawing.Size(99, 22)
-        Me.SendEmailToolStripButton.Text = "Send &Emails"
+        Me.SendEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SendEmailDeclaredToolStripMenuItem, Me.SendEmailActualToolStripMenuItem})
+        Me.SendEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
+        Me.SendEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SendEmailToolStripDropDownButton.Name = "SendEmailToolStripDropDownButton"
+        Me.SendEmailToolStripDropDownButton.Size = New System.Drawing.Size(99, 22)
+        Me.SendEmailToolStripDropDownButton.Text = "Send &Emails"
         '
         'SendEmailDeclaredToolStripMenuItem
         '
@@ -207,10 +193,26 @@ Partial Class SelectPayslipEmployeesForm
         Me.SendEmailActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.SendEmailActualToolStripMenuItem.Text = "Actual"
         '
+        'PreviewToolStripButton
+        '
+        Me.PreviewToolStripButton.Image = Global.AccuPay.My.Resources.Resources.documents7
+        Me.PreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PreviewToolStripButton.Name = "PreviewToolStripButton"
+        Me.PreviewToolStripButton.Size = New System.Drawing.Size(68, 22)
+        Me.PreviewToolStripButton.Text = "Preview"
+        '
+        'SendEmailToolStripButton
+        '
+        Me.SendEmailToolStripButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
+        Me.SendEmailToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SendEmailToolStripButton.Name = "SendEmailToolStripButton"
+        Me.SendEmailToolStripButton.Size = New System.Drawing.Size(90, 22)
+        Me.SendEmailToolStripButton.Text = "Send &Emails"
+        '
         'ManageEmailToolStripDropDownButton
         '
         Me.ManageEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ResetEmailsToolStripMenuItem, Me.RefreshEmailStatusToolStripMenuItem})
-        Me.ManageEmailToolStripDropDownButton.Image = CType(resources.GetObject("ManageEmailToolStripDropDownButton.Image"), System.Drawing.Image)
+        Me.ManageEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
         Me.ManageEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ManageEmailToolStripDropDownButton.Name = "ManageEmailToolStripDropDownButton"
         Me.ManageEmailToolStripDropDownButton.Size = New System.Drawing.Size(116, 22)
@@ -234,115 +236,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.RefreshEmailServiceToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.RefreshEmailServiceToolStripButton.Name = "RefreshEmailServiceToolStripButton"
         Me.RefreshEmailServiceToolStripButton.Size = New System.Drawing.Size(135, 22)
-        Me.RefreshEmailServiceToolStripButton.Text = "Restart Email Service"
-        '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
-        Me.DataGridViewTextBoxColumn1.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Employee Number"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        Me.DataGridViewTextBoxColumn1.Width = 101
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.DataPropertyName = "FirstName"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle7
-        Me.DataGridViewTextBoxColumn2.FillWeight = 150.0!
-        Me.DataGridViewTextBoxColumn2.HeaderText = "First Name"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        Me.DataGridViewTextBoxColumn2.Width = 152
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.DataPropertyName = "MiddleName"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle8
-        Me.DataGridViewTextBoxColumn3.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Middle Name"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        Me.DataGridViewTextBoxColumn3.Width = 102
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.DataPropertyName = "LastName"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle9
-        Me.DataGridViewTextBoxColumn4.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Last Name"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.Width = 101
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.DataPropertyName = "EmployeeType"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle10.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle10
-        Me.DataGridViewTextBoxColumn5.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Employee Type"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        Me.DataGridViewTextBoxColumn5.Width = 101
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.DataPropertyName = "PositionName"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle11.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle11
-        Me.DataGridViewTextBoxColumn6.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Position"
-        Me.DataGridViewTextBoxColumn6.MinimumWidth = 120
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        Me.DataGridViewTextBoxColumn6.Width = 120
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.DataPropertyName = "DivisionName"
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle12
-        Me.DataGridViewTextBoxColumn7.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Division"
-        Me.DataGridViewTextBoxColumn7.MinimumWidth = 120
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        Me.DataGridViewTextBoxColumn7.Width = 120
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.DataPropertyName = "EmailStatus"
-        Me.DataGridViewTextBoxColumn8.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Email Status"
-        Me.DataGridViewTextBoxColumn8.MinimumWidth = 120
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
-        Me.DataGridViewTextBoxColumn8.Width = 120
-        '
-        'DataGridViewTextBoxColumn9
-        '
-        Me.DataGridViewTextBoxColumn9.DataPropertyName = "ErrorLogMessage"
-        Me.DataGridViewTextBoxColumn9.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn9.HeaderText = "Last Error Log Message"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        Me.DataGridViewTextBoxColumn9.ReadOnly = True
-        Me.DataGridViewTextBoxColumn9.Width = 192
-        '
-        'DataGridViewTextBoxColumn10
-        '
-        Me.DataGridViewTextBoxColumn10.DataPropertyName = "ErrorLogMessage"
-        Me.DataGridViewTextBoxColumn10.HeaderText = "Last Error Log Message"
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        Me.DataGridViewTextBoxColumn10.ReadOnly = True
-        Me.DataGridViewTextBoxColumn10.Width = 177
+        Me.RefreshEmailServiceToolStripButton.Text = "&Restart Email Service"
         '
         'SelectedCheckBoxColumn
         '
@@ -437,6 +331,7 @@ Partial Class SelectPayslipEmployeesForm
         'PayslipTypeColumn
         '
         Me.PayslipTypeColumn.DataPropertyName = "PayslipType"
+        Me.PayslipTypeColumn.FillWeight = 36.74457!
         Me.PayslipTypeColumn.HeaderText = "Payslip Type"
         Me.PayslipTypeColumn.Name = "PayslipTypeColumn"
         '
@@ -488,21 +383,11 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents ActionPanel As Panel
     Friend WithEvents EmployeeGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents StatusLabel As Label
-    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
     Friend WithEvents UncheckAllButton As Button
     Friend WithEvents ToolStrip1 As ToolStrip
     Friend WithEvents RefreshEmailServiceToolStripButton As ToolStripButton
-    Friend WithEvents SendEmailToolStripButton As ToolStripDropDownButton
-    Friend WithEvents PreviewToolStripButton As ToolStripDropDownButton
+    Friend WithEvents SendEmailToolStripDropDownButton As ToolStripDropDownButton
+    Friend WithEvents PreviewToolStripDropDownButton As ToolStripDropDownButton
     Friend WithEvents PreviewDeclaredToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PreviewActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SendEmailDeclaredToolStripMenuItem As ToolStripMenuItem
@@ -510,6 +395,8 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents ManageEmailToolStripDropDownButton As ToolStripDropDownButton
     Friend WithEvents ResetEmailsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RefreshEmailStatusToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PreviewToolStripButton As ToolStripButton
+    Friend WithEvents SendEmailToolStripButton As ToolStripButton
     Friend WithEvents SelectedCheckBoxColumn As DataGridViewCheckBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn

@@ -62,7 +62,9 @@ Public Class SelectPayslipEmployeesForm
 
         EmployeeGridView.AutoGenerateColumns = False
 
+        SendEmailToolStripDropDownButton.Visible = _isEmail
         SendEmailToolStripButton.Visible = _isEmail
+
         ManageEmailToolStripDropDownButton.Visible = _isEmail
         RefreshEmailServiceToolStripButton.Visible = _isEmail
 
@@ -78,15 +80,14 @@ Public Class SelectPayslipEmployeesForm
 
         If _policyHelper.ShowActual Then
 
-            RemoveHandler PreviewToolStripButton.Click, AddressOf PreviewButton_Click
-            RemoveHandler SendEmailToolStripButton.Click, AddressOf SendEmailButton_Click
+            PreviewToolStripButton.Visible = False
+            SendEmailToolStripButton.Visible = False
         Else
 
-            PreviewDeclaredToolStripMenuItem.Visible = False
-            PreviewActualToolStripMenuItem.Visible = False
+            PreviewToolStripDropDownButton.Visible = False
+            SendEmailToolStripDropDownButton.Visible = False
 
-            SendEmailDeclaredToolStripMenuItem.Visible = False
-            SendEmailActualToolStripMenuItem.Visible = False
+            PayslipTypeColumn.Visible = False
         End If
 
     End Sub
@@ -235,8 +236,13 @@ Public Class SelectPayslipEmployeesForm
     Private Sub EnableDisableActionButtons()
         Dim selectedEmployeesCount = _employeeModels.Where(Function(e) e.IsSelected).Count
 
-        PreviewToolStripButton.Enabled = selectedEmployeesCount > 0
-        SendEmailToolStripButton.Enabled = selectedEmployeesCount > 0
+        Dim enabled = selectedEmployeesCount > 0
+
+        PreviewToolStripDropDownButton.Enabled = enabled
+        PreviewToolStripButton.Enabled = enabled
+
+        SendEmailToolStripDropDownButton.Enabled = enabled
+        SendEmailToolStripButton.Enabled = enabled
 
         StatusLabel.Text = $"{selectedEmployeesCount} employee(s) selected."
     End Sub
@@ -286,7 +292,16 @@ Public Class SelectPayslipEmployeesForm
 
         Dim isActual = sender Is SendEmailActualToolStripMenuItem
 
-        Dim confirm = MessageBoxHelper.Confirm(Of Boolean)($"Send email to {employees.Count} employee(s)?")
+        Dim payslipType = ""
+        If _policyHelper.ShowActual Then
+
+            payslipType = If(isActual, " Actual", " Declared")
+        End If
+
+        Const messageTitle As String = "Send Email Payslips"
+        Dim confirm = MessageBoxHelper.Confirm(Of Boolean)(
+            $"Send{payslipType} payslips to {employees.Count} employee(s) through email?",
+            messageTitle)
 
         If Not confirm Then Return
 
@@ -301,13 +316,22 @@ Public Class SelectPayslipEmployeesForm
             })
         Next
 
-        Await _paystubEmailRepository.CreateManyAsync(paystubEmails)
+        DisableAllButtons()
 
-        Await RefreshEmailStatus()
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
 
-        EnableDisableActionButtons()
+                Await _paystubEmailRepository.CreateManyAsync(paystubEmails)
 
-        MessageBoxHelper.Information($"{employees.Count} email(s) were added to queue. You can click refresh to check the updated status of the emails.")
+                Await RefreshEmailStatus()
+
+                EnableDisableActionButtons()
+
+                MessageBoxHelper.Information($"{employees.Count} email(s) were added to queue. You can click 'Refresh Status' in 'Manage Emails' to check the updated status of the emails.")
+
+            End Function)
+
+        DisableAllButtons(disable:=False)
 
     End Sub
 
@@ -389,13 +413,14 @@ Public Class SelectPayslipEmployeesForm
 
     Private Async Sub ResetEmailsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ResetEmailsToolStripMenuItem.Click
 
-        DisableAllButtons()
-
-        Dim confirm = MessageBoxHelper.Confirm(Of Boolean)($"Reset ALL email status back to unsent?")
+        Const messageTitle As String = "Reset All Email Status"
+        Dim confirm = MessageBoxHelper.Confirm(Of Boolean)($"Reset ALL email status back to unsent?", messageTitle)
 
         If Not confirm Then Return
 
-        Await FunctionUtils.TryCatchFunctionAsync("Reset Emails",
+        DisableAllButtons()
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
 
@@ -423,13 +448,16 @@ Public Class SelectPayslipEmployeesForm
                 Return
             End If
 
-            Dim confirm = MessageBoxHelper.Confirm(Of Boolean)($"Reset email status of employee [{employee.EmployeeNumber}] back to unsent?")
+            Const messageTitle As String = "Reset Email Status"
+            Dim confirm = MessageBoxHelper.Confirm(Of Boolean)(
+                $"Reset email status of employee [{employee.EmployeeNumber}] back to unsent?",
+                messageTitle)
 
             If Not confirm Then Return
 
             DisableAllButtons()
 
-            Await FunctionUtils.TryCatchFunctionAsync("Reset Email",
+            Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                 Async Function()
                     Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
 
