@@ -206,7 +206,7 @@ Public Class EmployeeForm
 
     Private Sub PreperateFormForLaGlobal()
 
-        If _currentSystemOwner = SystemOwnerService.LAGlobal Then
+        If _currentSystemOwner <> SystemOwnerService.LAGlobal Then
             ActiveEmployeeChecklistReportToolStripMenuItem.Visible = False
             BPIInsuranceAmountReportToolStripMenuItem.Visible = False
             EmploymentContractToolStripMenuItem.Visible = False
