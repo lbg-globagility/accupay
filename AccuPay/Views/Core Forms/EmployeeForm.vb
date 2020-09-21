@@ -1923,7 +1923,7 @@ Public Class EmployeeForm
             Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
 
             Dim position = Await positionService.GetByIdWithDivisionAsync(positionId)
-            If position IsNot Nothing Then
+            If position?.Division IsNot Nothing Then
                 divisionName = position.Division.Name
             End If
             txtDivisionName.Text = divisionName
