@@ -1368,14 +1368,14 @@ Public Class TimeLogsForm2
 
                     Dim i = 2
                     For Each row As DataGridViewRow In grid.Rows
-                        If row.Cells(7).Value IsNot Nothing Or row.Cells(12).Value IsNot Nothing Then
-                            worksheet.Cells($"A{i}").Value = row.Cells(2).Value
-                            worksheet.Cells($"B{i}").Value = row.Cells(3).Value
-                            worksheet.Cells($"C{i}").Value = row.Cells(4).Value
-                            worksheet.Cells($"D{i}").Value = row.Cells(7).Value
-                            worksheet.Cells($"E{i}").Value = row.Cells(6).Value
-                            worksheet.Cells($"F{i}").Value = row.Cells(12).Value
-                            worksheet.Cells($"G{i}").Value = row.Cells(8).Value
+                        If row.Cells(colTimeIn.Index).Value IsNot Nothing Or row.Cells(colTimeOut.Index).Value IsNot Nothing Then
+                            worksheet.Cells($"A{i}").Value = row.Cells(colEmployeeNo.Index).Value
+                            worksheet.Cells($"B{i}").Value = row.Cells(colFullName.Index).Value
+                            worksheet.Cells($"C{i}").Value = row.Cells(colShiftSchedule.Index).Value
+                            worksheet.Cells($"D{i}").Value = row.Cells(colTimeIn.Index).Value
+                            worksheet.Cells($"E{i}").Value = row.Cells(colDateIn.Index).Value
+                            worksheet.Cells($"F{i}").Value = row.Cells(colTimeOut.Index).Value
+                            worksheet.Cells($"G{i}").Value = row.Cells(colDateOutDisplay.Index).Value
                             i += 1
                         End If
                     Next
