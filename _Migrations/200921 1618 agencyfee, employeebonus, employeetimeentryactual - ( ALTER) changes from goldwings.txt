@@ -1,0 +1,10 @@
+ALTER TABLE `agencyfee`
+	CHANGE COLUMN `DailyFee` `DailyFee` DECIMAL(11,2) NULL DEFAULT 0.00 AFTER `TimeEntryDate`;
+
+ALTER TABLE `employeebonus`
+	CHANGE COLUMN `RemainingBalance` `RemainingBalance` DECIMAL(12,6) NULL DEFAULT 0.000000 AFTER `BonusAmount`;
+
+
+ALTER TABLE `employeetimeentryactual`
+	DROP COLUMN IF EXISTS `ShiftHours`,
+	DROP COLUMN IF EXISTS `WorkHours`;
