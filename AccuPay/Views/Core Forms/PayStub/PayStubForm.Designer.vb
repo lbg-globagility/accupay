@@ -310,6 +310,7 @@ Partial Class PayStubForm
         Me.PrintPayrollSummaryToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PrintPayrollSummaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -345,7 +346,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PrintPayrollSummaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -2769,7 +2769,6 @@ Partial Class PayStubForm
         Me.btnTotalTaxabAllowance.Text = "..."
         Me.btnTotalTaxabAllowance.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnTotalTaxabAllowance.UseVisualStyleBackColor = True
-        Me.btnTotalTaxabAllowance.Visible = False
         '
         'btntotallow
         '
@@ -2781,7 +2780,6 @@ Partial Class PayStubForm
         Me.btntotallow.Text = "..."
         Me.btntotallow.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btntotallow.UseVisualStyleBackColor = True
-        Me.btntotallow.Visible = False
         '
         'Label35
         '
@@ -3330,14 +3328,22 @@ Partial Class PayStubForm
         'PayrollSummaryDeclaredToolStripMenuItem
         '
         Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayrollSummaryActualToolStripMenuItem
         '
         Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
+        '
+        'PrintPayrollSummaryToolStripButton
+        '
+        Me.PrintPayrollSummaryToolStripButton.Image = Global.AccuPay.My.Resources.Resources.timeattendance
+        Me.PrintPayrollSummaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PrintPayrollSummaryToolStripButton.Name = "PrintPayrollSummaryToolStripButton"
+        Me.PrintPayrollSummaryToolStripButton.Size = New System.Drawing.Size(145, 22)
+        Me.PrintPayrollSummaryToolStripButton.Text = "Print Payroll Summary"
         '
         'ImageList1
         '
@@ -3570,14 +3576,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn29.HeaderText = "IsAdjustmentActual"
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.Visible = False
-        '
-        'PrintPayrollSummaryToolStripButton
-        '
-        Me.PrintPayrollSummaryToolStripButton.Image = Global.AccuPay.My.Resources.Resources.timeattendance
-        Me.PrintPayrollSummaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PrintPayrollSummaryToolStripButton.Name = "PrintPayrollSummaryToolStripButton"
-        Me.PrintPayrollSummaryToolStripButton.Size = New System.Drawing.Size(145, 22)
-        Me.PrintPayrollSummaryToolStripButton.Text = "Print Payroll Summary"
         '
         'PayStubForm
         '

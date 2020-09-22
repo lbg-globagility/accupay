@@ -66,7 +66,7 @@ FROM (SELECT i.*
 				) i
 		
 		# ########################################################################
-		UNION
+		/*UNION
 		SELECT i.*
 		FROM (SELECT
 				apd.RowID
@@ -108,7 +108,7 @@ FROM (SELECT i.*
 				WHERE apd.`Date` BETWEEN from_date AND to_date
 				AND apd.Amount != 0
 				ORDER BY ea.`AllowanceName`, apd.`Date`
-				) i
+				) i*/
 		) ii
 ORDER BY ii.`AllowanceName`, STR_TO_DATE(ii.`Date`, custom_date_format)
 ;

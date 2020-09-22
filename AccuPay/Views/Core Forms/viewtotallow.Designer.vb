@@ -45,8 +45,11 @@ Partial Class viewtotallow
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'dgvempallowance
@@ -76,7 +79,7 @@ Partial Class viewtotallow
         Me.dgvempallowance.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvempallowance.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvempallowance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempallowance.Location = New System.Drawing.Point(0, 44)
+        Me.dgvempallowance.Location = New System.Drawing.Point(0, 27)
         Me.dgvempallowance.MultiSelect = False
         Me.dgvempallowance.Name = "dgvempallowance"
         Me.dgvempallowance.ReadOnly = True
@@ -88,7 +91,7 @@ Partial Class viewtotallow
         DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvempallowance.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
-        Me.dgvempallowance.Size = New System.Drawing.Size(784, 380)
+        Me.dgvempallowance.Size = New System.Drawing.Size(784, 397)
         Me.dgvempallowance.TabIndex = 0
         '
         'RowID
@@ -139,7 +142,7 @@ Partial Class viewtotallow
         Me.Panel1.Controls.Add(Me.ComboBox2)
         Me.Panel1.Controls.Add(Me.ComboBox1)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Location = New System.Drawing.Point(0, 27)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(784, 44)
         Me.Panel1.TabIndex = 1
@@ -219,14 +222,36 @@ Partial Class viewtotallow
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.Width = 181
         '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.Label1)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(784, 27)
+        Me.Panel2.TabIndex = 2
+        '
+        'Label1
+        '
+        Me.Label1.BackColor = System.Drawing.Color.Black
+        Me.Label1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label1.ForeColor = System.Drawing.Color.White
+        Me.Label1.Location = New System.Drawing.Point(0, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(784, 27)
+        Me.Label1.TabIndex = 0
+        Me.Label1.Text = "Only daily allowances will be shown"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'viewtotallow
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(194, Byte), Integer), CType(CType(183, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(784, 424)
-        Me.Controls.Add(Me.dgvempallowance)
         Me.Controls.Add(Me.Panel1)
+        Me.Controls.Add(Me.dgvempallowance)
+        Me.Controls.Add(Me.Panel2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.KeyPreview = True
         Me.MaximizeBox = False
@@ -236,6 +261,7 @@ Partial Class viewtotallow
         Me.Text = "Employee Allowance"
         CType(Me.dgvempallowance, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
+        Me.Panel2.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -254,4 +280,6 @@ Partial Class viewtotallow
     Friend WithEvents eall_Amount As DataGridViewTextBoxColumn
     Friend WithEvents AllowanceFrequency As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents Label1 As Label
 End Class
