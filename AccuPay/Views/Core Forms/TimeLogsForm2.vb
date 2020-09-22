@@ -1080,7 +1080,13 @@ Public Class TimeLogsForm2
 
     Private Async Sub FilterButton_Click(sender As Object, e As EventArgs) Handles FilterButton.Click
 
-        If _originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
+        If EmployeeTreeView1.GetTickedEmployees().Any() = False Then
+
+            MessageBoxHelper.Warning("No selected employees.")
+            Return
+        End If
+
+        If _originalDates Is Nothing OrElse _originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
             Return
         End If
 
