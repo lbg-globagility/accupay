@@ -28,6 +28,8 @@ Public Class SalaryTab
 
     Private _ecolaAllowance As Allowance
 
+    Private _currentRolePermission As RolePermission
+
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
@@ -86,10 +88,6 @@ Public Class SalaryTab
             txtEcola.Text = _ecolaAllowance?.Amount.ToString
         End If
 
-        If _mode = FormMode.Creating Then
-            EnableSalaryGrid()
-        End If
-
         txtPayFrequency.Text = employee.PayFrequency?.Type
         txtSalaryType.Text = employee.EmployeeType
         txtFullname.Text = employee.FullNameWithMiddleInitial
@@ -122,9 +120,9 @@ Public Class SalaryTab
             'If _employee.IsDaily Then
             'End If
             _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
-                                                employeeId.Value,
-                                                payDateFrom:=currentPayPeriod.PayFromDate,
-                                                payDateTo:=currentPayPeriod.PayToDate)
+                employeeId.Value,
+                payDateFrom:=currentPayPeriod.PayFromDate,
+                payDateTo:=currentPayPeriod.PayToDate)
 
             If _ecolaAllowance Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)
@@ -178,6 +176,8 @@ Public Class SalaryTab
 
         If role.Success Then
 
+            _currentRolePermission = role.RolePermission
+
             If role.RolePermission.Create Then
                 btnNew.Visible = True
                 btnImport.Visible = True
@@ -212,11 +212,6 @@ Public Class SalaryTab
                 btnSave.Enabled = False
                 btnDelete.Enabled = False
                 btnCancel.Enabled = False
-            Case FormMode.Creating
-                btnNew.Enabled = False
-                btnSave.Enabled = True
-                btnDelete.Enabled = False
-                btnCancel.Enabled = True
             Case FormMode.Editing
                 btnNew.Enabled = True
                 btnSave.Enabled = True
@@ -264,19 +259,19 @@ Public Class SalaryTab
         AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
     End Sub
 
-    Private Sub FormToolsControl(control As Boolean)
-        dtpEffectiveFrom.Enabled = control
-        txtAmount.Enabled = control
-        txtAllowance.Enabled = control
-        chkPayPhilHealth.Enabled = control
-        chkPaySSS.Enabled = control
-        ChkPagIbig.Enabled = control
-        txtPhilHealth.Enabled = control
-        txtPagIbig.Enabled = control
+    Private Sub FormToolsControl(enabled As Boolean)
 
-        If control Then
+        If enabled Then
             txtPhilHealth.Enabled = Not chkPayPhilHealth.Checked
             txtPagIbig.Enabled = Not ChkPagIbig.Checked
+
+            If _currentRolePermission IsNot Nothing AndAlso _currentRolePermission.Update Then
+
+                grpSalary.Enabled = True
+
+            End If
+        Else
+            grpSalary.Enabled = False
         End If
 
     End Sub
@@ -336,21 +331,6 @@ Public Class SalaryTab
 
     End Sub
 
-    Private Sub DisableSalaryGrid()
-        RemoveHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
-        dgvSalaries.ClearSelection()
-        dgvSalaries.CurrentCell = Nothing
-    End Sub
-
-    Private Sub EnableSalaryGrid()
-        AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
-
-        If dgvSalaries.Rows.Count > 0 Then
-            dgvSalaries.Item(0, 0).Selected = True
-            SelectSalary(DirectCast(dgvSalaries.CurrentRow.DataBoundItem, Salary))
-        End If
-    End Sub
-
     Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
         'Focus other control to commit the changes on some control
@@ -359,12 +339,18 @@ Public Class SalaryTab
         'or focus other control manually
         pbEmployee.Focus()
 
-        Dim oldsalary As Salary = Nothing
+        If _currentSalary Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected salary.")
+            Return
+        End If
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Salary",
             Async Function()
 
-                With _currentSalary
+                Dim salary = _currentSalary.CloneJson()
+
+                With salary
                     .EffectiveFrom = dtpEffectiveFrom.Value
                     .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
                     .BasicSalary = txtAmount.Text.ToDecimal
@@ -374,20 +360,16 @@ Public Class SalaryTab
                     .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
                     .AutoComputeHDMFContribution = ChkPagIbig.Checked
                     .HDMFAmount = txtPagIbig.Text.ToDecimal
+                    .LastUpdBy = z_User
                 End With
 
-                _currentSalary.UpdateTotalSalary()
+                salary.UpdateTotalSalary()
 
-                If _currentSalary.RowID.HasValue Then
-
-                    Dim repository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
-                    oldsalary = Await repository.GetByIdAsync(_currentSalary.RowID.Value)
-                    _currentSalary.LastUpdBy = z_User
-
-                End If
+                Dim repository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+                Dim oldsalary = Await repository.GetByIdAsync(salary.RowID.Value)
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
-                Await dataService.SaveAsync(_currentSalary)
+                Await dataService.SaveAsync(salary)
 
                 If _isSystemOwnerBenchMark Then
 
@@ -395,19 +377,10 @@ Public Class SalaryTab
 
                 End If
 
-                Dim messageTitle = ""
-                If _mode = FormMode.Creating Then
+                _currentSalary = salary
 
-                    messageTitle = "New Salary"
-                    Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-                    userActivityRepository.RecordAdd(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
-
-                ElseIf _mode = FormMode.Editing Then
-
-                    messageTitle = "Update Salary"
-                    RecordUpdateSalary(oldsalary)
-
-                End If
+                Dim messageTitle = "Update Salary"
+                RecordUpdateSalary(oldsalary)
 
                 ShowBalloonInfo("Salary successfuly saved.", messageTitle)
                 LoadSalaries()
@@ -546,10 +519,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        If _mode = FormMode.Creating Then
-            SelectSalary(Nothing)
-            EnableSalaryGrid()
-        ElseIf _mode = FormMode.Editing Then
+        If _mode = FormMode.Editing Then
             LoadSalaries()
         End If
 
@@ -557,6 +527,7 @@ Public Class SalaryTab
             ChangeMode(FormMode.Empty)
         Else
             ChangeMode(FormMode.Editing)
+            DisplaySalary()
         End If
     End Sub
 
@@ -603,8 +574,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub UpdateTotalSalary()
-        Dim totalSalary = txtAmount.Text.ToDecimal +
-                    txtAllowance.Text.ToDecimal
+        Dim totalSalary = txtAmount.Text.ToDecimal + txtAllowance.Text.ToDecimal
 
         txtTotalSalary.Text = totalSalary.ToString
     End Sub
