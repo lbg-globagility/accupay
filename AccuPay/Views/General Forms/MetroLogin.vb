@@ -266,28 +266,11 @@ Public Class MetroLogin
 
     Private Sub MetroLink1_Click(sender As Object, e As EventArgs) Handles MetroLink1.Click
 
+        'Hide forgot password until we require each client to provide an email account
+        'or provide an email account by globagility that will be used in forgot password process
         Dim n_ForgotPasswordForm As New ForgotPasswordForm
 
         n_ForgotPasswordForm.ShowDialog()
-        '# ####################################### #
-        'ForgotPasswordForm.Show()
-
-        'MsgBox(Convert.ToBoolean("1"))
-
-        'cbxorganiz.Enabled = Convert.ToBoolean("1")
-
-        ''MsgBox(Convert.ToBoolean("0").ToString)
-
-        'cbxorganiz.Enabled = Convert.ToBoolean("0")
-
-        'Dim dialog_box = MessageBox.Show("Come on", "", MessageBoxButtons.YesNoCancel)
-
-        'If dialog_box = Windows.Forms.DialogResult.Yes Then
-        '    cbxorganiz.Enabled = Convert.ToBoolean(1)
-        'Else
-        '    cbxorganiz.Enabled = Convert.ToBoolean(0)
-        'End If
-        '# ####################################### #
 
     End Sub
 
