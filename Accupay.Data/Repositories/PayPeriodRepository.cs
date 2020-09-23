@@ -343,13 +343,10 @@ namespace AccuPay.Data.Repositories
 
         private DateTime GetCutOffDateUsingDefault(DateTime date, bool isCutOffStart)
         {
-            int month = date.Month;
-            int year = date.Year;
+            DayValueSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
+            DayValueSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
 
-            DaysSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
-            DaysSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
-
-            DaysSpan currentDaySpan = firstHalf.IsBetween(date) ? firstHalf : endOfTheMonth;
+            (DayValueSpan currentDaySpan, int month, int year) = PayPeriodHelper.GetCutOffDayValueSpan(date, firstHalf, endOfTheMonth);
 
             return isCutOffStart ?
                 currentDaySpan.From.GetDate(month: month, year: year) :

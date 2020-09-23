@@ -2,7 +2,7 @@
 
 namespace AccuPay.Data.Services.Policies
 {
-    public class DaysSpan
+    public class DayValueSpan
     {
         private static readonly DayValue DefaultFirstHalfStartDay = DayValue.Create(1);
         private static readonly DayValue DefaultFirstHalfEndDay = DayValue.Create(15);
@@ -12,26 +12,23 @@ namespace AccuPay.Data.Services.Policies
         public DayValue From { get; set; }
         public DayValue To { get; set; }
 
-        private DaysSpan(DayValue from, DayValue to)
+        private DayValueSpan(DayValue from, DayValue to)
         {
             From = from;
             To = to;
         }
 
-        public static DaysSpan Create(DayValue from, DayValue to)
+        public static DayValueSpan Create(DayValue from, DayValue to)
         {
-            return new DaysSpan(from, to);
+            return new DayValueSpan(from, to);
         }
 
-        public static DaysSpan DefaultFirstHalf => new DaysSpan(DefaultFirstHalfStartDay, DefaultFirstHalfEndDay);
+        public static DayValueSpan DefaultFirstHalf => new DayValueSpan(DefaultFirstHalfStartDay, DefaultFirstHalfEndDay);
 
-        public static DaysSpan DefaultEndOfTheMonth => new DaysSpan(DefaultEndOfTheMonthStartDay, DefaultEndOfTheMonthEndDay);
+        public static DayValueSpan DefaultEndOfTheMonth => new DayValueSpan(DefaultEndOfTheMonthStartDay, DefaultEndOfTheMonthEndDay);
 
-        public bool IsBetween(DateTime date)
+        public bool Contains(DateTime date, int month, int year)
         {
-            int month = date.Month;
-            int year = date.Year;
-
             DateTime fromDate = From.GetDate(month: month, year: year);
             DateTime toDate = To.GetDate(month: month, year: year);
 

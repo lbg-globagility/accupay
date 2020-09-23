@@ -96,13 +96,11 @@ namespace AccuPay.Data.Services
 
         private async Task<bool> CheckIfSalaryHasBeenUsed(Salary salary)
         {
-            int month = salary.EffectiveFrom.Month;
-            int year = salary.EffectiveFrom.Year;
+            DayValueSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
+            DayValueSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
 
-            DaysSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
-            DaysSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
-
-            DaysSpan currentDaySpan = firstHalf.IsBetween(salary.EffectiveFrom) ? firstHalf : endOfTheMonth;
+            (DayValueSpan currentDaySpan, int month, int year) = PayPeriodHelper
+                .GetCutOffDayValueSpan(salary.EffectiveFrom, firstHalf, endOfTheMonth);
 
             var salaryFirstCutOffStartDate = currentDaySpan.From.GetDate(month: month, year: year);
 
@@ -123,12 +121,6 @@ namespace AccuPay.Data.Services
                     AllowanceSalary = validRecord.AllowanceSalary.Value,
                     EffectiveFrom = validRecord.EffectiveFrom.Value
                 };
-
-                //salary.DoPaySSSContribution = dto.DoPaySSSContribution;
-                //salary.AutoComputePhilHealthContribution = dto.AutoComputePhilHealthContribution;
-                //salary.PhilHealthDeduction = dto.PhilHealthDeduction;
-                //salary.AutoComputeHDMFContribution = dto.AutoComputeHDMFContribution;
-                //salary.HDMFAmount = dto.HDMFDeduction;
 
                 added.Add(salary);
             }

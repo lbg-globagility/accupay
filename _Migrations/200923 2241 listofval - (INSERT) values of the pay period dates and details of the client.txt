@@ -1,0 +1,45 @@
+
+#Run the appropriate script for the clients
+
+/*
+#GOLDWINGS 
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES ('21,5,false,false,true,false', 'DefaultFirstHalfDaysSpan', 'Pay Period Policy', 'Yes', NOW(), '1', NOW(), '1', '1');
+
+
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES ('6,20,false,false,false,false', 'DefaultEndOfTheMonthDaysSpan', 'Pay Period Policy', 'Yes', NOW(), '1', NOW(), '1', '1');
+*/
+
+/*
+#CINEMA 2000
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES ('16,31,false,true,true,true', 'DefaultFirstHalfDaysSpan', 'Pay Period Policy', 'Yes', NOW(), '1', NOW(), '1', '1');
+
+
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES ('1,15,false,false,false,false', 'DefaultEndOfTheMonthDaysSpan', 'Pay Period Policy', 'Yes', NOW(), '1', NOW(), '1', '1');
+*/
+
+/*
+#LA GLOBAL
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES ('1,15,false,false,false,false', 'DefaultFirstHalfDaysSpan', 'Pay Period Policy', 'Yes', NOW(), '1', NOW(), '1', '1');
+
+
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES ('16,31,false,true,false,false', 'DefaultEndOfTheMonthDaysSpan', 'Pay Period Policy', 'Yes', NOW(), '1', NOW(), '1', '1');
+*/
+
+
+
+
+#the DisplayValue means
+/*
+1. First day of the cut off
+2. Last day of the cut off 
+3. Is first day the last day of the month?
+4. Is last day the last day of the month?
+5. Is first day from previous month?
+6. Is last day from previous months
+*/
