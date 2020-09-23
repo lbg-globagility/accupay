@@ -102,8 +102,8 @@ namespace AccuPay.Data.Services
             TimeAttendanceLogRepository timeAttendanceLogRepository,
             TimeEntryRepository timeEntryRepository,
             TimeLogRepository timeLogRepository,
-                                TripTicketRepository tripTicketRepository,
-                                RouteRateRepository routeRateRepository)
+            TripTicketRepository tripTicketRepository,
+            RouteRateRepository routeRateRepository)
         {
             _dbContextOptionsService = dbContextOptionsService;
             _calendarService = calendarService;
@@ -371,8 +371,8 @@ namespace AccuPay.Data.Services
                         payrate,
                         calendarCollection,
                         branchId,
-                                                            tripTicketsForDate,
-                                                            _routeRates);
+                        tripTicketsForDate,
+                        _routeRates);
 
                     if (payrate.IsRegularHoliday)
                     {

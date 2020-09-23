@@ -34,8 +34,8 @@ namespace AccuPay.Data.Repositories
         public TripTicketQueryBuilder BetweeDates(TimePeriod timePeriod)
         {
             _query = _query
-               .Where(tt => tt.TripDate >= timePeriod.Start)
-               .Where(tt => tt.TripDate <= timePeriod.End);
+               .Where(tt => tt.Date >= timePeriod.Start)
+               .Where(tt => tt.Date <= timePeriod.End);
             return this;
         }
 
@@ -70,7 +70,7 @@ namespace AccuPay.Data.Repositories
         public TripTicketQueryBuilder IncludeTripTicketEmployees()
         {
             _query = _query
-                .Include(x => x.TripTicketEmployees)
+                .Include(x => x.Employees)
                 .ThenInclude(tte => tte.Employee);
             return this;
         }

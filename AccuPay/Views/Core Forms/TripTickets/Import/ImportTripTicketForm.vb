@@ -137,9 +137,9 @@ Public Class ImportTripTicketForm
                 newtripTicket.Vehicle = newVehicle
             End If
 
-            newtripTicket.TripDate = .TripDate
+            newtripTicket.Date = .TripDate
 
-            newtripTicket.TripTicketEmployees = .Items.Select(Function(t) NewTripTicketEmployee(t)).ToList()
+            newtripTicket.Employees = .Items.Select(Function(t) NewTripTicketEmployee(t)).ToList()
 
         End With
     End Sub
@@ -255,7 +255,7 @@ Public Class ImportTripTicketForm
             Dim tripTicket = tripiTickets.
                 Where(Function(t) t.RouteDescription = model.TripLocation).
                 Where(Function(t) t.VehiclePlateNo = model.Truck).
-                Where(Function(t) t.TripDate = model.TripDate).
+                Where(Function(t) t.Date = model.TripDate).
                 FirstOrDefault
 
             model.Validate(employee, route, vehicle, tripTicket)
@@ -361,9 +361,9 @@ Public Class ImportTripTicketForm
             _noNumberOfTrips = Not NumberOfTrips.HasValue
 
             If tripTicket IsNot Nothing And Not _noEmployee Then
-                If tripTicket.TripTicketEmployees IsNot Nothing Then
+                If tripTicket.Employees IsNot Nothing Then
                     Dim query = tripTicket.
-                        TripTicketEmployees.
+                        Employees.
                         Where(Function(tte) tte.EmployeeID = EmployeeID).
                         Where(Function(tte) tte.NoOfTrips = NumberOfTrips).
                         ToList()

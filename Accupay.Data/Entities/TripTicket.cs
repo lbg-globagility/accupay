@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -32,8 +31,6 @@ namespace AccuPay.Data.Entities
         public string TicketNo { get; set; }
 
         public DateTime? Date { get; set; }
-        [Column("Date")]
-        public DateTime? TripDate { get; set; }
 
         public TimeSpan? TimeFrom { get; set; }
 
@@ -55,14 +52,7 @@ namespace AccuPay.Data.Entities
 
         public string RouteDescription => Route?.Description;
 
-        public TripTicket()
-        {
-            Created = DateTime.Now;
-        }
-
         public string VehiclePlateNo => Vehicle?.PlateNo;
-
-        public virtual ICollection<TripTicketEmployee> TripTicketEmployees { get; set; }
 
         public static TripTicket NewTripTicket(int organizationId, int userId)
         {

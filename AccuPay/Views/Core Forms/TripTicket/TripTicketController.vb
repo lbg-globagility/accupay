@@ -343,7 +343,6 @@ Public Class TripTicketController
         _tripTicket.Date = View.TripDate
         _tripTicket.VehicleID = View.VehicleID
         _tripTicket.RouteID = View.RouteID
-        _tripTicket.LastUpd = DateTime.Now()
     End Sub
 
     Private Sub Persist()
