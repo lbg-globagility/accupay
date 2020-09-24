@@ -19,6 +19,8 @@ Public Class TripTicketForm
 
     Public Event EmployeeWasAdded(employeeID As Integer?)
 
+    Public Event EmployeeWasRemoved(employeeID As Integer?)
+
     Public Event TripTicketSelected(tripTicketID As Integer?)
 
     Public Event RouteHasChanged(routeID As Integer?)
@@ -200,7 +202,17 @@ Public Class TripTicketForm
     End Sub
 
     Private Sub dgvTripTicketHelpers_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTripTicketHelpers.CellClick
-        ' Implement remove
+        Dim datagrid = DirectCast(sender, DataGridView)
+
+        If e.ColumnIndex = colTripTicketHelpersRemove.Index Then
+            Dim tripTicketEmployee = DirectCast(datagrid.Rows(e.RowIndex).DataBoundItem, TripTicketEmployee)
+
+            RaiseEvent EmployeeWasRemoved(tripTicketEmployee.EmployeeID)
+
+            Console.WriteLine("Remove")
+            'Dim link As String = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
+            'System.Diagnostics.Process.Start(link)
+        End If
     End Sub
 
     Private Sub cboRoutes_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboRoutes.SelectedIndexChanged

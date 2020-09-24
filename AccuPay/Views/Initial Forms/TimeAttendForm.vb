@@ -54,12 +54,14 @@ Public Class TimeAttendForm
         Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
         Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
         Dim timeEntryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMEENTRY).FirstOrDefault()
+        Dim tripTicketPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TRIPTICKET).FirstOrDefault()
 
         LeaveToolStripMenuItem.Visible = If(leavePermission?.Read, False)
         OfficialBusinessToolStripMenuItem.Visible = If(officialBusinessPermission?.Read, False)
         OvertimeToolStripMenuItem.Visible = If(overtimePermission?.Read, False)
         TimeLogsToolStripMenuItem.Visible = If(timeLogPermission?.Read, False)
         SummaryToolStripMenuItem.Visible = If(timeEntryPermission?.Read, False)
+        TripTicketsToolStripMenuItem.Visible = If(tripTicketPermission?.Read, False)
 
         'Shift and overtime only overrides the visibility if Read is False
         'since they are already checked by other policies above
@@ -218,8 +220,9 @@ Public Class TimeAttendForm
         previousForm = EmployeeOvertimeForm
     End Sub
 
-    Private Sub TripTicketsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TripTicketsToolStripMenuItem.Click
-        ChangeForm(TripTicketForm, "Employee Time Entry Logs")
+    Private Async Sub TripTicketsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TripTicketsToolStripMenuItem.Click
+        Await ChangeForm(TripTicketForm, PermissionConstant.TRIPTICKET)
         previousForm = TripTicketForm
     End Sub
+
 End Class

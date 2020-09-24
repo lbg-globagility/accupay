@@ -254,6 +254,7 @@ Public Class TripTicketController
         tripTicketHelper.OrganizationID = z_OrganizationID
         tripTicketHelper.CreatedBy = z_User
         tripTicketHelper.Employee = employee
+        tripTicketHelper.EmployeeID = employee.RowID
 
         If _tripTicket.IsSpecialOperations Then
             'tripTicketHelper.PaymentAmount = Me.standardMinimumWage
@@ -262,6 +263,12 @@ Public Class TripTicketController
         End If
 
         View.TripTicketHelpersSource.Add(tripTicketHelper)
+    End Sub
+
+    Private Sub RemoveTripTicketHelper(employeeID As Integer?) Handles View.EmployeeWasRemoved
+        Dim tripTicketEmployee = _tripTicketHelpers.FirstOrDefault(Function(e) CBool(e.EmployeeID = employeeID))
+
+        View.TripTicketHelpersSource.Remove(tripTicketEmployee)
     End Sub
 
     ''' <summary>

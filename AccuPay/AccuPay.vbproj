@@ -2108,6 +2108,21 @@
     <EmbeddedResource Include="Views\Core Forms\TripTickets\Import\ImportTripTicketForm.resx">
       <DependentUpon>ImportTripTicketForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\NewTripTicketDialog.resx">
+      <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\RouteForm.resx">
+      <DependentUpon>RouteForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\RoutePayRateMatrixForm.resx">
+      <DependentUpon>RoutePayRateMatrixForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\TripTicketForm.resx">
+      <DependentUpon>TripTicketForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\VehicleForm.resx">
+      <DependentUpon>VehicleForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </EmbeddedResource>

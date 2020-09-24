@@ -22,19 +22,14 @@ Partial Class TripTicketForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TripTicketForm))
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.pnlTripTicket = New System.Windows.Forms.Panel()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.dgvTripTicketHelpers = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.dgvEmployeesRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvEmployeesName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTripTicketHelpersPosition = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvEmployeesPayment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTripTicketHelpersRemove = New DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn()
         Me.cboEmployees = New System.Windows.Forms.ComboBox()
         Me.btnAddHelper = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -87,6 +82,10 @@ Partial Class TripTicketForm
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dgvEmployeesName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTripTicketHelpersPosition = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dgvEmployeesPayment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTripTicketHelpersRemove = New DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn()
         Me.pnlTripTicket.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.dgvTripTicketHelpers, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -137,70 +136,33 @@ Partial Class TripTicketForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvTripTicketHelpers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvTripTicketHelpers.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvTripTicketHelpers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvTripTicketHelpers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvTripTicketHelpers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvTripTicketHelpers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.dgvEmployeesRowID, Me.dgvEmployeesName, Me.colTripTicketHelpersPosition, Me.dgvEmployeesPayment, Me.colTripTicketHelpersRemove})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvTripTicketHelpers.DefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvTripTicketHelpers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.dgvEmployeesName, Me.colTripTicketHelpersPosition, Me.dgvEmployeesPayment, Me.colTripTicketHelpersRemove})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvTripTicketHelpers.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvTripTicketHelpers.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvTripTicketHelpers.Location = New System.Drawing.Point(11, 48)
         Me.dgvTripTicketHelpers.MultiSelect = False
         Me.dgvTripTicketHelpers.Name = "dgvTripTicketHelpers"
-        Me.dgvTripTicketHelpers.ReadOnly = True
         Me.dgvTripTicketHelpers.RowHeadersWidth = 25
         Me.dgvTripTicketHelpers.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvTripTicketHelpers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvTripTicketHelpers.Size = New System.Drawing.Size(819, 287)
         Me.dgvTripTicketHelpers.TabIndex = 102
-        '
-        'dgvEmployeesRowID
-        '
-        Me.dgvEmployeesRowID.DataPropertyName = "RowID"
-        Me.dgvEmployeesRowID.HeaderText = "RowID"
-        Me.dgvEmployeesRowID.Name = "dgvEmployeesRowID"
-        Me.dgvEmployeesRowID.ReadOnly = True
-        '
-        'dgvEmployeesName
-        '
-        Me.dgvEmployeesName.DataPropertyName = "FullName"
-        Me.dgvEmployeesName.HeaderText = "Name"
-        Me.dgvEmployeesName.Name = "dgvEmployeesName"
-        Me.dgvEmployeesName.ReadOnly = True
-        '
-        'colTripTicketHelpersPosition
-        '
-        Me.colTripTicketHelpersPosition.DataPropertyName = "PositionName"
-        Me.colTripTicketHelpersPosition.HeaderText = "Position"
-        Me.colTripTicketHelpersPosition.Name = "colTripTicketHelpersPosition"
-        Me.colTripTicketHelpersPosition.ReadOnly = True
-        '
-        'dgvEmployeesPayment
-        '
-        Me.dgvEmployeesPayment.DataPropertyName = "PaymentAmount"
-        Me.dgvEmployeesPayment.HeaderText = "Payment"
-        Me.dgvEmployeesPayment.Name = "dgvEmployeesPayment"
-        Me.dgvEmployeesPayment.ReadOnly = True
-        '
-        'colTripTicketHelpersRemove
-        '
-        Me.colTripTicketHelpersRemove.HeaderText = "Remove"
-        Me.colTripTicketHelpersRemove.Name = "colTripTicketHelpersRemove"
-        Me.colTripTicketHelpersRemove.ReadOnly = True
-        Me.colTripTicketHelpersRemove.Text = "Remove"
-        Me.colTripTicketHelpersRemove.UseColumnTextForButtonValue = True
         '
         'cboEmployees
         '
@@ -327,7 +289,7 @@ Partial Class TripTicketForm
         '
         'cboRoutes
         '
-        Me.cboRoutes.DisplayMember = "Name"
+        Me.cboRoutes.DisplayMember = "Description"
         Me.cboRoutes.FormattingEnabled = True
         Me.cboRoutes.Location = New System.Drawing.Point(161, 95)
         Me.cboRoutes.Name = "cboRoutes"
@@ -483,7 +445,7 @@ Partial Class TripTicketForm
         Me.btnNewTripTicket.Image = Global.AccuPay.My.Resources.Resources._new
         Me.btnNewTripTicket.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNewTripTicket.Name = "btnNewTripTicket"
-        Me.btnNewTripTicket.Size = New System.Drawing.Size(110, 22)
+        Me.btnNewTripTicket.Size = New System.Drawing.Size(107, 22)
         Me.btnNewTripTicket.Text = "&New Trip Ticket"
         Me.btnNewTripTicket.ToolTipText = "New Trip Ticket"
         '
@@ -492,7 +454,7 @@ Partial Class TripTicketForm
         Me.btnSaveTripTicket.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.btnSaveTripTicket.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSaveTripTicket.Name = "btnSaveTripTicket"
-        Me.btnSaveTripTicket.Size = New System.Drawing.Size(110, 22)
+        Me.btnSaveTripTicket.Size = New System.Drawing.Size(107, 22)
         Me.btnSaveTripTicket.Text = "&Save Trip Ticket"
         '
         'btnCancel
@@ -548,33 +510,33 @@ Partial Class TripTicketForm
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgvTripTickets.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvTripTickets.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvTripTickets.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvTripTickets.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.dgvTripTickets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvTripTickets.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.dgvTripTicketsRowID, Me.dgvTripTicketsTicketNo, Me.dgvTripTicketsTripDate, Me.dgvTripTicketsRoute})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvTripTickets.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvTripTickets.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvTripTickets.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvTripTickets.Location = New System.Drawing.Point(3, 67)
+        Me.dgvTripTickets.Location = New System.Drawing.Point(8, 32)
         Me.dgvTripTickets.MultiSelect = False
         Me.dgvTripTickets.Name = "dgvTripTickets"
         Me.dgvTripTickets.ReadOnly = True
         Me.dgvTripTickets.RowHeadersWidth = 25
         Me.dgvTripTickets.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvTripTickets.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTripTickets.Size = New System.Drawing.Size(395, 626)
+        Me.dgvTripTickets.Size = New System.Drawing.Size(384, 664)
         Me.dgvTripTickets.TabIndex = 102
         '
         'dgvTripTicketsRowID
@@ -633,7 +595,7 @@ Partial Class TripTicketForm
         'lblSearch
         '
         Me.lblSearch.AutoSize = True
-        Me.lblSearch.Location = New System.Drawing.Point(8, 51)
+        Me.lblSearch.Location = New System.Drawing.Point(8, 8)
         Me.lblSearch.Name = "lblSearch"
         Me.lblSearch.Size = New System.Drawing.Size(41, 13)
         Me.lblSearch.TabIndex = 104
@@ -641,7 +603,7 @@ Partial Class TripTicketForm
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(70, 48)
+        Me.TextBox1.Location = New System.Drawing.Point(64, 8)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(328, 20)
         Me.TextBox1.TabIndex = 103
@@ -704,6 +666,34 @@ Partial Class TripTicketForm
         Me.DataGridViewTextBoxColumn8.HeaderText = "Route"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
         Me.DataGridViewTextBoxColumn8.Width = 80
+        '
+        'dgvEmployeesName
+        '
+        Me.dgvEmployeesName.DataPropertyName = "FullName"
+        Me.dgvEmployeesName.HeaderText = "Name"
+        Me.dgvEmployeesName.Name = "dgvEmployeesName"
+        Me.dgvEmployeesName.ReadOnly = True
+        '
+        'colTripTicketHelpersPosition
+        '
+        Me.colTripTicketHelpersPosition.DataPropertyName = "PositionName"
+        Me.colTripTicketHelpersPosition.HeaderText = "Position"
+        Me.colTripTicketHelpersPosition.Name = "colTripTicketHelpersPosition"
+        Me.colTripTicketHelpersPosition.ReadOnly = True
+        '
+        'dgvEmployeesPayment
+        '
+        Me.dgvEmployeesPayment.DataPropertyName = "NoOfTrips"
+        Me.dgvEmployeesPayment.HeaderText = "No of Trips"
+        Me.dgvEmployeesPayment.Name = "dgvEmployeesPayment"
+        '
+        'colTripTicketHelpersRemove
+        '
+        Me.colTripTicketHelpersRemove.HeaderText = "Remove"
+        Me.colTripTicketHelpersRemove.Name = "colTripTicketHelpersRemove"
+        Me.colTripTicketHelpersRemove.ReadOnly = True
+        Me.colTripTicketHelpersRemove.Text = "Remove"
+        Me.colTripTicketHelpersRemove.UseColumnTextForButtonValue = True
         '
         'TripTicketForm
         '
@@ -778,11 +768,6 @@ Partial Class TripTicketForm
     Friend WithEvents dgvTripTicketsRoute As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn8 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents lnkRoutePayMatrix As System.Windows.Forms.LinkLabel
-    Friend WithEvents dgvEmployeesRowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents dgvEmployeesName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colTripTicketHelpersPosition As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents dgvEmployeesPayment As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents colTripTicketHelpersRemove As DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents txtTruckType As System.Windows.Forms.TextBox
     Friend WithEvents txtPlateNo As System.Windows.Forms.TextBox
@@ -792,4 +777,8 @@ Partial Class TripTicketForm
     Friend WithEvents lblDistance As System.Windows.Forms.Label
     Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
     Friend WithEvents lblSearch As System.Windows.Forms.Label
+    Friend WithEvents dgvEmployeesName As DataGridViewTextBoxColumn
+    Friend WithEvents colTripTicketHelpersPosition As DataGridViewTextBoxColumn
+    Friend WithEvents dgvEmployeesPayment As DataGridViewTextBoxColumn
+    Friend WithEvents colTripTicketHelpersRemove As DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn
 End Class
