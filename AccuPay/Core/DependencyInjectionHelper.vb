@@ -77,7 +77,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ListOfValueRepository)
         services.AddTransient(Of LoanPaymentFromBonusRepository)
         services.AddTransient(Of LoanRepository)
-
         services.AddTransient(Of OfficialBusinessRepository)
         services.AddTransient(Of OrganizationRepository)
         services.AddTransient(Of OvertimeRepository)
@@ -94,6 +93,8 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ProductRepository)
         services.AddTransient(Of PromotionRepository)
         services.AddTransient(Of RoleRepository)
+        services.AddTransient(Of RouteRepository)
+        services.AddTransient(Of RouteRateRepository)
         services.AddTransient(Of SalaryRepository)
         services.AddTransient(Of ShiftRepository)
         services.AddTransient(Of ShiftScheduleRepository)
@@ -101,7 +102,9 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeAttendanceLogRepository)
         services.AddTransient(Of TimeEntryRepository)
         services.AddTransient(Of TimeLogRepository)
+        services.AddTransient(Of TripTicketRepository)
         services.AddTransient(Of UserActivityRepository)
+        services.AddTransient(Of VehicleRepository)
         services.AddTransient(Of WithholdingTaxBracketRepository)
 
         services.AddTransient(Of CalendarService)
