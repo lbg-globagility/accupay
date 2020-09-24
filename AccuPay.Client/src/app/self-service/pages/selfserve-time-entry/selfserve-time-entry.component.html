@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>View Timesheet</h1>
+
+<div mat-dialog-content>
+  <button mat-raised-button color="accent" (click)="selectPeriod()">
+    SELECT A PAY PERIOD
+  </button>
+</div>
+
+<div mat-dialog-content>
+  <app-time-entry-table [timeEntries]="timeEntries"></app-time-entry-table>
+</div>

@@ -79,7 +79,7 @@ namespace AccuPay.Web.TimeEntries
 
         public async Task<ICollection<TimeEntryDto>> GetTimeEntries(int payPeriodId, int employeeId)
         {
-            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
+            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId); ;
 
             var list = await _dataService.GetEmployeeTimeEntries(
                 _currentUser.OrganizationId,

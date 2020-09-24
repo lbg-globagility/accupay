@@ -21,5 +21,6 @@ import { LeavesComponent } from './leaves/leaves.component';
     LeavesComponent,
   ],
   imports: [SharedModule],
+  exports: [LeaveFormComponent],
 })
 export class LeavesModule {}

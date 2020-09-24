@@ -21,16 +21,11 @@ namespace AccuPay.Web.OfficialBusinesses
             _repository = repository;
         }
 
-        public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(PageOptions options, OfficialBusinessFilter filter)
+        public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(OfficialBusinessPageOptions options)
         {
             // TODO: sort and desc in repository
             int organizationId = _currentUser.OrganizationId;
-            var paginatedList = await _repository.GetPaginatedListAsync(
-                options,
-                organizationId,
-                filter.Term,
-                filter.DateFrom,
-                filter.DateTo);
+            var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId);
 
             return paginatedList.Select(x => ConvertToDto(x));
         }
@@ -54,6 +49,25 @@ namespace AccuPay.Web.OfficialBusinesses
             ApplyChanges(dto, officialBusiness);
 
             await _dataService.SaveAsync(officialBusiness);
+
+            return ConvertToDto(officialBusiness);
+        }
+
+        public async Task<OfficialBusinessDto> Create(SelfServiceCreateOfficialBusinessDto dto)
+        {
+            var officialBusiness = new OfficialBusiness()
+            {
+                EmployeeID = _currentUser.EmployeeId,
+                CreatedBy = _currentUser.UserId,
+                OrganizationID = _currentUser.OrganizationId
+            };
+
+            officialBusiness.StartDate = dto.Date;
+            officialBusiness.StartTime = dto.StartTime?.TimeOfDay;
+            officialBusiness.EndTime = dto.EndTime?.TimeOfDay;
+            officialBusiness.Reason = dto.Reason;
+
+            await _repository.CreateAsync(officialBusiness);
 
             return ConvertToDto(officialBusiness);
         }

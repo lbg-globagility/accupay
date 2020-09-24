@@ -1,5 +1,3 @@
-using System;
-
 namespace AccuPay.Web.Users
 {
     public class UserDto
@@ -11,5 +9,7 @@ namespace AccuPay.Web.Users
         public string LastName { get; set; }
 
         public string Email { get; set; }
+
+        public string Type { get; set; }
     }
 }

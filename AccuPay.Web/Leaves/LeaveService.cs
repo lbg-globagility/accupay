@@ -31,15 +31,12 @@ namespace AccuPay.Web.Leaves
             _currentUser = currentUser;
         }
 
-        public async Task<PaginatedList<LeaveDto>> PaginatedList(PageOptions options, LeaveFilter filter)
+        public async Task<PaginatedList<LeaveDto>> PaginatedList(LeavePageOptions options)
         {
             // TODO: sort and desc in repository
             var paginatedList = await _leaveRepository.GetPaginatedListAsync(
                 options,
-                _currentUser.OrganizationId,
-                filter.Term,
-                filter.DateFrom,
-                filter.DateTo);
+                _currentUser.OrganizationId);
 
             return paginatedList.Select(x => ConvertToDto(x));
         }
@@ -92,6 +89,27 @@ namespace AccuPay.Web.Leaves
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, leave);
+
+            await _dataService.SaveAsync(leave);
+
+            return ConvertToDto(leave);
+        }
+
+        public async Task<LeaveDto> Create(SelfServiceCreateLeaveDto dto)
+        {
+            var leave = new Leave()
+            {
+                EmployeeID = _currentUser.EmployeeId,
+                CreatedBy = _currentUser.UserId,
+                OrganizationID = _currentUser.OrganizationId,
+            };
+
+            leave.LeaveType = dto.LeaveType;
+            leave.StartDate = dto.StartDate;
+            leave.StartTime = dto.StartTime?.TimeOfDay;
+            leave.EndTime = dto.EndTime?.TimeOfDay;
+            leave.Reason = dto.Reason;
+            leave.Status = Leave.StatusPending;
 
             await _dataService.SaveAsync(leave);
 

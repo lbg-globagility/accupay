@@ -1,5 +1,3 @@
-using System;
-
 namespace AccuPay.Web.Core.Auth
 {
     /// <summary>
@@ -12,5 +10,7 @@ namespace AccuPay.Web.Core.Auth
         int OrganizationId { get; }
 
         int ClientId { get; }
+
+        int? EmployeeId { get; }
     }
 }

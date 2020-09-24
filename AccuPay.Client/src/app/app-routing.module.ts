@@ -91,6 +91,12 @@ import { LoansComponent } from './loans/loans/loans.component';
 import { PositionsComponent } from 'src/app/positions/components/positions/positions.component';
 import { PermissionGuard, PermissionTypes } from 'src/app/core/auth';
 import { NotAuthorizedComponent } from 'src/app/errors/not-authorized/not-authorized.component';
+import { SelfServeComponent } from './self-service/self-serve/self-serve.component';
+import { SelfServiceTimesheetsComponent } from 'src/app/self-service/components/self-service-timesheets/self-service-timesheets.component';
+import { SelfserviceLeavesComponent } from 'src/app/self-service/leaves/components';
+import { SelfserviceOvertimesComponent } from 'src/app/self-service/overtimes/components';
+import { SelfserviceOfficialBusinessesComponent } from 'src/app/self-service/official-businesses/components';
+import { SelfserviceDashboardComponent } from 'src/app/self-service/dashboard/components/selfservice-dashboard/selfservice-dashboard.component';
 
 const routes: Routes = [
   {
@@ -545,6 +551,32 @@ const routes: Routes = [
     ],
     canActivate: [AuthGuard],
     canActivateChild: [PermissionGuard],
+  },
+  {
+    path: 'self-service',
+    component: MainComponent,
+    children: [
+      {
+        path: '',
+        component: SelfserviceDashboardComponent,
+      },
+      {
+        path: 'leaves',
+        component: SelfserviceLeavesComponent,
+      },
+      {
+        path: 'overtimes',
+        component: SelfserviceOvertimesComponent,
+      },
+      {
+        path: 'official-businesses',
+        component: SelfserviceOfficialBusinessesComponent,
+      },
+      {
+        path: 'timesheets',
+        component: SelfServiceTimesheetsComponent,
+      },
+    ],
   },
   {
     path: 'not-authorized',

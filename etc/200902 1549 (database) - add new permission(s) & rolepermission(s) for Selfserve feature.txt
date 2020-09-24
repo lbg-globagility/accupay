@@ -1,0 +1,13 @@
+INSERT INTO `permission` (`Name`) VALUES ('SelfserveLeave') ON DUPLICATE KEY UPDATE `Name`='SelfserveLeave';
+INSERT INTO `permission` (`Name`) VALUES ('SelfserveOvertime') ON DUPLICATE KEY UPDATE `Name`='SelfserveOvertime';
+INSERT INTO `permission` (`Name`) VALUES ('SelfserveOfficialBusiness') ON DUPLICATE KEY UPDATE `Name`='SelfserveOfficialBusiness';
+INSERT INTO `permission` (`Name`) VALUES ('SelfserveTimeEntry') ON DUPLICATE KEY UPDATE `Name`='SelfserveTimeEntry';
+
+INSERT INTO `rolepermission` (`RoleId`, `PermissionId`, `Read`, `Create`, `Update`, `Delete`)
+SELECT
+r.Id `RoleId`, p.Id `PermissionId`, TRUE `Read`, TRUE `Create`, FALSE `Update`, FALSE `Delete`
+FROM aspnetroles r
+INNER JOIN permission p ON p.`Name` IN ('SelfserveLeave', 'SelfserveOvertime', 'SelfserveOfficialBusiness', 'SelfserveTimeEntry')
+WHERE r.`Name`='Selfserve'
+ON DUPLICATE KEY UPDATE `Read`=TRUE
+;

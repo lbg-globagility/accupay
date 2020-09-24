@@ -111,5 +111,25 @@ namespace AccuPay.Web.Core.Auth
         public const string AllowanceTypeCreate = "AllowanceType:create";
         public const string AllowanceTypeUpdate = "AllowanceType:update";
         public const string AllowanceTypeDelete = "AllowanceType:delete";
+
+        public const string SelfserveLeaveRead = "SelfserveLeave:read";
+        public const string SelfserveLeaveCreate = "SelfserveLeave:create";
+        public const string SelfserveLeaveUpdate = "SelfserveLeave:update";
+        public const string SelfserveLeaveDelete = "SelfserveLeave:delete";
+
+        public const string SelfserveOvertimeRead = "SelfserveOvertime:read";
+        public const string SelfserveOvertimeCreate = "SelfserveOvertime:create";
+        public const string SelfserveOvertimeUpdate = "SelfserveOvertime:update";
+        public const string SelfserveOvertimeDelete = "SelfserveOvertime:delete";
+
+        public const string SelfserveOfficialBusinessRead = "SelfserveOfficialBusiness:read";
+        public const string SelfserveOfficialBusinessCreate = "SelfserveOfficialBusiness:create";
+        public const string SelfserveOfficialBusinessUpdate = "SelfserveOfficialBusiness:update";
+        public const string SelfserveOfficialBusinessDelete = "SelfserveOfficialBusiness:delete";
+
+        public const string SelfserveTimeEntryRead = "SelfserveTimeEntry:read";
+        public const string SelfserveTimeEntryCreate = "SelfserveTimeEntry:create";
+        public const string SelfserveTimeEntryUpdate = "SelfserveTimeEntry:update";
+        public const string SelfserveTimeEntryDelete = "SelfserveTimeEntry:delete";
     }
 }

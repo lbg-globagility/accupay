@@ -12,6 +12,8 @@ namespace AccuPay.Data.Entities
 
         public const string StatusPending = "Pending";
 
+        public const string StatusRejected = "Rejected";
+
         public int? OrganizationID { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
