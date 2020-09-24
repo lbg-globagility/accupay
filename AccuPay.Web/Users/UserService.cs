@@ -75,7 +75,9 @@ namespace AccuPay.Web.Users
                 LastName = dto.LastName,
                 Email = dto.Email,
                 UserName = dto.Email,
-                ClientId = _currentUser.ClientId
+                ClientId = _currentUser.ClientId,
+                EmployeeId = dto.EmployeeId,
+                CreatedById = _currentUser.UserId
             };
             var result = await _users.CreateAsync(user, DEFAULT_PASSWORD);
             if (result.Succeeded)

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeeUserModel } from 'src/app/users/shared/user-form-user';
 import { User } from 'src/app/users/shared/user';
 
 interface FormValue {
@@ -38,6 +39,7 @@ export class UserFormComponent implements OnInit {
   });
 
   showUnregisteredUserOption: boolean = false;
+  employeeUser: EmployeeUserModel;
 
   constructor(private fb: FormBuilder) {}
 
@@ -59,10 +61,21 @@ export class UserFormComponent implements OnInit {
 
     const user = this.form.value as User;
 
+    if (this.employeeUser != null) {
+      user.employeeId = this.employeeUser.employeeId;
+    }
+
     this.save.emit(user);
   }
 
   onCancel(): void {
     this.cancel.emit();
+  }
+
+  patchUser(user: EmployeeUserModel) {
+    if (user) {
+      this.employeeUser = user;
+      this.form.patchValue(user);
+    }
   }
 }

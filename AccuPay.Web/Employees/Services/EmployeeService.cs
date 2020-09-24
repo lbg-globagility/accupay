@@ -187,5 +187,15 @@ namespace AccuPay.Web.Employees.Services
 
             return parsedResult;
         }
+
+        public async Task<PaginatedList<EmployeeDto>> GetUnregisteredEmployeeAsync(PageOptions options, string searchTerm)
+        {
+            var organizationId = _currentUser.OrganizationId;
+            var clientId = _currentUser.ClientId;
+
+            var employees = await _employeeRepository.GetUnregisteredEmployeeAsync(options, searchTerm, clientId, organizationId);
+
+            return employees.Select(e => EmployeeDto.Convert(e));
+        }
     }
 }

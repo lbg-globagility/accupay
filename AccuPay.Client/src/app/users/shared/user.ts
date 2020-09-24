@@ -16,4 +16,5 @@ export interface User {
   status?: string;
   recallCategories?: string[];
   location: string;
+  employeeId?: number;
 }
