@@ -161,8 +161,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub ShowOrHidePayrollSummaryByBranch()
-        CostCenterReportToolStripMenuItem.Visible = _policy.PayRateCalculationBasis =
-                                                            PayRateCalculationBasis.Branch
+        CostCenterReportToolStripMenuItem.Visible = _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch
     End Sub
 
     Private Sub ShowOrHideActual()
@@ -174,6 +173,9 @@ Public Class PayStubForm
 
         PayslipDeclaredToolStripMenuItem.Visible = showActual
         PayslipActualToolStripMenuItem.Visible = showActual
+
+        CostCenterReportDeclaredToolStripMenuItem.Visible = showActual
+        CostCenterReportActualToolStripMenuItem.Visible = showActual
 
         ExportNetPayDeclaredAllToolStripMenuItem.Visible = showActual
         ExportNetPayDeclaredCashToolStripMenuItem.Visible = showActual
@@ -198,6 +200,8 @@ Public Class PayStubForm
 
             PrintPayrollSummaryToolStripDropDownButton.Visible = True
             PrintPayrollSummaryToolStripButton.Visible = False
+
+            RemoveHandler CostCenterReportToolStripMenuItem.Click, AddressOf CostCenterReportToolStripMenuItem_Click
 
             RemoveHandler ExportNetPayAllToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
             RemoveHandler ExportNetPayCashToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
@@ -2011,9 +2015,13 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub PayrollSummaryByBranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CostCenterReportToolStripMenuItem.Click
+    Private Sub CostCenterReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles _
+        CostCenterReportToolStripMenuItem.Click,
+        CostCenterReportDeclaredToolStripMenuItem.Click,
+        CostCenterReportActualToolStripMenuItem.Click
 
         Dim provider = New CostCenterReportProvider()
+        provider.IsActual = sender Is CostCenterReportActualToolStripMenuItem
 
         provider.Run()
 

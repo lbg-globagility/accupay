@@ -36,7 +36,8 @@ namespace AccuPay.Data.Services
         public List<PayPeriodModel> GetData(
             DateTime selectedMonth,
             Branch selectedBranch,
-            int userId)
+            int userId,
+            bool isActual)
         {
             _selectedMonth = selectedMonth;
             _selectedBranch = selectedBranch;
@@ -140,6 +141,7 @@ namespace AccuPay.Data.Services
                 .Where(x => x.Month == _selectedMonth.Month)
                 .ToList();
             payPeriodModels = CreatePayPeriodModels(
+                isActual,
                 payPeriods,
                 employees,
                 salaries,
@@ -389,6 +391,7 @@ namespace AccuPay.Data.Services
         }
 
         private List<PayPeriodModel> CreatePayPeriodModels(
+            bool isActual,
             List<TimePeriod> payPeriods,
             List<Employee> employees,
             List<Salary> salaries,
@@ -417,6 +420,7 @@ namespace AccuPay.Data.Services
                     .ToList();
 
                 var paystubModels = CreatePaystubModels(
+                    isActual,
                     employees,
                     salaries,
                     payPeriod,
@@ -442,6 +446,7 @@ namespace AccuPay.Data.Services
         }
 
         private List<PaystubModel> CreatePaystubModels(
+            bool isActual,
             List<Employee> employees,
             List<Salary> salaries,
             TimePeriod payPeriod,
@@ -477,10 +482,10 @@ namespace AccuPay.Data.Services
                     .ToList();
 
                 var employeeBranchActualTimeEntries = branchActualTimeEntries
-                                    .Where(t => t.Date >= payPeriod.Start)
-                                    .Where(t => t.Date <= payPeriod.End)
-                                    .Where(t => t.EmployeeID == employee.RowID)
-                                    .ToList();
+                    .Where(t => t.Date >= payPeriod.Start)
+                    .Where(t => t.Date <= payPeriod.End)
+                    .Where(t => t.EmployeeID == employee.RowID)
+                    .ToList();
 
                 var employeeAllowances = dailyAllowances
                     .Where(x => x.EmployeeID == employee.RowID)
@@ -519,6 +524,7 @@ namespace AccuPay.Data.Services
                     employee,
                     salary,
                     paystub,
+                    isActual,
                     monthlyDeduction,
                     hmoLoan,
                     employeeAllowances,
@@ -566,6 +572,7 @@ namespace AccuPay.Data.Services
                 Employee employee,
                 Salary salary,
                 Paystub currentPaystub,
+                bool isActual,
                 MonthlyDeduction monthlyDeduction,
                 LoanTransaction hmoLoan,
                 List<Allowance> dailyAllowances,
@@ -586,7 +593,13 @@ namespace AccuPay.Data.Services
                 paystubModel.Employee = employee;
 
                 if (salary != null)
-                    paystubModel = ComputeHoursAndPay(paystubModel, employee, salary, branchTimeEntries);
+                    paystubModel = ComputeHoursAndPay(
+                        paystubModel,
+                        employee,
+                        salary,
+                        isActual,
+                        timeEntries: branchTimeEntries,
+                        actualTimeEntries: branchActualTimeEntries);
 
                 if (currentPaystub != null && currentPaystub.RegularHours > 0)
                 {
@@ -699,37 +712,55 @@ namespace AccuPay.Data.Services
             {
             }
 
-            private static PaystubModel ComputeHoursAndPay(PaystubModel paystubModel, Employee employee, Salary salary, List<TimeEntry> timeEntries)
+            private static PaystubModel ComputeHoursAndPay(
+                PaystubModel paystubModel,
+                Employee employee,
+                Salary salary,
+                bool isActual,
+                List<TimeEntry> timeEntries,
+                List<ActualTimeEntry> actualTimeEntries)
             {
                 var totalTimeEntries = TotalTimeEntryCalculator.Calculate(
                     timeEntries,
                     salary,
                     employee,
-                    new List<ActualTimeEntry>());
+                    actualTimeEntries);
 
                 paystubModel.RegularHours = totalTimeEntries.RegularHours;
-                paystubModel.HourlyRate = totalTimeEntries.HourlyRate;
-
                 paystubModel.OvertimeHours = AccuMath.CommercialRound(totalTimeEntries.OvertimeHours);
-                paystubModel.OvertimePay = totalTimeEntries.OvertimePay;
-
                 paystubModel.NightDiffHours = AccuMath.CommercialRound(totalTimeEntries.NightDifferentialHours);
-                paystubModel.NightDiffPay = totalTimeEntries.NightDiffPay;
-
                 paystubModel.NightDiffOvertimeHours = AccuMath.CommercialRound(totalTimeEntries.NightDifferentialOvertimeHours);
-                paystubModel.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay;
 
                 paystubModel.SpecialHolidayHours = AccuMath.CommercialRound(totalTimeEntries.SpecialHolidayHours);
-                paystubModel.SpecialHolidayPay = totalTimeEntries.SpecialHolidayPay;
-
                 paystubModel.SpecialHolidayOTHours = AccuMath.CommercialRound(totalTimeEntries.SpecialHolidayOTHours);
-                paystubModel.SpecialHolidayOTPay = totalTimeEntries.SpecialHolidayOTPay;
-
                 paystubModel.RegularHolidayHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayHours);
-                paystubModel.RegularHolidayPay = totalTimeEntries.RegularHolidayPay;
-
                 paystubModel.RegularHolidayOTHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayOTHours);
-                paystubModel.RegularHolidayOTPay = totalTimeEntries.RegularHolidayOTPay;
+
+                if (!isActual)
+                {
+                    paystubModel.HourlyRate = totalTimeEntries.HourlyRate;
+                    paystubModel.OvertimePay = totalTimeEntries.OvertimePay;
+                    paystubModel.NightDiffPay = totalTimeEntries.NightDiffPay;
+                    paystubModel.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay;
+
+                    paystubModel.SpecialHolidayPay = totalTimeEntries.SpecialHolidayPay;
+                    paystubModel.SpecialHolidayOTPay = totalTimeEntries.SpecialHolidayOTPay;
+                    paystubModel.RegularHolidayPay = totalTimeEntries.RegularHolidayPay;
+                    paystubModel.RegularHolidayOTPay = totalTimeEntries.RegularHolidayOTPay;
+                }
+                else
+                {
+                    paystubModel.HourlyRate = totalTimeEntries.ActualHourlyRate;
+                    paystubModel.OvertimePay = totalTimeEntries.ActualOvertimePay;
+                    paystubModel.NightDiffPay = totalTimeEntries.ActualNightDiffPay;
+                    paystubModel.NightDiffOvertimePay = totalTimeEntries.ActualNightDiffOvertimePay;
+
+                    paystubModel.SpecialHolidayPay = totalTimeEntries.ActualSpecialHolidayPay;
+                    paystubModel.SpecialHolidayOTPay = totalTimeEntries.ActualSpecialHolidayOTPay;
+                    paystubModel.RegularHolidayPay = totalTimeEntries.ActualRegularHolidayPay;
+                    paystubModel.RegularHolidayOTPay = totalTimeEntries.ActualRegularHolidayOTPay;
+                }
+
                 return paystubModel;
             }
 
