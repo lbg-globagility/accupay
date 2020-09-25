@@ -2295,6 +2295,10 @@ Public Class EmployeeForm
 
         BranchComboBox.SelectedIndex = branchIndex
 
+        If branch Is Nothing Then
+            BranchComboBox.Text = Nothing
+        End If
+
         BPIinsuranceText.Text = dgvEmp.CurrentRow.Cells("BPIInsuranceColumn").Value
 
         AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
