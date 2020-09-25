@@ -94,7 +94,7 @@ Partial Class PayStubForm
         Me.Label105 = New System.Windows.Forms.Label()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.txtRegularHolidayHours = New System.Windows.Forms.TextBox()
-        Me.txtRestDayOtHour = New System.Windows.Forms.TextBox()
+        Me.txtRestDayOtHours = New System.Windows.Forms.TextBox()
         Me.Label63 = New System.Windows.Forms.Label()
         Me.Label102 = New System.Windows.Forms.Label()
         Me.txtSpecialHolidayOTPay = New System.Windows.Forms.TextBox()
@@ -1072,7 +1072,7 @@ Partial Class PayStubForm
         'Panel6
         '
         Me.Panel6.Controls.Add(Me.txtRegularHolidayHours)
-        Me.Panel6.Controls.Add(Me.txtRestDayOtHour)
+        Me.Panel6.Controls.Add(Me.txtRestDayOtHours)
         Me.Panel6.Controls.Add(Me.Label63)
         Me.Panel6.Controls.Add(Me.Label102)
         Me.Panel6.Controls.Add(Me.txtSpecialHolidayOTPay)
@@ -1114,12 +1114,12 @@ Partial Class PayStubForm
         '
         'txtRestDayOtHour
         '
-        Me.txtRestDayOtHour.AccessibleDescription = "RestDayOTHours"
-        Me.txtRestDayOtHour.Location = New System.Drawing.Point(117, 124)
-        Me.txtRestDayOtHour.Name = "txtRestDayOtHour"
-        Me.txtRestDayOtHour.Size = New System.Drawing.Size(100, 20)
-        Me.txtRestDayOtHour.TabIndex = 533
-        Me.txtRestDayOtHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtRestDayOtHours.AccessibleDescription = "RestDayOTHours"
+        Me.txtRestDayOtHours.Location = New System.Drawing.Point(117, 124)
+        Me.txtRestDayOtHours.Name = "txtRestDayOtHour"
+        Me.txtRestDayOtHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayOtHours.TabIndex = 533
+        Me.txtRestDayOtHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label63
         '
@@ -3830,7 +3830,7 @@ Partial Class PayStubForm
     Friend WithEvents Label96 As Label
     Friend WithEvents txtRestDayPay As TextBox
     Friend WithEvents txtRestDayHours As TextBox
-    Friend WithEvents txtRestDayOtHour As TextBox
+    Friend WithEvents txtRestDayOtHours As TextBox
     Friend WithEvents Label102 As Label
     Friend WithEvents txtRestDayOtPay As TextBox
     Friend WithEvents Label60 As Label

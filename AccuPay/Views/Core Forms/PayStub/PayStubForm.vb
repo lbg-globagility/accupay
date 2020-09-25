@@ -1437,6 +1437,7 @@ Public Class PayStubForm
         txtSpecialHolidayHours.Text = FormatNumber(paystub.SpecialHolidayHours, 2)
         txtSpecialHolidayOTHours.Text = FormatNumber(paystub.SpecialHolidayOTHours, 2)
         txtRestDayHours.Text = FormatNumber(paystub.RestDayHours, 2)
+        txtRestDayOtHours.Text = FormatNumber(paystub.RestDayOTHours, 2)
         txtLeaveHours.Text = FormatNumber(paystub.LeaveHours, 2)
 
         txtRegularHolidayPay.Text = FormatNumber(paystub.RegularHolidayPay, 2)
@@ -1444,6 +1445,7 @@ Public Class PayStubForm
         txtSpecialHolidayPay.Text = FormatNumber(paystub.SpecialHolidayPay, 2)
         txtSpecialHolidayOTPay.Text = FormatNumber(paystub.SpecialHolidayOTPay, 2)
         txtRestDayPay.Text = FormatNumber(paystub.RestDayPay, 2)
+        txtRestDayOtPay.Text = FormatNumber(paystub.RestDayOTPay, 2)
         txtLeavePay.Text = FormatNumber(paystub.LeavePay, 2)
 
         'Allowance, Bonus and Gross Pay
@@ -1538,6 +1540,7 @@ Public Class PayStubForm
         txtSpecialHolidayHours.Text = FormatNumber(paystub.SpecialHolidayHours, 2)
         txtSpecialHolidayOTHours.Text = FormatNumber(paystub.SpecialHolidayOTHours, 2)
         txtRestDayHours.Text = FormatNumber(paystub.RestDayHours, 2)
+        txtRestDayOtHours.Text = FormatNumber(paystub.RestDayOTHours, 2)
         txtLeaveHours.Text = FormatNumber(paystub.LeaveHours, 2)
 
         txtRegularHolidayPay.Text = FormatNumber(paystub.Actual?.RegularHolidayPay, 2)
@@ -1545,6 +1548,7 @@ Public Class PayStubForm
         txtSpecialHolidayPay.Text = FormatNumber(paystub.Actual?.SpecialHolidayPay, 2)
         txtSpecialHolidayOTPay.Text = FormatNumber(paystub.Actual?.SpecialHolidayOTPay, 2)
         txtRestDayPay.Text = FormatNumber(paystub.Actual?.RestDayPay, 2)
+        txtRestDayOtPay.Text = FormatNumber(paystub.Actual?.RestDayOTPay, 2)
         txtLeavePay.Text = FormatNumber(paystub.Actual?.LeavePay, 2)
 
         'Allowance, Bonus and Gross Pay

@@ -36,10 +36,10 @@ VALUES ('16,31,false,true,false,false', 'DefaultEndOfTheMonthDaysSpan', 'Pay Per
 
 #the DisplayValue means
 /*
-1. First day of the cut off
-2. Last day of the cut off 
-3. Is first day the last day of the month?
-4. Is last day the last day of the month?
-5. Is first day from previous month?
-6. Is last day from previous months
+1. First Day of the cut off
+2. Last Day of the cut off 
+3. Is First Day the last day of the month?
+4. Is Last Day the last day of the month?
+5. Is First Day from previous month?
+6. Is Last Day from previous month?
 */

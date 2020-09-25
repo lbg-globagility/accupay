@@ -46,6 +46,10 @@ Public Class CostCenterReportProvider
     Private Const NightDiffPayKey As String = "NightDiffPay"
     Private Const NightDiffOvertimeHoursKey As String = "NightDiffOvertimeHours"
     Private Const NightDiffOvertimePayKey As String = "NightDiffOvertimePay"
+    Private Const RestDayHoursKey As String = "RestDayHours"
+    Private Const RestDayPayKey As String = "RestDayPay"
+    Private Const RestDayOTHoursKey As String = "RestDayOTHours"
+    Private Const RestDayOTPayKey As String = "RestDayOTPay"
     Private Const SpecialHolidayHoursKey As String = "SpecialHolidayHours"
     Private Const SpecialHolidayPayKey As String = "SpecialHolidayPay"
     Private Const SpecialHolidayOTHoursKey As String = "SpecialHolidayOTHours"
@@ -82,6 +86,10 @@ Public Class CostCenterReportProvider
             New ExcelReportColumn("ND PAY", NightDiffPayKey, [optional]:=True),
             New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursKey, [optional]:=True),
             New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY HOURS", RestDayHoursKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY PAY", RestDayPayKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY OT HOURS", RestDayOTHoursKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY OT PAY", RestDayOTPayKey, [optional]:=True),
             New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursKey, [optional]:=True),
             New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayKey, [optional]:=True),
             New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursKey, [optional]:=True),

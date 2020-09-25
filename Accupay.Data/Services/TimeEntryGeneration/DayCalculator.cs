@@ -667,7 +667,7 @@ namespace AccuPay.Data.Services
                 var holidayRate = 0M;
                 var holidayOTRate = 0M;
 
-                if (currentShift.IsWorkingDay)
+                if (currentShift.IsWorkingDay || _employmentPolicy.ComputeRestDay == false)
                 {
                     holidayRate = payrate.RegularRate;
                     holidayOTRate = payrate.OvertimeRate;
