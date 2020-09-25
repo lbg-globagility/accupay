@@ -83,9 +83,7 @@ Partial Class SalaryTab
         Me.lblTotalSalary = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.dtpEffectiveTo = New System.Windows.Forms.DateTimePicker()
         Me.dtpEffectiveFrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblPayFrequency = New System.Windows.Forms.Label()
@@ -245,9 +243,7 @@ Partial Class SalaryTab
         Me.grpSalary.Controls.Add(Me.lblTotalSalary)
         Me.grpSalary.Controls.Add(Me.Label6)
         Me.grpSalary.Controls.Add(Me.Label5)
-        Me.grpSalary.Controls.Add(Me.dtpEffectiveTo)
         Me.grpSalary.Controls.Add(Me.dtpEffectiveFrom)
-        Me.grpSalary.Controls.Add(Me.Label4)
         Me.grpSalary.Controls.Add(Me.Label3)
         Me.grpSalary.Controls.Add(Me.Label2)
         Me.grpSalary.Controls.Add(Me.lblPayFrequency)
@@ -479,17 +475,6 @@ Partial Class SalaryTab
         Me.Label5.TabIndex = 61
         Me.Label5.Text = "Basic Salary:"
         '
-        'dtpEffectiveTo
-        '
-        Me.dtpEffectiveTo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtpEffectiveTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpEffectiveTo.Location = New System.Drawing.Point(136, 112)
-        Me.dtpEffectiveTo.Name = "dtpEffectiveTo"
-        Me.dtpEffectiveTo.ShowCheckBox = True
-        Me.dtpEffectiveTo.Size = New System.Drawing.Size(159, 20)
-        Me.dtpEffectiveTo.TabIndex = 58
-        Me.dtpEffectiveTo.Visible = False
-        '
         'dtpEffectiveFrom
         '
         Me.dtpEffectiveFrom.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -498,16 +483,6 @@ Partial Class SalaryTab
         Me.dtpEffectiveFrom.Name = "dtpEffectiveFrom"
         Me.dtpEffectiveFrom.Size = New System.Drawing.Size(159, 20)
         Me.dtpEffectiveFrom.TabIndex = 57
-        '
-        'Label4
-        '
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(8, 112)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(112, 16)
-        Me.Label4.TabIndex = 3
-        Me.Label4.Text = "Effective To"
-        Me.Label4.Visible = False
         '
         'Label3
         '
@@ -952,11 +927,9 @@ Partial Class SalaryTab
     Friend WithEvents btnNew As ToolStripButton
     Friend WithEvents ToolStripProgressBar2 As ToolStripProgressBar
     Friend WithEvents grpSalary As GroupBox
-    Friend WithEvents Label4 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents lblPayFrequency As Label
-    Friend WithEvents dtpEffectiveTo As DateTimePicker
     Friend WithEvents dtpEffectiveFrom As DateTimePicker
     Friend WithEvents Label9 As Label
     Friend WithEvents Label8 As Label

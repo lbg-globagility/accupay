@@ -149,9 +149,7 @@ INNER JOIN (SELECT
 				INNER JOIN activesalary ii ON ii.EmployeeID=i.EmployeeID AND DATEDIFF(paydat_to, EffectiveDateFrom)=i.Result
 				) es
 ON es.EmployeeID = ps.EmployeeID AND
-    es.OrganizationID=ps.OrganizationID #AND
-#    (es.EffectiveDateFrom >= ps.PayFromDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) >= ps.PayFromDate) AND
-#    (es.EffectiveDateFrom <= ps.PayToDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) <= ps.PayToDate)
+    es.OrganizationID=ps.OrganizationID
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',

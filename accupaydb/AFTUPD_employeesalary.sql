@@ -97,21 +97,6 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 
 END IF;
 
-IF OLD.EffectiveDateTo != NEW.EffectiveDateTo THEN
-
-INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
-) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'EffectiveDateTo',NEW.RowID,OLD.EffectiveDateTo,NEW.EffectiveDateTo,'Update');
-
-END IF;
-
-
-UPDATE employeetimeentry ete
-SET ete.EmployeeSalaryID=NEW.RowID
-WHERE ete.EmployeeID=NEW.EmployeeID
-AND ete.OrganizationID=NEW.OrganizationID
-AND ete.EmployeeSalaryID IS NULL
-AND ete.`Date` BETWEEN NEW.EffectiveDateFrom AND IFNULL(NEW.EffectiveDateTo,ete.`Date`);
-
 
 END//
 DELIMITER ;

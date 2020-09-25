@@ -829,22 +829,6 @@ Public Class OrganizationForm
         AddListOfValueForm.ShowDialog()
     End Sub
 
-    Function payp_count() As Integer
-
-        Dim params(2, 2) As Object
-
-        params(0, 0) = "organization_ID"
-
-        params(0, 1) = orgztnID
-
-        Dim _divisor = EXEC_INSUPD_PROCEDURE(params,
-                                              "COUNT_payperiodthisyear",
-                                              "payp_count")
-
-        payp_count = CInt(_divisor)
-
-    End Function
-
     Private Sub txtvlallow_TextChanged(sender As Object, e As EventArgs) Handles txtvlallow.TextChanged
 
     End Sub

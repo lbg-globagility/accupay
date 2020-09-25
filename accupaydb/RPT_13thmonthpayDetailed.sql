@@ -50,8 +50,8 @@ INNER JOIN employee e
 
 INNER JOIN employeesalary esa
         ON esa.EmployeeID=e.RowID
-           AND (esa.EffectiveDateFrom >= pay_date_from OR IFNULL(esa.EffectiveDateTo, ADDDATE(esa.EffectiveDateFrom, INTERVAL 99 YEAR)) >= pay_date_from)
-           AND (esa.EffectiveDateFrom <= pay_date_to OR IFNULL(esa.EffectiveDateTo, ADDDATE(esa.EffectiveDateFrom, INTERVAL 99 YEAR)) <= pay_date_to)
+           AND (esa.EffectiveDateFrom >= pay_date_from OR ADDDATE(esa.EffectiveDateFrom, INTERVAL 99 YEAR) >= pay_date_from)
+           AND (esa.EffectiveDateFrom <= pay_date_to OR ADDDATE(esa.EffectiveDateFrom, INTERVAL 99 YEAR) <= pay_date_to)
 
 INNER JOIN payperiod pyp
         ON pyp.RowID=ps.PayPeriodID

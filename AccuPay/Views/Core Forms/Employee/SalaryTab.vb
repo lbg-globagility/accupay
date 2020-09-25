@@ -278,7 +278,6 @@ Public Class SalaryTab
 
     Private Sub ClearForm()
         dtpEffectiveFrom.Value = Date.Today
-        dtpEffectiveTo.Value = Date.Today
         txtAmount.Text = String.Empty
         txtAllowance.Text = String.Empty
         txtTotalSalary.Text = String.Empty
@@ -290,11 +289,6 @@ Public Class SalaryTab
     Private Sub DisplaySalary()
         RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
         dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
-
-        dtpEffectiveTo.Checked = _currentSalary.EffectiveTo.HasValue
-        If _currentSalary.EffectiveTo.HasValue Then
-            dtpEffectiveTo.Value = _currentSalary.EffectiveTo.Value
-        End If
 
         txtAmount.Text = CStr(_currentSalary.BasicSalary)
         txtAllowance.Text = CStr(_currentSalary.AllowanceSalary)
@@ -352,7 +346,6 @@ Public Class SalaryTab
 
                 With salary
                     .EffectiveFrom = dtpEffectiveFrom.Value
-                    .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
                     .BasicSalary = txtAmount.Text.ToDecimal
                     .AllowanceSalary = txtAllowance.Text.ToDecimal
                     .DoPaySSSContribution = chkPaySSS.Checked
@@ -401,13 +394,6 @@ Public Class SalaryTab
             {
                 .EntityId = CInt(oldSalary.RowID),
                 .Description = $"Updated {entityName} start date from '{oldSalary.EffectiveFrom.ToShortDateString}' to '{_currentSalary.EffectiveFrom.ToShortDateString}'."
-            })
-        End If
-        If _currentSalary.EffectiveTo.ToString <> oldSalary.EffectiveTo.ToString Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated {entityName} end date from '{oldSalary.EffectiveTo?.ToShortDateString}' to '{_currentSalary.EffectiveTo?.ToShortDateString}'."
             })
         End If
         If _currentSalary.BasicSalary <> oldSalary.BasicSalary Then

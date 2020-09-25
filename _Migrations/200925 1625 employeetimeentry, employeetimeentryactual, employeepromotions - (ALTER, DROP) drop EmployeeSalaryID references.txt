@@ -1,0 +1,9 @@
+ALTER TABLE `employeetimeentry`
+	DROP COLUMN IF EXISTS `EmployeeSalaryID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeetimeentry_employeesalary_EmployeeSalaryID`;
+
+
+ALTER TABLE `employeetimeentryactual`
+	DROP COLUMN IF EXISTS `EmployeeSalaryID`;
+	
+DROP TABLE IF EXISTS `employeepromotions;

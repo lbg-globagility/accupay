@@ -128,7 +128,6 @@ Public Class HRISForm
             CertificatesToolStripMenuItem.Visible = False
             EducBGToolStripMenuItem.Visible = False
             PrevEmplyrToolStripMenuItem.Visible = False
-            PromotionToolStripMenuItem.Visible = False
             DisciplinaryActionToolStripMenuItem.Visible = False
             EmpSalToolStripMenuItem.Visible = False
             BonusToolStripMenuItem.Visible = False
@@ -147,7 +146,6 @@ Public Class HRISForm
             CertificatesToolStripMenuItem.Visible = False
             EducBGToolStripMenuItem.Visible = False
             PrevEmplyrToolStripMenuItem.Visible = False
-            PromotionToolStripMenuItem.Visible = False
             DisciplinaryActionToolStripMenuItem.Visible = False
             BonusToolStripMenuItem.Visible = False
             AttachmentToolStripMenuItem.Visible = False

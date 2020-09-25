@@ -92,7 +92,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PositionRepository)
         services.AddTransient(Of PreviousEmployerRepository)
         services.AddTransient(Of ProductRepository)
-        services.AddTransient(Of PromotionRepository)
         services.AddTransient(Of RoleRepository)
         services.AddTransient(Of SalaryRepository)
         services.AddTransient(Of ShiftRepository)

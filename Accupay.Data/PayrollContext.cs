@@ -72,7 +72,6 @@ namespace AccuPay.Data
         internal virtual DbSet<Position> Positions { get; set; }
         internal virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
         internal virtual DbSet<Product> Products { get; set; }
-        internal virtual DbSet<Promotion> Promotions { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
         internal virtual DbSet<Shift> Shifts { get; set; }
         internal virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }

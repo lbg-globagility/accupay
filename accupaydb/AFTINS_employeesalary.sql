@@ -27,14 +27,7 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'NoofDependents',NEW.RowID,'',NEW.NoofDependents,'Insert')
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'MaritalStatus',NEW.RowID,'',NEW.MaritalStatus,'Insert')
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'PositionID',NEW.RowID,'',NEW.PositionID,'Insert')
-,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EffectiveDateFrom',NEW.RowID,'',NEW.EffectiveDateFrom,'Insert')
-,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EffectiveDateTo',NEW.RowID,'',NEW.EffectiveDateTo,'Insert');
-
-UPDATE employeetimeentry ete
-SET ete.EmployeeSalaryID=NEW.RowID
-WHERE ete.EmployeeID=NEW.EmployeeID
-AND ete.OrganizationID=NEW.OrganizationID
-AND ete.`Date` BETWEEN NEW.EffectiveDateFrom AND IFNULL(NEW.EffectiveDateTo,ete.`Date`);
+,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EffectiveDateFrom',NEW.RowID,'',NEW.EffectiveDateFrom,'Insert');
 
 END//
 DELIMITER ;

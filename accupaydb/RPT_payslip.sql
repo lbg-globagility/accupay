@@ -228,8 +228,7 @@ INNER JOIN employeesalary esa
 		                  FROM employeesalary esa
 								WHERE esa.EmployeeID=ps.EmployeeID
 								AND esa.OrganizationID=og_rowid
-								AND (esa.EffectiveDateFrom >= date_from OR IFNULL(esa.EffectiveDateTo, max_date_thisyear) >= date_from)
-								AND (esa.EffectiveDateFrom <= date_to OR IFNULL(esa.EffectiveDateTo, max_date_thisyear) <= date_to)
+								AND esa.EffectiveDateFrom <= date_from
 								ORDER BY esa.EffectiveDateFrom DESC
 								LIMIT 1)
 

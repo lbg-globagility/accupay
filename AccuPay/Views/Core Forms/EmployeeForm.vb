@@ -18,10 +18,6 @@ Public Class EmployeeForm
 
     Private Const EmployeeEntityName As String = "Employee"
 
-    Private Const DisciplinaryActionEntityName As String = "Disciplinary Action"
-
-    Private Const PromotionEntityName As String = "Promotion"
-
     Private str_ms_excel_file_extensn As String =
         String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
@@ -1852,27 +1848,6 @@ Public Class EmployeeForm
 
         cboPosit.DataSource = dt_cboPosit
     End Sub
-
-    Function payp_count(Optional PayFreqRowID As Object = Nothing) As Integer
-        Dim params(1, 2) As Object
-
-        If dgvEmp.RowCount <> 0 Then
-            PayFreqRowID = dgvEmp.CurrentRow.Cells("Column30").Value
-        Else
-            PayFreqRowID = 1
-        End If
-
-        params(0, 0) = "organization_ID"
-        params(1, 0) = "PayFrequencyID"
-
-        params(0, 1) = orgztnID
-        params(1, 1) = PayFreqRowID
-
-        Dim _divisor = EXEC_INSUPD_PROCEDURE(params,
-                                              "COUNT_payperiodthisyear",
-                                              "payp_count")
-        Return CInt(_divisor)
-    End Function
 
     Private Sub Employee_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
 

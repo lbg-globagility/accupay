@@ -16,8 +16,8 @@ SELECT es.TrueSalary / es.Salary AS UndeclaredPercent
 FROM employeesalary es
 WHERE es.EmployeeID=EmpRowID
 AND es.OrganizationID=OrganizID
-AND (es.EffectiveDateFrom >= PayPFrom OR IFNULL(es.EffectiveDateTo,PayPTo) >= PayPFrom)
-AND (es.EffectiveDateFrom <= PayPTo OR IFNULL(es.EffectiveDateTo,PayPTo) <= PayPTo)
+AND es.EffectiveDateFrom  <= PayPFrom
+ORDER BY es.EffectiveDateFrom DESC
 LIMIT 1
 INTO returnvalue;
 

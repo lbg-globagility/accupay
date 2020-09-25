@@ -38,16 +38,6 @@ Public Class SalaryTab2
         End Get
     End Property
 
-    Public ReadOnly Property EffectiveTo As Date?
-        Get
-            If dtpEffectiveTo.Checked Then
-                Return dtpEffectiveTo.Value
-            Else
-                Return Nothing
-            End If
-        End Get
-    End Property
-
     Public Property BasicSalary As Decimal
         Get
             Return ObjectUtils.ToDecimal(txtAmount.Text)
@@ -186,7 +176,6 @@ Public Class SalaryTab2
 
     Private Sub ClearForm()
         dtpEffectiveFrom.Value = Date.Today
-        dtpEffectiveTo.Checked = False
         txtAmount.Text = String.Empty
         txtAllowance.Text = String.Empty
         txtTotalSalary.Text = String.Empty
@@ -199,11 +188,6 @@ Public Class SalaryTab2
     Public Sub DisplaySalary(salary As Salary)
         RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
         dtpEffectiveFrom.Value = salary.EffectiveFrom
-
-        dtpEffectiveTo.Checked = salary.EffectiveTo.HasValue
-        If salary.EffectiveTo.HasValue Then
-            dtpEffectiveTo.Value = salary.EffectiveTo.Value
-        End If
 
         txtAmount.Text = CStr(salary.BasicSalary)
         txtAllowance.Text = CStr(salary.AllowanceSalary)

@@ -1,0 +1,31 @@
+/*
+#Running the ALTER TABLE `employeesalary` query
+#can result to error since there can be employees
+#with salaries with the same EffectiveDateFrom.
+#You need to manually delete the duplicate so the
+#query would run. You can use the SELECT query
+#below to check the duplicates.
+
+SELECT EffectiveDateFrom, EmployeeID, COUNT(*) AS `count` FROM employeesalary
+GROUP BY EffectiveDateFrom, EmployeeID
+HAVING `count` > 1;
+
+#AND
+
+SELECT b.*, a.* FROM employeesalary a
+INNER JOIN (
+	SELECT EmployeeID, EffectiveDateFrom, COUNT(*) AS `count` FROM employeesalary
+	GROUP BY EffectiveDateFrom, EmployeeID
+	HAVING `count` > 1
+) b
+ON a.EffectiveDateFrom = b.EffectiveDateFrom
+AND a.EmployeeID = b.EmployeeID
+ORDER BY a.EmployeeID;
+
+*/
+
+
+ALTER TABLE `employeesalary`
+	DROP COLUMN IF EXISTS `EffectiveDateTo`,
+	DROP INDEX IF EXISTS `EmployeeID`,
+	ADD UNIQUE INDEX `AK_employeesalary` (`EmployeeID`, `OrganizationID`, `EffectiveDateFrom`);

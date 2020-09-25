@@ -134,8 +134,8 @@ ON e.RowID = ps.EmployeeID AND
 INNER JOIN employeesalary es
 ON es.EmployeeID = ps.EmployeeID AND
     es.OrganizationID=ps.OrganizationID AND
-    (es.EffectiveDateFrom >= ps.PayFromDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) >= ps.PayFromDate) AND
-    (es.EffectiveDateFrom <= ps.PayToDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) <= ps.PayToDate)
+    (es.EffectiveDateFrom >= ps.PayFromDate OR ps.PayToDate >= ps.PayFromDate) AND
+    (es.EffectiveDateFrom <= ps.PayToDate OR ps.PayToDate <= ps.PayToDate)
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',

@@ -614,12 +614,6 @@
     <Compile Include="Views\Core Forms\Employee\AddPreviousEmployerForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Employee\AddPromotionForm.Designer.vb">
-      <DependentUpon>AddPromotionForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\AddPromotionForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\Employee\AddSalaryForm.Designer.vb">
       <DependentUpon>AddSalaryForm.vb</DependentUpon>
     </Compile>
@@ -666,12 +660,6 @@
       <DependentUpon>ViewLeaveLedgerTypeSelector.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\ViewLeaveLedgerTypeSelector.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\PromotionTab.Designer.vb">
-      <DependentUpon>PromotionTab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\PromotionTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.Designer.vb">
@@ -1271,12 +1259,6 @@
     <Compile Include="Views\Core Forms\AddressClass.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\BonusGenerator.Designer.vb">
-      <DependentUpon>BonusGenerator.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\BonusGenerator.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\CopyRightExpirationPrompt.Designer.vb">
       <DependentUpon>CopyRightExpirationPrompt.vb</DependentUpon>
     </Compile>
@@ -1347,12 +1329,6 @@
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\OrganizationPrompt.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\PayPeriodSelector.Designer.vb">
-      <DependentUpon>PayPeriodSelector.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\PayPeriodSelector.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Payrate.Designer.vb">
@@ -1680,12 +1656,6 @@
     <Compile Include="Views\Core Forms\ShiftList.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\ShiftTemplater.Designer.vb">
-      <DependentUpon>ShiftTemplater.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\ShiftTemplater.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\SSSCntrib.Designer.vb">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
     </Compile>
@@ -2006,9 +1976,6 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\AddPreviousEmployerForm.resx">
       <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\AddPromotionForm.resx">
-      <DependentUpon>AddPromotionForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddSalaryForm.resx">
       <DependentUpon>AddSalaryForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -2032,9 +1999,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\ViewLeaveLedgerTypeSelector.resx">
       <DependentUpon>ViewLeaveLedgerTypeSelector.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\PromotionTab.resx">
-      <DependentUpon>PromotionTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.resx">
       <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
@@ -2332,9 +2296,6 @@
     <EmbeddedResource Include="Views\Core Forms\AddressClass.resx">
       <DependentUpon>AddressClass.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\BonusGenerator.resx">
-      <DependentUpon>BonusGenerator.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\CopyRightExpirationPrompt.resx">
       <DependentUpon>CopyRightExpirationPrompt.vb</DependentUpon>
     </EmbeddedResource>
@@ -2358,9 +2319,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\OrganizationPrompt.resx">
       <DependentUpon>OrganizationPrompt.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\PayPeriodSelector.resx">
-      <DependentUpon>PayPeriodSelector.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Payrate.resx">
       <DependentUpon>Payrate.vb</DependentUpon>
@@ -2566,9 +2524,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\ShiftList.resx">
       <DependentUpon>ShiftList.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\ShiftTemplater.resx">
-      <DependentUpon>ShiftTemplater.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SSSCntrib.resx">
       <DependentUpon>SSSCntrib.vb</DependentUpon>

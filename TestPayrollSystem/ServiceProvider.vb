@@ -7,7 +7,6 @@ Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
-Imports AccuPay.Infrastructure.Reports
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
@@ -92,7 +91,6 @@ Public Class ServiceProvider
         services.AddTransient(Of PositionRepository)
         services.AddTransient(Of PreviousEmployerRepository)
         services.AddTransient(Of ProductRepository)
-        services.AddTransient(Of PromotionRepository)
         services.AddTransient(Of SalaryRepository)
         services.AddTransient(Of ShiftRepository)
         services.AddTransient(Of ShiftScheduleRepository)
