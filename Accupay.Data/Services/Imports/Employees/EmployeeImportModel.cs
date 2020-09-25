@@ -33,7 +33,7 @@ namespace AccuPay.Data.Services.Imports.Employees
         public EmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee, Position job)
         {
             _employeeAlreadyExists = employee != null;
-            _jobNotYetExists = _job == null;
+            _jobNotYetExists = job == null;
 
             _employee = employee;
             _parsedEmployee = parsedEmployee;
@@ -126,6 +126,7 @@ namespace AccuPay.Data.Services.Imports.Employees
             MobileNo = _parsedEmployee.ContactNo;
             Address = _parsedEmployee.Address;
             Gender = !_noGender ? _parsedEmployee.Gender : string.Empty;
+            Nickname = _parsedEmployee.Nickname;
             EmployeeType = !_noEmployeeType ? _parsedEmployee.EmployeeType : string.Empty;
             MaritalStatus = !_noMaritalStatus ? _parsedEmployee.MaritalStatus : string.Empty;
             if (!_noBirthDate) Birthdate = _parsedEmployee.Birthdate;
@@ -136,6 +137,7 @@ namespace AccuPay.Data.Services.Imports.Employees
             //AlphalistExempted = _parsedEmployee.;
             //DayOfRest = _parsedEmployee.;
             AtmNo = _parsedEmployee.AtmAccountNo;
+            Salutation = _parsedEmployee.Salutation;
             //BankName = _parsedEmployee.;
             //DateRegularized = _parsedEmployee.;
             //DateEvaluated = _parsedEmployee.;
@@ -145,6 +147,11 @@ namespace AccuPay.Data.Services.Imports.Employees
             //BPIInsurance = _parsedEmployee.;
             if (!_monthlyHasNoWorkDaysPerYear) WorkDaysPerYear = _parsedEmployee.WorkDaysPerYear;
             JobPosition = _parsedEmployee.JobPosition;
+            VacationLeaveAllowance = _parsedEmployee.VacationLeaveAllowance;
+            SickLeaveAllowance = _parsedEmployee.SickLeaveAllowance;
+            CurrentVacationLeaveBalance = _parsedEmployee.CurrentVacationLeaveBalance;
+            CurrentSickLeaveBalance = _parsedEmployee.CurrentSickLeaveBalance;
+            Branch = _parsedEmployee.Branch;
 
             //if (employee.EmploymentPolicy != null)
             //{
@@ -227,10 +234,10 @@ namespace AccuPay.Data.Services.Imports.Employees
                     HdmfNo = PagIbigNo,
                     PhilHealthNo = PhilHealthNo,
                     Salutation = _parsedEmployee.Salutation,
-                    SickLeaveAllowance = _parsedEmployee.SickLeaveAllowanceAnnual.HasValue ? _parsedEmployee.SickLeaveAllowanceAnnual.Value : 0,
+                    SickLeaveAllowance = _parsedEmployee.SickLeaveAllowance.HasValue ? _parsedEmployee.SickLeaveAllowance.Value : 0,
                     SssNo = SssNo,
                     TinNo = Tin,
-                    VacationLeaveAllowance = _parsedEmployee.VacationLeaveAllowanceAnnual.HasValue ? _parsedEmployee.SickLeaveAllowanceAnnual.Value : 0,
+                    VacationLeaveAllowance = _parsedEmployee.VacationLeaveAllowance.HasValue ? _parsedEmployee.SickLeaveAllowance.Value : 0,
                     WorkDaysPerYear = WorkDaysPerYear,
                     PositionID = _jobPositionId
                 };

@@ -66,10 +66,10 @@ namespace AccuPay.Data.Services.Imports.Employees
         public string EmploymentStatus { get; set; }
 
         [ColumnName("VL allowance per year (hours)")]
-        public decimal? VacationLeaveAllowanceAnnual { get; set; }
+        public decimal? VacationLeaveAllowance { get; set; }
 
         [ColumnName("SL allowance per year (hours)")]
-        public decimal? SickLeaveAllowanceAnnual { get; set; }
+        public decimal? SickLeaveAllowance { get; set; }
 
         [ColumnName("Works days per year")]
         public decimal WorkDaysPerYear { get; set; }

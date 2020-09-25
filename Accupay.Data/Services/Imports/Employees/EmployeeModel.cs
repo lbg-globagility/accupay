@@ -127,5 +127,13 @@ namespace AccuPay.Data.Services.Imports.Employees
 
             public string Name { get; set; }
         }
+
+        public string Salutation { get; set; }
+        public string Nickname { get; set; }
+        public decimal? VacationLeaveAllowance { get; set; }
+        public decimal? SickLeaveAllowance { get; set; }
+        public decimal? CurrentVacationLeaveBalance { get; set; }
+        public decimal? CurrentSickLeaveBalance { get; set; }
+        public string Branch { get; set; }
     }
 }

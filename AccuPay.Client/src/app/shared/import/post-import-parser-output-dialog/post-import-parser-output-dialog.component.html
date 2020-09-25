@@ -1,7 +1,7 @@
 <div mat-card>
   <h1 mat-card-title>Result</h1>
 
-  <div mat-card-content>
+  <div mat-card-content class="card-content">
     <mat-tab-group>
       <mat-tab>
         <ng-template mat-tab-label>OK ({{ validRecords?.length }})</ng-template>
@@ -65,7 +65,7 @@
     </mat-tab-group>
   </div>
 
-  <div mat-card-actions align="end">
-    <button mat-button color="primary" (click)="onClickOk()">OK</button>
+  <div mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onClickOk()">OK</button>
   </div>
 </div>

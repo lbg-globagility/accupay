@@ -22,10 +22,10 @@ export class EmployeeImportModel implements ImportModel {
   atmNo: string;
   workDaysPerYear: number;
   jobPosition: string;
-  leaveAllowance: number;
+  vacationLeaveAllowance: number;
   sickLeaveAllowance: number;
   branch: string;
-  currentLeaveBalance: number;
+  currentVacationLeaveBalance: number;
   currentSickLeaveBalance: number;
   remarks: string;
 }
