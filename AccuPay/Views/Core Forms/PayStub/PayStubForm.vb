@@ -16,6 +16,7 @@ Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
+Imports OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 Imports OfficeOpenXml.Style
 
 Public Class PayStubForm
@@ -807,15 +808,23 @@ Public Class PayStubForm
                     '            Interlocked.Increment(_finishedPaystubs)
                     '        End Sub)
                     resources.Employees.ToList().ForEach(
-                            Sub(employee)
+                        Sub(employee)
 
-                                _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,
-                                                                userId:=z_User,
-                                                                employee:=employee,
-                                                                resources:=resources))
+                            Dim result = generator.DoProcess(
+                                organizationId:=z_OrganizationID,
+                                userId:=z_User,
+                                employee:=employee,
+                                resources:=resources)
 
-                                Interlocked.Increment(_finishedPaystubs)
-                            End Sub)
+                            _results.Add(result)
+
+                            If result.IsSuccess Then
+
+                                RecordPaytubGenerated(result)
+                            End If
+
+                            Interlocked.Increment(_finishedPaystubs)
+                        End Sub)
                 End Sub
             )
 
@@ -835,6 +844,28 @@ Public Class PayStubForm
         Catch ex As Exception
             _logger.Error("Error loading the employees", ex)
         End Try
+    End Sub
+
+    Private Sub RecordPaytubGenerated(result As PayrollGeneration.Result)
+
+        Dim payPeriodString = GetPayPeriodString()
+
+        Dim activityItem = New List(Of UserActivityItem) From {
+            New UserActivityItem() With
+            {
+                .EntityId = result.PaystubId.Value,
+                .Description = $"Generated paystub for payroll {payPeriodString}",
+                .ChangedEmployeeId = result.EmployeeId
+            }
+        }
+
+        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        userActivityService.CreateRecord(
+          z_User,
+          PaystubEntityName,
+          z_OrganizationID,
+          UserActivityRepository.RecordTypeDelete,
+          activityItem)
     End Sub
 
     Private Sub ProgressTimer_Tick(sender As Object, e As EventArgs) Handles ProgressTimer.Tick
@@ -1804,9 +1835,11 @@ Public Class PayStubForm
         If close Then
 
             Await dataService.CloseAsync(payPeriod.RowID.Value, z_User)
+            Await RecordPayrollStatusUpdateAsync($"Closed payroll {GetPayPeriodString()}.")
         Else
-            Await dataService.ReopenAsync(payPeriod.RowID.Value, z_User)
 
+            Await dataService.ReopenAsync(payPeriod.RowID.Value, z_User)
+            Await RecordPayrollStatusUpdateAsync($"Reopened payroll {GetPayPeriodString()}.")
         End If
 
         RefreshForm()
@@ -1823,6 +1856,28 @@ Public Class PayStubForm
 
         Return True
 
+    End Function
+
+    Private Async Function RecordPayrollStatusUpdateAsync(description As String) As Task
+
+        Dim payPeriodString = GetPayPeriodString()
+
+        Dim activityItem = New List(Of UserActivityItem) From {
+            New UserActivityItem() With
+            {
+                .EntityId = Nothing,
+                .Description = description,
+                .ChangedEmployeeId = Nothing
+            }
+        }
+
+        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        Await userActivityService.CreateRecordAsync(
+          z_User,
+          PaystubEntityName,
+          z_OrganizationID,
+          UserActivityRepository.RecordTypeEdit,
+          activityItem)
     End Function
 
     Private Sub RefreshForm()
@@ -2006,10 +2061,11 @@ Public Class PayStubForm
                       Await payperiodDataService.CancelAsync(payperiodId.Value, z_User)
 
                       Dim recordMessage = $"Deleted paystub and time entries for payroll {payPeriodString}."
+
                       Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
+                      Await RecordPayrollStatusUpdateAsync($"Cancelled payroll {GetPayPeriodString()}.")
 
                       RefreshForm()
-
                       Await TimeEntrySummaryForm.LoadPayPeriods()
 
                       MessageBoxHelper.Information($"Payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully cancelled.")

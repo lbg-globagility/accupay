@@ -26,6 +26,7 @@ Partial Class UserActivityForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UserActivityForm))
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.CloseButton = New System.Windows.Forms.Button()
@@ -122,6 +123,8 @@ Partial Class UserActivityForm
         'ChangedEntityColumn
         '
         Me.ChangedEntityColumn.DataPropertyName = "ChangedEntity"
+        DataGridViewCellStyle2.NullValue = "--"
+        Me.ChangedEntityColumn.DefaultCellStyle = DataGridViewCellStyle2
         Me.ChangedEntityColumn.FillWeight = 1.55!
         Me.ChangedEntityColumn.HeaderText = "ChangedEntity"
         Me.ChangedEntityColumn.Name = "ChangedEntityColumn"

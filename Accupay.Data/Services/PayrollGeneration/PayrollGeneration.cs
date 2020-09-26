@@ -223,7 +223,7 @@ namespace AccuPay.Data.Services
                         timeEntries: timeEntries,
                         leaves: leaves);
 
-            return Result.Success(employee);
+            return Result.Success(employee, paystub);
         }
 
         private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int userId)
@@ -869,6 +869,8 @@ namespace AccuPay.Data.Services
         {
             public int EmployeeId { get; set; }
 
+            public int? PaystubId { get; set; }
+
             public string EmployeeNo { get; set; }
 
             public string FullName { get; set; }
@@ -881,19 +883,21 @@ namespace AccuPay.Data.Services
 
             public bool IsError => Status == ResultStatus.Error;
 
-            private Result(int employeeId, string employeeNo, string fullName, ResultStatus status, string description)
+            private Result(int employeeId, int? paystubId, string employeeNo, string fullName, ResultStatus status, string description)
             {
                 EmployeeId = employeeId;
                 EmployeeNo = employeeNo;
                 FullName = fullName;
                 Status = status;
                 Description = description;
+                PaystubId = paystubId;
             }
 
-            public static Result Success(Employee employee)
+            public static Result Success(Employee employee, Paystub paystub)
             {
                 var result = new Result(
                     employee.RowID.Value,
+                    paystub.RowID.Value,
                     employee.EmployeeNo,
                     employee.FullNameWithMiddleInitialLastNameFirst,
                     ResultStatus.Success,
@@ -906,6 +910,7 @@ namespace AccuPay.Data.Services
             {
                 var result = new Result(
                     employee.RowID.Value,
+                    paystubId: null,
                     employee.EmployeeNo,
                     employee.FullNameWithMiddleInitialLastNameFirst,
                     ResultStatus.Error,
