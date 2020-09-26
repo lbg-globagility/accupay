@@ -481,8 +481,8 @@ Partial Class TimeEntrySummaryForm
         Me.GenerateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.cash_register
         Me.GenerateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.GenerateTimeEntryButton.Name = "GenerateTimeEntryButton"
-        Me.GenerateTimeEntryButton.Size = New System.Drawing.Size(137, 22)
-        Me.GenerateTimeEntryButton.Text = "&Start New Pay Period"
+        Me.GenerateTimeEntryButton.Size = New System.Drawing.Size(139, 22)
+        Me.GenerateTimeEntryButton.Text = "&Start New Pay Payroll"
         '
         'RegenerateTimeEntryButton
         '

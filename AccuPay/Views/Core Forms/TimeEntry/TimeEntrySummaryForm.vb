@@ -58,6 +58,8 @@ Public Class TimeEntrySummaryForm
 
     Private _formHasLoaded As Boolean = False
 
+    Private _generateDefaultShiftAndTimeLogsButtonHidden As Boolean
+
     Private _regenerateTimeEntryButtonHidden As Boolean
 
     Private _tsBtnDeleteTimeEntryHidden As Boolean
@@ -114,9 +116,9 @@ Public Class TimeEntrySummaryForm
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
-        ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
         RegenerateTimeEntryButton.Visible = False
+        GenerateDefaultShiftAndTimeLogsButton.Visible = False
 
         Await LoadEmployees()
         Await LoadPayPeriods()
@@ -179,14 +181,18 @@ Public Class TimeEntrySummaryForm
             shiftPermission.Update = False Then
 
             GenerateDefaultShiftAndTimeLogsButton.Visible = False
+            _generateDefaultShiftAndTimeLogsButtonHidden = True
         End If
 
-        If timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Update = False Then
+        Dim updateTimeEntryPermission = timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Update
+        Dim deleteTimeEntryPermission = timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Delete
+
+        If Not updateTimeEntryPermission Then
             RegenerateTimeEntryButton.Visible = False
             _regenerateTimeEntryButtonHidden = True
         End If
 
-        If timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Delete = False Then
+        If Not deleteTimeEntryPermission Then
             tsBtnDeleteTimeEntry.Visible = False
             _tsBtnDeleteTimeEntryHidden = True
         End If
@@ -301,6 +307,10 @@ Public Class TimeEntrySummaryForm
 
         If Not _regenerateTimeEntryButtonHidden Then
             RegenerateTimeEntryButton.Visible = _selectedPayPeriod.IsOpen
+        End If
+
+        If Not _generateDefaultShiftAndTimeLogsButtonHidden Then
+            GenerateDefaultShiftAndTimeLogsButton.Visible = Not _selectedPayPeriod.IsClosed
         End If
 
     End Function
@@ -1065,6 +1075,10 @@ Public Class TimeEntrySummaryForm
 
         If Not _regenerateTimeEntryButtonHidden Then
             RegenerateTimeEntryButton.Visible = isOpen
+        End If
+
+        If Not _generateDefaultShiftAndTimeLogsButtonHidden Then
+            GenerateDefaultShiftAndTimeLogsButton.Visible = _selectedPayPeriod IsNot Nothing AndAlso Not _selectedPayPeriod.IsClosed
         End If
 
         Await LoadTimeEntries()

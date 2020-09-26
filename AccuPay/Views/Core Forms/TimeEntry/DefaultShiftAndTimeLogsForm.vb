@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
@@ -23,15 +24,19 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private ReadOnly DefaultShiftBreakLength As Integer = 1
 
+    Private ReadOnly _roleRepository As RoleRepository
+
     Sub New(currentPayPeriod As IPayPeriod)
 
         InitializeComponent()
 
         Me._currentPayPeriod = currentPayPeriod
 
+        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+
     End Sub
 
-    Private Sub DefaultShiftAndTimeLogsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub DefaultShiftAndTimeLogsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         EmployeeDataGrid.AutoGenerateColumns = False
 
@@ -42,6 +47,19 @@ Public Class DefaultShiftAndTimeLogsForm
         DefaultBreakLengthNumeric.Value = DefaultShiftBreakLength
 
         Me.Text &= $" ({GetPayPeriodDescription()})"
+
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
+        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
+
+        Dim deleteShiftPermission = shiftPermission IsNot Nothing AndAlso shiftPermission.Delete
+        Dim deleteTimeLogPermission = timeLogPermission IsNot Nothing AndAlso timeLogPermission.Delete
+
+        If Not deleteShiftPermission OrElse Not deleteTimeLogPermission Then
+
+            DeleteButton.Visible = False
+
+        End If
 
     End Sub
 
