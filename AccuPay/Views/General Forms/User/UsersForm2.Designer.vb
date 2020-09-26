@@ -31,15 +31,15 @@ Partial Class UsersForm2
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.UserGrid = New System.Windows.Forms.DataGridView()
+        Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.UserUserControl = New AccuPay.UserUserControl()
         Me.LabelForBalloon = New System.Windows.Forms.Label()
-        Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip3.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.UserGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -88,7 +88,7 @@ Partial Class UsersForm2
         '
         'DeleteButton
         '
-        Me.DeleteButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.DeleteButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DeleteButton.Name = "DeleteButton"
         Me.DeleteButton.Size = New System.Drawing.Size(60, 19)
@@ -141,6 +141,28 @@ Partial Class UsersForm2
         Me.UserGrid.Size = New System.Drawing.Size(324, 274)
         Me.UserGrid.TabIndex = 109
         '
+        'LastNameColumn
+        '
+        Me.LastNameColumn.DataPropertyName = "LastName"
+        Me.LastNameColumn.HeaderText = "Last Name"
+        Me.LastNameColumn.Name = "LastNameColumn"
+        Me.LastNameColumn.ReadOnly = True
+        '
+        'FirstNameColumn
+        '
+        Me.FirstNameColumn.DataPropertyName = "FirstName"
+        Me.FirstNameColumn.HeaderText = "First Name"
+        Me.FirstNameColumn.Name = "FirstNameColumn"
+        Me.FirstNameColumn.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Column2.DataPropertyName = "UserName"
+        Me.Column2.HeaderText = "Username"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
@@ -187,28 +209,6 @@ Partial Class UsersForm2
         Me.LabelForBalloon.Size = New System.Drawing.Size(90, 13)
         Me.LabelForBalloon.TabIndex = 160
         Me.LabelForBalloon.Text = "label for baloon"
-        '
-        'LastNameColumn
-        '
-        Me.LastNameColumn.DataPropertyName = "LastName"
-        Me.LastNameColumn.HeaderText = "Last Name"
-        Me.LastNameColumn.Name = "LastNameColumn"
-        Me.LastNameColumn.ReadOnly = True
-        '
-        'FirstNameColumn
-        '
-        Me.FirstNameColumn.DataPropertyName = "FirstName"
-        Me.FirstNameColumn.HeaderText = "First Name"
-        Me.FirstNameColumn.Name = "FirstNameColumn"
-        Me.FirstNameColumn.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Column2.DataPropertyName = "UserName"
-        Me.Column2.HeaderText = "Username"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
         '
         'UsersForm2
         '

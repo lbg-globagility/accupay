@@ -316,7 +316,7 @@ Public Class CertificationTab
         Return False
     End Function
 
-    Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
+    Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         EmployeeForm.Close()
     End Sub
 
@@ -334,7 +334,7 @@ Public Class CertificationTab
         End If
     End Sub
 
-    Private Sub UserActivity_Click(sender As Object, e As EventArgs) Handles UserActivity.Click
+    Private Sub UserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
         Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub

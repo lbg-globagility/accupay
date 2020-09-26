@@ -33,10 +33,8 @@ Partial Class PreviousEmployerTab
         Me.ToolStrip10 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel3 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
@@ -160,7 +158,7 @@ Partial Class PreviousEmployerTab
         '
         Me.ToolStrip10.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip10.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip10.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel3, Me.ToolStripSeparator5, Me.btnDelete, Me.ToolStripSeparator6, Me.btnCancel, Me.btnClose, Me.btnUserActivity})
+        Me.ToolStrip10.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.ToolStripSeparator5, Me.btnClose, Me.btnUserActivity})
         Me.ToolStrip10.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip10.Name = "ToolStrip10"
         Me.ToolStrip10.Size = New System.Drawing.Size(856, 25)
@@ -172,22 +170,16 @@ Partial Class PreviousEmployerTab
         Me.btnNew.Image = Global.AccuPay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
-        Me.btnNew.Size = New System.Drawing.Size(130, 22)
-        Me.btnNew.Text = "&New Prev Employer"
+        Me.btnNew.Size = New System.Drawing.Size(51, 22)
+        Me.btnNew.Text = "&New"
         '
         'btnSave
         '
         Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(130, 22)
-        Me.btnSave.Text = "&Save Prev Employer"
-        '
-        'ToolStripLabel3
-        '
-        Me.ToolStripLabel3.AutoSize = False
-        Me.ToolStripLabel3.Name = "ToolStripLabel3"
-        Me.ToolStripLabel3.Size = New System.Drawing.Size(50, 22)
+        Me.btnSave.Size = New System.Drawing.Size(51, 22)
+        Me.btnSave.Text = "&Save"
         '
         'ToolStripSeparator5
         '
@@ -197,16 +189,11 @@ Partial Class PreviousEmployerTab
         'btnDelete
         '
         Me.btnDelete.Enabled = False
-        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(139, 22)
-        Me.btnDelete.Text = "&Delete Prev Employer"
-        '
-        'ToolStripSeparator6
-        '
-        Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(6, 25)
+        Me.btnDelete.Size = New System.Drawing.Size(60, 22)
+        Me.btnDelete.Text = "&Delete"
         '
         'btnCancel
         '
@@ -905,10 +892,8 @@ Partial Class PreviousEmployerTab
     Friend WithEvents ToolStrip10 As ToolStrip
     Friend WithEvents btnNew As ToolStripButton
     Friend WithEvents btnSave As ToolStripButton
-    Friend WithEvents ToolStripLabel3 As ToolStripLabel
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents btnDelete As ToolStripButton
-    Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents grpDetails As GroupBox

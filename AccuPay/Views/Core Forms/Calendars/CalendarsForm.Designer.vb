@@ -30,7 +30,6 @@ Partial Class CalendarsForm
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.DayTypesToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
@@ -60,7 +59,7 @@ Partial Class CalendarsForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripSeparator1, Me.DeleteToolStripButton, Me.DayTypesToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripSeparator9, Me.DayTypesToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(849, 25)
@@ -105,11 +104,6 @@ Partial Class CalendarsForm
         Me.CloseButton.Size = New System.Drawing.Size(56, 22)
         Me.CloseButton.Text = "Close"
         '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
         'DeleteToolStripButton
         '
         Me.DeleteToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
@@ -123,7 +117,7 @@ Partial Class CalendarsForm
         Me.DayTypesToolStripButton.Image = Global.AccuPay.My.Resources.Resources.application_view_list_icon
         Me.DayTypesToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DayTypesToolStripButton.Name = "DayTypesToolStripButton"
-        Me.DayTypesToolStripButton.Size = New System.Drawing.Size(79, 22)
+        Me.DayTypesToolStripButton.Size = New System.Drawing.Size(80, 22)
         Me.DayTypesToolStripButton.Text = "Day Types"
         '
         'FormTitleLabel
@@ -365,7 +359,6 @@ Partial Class CalendarsForm
     Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
     Friend WithEvents Column_Name As DataGridViewTextBoxColumn
-    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents DayTypesToolStripButton As ToolStripButton
     Friend WithEvents MonthSelectorControl As CalendarMonthSelectorControl
     Friend WithEvents CalendarLabel As Label

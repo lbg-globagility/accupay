@@ -49,7 +49,6 @@ Partial Class EmployeeAllowanceForm
         Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -192,7 +191,7 @@ Partial Class EmployeeAllowanceForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.btnClose, Me.ImportToolStripButton, Me.UserActivityToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.ImportToolStripButton, Me.ToolStripSeparator9, Me.btnClose, Me.UserActivityToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -227,11 +226,6 @@ Partial Class EmployeeAllowanceForm
         Me.DeleteToolStripButton.Name = "DeleteToolStripButton"
         Me.DeleteToolStripButton.Size = New System.Drawing.Size(60, 22)
         Me.DeleteToolStripButton.Text = "&Delete"
-        '
-        'ToolStripSeparator10
-        '
-        Me.ToolStripSeparator10.Name = "ToolStripSeparator10"
-        Me.ToolStripSeparator10.Size = New System.Drawing.Size(6, 25)
         '
         'CancelToolStripButton
         '
@@ -516,7 +510,7 @@ Partial Class EmployeeAllowanceForm
         Me.Label156.Location = New System.Drawing.Point(20, 0)
         Me.Label156.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label156.Name = "Label156"
-        Me.Label156.Size = New System.Drawing.Size(30, 13)
+        Me.Label156.Size = New System.Drawing.Size(29, 13)
         Me.Label156.TabIndex = 365
         Me.Label156.Text = "Type"
         '
@@ -1019,7 +1013,6 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents SaveToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator9 As ToolStripSeparator
     Friend WithEvents DeleteToolStripButton As ToolStripButton
-    Friend WithEvents ToolStripSeparator10 As ToolStripSeparator
     Friend WithEvents CancelToolStripButton As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents ImportToolStripButton As ToolStripButton

@@ -154,10 +154,7 @@ Partial Class OrganizationForm
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.NewButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelButton = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.dgvCompanyList = New System.Windows.Forms.DataGridView()
@@ -1512,7 +1509,7 @@ Partial Class OrganizationForm
         'ToolStrip1
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.CancelButton, Me.btnClose})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.btnDelete, Me.CancelButton, Me.btnClose})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1011, 25)
@@ -1535,17 +1532,6 @@ Partial Class OrganizationForm
         Me.SaveButton.Size = New System.Drawing.Size(51, 22)
         Me.SaveButton.Text = "&Save"
         '
-        'ToolStripLabel1
-        '
-        Me.ToolStripLabel1.AutoSize = False
-        Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(50, 22)
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
         'btnDelete
         '
         Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.deleteuser
@@ -1554,11 +1540,6 @@ Partial Class OrganizationForm
         Me.btnDelete.Size = New System.Drawing.Size(60, 22)
         Me.btnDelete.Text = "&Delete"
         Me.btnDelete.Visible = False
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
         '
         'CancelButton
         '
@@ -1690,10 +1671,7 @@ Partial Class OrganizationForm
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents NewButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents SaveButton As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripLabel1 As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents btnDelete As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents CancelButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents txtSearch As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label

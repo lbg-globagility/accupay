@@ -40,6 +40,13 @@ Partial Class TimeLogsForm2
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.MainSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.EmployeeTreeView1 = New AccuPay.EmployeeTreeView()
+        Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
+        Me.CloseToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ExportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -48,14 +55,6 @@ Partial Class TimeLogsForm2
         Me.Label6 = New System.Windows.Forms.Label()
         Me.dtpDateTo = New System.Windows.Forms.DateTimePicker()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.btnExport = New System.Windows.Forms.Button()
-        Me.btnImport = New System.Windows.Forms.Button()
-        Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
-        Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.grid = New System.Windows.Forms.DataGridView()
         Me.colRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colEmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -102,15 +101,13 @@ Partial Class TimeLogsForm2
         Me.MainSplitContainer.Panel1.SuspendLayout()
         Me.MainSplitContainer.Panel2.SuspendLayout()
         Me.MainSplitContainer.SuspendLayout()
+        Me.ToolStrip2.SuspendLayout()
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer2.Panel1.SuspendLayout()
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
         Me.Panel6.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        Me.Panel4.SuspendLayout()
-        Me.Panel5.SuspendLayout()
-        Me.ToolStrip1.SuspendLayout()
         CType(Me.grid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ActionPanel.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -142,6 +139,7 @@ Partial Class TimeLogsForm2
         '
         'MainSplitContainer.Panel2
         '
+        Me.MainSplitContainer.Panel2.Controls.Add(Me.ToolStrip2)
         Me.MainSplitContainer.Panel2.Controls.Add(Me.SplitContainer2)
         Me.MainSplitContainer.Size = New System.Drawing.Size(1255, 585)
         Me.MainSplitContainer.SplitterDistance = 352
@@ -157,6 +155,62 @@ Partial Class TimeLogsForm2
         Me.EmployeeTreeView1.Size = New System.Drawing.Size(352, 585)
         Me.EmployeeTreeView1.TabIndex = 316
         '
+        'ToolStrip2
+        '
+        Me.ToolStrip2.BackColor = System.Drawing.Color.White
+        Me.ToolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CloseToolStripButton, Me.ImportToolStripButton, Me.ToolStripSeparator1, Me.ExportToolStripButton, Me.UserActivityToolStripButton, Me.ToolStripProgressBar1})
+        Me.ToolStrip2.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip2.Name = "ToolStrip2"
+        Me.ToolStrip2.Size = New System.Drawing.Size(899, 25)
+        Me.ToolStrip2.TabIndex = 350
+        Me.ToolStrip2.Text = "ToolStrip2"
+        '
+        'CloseToolStripButton
+        '
+        Me.CloseToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.CloseToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.CloseToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CloseToolStripButton.Name = "CloseToolStripButton"
+        Me.CloseToolStripButton.Size = New System.Drawing.Size(56, 22)
+        Me.CloseToolStripButton.Text = "Close"
+        '
+        'ImportToolStripButton
+        '
+        Me.ImportToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Add
+        Me.ImportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ImportToolStripButton.Name = "ImportToolStripButton"
+        Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.ImportToolStripButton.Text = "Import"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'ExportToolStripButton
+        '
+        Me.ExportToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Document
+        Me.ExportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ExportToolStripButton.Name = "ExportToolStripButton"
+        Me.ExportToolStripButton.Size = New System.Drawing.Size(60, 22)
+        Me.ExportToolStripButton.Text = "Export"
+        '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
+        '
+        'ToolStripProgressBar1
+        '
+        Me.ToolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripProgressBar1.Name = "ToolStripProgressBar1"
+        Me.ToolStripProgressBar1.Size = New System.Drawing.Size(100, 22)
+        Me.ToolStripProgressBar1.Visible = False
+        '
         'SplitContainer2
         '
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
@@ -168,7 +222,6 @@ Partial Class TimeLogsForm2
         '
         Me.SplitContainer2.Panel1.BackColor = System.Drawing.Color.White
         Me.SplitContainer2.Panel1.Controls.Add(Me.Panel6)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Panel4)
         '
         'SplitContainer2.Panel2
         '
@@ -182,9 +235,9 @@ Partial Class TimeLogsForm2
         '
         Me.Panel6.Controls.Add(Me.GroupBox1)
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel6.Location = New System.Drawing.Point(0, 24)
+        Me.Panel6.Location = New System.Drawing.Point(0, 0)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(899, 114)
+        Me.Panel6.Size = New System.Drawing.Size(899, 138)
         Me.Panel6.TabIndex = 353
         '
         'GroupBox1
@@ -197,7 +250,7 @@ Partial Class TimeLogsForm2
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Left
         Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(209, 114)
+        Me.GroupBox1.Size = New System.Drawing.Size(364, 138)
         Me.GroupBox1.TabIndex = 349
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Filter Dates"
@@ -246,91 +299,6 @@ Partial Class TimeLogsForm2
         Me.Label5.Size = New System.Drawing.Size(33, 13)
         Me.Label5.TabIndex = 345
         Me.Label5.Text = "From"
-        '
-        'Panel4
-        '
-        Me.Panel4.Controls.Add(Me.btnExport)
-        Me.Panel4.Controls.Add(Me.btnImport)
-        Me.Panel4.Controls.Add(Me.Panel5)
-        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel4.Location = New System.Drawing.Point(0, 0)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(899, 24)
-        Me.Panel4.TabIndex = 351
-        '
-        'btnExport
-        '
-        Me.btnExport.BackgroundImage = Global.AccuPay.My.Resources.Resources.Document
-        Me.btnExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.btnExport.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnExport.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnExport.Location = New System.Drawing.Point(75, 0)
-        Me.btnExport.Name = "btnExport"
-        Me.btnExport.Size = New System.Drawing.Size(75, 24)
-        Me.btnExport.TabIndex = 352
-        Me.btnExport.Text = "Exp&ort"
-        Me.btnExport.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnExport.UseVisualStyleBackColor = True
-        '
-        'btnImport
-        '
-        Me.btnImport.BackgroundImage = Global.AccuPay.My.Resources.Resources.Add
-        Me.btnImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.btnImport.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnImport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnImport.Location = New System.Drawing.Point(0, 0)
-        Me.btnImport.Name = "btnImport"
-        Me.btnImport.Size = New System.Drawing.Size(75, 24)
-        Me.btnImport.TabIndex = 351
-        Me.btnImport.Text = "Imp&ort"
-        Me.btnImport.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnImport.UseVisualStyleBackColor = True
-        '
-        'Panel5
-        '
-        Me.Panel5.Controls.Add(Me.ToolStrip1)
-        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Panel5.Location = New System.Drawing.Point(641, 0)
-        Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(258, 24)
-        Me.Panel5.TabIndex = 330
-        '
-        'ToolStrip1
-        '
-        Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnClose, Me.ToolStripProgressBar1, Me.btnUserActivity})
-        Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(258, 25)
-        Me.ToolStrip1.TabIndex = 329
-        Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'tsbtnClose
-        '
-        Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnClose.Name = "tsbtnClose"
-        Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
-        Me.tsbtnClose.Text = "Close"
-        '
-        'ToolStripProgressBar1
-        '
-        Me.ToolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripProgressBar1.Name = "ToolStripProgressBar1"
-        Me.ToolStripProgressBar1.Size = New System.Drawing.Size(100, 22)
-        Me.ToolStripProgressBar1.Visible = False
-        '
-        'btnUserActivity
-        '
-        Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
-        Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnUserActivity.Name = "btnUserActivity"
-        Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.btnUserActivity.Text = "User Activity"
         '
         'grid
         '
@@ -801,8 +769,11 @@ Partial Class TimeLogsForm2
         Me.Name = "TimeLogsForm2"
         Me.MainSplitContainer.Panel1.ResumeLayout(False)
         Me.MainSplitContainer.Panel2.ResumeLayout(False)
+        Me.MainSplitContainer.Panel2.PerformLayout()
         CType(Me.MainSplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MainSplitContainer.ResumeLayout(False)
+        Me.ToolStrip2.ResumeLayout(False)
+        Me.ToolStrip2.PerformLayout()
         Me.SplitContainer2.Panel1.ResumeLayout(False)
         Me.SplitContainer2.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
@@ -810,11 +781,6 @@ Partial Class TimeLogsForm2
         Me.Panel6.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
-        Me.Panel4.ResumeLayout(False)
-        Me.Panel5.ResumeLayout(False)
-        Me.Panel5.PerformLayout()
-        Me.ToolStrip1.ResumeLayout(False)
-        Me.ToolStrip1.PerformLayout()
         CType(Me.grid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ActionPanel.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
@@ -827,8 +793,6 @@ Partial Class TimeLogsForm2
     Friend WithEvents lblFormTitle As Label
     Friend WithEvents MainSplitContainer As SplitContainer
     Friend WithEvents EmployeeTreeView1 As EmployeeTreeView
-    Friend WithEvents ToolStrip1 As ToolStrip
-    Friend WithEvents tsbtnClose As ToolStripButton
     Friend WithEvents SplitContainer2 As SplitContainer
     Friend WithEvents grid As DataGridView
     Friend WithEvents GroupBox1 As GroupBox
@@ -856,16 +820,10 @@ Partial Class TimeLogsForm2
     Friend WithEvents Label2 As Label
     Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn12 As DataGridViewTextBoxColumn
-    Friend WithEvents Panel4 As Panel
-    Friend WithEvents Panel5 As Panel
-    Friend WithEvents btnImport As Button
     Friend WithEvents Panel6 As Panel
     Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
     Friend WithEvents bgworkTypicalImport As System.ComponentModel.BackgroundWorker
     Friend WithEvents bgworkImport As System.ComponentModel.BackgroundWorker
-    Friend WithEvents ToolStripProgressBar1 As ToolStripProgressBar
-    Friend WithEvents btnExport As Button
-    Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents colRowID As DataGridViewTextBoxColumn
     Friend WithEvents colEmployeeID As DataGridViewTextBoxColumn
     Friend WithEvents colEmployeeNo As DataGridViewTextBoxColumn
@@ -885,4 +843,11 @@ Partial Class TimeLogsForm2
     Friend WithEvents colDelete As DataGridViewImageColumn
     Friend WithEvents colRestore As DataGridViewImageColumn
     Friend WithEvents FilterButton As Button
+    Friend WithEvents ToolStrip2 As ToolStrip
+    Friend WithEvents CloseToolStripButton As ToolStripButton
+    Friend WithEvents ImportToolStripButton As ToolStripButton
+    Friend WithEvents UserActivityToolStripButton As ToolStripButton
+    Friend WithEvents ToolStripProgressBar1 As ToolStripProgressBar
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents ExportToolStripButton As ToolStripButton
 End Class

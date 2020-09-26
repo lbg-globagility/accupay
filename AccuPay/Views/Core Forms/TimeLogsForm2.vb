@@ -252,7 +252,7 @@ Public Class TimeLogsForm2
 
     Private Sub ShowSuccessImportBalloon()
         InfoBalloon("Imported successfully.",
-                  "Imported successfully.", btnImport, 0, -70)
+                  "Imported successfully.", dtpDateFrom, 0, -70)
     End Sub
 
     Private Async Function NewTimeEntryAlternateLineImport() As Task
@@ -797,7 +797,7 @@ Public Class TimeLogsForm2
     Private Async Function CheckRolePermissions() As Task
         Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.TIMELOG)
 
-        btnImport.Visible = True
+        ImportToolStripButton.Visible = True
         btnDeleteAll.Visible = True
         ActionPanel.Visible = True
         grid.ReadOnly = False
@@ -808,7 +808,7 @@ Public Class TimeLogsForm2
 
             If Not _currentRolePermission.Create AndAlso Not _currentRolePermission.Update Then
 
-                btnImport.Visible = False
+                ImportToolStripButton.Visible = False
 
                 If Not _currentRolePermission.Delete Then
 
@@ -839,7 +839,7 @@ Public Class TimeLogsForm2
         InfoBalloon(, , lblFormTitle, , , 1)
     End Sub
 
-    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
+    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles CloseToolStripButton.Click
         Close()
 
     End Sub
@@ -1217,7 +1217,7 @@ Public Class TimeLogsForm2
         Console.WriteLine("{0} : {1}", {e.Column.Name, e.Column.Width})
     End Sub
 
-    Private Async Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
+    Private Async Sub btnImport_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
         Dim timeLogsFormat_ As TimeLogsFormat? = TimeLogsImportOption()
 
@@ -1339,11 +1339,9 @@ Public Class TimeLogsForm2
         If e.ColumnIndex = colDelete.Index Then grid.Cursor = Cursors.Default
     End Sub
 
-    Private Sub ToolStripLabel1_Click(sender As Object, e As EventArgs)
+    Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles ExportToolStripButton.Click
 
-    End Sub
-
-    Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
+        ExportToolStripButton.Enabled = False
 
         Try
             Dim saveFileDialog = New SaveFileDialog()
@@ -1397,12 +1395,13 @@ Public Class TimeLogsForm2
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage()
-
+        Finally
+            ExportToolStripButton.Enabled = True
         End Try
 
     End Sub
 
-    Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
+    Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
         Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub

@@ -124,7 +124,7 @@ Public Class AttachmentTab
         End If
     End Sub
 
-    Private Sub ToolStripButton16_Click(sender As Object, e As EventArgs) Handles ToolStripButton16.Click
+    Private Sub ToolStripButton16_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         EmployeeForm.Close()
     End Sub
 

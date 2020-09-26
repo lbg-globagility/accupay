@@ -22,11 +22,16 @@ namespace AccuPay.Data.Repositories
             this._context = context;
         }
 
-        public IEnumerable<UserActivity> GetAll(int? organizationId = null, string entityName = null)
+        public async Task<ICollection<UserActivity>> GetAllAsync(
+            int? organizationId = null,
+            string entityName = null)
         {
             var query = _context.UserActivities
-                .Include(x => x.ActivityItems)
                 .Include(x => x.User)
+                .Include(x => x.ActivityItems)
+                    .ThenInclude(x => x.ChangedEmployee)
+                .Include(x => x.ActivityItems)
+                    .ThenInclude(x => x.ChangedUser)
                 .AsQueryable();
 
             if (organizationId != null)
@@ -39,7 +44,7 @@ namespace AccuPay.Data.Repositories
                 query = query.Where(x => x.EntityName == entityName);
             }
 
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         public void RecordAdd(
