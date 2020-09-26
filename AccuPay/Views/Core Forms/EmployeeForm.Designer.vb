@@ -92,13 +92,13 @@ Partial Class EmployeeForm
         Me.txtNName = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.txtTIN = New System.Windows.Forms.MaskedTextBox()
+        Me.txtTIN = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.txtSSS = New System.Windows.Forms.MaskedTextBox()
+        Me.txtSSS = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.txtPIN = New System.Windows.Forms.MaskedTextBox()
+        Me.txtPIN = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.txtHDMF = New System.Windows.Forms.MaskedTextBox()
+        Me.txtHDMF = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.txtemail = New System.Windows.Forms.TextBox()
@@ -1142,7 +1142,6 @@ Partial Class EmployeeForm
         '
         Me.txtTIN.Location = New System.Drawing.Point(399, 141)
         Me.txtTIN.Name = "txtTIN"
-        Me.txtTIN.ShortcutsEnabled = False
         Me.txtTIN.Size = New System.Drawing.Size(168, 20)
         Me.txtTIN.TabIndex = 27
         Me.txtTIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -1160,7 +1159,6 @@ Partial Class EmployeeForm
         '
         Me.txtSSS.Location = New System.Drawing.Point(399, 167)
         Me.txtSSS.Name = "txtSSS"
-        Me.txtSSS.ShortcutsEnabled = False
         Me.txtSSS.Size = New System.Drawing.Size(168, 20)
         Me.txtSSS.TabIndex = 28
         Me.txtSSS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -1178,7 +1176,6 @@ Partial Class EmployeeForm
         '
         Me.txtPIN.Location = New System.Drawing.Point(399, 193)
         Me.txtPIN.Name = "txtPIN"
-        Me.txtPIN.ShortcutsEnabled = False
         Me.txtPIN.Size = New System.Drawing.Size(168, 20)
         Me.txtPIN.TabIndex = 29
         Me.txtPIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -1196,7 +1193,6 @@ Partial Class EmployeeForm
         '
         Me.txtHDMF.Location = New System.Drawing.Point(399, 233)
         Me.txtHDMF.Name = "txtHDMF"
-        Me.txtHDMF.ShortcutsEnabled = False
         Me.txtHDMF.Size = New System.Drawing.Size(168, 20)
         Me.txtHDMF.TabIndex = 30
         Me.txtHDMF.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -9104,13 +9100,13 @@ Partial Class EmployeeForm
     Friend WithEvents txtNName As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents txtTIN As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtTIN As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents txtSSS As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtSSS As System.Windows.Forms.TextBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents txtPIN As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtPIN As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents txtHDMF As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtHDMF As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents txtemail As System.Windows.Forms.TextBox
