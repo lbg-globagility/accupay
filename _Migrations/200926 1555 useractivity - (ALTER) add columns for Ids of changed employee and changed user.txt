@@ -1,0 +1,9 @@
+ALTER TABLE `useractivityitem`
+	ALTER `EntityId` DROP DEFAULT;
+ALTER TABLE `useractivityitem`
+	COMMENT='EntityId = RowID of the changed record\r\nChangedEmployeeId = If the activity involves an employee, set this to the RowID of the Employee\r\nChangedUserId = If the activity involves modifying a user, set this to the Id of the User (for example, changing the email of user)',
+	CHANGE COLUMN IF EXISTS `EntityId` `EntityId` INT(11) NOT NULL COMMENT 'The RowID of the created/updated/delete Id' AFTER `UserActivityId`,
+	ADD COLUMN IF NOT EXISTS `ChangedEmployeeId` INT(11) NULL DEFAULT NULL COMMENT 'If the activity involves an employee, set this to the RowID of the Employee' AFTER `EntityId`,
+	ADD COLUMN IF NOT EXISTS`ChangedUserId` INT(11) NULL DEFAULT NULL COMMENT 'If the activity involves modifying a user, set this to the Id of the User' AFTER `ChangedEmployeeId`,
+	ADD CONSTRAINT `FK_useractivityitem_employee_ChangedEmployeeId` FOREIGN KEY (`ChangedEmployeeId`) REFERENCES `employee` (`RowID`),
+	ADD CONSTRAINT `FK_useractivityitem_aspnetusers_ChangedUserId` FOREIGN KEY (`ChangedUserId`) REFERENCES `aspnetusers` (`Id`);

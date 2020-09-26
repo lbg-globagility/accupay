@@ -294,6 +294,8 @@ Partial Class PayStubForm
         Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportNetPayActualDirectDepositToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CostCenterReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CostCenterReportDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CostCenterReportActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePaystubsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -346,8 +348,7 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CostCenterReportDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CostCenterReportActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -1112,11 +1113,11 @@ Partial Class PayStubForm
         Me.txtRegularHolidayHours.TabIndex = 307
         Me.txtRegularHolidayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtRestDayOtHour
+        'txtRestDayOtHours
         '
         Me.txtRestDayOtHours.AccessibleDescription = "RestDayOTHours"
         Me.txtRestDayOtHours.Location = New System.Drawing.Point(117, 124)
-        Me.txtRestDayOtHours.Name = "txtRestDayOtHour"
+        Me.txtRestDayOtHours.Name = "txtRestDayOtHours"
         Me.txtRestDayOtHours.Size = New System.Drawing.Size(100, 20)
         Me.txtRestDayOtHours.TabIndex = 533
         Me.txtRestDayOtHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -3086,7 +3087,7 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayrollToolStripDropDownButton, Me.GeneratePayrollToolStripButton, Me.tsbtnClose, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.PrintPayrollSummaryToolStripDropDownButton, Me.PrintPayrollSummaryToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayrollToolStripDropDownButton, Me.GeneratePayrollToolStripButton, Me.tsbtnClose, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.PrintPayrollSummaryToolStripDropDownButton, Me.PrintPayrollSummaryToolStripButton, Me.UserActivityToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(961, 25)
@@ -3133,14 +3134,14 @@ Partial Class PayStubForm
         'PayslipDeclaredToolStripMenuItem
         '
         Me.PayslipDeclaredToolStripMenuItem.Name = "PayslipDeclaredToolStripMenuItem"
-        Me.PayslipDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayslipDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayslipDeclaredToolStripMenuItem.Tag = "0"
         Me.PayslipDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayslipActualToolStripMenuItem
         '
         Me.PayslipActualToolStripMenuItem.Name = "PayslipActualToolStripMenuItem"
-        Me.PayslipActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayslipActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayslipActualToolStripMenuItem.Tag = "1"
         Me.PayslipActualToolStripMenuItem.Text = "Actual"
         '
@@ -3156,7 +3157,7 @@ Partial Class PayStubForm
         '
         Me.ExportNetPayAllToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportNetPayDeclaredAllToolStripMenuItem, Me.ExportNetPayActualAllToolStripMenuItem})
         Me.ExportNetPayAllToolStripMenuItem.Name = "ExportNetPayAllToolStripMenuItem"
-        Me.ExportNetPayAllToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportNetPayAllToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ExportNetPayAllToolStripMenuItem.Text = "All"
         '
         'ExportNetPayDeclaredAllToolStripMenuItem
@@ -3175,7 +3176,7 @@ Partial Class PayStubForm
         '
         Me.ExportNetPayCashToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportNetPayDeclaredCashToolStripMenuItem, Me.ExportNetPayActualCashToolStripMenuItem})
         Me.ExportNetPayCashToolStripMenuItem.Name = "ExportNetPayCashToolStripMenuItem"
-        Me.ExportNetPayCashToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportNetPayCashToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ExportNetPayCashToolStripMenuItem.Text = "Cash"
         '
         'ExportNetPayDeclaredCashToolStripMenuItem
@@ -3194,7 +3195,7 @@ Partial Class PayStubForm
         '
         Me.ExportNetPayDirectDepositToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem, Me.ExportNetPayActualDirectDepositToolStripMenuItem})
         Me.ExportNetPayDirectDepositToolStripMenuItem.Name = "ExportNetPayDirectDepositToolStripMenuItem"
-        Me.ExportNetPayDirectDepositToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ExportNetPayDirectDepositToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ExportNetPayDirectDepositToolStripMenuItem.Text = "Direct Deposit"
         '
         'ExportNetPayDeclaredDirectDepositToolStripMenuItem
@@ -3216,6 +3217,18 @@ Partial Class PayStubForm
         Me.CostCenterReportToolStripMenuItem.Name = "CostCenterReportToolStripMenuItem"
         Me.CostCenterReportToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
         Me.CostCenterReportToolStripMenuItem.Text = "Cost Center Report"
+        '
+        'CostCenterReportDeclaredToolStripMenuItem
+        '
+        Me.CostCenterReportDeclaredToolStripMenuItem.Name = "CostCenterReportDeclaredToolStripMenuItem"
+        Me.CostCenterReportDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.CostCenterReportDeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'CostCenterReportActualToolStripMenuItem
+        '
+        Me.CostCenterReportActualToolStripMenuItem.Name = "CostCenterReportActualToolStripMenuItem"
+        Me.CostCenterReportActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.CostCenterReportActualToolStripMenuItem.Text = "Actual"
         '
         'RecalculateThirteenthMonthPayToolStripMenuItem
         '
@@ -3331,13 +3344,13 @@ Partial Class PayStubForm
         'PayrollSummaryDeclaredToolStripMenuItem
         '
         Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayrollSummaryActualToolStripMenuItem
         '
         Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
         '
         'PrintPayrollSummaryToolStripButton
@@ -3580,17 +3593,13 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.Visible = False
         '
-        'CostCenterReportDeclaredToolStripMenuItem
+        'UserActivityToolStripButton
         '
-        Me.CostCenterReportDeclaredToolStripMenuItem.Name = "CostCenterReportDeclaredToolStripMenuItem"
-        Me.CostCenterReportDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.CostCenterReportDeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'CostCenterReportActualToolStripMenuItem
-        '
-        Me.CostCenterReportActualToolStripMenuItem.Name = "CostCenterReportActualToolStripMenuItem"
-        Me.CostCenterReportActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.CostCenterReportActualToolStripMenuItem.Text = "Actual"
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'PayStubForm
         '
@@ -3948,4 +3957,5 @@ Partial Class PayStubForm
     Friend WithEvents PrintPayrollSummaryToolStripButton As ToolStripButton
     Friend WithEvents CostCenterReportDeclaredToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CostCenterReportActualToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents UserActivityToolStripButton As ToolStripButton
 End Class

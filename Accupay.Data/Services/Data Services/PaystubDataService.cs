@@ -52,7 +52,11 @@ namespace AccuPay.Data.Services
         public async Task DeleteAsync(EmployeeCompositeKey key, int userId, int organizationId)
         {
             var paystub = await _paystubRepository.GetByCompositeKeyAsync(key);
+            await DeleteAsync(paystub, userId: userId, organizationId: organizationId);
+        }
 
+        public async Task DeleteAsync(Paystub paystub, int userId, int organizationId)
+        {
             if (paystub == null)
                 throw new BusinessLogicException("Paystub does not exists.");
 

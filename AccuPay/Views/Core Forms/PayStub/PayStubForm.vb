@@ -20,6 +20,8 @@ Imports OfficeOpenXml.Style
 
 Public Class PayStubForm
 
+    Private Const PaystubEntityName As String = "Paystub"
+
     Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
 
     Public Property CurrentYear As String = CDate(dbnow).Year
@@ -1657,9 +1659,10 @@ Public Class PayStubForm
         Dim toBeDeletedPaypFrom = paypFrom
         Dim toBeDeletedPaypTo = paypTo
 
-        Dim prompt = MessageBox.Show("Are you sure you want to delete the '" & CDate(toBeDeletedPaypFrom).ToShortDateString &
-                                     "' to '" & CDate(toBeDeletedPaypTo).ToShortDateString &
-                                     "' payroll of employee '" & toBeDeletedEmployeeNumber & "' ?",
+        Dim payPeriodString As String = GetPayPeriodString()
+
+        Dim prompt = MessageBox.Show("Are you sure you want to delete the " & payPeriodString &
+                                     " payroll of employee '" & toBeDeletedEmployeeNumber & "' ?",
                                      "Delete employee payroll",
                                      MessageBoxButtons.YesNoCancel,
                                      MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
@@ -1671,14 +1674,25 @@ Public Class PayStubForm
             Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
                 Async Function()
 
-                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
-
-                    Await paystubDataService.DeleteAsync(
+                    Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
                         New EmployeeCompositeKey(
                             employeeId:=employeeId.Value,
-                            payPeriodId:=payPeriodId.Value),
+                            payPeriodId:=payPeriodId.Value))
+
+                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                    Await paystubDataService.DeleteAsync(
+                        paystub,
                         userId:=z_User,
                         organizationId:=z_OrganizationID)
+
+                    Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+                    userActivityService.RecordDelete(
+                        z_User,
+                        PaystubEntityName,
+                        entityId:=paystub.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        $" for payroll {payPeriodString}",
+                        changedEmployeeId:=paystub.EmployeeID)
 
                     RefreshForm()
 
@@ -1827,8 +1841,10 @@ Public Class PayStubForm
 
         End If
 
+        Dim payPeriodString As String = GetPayPeriodString()
+
         Dim confirm = MessageBoxHelper.Confirm(Of Boolean)(
-            $"Generate payroll for '{CDate(paypFrom).ToShortDateString}' to '{CDate(paypTo).ToShortDateString}'?",
+            $"Generate payroll for {payPeriodString}?",
             "Generate Payroll")
 
         If Not confirm Then Return
@@ -1888,22 +1904,29 @@ Public Class PayStubForm
 
         End If
 
-        Dim prompt = MessageBox.Show($"Are you sure you want to delete ALL paystubs of employees for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}'?",
-                                     "Delete all employee payroll",
+        Dim payPeriodString As String = GetPayPeriodString()
+
+        Dim prompt = MessageBox.Show($"Are you sure you want to delete ALL paystubs of employees for payroll {payPeriodString}?",
+                                     "Delete all employee paystubs",
                                      MessageBoxButtons.YesNoCancel,
                                      MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If prompt = Windows.Forms.DialogResult.Yes Then
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-            Await FunctionUtils.TryCatchFunctionAsync("Delete Payroll",
+            Await FunctionUtils.TryCatchFunctionAsync("Delete ALL Pastubs",
                   Async Function()
+
+                      Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId.Value)
 
                       Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
                       Await paystubDataService.DeleteByPeriodAsync(
                         payPeriodId:=payperiodId.Value,
                         userId:=z_User,
                         organizationId:=z_OrganizationID)
+
+                      Dim recordMessage = $"Deleted a paystub for payroll {payPeriodString}."
+                      Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
 
                       RefreshForm()
 
@@ -1916,6 +1939,38 @@ Public Class PayStubForm
 
         DeletePaystubsToolStripMenuItem.Enabled = True
     End Sub
+
+    Private Function GetPayPeriodString() As String
+        Return $"'{CDate(paypFrom).ToShortDateString}' to '{CDate(paypTo).ToShortDateString}'"
+    End Function
+
+    Private Shared Async Function RecordMultiplePaystubUserActivity(
+        description As String,
+        paystubs As ICollection(Of Paystub)) As Task
+
+        Dim changes = New List(Of UserActivityItem)
+
+        For Each paystub In paystubs
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = paystub.RowID.Value,
+                .Description = description,
+                .ChangedEmployeeId = paystub.EmployeeID.Value
+            })
+        Next
+
+        If changes.Any() Then
+
+            Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            Await repo.CreateRecordAsync(
+              z_User,
+              PaystubEntityName,
+              z_OrganizationID,
+              UserActivityRepository.RecordTypeDelete,
+              changes)
+
+        End If
+    End Function
 
     Private Async Sub CancelPayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CancelPayrollToolStripMenuItem.Click
         CancelPayrollToolStripMenuItem.Enabled = False
@@ -1932,7 +1987,9 @@ Public Class PayStubForm
 
         End If
 
-        Dim prompt = MessageBox.Show($"Are you sure you want to cancel the payroll and delete ALL paystubs and time entries of employees for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}'?",
+        Dim payPeriodString As String = GetPayPeriodString()
+
+        Dim prompt = MessageBox.Show($"Are you sure you want to cancel the payroll and delete ALL paystubs and time entries of employees for payroll {payPeriodString}?",
                                      "Cancel payroll",
                                      MessageBoxButtons.YesNoCancel,
                                      MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
@@ -1943,8 +2000,13 @@ Public Class PayStubForm
             Await FunctionUtils.TryCatchFunctionAsync("Cancel Payroll",
                   Async Function()
 
+                      Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId.Value)
+
                       Dim payperiodDataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
                       Await payperiodDataService.CancelAsync(payperiodId.Value, z_User)
+
+                      Dim recordMessage = $"Deleted paystub and time entries for payroll {payPeriodString}."
+                      Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
 
                       RefreshForm()
 
@@ -2160,6 +2222,11 @@ Public Class PayStubForm
                 Process.Start(fileName)
             End Using
         End If
+    End Sub
+
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm(PaystubEntityName)
+        userActivity.ShowDialog()
     End Sub
 
 End Class
