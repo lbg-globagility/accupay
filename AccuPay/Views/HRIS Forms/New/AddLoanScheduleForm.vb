@@ -188,7 +188,15 @@ Public Class AddLoanScheduleForm
 
                 Await dataService.SaveAsync(Me._newLoanSchedule)
 
-                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
+                Dim suffixIdentifier = $" with type '{cboLoanType.Text}' and start date '{Me._newLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}'"
+
+                _userActivityRepository.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=Me._newLoanSchedule.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._newLoanSchedule.EmployeeID.Value,
+                    suffixIdentifier:=suffixIdentifier)
 
                 Me.IsSaved = True
 

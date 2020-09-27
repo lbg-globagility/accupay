@@ -409,11 +409,15 @@ Public Class EmployeeAllowanceForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
                 Await dataService.DeleteAsync(Me._currentAllowance.RowID.Value)
 
+                Dim suffixIdentifier = $" with type '{Me._currentAllowance.Product?.Name}' and start date '{Me._currentAllowance.EffectiveStartDate.ToShortDateString()}'"
+
                 _userActivityRepository.RecordDelete(
                     z_User,
                     FormEntityName,
-                    CInt(Me._currentAllowance.RowID),
-                    z_OrganizationID)
+                    entityId:=Me._currentAllowance.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._currentAllowance.EmployeeID.Value,
+                    suffixIdentifier:=suffixIdentifier)
 
                 Await LoadAllowances(currentEmployee)
 
@@ -647,7 +651,6 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Function RecordUpdate(newAllowance As Allowance) As Boolean
-
         Dim oldAllowance =
             Me._changedAllowances.
                 FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newAllowance.RowID))
@@ -656,41 +659,46 @@ Public Class EmployeeAllowanceForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        Dim suffixIdentifier = $"of allowance with type '{oldAllowance.Product?.Name}' and start date '{oldAllowance.EffectiveStartDate.ToShortDateString()}'"
 
         If newAllowance.Type <> oldAllowance.Type Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldAllowance.RowID),
-                .Description = $"Updated {entityName} type from '{oldAllowance.Type}' to '{newAllowance.Type}'."
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated type from '{oldAllowance.Type}' to '{newAllowance.Type}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
         If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldAllowance.RowID),
-                .Description = $"Updated {entityName} frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}'."
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
         If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldAllowance.RowID),
-                .Description = $"Updated {entityName} start date from '{oldAllowance.EffectiveStartDate.ToShortDateString}' to '{newAllowance.EffectiveStartDate.ToShortDateString}'."
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated start date from '{oldAllowance.EffectiveStartDate.ToShortDateString()}' to '{newAllowance.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
-        If newAllowance.EffectiveEndDate.ToString <> oldAllowance.EffectiveEndDate.ToString Then
+        If newAllowance.EffectiveEndDate.ToString() <> oldAllowance.EffectiveEndDate.ToString() Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldAllowance.RowID),
-                .Description = $"Updated {entityName} end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString}' to '{newAllowance.EffectiveEndDate?.ToShortDateString}'."
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString()}' to '{newAllowance.EffectiveEndDate?.ToShortDateString()}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
         If newAllowance.Amount <> oldAllowance.Amount Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldAllowance.RowID),
-                .Description = $"Updated {entityName} amount from '{oldAllowance.Amount.ToString}' to '{newAllowance.Amount.ToString}'."
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated amount from '{oldAllowance.Amount}' to '{newAllowance.Amount}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
 

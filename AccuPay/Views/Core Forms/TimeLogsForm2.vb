@@ -273,7 +273,7 @@ Public Class TimeLogsForm2
 
         Dim timeLogsImportParser = MainServiceProvider.GetRequiredService(Of TimeLogImportParser)
         Dim timeAttendanceHelper As ITimeAttendanceHelper = Await timeLogsImportParser.
-                                        GetHelper(logs, organizationId:=z_OrganizationID, userId:=z_User)
+            GetHelper(logs, organizationId:=z_OrganizationID, userId:=z_User)
 
         'preview the logs here
         Dim previewDialog As New _
@@ -351,12 +351,13 @@ Public Class TimeLogsForm2
         For Each log In timeLogs
             importList.Add(New UserActivityItem() With
             {
-                .Description = $"Imported a new {FormEntityName.ToLower()}.",
-                .EntityId = log.RowID.Value
+                .Description = $"Created a new time log with date {log.LogDate.ToShortDateString()}.",
+                .EntityId = log.RowID.Value,
+                .ChangedEmployeeId = log.EmployeeID
             })
         Next
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeAdd, importList)
     End Function
 
     Private Sub ResetGridRowsDefaultCellStyle()
@@ -381,33 +382,42 @@ Public Class TimeLogsForm2
                 Where(Function(tl) tl.LogDate = item.LogDate).
                 FirstOrDefault()
 
+            Dim suffixIdentifier = $"of time log with date '{item.LogDate.ToShortDateString()}'."
+
             If Not Nullable.Equals(item.TimeIn, oldValue.TimeIn) Then
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(item.RowID),
-                    .Description = $"Updated {entityName} time in from '{oldValue.TimeIn}' to '{item.TimeIn}' on '{oldValue.LogDate.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = item.RowID.Value,
+                    .Description = $"Updated time in from '{oldValue.TimeIn.ToStringFormat("hh:mm tt")}' to '{item.TimeIn.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    .ChangedEmployeeId = item.EmployeeID.Value
+                })
             End If
             If Not Nullable.Equals(item.TimeOut, oldValue.TimeOut) Then
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(item.RowID),
-                    .Description = $"Updated {entityName} time out from '{oldValue.TimeOut}' to '{item.TimeOut}' on '{oldValue.LogDate.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = item.RowID.Value,
+                    .Description = $"Updated time out from '{oldValue.TimeOut.ToStringFormat("hh:mm tt")}' to '{item.TimeOut.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    .ChangedEmployeeId = item.EmployeeID.Value
+                })
             End If
-            If item.TimeStampOut.NullableEquals(oldValue.TimeStampOut) = False Then
+
+            Dim currentDateOut = If(item.TimeStampOut Is Nothing, item.TimeStampOut, item.TimeStampOut.Value.Date)
+            Dim oldDateOut = If(oldValue.TimeStampOut Is Nothing, oldValue.TimeStampOut, oldValue.TimeStampOut.Value.Date)
+            If currentDateOut.NullableEquals(oldDateOut) = False Then
                 'TimeStampOut is null by default. It means TimeStampOut is equals to LogDate
-                Dim dontSave = oldValue.TimeStampOut Is Nothing AndAlso
-                                item.TimeStampOut IsNot Nothing AndAlso
-                                item.TimeStampOut.Value.Date = item.LogDate.Date
+                Dim dontSave =
+                    oldValue.TimeStampOut Is Nothing AndAlso
+                    item.TimeStampOut IsNot Nothing AndAlso
+                    item.TimeStampOut.Value.Date = item.LogDate.Date
 
                 If dontSave = False Then
 
                     changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(item.RowID),
-                        .Description = $"Updated {entityName} date out from '{oldValue.TimeStampOut.ToShortDateString}' to '{item.TimeStampOut.ToShortDateString}' on '{oldValue.LogDate.ToShortDateString}'."
-                        })
+                    {
+                        .EntityId = item.RowID.Value,
+                        .Description = $"Updated date out from '{oldValue.TimeStampOut.ToShortDateString()}' to '{item.TimeStampOut.ToShortDateString()}' {suffixIdentifier}",
+                        .ChangedEmployeeId = item.EmployeeID.Value
+                    })
 
                 End If
             End If
@@ -424,10 +434,11 @@ Public Class TimeLogsForm2
                 End If
 
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(item.RowID),
-                    .Description = $"Updated {entityName} branch from '{oldBranch}' to '{newBranch}' on '{oldValue.LogDate.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = item.RowID.Value,
+                    .Description = $"Updated branch from '{oldBranch}' to '{newBranch}' {suffixIdentifier}",
+                    .ChangedEmployeeId = item.EmployeeID.Value
+                })
             End If
 
             _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
@@ -1025,16 +1036,30 @@ Public Class TimeLogsForm2
 
     Private Sub CreateUserActivityRecords(oldRecords As IEnumerable(Of TimeLog), addedTimeLogs As List(Of TimeLog), updatedTimeLogs As List(Of TimeLog), deletedTimeLogs As List(Of TimeLog))
         For Each item In addedTimeLogs      'for new
-            _userActivityRepo.RecordAdd(z_User, FormEntityName, item.RowID.Value, z_OrganizationID)
+            _userActivityRepo.RecordAdd(
+                z_User,
+                FormEntityName,
+                entityId:=item.RowID.Value,
+                organizationId:=z_OrganizationID,
+                suffixIdentifier:=$" with date '{item.LogDate.ToShortDateString()}'",
+                changedEmployeeId:=item.EmployeeID.Value)
         Next
 
         RecordUpdate(updatedTimeLogs, oldRecords)
 
-        Dim groupedDeletedTimeLogs = deletedTimeLogs.GroupBy(Function(x) New With {Key x.EmployeeID, Key x.LogDate}).
-                                                    Select(Function(x) x.First).ToArray
+        Dim groupedDeletedTimeLogs = deletedTimeLogs.
+            GroupBy(Function(x) New With {Key x.EmployeeID, Key x.LogDate}).
+            Select(Function(x) x.First).
+            ToArray()
 
         For Each item In groupedDeletedTimeLogs
-            _userActivityRepo.RecordDelete(z_User, FormEntityName, item.RowID.Value, z_OrganizationID)
+            _userActivityRepo.RecordDelete(
+                z_User,
+                FormEntityName,
+                entityId:=item.RowID.Value,
+                organizationId:=z_OrganizationID,
+                suffixIdentifier:=$" with date '{item.LogDate.ToShortDateString()}'",
+                changedEmployeeId:=item.EmployeeID.Value)
         Next
     End Sub
 
@@ -1305,6 +1330,15 @@ Public Class TimeLogsForm2
         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
         Await timeLogService.SaveImportAsync(z_OrganizationID, timeLogs)
 
+        Dim importList = New List(Of UserActivityItem)
+        For Each log In timeLogs
+            importList.Add(New UserActivityItem() With
+            {
+                .Description = $"Created a new time log with date {log.LogDate.ToShortDateString()}.",
+                .EntityId = log.RowID.Value,
+                .ChangedEmployeeId = log.EmployeeID
+            })
+        Next
         Return
 
     End Sub

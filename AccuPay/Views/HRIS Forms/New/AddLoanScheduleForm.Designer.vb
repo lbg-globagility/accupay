@@ -239,9 +239,9 @@ Partial Class AddLoanScheduleForm
         Me.lblDateFrom.Location = New System.Drawing.Point(20, 195)
         Me.lblDateFrom.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblDateFrom.Name = "lblDateFrom"
-        Me.lblDateFrom.Size = New System.Drawing.Size(60, 13)
+        Me.lblDateFrom.Size = New System.Drawing.Size(58, 13)
         Me.lblDateFrom.TabIndex = 372
-        Me.lblDateFrom.Text = "Date From"
+        Me.lblDateFrom.Text = "Start Date"
         '
         'lblRemarks
         '

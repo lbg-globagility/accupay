@@ -158,7 +158,15 @@ Public Class AddAllowanceForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
                 Await dataService.SaveAsync(Me._newAllowance)
 
-                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
+                Dim suffixIdentifier = $" with type '{Me._newAllowance.Product?.Name}' and start date '{Me._newAllowance.EffectiveStartDate.ToShortDateString()}'"
+
+                _userActivityRepository.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=Me._newAllowance.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._newAllowance.EmployeeID.Value,
+                    suffixIdentifier:=suffixIdentifier)
 
                 Me.IsSaved = True
 
