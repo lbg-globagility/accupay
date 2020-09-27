@@ -55,6 +55,21 @@ namespace AccuPay.Data.Services
             if (salary.AllowanceSalary < 0)
                 throw new BusinessLogicException("Allowance Salary cannot be less than 0.");
 
+            var salariesWithSameDate = await _salaryRepository.GetByEmployeeAndEffectiveFromAsync(
+                salary.EmployeeID.Value,
+                salary.EffectiveFrom);
+
+            if (IsNewEntity(salary.RowID))
+            {
+                if (salariesWithSameDate.Any())
+                    throw new BusinessLogicException("Salary already exists!");
+            }
+            else
+            {
+                if (salariesWithSameDate.Any(x => x.RowID != salary.RowID))
+                    throw new BusinessLogicException("Salary already exists!");
+            }
+
             salary.UpdateTotalSalary();
         }
 

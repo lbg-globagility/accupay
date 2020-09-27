@@ -153,7 +153,13 @@ Public Class CertificationTab
                     Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
                     Await certificationRepo.DeleteAsync(_currentCertification)
 
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentCertification.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentCertification.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentCertification.EmployeeID,
+                        suffixIdentifier:=$" with type '{_currentCertification.CertificationType}'")
 
                     Await LoadCertifications()
                 End Function)
@@ -252,52 +258,63 @@ Public Class CertificationTab
     Private Sub RecordUpdateCertification(oldCertification As Certification)
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        If oldCertification Is Nothing Then Return
+
+        Dim suffixIdentifier = $"of certification with type '{_currentCertification.CertificationType}'."
 
         If _currentCertification.CertificationType <> oldCertification.CertificationType Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Updated {entityName} type from '{oldCertification.CertificationType}' to '{_currentCertification.CertificationType}'."
-                        })
+            {
+                .EntityId = oldCertification.RowID.Value,
+                .Description = $"Updated type from '{oldCertification.CertificationType}' to '{_currentCertification.CertificationType}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldCertification.EmployeeID
+            })
         End If
         If _currentCertification.IssuingAuthority <> oldCertification.IssuingAuthority Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Updated {entityName} issuing authority from '{oldCertification.IssuingAuthority}' to '{_currentCertification.IssuingAuthority}'."
-                        })
+            {
+                .EntityId = oldCertification.RowID.Value,
+                .Description = $"Updated issuing authority from '{oldCertification.IssuingAuthority}' to '{_currentCertification.IssuingAuthority}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldCertification.EmployeeID
+            })
         End If
         If _currentCertification.CertificationNo <> oldCertification.CertificationNo Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Updated {entityName} number from '{oldCertification.CertificationNo}' to '{_currentCertification.CertificationNo}'."
-                        })
+            {
+                .EntityId = oldCertification.RowID.Value,
+                .Description = $"Updated number from '{oldCertification.CertificationNo}' to '{_currentCertification.CertificationNo}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldCertification.EmployeeID
+            })
         End If
         If _currentCertification.IssueDate <> oldCertification.IssueDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Updated {entityName} issued date from '{oldCertification.IssueDate.ToShortDateString}' to '{_currentCertification.IssueDate.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldCertification.RowID.Value,
+                .Description = $"Updated issued date from '{oldCertification.IssueDate.ToShortDateString()}' to '{_currentCertification.IssueDate.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldCertification.EmployeeID
+            })
         End If
         If _currentCertification.ExpirationDate?.ToShortDateString <> oldCertification.ExpirationDate?.ToShortDateString Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Updated {entityName} expiration date from '{oldCertification.ExpirationDate?.ToShortDateString}' to '{_currentCertification.ExpirationDate?.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldCertification.RowID.Value,
+                .Description = $"Updated expiration date from '{oldCertification.ExpirationDate?.ToShortDateString()}' to '{_currentCertification.ExpirationDate?.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldCertification.EmployeeID
+            })
         End If
         If _currentCertification.Comments <> oldCertification.Comments Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Updated {entityName} comments from '{oldCertification.Comments}' to '{_currentCertification.Comments}'."
-                        })
+            {
+                .EntityId = oldCertification.RowID.Value,
+                .Description = $"Updated comments from '{oldCertification.Comments}' to '{_currentCertification.Comments}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldCertification.EmployeeID
+            })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
     End Sub
 

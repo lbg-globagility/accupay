@@ -170,7 +170,13 @@ Public Class BonusTab
                     Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
                     Await bonusRepo.DeleteAsync(_currentBonus)
 
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentBonus.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentBonus.EmployeeID,
+                        suffixIdentifier:=$" with type '{_currentBonus.BonusType}' and start date '{_currentBonus.EffectiveStartDate.ToShortDateString()}'")
 
                     Await LoadBonuses()
                 End Function)
@@ -356,45 +362,55 @@ Public Class BonusTab
     Private Sub RecordUpdateBonus(oldBonus As Bonus)
         Dim changes As New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        If oldBonus Is Nothing Then Return
+
+        Dim suffixIdentifier = $"of bonus with type '{_currentBonus.BonusType}' and start date '{_currentBonus.EffectiveStartDate.ToShortDateString()}'."
 
         If _currentBonus.ProductID <> oldBonus.ProductID Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} type from '{oldBonus.Product.Name}' to '{_currentBonus.Product.Name}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated type from '{oldBonus.Product.Name}' to '{_currentBonus.Product.Name}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.AllowanceFrequency <> oldBonus.AllowanceFrequency Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} frequency from '{oldBonus.AllowanceFrequency}' to '{_currentBonus.AllowanceFrequency}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated frequency from '{oldBonus.AllowanceFrequency}' to '{_currentBonus.AllowanceFrequency}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.EffectiveStartDate <> oldBonus.EffectiveStartDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} start date from '{oldBonus.EffectiveStartDate.ToShortDateString}' to '{_currentBonus.EffectiveStartDate.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated start date from '{oldBonus.EffectiveStartDate.ToShortDateString}' to '{_currentBonus.EffectiveStartDate.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.EffectiveEndDate <> oldBonus.EffectiveEndDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} end date from '{oldBonus.EffectiveEndDate.ToShortDateString}' to '{_currentBonus.EffectiveEndDate.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated end date from '{oldBonus.EffectiveEndDate.ToShortDateString}' to '{_currentBonus.EffectiveEndDate.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.BonusAmount <> oldBonus.BonusAmount Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} amount from '{oldBonus.BonusAmount}' to '{_currentBonus.BonusAmount}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated amount from '{oldBonus.BonusAmount}' to '{_currentBonus.BonusAmount}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
     End Sub
 

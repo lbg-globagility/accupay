@@ -945,13 +945,13 @@ Public Class EmployeeLoansForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim suffixIdentifier = $"of loan with type '{cboLoanType.Text}' and start date '{Me._currentLoan.DedEffectiveDateFrom.ToShortDateString()}'"
+        Dim suffixIdentifier = $"of loan with type '{oldLoanSchedule.LoanName}' and start date '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}'."
 
         If newLoanSchedule.LoanName <> oldLoanSchedule.LoanName Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}' {suffixIdentifier}.",
+                .Description = $"Updated type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -959,7 +959,7 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated loan number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}' {suffixIdentifier}.",
+                .Description = $"Updated loan number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -967,7 +967,7 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated total amount from '{oldLoanSchedule.TotalLoanAmount}' to '{newLoanSchedule.TotalLoanAmount}' {suffixIdentifier}.",
+                .Description = $"Updated total amount from '{oldLoanSchedule.TotalLoanAmount}' to '{newLoanSchedule.TotalLoanAmount}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -975,7 +975,7 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated date from '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' {suffixIdentifier}.",
+                .Description = $"Updated start date '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -983,7 +983,7 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated deduction amount from '{oldLoanSchedule.DeductionAmount}' to '{newLoanSchedule.DeductionAmount}' {suffixIdentifier}.",
+                .Description = $"Updated deduction amount from '{oldLoanSchedule.DeductionAmount}' to '{newLoanSchedule.DeductionAmount}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -991,7 +991,7 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}' {suffixIdentifier}.",
+                .Description = $"Updated status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -999,7 +999,7 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated interest percentage from '{oldLoanSchedule.DeductionPercentage}' to '{newLoanSchedule.DeductionPercentage}' {suffixIdentifier}.",
+                .Description = $"Updated interest percentage from '{oldLoanSchedule.DeductionPercentage}' to '{newLoanSchedule.DeductionPercentage}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -1007,7 +1007,7 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}' {suffixIdentifier}.",
+                .Description = $"Updated deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
@@ -1015,12 +1015,15 @@ Public Class EmployeeLoansForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLoanSchedule.RowID.Value,
-                .Description = $"Updated comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}' {suffixIdentifier}.",
+                .Description = $"Updated comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
             })
         End If
 
-        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
         Return True
     End Function

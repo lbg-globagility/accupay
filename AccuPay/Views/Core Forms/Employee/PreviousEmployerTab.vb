@@ -196,7 +196,13 @@ Public Class PreviousEmployerTab
                     Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
                     Await previousEmployerRepo.DeleteAsync(_currentPrevEmployer)
 
-                    _userActivityRepo.RecordDelete(z_User, "Previous Employer", CInt(_currentPrevEmployer.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentPrevEmployer.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentPrevEmployer.EmployeeID,
+                        suffixIdentifier:=$" with name '{_currentPrevEmployer.Name}'")
 
                     Await LoadPrevEmployers()
                 End Function)
@@ -309,122 +315,143 @@ Public Class PreviousEmployerTab
     Private Sub RecordUpdatePrevEmployer(oldPrevEmployer As PreviousEmployer)
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        If oldPrevEmployer Is Nothing Then Return
+
+        Dim suffixIdentifier = $"of previous employer with name '{oldPrevEmployer.Name}'."
 
         If _currentPrevEmployer.Name <> oldPrevEmployer.Name Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} name from '{oldPrevEmployer.Name}' to '{_currentPrevEmployer.Name}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated name from '{oldPrevEmployer.Name}' to '{_currentPrevEmployer.Name}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.TradeName <> oldPrevEmployer.TradeName Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} trade name from '{oldPrevEmployer.TradeName}' to '{_currentPrevEmployer.TradeName}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated trade name from '{oldPrevEmployer.TradeName}' to '{_currentPrevEmployer.TradeName}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.ContactName <> oldPrevEmployer.ContactName Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} contact name from '{oldPrevEmployer.ContactName}' to '{_currentPrevEmployer.ContactName}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated contact name from '{oldPrevEmployer.ContactName}' to '{_currentPrevEmployer.ContactName}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.MainPhone <> oldPrevEmployer.MainPhone Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} main phone from '{oldPrevEmployer.MainPhone}' to '{_currentPrevEmployer.MainPhone}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated main phone from '{oldPrevEmployer.MainPhone}' to '{_currentPrevEmployer.MainPhone}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.AltPhone <> oldPrevEmployer.AltPhone Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} alt phone from '{oldPrevEmployer.AltPhone}' to '{_currentPrevEmployer.AltPhone}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated alt phone from '{oldPrevEmployer.AltPhone}' to '{_currentPrevEmployer.AltPhone}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.FaxNumber <> oldPrevEmployer.FaxNumber Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} fax number from '{oldPrevEmployer.FaxNumber}' to '{_currentPrevEmployer.FaxNumber}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated fax number from '{oldPrevEmployer.FaxNumber}' to '{_currentPrevEmployer.FaxNumber}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.EmailAddress <> oldPrevEmployer.EmailAddress Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} email address from '{oldPrevEmployer.EmailAddress}' to '{_currentPrevEmployer.EmailAddress}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated email address from '{oldPrevEmployer.EmailAddress}' to '{_currentPrevEmployer.EmailAddress}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.AltEmailAddress <> oldPrevEmployer.AltEmailAddress Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} alt email address from '{oldPrevEmployer.AltEmailAddress}' to '{_currentPrevEmployer.AltEmailAddress}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated alt email address from '{oldPrevEmployer.AltEmailAddress}' to '{_currentPrevEmployer.AltEmailAddress}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.URL <> oldPrevEmployer.URL Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} URL from '{oldPrevEmployer.URL}' to '{_currentPrevEmployer.URL}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated URL from '{oldPrevEmployer.URL}' to '{_currentPrevEmployer.URL}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.TINNo <> oldPrevEmployer.TINNo Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} TIN number from '{oldPrevEmployer.TINNo}' to '{_currentPrevEmployer.TINNo}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated TIN number from '{oldPrevEmployer.TINNo}' to '{_currentPrevEmployer.TINNo}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.JobTitle <> oldPrevEmployer.JobTitle Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} job title from '{oldPrevEmployer.JobTitle}' to '{_currentPrevEmployer.JobTitle}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated job title from '{oldPrevEmployer.JobTitle}' to '{_currentPrevEmployer.JobTitle}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.JobFunction <> oldPrevEmployer.JobFunction Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} job function from '{oldPrevEmployer.JobFunction}' to '{_currentPrevEmployer.JobFunction}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated job function from '{oldPrevEmployer.JobFunction}' to '{_currentPrevEmployer.JobFunction}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.OrganizationType <> oldPrevEmployer.OrganizationType Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} organization type from '{oldPrevEmployer.OrganizationType}' to '{_currentPrevEmployer.OrganizationType}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated organization type from '{oldPrevEmployer.OrganizationType}' to '{_currentPrevEmployer.OrganizationType}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.ExperienceFrom.ToShortDateString <> oldPrevEmployer.ExperienceFrom.ToShortDateString Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} experience start date from '{oldPrevEmployer.ExperienceFrom.ToShortDateString}' to '{_currentPrevEmployer.ExperienceFrom.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated experience start date from '{oldPrevEmployer.ExperienceFrom.ToShortDateString}' to '{_currentPrevEmployer.ExperienceFrom.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.ExperienceTo.ToShortDateString <> oldPrevEmployer.ExperienceTo.ToShortDateString Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} experience end date from '{oldPrevEmployer.ExperienceTo.ToShortDateString}' to '{_currentPrevEmployer.ExperienceTo.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated experience end date from '{oldPrevEmployer.ExperienceTo.ToShortDateString}' to '{_currentPrevEmployer.ExperienceTo.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
         If _currentPrevEmployer.BusinessAddress <> oldPrevEmployer.BusinessAddress Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldPrevEmployer.RowID),
-                        .Description = $"Updated {entityName} company address from '{oldPrevEmployer.BusinessAddress}' to '{_currentPrevEmployer.BusinessAddress}'."
-                        })
+            {
+                .EntityId = oldPrevEmployer.RowID.Value,
+                .Description = $"Updated company address from '{oldPrevEmployer.BusinessAddress}' to '{_currentPrevEmployer.BusinessAddress}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
+            })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
     End Sub
 

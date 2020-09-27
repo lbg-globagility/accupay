@@ -22,11 +22,11 @@ Public Class AddDisciplinaryAction
 
     Private _disciplinaryActionRepo As DisciplinaryActionRepository
 
-    Private _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As ListOfValueRepository
 
-    Private _productRepo As ProductRepository
+    Private ReadOnly _productRepo As ProductRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -96,7 +96,14 @@ Public Class AddDisciplinaryAction
 
                 Await _disciplinaryActionRepo.CreateAsync(_newDisciplinaryAction)
 
-                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newDisciplinaryAction.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=_newDisciplinaryAction.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=_newDisciplinaryAction.EmployeeID,
+                    suffixIdentifier:=$" with finding name '{currentFinding.PartNo}'")
+
                 succeed = True
             End Function)
 

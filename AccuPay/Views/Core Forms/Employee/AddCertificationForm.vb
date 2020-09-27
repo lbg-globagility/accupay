@@ -15,7 +15,7 @@ Public Class AddCertificationForm
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -65,7 +65,13 @@ Public Class AddCertificationForm
                 Dim awardRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
                 Await awardRepo.CreateAsync(_newCertification)
 
-                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newCertification.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=_newCertification.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=_newCertification.EmployeeID,
+                    suffixIdentifier:=$" with type '{_newCertification.CertificationType}'")
 
                 succeed = True
             End Function)

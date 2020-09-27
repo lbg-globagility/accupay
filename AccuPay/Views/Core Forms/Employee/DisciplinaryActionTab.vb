@@ -190,7 +190,14 @@ Public Class DisciplinaryActionTab
 
                     Await _disciplinaryActionRepo.DeleteAsync(_currentDiscAction)
 
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentDiscAction.RowID), z_OrganizationID)
+                    Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentDiscAction.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentDiscAction.EmployeeID,
+                        suffixIdentifier:=$" with finding name '{currentFinding.PartNo}'")
 
                     Await LoadDisciplinaryActions()
                 End Function)
@@ -254,54 +261,66 @@ Public Class DisciplinaryActionTab
 
     Private Sub RecordUpdateDiscAction(oldDisciplinaryAction As DisciplinaryAction)
         Dim changes = New List(Of UserActivityItem)
+
+        If oldDisciplinaryAction Is Nothing Then Return
+
         Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
 
-        Dim entityName = FormEntityName.ToLower()
+        Dim suffixIdentifier = $"of disciplinary action with finding name '{oldDisciplinaryAction.FindingName}'."
 
         If _currentDiscAction.FindingID <> oldDisciplinaryAction.FindingID Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated {entityName} finding name from '{oldDisciplinaryAction.FindingName}' to '{currentFinding.PartNo}'."
-                        })
+            {
+                .EntityId = oldDisciplinaryAction.RowID.Value,
+                .Description = $"Updated finding name from '{oldDisciplinaryAction.FindingName}' to '{currentFinding.PartNo}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
+            })
         End If
         If _currentDiscAction.Action <> oldDisciplinaryAction.Action Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated {entityName} penaty from '{oldDisciplinaryAction.Action}' to '{_currentDiscAction.Action}'."
-                        })
+            {
+                .EntityId = oldDisciplinaryAction.RowID.Value,
+                .Description = $"Updated penaty from '{oldDisciplinaryAction.Action}' to '{_currentDiscAction.Action}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
+            })
         End If
         If _currentDiscAction.DateFrom <> oldDisciplinaryAction.DateFrom Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated {entityName} start date from '{oldDisciplinaryAction.DateFrom.ToShortDateString}' to '{_currentDiscAction.DateFrom.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldDisciplinaryAction.RowID.Value,
+                .Description = $"Updated start date from '{oldDisciplinaryAction.DateFrom.ToShortDateString}' to '{_currentDiscAction.DateFrom.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
+            })
         End If
         If _currentDiscAction.DateTo <> oldDisciplinaryAction.DateTo Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated {entityName} end date from '{oldDisciplinaryAction.DateTo.ToShortDateString}' to '{_currentDiscAction.DateTo.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldDisciplinaryAction.RowID.Value,
+                .Description = $"Updated end date from '{oldDisciplinaryAction.DateTo.ToShortDateString}' to '{_currentDiscAction.DateTo.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
+            })
         End If
         If _currentDiscAction.FindingDescription <> oldDisciplinaryAction.FindingDescription Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated {entityName} finding description from '{oldDisciplinaryAction.FindingDescription}' to '{_currentDiscAction.FindingDescription}'."
-                        })
+            {
+                .EntityId = oldDisciplinaryAction.RowID.Value,
+                .Description = $"Updated finding description from '{oldDisciplinaryAction.FindingDescription}' to '{_currentDiscAction.FindingDescription}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
+            })
         End If
         If _currentDiscAction.Comments <> oldDisciplinaryAction.Comments Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated {entityName} comments from '{oldDisciplinaryAction.Comments}' to '{_currentDiscAction.Comments}'."
-                        })
+            {
+                .EntityId = oldDisciplinaryAction.RowID.Value,
+                .Description = $"Updated comments from '{oldDisciplinaryAction.Comments}' to '{_currentDiscAction.Comments}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
+            })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
     End Sub
 

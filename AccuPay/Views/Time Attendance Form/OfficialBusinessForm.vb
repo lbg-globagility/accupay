@@ -322,13 +322,13 @@ Public Class OfficialBusinessForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim suffixIdentifier = $"of official business with date '{oldOfficialBusiness.StartDate.ToShortDateString()}'"
+        Dim suffixIdentifier = $"of official business with date '{oldOfficialBusiness.StartDate.ToShortDateString()}'."
 
         If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated start date from '{oldOfficialBusiness.StartDate?.ToShortDateString()}' to '{newOfficialBusiness.StartDate?.ToShortDateString()}' {suffixIdentifier}.",
+                .Description = $"Updated start date from '{oldOfficialBusiness.StartDate?.ToShortDateString()}' to '{newOfficialBusiness.StartDate?.ToShortDateString()}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
@@ -336,7 +336,7 @@ Public Class OfficialBusinessForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated start time from '{oldOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .Description = $"Updated start time from '{oldOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
@@ -344,7 +344,7 @@ Public Class OfficialBusinessForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated end time from '{oldOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .Description = $"Updated end time from '{oldOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
@@ -352,7 +352,7 @@ Public Class OfficialBusinessForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}' {suffixIdentifier}.",
+                .Description = $"Updated reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
@@ -360,7 +360,7 @@ Public Class OfficialBusinessForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}' {suffixIdentifier}.",
+                .Description = $"Updated comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
@@ -368,12 +368,15 @@ Public Class OfficialBusinessForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}' {suffixIdentifier}.",
+                .Description = $"Updated status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
 
-        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
         Return True
     End Function

@@ -214,7 +214,7 @@ Partial Class UserRoleForm
         Me.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DeleteButton.Name = "DeleteButton"
         Me.DeleteButton.Size = New System.Drawing.Size(60, 22)
-        Me.DeleteButton.Text = "Delete"
+        Me.DeleteButton.Text = "&Delete"
         '
         'CancelButton
         '
@@ -222,7 +222,7 @@ Partial Class UserRoleForm
         Me.CancelButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.CancelButton.Name = "CancelButton"
         Me.CancelButton.Size = New System.Drawing.Size(63, 22)
-        Me.CancelButton.Text = "Cancel"
+        Me.CancelButton.Text = "&Cancel"
         '
         'CloseButton
         '

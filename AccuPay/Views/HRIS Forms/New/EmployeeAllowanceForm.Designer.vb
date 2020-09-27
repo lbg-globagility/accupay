@@ -47,11 +47,11 @@ Partial Class EmployeeAllowanceForm
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
         Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.AllowancesBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.pnlMain = New System.Windows.Forms.Panel()
@@ -214,11 +214,6 @@ Partial Class EmployeeAllowanceForm
         Me.SaveToolStripButton.Size = New System.Drawing.Size(51, 22)
         Me.SaveToolStripButton.Text = "&Save"
         '
-        'ToolStripSeparator9
-        '
-        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
-        '
         'DeleteToolStripButton
         '
         Me.DeleteToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
@@ -233,7 +228,21 @@ Partial Class EmployeeAllowanceForm
         Me.CancelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.CancelToolStripButton.Name = "CancelToolStripButton"
         Me.CancelToolStripButton.Size = New System.Drawing.Size(63, 22)
-        Me.CancelToolStripButton.Text = "Cancel"
+        Me.CancelToolStripButton.Text = "&Cancel"
+        '
+        'ImportToolStripButton
+        '
+        Me.ImportToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Add
+        Me.ImportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ImportToolStripButton.Name = "ImportToolStripButton"
+        Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.ImportToolStripButton.Text = "&Import"
+        Me.ImportToolStripButton.ToolTipText = "Import loans"
+        '
+        'ToolStripSeparator9
+        '
+        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
         '
         'btnClose
         '
@@ -244,22 +253,13 @@ Partial Class EmployeeAllowanceForm
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
         '
-        'ImportToolStripButton
-        '
-        Me.ImportToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Add
-        Me.ImportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ImportToolStripButton.Name = "ImportToolStripButton"
-        Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
-        Me.ImportToolStripButton.Text = "Import"
-        Me.ImportToolStripButton.ToolTipText = "Import loans"
-        '
         'UserActivityToolStripButton
         '
         Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
         Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
         Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivityToolStripButton.Text = "User Activity"
+        Me.UserActivityToolStripButton.Text = "&User Activity"
         '
         'AllowancesBindingSource
         '

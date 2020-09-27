@@ -16,7 +16,7 @@ Public Class AddSalaryForm
 
     Private _employee As Employee
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
@@ -86,7 +86,13 @@ Public Class AddSalaryForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
                 Await dataService.SaveAsync(newSalary)
 
-                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(newSalary.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=newSalary.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=newSalary.EmployeeID,
+                    suffixIdentifier:=$" with start date '{newSalary.EffectiveFrom.ToShortDateString()}'")
 
                 succeed = True
             End Function)

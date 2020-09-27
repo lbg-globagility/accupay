@@ -387,73 +387,82 @@ Public Class SalaryTab
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        Dim suffixIdentifier = $"of salary with start date '{oldSalary.EffectiveFrom.ToShortDateString()}'."
 
         If _currentSalary.EffectiveFrom <> oldSalary.EffectiveFrom Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated {entityName} start date from '{oldSalary.EffectiveFrom.ToShortDateString}' to '{_currentSalary.EffectiveFrom.ToShortDateString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated start date from '{oldSalary.EffectiveFrom.ToShortDateString()}' to '{_currentSalary.EffectiveFrom.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.BasicSalary <> oldSalary.BasicSalary Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated basic salary from '{oldSalary.BasicSalary.ToString}' to '{_currentSalary.BasicSalary.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated basic salary from '{oldSalary.BasicSalary}' to '{_currentSalary.BasicSalary}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.AllowanceSalary <> oldSalary.AllowanceSalary Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated allowance salary from '{oldSalary.AllowanceSalary.ToString}' to '{_currentSalary.AllowanceSalary.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated allowance salary from '{oldSalary.AllowanceSalary}' to '{_currentSalary.AllowanceSalary}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.TotalSalary <> oldSalary.TotalSalary Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated total salary from '{oldSalary.TotalSalary.ToString}' to '{_currentSalary.TotalSalary.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated total salary from '{oldSalary.TotalSalary}' to '{_currentSalary.TotalSalary}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.AutoComputePhilHealthContribution <> oldSalary.AutoComputePhilHealthContribution Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated {entityName} PhilHealth auto from '{oldSalary.AutoComputePhilHealthContribution.ToString}' to '{_currentSalary.AutoComputePhilHealthContribution.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated PhilHealth autocompute option from '{oldSalary.AutoComputePhilHealthContribution}' to '{_currentSalary.AutoComputePhilHealthContribution}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.PhilHealthDeduction <> oldSalary.PhilHealthDeduction Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated {entityName} PhilHealth deduction from '{oldSalary.PhilHealthDeduction.ToString}' to '{_currentSalary.PhilHealthDeduction.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated PhilHealth deduction from '{oldSalary.PhilHealthDeduction}' to '{_currentSalary.PhilHealthDeduction}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.DoPaySSSContribution <> oldSalary.DoPaySSSContribution Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated {entityName} SSS deduction from '{oldSalary.DoPaySSSContribution.ToString}' to '{_currentSalary.DoPaySSSContribution.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated SSS pay option from '{oldSalary.DoPaySSSContribution}' to '{_currentSalary.DoPaySSSContribution}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.AutoComputeHDMFContribution <> oldSalary.AutoComputeHDMFContribution Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated {entityName} PagIbig auto from '{oldSalary.AutoComputeHDMFContribution.ToString}' to '{_currentSalary.AutoComputeHDMFContribution.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated PAGIBIG autocompute option from '{oldSalary.AutoComputeHDMFContribution}' to '{_currentSalary.AutoComputeHDMFContribution}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
         If _currentSalary.HDMFAmount <> oldSalary.HDMFAmount Then
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = CInt(oldSalary.RowID),
-                .Description = $"Updated {entityName} PagIbig deduction from '{oldSalary.HDMFAmount.ToString}' to '{_currentSalary.HDMFAmount.ToString}'."
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated PAGIBIG deduction from '{oldSalary.HDMFAmount}' to '{_currentSalary.HDMFAmount}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
 
-        If changes.Count > 0 Then
+        If changes.Any() Then
             Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
             userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
         End If
@@ -498,7 +507,13 @@ Public Class SalaryTab
                 Await dataService.DeleteAsync(_currentSalary.RowID.Value)
 
                 Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-                userActivityRepository.RecordDelete(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
+                userActivityRepository.RecordDelete(
+                    z_User,
+                    FormEntityName,
+                    entityId:=_currentSalary.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=_currentSalary.EmployeeID,
+                    suffixIdentifier:=$" with start date '{_currentSalary.EffectiveFrom.ToShortDateString()}'")
 
                 LoadSalaries()
             End Function)

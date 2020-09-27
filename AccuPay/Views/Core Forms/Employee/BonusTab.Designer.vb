@@ -32,8 +32,9 @@ Partial Class BonusTab
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnNew = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSave = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnDelete = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsbtnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.pbEmpPicBon = New System.Windows.Forms.PictureBox()
         Me.txtEmpIDBon = New System.Windows.Forms.TextBox()
@@ -67,7 +68,6 @@ Partial Class BonusTab
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStrip20.SuspendLayout()
         CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -109,21 +109,26 @@ Partial Class BonusTab
         Me.tsbtnSave.Size = New System.Drawing.Size(51, 22)
         Me.tsbtnSave.Text = "&Save"
         '
-        'tsbtnCancel
-        '
-        Me.tsbtnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnCancel.Name = "tsbtnCancel"
-        Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.tsbtnCancel.Text = "Cancel"
-        '
         'tsbtnDelete
         '
         Me.tsbtnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.tsbtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnDelete.Name = "tsbtnDelete"
         Me.tsbtnDelete.Size = New System.Drawing.Size(60, 22)
-        Me.tsbtnDelete.Text = "Delete"
+        Me.tsbtnDelete.Text = "&Delete"
+        '
+        'tsbtnCancel
+        '
+        Me.tsbtnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnCancel.Name = "tsbtnCancel"
+        Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
+        Me.tsbtnCancel.Text = "&Cancel"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'tsbtnUserActivity
         '
@@ -131,7 +136,7 @@ Partial Class BonusTab
         Me.tsbtnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnUserActivity.Name = "tsbtnUserActivity"
         Me.tsbtnUserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.tsbtnUserActivity.Text = "User Activity"
+        Me.tsbtnUserActivity.Text = "&User Activity"
         '
         'pbEmpPicBon
         '
@@ -532,11 +537,6 @@ Partial Class BonusTab
         Me.DataGridViewTextBoxColumn5.HeaderText = "ProductID"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.Visible = False
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'BonusTab
         '

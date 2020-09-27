@@ -418,13 +418,13 @@ Public Class EmployeeLeavesForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim suffixIdentifier = $"of leave with date '{oldLeave.StartDate.ToShortDateString()}'"
+        Dim suffixIdentifier = $"of leave with date '{oldLeave.StartDate.ToShortDateString()}'."
 
         If newLeave.StartDate <> oldLeave.StartDate Then
             changes.Add(New UserActivityItem() With
            {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated start date from '{oldLeave.StartDate.ToShortDateString()}' to '{newLeave.StartDate.ToShortDateString()}' {suffixIdentifier}.",
+                .Description = $"Updated start date from '{oldLeave.StartDate.ToShortDateString()}' to '{newLeave.StartDate.ToShortDateString()}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
@@ -432,7 +432,7 @@ Public Class EmployeeLeavesForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated start time from '{oldLeave.StartTime.ToStringFormat("hh:mm tt")}' to '{newLeave.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .Description = $"Updated start time from '{oldLeave.StartTime.ToStringFormat("hh:mm tt")}' to '{newLeave.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
@@ -440,7 +440,7 @@ Public Class EmployeeLeavesForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated end time from '{oldLeave.EndTime.ToStringFormat("hh:mm tt")}' to '{newLeave.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .Description = $"Updated end time from '{oldLeave.EndTime.ToStringFormat("hh:mm tt")}' to '{newLeave.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
@@ -448,7 +448,7 @@ Public Class EmployeeLeavesForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated reason from '{oldLeave.Reason}' to '{newLeave.Reason}' {suffixIdentifier}.",
+                .Description = $"Updated reason from '{oldLeave.Reason}' to '{newLeave.Reason}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
@@ -456,7 +456,7 @@ Public Class EmployeeLeavesForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated comments from '{oldLeave.Comments}' to '{newLeave.Comments}' {suffixIdentifier}.",
+                .Description = $"Updated comments from '{oldLeave.Comments}' to '{newLeave.Comments}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
@@ -464,7 +464,7 @@ Public Class EmployeeLeavesForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}' {suffixIdentifier}.",
+                .Description = $"Updated type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
@@ -472,12 +472,12 @@ Public Class EmployeeLeavesForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated status from '{oldLeave.Status}' to '{newLeave.Status}' {suffixIdentifier}.",
+                .Description = $"Updated status from '{oldLeave.Status}' to '{newLeave.Status}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
 
-        If changes.Count > 0 Then
+        If changes.Any() Then
 
             _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True

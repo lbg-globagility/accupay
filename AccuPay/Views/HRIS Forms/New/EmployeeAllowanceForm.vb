@@ -659,13 +659,13 @@ Public Class EmployeeAllowanceForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim suffixIdentifier = $"of allowance with type '{oldAllowance.Product?.Name}' and start date '{oldAllowance.EffectiveStartDate.ToShortDateString()}'"
+        Dim suffixIdentifier = $"of allowance with type '{oldAllowance.Product?.Name}' and start date '{oldAllowance.EffectiveStartDate.ToShortDateString()}'."
 
         If newAllowance.Type <> oldAllowance.Type Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated type from '{oldAllowance.Type}' to '{newAllowance.Type}' {suffixIdentifier}.",
+                .Description = $"Updated type from '{oldAllowance.Type}' to '{newAllowance.Type}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
@@ -673,7 +673,7 @@ Public Class EmployeeAllowanceForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}' {suffixIdentifier}.",
+                .Description = $"Updated frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
@@ -681,7 +681,7 @@ Public Class EmployeeAllowanceForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated start date from '{oldAllowance.EffectiveStartDate.ToShortDateString()}' to '{newAllowance.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}.",
+                .Description = $"Updated start date from '{oldAllowance.EffectiveStartDate.ToShortDateString()}' to '{newAllowance.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
@@ -689,7 +689,7 @@ Public Class EmployeeAllowanceForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString()}' to '{newAllowance.EffectiveEndDate?.ToShortDateString()}' {suffixIdentifier}.",
+                .Description = $"Updated end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString()}' to '{newAllowance.EffectiveEndDate?.ToShortDateString()}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
@@ -697,12 +697,15 @@ Public Class EmployeeAllowanceForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated amount from '{oldAllowance.Amount}' to '{newAllowance.Amount}' {suffixIdentifier}.",
+                .Description = $"Updated amount from '{oldAllowance.Amount}' to '{newAllowance.Amount}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldAllowance.EmployeeID.Value
             })
         End If
 
-        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
         Return True
     End Function

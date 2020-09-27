@@ -33,7 +33,7 @@ Partial Class AttachmentTab
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
-        Me.btnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.dgvAttachments = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.c_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -45,7 +45,6 @@ Partial Class AttachmentTab
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip21.SuspendLayout()
         CType(Me.dgvAttachments, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -92,7 +91,7 @@ Partial Class AttachmentTab
         '
         Me.ToolStrip21.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip21.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip21.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnClose, Me.btnDelete, Me.btnCancel, Me.ToolStripSeparator1, Me.btnUserActivity})
+        Me.ToolStrip21.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnClose, Me.btnDelete, Me.ToolStripSeparator1, Me.btnUserActivity})
         Me.ToolStrip21.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip21.Name = "ToolStrip21"
         Me.ToolStrip21.Size = New System.Drawing.Size(856, 25)
@@ -124,13 +123,10 @@ Partial Class AttachmentTab
         Me.btnDelete.Size = New System.Drawing.Size(60, 22)
         Me.btnDelete.Text = "&Delete"
         '
-        'btnCancel
+        'ToolStripSeparator1
         '
-        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.btnCancel.Text = "&Cancel"
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'btnUserActivity
         '
@@ -264,11 +260,6 @@ Partial Class AttachmentTab
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.Width = 160
         '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
         'AttachmentTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -298,7 +289,6 @@ Partial Class AttachmentTab
     Friend WithEvents pbEmployee As PictureBox
     Friend WithEvents ToolStrip21 As ToolStrip
     Friend WithEvents btnNew As ToolStripButton
-    Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents dgvAttachments As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents pbAttachment As PictureBox

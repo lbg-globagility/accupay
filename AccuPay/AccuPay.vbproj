@@ -916,10 +916,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\PositionUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\TimeLogsForm2.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\TimeLogsForm2.Designer.vb">
       <DependentUpon>TimeLogsForm2.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\TimeLogsForm2.vb">
+    <Compile Include="Views\Time Attendance Form\TimeLogsForm2.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\AddAllowanceForm.Designer.vb">
@@ -1090,10 +1090,10 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
-    <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb">
+    <Compile Include="Views\Time Attendance Form\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\AccuPayTreeView.vb">
@@ -2108,7 +2108,7 @@
     <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayslipEmployeesForm.resx">
       <DependentUpon>SelectPayslipEmployeesForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\TimeLogsForm2.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\TimeLogsForm2.resx">
       <DependentUpon>TimeLogsForm2.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableDatePicker.resx">
@@ -2218,7 +2218,7 @@
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.resx">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.resx">

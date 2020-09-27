@@ -78,11 +78,11 @@ Partial Class OfficialBusinessForm
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
         Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.OfficialBusinessListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -682,11 +682,6 @@ Partial Class OfficialBusinessForm
         Me.SaveToolStripButton.Size = New System.Drawing.Size(51, 22)
         Me.SaveToolStripButton.Text = "&Save"
         '
-        'ToolStripSeparator9
-        '
-        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
-        '
         'DeleteToolStripButton
         '
         Me.DeleteToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
@@ -701,7 +696,7 @@ Partial Class OfficialBusinessForm
         Me.CancelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.CancelToolStripButton.Name = "CancelToolStripButton"
         Me.CancelToolStripButton.Size = New System.Drawing.Size(63, 22)
-        Me.CancelToolStripButton.Text = "Cancel"
+        Me.CancelToolStripButton.Text = "&Cancel"
         '
         'CloseButton
         '
@@ -718,8 +713,13 @@ Partial Class OfficialBusinessForm
         Me.ImportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ImportToolStripButton.Name = "ImportToolStripButton"
         Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
-        Me.ImportToolStripButton.Text = "Import"
+        Me.ImportToolStripButton.Text = "&Import"
         Me.ImportToolStripButton.ToolTipText = "Import loans"
+        '
+        'ToolStripSeparator9
+        '
+        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
         '
         'UserActivityToolStripButton
         '
@@ -727,7 +727,7 @@ Partial Class OfficialBusinessForm
         Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
         Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivityToolStripButton.Text = "User Activity"
+        Me.UserActivityToolStripButton.Text = "&User Activity"
         '
         'OfficialBusinessListBindingSource
         '

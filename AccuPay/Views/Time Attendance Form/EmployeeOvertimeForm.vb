@@ -332,13 +332,13 @@ Public Class EmployeeOvertimeForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim suffixIdentifier = $"of overtime with date '{oldOvertime.OTStartDate.ToShortDateString()}' and time period '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'"
+        Dim suffixIdentifier = $"of overtime with date '{oldOvertime.OTStartDate.ToShortDateString()}' and time period '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'."
 
         If newOvertime.OTStartDate <> oldOvertime.OTStartDate Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated start date from '{oldOvertime.OTStartDate.ToShortDateString()}' to '{newOvertime.OTStartDate.ToShortDateString()}' {suffixIdentifier}.",
+                .Description = $"Updated start date from '{oldOvertime.OTStartDate.ToShortDateString()}' to '{newOvertime.OTStartDate.ToShortDateString()}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
@@ -346,7 +346,7 @@ Public Class EmployeeOvertimeForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated start time from '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .Description = $"Updated start time from '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
@@ -354,7 +354,7 @@ Public Class EmployeeOvertimeForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated end time from '{oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .Description = $"Updated end time from '{oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
@@ -362,7 +362,7 @@ Public Class EmployeeOvertimeForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}' {suffixIdentifier}.",
+                .Description = $"Updated reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
@@ -370,7 +370,7 @@ Public Class EmployeeOvertimeForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}' {suffixIdentifier}.",
+                .Description = $"Updated comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
@@ -378,12 +378,15 @@ Public Class EmployeeOvertimeForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated status from '{oldOvertime.Status}' to '{newOvertime.Status}' {suffixIdentifier}.",
+                .Description = $"Updated status from '{oldOvertime.Status}' to '{newOvertime.Status}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
 
-        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
         Return True
     End Function

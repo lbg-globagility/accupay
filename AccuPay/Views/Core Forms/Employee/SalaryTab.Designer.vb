@@ -51,6 +51,8 @@ Partial Class SalaryTab
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.btnImport = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.UserActivitySalaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
@@ -120,8 +122,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btnImport = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStrip5.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -169,7 +169,20 @@ Partial Class SalaryTab
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.Text = "&Cancel"
+        '
+        'btnImport
+        '
+        Me.btnImport.Image = Global.AccuPay.My.Resources.Resources.Add
+        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnImport.Name = "btnImport"
+        Me.btnImport.Size = New System.Drawing.Size(63, 22)
+        Me.btnImport.Text = "&Import"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'btnClose
         '
@@ -186,7 +199,7 @@ Partial Class SalaryTab
         Me.UserActivitySalaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.UserActivitySalaryToolStripButton.Name = "UserActivitySalaryToolStripButton"
         Me.UserActivitySalaryToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivitySalaryToolStripButton.Text = "User Activity"
+        Me.UserActivitySalaryToolStripButton.Text = "&User Activity"
         '
         'pbEmployee
         '
@@ -878,19 +891,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn19.HeaderText = "TrueHDMFAmount"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.Visible = False
-        '
-        'btnImport
-        '
-        Me.btnImport.Image = Global.AccuPay.My.Resources.Resources.Add
-        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnImport.Name = "btnImport"
-        Me.btnImport.Size = New System.Drawing.Size(63, 22)
-        Me.btnImport.Text = "Import"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'SalaryTab
         '

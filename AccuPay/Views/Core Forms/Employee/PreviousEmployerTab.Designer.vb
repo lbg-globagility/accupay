@@ -33,9 +33,9 @@ Partial Class PreviousEmployerTab
         Me.ToolStrip10 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.grpDetails = New System.Windows.Forms.GroupBox()
@@ -181,11 +181,6 @@ Partial Class PreviousEmployerTab
         Me.btnSave.Size = New System.Drawing.Size(51, 22)
         Me.btnSave.Text = "&Save"
         '
-        'ToolStripSeparator5
-        '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 25)
-        '
         'btnDelete
         '
         Me.btnDelete.Enabled = False
@@ -203,6 +198,11 @@ Partial Class PreviousEmployerTab
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
         Me.btnCancel.Text = "&Cancel"
         '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 25)
+        '
         'btnClose
         '
         Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
@@ -218,7 +218,7 @@ Partial Class PreviousEmployerTab
         Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnUserActivity.Name = "btnUserActivity"
         Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.btnUserActivity.Text = "User Activity"
+        Me.btnUserActivity.Text = "&User Activity"
         '
         'grpDetails
         '
