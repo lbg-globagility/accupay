@@ -275,6 +275,8 @@ Public Class SelectPayslipEmployeesForm
                 Dim crvwr As New CrysRepForm
                 crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
                 crvwr.Show()
+
+                DisableAllButtons(disable:=False)
             End Sub)
 
         DisableAllButtons(disable:=False)

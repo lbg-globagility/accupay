@@ -11,6 +11,8 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class StartNewPayPeriodDialog
 
+    Private Const FormEntityName As String = "Payroll"
+
     Private _payFrequencyId As Integer
 
     Private _currentPayperiod As PayPeriod
@@ -170,6 +172,8 @@ Public Class StartNewPayPeriodDialog
                     isFirstHalf:=_currentPayperiod.IsFirstHalf,
                     userId:=z_User)
 
+                Await RecordStartPayrollUserAcitivity()
+
                 Await TimeEntrySummaryForm.LoadPayPeriods()
 
                 PayStubForm.VIEW_payperiodofyear(PayStubForm.CurrentYear)
@@ -179,6 +183,42 @@ Public Class StartNewPayPeriodDialog
 
         Me.Cursor = Cursors.Default
     End Sub
+
+    Private Async Function RecordStartPayrollUserAcitivity() As Task
+        Dim payPeriodsOfTheMonth = Await _payPeriodRepository.GetByMonthYearAndPayPrequencyAsync(
+            organizationId:=z_OrganizationID,
+            month:=_currentPayperiod.Month,
+            year:=_currentPayperiod.Year,
+            payFrequencyId:=Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId)
+
+        Dim newPayPeriod = payPeriodsOfTheMonth.FirstOrDefault(
+            Function(p)
+                If _currentPayperiod.IsFirstHalf Then
+                    Return p.IsFirstHalf
+                Else
+                    Return p.IsEndOfTheMonth
+                End If
+            End Function)
+
+        Dim payPeriodString = $"'{newPayPeriod.PayFromDate.ToShortDateString()}' to '{newPayPeriod.PayToDate.ToShortDateString()}'"
+
+        Dim activityItem = New List(Of UserActivityItem) From {
+            New UserActivityItem() With
+            {
+                .EntityId = newPayPeriod.RowID.Value,
+                .Description = $"Opened the payroll {payPeriodString}.",
+                .ChangedEmployeeId = Nothing
+            }
+        }
+
+        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        Await userActivityService.CreateRecordAsync(
+          z_User,
+          FormEntityName,
+          z_OrganizationID,
+          UserActivityRepository.RecordTypeEdit,
+          activityItem)
+    End Function
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         DialogResult = DialogResult.Cancel

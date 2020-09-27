@@ -16,12 +16,11 @@ Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
-Imports OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 Imports OfficeOpenXml.Style
 
 Public Class PayStubForm
 
-    Private Const PaystubEntityName As String = "Paystub"
+    Private Const FormEntityName As String = "Payroll"
 
     Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
 
@@ -109,7 +108,7 @@ Public Class PayStubForm
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
 
-        setProperInterfaceBaseOnCurrentSystemOwner()
+        SetProperInterfaceBaseOnCurrentSystemOwner()
 
         For Each txtbx In Panel6.Controls.OfType(Of TextBox)
             AddHandler txtbx.TextChanged, AddressOf NumberFieldFormatter
@@ -854,7 +853,7 @@ Public Class PayStubForm
             New UserActivityItem() With
             {
                 .EntityId = result.PaystubId.Value,
-                .Description = $"Generated paystub for payroll {payPeriodString}",
+                .Description = $"Generated paystub for payroll {payPeriodString}.",
                 .ChangedEmployeeId = result.EmployeeId
             }
         }
@@ -862,7 +861,7 @@ Public Class PayStubForm
         Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         userActivityService.CreateRecord(
           z_User,
-          PaystubEntityName,
+          FormEntityName,
           z_OrganizationID,
           UserActivityRepository.RecordTypeDelete,
           activityItem)
@@ -1716,14 +1715,7 @@ Public Class PayStubForm
                         userId:=z_User,
                         organizationId:=z_OrganizationID)
 
-                    Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-                    userActivityService.RecordDelete(
-                        z_User,
-                        PaystubEntityName,
-                        entityId:=paystub.RowID.Value,
-                        organizationId:=z_OrganizationID,
-                        $" for payroll {payPeriodString}",
-                        changedEmployeeId:=paystub.EmployeeID)
+                    Await RecordDeletePaystubUserActivity(payPeriodString, paystub)
 
                     RefreshForm()
 
@@ -1737,11 +1729,31 @@ Public Class PayStubForm
 
     End Function
 
+    Private Async Function RecordDeletePaystubUserActivity(payPeriodString As String, paystub As Paystub) As Task
+
+        Dim activityItem = New List(Of UserActivityItem) From {
+            New UserActivityItem() With
+            {
+                .EntityId = paystub.RowID.Value,
+                .Description = $"Deleted a paystub for payroll {payPeriodString}.",
+                .ChangedEmployeeId = paystub.EmployeeID.Value
+            }
+        }
+
+        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        Await userActivityService.CreateRecordAsync(
+          z_User,
+          FormEntityName,
+          z_OrganizationID,
+          UserActivityRepository.RecordTypeEdit,
+          activityItem)
+    End Function
+
     Private Sub dgvemployees_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgvemployees.RowsRemoved
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
+    Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
         If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 Then
             Dim str_empty As String = String.Empty
             TabPage1.Text = str_empty
@@ -1835,11 +1847,11 @@ Public Class PayStubForm
         If close Then
 
             Await dataService.CloseAsync(payPeriod.RowID.Value, z_User)
-            Await RecordPayrollStatusUpdateAsync($"Closed payroll {GetPayPeriodString()}.")
+            Await RecordPayrollStatusUpdateAsync(payPeriod.RowID.Value, $"Closed the payroll {GetPayPeriodString()}.")
         Else
 
             Await dataService.ReopenAsync(payPeriod.RowID.Value, z_User)
-            Await RecordPayrollStatusUpdateAsync($"Reopened payroll {GetPayPeriodString()}.")
+            Await RecordPayrollStatusUpdateAsync(payPeriod.RowID.Value, $"Reopened the payroll {GetPayPeriodString()}.")
         End If
 
         RefreshForm()
@@ -1858,14 +1870,14 @@ Public Class PayStubForm
 
     End Function
 
-    Private Async Function RecordPayrollStatusUpdateAsync(description As String) As Task
+    Private Async Function RecordPayrollStatusUpdateAsync(payPeriodId As Integer, description As String) As Task
 
         Dim payPeriodString = GetPayPeriodString()
 
         Dim activityItem = New List(Of UserActivityItem) From {
             New UserActivityItem() With
             {
-                .EntityId = Nothing,
+                .EntityId = payPeriodId,
                 .Description = description,
                 .ChangedEmployeeId = Nothing
             }
@@ -1874,7 +1886,7 @@ Public Class PayStubForm
         Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         Await userActivityService.CreateRecordAsync(
           z_User,
-          PaystubEntityName,
+          FormEntityName,
           z_OrganizationID,
           UserActivityRepository.RecordTypeEdit,
           activityItem)
@@ -1996,7 +2008,7 @@ Public Class PayStubForm
     End Sub
 
     Private Function GetPayPeriodString() As String
-        Return $"'{CDate(paypFrom).ToShortDateString}' to '{CDate(paypTo).ToShortDateString}'"
+        Return $"'{CDate(paypFrom).ToShortDateString()}' to '{CDate(paypTo).ToShortDateString()}'"
     End Function
 
     Private Shared Async Function RecordMultiplePaystubUserActivity(
@@ -2019,7 +2031,7 @@ Public Class PayStubForm
             Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
             Await repo.CreateRecordAsync(
               z_User,
-              PaystubEntityName,
+              FormEntityName,
               z_OrganizationID,
               UserActivityRepository.RecordTypeDelete,
               changes)
@@ -2063,7 +2075,7 @@ Public Class PayStubForm
                       Dim recordMessage = $"Deleted paystub and time entries for payroll {payPeriodString}."
 
                       Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
-                      Await RecordPayrollStatusUpdateAsync($"Cancelled payroll {GetPayPeriodString()}.")
+                      Await RecordPayrollStatusUpdateAsync(payperiodId.Value, $"Cancelled the payroll {GetPayPeriodString()}.")
 
                       RefreshForm()
                       Await TimeEntrySummaryForm.LoadPayPeriods()
@@ -2281,7 +2293,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PaystubEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 
