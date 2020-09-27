@@ -4,6 +4,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddOvertimeForm
@@ -144,7 +145,14 @@ Public Class AddOvertimeForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
                 Await dataService.SaveAsync(Me._newOvertime)
 
-                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOvertime.RowID.Value, z_OrganizationID)
+                Dim suffixIdentifier = $" with date '{Me._newOvertime.OTStartDate.ToShortDateString()}' and time period '{Me._newOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {Me._newOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'"
+                _userActivityRepository.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=Me._newOvertime.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._newOvertime.EmployeeID.Value,
+                    suffixIdentifier:=suffixIdentifier)
 
                 Me.IsSaved = True
 

@@ -22,10 +22,11 @@ namespace AccuPay.Utilities.Extensions
                                 string format,
                                 DateTime? currentDate = null)
         {
+            if (!timeSpanInput.HasValue) return string.Empty;
+
             currentDate = currentDate == null ? DateTime.Now.ToMinimumHourValue() :
                                                 currentDate.Value.ToMinimumHourValue();
 
-            if (!timeSpanInput.HasValue) return string.Empty;
             return currentDate.Value.Add(timeSpanInput.Value).ToString(format);
         }
 

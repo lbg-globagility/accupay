@@ -322,55 +322,54 @@ Public Class OfficialBusinessForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        Dim suffixIdentifier = $"of official business with date '{oldOfficialBusiness.StartDate.ToShortDateString()}'"
 
         If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated {entityName} start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'."
-            })
-        End If
-        If newOfficialBusiness.EndDate <> oldOfficialBusiness.EndDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated {entityName} end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'."
+                .Description = $"Updated start date from '{oldOfficialBusiness.StartDate?.ToShortDateString()}' to '{newOfficialBusiness.StartDate?.ToShortDateString()}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
         If newOfficialBusiness.StartTime <> oldOfficialBusiness.StartTime Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated {entityName} start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'."
+                .Description = $"Updated start time from '{oldOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
         If newOfficialBusiness.EndTime <> oldOfficialBusiness.EndTime Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated {entityName} end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'."
+                .Description = $"Updated end time from '{oldOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
         If newOfficialBusiness.Reason <> oldOfficialBusiness.Reason Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated {entityName} reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'."
+                .Description = $"Updated reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
         If newOfficialBusiness.Comments <> oldOfficialBusiness.Comments Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated {entityName} comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'."
+                .Description = $"Updated comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
         If newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated {entityName} status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'."
+                .Description = $"Updated status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}' {suffixIdentifier}.",
+                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
             })
         End If
 
@@ -444,10 +443,13 @@ Public Class OfficialBusinessForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
                 Await dataService.DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
 
-                _userActivityRepository.RecordDelete(z_User,
-                                                        FormEntityName,
-                                                        Me._currentOfficialBusiness.RowID.Value,
-                                                        z_OrganizationID)
+                _userActivityRepository.RecordDelete(
+                    z_User,
+                    FormEntityName,
+                    entityId:=Me._currentOfficialBusiness.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._currentOfficialBusiness.EmployeeID.Value,
+                    suffixIdentifier:=$" with date '{ Me._currentOfficialBusiness.StartDate.ToShortDateString()}'")
 
                 Await LoadOfficialBusinesses(currentEmployee)
 
