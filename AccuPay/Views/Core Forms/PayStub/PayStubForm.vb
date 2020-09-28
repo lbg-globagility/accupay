@@ -680,7 +680,7 @@ Public Class PayStubForm
 
             lblSubtotal.Text = ""
 
-            txtTotalAllowance.Text = ""
+            txtTotalNonTaxableAllowance.Text = ""
             txtTotalTaxableAllowance.Text = ""
 
             txtGrossPay.Text = ""
@@ -911,9 +911,11 @@ Public Class PayStubForm
         TabControlColor(TabControl1, e)
     End Sub
 
-    Private Async Sub btntotallow_Click(sender As Object, e As EventArgs) Handles btntotallow.Click, btnTotalTaxabAllowance.Click
+    Private Async Sub ShowAllowanceButton_Click(sender As Object, e As EventArgs) Handles ShowNonTaxableAllowanceButton.Click, ShowTaxableAllowanceButton.Click
         viewtotloan.Close()
         viewtotbon.Close()
+
+        Dim isTaxable = sender Is ShowTaxableAllowanceButton
 
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
@@ -934,7 +936,7 @@ Public Class PayStubForm
 
         End If
 
-        Dim dialog As New AllowanceBreakdownDialog(paystub.RowID.Value)
+        Dim dialog As New AllowanceBreakdownDialog(paystub.RowID.Value, isTaxable)
         dialog.ShowDialog()
     End Sub
 
@@ -1487,8 +1489,9 @@ Public Class PayStubForm
         txtLeavePay.Text = FormatNumber(paystub.LeavePay, 2)
 
         'Allowance, Bonus and Gross Pay
-        txtTotalAllowance.Text = FormatNumber(paystub.TotalAllowance, 2)
+        txtTotalNonTaxableAllowance.Text = FormatNumber(paystub.TotalNonTaxableAllowance, 2)
         txtTotalTaxableAllowance.Text = FormatNumber(paystub.TotalTaxableAllowance, 2)
+        txtGrandTotalAllowance.Text = FormatNumber(paystub.GrandTotalAllowance, 2)
 
         txtTotalBonus.Text = FormatNumber(paystub.TotalBonus, 2)
         txtGrossPay.Text = FormatNumber(paystub.GrossPay, 2)
@@ -1590,8 +1593,9 @@ Public Class PayStubForm
         txtLeavePay.Text = FormatNumber(paystub.Actual?.LeavePay, 2)
 
         'Allowance, Bonus and Gross Pay
-        txtTotalAllowance.Text = FormatNumber(paystub.TotalAllowance, 2)
+        txtTotalNonTaxableAllowance.Text = FormatNumber(paystub.TotalNonTaxableAllowance, 2)
         txtTotalTaxableAllowance.Text = FormatNumber(paystub.TotalTaxableAllowance, 2)
+        txtGrandTotalAllowance.Text = FormatNumber(paystub.GrandTotalAllowance, 2)
 
         txtTotalBonus.Text = FormatNumber(paystub.TotalBonus, 2)
         txtGrossPay.Text = FormatNumber(paystub.Actual?.GrossPay, 2)
@@ -1766,19 +1770,6 @@ Public Class PayStubForm
             TabPage4.Text = str_empty
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
 
-        End If
-
-        If _systemOwnerService.GetCurrentSystemOwner() <> SystemOwnerService.Goldwings Then
-            Label13.Visible = False
-            Label43.Visible = False
-            txtTotalBonus.Visible = False
-            btntotbon.Visible = False
-            lblGrossIncomeDivider.Visible = False
-
-            Dim newPositionY = 496
-            lblGrossIncome.Location = New Point(lblGrossIncome.Location.X, newPositionY)
-            lblGrossIncomePesoSign.Location = New Point(lblGrossIncomePesoSign.Location.X, newPositionY)
-            txtGrossPay.Location = New Point(txtGrossPay.Location.X, newPositionY)
         End If
     End Sub
 

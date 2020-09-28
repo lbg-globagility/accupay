@@ -17,12 +17,6 @@ DECLARE date_from
 		  ,min_date_thisyear
 		  ,max_date_thisyear DATE;
 
-DECLARE is_endofmonth BOOL DEFAULT FALSE;
-
-DECLARE max_dependent INT(11);
-
-DECLARE text_cutoff_ordinal VARCHAR(50);
-
 DECLARE giveAllowanceForHoliday BOOL DEFAULT FALSE;
 
 DECLARE month_per_year
@@ -45,25 +39,17 @@ EXISTS(SELECT l.RowID
 		 LIMIT 1)
 INTO giveAllowanceForHoliday;
 
-SELECT MAX(fs.Dependent)
-FROM filingstatus fs
-INTO max_dependent;
-
 SELECT pp.PayFromDate
 ,pp.PayToDate
-,(pp.Half = 0) `is_endofmonth`
 ,MIN(pyp.PayToDate)
 ,MAX(pyp.PayToDate)
-,CONCAT_WS('-', pp.`Year`, pp.OrdinalValue)
 FROM payperiod pp
 INNER JOIN payperiod pyp ON pyp.OrganizationID=pp.OrganizationID AND pyp.`Year`=pp.`Year` AND pyp.TotalGrossSalary=pp.TotalGrossSalary
 WHERE pp.RowID=pperiod_id
 INTO date_from
      ,date_to
-	  ,is_endofmonth
 	  ,min_date_thisyear
-	  ,max_date_thisyear
-	  ,text_cutoff_ordinal;
+	  ,max_date_thisyear;
 
 SELECT ps.RowID
 ,e.EmployeeID `COL1`
@@ -121,7 +107,7 @@ SELECT ps.RowID
 ,IFNULL(FORMAT(ps.RegularHolidayHours+ps.SpecialHolidayHours, 2), 0) `COL16`
 ,IFNULL(FORMAT(ps.RegularHolidayPay+ps.SpecialHolidayPay, 2), 0) `COL17`
 
-,(ps.TotalAllowance + ps.TotalBonus) `COL18`
+,(ps.TotalAllowance + ps.TotalTaxableAllowance + ps.TotalBonus) `COL18`
 ,ps.TotalAdjustments `COL19`
 
 ,ps.TotalGrossSalary `COL20`
@@ -186,10 +172,6 @@ INNER JOIN `position` pos
 		     AND pos.OrganizationID=e.OrganizationID
 INNER JOIN division dv
         ON dv.RowID=pos.DivisionId
-
-INNER JOIN filingstatus fs
-        ON fs.MaritalStatus=e.MaritalStatus
-           AND fs.Dependent=IF(max_dependent < e.NoOfDependents, max_dependent, e.NoOfDependents)
 
 INNER JOIN paystubactual psa
         ON psa.RowID=ps.RowID

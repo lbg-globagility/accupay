@@ -7,7 +7,7 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class AllowanceBreakdownDialog
 
     Private ReadOnly _paystubId As Integer
-
+    Private ReadOnly _isTaxable As Boolean
     Private ReadOnly _paystubRepository As PaystubRepository
 
     Private _allAllowanceTransactions As List(Of AllowanceItemViewModel)
@@ -16,13 +16,14 @@ Public Class AllowanceBreakdownDialog
 
     Private _normalFont As Font
 
-    Sub New(paystubId As Integer)
+    Sub New(paystubId As Integer, isTaxable As Boolean)
 
         InitializeComponent()
 
         _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
         _paystubId = paystubId
+        _isTaxable = isTaxable
     End Sub
 
     Private Async Sub AllowanceBreakdownDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -80,7 +81,19 @@ Public Class AllowanceBreakdownDialog
     End Function
 
     Private Async Function GetAllowanceTransactions() As Threading.Tasks.Task(Of List(Of AllowanceItemViewModel))
+
+        Dim list As New List(Of AllowanceItemViewModel)
+
         Dim allowanceItems = (Await _paystubRepository.GetAllowanceItemsAsync(_paystubId))
+
+        If _isTaxable Then
+
+            allowanceItems = allowanceItems.Where(Function(a) a.Allowance.Product.IsTaxable).ToList()
+        Else
+            allowanceItems = allowanceItems.Where(Function(a) Not a.Allowance.Product.IsTaxable).ToList()
+        End If
+
+        If Not allowanceItems.Any() Then Return list
 
         Dim allowanceWithBreakdowns = allowanceItems.
             Where(Function(i) i.AllowancesPerDay.Any()).
@@ -94,8 +107,6 @@ Public Class AllowanceBreakdownDialog
 
         Dim arrangedAllowanceItems = allowanceWithOutBreakdowns.ToList()
         arrangedAllowanceItems.AddRange(allowanceWithBreakdowns)
-
-        Dim list As New List(Of AllowanceItemViewModel)
 
         For Each item In arrangedAllowanceItems
 

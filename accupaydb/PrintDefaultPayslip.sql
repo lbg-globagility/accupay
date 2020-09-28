@@ -19,7 +19,6 @@ DECLARE paydate_from DATE;
 DECLARE paydat_to DATE;
 
 DECLARE v_hours_per_day INT(2) DEFAULT 8;
-DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
 SET @ppIds = (SELECT GROUP_CONCAT(pp.RowID)
 					#, SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH) #2018-01-05
@@ -74,7 +73,7 @@ SELECT
     ) `COL13`,
     ps.NightDiffHours `COL14`,
     IF(IsActualFlag, psa.NightDiffPay, ps.NightDiffPay) `COL15`,
-    (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
+    (ps.TotalAllowance + ps.TotalTaxableAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
     IF(IsActualFlag = TRUE, psa.TotalAdjustments, ps.TotalAdjustments) `COL19`,
     IF(
         IsActualFlag,

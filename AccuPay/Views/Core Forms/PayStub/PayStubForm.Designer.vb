@@ -88,7 +88,7 @@ Partial Class PayStubForm
         Me.pbEmpPicChk = New System.Windows.Forms.PictureBox()
         Me.lblPaidLeavePesoSign = New System.Windows.Forms.Label()
         Me.txtLeaveHours = New System.Windows.Forms.TextBox()
-        Me.txtGrandTotalAllow = New System.Windows.Forms.TextBox()
+        Me.txtGrandTotalAllowance = New System.Windows.Forms.TextBox()
         Me.Label106 = New System.Windows.Forms.Label()
         Me.Label107 = New System.Windows.Forms.Label()
         Me.Label105 = New System.Windows.Forms.Label()
@@ -245,8 +245,8 @@ Partial Class PayStubForm
         Me.lblPaidLeave = New System.Windows.Forms.Label()
         Me.btntotbon = New System.Windows.Forms.Button()
         Me.btntotloan = New System.Windows.Forms.Button()
-        Me.btnTotalTaxabAllowance = New System.Windows.Forms.Button()
-        Me.btntotallow = New System.Windows.Forms.Button()
+        Me.ShowTaxableAllowanceButton = New System.Windows.Forms.Button()
+        Me.ShowNonTaxableAllowanceButton = New System.Windows.Forms.Button()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
@@ -257,7 +257,7 @@ Partial Class PayStubForm
         Me.txtTotalBonus = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.txtTotalTaxableAllowance = New System.Windows.Forms.TextBox()
-        Me.txtTotalAllowance = New System.Windows.Forms.TextBox()
+        Me.txtTotalNonTaxableAllowance = New System.Windows.Forms.TextBox()
         Me.Label104 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -643,7 +643,7 @@ Partial Class PayStubForm
         '
         Me.lblGrossIncome.AutoSize = True
         Me.lblGrossIncome.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGrossIncome.Location = New System.Drawing.Point(14, 583)
+        Me.lblGrossIncome.Location = New System.Drawing.Point(14, 574)
         Me.lblGrossIncome.Name = "lblGrossIncome"
         Me.lblGrossIncome.Size = New System.Drawing.Size(91, 13)
         Me.lblGrossIncome.TabIndex = 170
@@ -826,7 +826,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.AutoScroll = True
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblPaidLeavePesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtLeaveHours)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.txtGrandTotalAllow)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtGrandTotalAllowance)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label106)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label107)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label105)
@@ -876,8 +876,8 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblPaidLeave)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btntotbon)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btntotloan)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btnTotalTaxabAllowance)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btntotallow)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ShowTaxableAllowanceButton)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ShowNonTaxableAllowanceButton)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label35)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label34)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label33)
@@ -888,7 +888,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalBonus)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label13)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalTaxableAllowance)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalAllowance)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalNonTaxableAllowance)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label104)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label12)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label7)
@@ -1024,20 +1024,19 @@ Partial Class PayStubForm
         Me.txtLeaveHours.TabIndex = 540
         Me.txtLeaveHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtGrandTotalAllow
+        'txtGrandTotalAllowance
         '
-        Me.txtGrandTotalAllow.BackColor = System.Drawing.Color.White
-        Me.txtGrandTotalAllow.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtGrandTotalAllow.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtGrandTotalAllow.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtGrandTotalAllow.Location = New System.Drawing.Point(253, 495)
-        Me.txtGrandTotalAllow.Name = "txtGrandTotalAllow"
-        Me.txtGrandTotalAllow.ReadOnly = True
-        Me.txtGrandTotalAllow.ShortcutsEnabled = False
-        Me.txtGrandTotalAllow.Size = New System.Drawing.Size(100, 16)
-        Me.txtGrandTotalAllow.TabIndex = 536
-        Me.txtGrandTotalAllow.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.txtGrandTotalAllow.Visible = False
+        Me.txtGrandTotalAllowance.BackColor = System.Drawing.Color.White
+        Me.txtGrandTotalAllowance.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtGrandTotalAllowance.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.txtGrandTotalAllowance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.txtGrandTotalAllowance.Location = New System.Drawing.Point(253, 495)
+        Me.txtGrandTotalAllowance.Name = "txtGrandTotalAllowance"
+        Me.txtGrandTotalAllowance.ReadOnly = True
+        Me.txtGrandTotalAllowance.ShortcutsEnabled = False
+        Me.txtGrandTotalAllowance.Size = New System.Drawing.Size(100, 16)
+        Me.txtGrandTotalAllowance.TabIndex = 536
+        Me.txtGrandTotalAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label106
         '
@@ -1048,7 +1047,6 @@ Partial Class PayStubForm
         Me.Label106.Size = New System.Drawing.Size(144, 13)
         Me.Label106.TabIndex = 537
         Me.Label106.Text = "Grand Total Allowance :"
-        Me.Label106.Visible = False
         '
         'Label107
         '
@@ -1058,7 +1056,6 @@ Partial Class PayStubForm
         Me.Label107.Size = New System.Drawing.Size(14, 13)
         Me.Label107.TabIndex = 539
         Me.Label107.Text = "₱"
-        Me.Label107.Visible = False
         '
         'Label105
         '
@@ -2721,7 +2718,7 @@ Partial Class PayStubForm
         Me.lblSubtotal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblSubtotal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblSubtotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblSubtotal.Location = New System.Drawing.Point(253, 396)
+        Me.lblSubtotal.Location = New System.Drawing.Point(249, 405)
         Me.lblSubtotal.Name = "lblSubtotal"
         Me.lblSubtotal.ReadOnly = True
         Me.lblSubtotal.ShortcutsEnabled = False
@@ -2762,27 +2759,27 @@ Partial Class PayStubForm
         Me.btntotloan.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btntotloan.UseVisualStyleBackColor = True
         '
-        'btnTotalTaxabAllowance
+        'ShowTaxableAllowanceButton
         '
-        Me.btnTotalTaxabAllowance.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnTotalTaxabAllowance.Location = New System.Drawing.Point(360, 457)
-        Me.btnTotalTaxabAllowance.Name = "btnTotalTaxabAllowance"
-        Me.btnTotalTaxabAllowance.Size = New System.Drawing.Size(21, 22)
-        Me.btnTotalTaxabAllowance.TabIndex = 246
-        Me.btnTotalTaxabAllowance.Text = "..."
-        Me.btnTotalTaxabAllowance.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.btnTotalTaxabAllowance.UseVisualStyleBackColor = True
+        Me.ShowTaxableAllowanceButton.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.ShowTaxableAllowanceButton.Location = New System.Drawing.Point(360, 457)
+        Me.ShowTaxableAllowanceButton.Name = "ShowTaxableAllowanceButton"
+        Me.ShowTaxableAllowanceButton.Size = New System.Drawing.Size(21, 22)
+        Me.ShowTaxableAllowanceButton.TabIndex = 246
+        Me.ShowTaxableAllowanceButton.Text = "..."
+        Me.ShowTaxableAllowanceButton.TextAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.ShowTaxableAllowanceButton.UseVisualStyleBackColor = True
         '
-        'btntotallow
+        'ShowNonTaxableAllowanceButton
         '
-        Me.btntotallow.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotallow.Location = New System.Drawing.Point(360, 431)
-        Me.btntotallow.Name = "btntotallow"
-        Me.btntotallow.Size = New System.Drawing.Size(21, 22)
-        Me.btntotallow.TabIndex = 246
-        Me.btntotallow.Text = "..."
-        Me.btntotallow.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.btntotallow.UseVisualStyleBackColor = True
+        Me.ShowNonTaxableAllowanceButton.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.ShowNonTaxableAllowanceButton.Location = New System.Drawing.Point(360, 431)
+        Me.ShowNonTaxableAllowanceButton.Name = "ShowNonTaxableAllowanceButton"
+        Me.ShowNonTaxableAllowanceButton.Size = New System.Drawing.Size(21, 22)
+        Me.ShowNonTaxableAllowanceButton.TabIndex = 246
+        Me.ShowNonTaxableAllowanceButton.Text = "..."
+        Me.ShowNonTaxableAllowanceButton.TextAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.ShowNonTaxableAllowanceButton.UseVisualStyleBackColor = True
         '
         'Label35
         '
@@ -2893,19 +2890,19 @@ Partial Class PayStubForm
         Me.txtTotalTaxableAllowance.TabIndex = 198
         Me.txtTotalTaxableAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtTotalAllowance
+        'txtTotalNonTaxableAllowance
         '
-        Me.txtTotalAllowance.BackColor = System.Drawing.Color.White
-        Me.txtTotalAllowance.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtTotalAllowance.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtTotalAllowance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtTotalAllowance.Location = New System.Drawing.Point(253, 435)
-        Me.txtTotalAllowance.Name = "txtTotalAllowance"
-        Me.txtTotalAllowance.ReadOnly = True
-        Me.txtTotalAllowance.ShortcutsEnabled = False
-        Me.txtTotalAllowance.Size = New System.Drawing.Size(100, 16)
-        Me.txtTotalAllowance.TabIndex = 198
-        Me.txtTotalAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtTotalNonTaxableAllowance.BackColor = System.Drawing.Color.White
+        Me.txtTotalNonTaxableAllowance.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTotalNonTaxableAllowance.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.txtTotalNonTaxableAllowance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.txtTotalNonTaxableAllowance.Location = New System.Drawing.Point(253, 435)
+        Me.txtTotalNonTaxableAllowance.Name = "txtTotalNonTaxableAllowance"
+        Me.txtTotalNonTaxableAllowance.ReadOnly = True
+        Me.txtTotalNonTaxableAllowance.ShortcutsEnabled = False
+        Me.txtTotalNonTaxableAllowance.Size = New System.Drawing.Size(100, 16)
+        Me.txtTotalNonTaxableAllowance.TabIndex = 198
+        Me.txtTotalNonTaxableAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label104
         '
@@ -3056,7 +3053,7 @@ Partial Class PayStubForm
         'Label36
         '
         Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(232, 397)
+        Me.Label36.Location = New System.Drawing.Point(232, 405)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(14, 13)
         Me.Label36.TabIndex = 176
@@ -3676,7 +3673,7 @@ Partial Class PayStubForm
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents txtHdmfEmployeeShare As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents txtTotalAllowance As System.Windows.Forms.TextBox
+    Friend WithEvents txtTotalNonTaxableAllowance As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents txtTotalBonus As System.Windows.Forms.TextBox
     Friend WithEvents txtTotalLoans As System.Windows.Forms.TextBox
@@ -3719,7 +3716,7 @@ Partial Class PayStubForm
     Friend WithEvents Label33 As System.Windows.Forms.Label
     Friend WithEvents Label35 As System.Windows.Forms.Label
     Friend WithEvents Label34 As System.Windows.Forms.Label
-    Friend WithEvents btntotallow As System.Windows.Forms.Button
+    Friend WithEvents ShowNonTaxableAllowanceButton As System.Windows.Forms.Button
     Friend WithEvents btntotloan As System.Windows.Forms.Button
     Friend WithEvents btntotbon As System.Windows.Forms.Button
     Friend WithEvents txtRegularPay As System.Windows.Forms.TextBox
@@ -3857,12 +3854,12 @@ Partial Class PayStubForm
     Friend WithEvents txtSpecialHolidayOTPay As TextBox
     Friend WithEvents Label63 As Label
     Friend WithEvents Panel6 As Panel
-    Friend WithEvents btnTotalTaxabAllowance As Button
+    Friend WithEvents ShowTaxableAllowanceButton As Button
     Friend WithEvents txtTotalTaxableAllowance As TextBox
     Friend WithEvents Label104 As Label
     Friend WithEvents Label103 As Label
     Friend WithEvents Label105 As Label
-    Friend WithEvents txtGrandTotalAllow As TextBox
+    Friend WithEvents txtGrandTotalAllowance As TextBox
     Friend WithEvents Label106 As Label
     Friend WithEvents Label107 As Label
     Friend WithEvents ManagePayrollToolStripDropDownButton As ToolStripDropDownButton

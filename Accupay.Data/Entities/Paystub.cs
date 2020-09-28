@@ -75,7 +75,8 @@ namespace AccuPay.Data.Entities
 
         public decimal TotalBonus { get; set; }
 
-        public decimal TotalAllowance { get; set; }
+        [Column("TotalAllowance")]
+        public decimal TotalNonTaxableAllowance { get; set; }
 
         public decimal TotalTaxableAllowance { get; set; }
 
@@ -134,6 +135,8 @@ namespace AccuPay.Data.Entities
         // TODO: try to remove this
         [NotMapped]
         public decimal Ecola { get; set; }
+
+        public decimal GrandTotalAllowance => TotalNonTaxableAllowance + TotalTaxableAllowance;
 
         public decimal NetDeductions => GovernmentDeductions + TotalLoans + WithholdingTax;
 

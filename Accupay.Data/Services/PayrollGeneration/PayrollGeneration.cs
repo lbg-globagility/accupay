@@ -363,8 +363,7 @@ namespace AccuPay.Data.Services
 
             // Allowances
             paystub.TotalTaxableAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => a.IsTaxable).Sum(a => a.Amount));
-            paystub.TotalAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => !a.IsTaxable).Sum(a => a.Amount));
-            var grandTotalAllowance = paystub.TotalAllowance + paystub.TotalTaxableAllowance;
+            paystub.TotalNonTaxableAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => !a.IsTaxable).Sum(a => a.Amount));
 
             // Bonuses
             paystub.TotalBonus = AccuMath.CommercialRound(bonuses.Sum(b => b.BonusAmount));
@@ -378,7 +377,7 @@ namespace AccuPay.Data.Services
             if (paystub.TotalEarnings < 0)
                 paystub.TotalEarnings = 0;
 
-            paystub.GrossPay = paystub.TotalEarnings + paystub.TotalBonus + grandTotalAllowance;
+            paystub.GrossPay = paystub.TotalEarnings + paystub.TotalBonus + paystub.GrandTotalAllowance;
 
             paystub.TotalAdjustments = paystub.Adjustments.Sum(a => a.Amount);
             // BPI Insurance feature, currently used by LA Global
@@ -453,6 +452,7 @@ namespace AccuPay.Data.Services
             }
         }
 
+        // TODO: move this function to employee class
         private bool IsFirstPay(Employee employee, PayPeriod payPeriod)
         {
             // start date is within current pay period
