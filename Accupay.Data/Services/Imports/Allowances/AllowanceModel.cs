@@ -8,6 +8,7 @@ namespace AccuPay.Data.Services.Imports.Allowances
     {
         public int? EmployeeId { get; set; }
         public string EmployeeNo { get; set; }
+        public string FullName { get; set; }
         public int? ProductId { get; set; }
         public int? AllowanceTypeId { get; set; }
         public string AllowanceName { get; internal set; }

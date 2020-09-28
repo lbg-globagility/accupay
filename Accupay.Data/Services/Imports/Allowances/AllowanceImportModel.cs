@@ -38,7 +38,11 @@ namespace AccuPay.Data.Services.Imports.Allowances
 
         private void ApplyData(AllowanceRowRecord parsedAllowance, Employee employee, AllowanceType allowanceType)
         {
-            if (!_noEmployee) EmployeeId = employee.RowID;
+            if (!_noEmployee)
+            {
+                EmployeeId = employee.RowID;
+                FullName = employee.FullNameLastNameFirst;
+            }
 
             if (!_noAllowanceType) AllowanceTypeId = allowanceType.Id;
 
@@ -116,6 +120,6 @@ namespace AccuPay.Data.Services.Imports.Allowances
             Remarks = string.Join("; ", errors.ToArray());
         }
 
-        public string Remarks { get; set; }
+        public string Remarks { get; internal set; }
     }
 }
