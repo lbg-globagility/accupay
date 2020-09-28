@@ -922,26 +922,26 @@
     <Compile Include="Views\Time Attendance Form\TimeLogsForm2.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddAllowanceForm.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Allowance\AddAllowanceForm.Designer.vb">
       <DependentUpon>AddAllowanceForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddAllowanceForm.vb">
+    <Compile Include="Views\Payroll Forms\Allowance\AddAllowanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\AllowanceRowRecord.vb" />
-    <Compile Include="Views\HRIS Forms\New\EmployeeAllowanceForm.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Allowance\AllowanceRowRecord.vb" />
+    <Compile Include="Views\Payroll Forms\Allowance\EmployeeAllowanceForm.Designer.vb">
       <DependentUpon>EmployeeAllowanceForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\EmployeeAllowanceForm.vb">
+    <Compile Include="Views\Payroll Forms\Allowance\EmployeeAllowanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\ImportAllowanceForm.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Allowance\ImportAllowanceForm.Designer.vb">
       <DependentUpon>ImportAllowanceForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\ImportAllowanceForm.vb">
+    <Compile Include="Views\Payroll Forms\Allowance\ImportAllowanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
+    <Compile Include="Views\Payroll Forms\Loans\LoanRowRecord.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
@@ -1125,28 +1125,28 @@
     <Compile Include="Views\Employees\SalaryTab2.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddLoanScheduleForm.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Loans\AddLoanScheduleForm.Designer.vb">
       <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddLoanScheduleForm.vb">
+    <Compile Include="Views\Payroll Forms\Loans\AddLoanScheduleForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddLoanTypeForm.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Loans\AddLoanTypeForm.Designer.vb">
       <DependentUpon>AddLoanTypeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\AddLoanTypeForm.vb">
+    <Compile Include="Views\Payroll Forms\Loans\AddLoanTypeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\EmployeeLoansForm.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Loans\EmployeeLoansForm.Designer.vb">
       <DependentUpon>EmployeeLoansForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\EmployeeLoansForm.vb">
+    <Compile Include="Views\Payroll Forms\Loans\EmployeeLoansForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\ImportLoansForm.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Loans\ImportLoansForm.Designer.vb">
       <DependentUpon>ImportLoansForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\New\ImportLoansForm.vb">
+    <Compile Include="Views\Payroll Forms\Loans\ImportLoansForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Initial Forms\AboutUs.Designer.vb">
@@ -1715,22 +1715,22 @@
     <Compile Include="Domain\Commons\FileObserver.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
-    <Compile Include="Views\Core Forms\viewtotallow.Designer.vb">
-      <DependentUpon>viewtotallow.vb</DependentUpon>
+    <Compile Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.Designer.vb">
+      <DependentUpon>AllowanceBreakdownDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\viewtotallow.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\viewtotbon.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\viewtotbon.Designer.vb">
       <DependentUpon>viewtotbon.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\viewtotbon.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\viewtotbon.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\viewtotloan.Designer.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\viewtotloan.Designer.vb">
       <DependentUpon>viewtotloan.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\viewtotloan.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\viewtotloan.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reports\rpt\CrystalReport1.vb">
@@ -2114,13 +2114,13 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableDatePicker.resx">
       <DependentUpon>NullableDatePicker.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\AddAllowanceForm.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Allowance\AddAllowanceForm.resx">
       <DependentUpon>AddAllowanceForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\EmployeeAllowanceForm.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Allowance\EmployeeAllowanceForm.resx">
       <DependentUpon>EmployeeAllowanceForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\ImportAllowanceForm.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Allowance\ImportAllowanceForm.resx">
       <DependentUpon>ImportAllowanceForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\EmployeeTreeView.resx">
@@ -2257,16 +2257,16 @@
     <EmbeddedResource Include="Views\HRIS Forms\DepartmentMinWages.resx">
       <DependentUpon>DepartmentMinWages.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\AddLoanScheduleForm.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Loans\AddLoanScheduleForm.resx">
       <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\AddLoanTypeForm.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Loans\AddLoanTypeForm.resx">
       <DependentUpon>AddLoanTypeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\EmployeeLoansForm.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Loans\EmployeeLoansForm.resx">
       <DependentUpon>EmployeeLoansForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\New\ImportLoansForm.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Loans\ImportLoansForm.resx">
       <DependentUpon>ImportLoansForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\AboutUs.resx">
@@ -2540,13 +2540,13 @@
     <EmbeddedResource Include="Views\General Forms\User Role\UserRoleForm.resx">
       <DependentUpon>UserRoleForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\viewtotallow.resx">
-      <DependentUpon>viewtotallow.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.resx">
+      <DependentUpon>AllowanceBreakdownDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\viewtotbon.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotbon.resx">
       <DependentUpon>viewtotbon.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\viewtotloan.resx">
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotloan.resx">
       <DependentUpon>viewtotloan.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\rpt\CrystalReport1.rpt">

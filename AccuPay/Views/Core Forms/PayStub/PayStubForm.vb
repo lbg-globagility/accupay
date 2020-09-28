@@ -911,26 +911,34 @@ Public Class PayStubForm
         TabControlColor(TabControl1, e)
     End Sub
 
-    Private Sub btntotallow_Click(sender As Object, e As EventArgs) Handles btntotallow.Click, btnTotalTaxabAllowance.Click
+    Private Async Sub btntotallow_Click(sender As Object, e As EventArgs) Handles btntotallow.Click, btnTotalTaxabAllowance.Click
         viewtotloan.Close()
         viewtotbon.Close()
 
-        With viewtotallow
-            .Show()
-            .BringToFront()
-            If dgvemployees.RowCount > 0 Then
+        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+        If employeeId Is Nothing OrElse payPeriodId Is Nothing Then
 
-                .VIEW_allowanceperday(dgvemployees.CurrentRow.Cells("RowID").Value,
-                                        paypFrom,
-                                        paypTo)
+            MessageBoxHelper.Warning("No selected paystub.", "Delete Paystub")
+            Return
 
-                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value
-            End If
-        End With
+        End If
+
+        Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
+            New EmployeeCompositeKey(employeeId:=employeeId, payPeriodId:=payPeriodId))
+
+        If paystub Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected paystub.", "Delete Paystub")
+            Return
+
+        End If
+
+        Dim dialog As New AllowanceBreakdownDialog(paystub.RowID.Value)
+        dialog.ShowDialog()
     End Sub
 
     Private Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
-        viewtotallow.Close()
         viewtotloan.Close()
 
         With viewtotbon
@@ -963,7 +971,6 @@ Public Class PayStubForm
                 frm.Close()
             Next
         End If
-        viewtotallow.Close()
         viewtotloan.Close()
         viewtotbon.Close()
 
@@ -1306,7 +1313,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
-        viewtotallow.Close()
         viewtotbon.Close()
 
         With viewtotloan

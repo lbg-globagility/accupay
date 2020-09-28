@@ -129,19 +129,21 @@ namespace AccuPay.Data.Repositories
 
         #region Child data
 
-        public async Task<IEnumerable<AllowanceItem>> GetAllowanceItemsAsync(int paystubId)
+        public async Task<ICollection<AllowanceItem>> GetAllowanceItemsAsync(int paystubId)
         {
             var paystub = await _context.Paystubs
                 .Include(x => x.AllowanceItems)
                     .ThenInclude(x => x.Allowance)
                         .ThenInclude(x => x.Product)
+                .Include(x => x.AllowanceItems)
+                    .ThenInclude(x => x.AllowancesPerDay)
                 .Where(x => x.RowID == paystubId)
                 .FirstOrDefaultAsync();
 
             return paystub.AllowanceItems;
         }
 
-        public async Task<IEnumerable<Adjustment>> GetAdjustmentsAsync(int paystubId)
+        public async Task<ICollection<Adjustment>> GetAdjustmentsAsync(int paystubId)
         {
             var paystub = await _context.Paystubs
                 .Include(x => x.Adjustments)
@@ -152,7 +154,7 @@ namespace AccuPay.Data.Repositories
             return paystub.Adjustments;
         }
 
-        public async Task<IEnumerable<LoanTransaction>> GetLoanTransactionsAsync(int paystubId)
+        public async Task<ICollection<LoanTransaction>> GetLoanTransactionsAsync(int paystubId)
         {
             var paystub = await _context.Paystubs
                 .Include(x => x.LoanTransactions)
@@ -205,14 +207,14 @@ namespace AccuPay.Data.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Paystub>> GetByPayPeriodFullPaystubAsync(int payPeriodId)
+        public async Task<ICollection<Paystub>> GetByPayPeriodFullPaystubAsync(int payPeriodId)
         {
             return await CreateBaseQueryWithFullPaystub()
                 .Where(x => x.PayPeriodID == payPeriodId)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Paystub>> GetPreviousCutOffPaystubsAsync(
+        public async Task<ICollection<Paystub>> GetPreviousCutOffPaystubsAsync(
             DateTime currentCuttOffStart,
             int organizationId)
         {
@@ -235,7 +237,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
+        public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
         {
             return await _context.Paystubs
                 .Include(x => x.Employee)
