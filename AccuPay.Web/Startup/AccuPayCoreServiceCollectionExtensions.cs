@@ -6,6 +6,7 @@ using AccuPay.Data.Services.Imports;
 using AccuPay.Data.Services.Imports.Allowances;
 using AccuPay.Data.Services.Imports.Employees;
 using AccuPay.Data.Services.Imports.Loans;
+using AccuPay.Data.Services.Imports.OfficialBusiness;
 using AccuPay.Data.Services.Imports.Overtimes;
 using AccuPay.Data.Services.Imports.Salaries;
 using AccuPay.Infrastructure.Reports;
@@ -121,6 +122,7 @@ namespace AccuPay.Web
             services.AddScoped<AllowanceImportParser>();
             services.AddScoped<EmployeeImportParser>();
             services.AddScoped<LoanImportParser>();
+            services.AddScoped<OfficialBusinessImportParser>();
             services.AddScoped<OvertimeImportParser>();
             services.AddScoped<SalaryImportParser>();
             services.AddScoped<ShiftImportParser>();

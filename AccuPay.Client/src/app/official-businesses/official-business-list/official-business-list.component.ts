@@ -1,5 +1,5 @@
 import { auditTime, filter } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Constants } from 'src/app/core/shared/constants';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageOptions } from 'src/app/core/shared/page-options';
@@ -16,6 +16,9 @@ import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { Moment } from 'moment';
 import { PermissionTypes } from 'src/app/core/auth';
+import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
+import { OfficialBusinessImportParserOutput } from '../shared/official-business-import-parser-output';
+import { OfficialBusinessImportModel } from '../shared/official-business-import-model';
 
 @Component({
   selector: 'app-official-business-list',
@@ -26,6 +29,8 @@ import { PermissionTypes } from 'src/app/core/auth';
   },
 })
 export class OfficialBusinessListComponent implements OnInit {
+  @ViewChild('uploader') fileInput: ElementRef;
+
   readonly PermissionTypes = PermissionTypes;
 
   readonly displayedColumns: string[] = [
@@ -165,6 +170,7 @@ export class OfficialBusinessListComponent implements OnInit {
       });
     });
   }
+
   newOfficialBusiness() {
     this.dialog
       .open(NewOfficialBusinessComponent)
@@ -186,5 +192,51 @@ export class OfficialBusinessListComponent implements OnInit {
       .finally(() => {
         this.isDownloadingTemplate = false;
       });
+  }
+
+  onImport(files: FileList) {
+    const file = files[0];
+
+    this.officialBusinessService.import(file).subscribe(
+      (outputParse) => {
+        this.getOfficialBusinessList();
+        this.displaySuccess(outputParse);
+        this.clearFile();
+      },
+      (err) => {
+        this.errorHandler.badRequest(
+          err,
+          'Failed to import official business.'
+        );
+        this.clearFile();
+      }
+    );
+  }
+
+  private displaySuccess(outputParse: OfficialBusinessImportParserOutput) {
+    const model: OfficialBusinessImportModel = {
+      employeeNo: '',
+      fullName: '',
+      startDate: null,
+      startTime: null,
+      endTime: null,
+      remarks: '',
+    };
+
+    this.dialog
+      .open(PostImportParserOutputDialogComponent, {
+        data: {
+          columnHeaders: new OfficialBusinessImportParserOutput().columnHeaders,
+          invalidRecords: outputParse.invalidRecords,
+          validRecords: outputParse.validRecords,
+          propertyNames: Object.getOwnPropertyNames(model),
+        },
+      })
+      .afterClosed()
+      .subscribe(() => this.getOfficialBusinessList());
+  }
+
+  clearFile() {
+    this.fileInput.nativeElement.value = '';
   }
 }

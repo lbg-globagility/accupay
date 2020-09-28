@@ -86,6 +86,19 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<OfficialBusiness>(officialBusinesses, count);
         }
 
+        internal async Task<List<OfficialBusiness>> GetByEmployeeIdsBetweenDatesAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
+        {
+            var result = await _context.OfficialBusinesses
+                .Include(ot => ot.Employee)
+                .Where(ot => ot.OrganizationID == organizationId)
+                .Where(ot => employeeIds.Contains(ot.EmployeeID.Value))
+                .Where(ot => ot.StartDate >= timePeriod.Start)
+                .Where(ot => ot.StartDate <= timePeriod.End)
+                .ToListAsync();
+
+            return result;
+        }
+
         public ICollection<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
             return CreateByQueryAllApprovedByDatePeriod(organizationId, datePeriod)

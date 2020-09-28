@@ -2,8 +2,13 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports.OfficialBusiness;
+using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.OfficialBusinesses
@@ -13,12 +18,14 @@ namespace AccuPay.Web.OfficialBusinesses
         private readonly OfficialBusinessDataService _dataService;
         private readonly OfficialBusinessRepository _repository;
         private readonly ICurrentUser _currentUser;
+        private readonly OfficialBusinessImportParser _importParser;
 
-        public OfficialBusinessService(OfficialBusinessDataService dataService, OfficialBusinessRepository repository, ICurrentUser currentUser)
+        public OfficialBusinessService(OfficialBusinessDataService dataService, OfficialBusinessRepository repository, ICurrentUser currentUser, OfficialBusinessImportParser importParser)
         {
             _dataService = dataService;
             _currentUser = currentUser;
             _repository = repository;
+            _importParser = importParser;
         }
 
         public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(OfficialBusinessPageOptions options)
@@ -94,6 +101,25 @@ namespace AccuPay.Web.OfficialBusinesses
         public List<string> GetStatusList()
         {
             return _repository.GetStatusList();
+        }
+
+        internal async Task<OfficialBusinessImportParserOutput> Import(IFormFile file)
+        {
+            if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
+                throw new InvalidFormatException();
+
+            Stream stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            if (stream == null)
+                throw new Exception("Unable to parse excel file.");
+
+            int userId = _currentUser.UserId;
+            var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
+
+            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+
+            return parsedResult;
         }
 
         private static void ApplyChanges(CrudOfficialBusinessDto dto, OfficialBusiness officialBusiness)

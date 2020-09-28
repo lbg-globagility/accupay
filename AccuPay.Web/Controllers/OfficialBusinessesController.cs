@@ -3,6 +3,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.OfficialBusinesses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -86,6 +87,13 @@ namespace AccuPay.Web.Controllers
         public ActionResult GetOfficialBusTemplate()
         {
             return Excel(_hostingEnvironment.ContentRootPath + "/ImportTemplates", "accupay-officialbus-template.xlsx");
+        }
+
+        [HttpPost("import")]
+        [Permission(PermissionTypes.OfficialBusinessCreate)]
+        public async Task<Data.Services.Imports.OfficialBusiness.OfficialBusinessImportParserOutput> Import([FromForm] IFormFile file)
+        {
+            return await _service.Import(file);
         }
     }
 }
