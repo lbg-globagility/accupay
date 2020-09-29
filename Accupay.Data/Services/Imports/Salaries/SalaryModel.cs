@@ -7,6 +7,7 @@ namespace AccuPay.Data.Services.Imports.Salaries
     public class SalaryModel
     {
         public string EmployeeNo { get; set; }
+        public string EmployeeName { get; set; }
 
         public DateTime? EffectiveFrom { get; set; }
 
