@@ -24,8 +24,6 @@ namespace AccuPay.Data.Entities
 
         public int? PositionID { get; set; }
 
-        public int? PayPhilHealthID { get; set; }
-
         public decimal PhilHealthDeduction { get; set; }
 
         public decimal HDMFAmount { get; set; }

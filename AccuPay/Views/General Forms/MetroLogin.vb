@@ -177,11 +177,6 @@ Public Class MetroLogin
         z_postName = USER_ROLE.Name
 
         If dbnow Is Nothing Then dbnow = EXECQUER(CURDATE_MDY)
-        If numofdaysthisyear = 0 Then
-
-            numofdaysthisyear = ObjectUtils.ToInteger(EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));"))
-
-        End If
 
         If Await CheckIfAuthorizedByUserLevel() Then
             MDIPrimaryForm.Show()

@@ -20,13 +20,6 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 
 END IF;
 
-IF OLD.PayPhilhealthID != NEW.PayPhilhealthID THEN
-
-INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
-) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'PayPhilhealthID',NEW.RowID,OLD.PayPhilhealthID,NEW.PayPhilhealthID,'Update');
-
-END IF;
-
 IF OLD.HDMFAmount != NEW.HDMFAmount THEN
 
 INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed

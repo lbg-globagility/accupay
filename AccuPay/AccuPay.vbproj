@@ -1349,12 +1349,6 @@
     <Compile Include="Views\Core Forms\PayStub\PayStubForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\PhiHealth.Designer.vb">
-      <DependentUpon>PhiHealth.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\PhiHealth.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\ProdCtrlForm.designer.vb">
       <DependentUpon>ProdCtrlForm.vb</DependentUpon>
     </Compile>
@@ -2328,9 +2322,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\PayStubForm.resx">
       <DependentUpon>PayStubForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\PhiHealth.resx">
-      <DependentUpon>PhiHealth.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\ProdCtrlForm.resx">
       <DependentUpon>ProdCtrlForm.vb</DependentUpon>
