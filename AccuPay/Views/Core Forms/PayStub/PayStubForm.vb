@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.CrystalReports
+Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
@@ -12,6 +13,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
+Imports Castle.Components.DictionaryAdapter
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -24,7 +26,7 @@ Public Class PayStubForm
 
     Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
 
-    Public Property CurrentYear As String = CDate(dbnow).Year
+    Public Property CurrentYear As Integer = CDate(dbnow).Year
 
     Private Const ItemsPerPage As Integer = 20
 
@@ -39,40 +41,34 @@ Public Class PayStubForm
     Public paypFrom As String = Nothing
     Public paypTo As String = Nothing
     Public paypRowID As String = Nothing
-    Public paypPayFreqID As String = Nothing
-    Public isEndOfMonth As String = 0
 
     Private _totalPaystubs As Integer = 0
     Private _finishedPaystubs As Integer = 0
 
     Dim currentEmployeeNumber As String = Nothing
 
-    Public withthirteenthmonthpay As SByte = 0
+    Dim selectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim IsUserPressEnterToSearch As Boolean = False
-
-    Dim selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
-
-    Dim unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
-
-    Dim quer_empPayFreq = ""
+    Dim unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim dtJosh As DataTable
     Dim da As New MySqlDataAdapter()
 
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
 
-    Private _policy As PolicyHelper
+    Private ReadOnly _policy As PolicyHelper
 
-    Private _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _agencyFeeRepository As AgencyFeeRepository
 
-    Private _paystubRepository As PaystubRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _agencyFeeRepository As AgencyFeeRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _paystubRepository As PaystubRepository
+
+    Private ReadOnly _productRepository As ProductRepository
 
     Sub New()
 
@@ -84,13 +80,15 @@ Public Class PayStubForm
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
+        _agencyFeeRepository = MainServiceProvider.GetRequiredService(Of AgencyFeeRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
         _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
-        _agencyFeeRepository = MainServiceProvider.GetRequiredService(Of AgencyFeeRepository)
-
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -101,7 +99,7 @@ Public Class PayStubForm
 
         Dim scrollbarwidth = 19
 
-        Dim mincolwidth As Integer = (dgvpayper.Width - (dgvpayper.RowHeadersWidth + scrollbarwidth)) / dgvVisibleRows.Count
+        Dim mincolwidth As Integer = CInt((dgvpayper.Width - (dgvpayper.RowHeadersWidth + scrollbarwidth)) / dgvVisibleRows.Count)
 
         For Each dgvcol In dgvVisibleRows
             dgvcol.Width = mincolwidth
@@ -118,11 +116,9 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         dgvAdjustments.AutoGenerateColumns = False
-
-        RefreshForm()
 
         dgvpayper.Focus()
 
@@ -130,20 +126,31 @@ Public Class PayStubForm
         linkNxt.Text = (CurrentYear + 1) & " →"
 
         If dgvemployees.RowCount <> 0 Then
-            dgvemployees.Item("EmployeeID", 0).Selected = 1
+            dgvemployees.Item("EmployeeID", 0).Selected = True
         End If
 
-        cboProducts.ValueMember = "ProductID"
-        cboProducts.DisplayMember = "ProductName"
+        cboProducts.ValueMember = "RowID"
+        cboProducts.DisplayMember = "DisplayName"
 
-        cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
-                                                  " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
+        Await PopulateAdjustmentTypeComboBox()
 
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
         ShowOrHidePayrollSummaryByBranch()
 
+        RefreshForm()
+
+        AddHandler DeclaredTabPage.Enter, AddressOf DeclaredTabPage_Enter
+        AddHandler ActualTabPage.Enter, AddressOf ActualTabPage_Enter
+        AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
+        AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
+
+    Private Async Function PopulateAdjustmentTypeComboBox() As Task
+        Dim items = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
+
+        cboProducts.DataSource = items
+    End Function
 
     Private Sub PayStub_EnabledChanged(sender As Object, e As EventArgs) Handles Me.EnabledChanged
 
@@ -190,9 +197,9 @@ Public Class PayStubForm
 
             Dim str_empty As String = String.Empty
 
-            TabPage1.Text = str_empty
+            DeclaredTabPage.Text = str_empty
 
-            TabPage4.Text = str_empty
+            ActualTabPage.Text = str_empty
 
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
 
@@ -222,19 +229,14 @@ Public Class PayStubForm
 
     End Sub
 
-    Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
+    Sub VIEW_payperiodofyear(Optional year As Integer = Nothing)
         ClosePayrollToolStripMenuItem.Visible = False
         ReopenPayrollToolStripMenuItem.Visible = False
         GeneratePayrollToolStripButton.Visible = False
 
-        Dim hasValue = (MDIPrimaryForm.systemprogressbar.Value > 0)
-        If hasValue Then
-            For i = 0 To 5
-                RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-            Next
-        End If
+        RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
-        Dim date_param = If(param_Date = Nothing, "NULL", "'" & param_Date & "-01-01'")
+        Dim date_param = If(year = Nothing, "NULL", "'" & year & "-01-01'")
         Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("CALL VIEW_payperiodofyear('" & orgztnID & "'," & date_param & ",'0');")
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
 
@@ -249,9 +251,10 @@ Public Class PayStubForm
             index += 1
         Next
         catchdt.Dispose()
-        If hasValue Then
-            AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-        End If
+
+        UpdatePayPeriodDetails()
+
+        AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
     End Sub
 
     Private Sub HighlightOpenPayPeriod(index As Integer, drow As DataRow)
@@ -286,15 +289,18 @@ Public Class PayStubForm
 
     End Sub
 
-    Sub loademployee(Optional q_empsearch As String = Nothing)
-        If paypRowID Is Nothing Then
-            Return
-        End If
+    Sub LoadEmployees()
 
-        Dim offset = _pageNo * ItemsPerPage
-        Dim limit = ItemsPerPage
+        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-        Dim parameters = New Object() {
+        dgvemployees.Rows.Clear()
+
+        If paypRowID IsNot Nothing Then
+
+            Dim offset = _pageNo * ItemsPerPage
+            Dim limit = ItemsPerPage
+
+            Dim parameters = New Object() {
             orgztnID,
             tsSearch.Text,
             paypRowID,
@@ -302,77 +308,60 @@ Public Class PayStubForm
             limit
         }
 
-        Dim n_ReadSQLProcedureToDatatable =
+            Dim n_ReadSQLProcedureToDatatable =
             New SQL("CALL SEARCH_employee_paystub(?1, ?2, ?3, ?4, ?5);",
                     parameters)
 
-        Dim catchdt = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
+            Dim catchdt = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
 
-        dgvemployees.Rows.Clear()
+            For Each drow As DataRow In catchdt.Rows
+                Dim row_array = drow.ItemArray
+                dgvemployees.Rows.Add(row_array)
+            Next
 
-        For Each drow As DataRow In catchdt.Rows
-            Dim row_array = drow.ItemArray
-            dgvemployees.Rows.Add(row_array)
-        Next
+            _totalItems = Val(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
+            _lastPageNo = CInt({Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max())
 
-        _totalItems = Val(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
-        _lastPageNo = {Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max()
+            Static x As SByte = 0
 
-        Static x As SByte = 0
+            If x = 0 Then
+                x = 1
 
-        If x = 0 Then
-            x = 1
+                With dgvemployees
+                    .Columns("RowID").Visible = False
 
-            With dgvemployees
-                .Columns("RowID").Visible = False
+                End With
+                If dgvemployees.RowCount > 0 Then
+                    dgvemployees.Item("EmployeeID", 0).Selected = True
+                End If
 
-            End With
-            If dgvemployees.RowCount > 0 Then
-                dgvemployees.Item("EmployeeID", 0).Selected = True
+                employeepicture = New SQLQueryToDatatable("SELECT RowID,Image FROM employee WHERE Image IS NOT NULL AND OrganizationID=" & orgztnID & ";").ResultTable 'retAsDatTbl("SELECT RowID,Image FROM employee WHERE OrganizationID=" & orgztnID & ";")
             End If
 
-            employeepicture = New SQLQueryToDatatable("SELECT RowID,Image FROM employee WHERE Image IS NOT NULL AND OrganizationID=" & orgztnID & ";").ResultTable 'retAsDatTbl("SELECT RowID,Image FROM employee WHERE OrganizationID=" & orgztnID & ";")
         End If
+
+        UpdateEmployeeDetails()
+
+        AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+
     End Sub
 
-    Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvpayper.SelectionChanged
-        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+    Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs)
+        UpdatePayPeriodDetails()
+    End Sub
 
-        Static str_pay_freq_sched As String = String.Empty
-
-        Static _year As Integer = 0
-
+    Private Sub UpdatePayPeriodDetails()
         If dgvpayper.RowCount > 0 Then
             With dgvpayper.CurrentRow
 
-                paypPayFreqID = .Cells("Column4").Value
-
-                paypRowID = .Cells("Column1").Value
-                paypFrom = MYSQLDateFormat(CDate(.Cells("Column2").Value)) 'Format(CDate(.Cells("Column2").Value), "yyyy-MM-dd")
-
-                paypTo = MYSQLDateFormat(CDate(.Cells("Column3").Value)) 'Format(CDate(.Cells("Column3").Value), "yyyy-MM-dd")
-
-                isEndOfMonth = Trim(.Cells("Column14").Value)
-
-                Dim str_sched_payfreq As String = Convert.ToString(.Cells("Column12").Value)
-
-                str_pay_freq_sched = str_sched_payfreq
-
-                _year = CurrentYear
-
-                Dim select_cutoff_payfrequency =
-                    tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Text = str_sched_payfreq)
-
-                For Each _tsbtn In select_cutoff_payfrequency
-                    PayFreq_Changed(_tsbtn, New EventArgs)
-                Next
-
                 If .Index < 0 Then Return
 
+                paypRowID = .Cells("Column1").Value.ToString()
+                paypFrom = MYSQLDateFormat(CDate(.Cells("Column2").Value)).ToString()
+                paypTo = MYSQLDateFormat(CDate(.Cells("Column3").Value)).ToString()
+
                 Dim status = Enums(Of PayPeriodStatus).Parse(.Cells("StatusColumn").Value)
-
                 Dim isModified = status = PayPeriodStatus.Open
-
                 ShowPayrollActions(isModified, status)
 
             End With
@@ -381,15 +370,12 @@ Public Class PayStubForm
             paypRowID = Nothing
             paypFrom = Nothing
             paypTo = Nothing
-            isEndOfMonth = 0
-            paypPayFreqID = String.Empty
 
             ShowPayrollActions(False)
 
-            dgvemployees_SelectionChanged(sender, e)
-
         End If
-        AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+
+        LoadEmployees()
     End Sub
 
     Private Sub ShowPayrollActions(showPayrollActions As Boolean, Optional payrollStatus As PayPeriodStatus? = Nothing)
@@ -449,50 +435,37 @@ Public Class PayStubForm
     End Sub
 
     Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
-        RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
         CurrentYear = CurrentYear - 1
 
         linkPrev.Text = "← " & (CurrentYear - 1)
         linkNxt.Text = (CurrentYear + 1) & " →"
 
         VIEW_payperiodofyear(CurrentYear)
-
-        AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-        dgvpayper_SelectionChanged(sender, e)
     End Sub
 
     Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
-        RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
         CurrentYear = CurrentYear + 1
 
         linkNxt.Text = (CurrentYear + 1) & " →"
         linkPrev.Text = "← " & (CurrentYear - 1)
 
         VIEW_payperiodofyear(CurrentYear)
-
-        AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-        dgvpayper_SelectionChanged(sender, e)
     End Sub
 
-    Private Sub First_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles First.LinkClicked, Prev.LinkClicked,
-                                                                                                Nxt.LinkClicked, Last.LinkClicked,
-                                                                                                LinkLabel4.LinkClicked, LinkLabel3.LinkClicked,
-                                                                                                LinkLabel2.LinkClicked, LinkLabel1.LinkClicked
-        Dim sendrname As String = DirectCast(sender, LinkLabel).Name
+    Private Sub EmployeeGridViewPaginationChanged(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles _
+        First.LinkClicked, Prev.LinkClicked,
+        Nxt.LinkClicked, Last.LinkClicked,
+        LinkLabel2.LinkClicked, LinkLabel1.LinkClicked
 
         Dim action As PaginationAction
 
-        If sendrname = "First" Or sendrname = "LinkLabel1" Then
+        If sender Is First OrElse sender Is LinkLabel1 Then
             action = PaginationAction.First
-        ElseIf sendrname = "Prev" Or sendrname = "LinkLabel2" Then
+        ElseIf sender Is Prev OrElse sender Is LinkLabel2 Then
             action = PaginationAction.Previous
-        ElseIf sendrname = "Nxt" Or sendrname = "LinkLabel4" Then
+        ElseIf sender Is Nxt OrElse sender Is LinkLabel4 Then
             action = PaginationAction.Next
-        ElseIf sendrname = "Last" Or sendrname = "LinkLabel3" Then
+        ElseIf sender Is Last OrElse sender Is LinkLabel3 Then
             action = PaginationAction.Last
         End If
 
@@ -507,40 +480,16 @@ Public Class PayStubForm
                 _pageNo = _lastPageNo
         End Select
 
-        Dim pay_freqString = String.Empty
-
-        For Each ctrl In tstrip.Items
-            If TypeOf ctrl Is ToolStripButton Then
-
-                If DirectCast(ctrl, ToolStripButton).BackColor =
-                        Color.FromArgb(194, 228, 255) Then
-
-                    pay_freqString =
-                            DirectCast(ctrl, ToolStripButton).Text
-
-                    Exit For
-                Else
-                    Continue For
-                End If
-            Else
-                Continue For
-            End If
-
-        Next
-
-        quer_empPayFreq = " And pf.PayFrequencyType='" & pay_freqString & "' "
-
-        loademployee(quer_empPayFreq)
-
-        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-        dgvemployees_SelectionChanged(sender, e)
-
-        AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+        LoadEmployees()
     End Sub
 
-    Private Sub dgvemployees_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvemployees.SelectionChanged
+    Private Sub dgvemployees_SelectionChanged(sender As Object, e As EventArgs)
 
+        UpdateEmployeeDetails()
+
+    End Sub
+
+    Private Sub UpdateEmployeeDetails()
         btnSaveAdjustments.Enabled = False
 
         Dim employeetype = ""
@@ -624,9 +573,9 @@ Public Class PayStubForm
                         MsgBox(getErrExcptn(ex, Me.Name))
                     End Try
                     If tabEarned.SelectedIndex = 0 Then
-                        TabPage1_Enter1(TabPage1, New EventArgs)
+                        DeclaredTabPage_Enter(DeclaredTabPage, New EventArgs)
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        TabPage4_Enter1(TabPage4, New EventArgs)
+                        ActualTabPage_Enter(ActualTabPage, New EventArgs)
                     End If
                 Else
 
@@ -642,9 +591,9 @@ Public Class PayStubForm
                         MsgBox(getErrExcptn(ex, Me.Name))
                     End Try
                     If tabEarned.SelectedIndex = 0 Then
-                        TabPage1_Enter1(TabPage1, New EventArgs)
+                        DeclaredTabPage_Enter(DeclaredTabPage, New EventArgs)
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        TabPage4_Enter1(TabPage4, New EventArgs)
+                        ActualTabPage_Enter(ActualTabPage, New EventArgs)
                     End If
                 End If
 
@@ -712,7 +661,6 @@ Public Class PayStubForm
             txtTotalNetPay.Text = ""
 
         End If
-
     End Sub
 
     Sub GeneratePayroll()
@@ -888,7 +836,8 @@ Public Class PayStubForm
         Await TimeEntrySummaryForm.LoadPayPeriods()
 
         Me.Enabled = True
-        dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
+
+        LoadEmployees()
     End Sub
 
     Private Sub GeneratingPayrollOnError(t As Task)
@@ -982,87 +931,20 @@ Public Class PayStubForm
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
 
-        IsUserPressEnterToSearch = (e_asc = 13)
-        If IsUserPressEnterToSearch Then
-            Dim search_string_len = tsSearch.Text.Trim.Length
-            IsUserPressEnterToSearch = (search_string_len > 0)
+        Dim userPressedEnterKey = (e_asc = 13)
+        If userPressedEnterKey Then
             tsbtnSearch_Click(sender, e)
         End If
     End Sub
 
     Private Sub tsbtnSearch_Click(sender As Object, e As EventArgs) Handles tsbtnSearch.Click
-        IsUserPressEnterToSearch = False
+
+        _pageNo = 0
 
         If tsSearch.Text.Trim.Length = 0 Then
-            First_LinkClicked(First, New LinkLabelLinkClickedEventArgs(New LinkLabel.Link()))
+            EmployeeGridViewPaginationChanged(First, New LinkLabelLinkClickedEventArgs(New LinkLabel.Link()))
         Else
-            Dim dattabsearch As New DataTable
 
-            'pagination = 0
-
-            _pageNo = 0
-
-            Dim offset = _pageNo * ItemsPerPage
-            Dim limit = ItemsPerPage
-
-            Dim param_array = New Object() {
-                orgztnID,
-                tsSearch.Text,
-                paypRowID,
-                offset,
-                limit
-            }
-
-            Dim n_ReadSQLProcedureToDatatable = New SQL(
-                "CALL SEARCH_employee_paystub(?1, ?2, ?3, ?4, ?5);",
-                param_array)
-
-            dattabsearch = n_ReadSQLProcedureToDatatable.GetFoundRows.Tables(0)
-
-            dgvemployees.Rows.Clear()
-
-            _totalItems = Val(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
-            _lastPageNo = {Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max()
-
-            For Each drow As DataRow In dattabsearch.Rows
-                Dim row_array = drow.ItemArray
-                dgvemployees.Rows.Add(row_array)
-            Next
-
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-            dgvemployees_SelectionChanged(sender, e)
-
-            AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-        End If
-    End Sub
-
-    Private Sub SplitContainer1_SplitterMoved(sender As Object, e As SplitterEventArgs) Handles SplitContainer1.SplitterMoved
-        SplitContainer1.Panel2.Focus()
-    End Sub
-
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        If Button3.Image.Tag = 1 Then
-            Button3.Image = Nothing
-            Button3.Image = My.Resources.r_arrow
-            Button3.Image.Tag = 0
-
-            TabControl1.Show()
-            dgvpayper.Width = 350
-
-            dgvpayper_SelectionChanged(sender, e)
-        Else
-            Button3.Image = Nothing
-            Button3.Image = My.Resources.l_arrow
-            Button3.Image.Tag = 1
-
-            TabControl1.Hide()
-            Dim pointX As Integer = Width_resolution - (Width_resolution * 0.15)
-
-            dgvpayper.Width = pointX
         End If
     End Sub
 
@@ -1076,153 +958,17 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub tbppayroll_Enter(sender As Object, e As EventArgs) Handles tbppayroll.Enter
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-
-            once = 1
-
-            Dim payfrqncy As New AutoCompleteStringCollection
-
-            Dim sel_query = ""
-
-            Dim hasAnEmployee = EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE OrganizationID=" & orgztnID & " LIMIT 1);")
-
-            If hasAnEmployee = 1 Then
-                sel_query = "SELECT pp.PayFrequencyType FROM payfrequency pp INNER JOIN employee e ON e.PayFrequencyID=pp.RowID GROUP BY pp.RowID;"
-            Else
-                sel_query = "SELECT PayFrequencyType FROM payfrequency WHERE PayFrequencyType IN ('SEMI-MONTHLY','WEEKLY');"
-            End If
-
-            enlistTheLists(sel_query, payfrqncy)
-
-            Dim first_sender As New ToolStripButton
-
-            Dim indx = 0
-
-            For Each strval In payfrqncy
-
-                If strval Is Nothing OrElse strval.ToString().Trim().ToUpper() <> "SEMI-MONTHLY" Then
-                    Continue For
-                End If
-
-                Dim new_tsbtn As New ToolStripButton
-
-                With new_tsbtn
-
-                    .AutoSize = False
-                    .BackColor = Color.FromArgb(255, 255, 255)
-                    .ImageTransparentColor = Color.Magenta
-                    .Margin = New Padding(0, 1, 0, 1)
-                    .Name = String.Concat("tsbtn" & strval)
-                    .Overflow = ToolStripItemOverflow.Never
-                    .Size = New Size(110, 30)
-                    .Text = strval
-                    .TextAlign = ContentAlignment.MiddleLeft
-                    .TextImageRelation = TextImageRelation.ImageBeforeText
-                    .ToolTipText = strval
-
-                End With
-
-                tstrip.Items.Add(new_tsbtn)
-
-                If indx = 0 Then
-                    indx = 1
-                    first_sender = new_tsbtn
-                End If
-
-                AddHandler new_tsbtn.Click, AddressOf PayFreq_Changed
-
-            Next
-
-            tstrip.PerformLayout()
-
-            If first_sender IsNot Nothing Then
-                PayFreq_Changed(first_sender, New EventArgs)
-            End If
-
-            For Each tsItem As ToolStripItem In tstrip.Items
-                tsItem.PerformClick()
-                Exit For
-            Next
-
-            dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
-
-            AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-
-        End If
-
-    End Sub
-
     Sub PayFreq_Changed(sender As Object, e As EventArgs)
 
-        quer_empPayFreq = ""
-
-        Dim senderObj As New ToolStripButton
-
-        Static prevObj As New ToolStripButton
-
         Static once As SByte = 0
-
-        senderObj = DirectCast(sender, ToolStripButton)
 
         If once = 0 Then
             once += 1
 
-            prevObj = senderObj
-
-            senderObj.BackColor = Color.FromArgb(194, 228, 255)
-
-            senderObj.Font = selectedButtonFont
-
-            quer_empPayFreq = " AND pf.PayFrequencyType='" & senderObj.Text & "' "
-
-            loademployee(quer_empPayFreq)
+            LoadEmployees()
 
             Exit Sub
         End If
-
-        If prevObj.Name = Nothing Then
-        Else
-
-            If prevObj.Name <> senderObj.Name Then
-
-                prevObj.BackColor = Color.FromArgb(255, 255, 255)
-
-                prevObj.Font = unselectedButtonFont
-
-                prevObj = senderObj
-
-            End If
-
-        End If
-
-        senderObj.BackColor = Color.FromArgb(194, 228, 255)
-
-        senderObj.Font = selectedButtonFont
-
-        senderObj.Tag = 1
-
-        Dim select_cutoff_payfrequency =
-            tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Name <> senderObj.Name)
-
-        For Each _tsbtn In select_cutoff_payfrequency
-            _tsbtn.Tag = 0
-        Next
-
-        Dim prev_selRowIndex = -1
-
-        If dgvemployees.RowCount <> 0 Then
-            Try
-                prev_selRowIndex = dgvemployees.CurrentRow.Index
-            Catch ex As Exception
-                prev_selRowIndex = -1
-            End Try
-        End If
-
-        quer_empPayFreq = String.Empty
 
         tsbtnSearch_Click(sender, e)
 
@@ -1240,9 +986,18 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub dgAdjustments_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellContentClick
+    Private Sub dgvAdjustments_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellContentClick
 
-        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
+        If e.ColumnIndex < 0 OrElse e.RowIndex < 0 OrElse dgvAdjustments.CurrentRow Is Nothing Then Return
+
+        Dim currentAdjustment = CType(dgvAdjustments.CurrentRow.DataBoundItem, IAdjustment)
+
+        If currentAdjustment Is Nothing Then
+
+            MessageBoxHelper.Warning("No adjustment selected.")
+            Return
+
+        End If
 
         If TypeOf dgvAdjustments.Columns(e.ColumnIndex) Is DataGridViewLinkColumn Then
             Dim n_ExecuteQuery As New ExecuteQuery("SELECT PartNo FROM product WHERE RowID='" & dgvAdjustments.Item("cboProducts", e.RowIndex).Value & "' LIMIT 1;")
@@ -1251,17 +1006,15 @@ Public Class PayStubForm
                                          "Delete adjustment", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
             If prompt = Windows.Forms.DialogResult.Yes Then
 
-                If Not IsDBNull(dgvAdjustments.Item("IsAdjustmentActual", e.RowIndex).Value) Then
+                Dim isActual = IsActualSelected()
 
-                    Dim SQLTableName As String = If(dgvAdjustments.Item("IsAdjustmentActual", e.RowIndex).Value = 0, "paystubadjustment", "paystubadjustmentactual")
-                    Dim del_quer As String =
-                        "DELETE FROM " & SQLTableName & " WHERE RowID='" & dgvAdjustments.Item("psaRowID", e.RowIndex).Value & "';"
-                    n_ExecuteQuery = New ExecuteQuery(del_quer)
+                Dim SQLTableName As String = If(isActual, "paystubadjustmentactual", "paystubadjustment")
 
-                End If
+                Dim del_quer As String =
+                        "DELETE FROM " & SQLTableName & " WHERE RowID='" & currentAdjustment.RowID.Value & "';"
+                n_ExecuteQuery = New ExecuteQuery(del_quer)
 
-                dgvAdjustments.Rows.Remove(dgvAdjustments.Rows(e.RowIndex))
-                dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
+                UpdateEmployeeDetails()
                 btnSaveAdjustments.Enabled = False
             End If
         End If
@@ -1270,48 +1023,57 @@ Public Class PayStubForm
     Sub btnSaveAdjustments_Click(sender As Object, e As EventArgs) Handles btnSaveAdjustments.Click
         dgvAdjustments.EndEdit(True)
 
+        Dim adjustments = CType(dgvAdjustments.DataSource, BindingSource)
+
+        For Each item In adjustments
+
+        Next
+
+        Dim adjustments1 = CType(adjustments.DataSource, BindingList(Of Adjustment))
+
+        For Each item In adjustments
+
+        Next
+
         Dim hasError As Boolean = False
-        Dim errorRow As New DataGridViewRow
-        Dim lastRow As Integer = dgvAdjustments.Rows.Count
+        'Dim errorRow As New DataGridViewRow
+        'Dim lastRow As Integer = dgvAdjustments.Rows.Count
 
-        Dim rowCount As Integer = 0
+        'If Not hasError Then
+        '    Try
+        '        Dim SQLFunctionName As String = If(ValNoComma(tabEarned.SelectedIndex) = 0, "I_paystubadjustment", "I_paystubadjustmentactual")
+        '        For Each dgvRow As DataGridViewRow In dgvAdjustments.Rows
+        '            Dim productRowID = dgvRow.Cells("cboProducts").Value
+        '            If productRowID IsNot Nothing And dgvRow.IsNewRow = False Then 'If Not dgvRow.Cells(0).Value Is Nothing AndAlso Not dgvRow.Cells(1).Value Is Nothing AndAlso IsNumeric(dgvRow.Cells(1).Value) Then
+        '                If TypeOf dgvRow.Cells("cboProducts").Value Is String Then
+        '                    productRowID =
+        '                    EXECQUER("SELECT RowID FROM product WHERE OrganizationID='" & orgztnID & "' AND PartNo='" & dgvRow.Cells("cboProducts").Value & "' LIMIT 1;")
+        '                End If
+        '                Dim n_ReadSQLFunction As _
+        '                    New ReadSQLFunction(SQLFunctionName,
+        '                                        "returnvalue",
+        '                                        orgztnID,
+        '                                        z_User,
+        '                                        productRowID,
+        '                                        ValNoComma(dgvRow.Cells("DataGridViewTextBoxColumn66").Value),
+        '                                        dgvRow.Cells("DataGridViewTextBoxColumn64").Value,
+        '                                        Me.currentEmployeeNumber,
+        '                                        paypRowID,
+        '                                        dgvRow.Cells("psaRowID").Value)
+        '                If ValNoComma(dgvRow.Cells("psaRowID").Value) = 0 And n_ReadSQLFunction.HasError = False Then
+        '                    dgvRow.Cells("psaRowID").Value = n_ReadSQLFunction.ReturnValue
+        '                End If
+        '            Else : Continue For
+        '            End If
+        '        Next
 
-        Dim comment_columnname = "DataGridViewTextBoxColumn64"
-        If Not hasError Then
-            Try
-                Dim SQLFunctionName As String = If(ValNoComma(tabEarned.SelectedIndex) = 0, "I_paystubadjustment", "I_paystubadjustmentactual")
-                For Each dgvRow As DataGridViewRow In dgvAdjustments.Rows
-                    Dim productRowID = dgvRow.Cells("cboProducts").Value
-                    If productRowID IsNot Nothing And dgvRow.IsNewRow = False Then 'If Not dgvRow.Cells(0).Value Is Nothing AndAlso Not dgvRow.Cells(1).Value Is Nothing AndAlso IsNumeric(dgvRow.Cells(1).Value) Then
-                        If TypeOf dgvRow.Cells("cboProducts").Value Is String Then
-                            productRowID =
-                            EXECQUER("SELECT RowID FROM product WHERE OrganizationID='" & orgztnID & "' AND PartNo='" & dgvRow.Cells("cboProducts").Value & "' LIMIT 1;")
-                        End If
-                        Dim n_ReadSQLFunction As _
-                            New ReadSQLFunction(SQLFunctionName,
-                                                "returnvalue",
-                                                orgztnID,
-                                                z_User,
-                                                productRowID,
-                                                ValNoComma(dgvRow.Cells("DataGridViewTextBoxColumn66").Value),
-                                                dgvRow.Cells("DataGridViewTextBoxColumn64").Value,
-                                                Me.currentEmployeeNumber,
-                                                paypRowID,
-                                                dgvRow.Cells("psaRowID").Value)
-                        If ValNoComma(dgvRow.Cells("psaRowID").Value) = 0 And n_ReadSQLFunction.HasError = False Then
-                            dgvRow.Cells("psaRowID").Value = n_ReadSQLFunction.ReturnValue
-                        End If
-                    Else : Continue For
-                    End If
-                Next
-            Catch ex As Exception
-                MsgBox(getErrExcptn(ex, Me.Name))
-            Finally
-                UpdatePaystubAdjustmentColumn()
-                MsgBox("Adjustments were saved!", MsgBoxStyle.Information)
-                dgvemployees_SelectionChanged(sender, e)
-            End Try
-        End If
+        '        UpdatePaystubAdjustmentColumn()
+        '        MsgBox("Adjustments were saved!", MsgBoxStyle.Information)
+        '        UpdateEmployeeDetails()
+        '    Catch ex As Exception
+        '        MsgBox(getErrExcptn(ex, Me.Name))
+        '    End Try
+        'End If
     End Sub
 
     Private Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
@@ -1356,37 +1118,59 @@ Public Class PayStubForm
         End Try
     End Sub
 
-    Private Sub UpdateAdjustmentDetails(Optional IsActual As Boolean = False)
-        Try
-            dtJosh = New DataTable
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-            conn.Open()
+    Private Sub UpdateAdjustmentDetails()
 
-            cmd = New MySqlCommand("VIEW_paystubadjustment", conn)
-            With cmd
-                .Parameters.Clear()
-                .CommandType = CommandType.StoredProcedure
-                .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeNumber)
-                If dgvpayper.RowCount > 0 And dgvpayper.SelectedRows.Count > 0 Then
-                    .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
-                Else
-                    .Parameters.AddWithValue("pa_PayPeriodID", DBNull.Value)
-                End If
-                .Parameters.AddWithValue("pa_OrganizationID", orgztnID)
-                .Parameters.AddWithValue("pa_IsActual", Convert.ToInt16(IsActual))
-            End With
+        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+        If employeeId Is Nothing OrElse payPeriodId Is Nothing Then Return
 
-            da = New MySqlDataAdapter(cmd)
-            da.Fill(dtJosh)
-            dgvAdjustments.DataSource = dtJosh
-        Catch ex As Exception
-            dgvAdjustments.Rows.Clear()
-        Finally
-            conn.Close()
-            cmd.Dispose()
-            da.Dispose()
-        End Try
+        Dim isActual = IsActualSelected()
+
+        Dim paystub = _paystubRepository.GetByCompositeKey(
+                        New EmployeeCompositeKey(
+                            employeeId:=employeeId.Value,
+                            payPeriodId:=payPeriodId.Value))
+
+        If paystub Is Nothing OrElse paystub.RowID Is Nothing Then Return
+
+        Dim list As New BindingList(Of Adjustment)(_paystubRepository.GetAdjustments(paystub.RowID.Value).ToList())
+
+        dgvAdjustments.DataSource = New BindingSource(list, Nothing)
+
+        'Try
+        '    dtJosh = New DataTable
+        '    If conn.State = ConnectionState.Open Then : conn.Close() : End If
+        '    conn.Open()
+
+        '    cmd = New MySqlCommand("VIEW_paystubadjustment", conn)
+        '    With cmd
+        '        .Parameters.Clear()
+        '        .CommandType = CommandType.StoredProcedure
+        '        .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeNumber)
+        '        If dgvpayper.RowCount > 0 And dgvpayper.SelectedRows.Count > 0 Then
+        '            .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
+        '        Else
+        '            .Parameters.AddWithValue("pa_PayPeriodID", DBNull.Value)
+        '        End If
+        '        .Parameters.AddWithValue("pa_OrganizationID", orgztnID)
+        '        .Parameters.AddWithValue("pa_IsActual", Convert.ToInt16(isActual))
+        '    End With
+
+        '    da = New MySqlDataAdapter(cmd)
+        '    da.Fill(dtJosh)
+        '    dgvAdjustments.DataSource = dtJosh
+        'Catch ex As Exception
+        '    dgvAdjustments.Rows.Clear()
+        'Finally
+        '    conn.Close()
+        '    cmd.Dispose()
+        '    da.Dispose()
+        'End Try
     End Sub
+
+    Private Function IsActualSelected() As Boolean
+        Return tabEarned.SelectedTab Is ActualTabPage
+    End Function
 
     Private Sub dgvAdjustments_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvAdjustments.DataError
         btnSaveAdjustments.Enabled = False
@@ -1419,13 +1203,13 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Sub TabPage1_Enter1(sender As Object, e As EventArgs) Handles TabPage1.Enter 'DECLARED
+    Private Sub DeclaredTabPage_Enter(sender As Object, e As EventArgs)
 
-        TabPage1.Text = TabPage1.Text.Trim
-        TabPage1.Text = TabPage1.Text & Space(15)
-        TabPage4.Text = TabPage4.Text.Trim
+        DeclaredTabPage.Text = DeclaredTabPage.Text.Trim
+        DeclaredTabPage.Text = DeclaredTabPage.Text & Space(15)
+        ActualTabPage.Text = ActualTabPage.Text.Trim
 
-        For Each txtbxctrl In TabPage1.Controls.OfType(Of TextBox).ToList()
+        For Each txtbxctrl In DeclaredTabPage.Controls.OfType(Of TextBox).ToList()
             txtbxctrl.Text = "0.00"
         Next
 
@@ -1521,15 +1305,15 @@ Public Class PayStubForm
         txtNetPay.Text = FormatNumber(totalNetSalary, 2)
         txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
 
-        UpdateAdjustmentDetails(Convert.ToInt16(TabPage1.Tag))
+        UpdateAdjustmentDetails()
     End Sub
 
-    Private Sub TabPage4_Enter1(sender As Object, e As EventArgs) Handles TabPage4.Enter 'UNDECLARED / ACTUAL
-        TabPage4.Text = TabPage4.Text.Trim
-        TabPage4.Text = TabPage4.Text & Space(15)
-        TabPage1.Text = TabPage1.Text.Trim
+    Private Sub ActualTabPage_Enter(sender As Object, e As EventArgs)
+        ActualTabPage.Text = ActualTabPage.Text.Trim
+        ActualTabPage.Text = ActualTabPage.Text & Space(15)
+        DeclaredTabPage.Text = DeclaredTabPage.Text.Trim
 
-        For Each txtbxctrl In TabPage4.Controls.OfType(Of TextBox).ToList()
+        For Each txtbxctrl In ActualTabPage.Controls.OfType(Of TextBox).ToList()
             txtbxctrl.Text = "0.00"
         Next
 
@@ -1628,6 +1412,7 @@ Public Class PayStubForm
         Dim totalNetPay = totalNetSalary + thirteenthMonthPay
         txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
 
+        UpdateAdjustmentDetails()
     End Sub
 
     Private Function GetPaystub(EmployeeRowID As Object) As Paystub
@@ -1652,12 +1437,12 @@ Public Class PayStubForm
     End Function
 
     Private Sub btndiscardchanges_Click(sender As Object, e As EventArgs) Handles btndiscardchanges.Click
-        UpdateAdjustmentDetails(Convert.ToInt16(tabEarned.SelectedIndex)) 'Josh
+        UpdateAdjustmentDetails()
 
         btnSaveAdjustments.Enabled = False
     End Sub
 
-    Private Sub LinkLabel5_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel5.LinkClicked
+    Private Async Sub AddNewAdjustmentTypeLinkLabel_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddNewAdjustmentTypeLinkLabel.LinkClicked
 
         Dim n_ProdCtrlForm As New ProdCtrlForm
 
@@ -1671,13 +1456,7 @@ Public Class PayStubForm
 
             If .ShowDialog = Windows.Forms.DialogResult.OK Then
 
-                cboProducts.DataSource = Nothing
-
-                cboProducts.ValueMember = "ProductID"
-                cboProducts.DisplayMember = "ProductName"
-
-                cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
-                                                                 " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
+                Await PopulateAdjustmentTypeComboBox()
 
             End If
 
@@ -1759,17 +1538,12 @@ Public Class PayStubForm
           activityItem)
     End Function
 
-    Private Sub dgvemployees_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgvemployees.RowsRemoved
-        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-    End Sub
-
     Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
         If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 Then
             Dim str_empty As String = String.Empty
-            TabPage1.Text = str_empty
-            TabPage4.Text = str_empty
+            DeclaredTabPage.Text = str_empty
+            ActualTabPage.Text = str_empty
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
-
         End If
     End Sub
 
@@ -1781,21 +1555,6 @@ Public Class PayStubForm
         e.Cancel = isCinemaUser
 
     End Sub
-
-    Private Function GetCurrentPayFrequencyType() As String
-
-        Dim select_cutoff_payfrequency =
-                tstrip.Items.OfType(Of ToolStripButton).Where(Function(tsbtn) tsbtn.Tag = 1)
-
-        Dim str_payfrequency_sched As String = "SEMI-MONTHLY"
-
-        For Each _tsbtn In select_cutoff_payfrequency
-            str_payfrequency_sched = _tsbtn.Text
-        Next
-
-        Return str_payfrequency_sched
-
-    End Function
 
     Private Enum PaginationAction
         First
@@ -1891,7 +1650,6 @@ Public Class PayStubForm
 
     Private Sub RefreshForm()
         VIEW_payperiodofyear()
-        dgvpayper_SelectionChanged(Nothing, Nothing)
     End Sub
 
     Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
@@ -1976,7 +1734,6 @@ Public Class PayStubForm
                                      MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If prompt = Windows.Forms.DialogResult.Yes Then
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
             Await FunctionUtils.TryCatchFunctionAsync("Delete ALL Pastubs",
                   Async Function()
@@ -2059,7 +1816,6 @@ Public Class PayStubForm
                                      MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If prompt = Windows.Forms.DialogResult.Yes Then
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
             Await FunctionUtils.TryCatchFunctionAsync("Cancel Payroll",
                   Async Function()
@@ -2094,13 +1850,16 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
-        Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
+    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles _
+        PayslipDeclaredToolStripMenuItem.Click,
+        PayslipActualToolStripMenuItem.Click
 
-        PrintPayslip(IsActualFlag)
+        Dim isActual = sender Is PayslipActualToolStripMenuItem
+
+        PrintPayslip(isActual)
     End Sub
 
-    Private Sub PrintPayslip(isActual As SByte)
+    Private Sub PrintPayslip(isActual As Boolean)
 
         FunctionUtils.TryCatchFunction("Print Payslip",
             Sub()
@@ -2184,7 +1943,11 @@ Public Class PayStubForm
         ExportNetPayActualDirectDepositToolStripMenuItem.Click
 
         Dim datePeriod = GetPayPeriodDates()
-        If datePeriod Is Nothing Then Return
+        If datePeriod Is Nothing Then
+
+            MessageBoxHelper.Warning("No pay period selected.")
+            Return
+        End If
 
         Dim paystubDateKey = New DateCompositeKey(
             z_OrganizationID,

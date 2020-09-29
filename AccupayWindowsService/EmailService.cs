@@ -109,7 +109,7 @@ namespace AccupayWindowsService
 
                 var payslipBuilder = _payslipBuilder.CreateReportDocument(
                     payPeriodId: currentPayPeriod.RowID.Value,
-                    isActual: (sbyte)(paystubEmail.IsActual ? 1 : 0),
+                    isActual: paystubEmail.IsActual,
                     employeeIds: employeeIds);
 
                 if (payslipBuilder.CheckIfEmployeeExists(employeeId.Value) == false)

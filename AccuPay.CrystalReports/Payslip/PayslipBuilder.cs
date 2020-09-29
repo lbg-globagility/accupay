@@ -81,7 +81,7 @@ namespace AccuPay.CrystalReports
             return _payslipDatatable.Rows.Count > 0 ? _payslipDatatable.Rows[0] : null;
         }
 
-        public PayslipBuilder CreateReportDocument(int payPeriodId, sbyte isActual = 0, int[] employeeIds = null)
+        public PayslipBuilder CreateReportDocument(int payPeriodId, bool isActual = false, int[] employeeIds = null)
         {
             // Use dapper or entity framework for procedure calls
             var payPeriod = _payPeriodRepository.GetById(payPeriodId);
@@ -136,7 +136,7 @@ namespace AccuPay.CrystalReports
             return rptdoc;
         }
 
-        private DataTable CreateGoldWingsDataSource(int organizationId, int payPeriodId, sbyte isActual, int[] employeeIds)
+        private DataTable CreateGoldWingsDataSource(int organizationId, int payPeriodId, bool isActual, int[] employeeIds)
         {
             var result = _dataService.GetGoldWingsData(organizationId, payPeriodId, isActual);
 
@@ -189,7 +189,7 @@ namespace AccuPay.CrystalReports
             return rptdoc;
         }
 
-        private DataTable CreateDefaultDataSource(int organizationId, int payPeriodId, sbyte isActual, int[] employeeIds = null)
+        private DataTable CreateDefaultDataSource(int organizationId, int payPeriodId, bool isActual, int[] employeeIds = null)
         {
             var result = _dataService.GetDefaultData(organizationId, payPeriodId, isActual);
 

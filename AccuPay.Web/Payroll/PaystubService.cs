@@ -28,9 +28,9 @@ namespace AccuPay.Web.Payroll
 
         public async Task<List<AdjustmentDto>> GetAdjustments(int paystubId)
         {
-            var loanTransactions = await repository.GetAdjustmentsAsync(paystubId);
+            var adjustments = await repository.GetAdjustmentsAsync(paystubId);
 
-            return loanTransactions.Select(x => AdjustmentDto.Convert(x)).ToList();
+            return adjustments.Select(x => AdjustmentDto.Convert(x)).ToList();
         }
 
         public async Task<List<LoanTransactionDto>> GetLoanTransactions(int paystubId)

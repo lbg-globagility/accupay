@@ -143,15 +143,28 @@ namespace AccuPay.Data.Repositories
             return paystub.AllowanceItems;
         }
 
+        public ICollection<Adjustment> GetAdjustments(int paystubId)
+        {
+            var paystub = BaseGetAdjustments(paystubId)
+                .FirstOrDefault();
+
+            return paystub.Adjustments;
+        }
+
         public async Task<ICollection<Adjustment>> GetAdjustmentsAsync(int paystubId)
         {
-            var paystub = await _context.Paystubs
-                .Include(x => x.Adjustments)
-                    .ThenInclude(x => x.Product)
-                .Where(x => x.RowID == paystubId)
+            var paystub = await BaseGetAdjustments(paystubId)
                 .FirstOrDefaultAsync();
 
             return paystub.Adjustments;
+        }
+
+        private IQueryable<Paystub> BaseGetAdjustments(int paystubId)
+        {
+            return _context.Paystubs
+                .Include(x => x.Adjustments)
+                    .ThenInclude(x => x.Product)
+                .Where(x => x.RowID == paystubId);
         }
 
         public async Task<ICollection<LoanTransaction>> GetLoanTransactionsAsync(int paystubId)
@@ -175,6 +188,15 @@ namespace AccuPay.Data.Repositories
                 .Include(x => x.Actual)
                 .Where(x => x.RowID == id)
                 .FirstOrDefaultAsync();
+        }
+
+        public Paystub GetByCompositeKey(EmployeeCompositeKey key)
+        {
+            var query = _context.Paystubs.AsNoTracking();
+
+            query = AddGetByEmployeeCompositeKeyQuery(key, query);
+
+            return query.FirstOrDefault();
         }
 
         public async Task<Paystub> GetByCompositeKeyAsync(EmployeeCompositeKey key)

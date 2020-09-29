@@ -17,19 +17,19 @@ namespace AccuPay.Data.Services
         }
 
         public async Task<IEnumerable<IAdjustment>> GetByMultipleEmployeeAndDatePeriodAsync(
-                                                                    int organizationId,
-                                                                    int[] employeeIds,
-                                                                    TimePeriod timePeriod)
+            int organizationId,
+            int[] employeeIds,
+            TimePeriod timePeriod)
         {
             var adjustmentQuery = GetBaseAdjustmentQuery(
-                                _context.Adjustments.Where(a => a.OrganizationID == organizationId),
-                                employeeIds,
-                                timePeriod);
+                _context.Adjustments.Where(a => a.OrganizationID == organizationId),
+                employeeIds,
+                timePeriod);
 
             var actualAdjustmentQuery = GetBaseAdjustmentQuery(
-                                _context.ActualAdjustments.Where(a => a.OrganizationID == organizationId),
-                                employeeIds,
-                                timePeriod);
+                _context.ActualAdjustments.Where(a => a.OrganizationID == organizationId),
+                employeeIds,
+                timePeriod);
 
             var adjustments = new List<IAdjustment>();
 
@@ -39,9 +39,10 @@ namespace AccuPay.Data.Services
             return adjustments;
         }
 
-        private IQueryable<IAdjustment> GetBaseAdjustmentQuery(IQueryable<IAdjustment> query,
-                                                                int[] employeeIds,
-                                                                TimePeriod timePeriod)
+        private IQueryable<IAdjustment> GetBaseAdjustmentQuery(
+            IQueryable<IAdjustment> query,
+            int[] employeeIds,
+            TimePeriod timePeriod)
         {
             return query.Include(p => p.Product).
                         Include(p => p.Paystub).

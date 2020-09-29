@@ -86,7 +86,7 @@ Public Class Form1
 
         Dim reportDocument = _payslipBuilder.
                 CreateReportDocument(currentPayPeriod.RowID.Value,
-                                     isActual:=0,
+                                     isActual:=False,
                                      employeeIds:=employeeIds).
                 GetReportDocument()
 
@@ -156,7 +156,7 @@ Public Class Form1
         Dim builder = CType(_payslipBuilder.
                 CreateReportDocument(
                     currentPayPeriod.RowID.Value,
-                    isActual:=0,
+                    isActual:=False,
                     employeeIds:=employeeIds).
                 GeneratePDF(saveFolderPath, fileName), PayslipBuilder)
 
@@ -181,7 +181,7 @@ Public Class Form1
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
         _payslipBuilder.CreateReportDocument(currentPayPeriod.RowID.Value,
-                                            isActual:=0,
+                                            isActual:=False,
                                             employeeIds:=employeeIds)
 
         Dim employee = _payslipBuilder.GetFirstEmployee()

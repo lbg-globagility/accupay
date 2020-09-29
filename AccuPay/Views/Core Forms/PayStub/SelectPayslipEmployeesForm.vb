@@ -60,6 +60,12 @@ Public Class SelectPayslipEmployeesForm
 
     Private Async Sub SelectPayslipEmployeesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        If _currentPayPeriod?.RowID Is Nothing Then
+
+            ToolStrip1.Enabled = False
+
+        End If
+
         EmployeeGridView.AutoGenerateColumns = False
 
         SendEmailToolStripDropDownButton.Visible = _isEmail
@@ -269,7 +275,7 @@ Public Class SelectPayslipEmployeesForm
 
                 Dim reportDocument = _payslipCreator.CreateReportDocument(
                     payPeriodId:=_currentPayPeriod.RowID.Value,
-                    isActual:=Convert.ToSByte(isActual),
+                    isActual:=isActual,
                     employeeIds:=employeeIds)
 
                 Dim crvwr As New CrysRepForm
