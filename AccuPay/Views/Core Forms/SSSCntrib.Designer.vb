@@ -22,7 +22,6 @@ Partial Class SSSCntrib
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SSSCntrib))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -34,12 +33,7 @@ Partial Class SSSCntrib
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSSSImport = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -72,7 +66,6 @@ Partial Class SSSCntrib
         Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.bgworkImportSSS = New System.ComponentModel.BackgroundWorker()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.dgvPaySSS, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -82,30 +75,12 @@ Partial Class SSSCntrib
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.ToolStripButton3, Me.ToolStripButton4, Me.tsbtnSSSImport, Me.ToolStripButton1, Me.ToolStripProgressBar1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton4})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1127, 25)
         Me.ToolStrip1.TabIndex = 4
         Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'ToolStripButton2
-        '
-        Me.ToolStripButton2.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(143, 22)
-        Me.ToolStripButton2.Text = "&Save SSS Contribution"
-        Me.ToolStripButton2.Visible = False
-        '
-        'ToolStripButton3
-        '
-        Me.ToolStripButton3.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(87, 22)
-        Me.ToolStripButton3.Text = "Delete Item"
-        Me.ToolStripButton3.Visible = False
         '
         'ToolStripButton4
         '
@@ -115,31 +90,6 @@ Partial Class SSSCntrib
         Me.ToolStripButton4.Name = "ToolStripButton4"
         Me.ToolStripButton4.Size = New System.Drawing.Size(56, 22)
         Me.ToolStripButton4.Text = "Close"
-        '
-        'tsbtnSSSImport
-        '
-        Me.tsbtnSSSImport.Image = CType(resources.GetObject("tsbtnSSSImport.Image"), System.Drawing.Image)
-        Me.tsbtnSSSImport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSSSImport.Name = "tsbtnSSSImport"
-        Me.tsbtnSSSImport.Size = New System.Drawing.Size(84, 22)
-        Me.tsbtnSSSImport.Text = "Import SSS"
-        Me.tsbtnSSSImport.Visible = False
-        '
-        'ToolStripButton1
-        '
-        Me.ToolStripButton1.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(63, 22)
-        Me.ToolStripButton1.Text = "Cancel"
-        Me.ToolStripButton1.Visible = False
-        '
-        'ToolStripProgressBar1
-        '
-        Me.ToolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripProgressBar1.Name = "ToolStripProgressBar1"
-        Me.ToolStripProgressBar1.Size = New System.Drawing.Size(100, 22)
-        Me.ToolStripProgressBar1.Visible = False
         '
         'lblforballoon
         '
@@ -407,11 +357,6 @@ Partial Class SSSCntrib
         Me.Panel1.Size = New System.Drawing.Size(1127, 378)
         Me.Panel1.TabIndex = 138
         '
-        'bgworkImportSSS
-        '
-        Me.bgworkImportSSS.WorkerReportsProgress = True
-        Me.bgworkImportSSS.WorkerSupportsCancellation = True
-        '
         'SSSCntrib
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -431,8 +376,6 @@ Partial Class SSSCntrib
 
     End Sub
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents ToolStripButton2 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripButton3 As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton4 As System.Windows.Forms.ToolStripButton
     Friend WithEvents lblforballoon As System.Windows.Forms.Label
     Friend WithEvents DataGridViewTextBoxColumn1 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -452,10 +395,6 @@ Partial Class SSSCntrib
     Friend WithEvents dgvPaySSS As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents tsbtnSSSImport As System.Windows.Forms.ToolStripButton
-    Friend WithEvents bgworkImportSSS As System.ComponentModel.BackgroundWorker
-    Friend WithEvents ToolStripProgressBar1 As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents Column1 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column14 As System.Windows.Forms.DataGridViewTextBoxColumn

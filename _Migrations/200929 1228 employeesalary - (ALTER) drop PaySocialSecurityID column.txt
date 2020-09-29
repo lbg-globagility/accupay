@@ -1,0 +1,3 @@
+ALTER TABLE `employeesalary`
+	DROP COLUMN IF EXISTS `PaySocialSecurityID`,
+	DROP FOREIGN KEY IF EXISTS `FK_EmployeeSalary_paysocialsecurity`;

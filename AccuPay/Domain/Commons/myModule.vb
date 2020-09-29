@@ -95,31 +95,6 @@ Module myModule
         Return conn
     End Function
 
-    Public Sub dbconn()
-
-        Static write As SByte = 0
-
-        Try
-
-            Dim n_DataBaseConnection As New DataBaseConnection
-
-            conn = New MySqlConnection
-
-            conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString
-
-            hasERR = 0
-        Catch ex As Exception
-
-            hasERR = 1
-
-            MsgBox(ex.Message & " ERR_NO 77-10 : dbconn", MsgBoxStyle.Critical, "Server Connection")
-        Finally
-            'REG_EDIT_DBCONNECTION()
-
-        End Try
-
-    End Sub
-
     Public Function getErrExcptn(ByVal ex As Exception, Optional FormNam As String = Nothing) As String
         Dim st As StackTrace = New StackTrace(ex, True)
         Dim sf As StackFrame = st.GetFrame(st.FrameCount - 1)
@@ -140,52 +115,6 @@ Module myModule
         'Return MsgBox(mystr, , "Unexpected Message")
     End Function
 
-    Sub filltable(ByVal datgrid As Object,
-                         Optional _quer As String = Nothing,
-                         Optional Params As Array = Nothing,
-                         Optional CommandType As Object = Nothing)
-        'Optional ParamValue As Object = Nothing, _
-        Dim publictable As New DataTable
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-            conn.Open()
-            cmd = New MySqlCommand
-            cmd.Connection = conn
-
-            cmd.CommandText = _quer
-
-            Select Case Val(CommandType)
-                Case 0
-                    cmd.CommandType = CommandType.Text
-                Case 1
-                    'cmd = New MySqlCommand(_quer, conn)
-                    cmd.Parameters.Clear()
-                    cmd.CommandType = CommandType.StoredProcedure
-                    '.Parameters.AddWithValue(ParamName, ParamValue)
-                    For indx = 0 To Params.GetUpperBound(0) - 1
-                        Dim paramName As String = Params(indx, 0)
-                        Dim paramVal = Params(indx, 1)
-                        cmd.Parameters.AddWithValue(paramName, paramVal)
-
-                    Next
-            End Select
-
-            da.SelectCommand = cmd
-            da.Fill(publictable)
-            datgrid.DataSource = publictable
-
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-            MsgBox(ex.Message & " ERR_NO 77-10 : filltable", MsgBoxStyle.Critical, "Unexpected Message")
-        Finally
-            conn.Close()
-            da.Dispose()
-            cmd.Dispose()
-        End Try
-
-    End Sub
-
     Function retAsDatTbl(ByVal _quer As String,
                          Optional dgv As DataGridView = Nothing) As Object
 
@@ -194,79 +123,6 @@ Module myModule
         Return n_SQLQueryToDatatable.ResultTable
 
     End Function
-
-    Sub dgvRowAdder(ByVal sqlcmd As String,
-                    ByVal dgvlistcatcher As DataGridView,
-                    Optional xtraCatcher As AutoCompleteStringCollection = Nothing,
-                    Optional asStringYes As SByte = 0)
-        Dim dr As MySqlDataReader
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-            conn.Open()
-            cmd = New MySqlCommand
-            With cmd
-                .Connection = conn
-                .CommandType = CommandType.Text
-                .CommandText = sqlcmd
-                dr = .ExecuteReader()
-            End With
-
-            dgvlistcatcher.Rows.Clear()
-
-            If xtraCatcher Is Nothing Then
-                If asStringYes = 0 Then
-                    Do While dr.Read
-                        Dim r = dgvlistcatcher.Rows.Add()
-                        For c = 0 To dr.FieldCount - 1
-                            Dim dr_val = If(IsDBNull(dr(c)), "", dr.GetString(c))
-                            dgvlistcatcher.Rows(r).Cells(c).Value = dr_val
-                        Next
-                    Loop
-                Else
-                    Do While dr.Read
-                        Dim r = dgvlistcatcher.Rows.Add()
-                        For c = 0 To dr.FieldCount - 1
-                            dgvlistcatcher.Rows(r).Cells(c).Value = dr(c)
-                        Next
-                    Loop
-                End If
-            Else
-                If asStringYes = 0 Then
-                    Do While dr.Read
-                        Dim r = dgvlistcatcher.Rows.Add()
-                        For c = 0 To dr.FieldCount - 1
-                            Dim dr_val = If(IsDBNull(dr(c)), "", dr.GetString(c))
-                            dgvlistcatcher.Rows(r).Cells(c).Value = dr_val
-
-                            If dgvlistcatcher.Rows(r).Cells(c).Visible Then
-                                xtraCatcher.Add(dr_val) 'dgvlistcatcher.Rows(r).Cells(c).ColumnIndex.ToString & "@" &
-                            End If
-                        Next
-                    Loop
-                Else
-                    Do While dr.Read
-                        Dim r = dgvlistcatcher.Rows.Add()
-                        For c = 0 To dr.FieldCount - 1
-                            dgvlistcatcher.Rows(r).Cells(c).Value = dr(c)
-
-                            If dgvlistcatcher.Rows(r).Cells(c).Visible Then
-                                xtraCatcher.Add(dr(c)) 'dgvlistcatcher.Rows(r).Cells(c).ColumnIndex.ToString & "@" &
-                            End If
-                        Next
-                    Loop
-                End If
-            End If
-
-            dr.Close()
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-            MsgBox(ex.Message & " ERR_NO 77-10 : dgvRowAdder", MsgBoxStyle.Critical, "Unexpected Message")
-        Finally
-            conn.Close()
-            cmd.Dispose()
-        End Try
-    End Sub
 
     Public hasERR As SByte
 
@@ -277,45 +133,6 @@ Module myModule
 
         Return n_ExecuteQuery.Result
 
-    End Function
-
-    Public Function EXECQUERByte(ByVal cmdsql As String, Optional makeItByte As Byte = Nothing) As Object
-        Dim theObj As New Object
-        Dim dr As MySqlDataReader
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-            Try
-                conn.Open()
-                hasERR = 0
-            Catch ex As Exception
-                hasERR = 1
-                MsgBox(ex.Message)
-            End Try
-            cmd = New MySqlCommand
-            With cmd
-                .CommandType = CommandType.Text
-                .Connection = conn
-                .CommandText = cmdsql
-                dr = .ExecuteReader()
-
-            End With
-            If makeItByte = Nothing Then
-                theObj = If(dr.Read = True, dr(0), Nothing)
-            Else
-
-            End If
-            dr.Close()
-            conn.Close()
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-            MsgBox(ex.Message & " ERR_NO : EXECQUERByte", , "Unexpected Message")
-        Finally
-            conn.Close()
-            cmd.Dispose()
-        End Try
-
-        Return theObj
     End Function
 
     Sub enlistTheLists(ByVal sqlcmd As String, ByVal listcatcher As AutoCompleteStringCollection, Optional isClear As SByte = Nothing)
@@ -417,48 +234,6 @@ Module myModule
         End If
     End Function
 
-    Sub rptParam(ByVal sender As Object, ByVal param As String, ByVal rptdoc As ReportDocument)
-        Dim crParamFldDeftns As ParameterFieldDefinitions
-        Dim crParamFldDeftn As ParameterFieldDefinition
-        Dim crParamrVals As New ParameterValues
-        Dim crParamDiscVal As New ParameterDiscreteValue
-        If TypeOf sender Is TextBox Or TypeOf sender Is ComboBox Or TypeOf sender Is Label Then
-            crParamDiscVal.Value = sender.Text
-            crParamFldDeftns = rptdoc.DataDefinition.ParameterFields
-            crParamFldDeftn = crParamFldDeftns.Item(param)
-            crParamrVals.Add(crParamDiscVal)
-            crParamFldDeftn.ApplyCurrentValues(crParamrVals)
-        ElseIf TypeOf sender Is DateTimePicker Then
-            crParamDiscVal.Value = Format(sender.Value, "MMM-dd-yyyy")
-            crParamFldDeftns = rptdoc.DataDefinition.ParameterFields
-            crParamFldDeftn = crParamFldDeftns.Item(param)
-            crParamrVals.Add(crParamDiscVal)
-            crParamFldDeftn.ApplyCurrentValues(crParamrVals)
-        ElseIf TypeOf sender Is String Then
-            crParamDiscVal.Value = sender
-            crParamFldDeftns = rptdoc.DataDefinition.ParameterFields
-            crParamFldDeftn = crParamFldDeftns.Item(param)
-            crParamrVals.Add(crParamDiscVal)
-            crParamFldDeftn.ApplyCurrentValues(crParamrVals)
-        End If
-    End Sub
-
-    Sub rptDefntn(obj As Object,
-                  Optional nemofRptDefntn As String = Nothing,
-                  Optional rptdocu As ReportDocument = Nothing)
-
-        Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject =
-        rptdocu.ReportDefinition.ReportObjects.Item(nemofRptDefntn)
-
-        If TypeOf obj Is TextBox Or TypeOf obj Is ComboBox Or TypeOf obj Is Label Then
-            objText.Text = obj.Text
-        ElseIf TypeOf obj Is DateTimePicker Then
-            objText.Text = Format(obj.Value, "MMM-dd-yyyy")
-        ElseIf TypeOf obj Is String Then
-            objText.Text = obj
-        End If
-    End Sub
-
     Public Function convertFileToByte(ByVal filePath As String) As Byte()
         Dim fs As FileStream
         fs = New FileStream(filePath, FileMode.Open, FileAccess.Read)
@@ -469,15 +244,6 @@ Module myModule
         Return fileByte
 
     End Function
-
-    Sub qty_KeyPress(ByVal sender As Object, ByVal e As KeyPressEventArgs)
-        Dim txtlngth As New TextBox
-        txtlngth = DirectCast(sender, TextBox)
-        txtlngth.MaxLength = 11
-        e.Handled = TrapNumKey(Asc(e.KeyChar))
-
-        AddHandler txtlngth.TextChanged, AddressOf qty_TextChanged
-    End Sub
 
     Sub qty_TextChanged(sender As Object, e As EventArgs)
         Dim txtlngth As New TextBox
@@ -495,13 +261,6 @@ Module myModule
         Finally
             RemoveHandler txtlngth.TextChanged, AddressOf qty_TextChanged
         End Try
-    End Sub
-
-    Sub rmks_KeyPress(ByVal sender As Object, ByVal e As KeyPressEventArgs)
-        Dim txtlngth As New TextBox
-        txtlngth = DirectCast(sender, TextBox)
-        txtlngth.MaxLength = 2000
-        e.Handled = False 'TrapCharKey(Asc(e.KeyChar))
     End Sub
 
     Sub TabControlColor(ByVal TabCntrl As TabControl,
@@ -725,42 +484,6 @@ Module myModule
         End Try
     End Sub
 
-    Sub myAutoChk(ByVal dgv As DataGridView, ByVal colName As String, ByVal chkbx As CheckBox)
-        Try
-            Dim rect As Rectangle = dgv.GetCellDisplayRectangle(dgv.Rows(0).Cells(colName).ColumnIndex, dgv.Rows(0).Cells(colName).RowIndex, True)
-            chkbx.Parent = dgv
-            chkbx.Location = New Point(rect.Right - chkbx.Width, rect.Top - ((dgv.ColumnHeadersHeight / 2) + 5))
-            chkbx.Visible = True
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-            MsgBox(ex.Message & " ERR_NO 77-10 : myAutoChk")
-        End Try
-    End Sub
-
-    Sub previewImage(ByVal colName As String, ByVal dgv As DataGridView, ByVal pb As PictureBox)
-        Try
-            For Each r As DataRow In prodImage.Rows
-                If dgv.CurrentRow.IsNewRow = False Then
-                    If r(0).ToString = Trim(dgv.CurrentRow.Cells(colName).Value) Then
-                        pb.Image = ConvertByteToImage(DirectCast(r(1), Byte()))
-                        pb.SizeMode = PictureBoxSizeMode.StretchImage
-                        Exit For
-                    Else
-                        pb.Image = Nothing
-                    End If
-                Else
-                    pb.Image = Nothing
-                    Exit For
-                End If
-            Next
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-            'MsgBox(getErrExcptn(ex) & " myModule")
-        End Try
-    End Sub
-
     Public Function ConvByteToImage(ByVal ImgByte As Byte()) As Image
         Try
             Dim stream As System.IO.MemoryStream
@@ -773,28 +496,6 @@ Module myModule
             hasERR = 1
             Return Nothing
         End Try
-    End Function
-
-    Public tsb_shmabut As New ToolStripButton
-
-    Public Function AdjustComboBoxWidth(ByVal sender As Object, ByVal e As EventArgs)
-        Dim senderComboBox = DirectCast(sender, ComboBox)
-        Dim width As Integer = senderComboBox.DropDownWidth
-        Dim g As Graphics = senderComboBox.CreateGraphics()
-        Dim font As Font = senderComboBox.Font
-
-        Dim vertScrollBarWidth As Integer = If((senderComboBox.Items.Count > senderComboBox.MaxDropDownItems), SystemInformation.VerticalScrollBarWidth, 0)
-
-        Dim newWidth As Integer
-        For Each s As String In DirectCast(sender, ComboBox).Items
-            newWidth = CInt(g.MeasureString(s, font).Width) + vertScrollBarWidth
-            If width < newWidth Then
-                width = newWidth
-            End If
-        Next
-
-        senderComboBox.DropDownWidth = width
-        Return False
     End Function
 
     Sub clearObjControl(ByVal obj As Object)
@@ -826,44 +527,6 @@ Module myModule
 
     End Sub
 
-    Function INS_paysocialsecurity(Optional RangeFromAmount As Object = Nothing,
-                Optional RangeToAmount As Object = Nothing,
-                Optional MonthlySalaryCredit As Object = Nothing,
-                Optional EmployeeContributionAmount As Object = Nothing,
-                Optional EmployerContributionAmount As Object = Nothing,
-                Optional EmployeeECAmount As Object = Nothing) As String
-
-        'RangeFromAmount = If(RangeFromAmount = Nothing, "NULL", RangeFromAmount)
-        'RangeToAmount = If(RangeToAmount = Nothing, "NULL", RangeToAmount)
-        MonthlySalaryCredit = If(MonthlySalaryCredit = Nothing, "NULL", MonthlySalaryCredit)
-        EmployeeContributionAmount = If(EmployeeContributionAmount = Nothing, "NULL", EmployeeContributionAmount)
-        EmployerContributionAmount = If(EmployerContributionAmount = Nothing, "NULL", EmployerContributionAmount)
-        EmployeeECAmount = If(EmployeeECAmount = Nothing, "NULL", EmployeeECAmount)
-
-        Dim getpaysocialsecurity = EXECQUER("INSERT INTO paysocialsecurity (CreatedBy,LastUpdBy,RangeFromAmount,RangeToAmount,MonthlySalaryCredit,EmployeeContributionAmount," &
-        "EmployerContributionAmount,EmployeeECAmount) VALUES (" &
-        "" & z_User &
-        "," & z_User &
-        "," & RangeFromAmount &
-        "," & RangeToAmount &
-        "," & MonthlySalaryCredit &
-        "," & EmployeeContributionAmount &
-        "," & EmployerContributionAmount &
-        "," & EmployeeECAmount &
-        ");") ' & _
-        '"SELECT COALESCE(RowID,'') FROM paysocialsecurity " & _
-        '"WHERE Createdby=" & 1 & _
-        '" AND LastUpdBy=" & 1 & _
-        '" AND RangeFromAmount=" & RangeFromAmount & _
-        '" AND RangeToAmount=" & RangeToAmount & _
-        '" AND MonthlySalaryCredit=" & MonthlySalaryCredit & _
-        '" AND EmployeeContributionAmount=" & EmployeeContributionAmount & _
-        '" AND EmployerContributionAmount=" & EmployerContributionAmount & _
-        '" AND EmployeeECAmount=" & EmployeeECAmount & ";"
-        Return getpaysocialsecurity
-
-    End Function
-
     Function INS_payphilhealth(Optional SalaryBracket As Object = Nothing,
                 Optional SalaryRangeFrom As Object = Nothing,
                 Optional SalaryRangeTo As Object = Nothing,
@@ -880,7 +543,7 @@ Module myModule
         EmployeeShare = If(EmployeeShare = Nothing, "NULL", EmployeeShare)
         EmployerShare = If(EmployerShare = Nothing, "NULL", EmployerShare)
         'TotalMonthlyPremium,
-        Dim getpaysocialsecurity = EXECQUER("INSERT INTO payphilhealth (CreatedBy,LastUpdBy,SalaryBracket,SalaryRangeFrom,SalaryRangeTo,SalaryBase," &
+        Dim getphilhealth = EXECQUER("INSERT INTO payphilhealth (CreatedBy,LastUpdBy,SalaryBracket,SalaryRangeFrom,SalaryRangeTo,SalaryBase," &
         "EmployeeShare,EmployerShare) VALUES (" &
         "" & z_User &
         "," & z_User &
@@ -901,7 +564,7 @@ Module myModule
         " AND EmployerShare=" & EmployerShare &
         " AND CreatedBy=" & z_User)
 
-        Return getpaysocialsecurity
+        Return getphilhealth
     End Function
 
     Public Function INS_employee(Optional EmployeeID As Object = Nothing, Optional EmploymentStatus As Object = Nothing, Optional Gender As Object = Nothing,
@@ -930,7 +593,7 @@ Module myModule
         MaritalStatus = If(MaritalStatus = Nothing, "NULL", "'" & MaritalStatus & "'")
         EmployeeType = If(EmployeeType = Nothing, "NULL", "'" & EmployeeType & "'")
 
-        Dim getpaysocialsecurity = EXECQUER("INSERT INTO employee (CreatedBy,LastUpdBy,OrganizationID,EmployeeID,EmploymentStatus,Gender,JobTitle," &
+        Dim getemployee = EXECQUER("INSERT INTO employee (CreatedBy,LastUpdBy,OrganizationID,EmployeeID,EmploymentStatus,Gender,JobTitle," &
         "PositionID,Salutation,FirstName,MiddleName,LastName,Nickname,Birthdate,TINNo,SSSNo,HDMFNo,PhilHealthNo,EmailAddress,WorkPhone,HomePhone,MobilePhone,HomeAddress," &
         "PayFrequencyID,UndertimeOverride,OvertimeOverride,Surname,MaritalStatus,NoOfDependents,LeavePerPayPeriod,EmployeeType) VALUES (" &
         "" & z_User &
@@ -1000,7 +663,7 @@ Module myModule
         " AND LeavePerPayPeriod=" & LeavePerPayPeriod &
         " AND EmployeeType" & If(EmployeeType = "NULL", " IS NULL", "=" & EmployeeType) & ";")
 
-        Return getpaysocialsecurity
+        Return getemployee
     End Function
 
     Function INS_employeedepen(Optional Salutation As Object = Nothing, Optional FirstName As Object = Nothing,
