@@ -29,9 +29,10 @@ namespace AccuPay.Data.Services.Imports.Overtimes
 
         private void ApplyData(OvertimeRowRecord parsedRecord)
         {
+            EmployeeNo = parsedRecord.EmployeeNo;
+
             if (!_noEmployee)
             {
-                EmployeeNo = parsedRecord.EmployeeNo;
                 EmployeeID = _employee.RowID;
                 FullName = _employee.FullNameLastNameFirst;
             }

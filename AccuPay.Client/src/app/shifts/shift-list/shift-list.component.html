@@ -76,10 +76,16 @@
       MORE
     </button>
     <mat-menu #moreMenu="matMenu">
-      <button mat-menu-item (click)="uploader.click()">Import</button>
       <button mat-menu-item (click)="downloadTemplate()">
         Download Template
       </button>
+      <button mat-menu-item (click)="uploader.click()">Import</button>
+      <input
+        hidden
+        type="file"
+        #uploader
+        (change)="onImport($event.target.files)"
+      />
     </mat-menu>
 
     <input
