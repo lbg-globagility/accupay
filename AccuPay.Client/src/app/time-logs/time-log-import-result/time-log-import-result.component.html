@@ -113,7 +113,7 @@
 
 <div mat-card-actions align="end">
   <button
-    mat-button
+    mat-raised-button
     color="primary"
     (click)="onSave()"
     [disabled]="isSaving"
@@ -122,5 +122,5 @@
     {{ isSaving ? "SAVE..." : "SAVE" }}
     <app-button-spinner [active]="isSaving"></app-button-spinner>
   </button>
-  <button mat-button [mat-dialog-close]="false">CANCEL</button>
+  <button mat-button color="primary" [mat-dialog-close]="false">CANCEL</button>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TimeLogService } from 'src/app/time-logs/time-log.service';
 import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
@@ -41,6 +41,8 @@ interface EmployeeTimeLogsModel {
   },
 })
 export class TimeLogsComponent implements OnInit {
+  @ViewChild('uploader') fileInput: ElementRef;
+
   readonly PermissionTypes = PermissionTypes;
 
   displayedColumns = ['employee'];
@@ -150,8 +152,12 @@ export class TimeLogsComponent implements OnInit {
             this.loadTimeLogs();
             this.displaySuccess();
           });
+        this.clearFile();
       },
-      (err) => this.errorHandler.badRequest(err, 'Failed to import time logs.')
+      (err) => {
+        this.errorHandler.badRequest(err, 'Failed to import time logs.');
+        this.clearFile();
+      }
     );
   }
 
@@ -221,5 +227,9 @@ export class TimeLogsComponent implements OnInit {
       timer: 3000,
       showConfirmButton: false,
     });
+  }
+
+  clearFile() {
+    this.fileInput.nativeElement.value = '';
   }
 }
