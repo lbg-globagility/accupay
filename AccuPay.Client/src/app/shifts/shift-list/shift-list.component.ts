@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { ShiftService } from '../shift.service';
@@ -16,6 +16,9 @@ import { ShiftsByEmployeePageOptions } from '../shared/shifts-by-employee-page-o
 import { EditShiftComponent } from '../edit-shift/edit-shift.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PermissionTypes } from 'src/app/core/auth';
+import { PostImportParserOutputDialogComponent } from 'src/app/shared/import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
+import { ShiftImportParserOutput } from '../shared/shift-import-parser-output';
+import { ShiftImportModel } from '../shared/shift-import-model';
 
 interface DateHeader {
   title: string;
@@ -40,6 +43,8 @@ interface EmployeeDutySchedulesModel {
   },
 })
 export class ShiftListComponent implements OnInit {
+  @ViewChild('uploader') fileInput: ElementRef;
+
   readonly PermissionTypes = PermissionTypes;
 
   displayedColumns = ['employee'];
@@ -138,11 +143,39 @@ export class ShiftListComponent implements OnInit {
     const file = files[0];
 
     this.shiftService.import(file).subscribe(
-      () => {
-        this.getShiftList();
-        this.displaySuccess();
+      (outputParse) => {
+        const model: ShiftImportModel = {
+          employeeNo: '',
+          fullName: '',
+          date: new Date(),
+          timeFromDisplay: new Date(),
+          timeToDisplay: new Date(),
+          breakFromDisplay: new Date(),
+          breakLength: 0,
+          isRestDayText: false,
+          remarks: '',
+        };
+
+        this.dialog
+          .open(PostImportParserOutputDialogComponent, {
+            data: {
+              columnHeaders: new ShiftImportParserOutput().columnHeaders,
+              invalidRecords: outputParse.invalidRecords,
+              validRecords: outputParse.validRecords,
+              propertyNames: Object.getOwnPropertyNames(model),
+            },
+          })
+          .afterClosed()
+          .subscribe(() => {
+            this.getShiftList();
+            this.displaySuccess();
+            this.clearFile();
+          });
       },
-      (err) => this.errorHandler.badRequest(err, 'Failed to import shift.')
+      (err) => {
+        this.errorHandler.badRequest(err, 'Failed to import shift.');
+        this.clearFile();
+      }
     );
   }
 
@@ -228,5 +261,9 @@ export class ShiftListComponent implements OnInit {
       .finally(() => {
         this.isDownloadingTemplate = false;
       });
+  }
+
+  clearFile() {
+    this.fileInput.nativeElement.value = '';
   }
 }

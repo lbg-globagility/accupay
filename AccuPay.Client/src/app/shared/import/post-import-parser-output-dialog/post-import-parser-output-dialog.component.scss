@@ -1,3 +1,10 @@
+.container {
+  max-height: 400px;
+  width: 550px;
+  max-width: 100%;
+  overflow: auto;
+}
+
 table {
   width: 100%;
   table-layout: fixed;
@@ -11,6 +18,10 @@ td {
   white-space: nowrap;
 }
 
-.card-content {
+.title {
+  padding-bottom: 8px;
+}
+
+.content {
   padding-bottom: 8px;
 }
