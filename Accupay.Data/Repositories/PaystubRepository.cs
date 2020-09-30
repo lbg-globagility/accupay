@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class PaystubRepository
+    public class PaystubRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -67,7 +67,7 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
+        public async Task UpdateManyThirteenthMonthPaysAsync(ICollection<ThirteenthMonthPay> thirteenthMonthPays)
         {
             foreach (var thirteenthMonthPay in thirteenthMonthPays)
             {
@@ -75,6 +75,156 @@ namespace AccuPay.Data.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        #region UpdateAdjustments
+
+        public async Task UpdateAdjustmentsAsync<T>(int paystubId, ICollection<T> allAdjustments) where T : IAdjustment
+        {
+            Paystub paystub = await GetPaystubWithAdjustments(paystubId);
+
+            decimal originalDeclaredAdjustments = paystub.Adjustments.Sum(x => x.Amount);
+            decimal originalActualAdjustments = paystub.ActualAdjustments.Sum(x => x.Amount);
+            decimal originalTotalAdjustments = originalDeclaredAdjustments + originalActualAdjustments;
+
+            List<T> originalAdjustments = GetOriginalAdjustments<T>(paystub);
+
+            List<T> modifiedAdjustments = GetModifiedAdjustments(allAdjustments);
+
+            AddContextState(paystub, originalAdjustments, modifiedAdjustments);
+
+            // Save changes
+            decimal updatedTotalAdjustments = paystub.Adjustments.Sum(x => x.Amount) + paystub.ActualAdjustments.Sum(x => x.Amount);
+
+            if (typeof(Adjustment).IsAssignableFrom(typeof(T)))
+            {
+                paystub.TotalAdjustments = paystub.Adjustments.Sum(x => x.Amount);
+                paystub.NetPay = (paystub.NetPay - originalDeclaredAdjustments) + paystub.TotalAdjustments;
+            }
+
+            paystub.Actual.TotalAdjustments = updatedTotalAdjustments;
+            paystub.Actual.NetPay = (paystub.Actual.NetPay - originalTotalAdjustments) + paystub.Actual.TotalAdjustments;
+
+            _context.Entry(paystub).State = EntityState.Modified;
+            _context.Entry(paystub.Actual).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+        }
+
+        private static List<T> GetOriginalAdjustments<T>(Paystub paystub) where T : IAdjustment
+        {
+            var originalAdjustments = new List<T>();
+            if (typeof(ActualAdjustment).IsAssignableFrom(typeof(T)))
+            {
+                paystub.ActualAdjustments
+                    .Where(x => x.IsActual)
+                    .ToList()
+                    .ForEach((a) =>
+                    {
+                        originalAdjustments.Add((T)(object)a);
+                    });
+            }
+            else
+            {
+                paystub.Adjustments
+                    .Where(x => !x.IsActual)
+                    .ToList()
+                    .ForEach((a) =>
+                    {
+                        originalAdjustments.Add((T)(object)a);
+                    });
+            }
+
+            return originalAdjustments;
+        }
+
+        private static List<T> GetModifiedAdjustments<T>(ICollection<T> allAdjustments) where T : IAdjustment
+        {
+            var modifiedAdjustments = new List<T>();
+
+            allAdjustments
+                .Where(x =>
+                {
+                    if (typeof(ActualAdjustment).IsAssignableFrom(typeof(T)))
+                    {
+                        return x.IsActual;
+                    }
+                    else
+                    {
+                        return !x.IsActual;
+                    }
+                })
+                .ToList()
+                .ForEach((a) =>
+                {
+                    modifiedAdjustments.Add(a);
+                });
+            return modifiedAdjustments;
+        }
+
+        private void AddContextState<T>(Paystub paystub, List<T> originalAdjustments, List<T> modifiedAdjustments) where T : IAdjustment
+        {
+            List<T> newAdjustments = modifiedAdjustments.Where(x => IsNewEntity(x.RowID)).ToList();
+            List<T> updatedAdjustments = modifiedAdjustments.Where(x => !IsNewEntity(x.RowID)).ToList();
+
+            foreach (T adjustment in originalAdjustments)
+            {
+                T updatedAdjustment = updatedAdjustments
+                    .Where(x => x.RowID == adjustment.RowID)
+                    .FirstOrDefault();
+
+                if (updatedAdjustment == null)
+                {
+                    // removing adjustment from paystub.Adjustments is not needed for entity tracking
+                    // but since we use the sum of paystub.Adjustments, we need to update the collection
+                    if (typeof(Adjustment).IsAssignableFrom(typeof(T)))
+                    {
+                        paystub.Adjustments.Remove((Adjustment)(object)adjustment);
+                    }
+                    else
+                    {
+                        paystub.ActualAdjustments.Remove((ActualAdjustment)(object)adjustment);
+                    }
+                    _context.Entry(adjustment).State = EntityState.Deleted;
+                }
+                else
+                {
+                    adjustment.Amount = updatedAdjustment.Amount;
+                    adjustment.ProductID = updatedAdjustment.ProductID;
+                    adjustment.Comment = updatedAdjustment.Comment;
+
+                    _context.Entry(adjustment).State = EntityState.Modified;
+                }
+            }
+
+            foreach (var newAdjustment in newAdjustments)
+            {
+                // adding adjustment from paystub.Adjustments is not needed for entity tracking
+                // but since we use the sum of paystub.Adjustments, we need to update the collection
+                if (typeof(Adjustment).IsAssignableFrom(typeof(T)))
+                {
+                    paystub.Adjustments.Add((Adjustment)(object)newAdjustment);
+                }
+                else
+                {
+                    paystub.ActualAdjustments.Add((ActualAdjustment)(object)newAdjustment);
+                }
+
+                _context.Entry(newAdjustment).State = EntityState.Added;
+            }
+        }
+
+        #endregion UpdateAdjustments
+
+        private async Task<Paystub> GetPaystubWithAdjustments(int paystubId)
+        {
+            return await _context.Paystubs
+                .AsNoTracking()
+                .Include(x => x.Actual)
+                .Include(x => x.Adjustments)
+                .Include(x => x.ActualAdjustments)
+                .Where(x => x.RowID == paystubId)
+                .FirstOrDefaultAsync();
         }
 
         private async Task DeleteAsyncWithContext(int id, int userId)
@@ -162,9 +312,22 @@ namespace AccuPay.Data.Repositories
         private IQueryable<Paystub> BaseGetAdjustments(int paystubId)
         {
             return _context.Paystubs
+                .AsNoTracking()
                 .Include(x => x.Adjustments)
                     .ThenInclude(x => x.Product)
                 .Where(x => x.RowID == paystubId);
+        }
+
+        public ICollection<ActualAdjustment> GetActualAdjustments(int paystubId)
+        {
+            var paystub = _context.Paystubs
+                .AsNoTracking()
+                .Include(x => x.ActualAdjustments)
+                    .ThenInclude(x => x.Product)
+                .Where(x => x.RowID == paystubId)
+                .FirstOrDefault();
+
+            return paystub.ActualAdjustments;
         }
 
         public async Task<ICollection<LoanTransaction>> GetLoanTransactionsAsync(int paystubId)

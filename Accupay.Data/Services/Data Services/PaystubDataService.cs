@@ -107,7 +107,7 @@ namespace AccuPay.Data.Services
                 payPeriodId: payPeriodId);
         }
 
-        public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
+        public async Task UpdateManyThirteenthMonthPaysAsync(ICollection<ThirteenthMonthPay> thirteenthMonthPays)
         {
             var paystubIds = thirteenthMonthPays
                 .Where(x => x.RowID.HasValue)
@@ -122,6 +122,23 @@ namespace AccuPay.Data.Services
             // validate payperiod
 
             await _paystubRepository.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays);
+        }
+
+        public async Task UpdateAdjustmentsAsync<T>(int paystubId, ICollection<T> allAdjustments, int modifiedByUserId) where T : IAdjustment
+        {
+            foreach (var adjustment in allAdjustments)
+            {
+                if (adjustment.RowID == null || adjustment.RowID <= 0)
+                {
+                    adjustment.CreatedBy = modifiedByUserId;
+                }
+                else
+                {
+                    adjustment.CreatedBy = modifiedByUserId;
+                }
+            }
+
+            await _paystubRepository.UpdateAdjustmentsAsync(paystubId, allAdjustments);
         }
 
         private async Task ValidateIfPayPeriodIsOpenAsync(int organizationId, int? payPeriodId)

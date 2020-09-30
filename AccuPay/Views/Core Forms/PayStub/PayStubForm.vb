@@ -6,6 +6,7 @@ Imports AccuPay.CrystalReports
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Repositories.PaystubRepository
@@ -16,7 +17,6 @@ Imports AccuPay.Utilities
 Imports Castle.Components.DictionaryAdapter
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
-Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -50,9 +50,6 @@ Public Class PayStubForm
     Dim selectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
     Dim unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
-
-    Dim dtJosh As DataTable
-    Dim da As New MySqlDataAdapter()
 
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
 
@@ -147,7 +144,9 @@ Public Class PayStubForm
     End Sub
 
     Private Async Function PopulateAdjustmentTypeComboBox() As Task
-        Dim items = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
+        Dim items = (Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)).
+            OrderBy(Function(a) a.PartNo).
+            ToList()
 
         cboProducts.DataSource = items
     End Function
@@ -431,7 +430,7 @@ Public Class PayStubForm
     Private Sub EnableAdjustmentsInput(Optional enable As Boolean = True)
         dgvAdjustments.Enabled = enable
         btnSaveAdjustments.Visible = enable
-        btndiscardchanges.Visible = enable
+        btnDiscardChanges.Visible = enable
     End Sub
 
     Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
@@ -490,21 +489,14 @@ Public Class PayStubForm
     End Sub
 
     Private Sub UpdateEmployeeDetails()
-        btnSaveAdjustments.Enabled = False
 
-        Dim employeetype = ""
-
-        Static sameEmpID As String = 0
+        EnableAdjustmentButtons(False)
+        ResetNumberTextBox()
 
         dgvemployees.Tag = Nothing
 
-        ResetNumberTextBox()
-
         If dgvemployees.RowCount > 0 Then 'And dgvemployees.CurrentRow IsNot Nothing
             With dgvemployees.CurrentRow
-
-                employeetype = Trim(.Cells("EmployeeType").Value)
-                sameEmpID = .Cells("RowID").Value
 
                 dgvemployees.Tag = .Cells("RowID").Value
 
@@ -599,8 +591,6 @@ Public Class PayStubForm
 
             End With
         Else
-            sameEmpID = -1
-
             currentEmployeeNumber = Nothing
 
             pbEmpPicChk.Image = Nothing
@@ -688,9 +678,10 @@ Public Class PayStubForm
         Dim loadTask = Task.Factory.StartNew(
             Function()
 
-                Dim resourcesTask = resources.Load(payPeriodId:=payPeriodId,
-                                                   organizationId:=z_OrganizationID,
-                                                   userId:=z_User)
+                Dim resourcesTask = resources.Load(
+                    payPeriodId:=payPeriodId,
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User)
 
                 resourcesTask.Wait()
 
@@ -776,10 +767,10 @@ Public Class PayStubForm
             )
 
             generationTask.ContinueWith(
-                    AddressOf GeneratingPayrollOnSuccess,
-                    CancellationToken.None,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext
+                AddressOf GeneratingPayrollOnSuccess,
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnRanToCompletion,
+                TaskScheduler.FromCurrentSynchronizationContext
             )
 
             generationTask.ContinueWith(
@@ -825,12 +816,11 @@ Public Class PayStubForm
     Private Async Sub GeneratingPayrollOnSuccess()
 
         Dim dialog = New PayrollResultDialog(_results.ToList()) With {
-                .Owner = Me
-            }
+            .Owner = Me
+        }
+
         dialog.ShowDialog()
-
         ProgressTimer.Stop()
-
         RefreshForm()
 
         Await TimeEntrySummaryForm.LoadPayPeriods()
@@ -986,95 +976,111 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub dgvAdjustments_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellContentClick
+    Private Async Sub dgvAdjustments_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellContentClick
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 OrElse dgvAdjustments.CurrentRow Is Nothing Then Return
 
+        Dim adjustments = CType(dgvAdjustments.DataSource, BindingSource)
         Dim currentAdjustment = CType(dgvAdjustments.CurrentRow.DataBoundItem, IAdjustment)
 
-        If currentAdjustment Is Nothing Then
+        If currentAdjustment Is Nothing Then Return
 
-            MessageBoxHelper.Warning("No adjustment selected.")
-            Return
+        If e.ColumnIndex = DeleteAdjustmentColumn.Index Then
 
-        End If
+            Dim adjustmentTypes = CType(cboProducts.DataSource, List(Of Product))
+            Dim adjustmentType = adjustmentTypes.FirstOrDefault(Function(a) a.RowID = currentAdjustment.ProductID)
+            Dim adjustmentName = adjustmentType?.Name
 
-        If TypeOf dgvAdjustments.Columns(e.ColumnIndex) Is DataGridViewLinkColumn Then
-            Dim n_ExecuteQuery As New ExecuteQuery("SELECT PartNo FROM product WHERE RowID='" & dgvAdjustments.Item("cboProducts", e.RowIndex).Value & "' LIMIT 1;")
-            Dim item_name As String = n_ExecuteQuery.Result
-            Dim prompt = MessageBox.Show("Are you sure you want to delete '" & item_name & "'" & If(item_name.ToLower.Contains("adjustment"), "", " adjustment") & " ?",
-                                         "Delete adjustment", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
-            If prompt = Windows.Forms.DialogResult.Yes Then
+            Dim message = "Are you sure you want to delete '" & adjustmentName & "'" & If(adjustmentName.ToLower.Contains("adjustment"), "", " adjustment") & " ?"
 
-                Dim isActual = IsActualSelected()
+            If MessageBoxHelper.Confirm(Of Boolean)(message, "Delete Adjustment") Then
 
-                Dim SQLTableName As String = If(isActual, "paystubadjustmentactual", "paystubadjustment")
-
-                Dim del_quer As String =
-                        "DELETE FROM " & SQLTableName & " WHERE RowID='" & currentAdjustment.RowID.Value & "';"
-                n_ExecuteQuery = New ExecuteQuery(del_quer)
-
-                UpdateEmployeeDetails()
-                btnSaveAdjustments.Enabled = False
+                adjustments.Remove(currentAdjustment)
+                Await SaveAdjustmentsAsync()
             End If
         End If
     End Sub
 
-    Sub btnSaveAdjustments_Click(sender As Object, e As EventArgs) Handles btnSaveAdjustments.Click
-        dgvAdjustments.EndEdit(True)
-
-        Dim adjustments = CType(dgvAdjustments.DataSource, BindingSource)
-
-        For Each item In adjustments
-
-        Next
-
-        Dim adjustments1 = CType(adjustments.DataSource, BindingList(Of Adjustment))
-
-        For Each item In adjustments
-
-        Next
-
-        Dim hasError As Boolean = False
-        'Dim errorRow As New DataGridViewRow
-        'Dim lastRow As Integer = dgvAdjustments.Rows.Count
-
-        'If Not hasError Then
-        '    Try
-        '        Dim SQLFunctionName As String = If(ValNoComma(tabEarned.SelectedIndex) = 0, "I_paystubadjustment", "I_paystubadjustmentactual")
-        '        For Each dgvRow As DataGridViewRow In dgvAdjustments.Rows
-        '            Dim productRowID = dgvRow.Cells("cboProducts").Value
-        '            If productRowID IsNot Nothing And dgvRow.IsNewRow = False Then 'If Not dgvRow.Cells(0).Value Is Nothing AndAlso Not dgvRow.Cells(1).Value Is Nothing AndAlso IsNumeric(dgvRow.Cells(1).Value) Then
-        '                If TypeOf dgvRow.Cells("cboProducts").Value Is String Then
-        '                    productRowID =
-        '                    EXECQUER("SELECT RowID FROM product WHERE OrganizationID='" & orgztnID & "' AND PartNo='" & dgvRow.Cells("cboProducts").Value & "' LIMIT 1;")
-        '                End If
-        '                Dim n_ReadSQLFunction As _
-        '                    New ReadSQLFunction(SQLFunctionName,
-        '                                        "returnvalue",
-        '                                        orgztnID,
-        '                                        z_User,
-        '                                        productRowID,
-        '                                        ValNoComma(dgvRow.Cells("DataGridViewTextBoxColumn66").Value),
-        '                                        dgvRow.Cells("DataGridViewTextBoxColumn64").Value,
-        '                                        Me.currentEmployeeNumber,
-        '                                        paypRowID,
-        '                                        dgvRow.Cells("psaRowID").Value)
-        '                If ValNoComma(dgvRow.Cells("psaRowID").Value) = 0 And n_ReadSQLFunction.HasError = False Then
-        '                    dgvRow.Cells("psaRowID").Value = n_ReadSQLFunction.ReturnValue
-        '                End If
-        '            Else : Continue For
-        '            End If
-        '        Next
-
-        '        UpdatePaystubAdjustmentColumn()
-        '        MsgBox("Adjustments were saved!", MsgBoxStyle.Information)
-        '        UpdateEmployeeDetails()
-        '    Catch ex As Exception
-        '        MsgBox(getErrExcptn(ex, Me.Name))
-        '    End Try
-        'End If
+    Private Async Sub btnSaveAdjustments_Click(sender As Object, e As EventArgs) Handles btnSaveAdjustments.Click
+        Await SaveAdjustmentsAsync()
     End Sub
+
+    Private Async Function SaveAdjustmentsAsync() As Task
+        dgvAdjustments.EndEdit(True)
+        Const messageTitle As String = "Save Adjustments"
+
+        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+        If employeeId Is Nothing OrElse payPeriodId Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected paystub.", messageTitle)
+            Return
+
+        End If
+
+        Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
+                        New EmployeeCompositeKey(
+                            employeeId:=employeeId.Value,
+                            payPeriodId:=payPeriodId.Value))
+
+        If paystub Is Nothing OrElse paystub.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("Paystub no longer exists.", messageTitle)
+            Return
+
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+         Async Function()
+
+             Dim allAjustments = CType(dgvAdjustments.DataSource, BindingSource)
+
+             If IsActualSelected() Then
+
+                 Await UpdateAdjustments(Of ActualAdjustment)(paystub, allAjustments)
+             Else
+
+                 Await UpdateAdjustments(Of Adjustment)(paystub, allAjustments)
+             End If
+
+             UpdateEmployeeDetails()
+
+         End Function)
+    End Function
+
+    Private Async Function UpdateAdjustments(Of T As IAdjustment)(paystub As Paystub, allAjustments As BindingSource) As Task
+        Dim adjustments As New List(Of T)
+
+        Dim isActual = GetType(ActualAdjustment).IsAssignableFrom(GetType(T))
+
+        For Each item As T In allAjustments
+
+            If item.ProductID Is Nothing Then
+
+                Throw New BusinessLogicException("Adjustment type is required!")
+
+            End If
+
+            If item.Amount = 0 Then
+
+                Throw New BusinessLogicException("Adjustment amount must be not be equal to zero.")
+
+            End If
+
+            item.IsActual = isActual
+            item.OrganizationID = z_OrganizationID
+            item.PaystubID = paystub.RowID.Value
+            adjustments.Add(item)
+        Next
+
+        If adjustments.GroupBy(Function(a) a.ProductID).Any(Function(a) a.Count() > 1) Then
+
+            Throw New BusinessLogicException("Multiple adjustment with the same adjustment type is not allowed.")
+        End If
+
+        Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+        Await dataService.UpdateAdjustmentsAsync(paystub.RowID.Value, adjustments.ToList(), z_User)
+    End Function
 
     Private Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
         viewtotbon.Close()
@@ -1090,35 +1096,7 @@ Public Class PayStubForm
         End With
     End Sub
 
-    Private Sub UpdatePaystubAdjustmentColumn()
-        Dim _conn As New MySqlConnection
-        _conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString
-        Try
-            If _conn.State = ConnectionState.Open Then : _conn.Close() : End If
-            _conn.Open()
-
-            cmd = New MySqlCommand("SP_UpdatePaystubAdjustment", _conn)
-
-            With cmd
-                .Parameters.Clear()
-                .CommandType = CommandType.StoredProcedure
-
-                .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeNumber)
-                .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
-                .Parameters.AddWithValue("User_RowID", z_User)
-                .Parameters.AddWithValue("Og_RowID", z_OrganizationID)
-            End With
-
-            cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name))
-        Finally
-            _conn.Close()
-            cmd.Dispose()
-        End Try
-    End Sub
-
-    Private Sub UpdateAdjustmentDetails()
+    Private Sub LoadAdjustments()
 
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
@@ -1127,45 +1105,25 @@ Public Class PayStubForm
         Dim isActual = IsActualSelected()
 
         Dim paystub = _paystubRepository.GetByCompositeKey(
-                        New EmployeeCompositeKey(
-                            employeeId:=employeeId.Value,
-                            payPeriodId:=payPeriodId.Value))
+            New EmployeeCompositeKey(
+                employeeId:=employeeId.Value,
+                payPeriodId:=payPeriodId.Value))
 
         If paystub Is Nothing OrElse paystub.RowID Is Nothing Then Return
 
-        Dim list As New BindingList(Of Adjustment)(_paystubRepository.GetAdjustments(paystub.RowID.Value).ToList())
+        If isActual Then
 
-        dgvAdjustments.DataSource = New BindingSource(list, Nothing)
+            Dim list As New BindingList(Of ActualAdjustment)(_paystubRepository.GetActualAdjustments(paystub.RowID.Value).ToList())
 
-        'Try
-        '    dtJosh = New DataTable
-        '    If conn.State = ConnectionState.Open Then : conn.Close() : End If
-        '    conn.Open()
+            dgvAdjustments.DataSource = New BindingSource(list, Nothing)
+            AdjustmentTitleLabel.Text = $"Actual Adjustments (Declared: {FormatNumber(paystub.TotalAdjustments, 2)})"
+        Else
 
-        '    cmd = New MySqlCommand("VIEW_paystubadjustment", conn)
-        '    With cmd
-        '        .Parameters.Clear()
-        '        .CommandType = CommandType.StoredProcedure
-        '        .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeNumber)
-        '        If dgvpayper.RowCount > 0 And dgvpayper.SelectedRows.Count > 0 Then
-        '            .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
-        '        Else
-        '            .Parameters.AddWithValue("pa_PayPeriodID", DBNull.Value)
-        '        End If
-        '        .Parameters.AddWithValue("pa_OrganizationID", orgztnID)
-        '        .Parameters.AddWithValue("pa_IsActual", Convert.ToInt16(isActual))
-        '    End With
+            Dim list As New BindingList(Of Adjustment)(_paystubRepository.GetAdjustments(paystub.RowID.Value).ToList())
 
-        '    da = New MySqlDataAdapter(cmd)
-        '    da.Fill(dtJosh)
-        '    dgvAdjustments.DataSource = dtJosh
-        'Catch ex As Exception
-        '    dgvAdjustments.Rows.Clear()
-        'Finally
-        '    conn.Close()
-        '    cmd.Dispose()
-        '    da.Dispose()
-        'End Try
+            dgvAdjustments.DataSource = New BindingSource(list, Nothing)
+            AdjustmentTitleLabel.Text = If(_policy.ShowActual, "Declared Adjustments", "Adjustments")
+        End If
     End Sub
 
     Private Function IsActualSelected() As Boolean
@@ -1173,17 +1131,21 @@ Public Class PayStubForm
     End Function
 
     Private Sub dgvAdjustments_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvAdjustments.DataError
-        btnSaveAdjustments.Enabled = False
+        EnableAdjustmentButtons(False)
     End Sub
 
     Private Sub dgvAdjustments_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAdjustments.CellEndEdit
-        UpdateSaveAdjustmentButtonDisable()
+        EnableAdjustmentButtons(True)
     End Sub
 
-    Private Sub UpdateSaveAdjustmentButtonDisable()
-        Dim hasError As Boolean = False
+    Private Sub dgvAdjustments_UserDeletedRow(sender As Object, e As DataGridViewRowEventArgs) Handles dgvAdjustments.UserDeletedRow
+        EnableAdjustmentButtons(True)
+    End Sub
 
-        btnSaveAdjustments.Enabled = Not hasError
+    Private Sub EnableAdjustmentButtons(enabled As Boolean)
+        btnSaveAdjustments.Enabled = enabled
+        btnDiscardChanges.Enabled = enabled
+
     End Sub
 
     Private Sub tabEarned_DrawItem(sender As Object, e As DrawItemEventArgs) Handles tabEarned.DrawItem
@@ -1292,9 +1254,11 @@ Public Class PayStubForm
         txtTotalLoans.Text = FormatNumber(paystub.TotalLoans, 2)
         txtTotalAdjustments.Text = FormatNumber(paystub.TotalAdjustments, 2)
 
-        Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(organizationId:=z_OrganizationID,
-                                                                   timePeriod:=datePeriod,
-                                                                   employeeId:=employee.RowID)
+        Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(
+            organizationId:=z_OrganizationID,
+            timePeriod:=datePeriod,
+            employeeId:=employee.RowID)
+
         txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
 
         '13th month and Net Pay
@@ -1305,7 +1269,7 @@ Public Class PayStubForm
         txtNetPay.Text = FormatNumber(totalNetSalary, 2)
         txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
 
-        UpdateAdjustmentDetails()
+        LoadAdjustments()
     End Sub
 
     Private Sub ActualTabPage_Enter(sender As Object, e As EventArgs)
@@ -1396,9 +1360,11 @@ Public Class PayStubForm
         txtTotalLoans.Text = FormatNumber(paystub.TotalLoans, 2)
         txtTotalAdjustments.Text = FormatNumber(paystub.Actual?.TotalAdjustments, 2)
 
-        Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(organizationId:=z_OrganizationID,
-                                                                   timePeriod:=datePeriod,
-                                                                   employeeId:=employee.RowID)
+        Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(
+            organizationId:=z_OrganizationID,
+            timePeriod:=datePeriod,
+            employeeId:=employee.RowID)
+
         txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
 
         '13th month and Net Pay
@@ -1412,7 +1378,7 @@ Public Class PayStubForm
         Dim totalNetPay = totalNetSalary + thirteenthMonthPay
         txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
 
-        UpdateAdjustmentDetails()
+        LoadAdjustments()
     End Sub
 
     Private Function GetPaystub(EmployeeRowID As Object) As Paystub
@@ -1422,7 +1388,7 @@ Public Class PayStubForm
         End If
 
         Return _paystubRepository.GetByCompositeKeyWithActualAndThirteenthMonth(
-                    New EmployeeCompositeKey(employeeId:=EmployeeRowID, payPeriodId:=paypRowID))
+            New EmployeeCompositeKey(employeeId:=EmployeeRowID, payPeriodId:=paypRowID))
     End Function
 
     Private Function GetPayPeriodDates() As TimePeriod
@@ -1436,10 +1402,10 @@ Public Class PayStubForm
         Return New TimePeriod(dateFrom, dateTo)
     End Function
 
-    Private Sub btndiscardchanges_Click(sender As Object, e As EventArgs) Handles btndiscardchanges.Click
-        UpdateAdjustmentDetails()
+    Private Sub btnDiscardChanges_Click(sender As Object, e As EventArgs) Handles btnDiscardChanges.Click
+        LoadAdjustments()
 
-        btnSaveAdjustments.Enabled = False
+        EnableAdjustmentButtons(False)
     End Sub
 
     Private Async Sub AddNewAdjustmentTypeLinkLabel_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddNewAdjustmentTypeLinkLabel.LinkClicked
@@ -1480,11 +1446,12 @@ Public Class PayStubForm
 
         Dim payPeriodString As String = GetPayPeriodString()
 
-        Dim prompt = MessageBox.Show("Are you sure you want to delete the " & payPeriodString &
-                                     " payroll of employee '" & toBeDeletedEmployeeNumber & "' ?",
-                                     "Delete employee payroll",
-                                     MessageBoxButtons.YesNoCancel,
-                                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+        Dim prompt = MessageBox.Show(
+            "Are you sure you want to delete the " & payPeriodString &
+            " payroll of employee '" & toBeDeletedEmployeeNumber & "' ?",
+            "Delete employee payroll",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If prompt = Windows.Forms.DialogResult.Yes Then
 
@@ -1728,33 +1695,34 @@ Public Class PayStubForm
 
         Dim payPeriodString As String = GetPayPeriodString()
 
-        Dim prompt = MessageBox.Show($"Are you sure you want to delete ALL paystubs of employees for payroll {payPeriodString}?",
-                                     "Delete all employee paystubs",
-                                     MessageBoxButtons.YesNoCancel,
-                                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+        Dim prompt = MessageBox.Show(
+            $"Are you sure you want to delete ALL paystubs of employees for payroll {payPeriodString}?",
+            "Delete all employee paystubs",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If prompt = Windows.Forms.DialogResult.Yes Then
 
             Await FunctionUtils.TryCatchFunctionAsync("Delete ALL Pastubs",
-                  Async Function()
+                Async Function()
 
-                      Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId.Value)
+                    Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId.Value)
 
-                      Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
-                      Await paystubDataService.DeleteByPeriodAsync(
-                        payPeriodId:=payperiodId.Value,
-                        userId:=z_User,
-                        organizationId:=z_OrganizationID)
+                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                    Await paystubDataService.DeleteByPeriodAsync(
+                    payPeriodId:=payperiodId.Value,
+                    userId:=z_User,
+                    organizationId:=z_OrganizationID)
 
-                      Dim recordMessage = $"Deleted a paystub for payroll {payPeriodString}."
-                      Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
+                    Dim recordMessage = $"Deleted a paystub for payroll {payPeriodString}."
+                    Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
 
-                      RefreshForm()
+                    RefreshForm()
 
-                      Await TimeEntrySummaryForm.LoadPayPeriods()
+                    Await TimeEntrySummaryForm.LoadPayPeriods()
 
-                      MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' were successfully deleted.")
-                  End Function)
+                    MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' were successfully deleted.")
+                End Function)
 
         End If
 
@@ -1810,31 +1778,32 @@ Public Class PayStubForm
 
         Dim payPeriodString As String = GetPayPeriodString()
 
-        Dim prompt = MessageBox.Show($"Are you sure you want to cancel the payroll and delete ALL paystubs and time entries of employees for payroll {payPeriodString}?",
-                                     "Cancel payroll",
-                                     MessageBoxButtons.YesNoCancel,
-                                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+        Dim prompt = MessageBox.Show(
+            $"Are you sure you want to cancel the payroll and delete ALL paystubs and time entries of employees for payroll {payPeriodString}?",
+            "Cancel payroll",
+            MessageBoxButtons.YesNoCancel,
+            MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If prompt = Windows.Forms.DialogResult.Yes Then
 
             Await FunctionUtils.TryCatchFunctionAsync("Cancel Payroll",
-                  Async Function()
+                Async Function()
 
-                      Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId.Value)
+                    Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId.Value)
 
-                      Dim payperiodDataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
-                      Await payperiodDataService.CancelAsync(payperiodId.Value, z_User)
+                    Dim payperiodDataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+                    Await payperiodDataService.CancelAsync(payperiodId.Value, z_User)
 
-                      Dim recordMessage = $"Deleted paystub and time entries for payroll {payPeriodString}."
+                    Dim recordMessage = $"Deleted paystub and time entries for payroll {payPeriodString}."
 
-                      Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
-                      Await RecordPayrollStatusUpdateAsync(payperiodId.Value, $"Cancelled the payroll {GetPayPeriodString()}.")
+                    Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
+                    Await RecordPayrollStatusUpdateAsync(payperiodId.Value, $"Cancelled the payroll {GetPayPeriodString()}.")
 
-                      RefreshForm()
-                      Await TimeEntrySummaryForm.LoadPayPeriods()
+                    RefreshForm()
+                    Await TimeEntrySummaryForm.LoadPayPeriods()
 
-                      MessageBoxHelper.Information($"Payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully cancelled.")
-                  End Function)
+                    MessageBoxHelper.Information($"Payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully cancelled.")
+                End Function)
 
         End If
 
