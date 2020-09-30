@@ -1,3 +1,5 @@
+Option Strict On
+
 Imports System.Collections.Concurrent
 Imports System.IO
 Imports System.Threading
@@ -260,7 +262,7 @@ Public Class PayStubForm
 
         Dim currentRow = dgvpayper.Rows(index)
 
-        Dim status = Enums(Of PayPeriodStatus).Parse(drow("Status"))
+        Dim status = Enums(Of PayPeriodStatus).Parse(drow("Status").ToString())
         If status = PayPeriodStatus.Open Then
 
             currentRow.DefaultCellStyle.SelectionForeColor = Color.Green
@@ -318,7 +320,7 @@ Public Class PayStubForm
                 dgvemployees.Rows.Add(row_array)
             Next
 
-            _totalItems = Val(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
+            _totalItems = CInt(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
             _lastPageNo = CInt({Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max())
 
             Static x As SByte = 0
@@ -359,7 +361,7 @@ Public Class PayStubForm
                 paypFrom = MYSQLDateFormat(CDate(.Cells("Column2").Value)).ToString()
                 paypTo = MYSQLDateFormat(CDate(.Cells("Column3").Value)).ToString()
 
-                Dim status = Enums(Of PayPeriodStatus).Parse(.Cells("StatusColumn").Value)
+                Dim status = Enums(Of PayPeriodStatus).Parse(.Cells("StatusColumn").Value.ToString())
                 Dim isModified = status = PayPeriodStatus.Open
                 ShowPayrollActions(isModified, status)
 
@@ -500,12 +502,11 @@ Public Class PayStubForm
 
                 dgvemployees.Tag = .Cells("RowID").Value
 
-                txtFName.Text = .Cells("FirstName").Value
+                txtFName.Text = .Cells("FirstName").Value.ToString()
 
-                Dim addtlWord = Nothing
+                Dim addtlWord As String = Nothing
 
-                If .Cells("MiddleName").Value = Nothing Then
-                Else
+                If Not IsDBNull(.Cells("MiddleName").Value) AndAlso Not String.IsNullOrWhiteSpace(.Cells("MiddleName").Value.ToString()) Then
 
                     Dim midNameTwoWords = Split(.Cells("MiddleName").Value.ToString, " ")
 
@@ -521,17 +522,17 @@ Public Class PayStubForm
 
                 End If
 
-                txtFName.Text = txtFName.Text & " " & .Cells("LastName").Value
+                txtFName.Text = txtFName.Text & " " & .Cells("LastName").Value.ToString()
 
-                currentEmployeeNumber = .Cells("EmployeeID").Value
+                currentEmployeeNumber = .Cells("EmployeeID").Value.ToString()
 
-                txtEmpID.Text = "ID# " & .Cells("EmployeeID").Value &
-                            If(IsDBNull(.Cells("Position")),
-                                                               "",
-                                                               ", " & .Cells("Position").Value) &
-                            If(.Cells("EmployeeType").Value = Nothing,
-                                                               "",
-                                                               ", " & .Cells("EmployeeType").Value & " salary")
+                txtEmpID.Text = "ID# " & .Cells("EmployeeID").Value.ToString() &
+                    If(IsDBNull(.Cells("Position")),
+                        "",
+                        ", " & .Cells("Position").Value.ToString()) &
+                    If(.Cells("EmployeeType").Value.ToString() = Nothing,
+                        "",
+                        ", " & .Cells("EmployeeType").Value.ToString() & " salary")
 
                 pbEmpPicChk.Image = Nothing
                 Try
@@ -565,9 +566,9 @@ Public Class PayStubForm
                         MsgBox(getErrExcptn(ex, Me.Name))
                     End Try
                     If tabEarned.SelectedIndex = 0 Then
-                        DeclaredTabPage_Enter(DeclaredTabPage, New EventArgs)
+                        ShowDeclaredData()
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        ActualTabPage_Enter(ActualTabPage, New EventArgs)
+                        ShowActualData()
                     End If
                 Else
 
@@ -583,9 +584,9 @@ Public Class PayStubForm
                         MsgBox(getErrExcptn(ex, Me.Name))
                     End Try
                     If tabEarned.SelectedIndex = 0 Then
-                        DeclaredTabPage_Enter(DeclaredTabPage, New EventArgs)
+                        ShowDeclaredData()
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        ActualTabPage_Enter(ActualTabPage, New EventArgs)
+                        ShowActualData()
                     End If
                 End If
 
@@ -661,7 +662,7 @@ Public Class PayStubForm
             Return
         End If
 
-        Dim payPeriod = _payPeriodRepository.GetById(payPeriodId)
+        Dim payPeriod = _payPeriodRepository.GetById(payPeriodId.Value)
         If payPeriod Is Nothing OrElse payPeriod?.RowID Is Nothing OrElse payPeriod?.OrganizationID Is Nothing Then
             GeneratePayrollToolStripButton.Enabled = True
             Return
@@ -679,7 +680,7 @@ Public Class PayStubForm
             Function()
 
                 Dim resourcesTask = resources.Load(
-                    payPeriodId:=payPeriodId,
+                    payPeriodId:=payPeriodId.Value,
                     organizationId:=z_OrganizationID,
                     userId:=z_User)
 
@@ -808,12 +809,12 @@ Public Class PayStubForm
 
     Private Sub ProgressTimer_Tick(sender As Object, e As EventArgs) Handles ProgressTimer.Tick
 
-        Dim percentComplete As Integer = (_finishedPaystubs / _totalPaystubs) * 100
+        Dim percentComplete As Integer = CInt((_finishedPaystubs / _totalPaystubs) * 100)
         MDIPrimaryForm.systemprogressbar.Value = percentComplete
 
     End Sub
 
-    Private Async Sub GeneratingPayrollOnSuccess()
+    Private Async Sub GeneratingPayrollOnSuccess(t As Task)
 
         Dim dialog = New PayrollResultDialog(_results.ToList()) With {
             .Owner = Me
@@ -840,8 +841,6 @@ Public Class PayStubForm
         Me.Close()
     End Sub
 
-    Public genpayselyear As String = Nothing
-
     Sub btnrefresh_Click(sender As Object, e As EventArgs) Handles btnrefresh.Click
         VIEW_payperiodofyear()
     End Sub
@@ -866,7 +865,7 @@ Public Class PayStubForm
         End If
 
         Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
-            New EmployeeCompositeKey(employeeId:=employeeId, payPeriodId:=payPeriodId))
+            New EmployeeCompositeKey(employeeId:=employeeId.Value, payPeriodId:=payPeriodId.Value))
 
         If paystub Is Nothing Then
 
@@ -886,11 +885,12 @@ Public Class PayStubForm
             .Show()
             .BringToFront()
             If dgvemployees.RowCount <> 0 Then
-                .VIEW_employeebonus_indate(dgvemployees.CurrentRow.Cells("RowID").Value,
-                                        paypFrom,
-                                        paypTo)
+                .VIEW_employeebonus_indate(
+                    dgvemployees.CurrentRow.Cells("RowID").Value,
+                    paypFrom,
+                    paypTo)
 
-                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value
+                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value.ToString()
             End If
         End With
 
@@ -919,7 +919,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
-        Dim e_asc As String = Asc(e.KeyChar)
+        Dim e_asc As Integer = Asc(e.KeyChar)
 
         Dim userPressedEnterKey = (e_asc = 13)
         If userPressedEnterKey Then
@@ -948,22 +948,6 @@ Public Class PayStubForm
 
     End Sub
 
-    Sub PayFreq_Changed(sender As Object, e As EventArgs)
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-            once += 1
-
-            LoadEmployees()
-
-            Exit Sub
-        End If
-
-        tsbtnSearch_Click(sender, e)
-
-    End Sub
-
     Private Async Sub dgvemployees_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvemployees.CellContentClick
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
@@ -985,10 +969,18 @@ Public Class PayStubForm
 
         If currentAdjustment Is Nothing Then Return
 
+        If currentAdjustment.RowID Is Nothing OrElse currentAdjustment.RowID <= 0 Then
+
+            adjustments.Remove(currentAdjustment)
+            Return
+        End If
+
         If e.ColumnIndex = DeleteAdjustmentColumn.Index Then
 
             Dim adjustmentTypes = CType(cboProducts.DataSource, List(Of Product))
-            Dim adjustmentType = adjustmentTypes.FirstOrDefault(Function(a) a.RowID = currentAdjustment.ProductID)
+            Dim adjustmentType As Product = If(currentAdjustment.ProductID Is Nothing, Nothing,
+                adjustmentTypes.FirstOrDefault(Function(a) a.RowID.Value = currentAdjustment.ProductID.Value))
+
             Dim adjustmentName = adjustmentType?.Name
 
             Dim message = "Are you sure you want to delete '" & adjustmentName & "'" & If(adjustmentName.ToLower.Contains("adjustment"), "", " adjustment") & " ?"
@@ -1006,7 +998,7 @@ Public Class PayStubForm
     End Sub
 
     Private Async Function SaveAdjustmentsAsync() As Task
-        dgvAdjustments.EndEdit(True)
+        dgvAdjustments.EndEdit()
         Const messageTitle As String = "Save Adjustments"
 
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
@@ -1091,12 +1083,12 @@ Public Class PayStubForm
 
             If dgvemployees.RowCount <> 0 Then
                 .VIEW_employeeloan_indate(dgvemployees.CurrentRow.Cells("RowID").Value, paypFrom, paypTo)
-                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value
+                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value.ToString()
             End If
         End With
     End Sub
 
-    Private Sub LoadAdjustments()
+    Private Async Function LoadAdjustmentsAsync() As Task
 
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
@@ -1104,7 +1096,7 @@ Public Class PayStubForm
 
         Dim isActual = IsActualSelected()
 
-        Dim paystub = _paystubRepository.GetByCompositeKey(
+        Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
             New EmployeeCompositeKey(
                 employeeId:=employeeId.Value,
                 payPeriodId:=payPeriodId.Value))
@@ -1113,18 +1105,18 @@ Public Class PayStubForm
 
         If isActual Then
 
-            Dim list As New BindingList(Of ActualAdjustment)(_paystubRepository.GetActualAdjustments(paystub.RowID.Value).ToList())
+            Dim list As New BindingList(Of ActualAdjustment)((Await _paystubRepository.GetActualAdjustmentsAsync(paystub.RowID.Value)).ToList())
 
             dgvAdjustments.DataSource = New BindingSource(list, Nothing)
             AdjustmentTitleLabel.Text = $"Actual Adjustments (Declared: {FormatNumber(paystub.TotalAdjustments, 2)})"
         Else
 
-            Dim list As New BindingList(Of Adjustment)(_paystubRepository.GetAdjustments(paystub.RowID.Value).ToList())
+            Dim list As New BindingList(Of Adjustment)((Await _paystubRepository.GetAdjustmentsAsync(paystub.RowID.Value)).ToList())
 
             dgvAdjustments.DataSource = New BindingSource(list, Nothing)
             AdjustmentTitleLabel.Text = If(_policy.ShowActual, "Declared Adjustments", "Adjustments")
         End If
-    End Sub
+    End Function
 
     Private Function IsActualSelected() As Boolean
         Return tabEarned.SelectedTab Is ActualTabPage
@@ -1166,7 +1158,10 @@ Public Class PayStubForm
     End Sub
 
     Private Sub DeclaredTabPage_Enter(sender As Object, e As EventArgs)
+        ShowDeclaredData()
+    End Sub
 
+    Private Async Function ShowDeclaredData() As Task
         DeclaredTabPage.Text = DeclaredTabPage.Text.Trim
         DeclaredTabPage.Text = DeclaredTabPage.Text & Space(15)
         ActualTabPage.Text = ActualTabPage.Text.Trim
@@ -1177,21 +1172,21 @@ Public Class PayStubForm
 
         Dim EmployeeRowID = dgvemployees.Tag
 
-        If ObjectUtils.ToNullableInteger(EmployeeRowID) Is Nothing OrElse
-            ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
+        Dim employeeId = ObjectUtils.ToNullableInteger(EmployeeRowID)
+        If employeeId Is Nothing OrElse ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
             Return
         End If
 
-        Dim employee = _employeeRepository.GetById(EmployeeRowID)
+        Dim employee = Await _employeeRepository.GetByIdAsync(employeeId.Value)
         If employee Is Nothing Then Return
 
-        Dim paystub = GetPaystub(employee.RowID)
+        Dim paystub = Await GetPaystubAsync(employee.RowID)
         If paystub Is Nothing Then Return
 
         Dim datePeriod = GetPayPeriodDates()
         If datePeriod Is Nothing Then Return
 
-        Dim salary = _employeeRepository.GetCurrentSalary(employee.RowID, datePeriod.Start)
+        Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.Start)
         If salary Is Nothing Then Return
 
         Dim basicRate = If(employee.IsDaily, salary.BasicSalary, salary.BasicSalary / 2)
@@ -1257,7 +1252,7 @@ Public Class PayStubForm
         Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(
             organizationId:=z_OrganizationID,
             timePeriod:=datePeriod,
-            employeeId:=employee.RowID)
+            employeeId:=employee.RowID.Value)
 
         txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
 
@@ -1269,10 +1264,14 @@ Public Class PayStubForm
         txtNetPay.Text = FormatNumber(totalNetSalary, 2)
         txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
 
-        LoadAdjustments()
+        Await LoadAdjustmentsAsync()
+    End Function
+
+    Private Async Sub ActualTabPage_Enter(sender As Object, e As EventArgs)
+        Await ShowActualData()
     End Sub
 
-    Private Sub ActualTabPage_Enter(sender As Object, e As EventArgs)
+    Private Async Function ShowActualData() As Task
         ActualTabPage.Text = ActualTabPage.Text.Trim
         ActualTabPage.Text = ActualTabPage.Text & Space(15)
         DeclaredTabPage.Text = DeclaredTabPage.Text.Trim
@@ -1282,22 +1281,21 @@ Public Class PayStubForm
         Next
 
         Dim EmployeeRowID = dgvemployees.Tag
-
-        If ObjectUtils.ToNullableInteger(EmployeeRowID) Is Nothing OrElse
-            ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
+        Dim employeeId = ObjectUtils.ToNullableInteger(EmployeeRowID)
+        If employeeId Is Nothing OrElse ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
             Return
         End If
 
-        Dim employee = _employeeRepository.GetById(EmployeeRowID)
+        Dim employee = Await _employeeRepository.GetByIdAsync(employeeId.Value)
         If employee Is Nothing Then Return
 
-        Dim paystub = GetPaystub(employee.RowID)
+        Dim paystub = Await GetPaystubAsync(employee.RowID)
         If paystub Is Nothing Then Return
 
         Dim datePeriod = GetPayPeriodDates()
         If datePeriod Is Nothing Then Return
 
-        Dim salary = _employeeRepository.GetCurrentSalary(employee.RowID, datePeriod.Start)
+        Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.Start)
         If salary Is Nothing Then Return
 
         Dim basicRate = If(employee.IsDaily, salary.TotalSalary, salary.TotalSalary / 2)
@@ -1363,7 +1361,7 @@ Public Class PayStubForm
         Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(
             organizationId:=z_OrganizationID,
             timePeriod:=datePeriod,
-            employeeId:=employee.RowID)
+            employeeId:=employee.RowID.Value)
 
         txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
 
@@ -1378,17 +1376,19 @@ Public Class PayStubForm
         Dim totalNetPay = totalNetSalary + thirteenthMonthPay
         txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
 
-        LoadAdjustments()
-    End Sub
+        Await LoadAdjustmentsAsync()
+    End Function
 
-    Private Function GetPaystub(EmployeeRowID As Object) As Paystub
-        If ObjectUtils.ToNullableInteger(EmployeeRowID) Is Nothing OrElse
-            ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
+    Private Async Function GetPaystubAsync(EmployeeRowID As Object) As Task(Of Paystub)
+        Dim employeeId = ObjectUtils.ToNullableInteger(EmployeeRowID)
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If employeeId Is Nothing OrElse payPeriodId Is Nothing Then
             Return Nothing
         End If
 
-        Return _paystubRepository.GetByCompositeKeyWithActualAndThirteenthMonth(
-            New EmployeeCompositeKey(employeeId:=EmployeeRowID, payPeriodId:=paypRowID))
+        Return Await _paystubRepository.GetByCompositeKeyWithActualAndThirteenthMonthAsync(
+            New EmployeeCompositeKey(employeeId:=employeeId.Value, payPeriodId:=payPeriodId.Value))
     End Function
 
     Private Function GetPayPeriodDates() As TimePeriod
@@ -1399,11 +1399,11 @@ Public Class PayStubForm
             Return Nothing
         End If
 
-        Return New TimePeriod(dateFrom, dateTo)
+        Return New TimePeriod(dateFrom.Value, dateTo.Value)
     End Function
 
-    Private Sub btnDiscardChanges_Click(sender As Object, e As EventArgs) Handles btnDiscardChanges.Click
-        LoadAdjustments()
+    Private Async Sub btnDiscardChanges_Click(sender As Object, e As EventArgs) Handles btnDiscardChanges.Click
+        Await LoadAdjustmentsAsync()
 
         EnableAdjustmentButtons(False)
     End Sub
@@ -1558,7 +1558,7 @@ Public Class PayStubForm
             Return False
         End If
 
-        Dim payPeriod = Await _payPeriodRepository.GetByIdAsync(payPeriodId)
+        Dim payPeriod = Await _payPeriodRepository.GetByIdAsync(payPeriodId.Value)
 
         If payPeriod Is Nothing Then
 
@@ -1659,7 +1659,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub CashOutUnusedLeavesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CashOutUnusedLeavesToolStripMenuItem.Click
-        If paypRowID = 0 Then
+        If ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
             MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
             Return
         End If
@@ -1814,7 +1814,7 @@ Public Class PayStubForm
 
         If _policy.ShowActual = False Then
 
-            PrintPayslip(isActual:=0)
+            PrintPayslip(isActual:=False)
 
         End If
     End Sub
@@ -1830,14 +1830,20 @@ Public Class PayStubForm
 
     Private Sub PrintPayslip(isActual As Boolean)
 
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If payPeriodId Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return
+        End If
+
         FunctionUtils.TryCatchFunction("Print Payslip",
             Sub()
                 Dim payslipBuilder = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
-                Dim payPeriodId = ValNoComma(paypRowID)
-
                 Dim reportDocument = payslipBuilder.CreateReportDocument(
-                    payPeriodId:=payPeriodId,
+                    payPeriodId:=payPeriodId.Value,
                     isActual:=isActual)
 
                 Dim crvwr As New CrysRepForm
@@ -1862,12 +1868,18 @@ Public Class PayStubForm
 
         Dim form As SelectPayslipEmployeesForm
 
-        Dim payPeriodId = ValNoComma(paypRowID)
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If payPeriodId Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return
+        End If
 
         If sender Is ManageEmailPayslipsToolStripMenuItem Then
-            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=True)
+            form = New SelectPayslipEmployeesForm(payPeriodId.Value, isEmail:=True)
         Else
-            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=False)
+            form = New SelectPayslipEmployeesForm(payPeriodId.Value, isEmail:=False)
         End If
 
         form.ShowDialog()
@@ -1892,7 +1904,7 @@ Public Class PayStubForm
 
         If payPeriodId Is Nothing Then Return
 
-        Dim form As New SelectThirteenthMonthEmployeesForm(payPeriodId)
+        Dim form As New SelectThirteenthMonthEmployeesForm(payPeriodId.Value)
 
         form.ShowDialog()
 

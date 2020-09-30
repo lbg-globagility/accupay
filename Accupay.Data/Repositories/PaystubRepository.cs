@@ -293,14 +293,6 @@ namespace AccuPay.Data.Repositories
             return paystub.AllowanceItems;
         }
 
-        public ICollection<Adjustment> GetAdjustments(int paystubId)
-        {
-            var paystub = BaseGetAdjustments(paystubId)
-                .FirstOrDefault();
-
-            return paystub.Adjustments;
-        }
-
         public async Task<ICollection<Adjustment>> GetAdjustmentsAsync(int paystubId)
         {
             var paystub = await BaseGetAdjustments(paystubId)
@@ -318,14 +310,14 @@ namespace AccuPay.Data.Repositories
                 .Where(x => x.RowID == paystubId);
         }
 
-        public ICollection<ActualAdjustment> GetActualAdjustments(int paystubId)
+        public async Task<ICollection<ActualAdjustment>> GetActualAdjustmentsAsync(int paystubId)
         {
-            var paystub = _context.Paystubs
+            var paystub = await _context.Paystubs
                 .AsNoTracking()
                 .Include(x => x.ActualAdjustments)
                     .ThenInclude(x => x.Product)
                 .Where(x => x.RowID == paystubId)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             return paystub.ActualAdjustments;
         }
@@ -353,15 +345,6 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public Paystub GetByCompositeKey(EmployeeCompositeKey key)
-        {
-            var query = _context.Paystubs.AsNoTracking();
-
-            query = AddGetByEmployeeCompositeKeyQuery(key, query);
-
-            return query.FirstOrDefault();
-        }
-
         public async Task<Paystub> GetByCompositeKeyAsync(EmployeeCompositeKey key)
         {
             var query = _context.Paystubs.AsNoTracking();
@@ -371,7 +354,7 @@ namespace AccuPay.Data.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public Paystub GetByCompositeKeyWithActualAndThirteenthMonth(EmployeeCompositeKey key)
+        public async Task<Paystub> GetByCompositeKeyWithActualAndThirteenthMonthAsync(EmployeeCompositeKey key)
         {
             var query = _context.Paystubs
                 .AsNoTracking()
@@ -381,7 +364,7 @@ namespace AccuPay.Data.Repositories
 
             query = AddGetByEmployeeCompositeKeyQuery(key, query);
 
-            return query.FirstOrDefault();
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<Paystub> GetByCompositeKeyFullPaystubAsync(EmployeeCompositeKey key)
