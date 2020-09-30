@@ -782,7 +782,7 @@ Public Class TimeLogsForm2
 
         Await CheckRolePermissions()
 
-        EmployeeTreeView1.SwitchOrganization(z_OrganizationID)
+        Await EmployeeTreeView1.SwitchOrganization(z_OrganizationID)
 
         BindGridCurrentCellChanged()
 

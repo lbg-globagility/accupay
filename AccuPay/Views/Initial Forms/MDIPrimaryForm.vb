@@ -100,7 +100,7 @@ Public Class MDIPrimaryForm
 
         setProperDashBoardAccordingToSystemOwner()
 
-        RunLeaveAccrual()
+        Await RunLeaveAccrual()
 
         Panel1.Focus()
         MyBase.OnLoad(e)
@@ -137,7 +137,7 @@ Public Class MDIPrimaryForm
         lblTime.Text = TimeOfDay
     End Sub
 
-    Private Async Sub RunLeaveAccrual()
+    Private Async Function RunLeaveAccrual() As Task
 
         Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
         Dim collection = Await listOfValueService.CreateAsync("LeavePolicy")
@@ -150,7 +150,7 @@ Public Class MDIPrimaryForm
                     Await service.CheckAccruals(z_OrganizationID, z_User)
                 End Function)
         End If
-    End Sub
+    End Function
 
     Dim ClosingForm As Form = Nothing 'New
 
@@ -323,7 +323,7 @@ Public Class MDIPrimaryForm
         End If
     End Sub
 
-    Private Async Sub RestrictByUserLevel()
+    Private Async Function RestrictByUserLevel() As Task
 
         Dim user = Await _userRepository.GetByIdAsync(z_User)
 
@@ -352,7 +352,7 @@ Public Class MDIPrimaryForm
 
         End If
 
-    End Sub
+    End Function
 
     Private Sub LoadVersionNo()
         Dim appSettings = ConfigurationManager.AppSettings
@@ -412,7 +412,7 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Sub GeneralToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
+    Private Async Sub GeneralToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
 
         isHome = 0
 
@@ -442,10 +442,10 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(0, sender, e)
+        Await refresh_previousForm(0)
     End Sub
 
-    Sub TimeAndAttendanceToolStripButton_Click(sender As Object, e As EventArgs) Handles TimeAndAttendanceToolStripButton.Click
+    Private Async Sub TimeAndAttendanceToolStripButton_Click(sender As Object, e As EventArgs) Handles TimeAndAttendanceToolStripButton.Click
 
         isHome = 0
 
@@ -475,25 +475,12 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(2, sender, e)
+        Await refresh_previousForm(2)
     End Sub
 
     Dim theemployeetable As New DataTable
 
-    Sub refresh_previousForm(Optional groupindex As Object = 0,
-                             Optional sndr As Object = 0,
-                             Optional ee As EventArgs = Nothing)
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-            'once = 1
-
-            Exit Sub
-
-        End If
-
-        Static countchanges As Integer = -1
+    Private Async Function refresh_previousForm(Optional groupindex As Object = 0) As Task
 
         If previousForm IsNot Nothing Then
 
@@ -525,7 +512,7 @@ Public Class MDIPrimaryForm
 
                             Case .GetEmployeeProfileTabPageIndex
                                 If .listofEditDepen.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
+                                    Await EmployeeForm.SearchEmployee()
                                 Else
 
                                 End If
@@ -558,17 +545,14 @@ Public Class MDIPrimaryForm
 
             ElseIf groupindex = 3 Then 'Payroll
                 If previousForm.Name = "Paystub" Then
-                    With PayStubForm
-                        .btnrefresh_Click(sndr, ee)
-                    End With
+                    Await PayStubForm.VIEW_payperiodofyear()
                 End If
             End If
 
-            countchanges = theemployeetable.Rows.Count
         End If
-    End Sub
+    End Function
 
-    Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
+    Private Async Sub PayrollToolStripButton_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
 
         isHome = 0
 
@@ -598,11 +582,11 @@ Public Class MDIPrimaryForm
         TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(3, sender, e)
+        Await refresh_previousForm(3)
 
     End Sub
 
-    Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
+    Private Async Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
 
         isHome = 0
 
@@ -632,7 +616,7 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(1, sender, e)
+        Await refresh_previousForm(1)
     End Sub
 
     'Toggling pin status
@@ -922,7 +906,7 @@ Public Class MDIPrimaryForm
 
         If _policyHelper.UseUserLevel Then
 
-            RestrictByUserLevel()
+            Await RestrictByUserLevel()
         Else
 
             RestrictByRole()

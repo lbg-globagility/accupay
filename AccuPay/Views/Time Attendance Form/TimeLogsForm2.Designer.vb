@@ -151,7 +151,6 @@ Partial Class TimeLogsForm2
         Me.EmployeeTreeView1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.EmployeeTreeView1.Location = New System.Drawing.Point(0, 0)
         Me.EmployeeTreeView1.Name = "EmployeeTreeView1"
-        Me.EmployeeTreeView1.OrganizationID = 0
         Me.EmployeeTreeView1.Size = New System.Drawing.Size(352, 585)
         Me.EmployeeTreeView1.TabIndex = 316
         '

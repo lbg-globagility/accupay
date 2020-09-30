@@ -299,7 +299,6 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.EmployeeTreeView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.EmployeeTreeView.Location = New System.Drawing.Point(20, 10)
         Me.EmployeeTreeView.Name = "EmployeeTreeView"
-        Me.EmployeeTreeView.OrganizationID = 0
         Me.EmployeeTreeView.Size = New System.Drawing.Size(293, 739)
         Me.EmployeeTreeView.TabIndex = 316
         '

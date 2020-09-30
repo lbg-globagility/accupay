@@ -137,7 +137,7 @@ Public Class PayStubForm
         ShowOrHideEmailPayslip()
         ShowOrHidePayrollSummaryByBranch()
 
-        RefreshForm()
+        Await RefreshForm()
 
         AddHandler DeclaredTabPage.Enter, AddressOf DeclaredTabPage_Enter
         AddHandler ActualTabPage.Enter, AddressOf ActualTabPage_Enter
@@ -230,7 +230,7 @@ Public Class PayStubForm
 
     End Sub
 
-    Sub VIEW_payperiodofyear(Optional year As Integer = Nothing)
+    Public Async Function VIEW_payperiodofyear(Optional year As Integer = Nothing) As Task
         ClosePayrollToolStripMenuItem.Visible = False
         ReopenPayrollToolStripMenuItem.Visible = False
         GeneratePayrollToolStripButton.Visible = False
@@ -253,10 +253,10 @@ Public Class PayStubForm
         Next
         catchdt.Dispose()
 
-        UpdatePayPeriodDetails()
+        Await UpdatePayPeriodDetails()
 
         AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
-    End Sub
+    End Function
 
     Private Sub HighlightOpenPayPeriod(index As Integer, drow As DataRow)
 
@@ -290,7 +290,7 @@ Public Class PayStubForm
 
     End Sub
 
-    Sub LoadEmployees()
+    Private Async Function LoadEmployeesAsync() As Task
 
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
@@ -323,35 +323,29 @@ Public Class PayStubForm
             _totalItems = CInt(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {paypRowID};"))
             _lastPageNo = CInt({Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max())
 
-            Static x As SByte = 0
+            With dgvemployees
+                .Columns("RowID").Visible = False
 
-            If x = 0 Then
-                x = 1
-
-                With dgvemployees
-                    .Columns("RowID").Visible = False
-
-                End With
-                If dgvemployees.RowCount > 0 Then
-                    dgvemployees.Item("EmployeeID", 0).Selected = True
-                End If
-
-                employeepicture = New SQLQueryToDatatable("SELECT RowID,Image FROM employee WHERE Image IS NOT NULL AND OrganizationID=" & orgztnID & ";").ResultTable 'retAsDatTbl("SELECT RowID,Image FROM employee WHERE OrganizationID=" & orgztnID & ";")
+            End With
+            If dgvemployees.RowCount > 0 Then
+                dgvemployees.Item("EmployeeID", 0).Selected = True
             End If
+
+            employeepicture = New SQLQueryToDatatable("SELECT RowID,Image FROM employee WHERE Image IS NOT NULL AND OrganizationID=" & orgztnID & ";").ResultTable 'retAsDatTbl("SELECT RowID,Image FROM employee WHERE OrganizationID=" & orgztnID & ";")
 
         End If
 
-        UpdateEmployeeDetails()
+        Await UpdateEmployeeDetails()
 
         AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
+    End Function
+
+    Private Async Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs)
+        Await UpdatePayPeriodDetails()
     End Sub
 
-    Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs)
-        UpdatePayPeriodDetails()
-    End Sub
-
-    Private Sub UpdatePayPeriodDetails()
+    Private Async Function UpdatePayPeriodDetails() As Task
         If dgvpayper.RowCount > 0 Then
             With dgvpayper.CurrentRow
 
@@ -376,8 +370,8 @@ Public Class PayStubForm
 
         End If
 
-        LoadEmployees()
-    End Sub
+        Await LoadEmployeesAsync()
+    End Function
 
     Private Sub ShowPayrollActions(showPayrollActions As Boolean, Optional payrollStatus As PayPeriodStatus? = Nothing)
 
@@ -435,29 +429,33 @@ Public Class PayStubForm
         btnDiscardChanges.Visible = enable
     End Sub
 
-    Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
+    Private Async Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
         CurrentYear = CurrentYear - 1
 
         linkPrev.Text = "← " & (CurrentYear - 1)
         linkNxt.Text = (CurrentYear + 1) & " →"
 
-        VIEW_payperiodofyear(CurrentYear)
+        Await VIEW_payperiodofyear(CurrentYear)
     End Sub
 
-    Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
+    Private Async Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
         CurrentYear = CurrentYear + 1
 
         linkNxt.Text = (CurrentYear + 1) & " →"
         linkPrev.Text = "← " & (CurrentYear - 1)
 
-        VIEW_payperiodofyear(CurrentYear)
+        Await VIEW_payperiodofyear(CurrentYear)
     End Sub
 
-    Private Sub EmployeeGridViewPaginationChanged(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles _
+    Private Async Sub EmployeeGridViewPaginationChanged(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles _
         First.LinkClicked, Prev.LinkClicked,
         Nxt.LinkClicked, Last.LinkClicked,
         LinkLabel2.LinkClicked, LinkLabel1.LinkClicked
 
+        Await UpdateEmployeeListByPagination(sender)
+    End Sub
+
+    Private Async Function UpdateEmployeeListByPagination(sender As Object) As Task
         Dim action As PaginationAction
 
         If sender Is First OrElse sender Is LinkLabel1 Then
@@ -481,16 +479,16 @@ Public Class PayStubForm
                 _pageNo = _lastPageNo
         End Select
 
-        LoadEmployees()
+        Await LoadEmployeesAsync()
+    End Function
+
+    Private Async Sub dgvemployees_SelectionChanged(sender As Object, e As EventArgs)
+
+        Await UpdateEmployeeDetails()
+
     End Sub
 
-    Private Sub dgvemployees_SelectionChanged(sender As Object, e As EventArgs)
-
-        UpdateEmployeeDetails()
-
-    End Sub
-
-    Private Sub UpdateEmployeeDetails()
+    Private Async Function UpdateEmployeeDetails() As Task
 
         EnableAdjustmentButtons(False)
         ResetNumberTextBox()
@@ -566,9 +564,9 @@ Public Class PayStubForm
                         MsgBox(getErrExcptn(ex, Me.Name))
                     End Try
                     If tabEarned.SelectedIndex = 0 Then
-                        ShowDeclaredData()
+                        Await ShowDeclaredData()
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        ShowActualData()
+                        Await ShowActualData()
                     End If
                 Else
 
@@ -584,9 +582,9 @@ Public Class PayStubForm
                         MsgBox(getErrExcptn(ex, Me.Name))
                     End Try
                     If tabEarned.SelectedIndex = 0 Then
-                        ShowDeclaredData()
+                        Await ShowDeclaredData()
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        ShowActualData()
+                        Await ShowActualData()
                     End If
                 End If
 
@@ -652,7 +650,7 @@ Public Class PayStubForm
             txtTotalNetPay.Text = ""
 
         End If
-    End Sub
+    End Function
 
     Sub GeneratePayroll()
 
@@ -822,13 +820,11 @@ Public Class PayStubForm
 
         dialog.ShowDialog()
         ProgressTimer.Stop()
-        RefreshForm()
+        Await RefreshForm()
 
         Await TimeEntrySummaryForm.LoadPayPeriods()
 
         Me.Enabled = True
-
-        LoadEmployees()
     End Sub
 
     Private Sub GeneratingPayrollOnError(t As Task)
@@ -841,8 +837,8 @@ Public Class PayStubForm
         Me.Close()
     End Sub
 
-    Sub btnrefresh_Click(sender As Object, e As EventArgs) Handles btnrefresh.Click
-        VIEW_payperiodofyear()
+    Private Async Sub btnrefresh_Click(sender As Object, e As EventArgs) Handles btnrefresh.Click
+        Await VIEW_payperiodofyear()
     End Sub
 
     Private Sub TabControl1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles TabControl1.DrawItem
@@ -918,25 +914,28 @@ Public Class PayStubForm
         PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
 
-    Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
+    Private Async Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
         Dim e_asc As Integer = Asc(e.KeyChar)
 
         Dim userPressedEnterKey = (e_asc = 13)
         If userPressedEnterKey Then
-            tsbtnSearch_Click(sender, e)
+            Await SearchEmployeeAsync()
         End If
     End Sub
 
-    Private Sub tsbtnSearch_Click(sender As Object, e As EventArgs) Handles tsbtnSearch.Click
+    Private Async Sub tsbtnSearch_Click(sender As Object, e As EventArgs) Handles tsbtnSearch.Click
+        Await SearchEmployeeAsync()
+    End Sub
 
+    Public Async Function SearchEmployeeAsync() As Task
         _pageNo = 0
 
         If tsSearch.Text.Trim.Length = 0 Then
-            EmployeeGridViewPaginationChanged(First, New LinkLabelLinkClickedEventArgs(New LinkLabel.Link()))
+            Await UpdateEmployeeListByPagination(First)
         Else
-
+            Await LoadEmployeesAsync()
         End If
-    End Sub
+    End Function
 
     Private Sub PayrollSummaryDeclaredAndActualToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles _
         PrintPayrollSummaryToolStripButton.Click,
@@ -1035,7 +1034,7 @@ Public Class PayStubForm
                  Await UpdateAdjustments(Of Adjustment)(paystub, allAjustments)
              End If
 
-             UpdateEmployeeDetails()
+             Await UpdateEmployeeDetails()
 
          End Function)
     End Function
@@ -1157,8 +1156,8 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Sub DeclaredTabPage_Enter(sender As Object, e As EventArgs)
-        ShowDeclaredData()
+    Private Async Sub DeclaredTabPage_Enter(sender As Object, e As EventArgs)
+        Await ShowDeclaredData()
     End Sub
 
     Private Async Function ShowDeclaredData() As Task
@@ -1473,7 +1472,7 @@ Public Class PayStubForm
 
                     Await RecordDeletePaystubUserActivity(payPeriodString, paystub)
 
-                    RefreshForm()
+                    Await RefreshForm()
 
                     Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -1577,7 +1576,7 @@ Public Class PayStubForm
             Await RecordPayrollStatusUpdateAsync(payPeriod.RowID.Value, $"Reopened the payroll {GetPayPeriodString()}.")
         End If
 
-        RefreshForm()
+        Await RefreshForm()
 
         Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -1615,9 +1614,9 @@ Public Class PayStubForm
           activityItem)
     End Function
 
-    Private Sub RefreshForm()
-        VIEW_payperiodofyear()
-    End Sub
+    Private Async Function RefreshForm() As Task
+        Await VIEW_payperiodofyear()
+    End Function
 
     Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
 
@@ -1717,7 +1716,7 @@ Public Class PayStubForm
                     Dim recordMessage = $"Deleted a paystub for payroll {payPeriodString}."
                     Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
 
-                    RefreshForm()
+                    Await RefreshForm()
 
                     Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -1799,7 +1798,7 @@ Public Class PayStubForm
                     Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
                     Await RecordPayrollStatusUpdateAsync(payperiodId.Value, $"Cancelled the payroll {GetPayPeriodString()}.")
 
-                    RefreshForm()
+                    Await RefreshForm()
                     Await TimeEntrySummaryForm.LoadPayPeriods()
 
                     MessageBoxHelper.Information($"Payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully cancelled.")

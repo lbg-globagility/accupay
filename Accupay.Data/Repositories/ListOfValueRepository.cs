@@ -22,11 +22,11 @@ namespace AccuPay.Data.Repositories
             return GetListOfValues("LeaveConvertiblePolicy");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter)
+        public ICollection<ListOfValue> GetFilteredListOfValues(Expression<Func<ListOfValue, bool>> filter)
         {
-            return await _context.ListOfValues.
-                                Where(filter).
-                                ToListAsync();
+            return _context.ListOfValues
+                .Where(filter)
+                .ToList();
         }
 
         public async Task<IEnumerable<ListOfValue>> GetDeductionSchedulesAsync()

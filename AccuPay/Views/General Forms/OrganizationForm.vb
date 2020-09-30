@@ -37,7 +37,7 @@ Public Class OrganizationForm
 
         NewButton.Visible = False
         SaveButton.Visible = False
-        CancelButton.Visible = False
+        CancelToolStripButton.Visible = False
 
         If role.Success Then
             _currentRolePermission = role.RolePermission
@@ -49,7 +49,7 @@ Public Class OrganizationForm
 
             If _currentRolePermission.Update OrElse _currentRolePermission.Create Then
                 SaveButton.Visible = True
-                CancelButton.Visible = True
+                CancelToolStripButton.Visible = True
             End If
         Else
             SplitContainer1.Panel1.Enabled = False
@@ -367,7 +367,7 @@ Public Class OrganizationForm
 
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
 
         isNew = 0
         cleartextbox()

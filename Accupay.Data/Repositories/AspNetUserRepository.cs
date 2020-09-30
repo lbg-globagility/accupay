@@ -41,13 +41,6 @@ namespace AccuPay.Data.Repositories
 
         #endregion Save
 
-        public AspNetUser GetById(int userId)
-        {
-            return _context.Users
-                .AsNoTracking()
-                .FirstOrDefault(x => x.Id == userId);
-        }
-
         public async Task<AspNetUser> GetByIdAsync(int userId)
         {
             return await _context.Users
@@ -106,7 +99,7 @@ namespace AccuPay.Data.Repositories
             return (users, count);
         }
 
-        public async Task<IEnumerable<AspNetUser>> GetUsersWithoutImageAsync()
+        public async Task<ICollection<AspNetUser>> GetUsersWithoutImageAsync()
         {
             return await _context.Users
                 .Include(x => x.OriginalImage)

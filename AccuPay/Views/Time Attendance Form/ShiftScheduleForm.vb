@@ -66,11 +66,11 @@ Public Class ShiftScheduleForm
 
 #Region "Methods"
 
-    Public Async Sub LoadShiftScheduleConfigurablePolicy()
+    Public Async Function LoadShiftScheduleConfigurablePolicy() As Task
         _dutyShiftPolicy = Await DutyShiftPolicy.Load1
 
         txtBreakLength.Value = _dutyShiftPolicy.BreakHour
-    End Sub
+    End Function
 
     Private Sub LoadWeek()
         Dim sundayDate = GetSundayDate()
@@ -1031,7 +1031,7 @@ Public Class ShiftScheduleForm
 
     Private Async Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        LoadShiftScheduleConfigurablePolicy()
+        Await LoadShiftScheduleConfigurablePolicy()
 
         Await CheckRolePermissions()
 
@@ -1044,7 +1044,7 @@ Public Class ShiftScheduleForm
 
         Next
 
-        EmployeeTreeView1.SwitchOrganization(organizationId)
+        Await EmployeeTreeView1.SwitchOrganization(organizationId)
 
         LoadWeek()
 

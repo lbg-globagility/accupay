@@ -147,8 +147,8 @@ Public Class MassOvertimeForm
         End If
     End Sub
 
-    Private Sub MassOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _presenter.Load()
+    Private Async Sub MassOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Await _presenter.Load()
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
         AddHandler EmployeeSearchTextBox.TextChanged, AddressOf EmployeeSearchTextBox_TextChanged
     End Sub
@@ -184,8 +184,8 @@ Public Class MassOvertimeForm
         SaveButton.Enabled = True
     End Sub
 
-    Private Sub EmployeeSearchTextBox_TextChanged(sender As Object, e As EventArgs)
-        _presenter.FilterEmployees(EmployeeSearchTextBox.Text)
+    Private Async Sub EmployeeSearchTextBox_TextChanged(sender As Object, e As EventArgs)
+        Await _presenter.FilterEmployees(EmployeeSearchTextBox.Text)
     End Sub
 
 End Class
@@ -215,23 +215,23 @@ Public Class MassOvertimePresenter
         featureChecker = FeatureListChecker.Instance
     End Sub
 
-    Public Sub Load()
+    Public Async Function Load() As Task
         _divisions = LoadDivisions()
-        _employees = LoadEmployees()
+        _employees = Await LoadEmployees()
 
         _view.ShowEmployees(_divisions, _employees)
-    End Sub
+    End Function
 
     Private Function LoadDivisions() As IList(Of Division)
 
         Return _divisionService.GetAll(z_OrganizationID).ToList()
     End Function
 
-    Private Function LoadEmployees() As IList(Of Employee)
+    Private Async Function LoadEmployees() As Task(Of IList(Of Employee))
 
-        Return _employeeRepository.
-                        GetAllWithDivisionAndPosition(z_OrganizationID).
-                        ToList
+        Return (Await _employeeRepository.
+            GetAllWithDivisionAndPositionAsync(z_OrganizationID)).
+            ToList()
     End Function
 
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
@@ -248,7 +248,7 @@ Public Class MassOvertimePresenter
             ToList()
     End Function
 
-    Public Async Sub FilterEmployees(needle As String)
+    Public Async Function FilterEmployees(needle As String) As Task
         Dim match =
             Function(employee As Employee) As Boolean
                 Dim contains = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(needle)
@@ -264,7 +264,7 @@ Public Class MassOvertimePresenter
             End Function)
 
         _view.ShowEmployees(_divisions, employees)
-    End Sub
+    End Function
 
     Public Sub RefreshOvertime()
         Dim dateFrom = _view.DateFrom

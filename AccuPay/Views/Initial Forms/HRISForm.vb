@@ -234,7 +234,7 @@ Public Class HRISForm
         Dim index = EmployeeForm.GetEmployeeProfileTabPageIndex
 
         EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tbpEmployee_Enter(sender, e)
+        Await EmployeeForm.OpenEmployeeTab()
         EmployeeForm.tabIndx = index
         Await ChangeForm(EmployeeForm, {PermissionConstant.EMPLOYEE})
         EmployeeForm.tbpEmployee.Focus()
