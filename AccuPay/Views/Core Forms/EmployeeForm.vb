@@ -714,7 +714,7 @@ Public Class EmployeeForm
 
     Dim empBDate As String
 
-    Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
+    Private Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
@@ -861,7 +861,7 @@ Public Class EmployeeForm
             Dim evaluationDate = If(dtpEvaluationDate.Checked, dtpEvaluationDate.Value, DBNull.Value)
 
             If Not isNew Then 'Means update and oldEmployee is needed for UserActivity
-                oldEmployee = GetOldEmployee(employee_RowID)
+                oldEmployee = Await GetOldEmployee(employee_RowID)
 
             End If
 
@@ -975,7 +975,12 @@ Public Class EmployeeForm
             If succeed Then
 
                 Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-                repo.RecordAdd(z_User, EmployeeEntityName, employee_RowID, z_OrganizationID)
+                repo.RecordAdd(
+                    z_User,
+                    EmployeeEntityName,
+                    entityId:=employee_RowID,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=employee_RowID)
                 InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
 
             End If
@@ -1094,17 +1099,18 @@ Public Class EmployeeForm
         tsbtnSaveEmp.Enabled = True
     End Sub
 
-    Private Shared Function GetOldEmployee(employee_RowID As Integer?) As Employee
+    Private Shared Async Function GetOldEmployee(employee_RowID As Integer?) As Task(Of Employee)
 
         If employee_RowID.HasValue = False Then Return Nothing
 
         Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
-        Return employeeBuilder.
-                    IncludePayFrequency().
-                    IncludePosition().
-                    IncludeBranch().
-                    GetById(employee_RowID.Value, z_OrganizationID)
+        Return Await employeeBuilder.
+            IncludePayFrequency().
+            IncludePosition().
+            IncludeBranch().
+            IncludeAgency().
+            GetByIdAsync(employee_RowID.Value, z_OrganizationID)
 
     End Function
 
@@ -1113,8 +1119,6 @@ Public Class EmployeeForm
         If oldEmployee Is Nothing Then Return False
 
         Dim changes = New List(Of UserActivityItem)
-
-        Dim entityName = EmployeeEntityName.ToLower()
 
         Dim gender = Nothing
         If rdFMale.Checked Then
@@ -1125,436 +1129,441 @@ Public Class EmployeeForm
 
         If oldEmployee.EmployeeNo <> txtEmpID.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} ID from '{oldEmployee.EmployeeNo}' to '{txtEmpID.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated employee ID from '{oldEmployee.EmployeeNo}' to '{txtEmpID.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.EmployeeType <> cboEmpType.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} type from '{oldEmployee.EmployeeType}' to '{cboEmpType.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated employee type from '{oldEmployee.EmployeeType}' to '{cboEmpType.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.EmploymentStatus <> cboEmpStat.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} status from '{oldEmployee.EmploymentStatus}' to '{cboEmpStat.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated employee status from '{oldEmployee.EmploymentStatus}' to '{cboEmpStat.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.StartDate <> dtpempstartdate.Value Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} start date from '{oldEmployee.StartDate.ToShortDateString}' to '{dtpempstartdate.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated start date from '{oldEmployee.StartDate.ToShortDateString}' to '{dtpempstartdate.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.Salutation <> cboSalut.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} salutation from '{oldEmployee.Salutation}' to '{cboSalut.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated salutation from '{oldEmployee.Salutation}' to '{cboSalut.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.Gender <> gender Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} gender from '{oldEmployee.Gender}' to '{gender}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated gender from '{oldEmployee.Gender}' to '{gender}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.FirstName <> txtFName.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} first name from '{oldEmployee.FirstName}' to '{txtFName.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated first name from '{oldEmployee.FirstName}' to '{txtFName.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.MiddleName <> txtMName.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} middle name from '{oldEmployee.MiddleName}' to '{txtMName.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated middle name from '{oldEmployee.MiddleName}' to '{txtMName.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.LastName <> txtLName.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} last name from '{oldEmployee.LastName}' to '{txtLName.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated last name from '{oldEmployee.LastName}' to '{txtLName.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.Surname <> txtSName.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} surname from '{oldEmployee.Surname}' to '{txtSName.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated surname from '{oldEmployee.Surname}' to '{txtSName.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.Nickname <> txtNName.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} nickname from '{oldEmployee.Nickname}' to '{txtNName.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated nickname from '{oldEmployee.Nickname}' to '{txtNName.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.MaritalStatus <> cboMaritStat.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} marital status from '{oldEmployee.MaritalStatus}' to '{cboMaritStat.Text}'."
-                        })
-        End If
-        If oldEmployee.NoOfDependents.ToString <> txtNumDepen.Text Then
-            changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} number of dependents from '{oldEmployee.NoOfDependents}' to '{txtNumDepen.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated marital status from '{oldEmployee.MaritalStatus}' to '{cboMaritStat.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.PayFrequency?.Type <> cboPayFreq.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} pay frequency from '{oldEmployee.PayFrequency?.Type}' to '{cboPayFreq.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated pay frequency from '{oldEmployee.PayFrequency?.Type}' to '{cboPayFreq.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.DayOfRest Is Nothing And cboDayOfRest.Text <> "" Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} rest day from '' to  '{cboDayOfRest.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated rest day from '' to  '{cboDayOfRest.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         ElseIf oldEmployee.DayOfRest IsNot Nothing And cboDayOfRest.Text <> "" Then
             If WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday) <> cboDayOfRest.Text Then
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to '{cboDayOfRest.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to '{cboDayOfRest.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             End If
         ElseIf oldEmployee.DayOfRest IsNot Nothing And cboDayOfRest.Text = "" Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to ''."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to '' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.DateEvaluated <> dtpEvaluationDate.Value Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to '{dtpEvaluationDate.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to '{dtpEvaluationDate.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If (oldEmployee.DateEvaluated Is Nothing And dtpEvaluationDate.Checked) Or
             (oldEmployee.DateEvaluated IsNot Nothing And dtpEvaluationDate.Checked = False) Then
             If dtpEvaluationDate.Checked = False Then
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to ''."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to '' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             Else
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} evaluation date from '' to '{dtpEvaluationDate.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated evaluation date from '' to '{dtpEvaluationDate.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             End If
         End If
         If oldEmployee.DateRegularized <> dtpRegularizationDate.Value Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to '{dtpRegularizationDate.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to '{dtpRegularizationDate.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If (oldEmployee.DateRegularized Is Nothing And dtpRegularizationDate.Checked) Or
             (oldEmployee.DateRegularized IsNot Nothing And dtpRegularizationDate.Checked = False) Then
             If dtpRegularizationDate.Checked = False Then
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to ''."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to '' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             Else
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} regularization date from '' to '{dtpRegularizationDate.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated regularization date from '' to '{dtpRegularizationDate.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             End If
         End If
         If oldEmployee.AtmNo Is Nothing And txtATM.Text <> "" Then 'change to deposit
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} salary distribution from 'Cash / Check' to 'Direct Deposit'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated salary distribution from 'Cash / Check' to 'Direct Deposit' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} ATM number from '' to '{txtATM.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated ATM number/account number from '' to '{txtATM.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} bank name from '' to '{cbobank.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated bank from '' to '{cbobank.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
 
         ElseIf oldEmployee.AtmNo <> Nothing And txtATM.Text Is Nothing Then ' change to cash / check
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} salary distribution from 'Direct Deposit' to 'Cash / Check'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated salary distribution from 'Direct Deposit' to 'Cash / Check' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         Else
             If oldEmployee.AtmNo <> txtATM.Text Then 'change ATM number and Bank Name
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} ATM number from '{oldEmployee.AtmNo}' to '{txtATM.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated ATM number/account number from '{oldEmployee.AtmNo}' to '{txtATM.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             End If
             If oldEmployee.BankName <> cbobank.Text Then
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} bank name from '{oldEmployee.BankName}' to '{cbobank.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated bank from '{oldEmployee.BankName}' to '{cbobank.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             End If
         End If
         If (oldEmployee.Branch Is Nothing And BranchComboBox.Text <> "") Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} branch from '' to '{BranchComboBox.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated branch from '' to '{BranchComboBox.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         ElseIf oldEmployee.Branch IsNot Nothing And BranchComboBox.Text <> "" Then
             If oldEmployee.Branch.Name <> BranchComboBox.Text Then
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} branch from '{oldEmployee.Branch.Name}' to '{BranchComboBox.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated branch from '{oldEmployee.Branch.Name}' to '{BranchComboBox.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             End If
         End If
         If oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} BPI insurance from '{oldEmployee.BPIInsurance.ToString}' to '{BPIinsuranceText.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated BPI insurance from '{oldEmployee.BPIInsurance.ToString}' to '{BPIinsuranceText.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.Position?.Name <> cboPosit.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} position from '{oldEmployee.Position?.Name}' to '{cboPosit.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated position from '{oldEmployee.Position?.Name}' to '{cboPosit.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If ShowAgency() AndAlso oldEmployee.Agency?.Name <> cboAgency.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated employee agency from '{oldEmployee.Agency?.Name} to '{cboAgency.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated employee agency from '{oldEmployee.Agency?.Name}' to '{cboAgency.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.BirthDate <> dtpempbdate.Value Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} birthday from '{oldEmployee.BirthDate.ToShortDateString}' to '{dtpempbdate.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated birthday from '{oldEmployee.BirthDate.ToShortDateString}' to '{dtpempbdate.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.EmailAddress <> txtemail.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} email address from '{oldEmployee.EmailAddress}' to '{txtemail.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated email address from '{oldEmployee.EmailAddress}' to '{txtemail.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.TinNo <> txtTIN.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} TIN from '{oldEmployee.TinNo}' to '{txtTIN.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated TIN from '{oldEmployee.TinNo}' to '{txtTIN.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.SssNo <> txtSSS.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} SSS from '{oldEmployee.SssNo}' to '{txtSSS.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated SSS from '{oldEmployee.SssNo}' to '{txtSSS.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.PhilHealthNo <> txtPIN.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} PhilHealth from '{oldEmployee.PhilHealthNo}' to '{txtPIN.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated PhilHealth from '{oldEmployee.PhilHealthNo}' to '{txtPIN.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.HdmfNo <> txtHDMF.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} PagIbig from '{oldEmployee.HdmfNo}' to '{txtHDMF.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated PAGIBIG from '{oldEmployee.HdmfNo}' to '{txtHDMF.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.HomeAddress <> txtHomeAddr.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} home address from '{oldEmployee.HomeAddress}' to '{txtHomeAddr.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated home address from '{oldEmployee.HomeAddress}' to '{txtHomeAddr.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
         End If
         If oldEmployee.WorkPhone <> txtWorkPhne.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} work phone from '{oldEmployee.WorkPhone}' to '{txtWorkPhne.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated work phone from '{oldEmployee.WorkPhone}' to '{txtWorkPhne.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.HomePhone <> txtHomePhne.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} home phone from '{oldEmployee.HomePhone}' to '{txtHomePhne.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated home phone from '{oldEmployee.HomePhone}' to '{txtHomePhne.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.MobilePhone <> txtMobPhne.Text Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} mobile phone from '{oldEmployee.MobilePhone}' to '{txtMobPhne.Text}'."
-                        })
-        End If
-        If oldEmployee.OvertimeOverride <> chkotflag.Checked Then
-            changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} calculate overtime from '{oldEmployee.OvertimeOverride.ToString}' to '{chkotflag.Checked.ToString}'."
-                        })
-        End If
-        If oldEmployee.UndertimeOverride <> chkutflag.Checked Then
-            changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} calculate undertime from '{oldEmployee.UndertimeOverride.ToString}' to '{chkutflag.Checked.ToString}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated mobile phone from '{oldEmployee.MobilePhone}' to '{txtMobPhne.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.LateGracePeriod <> txtUTgrace.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} grace period from '{oldEmployee.LateGracePeriod.ToString}' to '{txtUTgrace.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated grace period from '{oldEmployee.LateGracePeriod}' to '{txtUTgrace.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
-        'If oldEmployee.AlphalistExempted <> chkAlphaListExempt.Checked Then
-        '    changes.Add(New UserActivityItem() With
-        '                {
-        '                .EntityId = oldEmployee.RowID,
-        '                .Description = $"Updated employee alpha list exemption from '{oldEmployee.AlphalistExempted.ToString}' to '{chkAlphaListExempt.Checked.ToString}'."
-        '                })
-        'End If
         If oldEmployee.WorkDaysPerYear <> txtWorkDaysPerYear.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} work days per year from '{oldEmployee.WorkDaysPerYear.ToString}' to '{txtWorkDaysPerYear.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated work days per year from '{oldEmployee.WorkDaysPerYear}' to '{txtWorkDaysPerYear.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.CalcHoliday <> chkcalcHoliday.Checked Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} calculate holiday from '{oldEmployee.CalcHoliday.ToString}' to '{chkcalcHoliday.Checked.ToString}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated calculate holiday from '{oldEmployee.CalcHoliday}' to '{chkcalcHoliday.Checked}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.CalcSpecialHoliday <> chkcalcSpclHoliday.Checked Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} calculate special holiday from '{oldEmployee.CalcSpecialHoliday.ToString}' to '{chkcalcSpclHoliday.Checked.ToString}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated calculate special holiday from '{oldEmployee.CalcSpecialHoliday}' to '{chkcalcSpclHoliday.Checked}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.CalcNightDiff <> chkcalcNightDiff.Checked Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} calculate night differential from '{oldEmployee.CalcNightDiff.ToString}' to '{chkcalcNightDiff.Checked.ToString}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated calculate night differential from '{oldEmployee.CalcNightDiff}' to '{chkcalcNightDiff.Checked}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.CalcRestDay <> chkcalcRestDay.Checked Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} calculate rest day from '{oldEmployee.CalcRestDay.ToString}' to '{chkcalcRestDay.Checked.ToString}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated calculate rest day from '{oldEmployee.CalcRestDay}' to '{chkcalcRestDay.Checked}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
-        'If oldEmployee.CalcNightDiffOT <> chkcalcNightDiffOT.Checked Then
-        '    changes.Add(New UserActivityItem() With
-        '                {
-        '                .EntityId = oldEmployee.RowID,
-        '                .Description = $"Updated employee calculate night diferential overtime from '{oldEmployee.CalcNightDiffOT.ToString}' to '{chkcalcNightDiffOT.Checked.ToString}'."
-        '                })
-        'End If
-        'If oldEmployee.CalcRestDayOT <> chkcalcRestDayOT.Checked Then
-        '    changes.Add(New UserActivityItem() With
-        '                {
-        '                .EntityId = oldEmployee.RowID,
-        '                .Description = $"Updated employee calculate rest day overtime from '{oldEmployee.CalcRestDayOT.ToString}' to '{chkcalcRestDayOT.Checked.ToString}'."
-        '                })
-        'End If
         If oldEmployee.VacationLeaveAllowance <> txtvlallow.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} vacation leave allowance from '{oldEmployee.VacationLeaveAllowance.ToString("#0")}' to '{txtvlallow.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated vacation leave allowance from '{oldEmployee.VacationLeaveAllowance:#0}' to '{txtvlallow.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.SickLeaveAllowance <> txtslallow.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} sick leave allowance from '{oldEmployee.SickLeaveAllowance.ToString}' to '{txtslallow.Text}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated sick leave allowance from '{oldEmployee.SickLeaveAllowance}' to '{txtslallow.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
         If oldEmployee.MaternityLeaveAllowance <> txtmlallow.Text.ToDecimal Then
             If gender = "F" Then
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} maternity leave allowance from '{oldEmployee.MaternityLeaveAllowance.ToString}' to '{txtmlallow.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated maternity leave allowance from '{oldEmployee.MaternityLeaveAllowance}' to '{txtmlallow.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             ElseIf gender = "M" Then
                 changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} paternity leave allowance from '{oldEmployee.MaternityLeaveAllowance.ToString}' to '{txtmlallow.Text}'."
-                        })
+                {
+                    .EntityId = oldEmployee.RowID,
+                    .Description = $"Updated paternity leave allowance from '{oldEmployee.MaternityLeaveAllowance}' to '{txtmlallow.Text}' of employee.",
+                    .ChangedEmployeeId = oldEmployee.RowID.Value
+                })
             End If
         End If
         If oldEmployee.OtherLeaveAllowance <> txtothrallow.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} other leave allowance from '{oldEmployee.OtherLeaveAllowance.ToString}' to '{txtothrallow.Text}'."
-                        })
-        End If
-        If oldEmployee.RevealInPayroll <> Not chkbxRevealInPayroll.Checked Then
-            changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} hide in payroll from '{(Not oldEmployee.RevealInPayroll).ToString}' to '{chkbxRevealInPayroll.Checked.ToString}'."
-                        })
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated other leave allowance from '{oldEmployee.OtherLeaveAllowance}' to '{txtothrallow.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
         End If
 
-        If changes.Count > 0 Then
+        If changes.Any() Then
             Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
             repo.CreateRecord(z_User, EmployeeEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
@@ -1822,7 +1831,7 @@ Public Class EmployeeForm
 
                 Dim selectedTab = tabctrlemp.SelectedTab
                 Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                Dim employee = GetCurrentEmployeeEntity(employeeID)
+                Dim employee = Await GetCurrentEmployeeEntity(employeeID)
 
                 If selectedTab Is tbpempchklist Then
 
@@ -2116,14 +2125,14 @@ Public Class EmployeeForm
         End If
     End Sub
 
-    Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
+    Private Shared Async Function GetCurrentEmployeeEntity(employeeID As Integer?) As Task(Of Employee)
 
         Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
-        Return employeeBuilder.
-                    IncludePayFrequency().
-                    IncludePosition().
-                    GetById(employeeID, z_OrganizationID)
+        Return Await employeeBuilder.
+            IncludePayFrequency().
+            IncludePosition().
+            GetByIdAsync(employeeID, z_OrganizationID)
 
     End Function
 

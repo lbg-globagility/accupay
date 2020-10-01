@@ -93,25 +93,22 @@ Public Class NewEmployeePresenter
     End Function
 
     Public Async Function GetEmployees() As Task(Of IList(Of Employee))
-        Return Await Task.Run(
-            Function()
 
-                Dim builder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim builder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
-                Dim employees As IEnumerable(Of Employee)
+        Dim employees As IEnumerable(Of Employee)
 
-                If _view.IsActive Then
-                    employees = builder.IsActive().ToList(z_OrganizationID)
-                Else
-                    employees = builder.ToList(z_OrganizationID)
+        If _view.IsActive Then
+            employees = Await builder.IsActive().ToListAsync(z_OrganizationID)
+        Else
+            employees = Await builder.ToListAsync(z_OrganizationID)
 
-                End If
+        End If
 
-                Return employees.
-                    OrderBy(Function(e) e.LastName).
-                    ThenBy(Function(e) e.FirstName).ToList()
+        Return employees.
+            OrderBy(Function(e) e.LastName).
+            ThenBy(Function(e) e.FirstName).ToList()
 
-            End Function)
     End Function
 
 End Class

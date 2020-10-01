@@ -53,8 +53,6 @@ namespace AccuPay.Data.Entities
         public DateTime StartDate { get; set; }
         public DateTime? TerminationDate { get; set; }
         public int? NoOfDependents { get; set; }
-        public bool UndertimeOverride { get; set; }
-        public bool OvertimeOverride { get; set; }
         public bool NewEmployeeFlag { get; set; }
         public decimal LeaveBalance { get; set; }
         public decimal SickLeaveBalance { get; set; }
