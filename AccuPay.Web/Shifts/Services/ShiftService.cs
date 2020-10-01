@@ -113,7 +113,7 @@ namespace AccuPay.Web.Shifts.Services
                 deleted: deleted);
         }
 
-        internal async Task Import(IFormFile file)
+        internal async Task<ShiftImportParser.ShiftImportParserOutput> Import(IFormFile file)
         {
             if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
                 throw new InvalidFormatException();
@@ -128,6 +128,8 @@ namespace AccuPay.Web.Shifts.Services
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
             await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+
+            return parsedResult;
         }
 
         private static EmployeeShiftsDto ConvertToDto(Employee employee, ICollection<EmployeeDutySchedule> shifts)

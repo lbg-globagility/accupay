@@ -2,11 +2,20 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { _isNumberValue } from '@angular/cdk/coercion';
+import { find } from 'lodash';
 
 interface ParseOutputModel {
   columnHeader: string;
   columnDef: string;
 }
+
+const EXEMPTED_PROPERTIES = [
+  'tin',
+  'sssNo',
+  'pagIbigNo',
+  'philHealthNo',
+  'atmNo',
+];
 
 @Component({
   selector: 'app-post-import-parser-output-dialog',
@@ -47,6 +56,12 @@ export class PostImportParserOutputDialogComponent implements OnInit {
 
   getValue(obj: any, propertyName: string) {
     const value = obj[propertyName];
+
+    if (
+      find(EXEMPTED_PROPERTIES, (propName) => propName == propertyName) != null
+    ) {
+      return value;
+    }
 
     if (propertyName.includes('Time') || propertyName.includes('time')) {
       return moment(value).toDate().toLocaleTimeString();

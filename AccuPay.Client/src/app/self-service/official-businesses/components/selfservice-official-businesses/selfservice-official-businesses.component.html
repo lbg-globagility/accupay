@@ -1,0 +1,66 @@
+<div class="flex">
+  <div class="w-1/2">
+    <h1 class="mat-headline">Official Businesses</h1>
+  </div>
+  <div class="w-1/2 flex justify-end items-start">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="create()"
+      class="m-with-icon"
+    >
+      <mat-icon>add</mat-icon>REQUEST OFFICIAL BUSINESS
+    </button>
+  </div>
+</div>
+
+<div class="mat-elevation-z1">
+  <table mat-table class="w-full" [dataSource]="dataSource">
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let officialBusiness">
+        {{ officialBusiness.startDate | date }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef>Time</th>
+      <td mat-cell *matCellDef="let officialBusiness">
+        <ng-container
+          *ngIf="
+            officialBusiness.startTime != null ||
+              officialBusiness.endTime != null;
+            else wholeDay
+          "
+        >
+          {{ officialBusiness.startTime | date: "shortTime" }} -
+          {{ officialBusiness.endTime | date: "shortTime" }}
+        </ng-container>
+        <ng-template #wholeDay>
+          <span class="italic">Whole Day</span>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let officialBusiness">
+        <app-status type="leave" [value]="officialBusiness.status"></app-status>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let officialBusiness; columns: displayedColumns"
+    ></tr>
+  </table>
+
+  <mat-paginator
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    [length]="totalCount"
+    (page)="page($event)"
+  ></mat-paginator>
+</div>

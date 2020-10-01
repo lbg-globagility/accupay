@@ -30,9 +30,11 @@ namespace AccuPay.Data.Services.Imports
 
         public DateTime? BreakFromDisplay => TimeUtility.ToDateTime(BreakTime);
 
-        public bool IsValidToSave => string.IsNullOrWhiteSpace(ErrorMessage);
+        public bool IsValidToSave => string.IsNullOrWhiteSpace(Remarks);
 
-        public string ErrorMessage
+        public string IsRestDayText => IsRestDay ? "Yes" : "No";
+
+        public string Remarks
         {
             get
             {

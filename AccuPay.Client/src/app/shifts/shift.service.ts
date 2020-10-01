@@ -6,6 +6,7 @@ import { Shift } from 'src/app/shifts/shared/shift';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
 import { ShiftsByEmployeePageOptions } from './shared/shifts-by-employee-page-option';
 import { EmployeeShifts } from './shared/employee-shifts';
+import { ShiftImportParserOutput } from './shared/shift-import-parser-output';
 
 @Injectable({
   providedIn: 'root',
@@ -36,11 +37,14 @@ export class ShiftService extends BasePdfService {
     return this.httpClient.put<void>(`${this.baseUrl}`, shifts);
   }
 
-  import(file: File): Observable<Shift> {
+  import(file: File): Observable<ShiftImportParserOutput> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.httpClient.post<Shift>(`${this.baseUrl}/import`, formData);
+    return this.httpClient.post<ShiftImportParserOutput>(
+      `${this.baseUrl}/import`,
+      formData
+    );
   }
 
   getShifScheduleTemplate(): Promise<any> {

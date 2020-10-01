@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AccountService } from '../services/account.service';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { catchError, map } from 'rxjs/operators';
+import { Role } from 'src/app/roles/shared/role';
 
 @Component({
   selector: 'app-login',
@@ -48,27 +49,23 @@ export class LoginComponent implements OnInit {
 
     this.authService.login(email, password).subscribe(
       () => {
-        this.loadRole().subscribe(() => {
-          if (this.authService.redirectUrl != null) {
-            const attemptedUrl = this.authService.redirectUrl;
-            this.authService.redirectUrl = null;
-            this.router.navigateByUrl(attemptedUrl);
-          } else {
+        if (this.authService.hasAttemptedUrl()) {
+          const attemptedUrl = this.authService.popUrlAttempt();
+          this.router.navigateByUrl(attemptedUrl);
+        } else {
+          const currentUser = this.authService.currentUser;
+
+          if (currentUser.type === 'Admin') {
             this.router.navigate(['']);
+          } else {
+            this.router.navigate(['self-service']);
           }
-        });
+        }
       },
       (error) => {
         this.loginError = error;
         this.loggingIn.next(false);
       }
-    );
-  }
-
-  private loadRole(): Observable<void> {
-    return this.accountService.getCurrentRole().pipe(
-      map((role) => this.accountService.getPermissions(role)),
-      map((permissions) => this.permissionService.loadPermissions(permissions))
     );
   }
 }

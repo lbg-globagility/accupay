@@ -29,5 +29,6 @@ namespace AccuPay.Data.Entities
         public DateTime? DeletedAt { get; set; }
 
         public string FullName => $"{FirstName} {LastName}".Trim();
+        public int? EmployeeId { get; set; }
     }
 }

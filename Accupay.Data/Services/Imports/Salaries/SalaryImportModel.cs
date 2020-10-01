@@ -32,7 +32,11 @@ namespace AccuPay.Data.Services.Imports.Salaries
 
         private void ApplyData(Employee employee, SalaryRowRecord parsedSalary)
         {
-            if (!_noEmployee) EmployeeId = employee.RowID.Value;
+            if (!_noEmployee)
+            {
+                EmployeeId = employee.RowID.Value;
+                EmployeeName = employee.FullNameLastNameFirst;
+            }
 
             _noEmployeeNo = string.IsNullOrWhiteSpace(parsedSalary.EmployeeNo);
             if (!_noEmployeeNo) EmployeeNo = parsedSalary.EmployeeNo;

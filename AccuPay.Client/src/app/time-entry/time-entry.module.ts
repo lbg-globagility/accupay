@@ -13,5 +13,6 @@ import { TimeEntryTableComponent } from './time-entry-table/time-entry-table.com
     TimeEntryTableComponent,
   ],
   imports: [SharedModule],
+  exports: [TimeEntryTableComponent],
 })
 export class TimeEntryModule {}

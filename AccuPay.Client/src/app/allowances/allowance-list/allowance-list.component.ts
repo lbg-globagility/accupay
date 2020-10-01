@@ -157,6 +157,7 @@ export class AllowanceListComponent implements OnInit {
   private displaySuccess(outputParse: AllowanceImportParserOutput) {
     const model: AllowanceImportModel = {
       employeeNo: '',
+      fullName: '',
       allowanceName: '',
       effectiveStartDate: new Date(),
       effectiveEndDate: new Date(),

@@ -36,11 +36,11 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.ShiftCreate)]
-        public async Task<ActionResult> Import([FromForm] IFormFile file)
+        public async Task<Data.Services.Imports.ShiftImportParser.ShiftImportParserOutput> Import([FromForm] IFormFile file)
         {
-            await _service.Import(file);
+            return await _service.Import(file);
 
-            return Ok();
+            // return Ok();
         }
 
         [HttpGet("employees")]

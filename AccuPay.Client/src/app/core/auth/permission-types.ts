@@ -103,4 +103,16 @@ export enum PermissionTypes {
   UserCreate = 'User:create',
   UserUpdate = 'User:update',
   UserDelete = 'User:delete',
+
+  SelfserveLeaveCreate = 'SelfserveLeave:create',
+  SelfserveLeaveRead = 'SelfserveLeave:read',
+
+  SelfserveOvertimeCreate = 'SelfserveOvertime:create',
+  SelfserveOvertimeRead = 'SelfserveOvertime:read',
+
+  SelfserveOfficialBusinessCreate = 'SelfserveOfficialBusiness:create',
+  SelfserveOfficialBusinessRead = 'SelfserveOfficialBusiness:read',
+
+  SelfserveTimeEntryCreate = 'SelfserveTimeEntry:create',
+  SelfserveTimeEntryRead = 'SelfserveTimeEntry:read',
 }

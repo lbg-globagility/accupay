@@ -1,0 +1,11 @@
+._button {
+  width: 120px;
+  height: 120px;
+
+  mat-icon {
+    $-size: 3rem;
+    font-size: $-size;
+    width: $-size;
+    height: $-size;
+  }
+}

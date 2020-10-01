@@ -16,7 +16,6 @@ namespace AccuPay.Data.Services.Imports.Allowances
         private bool _noAllowanceFrequency;
         private bool _noAllowanceName;
         private bool _noAmount;
-        private bool _noEffectiveEndDate;
         private bool _noEffectiveStartDate;
         private bool _noEmployeeNo;
         private bool _fixedAllowanceNotSetToMonthlyFrequency;
@@ -39,7 +38,11 @@ namespace AccuPay.Data.Services.Imports.Allowances
 
         private void ApplyData(AllowanceRowRecord parsedAllowance, Employee employee, AllowanceType allowanceType)
         {
-            if (!_noEmployee) EmployeeId = employee.RowID;
+            if (!_noEmployee)
+            {
+                EmployeeId = employee.RowID;
+                FullName = employee.FullNameLastNameFirst;
+            }
 
             if (!_noAllowanceType) AllowanceTypeId = allowanceType.Id;
 
@@ -51,9 +54,6 @@ namespace AccuPay.Data.Services.Imports.Allowances
 
             _noAmount = !parsedAllowance.Amount.HasValue;
             if (!_noAmount) Amount = parsedAllowance.Amount;
-
-            _noEffectiveEndDate = !parsedAllowance.EffectiveEndDate.HasValue;
-            if (!_noEffectiveEndDate) EffectiveEndDate = parsedAllowance.EffectiveEndDate;
 
             _noEffectiveStartDate = !parsedAllowance.EffectiveStartDate.HasValue;
             if (!_noEffectiveStartDate) EffectiveStartDate = parsedAllowance.EffectiveStartDate;
@@ -74,7 +74,7 @@ namespace AccuPay.Data.Services.Imports.Allowances
                 var sameEmployee = _noEmployee ? false : _allowance.EmployeeID == EmployeeId;
                 var sameAllowanceType = _noAllowanceType ? false : isEqualToLowerCase(_allowance.Type, AllowanceName);
                 var sameEffectiveStartDate = _noEffectiveStartDate ? false : _allowance.EffectiveStartDate == EffectiveStartDate.Value;
-                var sameEffectiveEndDate = _noEffectiveEndDate ? false : _allowance.EffectiveEndDate == EffectiveEndDate.Value;
+                var sameEffectiveEndDate = _allowance.EffectiveEndDate == EffectiveEndDate;
                 var sameAmount = _noAmount ? false : _allowance.Amount == Amount.Value;
 
                 _hasDuplicate = sameEmployee && sameAllowanceType && sameEffectiveStartDate && sameEffectiveEndDate && sameAmount;
@@ -97,7 +97,6 @@ namespace AccuPay.Data.Services.Imports.Allowances
                     _noAllowanceFrequency ||
                     _noAllowanceName ||
                     _noAmount ||
-                    _noEffectiveEndDate ||
                     _noEffectiveStartDate ||
                     _noEmployeeNo ||
                     _fixedAllowanceNotSetToMonthlyFrequency ||
@@ -113,7 +112,6 @@ namespace AccuPay.Data.Services.Imports.Allowances
             if (_noAllowanceFrequency) errors.Add("Invalid Allowance frequency");
             if (_noAllowanceName) errors.Add("Invalid Name of allowance");
             if (_noAmount) errors.Add("Invalid Allowance amount");
-            if (_noEffectiveEndDate) errors.Add("Invalid Effective end date");
             if (_noEffectiveStartDate) errors.Add("Invalid Effective start date");
             if (_noEmployeeNo) errors.Add("Invalid EmployeeID");
             if (_fixedAllowanceNotSetToMonthlyFrequency) errors.Add("Only fixed allowance type are allowed for Monthly allowances.");
@@ -122,6 +120,6 @@ namespace AccuPay.Data.Services.Imports.Allowances
             Remarks = string.Join("; ", errors.ToArray());
         }
 
-        public string Remarks { get; set; }
+        public string Remarks { get; internal set; }
     }
 }

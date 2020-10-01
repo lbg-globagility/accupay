@@ -13,6 +13,8 @@ namespace AccuPay.Web.Core.Auth
 
         public int ClientId { get; private set; }
 
+        public int? EmployeeId { get; private set; }
+
         public CurrentUser(IHttpContextAccessor accessor)
         {
             ReadClaims(accessor?.HttpContext?.User);
@@ -28,6 +30,7 @@ namespace AccuPay.Web.Core.Auth
             ReadUserId(user);
             ReadOrganizationId(user);
             ReadClientId(user);
+            ReadEmployeeId(user);
         }
 
         private void ReadUserId(ClaimsPrincipal principal)
@@ -49,6 +52,13 @@ namespace AccuPay.Web.Core.Auth
             var claim = principal.FindFirst(CustomClaimTypes.ClientId);
 
             ClientId = claim is null ? 0 : int.Parse(claim.Value);
+        }
+
+        private void ReadEmployeeId(ClaimsPrincipal principal)
+        {
+            var value = principal.FindFirst(CustomClaimTypes.EmployeeId)?.Value;
+
+            EmployeeId = string.IsNullOrEmpty(value) ? 0 : int.Parse(value);
         }
     }
 }

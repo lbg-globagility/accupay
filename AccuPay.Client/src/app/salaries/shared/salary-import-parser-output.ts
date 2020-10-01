@@ -7,6 +7,7 @@ export class SalaryImportParserOutput
   invalidRecords: SalaryImportModel[];
   columnHeaders: string[] = [
     'Employee No',
+    'Employee Name',
     'Effective From',
     'Basic Salary',
     'Allowance Salary',

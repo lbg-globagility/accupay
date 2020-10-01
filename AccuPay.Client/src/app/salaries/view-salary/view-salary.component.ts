@@ -142,6 +142,7 @@ export class ViewSalaryComponent implements OnInit {
   private displaySuccess(outputParse: SalaryImportParserOutput) {
     const model: SalaryImportModel = {
       employeeNo: '',
+      employeeName: '',
       effectiveFrom: new Date(),
       basicSalary: 0,
       allowanceSalary: 0,

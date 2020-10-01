@@ -59,6 +59,14 @@ namespace AccuPay.Web.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetInformation()
+        {
+            var dto = await _accountService.GetInformation();
+
+            return dto;
+        }
+
         [HttpGet("current-role")]
         public async Task<ActionResult<RoleDto>> GetCurrentRole()
         {

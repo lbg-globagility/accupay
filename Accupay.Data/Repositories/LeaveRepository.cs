@@ -51,11 +51,8 @@ namespace AccuPay.Data.Repositories
         }
 
         public async Task<PaginatedList<Leave>> GetPaginatedListAsync(
-            PageOptions options,
-            int organizationId,
-            string searchTerm = "",
-            DateTime? dateFrom = null,
-            DateTime? dateTo = null)
+            LeavePageOptions options,
+            int organizationId)
         {
             var query = _context.Leaves
                 .Include(x => x.Employee)
@@ -66,9 +63,9 @@ namespace AccuPay.Data.Repositories
                     .ThenBy(x => x.Employee.FirstName)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (options.HasSearchTerm)
             {
-                searchTerm = $"%{searchTerm}%";
+                var searchTerm = $"%{options.SearchTerm}%";
 
                 query = query.Where(x =>
                     EF.Functions.Like(x.LeaveType, searchTerm) ||
@@ -77,13 +74,18 @@ namespace AccuPay.Data.Repositories
                     EF.Functions.Like(x.Employee.LastName, searchTerm));
             }
 
-            if (dateFrom.HasValue)
+            if (options.HasDateFrom)
             {
-                query = query.Where(t => dateFrom.Value.Date <= t.StartDate);
+                query = query.Where(t => options.DateFrom.Value.Date <= t.StartDate);
             }
-            if (dateTo.HasValue)
+            if (options.HasDateTo)
             {
-                query = query.Where(t => t.StartDate <= dateTo.Value.Date);
+                query = query.Where(t => t.StartDate <= options.DateTo.Value.Date);
+            }
+
+            if (options.HasEmployeeId)
+            {
+                query = query.Where(t => t.EmployeeID == options.EmployeeId);
             }
 
             var leaves = await query.Page(options).ToListAsync();

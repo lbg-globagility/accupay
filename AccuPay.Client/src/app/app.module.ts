@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgxPermissionsModule, NgxPermissionsService } from 'ngx-permissions';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { AllowancesModule } from 'src/app/allowances/allowances.module';
 import { EmployeesModule } from './employees/employees.module';
 import { LeavesModule } from 'src/app/leaves/leaves.module';
@@ -33,7 +33,10 @@ import { LoanTypesModule } from './loan-types/loan-types.module';
 import { EmploymentPoliciesModule } from 'src/app/employment-policies/employment-policies.module';
 import { AccountService } from 'src/app/accounts/services/account.service';
 import { ErrorsModule } from 'src/app/errors/errors.module';
-import { map, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { SelfServiceModule } from './self-service/self-service.module';
+import { AuthService } from 'src/app/core/auth';
+import { forkJoin } from 'rxjs';
 
 @NgModule({
   declarations: [AppComponent],
@@ -69,6 +72,7 @@ import { map, catchError } from 'rxjs/operators';
     AllowanceTypesModule,
     ReportsModule,
     LoanTypesModule,
+    SelfServiceModule,
   ],
   providers: [
     {
@@ -78,17 +82,12 @@ import { map, catchError } from 'rxjs/operators';
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: (as: AccountService, ps: NgxPermissionsService) => () => {
-        return as
-          .getCurrentRole()
-          .pipe(
-            map((role) => as.getPermissions(role)),
-            map((permissions) => ps.loadPermissions(permissions)),
-            catchError(() => Promise.resolve(false))
-          )
+      useFactory: (as: AuthService) => () => {
+        return forkJoin([as.getCurrentRole(), as.getAccount()])
+          .pipe(catchError(() => Promise.resolve(false)))
           .toPromise();
       },
-      deps: [AccountService, NgxPermissionsService],
+      deps: [AuthService],
       multi: true,
     },
   ],

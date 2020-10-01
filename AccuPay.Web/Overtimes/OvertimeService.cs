@@ -21,8 +21,12 @@ namespace AccuPay.Web.Overtimes
         private readonly OvertimeImportParser _importParser;
         private readonly OvertimeDataService _dataService;
 
-        public OvertimeService(OvertimeRepository repository, OvertimeDataService dataService, ICurrentUser currentUser,
-            OvertimeImportParser importParser, OvertimeDataService overtimeDataService)
+        public OvertimeService(
+            OvertimeRepository repository,
+            OvertimeDataService dataService,
+            ICurrentUser currentUser,
+            OvertimeImportParser importParser,
+            OvertimeDataService overtimeDataService)
         {
             _repository = repository;
             _service = dataService;
@@ -31,14 +35,9 @@ namespace AccuPay.Web.Overtimes
             _dataService = overtimeDataService;
         }
 
-        public async Task<PaginatedList<OvertimeDto>> PaginatedList(PageOptions options, OvertimeFilter filter)
+        public async Task<PaginatedList<OvertimeDto>> PaginatedList(OvertimePageOptions options)
         {
-            var paginatedList = await _repository.GetPaginatedListAsync(
-                options,
-                _currentUser.OrganizationId,
-                filter.Term,
-                filter.DateFrom,
-                filter.DateTo);
+            var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId);
 
             return paginatedList.Select(x => ConvertToDto(x));
         }
@@ -59,6 +58,25 @@ namespace AccuPay.Web.Overtimes
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
+
+            await _service.SaveAsync(overtime);
+
+            return ConvertToDto(overtime);
+        }
+
+        public async Task<OvertimeDto> Create(SelfServiceCreateOvertimeDto dto)
+        {
+            var overtime = new Overtime()
+            {
+                EmployeeID = _currentUser.EmployeeId,
+                CreatedBy = _currentUser.UserId,
+                OrganizationID = _currentUser.OrganizationId,
+            };
+
+            overtime.OTStartDate = dto.StartDate;
+            overtime.OTStartTime = dto.StartTime.TimeOfDay;
+            overtime.OTEndTime = dto.EndTime.TimeOfDay;
+            overtime.Reason = dto.Reason;
 
             await _service.SaveAsync(overtime);
 

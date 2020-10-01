@@ -72,19 +72,23 @@
       mat-raised-button
       color="primary"
       class="m-with-icon"
-      style="margin-left: 8px;"
+      style="margin-left: 8px"
       [matMenuTriggerFor]="moreMenu"
     >
       <mat-icon>more_vert</mat-icon>
       MORE
     </button>
     <mat-menu #moreMenu="matMenu">
-      <button mat-menu-item matTooltip="'Import' is still under construction">
-        Import
-      </button>
       <button mat-menu-item (click)="downloadTemplate()">
         Download Template
       </button>
+      <button mat-menu-item (click)="uploader.click()">Import</button>
+      <input
+        hidden
+        type="file"
+        #uploader
+        (change)="onImport($event.target.files)"
+      />
     </mat-menu>
   </div>
 </div>

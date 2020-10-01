@@ -10,6 +10,8 @@ namespace AccuPay.Data.Services.Imports.Loans
 
         public int EmployeeId { get; set; }
 
+        public string EmployeeName { get; set; }
+
         public string LoanName { get; set; }
 
         public int LoanTypeId { get; set; }

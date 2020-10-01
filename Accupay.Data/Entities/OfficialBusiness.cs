@@ -52,6 +52,11 @@ namespace AccuPay.Data.Entities
 
         public DateTime? PayrollDate => StartDate;
 
+        public OfficialBusiness()
+        {
+            Status = StatusPending;
+        }
+
         [NotMapped]
         public DateTime? StartTimeFull
         {

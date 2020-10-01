@@ -10,35 +10,31 @@
       class="m-with-icon"
       routerLink="/salaries/new"
     >
-      <mat-icon>add</mat-icon>NEW SALARY
+      <mat-icon>add</mat-icon>NEW
     </a>
 
     <button
-      [disabled]="isDownloadingTemplate"
       mat-raised-button
-      (click)="downloadTemplate()"
-      style="margin-left: 8px;"
       color="primary"
+      class="m-with-icon"
+      style="margin-left: 8px"
+      [matMenuTriggerFor]="moreMenu"
     >
-      {{ isDownloadingTemplate ? "DOWNLOADING..." : "DOWNLOAD TEMPLATE" }}
-      <app-button-spinner [active]="isDownloadingTemplate"></app-button-spinner>
+      <mat-icon>more_vert</mat-icon>MORE
     </button>
+    <mat-menu #moreMenu="matMenu">
+      <button mat-menu-item (click)="downloadTemplate()">
+        Download Template
+      </button>
 
-    <input
-      hidden
-      type="file"
-      #uploader
-      (change)="onImport($event.target.files)"
-    />
-    <button
-      mat-raised-button
-      color="accent"
-      class="new-btn"
-      style="margin-left: 10px;"
-      (click)="uploader.click()"
-    >
-      IMPORT
-    </button>
+      <input
+        hidden
+        type="file"
+        #uploader
+        (change)="onImport($event.target.files)"
+      />
+      <button mat-menu-item (click)="uploader.click()">Import</button>
+    </mat-menu>
   </div>
 </div>
 
@@ -71,9 +67,7 @@
       </div>
 
       <div class="col-lg-3">
-        <app-display-field label="Salary Type">
-          Monthly
-        </app-display-field>
+        <app-display-field label="Salary Type"> Monthly </app-display-field>
       </div>
 
       <div class="col-lg-3">
@@ -111,9 +105,7 @@
           >
             <span>Automatic Computation</span>
           </ng-container>
-          <ng-template #sssOverride>
-            No contribution
-          </ng-template>
+          <ng-template #sssOverride> No contribution </ng-template>
         </app-display-field>
       </div>
 

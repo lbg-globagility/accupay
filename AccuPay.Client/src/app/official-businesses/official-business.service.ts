@@ -6,6 +6,7 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { Moment } from 'moment';
 import { BasePdfService } from '../core/shared/services/base-pdf-service';
+import { OfficialBusinessImportParserOutput } from './shared/official-business-import-parser-output';
 
 @Injectable({
   providedIn: 'root',
@@ -75,6 +76,16 @@ export class OfficialBusinessService extends BasePdfService {
     return this.getFile(
       this.OBTemplateFileName,
       `${this.baseUrl}/accupay-official-business-template`
+    );
+  }
+
+  import(file: File): Observable<OfficialBusinessImportParserOutput> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.httpClient.post<OfficialBusinessImportParserOutput>(
+      `${this.baseUrl}/import`,
+      formData
     );
   }
 }

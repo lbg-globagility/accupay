@@ -24,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostImportParserOutputDialogComponent } from './import/post-import-parser-output-dialog/post-import-parser-output-dialog.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     // MatProgressBarModule,
     MatTableModule,
     MatTabsModule,
+    MatGridListModule,
   ],
   exports: [
     StatusComponent,

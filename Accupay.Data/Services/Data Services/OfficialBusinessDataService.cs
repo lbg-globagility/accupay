@@ -2,9 +2,11 @@
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services.Imports.OfficialBusiness;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +14,8 @@ namespace AccuPay.Data.Services
 {
     public class OfficialBusinessDataService : BaseDailyPayrollDataService<OfficialBusiness>
     {
+        private readonly OfficialBusinessRepository _officialBusinessRepository;
+
         public OfficialBusinessDataService(
             OfficialBusinessRepository officialBusinessRepository,
             PayPeriodRepository payPeriodRepository,
@@ -25,6 +29,7 @@ namespace AccuPay.Data.Services
                 entityName: "Official Business",
                 entityNamePlural: "Official Businesses")
         {
+            _officialBusinessRepository = officialBusinessRepository;
         }
 
         protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness)
@@ -72,6 +77,29 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
 
             officialBusiness.UpdateEndDate();
+        }
+
+        public async Task<List<OfficialBusiness>> BatchApply(IReadOnlyCollection<OfficialBusinessImportModel> validRecords, int organizationId, int userId)
+        {
+            List<OfficialBusiness> officialBusinesses = new List<OfficialBusiness>();
+
+            foreach (var ob in validRecords)
+            {
+                officialBusinesses.Add(new OfficialBusiness()
+                {
+                    CreatedBy = userId,
+                    EmployeeID = ob.EmployeeID,
+                    OrganizationID = organizationId,
+                    EndTimeFull = ob.EndTime.Value,
+                    StartDate = ob.StartDate.Value,
+                    StartTimeFull = ob.StartTime.Value,
+                    Status = Overtime.StatusPending
+                });
+            }
+
+            await _officialBusinessRepository.SaveManyAsync(officialBusinesses);
+
+            return officialBusinesses;
         }
     }
 }

@@ -26,9 +26,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet]
         [Permission(PermissionTypes.OvertimeRead)]
-        public async Task<ActionResult<PaginatedList<OvertimeDto>>> List([FromQuery] PageOptions options, [FromQuery] OvertimeFilter filter)
+        public async Task<ActionResult<PaginatedList<OvertimeDto>>> List([FromQuery] OvertimePageOptions options)
         {
-            return await _service.PaginatedList(options, filter);
+            return await _service.PaginatedList(options);
         }
 
         [HttpGet("{id}")]

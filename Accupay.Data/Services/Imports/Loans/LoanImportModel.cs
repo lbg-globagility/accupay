@@ -34,7 +34,11 @@ namespace AccuPay.Data.Services.Imports.Loans
         private void ApplyData()
         {
             EmployeeNo = _loan.EmployeeNo;
-            if (!_noEmployee) EmployeeId = _employee.RowID.Value;
+            if (!_noEmployee)
+            {
+                EmployeeId = _employee.RowID.Value;
+                EmployeeName = _employee.FullNameLastNameFirst;
+            }
             LoanName = _loan.LoanName;
             if (!_noLoanType) LoanTypeId = _loanType.RowID.Value;
             LoanNumber = _loan.LoanNumber;

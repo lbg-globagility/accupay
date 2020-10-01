@@ -7,6 +7,7 @@ export class AllowanceImportParserOutput
   invalidRecords: AllowanceImportModel[];
   columnHeaders: string[] = [
     'EmployeeID',
+    'Employee Name',
     'Name of allowance',
     'Effective start date',
     'Effective end date',
