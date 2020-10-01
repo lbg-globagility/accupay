@@ -22,6 +22,13 @@ namespace AccuPay.Data.Helpers
             TotalCount = total;
         }
 
+        public PaginatedList(IEnumerable<T> items, int total, int pageSize)
+        {
+            Items = items;
+            TotalPages = (int)Math.Ceiling(total / (double)pageSize);
+            TotalCount = total;
+        }
+
         public PaginatedList(IEnumerable<T> items, int total, int pageNumber, int pageSize)
         {
             Items = items;

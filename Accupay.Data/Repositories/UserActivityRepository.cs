@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,29 +23,40 @@ namespace AccuPay.Data.Repositories
             this._context = context;
         }
 
-        public async Task<ICollection<UserActivity>> GetAllAsync(
+        public async Task<PaginatedList<UserActivityItem>> GetPaginatedListAsync(
+            PageOptions options,
             int? organizationId = null,
             string entityName = null)
         {
-            var query = _context.UserActivities
-                .Include(x => x.User)
-                .Include(x => x.ActivityItems)
-                    .ThenInclude(x => x.ChangedEmployee)
-                .Include(x => x.ActivityItems)
-                    .ThenInclude(x => x.ChangedUser)
-                .AsQueryable();
+            var query = _context.UserActivityItems
+                    .Include(x => x.ChangedEmployee)
+                    .Include(x => x.ChangedUser)
+                    .Include(x => x.Activity)
+                        .ThenInclude(x => x.User)
+                    .AsQueryable();
 
             if (organizationId != null)
             {
-                query = query.Where(x => x.OrganizationID == organizationId);
+                query = query.Where(x => x.Activity.OrganizationID == organizationId);
             }
 
             if (!string.IsNullOrWhiteSpace(entityName))
             {
-                query = query.Where(x => x.EntityName == entityName);
+                query = query.Where(x => x.Activity.EntityName == entityName);
             }
 
-            return await query.ToListAsync();
+            if (!string.IsNullOrWhiteSpace(options.Sort))
+            {
+                if (options.Sort == "Created")
+                {
+                    query = query.OrderBy(x => x.Created, options.Direction);
+                }
+            }
+
+            var userActivities = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedList<UserActivityItem>(userActivities, count, options.PageSize);
         }
 
         public void RecordAdd(

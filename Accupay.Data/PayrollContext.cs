@@ -82,6 +82,7 @@ namespace AccuPay.Data
         internal virtual DbSet<TimeAttendanceLog> TimeAttendanceLogs { get; set; }
         internal virtual DbSet<TimeLog> TimeLogs { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
+        internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 

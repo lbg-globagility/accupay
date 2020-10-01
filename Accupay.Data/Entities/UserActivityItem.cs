@@ -28,5 +28,8 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("ChangedUserId")]
         public AspNetUser ChangedUser { get; set; }
+
+        [ForeignKey("UserActivityId")]
+        public UserActivity Activity { get; set; }
     }
 }
