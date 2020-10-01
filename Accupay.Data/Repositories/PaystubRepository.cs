@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -216,17 +217,6 @@ namespace AccuPay.Data.Repositories
 
         #endregion UpdateAdjustments
 
-        private async Task<Paystub> GetPaystubWithAdjustments(int paystubId)
-        {
-            return await _context.Paystubs
-                .AsNoTracking()
-                .Include(x => x.Actual)
-                .Include(x => x.Adjustments)
-                .Include(x => x.ActualAdjustments)
-                .Where(x => x.RowID == paystubId)
-                .FirstOrDefaultAsync();
-        }
-
         private async Task DeleteAsyncWithContext(int id, int userId)
         {
             var paystub = await _context.Paystubs
@@ -332,6 +322,46 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
 
             return paystub.LoanTransactions;
+        }
+
+        public async Task<Paystub> GetPaystubWithAdjustments(int paystubId)
+        {
+            return await _context.Paystubs
+                .AsNoTracking()
+                .Include(x => x.Actual)
+                .Include(x => x.Adjustments)
+                .Include(x => x.ActualAdjustments)
+                .Where(x => x.RowID == paystubId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ICollection<Paystub>> GetPaystubWithAdjustmentsByEmployeeAndDatePeriodAsync(
+            int organizationId,
+            int[] employeeIds,
+            TimePeriod timePeriod,
+            bool includeActual = true)
+        {
+            var query = _context.Paystubs
+                .AsNoTracking()
+                .Include(x => x.Actual)
+                .Include(x => x.Adjustments)
+                    .ThenInclude(a => a.Product)
+                .Include(x => x.PayPeriod)
+                .AsQueryable();
+
+            if (includeActual)
+            {
+                query = query
+                    .Include(x => x.ActualAdjustments)
+                        .ThenInclude(a => a.Product);
+            }
+
+            return await query
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.PayPeriod.PayFromDate >= timePeriod.Start)
+                .Where(x => x.PayPeriod.PayToDate <= timePeriod.End)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
+                .ToListAsync();
         }
 
         #endregion Child data

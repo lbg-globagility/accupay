@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,24 +31,7 @@ namespace AccuPay.Data.Services
             _payPeriodRepository = payPeriodRepository;
         }
 
-        public async Task<ICollection<PaystubData>> GetAll(int payPeriodId)
-        {
-            var paystubs = await _paystubRepository.GetByPayPeriodFullPaystubAsync(payPeriodId);
-
-            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
-
-            var employeeIds = paystubs.Select(x => x.EmployeeID.Value).ToArray();
-
-            var salaries = await _salaryRepository.GetByMultipleEmployeeAsync(employeeIds, payPeriod.PayFromDate);
-
-            var paystubsWithSalary = paystubs
-                .Select(paystub => new PaystubData(
-                    paystub,
-                    salaries.FirstOrDefault(s => s.EmployeeID == paystub.EmployeeID)
-                )).ToList();
-
-            return paystubsWithSalary;
-        }
+        #region Save
 
         public async Task DeleteAsync(EmployeeCompositeKey key, int userId, int organizationId)
         {
@@ -147,6 +131,49 @@ namespace AccuPay.Data.Services
 
             if (currentOpenPayPeriod == null || currentOpenPayPeriod?.RowID != payPeriodId)
                 throw new BusinessLogicException("Only open pay periods can be modified.");
+        }
+
+        #endregion Save
+
+        public async Task<ICollection<PaystubData>> GetAllAsync(int payPeriodId)
+        {
+            var paystubs = await _paystubRepository.GetByPayPeriodFullPaystubAsync(payPeriodId);
+
+            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
+
+            var employeeIds = paystubs.Select(x => x.EmployeeID.Value).ToArray();
+
+            var salaries = await _salaryRepository.GetByMultipleEmployeeAsync(employeeIds, payPeriod.PayFromDate);
+
+            var paystubsWithSalary = paystubs
+                .Select(paystub => new PaystubData(
+                    paystub,
+                    salaries.FirstOrDefault(s => s.EmployeeID == paystub.EmployeeID)
+                )).ToList();
+
+            return paystubsWithSalary;
+        }
+
+        public async Task<ICollection<IAdjustment>> GetAdjustmentsByEmployeeAndDatePeriodAsync(
+            int organizationId,
+            int[] employeeIds,
+            TimePeriod timePeriod,
+            bool includeActual = true)
+        {
+            IEnumerable<Paystub> paystubs = await _paystubRepository.GetPaystubWithAdjustmentsByEmployeeAndDatePeriodAsync(
+                organizationId,
+                employeeIds,
+                timePeriod,
+                includeActual);
+
+            var adjustments = new List<IAdjustment>(paystubs.SelectMany(x => x.Adjustments.Select(a => a)).ToList());
+
+            if (includeActual)
+            {
+                adjustments.AddRange(paystubs.SelectMany(x => x.ActualAdjustments.Select(a => a)).ToList());
+            }
+
+            return adjustments;
         }
     }
 }

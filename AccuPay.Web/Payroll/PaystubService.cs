@@ -20,7 +20,7 @@ namespace AccuPay.Web.Payroll
 
         public async Task<ICollection<PaystubDto>> GetAll(int payPeriodId)
         {
-            var paystubs = await _service.GetAll(payPeriodId);
+            var paystubs = await _service.GetAllAsync(payPeriodId);
             var dtos = paystubs.Select(t => PaystubDto.Convert(t)).ToList();
 
             return dtos;

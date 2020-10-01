@@ -123,7 +123,6 @@ Public Class ServiceProvider
 
         services.AddTransient(Of TimeEntryGenerator)
 
-        services.AddTransient(Of AdjustmentService)
         services.AddTransient(Of OvertimeRateService)
         services.AddTransient(Of LeaveAccrualService)
         services.AddTransient(Of ProductDataService)

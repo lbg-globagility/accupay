@@ -94,7 +94,6 @@ namespace AccuPay.Web
 
             services.AddScoped<TimeEntryGenerator>();
 
-            services.AddScoped<AdjustmentService>();
             services.AddScoped<OvertimeRateService>();
             services.AddScoped<PayPeriodDataService>();
             services.AddScoped<SystemOwnerService>();
