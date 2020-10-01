@@ -60,6 +60,8 @@ Public Class PayStubForm
 
     Private _originalAdjustments As List(Of Adjustment)
 
+    Private _currentSystemOwner As String
+
     Private ReadOnly _policy As PolicyHelper
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
@@ -110,6 +112,7 @@ Public Class PayStubForm
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
 
+        _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
         SetProperInterfaceBaseOnCurrentSystemOwner()
 
         For Each txtbx In Panel6.Controls.OfType(Of TextBox)
@@ -1747,13 +1750,38 @@ Public Class PayStubForm
     End Function
 
     Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
-        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 Then
+        If _currentSystemOwner = SystemOwnerService.Cinema2000 Then
             Dim str_empty As String = String.Empty
             DeclaredTabPage.Text = str_empty
             ActualTabPage.Text = str_empty
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
         End If
+
+        If Not ShowAgency() Then
+            lblAgencyFee.Visible = False
+            lblAgencyFeePesoSign.Visible = False
+            txtAgencyFee.Visible = False
+        End If
+
+        If Not ShowBonus() Then
+            lblTotalBonus.Visible = False
+            lblTotalBonusPesoSign.Visible = False
+            txtTotalBonus.Visible = False
+        End If
+
     End Sub
+
+    Private Function ShowBonus() As Boolean
+
+        Return _currentSystemOwner = SystemOwnerService.Goldwings
+
+    End Function
+
+    Private Function ShowAgency() As Boolean
+        Return _currentSystemOwner = SystemOwnerService.Hyundai OrElse
+            _currentSystemOwner = SystemOwnerService.Goldwings
+
+    End Function
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
 

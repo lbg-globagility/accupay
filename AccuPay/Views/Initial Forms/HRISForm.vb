@@ -47,6 +47,9 @@ Public Class HRISForm
         OffSetToolStripMenuItem.Visible =
             (curr_sys_owner_name = SystemOwnerService.Cinema2000)
 
+        BonusToolStripMenuItem.Visible =
+            (curr_sys_owner_name = SystemOwnerService.Goldwings)
+
         If _systemOwnerService.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
@@ -88,13 +91,16 @@ Public Class HRISForm
         EducBGToolStripMenuItem.Visible = employeeUpdatable
         PrevEmplyrToolStripMenuItem.Visible = employeeUpdatable
         DisciplinaryActionToolStripMenuItem.Visible = employeeUpdatable
-        BonusToolStripMenuItem.Visible = employeeUpdatable
         AttachmentToolStripMenuItem.Visible = employeeUpdatable
 
-        'Job, Points, Offset only overrides the visibility if Read is False
+        'Bonus, Job, Points, Offset only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If Not employeeUpdatable Then
             OffSetToolStripMenuItem.Visible = False
+        End If
+
+        If Not employeeUpdatable Then
+            BonusToolStripMenuItem.Visible = False
         End If
 
         If positionPermission Is Nothing OrElse positionPermission.Read = False Then

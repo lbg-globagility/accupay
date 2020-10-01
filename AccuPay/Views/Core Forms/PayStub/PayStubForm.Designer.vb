@@ -30,10 +30,10 @@ Partial Class PayStubForm
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayper = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -129,7 +129,7 @@ Partial Class PayStubForm
         Me.Label85 = New System.Windows.Forms.Label()
         Me.txtTotalNetPay = New System.Windows.Forms.TextBox()
         Me.lblTotalNetPay = New System.Windows.Forms.Label()
-        Me.Label87 = New System.Windows.Forms.Label()
+        Me.lblAgencyFeePesoSign = New System.Windows.Forms.Label()
         Me.lblAgencyFee = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
@@ -222,6 +222,10 @@ Partial Class PayStubForm
         Me.btnSaveAdjustments = New System.Windows.Forms.Button()
         Me.AdjustmentTitleLabel = New System.Windows.Forms.Label()
         Me.dgvAdjustments = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.cboProducts = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DataGridViewTextBoxColumn66 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn64 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DeleteAdjustmentColumn = New System.Windows.Forms.DataGridViewLinkColumn()
         Me.Label37 = New System.Windows.Forms.Label()
         Me.txtHolidayPay = New System.Windows.Forms.TextBox()
         Me.lblsubtotmisc = New System.Windows.Forms.TextBox()
@@ -231,7 +235,7 @@ Partial Class PayStubForm
         Me.Label46 = New System.Windows.Forms.Label()
         Me.Label45 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
-        Me.Label43 = New System.Windows.Forms.Label()
+        Me.lblTotalBonusPesoSign = New System.Windows.Forms.Label()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.lblSubtotal = New System.Windows.Forms.TextBox()
@@ -248,7 +252,7 @@ Partial Class PayStubForm
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.txtTotalBonus = New System.Windows.Forms.TextBox()
-        Me.Label13 = New System.Windows.Forms.Label()
+        Me.lblTotalBonus = New System.Windows.Forms.Label()
         Me.txtTotalTaxableAllowance = New System.Windows.Forms.TextBox()
         Me.txtTotalNonTaxableAllowance = New System.Windows.Forms.TextBox()
         Me.Label104 = New System.Windows.Forms.Label()
@@ -341,10 +345,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cboProducts = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.DataGridViewTextBoxColumn66 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn64 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DeleteAdjustmentColumn = New System.Windows.Forms.DataGridViewLinkColumn()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -641,9 +641,9 @@ Partial Class PayStubForm
         Me.lblGrossIncome.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblGrossIncome.Location = New System.Drawing.Point(14, 574)
         Me.lblGrossIncome.Name = "lblGrossIncome"
-        Me.lblGrossIncome.Size = New System.Drawing.Size(91, 13)
+        Me.lblGrossIncome.Size = New System.Drawing.Size(92, 13)
         Me.lblGrossIncome.TabIndex = 170
-        Me.lblGrossIncome.Text = "Gross income :"
+        Me.lblGrossIncome.Text = "Gross Income :"
         '
         'Last
         '
@@ -839,7 +839,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label85)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalNetPay)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblTotalNetPay)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label87)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.lblAgencyFeePesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblAgencyFee)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label14)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label32)
@@ -864,7 +864,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label46)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label45)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label44)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label43)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.lblTotalBonusPesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label41)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label40)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblSubtotal)
@@ -881,7 +881,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label21)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label29)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalBonus)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label13)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.lblTotalBonus)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalTaxableAllowance)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalNonTaxableAllowance)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label104)
@@ -1474,14 +1474,14 @@ Partial Class PayStubForm
         Me.lblTotalNetPay.TabIndex = 523
         Me.lblTotalNetPay.Text = "Total Net pay:"
         '
-        'Label87
+        'lblAgencyFeePesoSign
         '
-        Me.Label87.AutoSize = True
-        Me.Label87.Location = New System.Drawing.Point(610, 490)
-        Me.Label87.Name = "Label87"
-        Me.Label87.Size = New System.Drawing.Size(14, 13)
-        Me.Label87.TabIndex = 522
-        Me.Label87.Text = "₱"
+        Me.lblAgencyFeePesoSign.AutoSize = True
+        Me.lblAgencyFeePesoSign.Location = New System.Drawing.Point(610, 490)
+        Me.lblAgencyFeePesoSign.Name = "lblAgencyFeePesoSign"
+        Me.lblAgencyFeePesoSign.Size = New System.Drawing.Size(14, 13)
+        Me.lblAgencyFeePesoSign.TabIndex = 522
+        Me.lblAgencyFeePesoSign.Text = "₱"
         '
         'lblAgencyFee
         '
@@ -2519,6 +2519,44 @@ Partial Class PayStubForm
         Me.dgvAdjustments.Size = New System.Drawing.Size(626, 154)
         Me.dgvAdjustments.TabIndex = 506
         '
+        'cboProducts
+        '
+        Me.cboProducts.DataPropertyName = "ProductID"
+        Me.cboProducts.FillWeight = 30.0!
+        Me.cboProducts.HeaderText = "Type"
+        Me.cboProducts.Name = "cboProducts"
+        Me.cboProducts.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.cboProducts.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'DataGridViewTextBoxColumn66
+        '
+        Me.DataGridViewTextBoxColumn66.DataPropertyName = "Amount"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle5
+        Me.DataGridViewTextBoxColumn66.FillWeight = 15.0!
+        Me.DataGridViewTextBoxColumn66.HeaderText = "Amount"
+        Me.DataGridViewTextBoxColumn66.Name = "DataGridViewTextBoxColumn66"
+        '
+        'DataGridViewTextBoxColumn64
+        '
+        Me.DataGridViewTextBoxColumn64.DataPropertyName = "Comment"
+        Me.DataGridViewTextBoxColumn64.FillWeight = 45.0!
+        Me.DataGridViewTextBoxColumn64.HeaderText = "Comment"
+        Me.DataGridViewTextBoxColumn64.Name = "DataGridViewTextBoxColumn64"
+        '
+        'DeleteAdjustmentColumn
+        '
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.DeleteAdjustmentColumn.DefaultCellStyle = DataGridViewCellStyle6
+        Me.DeleteAdjustmentColumn.FillWeight = 10.0!
+        Me.DeleteAdjustmentColumn.HeaderText = ""
+        Me.DeleteAdjustmentColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.DeleteAdjustmentColumn.LinkColor = System.Drawing.Color.Red
+        Me.DeleteAdjustmentColumn.Name = "DeleteAdjustmentColumn"
+        Me.DeleteAdjustmentColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeleteAdjustmentColumn.Text = "Delete"
+        Me.DeleteAdjustmentColumn.UseColumnTextForLinkValue = True
+        '
         'Label37
         '
         Me.Label37.AutoSize = True
@@ -2613,14 +2651,14 @@ Partial Class PayStubForm
         Me.Label44.TabIndex = 265
         Me.Label44.Text = "₱"
         '
-        'Label43
+        'lblTotalBonusPesoSign
         '
-        Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(233, 532)
-        Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(14, 13)
-        Me.Label43.TabIndex = 264
-        Me.Label43.Text = "₱"
+        Me.lblTotalBonusPesoSign.AutoSize = True
+        Me.lblTotalBonusPesoSign.Location = New System.Drawing.Point(233, 532)
+        Me.lblTotalBonusPesoSign.Name = "lblTotalBonusPesoSign"
+        Me.lblTotalBonusPesoSign.Size = New System.Drawing.Size(14, 13)
+        Me.lblTotalBonusPesoSign.TabIndex = 264
+        Me.lblTotalBonusPesoSign.Text = "₱"
         '
         'Label41
         '
@@ -2794,15 +2832,15 @@ Partial Class PayStubForm
         Me.txtTotalBonus.TabIndex = 196
         Me.txtTotalBonus.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'Label13
+        'lblTotalBonus
         '
-        Me.Label13.AutoSize = True
-        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(14, 532)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(83, 13)
-        Me.Label13.TabIndex = 197
-        Me.Label13.Text = "Total Bonus :"
+        Me.lblTotalBonus.AutoSize = True
+        Me.lblTotalBonus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTotalBonus.Location = New System.Drawing.Point(14, 532)
+        Me.lblTotalBonus.Name = "lblTotalBonus"
+        Me.lblTotalBonus.Size = New System.Drawing.Size(83, 13)
+        Me.lblTotalBonus.TabIndex = 197
+        Me.lblTotalBonus.Text = "Total Bonus :"
         '
         'txtTotalTaxableAllowance
         '
@@ -3509,44 +3547,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.Visible = False
         '
-        'cboProducts
-        '
-        Me.cboProducts.DataPropertyName = "ProductID"
-        Me.cboProducts.FillWeight = 30.0!
-        Me.cboProducts.HeaderText = "Type"
-        Me.cboProducts.Name = "cboProducts"
-        Me.cboProducts.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.cboProducts.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'DataGridViewTextBoxColumn66
-        '
-        Me.DataGridViewTextBoxColumn66.DataPropertyName = "Amount"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle5
-        Me.DataGridViewTextBoxColumn66.FillWeight = 15.0!
-        Me.DataGridViewTextBoxColumn66.HeaderText = "Amount"
-        Me.DataGridViewTextBoxColumn66.Name = "DataGridViewTextBoxColumn66"
-        '
-        'DataGridViewTextBoxColumn64
-        '
-        Me.DataGridViewTextBoxColumn64.DataPropertyName = "Comment"
-        Me.DataGridViewTextBoxColumn64.FillWeight = 45.0!
-        Me.DataGridViewTextBoxColumn64.HeaderText = "Comment"
-        Me.DataGridViewTextBoxColumn64.Name = "DataGridViewTextBoxColumn64"
-        '
-        'DeleteAdjustmentColumn
-        '
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.DeleteAdjustmentColumn.DefaultCellStyle = DataGridViewCellStyle6
-        Me.DeleteAdjustmentColumn.FillWeight = 10.0!
-        Me.DeleteAdjustmentColumn.HeaderText = ""
-        Me.DeleteAdjustmentColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.DeleteAdjustmentColumn.LinkColor = System.Drawing.Color.Red
-        Me.DeleteAdjustmentColumn.Name = "DeleteAdjustmentColumn"
-        Me.DeleteAdjustmentColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeleteAdjustmentColumn.Text = "Delete"
-        Me.DeleteAdjustmentColumn.UseColumnTextForLinkValue = True
-        '
         'PayStubForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3623,7 +3623,7 @@ Partial Class PayStubForm
     Friend WithEvents txtHdmfEmployeeShare As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents txtTotalNonTaxableAllowance As System.Windows.Forms.TextBox
-    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents lblTotalBonus As System.Windows.Forms.Label
     Friend WithEvents txtTotalBonus As System.Windows.Forms.TextBox
     Friend WithEvents txtTotalLoans As System.Windows.Forms.TextBox
     Friend WithEvents Label14 As System.Windows.Forms.Label
@@ -3680,7 +3680,7 @@ Partial Class PayStubForm
     Friend WithEvents Label40 As System.Windows.Forms.Label
     Friend WithEvents Label41 As System.Windows.Forms.Label
     Friend WithEvents Label42 As System.Windows.Forms.Label
-    Friend WithEvents Label43 As System.Windows.Forms.Label
+    Friend WithEvents lblTotalBonusPesoSign As System.Windows.Forms.Label
     Friend WithEvents Label44 As System.Windows.Forms.Label
     Friend WithEvents Label45 As System.Windows.Forms.Label
     Friend WithEvents Label47 As System.Windows.Forms.Label
@@ -3766,7 +3766,7 @@ Partial Class PayStubForm
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents lblAgencyFee As System.Windows.Forms.Label
     Friend WithEvents txtAgencyFee As System.Windows.Forms.TextBox
-    Friend WithEvents Label87 As System.Windows.Forms.Label
+    Friend WithEvents lblAgencyFeePesoSign As System.Windows.Forms.Label
     Friend WithEvents lblTotalNetPay As System.Windows.Forms.Label
     Friend WithEvents txtTotalNetPay As System.Windows.Forms.TextBox
     Friend WithEvents Label85 As System.Windows.Forms.Label

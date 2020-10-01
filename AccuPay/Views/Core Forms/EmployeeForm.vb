@@ -135,7 +135,18 @@ Public Class EmployeeForm
             RemoveTab(tbpSalary)
         End If
 
+        If Not ShowBonus() Then
+
+            RemoveTab(tbpBonus)
+        End If
+
     End Sub
+
+    Private Function ShowBonus() As Boolean
+
+        Return _currentSystemOwner = SystemOwnerService.Goldwings
+
+    End Function
 
     Private Sub RemoveTab(page As TabPage)
 
