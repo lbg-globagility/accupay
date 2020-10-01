@@ -60,12 +60,6 @@ Public Class SelectPayslipEmployeesForm
 
     Private Async Sub SelectPayslipEmployeesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        If _currentPayPeriod?.RowID Is Nothing Then
-
-            ToolStrip1.Enabled = False
-
-        End If
-
         EmployeeGridView.AutoGenerateColumns = False
 
         SendEmailToolStripDropDownButton.Visible = _isEmail
@@ -81,6 +75,12 @@ Public Class SelectPayslipEmployeesForm
         ErrorLogMessageColumn.Visible = _isEmail
 
         _currentPayPeriod = Await _payPeriodRepository.GetByIdAsync(_currentPayPeriodId)
+
+        If _currentPayPeriod?.RowID Is Nothing OrElse _currentPayPeriod.Status <> Data.Enums.PayPeriodStatus.Open Then
+
+            ToolStrip1.Enabled = False
+
+        End If
 
         Await ShowEmployees()
 
