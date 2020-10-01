@@ -180,6 +180,11 @@ namespace AccuPay.Data.Entities
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
 
+        public bool IsFirstPay(PayPeriod payPeriod) =>
+            payPeriod != null &&
+            payPeriod.PayFromDate.Date <= StartDate.Date &&
+            StartDate.Date <= payPeriod.PayToDate.Date;
+
         public static Employee NewEmployee(int organizationId, int userId)
         {
             return new Employee

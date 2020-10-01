@@ -412,7 +412,7 @@ namespace AccuPay.Data.Services
         private bool EligibleForNewBPIInsurance(Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payPeriod)
         {
             return settings.GetBoolean("Employee Policy.UseBPIInsurance", false) &&
-                    IsFirstPay(employee, payPeriod) &&
+                    employee.IsFirstPay(payPeriod) &&
                     employee.BPIInsurance > 0 &&
                     !paystub.Adjustments.Any(a => a.Product?.PartNo == ProductConstant.BPI_INSURANCE_ADJUSTMENT);
         }
@@ -426,9 +426,8 @@ namespace AccuPay.Data.Services
             else if (employee.IsMonthly)
             {
                 var isFirstPayAsDailyRule = settings.GetBoolean("Payroll Policy", "isfirstsalarydaily");
-                bool isFirstPay = IsFirstPay(employee, payPeriod);
 
-                if (isFirstPay && isFirstPayAsDailyRule)
+                if (employee.IsFirstPay(payPeriod) && isFirstPayAsDailyRule)
                 {
                     paystub.TotalEarnings = paystub.RegularPay +
                                             paystub.LeavePay +
@@ -450,14 +449,6 @@ namespace AccuPay.Data.Services
                                         paystub.LeavePay +
                                         paystub.AdditionalPay;
             }
-        }
-
-        // TODO: move this function to employee class
-        private bool IsFirstPay(Employee employee, PayPeriod payPeriod)
-        {
-            // start date is within current pay period
-            return payPeriod.PayFromDate <= employee.StartDate &&
-                                employee.StartDate <= payPeriod.PayToDate;
         }
 
         private void ComputeBasicHoursAndPay(Paystub paystub,
