@@ -165,7 +165,7 @@ Public Class TripTicketForm
         Dim dialog = New NewTripTicketDialog()
         dialog.ShowDialog()
 
-        'RaiseEvent TripTicketCreated()
+        RaiseEvent TripTicketCreated()
     End Sub
 
     Private Sub btnSaveTripTicket_Click(sender As Object, e As EventArgs) Handles btnSaveTripTicket.Click
@@ -208,10 +208,6 @@ Public Class TripTicketForm
             Dim tripTicketEmployee = DirectCast(datagrid.Rows(e.RowIndex).DataBoundItem, TripTicketEmployee)
 
             RaiseEvent EmployeeWasRemoved(tripTicketEmployee.EmployeeID)
-
-            Console.WriteLine("Remove")
-            'Dim link As String = DataGridView1(e.ColumnIndex, e.RowIndex).Value.ToString()
-            'System.Diagnostics.Process.Start(link)
         End If
     End Sub
 
@@ -233,7 +229,7 @@ Public Class TripTicketForm
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        ' Should clear form
+        RaiseEvent TripTicketCancelChanges()
     End Sub
 
     Private Sub cboVehicles_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboVehicles.SelectedIndexChanged

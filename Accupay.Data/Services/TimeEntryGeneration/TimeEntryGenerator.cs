@@ -331,15 +331,16 @@ namespace AccuPay.Data.Services
                 if (!currentTimeEntries.Any())
                     return;
             }
-
-            // TODO: return this as one the list of errors of Time entry generation
+            
+            // If there aren't any attendance data, that means there aren't any time entries to compute.
             if (!(timeLogs.Any() || leavesInCutoff.Any() || officialBusinesses.Any()) && (!employee.IsFixed))
-                return;
+                return; // TODO: return this as one the list of errors of Time entry generation
 
             var dayCalculator = new DayCalculator(organization, settings, employee, employmentPolicy);
 
             var timeEntries = new List<TimeEntry>();
             var regularHolidaysList = new List<DateTime>(); // Used for postlegalholidaycheck
+
             foreach (var currentDate in CalendarHelper.EachDay(_cutoffStart, _cutoffEnd))
             {
                 try

@@ -62,6 +62,7 @@ namespace AccuPay.Data.Repositories
             _context.Entry(tripTicket).State = EntityState.Modified;
 
             tripTicket.Employees.ToList().ForEach(t => _context.Entry(t.Employee).State = EntityState.Detached);
+            tripTicket.Employees.ToList().ForEach(t => _context.Entry(t.Employee.Position).State = EntityState.Detached);
 
             //tripTicketEmployees.ToList().ForEach(t =>
             //{

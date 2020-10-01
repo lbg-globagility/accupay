@@ -234,8 +234,13 @@ Public Class TripTicketController
         View.TripTicketHelpersSource.DataSource = _tripTicketHelpers
     End Sub
 
-    Private Sub CancelChanges() Handles View.TripTicketCancelChanges
-        'Me.context.Entry(Me._tripTicket).Reload()
+    Private Async Sub CancelChanges() Handles View.TripTicketCancelChanges
+        Await LoadTripTicket(_tripTicket.RowID)
+        Await LoadTripTicketHelpers(_tripTicket.RowID)
+
+        View.ClearDisplay()
+        View.DisplayTripTicket(_tripTicket)
+        View.TripTicketHelpersSource.DataSource = _tripTicketHelpers
     End Sub
 
     Private Async Sub SelectTripTicket(tripTicketID As Integer?) Handles View.TripTicketSelected
