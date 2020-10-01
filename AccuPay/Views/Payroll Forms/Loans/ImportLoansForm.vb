@@ -188,9 +188,10 @@ Public Class ImportLoansForm
             Return Nothing
         End If
 
-        Dim loanType = Await Me._productRepository.GetOrCreateLoanTypeAsync(record.LoanName,
-                                                                organizationId:=z_OrganizationID,
-                                                                userId:=z_User)
+        Dim loanType = Await Me._productRepository.GetOrCreateLoanTypeAsync(
+            record.LoanName,
+            organizationId:=z_OrganizationID,
+            userId:=z_User)
 
         If loanType Is Nothing Then
 
@@ -276,11 +277,15 @@ Public Class ImportLoansForm
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In _loans
+
+                    Dim suffixIdentifier = $"with type '{item.LoanName}' and start date '{item.DedEffectiveDateFrom.ToShortDateString()}'."
+
                     importList.Add(New UserActivityItem() With
-                        {
-                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
-                        .EntityId = item.RowID.Value
-                        })
+                    {
+                        .Description = $"Created a new loan {suffixIdentifier}",
+                        .EntityId = item.RowID.Value,
+                        .ChangedEmployeeId = item.EmployeeID.Value
+                    })
                 Next
 
                 _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)

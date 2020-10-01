@@ -119,9 +119,9 @@ Public Class TimeLogsForm2
                 GetByEmployeeAndDatePeriodAsync(z_OrganizationID, employeeIDs, datePeriod)
 
         shiftSchedules = shiftSchedules.
-                                Where(Function(s) s.StartTime.HasValue).
-                                Where(Function(s) s.EndTime.HasValue).
-                                ToList()
+            Where(Function(s) s.StartTime.HasValue).
+            Where(Function(s) s.EndTime.HasValue).
+            ToList()
 
         Dim dataSource As New List(Of TimeLogModel)
 
@@ -130,7 +130,7 @@ Public Class TimeLogsForm2
         Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
 
         Dim timeLogs = Await timeLogRepository.
-                            GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIDs, datePeriod)
+            GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIDs, datePeriod)
 
         For Each model In models
             Dim seek = timeLogs.
@@ -145,8 +145,8 @@ Public Class TimeLogsForm2
 
             If seek.Any Then
                 Dim timeLog = seek.
-                                OrderByDescending(Function(t) t.LastUpd).
-                                FirstOrDefault
+                    OrderByDescending(Function(t) t.LastUpd).
+                    FirstOrDefault
 
                 If hasShiftSched Then
                     dataSource.Add(New TimeLogModel(timeLog) With {.ShiftSchedule = seekShiftSched.FirstOrDefault})
@@ -357,7 +357,7 @@ Public Class TimeLogsForm2
             })
         Next
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeAdd, importList)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
     End Function
 
     Private Sub ResetGridRowsDefaultCellStyle()
@@ -1339,7 +1339,8 @@ Public Class TimeLogsForm2
                 .ChangedEmployeeId = log.EmployeeID
             })
         Next
-        Return
+
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
     End Sub
 

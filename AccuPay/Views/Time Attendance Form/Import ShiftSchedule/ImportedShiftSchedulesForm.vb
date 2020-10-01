@@ -114,19 +114,24 @@ Public Class ImportedShiftSchedulesForm
                     userId:=z_User)
 
                 Dim importList = New List(Of UserActivityItem)
-                Dim entityName = FormEntityName.ToLower()
 
                 For Each schedule In result.AddedList
+
+                    Dim suffixIdentifier = CreateSuffixIdentifier(schedule)
+
                     importList.Add(New UserActivityItem() With
                     {
-                        .Description = $"Imported a new {entityName}.",
+                        .Description = $"Imported a new shift {suffixIdentifier}",
                         .EntityId = schedule.RowID
                     })
                 Next
                 For Each schedule In result.UpdatedList
+
+                    Dim suffixIdentifier = CreateSuffixIdentifier(schedule)
+
                     importList.Add(New UserActivityItem() With
                     {
-                        .Description = $"Updated a {entityName} on import.",
+                        .Description = $"Updated a shift on import {suffixIdentifier}",
                         .EntityId = schedule.RowID
                     })
                 Next
@@ -144,6 +149,10 @@ Public Class ImportedShiftSchedulesForm
             End Function)
 
     End Sub
+
+    Private Shared Function CreateSuffixIdentifier(schedule As EmployeeDutySchedule) As String
+        Return $"with date '{schedule.DateSched.ToShortDateString()}'."
+    End Function
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         DialogResult = DialogResult.Cancel

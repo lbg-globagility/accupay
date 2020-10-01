@@ -33,7 +33,7 @@ Public Class TimeAttendForm
 
     Private Async Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim checker = FeatureListChecker.Instance
-        MassOvertimeToolStripMenuItem.Visible = True 'checker.HasAccess(Feature.MassOvertime)
+        MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
 
         LoadShiftSchedulePolicy()
 

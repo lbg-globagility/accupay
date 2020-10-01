@@ -259,16 +259,7 @@ Public Class ImportAllowanceForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
                 Await dataService.SaveManyAsync(_allowances)
 
-                Dim importList = New List(Of UserActivityItem)
-                For Each item In _allowances
-                    importList.Add(New UserActivityItem() With
-                    {
-                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
-                        .EntityId = item.RowID.Value
-                    })
-                Next
-
-                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                Await RecordUserActivity()
 
                 Me.IsSaved = True
                 Me.Cursor = Cursors.Default
@@ -278,6 +269,27 @@ Public Class ImportAllowanceForm
 
         Me.Cursor = Cursors.Default
     End Sub
+
+    Private Async Function RecordUserActivity() As Task
+        Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID)).ToList()
+
+        Dim importList = New List(Of UserActivityItem)
+        For Each item In _allowances
+
+            Dim allowanceType = Me._allowanceTypeList.Where(Function(t) t.RowID.Value = item.ProductID.Value).FirstOrDefault()
+
+            Dim suffixIdentifier = $" with type '{allowanceType?.PartNo}' and start date '{item.EffectiveStartDate.ToShortDateString()}'."
+
+            importList.Add(New UserActivityItem() With
+            {
+                .Description = $"Imported a new allowance {suffixIdentifier}",
+                .EntityId = item.RowID.Value,
+                .ChangedEmployeeId = item.EmployeeID.Value
+            })
+        Next
+
+        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+    End Function
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
         Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance)
