@@ -31,6 +31,13 @@ namespace AccuPay.Data.Services.Imports.OfficialBusiness
         public Task<OfficialBusinessImportParserOutput> Parse(Stream importFile, int organizationId)
         {
             var parsedRecords = _parser.Read(importFile, WORKSHEETNAME);
+            if (!parsedRecords.Any())
+            {
+                var emptyList = new List<OfficialBusinessImportModel>();
+
+                return Task.Run(() => new OfficialBusinessImportParserOutput(emptyList, emptyList));
+            }
+
             return Validate(parsedRecords, organizationId);
         }
 

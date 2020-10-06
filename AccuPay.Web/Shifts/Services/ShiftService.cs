@@ -127,7 +127,7 @@ namespace AccuPay.Web.Shifts.Services
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            if (parsedResult.ValidRecords.Any()) await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
 
             return parsedResult;
         }

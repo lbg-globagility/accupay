@@ -29,6 +29,13 @@ namespace AccuPay.Data.Services.Imports.Salaries
         public Task<SalaryImportParserOutput> Parse(Stream importFile, int organizationId)
         {
             var parsedRecords = _parser.Read(importFile, WORKSHEETNAME);
+            if (!parsedRecords.Any())
+            {
+                var emptyList = new List<SalaryImportModel>();
+
+                return Task.Run(() => new SalaryImportParserOutput(emptyList, emptyList));
+            }
+
             return Validate(parsedRecords, organizationId);
         }
 

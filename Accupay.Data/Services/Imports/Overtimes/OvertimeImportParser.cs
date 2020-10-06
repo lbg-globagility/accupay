@@ -31,6 +31,13 @@ namespace AccuPay.Data.Services.Imports.Overtimes
         public Task<OvertimeImportParserOutput> Parse(Stream importFile, int organizationId)
         {
             var parsedRecords = _parser.Read(importFile, WORKSHEETNAME);
+            if (!parsedRecords.Any())
+            {
+                var emptyList = new List<OvertimeImportModel>();
+
+                return Task.Run(() => new OvertimeImportParserOutput(emptyList, emptyList));
+            }
+
             return Validate(parsedRecords, organizationId);
         }
 

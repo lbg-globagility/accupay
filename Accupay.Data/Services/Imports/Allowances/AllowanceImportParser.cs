@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,6 +36,13 @@ namespace AccuPay.Data.Services.Imports.Allowances
         public Task<AllowanceImportParserOutput> Parse(Stream importFile, int organizationId)
         {
             var parsedRecords = _parser.Read(importFile, WORKSHEETNAME);
+            if (!parsedRecords.Any())
+            {
+                var emptyList = new List<AllowanceImportModel>();
+
+                return Task.Run(() => new AllowanceImportParserOutput(emptyList, emptyList));
+            }
+
             return Validate(parsedRecords, organizationId);
         }
 

@@ -36,6 +36,13 @@ namespace AccuPay.Data.Services.Imports
         public Task<ShiftImportParserOutput> Parse(Stream importFile, int organizationId)
         {
             var parsedRecords = _parser.Read(importFile, WorkSheetName);
+            if (!parsedRecords.Any())
+            {
+                var emptyList = new List<ShiftImportModel>();
+
+                return Task.Run(() => new ShiftImportParserOutput(emptyList, emptyList));
+            }
+
             return Validate(parsedRecords, organizationId);
         }
 

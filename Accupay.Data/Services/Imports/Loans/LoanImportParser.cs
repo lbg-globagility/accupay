@@ -32,6 +32,13 @@ namespace AccuPay.Data.Services.Imports.Loans
         public Task<LoanImportParserOutput> Parse(Stream importFile, int organizationId)
         {
             var parsedRecords = _parser.Read(importFile, WORKSHEETNAME);
+            if (!parsedRecords.Any())
+            {
+                var emptyList = new List<LoanImportModel>();
+
+                return Task.Run(() => new LoanImportParserOutput(emptyList, emptyList));
+            }
+
             return Validate(parsedRecords, organizationId);
         }
 

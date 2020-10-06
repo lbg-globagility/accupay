@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { ShiftService } from '../shift.service';
-import { auditTime, filter } from 'rxjs/operators';
+import { auditTime, filter, retryWhen } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { PageEvent } from '@angular/material/paginator';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
@@ -168,7 +168,7 @@ export class ShiftListComponent implements OnInit {
           .afterClosed()
           .subscribe(() => {
             this.getShiftList();
-            this.displaySuccess();
+            this.displaySuccess(outputParse.validRecords);
             this.clearFile();
           });
       },
@@ -238,7 +238,11 @@ export class ShiftListComponent implements OnInit {
     ];
   }
 
-  private displaySuccess() {
+  private displaySuccess(validRecords: ShiftImportModel[] = null) {
+    if (validRecords && validRecords.length === 0) {
+      return;
+    }
+
     Swal.fire({
       title: 'Success',
       text: 'Successfully imported new shifts!',
