@@ -151,7 +151,7 @@ namespace AccuPay.Data.Services
             var organization = _organizationRepository.GetById(_organizationId);
 
             _salaries = _salaryRepository
-                .GetByCutOff(_organizationId, _cutoffStart)
+                .GetByCutOff(_organizationId, _cutoffStart, _cutoffEnd)
                 .ToList();
 
             var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart);

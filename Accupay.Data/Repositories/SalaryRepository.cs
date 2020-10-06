@@ -99,9 +99,9 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public ICollection<Salary> GetByCutOff(int organizationId, DateTime cutoffStart)
+        public ICollection<Salary> GetByCutOff(int organizationId, DateTime cutoffStart, DateTime? cutoffEnd = null)
         {
-            return CreateBaseQueryByCutOff(cutoffStart)
+            return CreateBaseQueryByCutOff(cutoffStart, cutoffEnd)
                 .Where(x => x.OrganizationID == organizationId)
                 .ToList();
         }
@@ -124,13 +124,27 @@ namespace AccuPay.Data.Repositories
 
         #endregion Queries
 
-        private IQueryable<Salary> CreateBaseQueryByCutOff(DateTime cutoffStart)
+        private IQueryable<Salary> CreateBaseQueryByCutOff(DateTime cutoffStart, DateTime? cutoffEnd = null)
         {
+            if (cutoffEnd != null)
+            {
+                return _context.Salaries
+                    .Where(sal => SatisfiedDate(sal.EffectiveFrom, cutoffStart, cutoffEnd))
+                    .OrderByDescending(x => x.EffectiveFrom)
+                    .GroupBy(x => x.EmployeeID)
+                    .Select(g => g.FirstOrDefault());
+            }
+
             return _context.Salaries
                 .Where(x => x.EffectiveFrom <= cutoffStart)
                 .OrderByDescending(x => x.EffectiveFrom)
                 .GroupBy(x => x.EmployeeID)
                 .Select(g => g.FirstOrDefault());
+        }
+
+        private bool SatisfiedDate(DateTime salaryEffectiveFrom, DateTime cutoffStart, DateTime? cutoffEnd)
+        {
+            return !(salaryEffectiveFrom <= cutoffStart) ? salaryEffectiveFrom <= cutoffEnd : salaryEffectiveFrom <= cutoffStart;
         }
     }
 }

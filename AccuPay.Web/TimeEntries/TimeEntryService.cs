@@ -91,7 +91,8 @@ namespace AccuPay.Web.TimeEntries
 
         public async Task<TimeEntryPayPeriodDto> GetDetails(int? payPeriodId)
         {
-            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
+            var periodId = payPeriodId.HasValue ? payPeriodId.Value : 0;
+            var payPeriod = await _payPeriodRepository.GetByIdAsync(periodId);
 
             var datePayPeriod = new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate);
 
