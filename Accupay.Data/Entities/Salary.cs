@@ -20,8 +20,6 @@ namespace AccuPay.Data.Entities
 
         public int? OrganizationID { get; set; }
 
-        public int? FilingStatusID { get; set; }
-
         public int? PositionID { get; set; }
 
         public int? PayPhilHealthID { get; set; }
