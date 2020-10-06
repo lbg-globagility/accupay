@@ -105,11 +105,18 @@ export class ViewSalaryComponent implements OnInit {
   }
 
   private loadSalary(): void {
-    this.salaryService.getLatest(this.employeeId).subscribe((salary) => {
-      this.latestSalary = salary;
+    this.salaryService.getLatest(this.employeeId).subscribe(
+      (salary) => {
+        this.latestSalary = salary;
 
-      this.isLoading.next(true);
-    });
+        this.isLoading.next(true);
+      },
+      () => {
+        this.latestSalary = null;
+
+        this.isLoading.next(true);
+      }
+    );
   }
 
   downloadTemplate(): void {
