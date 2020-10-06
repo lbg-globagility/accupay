@@ -24,7 +24,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet("{payPeriodId}")]
         [Permission(PermissionTypes.TimeEntryRead)]
-        public async Task<ActionResult<TimeEntryPayPeriodDto>> Details(int payPeriodId)
+        public async Task<ActionResult<TimeEntryPayPeriodDto>> Details(int? payPeriodId)
         {
             return await _service.GetDetails(payPeriodId);
         }

@@ -99,7 +99,6 @@ export class TimeEntryDetailsComponent implements OnInit {
       .getEmployees(this.payPeriodId, options, this.searchTerm)
       .subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.items);
-        console.log(this.dataSource);
         this.totalCount = data.totalCount;
       });
   }

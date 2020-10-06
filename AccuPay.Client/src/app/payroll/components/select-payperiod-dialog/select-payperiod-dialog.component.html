@@ -1,6 +1,4 @@
-<h2 mat-dialog-title>
-  Select a Pay Period
-</h2>
+<h2 mat-dialog-title>Select a Pay Period</h2>
 
 <div mat-dialog-content>
   <table
@@ -10,7 +8,7 @@
     id="mat-table"
   >
     <ng-container matColumnDef="isSelected">
-      <th mat-header-cell *matHeaderCellDef style="width: 60px;"></th>
+      <th mat-header-cell *matHeaderCellDef style="width: 60px"></th>
       <td
         mat-cell
         *matCellDef="let row; let payPeriod"
@@ -54,7 +52,7 @@
     </ng-container>
 
     <ng-container matColumnDef="next-year-link">
-      <th mat-header-cell *matHeaderCellDef style="text-align: right;">
+      <th mat-header-cell *matHeaderCellDef style="text-align: right">
         <button mat-button color="primary" (click)="loadList(nextYear)">
           {{ nextYear }} <mat-icon>east</mat-icon>
         </button>
@@ -65,7 +63,7 @@
       mat-header-row
       *matHeaderRowDef="['previous-year-link', 'next-year-link']; sticky: true"
     ></tr>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
@@ -78,13 +76,11 @@
   <button
     mat-raised-button
     color="primary"
-    [disabled]="!selection?.selected.length"
+    [disabled]="selection?.selected[0]?.id == null"
     cdkFocusInitial
     (click)="startPayroll()"
   >
     START
   </button>
-  <button mat-button mat-dialog-close color="primary">
-    CANCEL
-  </button>
+  <button mat-button mat-dialog-close color="primary">CANCEL</button>
 </div>

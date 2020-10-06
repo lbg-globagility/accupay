@@ -89,7 +89,7 @@ namespace AccuPay.Web.TimeEntries
             return list.Select(x => TimeEntryDto.Convert(x)).ToList();
         }
 
-        public async Task<TimeEntryPayPeriodDto> GetDetails(int payPeriodId)
+        public async Task<TimeEntryPayPeriodDto> GetDetails(int? payPeriodId)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 

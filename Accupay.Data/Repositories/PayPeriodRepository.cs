@@ -34,10 +34,22 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<PayPeriod> GetLatestAsync(int organizationId)
         {
-            return await CreateBaseQuery(organizationId)
+            var recentPeriod = await CreateBaseQuery(organizationId)
                 .Where(p => p.Status != PayPeriodStatus.Pending)
                 .OrderByDescending(p => p.PayFromDate)
                 .FirstOrDefaultAsync();
+
+            if (recentPeriod == null)
+            {
+                var currentYear = DateTime.UtcNow.Year;
+
+                return await CreateBaseQuery(organizationId)
+                    .Where(p => p.Year == currentYear)
+                    .OrderBy(p => p.PayFromDate)
+                    .FirstOrDefaultAsync();
+            }
+
+            return recentPeriod;
         }
 
         public async Task<PayPeriod> GetCurrentOpenAsync(int organizationId)
