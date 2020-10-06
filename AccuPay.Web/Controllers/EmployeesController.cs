@@ -3,6 +3,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
+using AccuPay.Web.Positions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,11 +22,13 @@ namespace AccuPay.Web.Controllers
     {
         private readonly EmployeeService _employeeService;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly PositionService _positionService;
 
-        public EmployeesController(EmployeeService employeeService, IHostingEnvironment hostingEnvironment)
+        public EmployeesController(EmployeeService employeeService, IHostingEnvironment hostingEnvironment, PositionService positionService)
         {
             _employeeService = employeeService;
             _hostingEnvironment = hostingEnvironment;
+            _positionService = positionService;
         }
 
         [HttpPost]
@@ -33,6 +36,17 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<EmployeeDto>> Create([FromBody] CreateEmployeeDto dto)
         {
             return await _employeeService.Create(dto);
+        }
+
+        [HttpGet("positions")]
+        [Permission(PermissionTypes.EmployeeCreate)]
+        public async Task<IEnumerable<PositionDto>> GetAllJobPosition([FromQuery] PageOptions options, string term)
+        {
+            options.All = true;
+
+            var positionPaginatedList = await _positionService.PaginatedList(options, term);
+
+            return positionPaginatedList.Items;
         }
 
         [HttpPut("{id}")]

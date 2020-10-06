@@ -55,7 +55,6 @@ export class EmployeeFormComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private employmentPolicyService: EmploymentPolicyService,
-    private positionService: PositionService,
     private fb: FormBuilder
   ) {}
 
@@ -88,8 +87,8 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   private loadPositions(): void {
-    this.positionService
-      .getAll()
+    this.employeeService
+      .getAllJobPosition()
       .subscribe((positions) => (this.positions = positions));
   }
 

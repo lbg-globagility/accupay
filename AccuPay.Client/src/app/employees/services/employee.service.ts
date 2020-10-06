@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { BasePdfService } from 'src/app/core/shared/services/base-pdf-service';
 import { EmployeeImportParserOutput } from '../shared/employee-import-parser-output';
 import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
+import { Position } from 'src/app/positions/shared/position';
 
 @Injectable({
   providedIn: 'root',
@@ -72,5 +73,9 @@ export class EmployeeService extends BasePdfService {
       `${this.apiRoute}/import`,
       formData
     );
+  }
+
+  getAllJobPosition(): Observable<Position[]> {
+    return this.httpClient.get<Position[]>(`${this.apiRoute}/positions`);
   }
 }
