@@ -58,7 +58,6 @@ namespace AccuPay.Data.Services.Imports.Salaries
                 return _noEmployee ||
                     _noEmployeeNo ||
                     _isOverlappedSalary ||
-                    _noAllowanceSalary ||
                     _noBasicSalary ||
                     _noEffectiveFrom;
             }
@@ -81,7 +80,6 @@ namespace AccuPay.Data.Services.Imports.Salaries
             if (_noEmployee) errors.Add("Employee doesn't exists");
             if (_noEmployeeNo) errors.Add("Invalid Employee No");
             if (_isOverlappedSalary) errors.Add("Overlapped other salary");
-            if (_noAllowanceSalary) errors.Add("Invalid Allowance Salary");
             if (_noBasicSalary) errors.Add("Invalid Basic Salary");
             if (_noEffectiveFrom) errors.Add("Invalid Effective From");
 

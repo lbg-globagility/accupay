@@ -140,7 +140,7 @@ export class ViewSalaryComponent implements OnInit {
         this.clearFile();
       },
       (err) => {
-        this.errorHandler.badRequest(err, 'Failed to import shift.');
+        this.errorHandler.badRequest(err, 'Failed to import salary.');
         this.clearFile();
       }
     );

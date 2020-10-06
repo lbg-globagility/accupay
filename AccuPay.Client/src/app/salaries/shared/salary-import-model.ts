@@ -5,6 +5,6 @@ export class SalaryImportModel implements ImportModel {
   employeeName: string;
   effectiveFrom: Date;
   basicSalary: number;
-  allowanceSalary: number;
+  allowanceSalary?: number;
   remarks: string;
 }

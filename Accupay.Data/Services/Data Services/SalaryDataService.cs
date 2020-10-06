@@ -120,7 +120,7 @@ namespace AccuPay.Data.Services
                     EmployeeID = validRecord.EmployeeId,
                     CreatedBy = userId,
                     BasicSalary = validRecord.BasicSalary.Value,
-                    AllowanceSalary = validRecord.AllowanceSalary.Value,
+                    AllowanceSalary = validRecord.AllowanceSalary.HasValue ? validRecord.AllowanceSalary.Value : 0,
                     EffectiveFrom = validRecord.EffectiveFrom.Value
                 };
 
