@@ -13,7 +13,7 @@ Namespace Global.AccuPay.Helpers
         Overtime
         Salary
         NewShift
-
+        TripTicket
     End Enum
 
     Public Class TemplatesHelper
@@ -27,6 +27,7 @@ Namespace Global.AccuPay.Helpers
         Public Shared ReadOnly OVERTIME As String = "accupay-overtime-template.xlsx"
         Public Shared ReadOnly SALARY As String = "accupay-salary-template.xlsx"
         Public Shared ReadOnly NEW_SHIFT As String = "accupay-shiftschedule-template.xlsx"
+        Public Shared ReadOnly TRIP_TICKET As String = "accupay-trip-ticket-template.xlsx"
 
         Private Const FILE_PATH As String = "ImportTemplates/"
 
@@ -60,6 +61,9 @@ Namespace Global.AccuPay.Helpers
 
                 Case ExcelTemplates.NewShift
                     Return NEW_SHIFT
+
+                Case ExcelTemplates.TripTicket
+                    Return TRIP_TICKET
 
                 Case Else
 
@@ -101,6 +105,9 @@ Namespace Global.AccuPay.Helpers
 
                 Case ExcelTemplates.NewShift
                     fileName = NEW_SHIFT
+
+                Case ExcelTemplates.TripTicket
+                    fileName = TRIP_TICKET
 
                 Case Else
 

@@ -28,6 +28,7 @@ Partial Class FormReports
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnstartreport = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButtonTripTicket = New System.Windows.Forms.ToolStripButton()
         Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -48,7 +49,7 @@ Partial Class FormReports
         'ToolStrip1
         '
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnstartreport})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnstartreport, Me.ToolStripButtonTripTicket})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1006, 25)
@@ -65,6 +66,15 @@ Partial Class FormReports
         Me.tsbtnstartreport.Text = "ToolStripButton1"
         Me.tsbtnstartreport.ToolTipText = "Start report"
         Me.tsbtnstartreport.Visible = False
+        '
+        'ToolStripButtonTripTicket
+        '
+        Me.ToolStripButtonTripTicket.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.ToolStripButtonTripTicket.Image = CType(resources.GetObject("ToolStripButtonTripTicket.Image"), System.Drawing.Image)
+        Me.ToolStripButtonTripTicket.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButtonTripTicket.Name = "ToolStripButtonTripTicket"
+        Me.ToolStripButtonTripTicket.Size = New System.Drawing.Size(103, 22)
+        Me.ToolStripButtonTripTicket.Text = "Import Trip Ticket"
         '
         'FormReports
         '
@@ -87,4 +97,5 @@ Partial Class FormReports
     Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents tsbtnstartreport As System.Windows.Forms.ToolStripButton
+    Friend WithEvents ToolStripButtonTripTicket As ToolStripButton
 End Class

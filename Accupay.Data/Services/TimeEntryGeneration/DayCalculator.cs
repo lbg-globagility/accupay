@@ -30,20 +30,23 @@ namespace AccuPay.Data.Services
             _employmentPolicy = employmentPolicy;
         }
 
-        public TimeEntry Compute(DateTime currentDate,
-                                Salary salary,
-                                IList<TimeEntry> oldTimeEntries,
-                                ShiftSchedule employeeShift,
-                                EmployeeDutySchedule shiftSched,
-                                TimeLog timeLog,
-                                IList<Overtime> overtimes,
-                                OfficialBusiness officialBusiness,
-                                IList<Leave> leaves,
-                                IList<TimeAttendanceLog> timeAttendanceLogs,
-                                IList<BreakTimeBracket> breakTimeBrackets,
-                                IPayrate payrate,
-                                CalendarCollection calendarCollection,
-                                int? branchId)
+        public TimeEntry Compute(
+            DateTime currentDate,
+            Salary salary,
+            IList<TimeEntry> oldTimeEntries,
+            ShiftSchedule employeeShift,
+            EmployeeDutySchedule shiftSched,
+            TimeLog timeLog,
+            IList<Overtime> overtimes,
+            OfficialBusiness officialBusiness,
+            IList<Leave> leaves,
+            IList<TimeAttendanceLog> timeAttendanceLogs,
+            IList<BreakTimeBracket> breakTimeBrackets,
+            IPayrate payrate,
+            CalendarCollection calendarCollection,
+            int? branchId,
+            ICollection<TripTicket> tripTickets,
+            ICollection<RoutePayRate> routeRates)
         {
             var timeEntry = oldTimeEntries.Where(t => t.Date == currentDate).SingleOrDefault();
 
@@ -78,23 +81,26 @@ namespace AccuPay.Data.Services
 
             var hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries.ToList(), calendarCollection);
 
-            ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate);
+            ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate, tripTickets, routeRates);
             ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay);
 
             return timeEntry;
         }
 
-        private void ComputeHours(DateTime currentDate,
-                                TimeEntry timeEntry,
-                                TimeLog timeLog,
-                                OfficialBusiness officialBusiness,
-                                IList<Leave> leaves,
-                                IList<Overtime> overtimes,
-                                IList<TimeAttendanceLog> timeAttendanceLogs,
-                                IList<BreakTimeBracket> breakTimeBrackets,
-                                CurrentShift currentShift,
-                                bool hasWorkedLastDay,
-                                IPayrate payrate)
+        private void ComputeHours(
+            DateTime currentDate,
+            TimeEntry timeEntry,
+            TimeLog timeLog,
+            OfficialBusiness officialBusiness,
+            IList<Leave> leaves,
+            IList<Overtime> overtimes,
+            IList<TimeAttendanceLog> timeAttendanceLogs,
+            IList<BreakTimeBracket> breakTimeBrackets,
+            CurrentShift currentShift,
+            bool hasWorkedLastDay,
+            IPayrate payrate,
+            ICollection<TripTicket> tripTickets,
+            ICollection<RoutePayRate> routeRates)
         {
             var previousDay = currentDate.AddDays(-1);
             var calculator = new TimeEntryCalculator();
@@ -205,8 +211,39 @@ namespace AccuPay.Data.Services
                                         timeEntry.SpecialHolidayHours;
             }
 
+            if (tripTickets.Any())
+            {
+                ComputeTripTicketPay(timeEntry, tripTickets, routeRates);
+            }
+
             ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves);
             ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry, payrate);
+        }
+
+        private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, ICollection<RoutePayRate> routeRates)
+        {
+            var tripTicketPay = 0m;
+
+            foreach (var tripTicket in tripTickets)
+            {
+                var tripTicketEmployee = tripTicket.Employees.FirstOrDefault(t => t.EmployeeID == _employee.RowID);
+
+                var routeRate = routeRates
+                    .Where(t => t.PositionID == _employee.PositionID)
+                    .Where(t => t.RouteID == tripTicket.RouteID)
+                    .FirstOrDefault();
+
+                if (routeRate is null)
+                {
+                    continue;
+                }
+                else
+                {
+                    tripTicketPay += routeRate.Rate * tripTicketEmployee.NoOfTrips;
+                }
+            }
+
+            timeEntry.RegularPay += tripTicketPay;
         }
 
         private TimePeriod GetLogPeriod(TimeLog timeLog,

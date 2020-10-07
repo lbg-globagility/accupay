@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -715,6 +715,45 @@
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\NewTripTicketDialog.Designer.vb">
+      <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\NewTripTicketDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RouteForm.Designer.vb">
+      <DependentUpon>RouteForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RouteForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RoutePayRateMatrixForm.Designer.vb">
+      <DependentUpon>RoutePayRateMatrixForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RoutePayRateMatrixForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\RouteTripNotFoundException.vb" />
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketController.vb" />
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketForm.Designer.vb">
+      <DependentUpon>TripTicketForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\TripTicketRepository.vb" />
+    <Compile Include="Views\Core Forms\TripTicket\VehicleForm.Designer.vb">
+      <DependentUpon>VehicleForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTicket\VehicleForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTickets\Import\ImportTripTicketForm.Designer.vb">
+      <DependentUpon>ImportTripTicketForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TripTickets\Import\ImportTripTicketForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
@@ -1885,6 +1924,9 @@
     <None Include="ImportTemplates\accupay-shiftschedule-template.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="ImportTemplates\accupay-trip-ticket-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
@@ -2027,6 +2069,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTickets\Import\ImportTripTicketForm.resx">
+      <DependentUpon>ImportTripTicketForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\NewTripTicketDialog.resx">
+      <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\RouteForm.resx">
+      <DependentUpon>RouteForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\RoutePayRateMatrixForm.resx">
+      <DependentUpon>RoutePayRateMatrixForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\TripTicketForm.resx">
+      <DependentUpon>TripTicketForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TripTicket\VehicleForm.resx">
+      <DependentUpon>VehicleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>

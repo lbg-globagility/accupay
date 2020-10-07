@@ -31,6 +31,10 @@ public class FeatureListChecker
         {
             "LoanDeductFromBonus",
             "8d066d73-775d-44b3-bd86-0bff6824aea5"
+        },
+        {
+            "TripTicket",
+            "58afca0b-7e27-44d3-b040-82031a5e75bd"
         }
     };
 
@@ -101,5 +105,6 @@ public enum Feature
     MassOvertime,
     JobLevel,
     AdditionalVacationLeaveType,
-    LoanDeductFromBonus
+    LoanDeductFromBonus,
+    TripTicket
 }

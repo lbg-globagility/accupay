@@ -21,6 +21,7 @@
         public const string SHIFT = "Shift";
         public const string TIMEENTRY = "TimeEntry";
         public const string TIMELOG = "TimeLog";
+        public const string TRIPTICKET = "TripTicket";
         public const string USER = "User";
     }
 }

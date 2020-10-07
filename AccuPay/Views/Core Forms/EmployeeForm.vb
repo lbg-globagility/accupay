@@ -1827,7 +1827,7 @@ Public Class EmployeeForm
 
                 ElseIf selectedTab Is tbpEmployee Then 'Employee
 
-                    SetEmployee()
+                    Await SetEmployee()
 
                 ElseIf selectedTab Is tbpAwards Then
 
@@ -1919,7 +1919,7 @@ Public Class EmployeeForm
         Return dateOutput
     End Function
 
-    Private Sub SetEmployee()
+    Private Async Function SetEmployee() As Task
         txtNName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column5").Value), "", dgvEmp.CurrentRow.Cells("Column5").Value)
         txtDivisionName.Text = dgvEmp.CurrentRow.Cells("Column7").Value
 
@@ -1976,7 +1976,7 @@ Public Class EmployeeForm
             radioGender = rdFMale
         End If
 
-        Gender_CheckedChanged(radioGender, New EventArgs)
+        Await GenderChanged(radioGender)
 
         noCurrCellChange = 0
 
@@ -2084,7 +2084,7 @@ Public Class EmployeeForm
         BPIinsuranceText.Text = dgvEmp.CurrentRow.Cells("BPIInsuranceColumn").Value
 
         AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
-    End Sub
+    End Function
 
     Private Sub SetComboBoxValue(dbValue As Object, comboBox As ComboBox)
         If IsDBNull(dbValue) OrElse dbValue = "" Then
@@ -3835,17 +3835,21 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged,
-                                                                                rdFMale.CheckedChanged
+    Private Async Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged, rdFMale.CheckedChanged
+        Await GenderChanged(sender)
+
+    End Sub
+
+    Private Async Function GenderChanged(sender As RadioButton) As Task
         If Not sender.Checked Then Return
 
-        Dim label_gender = ""
+        Dim label_gender As String
 
         If sender.Name = rdMale.Name Then
 
             label_gender = "Paternity"
 
-            LoadSalutation(Gender.Male)
+            Await LoadSalutation(Gender.Male)
 
             Label148.Text = label_gender
             Label149.Text = label_gender
@@ -3853,13 +3857,12 @@ Public Class EmployeeForm
 
             label_gender = "Maternity"
 
-            LoadSalutation(Gender.Female)
+            Await LoadSalutation(Gender.Female)
 
             Label148.Text = label_gender
             Label149.Text = label_gender
         End If
-
-    End Sub
+    End Function
 
     Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
         Dim userActivity As New UserActivityForm(EmployeeEntityName)
@@ -3873,13 +3876,13 @@ Public Class EmployeeForm
     Dim indentifyGender As Dictionary(Of Gender, String) =
         New Dictionary(Of Gender, String) From {{Gender.Male, Gender.Male.ToString()}, {Gender.Female, Gender.Female.ToString()}}
 
-    Private Sub LoadSalutation(gender As Gender)
+    Private Async Function LoadSalutation(gender As Gender) As Task
         Dim genderList = {"Neutral", indentifyGender(gender)}
 
         Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        Dim salutationList = listOfValueRepository.
-            GetFilteredListOfValues(Function(l) l.Type = "Salutation" AndAlso genderList.Contains(l.ParentLIC))
+        Dim salutationList = Await listOfValueRepository.
+            GetFilteredListOfValuesAsync(Function(l) l.Type = "Salutation" AndAlso genderList.Contains(l.ParentLIC))
 
         salutationList = salutationList.OrderBy(Function(l) l.DisplayValue).ToList()
 
@@ -3912,7 +3915,7 @@ Public Class EmployeeForm
         Colmn2.Items.Add(String.Empty)
         Colmn2.Items.AddRange(salutations)
 
-    End Sub
+    End Function
 
     Private Enum Gender
         Male
