@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -1145,9 +1145,6 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\AccuPayTreeView.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\ImportAllowance.vb" />
-    <Compile Include="Views\Core Forms\USER CONTROLS\ImportOB.vb" />
-    <Compile Include="Views\Core Forms\USER CONTROLS\ImportOvertime.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
