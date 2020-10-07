@@ -12,11 +12,13 @@ namespace AccuPay.Data.Entities
 
         public int? OrganizationID { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
         public int? CreatedBy { get; set; }
 
-        public DateTime LastUpd { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime? LastUpd { get; set; }
 
         public int? LastUpdBy { get; set; }
 
@@ -29,6 +31,11 @@ namespace AccuPay.Data.Entities
         public Vehicle()
         {
             Created = DateTime.Now;
+        }
+
+        public static Vehicle NewVehicle(int organizationId, int userId)
+        {
+            return new Vehicle() { OrganizationID = organizationId, CreatedBy = userId };
         }
     }
 }

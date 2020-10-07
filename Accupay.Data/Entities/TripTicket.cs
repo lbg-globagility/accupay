@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,15 +9,18 @@ namespace AccuPay.Data.Entities
     public class TripTicket
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
 
         public int? OrganizationID { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
         public int? CreatedBy { get; set; }
 
-        public DateTime LastUpd { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime? LastUpd { get; set; }
 
         public int? LastUpdBy { get; set; }
 
@@ -26,7 +30,7 @@ namespace AccuPay.Data.Entities
 
         public string TicketNo { get; set; }
 
-        public DateTime? TripDate { get; set; }
+        public DateTime? Date { get; set; }
 
         public TimeSpan? TimeFrom { get; set; }
 
@@ -38,10 +42,7 @@ namespace AccuPay.Data.Entities
 
         public bool IsSpecialOperations { get; set; }
 
-        public TripTicket()
-        {
-            Created = DateTime.Now;
-        }
+        public virtual ICollection<TripTicketEmployee> Employees { get; set; }
 
         [ForeignKey("VehicleID")]
         public virtual Vehicle Vehicle { get; set; }
@@ -50,5 +51,12 @@ namespace AccuPay.Data.Entities
         public virtual Route Route { get; set; }
 
         public string RouteDescription => Route?.Description;
+
+        public string VehiclePlateNo => Vehicle?.PlateNo;
+
+        public static TripTicket NewTripTicket(int organizationId, int userId)
+        {
+            return new TripTicket() { OrganizationID = organizationId, CreatedBy = userId };
+        }
     }
 }

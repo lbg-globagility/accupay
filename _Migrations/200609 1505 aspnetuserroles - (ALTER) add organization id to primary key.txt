@@ -1,0 +1,3 @@
+ALTER TABLE `AspNetUserRoles`
+	DROP PRIMARY KEY,
+	ADD PRIMARY KEY (`UserId`, `RoleId`, `OrganizationId`) USING BTREE;

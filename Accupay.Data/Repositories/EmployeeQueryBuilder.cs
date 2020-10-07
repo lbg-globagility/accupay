@@ -31,8 +31,7 @@ namespace AccuPay.Data.Repositories
 
         public EmployeeQueryBuilder ByEmployeeNumber(string employeeNumber)
         {
-            _query = _query.Where(x => x.EmployeeNo.Trim().ToLower() ==
-                                        employeeNumber.ToTrimmedLowerCase());
+            _query = _query.Where(x => x.EmployeeNo.Trim().ToLower() == employeeNumber.ToTrimmedLowerCase());
             return this;
         }
 
@@ -54,16 +53,15 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public EmployeeQueryBuilder IncludePayFrequency()
+        public EmployeeQueryBuilder IncludeAgency()
         {
-            _query = _query.Include(x => x.PayFrequency);
+            _query = _query.Include(x => x.Agency);
             return this;
         }
 
-        public EmployeeQueryBuilder IncludePosition()
+        public EmployeeQueryBuilder IncludeBranch()
         {
-            // Note: No need to call WithPosition if WithDivision is already called.
-            _query = _query.Include(x => x.Position);
+            _query = _query.Include(x => x.Branch);
             return this;
         }
 
@@ -74,9 +72,9 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public EmployeeQueryBuilder IncludeBranch()
+        public EmployeeQueryBuilder IncludeEmploymentPolicy()
         {
-            _query = _query.Include(x => x.Branch);
+            _query = _query.Include(x => x.EmploymentPolicy);
             return this;
         }
 
@@ -86,9 +84,16 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public EmployeeQueryBuilder IncludeEmploymentPolicy()
+        public EmployeeQueryBuilder IncludePayFrequency()
         {
-            _query = _query.Include(x => x.EmploymentPolicy);
+            _query = _query.Include(x => x.PayFrequency);
+            return this;
+        }
+
+        public EmployeeQueryBuilder IncludePosition()
+        {
+            // Note: No need to call WithPosition if WithDivision is already called.
+            _query = _query.Include(x => x.Position);
             return this;
         }
 
@@ -106,22 +111,10 @@ namespace AccuPay.Data.Repositories
             return await _query.ToListAsync();
         }
 
-        public Employee GetById(int employeeId, int? organizationId)
-        {
-            ResolveOrganizationIdQuery(organizationId);
-            return _query.Where(x => x.RowID == employeeId).FirstOrDefault();
-        }
-
         public async Task<Employee> GetByIdAsync(int employeeId, int? organizationId)
         {
             ResolveOrganizationIdQuery(organizationId);
             return await _query.Where(x => x.RowID == employeeId).FirstOrDefaultAsync();
-        }
-
-        public Employee FirstOrDefault(int? organizationId)
-        {
-            ResolveOrganizationIdQuery(organizationId);
-            return _query.FirstOrDefault();
         }
 
         public async Task<Employee> FirstOrDefaultAsync(int organizationId)
@@ -142,9 +135,9 @@ namespace AccuPay.Data.Repositories
 
         private Expression<Func<Employee, bool>> CheckIfEmployeeHasPaystub(int payPeriodId, bool expected)
         {
-            return e => _context.Paystubs.
-                                    Any(p => p.EmployeeID == e.RowID &&
-                                        p.PayPeriodID == payPeriodId) == expected;
+            return e => _context.Paystubs
+                .Any(p => p.EmployeeID == e.RowID && p.PayPeriodID == payPeriodId)
+                == expected;
         }
     }
 }

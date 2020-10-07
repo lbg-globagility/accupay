@@ -170,7 +170,7 @@ namespace AccuPay.Web.Payroll
             TotalAdjustments = paystub.TotalAdjustments;
             TotalEarnings = paystub.TotalEarnings;
             TotalBonus = paystub.TotalBonus;
-            TotalNonTaxableAllowance = paystub.TotalAllowance;
+            TotalNonTaxableAllowance = paystub.TotalNonTaxableAllowance;
             TotalTaxableAllowance = paystub.TotalTaxableAllowance;
             TaxableIncome = paystub.TaxableIncome;
             WithholdingTax = paystub.WithholdingTax;

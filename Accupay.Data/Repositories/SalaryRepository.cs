@@ -92,6 +92,15 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Salary>(salaries, count);
         }
 
+        public async Task<ICollection<Salary>> GetByEmployeeAndEffectiveFromAsync(int employeeId, DateTime date)
+        {
+            return await _context.Salaries
+                .AsNoTracking()
+                .Where(l => l.EmployeeID == employeeId)
+                .Where(l => l.EffectiveFrom.Date == date)
+                .ToListAsync();
+        }
+
         public async Task<ICollection<Salary>> GetAllAsync(int organizationId)
         {
             return await _context.Salaries

@@ -28,7 +28,7 @@ SELECT RowID FROM category WHERE CategoryName='Allowance Type' AND OrganizationI
 
 
 SELECT es.*
-,IF(e.EmployeeType = 'Fixed', (es.Salary * 12), IF(e.EmployeeType = 'Daily', (es.BasicPay * GET_OrgProRatedCountOfDays(orgworkdaysofyear, es.EffectiveDateFrom, IFNULL(es.EffectiveDateTo,LastDateOfFinancialYear), eal.AllowanceFrequency)), (((es.BasicPay * 8) * orgworkdaysofyear) / 12) * 12)) AS TotalGrossCompensation
+,IF(e.EmployeeType = 'Fixed', (es.Salary * 12), IF(e.EmployeeType = 'Daily', (es.BasicPay * GET_OrgProRatedCountOfDays(orgworkdaysofyear, es.EffectiveDateFrom, LastDateOfFinancialYear, eal.AllowanceFrequency)), (((es.BasicPay * 8) * orgworkdaysofyear) / 12) * 12)) AS TotalGrossCompensation
 ,IFNULL((pss.EmployeeContributionAmount * 12),0) AS EmployeeContributionAmount
 ,(phh.EmployeeShare * 12) AS EmployeeShare
 ,(es.HDMFAmount) * 12 AS HDMFAmount
@@ -48,8 +48,8 @@ LEFT JOIN (SELECT ea.*
                 AND (FirstDateOfFinancialYear <= ea.EffectiveStartDate OR FirstDateOfFinancialYear <= ea.EffectiveEndDate)
                 AND (LastDateOfFinancialYear >= ea.EffectiveStartDate OR LastDateOfFinancialYear >= ea.EffectiveEndDate)) eal ON eal.EmployeeID=es.EmployeeID
 WHERE es.OrganizationID=OrganizID
-AND (FirstDateOfFinancialYear <= es.EffectiveDateFrom OR FirstDateOfFinancialYear <= IFNULL(es.EffectiveDateTo,FirstDateOfFinancialYear))
-AND (LastDateOfFinancialYear >= es.EffectiveDateFrom OR LastDateOfFinancialYear >= IFNULL(es.EffectiveDateTo,LastDateOfFinancialYear))
+AND (FirstDateOfFinancialYear <= es.EffectiveDateFrom OR FirstDateOfFinancialYear <= FirstDateOfFinancialYear)
+AND (LastDateOfFinancialYear >= es.EffectiveDateFrom OR LastDateOfFinancialYear >= LastDateOfFinancialYear)
 GROUP BY es.EmployeeID;
 
 

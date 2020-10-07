@@ -8,15 +8,18 @@ namespace AccuPay.Data.Entities
     public class RoutePayRate
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
 
         public int? OrganizationID { get; set; }
 
-        public DateTime Created { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; private set; }
 
         public int? CreatedBy { get; set; }
 
-        public DateTime LastUpd { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime? LastUpd { get; private set; }
 
         public int? LastUpdBy { get; set; }
 
@@ -32,10 +35,6 @@ namespace AccuPay.Data.Entities
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
 
-        public RoutePayRate()
-        {
-            Created = DateTime.Now;
-            LastUpd = DateTime.Now;
-        }
+        public bool IsNew => (RowID ?? 0) <= 0;
     }
 }

@@ -99,7 +99,7 @@ Namespace Desktop.Helpers
 
             Dim roleData = GetRole(permissionName, userRole, policyHelper)
 
-            If roleData.Success Then
+            If roleData.Success AndAlso roleData.RolePermission IsNot Nothing Then
                 Return roleData.RolePermission.Update
             Else
                 Return False
@@ -147,7 +147,7 @@ Namespace Desktop.Helpers
             Else
             End If
 
-            Return (True, role)
+            Return (If(role Is Nothing, False, True), role)
         End Function
 
         Private Shared Async Function GetRolePermissionAsync(permissionName As String, userRole As AspNetRole) As Task(Of RolePermission)

@@ -147,7 +147,13 @@ Public Class AddOfficialBusinessForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
                 Await dataService.SaveAsync(Me._newOfficialBusiness)
 
-                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=Me._newOfficialBusiness.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._newOfficialBusiness.EmployeeID.Value,
+                    suffixIdentifier:=$" with date '{ Me._newOfficialBusiness.StartDate.Value.ToShortDateString()}'")
 
                 Me.IsSaved = True
 

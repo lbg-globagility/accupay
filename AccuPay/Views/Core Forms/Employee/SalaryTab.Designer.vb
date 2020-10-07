@@ -51,9 +51,9 @@ Partial Class SalaryTab
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
         Me.btnImport = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.UserActivitySalaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
@@ -83,9 +83,7 @@ Partial Class SalaryTab
         Me.lblTotalSalary = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.dtpEffectiveTo = New System.Windows.Forms.DateTimePicker()
         Me.dtpEffectiveFrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblPayFrequency = New System.Windows.Forms.Label()
@@ -134,7 +132,7 @@ Partial Class SalaryTab
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripProgressBar2, Me.btnImport, Me.UserActivitySalaryToolStripButton})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnImport, Me.ToolStripSeparator1, Me.btnClose, Me.UserActivitySalaryToolStripButton})
         Me.ToolStrip5.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(856, 25)
@@ -171,7 +169,20 @@ Partial Class SalaryTab
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.Text = "&Cancel"
+        '
+        'btnImport
+        '
+        Me.btnImport.Image = Global.AccuPay.My.Resources.Resources.Add
+        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnImport.Name = "btnImport"
+        Me.btnImport.Size = New System.Drawing.Size(63, 22)
+        Me.btnImport.Text = "&Import"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'btnClose
         '
@@ -182,28 +193,13 @@ Partial Class SalaryTab
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
         '
-        'ToolStripProgressBar2
-        '
-        Me.ToolStripProgressBar2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripProgressBar2.Name = "ToolStripProgressBar2"
-        Me.ToolStripProgressBar2.Size = New System.Drawing.Size(100, 22)
-        Me.ToolStripProgressBar2.Visible = False
-        '
-        'btnImport
-        '
-        Me.btnImport.Image = CType(resources.GetObject("btnImport.Image"), System.Drawing.Image)
-        Me.btnImport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnImport.Name = "btnImport"
-        Me.btnImport.Size = New System.Drawing.Size(63, 22)
-        Me.btnImport.Text = "Import"
-        '
         'UserActivitySalaryToolStripButton
         '
         Me.UserActivitySalaryToolStripButton.Image = CType(resources.GetObject("UserActivitySalaryToolStripButton.Image"), System.Drawing.Image)
         Me.UserActivitySalaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.UserActivitySalaryToolStripButton.Name = "UserActivitySalaryToolStripButton"
         Me.UserActivitySalaryToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivitySalaryToolStripButton.Text = "User Activity"
+        Me.UserActivitySalaryToolStripButton.Text = "&User Activity"
         '
         'pbEmployee
         '
@@ -245,9 +241,7 @@ Partial Class SalaryTab
         Me.grpSalary.Controls.Add(Me.lblTotalSalary)
         Me.grpSalary.Controls.Add(Me.Label6)
         Me.grpSalary.Controls.Add(Me.Label5)
-        Me.grpSalary.Controls.Add(Me.dtpEffectiveTo)
         Me.grpSalary.Controls.Add(Me.dtpEffectiveFrom)
-        Me.grpSalary.Controls.Add(Me.Label4)
         Me.grpSalary.Controls.Add(Me.Label3)
         Me.grpSalary.Controls.Add(Me.Label2)
         Me.grpSalary.Controls.Add(Me.lblPayFrequency)
@@ -479,17 +473,6 @@ Partial Class SalaryTab
         Me.Label5.TabIndex = 61
         Me.Label5.Text = "Basic Salary:"
         '
-        'dtpEffectiveTo
-        '
-        Me.dtpEffectiveTo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtpEffectiveTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpEffectiveTo.Location = New System.Drawing.Point(136, 112)
-        Me.dtpEffectiveTo.Name = "dtpEffectiveTo"
-        Me.dtpEffectiveTo.ShowCheckBox = True
-        Me.dtpEffectiveTo.Size = New System.Drawing.Size(159, 20)
-        Me.dtpEffectiveTo.TabIndex = 58
-        Me.dtpEffectiveTo.Visible = False
-        '
         'dtpEffectiveFrom
         '
         Me.dtpEffectiveFrom.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -498,16 +481,6 @@ Partial Class SalaryTab
         Me.dtpEffectiveFrom.Name = "dtpEffectiveFrom"
         Me.dtpEffectiveFrom.Size = New System.Drawing.Size(159, 20)
         Me.dtpEffectiveFrom.TabIndex = 57
-        '
-        'Label4
-        '
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(8, 112)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(112, 16)
-        Me.Label4.TabIndex = 3
-        Me.Label4.Text = "Effective To"
-        Me.Label4.Visible = False
         '
         'Label3
         '
@@ -950,13 +923,10 @@ Partial Class SalaryTab
     Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents pbEmployee As PictureBox
     Friend WithEvents btnNew As ToolStripButton
-    Friend WithEvents ToolStripProgressBar2 As ToolStripProgressBar
     Friend WithEvents grpSalary As GroupBox
-    Friend WithEvents Label4 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents lblPayFrequency As Label
-    Friend WithEvents dtpEffectiveTo As DateTimePicker
     Friend WithEvents dtpEffectiveFrom As DateTimePicker
     Friend WithEvents Label9 As Label
     Friend WithEvents Label8 As Label
@@ -1001,7 +971,6 @@ Partial Class SalaryTab
     Friend WithEvents lblTotalSalary As Label
     Friend WithEvents lblTotalSalaryPeroSign As Label
     Friend WithEvents tlpResult As ToolTip
-    Friend WithEvents btnImport As ToolStripButton
     Friend WithEvents chkPaySSS As CheckBox
     Friend WithEvents chkPayPhilHealth As CheckBox
     Friend WithEvents ChkPagIbig As CheckBox
@@ -1021,4 +990,6 @@ Partial Class SalaryTab
     Friend WithEvents lblEcolaPeroSign As Label
     Friend WithEvents lblEcola As Label
     Friend WithEvents UserActivitySalaryToolStripButton As ToolStripButton
+    Friend WithEvents btnImport As ToolStripButton
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 End Class

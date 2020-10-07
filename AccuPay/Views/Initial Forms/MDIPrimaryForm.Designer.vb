@@ -127,12 +127,13 @@ Partial Class MDIPrimaryForm
         Me.ToolStripLabel7 = New System.Windows.Forms.ToolStripLabel()
         Me.lblVersionName = New System.Windows.Forms.ToolStripLabel()
         Me.lblVersionValue = New System.Windows.Forms.ToolStripLabel()
+        Me.EmailServiceStatusToolStripLabel = New System.Windows.Forms.ToolStripLabel()
         Me.systemprogressbar = New System.Windows.Forms.ToolStripProgressBar()
         Me.Showmainbutton = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripButton0 = New System.Windows.Forms.ToolStripButton()
+        Me.HomeToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.GeneralToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.HrisToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.TimeToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.TimeAndAttendanceToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.PayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ReportsToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
@@ -143,6 +144,36 @@ Partial Class MDIPrimaryForm
         Me.bgDashBoardReloader = New System.ComponentModel.BackgroundWorker()
         Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.ctxtmenNothing = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.EmailStatusTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn41 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -1099,6 +1130,7 @@ Partial Class MDIPrimaryForm
         Me.DataGridViewTextBoxColumn7.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        Me.DataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn7.Width = 136
         '
         'DataGridViewTextBoxColumn8
@@ -1130,7 +1162,7 @@ Partial Class MDIPrimaryForm
         Me.ToolStrip1.CanOverflow = False
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.ToolStripLabel1, Me.lblPosition, Me.ToolStripLabel8, Me.ToolStripLabel3, Me.lblUser, Me.ToolStripLabel4, Me.ToolStripLabel5, Me.lblTime, Me.ToolStripLabel6, Me.ToolStripLabel7, Me.lblVersionName, Me.lblVersionValue, Me.systemprogressbar})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.ToolStripLabel1, Me.lblPosition, Me.ToolStripLabel8, Me.ToolStripLabel3, Me.lblUser, Me.ToolStripLabel4, Me.ToolStripLabel5, Me.lblTime, Me.ToolStripLabel6, Me.ToolStripLabel7, Me.lblVersionName, Me.lblVersionValue, Me.EmailServiceStatusToolStripLabel, Me.systemprogressbar})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 537)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1059, 25)
@@ -1222,6 +1254,16 @@ Partial Class MDIPrimaryForm
         Me.lblVersionValue.Name = "lblVersionValue"
         Me.lblVersionValue.Size = New System.Drawing.Size(0, 22)
         '
+        'EmailServiceStatusToolStripLabel
+        '
+        Me.EmailServiceStatusToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.EmailServiceStatusToolStripLabel.Enabled = False
+        Me.EmailServiceStatusToolStripLabel.ForeColor = System.Drawing.Color.Black
+        Me.EmailServiceStatusToolStripLabel.Name = "EmailServiceStatusToolStripLabel"
+        Me.EmailServiceStatusToolStripLabel.Size = New System.Drawing.Size(160, 22)
+        Me.EmailServiceStatusToolStripLabel.Text = "Getting email service status..."
+        Me.EmailServiceStatusToolStripLabel.Visible = False
+        '
         'systemprogressbar
         '
         Me.systemprogressbar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
@@ -1238,7 +1280,7 @@ Partial Class MDIPrimaryForm
         Me.Showmainbutton.Dock = System.Windows.Forms.DockStyle.Left
         Me.Showmainbutton.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.Showmainbutton.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton0, Me.GeneralToolStripButton, Me.HrisToolStripButton, Me.TimeToolStripButton, Me.PayrollToolStripButton, Me.ReportsToolStripButton})
+        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HomeToolStripButton, Me.GeneralToolStripButton, Me.HrisToolStripButton, Me.TimeAndAttendanceToolStripButton, Me.PayrollToolStripButton, Me.ReportsToolStripButton})
         Me.Showmainbutton.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow
         Me.Showmainbutton.Location = New System.Drawing.Point(0, 0)
         Me.Showmainbutton.Name = "Showmainbutton"
@@ -1246,19 +1288,19 @@ Partial Class MDIPrimaryForm
         Me.Showmainbutton.TabIndex = 39
         Me.Showmainbutton.Text = "ToolStrip1"
         '
-        'ToolStripButton0
+        'HomeToolStripButton
         '
-        Me.ToolStripButton0.AutoSize = False
-        Me.ToolStripButton0.Image = CType(resources.GetObject("ToolStripButton0.Image"), System.Drawing.Image)
-        Me.ToolStripButton0.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton0.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
-        Me.ToolStripButton0.Name = "ToolStripButton0"
-        Me.ToolStripButton0.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-        Me.ToolStripButton0.Size = New System.Drawing.Size(85, 80)
-        Me.ToolStripButton0.Text = "Home"
-        Me.ToolStripButton0.TextAlign = System.Drawing.ContentAlignment.BottomCenter
-        Me.ToolStripButton0.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        Me.ToolStripButton0.ToolTipText = "Home"
+        Me.HomeToolStripButton.AutoSize = False
+        Me.HomeToolStripButton.Image = CType(resources.GetObject("HomeToolStripButton.Image"), System.Drawing.Image)
+        Me.HomeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.HomeToolStripButton.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+        Me.HomeToolStripButton.Name = "HomeToolStripButton"
+        Me.HomeToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
+        Me.HomeToolStripButton.Size = New System.Drawing.Size(85, 80)
+        Me.HomeToolStripButton.Text = "Home"
+        Me.HomeToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.HomeToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.HomeToolStripButton.ToolTipText = "Home"
         '
         'GeneralToolStripButton
         '
@@ -1289,18 +1331,18 @@ Partial Class MDIPrimaryForm
         Me.HrisToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.HrisToolStripButton.ToolTipText = "HRIS"
         '
-        'TimeToolStripButton
+        'TimeAndAttendanceToolStripButton
         '
-        Me.TimeToolStripButton.AutoSize = False
-        Me.TimeToolStripButton.Image = CType(resources.GetObject("TimeToolStripButton.Image"), System.Drawing.Image)
-        Me.TimeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.TimeToolStripButton.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
-        Me.TimeToolStripButton.Name = "TimeToolStripButton"
-        Me.TimeToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-        Me.TimeToolStripButton.Size = New System.Drawing.Size(85, 80)
-        Me.TimeToolStripButton.Text = "Time"
-        Me.TimeToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter
-        Me.TimeToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.TimeAndAttendanceToolStripButton.AutoSize = False
+        Me.TimeAndAttendanceToolStripButton.Image = CType(resources.GetObject("TimeAndAttendanceToolStripButton.Image"), System.Drawing.Image)
+        Me.TimeAndAttendanceToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.TimeAndAttendanceToolStripButton.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+        Me.TimeAndAttendanceToolStripButton.Name = "TimeAndAttendanceToolStripButton"
+        Me.TimeAndAttendanceToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
+        Me.TimeAndAttendanceToolStripButton.Size = New System.Drawing.Size(85, 80)
+        Me.TimeAndAttendanceToolStripButton.Text = "Time"
+        Me.TimeAndAttendanceToolStripButton.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.TimeAndAttendanceToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'PayrollToolStripButton
         '
@@ -1378,6 +1420,221 @@ Partial Class MDIPrimaryForm
         '
         Me.ctxtmenNothing.Name = "ctxtmenNothing"
         Me.ctxtmenNothing.Size = New System.Drawing.Size(61, 4)
+        '
+        'EmailStatusTimer
+        '
+        Me.EmailStatusTimer.Interval = 5000
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.FillWeight = 59.93846!
+        Me.DataGridViewTextBoxColumn13.HeaderText = "Remaining balance"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
+        Me.DataGridViewTextBoxColumn13.Width = 164
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.FillWeight = 50.92582!
+        Me.DataGridViewTextBoxColumn14.HeaderText = "Remaining pay period"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
+        Me.DataGridViewTextBoxColumn14.Width = 185
+        '
+        'DataGridViewTextBoxColumn15
+        '
+        Me.DataGridViewTextBoxColumn15.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        Me.DataGridViewTextBoxColumn15.ReadOnly = True
+        Me.DataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn15.Width = 127
+        '
+        'DataGridViewTextBoxColumn16
+        '
+        Me.DataGridViewTextBoxColumn16.HeaderText = "Employee Full Name"
+        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        Me.DataGridViewTextBoxColumn16.ReadOnly = True
+        Me.DataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn16.Width = 127
+        '
+        'DataGridViewTextBoxColumn17
+        '
+        Me.DataGridViewTextBoxColumn17.HeaderText = "Date hired"
+        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.ReadOnly = True
+        Me.DataGridViewTextBoxColumn17.Width = 127
+        '
+        'DataGridViewTextBoxColumn18
+        '
+        Me.DataGridViewTextBoxColumn18.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        Me.DataGridViewTextBoxColumn18.ReadOnly = True
+        Me.DataGridViewTextBoxColumn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn19
+        '
+        Me.DataGridViewTextBoxColumn19.HeaderText = "Employee Full Name"
+        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
+        Me.DataGridViewTextBoxColumn19.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn20
+        '
+        Me.DataGridViewTextBoxColumn20.HeaderText = "Dependent Full Name"
+        Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+        Me.DataGridViewTextBoxColumn20.ReadOnly = True
+        Me.DataGridViewTextBoxColumn20.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn21
+        '
+        Me.DataGridViewTextBoxColumn21.HeaderText = "Dependent Birthdate"
+        Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+        Me.DataGridViewTextBoxColumn21.ReadOnly = True
+        Me.DataGridViewTextBoxColumn21.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn22
+        '
+        Me.DataGridViewTextBoxColumn22.FillWeight = 179.0281!
+        Me.DataGridViewTextBoxColumn22.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
+        Me.DataGridViewTextBoxColumn22.ReadOnly = True
+        Me.DataGridViewTextBoxColumn22.Width = 130
+        '
+        'DataGridViewTextBoxColumn23
+        '
+        Me.DataGridViewTextBoxColumn23.FillWeight = 139.5578!
+        Me.DataGridViewTextBoxColumn23.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
+        Me.DataGridViewTextBoxColumn23.ReadOnly = True
+        Me.DataGridViewTextBoxColumn23.Width = 130
+        '
+        'DataGridViewTextBoxColumn24
+        '
+        Me.DataGridViewTextBoxColumn24.FillWeight = 110.1821!
+        Me.DataGridViewTextBoxColumn24.HeaderText = "Pay period"
+        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        Me.DataGridViewTextBoxColumn24.ReadOnly = True
+        Me.DataGridViewTextBoxColumn24.Width = 130
+        '
+        'DataGridViewTextBoxColumn25
+        '
+        Me.DataGridViewTextBoxColumn25.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
+        Me.DataGridViewTextBoxColumn25.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn26
+        '
+        Me.DataGridViewTextBoxColumn26.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
+        Me.DataGridViewTextBoxColumn26.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn27
+        '
+        Me.DataGridViewTextBoxColumn27.HeaderText = "Time"
+        Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
+        Me.DataGridViewTextBoxColumn27.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn28
+        '
+        Me.DataGridViewTextBoxColumn28.HeaderText = "StartDate"
+        Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
+        Me.DataGridViewTextBoxColumn28.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn29
+        '
+        Me.DataGridViewTextBoxColumn29.HeaderText = "No. of day(s)"
+        Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
+        Me.DataGridViewTextBoxColumn29.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn30
+        '
+        Me.DataGridViewTextBoxColumn30.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
+        Me.DataGridViewTextBoxColumn30.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn31
+        '
+        Me.DataGridViewTextBoxColumn31.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
+        Me.DataGridViewTextBoxColumn31.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn32
+        '
+        Me.DataGridViewTextBoxColumn32.HeaderText = "Frequency"
+        Me.DataGridViewTextBoxColumn32.Name = "DataGridViewTextBoxColumn32"
+        Me.DataGridViewTextBoxColumn32.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn33
+        '
+        Me.DataGridViewTextBoxColumn33.HeaderText = "Cut off"
+        Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
+        Me.DataGridViewTextBoxColumn33.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn34
+        '
+        Me.DataGridViewTextBoxColumn34.FillWeight = 102.5126!
+        Me.DataGridViewTextBoxColumn34.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
+        Me.DataGridViewTextBoxColumn34.ReadOnly = True
+        Me.DataGridViewTextBoxColumn34.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn34.Width = 136
+        '
+        'DataGridViewTextBoxColumn35
+        '
+        Me.DataGridViewTextBoxColumn35.FillWeight = 99.67702!
+        Me.DataGridViewTextBoxColumn35.HeaderText = "Employee Full Name"
+        Me.DataGridViewTextBoxColumn35.Name = "DataGridViewTextBoxColumn35"
+        Me.DataGridViewTextBoxColumn35.ReadOnly = True
+        Me.DataGridViewTextBoxColumn35.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn35.Width = 132
+        '
+        'DataGridViewTextBoxColumn36
+        '
+        Me.DataGridViewTextBoxColumn36.FillWeight = 97.8104!
+        Me.DataGridViewTextBoxColumn36.HeaderText = "No. of OT hrs"
+        Me.DataGridViewTextBoxColumn36.Name = "DataGridViewTextBoxColumn36"
+        Me.DataGridViewTextBoxColumn36.ReadOnly = True
+        Me.DataGridViewTextBoxColumn36.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn36.Width = 130
+        '
+        'DataGridViewTextBoxColumn37
+        '
+        Me.DataGridViewTextBoxColumn37.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
+        Me.DataGridViewTextBoxColumn37.ReadOnly = True
+        Me.DataGridViewTextBoxColumn37.Visible = False
+        '
+        'DataGridViewTextBoxColumn38
+        '
+        Me.DataGridViewTextBoxColumn38.FillWeight = 102.5126!
+        Me.DataGridViewTextBoxColumn38.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
+        Me.DataGridViewTextBoxColumn38.ReadOnly = True
+        Me.DataGridViewTextBoxColumn38.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn38.Width = 136
+        '
+        'DataGridViewTextBoxColumn39
+        '
+        Me.DataGridViewTextBoxColumn39.FillWeight = 99.67702!
+        Me.DataGridViewTextBoxColumn39.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn39.Name = "DataGridViewTextBoxColumn39"
+        Me.DataGridViewTextBoxColumn39.ReadOnly = True
+        Me.DataGridViewTextBoxColumn39.Width = 132
+        '
+        'DataGridViewTextBoxColumn40
+        '
+        Me.DataGridViewTextBoxColumn40.FillWeight = 97.8104!
+        Me.DataGridViewTextBoxColumn40.HeaderText = "No. of OB hrs"
+        Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
+        Me.DataGridViewTextBoxColumn40.ReadOnly = True
+        Me.DataGridViewTextBoxColumn40.Width = 130
+        '
+        'DataGridViewTextBoxColumn41
+        '
+        Me.DataGridViewTextBoxColumn41.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn41.Name = "DataGridViewTextBoxColumn41"
+        Me.DataGridViewTextBoxColumn41.ReadOnly = True
+        Me.DataGridViewTextBoxColumn41.Visible = False
         '
         'MDIPrimaryForm
         '
@@ -1458,9 +1715,9 @@ Partial Class MDIPrimaryForm
     Friend WithEvents ToolStripLabel7 As System.Windows.Forms.ToolStripLabel
     Friend WithEvents Showmainbutton As System.Windows.Forms.ToolStrip
     Friend WithEvents GeneralToolStripButton As System.Windows.Forms.ToolStripButton
-    Friend WithEvents TimeToolStripButton As System.Windows.Forms.ToolStripButton
+    Friend WithEvents TimeAndAttendanceToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
-    Friend WithEvents ToolStripButton0 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents HomeToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents systemprogressbar As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents PayrollToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents HrisToolStripButton As System.Windows.Forms.ToolStripButton
@@ -1554,4 +1811,35 @@ Partial Class MDIPrimaryForm
     Friend WithEvents elvTime As DataGridViewTextBoxColumn
     Friend WithEvents elvStartDate As DataGridViewTextBoxColumn
     Friend WithEvents elvDays As DataGridViewTextBoxColumn
+    Friend WithEvents EmailServiceStatusToolStripLabel As ToolStripLabel
+    Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn16 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn17 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn20 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn21 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn22 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn23 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn24 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn25 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn29 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn30 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn31 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn32 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn33 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn34 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn35 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn36 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn37 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn38 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn39 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn40 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn41 As DataGridViewTextBoxColumn
+    Friend WithEvents EmailStatusTimer As Timer
 End Class

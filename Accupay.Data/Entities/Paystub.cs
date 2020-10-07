@@ -75,7 +75,8 @@ namespace AccuPay.Data.Entities
 
         public decimal TotalBonus { get; set; }
 
-        public decimal TotalAllowance { get; set; }
+        [Column("TotalAllowance")]
+        public decimal TotalNonTaxableAllowance { get; set; }
 
         public decimal TotalTaxableAllowance { get; set; }
 
@@ -135,36 +136,46 @@ namespace AccuPay.Data.Entities
         [NotMapped]
         public decimal Ecola { get; set; }
 
+        public decimal GrandTotalAllowance => TotalNonTaxableAllowance + TotalTaxableAllowance;
+
         public decimal NetDeductions => GovernmentDeductions + TotalLoans + WithholdingTax;
 
         public decimal GovernmentDeductions => SssEmployeeShare + PhilHealthEmployeeShare + HdmfEmployeeShare;
 
-        public decimal RegularHoursAndTotalRestDay => RegularHours +
-                                                        RestDayHours +
-                                                        SpecialHolidayRestDayHours +
-                                                        RegularHolidayRestDayHours;
+        public decimal TotalRestDayHours => RestDayHours + SpecialHolidayRestDayHours + RegularHolidayRestDayHours;
 
-        public decimal TotalWorkedHoursWithoutOvertimeAndLeave => RegularHours +
-                                                                RestDayHours +
-                                                                SpecialHolidayHours +
-                                                                SpecialHolidayRestDayHours +
-                                                                RegularHolidayHours +
-                                                                RegularHolidayRestDayHours;
+        public decimal RegularHoursAndTotalRestDay => RegularHours + TotalRestDayHours;
 
-        public decimal TotalDaysPayWithOutOvertimeAndLeave => RegularPay +
-                                                            RestDayPay +
-                                                            SpecialHolidayPay +
-                                                            SpecialHolidayRestDayPay +
-                                                            RegularHolidayPay +
-                                                            RegularHolidayRestDayPay;
+        public decimal TotalOvertimeHours =>
+            OvertimeHours +
+            RestDayOTHours +
+            SpecialHolidayOTHours +
+            RegularHolidayOTHours +
+            SpecialHolidayRestDayOTHours +
+            RegularHolidayRestDayOTHours;
+
+        public decimal TotalWorkedHoursWithoutOvertimeAndLeave =>
+            RegularHoursAndTotalRestDay +
+            SpecialHolidayHours +
+            RegularHolidayHours;
+
+        public decimal TotalWorkedHoursWithoutLeave => TotalWorkedHoursWithoutOvertimeAndLeave + TotalOvertimeHours;
+
+        public decimal TotalDaysPayWithOutOvertimeAndLeave =>
+            RegularPay +
+            RestDayPay +
+            SpecialHolidayPay +
+            RegularHolidayPay +
+            SpecialHolidayRestDayPay +
+            RegularHolidayRestDayPay;
 
         public decimal TotalDeductionAdjustments =>
-                        Adjustments.Where(a => a.Amount < 0).Sum(a => a.Amount) +
-                        ActualAdjustments.Where(a => a.Amount < 0).Sum(a => a.Amount);
+            Adjustments.Where(a => a.Amount < 0).Sum(a => a.Amount) +
+            ActualAdjustments.Where(a => a.Amount < 0).Sum(a => a.Amount);
 
         public decimal TotalAdditionAdjustments =>
-                        Adjustments.Where(a => a.Amount > 0).Sum(a => a.Amount) +
-                        ActualAdjustments.Where(a => a.Amount > 0).Sum(a => a.Amount);
+            Adjustments.Where(a => a.Amount > 0).Sum(a => a.Amount) +
+            ActualAdjustments.Where(a => a.Amount > 0).Sum(a => a.Amount);
 
         public Paystub()
         {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class BaseDataService
+    public abstract class BaseDataService
     {
         private const string ClosedPayPeriodErrorMessage = "Data cannot be modified since it is within a \"Closed\" pay period.";
 

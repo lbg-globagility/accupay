@@ -63,7 +63,7 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        internal async Task<ICollection<Position>> GetAllAsync(int organizationId)
+        public async Task<ICollection<Position>> GetAllAsync(int organizationId)
         {
             return await _context.Positions
                 .Where(p => p.OrganizationID == organizationId)

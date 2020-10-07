@@ -24,7 +24,7 @@ Partial Class NewDivisionPositionForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(NewDivisionPositionForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.DivisionPositionTreeView = New System.Windows.Forms.TreeView()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.lblFormTitle = New System.Windows.Forms.Label()
@@ -41,7 +41,6 @@ Partial Class NewDivisionPositionForm
         Me.SavePositionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeletePositionToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelPositionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseFormToolStripItem2 = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityPositionToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -59,7 +58,6 @@ Partial Class NewDivisionPositionForm
         Me.SaveDivisionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.DeleteDivisionToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.CancelDivisionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseFormToolStripItem = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -164,14 +162,14 @@ Partial Class NewDivisionPositionForm
         Me.EmployeeDataGrid.BackgroundColor = System.Drawing.Color.White
         Me.EmployeeDataGrid.ColumnHeadersHeight = 34
         Me.EmployeeDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EmployeeID, Me.LastName, Me.FirstName, Me.MiddleName})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeeDataGrid.DefaultCellStyle = DataGridViewCellStyle2
         Me.EmployeeDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeeDataGrid.Location = New System.Drawing.Point(6, 242)
         Me.EmployeeDataGrid.MultiSelect = False
@@ -224,7 +222,7 @@ Partial Class NewDivisionPositionForm
         '
         Me.ToolStrip2.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SavePositionToolStripButton, Me.ToolStripSeparator3, Me.DeletePositionToolStripButton, Me.ToolStripSeparator4, Me.CancelPositionToolStripButton, Me.CloseFormToolStripItem2, Me.UserActivityPositionToolStripButton})
+        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SavePositionToolStripButton, Me.DeletePositionToolStripButton, Me.CancelPositionToolStripButton, Me.CloseFormToolStripItem2, Me.ToolStripSeparator3, Me.UserActivityPositionToolStripButton})
         Me.ToolStrip2.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip2.Name = "ToolStrip2"
         Me.ToolStrip2.Size = New System.Drawing.Size(796, 25)
@@ -246,16 +244,11 @@ Partial Class NewDivisionPositionForm
         '
         'DeletePositionToolStripButton
         '
-        Me.DeletePositionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.DeletePositionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.DeletePositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DeletePositionToolStripButton.Name = "DeletePositionToolStripButton"
         Me.DeletePositionToolStripButton.Size = New System.Drawing.Size(60, 22)
         Me.DeletePositionToolStripButton.Text = "&Delete"
-        '
-        'ToolStripSeparator4
-        '
-        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 25)
         '
         'CancelPositionToolStripButton
         '
@@ -398,7 +391,7 @@ Partial Class NewDivisionPositionForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveDivisionToolStripButton, Me.ToolStripSeparator1, Me.DeleteDivisionToolStripButton, Me.ToolStripSeparator2, Me.CancelDivisionToolStripButton, Me.CloseFormToolStripItem, Me.UserActivityToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveDivisionToolStripButton, Me.DeleteDivisionToolStripButton, Me.CancelDivisionToolStripButton, Me.CloseFormToolStripItem, Me.ToolStripSeparator1, Me.UserActivityToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(779, 25)
@@ -420,16 +413,11 @@ Partial Class NewDivisionPositionForm
         '
         'DeleteDivisionToolStripButton
         '
-        Me.DeleteDivisionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.deleteuser
+        Me.DeleteDivisionToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.DeleteDivisionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DeleteDivisionToolStripButton.Name = "DeleteDivisionToolStripButton"
         Me.DeleteDivisionToolStripButton.Size = New System.Drawing.Size(60, 22)
         Me.DeleteDivisionToolStripButton.Text = "&Delete"
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
         '
         'CancelDivisionToolStripButton
         '
@@ -609,7 +597,6 @@ Partial Class NewDivisionPositionForm
     Friend WithEvents SavePositionToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents DeletePositionToolStripButton As ToolStripButton
-    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents CancelPositionToolStripButton As ToolStripButton
     Friend WithEvents CloseFormToolStripItem2 As ToolStripButton
     Friend WithEvents miniToolStrip As ToolStrip
@@ -618,7 +605,6 @@ Partial Class NewDivisionPositionForm
     Friend WithEvents SaveDivisionToolStripButton As ToolStripButton
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents DeleteDivisionToolStripButton As ToolStripButton
-    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents CancelDivisionToolStripButton As ToolStripButton
     Friend WithEvents CloseFormToolStripItem As ToolStripButton
     Friend WithEvents FormsTabControl As TabControl

@@ -5,7 +5,9 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities
 Imports Indigo
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -33,6 +35,7 @@ Public Class MDIPrimaryForm
 
     Private if_sysowner_is_benchmark As Boolean
     Private if_sysowner_is_cinema2k As Boolean
+    Private if_sysowner_is_goldwings As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
     Private ReadOnly _policyHelper As PolicyHelper
@@ -40,6 +43,8 @@ Public Class MDIPrimaryForm
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
     Private ReadOnly _userRepository As AspNetUserRepository
+
+    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
 
     Sub New()
 
@@ -51,9 +56,13 @@ Public Class MDIPrimaryForm
 
         _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
-        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-        if_sysowner_is_cinema2k = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
-        if_sysowner_is_hyundai = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
+
+        Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
+        if_sysowner_is_benchmark = currentSystemOwner = SystemOwnerService.Benchmark
+        if_sysowner_is_cinema2k = currentSystemOwner = SystemOwnerService.Cinema2000
+        if_sysowner_is_goldwings = currentSystemOwner = SystemOwnerService.Goldwings
+        if_sysowner_is_hyundai = currentSystemOwner = SystemOwnerService.Hyundai
 
         PrepareFormForBenchmark()
     End Sub
@@ -97,7 +106,7 @@ Public Class MDIPrimaryForm
 
         setProperDashBoardAccordingToSystemOwner()
 
-        RunLeaveAccrual()
+        Await RunLeaveAccrual()
 
         Panel1.Focus()
         MyBase.OnLoad(e)
@@ -134,7 +143,7 @@ Public Class MDIPrimaryForm
         lblTime.Text = TimeOfDay
     End Sub
 
-    Private Async Sub RunLeaveAccrual()
+    Private Async Function RunLeaveAccrual() As Task
 
         Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
         Dim collection = Await listOfValueService.CreateAsync("LeavePolicy")
@@ -147,13 +156,13 @@ Public Class MDIPrimaryForm
                     Await service.CheckAccruals(z_OrganizationID, z_User)
                 End Function)
         End If
-    End Sub
+    End Function
 
     Dim ClosingForm As Form = Nothing 'New
 
     Dim busy_bgworks(1) As System.ComponentModel.BackgroundWorker
 
-    Private Sub MDIPrimaryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+    Private Async Sub MDIPrimaryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         busy_bgworks(0) = bgDashBoardReloader
 
         Dim busy_bgworker = busy_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).
@@ -164,9 +173,8 @@ Public Class MDIPrimaryForm
                       Return False
                   End Function)
 
-        e.Cancel = (busy_bgworker.Count > 0)
-
         LockTime()
+        EmailStatusTimer.Stop()
 
         If e.Cancel = False Then
 
@@ -268,9 +276,9 @@ Public Class MDIPrimaryForm
 
                     .PhotoImages.Image = Nothing
 
-                    .cbxorganiz.SelectedIndex = -1
+                    .OrganizationComboBox.SelectedIndex = -1
 
-                    .ReloadOrganization()
+                    Await MetroLogin.ReloadOrganizationAsync()
 
                     If Debugger.IsAttached Then
                         .AssignDefaultCredentials()
@@ -290,37 +298,46 @@ Public Class MDIPrimaryForm
     Private Sub MDIPrimaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Try
-            PrepareForm(sender, e)
+            PrepareForm()
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         Finally
         End Try
     End Sub
 
-    Private Sub PrepareForm(sender As Object, e As EventArgs)
+    Private Sub PrepareForm()
         If dbnow = Nothing Then
             dbnow = EXECQUER(CURDATE_MDY)
         End If
-        TimeToolStripButton.Text = "Time &&" & vbNewLine & "Attendance"
-        TimeToolStripButton.ToolTipText = "Time & Attendance"
+        TimeAndAttendanceToolStripButton.Text = "Time &&" & vbNewLine & "Attendance"
+        TimeAndAttendanceToolStripButton.ToolTipText = "Time & Attendance"
         '123, 24
         lblTime.Text = TimeOfDay
         lblUser.Text = userFirstName &
                        If(userLastName = Nothing, "", " " & userLastName)
         lblPosition.Text = z_postName
-        ToolStripButton0_Click(sender, e)
+        SelectHomeToolStrip()
         PictureBox1.Image = ImageList1.Images(1)
         LoadVersionNo()
+
+        If _policyHelper.UseEmailPayslip Then
+
+            EmailServiceStatusToolStripLabel.Visible = True
+            AddHandler EmailStatusTimer.Tick, AddressOf EmailStatusTimer_Tick
+
+            EmailStatusTimer.Start()
+        End If
+
     End Sub
 
     Private Sub PrepareFormForBenchmark()
         If if_sysowner_is_benchmark Then
-            ToolStripButton0.Visible = False
-            TimeToolStripButton.Visible = False
+            HomeToolStripButton.Visible = False
+            TimeAndAttendanceToolStripButton.Visible = False
         End If
     End Sub
 
-    Private Async Sub RestrictByUserLevel()
+    Private Async Function RestrictByUserLevel() As Task
 
         Dim user = Await _userRepository.GetByIdAsync(z_User)
 
@@ -343,13 +360,13 @@ Public Class MDIPrimaryForm
 
             If user.UserLevel = UserLevel.Five Then
 
-                TimeToolStripButton.Visible = False
+                TimeAndAttendanceToolStripButton.Visible = False
 
             End If
 
         End If
 
-    End Sub
+    End Function
 
     Private Sub LoadVersionNo()
         Dim appSettings = ConfigurationManager.AppSettings
@@ -371,8 +388,12 @@ Public Class MDIPrimaryForm
 
     Dim isHome As SByte = 0
 
-    Private Sub ToolStripButton0_Click(sender As Object, e As EventArgs) Handles ToolStripButton0.Click
+    Private Sub HomeToolStripButton_Click(sender As Object, e As EventArgs) Handles HomeToolStripButton.Click
+        SelectHomeToolStrip()
 
+    End Sub
+
+    Private Sub SelectHomeToolStrip()
         isHome = 1
 
         UnlockTime()
@@ -385,19 +406,19 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(255, 255, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        ToolStripButton0.Font = selectedButtonFont
+        HomeToolStripButton.Font = selectedButtonFont
 
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
@@ -409,7 +430,7 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
+    Private Async Sub GeneralToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
 
         isHome = 0
 
@@ -423,9 +444,9 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
@@ -433,16 +454,16 @@ Public Class MDIPrimaryForm
 
         GeneralToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(0, sender, e)
+        Await refresh_previousForm(0)
     End Sub
 
-    Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles TimeToolStripButton.Click
+    Private Async Sub TimeAndAttendanceToolStripButton_Click(sender As Object, e As EventArgs) Handles TimeAndAttendanceToolStripButton.Click
 
         isHome = 0
 
@@ -456,41 +477,28 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        TimeToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
-        TimeToolStripButton.Font = selectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(2, sender, e)
+        Await refresh_previousForm(2)
     End Sub
 
     Dim theemployeetable As New DataTable
 
-    Sub refresh_previousForm(Optional groupindex As Object = 0,
-                             Optional sndr As Object = 0,
-                             Optional ee As EventArgs = Nothing)
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-            'once = 1
-
-            Exit Sub
-
-        End If
-
-        Static countchanges As Integer = -1
+    Private Async Function refresh_previousForm(Optional groupindex As Object = 0) As Task
 
         If previousForm IsNot Nothing Then
 
@@ -522,7 +530,7 @@ Public Class MDIPrimaryForm
 
                             Case .GetEmployeeProfileTabPageIndex
                                 If .listofEditDepen.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
+                                    Await EmployeeForm.SearchEmployee()
                                 Else
 
                                 End If
@@ -555,17 +563,14 @@ Public Class MDIPrimaryForm
 
             ElseIf groupindex = 3 Then 'Payroll
                 If previousForm.Name = "Paystub" Then
-                    With PayStubForm
-                        .btnrefresh_Click(sndr, ee)
-                    End With
+                    Await PayStubForm.VIEW_payperiodofyear()
                 End If
             End If
 
-            countchanges = theemployeetable.Rows.Count
         End If
-    End Sub
+    End Function
 
-    Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
+    Private Async Sub PayrollToolStripButton_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
 
         isHome = 0
 
@@ -579,27 +584,27 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
         PayrollToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
         PayrollToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(3, sender, e)
+        Await refresh_previousForm(3)
 
     End Sub
 
-    Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
+    Private Async Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
 
         isHome = 0
 
@@ -613,9 +618,9 @@ Public Class MDIPrimaryForm
 
         FormReports.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
@@ -623,13 +628,13 @@ Public Class MDIPrimaryForm
 
         HrisToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(1, sender, e)
+        Await refresh_previousForm(1)
     End Sub
 
     'Toggling pin status
@@ -684,20 +689,20 @@ Public Class MDIPrimaryForm
         HRISForm.Hide()
         TimeAttendForm.Hide()
 
-        ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
+        HomeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
-        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeAndAttendanceToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
         PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
         ReportsToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
         ReportsToolStripButton.Font = selectedButtonFont
 
-        ToolStripButton0.Font = unselectedButtonFont
+        HomeToolStripButton.Font = unselectedButtonFont
         GeneralToolStripButton.Font = unselectedButtonFont
         HrisToolStripButton.Font = unselectedButtonFont
-        TimeToolStripButton.Font = unselectedButtonFont
+        TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
     End Sub
 
@@ -710,7 +715,6 @@ Public Class MDIPrimaryForm
     Sub UnlockTime()
 
         Timer2.Enabled = True
-
         Timer2.Start()
 
         Static once As SByte = 0
@@ -919,7 +923,7 @@ Public Class MDIPrimaryForm
 
         If _policyHelper.UseUserLevel Then
 
-            RestrictByUserLevel()
+            Await RestrictByUserLevel()
         Else
 
             RestrictByRole()
@@ -930,48 +934,124 @@ Public Class MDIPrimaryForm
 
     Private Sub RestrictByRole()
 
-        Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
-        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
-        Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
+        'General
+        Dim userPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.USER).FirstOrDefault()
+        Dim organizationPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ORGANIZATION).FirstOrDefault()
+        Dim branchPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.BRANCH).FirstOrDefault()
+        Dim rolePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ROLE).FirstOrDefault()
+        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
+        Dim calendarPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.CALENDAR).FirstOrDefault()
+        Dim agencyPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.AGENCY).FirstOrDefault()
+
+        If Not CheckReadPermission(userPermission) AndAlso
+            Not CheckReadPermission(organizationPermission) AndAlso
+            Not CheckReadPermission(branchPermission) AndAlso
+            Not CheckReadPermission(rolePermission) AndAlso
+            Not CheckReadPermission(shiftPermission) AndAlso
+            Not CheckReadPermission(calendarPermission) Then
+
+            GeneralToolStripButton.Visible = False
+
+            Dim isAgencyAndHasReadPermission = (
+                if_sysowner_is_hyundai OrElse
+                if_sysowner_is_goldwings) AndAlso
+                CheckReadPermission(agencyPermission)
+
+            If isAgencyAndHasReadPermission Then
+                GeneralToolStripButton.Visible = True
+            End If
+
+        End If
+
+        'HRIS
         Dim employeePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.EMPLOYEE).FirstOrDefault()
+        Dim salaryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SALARY).FirstOrDefault()
+        Dim divisionPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.DIVISION).FirstOrDefault()
+        Dim positionPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.POSITION).FirstOrDefault()
+
+        If Not CheckReadPermission(employeePermission) AndAlso
+            Not CheckReadPermission(salaryPermission) AndAlso
+            Not CheckReadPermission(divisionPermission) AndAlso
+            Not CheckReadPermission(positionPermission) Then
+
+            HrisToolStripButton.Visible = False
+        End If
+
+        'Time & Attendance
+        Dim leavePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LEAVE).FirstOrDefault()
         Dim officialBusinessPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OFFICIALBUSINESS).FirstOrDefault()
         Dim overtimePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OVERTIME).FirstOrDefault()
-        Dim leavePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LEAVE).FirstOrDefault()
+        'shiftPermission
+        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
+        Dim timeEntryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMEENTRY).FirstOrDefault()
 
-        If loanPermission Is Nothing OrElse loanPermission.Read = False Then
+        If Not CheckReadPermission(leavePermission) AndAlso
+            Not CheckReadPermission(officialBusinessPermission) AndAlso
+            Not CheckReadPermission(overtimePermission) AndAlso
+            Not CheckReadPermission(shiftPermission) AndAlso
+            Not CheckReadPermission(timeLogPermission) AndAlso
+            Not CheckReadPermission(timeEntryPermission) Then
+
+            TimeAndAttendanceToolStripButton.Visible = False
+        End If
+
+        'Payroll
+        Dim allowancePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ALLOWANCE).FirstOrDefault()
+        Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
+        Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
+
+        If Not CheckReadPermission(allowancePermission) AndAlso
+            Not CheckReadPermission(loanPermission) AndAlso
+            Not CheckReadPermission(payPeriodPermission) Then
+
+            PayrollToolStripButton.Visible = False
+        End If
+
+        ShowOrHideDashboardWidgets(loanPermission, timeLogPermission, payPeriodPermission, employeePermission, officialBusinessPermission, overtimePermission, leavePermission)
+    End Sub
+
+    Private Shared Function CheckReadPermission(userPermission As Data.Entities.RolePermission) As Boolean
+        Return userPermission IsNot Nothing AndAlso userPermission.Read
+    End Function
+
+    Private Sub ShowOrHideDashboardWidgets(loanPermission As Data.Entities.RolePermission, timeLogPermission As Data.Entities.RolePermission, payPeriodPermission As Data.Entities.RolePermission, employeePermission As Data.Entities.RolePermission, officialBusinessPermission As Data.Entities.RolePermission, overtimePermission As Data.Entities.RolePermission, leavePermission As Data.Entities.RolePermission)
+
+        'TODO: stop querying for dashboard data if user has no read permission for that
+
+        If Not CheckReadPermission(loanPermission) Then
             LoanBalanceCollapsibleGroupBox.Visible = False
         End If
 
-        If timeLogPermission Is Nothing OrElse timeLogPermission.Read = False Then
+        If Not CheckReadPermission(timeLogPermission) Then
             CollapsibleGroupBox3.Visible = False
         End If
 
-        If payPeriodPermission Is Nothing OrElse payPeriodPermission.Read = False Then
+        If Not CheckReadPermission(payPeriodPermission) Then
             NegativePayslipsCollapsibleGroupBox.Visible = False
         End If
 
-        If employeePermission Is Nothing OrElse employeePermission.Read = False Then
+        If Not CheckReadPermission(employeePermission) Then
             BirthdayCollapsibleGroupBox.Visible = False
             UnqualifiedCollapsibleGroupBox.Visible = False
             CollapsibleGroupBox5.Visible = False
         End If
 
-        If officialBusinessPermission Is Nothing OrElse officialBusinessPermission.Read = False Then
+        If Not CheckReadPermission(officialBusinessPermission) Then
             PendingOfficialBusinessCollapsibleGroupBox.Visible = False
         End If
 
-        If overtimePermission Is Nothing OrElse overtimePermission.Read = False Then
+        If Not CheckReadPermission(overtimePermission) Then
             PendingOvertimeCollapsibleGroupBox.Visible = False
         End If
 
-        If leavePermission Is Nothing OrElse leavePermission.Read = False Then
+        If Not CheckReadPermission(leavePermission) Then
             CollapsibleGroupBox4.Visible = False
             CollapsibleGroupBox6.Visible = False
         End If
     End Sub
 
     Private Sub NotifyIcon1_Click(sender As Object, e As EventArgs)
-        ToolStripButton0_Click(sender, e)
+        SelectHomeToolStrip()
     End Sub
 
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
@@ -1043,6 +1123,52 @@ Public Class MDIPrimaryForm
             collapgpbox.Visible = _bool
 
         Next
+
+    End Sub
+
+    Private Async Sub EmailStatusTimer_Tick(sender As Object, e As EventArgs)
+
+        EmailServiceStatusToolStripLabel.Enabled = True
+
+        Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
+        Dim queueCount = onQueue.Count()
+
+        Dim connectionString = ConnectionStringRegistry.GetCurrent()
+        Dim service = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)
+        Dim status = Await service.GetStatus()
+
+        Dim isOnline = status = ServiceProcess.ServiceControllerStatus.Running
+
+        UpdateEmailStatusToolStripLabel(isOnline, queueCount)
+
+    End Sub
+
+    Private Sub UpdateEmailStatusToolStripLabel(isOnline As Boolean, queueCount As Integer)
+
+        Dim foreColor = Color.DarkGreen
+        Dim status = "Online"
+
+        If Not isOnline Then
+
+            foreColor = Color.DarkRed
+            status = "OFFLINE"
+        End If
+
+        Dim queueDescription = String.Empty
+
+        If queueCount > 0 Then
+            EmailServiceStatusToolStripLabel.ForeColor = Color.DarkOrange
+            queueDescription = $"{queueCount} email{If(queueCount > 1, "s", "")} on queue."
+        End If
+
+        EmailServiceStatusToolStripLabel.Text = $"Email Service is {status}. {queueDescription}"
+        EmailServiceStatusToolStripLabel.ForeColor = foreColor
+    End Sub
+
+    Private Sub EmailServiceStatusToolStripLabel_Click(sender As Object, e As EventArgs) Handles EmailServiceStatusToolStripLabel.Click
+
+        Dim form As New EmailDashboardForm()
+        form.ShowDialog()
 
     End Sub
 

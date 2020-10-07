@@ -9,6 +9,7 @@ Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
+Imports AccuPay.Utilities.Extensions
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -65,11 +66,11 @@ Public Class ShiftScheduleForm
 
 #Region "Methods"
 
-    Public Async Sub LoadShiftScheduleConfigurablePolicy()
+    Public Async Function LoadShiftScheduleConfigurablePolicy() As Task
         _dutyShiftPolicy = Await DutyShiftPolicy.Load1
 
         txtBreakLength.Value = _dutyShiftPolicy.BreakHour
-    End Sub
+    End Function
 
     Private Sub LoadWeek()
         Dim sundayDate = GetSundayDate()
@@ -306,47 +307,56 @@ Public Class ShiftScheduleForm
                   "Imported successfully.", DateFilterGroupBox, 0, -70)
     End Sub
 
-    Private Sub RecordUpdate(oldRecords As IEnumerable(Of EmployeeDutySchedule), updatedShiftSchedules As List(Of EmployeeDutySchedule))
-        For Each ssm In updatedShiftSchedules      'for update
+    Private Sub RecordUpdate(oldRecords As IEnumerable(Of EmployeeDutySchedule), updatedShifts As List(Of EmployeeDutySchedule))
+        For Each ssm In updatedShifts
             Dim changes As New List(Of UserActivityItem)
             Dim entityName = FormEntityName.ToLower()
 
-            Dim oldShiftSchedule = oldRecords.Where(Function(x) x.RowID = ssm.RowID).FirstOrDefault()
+            Dim oldShifts = oldRecords.Where(Function(x) x.RowID = ssm.RowID).FirstOrDefault()
 
-            If Not Nullable.Equals(ssm.StartTime, oldShiftSchedule?.StartTime) Then
+            If oldShifts Is Nothing Then Return
+
+            Dim suffixIdentifier = $"of shift with date '{ssm.DateSched.ToShortDateString()}'."
+
+            If Not Nullable.Equals(ssm.StartTime, oldShifts.StartTime) Then
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} start time from '{oldShiftSchedule?.StartTime}' to '{ssm.StartTime}' on '{ssm.DateSched.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = ssm.RowID,
+                    .Description = $"Updated start time from '{oldShifts.StartTime.ToStringFormat("hh:mm tt")}' to '{ssm.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    .ChangedEmployeeId = oldShifts.EmployeeID.Value
+                })
             End If
-            If Not Nullable.Equals(ssm.EndTime, oldShiftSchedule?.EndTime) Then
+            If Not Nullable.Equals(ssm.EndTime, oldShifts.EndTime) Then
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} end time from '{oldShiftSchedule?.EndTime}' to '{ssm.EndTime}' on '{ssm.DateSched.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = ssm.RowID,
+                    .Description = $"Updated end time from '{oldShifts.EndTime.ToStringFormat("hh:mm tt")}' to '{ssm.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    .ChangedEmployeeId = oldShifts.EmployeeID.Value
+                })
             End If
-            If Not Nullable.Equals(ssm.BreakStartTime, oldShiftSchedule?.BreakStartTime) Then
+            If Not Nullable.Equals(ssm.BreakStartTime, oldShifts.BreakStartTime) Then
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} break start from '{oldShiftSchedule?.BreakStartTime}' to '{ssm.BreakStartTime}' on '{ssm.DateSched.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = ssm.RowID,
+                    .Description = $"Updated break start from '{oldShifts.BreakStartTime.ToStringFormat("hh:mm tt")}' to '{ssm.BreakStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    .ChangedEmployeeId = oldShifts.EmployeeID.Value
+                })
             End If
-            If oldShiftSchedule?.BreakLength <> ssm.BreakLength Then
+            If oldShifts.BreakLength <> ssm.BreakLength Then
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} break length from '{oldShiftSchedule?.BreakLength}' to '{ssm.BreakLength}' on '{ssm.DateSched.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = ssm.RowID,
+                    .Description = $"Updated break length from '{oldShifts.BreakLength}' to '{ssm.BreakLength}' {suffixIdentifier}",
+                    .ChangedEmployeeId = oldShifts.EmployeeID.Value
+                })
             End If
-            If oldShiftSchedule?.IsRestDay <> ssm.IsRestDay Then
+            If oldShifts.IsRestDay <> ssm.IsRestDay Then
                 changes.Add(New UserActivityItem() With
-                    {
-                    .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} restday from '{oldShiftSchedule?.IsRestDay}' to '{ssm.IsRestDay}' on '{ssm.DateSched.ToShortDateString}'."
-                    })
+                {
+                    .EntityId = ssm.RowID,
+                    .Description = $"Updated offset from '{oldShifts.IsRestDay}' to '{ssm.IsRestDay}' {suffixIdentifier}",
+                    .ChangedEmployeeId = oldShifts.EmployeeID.Value
+                })
             End If
 
             _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
@@ -890,25 +900,25 @@ Public Class ShiftScheduleForm
 
         Dim datePeriod = New TimePeriod(dtpDateFrom.Value.Date, dtpDateTo.Value.Date)
 
-        Dim addedShiftSchedules As New List(Of EmployeeDutySchedule)
-        Dim updatedShiftSchedules As New List(Of EmployeeDutySchedule)
-        Dim deletedShiftSchedules As New List(Of EmployeeDutySchedule)
+        Dim addedShifts As New List(Of EmployeeDutySchedule)
+        Dim updatedShifts As New List(Of EmployeeDutySchedule)
+        Dim deletedShifts As New List(Of EmployeeDutySchedule)
 
         For Each ssm In toSaveList
 
             If ssm.IsNew Then
-                addedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
+                addedShifts.Add(ssm.ToEmployeeDutySchedule())
             ElseIf ssm.IsUpdate Then
-                updatedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
+                updatedShifts.Add(ssm.ToEmployeeDutySchedule())
             ElseIf ssm.ConsideredDelete Then
-                deletedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
+                deletedShifts.Add(ssm.ToEmployeeDutySchedule())
             End If
 
         Next
 
-        If Not addedShiftSchedules.Any() AndAlso
-            Not updatedShiftSchedules.Any() AndAlso
-            Not deletedShiftSchedules.Any() Then
+        If Not addedShifts.Any() AndAlso
+            Not updatedShifts.Any() AndAlso
+            Not deletedShifts.Any() Then
 
             MessageBoxHelper.Warning("No valid shifts to save.")
             Return
@@ -925,19 +935,19 @@ Public Class ShiftScheduleForm
 
         Const UnathorizedActionTitle As String = "Unauthorized Action"
 
-        If addedShiftSchedules.Any() AndAlso Not _currentRolePermission.Create Then
+        If addedShifts.Any() AndAlso Not _currentRolePermission.Create Then
 
             MessageBoxHelper.Warning("You are prohibited to create new shifts. " & allowedActionsMessage, UnathorizedActionTitle)
             Return
         End If
 
-        If updatedShiftSchedules.Any() AndAlso Not _currentRolePermission.Update Then
+        If updatedShifts.Any() AndAlso Not _currentRolePermission.Update Then
 
             MessageBoxHelper.Warning("You are prohibited to update existing shifts. " & allowedActionsMessage, UnathorizedActionTitle)
             Return
         End If
 
-        If deletedShiftSchedules.Any() AndAlso Not _currentRolePermission.Delete Then
+        If deletedShifts.Any() AndAlso Not _currentRolePermission.Delete Then
 
             MessageBoxHelper.Warning("You are prohibited to delete existing shifts. " & allowedActionsMessage, UnathorizedActionTitle)
             Return
@@ -954,9 +964,9 @@ Public Class ShiftScheduleForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
                 Await dataService.ChangeManyAsync(
                     organizationId:=z_OrganizationID,
-                    added:=addedShiftSchedules,
-                    updated:=updatedShiftSchedules,
-                    deleted:=deletedShiftSchedules)
+                    added:=addedShifts,
+                    updated:=updatedShifts,
+                    deleted:=deletedShifts)
 
                 For Each ssm In toSaveList
 
@@ -967,15 +977,7 @@ Public Class ShiftScheduleForm
                     ssm.CommitChanges()
                 Next
 
-                For Each ssm In addedShiftSchedules      'for new
-                    _userActivityRepo.RecordAdd(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
-                Next
-
-                RecordUpdate(oldRecords, updatedShiftSchedules)
-
-                For Each ssm In deletedShiftSchedules   'for delete
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
-                Next
+                RecordUserActivity(addedShifts, updatedShifts, deletedShifts, oldRecords)
 
                 ShowSuccessBalloon()
 
@@ -987,6 +989,30 @@ Public Class ShiftScheduleForm
 
                 NoAffectedRows()
             End Function)
+    End Sub
+
+    Private Sub RecordUserActivity(addedShiftSchedules As List(Of EmployeeDutySchedule), updatedShiftSchedules As List(Of EmployeeDutySchedule), deletedShiftSchedules As List(Of EmployeeDutySchedule), oldRecords As ICollection(Of EmployeeDutySchedule))
+        For Each ssm In addedShiftSchedules      'for new
+            _userActivityRepo.RecordAdd(
+                z_User,
+                FormEntityName,
+                entityId:=ssm.RowID,
+                organizationId:=z_OrganizationID,
+                suffixIdentifier:=$" with date '{ssm.DateSched.ToShortDateString()}'",
+                changedEmployeeId:=ssm.EmployeeID.Value)
+        Next
+
+        RecordUpdate(oldRecords, updatedShiftSchedules)
+
+        For Each ssm In deletedShiftSchedules   'for delete
+            _userActivityRepo.RecordDelete(
+                z_User,
+                FormEntityName,
+                entityId:=ssm.RowID,
+                organizationId:=z_OrganizationID,
+                suffixIdentifier:=$" with date '{ssm.DateSched.ToShortDateString()}'",
+                changedEmployeeId:=ssm.EmployeeID.Value)
+        Next
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
@@ -1005,7 +1031,7 @@ Public Class ShiftScheduleForm
 
     Private Async Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        LoadShiftScheduleConfigurablePolicy()
+        Await LoadShiftScheduleConfigurablePolicy()
 
         Await CheckRolePermissions()
 
@@ -1018,7 +1044,7 @@ Public Class ShiftScheduleForm
 
         Next
 
-        EmployeeTreeView1.SwitchOrganization(organizationId)
+        Await EmployeeTreeView1.SwitchOrganization(organizationId)
 
         LoadWeek()
 
@@ -1221,7 +1247,13 @@ Public Class ShiftScheduleForm
 
     Private Async Sub FilterButton_Click(sender As Object, e As EventArgs) Handles FilterButton.Click
 
-        If _originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
+        If EmployeeTreeView1.GetTickedEmployees().Any() = False Then
+
+            MessageBoxHelper.Warning("No selected employees.")
+            Return
+        End If
+
+        If _originalDates Is Nothing OrElse _originalDates.Equals(New TimePeriod(dtpDateFrom.Value, dtpDateTo.Value)) Then
             Return
         End If
 

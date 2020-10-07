@@ -3,9 +3,13 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
+Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DefaultShiftAndTimeLogsForm
@@ -20,19 +24,42 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private ReadOnly DefaultShiftBreakLength As Integer = 1
 
+    Private ReadOnly _roleRepository As RoleRepository
+
     Sub New(currentPayPeriod As IPayPeriod)
 
         InitializeComponent()
 
         Me._currentPayPeriod = currentPayPeriod
 
+        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+
     End Sub
 
-    Private Sub DefaultShiftAndTimeLogsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub DefaultShiftAndTimeLogsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         EmployeeDataGrid.AutoGenerateColumns = False
 
-        Me.Text = Me.Text & $" ({GetPayPeriodDescription()})"
+        Dim currentDate = Date.Now.ToMinimumHourValue()
+        DefaultStartTimePicker.Value = currentDate.AddSeconds(DefaultStartTime.TotalSeconds)
+        DefaultEndTimePicker.Value = currentDate.AddSeconds(DefaultEndTime.TotalSeconds)
+        DefaultBreakTimePicker.Value = currentDate.AddSeconds(DefaultShiftBreakTime.TotalSeconds)
+        DefaultBreakLengthNumeric.Value = DefaultShiftBreakLength
+
+        Me.Text &= $" ({GetPayPeriodDescription()})"
+
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
+        Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
+
+        Dim deleteShiftPermission = shiftPermission IsNot Nothing AndAlso shiftPermission.Delete
+        Dim deleteTimeLogPermission = timeLogPermission IsNot Nothing AndAlso timeLogPermission.Delete
+
+        If Not deleteShiftPermission OrElse Not deleteTimeLogPermission Then
+
+            DeleteButton.Visible = False
+
+        End If
 
     End Sub
 
@@ -57,8 +84,10 @@ Public Class DefaultShiftAndTimeLogsForm
         EmployeeDataGrid.Refresh()
 
         SaveButton.Enabled = selectedEmployees.Count > 0
+        DeleteButton.Enabled = selectedEmployees.Count > 0
 
         SaveButton.Text = $"&Create ({selectedEmployees.Count()})"
+        DeleteButton.Text = $"&Delete ({selectedEmployees.Count()})"
     End Sub
 
     Private Sub EmployeeDataGrid_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles EmployeeDataGrid.DataError
@@ -66,7 +95,7 @@ Public Class DefaultShiftAndTimeLogsForm
         Console.WriteLine("EmployeeDataGrid_DataError")
     End Sub
 
-    Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+    Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
 
         Const messageTitle As String = "Default Shift & Time Logs"
 
@@ -84,6 +113,16 @@ Public Class DefaultShiftAndTimeLogsForm
         If MessageBoxHelper.
             Confirm(Of Boolean)($"This will override the shift and time logs of { employeeCount } employee(s). Are you sure you want to create default data from {GetPayPeriodDescription()}?",
             messageTitle) Then
+
+            Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+            Dim currentPayPeriod = Await payPeriodRepository.GetByIdAsync(_currentPayPeriod.RowID.Value)
+
+            If currentPayPeriod.Status = Enums.PayPeriodStatus.Closed Then
+
+                MessageBoxHelper.Warning("Data cannot be added/updated since it is within a ""Closed"" pay period.")
+
+                Return
+            End If
 
             GenerateDefaultShiftAndTimeLogs(messageTitle, selectedEmployees)
         End If
@@ -114,7 +153,7 @@ Public Class DefaultShiftAndTimeLogsForm
                      Next
                  Next
 
-                 'Add a result form to show if there are errors
+                 'TODO: Add a result form to show if there are errors
                  Parallel.ForEach(selectedEmployees,
                     Async Sub(employee)
 
@@ -122,7 +161,7 @@ Public Class DefaultShiftAndTimeLogsForm
                         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
 
                         Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
-                        Await timeLogService.ChangeManyAsync(z_OrganizationID, addedTimeLogs:=employeeTimeLogs.ToList())
+                        Await timeLogService.ChangeManyAsync(z_OrganizationID, added:=employeeTimeLogs.ToList())
 
                         Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
                         Await shiftService.BatchApply(employeeShifts, z_OrganizationID, z_User)
@@ -139,9 +178,10 @@ Public Class DefaultShiftAndTimeLogsForm
     End Sub
 
     Private Shared Function SkippableDate(currentDate As Date, employee As Employee) As Boolean
-        Return employee.IsDaily = False AndAlso (
-                            currentDate.DayOfWeek = DayOfWeek.Saturday OrElse
-                            currentDate.DayOfWeek = DayOfWeek.Sunday)
+        Return employee.IsDaily = False AndAlso
+            (
+                currentDate.DayOfWeek = DayOfWeek.Saturday OrElse
+                currentDate.DayOfWeek = DayOfWeek.Sunday)
     End Function
 
     Private Function CreateTimeLogs(currentDate As Date, employee As Employee) As TimeLog
@@ -150,25 +190,109 @@ Public Class DefaultShiftAndTimeLogsForm
             .CreatedBy = z_User,
             .EmployeeID = employee.RowID,
             .LogDate = currentDate,
-            .TimeIn = DefaultStartTime,
-            .TimeOut = DefaultEndTime,
+            .TimeIn = DefaultStartTimePicker.Value.TimeOfDay,
+            .TimeOut = DefaultEndTimePicker.Value.TimeOfDay,
             .BranchID = employee.BranchID
         }
     End Function
 
     Private Function CreateShift(currentDate As Date, employee As Employee) As ShiftModel
+
         Dim shift = New ShiftModel With {
             .EmployeeId = employee.RowID,
             .Date = currentDate,
-            .StartTime = DefaultStartTime,
-            .EndTime = DefaultEndTime,
-            .BreakTime = DefaultShiftBreakTime,
-            .BreakLength = DefaultShiftBreakLength,
+            .StartTime = DefaultStartTimePicker.Value.TimeOfDay,
+            .EndTime = DefaultEndTimePicker.Value.TimeOfDay,
+            .BreakTime = DefaultBreakTimePicker.Value.TimeOfDay,
+            .BreakLength = DefaultBreakLengthNumeric.Value.Round(),
             .IsRestDay = False
         }
 
         Return shift
 
+    End Function
+
+    Private Sub DefaultBreakLengthNumeric_Leave(sender As Object, e As EventArgs) Handles DefaultBreakLengthNumeric.Leave
+        DefaultBreakLengthNumeric.Value = DefaultBreakLengthNumeric.Value.Round()
+    End Sub
+
+    Private Async Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+
+        Const messageTitle As String = "Delete Multiple Shift and Time Logs"
+
+        If _currentPayPeriod Is Nothing Then
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return
+        End If
+
+        Dim selectedEmployees = EmployeeTreeView.GetTickedEmployees.ToList()
+
+        Dim employeeCount = selectedEmployees.Count
+
+        If employeeCount = 0 Then Return
+
+        If MessageBoxHelper.
+            Confirm(Of Boolean)($"This will delete the shift and time logs of { employeeCount } employee(s). Are you sure you want to delete shift and time logs from {GetPayPeriodDescription()}?",
+            messageTitle) Then
+
+            Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+            Dim currentPayPeriod = Await payPeriodRepository.GetByIdAsync(_currentPayPeriod.RowID.Value)
+
+            If currentPayPeriod.Status = Enums.PayPeriodStatus.Closed Then
+
+                MessageBoxHelper.Warning("Data cannot be deleted since it is within a ""Closed"" pay period.")
+
+                Return
+            End If
+
+            Await DeleteMultipleShiftAndTImelogs(messageTitle, selectedEmployees)
+        End If
+
+    End Sub
+
+    Private Async Function DeleteMultipleShiftAndTImelogs(messageTitle As String, selectedEmployees As List(Of Employee)) As Task
+        Dim shiftRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+
+        Dim employeeIds = selectedEmployees.Select(Function(x) x.RowID.Value).ToList()
+
+        Dim coveredPeriod = New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
+
+        Dim shifts = Await shiftRepository.GetByMultipleEmployeeAndBetweenDatePeriodAsync(
+            z_OrganizationID,
+            employeeIds,
+            coveredPeriod)
+
+        Dim timeLogs = Await timeLogRepository.GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
+            employeeIds,
+            coveredPeriod)
+
+        Me.Cursor = Cursors.WaitCursor
+
+        FunctionUtils.TryCatchFunction(messageTitle,
+             Sub()
+
+                 'TODO: Add a result form to show if there are errors
+                 Parallel.ForEach(selectedEmployees,
+                    Async Sub(employee)
+
+                        Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+                        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+
+                        Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
+                        Await timeLogService.ChangeManyAsync(z_OrganizationID, deleted:=employeeTimeLogs.ToList())
+
+                        Dim employeeShifts = shifts.Where(Function(s) s.EmployeeID.Value = employee.RowID.Value)
+                        Await shiftService.ChangeManyAsync(z_OrganizationID, deleted:=employeeShifts.ToList())
+
+                    End Sub)
+
+                 MessageBoxHelper.Information("Shift and time logs were sucessfully deleted.", messageTitle)
+                 Me.Close()
+             End Sub
+        )
+
+        Me.Cursor = Cursors.Default
     End Function
 
 End Class

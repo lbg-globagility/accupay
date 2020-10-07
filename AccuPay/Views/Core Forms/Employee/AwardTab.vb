@@ -166,7 +166,13 @@ Public Class AwardTab
                     Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
                     Await awardRepo.DeleteAsync(_currentAward)
 
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentAward.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentAward.EmployeeID,
+                        suffixIdentifier:=$" with type '{ _currentAward.AwardType}'")
 
                     Await LoadAwards()
                 End Function)
@@ -262,31 +268,39 @@ Public Class AwardTab
     Private Sub RecordUpdateAward(oldAward As Award)
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        If oldAward Is Nothing Then Return
+
+        Dim suffixIdentifier = $"of award with type '{oldAward.AwardType}'."
 
         If _currentAward.AwardType <> oldAward.AwardType Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAward.RowID),
-                        .Description = $"Updated {entityName} type from '{oldAward.AwardType}' to '{_currentAward.AwardType}'."
-                        })
+            {
+                .EntityId = oldAward.RowID.Value,
+                .Description = $"Updated type from '{oldAward.AwardType}' to '{_currentAward.AwardType}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAward.EmployeeID
+            })
         End If
         If _currentAward.AwardDescription <> oldAward.AwardDescription Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAward.RowID),
-                        .Description = $"Updated {entityName} description from '{oldAward.AwardDescription}' to '{_currentAward.AwardDescription}'."
-                        })
+            {
+                .EntityId = oldAward.RowID.Value,
+                .Description = $"Updated description from '{oldAward.AwardDescription}' to '{_currentAward.AwardDescription}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAward.EmployeeID
+            })
         End If
         If _currentAward.AwardDate <> oldAward.AwardDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldAward.RowID),
-                        .Description = $"Updated {entityName} date from '{oldAward.AwardDate.ToShortDateString}' to '{_currentAward.AwardDate.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldAward.RowID.Value,
+                .Description = $"Updated date from '{oldAward.AwardDate.ToShortDateString()}' to '{_currentAward.AwardDate.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAward.EmployeeID
+            })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
     End Sub
 

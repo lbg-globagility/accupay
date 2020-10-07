@@ -77,7 +77,7 @@ export class SelectPayperiodDialogComponent implements OnInit {
         selectedPayPeriod = null;
       }
 
-      let selector = this.getFocusedQuerySelector(selectedIndex);
+      let selector = this.getFocusedQuerySelector(data, selectedIndex);
       setTimeout(() => {
         document.querySelector(selector).scrollIntoView();
       });
@@ -92,14 +92,14 @@ export class SelectPayperiodDialogComponent implements OnInit {
     this.nextYear = year + 1;
   }
 
-  private getFocusedQuerySelector(selectedIndex: number) {
+  private getFocusedQuerySelector(data: PayPeriod[], selectedIndex: number) {
     if (selectedIndex <= 5) {
       return '#mat-table';
     }
 
     let focusedIndex = selectedIndex - 5;
 
-    if (focusedIndex) return `.row${this.payPeriodDataSource[focusedIndex].id}`;
+    if (focusedIndex) return `.row${data[focusedIndex].id}`;
   }
 
   startPayroll(): void {

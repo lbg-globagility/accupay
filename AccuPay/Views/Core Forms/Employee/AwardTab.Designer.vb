@@ -31,8 +31,8 @@ Partial Class AwardTab
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.txtFullname = New System.Windows.Forms.TextBox()
@@ -61,7 +61,7 @@ Partial Class AwardTab
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripProgressBar2, Me.btnUserActivity})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.ToolStripSeparator1, Me.btnClose, Me.btnUserActivity})
         Me.ToolStrip5.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(856, 25)
@@ -98,7 +98,12 @@ Partial Class AwardTab
         Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.btnCancel.Text = "Cancel"
+        Me.btnCancel.Text = "&Cancel"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
         'btnClose
         '
@@ -109,20 +114,13 @@ Partial Class AwardTab
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
         '
-        'ToolStripProgressBar2
-        '
-        Me.ToolStripProgressBar2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripProgressBar2.Name = "ToolStripProgressBar2"
-        Me.ToolStripProgressBar2.Size = New System.Drawing.Size(100, 22)
-        Me.ToolStripProgressBar2.Visible = False
-        '
         'btnUserActivity
         '
         Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
         Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnUserActivity.Name = "btnUserActivity"
         Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.btnUserActivity.Text = "User Activity"
+        Me.btnUserActivity.Text = "&User Activity"
         '
         'txtEmployeeID
         '
@@ -340,7 +338,6 @@ Partial Class AwardTab
     Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
-    Friend WithEvents ToolStripProgressBar2 As ToolStripProgressBar
     Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents txtEmployeeID As TextBox
     Public WithEvents txtFullname As TextBox
@@ -359,4 +356,5 @@ Partial Class AwardTab
     Friend WithEvents c_Description As DataGridViewTextBoxColumn
     Friend WithEvents c_Date As DataGridViewTextBoxColumn
     Friend WithEvents Label3 As Label
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 End Class

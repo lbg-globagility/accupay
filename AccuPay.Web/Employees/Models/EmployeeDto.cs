@@ -86,7 +86,6 @@ namespace AccuPay.Web.Employees.Models
             BankName = employee.BankName;
             DateRegularized = employee.DateRegularized;
             DateEvaluated = employee.DateEvaluated;
-            RevealInPayroll = employee.RevealInPayroll;
             AgencyID = employee.AgencyID;
             AdvancementPoints = employee.AdvancementPoints;
             BPIInsurance = employee.BPIInsurance;

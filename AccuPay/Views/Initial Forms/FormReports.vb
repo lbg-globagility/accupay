@@ -43,6 +43,8 @@ Public Class FormReports
 
         tsbtnstartreport_Click(sender, e)
 
+        Dim checker = FeatureListChecker.Instance
+        ToolStripButtonTripTicket.Visible = checker.HasAccess(Feature.TripTicket)
     End Sub
 
     Private Sub tsbtnstartreport_Click(sender As Object, e As EventArgs) Handles tsbtnstartreport.Click
@@ -51,6 +53,13 @@ Public Class FormReports
 
         previousForm = ReportsList
 
+    End Sub
+
+    Private Async Sub ToolStripButtonTripTicket_Click(sender As Object, e As EventArgs) Handles ToolStripButtonTripTicket.Click
+        Dim form = New ImportTripTicketForm
+        If form.ShowDialog = DialogResult.OK Then
+            Await form.SaveAsync()
+        End If
     End Sub
 
 End Class

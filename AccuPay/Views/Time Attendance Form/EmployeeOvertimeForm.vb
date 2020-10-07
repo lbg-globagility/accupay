@@ -332,59 +332,61 @@ Public Class EmployeeOvertimeForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        Dim suffixIdentifier = $"of overtime with date '{oldOvertime.OTStartDate.ToShortDateString()}' and time period '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'."
 
         If newOvertime.OTStartDate <> oldOvertime.OTStartDate Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated {entityName} start date from '{oldOvertime.OTStartDate.ToShortDateString}' to '{newOvertime.OTStartDate.ToShortDateString}'."
-            })
-        End If
-        If newOvertime.OTEndDate <> oldOvertime.OTEndDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated {entityName} end date from '{oldOvertime.OTEndDate.ToShortDateString}' to '{newOvertime.OTEndDate.ToShortDateString}'."
+                .Description = $"Updated start date from '{oldOvertime.OTStartDate.ToShortDateString()}' to '{newOvertime.OTStartDate.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
         If newOvertime.OTStartTime <> oldOvertime.OTStartTime Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated {entityName} start time from '{oldOvertime.OTStartTime.StripSeconds.ToString}' to '{newOvertime.OTStartTime.StripSeconds.ToString}'."
+                .Description = $"Updated start time from '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
         If newOvertime.OTEndTime <> oldOvertime.OTEndTime Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated {entityName} end time from '{oldOvertime.OTEndTime.StripSeconds.ToString}' to '{newOvertime.OTEndTime.StripSeconds.ToString}'."
+                .Description = $"Updated end time from '{oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
         If newOvertime.Reason <> oldOvertime.Reason Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated {entityName} reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}'."
+                .Description = $"Updated reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
         If newOvertime.Comments <> oldOvertime.Comments Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated {entityName} comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}'."
+                .Description = $"Updated comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
         If newOvertime.Status <> oldOvertime.Status Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldOvertime.RowID.Value,
-                .Description = $"Updated {entityName} status from '{oldOvertime.Status}' to '{newOvertime.Status}'."
+                .Description = $"Updated status from '{oldOvertime.Status}' to '{newOvertime.Status}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldOvertime.EmployeeID.Value
             })
         End If
 
-        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
         Return True
     End Function
@@ -432,11 +434,15 @@ Public Class EmployeeOvertimeForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
                 Await dataService.DeleteAsync(Me._currentOvertime.RowID.Value)
 
+                Dim suffixIdentifier = $" with date '{Me._currentOvertime.OTStartDate.ToShortDateString()}' and time period '{Me._currentOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {Me._currentOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'"
+
                 _userActivityRepository.RecordDelete(
                     z_User,
                     FormEntityName,
-                    Me._currentOvertime.RowID.Value,
-                    z_OrganizationID)
+                    entityId:=Me._currentOvertime.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._currentOvertime.EmployeeID.Value,
+                    suffixIdentifier:=suffixIdentifier)
 
                 Await LoadOvertimes(currentEmployee)
 

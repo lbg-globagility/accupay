@@ -29,13 +29,13 @@ Partial Class BonusTab
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip20 = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnNewBon = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSaveBon = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnCancelBon = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
-        Me.tsbtnDelBon = New System.Windows.Forms.ToolStripButton()
-        Me.UserActivity = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnNew = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnSave = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnDelete = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsbtnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.pbEmpPicBon = New System.Windows.Forms.PictureBox()
         Me.txtEmpIDBon = New System.Windows.Forms.TextBox()
         Me.txtFNameBon = New System.Windows.Forms.TextBox()
@@ -77,67 +77,66 @@ Partial Class BonusTab
         '
         Me.ToolStrip20.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip20.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripLabel8, Me.tsbtnDelBon, Me.UserActivity})
+        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnClose, Me.tsbtnNew, Me.tsbtnSave, Me.tsbtnDelete, Me.tsbtnCancel, Me.ToolStripSeparator1, Me.tsbtnUserActivity})
         Me.ToolStrip20.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip20.Name = "ToolStrip20"
         Me.ToolStrip20.Size = New System.Drawing.Size(856, 25)
         Me.ToolStrip20.TabIndex = 165
         Me.ToolStrip20.Text = "ToolStrip20"
         '
-        'ToolStripButton11
+        'tsbtnClose
         '
-        Me.ToolStripButton11.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton11.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton11.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton11.Name = "ToolStripButton11"
-        Me.ToolStripButton11.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton11.Text = "Close"
+        Me.tsbtnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.tsbtnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.tsbtnClose.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnClose.Name = "tsbtnClose"
+        Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
+        Me.tsbtnClose.Text = "Close"
         '
-        'tsbtnNewBon
+        'tsbtnNew
         '
-        Me.tsbtnNewBon.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.tsbtnNewBon.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewBon.Name = "tsbtnNewBon"
-        Me.tsbtnNewBon.Size = New System.Drawing.Size(87, 22)
-        Me.tsbtnNewBon.Text = "&New Bonus"
+        Me.tsbtnNew.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.tsbtnNew.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnNew.Name = "tsbtnNew"
+        Me.tsbtnNew.Size = New System.Drawing.Size(51, 22)
+        Me.tsbtnNew.Text = "&New"
         '
-        'tsbtnSaveBon
+        'tsbtnSave
         '
-        Me.tsbtnSaveBon.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.tsbtnSaveBon.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSaveBon.Name = "tsbtnSaveBon"
-        Me.tsbtnSaveBon.Size = New System.Drawing.Size(87, 22)
-        Me.tsbtnSaveBon.Text = "&Save Bonus"
+        Me.tsbtnSave.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.tsbtnSave.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnSave.Name = "tsbtnSave"
+        Me.tsbtnSave.Size = New System.Drawing.Size(51, 22)
+        Me.tsbtnSave.Text = "&Save"
         '
-        'tsbtnCancelBon
+        'tsbtnDelete
         '
-        Me.tsbtnCancelBon.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.tsbtnCancelBon.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnCancelBon.Name = "tsbtnCancelBon"
-        Me.tsbtnCancelBon.Size = New System.Drawing.Size(63, 22)
-        Me.tsbtnCancelBon.Text = "Cancel"
+        Me.tsbtnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.tsbtnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnDelete.Name = "tsbtnDelete"
+        Me.tsbtnDelete.Size = New System.Drawing.Size(60, 22)
+        Me.tsbtnDelete.Text = "&Delete"
         '
-        'ToolStripLabel8
+        'tsbtnCancel
         '
-        Me.ToolStripLabel8.AutoSize = False
-        Me.ToolStripLabel8.Name = "ToolStripLabel8"
-        Me.ToolStripLabel8.Size = New System.Drawing.Size(50, 22)
+        Me.tsbtnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnCancel.Name = "tsbtnCancel"
+        Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
+        Me.tsbtnCancel.Text = "&Cancel"
         '
-        'tsbtnDelBon
+        'ToolStripSeparator1
         '
-        Me.tsbtnDelBon.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.tsbtnDelBon.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDelBon.Name = "tsbtnDelBon"
-        Me.tsbtnDelBon.Size = New System.Drawing.Size(96, 22)
-        Me.tsbtnDelBon.Text = "Delete bonus"
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
-        'UserActivity
+        'tsbtnUserActivity
         '
-        Me.UserActivity.Image = CType(resources.GetObject("UserActivity.Image"), System.Drawing.Image)
-        Me.UserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivity.Name = "UserActivity"
-        Me.UserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivity.Text = "User Activity"
+        Me.tsbtnUserActivity.Image = CType(resources.GetObject("tsbtnUserActivity.Image"), System.Drawing.Image)
+        Me.tsbtnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnUserActivity.Name = "tsbtnUserActivity"
+        Me.tsbtnUserActivity.Size = New System.Drawing.Size(93, 22)
+        Me.tsbtnUserActivity.Text = "&User Activity"
         '
         'pbEmpPicBon
         '
@@ -577,12 +576,11 @@ Partial Class BonusTab
     End Sub
 
     Friend WithEvents ToolStrip20 As ToolStrip
-    Friend WithEvents ToolStripButton11 As ToolStripButton
-    Friend WithEvents tsbtnNewBon As ToolStripButton
-    Friend WithEvents tsbtnSaveBon As ToolStripButton
-    Friend WithEvents tsbtnCancelBon As ToolStripButton
-    Friend WithEvents ToolStripLabel8 As ToolStripLabel
-    Friend WithEvents tsbtnDelBon As ToolStripButton
+    Friend WithEvents tsbtnClose As ToolStripButton
+    Friend WithEvents tsbtnNew As ToolStripButton
+    Friend WithEvents tsbtnSave As ToolStripButton
+    Friend WithEvents tsbtnCancel As ToolStripButton
+    Friend WithEvents tsbtnDelete As ToolStripButton
     Friend WithEvents pbEmpPicBon As PictureBox
     Friend WithEvents txtEmpIDBon As TextBox
     Friend WithEvents txtFNameBon As TextBox
@@ -615,5 +613,6 @@ Partial Class BonusTab
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
-    Friend WithEvents UserActivity As ToolStripButton
+    Friend WithEvents tsbtnUserActivity As ToolStripButton
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 End Class

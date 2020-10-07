@@ -149,6 +149,7 @@ namespace AccuPay.Data.Repositories
 
         public PayPeriod GetNextPayPeriod(int payPeriodId)
         {
+            // TODO: use the policy DefaultFirstHalfDaysSpan and DefaultEndMonthDaysSpan
             var currentPayPeriod = _context.PayPeriods.FirstOrDefault(p => p.RowID == payPeriodId);
 
             if (currentPayPeriod == null)
@@ -164,6 +165,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<DateTime?> GetFirstDayOfTheYear(PayPeriod currentPayPeriod, int organizationId)
         {
+            // TODO: use the policy DefaultFirstHalfDaysSpan
             var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(currentPayPeriod, organizationId);
 
             return firstPayPeriodOfTheYear?.PayFromDate;
@@ -171,6 +173,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<PayPeriod> GetFirstPayPeriodOfTheYear(PayPeriod currentPayPeriod, int organizationId)
         {
+            // TODO: use the policy DefaultFirstHalfDaysSpan
             var currentPayPeriodYear = currentPayPeriod?.Year;
 
             if (currentPayPeriodYear == null)
@@ -184,6 +187,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<DateTime?> GetLastDayOfTheYear(PayPeriod currentPayPeriod, int organizationId)
         {
+            // TODO: use the policy DefaultEndMonthDaysSpan
             var currentPayPeriodYear = currentPayPeriod?.Year;
 
             if (currentPayPeriodYear == null)
@@ -355,13 +359,10 @@ namespace AccuPay.Data.Repositories
 
         private DateTime GetCutOffDateUsingDefault(DateTime date, bool isCutOffStart)
         {
-            int month = date.Month;
-            int year = date.Year;
+            DayValueSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
+            DayValueSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
 
-            DaysSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
-            DaysSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
-
-            DaysSpan currentDaySpan = firstHalf.IsBetween(date) ? firstHalf : endOfTheMonth;
+            (DayValueSpan currentDaySpan, int month, int year) = PayPeriodHelper.GetCutOffDayValueSpan(date, firstHalf, endOfTheMonth);
 
             return isCutOffStart ?
                 currentDaySpan.From.GetDate(month: month, year: year) :

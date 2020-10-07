@@ -21,9 +21,9 @@ Public Class AddBonusForm
 
     Private _newBonus As New Bonus()
 
-    Private _productRepo As ProductRepository
+    Private ReadOnly _productRepo As ProductRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -124,7 +124,13 @@ Public Class AddBonusForm
             Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
             Await bonusRepo.CreateAsync(_newBonus)
 
-            _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newBonus.RowID), z_OrganizationID)
+            _userActivityRepo.RecordAdd(
+                z_User,
+                FormEntityName,
+                entityId:=_newBonus.RowID.Value,
+                organizationId:=z_OrganizationID,
+                changedEmployeeId:=_newBonus.EmployeeID,
+                suffixIdentifier:=$" with type '{cbobontype.Text}' and start date '{_newBonus.EffectiveStartDate.ToShortDateString()}'")
 
             succeed = True
         End Function)

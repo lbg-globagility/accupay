@@ -1,5 +1,7 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Data.EntityFrameworkCore;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -41,7 +43,7 @@ namespace AccuPay.Data
         internal virtual DbSet<Division> Divisions { get; set; }
         internal virtual DbSet<DivisionMinimumWage> DivisionMinimumWages { get; set; }
         internal virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
-        internal virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
         internal virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
         internal virtual DbSet<EmploymentPolicy> EmploymentPolicies { get; set; }
         internal virtual DbSet<EmploymentPolicyType> EmploymentPolicyTypes { get; set; }
@@ -72,7 +74,8 @@ namespace AccuPay.Data
         internal virtual DbSet<Position> Positions { get; set; }
         internal virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
         internal virtual DbSet<Product> Products { get; set; }
-        internal virtual DbSet<Promotion> Promotions { get; set; }
+        public virtual DbSet<Route> Routes { get; set; }
+        public virtual DbSet<RoutePayRate> RoutePayRates { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
         internal virtual DbSet<Shift> Shifts { get; set; }
         internal virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
@@ -82,7 +85,11 @@ namespace AccuPay.Data
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
         internal virtual DbSet<TimeAttendanceLog> TimeAttendanceLogs { get; set; }
         internal virtual DbSet<TimeLog> TimeLogs { get; set; }
+        public virtual DbSet<TripTicket> TripTickets { get; set; }
+        public virtual DbSet<TripTicketEmployee> TripTicketEmployees { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
+        internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
+        public virtual DbSet<Vehicle> Vehicles { get; set; }
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 
@@ -149,6 +156,9 @@ namespace AccuPay.Data
                 b.Property(u => u.Name).HasMaxLength(256);
                 b.Property(u => u.NormalizedName).HasMaxLength(256);
             });
+            modelBuilder.Entity<PayPeriod>()
+                .Property(t => t.Status)
+                .HasConversion(new EnumToStringConverter<PayPeriodStatus>());
 
             modelBuilder.Entity<UserRole>(b =>
             {

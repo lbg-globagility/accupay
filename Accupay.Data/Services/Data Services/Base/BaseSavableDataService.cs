@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class BaseSavableDataService<T> : BaseDataService where T : BaseEntity
+    public abstract class BaseSavableDataService<T> : BaseDataService where T : BaseEntity
     {
         protected readonly SavableRepository<T> _repository;
         protected readonly PayrollContext _context;

@@ -20,11 +20,11 @@ Public Class AddAttachmentForm
 
     Private _employee As Employee
 
-    Private _attachmentRepo As AttachmentRepository
+    Private ReadOnly _attachmentRepo As AttachmentRepository
 
-    Private _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As ListOfValueRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -119,7 +119,14 @@ Public Class AddAttachmentForm
 
             Await _attachmentRepo.CreateAsync(_newAttachment)
 
-            _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAttachment.RowID), z_OrganizationID)
+            _userActivityRepo.RecordAdd(
+                z_User,
+                FormEntityName,
+                entityId:=_newAttachment.RowID.Value,
+                organizationId:=z_OrganizationID,
+                changedEmployeeId:=_newAttachment.EmployeeID,
+                suffixIdentifier:=$" with type '{ _newAttachment.Type}'")
+
             succeed = True
 
         End Function)

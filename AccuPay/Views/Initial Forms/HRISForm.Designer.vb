@@ -31,7 +31,6 @@ Partial Class HRISForm
         Me.EducBGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrevEmplyrToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.PromotionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DisciplinaryActionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EmpSalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BonusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -60,7 +59,7 @@ Partial Class HRISForm
         '
         'EmployeeToolStripMenuItem
         '
-        Me.EmployeeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckListToolStripMenuItem, Me.PersonalInfoToolStripMenuItem, Me.AwardsToolStripMenuItem, Me.CertificatesToolStripMenuItem, Me.EducBGToolStripMenuItem, Me.PrevEmplyrToolStripMenuItem, Me.ToolStripSeparator1, Me.PromotionToolStripMenuItem, Me.DisciplinaryActionToolStripMenuItem, Me.EmpSalToolStripMenuItem, Me.BonusToolStripMenuItem, Me.AttachmentToolStripMenuItem, Me.OffSetToolStripMenuItem})
+        Me.EmployeeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckListToolStripMenuItem, Me.PersonalInfoToolStripMenuItem, Me.AwardsToolStripMenuItem, Me.CertificatesToolStripMenuItem, Me.EducBGToolStripMenuItem, Me.PrevEmplyrToolStripMenuItem, Me.ToolStripSeparator1, Me.DisciplinaryActionToolStripMenuItem, Me.EmpSalToolStripMenuItem, Me.BonusToolStripMenuItem, Me.AttachmentToolStripMenuItem, Me.OffSetToolStripMenuItem})
         Me.EmployeeToolStripMenuItem.Name = "EmployeeToolStripMenuItem"
         Me.EmployeeToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
         Me.EmployeeToolStripMenuItem.Text = "Employee"
@@ -68,87 +67,80 @@ Partial Class HRISForm
         'CheckListToolStripMenuItem
         '
         Me.CheckListToolStripMenuItem.Name = "CheckListToolStripMenuItem"
-        Me.CheckListToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CheckListToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.CheckListToolStripMenuItem.Text = "Check list"
         '
-        'PersonalinfoToolStripMenuItem
+        'PersonalInfoToolStripMenuItem
         '
-        Me.PersonalInfoToolStripMenuItem.Name = "PersonalinfoToolStripMenuItem"
-        Me.PersonalInfoToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PersonalInfoToolStripMenuItem.Name = "PersonalInfoToolStripMenuItem"
+        Me.PersonalInfoToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.PersonalInfoToolStripMenuItem.Text = "Personal Profile"
         '
         'AwardsToolStripMenuItem
         '
         Me.AwardsToolStripMenuItem.Name = "AwardsToolStripMenuItem"
-        Me.AwardsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AwardsToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.AwardsToolStripMenuItem.Text = "Awards"
         '
         'CertificatesToolStripMenuItem
         '
         Me.CertificatesToolStripMenuItem.Name = "CertificatesToolStripMenuItem"
-        Me.CertificatesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CertificatesToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.CertificatesToolStripMenuItem.Text = "Certifications"
         '
         'EducBGToolStripMenuItem
         '
         Me.EducBGToolStripMenuItem.Name = "EducBGToolStripMenuItem"
-        Me.EducBGToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EducBGToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.EducBGToolStripMenuItem.Text = "Educ Background"
         '
         'PrevEmplyrToolStripMenuItem
         '
         Me.PrevEmplyrToolStripMenuItem.Name = "PrevEmplyrToolStripMenuItem"
-        Me.PrevEmplyrToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PrevEmplyrToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.PrevEmplyrToolStripMenuItem.Text = "Previous Employer"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
-        '
-        'PromotionToolStripMenuItem
-        '
-        Me.PromotionToolStripMenuItem.Name = "PromotionToolStripMenuItem"
-        Me.PromotionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.PromotionToolStripMenuItem.Text = "Promotion"
-        Me.PromotionToolStripMenuItem.Visible = False
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(170, 6)
         '
         'DisciplinaryActionToolStripMenuItem
         '
         Me.DisciplinaryActionToolStripMenuItem.Name = "DisciplinaryActionToolStripMenuItem"
-        Me.DisciplinaryActionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DisciplinaryActionToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.DisciplinaryActionToolStripMenuItem.Text = "Disciplinary Action"
         '
         'EmpSalToolStripMenuItem
         '
         Me.EmpSalToolStripMenuItem.Name = "EmpSalToolStripMenuItem"
-        Me.EmpSalToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EmpSalToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.EmpSalToolStripMenuItem.Text = "Salary"
         '
         'BonusToolStripMenuItem
         '
         Me.BonusToolStripMenuItem.Name = "BonusToolStripMenuItem"
-        Me.BonusToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.BonusToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.BonusToolStripMenuItem.Text = "Bonus"
         '
         'AttachmentToolStripMenuItem
         '
         Me.AttachmentToolStripMenuItem.Name = "AttachmentToolStripMenuItem"
-        Me.AttachmentToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AttachmentToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.AttachmentToolStripMenuItem.Text = "Attachment"
         '
         'OffSetToolStripMenuItem
         '
         Me.OffSetToolStripMenuItem.AccessibleDescription = "Cinema 2000"
         Me.OffSetToolStripMenuItem.Name = "OffSetToolStripMenuItem"
-        Me.OffSetToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.OffSetToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.OffSetToolStripMenuItem.Text = "Offset"
         '
         'DivisionToolStripMenuItem
         '
         Me.DivisionToolStripMenuItem.Name = "DivisionToolStripMenuItem"
         Me.DivisionToolStripMenuItem.Size = New System.Drawing.Size(120, 20)
-        Me.DivisionToolStripMenuItem.Text = "D&ivision && Position"
+        Me.DivisionToolStripMenuItem.Text = "Di&vision && Position"
         '
         'JobLevelToolStripMenuItem
         '
@@ -172,7 +164,7 @@ Partial Class HRISForm
         'EmployeeExperimentalToolStripMenuItem
         '
         Me.EmployeeExperimentalToolStripMenuItem.Name = "EmployeeExperimentalToolStripMenuItem"
-        Me.EmployeeExperimentalToolStripMenuItem.Size = New System.Drawing.Size(151, 20)
+        Me.EmployeeExperimentalToolStripMenuItem.Size = New System.Drawing.Size(150, 20)
         Me.EmployeeExperimentalToolStripMenuItem.Text = "Employee (Experimental)"
         '
         'DeductionsToolStripMenuItem
@@ -226,7 +218,6 @@ Partial Class HRISForm
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents EducBGToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents DisciplinaryActionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents PromotionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CheckListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BonusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AttachmentToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

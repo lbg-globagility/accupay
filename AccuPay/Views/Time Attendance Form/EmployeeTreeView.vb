@@ -24,14 +24,10 @@ Public Class EmployeeTreeView
 
     Private _organizationID As Integer
 
-    Public Property OrganizationID As Integer
+    Public ReadOnly Property OrganizationID As Integer
         Get
             Return _organizationID
         End Get
-        Set(value As Integer)
-            _organizationID = value
-            WhenOrganizationIdChanged(value)
-        End Set
     End Property
 
 #End Region
@@ -54,19 +50,19 @@ Public Class EmployeeTreeView
 
 #Region "Methods"
 
-    Public Sub SwitchOrganization(organizationId As Integer)
+    Public Async Function SwitchOrganization(organizationId As Integer) As Task
         _organizationID = organizationId
-        WhenOrganizationIdChanged(organizationId)
-    End Sub
+        Await WhenOrganizationIdChanged(organizationId)
+    End Function
 
-    Private Sub WhenOrganizationIdChanged(organizationId As Integer)
+    Private Async Function WhenOrganizationIdChanged(organizationId As Integer) As Task
         If DesignMode Then
             Return
         End If
 
         RaiseEvent OrganizationIDChanged(Me, New EventArgs)
-        _presenter.Load(organizationId)
-    End Sub
+        Await _presenter.Load(organizationId)
+    End Function
 
     Private Sub EmployeeTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
         RemoveHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
@@ -195,29 +191,29 @@ Public Class EmployeeTreeView
 
 #Region "EventHandlers"
 
-    Private Sub EmployeeTreeView_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Async Sub EmployeeTreeView_Load(sender As Object, e As EventArgs) Handles Me.Load
         If DesignMode Then
             Return
         End If
 
-        _presenter.Load()
+        Await _presenter.Load(z_OrganizationID)
         AddHandler AccuPayEmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
-    Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
+    Private Async Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
 
         If _presenter Is Nothing Then Return
 
-        _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
+        Await _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
 
         RaiseEvent FiltersEmployee(e, New EventArgs)
     End Sub
 
-    Private Sub ChkActiveOnly_CheckedChanged(sender As Object, e As EventArgs) Handles chkActive.CheckedChanged
+    Private Async Sub ChkActiveOnly_CheckedChanged(sender As Object, e As EventArgs) Handles chkActive.CheckedChanged
 
         If _presenter Is Nothing Then Return
 
-        _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
+        Await _presenter.FilterEmployees(TextBox1.Text, chkActive.Checked)
 
         RaiseEvent FiltersEmployee(e, New EventArgs)
     End Sub
@@ -231,8 +227,6 @@ Public Class EmployeeTreeView
         Private _divisions As IList(Of Division)
 
         Private _view As EmployeeTreeView
-
-        Private _models As List(Of OvertimeModel)
 
         Private _organizationId As Integer
 
@@ -253,45 +247,38 @@ Public Class EmployeeTreeView
 
         End Sub
 
-        Public Sub Load()
-            Reload()
-        End Sub
-
-        Public Sub Load(organizationId As Integer)
+        Public Async Function Load(organizationId As Integer) As Task
             _organizationId = organizationId
-            Reload()
-        End Sub
+            Await Reload()
+        End Function
 
-        Private Sub Reload()
+        Private Async Function Reload() As Task
             _divisions = LoadDivisions()
-            _employees = LoadEmployees()
+            _employees = Await LoadEmployees()
 
             Dim initialEmployees = _employees.Where(Function(e) e.IsActive).ToList()
 
             _view.ShowEmployees(_divisions, initialEmployees)
-        End Sub
+        End Function
 
         Private Function LoadDivisions() As IList(Of Division)
 
-            Return _divisionService.GetAll(z_OrganizationID).
-                                        OrderBy(Function(d) d.Name).
-                                        ToList()
+            Return _divisionService.GetAll(_organizationId).
+                OrderBy(Function(d) d.Name).
+                ToList()
         End Function
 
-        Private Function LoadEmployees() As IList(Of Employee)
+        Private Async Function LoadEmployees() As Task(Of IList(Of Employee))
 
-            Dim employees = _employeeRepository.
-                                    GetAllWithDivisionAndPosition(z_OrganizationID).
-                                    ToList
-
-            Return employees.
-                        OrderBy(Function(e) e.LastName).
-                        ThenBy(Function(e) e.FirstName).
-                        ToList()
+            Return (Await _employeeRepository.
+                GetAllWithDivisionAndPositionAsync(_organizationId)).
+                OrderBy(Function(e) e.LastName).
+                ThenBy(Function(e) e.FirstName).
+                ToList()
 
         End Function
 
-        Public Async Sub FilterEmployees(needle As String, isActiveOnly As Boolean)
+        Public Async Function FilterEmployees(needle As String, isActiveOnly As Boolean) As Task
             Dim match =
                 Function(employee As Employee) As Boolean
                     needle = needle.ToLower
@@ -318,7 +305,7 @@ Public Class EmployeeTreeView
                 End Function)
 
             _view.ShowEmployees(_divisions, employees)
-        End Sub
+        End Function
 
         Public Function GetActiveEmployees() As IList(Of Employee)
             Dim list = New List(Of Employee)

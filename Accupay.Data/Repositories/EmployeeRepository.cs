@@ -86,9 +86,10 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task ChangeManyAsync(List<Employee> added = null,
-                                          List<Employee> updated = null,
-                                          List<Employee> deleted = null)
+        public async Task ChangeManyAsync(
+            List<Employee> added = null,
+            List<Employee> updated = null,
+            List<Employee> deleted = null)
         {
             if (added != null)
             {
@@ -124,22 +125,21 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
+        public async Task<ICollection<Employee>> GetAllAsync(int organizationId)
         {
             // builder's lifecycle should only span in each method
             // that is why we did not inject this on the constructor
             // and create a class variable of EmployeeQueryBuilder
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            ToListAsync(organizationId);
+            return await builder.ToListAsync(organizationId);
         }
 
-        public async Task<IEnumerable<Employee>> GetAllActiveAsync(int organizationId)
+        public async Task<ICollection<Employee>> GetAllActiveAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            IsActive().
-                            ToListAsync(organizationId);
+            return await builder
+                .IsActive()
+                .ToListAsync(organizationId);
         }
 
         public async Task<PaginatedList<Employee>> GetPaginatedListWithTimeEntryAsync(
@@ -151,11 +151,11 @@ namespace AccuPay.Data.Repositories
             var payPeriod = await _context.PayPeriods.FirstOrDefaultAsync(x => x.RowID == payPeriodId);
 
             var paginatedListResult = await BaseGetPaginatedListAsync(
-                                                options,
-                                                organizationId: organizationId,
-                                                payPeriod: payPeriod,
-                                                hasTimeEntries: true,
-                                                searchTerm: searchTerm);
+                options,
+                organizationId: organizationId,
+                payPeriod: payPeriod,
+                hasTimeEntries: true,
+                searchTerm: searchTerm);
 
             var employeeIds = paginatedListResult.Items.Select(x => x.RowID.Value);
             var timeEntries = _context.TimeEntries
@@ -208,9 +208,9 @@ namespace AccuPay.Data.Repositories
                 if (hasTimeEntries)
                 {
                     query = query.Where(e => e.TimeEntries
-                                                .Where(t => t.Date >= payPeriod.PayFromDate)
-                                                .Where(t => t.Date <= payPeriod.PayToDate)
-                                                .Any());
+                        .Where(t => t.Date >= payPeriod.PayFromDate)
+                        .Where(t => t.Date <= payPeriod.PayToDate)
+                        .Any());
                 }
             }
 
@@ -220,92 +220,90 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Employee>(employees, count);
         }
 
-        public async Task<IEnumerable<Employee>> GetAllWithPayrollAsync(int payPeriodId,
-                                                                    int organizationId)
+        public async Task<ICollection<Employee>> GetAllWithPayrollAsync(int payPeriodId, int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            HasPaystubs(payPeriodId).
-                            ToListAsync(organizationId);
+            return await builder
+                .HasPaystubs(payPeriodId)
+                .ToListAsync(organizationId);
         }
 
-        public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
+        public async Task<ICollection<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            HasNoPaystubs(payPeriodId).
-                            IsActive().
-                            ToListAsync(organizationId);
+            return await builder
+                .HasNoPaystubs(payPeriodId)
+                .IsActive()
+                .ToListAsync(organizationId);
         }
 
-        public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
+        public async Task<ICollection<Employee>> GetAllWithPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            IncludePosition().
-                            ToListAsync(organizationId);
+            return await builder
+                .IncludePosition()
+                .ToListAsync(organizationId);
         }
 
-        public IEnumerable<Employee> GetAllActiveWithPosition(int organizationId)
+        public ICollection<Employee> GetAllActiveWithPosition(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return builder.
-                        IncludePosition().
-                        IsActive().
-                        ToList(organizationId);
+            return builder
+                .IncludePosition()
+                .IsActive()
+                .ToList(organizationId);
         }
 
-        public IEnumerable<Employee> GetAllWithDivisionAndPosition(int organizationId)
+        public async Task<ICollection<Employee>> GetAllWithDivisionAndPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return builder.
-                        IncludeDivision().
-                        ToList(organizationId);
+            return await builder
+                .IncludeDivision()
+                .ToListAsync(organizationId);
         }
 
-        public async Task<IEnumerable<Employee>> GetAllActiveWithDivisionAndPositionAsync(int organizationId)
+        public async Task<ICollection<Employee>> GetAllActiveWithDivisionAndPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            IncludeDivision().
-                            IsActive().
-                            ToListAsync(organizationId);
+            return await builder
+                .IncludeDivision()
+                .IsActive()
+                .ToListAsync(organizationId);
         }
 
-        public async Task<IEnumerable<Employee>> GetByMultipleEmployeeNumberAsync(string[] employeeNumbers,
-                                                                                int organizationId)
+        public async Task<ICollection<Employee>> GetByMultipleEmployeeNumberAsync(string[] employeeNumbers, int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            Filter(x => employeeNumbers.Contains(x.EmployeeNo)).
-                            ToListAsync(organizationId);
+            return await builder
+                .Filter(x => employeeNumbers.Contains(x.EmployeeNo))
+                .ToListAsync(organizationId);
         }
 
-        public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(int[] employeeIdList)
+        public async Task<ICollection<Employee>> GetByMultipleIdAsync(int[] employeeIdList)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            Filter(x => employeeIdList.Contains(x.RowID.Value)).
-                            ToListAsync(null);
+            return await builder
+                .Filter(x => employeeIdList.Contains(x.RowID.Value))
+                .ToListAsync(null);
         }
 
-        public async Task<IEnumerable<Employee>> GetByPositionAsync(int positionId)
+        public async Task<ICollection<Employee>> GetByPositionAsync(int positionId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            Filter(x => x.PositionID == positionId).
-                            ToListAsync(null);
+            return await builder
+                .Filter(x => x.PositionID == positionId)
+                .ToListAsync(null);
         }
 
-        public async Task<IEnumerable<Employee>> GetByBranchAsync(int branchId)
+        public async Task<ICollection<Employee>> GetByBranchAsync(int branchId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            Filter(x => x.BranchID == branchId).
-                            ToListAsync(null);
+            return await builder
+                .Filter(x => x.BranchID == branchId)
+                .ToListAsync(null);
         }
 
-        public async Task<IEnumerable<Employee>> GetEmployeesWithoutImageAsync()
+        public async Task<ICollection<Employee>> GetEmployeesWithoutImageAsync()
         {
             return await _context.Employees
                 .Include(x => x.OriginalImage)
@@ -356,12 +354,6 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public Employee GetById(int employeeId)
-        {
-            var builder = new EmployeeQueryBuilder(_context);
-            return builder.IncludePosition().IncludeEmploymentPolicy().GetById(employeeId, null);
-        }
-
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
@@ -371,26 +363,26 @@ namespace AccuPay.Data.Repositories
         public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            IncludeDivision().
-                            IsActive().
-                            GetByIdAsync(employeeId, null);
+            return await builder
+                .IncludeDivision()
+                .IsActive()
+                .GetByIdAsync(employeeId, null);
         }
 
         public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return await builder.
-                            ByEmployeeNumber(employeeNumber).
-                            FirstOrDefaultAsync(organizationId);
+            return await builder
+                .ByEmployeeNumber(employeeNumber)
+                .FirstOrDefaultAsync(organizationId);
         }
 
         public async Task<string> GetImagePathByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            var employee = await builder.
-                IncludeImage().
-                GetByIdAsync(employeeId, null);
+            var employee = await builder
+                .IncludeImage()
+                .GetByIdAsync(employeeId, null);
 
             return employee.OriginalImage?.Path;
         }
@@ -402,23 +394,7 @@ namespace AccuPay.Data.Repositories
         public async Task<Salary> GetCurrentSalaryAsync(int employeeId, DateTime? date = null)
         {
             return await CreateBaseQueryCurrentSalary(employeeId, date)
-                            .FirstOrDefaultAsync();
-        }
-
-        public Salary GetCurrentSalary(int employeeId, DateTime? date = null)
-        {
-            return CreateBaseQueryCurrentSalary(employeeId, date)
-                            .FirstOrDefault();
-        }
-
-        private IOrderedQueryable<Salary> CreateBaseQueryCurrentSalary(int employeeId, DateTime? date = null)
-        {
-            date = date ?? DateTime.Now;
-
-            return _context.Salaries
-                            .Where(x => x.EmployeeID == employeeId)
-                            .Where(x => x.EffectiveFrom <= date)
-                            .OrderByDescending(x => x.EffectiveFrom);
+                .FirstOrDefaultAsync();
         }
 
         public async Task<decimal> GetVacationLeaveBalance(int employeeId)
@@ -435,23 +411,33 @@ namespace AccuPay.Data.Repositories
         {
             var defaultBalance = 0;
 
-            var leaveledger = await _context.LeaveLedgers.
-                                            Include(l => l.Product).
-                                            Where(l => l.Product.PartNo == partNo).
-                                            Where(l => l.EmployeeID == employeeId).
-                                            FirstOrDefaultAsync();
+            var leaveledger = await _context.LeaveLedgers
+                .Include(l => l.Product)
+                .Where(l => l.Product.PartNo == partNo)
+                .Where(l => l.EmployeeID == employeeId)
+                .FirstOrDefaultAsync();
 
             if (leaveledger?.LastTransactionID == null)
                 return defaultBalance;
 
-            var leaveTransaction = await _context.LeaveTransactions.
-                                            Where(l => l.RowID == leaveledger.LastTransactionID).
-                                            FirstOrDefaultAsync();
+            var leaveTransaction = await _context.LeaveTransactions
+                .Where(l => l.RowID == leaveledger.LastTransactionID)
+                .FirstOrDefaultAsync();
 
             if (leaveTransaction?.Balance == null)
                 return defaultBalance;
 
             return leaveTransaction.Balance;
+        }
+
+        private IOrderedQueryable<Salary> CreateBaseQueryCurrentSalary(int employeeId, DateTime? date = null)
+        {
+            date = date ?? DateTime.Now;
+
+            return _context.Salaries
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.EffectiveFrom <= date)
+                .OrderByDescending(x => x.EffectiveFrom);
         }
 
         #endregion Others

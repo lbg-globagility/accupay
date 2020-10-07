@@ -11,7 +11,6 @@ namespace AccuPay.Data.Entities
 
         public int? EmployeeShiftID { get; set; }
 
-        public int? EmployeeSalaryID { get; set; }
         public int? PayRateID { get; set; }
 
         [Column("Date")]

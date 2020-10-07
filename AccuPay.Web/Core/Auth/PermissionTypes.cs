@@ -102,11 +102,6 @@ namespace AccuPay.Web.Core.Auth
         public const string RoleUpdate = "Role:update";
         public const string RoleDelete = "Role:delete";
 
-        public const string AccountRead = "Account:read";
-        public const string AccountCreate = "Account:create";
-        public const string AccountUpdate = "Account:update";
-        public const string AccountDelete = "Account:delete";
-
         public const string AllowanceTypeRead = "AllowanceType:read";
         public const string AllowanceTypeCreate = "AllowanceType:create";
         public const string AllowanceTypeUpdate = "AllowanceType:update";

@@ -41,36 +41,36 @@ namespace AccuPay.Data.Services
 
         public async Task ChangeManyAsync(
             int organizationId,
-            List<TimeLog> addedTimeLogs = null,
-            List<TimeLog> updatedTimeLogs = null,
-            List<TimeLog> deletedTimeLogs = null)
+            List<TimeLog> added = null,
+            List<TimeLog> updated = null,
+            List<TimeLog> deleted = null)
         {
             // TODO: add and update time attendance log for every time log
 
-            if (addedTimeLogs == null && updatedTimeLogs == null && deletedTimeLogs == null)
+            if (added == null && updated == null && deleted == null)
                 throw new BusinessLogicException("No logs to be saved.");
 
-            if (addedTimeLogs != null)
+            if (added != null)
             {
-                addedTimeLogs.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayPeriod(addedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                added.ForEach(x => SanitizeEntity(x));
+                await CheckIfDataIsWithinClosedPayPeriod(added.Select(x => x.LogDate).Distinct(), organizationId);
             }
 
-            if (updatedTimeLogs != null)
+            if (updated != null)
             {
-                updatedTimeLogs.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayPeriod(updatedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                updated.ForEach(x => SanitizeEntity(x));
+                await CheckIfDataIsWithinClosedPayPeriod(updated.Select(x => x.LogDate).Distinct(), organizationId);
             }
 
-            if (deletedTimeLogs != null)
+            if (deleted != null)
             {
-                await CheckIfDataIsWithinClosedPayPeriod(deletedTimeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                await CheckIfDataIsWithinClosedPayPeriod(deleted.Select(x => x.LogDate).Distinct(), organizationId);
             }
 
             await _timeLogRepository.ChangeManyAsync(
-                added: addedTimeLogs,
-                updated: updatedTimeLogs,
-                deleted: deletedTimeLogs);
+                added: added,
+                updated: updated,
+                deleted: deleted);
         }
 
         private void SanitizeEntity(TimeLog timeLog)

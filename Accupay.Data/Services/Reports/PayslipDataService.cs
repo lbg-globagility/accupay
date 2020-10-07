@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace AccuPay.Data.Services
 {
@@ -8,9 +9,9 @@ namespace AccuPay.Data.Services
         {
         }
 
-        public DataTable GetDefaultData(int organizationId, int payPeriodId, sbyte isActual)
+        public DataTable GetDefaultData(int organizationId, int payPeriodId, bool isActual)
         {
-            var procedureCall = "CALL PrintDefaultPayslip(" + organizationId + "," + payPeriodId + "," + isActual + ");";
+            var procedureCall = "CALL PrintDefaultPayslip(" + organizationId + "," + payPeriodId + "," + Convert.ToSByte(isActual) + ");";
 
             return CallRawSql(procedureCall);
         }
@@ -22,9 +23,9 @@ namespace AccuPay.Data.Services
             return CallRawSql(procedureCall);
         }
 
-        public DataTable GetGoldWingsData(int organizationId, int payPeriodId, sbyte isActual)
+        public DataTable GetGoldWingsData(int organizationId, int payPeriodId, bool isActual)
         {
-            var procedureCall = "CALL paystub_payslip(" + organizationId + "," + payPeriodId + "," + isActual + ");";
+            var procedureCall = "CALL paystub_payslip(" + organizationId + "," + payPeriodId + "," + Convert.ToSByte(isActual) + ");";
 
             return CallRawSql(procedureCall);
         }

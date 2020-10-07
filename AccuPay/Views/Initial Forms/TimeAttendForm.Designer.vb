@@ -30,6 +30,7 @@ Partial Class TimeAttendForm
         Me.OldShiftToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShiftScheduleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TripTicketsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelTimeAttend = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
@@ -38,7 +39,7 @@ Partial Class TimeAttendForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MassOvertimeToolStripMenuItem, Me.LeaveToolStripMenuItem, Me.OfficialBusinessToolStripMenuItem, Me.OvertimeToolStripMenuItem, Me.OldShiftToolStripMenuItem, Me.ShiftScheduleToolStripMenuItem, Me.TimeLogsToolStripMenuItem, Me.SummaryToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MassOvertimeToolStripMenuItem, Me.LeaveToolStripMenuItem, Me.OfficialBusinessToolStripMenuItem, Me.OvertimeToolStripMenuItem, Me.OldShiftToolStripMenuItem, Me.ShiftScheduleToolStripMenuItem, Me.TimeLogsToolStripMenuItem, Me.TripTicketsToolStripMenuItem, Me.SummaryToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -69,9 +70,9 @@ Partial Class TimeAttendForm
         Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
         Me.OvertimeToolStripMenuItem.Text = "Overtimes"
         '
-        'TimeEntToolStripMenuItem
+        'OldShiftToolStripMenuItem
         '
-        Me.OldShiftToolStripMenuItem.Name = "TimeEntToolStripMenuItem"
+        Me.OldShiftToolStripMenuItem.Name = "OldShiftToolStripMenuItem"
         Me.OldShiftToolStripMenuItem.Size = New System.Drawing.Size(98, 20)
         Me.OldShiftToolStripMenuItem.Text = "Employee Shift"
         '
@@ -84,8 +85,14 @@ Partial Class TimeAttendForm
         'TimeLogsToolStripMenuItem
         '
         Me.TimeLogsToolStripMenuItem.Name = "TimeLogsToolStripMenuItem"
-        Me.TimeLogsToolStripMenuItem.Size = New System.Drawing.Size(74, 20)
+        Me.TimeLogsToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
         Me.TimeLogsToolStripMenuItem.Text = "Time Logs"
+        '
+        'TripTicketsToolStripMenuItem
+        '
+        Me.TripTicketsToolStripMenuItem.Name = "TripTicketsToolStripMenuItem"
+        Me.TripTicketsToolStripMenuItem.Size = New System.Drawing.Size(77, 20)
+        Me.TripTicketsToolStripMenuItem.Text = "Trip Tickets"
         '
         'SummaryToolStripMenuItem
         '
@@ -128,4 +135,5 @@ Partial Class TimeAttendForm
     Friend WithEvents OfficialBusinessToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LeaveToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OvertimeToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents TripTicketsToolStripMenuItem As ToolStripMenuItem
 End Class

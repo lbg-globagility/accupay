@@ -157,19 +157,24 @@ Public Class ImportLeaveForm
                 Dim importList = New List(Of UserActivityItem)
                 Dim entityName = FormEntityName.ToLower()
 
+                'TODO: import should be create only
                 For Each item In leaves
+
+                    Dim suffixIdentifier = $"with date '{item.StartDate.ToShortDateString()}'."
 
                     If item.IsNew Then
                         importList.Add(New UserActivityItem() With
                         {
-                            .Description = $"Imported a new {entityName}.",
-                            .EntityId = item.RowID.Value
+                            .Description = $"Imported a new leave {suffixIdentifier}",
+                            .EntityId = item.RowID.Value,
+                            .ChangedEmployeeId = item.EmployeeID.Value
                         })
                     Else
                         importList.Add(New UserActivityItem() With
                         {
-                            .Description = $"Updated a {entityName} on import.",
-                            .EntityId = item.RowID.Value
+                            .Description = $"Updated a {entityName} on import {suffixIdentifier}",
+                            .EntityId = item.RowID.Value,
+                            .ChangedEmployeeId = item.EmployeeID.Value
                         })
                     End If
 

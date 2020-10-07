@@ -195,7 +195,7 @@ Public Class SelectThirteenthMonthEmployeesForm
                         End Function)
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
-                Await dataService.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays)
+                Await dataService.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays.ToList())
 
                 _employeeModels.
                         Where(Function(m) m.ForSaving).

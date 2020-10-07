@@ -28,22 +28,26 @@ Partial Class SelectPayslipEmployeesForm
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectPayslipEmployeesForm))
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.RefreshEmailServiceButton = New System.Windows.Forms.Button()
-        Me.RefreshEmailStatusButton = New System.Windows.Forms.Button()
-        Me.PreviewButton = New System.Windows.Forms.Button()
-        Me.PayslipTypePanel = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.PayslipTypeComboBox = New System.Windows.Forms.ComboBox()
-        Me.CancelDialogButton = New System.Windows.Forms.Button()
-        Me.SendEmailsButton = New System.Windows.Forms.Button()
+        Me.ActionPanel = New System.Windows.Forms.Panel()
+        Me.UncheckAllButton = New System.Windows.Forms.Button()
+        Me.CloseDialogButton = New System.Windows.Forms.Button()
         Me.EmployeeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.StatusLabel = New System.Windows.Forms.Label()
+        Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.PreviewToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.PreviewDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PreviewActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SendEmailToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.SendEmailDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SendEmailActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PreviewToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.SendEmailToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ManageEmailToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.ResetEmailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RefreshEmailStatusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RefreshEmailServiceToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -54,125 +58,54 @@ Partial Class SelectPayslipEmployeesForm
         Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmailStatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PayslipTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ResetEmailButtonColumn = New System.Windows.Forms.DataGridViewLinkColumn()
         Me.ErrorLogMessageColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.lblStatus = New System.Windows.Forms.Label()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UncheckAllButton = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
-        Me.PayslipTypePanel.SuspendLayout()
+        Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
-        Me.Panel1.Controls.Add(Me.RefreshEmailServiceButton)
-        Me.Panel1.Controls.Add(Me.RefreshEmailStatusButton)
-        Me.Panel1.Controls.Add(Me.PreviewButton)
-        Me.Panel1.Controls.Add(Me.PayslipTypePanel)
-        Me.Panel1.Controls.Add(Me.CancelDialogButton)
-        Me.Panel1.Controls.Add(Me.SendEmailsButton)
+        Me.Panel1.Controls.Add(Me.ActionPanel)
+        Me.Panel1.Controls.Add(Me.CloseDialogButton)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel1.Location = New System.Drawing.Point(0, 413)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1084, 50)
+        Me.Panel1.Size = New System.Drawing.Size(1234, 50)
         Me.Panel1.TabIndex = 0
         '
-        'RefreshEmailServiceButton
+        'ActionPanel
         '
-        Me.RefreshEmailServiceButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RefreshEmailServiceButton.BackColor = System.Drawing.Color.Red
-        Me.RefreshEmailServiceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.RefreshEmailServiceButton.ForeColor = System.Drawing.Color.White
-        Me.RefreshEmailServiceButton.Location = New System.Drawing.Point(481, 15)
-        Me.RefreshEmailServiceButton.Name = "RefreshEmailServiceButton"
-        Me.RefreshEmailServiceButton.Size = New System.Drawing.Size(123, 23)
-        Me.RefreshEmailServiceButton.TabIndex = 9
-        Me.RefreshEmailServiceButton.Text = "Restart Email Service"
-        Me.RefreshEmailServiceButton.UseVisualStyleBackColor = False
+        Me.ActionPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.ActionPanel.Controls.Add(Me.UncheckAllButton)
+        Me.ActionPanel.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ActionPanel.Location = New System.Drawing.Point(0, 0)
+        Me.ActionPanel.Name = "ActionPanel"
+        Me.ActionPanel.Size = New System.Drawing.Size(456, 50)
+        Me.ActionPanel.TabIndex = 6
         '
-        'RefreshEmailStatusButton
+        'UncheckAllButton
         '
-        Me.RefreshEmailStatusButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RefreshEmailStatusButton.Location = New System.Drawing.Point(618, 15)
-        Me.RefreshEmailStatusButton.Name = "RefreshEmailStatusButton"
-        Me.RefreshEmailStatusButton.Size = New System.Drawing.Size(123, 23)
-        Me.RefreshEmailStatusButton.TabIndex = 8
-        Me.RefreshEmailStatusButton.Text = "&Refresh Email Status"
-        Me.RefreshEmailStatusButton.UseVisualStyleBackColor = True
+        Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
+        Me.UncheckAllButton.Name = "UncheckAllButton"
+        Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
+        Me.UncheckAllButton.TabIndex = 9
+        Me.UncheckAllButton.Text = "&Uncheck All"
+        Me.UncheckAllButton.UseVisualStyleBackColor = True
         '
-        'PreviewButton
+        'CloseDialogButton
         '
-        Me.PreviewButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.PreviewButton.Enabled = False
-        Me.PreviewButton.Location = New System.Drawing.Point(865, 15)
-        Me.PreviewButton.Name = "PreviewButton"
-        Me.PreviewButton.Size = New System.Drawing.Size(96, 23)
-        Me.PreviewButton.TabIndex = 7
-        Me.PreviewButton.Text = "&Preview"
-        Me.PreviewButton.UseVisualStyleBackColor = True
-        '
-        'PayslipTypePanel
-        '
-        Me.PayslipTypePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PayslipTypePanel.Controls.Add(Me.UncheckAllButton)
-        Me.PayslipTypePanel.Controls.Add(Me.Label1)
-        Me.PayslipTypePanel.Controls.Add(Me.PayslipTypeComboBox)
-        Me.PayslipTypePanel.Dock = System.Windows.Forms.DockStyle.Left
-        Me.PayslipTypePanel.Location = New System.Drawing.Point(0, 0)
-        Me.PayslipTypePanel.Name = "PayslipTypePanel"
-        Me.PayslipTypePanel.Size = New System.Drawing.Size(456, 50)
-        Me.PayslipTypePanel.TabIndex = 6
-        '
-        'Label1
-        '
-        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(242, 19)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(70, 13)
-        Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Payslip Type:"
-        '
-        'PayslipTypeComboBox
-        '
-        Me.PayslipTypeComboBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.PayslipTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.PayslipTypeComboBox.FormattingEnabled = True
-        Me.PayslipTypeComboBox.ItemHeight = 13
-        Me.PayslipTypeComboBox.Location = New System.Drawing.Point(315, 15)
-        Me.PayslipTypeComboBox.Name = "PayslipTypeComboBox"
-        Me.PayslipTypeComboBox.Size = New System.Drawing.Size(121, 21)
-        Me.PayslipTypeComboBox.TabIndex = 5
-        '
-        'CancelDialogButton
-        '
-        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelDialogButton.Location = New System.Drawing.Point(970, 15)
-        Me.CancelDialogButton.Name = "CancelDialogButton"
-        Me.CancelDialogButton.Size = New System.Drawing.Size(96, 23)
-        Me.CancelDialogButton.TabIndex = 3
-        Me.CancelDialogButton.Text = "&Cancel"
-        Me.CancelDialogButton.UseVisualStyleBackColor = True
-        '
-        'SendEmailsButton
-        '
-        Me.SendEmailsButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SendEmailsButton.Enabled = False
-        Me.SendEmailsButton.Location = New System.Drawing.Point(750, 15)
-        Me.SendEmailsButton.Name = "SendEmailsButton"
-        Me.SendEmailsButton.Size = New System.Drawing.Size(106, 23)
-        Me.SendEmailsButton.TabIndex = 4
-        Me.SendEmailsButton.Text = "&Send Emails"
-        Me.SendEmailsButton.UseVisualStyleBackColor = True
+        Me.CloseDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CloseDialogButton.Location = New System.Drawing.Point(1120, 15)
+        Me.CloseDialogButton.Name = "CloseDialogButton"
+        Me.CloseDialogButton.Size = New System.Drawing.Size(96, 23)
+        Me.CloseDialogButton.TabIndex = 3
+        Me.CloseDialogButton.Text = "&Close"
+        Me.CloseDialogButton.UseVisualStyleBackColor = True
         '
         'EmployeeGridView
         '
@@ -181,7 +114,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.EmployeeGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.EmployeeGridView.BackgroundColor = System.Drawing.Color.White
         Me.EmployeeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.EmployeeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectedCheckBoxColumn, Me.Column1, Me.Column3, Me.Column6, Me.Column2, Me.EmailAddressColumn, Me.Column4, Me.Column5, Me.Column7, Me.EmailStatusColumn, Me.ErrorLogMessageColumn})
+        Me.EmployeeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectedCheckBoxColumn, Me.Column1, Me.Column3, Me.Column6, Me.Column2, Me.EmailAddressColumn, Me.Column4, Me.Column5, Me.Column7, Me.EmailStatusColumn, Me.PayslipTypeColumn, Me.ResetEmailButtonColumn, Me.ErrorLogMessageColumn})
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -192,10 +125,118 @@ Partial Class SelectPayslipEmployeesForm
         Me.EmployeeGridView.DefaultCellStyle = DataGridViewCellStyle6
         Me.EmployeeGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.EmployeeGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.EmployeeGridView.Location = New System.Drawing.Point(0, 21)
+        Me.EmployeeGridView.Location = New System.Drawing.Point(0, 46)
         Me.EmployeeGridView.Name = "EmployeeGridView"
-        Me.EmployeeGridView.Size = New System.Drawing.Size(1084, 392)
+        Me.EmployeeGridView.Size = New System.Drawing.Size(1234, 367)
         Me.EmployeeGridView.TabIndex = 1
+        '
+        'StatusLabel
+        '
+        Me.StatusLabel.BackColor = System.Drawing.Color.Black
+        Me.StatusLabel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.StatusLabel.ForeColor = System.Drawing.Color.White
+        Me.StatusLabel.Location = New System.Drawing.Point(0, 25)
+        Me.StatusLabel.Name = "StatusLabel"
+        Me.StatusLabel.Padding = New System.Windows.Forms.Padding(4)
+        Me.StatusLabel.Size = New System.Drawing.Size(1234, 21)
+        Me.StatusLabel.TabIndex = 14
+        Me.StatusLabel.Text = "Tick the checkbox of the employee that you want to include."
+        '
+        'ToolStrip1
+        '
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
+        Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip1.Name = "ToolStrip1"
+        Me.ToolStrip1.Size = New System.Drawing.Size(1234, 25)
+        Me.ToolStrip1.TabIndex = 15
+        Me.ToolStrip1.Text = "ToolStrip1"
+        '
+        'PreviewToolStripDropDownButton
+        '
+        Me.PreviewToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewDeclaredToolStripMenuItem, Me.PreviewActualToolStripMenuItem})
+        Me.PreviewToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.documents7
+        Me.PreviewToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PreviewToolStripDropDownButton.Name = "PreviewToolStripDropDownButton"
+        Me.PreviewToolStripDropDownButton.Size = New System.Drawing.Size(77, 22)
+        Me.PreviewToolStripDropDownButton.Text = "&Preview"
+        '
+        'PreviewDeclaredToolStripMenuItem
+        '
+        Me.PreviewDeclaredToolStripMenuItem.Name = "PreviewDeclaredToolStripMenuItem"
+        Me.PreviewDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PreviewDeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'PreviewActualToolStripMenuItem
+        '
+        Me.PreviewActualToolStripMenuItem.Name = "PreviewActualToolStripMenuItem"
+        Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PreviewActualToolStripMenuItem.Text = "Actual"
+        '
+        'SendEmailToolStripDropDownButton
+        '
+        Me.SendEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SendEmailDeclaredToolStripMenuItem, Me.SendEmailActualToolStripMenuItem})
+        Me.SendEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
+        Me.SendEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SendEmailToolStripDropDownButton.Name = "SendEmailToolStripDropDownButton"
+        Me.SendEmailToolStripDropDownButton.Size = New System.Drawing.Size(99, 22)
+        Me.SendEmailToolStripDropDownButton.Text = "Send &Emails"
+        '
+        'SendEmailDeclaredToolStripMenuItem
+        '
+        Me.SendEmailDeclaredToolStripMenuItem.Name = "SendEmailDeclaredToolStripMenuItem"
+        Me.SendEmailDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.SendEmailDeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'SendEmailActualToolStripMenuItem
+        '
+        Me.SendEmailActualToolStripMenuItem.Name = "SendEmailActualToolStripMenuItem"
+        Me.SendEmailActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.SendEmailActualToolStripMenuItem.Text = "Actual"
+        '
+        'PreviewToolStripButton
+        '
+        Me.PreviewToolStripButton.Image = Global.AccuPay.My.Resources.Resources.documents7
+        Me.PreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PreviewToolStripButton.Name = "PreviewToolStripButton"
+        Me.PreviewToolStripButton.Size = New System.Drawing.Size(68, 22)
+        Me.PreviewToolStripButton.Text = "Preview"
+        '
+        'SendEmailToolStripButton
+        '
+        Me.SendEmailToolStripButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
+        Me.SendEmailToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SendEmailToolStripButton.Name = "SendEmailToolStripButton"
+        Me.SendEmailToolStripButton.Size = New System.Drawing.Size(90, 22)
+        Me.SendEmailToolStripButton.Text = "Send &Emails"
+        '
+        'ManageEmailToolStripDropDownButton
+        '
+        Me.ManageEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ResetEmailsToolStripMenuItem, Me.RefreshEmailStatusToolStripMenuItem})
+        Me.ManageEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
+        Me.ManageEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ManageEmailToolStripDropDownButton.Name = "ManageEmailToolStripDropDownButton"
+        Me.ManageEmailToolStripDropDownButton.Size = New System.Drawing.Size(116, 22)
+        Me.ManageEmailToolStripDropDownButton.Text = "&Manage Emails"
+        '
+        'ResetEmailsToolStripMenuItem
+        '
+        Me.ResetEmailsToolStripMenuItem.Name = "ResetEmailsToolStripMenuItem"
+        Me.ResetEmailsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ResetEmailsToolStripMenuItem.Text = "Reset All"
+        '
+        'RefreshEmailStatusToolStripMenuItem
+        '
+        Me.RefreshEmailStatusToolStripMenuItem.Name = "RefreshEmailStatusToolStripMenuItem"
+        Me.RefreshEmailStatusToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.RefreshEmailStatusToolStripMenuItem.Text = "Refresh Status"
+        '
+        'RefreshEmailServiceToolStripButton
+        '
+        Me.RefreshEmailServiceToolStripButton.Image = Global.AccuPay.My.Resources.Resources._1431339112_Settings
+        Me.RefreshEmailServiceToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.RefreshEmailServiceToolStripButton.Name = "RefreshEmailServiceToolStripButton"
+        Me.RefreshEmailServiceToolStripButton.Size = New System.Drawing.Size(135, 22)
+        Me.RefreshEmailServiceToolStripButton.Text = "&Restart Email Service"
         '
         'SelectedCheckBoxColumn
         '
@@ -287,6 +328,24 @@ Partial Class SelectPayslipEmployeesForm
         Me.EmailStatusColumn.Name = "EmailStatusColumn"
         Me.EmailStatusColumn.ReadOnly = True
         '
+        'PayslipTypeColumn
+        '
+        Me.PayslipTypeColumn.DataPropertyName = "PayslipType"
+        Me.PayslipTypeColumn.FillWeight = 36.74457!
+        Me.PayslipTypeColumn.HeaderText = "Payslip Type"
+        Me.PayslipTypeColumn.Name = "PayslipTypeColumn"
+        '
+        'ResetEmailButtonColumn
+        '
+        Me.ResetEmailButtonColumn.FillWeight = 50.0!
+        Me.ResetEmailButtonColumn.HeaderText = ""
+        Me.ResetEmailButtonColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline
+        Me.ResetEmailButtonColumn.LinkColor = System.Drawing.Color.Red
+        Me.ResetEmailButtonColumn.Name = "ResetEmailButtonColumn"
+        Me.ResetEmailButtonColumn.Text = "Reset Email"
+        Me.ResetEmailButtonColumn.UseColumnTextForLinkValue = True
+        Me.ResetEmailButtonColumn.VisitedLinkColor = System.Drawing.Color.Red
+        '
         'ErrorLogMessageColumn
         '
         Me.ErrorLogMessageColumn.DataPropertyName = "ErrorLogMessage"
@@ -294,142 +353,15 @@ Partial Class SelectPayslipEmployeesForm
         Me.ErrorLogMessageColumn.Name = "ErrorLogMessageColumn"
         Me.ErrorLogMessageColumn.ReadOnly = True
         '
-        'lblStatus
-        '
-        Me.lblStatus.BackColor = System.Drawing.Color.Black
-        Me.lblStatus.Dock = System.Windows.Forms.DockStyle.Top
-        Me.lblStatus.ForeColor = System.Drawing.Color.White
-        Me.lblStatus.Location = New System.Drawing.Point(0, 0)
-        Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Padding = New System.Windows.Forms.Padding(4)
-        Me.lblStatus.Size = New System.Drawing.Size(1084, 21)
-        Me.lblStatus.TabIndex = 14
-        Me.lblStatus.Text = "Tick the checkbox of the employee that you want to include."
-        '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
-        Me.DataGridViewTextBoxColumn1.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Employee Number"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        Me.DataGridViewTextBoxColumn1.Width = 101
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.DataPropertyName = "FirstName"
-        Me.DataGridViewTextBoxColumn2.FillWeight = 150.0!
-        Me.DataGridViewTextBoxColumn2.HeaderText = "First Name"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        Me.DataGridViewTextBoxColumn2.Width = 152
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.DataPropertyName = "MiddleName"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle7.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle7
-        Me.DataGridViewTextBoxColumn3.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Middle Name"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        Me.DataGridViewTextBoxColumn3.Width = 102
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.DataPropertyName = "LastName"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.Format = "MM/dd/yyyy"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle8
-        Me.DataGridViewTextBoxColumn4.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Last Name"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.Width = 101
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.DataPropertyName = "EmployeeType"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle9
-        Me.DataGridViewTextBoxColumn5.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Employee Type"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        Me.DataGridViewTextBoxColumn5.Width = 101
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.DataPropertyName = "PositionName"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle10.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle10
-        Me.DataGridViewTextBoxColumn6.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Position"
-        Me.DataGridViewTextBoxColumn6.MinimumWidth = 120
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        Me.DataGridViewTextBoxColumn6.Width = 120
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.DataPropertyName = "DivisionName"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle11
-        Me.DataGridViewTextBoxColumn7.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Division"
-        Me.DataGridViewTextBoxColumn7.MinimumWidth = 120
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        Me.DataGridViewTextBoxColumn7.Width = 120
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.DataPropertyName = "EmailStatus"
-        Me.DataGridViewTextBoxColumn8.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Email Status"
-        Me.DataGridViewTextBoxColumn8.MinimumWidth = 120
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
-        Me.DataGridViewTextBoxColumn8.Width = 120
-        '
-        'DataGridViewTextBoxColumn9
-        '
-        Me.DataGridViewTextBoxColumn9.DataPropertyName = "ErrorLogMessage"
-        Me.DataGridViewTextBoxColumn9.FillWeight = 36.74457!
-        Me.DataGridViewTextBoxColumn9.HeaderText = "Last Error Log Message"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        Me.DataGridViewTextBoxColumn9.ReadOnly = True
-        Me.DataGridViewTextBoxColumn9.Width = 192
-        '
-        'DataGridViewTextBoxColumn10
-        '
-        Me.DataGridViewTextBoxColumn10.DataPropertyName = "ErrorLogMessage"
-        Me.DataGridViewTextBoxColumn10.HeaderText = "Last Error Log Message"
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        Me.DataGridViewTextBoxColumn10.ReadOnly = True
-        Me.DataGridViewTextBoxColumn10.Width = 177
-        '
-        'Button1
-        '
-        Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
-        Me.UncheckAllButton.Name = "Button1"
-        Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
-        Me.UncheckAllButton.TabIndex = 9
-        Me.UncheckAllButton.Text = "&Uncheck All"
-        Me.UncheckAllButton.UseVisualStyleBackColor = True
-        '
         'SelectPayslipEmployeesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1084, 463)
+        Me.ClientSize = New System.Drawing.Size(1234, 463)
         Me.Controls.Add(Me.EmployeeGridView)
-        Me.Controls.Add(Me.lblStatus)
+        Me.Controls.Add(Me.StatusLabel)
+        Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -437,34 +369,34 @@ Partial Class SelectPayslipEmployeesForm
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Select Employees Form"
         Me.Panel1.ResumeLayout(False)
-        Me.PayslipTypePanel.ResumeLayout(False)
-        Me.PayslipTypePanel.PerformLayout()
+        Me.ActionPanel.ResumeLayout(False)
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip1.ResumeLayout(False)
+        Me.ToolStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents CancelDialogButton As Button
-    Friend WithEvents SendEmailsButton As Button
-    Friend WithEvents PayslipTypePanel As Panel
-    Friend WithEvents Label1 As Label
-    Friend WithEvents PayslipTypeComboBox As ComboBox
-    Friend WithEvents PreviewButton As Button
+    Friend WithEvents CloseDialogButton As Button
+    Friend WithEvents ActionPanel As Panel
     Friend WithEvents EmployeeGridView As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents lblStatus As Label
-    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
-    Friend WithEvents RefreshEmailStatusButton As Button
-    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
-    Friend WithEvents RefreshEmailServiceButton As Button
+    Friend WithEvents StatusLabel As Label
+    Friend WithEvents UncheckAllButton As Button
+    Friend WithEvents ToolStrip1 As ToolStrip
+    Friend WithEvents RefreshEmailServiceToolStripButton As ToolStripButton
+    Friend WithEvents SendEmailToolStripDropDownButton As ToolStripDropDownButton
+    Friend WithEvents PreviewToolStripDropDownButton As ToolStripDropDownButton
+    Friend WithEvents PreviewDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PreviewActualToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SendEmailDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents SendEmailActualToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ManageEmailToolStripDropDownButton As ToolStripDropDownButton
+    Friend WithEvents ResetEmailsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RefreshEmailStatusToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PreviewToolStripButton As ToolStripButton
+    Friend WithEvents SendEmailToolStripButton As ToolStripButton
     Friend WithEvents SelectedCheckBoxColumn As DataGridViewCheckBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
@@ -475,6 +407,7 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents EmailStatusColumn As DataGridViewTextBoxColumn
+    Friend WithEvents PayslipTypeColumn As DataGridViewTextBoxColumn
+    Friend WithEvents ResetEmailButtonColumn As DataGridViewLinkColumn
     Friend WithEvents ErrorLogMessageColumn As DataGridViewTextBoxColumn
-    Friend WithEvents UncheckAllButton As Button
 End Class

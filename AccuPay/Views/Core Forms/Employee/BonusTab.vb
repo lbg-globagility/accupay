@@ -105,11 +105,11 @@ Public Class BonusTab
 
     End Sub
 
-    Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
+    Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
         EmployeeForm.Close()
     End Sub
 
-    Private Async Sub tsbtnCancelBon_Click(sender As Object, e As EventArgs) Handles tsbtnCancelBon.Click
+    Private Async Sub tsbtnCancelBon_Click(sender As Object, e As EventArgs) Handles tsbtnCancel.Click
         If _mode = FormMode.Creating Then
             SelectBonus(Nothing)
             EnableBonusGrid()
@@ -160,7 +160,7 @@ Public Class BonusTab
         txtbonamt.Text = ""
     End Sub
 
-    Private Async Sub tsbtnDelBon_Click(sender As Object, e As EventArgs) Handles tsbtnDelBon.Click
+    Private Async Sub tsbtnDelBon_Click(sender As Object, e As EventArgs) Handles tsbtnDelete.Click
         If _bonuses.Count > 0 Then
             Dim result = MsgBox("Are you sure you want to delete this Bonus?", MsgBoxStyle.YesNo, "Delete Bonus")
 
@@ -170,7 +170,13 @@ Public Class BonusTab
                     Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
                     Await bonusRepo.DeleteAsync(_currentBonus)
 
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentBonus.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentBonus.EmployeeID,
+                        suffixIdentifier:=$" with type '{_currentBonus.BonusType}' and start date '{_currentBonus.EffectiveStartDate.ToShortDateString()}'")
 
                     Await LoadBonuses()
                 End Function)
@@ -178,14 +184,14 @@ Public Class BonusTab
         End If
     End Sub
 
-    Private Async Sub tsbtnSaveBon_Click(sender As Object, e As EventArgs) Handles tsbtnSaveBon.Click
+    Private Async Sub tsbtnSaveBon_Click(sender As Object, e As EventArgs) Handles tsbtnSave.Click
         pbEmpPicBon.Focus()
         If Await SaveBonus() Then
             Await LoadBonuses()
         End If
     End Sub
 
-    Private Async Sub tsbtnNewBon_Click(sender As Object, e As EventArgs) Handles tsbtnNewBon.Click
+    Private Async Sub tsbtnNewBon_Click(sender As Object, e As EventArgs) Handles tsbtnNew.Click
 
         If _employee Is Nothing Then
             MessageBoxHelper.ErrorMessage("Please select an employee first.")
@@ -294,25 +300,25 @@ Public Class BonusTab
 
         Select Case _mode
             Case FormMode.Disabled
-                tsbtnNewBon.Enabled = False
-                tsbtnSaveBon.Enabled = False
-                tsbtnDelBon.Enabled = False
-                tsbtnCancelBon.Enabled = False
+                tsbtnNew.Enabled = False
+                tsbtnSave.Enabled = False
+                tsbtnDelete.Enabled = False
+                tsbtnCancel.Enabled = False
             Case FormMode.Empty
-                tsbtnNewBon.Enabled = True
-                tsbtnSaveBon.Enabled = False
-                tsbtnDelBon.Enabled = False
-                tsbtnCancelBon.Enabled = False
+                tsbtnNew.Enabled = True
+                tsbtnSave.Enabled = False
+                tsbtnDelete.Enabled = False
+                tsbtnCancel.Enabled = False
             Case FormMode.Creating
-                tsbtnNewBon.Enabled = False
-                tsbtnSaveBon.Enabled = True
-                tsbtnDelBon.Enabled = False
-                tsbtnCancelBon.Enabled = True
+                tsbtnNew.Enabled = False
+                tsbtnSave.Enabled = True
+                tsbtnDelete.Enabled = False
+                tsbtnCancel.Enabled = True
             Case FormMode.Editing
-                tsbtnNewBon.Enabled = True
-                tsbtnSaveBon.Enabled = True
-                tsbtnDelBon.Enabled = True
-                tsbtnCancelBon.Enabled = True
+                tsbtnNew.Enabled = True
+                tsbtnSave.Enabled = True
+                tsbtnDelete.Enabled = True
+                tsbtnCancel.Enabled = True
         End Select
     End Sub
 
@@ -356,45 +362,55 @@ Public Class BonusTab
     Private Sub RecordUpdateBonus(oldBonus As Bonus)
         Dim changes As New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        If oldBonus Is Nothing Then Return
+
+        Dim suffixIdentifier = $"of bonus with type '{_currentBonus.BonusType}' and start date '{_currentBonus.EffectiveStartDate.ToShortDateString()}'."
 
         If _currentBonus.ProductID <> oldBonus.ProductID Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} type from '{oldBonus.Product.Name}' to '{_currentBonus.Product.Name}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated type from '{oldBonus.Product.Name}' to '{_currentBonus.Product.Name}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.AllowanceFrequency <> oldBonus.AllowanceFrequency Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} frequency from '{oldBonus.AllowanceFrequency}' to '{_currentBonus.AllowanceFrequency}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated frequency from '{oldBonus.AllowanceFrequency}' to '{_currentBonus.AllowanceFrequency}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.EffectiveStartDate <> oldBonus.EffectiveStartDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} start date from '{oldBonus.EffectiveStartDate.ToShortDateString}' to '{_currentBonus.EffectiveStartDate.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated start date from '{oldBonus.EffectiveStartDate.ToShortDateString}' to '{_currentBonus.EffectiveStartDate.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.EffectiveEndDate <> oldBonus.EffectiveEndDate Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} end date from '{oldBonus.EffectiveEndDate.ToShortDateString}' to '{_currentBonus.EffectiveEndDate.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated end date from '{oldBonus.EffectiveEndDate.ToShortDateString}' to '{_currentBonus.EffectiveEndDate.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
         If _currentBonus.BonusAmount <> oldBonus.BonusAmount Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Updated {entityName} amount from '{oldBonus.BonusAmount}' to '{_currentBonus.BonusAmount}'."
-                        })
+            {
+                .EntityId = oldBonus.RowID.Value,
+                .Description = $"Updated amount from '{oldBonus.BonusAmount}' to '{_currentBonus.BonusAmount}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldBonus.EmployeeID
+            })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
     End Sub
 
@@ -404,7 +420,7 @@ Public Class BonusTab
         End If
     End Sub
 
-    Private Sub ToolStripButton1_Click_1(sender As Object, e As EventArgs) Handles UserActivity.Click
+    Private Sub ToolStripButton1_Click_1(sender As Object, e As EventArgs) Handles tsbtnUserActivity.Click
         Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub

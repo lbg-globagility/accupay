@@ -47,6 +47,9 @@ Public Class HRISForm
         OffSetToolStripMenuItem.Visible =
             (curr_sys_owner_name = SystemOwnerService.Cinema2000)
 
+        BonusToolStripMenuItem.Visible =
+            (curr_sys_owner_name = SystemOwnerService.Goldwings)
+
         If _systemOwnerService.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
@@ -88,13 +91,16 @@ Public Class HRISForm
         EducBGToolStripMenuItem.Visible = employeeUpdatable
         PrevEmplyrToolStripMenuItem.Visible = employeeUpdatable
         DisciplinaryActionToolStripMenuItem.Visible = employeeUpdatable
-        BonusToolStripMenuItem.Visible = employeeUpdatable
         AttachmentToolStripMenuItem.Visible = employeeUpdatable
 
-        'Job, Points, Offset only overrides the visibility if Read is False
+        'Bonus, Job, Points, Offset only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If Not employeeUpdatable Then
             OffSetToolStripMenuItem.Visible = False
+        End If
+
+        If Not employeeUpdatable Then
+            BonusToolStripMenuItem.Visible = False
         End If
 
         If positionPermission Is Nothing OrElse positionPermission.Read = False Then
@@ -128,7 +134,6 @@ Public Class HRISForm
             CertificatesToolStripMenuItem.Visible = False
             EducBGToolStripMenuItem.Visible = False
             PrevEmplyrToolStripMenuItem.Visible = False
-            PromotionToolStripMenuItem.Visible = False
             DisciplinaryActionToolStripMenuItem.Visible = False
             EmpSalToolStripMenuItem.Visible = False
             BonusToolStripMenuItem.Visible = False
@@ -147,7 +152,6 @@ Public Class HRISForm
             CertificatesToolStripMenuItem.Visible = False
             EducBGToolStripMenuItem.Visible = False
             PrevEmplyrToolStripMenuItem.Visible = False
-            PromotionToolStripMenuItem.Visible = False
             DisciplinaryActionToolStripMenuItem.Visible = False
             BonusToolStripMenuItem.Visible = False
             AttachmentToolStripMenuItem.Visible = False
@@ -236,7 +240,7 @@ Public Class HRISForm
         Dim index = EmployeeForm.GetEmployeeProfileTabPageIndex
 
         EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tbpEmployee_Enter(sender, e)
+        Await EmployeeForm.OpenEmployeeTab()
         EmployeeForm.tabIndx = index
         Await ChangeForm(EmployeeForm, {PermissionConstant.EMPLOYEE})
         EmployeeForm.tbpEmployee.Focus()

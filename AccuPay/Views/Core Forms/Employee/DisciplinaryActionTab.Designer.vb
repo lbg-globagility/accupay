@@ -28,13 +28,11 @@ Partial Class DisciplinaryActionTab
         Me.ToolStrip8 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnPrintMemo = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnPrintMemo = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.txtFullname = New System.Windows.Forms.TextBox()
@@ -77,7 +75,7 @@ Partial Class DisciplinaryActionTab
         '
         Me.ToolStrip8.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip8.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnUserActivity})
+        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripSeparator1, Me.btnPrintMemo, Me.btnUserActivity})
         Me.ToolStrip8.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip8.Name = "ToolStrip8"
         Me.ToolStrip8.Size = New System.Drawing.Size(825, 25)
@@ -89,49 +87,24 @@ Partial Class DisciplinaryActionTab
         Me.btnNew.Image = Global.AccuPay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
-        Me.btnNew.Size = New System.Drawing.Size(153, 22)
-        Me.btnNew.Text = "&New Disciplinary Action"
+        Me.btnNew.Size = New System.Drawing.Size(51, 22)
+        Me.btnNew.Text = "&New"
         '
         'btnSave
         '
         Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(153, 22)
-        Me.btnSave.Text = "&Save Disciplinary Action"
-        '
-        'ToolStripLabel1
-        '
-        Me.ToolStripLabel1.AutoSize = False
-        Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(50, 22)
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        Me.btnSave.Size = New System.Drawing.Size(51, 22)
+        Me.btnSave.Text = "&Save"
         '
         'btnDelete
         '
         Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(162, 22)
-        Me.btnDelete.Text = "&Delete Disciplinary Action"
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
-        '
-        'btnPrintMemo
-        '
-        Me.btnPrintMemo.Image = CType(resources.GetObject("btnPrintMemo.Image"), System.Drawing.Image)
-        Me.btnPrintMemo.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnPrintMemo.Name = "btnPrintMemo"
-        Me.btnPrintMemo.Size = New System.Drawing.Size(90, 22)
-        Me.btnPrintMemo.Text = "Print Memo"
-        Me.btnPrintMemo.Visible = False
+        Me.btnDelete.Size = New System.Drawing.Size(60, 22)
+        Me.btnDelete.Text = "&Delete"
         '
         'btnCancel
         '
@@ -150,13 +123,27 @@ Partial Class DisciplinaryActionTab
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
         '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'btnPrintMemo
+        '
+        Me.btnPrintMemo.Image = CType(resources.GetObject("btnPrintMemo.Image"), System.Drawing.Image)
+        Me.btnPrintMemo.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnPrintMemo.Name = "btnPrintMemo"
+        Me.btnPrintMemo.Size = New System.Drawing.Size(90, 22)
+        Me.btnPrintMemo.Text = "&Print Memo"
+        Me.btnPrintMemo.Visible = False
+        '
         'btnUserActivity
         '
         Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
         Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnUserActivity.Name = "btnUserActivity"
         Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.btnUserActivity.Text = "User Activity"
+        Me.btnUserActivity.Text = "&User Activity"
         '
         'txtEmployeeID
         '
@@ -512,10 +499,8 @@ Partial Class DisciplinaryActionTab
     Friend WithEvents ToolStrip8 As ToolStrip
     Friend WithEvents btnNew As ToolStripButton
     Friend WithEvents btnSave As ToolStripButton
-    Friend WithEvents ToolStripLabel1 As ToolStripLabel
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents btnDelete As ToolStripButton
-    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents btnPrintMemo As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton

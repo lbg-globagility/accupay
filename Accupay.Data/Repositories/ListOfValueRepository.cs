@@ -17,62 +17,52 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public IEnumerable<ListOfValue> GetLeaveConvertiblePolicies()
+        public ICollection<ListOfValue> GetLeaveConvertiblePolicies()
         {
             return GetListOfValues("LeaveConvertiblePolicy");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter)
+        public async Task<ICollection<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter)
         {
-            return await _context.ListOfValues.
-                                Where(filter).
-                                ToListAsync();
+            return await _context.ListOfValues
+                .Where(filter)
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetDeductionSchedulesAsync()
+        public async Task<ICollection<ListOfValue>> GetDeductionSchedulesAsync()
         {
             return await GetListOfValuesAsync("Government deduction schedule");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetEmployeeChecklistsAsync()
+        public async Task<ICollection<ListOfValue>> GetEmployeeChecklistsAsync()
         {
             return await GetListOfValuesAsync("Employee Checklist");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetEmployeeDisciplinaryPenalties()
+        public async Task<ICollection<ListOfValue>> GetEmployeeDisciplinaryPenalties()
         {
             return await GetListOfValuesAsync("Employee Disciplinary Penalty");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetShiftPoliciesAsync()
-        {
-            return await GetListOfValuesAsync("ShiftPolicy");
-        }
-
-        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
+        public async Task<ICollection<ListOfValue>> GetDutyShiftPoliciesAsync()
         {
             return await GetListOfValuesAsync("DutyShift");
         }
 
-        public IEnumerable<ListOfValue> GetDutyShiftPolicies()
+        public ICollection<ListOfValue> GetListOfValues(string type)
         {
-            return GetListOfValues("DutyShift");
+            return _context.ListOfValues
+                .Where(l => l.Type == type)
+                .Where(l => l.Active == "Yes")
+                .ToList();
         }
 
-        public IEnumerable<ListOfValue> GetListOfValues(string type)
+        public async Task<ICollection<ListOfValue>> GetListOfValuesAsync(string type)
         {
-            return _context.ListOfValues.
-                            Where(l => l.Type == type).
-                            Where(l => l.Active == "Yes").
-                            ToList();
-        }
-
-        public async Task<IEnumerable<ListOfValue>> GetListOfValuesAsync(string type)
-        {
-            return await _context.ListOfValues.
-                                Where(l => l.Type == type).
-                                Where(l => l.Active == "Yes").
-                                ToListAsync();
+            return await _context.ListOfValues
+                .Where(l => l.Type == type)
+                .Where(l => l.Active == "Yes")
+                .ToListAsync();
         }
 
         public List<string> ConvertToStringList(IEnumerable<ListOfValue> listOfValues, string columnName = "DisplayValue")
@@ -85,16 +75,12 @@ namespace AccuPay.Data.Repositories
                 switch (columnName)
                 {
                     case "LIC":
-                        {
-                            stringList.Add(listOfValue.LIC);
-                            break;
-                        }
+                        stringList.Add(listOfValue.LIC);
+                        break;
 
                     default:
-                        {
-                            stringList.Add(listOfValue.DisplayValue);
-                            break;
-                        }
+                        stringList.Add(listOfValue.DisplayValue);
+                        break;
                 }
             }
 

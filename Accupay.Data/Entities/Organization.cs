@@ -36,6 +36,8 @@ namespace AccuPay.Data.Entities
         [Column("NoPurpose")]
         public bool IsInActive { get; set; }
 
+        public Byte[] Image { get; set; }
+
         public static Organization NewOrganization(int userId, int clientId)
         {
             return new Organization()

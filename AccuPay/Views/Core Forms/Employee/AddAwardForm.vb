@@ -15,7 +15,7 @@ Public Class AddAwardForm
 
     Private _employee As Employee
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -60,7 +60,13 @@ Public Class AddAwardForm
                 Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
                 Await awardRepo.CreateAsync(_newAward)
 
-                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=_newAward.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=_newAward.EmployeeID,
+                    suffixIdentifier:=$" with type '{ _newAward.AwardType}'")
 
                 succeed = True
             End Function)

@@ -90,7 +90,6 @@ namespace AccuPay.Data.Services.Imports.Employees
             BankName = employee.BankName;
             DateRegularized = employee.DateRegularized;
             DateEvaluated = employee.DateEvaluated;
-            RevealInPayroll = employee.RevealInPayroll;
             AgencyID = employee.AgencyID;
             AdvancementPoints = employee.AdvancementPoints;
             BPIInsurance = employee.BPIInsurance;

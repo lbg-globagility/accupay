@@ -1,10 +1,14 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MetroLogin
@@ -38,9 +42,9 @@ Public Class MetroLogin
         _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
     End Sub
 
-    Protected Overrides Sub OnLoad(e As EventArgs)
+    Protected Overrides Async Sub OnLoad(e As EventArgs)
 
-        ReloadOrganization()
+        Await ReloadOrganizationAsync()
 
         MyBase.OnLoad(e)
 
@@ -54,7 +58,6 @@ Public Class MetroLogin
 
             Return True
         Else
-            'ShiftTemplater
             Return MyBase.ProcessCmdKey(msg, keyData)
 
         End If
@@ -62,8 +65,6 @@ Public Class MetroLogin
     End Function
 
     Private Sub MetroLogin_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
-        'n_FileObserver.Undetect()
 
         Application.Exit()
 
@@ -74,6 +75,8 @@ Public Class MetroLogin
             AssignDefaultCredentials()
 
         End If
+
+        OrganizationComboBox.DisplayMember = "Name"
     End Sub
 
     Public Sub AssignDefaultCredentials()
@@ -81,53 +84,34 @@ Public Class MetroLogin
         PasswordTextBox.Text = "admin"
     End Sub
 
-    Private Sub cbxorganiz_DropDown(sender As Object, e As EventArgs) Handles cbxorganiz.DropDown
+    Private Sub OrganizationComboBox_DropDown(sender As Object, e As EventArgs) Handles OrganizationComboBox.DropDown
 
-        'TODO: this code has an error sometimes when there is no organization
+        Dim organizations = CType(OrganizationComboBox.DataSource, List(Of Organization))
 
-        Static cb_font As Font = cbxorganiz.Font
+        If Not organizations.Any() Then Return
 
-        'Dim cb_width As Integer = cbxorganiz.DropDownWidth
+        Static font As Font = OrganizationComboBox.Font
+        Dim grp As Graphics = OrganizationComboBox.CreateGraphics()
 
-        Dim grp As Graphics = cbxorganiz.CreateGraphics()
+        Dim vertScrollBarWidth As Integer = If(OrganizationComboBox.Items.Count > OrganizationComboBox.MaxDropDownItems, SystemInformation.VerticalScrollBarWidth, 0)
 
-        Dim vertScrollBarWidth As Integer = If(cbxorganiz.Items.Count > cbxorganiz.MaxDropDownItems, SystemInformation.VerticalScrollBarWidth, 0)
+        Dim width As Integer = 0
 
-        Dim wiidth As Integer = 0
+        Dim longestWord = organizations.
+            OrderByDescending(Function(o) o.Name.Length).
+            Select(Function(o) o.Name).
+            FirstOrDefault()
 
-        Dim data_source As New DataTable
+        width = CInt(grp.MeasureString(longestWord, font).Width) + vertScrollBarWidth
 
-        data_source = cbxorganiz.DataSource
-
-        Dim i = 0
-
-        Dim drp_downwidhths As Integer()
-
-        ReDim drp_downwidhths(data_source.Rows.Count - 1)
-
-        For Each strRow As DataRow In data_source.Rows
-
-            wiidth = CInt(grp.MeasureString(CStr(strRow(1)), cb_font).Width) + vertScrollBarWidth
-
-            drp_downwidhths(i) = wiidth
-
-            'If cb_width < wiidth Then
-            '    wiidth = wiidth
-            'End If
-
-            i += 1
-
-        Next
-
-        Dim max_drp_downwidhth As Integer = drp_downwidhths.Max
-
-        cbxorganiz.DropDownWidth = max_drp_downwidhth 'wiidth, cb_width
+        OrganizationComboBox.DropDownWidth = width
 
     End Sub
 
-    Private Sub Login_KeyPress(sender As Object, e As KeyPressEventArgs) Handles PasswordTextBox.KeyPress,
-                                                                                    UserNameTextBox.KeyPress,
-                                                                                    cbxorganiz.KeyPress
+    Private Sub Login_KeyPress(sender As Object, e As KeyPressEventArgs) Handles _
+        PasswordTextBox.KeyPress,
+        UserNameTextBox.KeyPress,
+        OrganizationComboBox.KeyPress
 
         Dim e_asc = Asc(e.KeyChar)
 
@@ -169,9 +153,9 @@ Public Class MetroLogin
             Return
         End If
 
-        If cbxorganiz.SelectedIndex = -1 Then
+        If OrganizationComboBox.SelectedIndex = -1 Then
             WarnBalloon("Please select a company.", "Invalid company", btnlogin, btnlogin.Width - 18, -69)
-            cbxorganiz.Focus()
+            OrganizationComboBox.Focus()
             enableButton()
             Return
         End If
@@ -193,7 +177,6 @@ Public Class MetroLogin
         z_postName = USER_ROLE.Name
 
         If dbnow Is Nothing Then dbnow = EXECQUER(CURDATE_MDY)
-        If numofdaysthisyear = 0 Then numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
 
         If Await CheckIfAuthorizedByUserLevel() Then
             MDIPrimaryForm.Show()
@@ -250,29 +233,27 @@ Public Class MetroLogin
 
     End Function
 
-    Private Sub cbxorganiz_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxorganiz.SelectedIndexChanged
+    Private Sub OrganizationComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles OrganizationComboBox.SelectedIndexChanged
+
+        If OrganizationComboBox.SelectedValue Is Nothing Then Return
+
+        Dim organization = CType(OrganizationComboBox.SelectedValue, Organization)
+
+        If organization Is Nothing Then Return
 
         PhotoImages.Image = Nothing
 
-        orgNam = cbxorganiz.Text
+        orgNam = organization.Name
 
         z_CompanyName = orgNam
 
-        ''orgztnID = EXECQUER("SELECT RowID FROM organization WHERE Name='" & orgNam & "' LIMIT 1;")
+        orgztnID = organization.RowID.ToString()
 
-        orgztnID = cbxorganiz.SelectedValue
+        z_OrganizationID = organization.RowID.Value
 
-        z_OrganizationID = ValNoComma(orgztnID)
+        If organization.Image IsNot Nothing AndAlso organization.Image.Length > 0 Then
 
-        Dim org_emblem As New DataTable
-
-        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT Image FROM organization WHERE RowID='" & orgztnID & "' AND Image IS NOT NULL;")
-
-        org_emblem = n_SQLQueryToDatatable.ResultTable
-
-        If org_emblem.Rows.Count > 0 Then
-
-            PhotoImages.Image = ConvertByteToImage(org_emblem.Rows(0)("Image"))
+            PhotoImages.Image = ConvertByteToImage(organization.Image)
 
         End If
 
@@ -280,68 +261,25 @@ Public Class MetroLogin
 
     Private Sub MetroLink1_Click(sender As Object, e As EventArgs) Handles MetroLink1.Click
 
+        'Hide forgot password until we require each client to provide an email account
+        'or provide an email account by globagility that will be used in forgot password process
         Dim n_ForgotPasswordForm As New ForgotPasswordForm
 
         n_ForgotPasswordForm.ShowDialog()
-        '# ####################################### #
-        'ForgotPasswordForm.Show()
-
-        'MsgBox(Convert.ToBoolean("1"))
-
-        'cbxorganiz.Enabled = Convert.ToBoolean("1")
-
-        ''MsgBox(Convert.ToBoolean("0").ToString)
-
-        'cbxorganiz.Enabled = Convert.ToBoolean("0")
-
-        'Dim dialog_box = MessageBox.Show("Come on", "", MessageBoxButtons.YesNoCancel)
-
-        'If dialog_box = Windows.Forms.DialogResult.Yes Then
-        '    cbxorganiz.Enabled = Convert.ToBoolean(1)
-        'Else
-        '    cbxorganiz.Enabled = Convert.ToBoolean(0)
-        'End If
-        '# ####################################### #
 
     End Sub
 
-    Sub ReloadOrganization()
+    Async Function ReloadOrganizationAsync() As Task
 
-        Dim strQuery As String = "SELECT RowID,Name FROM organization WHERE NoPurpose='0' ORDER BY Name;"
+        Dim list = Await _organizationRepository.List(OrganizationPageOptions.AllData, 1)
 
-        Static once As SByte = 0
+        If list.organizations IsNot Nothing Then
 
-        If once = 0 Then
-
-            once = 1
-
-            Dim n_SQLQueryToDatatable As New SQLQueryToDatatable(strQuery)
-
-            cbxorganiz.ValueMember = n_SQLQueryToDatatable.ResultTable.Columns(0).ColumnName
-
-            cbxorganiz.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
-
-            cbxorganiz.DataSource = n_SQLQueryToDatatable.ResultTable
-        Else
-
-            Dim isThereSomeNewToOrganization =
-                EXECQUER("SELECT EXISTS(SELECT RowID FROM organization WHERE DATE_FORMAT(Created,'%Y-%m-%d')=CURDATE() OR DATE_FORMAT(LastUpd,'%Y-%m-%d')=CURDATE() LIMIT 1);")
-
-            If isThereSomeNewToOrganization = "1" Then
-
-                Dim n_SQLQueryToDatatable As New SQLQueryToDatatable(strQuery)
-
-                cbxorganiz.ValueMember = n_SQLQueryToDatatable.ResultTable.Columns(0).ColumnName
-
-                cbxorganiz.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
-
-                cbxorganiz.DataSource = n_SQLQueryToDatatable.ResultTable
-            Else
-
-            End If
+            OrganizationComboBox.DataSource = list.organizations.
+                OrderBy(Function(o) o.Name).
+                ToList()
 
         End If
-
-    End Sub
+    End Function
 
 End Class

@@ -7,25 +7,28 @@ namespace AccuPay.Utilities.Extensions
         public const int HoursPerDay = 24;
 
         public static string ToStringFormat(
-                                this TimeSpan timeSpanInput,
-                                string format,
-                                DateTime? currentDate = null)
+            this TimeSpan timeSpanInput,
+            string format,
+            DateTime? currentDate = null)
         {
-            currentDate = currentDate == null ? DateTime.Now.ToMinimumHourValue() :
-                                                currentDate.Value.ToMinimumHourValue();
+            currentDate = currentDate == null ?
+                DateTime.Now.ToMinimumHourValue() :
+                currentDate.Value.ToMinimumHourValue();
 
             return currentDate.Value.Add(timeSpanInput).ToString(format);
         }
 
         public static string ToStringFormat(
-                                this TimeSpan? timeSpanInput,
-                                string format,
-                                DateTime? currentDate = null)
+                this TimeSpan? timeSpanInput,
+                string format,
+                DateTime? currentDate = null)
         {
-            currentDate = currentDate == null ? DateTime.Now.ToMinimumHourValue() :
-                                                currentDate.Value.ToMinimumHourValue();
-
             if (!timeSpanInput.HasValue) return string.Empty;
+
+            currentDate = currentDate == null ?
+                DateTime.Now.ToMinimumHourValue() :
+                currentDate.Value.ToMinimumHourValue();
+
             return currentDate.Value.Add(timeSpanInput.Value).ToString(format);
         }
 
