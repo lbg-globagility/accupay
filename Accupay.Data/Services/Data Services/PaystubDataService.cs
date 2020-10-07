@@ -9,26 +9,18 @@ using static AccuPay.Data.Repositories.PaystubRepository;
 
 namespace AccuPay.Data.Services
 {
-    public class PaystubDataService
+    public class PaystubDataService : BasePaystubDataService
     {
         private readonly PaystubRepository _paystubRepository;
-        private readonly PaystubEmailRepository _paystubEmailRepository;
-        private readonly PaystubEmailHistoryRepository _paystubEmailHistoryRepository;
         private readonly SalaryRepository _salaryRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
 
         public PaystubDataService(
             PaystubRepository paystubRepository,
-            PaystubEmailRepository paystubEmailRepository,
-            PaystubEmailHistoryRepository paystubEmailHistoryRepository,
             SalaryRepository salaryRepository,
-            PayPeriodRepository payPeriodRepository)
+            PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
         {
             _paystubRepository = paystubRepository;
-            _paystubEmailRepository = paystubEmailRepository;
-            _paystubEmailHistoryRepository = paystubEmailHistoryRepository;
             _salaryRepository = salaryRepository;
-            _payPeriodRepository = payPeriodRepository;
         }
 
         #region Save
@@ -66,31 +58,6 @@ namespace AccuPay.Data.Services
                 userId: userId);
         }
 
-        public async Task DeletePaystubEmailsByPeriodAsync(int payPeriodId, int organizationId)
-        {
-            await ValidateIfPayPeriodIsOpenAsync(
-                organizationId: organizationId,
-                payPeriodId: payPeriodId);
-
-            await _paystubEmailRepository.DeleteByPayPeriodAsync(payPeriodId);
-            await _paystubEmailHistoryRepository.DeleteByPayPeriodAsync(payPeriodId);
-        }
-
-        public async Task DeletePaystubEmailsByEmployeeAndPeriodAsync(int employeeId, int payPeriodId, int organizationId)
-        {
-            await ValidateIfPayPeriodIsOpenAsync(
-                organizationId: organizationId,
-                payPeriodId: payPeriodId);
-
-            await _paystubEmailRepository.DeleteByEmployeeAndPayPeriodAsync(
-                employeeId: employeeId,
-                payPeriodId: payPeriodId);
-
-            await _paystubEmailHistoryRepository.DeleteByEmployeeAndPayPeriodAsync(
-                employeeId: employeeId,
-                payPeriodId: payPeriodId);
-        }
-
         public async Task UpdateManyThirteenthMonthPaysAsync(ICollection<ThirteenthMonthPay> thirteenthMonthPays)
         {
             var paystubIds = thirteenthMonthPays
@@ -123,14 +90,6 @@ namespace AccuPay.Data.Services
             }
 
             await _paystubRepository.UpdateAdjustmentsAsync(paystubId, allAdjustments);
-        }
-
-        private async Task ValidateIfPayPeriodIsOpenAsync(int organizationId, int? payPeriodId)
-        {
-            var currentOpenPayPeriod = await _payPeriodRepository.GetCurrentOpenAsync(organizationId);
-
-            if (currentOpenPayPeriod == null || currentOpenPayPeriod?.RowID != payPeriodId)
-                throw new BusinessLogicException("Only open pay periods can be modified.");
         }
 
         #endregion Save

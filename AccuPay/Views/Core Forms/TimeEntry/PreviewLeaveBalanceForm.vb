@@ -50,7 +50,7 @@ Public Class PreviewLeaveBalanceForm
         Close()
     End Sub
 
-    Private Async Sub btnReset_ClickAsync(sender As Object, e As EventArgs) Handles btnReset.Click
+    Private Sub btnReset_ClickAsync(sender As Object, e As EventArgs) Handles btnReset.Click
         'RenewLeaveBalance does not update when the payperiod chosen is not the start of the year.
         'Remove the Return statement when that is fixed.
 

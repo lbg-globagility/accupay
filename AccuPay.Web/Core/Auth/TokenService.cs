@@ -47,7 +47,7 @@ namespace AccuPay.Web.Core.Auth
 
                 return claimsPrincipal;
             }
-            catch (SecurityTokenValidationException ex)
+            catch (SecurityTokenValidationException)
             {
                 // The token failed validation!
                 // TODO: Log it or display an error.

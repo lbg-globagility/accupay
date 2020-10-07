@@ -163,7 +163,7 @@ namespace AccuPay.Data.Services
 
                 await context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

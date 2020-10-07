@@ -5,7 +5,9 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities
 Imports Indigo
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -42,6 +44,8 @@ Public Class MDIPrimaryForm
 
     Private ReadOnly _userRepository As AspNetUserRepository
 
+    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+
     Sub New()
 
         InitializeComponent()
@@ -51,6 +55,8 @@ Public Class MDIPrimaryForm
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
         _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
 
         Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
         if_sysowner_is_benchmark = currentSystemOwner = SystemOwnerService.Benchmark
@@ -170,6 +176,7 @@ Public Class MDIPrimaryForm
         e.Cancel = (busy_bgworker.Count > 0)
 
         LockTime()
+        EmailStatusTimer.Stop()
 
         If e.Cancel = False Then
 
@@ -293,14 +300,14 @@ Public Class MDIPrimaryForm
     Private Sub MDIPrimaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Try
-            PrepareForm(sender, e)
+            PrepareForm()
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         Finally
         End Try
     End Sub
 
-    Private Sub PrepareForm(sender As Object, e As EventArgs)
+    Private Sub PrepareForm()
         If dbnow = Nothing Then
             dbnow = EXECQUER(CURDATE_MDY)
         End If
@@ -311,9 +318,18 @@ Public Class MDIPrimaryForm
         lblUser.Text = userFirstName &
                        If(userLastName = Nothing, "", " " & userLastName)
         lblPosition.Text = z_postName
-        HomeToolStripButton_Click(sender, e)
+        SelectHomeToolStrip()
         PictureBox1.Image = ImageList1.Images(1)
         LoadVersionNo()
+
+        If _policyHelper.UseEmailPayslip Then
+
+            EmailServiceStatusToolStripLabel.Visible = True
+            AddHandler EmailStatusTimer.Tick, AddressOf EmailStatusTimer_Tick
+
+            EmailStatusTimer.Start()
+        End If
+
     End Sub
 
     Private Sub PrepareFormForBenchmark()
@@ -375,7 +391,11 @@ Public Class MDIPrimaryForm
     Dim isHome As SByte = 0
 
     Private Sub HomeToolStripButton_Click(sender As Object, e As EventArgs) Handles HomeToolStripButton.Click
+        SelectHomeToolStrip()
 
+    End Sub
+
+    Private Sub SelectHomeToolStrip()
         isHome = 1
 
         UnlockTime()
@@ -697,7 +717,6 @@ Public Class MDIPrimaryForm
     Sub UnlockTime()
 
         Timer2.Enabled = True
-
         Timer2.Start()
 
         Static once As SByte = 0
@@ -1034,7 +1053,7 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Sub NotifyIcon1_Click(sender As Object, e As EventArgs)
-        HomeToolStripButton_Click(sender, e)
+        SelectHomeToolStrip()
     End Sub
 
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
@@ -1106,6 +1125,52 @@ Public Class MDIPrimaryForm
             collapgpbox.Visible = _bool
 
         Next
+
+    End Sub
+
+    Private Async Sub EmailStatusTimer_Tick(sender As Object, e As EventArgs)
+
+        EmailServiceStatusToolStripLabel.Enabled = True
+
+        Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
+        Dim queueCount = onQueue.Count()
+
+        Dim connectionString = ConnectionStringRegistry.GetCurrent()
+        Dim service = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)
+        Dim status = Await service.GetStatus()
+
+        Dim isOnline = status = ServiceProcess.ServiceControllerStatus.Running
+
+        UpdateEmailStatusToolStripLabel(isOnline, queueCount)
+
+    End Sub
+
+    Private Sub UpdateEmailStatusToolStripLabel(isOnline As Boolean, queueCount As Integer)
+
+        Dim foreColor = Color.DarkGreen
+        Dim status = "Online"
+
+        If Not isOnline Then
+
+            foreColor = Color.DarkRed
+            status = "OFFLINE"
+        End If
+
+        Dim queueDescription = String.Empty
+
+        If queueCount > 0 Then
+            EmailServiceStatusToolStripLabel.ForeColor = Color.DarkOrange
+            queueDescription = $"{queueCount} email{If(queueCount > 1, "s", "")} on queue."
+        End If
+
+        EmailServiceStatusToolStripLabel.Text = $"Email Service is {status}. {queueDescription}"
+        EmailServiceStatusToolStripLabel.ForeColor = foreColor
+    End Sub
+
+    Private Sub EmailServiceStatusToolStripLabel_Click(sender As Object, e As EventArgs) Handles EmailServiceStatusToolStripLabel.Click
+
+        Dim form As New EmailDashboardForm()
+        form.ShowDialog()
 
     End Sub
 

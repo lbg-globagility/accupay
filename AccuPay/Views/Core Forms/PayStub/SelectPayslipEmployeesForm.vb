@@ -5,6 +5,7 @@ Imports AccuPay.CrystalReports
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -151,8 +152,9 @@ Public Class SelectPayslipEmployeesForm
         Dim index = 0
         For Each employee In _employeeModels
 
-            Dim row = EmployeeGridView.Rows(index)
-            Dim checkBoxCell = row.Cells(SelectedCheckBoxColumn.Index)
+            Dim row As DataGridViewRow = EmployeeGridView.Rows(index)
+            Dim checkBoxCell As DataGridViewCell = row.Cells(SelectedCheckBoxColumn.Index)
+            Dim resetEmailCell As DataGridViewLinkCell = CType(row.Cells(ResetEmailButtonColumn.Index), DataGridViewLinkCell)
 
             Dim history = paystubEmailHistories.
                 FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
@@ -167,6 +169,7 @@ Public Class SelectPayslipEmployeesForm
             employee.PayslipType = "-"
             employee.EmailStatus = "-"
             employee.ErrorLogMessage = Nothing
+            SetResetEmailCellLinkColor(resetEmailCell, Color.Red)
 
             If history IsNot Nothing Then
 
@@ -180,6 +183,8 @@ Public Class SelectPayslipEmployeesForm
                 row.DefaultCellStyle.ForeColor = Color.White
                 checkBoxCell.Style.BackColor = Color.Black
                 checkBoxCell.ReadOnly = True
+
+                SetResetEmailCellLinkColor(resetEmailCell, Color.LightBlue)
 
             ElseIf queue IsNot Nothing Then
 
@@ -203,6 +208,7 @@ Public Class SelectPayslipEmployeesForm
                     Case PaystubEmail.StatusFailed
                         row.DefaultCellStyle.BackColor = Color.Red
                         row.DefaultCellStyle.ForeColor = Color.White
+                        SetResetEmailCellLinkColor(resetEmailCell, Color.LightBlue)
 
                         employee.ErrorLogMessage = queue.ErrorLogMessage
 
@@ -234,6 +240,12 @@ Public Class SelectPayslipEmployeesForm
         Next
 
     End Function
+
+    Private Shared Sub SetResetEmailCellLinkColor(linkCell As DataGridViewLinkCell, color As Color)
+        linkCell.LinkColor = color
+        linkCell.ActiveLinkColor = color
+        linkCell.VisitedLinkColor = color
+    End Sub
 
     Private Shared Function SetPayslipType(isActual As Boolean) As String
         Return If(isActual, "Actual", "Declared")
@@ -316,12 +328,10 @@ Public Class SelectPayslipEmployeesForm
         Dim paystubEmails As New List(Of PaystubEmail)
 
         For Each employee In employees
-            paystubEmails.Add(New PaystubEmail() With {
-                .CreatedBy = z_User,
-                .PaystubID = employee.PaystubId,
-                .Status = PaystubEmail.StatusWaiting,
-                .IsActual = isActual
-            })
+            paystubEmails.Add(PaystubEmail.Create(
+               createdByUserId:=z_User,
+               paystubId:=employee.PaystubId,
+               isActual:=isActual))
         Next
 
         DisableAllButtons()
@@ -329,7 +339,8 @@ Public Class SelectPayslipEmployeesForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Await _paystubEmailRepository.CreateManyAsync(paystubEmails)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
+                Await dataService.CreateManyAsync(paystubEmails)
 
                 Await RefreshEmailStatus()
 
@@ -365,24 +376,30 @@ Public Class SelectPayslipEmployeesForm
 
         Try
             DisableAllButtons()
-            'TODO: getting the IP Address should be from a static class and also will be used by other
-            'functions that are needing the values from registry
 
-            Dim regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\GoldWings", True)
-            Dim serverIpAddress = regKey.GetValue("server").ToString
+            Dim regKey = ConnectionStringRegistry.GetCurrent()
+            Dim serverIpAddress = regKey.ServerName
 
             Dim service = New WSMService(serverIpAddress, serviceName)
-            Dim result = Await service.StartOrRestart()
+
+            Dim result = Await service.StopIfRunning()
+
+            If Not result.IsSuccessStatusCode Then
+                MessageBoxHelper.Information($"Cannot restart the service at this time. {globagilityHelpDescription}")
+                Return
+            End If
+
+            Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
+            Await dataService.ResetAllProcessingAsync()
+
+            result = Await service.StartOrRestart()
 
             If result.IsSuccessStatusCode Then
                 MessageBoxHelper.Information("Service successfully restarted.")
             Else
                 MessageBoxHelper.Information($"Cannot restart the service at this time. {globagilityHelpDescription}")
-
+                Return
             End If
-
-            ''TODO: AccuPay Email Service should be stored in a static class that will also be used
-            ''by the AccuPayWindowService project.
         Catch ex As Exception
             MessageBoxHelper.ErrorMessage($"An error occured trying to restart the service. {globagilityHelpDescription}")
         Finally
@@ -430,9 +447,9 @@ Public Class SelectPayslipEmployeesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
 
-                Await dataService.DeletePaystubEmailsByPeriodAsync(
+                Await dataService.DeleteByPayPeriodAsync(
                     payPeriodId:=_currentPayPeriod.RowID.Value,
                     organizationId:=z_OrganizationID
                 )
@@ -467,9 +484,9 @@ Public Class SelectPayslipEmployeesForm
 
             Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                 Async Function()
-                    Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
 
-                    Await dataService.DeletePaystubEmailsByEmployeeAndPeriodAsync(
+                    Await dataService.DeleteByEmployeeAndPayPeriodAsync(
                         employeeId:=employee.EmployeeId,
                         payPeriodId:=_currentPayPeriod.RowID.Value,
                         organizationId:=z_OrganizationID

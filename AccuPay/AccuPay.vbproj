@@ -431,6 +431,7 @@
     <Compile Include="Core\Utilities\Helper\TemplatesHelper.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
     <Compile Include="Core\Utilities\PermissionHelper.vb" />
+    <Compile Include="Core\Utilities\ConnectionStringRegistry.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
@@ -764,6 +765,12 @@
       <DependentUpon>UsersForm2.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\General Forms\User\UsersForm2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Initial Forms\EmailDashboardForm.Designer.vb">
+      <DependentUpon>EmailDashboardForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Initial Forms\EmailDashboardForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\AddLeaveForm.Designer.vb">
@@ -2044,6 +2051,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\User\UsersForm2.resx">
       <DependentUpon>UsersForm2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Initial Forms\EmailDashboardForm.resx">
+      <DependentUpon>EmailDashboardForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\AddLeaveForm.resx">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>

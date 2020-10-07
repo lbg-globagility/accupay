@@ -13,8 +13,6 @@ Public Class StartNewPayPeriodDialog
 
     Private Const FormEntityName As String = "Payroll"
 
-    Private _payFrequencyId As Integer
-
     Private _currentPayperiod As PayPeriod
 
     Private _payperiodModels As IList(Of PayperiodModel)
@@ -63,8 +61,6 @@ Public Class StartNewPayPeriodDialog
 
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsDataGridView.AutoGenerateColumns = False
-
-        _payFrequencyId = Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId
 
         Await LoadPayPeriods()
 
@@ -159,7 +155,7 @@ Public Class StartNewPayPeriodDialog
 
     Private Async Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
 
-        Await FunctionUtils.TryCatchFunctionAsync("Start New Pay Period",
+        Await FunctionUtils.TryCatchFunctionAsync("Start New Payroll",
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
 
@@ -176,7 +172,7 @@ Public Class StartNewPayPeriodDialog
 
                 Await TimeEntrySummaryForm.LoadPayPeriods()
 
-                PayStubForm.VIEW_payperiodofyear(PayStubForm.CurrentYear)
+                Await PayStubForm.VIEW_payperiodofyear(PayStubForm.CurrentYear)
 
                 DialogResult = DialogResult.OK
             End Function)

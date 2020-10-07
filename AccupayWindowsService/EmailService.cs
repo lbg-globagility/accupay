@@ -8,6 +8,8 @@ using System.ServiceProcess;
 using System.Timers;
 using System.Configuration;
 using AccuPay.Data.Services;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AccupayWindowsService
 {
@@ -38,22 +40,15 @@ namespace AccupayWindowsService
         private const string PayslipsFolderName = "Payslips";
         private const string LogsFolderName = "Logs";
 
-        private readonly PaystubEmailRepository _paystubEmailRepository;
-        private readonly PayslipBuilder _payslipBuilder;
-        private readonly SystemOwnerService _systemOwnerService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public EmailService(
-            PaystubEmailRepository paystubEmailRepository,
-            PayslipBuilder payslipBuilder,
-            SystemOwnerService systemOwnerService)
+        public EmailService(IServiceScopeFactory serviceScopeFactory)
         {
             InitializeComponent();
 
             _emailTimer = new Timer();
             _emailSender = new EmailSender(new EmailConfig());
-            _paystubEmailRepository = paystubEmailRepository;
-            _payslipBuilder = payslipBuilder;
-            _systemOwnerService = systemOwnerService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         protected override void OnStart(string[] args)
@@ -71,7 +66,24 @@ namespace AccupayWindowsService
             WriteToFile("Service has stopped.");
         }
 
-        private void OnElapsedTimeEmail(object source, ElapsedEventArgs e)
+        private async void OnElapsedTimeEmail(object source, ElapsedEventArgs e)
+        {
+            using (var serviceScope = _serviceScopeFactory.CreateScope())
+            {
+                var repository = serviceScope.ServiceProvider.GetRequiredService<PaystubEmailRepository>();
+                var dataservice = serviceScope.ServiceProvider.GetRequiredService<PaystubEmailDataService>();
+                var payslipBuilder = serviceScope.ServiceProvider.GetRequiredService<PayslipBuilder>();
+                var systemOwnerService = serviceScope.ServiceProvider.GetRequiredService<SystemOwnerService>();
+
+                await ExecuteSendEmail(repository, dataservice, payslipBuilder, systemOwnerService);
+            }
+        }
+
+        private async Task ExecuteSendEmail(
+            PaystubEmailRepository repository,
+            PaystubEmailDataService dataService,
+            PayslipBuilder payslipBuilder,
+            SystemOwnerService systemOwnerService)
         {
             PaystubEmail paystubEmail = null;
 
@@ -79,7 +91,7 @@ namespace AccupayWindowsService
             {
                 WriteToFile("--OnElapsedTimeEmail--");
 
-                paystubEmail = _paystubEmailRepository.FirstOnQueueWithPaystubDetails();
+                paystubEmail = repository.FirstOnQueueWithPaystubDetails();
                 if (paystubEmail == null)
                 {
                     WriteToFile("No queued email.");
@@ -87,7 +99,7 @@ namespace AccupayWindowsService
                 }
                 else
                 {
-                    _paystubEmailRepository.SetStatusToProcessing(paystubEmail.RowID);
+                    await dataService.SetStatusToProcessing(paystubEmail.RowID);
                 }
 
                 var paystubEmailLog = $"[paystubId: {paystubEmail.Paystub?.RowID}]";
@@ -99,7 +111,7 @@ namespace AccupayWindowsService
                 var organizationId = paystubEmail.Paystub?.OrganizationID;
 
                 string validationErrorMessage;
-                if (!Validate(paystubEmail, errorTitle, currentPayPeriod, employeeId, employee, organizationId))
+                if (!(await Validate(paystubEmail, errorTitle, currentPayPeriod, employeeId, employee, organizationId, dataService)))
                 {
                     return;
                 }
@@ -107,24 +119,24 @@ namespace AccupayWindowsService
                 DateTime payDate = GetPayDate(currentPayPeriod);
                 var employeeIds = new int[] { employeeId.Value };
 
-                var payslipBuilder = _payslipBuilder.CreateReportDocument(
+                var builder = payslipBuilder.CreateReportDocument(
                     payPeriodId: currentPayPeriod.RowID.Value,
                     isActual: paystubEmail.IsActual,
                     employeeIds: employeeIds);
 
-                if (payslipBuilder.CheckIfEmployeeExists(employeeId.Value) == false)
+                if (builder.CheckIfEmployeeExists(employeeId.Value) == false)
                 {
                     validationErrorMessage = $"{errorTitle} Cannot find employee in the payslip report datatable.";
                     WriteToFile(validationErrorMessage);
-                    _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
+                    await dataService.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                     return;
                 }
 
                 var employeeNumber = employee.EmployeeNo ?? "";
                 var fileName = $"Payslip-{payDate:yyyy-MM-dd}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.pdf";
-                var pdfFile = CreatePDF(payslipBuilder, employee.BirthDate, fileName);
+                var pdfFile = CreatePDF(builder, employee.BirthDate, fileName);
 
-                SendEmail(paystubEmail, paystubEmailLog, payDate, employee.EmailAddress, pdfFile, fileName);
+                await SendEmail(paystubEmail, paystubEmailLog, payDate, employee.EmailAddress, pdfFile, fileName, systemOwnerService, dataService);
             }
             catch (Exception ex)
             {
@@ -134,12 +146,19 @@ namespace AccupayWindowsService
                 if (paystubEmail != null)
                 {
                     string validationErrorMessage = $"[System Error] {ex.Message}";
-                    _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
+                    await dataService.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                 }
             }
         }
 
-        private bool Validate(PaystubEmail paystubEmail, string errorTitle, PayPeriod currentPayPeriod, int? employeeId, Employee employee, int? organizationId)
+        private async Task<bool> Validate(
+            PaystubEmail paystubEmail,
+            string errorTitle,
+            PayPeriod currentPayPeriod,
+            int? employeeId,
+            Employee employee,
+            int? organizationId,
+            PaystubEmailDataService dataService)
         {
             string validationErrorMessage = GetErrorMessage(
                 errorTitle,
@@ -150,7 +169,7 @@ namespace AccupayWindowsService
             if (string.IsNullOrWhiteSpace(validationErrorMessage) == false)
             {
                 WriteToFile(validationErrorMessage);
-                _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
+                await dataService.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                 return false;
             }
 
@@ -158,7 +177,7 @@ namespace AccupayWindowsService
             {
                 validationErrorMessage = $"{errorTitle} Email address is null or empty.";
                 WriteToFile(validationErrorMessage);
-                _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
+                await dataService.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                 return false;
             }
 
@@ -189,13 +208,15 @@ namespace AccupayWindowsService
             return builder.GetPDF();
         }
 
-        private void SendEmail(
+        private async Task SendEmail(
             PaystubEmail paystubEmail,
             string paystubEmailLog,
             DateTime payDate,
             string emailAddress,
             string pdfFile,
-            string fileName)
+            string fileName,
+            SystemOwnerService systemOwnerService,
+            PaystubEmailDataService dataService)
         {
             var cutoffDate = payDate.ToString("MMMM d, yyyy");
 
@@ -205,7 +226,7 @@ namespace AccupayWindowsService
                 $"\n\n" +
                 $"Your payslip is password-protected to ensure the security of your account. The default password is your date of birth with the following format mmddyyyy. For example, if your birthday is February 2, 1988, your password is \"02021988\"";
 
-            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Cinema2000)
+            if (systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Cinema2000)
             {
                 body += $"\n\n" +
                 $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at hrd@cinema2000.com.ph for any inquiries or corrections regarding your salary.";
@@ -224,7 +245,7 @@ namespace AccupayWindowsService
 
             WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {emailAddress}]");
 
-            _paystubEmailRepository.Finish(paystubEmail.RowID, fileName, emailAddress);
+            await dataService.Finish(paystubEmail.RowID, fileName, emailAddress);
         }
 
         private string GetErrorMessage(
