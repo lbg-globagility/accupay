@@ -44,6 +44,7 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -72,7 +73,6 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle47 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle48 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle49 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle50 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle51 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle52 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -141,16 +141,10 @@ Partial Class EmployeeForm
         Me.BranchComboBox = New System.Windows.Forms.ComboBox()
         Me.BranchLabel = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.chkcalcRestDayOT = New System.Windows.Forms.CheckBox()
         Me.chkcalcRestDay = New System.Windows.Forms.CheckBox()
-        Me.chkcalcNightDiffOT = New System.Windows.Forms.CheckBox()
         Me.chkcalcNightDiff = New System.Windows.Forms.CheckBox()
         Me.chkcalcSpclHoliday = New System.Windows.Forms.CheckBox()
         Me.chkcalcHoliday = New System.Windows.Forms.CheckBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.chkbxRevealInPayroll = New System.Windows.Forms.CheckBox()
-        Me.Label366 = New System.Windows.Forms.Label()
-        Me.txtWorkHoursPerWeek = New System.Windows.Forms.TextBox()
         Me.AgencyLabel = New System.Windows.Forms.Label()
         Me.cboAgency = New System.Windows.Forms.ComboBox()
         Me.Label363 = New System.Windows.Forms.Label()
@@ -165,32 +159,19 @@ Partial Class EmployeeForm
         Me.Label353 = New System.Windows.Forms.Label()
         Me.Label359 = New System.Windows.Forms.Label()
         Me.Label360 = New System.Windows.Forms.Label()
-        Me.chkWed = New System.Windows.Forms.CheckBox()
-        Me.chkSat = New System.Windows.Forms.CheckBox()
-        Me.chkFri = New System.Windows.Forms.CheckBox()
-        Me.chkThu = New System.Windows.Forms.CheckBox()
-        Me.chkTue = New System.Windows.Forms.CheckBox()
-        Me.chkMon = New System.Windows.Forms.CheckBox()
-        Me.chkSun = New System.Windows.Forms.CheckBox()
         Me.cboDayOfRest = New System.Windows.Forms.ComboBox()
         Me.Label352 = New System.Windows.Forms.Label()
         Me.txtWorkDaysPerYear = New System.Windows.Forms.TextBox()
         Me.Label351 = New System.Windows.Forms.Label()
-        Me.chkAlphaListExempt = New System.Windows.Forms.CheckBox()
         Me.Label311 = New System.Windows.Forms.Label()
         Me.Label223 = New System.Windows.Forms.Label()
         Me.Label211 = New System.Windows.Forms.Label()
         Me.Label212 = New System.Windows.Forms.Label()
         Me.Label147 = New System.Windows.Forms.Label()
         Me.txtUTgrace = New System.Windows.Forms.TextBox()
-        Me.Label143 = New System.Windows.Forms.Label()
-        Me.txtOTgrace = New System.Windows.Forms.TextBox()
-        Me.chkutflag = New System.Windows.Forms.CheckBox()
-        Me.chkotflag = New System.Windows.Forms.CheckBox()
         Me.Label129 = New System.Windows.Forms.Label()
         Me.Label120 = New System.Windows.Forms.Label()
         Me.dtpempstartdate = New System.Windows.Forms.DateTimePicker()
-        Me.Label87 = New System.Windows.Forms.Label()
         Me.TabControl3 = New System.Windows.Forms.TabControl()
         Me.tbpleavebal = New System.Windows.Forms.TabPage()
         Me.txtothrbal = New System.Windows.Forms.TextBox()
@@ -226,7 +207,6 @@ Partial Class EmployeeForm
         Me.cboMaritStat = New System.Windows.Forms.ComboBox()
         Me.cboSalut = New System.Windows.Forms.ComboBox()
         Me.cboEmpStat = New System.Windows.Forms.ComboBox()
-        Me.txtSName = New System.Windows.Forms.TextBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.cboEmpType = New System.Windows.Forms.ComboBox()
@@ -247,11 +227,32 @@ Partial Class EmployeeForm
         Me.Label365 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.dgvDepen = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Colmn0 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Colmn2 = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.Colmn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Colmn7 = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.Colmn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Colmn19 = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.Colmn20 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Colmn21 = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.Colmn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Colmn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip4 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnNewDepen = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSaveDepen = New System.Windows.Forms.ToolStripButton()
@@ -279,13 +280,21 @@ Partial Class EmployeeForm
         Me.WorkOrderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UserActivityEmployeeToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tbpAwards = New System.Windows.Forms.TabPage()
+        Me.AwardTab = New AccuPay.AwardTab()
         Me.tbpCertifications = New System.Windows.Forms.TabPage()
+        Me.CertificationTab = New AccuPay.CertificationTab()
         Me.tbpDiscipAct = New System.Windows.Forms.TabPage()
+        Me.DisciplinaryActionTab = New AccuPay.DisciplinaryActionTab()
         Me.tbpEducBG = New System.Windows.Forms.TabPage()
+        Me.EducationalBackgroundTab = New AccuPay.EducationalBackgroundTab()
         Me.tbpPrevEmp = New System.Windows.Forms.TabPage()
+        Me.PreviousEmployerTab = New AccuPay.PreviousEmployerTab()
         Me.tbpBonus = New System.Windows.Forms.TabPage()
+        Me.BonusTab = New AccuPay.BonusTab()
         Me.tbpAttachment = New System.Windows.Forms.TabPage()
+        Me.AttachmentTab = New AccuPay.AttachmentTab()
         Me.tbpSalary = New System.Windows.Forms.TabPage()
+        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.Label331 = New System.Windows.Forms.Label()
         Me.Label330 = New System.Windows.Forms.Label()
@@ -294,6 +303,15 @@ Partial Class EmployeeForm
         Me.pbEmpPicPromot = New System.Windows.Forms.PictureBox()
         Me.Label222 = New System.Windows.Forms.Label()
         Me.dgvPromotionList = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_empID2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_empname2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_promotRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_PostionFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_positionto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_effecDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_compensation = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_basicpay = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_reasonpromot = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblpeso = New System.Windows.Forms.Label()
         Me.cmbfrom = New System.Windows.Forms.ComboBox()
         Me.txtempcurrbasicpay = New System.Windows.Forms.Label()
@@ -330,8 +348,18 @@ Partial Class EmployeeForm
         Me.Label343 = New System.Windows.Forms.Label()
         Me.pbEmpPicAtta = New System.Windows.Forms.PictureBox()
         Me.dgvempatta = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.eatt_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eatt_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.eatt_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_FileType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_LastUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_AttachedFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eatt_viewthis = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtFNameAtta = New System.Windows.Forms.TextBox()
         Me.cboattatype = New System.Windows.Forms.ComboBox()
         Me.txtEmpIDAtta = New System.Windows.Forms.TextBox()
@@ -360,6 +388,13 @@ Partial Class EmployeeForm
         Me.lblAddFindingname = New System.Windows.Forms.LinkLabel()
         Me.Label42 = New System.Windows.Forms.Label()
         Me.dgvDisciplinaryList = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_FindingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_action = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_datefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_dateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_desc = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dtpTo = New System.Windows.Forms.DateTimePicker()
         Me.txtDesc = New System.Windows.Forms.TextBox()
         Me.txtAction = New System.Windows.Forms.TextBox()
@@ -425,6 +460,23 @@ Partial Class EmployeeForm
         Me.Label56 = New System.Windows.Forms.Label()
         Me.txtFNamePrevEmp = New System.Windows.Forms.TextBox()
         Me.dgvListCompany = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_compname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_trade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_contname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_mainphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_altphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_faxno = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_emailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_altemailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_url = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_tinno = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_jobtitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_jobfunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_orgtype = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_experience = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_expdateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_compaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowidPrevEmp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtEmpIDPrevEmp = New System.Windows.Forms.TextBox()
         Me.ToolStrip10 = New System.Windows.Forms.ToolStrip()
         Me.btnNewPrevEmp = New System.Windows.Forms.ToolStripButton()
@@ -509,10 +561,13 @@ Partial Class EmployeeForm
         Me.dtpbonstartdate = New System.Windows.Forms.DateTimePicker()
         Me.txtFNameBon = New System.Windows.Forms.TextBox()
         Me.dgvempbon = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Frequency = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label184 = New System.Windows.Forms.Label()
         Me.Label179 = New System.Windows.Forms.Label()
         Me.cbobontype = New System.Windows.Forms.ComboBox()
@@ -555,6 +610,73 @@ Partial Class EmployeeForm
         Me.Label29 = New System.Windows.Forms.Label()
         Me.TextBox17 = New System.Windows.Forms.TextBox()
         Me.dgvEmp = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colstartdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.slbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.mlbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.slallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.mlallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.slpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.mlpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.fstatRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AlphaExempted = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WorkDaysPerYear = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DayOfRest = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ATMNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BankName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OtherPayP = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OtherLeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OtherLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcSpecialHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcNightDiff = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcNightDiffOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcRestDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcRestDayOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LateGracePeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RevealInPayroll = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OffSetBal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AgencyName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AgencyRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BranchID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BPIInsuranceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Last = New System.Windows.Forms.LinkLabel()
         Me.Nxt = New System.Windows.Forms.LinkLabel()
         Me.Prev = New System.Windows.Forms.LinkLabel()
@@ -652,102 +774,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn86 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn87 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn88 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn0 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Colmn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AwardTab = New AccuPay.AwardTab()
-        Me.CertificationTab = New AccuPay.CertificationTab()
-        Me.DisciplinaryActionTab = New AccuPay.DisciplinaryActionTab()
-        Me.EducationalBackgroundTab = New AccuPay.EducationalBackgroundTab()
-        Me.PreviousEmployerTab = New AccuPay.PreviousEmployerTab()
-        Me.BonusTab = New AccuPay.BonusTab()
-        Me.AttachmentTab = New AccuPay.AttachmentTab()
-        Me.SalaryTab = New AccuPay.SalaryTab()
-        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colstartdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.slbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.mlbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.slallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.mlallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.slpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.mlpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.fstatRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AlphaExempted = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WorkDaysPerYear = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DayOfRest = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ATMNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BankName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OtherPayP = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OtherLeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OtherLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcSpecialHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcNightDiff = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcNightDiffOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcRestDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcRestDayOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LateGracePeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RevealInPayroll = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OffSetBal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AgencyName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AgencyRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BranchID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BPIInsuranceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn89 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn90 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn91 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -757,15 +783,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn95 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn96 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn97 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_empID2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_empname2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_promotRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_PostionFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_positionto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_effecDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_compensation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_basicpay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_reasonpromot = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn98 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn99 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn100 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -776,16 +793,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn105 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn106 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn107 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_FileType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_LastUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_AttachedFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn108 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn109 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn110 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -793,13 +800,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn112 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn113 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn114 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_FindingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_action = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_datefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_desc = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn115 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn116 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn117 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -817,29 +817,9 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn129 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn130 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn131 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_compname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_trade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_contname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_mainphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_altphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_faxno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_emailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_altemailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_url = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_tinno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_jobtitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_jobfunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_orgtype = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_experience = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_expdateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_compaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowidPrevEmp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn132 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn133 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn134 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn135 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn136 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn137 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -932,7 +912,6 @@ Partial Class EmployeeForm
         Me.Panel4.SuspendLayout
         Me.LeaveGroupBox.SuspendLayout
         Me.GroupBox1.SuspendLayout
-        Me.Panel1.SuspendLayout
         Me.GroupBox2.SuspendLayout
         Me.TabControl3.SuspendLayout
         Me.tbpleavebal.SuspendLayout
@@ -1508,38 +1487,24 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.BranchComboBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BranchLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox1)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Panel1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AgencyLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboAgency)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label363)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label362)
         Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkWed)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkSat)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkFri)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkThu)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkTue)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkMon)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkSun)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboDayOfRest)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label352)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtWorkDaysPerYear)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label351)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkAlphaListExempt)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label311)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label223)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label211)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label212)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label147)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtUTgrace)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Label143)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.txtOTgrace)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkutflag)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkotflag)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label129)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label120)
         Me.SplitContainer2.Panel1.Controls.Add(Me.dtpempstartdate)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Label87)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TabControl3)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label27)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label26)
@@ -1566,7 +1531,6 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label7)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtWorkPhne)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtHomeAddr)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.txtSName)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label6)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label24)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label13)
@@ -1751,9 +1715,7 @@ Partial Class EmployeeForm
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.chkcalcRestDayOT)
         Me.GroupBox1.Controls.Add(Me.chkcalcRestDay)
-        Me.GroupBox1.Controls.Add(Me.chkcalcNightDiffOT)
         Me.GroupBox1.Controls.Add(Me.chkcalcNightDiff)
         Me.GroupBox1.Controls.Add(Me.chkcalcSpclHoliday)
         Me.GroupBox1.Controls.Add(Me.chkcalcHoliday)
@@ -1765,17 +1727,6 @@ Partial Class EmployeeForm
         Me.GroupBox1.Text = "Pay Rate Inclusion"
         Me.ToolTip1.SetToolTip(Me.GroupBox1, "If unchecked, pay rate for the day will be 1")
         '
-        'chkcalcRestDayOT
-        '
-        Me.chkcalcRestDayOT.AutoSize = True
-        Me.chkcalcRestDayOT.Location = New System.Drawing.Point(190, 72)
-        Me.chkcalcRestDayOT.Name = "chkcalcRestDayOT"
-        Me.chkcalcRestDayOT.Size = New System.Drawing.Size(135, 17)
-        Me.chkcalcRestDayOT.TabIndex = 5
-        Me.chkcalcRestDayOT.Text = "Calculate Rest Day OT"
-        Me.chkcalcRestDayOT.UseVisualStyleBackColor = True
-        Me.chkcalcRestDayOT.Visible = False
-        '
         'chkcalcRestDay
         '
         Me.chkcalcRestDay.AutoSize = True
@@ -1785,17 +1736,6 @@ Partial Class EmployeeForm
         Me.chkcalcRestDay.TabIndex = 4
         Me.chkcalcRestDay.Text = "Calculate Rest Day"
         Me.chkcalcRestDay.UseVisualStyleBackColor = True
-        '
-        'chkcalcNightDiffOT
-        '
-        Me.chkcalcNightDiffOT.AutoSize = True
-        Me.chkcalcNightDiffOT.Location = New System.Drawing.Point(22, 72)
-        Me.chkcalcNightDiffOT.Name = "chkcalcNightDiffOT"
-        Me.chkcalcNightDiffOT.Size = New System.Drawing.Size(169, 17)
-        Me.chkcalcNightDiffOT.TabIndex = 3
-        Me.chkcalcNightDiffOT.Text = "Calculate Night Differential OT"
-        Me.chkcalcNightDiffOT.UseVisualStyleBackColor = True
-        Me.chkcalcNightDiffOT.Visible = False
         '
         'chkcalcNightDiff
         '
@@ -1826,46 +1766,6 @@ Partial Class EmployeeForm
         Me.chkcalcHoliday.TabIndex = 0
         Me.chkcalcHoliday.Text = "Calculate Holiday"
         Me.chkcalcHoliday.UseVisualStyleBackColor = True
-        '
-        'Panel1
-        '
-        Me.Panel1.AccessibleDescription = "Cinema 2000"
-        Me.Panel1.Controls.Add(Me.chkbxRevealInPayroll)
-        Me.Panel1.Controls.Add(Me.Label366)
-        Me.Panel1.Controls.Add(Me.txtWorkHoursPerWeek)
-        Me.Panel1.Location = New System.Drawing.Point(298, 507)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(243, 44)
-        Me.Panel1.TabIndex = 536
-        Me.Panel1.Visible = False
-        '
-        'chkbxRevealInPayroll
-        '
-        Me.chkbxRevealInPayroll.AutoSize = True
-        Me.chkbxRevealInPayroll.Location = New System.Drawing.Point(103, 26)
-        Me.chkbxRevealInPayroll.Name = "chkbxRevealInPayroll"
-        Me.chkbxRevealInPayroll.Size = New System.Drawing.Size(105, 17)
-        Me.chkbxRevealInPayroll.TabIndex = 528
-        Me.chkbxRevealInPayroll.Text = "Hidden in Payroll"
-        Me.chkbxRevealInPayroll.UseVisualStyleBackColor = True
-        '
-        'Label366
-        '
-        Me.Label366.AutoSize = True
-        Me.Label366.Location = New System.Drawing.Point(0, 7)
-        Me.Label366.Name = "Label366"
-        Me.Label366.Size = New System.Drawing.Size(97, 13)
-        Me.Label366.TabIndex = 526
-        Me.Label366.Text = "Work hrs per week"
-        '
-        'txtWorkHoursPerWeek
-        '
-        Me.txtWorkHoursPerWeek.Location = New System.Drawing.Point(103, 0)
-        Me.txtWorkHoursPerWeek.MaxLength = 12
-        Me.txtWorkHoursPerWeek.Name = "txtWorkHoursPerWeek"
-        Me.txtWorkHoursPerWeek.Size = New System.Drawing.Size(79, 20)
-        Me.txtWorkHoursPerWeek.TabIndex = 527
-        Me.txtWorkHoursPerWeek.Text = "90"
         '
         'AgencyLabel
         '
@@ -2011,83 +1911,6 @@ Partial Class EmployeeForm
         Me.Label360.TabIndex = 519
         Me.Label360.Text = "*"
         '
-        'chkWed
-        '
-        Me.chkWed.AutoSize = True
-        Me.chkWed.Location = New System.Drawing.Point(-51, 559)
-        Me.chkWed.Name = "chkWed"
-        Me.chkWed.Size = New System.Drawing.Size(83, 17)
-        Me.chkWed.TabIndex = 521
-        Me.chkWed.Text = "Wednesday"
-        Me.chkWed.UseVisualStyleBackColor = True
-        Me.chkWed.Visible = False
-        '
-        'chkSat
-        '
-        Me.chkSat.AutoSize = True
-        Me.chkSat.Location = New System.Drawing.Point(33, 541)
-        Me.chkSat.Name = "chkSat"
-        Me.chkSat.Size = New System.Drawing.Size(68, 17)
-        Me.chkSat.TabIndex = 520
-        Me.chkSat.Text = "Saturday"
-        Me.chkSat.UseVisualStyleBackColor = True
-        Me.chkSat.Visible = False
-        '
-        'chkFri
-        '
-        Me.chkFri.AutoSize = True
-        Me.chkFri.Location = New System.Drawing.Point(33, 523)
-        Me.chkFri.Name = "chkFri"
-        Me.chkFri.Size = New System.Drawing.Size(54, 17)
-        Me.chkFri.TabIndex = 519
-        Me.chkFri.Text = "Friday"
-        Me.chkFri.UseVisualStyleBackColor = True
-        Me.chkFri.Visible = False
-        '
-        'chkThu
-        '
-        Me.chkThu.AutoSize = True
-        Me.chkThu.Location = New System.Drawing.Point(33, 505)
-        Me.chkThu.Name = "chkThu"
-        Me.chkThu.Size = New System.Drawing.Size(70, 17)
-        Me.chkThu.TabIndex = 518
-        Me.chkThu.Text = "Thursday"
-        Me.chkThu.UseVisualStyleBackColor = True
-        Me.chkThu.Visible = False
-        '
-        'chkTue
-        '
-        Me.chkTue.AutoSize = True
-        Me.chkTue.Location = New System.Drawing.Point(-51, 541)
-        Me.chkTue.Name = "chkTue"
-        Me.chkTue.Size = New System.Drawing.Size(67, 17)
-        Me.chkTue.TabIndex = 517
-        Me.chkTue.Text = "Tuesday"
-        Me.chkTue.UseVisualStyleBackColor = True
-        Me.chkTue.Visible = False
-        '
-        'chkMon
-        '
-        Me.chkMon.AutoSize = True
-        Me.chkMon.Location = New System.Drawing.Point(-51, 523)
-        Me.chkMon.Name = "chkMon"
-        Me.chkMon.Size = New System.Drawing.Size(64, 17)
-        Me.chkMon.TabIndex = 516
-        Me.chkMon.Text = "Monday"
-        Me.chkMon.UseVisualStyleBackColor = True
-        Me.chkMon.Visible = False
-        '
-        'chkSun
-        '
-        Me.chkSun.AutoSize = True
-        Me.chkSun.Location = New System.Drawing.Point(-41, 505)
-        Me.chkSun.Name = "chkSun"
-        Me.chkSun.Size = New System.Drawing.Size(62, 17)
-        Me.chkSun.TabIndex = 515
-        Me.chkSun.Text = "Sunday"
-        Me.chkSun.UseVisualStyleBackColor = True
-        Me.chkSun.Visible = False
-        '
         'cboDayOfRest
         '
         Me.cboDayOfRest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -2124,17 +1947,6 @@ Partial Class EmployeeForm
         Me.Label351.Size = New System.Drawing.Size(99, 13)
         Me.Label351.TabIndex = 506
         Me.Label351.Text = "Work days per year"
-        '
-        'chkAlphaListExempt
-        '
-        Me.chkAlphaListExempt.AutoSize = True
-        Me.chkAlphaListExempt.Location = New System.Drawing.Point(399, 458)
-        Me.chkAlphaListExempt.Name = "chkAlphaListExempt"
-        Me.chkAlphaListExempt.Size = New System.Drawing.Size(123, 17)
-        Me.chkAlphaListExempt.TabIndex = 38
-        Me.chkAlphaListExempt.Text = "Included in Alpha list"
-        Me.chkAlphaListExempt.UseVisualStyleBackColor = True
-        Me.chkAlphaListExempt.Visible = False
         '
         'Label311
         '
@@ -2179,62 +1991,20 @@ Partial Class EmployeeForm
         'Label147
         '
         Me.Label147.AutoSize = True
-        Me.Label147.Location = New System.Drawing.Point(447, 436)
+        Me.Label147.Location = New System.Drawing.Point(302, 460)
         Me.Label147.Name = "Label147"
-        Me.Label147.Size = New System.Drawing.Size(106, 13)
+        Me.Label147.Size = New System.Drawing.Size(96, 13)
         Me.Label147.TabIndex = 168
-        Me.Label147.Text = "grace period (minute)"
+        Me.Label147.Text = "Grace period (min.)"
         '
         'txtUTgrace
         '
-        Me.txtUTgrace.Location = New System.Drawing.Point(400, 432)
+        Me.txtUTgrace.Location = New System.Drawing.Point(400, 454)
         Me.txtUTgrace.MaxLength = 50
         Me.txtUTgrace.Name = "txtUTgrace"
         Me.txtUTgrace.ShortcutsEnabled = False
         Me.txtUTgrace.Size = New System.Drawing.Size(41, 20)
         Me.txtUTgrace.TabIndex = 38
-        '
-        'Label143
-        '
-        Me.Label143.AutoSize = True
-        Me.Label143.Location = New System.Drawing.Point(573, 382)
-        Me.Label143.Name = "Label143"
-        Me.Label143.Size = New System.Drawing.Size(106, 13)
-        Me.Label143.TabIndex = 166
-        Me.Label143.Text = "grace period (minute)"
-        Me.Label143.Visible = False
-        '
-        'txtOTgrace
-        '
-        Me.txtOTgrace.Location = New System.Drawing.Point(526, 383)
-        Me.txtOTgrace.MaxLength = 50
-        Me.txtOTgrace.Name = "txtOTgrace"
-        Me.txtOTgrace.ShortcutsEnabled = False
-        Me.txtOTgrace.Size = New System.Drawing.Size(41, 20)
-        Me.txtOTgrace.TabIndex = 36
-        Me.txtOTgrace.Visible = False
-        '
-        'chkutflag
-        '
-        Me.chkutflag.AutoSize = True
-        Me.chkutflag.Location = New System.Drawing.Point(399, 412)
-        Me.chkutflag.Name = "chkutflag"
-        Me.chkutflag.Size = New System.Drawing.Size(119, 17)
-        Me.chkutflag.TabIndex = 37
-        Me.chkutflag.Text = "Calculate undertime"
-        Me.chkutflag.UseVisualStyleBackColor = True
-        Me.chkutflag.Visible = False
-        '
-        'chkotflag
-        '
-        Me.chkotflag.AutoSize = True
-        Me.chkotflag.Location = New System.Drawing.Point(399, 387)
-        Me.chkotflag.Name = "chkotflag"
-        Me.chkotflag.Size = New System.Drawing.Size(113, 17)
-        Me.chkotflag.TabIndex = 35
-        Me.chkotflag.Text = "Calculate overtime"
-        Me.chkotflag.UseVisualStyleBackColor = True
-        Me.chkotflag.Visible = False
         '
         'Label129
         '
@@ -2263,15 +2033,6 @@ Partial Class EmployeeForm
         Me.dtpempstartdate.Name = "dtpempstartdate"
         Me.dtpempstartdate.Size = New System.Drawing.Size(168, 20)
         Me.dtpempstartdate.TabIndex = 3
-        '
-        'Label87
-        '
-        Me.Label87.AutoSize = True
-        Me.Label87.Location = New System.Drawing.Point(8, 247)
-        Me.Label87.Name = "Label87"
-        Me.Label87.Size = New System.Drawing.Size(49, 13)
-        Me.Label87.TabIndex = 154
-        Me.Label87.Text = "Surname"
         '
         'TabControl3
         '
@@ -2630,14 +2391,6 @@ Partial Class EmployeeForm
         Me.cboEmpStat.Size = New System.Drawing.Size(168, 21)
         Me.cboEmpStat.TabIndex = 2
         '
-        'txtSName
-        '
-        Me.txtSName.Location = New System.Drawing.Point(128, 240)
-        Me.txtSName.MaxLength = 50
-        Me.txtSName.Name = "txtSName"
-        Me.txtSName.Size = New System.Drawing.Size(168, 20)
-        Me.txtSName.TabIndex = 10
-        '
         'Label24
         '
         Me.Label24.AutoSize = True
@@ -2864,6 +2617,20 @@ Partial Class EmployeeForm
         Me.dgvDepen.Size = New System.Drawing.Size(632, 11)
         Me.dgvDepen.TabIndex = 116
         '
+        'Colmn0
+        '
+        Me.Colmn0.HeaderText = "RowID"
+        Me.Colmn0.Name = "Colmn0"
+        Me.Colmn0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn0.Visible = False
+        '
+        'Colmn1
+        '
+        Me.Colmn1.HeaderText = "ParentEmployeeID"
+        Me.Colmn1.Name = "Colmn1"
+        Me.Colmn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn1.Visible = False
+        '
         'Colmn2
         '
         Me.Colmn2.HeaderText = "Salutation"
@@ -2871,10 +2638,115 @@ Partial Class EmployeeForm
         Me.Colmn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Colmn2.Width = 160
         '
+        'Colmn3
+        '
+        Me.Colmn3.HeaderText = "First Name"
+        Me.Colmn3.Name = "Colmn3"
+        Me.Colmn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn3.Width = 160
+        '
+        'Colmn4
+        '
+        Me.Colmn4.HeaderText = "MiddleName"
+        Me.Colmn4.Name = "Colmn4"
+        Me.Colmn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn4.Width = 160
+        '
+        'Colmn5
+        '
+        Me.Colmn5.HeaderText = "Last Name"
+        Me.Colmn5.Name = "Colmn5"
+        Me.Colmn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn5.Width = 160
+        '
+        'Colmn6
+        '
+        Me.Colmn6.HeaderText = "Surname"
+        Me.Colmn6.Name = "Colmn6"
+        Me.Colmn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn6.Width = 160
+        '
         'Colmn7
         '
         Me.Colmn7.HeaderText = "Relationship to Employee"
         Me.Colmn7.Name = "Colmn7"
+        '
+        'Colmn8
+        '
+        Me.Colmn8.HeaderText = "TIN"
+        Me.Colmn8.Name = "Colmn8"
+        Me.Colmn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn8.Width = 160
+        '
+        'Colmn9
+        '
+        Me.Colmn9.HeaderText = "SSS No."
+        Me.Colmn9.Name = "Colmn9"
+        Me.Colmn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn9.Width = 160
+        '
+        'Colmn10
+        '
+        Me.Colmn10.HeaderText = "PAGIBIG No."
+        Me.Colmn10.Name = "Colmn10"
+        Me.Colmn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn10.Width = 160
+        '
+        'Colmn11
+        '
+        Me.Colmn11.HeaderText = "PhilHealth No."
+        Me.Colmn11.Name = "Colmn11"
+        Me.Colmn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn11.Width = 160
+        '
+        'Colmn12
+        '
+        Me.Colmn12.HeaderText = "Email address"
+        Me.Colmn12.Name = "Colmn12"
+        Me.Colmn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn12.Width = 160
+        '
+        'Colmn13
+        '
+        Me.Colmn13.HeaderText = "Work Phone No."
+        Me.Colmn13.Name = "Colmn13"
+        Me.Colmn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn13.Width = 160
+        '
+        'Colmn14
+        '
+        Me.Colmn14.HeaderText = "Home Phone No."
+        Me.Colmn14.Name = "Colmn14"
+        Me.Colmn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn14.Width = 160
+        '
+        'Colmn15
+        '
+        Me.Colmn15.HeaderText = "Mobile  Phone No."
+        Me.Colmn15.Name = "Colmn15"
+        Me.Colmn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn15.Width = 160
+        '
+        'Colmn16
+        '
+        Me.Colmn16.HeaderText = "Home address"
+        Me.Colmn16.Name = "Colmn16"
+        Me.Colmn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn16.Width = 160
+        '
+        'Colmn17
+        '
+        Me.Colmn17.HeaderText = "Nickname"
+        Me.Colmn17.Name = "Colmn17"
+        Me.Colmn17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn17.Width = 160
+        '
+        'Colmn18
+        '
+        Me.Colmn18.HeaderText = "JobTitle"
+        Me.Colmn18.Name = "Colmn18"
+        Me.Colmn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn18.Width = 160
         '
         'Colmn19
         '
@@ -2924,6 +2796,38 @@ Partial Class EmployeeForm
         Me.Colmn21.Name = "Colmn21"
         Me.Colmn21.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Colmn21.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'Colmn22
+        '
+        Me.Colmn22.HeaderText = "Created by"
+        Me.Colmn22.Name = "Colmn22"
+        Me.Colmn22.ReadOnly = True
+        Me.Colmn22.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn22.Visible = False
+        '
+        'Colmn23
+        '
+        Me.Colmn23.HeaderText = "Creation Date"
+        Me.Colmn23.Name = "Colmn23"
+        Me.Colmn23.ReadOnly = True
+        Me.Colmn23.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn23.Visible = False
+        '
+        'Colmn24
+        '
+        Me.Colmn24.HeaderText = "Last update by"
+        Me.Colmn24.Name = "Colmn24"
+        Me.Colmn24.ReadOnly = True
+        Me.Colmn24.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn24.Visible = False
+        '
+        'Colmn25
+        '
+        Me.Colmn25.HeaderText = "Last update"
+        Me.Colmn25.Name = "Colmn25"
+        Me.Colmn25.ReadOnly = True
+        Me.Colmn25.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Colmn25.Visible = False
         '
         'ToolStrip4
         '
@@ -3136,6 +3040,15 @@ Partial Class EmployeeForm
         Me.tbpAwards.Text = "AWARD"
         Me.tbpAwards.UseVisualStyleBackColor = True
         '
+        'AwardTab
+        '
+        Me.AwardTab.BackColor = System.Drawing.Color.White
+        Me.AwardTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AwardTab.Location = New System.Drawing.Point(3, 3)
+        Me.AwardTab.Name = "AwardTab"
+        Me.AwardTab.Size = New System.Drawing.Size(854, 480)
+        Me.AwardTab.TabIndex = 0
+        '
         'tbpCertifications
         '
         Me.tbpCertifications.AccessibleDescription = "Employee Certification"
@@ -3148,6 +3061,15 @@ Partial Class EmployeeForm
         Me.tbpCertifications.TabIndex = 2
         Me.tbpCertifications.Text = "CERTI"
         Me.tbpCertifications.UseVisualStyleBackColor = True
+        '
+        'CertificationTab
+        '
+        Me.CertificationTab.BackColor = System.Drawing.Color.White
+        Me.CertificationTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.CertificationTab.Location = New System.Drawing.Point(3, 3)
+        Me.CertificationTab.Name = "CertificationTab"
+        Me.CertificationTab.Size = New System.Drawing.Size(854, 480)
+        Me.CertificationTab.TabIndex = 0
         '
         'tbpDiscipAct
         '
@@ -3162,6 +3084,15 @@ Partial Class EmployeeForm
         Me.tbpDiscipAct.Text = "DISCIP"
         Me.tbpDiscipAct.UseVisualStyleBackColor = True
         '
+        'DisciplinaryActionTab
+        '
+        Me.DisciplinaryActionTab.BackColor = System.Drawing.Color.White
+        Me.DisciplinaryActionTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DisciplinaryActionTab.Location = New System.Drawing.Point(3, 3)
+        Me.DisciplinaryActionTab.Name = "DisciplinaryActionTab"
+        Me.DisciplinaryActionTab.Size = New System.Drawing.Size(854, 480)
+        Me.DisciplinaryActionTab.TabIndex = 0
+        '
         'tbpEducBG
         '
         Me.tbpEducBG.AccessibleDescription = "Employee Educational Background"
@@ -3174,6 +3105,15 @@ Partial Class EmployeeForm
         Me.tbpEducBG.TabIndex = 6
         Me.tbpEducBG.Text = "EDUC"
         Me.tbpEducBG.UseVisualStyleBackColor = True
+        '
+        'EducationalBackgroundTab
+        '
+        Me.EducationalBackgroundTab.BackColor = System.Drawing.Color.White
+        Me.EducationalBackgroundTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EducationalBackgroundTab.Location = New System.Drawing.Point(3, 3)
+        Me.EducationalBackgroundTab.Name = "EducationalBackgroundTab"
+        Me.EducationalBackgroundTab.Size = New System.Drawing.Size(854, 480)
+        Me.EducationalBackgroundTab.TabIndex = 0
         '
         'tbpPrevEmp
         '
@@ -3188,6 +3128,15 @@ Partial Class EmployeeForm
         Me.tbpPrevEmp.Text = "PREV EMP"
         Me.tbpPrevEmp.UseVisualStyleBackColor = True
         '
+        'PreviousEmployerTab
+        '
+        Me.PreviousEmployerTab.BackColor = System.Drawing.Color.White
+        Me.PreviousEmployerTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PreviousEmployerTab.Location = New System.Drawing.Point(3, 3)
+        Me.PreviousEmployerTab.Name = "PreviousEmployerTab"
+        Me.PreviousEmployerTab.Size = New System.Drawing.Size(854, 480)
+        Me.PreviousEmployerTab.TabIndex = 0
+        '
         'tbpBonus
         '
         Me.tbpBonus.AccessibleDescription = "Employee Bonus"
@@ -3200,6 +3149,15 @@ Partial Class EmployeeForm
         Me.tbpBonus.TabIndex = 17
         Me.tbpBonus.Text = "BONUS"
         Me.tbpBonus.UseVisualStyleBackColor = True
+        '
+        'BonusTab
+        '
+        Me.BonusTab.BackColor = System.Drawing.Color.White
+        Me.BonusTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BonusTab.Location = New System.Drawing.Point(3, 3)
+        Me.BonusTab.Name = "BonusTab"
+        Me.BonusTab.Size = New System.Drawing.Size(854, 480)
+        Me.BonusTab.TabIndex = 0
         '
         'tbpAttachment
         '
@@ -3214,6 +3172,15 @@ Partial Class EmployeeForm
         Me.tbpAttachment.Text = "ATTACH"
         Me.tbpAttachment.UseVisualStyleBackColor = True
         '
+        'AttachmentTab
+        '
+        Me.AttachmentTab.BackColor = System.Drawing.Color.White
+        Me.AttachmentTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AttachmentTab.Location = New System.Drawing.Point(3, 3)
+        Me.AttachmentTab.Name = "AttachmentTab"
+        Me.AttachmentTab.Size = New System.Drawing.Size(854, 480)
+        Me.AttachmentTab.TabIndex = 0
+        '
         'tbpSalary
         '
         Me.tbpSalary.AccessibleDescription = "Employee Salary"
@@ -3224,6 +3191,18 @@ Partial Class EmployeeForm
         Me.tbpSalary.TabIndex = 19
         Me.tbpSalary.Text = "SALARY"
         Me.tbpSalary.UseVisualStyleBackColor = True
+        '
+        'SalaryTab
+        '
+        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.BackColor = System.Drawing.Color.White
+        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
+        Me.SalaryTab.Name = "SalaryTab"
+        Me.SalaryTab.PhilHealth = Nothing
+        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
+        Me.SalaryTab.TabIndex = 0
         '
         'Panel11
         '
@@ -3352,6 +3331,64 @@ Partial Class EmployeeForm
         Me.dgvPromotionList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvPromotionList.Size = New System.Drawing.Size(793, 360)
         Me.dgvPromotionList.TabIndex = 330
+        '
+        'c_empID2
+        '
+        Me.c_empID2.HeaderText = "Employee ID"
+        Me.c_empID2.Name = "c_empID2"
+        Me.c_empID2.ReadOnly = True
+        '
+        'c_empname2
+        '
+        Me.c_empname2.HeaderText = "Employee Name"
+        Me.c_empname2.Name = "c_empname2"
+        Me.c_empname2.ReadOnly = True
+        Me.c_empname2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.c_empname2.Width = 150
+        '
+        'c_promotRowID
+        '
+        Me.c_promotRowID.HeaderText = "RowID"
+        Me.c_promotRowID.Name = "c_promotRowID"
+        Me.c_promotRowID.ReadOnly = True
+        Me.c_promotRowID.Visible = False
+        '
+        'c_PostionFrom
+        '
+        Me.c_PostionFrom.HeaderText = "Position From"
+        Me.c_PostionFrom.Name = "c_PostionFrom"
+        Me.c_PostionFrom.ReadOnly = True
+        '
+        'c_positionto
+        '
+        Me.c_positionto.HeaderText = "Position To"
+        Me.c_positionto.Name = "c_positionto"
+        Me.c_positionto.ReadOnly = True
+        '
+        'c_effecDate
+        '
+        Me.c_effecDate.HeaderText = "Effective Date"
+        Me.c_effecDate.Name = "c_effecDate"
+        Me.c_effecDate.ReadOnly = True
+        '
+        'c_compensation
+        '
+        Me.c_compensation.HeaderText = "Compensation"
+        Me.c_compensation.Name = "c_compensation"
+        Me.c_compensation.ReadOnly = True
+        '
+        'c_basicpay
+        '
+        Me.c_basicpay.HeaderText = "Basic Pay"
+        Me.c_basicpay.Name = "c_basicpay"
+        Me.c_basicpay.ReadOnly = True
+        Me.c_basicpay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'c_reasonpromot
+        '
+        Me.c_reasonpromot.HeaderText = "Reason"
+        Me.c_reasonpromot.Name = "c_reasonpromot"
+        Me.c_reasonpromot.ReadOnly = True
         '
         'lblpeso
         '
@@ -3737,6 +3774,13 @@ Partial Class EmployeeForm
         Me.dgvempatta.Size = New System.Drawing.Size(611, 345)
         Me.dgvempatta.TabIndex = 0
         '
+        'eatt_RowID
+        '
+        Me.eatt_RowID.HeaderText = "RowID"
+        Me.eatt_RowID.Name = "eatt_RowID"
+        Me.eatt_RowID.Visible = False
+        Me.eatt_RowID.Width = 128
+        '
         'eatt_Type
         '
         Me.eatt_Type.HeaderText = "Type"
@@ -3745,6 +3789,56 @@ Partial Class EmployeeForm
         Me.eatt_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.eatt_Type.Width = 200
         '
+        'eatt_FileName
+        '
+        Me.eatt_FileName.HeaderText = "File name"
+        Me.eatt_FileName.MaxInputLength = 200
+        Me.eatt_FileName.Name = "eatt_FileName"
+        Me.eatt_FileName.Width = 160
+        '
+        'eatt_FileType
+        '
+        Me.eatt_FileType.HeaderText = "File extension"
+        Me.eatt_FileType.Name = "eatt_FileType"
+        Me.eatt_FileType.ReadOnly = True
+        Me.eatt_FileType.Width = 160
+        '
+        'eatt_EmployeeID
+        '
+        Me.eatt_EmployeeID.HeaderText = "Column42"
+        Me.eatt_EmployeeID.Name = "eatt_EmployeeID"
+        Me.eatt_EmployeeID.Visible = False
+        '
+        'eatt_Created
+        '
+        Me.eatt_Created.HeaderText = "Column43"
+        Me.eatt_Created.Name = "eatt_Created"
+        Me.eatt_Created.Visible = False
+        '
+        'eatt_CreatedBy
+        '
+        Me.eatt_CreatedBy.HeaderText = "Column44"
+        Me.eatt_CreatedBy.Name = "eatt_CreatedBy"
+        Me.eatt_CreatedBy.Visible = False
+        '
+        'eatt_LastUpd
+        '
+        Me.eatt_LastUpd.HeaderText = "Column45"
+        Me.eatt_LastUpd.Name = "eatt_LastUpd"
+        Me.eatt_LastUpd.Visible = False
+        '
+        'eatt_LastUpdBy
+        '
+        Me.eatt_LastUpdBy.HeaderText = "Column46"
+        Me.eatt_LastUpdBy.Name = "eatt_LastUpdBy"
+        Me.eatt_LastUpdBy.Visible = False
+        '
+        'eatt_AttachedFile
+        '
+        Me.eatt_AttachedFile.HeaderText = "Column47"
+        Me.eatt_AttachedFile.Name = "eatt_AttachedFile"
+        Me.eatt_AttachedFile.Visible = False
+        '
         'eatt_viewthis
         '
         Me.eatt_viewthis.HeaderText = ""
@@ -3752,6 +3846,12 @@ Partial Class EmployeeForm
         Me.eatt_viewthis.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.eatt_viewthis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.eatt_viewthis.Width = 120
+        '
+        'Column38
+        '
+        Me.Column38.HeaderText = "Attachment Type"
+        Me.Column38.Name = "Column38"
+        Me.Column38.Visible = False
         '
         'txtFNameAtta
         '
@@ -4074,6 +4174,55 @@ Partial Class EmployeeForm
         Me.dgvDisciplinaryList.Size = New System.Drawing.Size(745, 325)
         Me.dgvDisciplinaryList.TabIndex = 323
         '
+        'c_FindingName
+        '
+        Me.c_FindingName.HeaderText = "Finding Name"
+        Me.c_FindingName.Name = "c_FindingName"
+        Me.c_FindingName.ReadOnly = True
+        Me.c_FindingName.Width = 117
+        '
+        'c_action
+        '
+        Me.c_action.HeaderText = "Action"
+        Me.c_action.Name = "c_action"
+        Me.c_action.ReadOnly = True
+        Me.c_action.Width = 117
+        '
+        'c_datefrom
+        '
+        Me.c_datefrom.HeaderText = "Effective Date From"
+        Me.c_datefrom.Name = "c_datefrom"
+        Me.c_datefrom.ReadOnly = True
+        Me.c_datefrom.Width = 117
+        '
+        'c_dateto
+        '
+        Me.c_dateto.HeaderText = "Effective Date To"
+        Me.c_dateto.Name = "c_dateto"
+        Me.c_dateto.ReadOnly = True
+        Me.c_dateto.Width = 117
+        '
+        'c_desc
+        '
+        Me.c_desc.HeaderText = "Finding Description"
+        Me.c_desc.Name = "c_desc"
+        Me.c_desc.ReadOnly = True
+        Me.c_desc.Width = 117
+        '
+        'c_comment
+        '
+        Me.c_comment.HeaderText = "Comments"
+        Me.c_comment.Name = "c_comment"
+        Me.c_comment.ReadOnly = True
+        Me.c_comment.Width = 117
+        '
+        'c_rowid
+        '
+        Me.c_rowid.HeaderText = "RowID"
+        Me.c_rowid.Name = "c_rowid"
+        Me.c_rowid.ReadOnly = True
+        Me.c_rowid.Visible = False
+        '
         'dtpTo
         '
         Me.dtpTo.Enabled = False
@@ -4234,7 +4383,7 @@ Partial Class EmployeeForm
         Me.UserActivityDisciplinaryActionToolStripButton.Image = CType(resources.GetObject("UserActivityDisciplinaryActionToolStripButton.Image"), System.Drawing.Image)
         Me.UserActivityDisciplinaryActionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.UserActivityDisciplinaryActionToolStripButton.Name = "UserActivityDisciplinaryActionToolStripButton"
-        Me.UserActivityDisciplinaryActionToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityDisciplinaryActionToolStripButton.Size = New System.Drawing.Size(93, 20)
         Me.UserActivityDisciplinaryActionToolStripButton.Text = "User Activity"
         '
         'Panel12
@@ -4739,6 +4888,109 @@ Partial Class EmployeeForm
         Me.dgvListCompany.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvListCompany.Size = New System.Drawing.Size(822, 245)
         Me.dgvListCompany.TabIndex = 321
+        '
+        'c_compname
+        '
+        Me.c_compname.HeaderText = "Company Name"
+        Me.c_compname.Name = "c_compname"
+        Me.c_compname.ReadOnly = True
+        '
+        'c_trade
+        '
+        Me.c_trade.HeaderText = "Trade Name"
+        Me.c_trade.Name = "c_trade"
+        Me.c_trade.ReadOnly = True
+        '
+        'c_contname
+        '
+        Me.c_contname.HeaderText = "Contact Name"
+        Me.c_contname.Name = "c_contname"
+        Me.c_contname.ReadOnly = True
+        '
+        'c_mainphone
+        '
+        Me.c_mainphone.HeaderText = "Main Phone"
+        Me.c_mainphone.Name = "c_mainphone"
+        Me.c_mainphone.ReadOnly = True
+        '
+        'c_altphone
+        '
+        Me.c_altphone.HeaderText = "Alt Phone"
+        Me.c_altphone.Name = "c_altphone"
+        Me.c_altphone.ReadOnly = True
+        '
+        'c_faxno
+        '
+        Me.c_faxno.HeaderText = "Fax No."
+        Me.c_faxno.Name = "c_faxno"
+        Me.c_faxno.ReadOnly = True
+        '
+        'c_emailaddr
+        '
+        Me.c_emailaddr.HeaderText = "Email Address"
+        Me.c_emailaddr.Name = "c_emailaddr"
+        Me.c_emailaddr.ReadOnly = True
+        '
+        'c_altemailaddr
+        '
+        Me.c_altemailaddr.HeaderText = "Alt Email Address"
+        Me.c_altemailaddr.Name = "c_altemailaddr"
+        Me.c_altemailaddr.ReadOnly = True
+        '
+        'c_url
+        '
+        Me.c_url.HeaderText = "URL"
+        Me.c_url.Name = "c_url"
+        Me.c_url.ReadOnly = True
+        '
+        'c_tinno
+        '
+        Me.c_tinno.HeaderText = "TIN No."
+        Me.c_tinno.Name = "c_tinno"
+        Me.c_tinno.ReadOnly = True
+        '
+        'c_jobtitle
+        '
+        Me.c_jobtitle.HeaderText = "Job Title"
+        Me.c_jobtitle.Name = "c_jobtitle"
+        Me.c_jobtitle.ReadOnly = True
+        '
+        'c_jobfunction
+        '
+        Me.c_jobfunction.HeaderText = "Job Function"
+        Me.c_jobfunction.Name = "c_jobfunction"
+        Me.c_jobfunction.ReadOnly = True
+        '
+        'c_orgtype
+        '
+        Me.c_orgtype.HeaderText = "Organization Type"
+        Me.c_orgtype.Name = "c_orgtype"
+        Me.c_orgtype.ReadOnly = True
+        '
+        'c_experience
+        '
+        Me.c_experience.HeaderText = "Experience From date"
+        Me.c_experience.Name = "c_experience"
+        Me.c_experience.ReadOnly = True
+        '
+        'c_expdateto
+        '
+        Me.c_expdateto.HeaderText = "Experience To date"
+        Me.c_expdateto.Name = "c_expdateto"
+        Me.c_expdateto.ReadOnly = True
+        '
+        'c_compaddr
+        '
+        Me.c_compaddr.HeaderText = "Company Address"
+        Me.c_compaddr.Name = "c_compaddr"
+        Me.c_compaddr.ReadOnly = True
+        '
+        'c_rowidPrevEmp
+        '
+        Me.c_rowidPrevEmp.HeaderText = "RowiD"
+        Me.c_rowidPrevEmp.Name = "c_rowidPrevEmp"
+        Me.c_rowidPrevEmp.ReadOnly = True
+        Me.c_rowidPrevEmp.Visible = False
         '
         'txtEmpIDPrevEmp
         '
@@ -5667,6 +5919,14 @@ Partial Class EmployeeForm
         Me.dgvempbon.Size = New System.Drawing.Size(783, 345)
         Me.dgvempbon.TabIndex = 5
         '
+        'bon_RowID
+        '
+        Me.bon_RowID.HeaderText = "RowID"
+        Me.bon_RowID.Name = "bon_RowID"
+        Me.bon_RowID.ReadOnly = True
+        Me.bon_RowID.Visible = False
+        Me.bon_RowID.Width = 50
+        '
         'bon_Type
         '
         Me.bon_Type.HeaderText = "Type"
@@ -5675,6 +5935,15 @@ Partial Class EmployeeForm
         Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.bon_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.bon_Type.Width = 180
+        '
+        'bon_Amount
+        '
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle19
+        Me.bon_Amount.HeaderText = "Amount"
+        Me.bon_Amount.Name = "bon_Amount"
+        Me.bon_Amount.ReadOnly = True
+        Me.bon_Amount.Width = 180
         '
         'bon_Frequency
         '
@@ -5760,6 +6029,13 @@ Partial Class EmployeeForm
         Me.bon_End.Name = "bon_End"
         Me.bon_End.ReadOnly = True
         Me.bon_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'bon_ProdID
+        '
+        Me.bon_ProdID.HeaderText = "ProductID"
+        Me.bon_ProdID.Name = "bon_ProdID"
+        Me.bon_ProdID.ReadOnly = True
+        Me.bon_ProdID.Visible = False
         '
         'Label184
         '
@@ -6221,6 +6497,438 @@ Partial Class EmployeeForm
         Me.dgvEmp.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvEmp.Size = New System.Drawing.Size(350, 296)
         Me.dgvEmp.TabIndex = 101
+        '
+        'RowID
+        '
+        Me.RowID.HeaderText = "RowID"
+        Me.RowID.Name = "RowID"
+        Me.RowID.ReadOnly = True
+        Me.RowID.Visible = False
+        '
+        'Column1
+        '
+        Me.Column1.HeaderText = "Employee ID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.HeaderText = "Last Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.HeaderText = "First Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.HeaderText = "Middle Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column21
+        '
+        Me.Column21.HeaderText = "Surname"
+        Me.Column21.Name = "Column21"
+        Me.Column21.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.HeaderText = "Nickname"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column31
+        '
+        Me.Column31.HeaderText = "Marital Status"
+        Me.Column31.Name = "Column31"
+        Me.Column31.ReadOnly = True
+        '
+        'Column32
+        '
+        Me.Column32.HeaderText = "No. of Dependents"
+        Me.Column32.Name = "Column32"
+        Me.Column32.ReadOnly = True
+        Me.Column32.ToolTipText = "No. of Dependents"
+        '
+        'Column6
+        '
+        Me.Column6.HeaderText = "Birthdate"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'colstartdate
+        '
+        Me.colstartdate.HeaderText = "Start date"
+        Me.colstartdate.Name = "colstartdate"
+        Me.colstartdate.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.HeaderText = "Job Title"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column8
+        '
+        Me.Column8.HeaderText = "Position"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column9
+        '
+        Me.Column9.HeaderText = "Salutation"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        '
+        'Column10
+        '
+        Me.Column10.HeaderText = "TIN"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        '
+        'Column11
+        '
+        Me.Column11.HeaderText = "SSS No."
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        '
+        'Column12
+        '
+        Me.Column12.HeaderText = "PAGIBIG No."
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        '
+        'Column13
+        '
+        Me.Column13.HeaderText = "PhilHealth No."
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        '
+        'Column15
+        '
+        Me.Column15.HeaderText = "Work Phone No."
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        '
+        'Column16
+        '
+        Me.Column16.HeaderText = "Home Phone No."
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        '
+        'Column17
+        '
+        Me.Column17.HeaderText = "Mobile Phone No."
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        '
+        'Column18
+        '
+        Me.Column18.HeaderText = "Home address"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        '
+        'Column14
+        '
+        Me.Column14.HeaderText = "Email address"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        '
+        'Column19
+        '
+        Me.Column19.HeaderText = "Gender"
+        Me.Column19.Name = "Column19"
+        Me.Column19.ReadOnly = True
+        '
+        'Column20
+        '
+        Me.Column20.HeaderText = "Employment Status"
+        Me.Column20.Name = "Column20"
+        Me.Column20.ReadOnly = True
+        '
+        'Column22
+        '
+        Me.Column22.HeaderText = "Pay Frequency"
+        Me.Column22.Name = "Column22"
+        Me.Column22.ReadOnly = True
+        '
+        'Column23
+        '
+        Me.Column23.HeaderText = "UndertimeOverride"
+        Me.Column23.Name = "Column23"
+        Me.Column23.ReadOnly = True
+        Me.Column23.Visible = False
+        '
+        'Column24
+        '
+        Me.Column24.HeaderText = "OvertimeOverride"
+        Me.Column24.Name = "Column24"
+        Me.Column24.ReadOnly = True
+        Me.Column24.Visible = False
+        '
+        'Column25
+        '
+        Me.Column25.HeaderText = "Creation Date"
+        Me.Column25.Name = "Column25"
+        Me.Column25.ReadOnly = True
+        '
+        'Column26
+        '
+        Me.Column26.HeaderText = "Created by"
+        Me.Column26.Name = "Column26"
+        Me.Column26.ReadOnly = True
+        '
+        'Column27
+        '
+        Me.Column27.HeaderText = "Last Update"
+        Me.Column27.Name = "Column27"
+        Me.Column27.ReadOnly = True
+        '
+        'Column28
+        '
+        Me.Column28.HeaderText = "Last Update by"
+        Me.Column28.Name = "Column28"
+        Me.Column28.ReadOnly = True
+        '
+        'Column29
+        '
+        Me.Column29.HeaderText = "PositionID"
+        Me.Column29.Name = "Column29"
+        Me.Column29.ReadOnly = True
+        Me.Column29.Visible = False
+        '
+        'Column30
+        '
+        Me.Column30.HeaderText = "PayFrequencyID"
+        Me.Column30.Name = "Column30"
+        Me.Column30.ReadOnly = True
+        Me.Column30.Visible = False
+        '
+        'Column34
+        '
+        Me.Column34.HeaderText = "EmployeeType"
+        Me.Column34.Name = "Column34"
+        Me.Column34.ReadOnly = True
+        '
+        'Column35
+        '
+        Me.Column35.HeaderText = "LeaveBalance"
+        Me.Column35.Name = "Column35"
+        Me.Column35.ReadOnly = True
+        Me.Column35.Visible = False
+        '
+        'slbalance
+        '
+        Me.slbalance.HeaderText = "Sick leave balance"
+        Me.slbalance.Name = "slbalance"
+        Me.slbalance.ReadOnly = True
+        Me.slbalance.Visible = False
+        '
+        'mlbalance
+        '
+        Me.mlbalance.HeaderText = "Maternity leave balance"
+        Me.mlbalance.Name = "mlbalance"
+        Me.mlbalance.ReadOnly = True
+        Me.mlbalance.Visible = False
+        '
+        'Column36
+        '
+        Me.Column36.HeaderText = "LeaveAllowance"
+        Me.Column36.Name = "Column36"
+        Me.Column36.ReadOnly = True
+        Me.Column36.Visible = False
+        '
+        'slallowance
+        '
+        Me.slallowance.HeaderText = "Sick leave allowance"
+        Me.slallowance.Name = "slallowance"
+        Me.slallowance.ReadOnly = True
+        Me.slallowance.Visible = False
+        '
+        'mlallowance
+        '
+        Me.mlallowance.HeaderText = "Maternity leave allowance"
+        Me.mlallowance.Name = "mlallowance"
+        Me.mlallowance.ReadOnly = True
+        Me.mlallowance.Visible = False
+        '
+        'Column33
+        '
+        Me.Column33.HeaderText = "LeavePerPayPeriod"
+        Me.Column33.Name = "Column33"
+        Me.Column33.ReadOnly = True
+        Me.Column33.Visible = False
+        '
+        'slpayp
+        '
+        Me.slpayp.HeaderText = "Sick leave per pay period"
+        Me.slpayp.Name = "slpayp"
+        Me.slpayp.ReadOnly = True
+        Me.slpayp.Visible = False
+        '
+        'mlpayp
+        '
+        Me.mlpayp.HeaderText = "Maternity leavle per pay period"
+        Me.mlpayp.Name = "mlpayp"
+        Me.mlpayp.ReadOnly = True
+        Me.mlpayp.Visible = False
+        '
+        'fstatRowID
+        '
+        Me.fstatRowID.HeaderText = "flingstatusRowID"
+        Me.fstatRowID.Name = "fstatRowID"
+        Me.fstatRowID.ReadOnly = True
+        Me.fstatRowID.Visible = False
+        '
+        'AlphaExempted
+        '
+        Me.AlphaExempted.HeaderText = "Is included in Alpha list"
+        Me.AlphaExempted.Name = "AlphaExempted"
+        Me.AlphaExempted.ReadOnly = True
+        Me.AlphaExempted.Visible = False
+        '
+        'WorkDaysPerYear
+        '
+        Me.WorkDaysPerYear.HeaderText = "Work Days Per Year"
+        Me.WorkDaysPerYear.Name = "WorkDaysPerYear"
+        Me.WorkDaysPerYear.ReadOnly = True
+        '
+        'DayOfRest
+        '
+        Me.DayOfRest.HeaderText = "Rest Day"
+        Me.DayOfRest.Name = "DayOfRest"
+        Me.DayOfRest.ReadOnly = True
+        '
+        'ATMNo
+        '
+        Me.ATMNo.HeaderText = "ATM No."
+        Me.ATMNo.Name = "ATMNo"
+        Me.ATMNo.ReadOnly = True
+        '
+        'BankName
+        '
+        Me.BankName.HeaderText = "Bank Name"
+        Me.BankName.Name = "BankName"
+        Me.BankName.ReadOnly = True
+        '
+        'OtherPayP
+        '
+        Me.OtherPayP.HeaderText = "Other leave per pay period"
+        Me.OtherPayP.Name = "OtherPayP"
+        Me.OtherPayP.ReadOnly = True
+        '
+        'OtherLeaveAllowance
+        '
+        Me.OtherLeaveAllowance.HeaderText = "Other Leave Allowance"
+        Me.OtherLeaveAllowance.Name = "OtherLeaveAllowance"
+        Me.OtherLeaveAllowance.ReadOnly = True
+        '
+        'OtherLeaveBalance
+        '
+        Me.OtherLeaveBalance.HeaderText = "Other Leave Balance"
+        Me.OtherLeaveBalance.Name = "OtherLeaveBalance"
+        Me.OtherLeaveBalance.ReadOnly = True
+        '
+        'CalcHoliday
+        '
+        Me.CalcHoliday.HeaderText = "CalcHoliday"
+        Me.CalcHoliday.Name = "CalcHoliday"
+        Me.CalcHoliday.ReadOnly = True
+        Me.CalcHoliday.Visible = False
+        '
+        'CalcSpecialHoliday
+        '
+        Me.CalcSpecialHoliday.HeaderText = "CalcSpecialHoliday"
+        Me.CalcSpecialHoliday.Name = "CalcSpecialHoliday"
+        Me.CalcSpecialHoliday.ReadOnly = True
+        Me.CalcSpecialHoliday.Visible = False
+        '
+        'CalcNightDiff
+        '
+        Me.CalcNightDiff.HeaderText = "CalcNightDiff"
+        Me.CalcNightDiff.Name = "CalcNightDiff"
+        Me.CalcNightDiff.ReadOnly = True
+        Me.CalcNightDiff.Visible = False
+        '
+        'CalcNightDiffOT
+        '
+        Me.CalcNightDiffOT.HeaderText = "CalcNightDiffOT"
+        Me.CalcNightDiffOT.Name = "CalcNightDiffOT"
+        Me.CalcNightDiffOT.ReadOnly = True
+        Me.CalcNightDiffOT.Visible = False
+        '
+        'CalcRestDay
+        '
+        Me.CalcRestDay.HeaderText = "CalcRestDay"
+        Me.CalcRestDay.Name = "CalcRestDay"
+        Me.CalcRestDay.ReadOnly = True
+        Me.CalcRestDay.Visible = False
+        '
+        'CalcRestDayOT
+        '
+        Me.CalcRestDayOT.HeaderText = "CalcRestDayOT"
+        Me.CalcRestDayOT.Name = "CalcRestDayOT"
+        Me.CalcRestDayOT.ReadOnly = True
+        Me.CalcRestDayOT.Visible = False
+        '
+        'LateGracePeriod
+        '
+        Me.LateGracePeriod.HeaderText = "LateGracePeriod"
+        Me.LateGracePeriod.Name = "LateGracePeriod"
+        Me.LateGracePeriod.ReadOnly = True
+        '
+        'RevealInPayroll
+        '
+        Me.RevealInPayroll.HeaderText = "RevealInPayroll"
+        Me.RevealInPayroll.Name = "RevealInPayroll"
+        Me.RevealInPayroll.ReadOnly = True
+        Me.RevealInPayroll.Visible = False
+        '
+        'OffSetBal
+        '
+        Me.OffSetBal.HeaderText = "OffSetBal"
+        Me.OffSetBal.Name = "OffSetBal"
+        Me.OffSetBal.ReadOnly = True
+        Me.OffSetBal.Visible = False
+        '
+        'AgencyName
+        '
+        Me.AgencyName.HeaderText = "AgencyName"
+        Me.AgencyName.Name = "AgencyName"
+        Me.AgencyName.ReadOnly = True
+        Me.AgencyName.Visible = False
+        '
+        'AgencyRowID
+        '
+        Me.AgencyRowID.HeaderText = "AgencyRowID"
+        Me.AgencyRowID.Name = "AgencyRowID"
+        Me.AgencyRowID.ReadOnly = True
+        Me.AgencyRowID.Visible = False
+        '
+        'BranchID
+        '
+        Me.BranchID.HeaderText = "BranchID"
+        Me.BranchID.Name = "BranchID"
+        Me.BranchID.ReadOnly = True
+        Me.BranchID.Visible = False
+        '
+        'BPIInsuranceColumn
+        '
+        Me.BPIInsuranceColumn.HeaderText = "BPI Insurance"
+        Me.BPIInsuranceColumn.Name = "BPIInsuranceColumn"
+        Me.BPIInsuranceColumn.ReadOnly = True
+        '
+        'Column37
+        '
+        Me.Column37.HeaderText = "IMAGE"
+        Me.Column37.Name = "Column37"
+        Me.Column37.ReadOnly = True
+        Me.Column37.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column37.Visible = False
         '
         'Last
         '
@@ -7099,664 +7807,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn88.Visible = False
         Me.DataGridViewTextBoxColumn88.Width = 180
         '
-        'Colmn0
-        '
-        Me.Colmn0.HeaderText = "RowID"
-        Me.Colmn0.Name = "Colmn0"
-        Me.Colmn0.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn0.Visible = False
-        '
-        'Colmn1
-        '
-        Me.Colmn1.HeaderText = "ParentEmployeeID"
-        Me.Colmn1.Name = "Colmn1"
-        Me.Colmn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn1.Visible = False
-        '
-        'Colmn3
-        '
-        Me.Colmn3.HeaderText = "First Name"
-        Me.Colmn3.Name = "Colmn3"
-        Me.Colmn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn3.Width = 160
-        '
-        'Colmn4
-        '
-        Me.Colmn4.HeaderText = "MiddleName"
-        Me.Colmn4.Name = "Colmn4"
-        Me.Colmn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn4.Width = 160
-        '
-        'Colmn5
-        '
-        Me.Colmn5.HeaderText = "Last Name"
-        Me.Colmn5.Name = "Colmn5"
-        Me.Colmn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn5.Width = 160
-        '
-        'Colmn6
-        '
-        Me.Colmn6.HeaderText = "Surname"
-        Me.Colmn6.Name = "Colmn6"
-        Me.Colmn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn6.Width = 160
-        '
-        'Colmn8
-        '
-        Me.Colmn8.HeaderText = "TIN"
-        Me.Colmn8.Name = "Colmn8"
-        Me.Colmn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn8.Width = 160
-        '
-        'Colmn9
-        '
-        Me.Colmn9.HeaderText = "SSS No."
-        Me.Colmn9.Name = "Colmn9"
-        Me.Colmn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn9.Width = 160
-        '
-        'Colmn10
-        '
-        Me.Colmn10.HeaderText = "PAGIBIG No."
-        Me.Colmn10.Name = "Colmn10"
-        Me.Colmn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn10.Width = 160
-        '
-        'Colmn11
-        '
-        Me.Colmn11.HeaderText = "PhilHealth No."
-        Me.Colmn11.Name = "Colmn11"
-        Me.Colmn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn11.Width = 160
-        '
-        'Colmn12
-        '
-        Me.Colmn12.HeaderText = "Email address"
-        Me.Colmn12.Name = "Colmn12"
-        Me.Colmn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn12.Width = 160
-        '
-        'Colmn13
-        '
-        Me.Colmn13.HeaderText = "Work Phone No."
-        Me.Colmn13.Name = "Colmn13"
-        Me.Colmn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn13.Width = 160
-        '
-        'Colmn14
-        '
-        Me.Colmn14.HeaderText = "Home Phone No."
-        Me.Colmn14.Name = "Colmn14"
-        Me.Colmn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn14.Width = 160
-        '
-        'Colmn15
-        '
-        Me.Colmn15.HeaderText = "Mobile  Phone No."
-        Me.Colmn15.Name = "Colmn15"
-        Me.Colmn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn15.Width = 160
-        '
-        'Colmn16
-        '
-        Me.Colmn16.HeaderText = "Home address"
-        Me.Colmn16.Name = "Colmn16"
-        Me.Colmn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn16.Width = 160
-        '
-        'Colmn17
-        '
-        Me.Colmn17.HeaderText = "Nickname"
-        Me.Colmn17.Name = "Colmn17"
-        Me.Colmn17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn17.Width = 160
-        '
-        'Colmn18
-        '
-        Me.Colmn18.HeaderText = "JobTitle"
-        Me.Colmn18.Name = "Colmn18"
-        Me.Colmn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn18.Width = 160
-        '
-        'Colmn22
-        '
-        Me.Colmn22.HeaderText = "Created by"
-        Me.Colmn22.Name = "Colmn22"
-        Me.Colmn22.ReadOnly = True
-        Me.Colmn22.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn22.Visible = False
-        '
-        'Colmn23
-        '
-        Me.Colmn23.HeaderText = "Creation Date"
-        Me.Colmn23.Name = "Colmn23"
-        Me.Colmn23.ReadOnly = True
-        Me.Colmn23.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn23.Visible = False
-        '
-        'Colmn24
-        '
-        Me.Colmn24.HeaderText = "Last update by"
-        Me.Colmn24.Name = "Colmn24"
-        Me.Colmn24.ReadOnly = True
-        Me.Colmn24.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn24.Visible = False
-        '
-        'Colmn25
-        '
-        Me.Colmn25.HeaderText = "Last update"
-        Me.Colmn25.Name = "Colmn25"
-        Me.Colmn25.ReadOnly = True
-        Me.Colmn25.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Colmn25.Visible = False
-        '
-        'AwardTab
-        '
-        Me.AwardTab.BackColor = System.Drawing.Color.White
-        Me.AwardTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.AwardTab.Location = New System.Drawing.Point(3, 3)
-        Me.AwardTab.Name = "AwardTab"
-        Me.AwardTab.Size = New System.Drawing.Size(854, 480)
-        Me.AwardTab.TabIndex = 0
-        '
-        'CertificationTab
-        '
-        Me.CertificationTab.BackColor = System.Drawing.Color.White
-        Me.CertificationTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.CertificationTab.Location = New System.Drawing.Point(3, 3)
-        Me.CertificationTab.Name = "CertificationTab"
-        Me.CertificationTab.Size = New System.Drawing.Size(854, 480)
-        Me.CertificationTab.TabIndex = 0
-        '
-        'DisciplinaryActionTab
-        '
-        Me.DisciplinaryActionTab.BackColor = System.Drawing.Color.White
-        Me.DisciplinaryActionTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DisciplinaryActionTab.Location = New System.Drawing.Point(3, 3)
-        Me.DisciplinaryActionTab.Name = "DisciplinaryActionTab"
-        Me.DisciplinaryActionTab.Size = New System.Drawing.Size(854, 480)
-        Me.DisciplinaryActionTab.TabIndex = 0
-        '
-        'EducationalBackgroundTab
-        '
-        Me.EducationalBackgroundTab.BackColor = System.Drawing.Color.White
-        Me.EducationalBackgroundTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.EducationalBackgroundTab.Location = New System.Drawing.Point(3, 3)
-        Me.EducationalBackgroundTab.Name = "EducationalBackgroundTab"
-        Me.EducationalBackgroundTab.Size = New System.Drawing.Size(854, 480)
-        Me.EducationalBackgroundTab.TabIndex = 0
-        '
-        'PreviousEmployerTab
-        '
-        Me.PreviousEmployerTab.BackColor = System.Drawing.Color.White
-        Me.PreviousEmployerTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PreviousEmployerTab.Location = New System.Drawing.Point(3, 3)
-        Me.PreviousEmployerTab.Name = "PreviousEmployerTab"
-        Me.PreviousEmployerTab.Size = New System.Drawing.Size(854, 480)
-        Me.PreviousEmployerTab.TabIndex = 0
-        '
-        'BonusTab
-        '
-        Me.BonusTab.BackColor = System.Drawing.Color.White
-        Me.BonusTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BonusTab.Location = New System.Drawing.Point(3, 3)
-        Me.BonusTab.Name = "BonusTab"
-        Me.BonusTab.Size = New System.Drawing.Size(854, 480)
-        Me.BonusTab.TabIndex = 0
-        '
-        'AttachmentTab
-        '
-        Me.AttachmentTab.BackColor = System.Drawing.Color.White
-        Me.AttachmentTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.AttachmentTab.Location = New System.Drawing.Point(3, 3)
-        Me.AttachmentTab.Name = "AttachmentTab"
-        Me.AttachmentTab.Size = New System.Drawing.Size(854, 480)
-        Me.AttachmentTab.TabIndex = 0
-        '
-        'SalaryTab
-        '
-        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.BackColor = System.Drawing.Color.White
-        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
-        Me.SalaryTab.Name = "SalaryTab"
-        Me.SalaryTab.PhilHealth = Nothing
-        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
-        Me.SalaryTab.TabIndex = 0
-        '
-        'RowID
-        '
-        Me.RowID.HeaderText = "RowID"
-        Me.RowID.Name = "RowID"
-        Me.RowID.ReadOnly = True
-        Me.RowID.Visible = False
-        '
-        'Column1
-        '
-        Me.Column1.HeaderText = "Employee ID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.HeaderText = "Last Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.HeaderText = "First Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.HeaderText = "Middle Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column21
-        '
-        Me.Column21.HeaderText = "Surname"
-        Me.Column21.Name = "Column21"
-        Me.Column21.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.HeaderText = "Nickname"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column31
-        '
-        Me.Column31.HeaderText = "Marital Status"
-        Me.Column31.Name = "Column31"
-        Me.Column31.ReadOnly = True
-        '
-        'Column32
-        '
-        Me.Column32.HeaderText = "No. of Dependents"
-        Me.Column32.Name = "Column32"
-        Me.Column32.ReadOnly = True
-        Me.Column32.ToolTipText = "No. of Dependents"
-        '
-        'Column6
-        '
-        Me.Column6.HeaderText = "Birthdate"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'colstartdate
-        '
-        Me.colstartdate.HeaderText = "Start date"
-        Me.colstartdate.Name = "colstartdate"
-        Me.colstartdate.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.HeaderText = "Job Title"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column8
-        '
-        Me.Column8.HeaderText = "Position"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column9
-        '
-        Me.Column9.HeaderText = "Salutation"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        '
-        'Column10
-        '
-        Me.Column10.HeaderText = "TIN"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        '
-        'Column11
-        '
-        Me.Column11.HeaderText = "SSS No."
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        '
-        'Column12
-        '
-        Me.Column12.HeaderText = "PAGIBIG No."
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        '
-        'Column13
-        '
-        Me.Column13.HeaderText = "PhilHealth No."
-        Me.Column13.Name = "Column13"
-        Me.Column13.ReadOnly = True
-        '
-        'Column15
-        '
-        Me.Column15.HeaderText = "Work Phone No."
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        '
-        'Column16
-        '
-        Me.Column16.HeaderText = "Home Phone No."
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        '
-        'Column17
-        '
-        Me.Column17.HeaderText = "Mobile Phone No."
-        Me.Column17.Name = "Column17"
-        Me.Column17.ReadOnly = True
-        '
-        'Column18
-        '
-        Me.Column18.HeaderText = "Home address"
-        Me.Column18.Name = "Column18"
-        Me.Column18.ReadOnly = True
-        '
-        'Column14
-        '
-        Me.Column14.HeaderText = "Email address"
-        Me.Column14.Name = "Column14"
-        Me.Column14.ReadOnly = True
-        '
-        'Column19
-        '
-        Me.Column19.HeaderText = "Gender"
-        Me.Column19.Name = "Column19"
-        Me.Column19.ReadOnly = True
-        '
-        'Column20
-        '
-        Me.Column20.HeaderText = "Employment Status"
-        Me.Column20.Name = "Column20"
-        Me.Column20.ReadOnly = True
-        '
-        'Column22
-        '
-        Me.Column22.HeaderText = "Pay Frequency"
-        Me.Column22.Name = "Column22"
-        Me.Column22.ReadOnly = True
-        '
-        'Column23
-        '
-        Me.Column23.HeaderText = "UndertimeOverride"
-        Me.Column23.Name = "Column23"
-        Me.Column23.ReadOnly = True
-        Me.Column23.Visible = False
-        '
-        'Column24
-        '
-        Me.Column24.HeaderText = "OvertimeOverride"
-        Me.Column24.Name = "Column24"
-        Me.Column24.ReadOnly = True
-        Me.Column24.Visible = False
-        '
-        'Column25
-        '
-        Me.Column25.HeaderText = "Creation Date"
-        Me.Column25.Name = "Column25"
-        Me.Column25.ReadOnly = True
-        '
-        'Column26
-        '
-        Me.Column26.HeaderText = "Created by"
-        Me.Column26.Name = "Column26"
-        Me.Column26.ReadOnly = True
-        '
-        'Column27
-        '
-        Me.Column27.HeaderText = "Last Update"
-        Me.Column27.Name = "Column27"
-        Me.Column27.ReadOnly = True
-        '
-        'Column28
-        '
-        Me.Column28.HeaderText = "Last Update by"
-        Me.Column28.Name = "Column28"
-        Me.Column28.ReadOnly = True
-        '
-        'Column29
-        '
-        Me.Column29.HeaderText = "PositionID"
-        Me.Column29.Name = "Column29"
-        Me.Column29.ReadOnly = True
-        Me.Column29.Visible = False
-        '
-        'Column30
-        '
-        Me.Column30.HeaderText = "PayFrequencyID"
-        Me.Column30.Name = "Column30"
-        Me.Column30.ReadOnly = True
-        Me.Column30.Visible = False
-        '
-        'Column34
-        '
-        Me.Column34.HeaderText = "EmployeeType"
-        Me.Column34.Name = "Column34"
-        Me.Column34.ReadOnly = True
-        '
-        'Column35
-        '
-        Me.Column35.HeaderText = "LeaveBalance"
-        Me.Column35.Name = "Column35"
-        Me.Column35.ReadOnly = True
-        Me.Column35.Visible = False
-        '
-        'slbalance
-        '
-        Me.slbalance.HeaderText = "Sick leave balance"
-        Me.slbalance.Name = "slbalance"
-        Me.slbalance.ReadOnly = True
-        Me.slbalance.Visible = False
-        '
-        'mlbalance
-        '
-        Me.mlbalance.HeaderText = "Maternity leave balance"
-        Me.mlbalance.Name = "mlbalance"
-        Me.mlbalance.ReadOnly = True
-        Me.mlbalance.Visible = False
-        '
-        'Column36
-        '
-        Me.Column36.HeaderText = "LeaveAllowance"
-        Me.Column36.Name = "Column36"
-        Me.Column36.ReadOnly = True
-        Me.Column36.Visible = False
-        '
-        'slallowance
-        '
-        Me.slallowance.HeaderText = "Sick leave allowance"
-        Me.slallowance.Name = "slallowance"
-        Me.slallowance.ReadOnly = True
-        Me.slallowance.Visible = False
-        '
-        'mlallowance
-        '
-        Me.mlallowance.HeaderText = "Maternity leave allowance"
-        Me.mlallowance.Name = "mlallowance"
-        Me.mlallowance.ReadOnly = True
-        Me.mlallowance.Visible = False
-        '
-        'Column33
-        '
-        Me.Column33.HeaderText = "LeavePerPayPeriod"
-        Me.Column33.Name = "Column33"
-        Me.Column33.ReadOnly = True
-        Me.Column33.Visible = False
-        '
-        'slpayp
-        '
-        Me.slpayp.HeaderText = "Sick leave per pay period"
-        Me.slpayp.Name = "slpayp"
-        Me.slpayp.ReadOnly = True
-        Me.slpayp.Visible = False
-        '
-        'mlpayp
-        '
-        Me.mlpayp.HeaderText = "Maternity leavle per pay period"
-        Me.mlpayp.Name = "mlpayp"
-        Me.mlpayp.ReadOnly = True
-        Me.mlpayp.Visible = False
-        '
-        'fstatRowID
-        '
-        Me.fstatRowID.HeaderText = "flingstatusRowID"
-        Me.fstatRowID.Name = "fstatRowID"
-        Me.fstatRowID.ReadOnly = True
-        Me.fstatRowID.Visible = False
-        '
-        'AlphaExempted
-        '
-        Me.AlphaExempted.HeaderText = "Is included in Alpha list"
-        Me.AlphaExempted.Name = "AlphaExempted"
-        Me.AlphaExempted.ReadOnly = True
-        Me.AlphaExempted.Visible = False
-        '
-        'WorkDaysPerYear
-        '
-        Me.WorkDaysPerYear.HeaderText = "Work Days Per Year"
-        Me.WorkDaysPerYear.Name = "WorkDaysPerYear"
-        Me.WorkDaysPerYear.ReadOnly = True
-        '
-        'DayOfRest
-        '
-        Me.DayOfRest.HeaderText = "Rest Day"
-        Me.DayOfRest.Name = "DayOfRest"
-        Me.DayOfRest.ReadOnly = True
-        '
-        'ATMNo
-        '
-        Me.ATMNo.HeaderText = "ATM No."
-        Me.ATMNo.Name = "ATMNo"
-        Me.ATMNo.ReadOnly = True
-        '
-        'BankName
-        '
-        Me.BankName.HeaderText = "Bank Name"
-        Me.BankName.Name = "BankName"
-        Me.BankName.ReadOnly = True
-        '
-        'OtherPayP
-        '
-        Me.OtherPayP.HeaderText = "Other leave per pay period"
-        Me.OtherPayP.Name = "OtherPayP"
-        Me.OtherPayP.ReadOnly = True
-        '
-        'OtherLeaveAllowance
-        '
-        Me.OtherLeaveAllowance.HeaderText = "Other Leave Allowance"
-        Me.OtherLeaveAllowance.Name = "OtherLeaveAllowance"
-        Me.OtherLeaveAllowance.ReadOnly = True
-        '
-        'OtherLeaveBalance
-        '
-        Me.OtherLeaveBalance.HeaderText = "Other Leave Balance"
-        Me.OtherLeaveBalance.Name = "OtherLeaveBalance"
-        Me.OtherLeaveBalance.ReadOnly = True
-        '
-        'CalcHoliday
-        '
-        Me.CalcHoliday.HeaderText = "CalcHoliday"
-        Me.CalcHoliday.Name = "CalcHoliday"
-        Me.CalcHoliday.ReadOnly = True
-        Me.CalcHoliday.Visible = False
-        '
-        'CalcSpecialHoliday
-        '
-        Me.CalcSpecialHoliday.HeaderText = "CalcSpecialHoliday"
-        Me.CalcSpecialHoliday.Name = "CalcSpecialHoliday"
-        Me.CalcSpecialHoliday.ReadOnly = True
-        Me.CalcSpecialHoliday.Visible = False
-        '
-        'CalcNightDiff
-        '
-        Me.CalcNightDiff.HeaderText = "CalcNightDiff"
-        Me.CalcNightDiff.Name = "CalcNightDiff"
-        Me.CalcNightDiff.ReadOnly = True
-        Me.CalcNightDiff.Visible = False
-        '
-        'CalcNightDiffOT
-        '
-        Me.CalcNightDiffOT.HeaderText = "CalcNightDiffOT"
-        Me.CalcNightDiffOT.Name = "CalcNightDiffOT"
-        Me.CalcNightDiffOT.ReadOnly = True
-        Me.CalcNightDiffOT.Visible = False
-        '
-        'CalcRestDay
-        '
-        Me.CalcRestDay.HeaderText = "CalcRestDay"
-        Me.CalcRestDay.Name = "CalcRestDay"
-        Me.CalcRestDay.ReadOnly = True
-        Me.CalcRestDay.Visible = False
-        '
-        'CalcRestDayOT
-        '
-        Me.CalcRestDayOT.HeaderText = "CalcRestDayOT"
-        Me.CalcRestDayOT.Name = "CalcRestDayOT"
-        Me.CalcRestDayOT.ReadOnly = True
-        Me.CalcRestDayOT.Visible = False
-        '
-        'LateGracePeriod
-        '
-        Me.LateGracePeriod.HeaderText = "LateGracePeriod"
-        Me.LateGracePeriod.Name = "LateGracePeriod"
-        Me.LateGracePeriod.ReadOnly = True
-        '
-        'RevealInPayroll
-        '
-        Me.RevealInPayroll.HeaderText = "RevealInPayroll"
-        Me.RevealInPayroll.Name = "RevealInPayroll"
-        Me.RevealInPayroll.ReadOnly = True
-        Me.RevealInPayroll.Visible = False
-        '
-        'OffSetBal
-        '
-        Me.OffSetBal.HeaderText = "OffSetBal"
-        Me.OffSetBal.Name = "OffSetBal"
-        Me.OffSetBal.ReadOnly = True
-        Me.OffSetBal.Visible = False
-        '
-        'AgencyName
-        '
-        Me.AgencyName.HeaderText = "AgencyName"
-        Me.AgencyName.Name = "AgencyName"
-        Me.AgencyName.ReadOnly = True
-        Me.AgencyName.Visible = False
-        '
-        'AgencyRowID
-        '
-        Me.AgencyRowID.HeaderText = "AgencyRowID"
-        Me.AgencyRowID.Name = "AgencyRowID"
-        Me.AgencyRowID.ReadOnly = True
-        Me.AgencyRowID.Visible = False
-        '
-        'BranchID
-        '
-        Me.BranchID.HeaderText = "BranchID"
-        Me.BranchID.Name = "BranchID"
-        Me.BranchID.ReadOnly = True
-        Me.BranchID.Visible = False
-        '
-        'BPIInsuranceColumn
-        '
-        Me.BPIInsuranceColumn.HeaderText = "BPI Insurance"
-        Me.BPIInsuranceColumn.Name = "BPIInsuranceColumn"
-        Me.BPIInsuranceColumn.ReadOnly = True
-        '
-        'Column37
-        '
-        Me.Column37.HeaderText = "IMAGE"
-        Me.Column37.Name = "Column37"
-        Me.Column37.ReadOnly = True
-        Me.Column37.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column37.Visible = False
-        '
         'DataGridViewTextBoxColumn89
         '
         Me.DataGridViewTextBoxColumn89.HeaderText = "Position From"
@@ -7830,64 +7880,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn97.Name = "DataGridViewTextBoxColumn97"
         Me.DataGridViewTextBoxColumn97.ReadOnly = True
         Me.DataGridViewTextBoxColumn97.Visible = False
-        '
-        'c_empID2
-        '
-        Me.c_empID2.HeaderText = "Employee ID"
-        Me.c_empID2.Name = "c_empID2"
-        Me.c_empID2.ReadOnly = True
-        '
-        'c_empname2
-        '
-        Me.c_empname2.HeaderText = "Employee Name"
-        Me.c_empname2.Name = "c_empname2"
-        Me.c_empname2.ReadOnly = True
-        Me.c_empname2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.c_empname2.Width = 150
-        '
-        'c_promotRowID
-        '
-        Me.c_promotRowID.HeaderText = "RowID"
-        Me.c_promotRowID.Name = "c_promotRowID"
-        Me.c_promotRowID.ReadOnly = True
-        Me.c_promotRowID.Visible = False
-        '
-        'c_PostionFrom
-        '
-        Me.c_PostionFrom.HeaderText = "Position From"
-        Me.c_PostionFrom.Name = "c_PostionFrom"
-        Me.c_PostionFrom.ReadOnly = True
-        '
-        'c_positionto
-        '
-        Me.c_positionto.HeaderText = "Position To"
-        Me.c_positionto.Name = "c_positionto"
-        Me.c_positionto.ReadOnly = True
-        '
-        'c_effecDate
-        '
-        Me.c_effecDate.HeaderText = "Effective Date"
-        Me.c_effecDate.Name = "c_effecDate"
-        Me.c_effecDate.ReadOnly = True
-        '
-        'c_compensation
-        '
-        Me.c_compensation.HeaderText = "Compensation"
-        Me.c_compensation.Name = "c_compensation"
-        Me.c_compensation.ReadOnly = True
-        '
-        'c_basicpay
-        '
-        Me.c_basicpay.HeaderText = "Basic Pay"
-        Me.c_basicpay.Name = "c_basicpay"
-        Me.c_basicpay.ReadOnly = True
-        Me.c_basicpay.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'c_reasonpromot
-        '
-        Me.c_reasonpromot.HeaderText = "Reason"
-        Me.c_reasonpromot.Name = "c_reasonpromot"
-        Me.c_reasonpromot.ReadOnly = True
         '
         'DataGridViewTextBoxColumn98
         '
@@ -7978,69 +7970,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn107.ReadOnly = True
         Me.DataGridViewTextBoxColumn107.Visible = False
         '
-        'eatt_RowID
-        '
-        Me.eatt_RowID.HeaderText = "RowID"
-        Me.eatt_RowID.Name = "eatt_RowID"
-        Me.eatt_RowID.Visible = False
-        Me.eatt_RowID.Width = 128
-        '
-        'eatt_FileName
-        '
-        Me.eatt_FileName.HeaderText = "File name"
-        Me.eatt_FileName.MaxInputLength = 200
-        Me.eatt_FileName.Name = "eatt_FileName"
-        Me.eatt_FileName.Width = 160
-        '
-        'eatt_FileType
-        '
-        Me.eatt_FileType.HeaderText = "File extension"
-        Me.eatt_FileType.Name = "eatt_FileType"
-        Me.eatt_FileType.ReadOnly = True
-        Me.eatt_FileType.Width = 160
-        '
-        'eatt_EmployeeID
-        '
-        Me.eatt_EmployeeID.HeaderText = "Column42"
-        Me.eatt_EmployeeID.Name = "eatt_EmployeeID"
-        Me.eatt_EmployeeID.Visible = False
-        '
-        'eatt_Created
-        '
-        Me.eatt_Created.HeaderText = "Column43"
-        Me.eatt_Created.Name = "eatt_Created"
-        Me.eatt_Created.Visible = False
-        '
-        'eatt_CreatedBy
-        '
-        Me.eatt_CreatedBy.HeaderText = "Column44"
-        Me.eatt_CreatedBy.Name = "eatt_CreatedBy"
-        Me.eatt_CreatedBy.Visible = False
-        '
-        'eatt_LastUpd
-        '
-        Me.eatt_LastUpd.HeaderText = "Column45"
-        Me.eatt_LastUpd.Name = "eatt_LastUpd"
-        Me.eatt_LastUpd.Visible = False
-        '
-        'eatt_LastUpdBy
-        '
-        Me.eatt_LastUpdBy.HeaderText = "Column46"
-        Me.eatt_LastUpdBy.Name = "eatt_LastUpdBy"
-        Me.eatt_LastUpdBy.Visible = False
-        '
-        'eatt_AttachedFile
-        '
-        Me.eatt_AttachedFile.HeaderText = "Column47"
-        Me.eatt_AttachedFile.Name = "eatt_AttachedFile"
-        Me.eatt_AttachedFile.Visible = False
-        '
-        'Column38
-        '
-        Me.Column38.HeaderText = "Attachment Type"
-        Me.Column38.Name = "Column38"
-        Me.Column38.Visible = False
-        '
         'DataGridViewTextBoxColumn108
         '
         Me.DataGridViewTextBoxColumn108.HeaderText = "Date From"
@@ -8108,55 +8037,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn114.ReadOnly = True
         Me.DataGridViewTextBoxColumn114.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn114.Visible = False
-        '
-        'c_FindingName
-        '
-        Me.c_FindingName.HeaderText = "Finding Name"
-        Me.c_FindingName.Name = "c_FindingName"
-        Me.c_FindingName.ReadOnly = True
-        Me.c_FindingName.Width = 117
-        '
-        'c_action
-        '
-        Me.c_action.HeaderText = "Action"
-        Me.c_action.Name = "c_action"
-        Me.c_action.ReadOnly = True
-        Me.c_action.Width = 117
-        '
-        'c_datefrom
-        '
-        Me.c_datefrom.HeaderText = "Effective Date From"
-        Me.c_datefrom.Name = "c_datefrom"
-        Me.c_datefrom.ReadOnly = True
-        Me.c_datefrom.Width = 117
-        '
-        'c_dateto
-        '
-        Me.c_dateto.HeaderText = "Effective Date To"
-        Me.c_dateto.Name = "c_dateto"
-        Me.c_dateto.ReadOnly = True
-        Me.c_dateto.Width = 117
-        '
-        'c_desc
-        '
-        Me.c_desc.HeaderText = "Finding Description"
-        Me.c_desc.Name = "c_desc"
-        Me.c_desc.ReadOnly = True
-        Me.c_desc.Width = 117
-        '
-        'c_comment
-        '
-        Me.c_comment.HeaderText = "Comments"
-        Me.c_comment.Name = "c_comment"
-        Me.c_comment.ReadOnly = True
-        Me.c_comment.Width = 117
-        '
-        'c_rowid
-        '
-        Me.c_rowid.HeaderText = "RowID"
-        Me.c_rowid.Name = "c_rowid"
-        Me.c_rowid.ReadOnly = True
-        Me.c_rowid.Visible = False
         '
         'DataGridViewTextBoxColumn115
         '
@@ -8284,109 +8164,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn131.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn131.Visible = False
         '
-        'c_compname
-        '
-        Me.c_compname.HeaderText = "Company Name"
-        Me.c_compname.Name = "c_compname"
-        Me.c_compname.ReadOnly = True
-        '
-        'c_trade
-        '
-        Me.c_trade.HeaderText = "Trade Name"
-        Me.c_trade.Name = "c_trade"
-        Me.c_trade.ReadOnly = True
-        '
-        'c_contname
-        '
-        Me.c_contname.HeaderText = "Contact Name"
-        Me.c_contname.Name = "c_contname"
-        Me.c_contname.ReadOnly = True
-        '
-        'c_mainphone
-        '
-        Me.c_mainphone.HeaderText = "Main Phone"
-        Me.c_mainphone.Name = "c_mainphone"
-        Me.c_mainphone.ReadOnly = True
-        '
-        'c_altphone
-        '
-        Me.c_altphone.HeaderText = "Alt Phone"
-        Me.c_altphone.Name = "c_altphone"
-        Me.c_altphone.ReadOnly = True
-        '
-        'c_faxno
-        '
-        Me.c_faxno.HeaderText = "Fax No."
-        Me.c_faxno.Name = "c_faxno"
-        Me.c_faxno.ReadOnly = True
-        '
-        'c_emailaddr
-        '
-        Me.c_emailaddr.HeaderText = "Email Address"
-        Me.c_emailaddr.Name = "c_emailaddr"
-        Me.c_emailaddr.ReadOnly = True
-        '
-        'c_altemailaddr
-        '
-        Me.c_altemailaddr.HeaderText = "Alt Email Address"
-        Me.c_altemailaddr.Name = "c_altemailaddr"
-        Me.c_altemailaddr.ReadOnly = True
-        '
-        'c_url
-        '
-        Me.c_url.HeaderText = "URL"
-        Me.c_url.Name = "c_url"
-        Me.c_url.ReadOnly = True
-        '
-        'c_tinno
-        '
-        Me.c_tinno.HeaderText = "TIN No."
-        Me.c_tinno.Name = "c_tinno"
-        Me.c_tinno.ReadOnly = True
-        '
-        'c_jobtitle
-        '
-        Me.c_jobtitle.HeaderText = "Job Title"
-        Me.c_jobtitle.Name = "c_jobtitle"
-        Me.c_jobtitle.ReadOnly = True
-        '
-        'c_jobfunction
-        '
-        Me.c_jobfunction.HeaderText = "Job Function"
-        Me.c_jobfunction.Name = "c_jobfunction"
-        Me.c_jobfunction.ReadOnly = True
-        '
-        'c_orgtype
-        '
-        Me.c_orgtype.HeaderText = "Organization Type"
-        Me.c_orgtype.Name = "c_orgtype"
-        Me.c_orgtype.ReadOnly = True
-        '
-        'c_experience
-        '
-        Me.c_experience.HeaderText = "Experience From date"
-        Me.c_experience.Name = "c_experience"
-        Me.c_experience.ReadOnly = True
-        '
-        'c_expdateto
-        '
-        Me.c_expdateto.HeaderText = "Experience To date"
-        Me.c_expdateto.Name = "c_expdateto"
-        Me.c_expdateto.ReadOnly = True
-        '
-        'c_compaddr
-        '
-        Me.c_compaddr.HeaderText = "Company Address"
-        Me.c_compaddr.Name = "c_compaddr"
-        Me.c_compaddr.ReadOnly = True
-        '
-        'c_rowidPrevEmp
-        '
-        Me.c_rowidPrevEmp.HeaderText = "RowiD"
-        Me.c_rowidPrevEmp.Name = "c_rowidPrevEmp"
-        Me.c_rowidPrevEmp.ReadOnly = True
-        Me.c_rowidPrevEmp.Visible = False
-        '
         'DataGridViewTextBoxColumn132
         '
         Me.DataGridViewTextBoxColumn132.HeaderText = "First Name"
@@ -8413,30 +8190,6 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn134.ReadOnly = True
         Me.DataGridViewTextBoxColumn134.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn134.Visible = False
-        '
-        'bon_RowID
-        '
-        Me.bon_RowID.HeaderText = "RowID"
-        Me.bon_RowID.Name = "bon_RowID"
-        Me.bon_RowID.ReadOnly = True
-        Me.bon_RowID.Visible = False
-        Me.bon_RowID.Width = 50
-        '
-        'bon_Amount
-        '
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle19
-        Me.bon_Amount.HeaderText = "Amount"
-        Me.bon_Amount.Name = "bon_Amount"
-        Me.bon_Amount.ReadOnly = True
-        Me.bon_Amount.Width = 180
-        '
-        'bon_ProdID
-        '
-        Me.bon_ProdID.HeaderText = "ProductID"
-        Me.bon_ProdID.Name = "bon_ProdID"
-        Me.bon_ProdID.ReadOnly = True
-        Me.bon_ProdID.Visible = False
         '
         'DataGridViewTextBoxColumn135
         '
@@ -8993,8 +8746,6 @@ Partial Class EmployeeForm
         Me.LeaveGroupBox.PerformLayout
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout
         Me.TabControl3.ResumeLayout(False)
@@ -9127,7 +8878,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
     Friend WithEvents Label23 As System.Windows.Forms.Label
-    Friend WithEvents txtSName As System.Windows.Forms.TextBox
     Friend WithEvents Label24 As System.Windows.Forms.Label
     Friend WithEvents cboEmpStat As System.Windows.Forms.ComboBox
     Friend WithEvents cboSalut As System.Windows.Forms.ComboBox
@@ -9433,7 +9183,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label155 As System.Windows.Forms.Label
     Friend WithEvents errprovidSal As System.Windows.Forms.ErrorProvider
     Friend WithEvents FontDialog1 As System.Windows.Forms.FontDialog
-    Friend WithEvents Label87 As System.Windows.Forms.Label
     Friend WithEvents dtpempstartdate As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label120 As System.Windows.Forms.Label
     Friend WithEvents Label124 As System.Windows.Forms.Label
@@ -9453,10 +9202,6 @@ Partial Class EmployeeForm
     Friend WithEvents txtpositfrompromot As System.Windows.Forms.TextBox
     Friend WithEvents Label142 As System.Windows.Forms.Label
     Friend WithEvents txtempcurrbasicpay As System.Windows.Forms.Label
-    Friend WithEvents chkotflag As System.Windows.Forms.CheckBox
-    Friend WithEvents chkutflag As System.Windows.Forms.CheckBox
-    Friend WithEvents txtOTgrace As System.Windows.Forms.TextBox
-    Friend WithEvents Label143 As System.Windows.Forms.Label
     Friend WithEvents Label147 As System.Windows.Forms.Label
     Friend WithEvents txtUTgrace As System.Windows.Forms.TextBox
     Friend WithEvents tbpBonus As System.Windows.Forms.TabPage
@@ -9650,7 +9395,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label344 As System.Windows.Forms.Label
     Friend WithEvents Label343 As System.Windows.Forms.Label
     Friend WithEvents btnPrintMemo As System.Windows.Forms.ToolStripButton
-    Friend WithEvents chkAlphaListExempt As System.Windows.Forms.CheckBox
     Friend WithEvents Panel7 As System.Windows.Forms.Panel
     Friend WithEvents txtWorkDaysPerYear As System.Windows.Forms.TextBox
     Friend WithEvents Label351 As System.Windows.Forms.Label
@@ -9661,17 +9405,8 @@ Partial Class EmployeeForm
     Friend WithEvents Label354 As System.Windows.Forms.Label
     Friend WithEvents Label356 As System.Windows.Forms.Label
     Friend WithEvents txtothrbal As System.Windows.Forms.TextBox
-    Friend WithEvents chkSun As System.Windows.Forms.CheckBox
-    Friend WithEvents chkTue As System.Windows.Forms.CheckBox
-    Friend WithEvents chkMon As System.Windows.Forms.CheckBox
-    Friend WithEvents chkThu As System.Windows.Forms.CheckBox
-    Friend WithEvents chkFri As System.Windows.Forms.CheckBox
-    Friend WithEvents chkSat As System.Windows.Forms.CheckBox
-    Friend WithEvents chkWed As System.Windows.Forms.CheckBox
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents chkcalcRestDayOT As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcRestDay As System.Windows.Forms.CheckBox
-    Friend WithEvents chkcalcNightDiffOT As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcNightDiff As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcSpclHoliday As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcHoliday As System.Windows.Forms.CheckBox
@@ -9691,9 +9426,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label365 As System.Windows.Forms.Label
     Friend WithEvents ToolStripLabel8 As System.Windows.Forms.ToolStripLabel
     Friend WithEvents tsbtnDelBon As System.Windows.Forms.ToolStripButton
-    Friend WithEvents chkbxRevealInPayroll As CheckBox
-    Friend WithEvents Label366 As Label
-    Friend WithEvents txtWorkHoursPerWeek As TextBox
     Friend WithEvents tbpSalary As TabPage
     Friend WithEvents SalaryTab As SalaryTab
     Friend WithEvents BonusTab As BonusTab
@@ -9706,7 +9438,6 @@ Partial Class EmployeeForm
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton
     Friend WithEvents tsbtnImport As ToolStripButton
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents DataGridViewTextBoxColumn64 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn65 As DataGridViewTextBoxColumn

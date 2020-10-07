@@ -884,7 +884,7 @@ Public Class EmployeeForm
                            txtFName.Text.Trim,
                            txtMName.Text.Trim,
                            txtLName.Text.Trim,
-                           txtSName.Text.Trim,
+                           String.Empty,
                            txtEmpID.Text.Trim,
                            txtTIN.Text.Trim,
                            txtSSS.Text.Trim,
@@ -912,8 +912,8 @@ Public Class EmployeeForm
                            0,'ValNoComma(txtslpayp.Text),
                            0,'ValNoComma(txtmlpayp.Text),
                            0,'ValNoComma(txtothrpayp.Text),
-                           Convert.ToInt16(chkutflag.Checked),
-                           Convert.ToInt16(chkotflag.Checked),
+                           False,
+                           False,
                            ValNoComma(txtvlbal.Text),
                            ValNoComma(txtslbal.Text),
                            ValNoComma(txtmlbal.Text),
@@ -930,12 +930,12 @@ Public Class EmployeeForm
                            Convert.ToInt16(chkcalcHoliday.Checked),
                            Convert.ToInt16(chkcalcSpclHoliday.Checked),
                            Convert.ToInt16(chkcalcNightDiff.Checked),
-                           Convert.ToInt16(chkcalcNightDiffOT.Checked),
+                           True,
                            Convert.ToInt16(chkcalcRestDay.Checked),
-                           Convert.ToInt16(chkcalcRestDayOT.Checked),
+                           True,
                            regularizationDate,
                            evaluationDate,
-                           (Not chkbxRevealInPayroll.Checked),
+                           False,
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            0,
@@ -1039,7 +1039,7 @@ Public Class EmployeeForm
             .Cells("Column16").Value = txtHomePhne.Text : .Cells("Column17").Value = txtMobPhne.Text
             .Cells("Column18").Value = txtHomeAddr.Text : .Cells("Column14").Value = txtemail.Text
             .Cells("Column19").Value = If(rdMale.Checked, "Male", "Female")
-            .Cells("Column20").Value = cboEmpStat.Text : .Cells("Column21").Value = txtSName.Text
+            .Cells("Column20").Value = cboEmpStat.Text
             .Cells("Column25").Value = dbnow : .Cells("Column26").Value = u_nem
 
             .Cells("Column29").Value = cboPosit.SelectedValue
@@ -1068,12 +1068,7 @@ Public Class EmployeeForm
             .Cells("slbalance").Value = txtslbal.Text
             .Cells("mlbalance").Value = txtmlbal.Text
 
-            .Cells("Column23").Value = If(chkutflag.Checked, 1, 0)
-            .Cells("Column24").Value = If(chkotflag.Checked, 1, 0)
-
             .Cells("Column1").Selected = True
-
-            .Cells("AlphaExempted").Value = If(chkAlphaListExempt.Checked = True, "0", "1")
 
             .Cells("WorkDaysPerYear").Value = txtWorkDaysPerYear.Text
 
@@ -1090,9 +1085,7 @@ Public Class EmployeeForm
             .Cells("CalcHoliday").Value = Convert.ToInt16(chkcalcHoliday.Checked)
             .Cells("CalcSpecialHoliday").Value = Convert.ToInt16(chkcalcSpclHoliday.Checked)
             .Cells("CalcNightDiff").Value = Convert.ToInt16(chkcalcNightDiff.Checked)
-            .Cells("CalcNightDiffOT").Value = Convert.ToInt16(chkcalcNightDiffOT.Checked)
             .Cells("CalcRestDay").Value = Convert.ToInt16(chkcalcRestDay.Checked)
-            .Cells("CalcRestDayOT").Value = Convert.ToInt16(chkcalcRestDayOT.Checked)
 
             .Cells("LateGracePeriod").Value = txtUTgrace.Text
             .Cells("AgencyName").Value = cboAgency.Text
@@ -1207,14 +1200,6 @@ Public Class EmployeeForm
             {
                 .EntityId = oldEmployee.RowID,
                 .Description = $"Updated last name from '{oldEmployee.LastName}' to '{txtLName.Text}' of employee.",
-                .ChangedEmployeeId = oldEmployee.RowID.Value
-            })
-        End If
-        If oldEmployee.Surname <> txtSName.Text Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEmployee.RowID,
-                .Description = $"Updated surname from '{oldEmployee.Surname}' to '{txtSName.Text}' of employee.",
                 .ChangedEmployeeId = oldEmployee.RowID.Value
             })
         End If
@@ -1380,7 +1365,7 @@ Public Class EmployeeForm
                 })
             End If
         End If
-        If oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
+        If _currentSystemOwner = SystemOwnerService.LAGlobal AndAlso oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldEmployee.RowID,
@@ -1721,15 +1706,6 @@ Public Class EmployeeForm
         Me.Close()
     End Sub
 
-    Private Sub txt_Leave(sender As Object, e As EventArgs) Handles txtFName.Leave, txtFName.Leave, txtHomeAddr.Leave,
-                                                                    txtLName.Leave, txtMName.Leave, txtNName.Leave, txtSName.Leave ', txtJTtle.Leave
-        'With DirectCast(sender, TextBox)
-        '    .Text = StrConv(.Text, VbStrConv.ProperCase)
-        'End With
-    End Sub
-
-    Dim PositE_asc As String
-
     Private Sub cboPosit_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboPosit.KeyPress
         e.Handled = True
     End Sub
@@ -1804,7 +1780,6 @@ Public Class EmployeeForm
                     txtFName.Text = If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value)
                     txtMName.Text = If(IsDBNull(.Cells("Column3").Value), "", .Cells("Column3").Value)
                     txtLName.Text = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value)
-                    txtSName.Text = If(IsDBNull(.Cells("Column21").Value), "", .Cells("Column21").Value)
 
                     employeefullname = If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value)
 
@@ -1822,10 +1797,6 @@ Public Class EmployeeForm
 
                     employeefullname = employeefullname & addtlWord
                     employeefullname = employeefullname & " " & If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value)
-                    employeefullname = employeefullname & If(IsDBNull(.Cells("Column21").Value),
-                                                             "",
-                                                             "-" & StrConv(.Cells("Column21").Value,
-                                                                           VbStrConv.ProperCase))
                     '
                     LastFirstMidName = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value) & ", " & If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value) &
                         If(Trim(addtlWord) Is Nothing, "", If(Trim(addtlWord) = ".", "", ", " & addtlWord))
@@ -1916,8 +1887,6 @@ Public Class EmployeeForm
                     clearObjControl(SplitContainer2.Panel1)
                     clearObjControl(tbpleaveallow)
                     clearObjControl(tbpleavebal)
-                    chkutflag.Checked = 0
-                    chkotflag.Checked = 0
                     listofEditDepen.Clear()
 
             End Select
@@ -2017,7 +1986,6 @@ Public Class EmployeeForm
         txtFName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column2").Value), "", dgvEmp.CurrentRow.Cells("Column2").Value)
         txtMName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column3").Value), "", dgvEmp.CurrentRow.Cells("Column3").Value)
         txtLName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column4").Value), "", dgvEmp.CurrentRow.Cells("Column4").Value)
-        txtSName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column21").Value), "", dgvEmp.CurrentRow.Cells("Column21").Value)
 
         Dim case_one As Integer = -1
         If case_one <> sameEmpID Then
@@ -2061,10 +2029,6 @@ Public Class EmployeeForm
         txtslbal.Text = dgvEmp.CurrentRow.Cells("slbalance").Value
         txtmlbal.Text = dgvEmp.CurrentRow.Cells("mlbalance").Value
 
-        chkutflag.Checked = If(dgvEmp.CurrentRow.Cells("Column23").Value = 1, True, False)
-        chkotflag.Checked = If(dgvEmp.CurrentRow.Cells("Column24").Value = 1, True, False)
-
-        chkAlphaListExempt.Checked = If(dgvEmp.CurrentRow.Cells("AlphaExempted").Value = 0, True, False)
         txtWorkDaysPerYear.Text = dgvEmp.CurrentRow.Cells("WorkDaysPerYear").Value
         cboDayOfRest.Text = String.Empty
         cboDayOfRest.Text = dgvEmp.CurrentRow.Cells("DayOfRest").Value
@@ -2084,12 +2048,7 @@ Public Class EmployeeForm
         chkcalcHoliday.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcHoliday").Value) 'If(dgvEmp.CurrentRow.Cells("CalcHoliday").Value = "Y", True, False)
         chkcalcSpclHoliday.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcSpecialHoliday").Value) 'If(dgvEmp.CurrentRow.Cells("CalcSpecialHoliday").Value = "Y", True, False)
         chkcalcNightDiff.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcNightDiff").Value) 'If(dgvEmp.CurrentRow.Cells("CalcNightDiff").Value = "Y", True, False)
-        chkcalcNightDiffOT.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcNightDiffOT").Value) 'If(dgvEmp.CurrentRow.Cells("CalcNightDiffOT").Value = "Y", True, False)
         chkcalcRestDay.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcRestDay").Value) 'If(dgvEmp.CurrentRow.Cells("CalcRestDay").Value = "Y", True, False)
-        chkcalcRestDayOT.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcRestDayOT").Value) 'If(dgvEmp.CurrentRow.Cells("CalcRestDayOT").Value = "Y", True, False)
-
-        chkbxRevealInPayroll.Checked =
-            (Not CBool(Convert.ToInt16(dgvEmp.CurrentRow.Cells("RevealInPayroll").Value)))
 
         txtUTgrace.Text = dgvEmp.CurrentRow.Cells("LateGracePeriod").Value 'AgencyName
         cboAgency.Text = dgvEmp.CurrentRow.Cells("AgencyName").Value
@@ -2204,7 +2163,6 @@ Public Class EmployeeForm
         Next
         dtpempstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-        chkbxRevealInPayroll.Checked = False
 
         BPIinsuranceText.Text = _policy.DefaultBPIInsurance
 
@@ -3253,9 +3211,6 @@ Public Class EmployeeForm
 
             AddHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
 
-            Panel1.Visible =
-                (Panel1.AccessibleDescription = _systemOwnerService.GetCurrentSystemOwner())
-
         End If
 
         tabIndx = GetEmployeeProfileTabPageIndex()
@@ -3557,10 +3512,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtOTgrace_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtOTgrace.KeyPress
-        e.Handled = TrapNumKey(Asc(e.KeyChar))
-    End Sub
-
     Private Sub txtUTgrace_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtUTgrace.KeyPress
 
         Dim e_asc = Asc(e.KeyChar)
@@ -3568,27 +3519,6 @@ Public Class EmployeeForm
         Dim n_TrapDecimalKey As New TrapDecimalKey(e_asc, txtUTgrace.Text)
 
         e.Handled = n_TrapDecimalKey.ResultTrap
-
-    End Sub
-
-    Private Sub chkotflag_CheckedChanged(sender As Object, e As EventArgs) Handles chkotflag.CheckedChanged
-        If chkotflag.Checked Then
-            txtOTgrace.Enabled = 1
-        Else
-            txtOTgrace.Enabled = 0
-        End If
-    End Sub
-
-    Private Sub Panel1_VisibleChanged(sender As Object, e As EventArgs) Handles Panel1.VisibleChanged
-
-        Dim _bool As Boolean = Panel1.Visible
-
-        If _bool Then
-
-            GroupBox1.Location =
-                New Point(GroupBox1.Location.X, 557)
-
-        End If
 
     End Sub
 
