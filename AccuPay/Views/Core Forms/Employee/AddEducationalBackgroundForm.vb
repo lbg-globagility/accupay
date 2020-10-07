@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -13,7 +15,7 @@ Public Class AddEducationalBackgroundForm
 
     Private _newEducBg As EducationalBackground
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -65,7 +67,7 @@ Public Class AddEducationalBackgroundForm
             Async Function()
                 _newEducBg = New EducationalBackground
                 With _newEducBg
-                    .Type = cboType.SelectedItem
+                    .Type = cboType.Text
                     .School = txtSchool.Text
                     .Degree = txtDegree.Text
                     .Course = txtCourse.Text
@@ -81,7 +83,13 @@ Public Class AddEducationalBackgroundForm
                 Dim educBGRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
                 Await educBGRepo.CreateAsync(_newEducBg)
 
-                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newEducBg.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=_newEducBg.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=_newEducBg.EmployeeID,
+                    suffixIdentifier:=$" with type '{_newEducBg.Type}' and school '{_newEducBg.School}'")
 
                 succeed = True
             End Function)

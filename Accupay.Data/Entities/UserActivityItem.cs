@@ -20,5 +20,16 @@ namespace AccuPay.Data.Entities
         public int UserActivityId { get; set; }
         public int EntityId { get; set; }
         public string Description { get; set; }
+        public int? ChangedEmployeeId { get; set; }
+        public int? ChangedUserId { get; set; }
+
+        [ForeignKey("ChangedEmployeeId")]
+        public Employee ChangedEmployee { get; set; }
+
+        [ForeignKey("ChangedUserId")]
+        public AspNetUser ChangedUser { get; set; }
+
+        [ForeignKey("UserActivityId")]
+        public UserActivity Activity { get; set; }
     }
 }

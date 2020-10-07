@@ -164,7 +164,13 @@ Public Class EducationalBackgroundTab
                     Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
                     Await educbgRepo.DeleteAsync(_currentEducBg)
 
-                    _userActivityRepo.RecordDelete(z_User, "Educational Background", CInt(_currentEducBg.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentEducBg.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentEducBg.EmployeeID,
+                        suffixIdentifier:=$" with type '{_currentEducBg.Type}' and school '{_currentEducBg.School}'")
 
                     Await LoadEducationalBackgrounds()
                 End Function)
@@ -271,66 +277,79 @@ Public Class EducationalBackgroundTab
     Private Sub RecordUpdateEducBg(oldEducBg As EducationalBackground)
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        If oldEducBg Is Nothing Then Return
+
+        Dim suffixIdentifier = $"of educational background with type '{oldEducBg.Type}' and school '{oldEducBg.School}'."
 
         If _currentEducBg.Type <> oldEducBg.Type Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} type from '{oldEducBg.Type}' to '{_currentEducBg.Type}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated type from '{oldEducBg.Type}' to '{_currentEducBg.Type}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
         If _currentEducBg.School <> oldEducBg.School Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} school from '{oldEducBg.School}' to '{_currentEducBg.School}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated school from '{oldEducBg.School}' to '{_currentEducBg.School}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
         If _currentEducBg.Degree <> oldEducBg.Degree Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} degree from '{oldEducBg.Degree}' to '{_currentEducBg.Degree}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated degree from '{oldEducBg.Degree}' to '{_currentEducBg.Degree}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
         If _currentEducBg.Course <> oldEducBg.Course Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} course from '{oldEducBg.Course}' to '{_currentEducBg.Course}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated course from '{oldEducBg.Course}' to '{_currentEducBg.Course}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
         If _currentEducBg.Major <> oldEducBg.Major Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} major from '{oldEducBg.Major}' to '{_currentEducBg.Major}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated major from '{oldEducBg.Major}' to '{_currentEducBg.Major}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
         If _currentEducBg.DateFrom <> oldEducBg.DateFrom Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} start date from '{oldEducBg.DateFrom.ToShortDateString}' to '{_currentEducBg.DateFrom.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated start date from '{oldEducBg.DateFrom.ToShortDateString}' to '{_currentEducBg.DateFrom.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
         If _currentEducBg.DateTo <> oldEducBg.DateTo Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} end date from '{oldEducBg.DateTo.ToShortDateString}' to '{_currentEducBg.DateTo.ToShortDateString}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated end date from '{oldEducBg.DateTo.ToShortDateString}' to '{_currentEducBg.DateTo.ToShortDateString}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
         If _currentEducBg.Remarks <> oldEducBg.Remarks Then
             changes.Add(New UserActivityItem() With
-                        {
-                        .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated {entityName} remarks from '{oldEducBg.Remarks}' to '{_currentEducBg.Remarks}'."
-                        })
+            {
+                .EntityId = oldEducBg.RowID.Value,
+                .Description = $"Updated remarks from '{oldEducBg.Remarks}' to '{_currentEducBg.Remarks}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldEducBg.EmployeeID
+            })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        If changes.Any() Then
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
 
     End Sub
 

@@ -5,6 +5,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Helpers
+Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportOvertimeForm
@@ -57,8 +58,8 @@ Public Class ImportOvertimeForm
         Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
                 records = ExcelService(Of OvertimeRowRecord).
-                                Read(fileName).
-                                ToList()
+                    Read(fileName).
+                    ToList()
             End Sub)
 
         If parsedSuccessfully = False Then Return
@@ -192,10 +193,14 @@ Public Class ImportOvertimeForm
                 Dim importlist = New List(Of UserActivityItem)
 
                 For Each overtime In _overtimes
+
+                    Dim suffixIdentifier = $"with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'."
+
                     importlist.Add(New UserActivityItem() With
                     {
-                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
-                        .EntityId = CInt(overtime.RowID)
+                        .Description = $"Create a new overtime {suffixIdentifier}",
+                        .EntityId = overtime.RowID.Value,
+                        .ChangedEmployeeId = overtime.EmployeeID.Value
                     })
                 Next
 

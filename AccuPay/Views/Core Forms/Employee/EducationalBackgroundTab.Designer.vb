@@ -28,12 +28,10 @@ Partial Class EducationalBackgroundTab
         Me.ToolStrip9 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.txtFullname = New System.Windows.Forms.TextBox()
@@ -87,7 +85,7 @@ Partial Class EducationalBackgroundTab
         Me.ToolStrip9.AutoSize = False
         Me.ToolStrip9.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip9.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip9.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnClose, Me.ToolStripSeparator3, Me.btnSave, Me.ToolStripSeparator4, Me.ToolStripLabel2, Me.btnDelete, Me.btnCancel, Me.btnUserActivity})
+        Me.ToolStrip9.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnClose, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.ToolStripSeparator3, Me.btnUserActivity})
         Me.ToolStrip9.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip9.Name = "ToolStrip9"
         Me.ToolStrip9.Size = New System.Drawing.Size(856, 25)
@@ -99,8 +97,8 @@ Partial Class EducationalBackgroundTab
         Me.btnNew.Image = Global.AccuPay.My.Resources.Resources._new
         Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnNew.Name = "btnNew"
-        Me.btnNew.Size = New System.Drawing.Size(147, 22)
-        Me.btnNew.Text = "&New Educ Background"
+        Me.btnNew.Size = New System.Drawing.Size(51, 22)
+        Me.btnNew.Text = "&New"
         '
         'btnClose
         '
@@ -111,38 +109,22 @@ Partial Class EducationalBackgroundTab
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
         '
-        'ToolStripSeparator3
-        '
-        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 25)
-        '
         'btnSave
         '
         Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
         Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(147, 22)
-        Me.btnSave.Text = "&Save Educ Background"
-        '
-        'ToolStripSeparator4
-        '
-        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(6, 25)
-        '
-        'ToolStripLabel2
-        '
-        Me.ToolStripLabel2.AutoSize = False
-        Me.ToolStripLabel2.Name = "ToolStripLabel2"
-        Me.ToolStripLabel2.Size = New System.Drawing.Size(89, 22)
+        Me.btnSave.Size = New System.Drawing.Size(51, 22)
+        Me.btnSave.Text = "&Save"
         '
         'btnDelete
         '
         Me.btnDelete.Enabled = False
-        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.cancel
+        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(156, 22)
-        Me.btnDelete.Text = "&Delete Educ Background"
+        Me.btnDelete.Size = New System.Drawing.Size(60, 22)
+        Me.btnDelete.Text = "&Delete"
         '
         'btnCancel
         '
@@ -152,13 +134,18 @@ Partial Class EducationalBackgroundTab
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
         Me.btnCancel.Text = "&Cancel"
         '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(6, 25)
+        '
         'btnUserActivity
         '
         Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
         Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnUserActivity.Name = "btnUserActivity"
         Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.btnUserActivity.Text = "User Activity"
+        Me.btnUserActivity.Text = "&User Activity"
         '
         'txtEmployeeID
         '
@@ -563,8 +550,6 @@ Partial Class EducationalBackgroundTab
     Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents btnSave As ToolStripButton
-    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
-    Friend WithEvents ToolStripLabel2 As ToolStripLabel
     Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnUserActivity As ToolStripButton

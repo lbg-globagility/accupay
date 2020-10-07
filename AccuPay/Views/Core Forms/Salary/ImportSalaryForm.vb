@@ -185,10 +185,14 @@ Public Class ImportSalaryForm
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In _salaries
+
+                    Dim suffixIdentifier = $"with start date '{item.EffectiveFrom.ToShortDateString()}'."
+
                     importList.Add(New UserActivityItem() With
                     {
-                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
-                        .EntityId = CInt(item.RowID)
+                        .Description = $"Created a new salary {suffixIdentifier}",
+                        .EntityId = item.RowID.Value,
+                        .ChangedEmployeeId = item.EmployeeID.Value
                     })
                 Next
 

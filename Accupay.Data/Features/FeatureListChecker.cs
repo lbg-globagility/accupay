@@ -68,7 +68,7 @@ public class FeatureListChecker
             var stream = new MemoryStream(File.ReadAllBytes(filename));
             Initialize(stream);
         }
-        catch (FileNotFoundException ex)
+        catch (FileNotFoundException)
         {
         }
     }

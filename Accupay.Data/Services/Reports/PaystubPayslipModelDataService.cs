@@ -90,7 +90,7 @@ namespace AccuPay.Data.Services
 
                     BasicHours = paystub.BasicHours,
 
-                    Allowance = paystub.TotalAllowance - paystub.Ecola,
+                    Allowance = paystub.TotalNonTaxableAllowance - paystub.Ecola,
 
                     Ecola = paystub.Ecola,
 

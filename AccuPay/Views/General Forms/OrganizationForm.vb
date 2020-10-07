@@ -37,7 +37,7 @@ Public Class OrganizationForm
 
         NewButton.Visible = False
         SaveButton.Visible = False
-        CancelButton.Visible = False
+        CancelToolStripButton.Visible = False
 
         If role.Success Then
             _currentRolePermission = role.RolePermission
@@ -49,7 +49,7 @@ Public Class OrganizationForm
 
             If _currentRolePermission.Update OrElse _currentRolePermission.Create Then
                 SaveButton.Visible = True
-                CancelButton.Visible = True
+                CancelToolStripButton.Visible = True
             End If
         Else
             SplitContainer1.Panel1.Enabled = False
@@ -367,7 +367,7 @@ Public Class OrganizationForm
 
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
 
         isNew = 0
         cleartextbox()
@@ -828,22 +828,6 @@ Public Class OrganizationForm
         AddListOfValueForm.lblName.Text = "Type"
         AddListOfValueForm.ShowDialog()
     End Sub
-
-    Function payp_count() As Integer
-
-        Dim params(2, 2) As Object
-
-        params(0, 0) = "organization_ID"
-
-        params(0, 1) = orgztnID
-
-        Dim _divisor = EXEC_INSUPD_PROCEDURE(params,
-                                              "COUNT_payperiodthisyear",
-                                              "payp_count")
-
-        payp_count = CInt(_divisor)
-
-    End Function
 
     Private Sub txtvlallow_TextChanged(sender As Object, e As EventArgs) Handles txtvlallow.TextChanged
 

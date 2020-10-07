@@ -9,7 +9,7 @@ namespace AccuPay.Data.Helpers
     {
         public static IQueryable<T> OrderBy<T, TKey>(this IQueryable<T> query, Expression<Func<T, TKey>> keySelector, string direction)
         {
-            if (direction == "desc")
+            if (direction.ToLower().Trim() == "desc")
             {
                 return query.OrderByDescending(keySelector);
             }
@@ -21,7 +21,7 @@ namespace AccuPay.Data.Helpers
 
         public static IOrderedQueryable<T> ThenBy<T, TKey>(this IOrderedQueryable<T> query, Expression<Func<T, TKey>> keySelector, string direction)
         {
-            if (direction == "desc")
+            if (direction.ToLower().Trim() == "desc")
             {
                 return query.ThenByDescending(keySelector);
             }

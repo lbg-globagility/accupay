@@ -38,24 +38,21 @@ namespace AccuPay.Infrastructure.Reports
         private readonly ListOfValueCollection _settings;
         private readonly OrganizationRepository _organizationRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
-
-        private readonly AdjustmentService _adjustmentService;
-
+        private readonly PaystubDataService _paystubDataService;
         private readonly SystemOwnerService _systemOwnerService;
-
         private readonly PayrollSummaryExcelFormatReportDataService _reportDataService;
 
         public PayrollSummaryReportBuilder(
             OrganizationRepository organizationRepository,
             PayPeriodRepository payPeriodRepository,
-            AdjustmentService adjustmentService,
+            PaystubDataService paystubDataService,
             SystemOwnerService systemOwnerService,
             ListOfValueService listOfValueService,
             PayrollSummaryExcelFormatReportDataService reportDataService)
         {
             _organizationRepository = organizationRepository;
             _payPeriodRepository = payPeriodRepository;
-            _adjustmentService = adjustmentService;
+            _paystubDataService = paystubDataService;
             _systemOwnerService = systemOwnerService;
             _reportDataService = reportDataService;
             _settings = listOfValueService.Create();
@@ -208,7 +205,7 @@ namespace AccuPay.Infrastructure.Reports
 
             var newFile = new FileInfo(saveFilePath);
 
-            var viewableReportColumns = await GetViewableReportColumns(allEmployees, hideEmptyColumns, organizationId, payPeriod);
+            var viewableReportColumns = await GetViewableReportColumns(allEmployees, hideEmptyColumns, organizationId, payPeriod, isActual);
 
             var employeeGroups = GroupEmployees(allEmployees);
 
@@ -395,7 +392,8 @@ namespace AccuPay.Infrastructure.Reports
             ICollection<DataRow> allEmployees,
             bool hideEmptyColumns,
             int organizationId,
-            SelectedPayPeriod payPeriod)
+            SelectedPayPeriod payPeriod,
+            bool isActual)
         {
             var viewableReportColumns = new List<ExcelReportColumn>();
             foreach (var reportColumn in _reportColumns)
@@ -419,7 +417,7 @@ namespace AccuPay.Infrastructure.Reports
             }
 
             if (GetPayrollSummaryAdjustmentBreakdownPolicy() != PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly)
-                await AddAdjustmentBreakdownColumns(allEmployees, viewableReportColumns, payPeriod, organizationId);
+                await AddAdjustmentBreakdownColumns(allEmployees, viewableReportColumns, payPeriod, organizationId, isActual);
 
             return viewableReportColumns;
         }
@@ -494,9 +492,12 @@ namespace AccuPay.Infrastructure.Reports
             ICollection<DataRow> allEmployees,
             List<ExcelReportColumn> viewableReportColumns,
             SelectedPayPeriod payPeriod,
-            int organizationId)
+            int organizationId,
+            bool isActual)
         {
-            var adjustments = await GetCurrentAdjustments(payPeriod, organizationId, allEmployees);
+            var adjustments = await GetCurrentAdjustments(payPeriod, organizationId, allEmployees, isActual);
+
+            if (!adjustments.Any()) return;
 
             var groupedAdjustments = adjustments.GroupBy(a => a.ProductID).ToList();
 
@@ -538,7 +539,7 @@ namespace AccuPay.Infrastructure.Reports
             }
         }
 
-        private async Task<List<IAdjustment>> GetCurrentAdjustments(SelectedPayPeriod payPeriod, int organizationId, ICollection<DataRow> allEmployees = null)
+        private async Task<List<IAdjustment>> GetCurrentAdjustments(SelectedPayPeriod payPeriod, int organizationId, ICollection<DataRow> allEmployees = null, bool isActual = false)
         {
             if (payPeriod.DateFrom == null || payPeriod.DateTo == null)
                 throw new ArgumentException("Cannot fetch pay period data.");
@@ -546,7 +547,12 @@ namespace AccuPay.Infrastructure.Reports
             var employeeIds = GetEmployeeIds(allEmployees.ToList());
             var datePeriod = new TimePeriod(payPeriod.DateFrom, payPeriod.DateTo);
 
-            _adjustments = (await _adjustmentService.GetByMultipleEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod)).ToList();
+            _adjustments = (await _paystubDataService.GetAdjustmentsByEmployeeAndDatePeriodAsync(
+                organizationId,
+                employeeIds,
+                datePeriod,
+                isActual
+            )).ToList();
 
             return _adjustments;
         }

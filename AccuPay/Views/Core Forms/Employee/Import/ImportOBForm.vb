@@ -192,10 +192,14 @@ Public Class ImportOBForm
                 Dim importlist = New List(Of UserActivityItem)
 
                 For Each officialBusiness In Me._officialBusinesses
+
+                    Dim suffixIdentifier = $"with date '{officialBusiness.StartDate.Value.ToShortDateString()}'."
+
                     importlist.Add(New UserActivityItem() With
                     {
-                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
-                        .EntityId = officialBusiness.RowID.Value
+                        .Description = $"Created a new official business {suffixIdentifier}",
+                        .EntityId = officialBusiness.RowID.Value,
+                        .ChangedEmployeeId = officialBusiness.EmployeeID.Value
                     })
                 Next
 

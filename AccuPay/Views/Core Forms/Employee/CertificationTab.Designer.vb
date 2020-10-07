@@ -26,13 +26,13 @@ Partial Class CertificationTab
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip20 = New System.Windows.Forms.ToolStrip()
-        Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
+        Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
-        Me.btnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
-        Me.UserActivity = New System.Windows.Forms.ToolStripButton()
+        Me.btnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.txtFullname = New System.Windows.Forms.TextBox()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
@@ -74,21 +74,21 @@ Partial Class CertificationTab
         '
         Me.ToolStrip20.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip20.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.btnNew, Me.btnSave, Me.btnCancel, Me.ToolStripLabel8, Me.btnDelete, Me.UserActivity})
+        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnClose, Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.ToolStripSeparator1, Me.btnUserActivity})
         Me.ToolStrip20.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip20.Name = "ToolStrip20"
         Me.ToolStrip20.Size = New System.Drawing.Size(856, 25)
         Me.ToolStrip20.TabIndex = 166
         Me.ToolStrip20.Text = "ToolStrip20"
         '
-        'ToolStripButton11
+        'btnClose
         '
-        Me.ToolStripButton11.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton11.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton11.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton11.Name = "ToolStripButton11"
-        Me.ToolStripButton11.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton11.Text = "Close"
+        Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(56, 22)
+        Me.btnClose.Text = "Close"
         '
         'btnNew
         '
@@ -106,35 +106,34 @@ Partial Class CertificationTab
         Me.btnSave.Size = New System.Drawing.Size(51, 22)
         Me.btnSave.Text = "&Save"
         '
-        'btnCancel
-        '
-        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.btnCancel.Text = "Cancel"
-        '
-        'ToolStripLabel8
-        '
-        Me.ToolStripLabel8.AutoSize = False
-        Me.ToolStripLabel8.Name = "ToolStripLabel8"
-        Me.ToolStripLabel8.Size = New System.Drawing.Size(50, 22)
-        '
         'btnDelete
         '
         Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(60, 22)
-        Me.btnDelete.Text = "Delete"
+        Me.btnDelete.Text = "&Delete"
         '
-        'UserActivity
+        'btnCancel
         '
-        Me.UserActivity.Image = CType(resources.GetObject("UserActivity.Image"), System.Drawing.Image)
-        Me.UserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivity.Name = "UserActivity"
-        Me.UserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivity.Text = "User Activity"
+        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(63, 22)
+        Me.btnCancel.Text = "&Cancel"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'btnUserActivity
+        '
+        Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
+        Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnUserActivity.Name = "btnUserActivity"
+        Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
+        Me.btnUserActivity.Text = "&User Activity"
         '
         'txtEmployeeID
         '
@@ -491,13 +490,12 @@ Partial Class CertificationTab
     End Sub
 
     Friend WithEvents ToolStrip20 As ToolStrip
-    Friend WithEvents ToolStripButton11 As ToolStripButton
+    Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents btnNew As ToolStripButton
     Friend WithEvents btnSave As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
-    Friend WithEvents ToolStripLabel8 As ToolStripLabel
     Friend WithEvents btnDelete As ToolStripButton
-    Friend WithEvents UserActivity As ToolStripButton
+    Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents txtEmployeeID As TextBox
     Public WithEvents txtFullname As TextBox
     Friend WithEvents pbEmployee As PictureBox
@@ -529,4 +527,5 @@ Partial Class CertificationTab
     Friend WithEvents Label1 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents dtpExpirationDate As DateTimePicker
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 End Class

@@ -61,7 +61,6 @@ Public Class PayrollForm
 
             PayrollToolStripMenuItem.Visible = False
             BenchmarkPaystubToolStripMenuItem.Visible = False
-            BonusToolStripMenuItem.Visible = False
             WithholdingTaxToolStripMenuItem.Visible = False
         End If
 
@@ -69,22 +68,12 @@ Public Class PayrollForm
 
     Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
 
-        Dim showBonusForm As Boolean =
-            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Goldwings)
-
-        ' no AccuPay clients are using bonus and other features are outdated and might be buggy
-        ' just like deleting Paystub should also delete it's bonuses
-        showBonusForm = False
-
-        BonusToolStripMenuItem.Visible = showBonusForm
-
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         If if_sysowner_is_benchmark Then
 
             BenchmarkPaystubToolStripMenuItem.Visible = True
 
-            BonusToolStripMenuItem.Visible = False
             WithholdingTaxToolStripMenuItem.Visible = False
             PaystubExperimentalToolStripMenuItem.Visible = False
             AllowanceToolStripMenuItem.Visible = False
@@ -144,12 +133,6 @@ Public Class PayrollForm
             previousForm = PayStubForm
 
         End If
-
-    End Sub
-
-    Private Async Sub BonusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
-        Await ChangeForm(BonusGenerator, PermissionConstant.PAYPERIOD)
-        previousForm = BonusGenerator
 
     End Sub
 

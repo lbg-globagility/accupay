@@ -60,14 +60,11 @@ namespace AccuPay.Data.Services
 
             timeEntry.Reset();
 
-            bool isBetweenSalaryDates = false;
-            if (salary != null)
-                isBetweenSalaryDates = currentDate.Date >= salary.EffectiveFrom &&
-                            (salary.EffectiveTo == null || currentDate.Date <= salary.EffectiveTo.Value);
+            bool hasSalaryForThisDate = salary != null && currentDate.Date >= salary.EffectiveFrom;
 
             // TODO: return this as one the list of errors of Time entry generation
             // No covered salary for this date
-            if (isBetweenSalaryDates == false)
+            if (hasSalaryForThisDate == false)
                 return timeEntry;
 
             var currentShift = GetCurrentShift(currentDate, employeeShift, shiftSched, _policy.UseShiftSchedule, _policy.RespectDefaultRestDay, _employee.DayOfRest);
@@ -707,7 +704,7 @@ namespace AccuPay.Data.Services
                 var holidayRate = 0M;
                 var holidayOTRate = 0M;
 
-                if (currentShift.IsWorkingDay)
+                if (currentShift.IsWorkingDay || _employmentPolicy.ComputeRestDay == false)
                 {
                     holidayRate = payrate.RegularRate;
                     holidayOTRate = payrate.OvertimeRate;

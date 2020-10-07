@@ -23,17 +23,17 @@ Partial Class PayStubForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PayStubForm))
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayper = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -78,7 +78,6 @@ Partial Class PayStubForm
         Me.tbppayroll = New System.Windows.Forms.TabPage()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-        Me.tstrip = New System.Windows.Forms.ToolStrip()
         Me.Label61 = New System.Windows.Forms.Label()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
@@ -88,13 +87,13 @@ Partial Class PayStubForm
         Me.pbEmpPicChk = New System.Windows.Forms.PictureBox()
         Me.lblPaidLeavePesoSign = New System.Windows.Forms.Label()
         Me.txtLeaveHours = New System.Windows.Forms.TextBox()
-        Me.txtGrandTotalAllow = New System.Windows.Forms.TextBox()
+        Me.txtGrandTotalAllowance = New System.Windows.Forms.TextBox()
         Me.Label106 = New System.Windows.Forms.Label()
         Me.Label107 = New System.Windows.Forms.Label()
         Me.Label105 = New System.Windows.Forms.Label()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.txtRegularHolidayHours = New System.Windows.Forms.TextBox()
-        Me.txtRestDayOtHour = New System.Windows.Forms.TextBox()
+        Me.txtRestDayOtHours = New System.Windows.Forms.TextBox()
         Me.Label63 = New System.Windows.Forms.Label()
         Me.Label102 = New System.Windows.Forms.Label()
         Me.txtSpecialHolidayOTPay = New System.Windows.Forms.TextBox()
@@ -130,16 +129,16 @@ Partial Class PayStubForm
         Me.Label85 = New System.Windows.Forms.Label()
         Me.txtTotalNetPay = New System.Windows.Forms.TextBox()
         Me.lblTotalNetPay = New System.Windows.Forms.Label()
-        Me.Label87 = New System.Windows.Forms.Label()
+        Me.lblAgencyFeePesoSign = New System.Windows.Forms.Label()
         Me.lblAgencyFee = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.txtLeavePay = New System.Windows.Forms.TextBox()
-        Me.LinkLabel5 = New System.Windows.Forms.LinkLabel()
-        Me.btndiscardchanges = New System.Windows.Forms.Button()
+        Me.AddNewAdjustmentTypeLinkLabel = New System.Windows.Forms.LinkLabel()
+        Me.btnDiscardChanges = New System.Windows.Forms.Button()
         Me.tabEarned = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.DeclaredTabPage = New System.Windows.Forms.TabPage()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.txtAbsentHours = New System.Windows.Forms.TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -179,7 +178,7 @@ Partial Class PayStubForm
         Me.Label19 = New System.Windows.Forms.Label()
         Me.txtRegularHours = New System.Windows.Forms.TextBox()
         Me.txtRegularPay = New System.Windows.Forms.TextBox()
-        Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.ActualTabPage = New System.Windows.Forms.TabPage()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Label82 = New System.Windows.Forms.Label()
         Me.Label68 = New System.Windows.Forms.Label()
@@ -221,14 +220,12 @@ Partial Class PayStubForm
         Me.Label66 = New System.Windows.Forms.Label()
         Me.txtHolidayHours = New System.Windows.Forms.TextBox()
         Me.btnSaveAdjustments = New System.Windows.Forms.Button()
-        Me.Label62 = New System.Windows.Forms.Label()
+        Me.AdjustmentTitleLabel = New System.Windows.Forms.Label()
         Me.dgvAdjustments = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.psaRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cboProducts = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.DataGridViewTextBoxColumn66 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn64 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewLinkColumn()
-        Me.IsAdjustmentActual = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DeleteAdjustmentColumn = New System.Windows.Forms.DataGridViewLinkColumn()
         Me.Label37 = New System.Windows.Forms.Label()
         Me.txtHolidayPay = New System.Windows.Forms.TextBox()
         Me.lblsubtotmisc = New System.Windows.Forms.TextBox()
@@ -238,15 +235,15 @@ Partial Class PayStubForm
         Me.Label46 = New System.Windows.Forms.Label()
         Me.Label45 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
-        Me.Label43 = New System.Windows.Forms.Label()
+        Me.lblTotalBonusPesoSign = New System.Windows.Forms.Label()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.lblSubtotal = New System.Windows.Forms.TextBox()
         Me.lblPaidLeave = New System.Windows.Forms.Label()
         Me.btntotbon = New System.Windows.Forms.Button()
         Me.btntotloan = New System.Windows.Forms.Button()
-        Me.btnTotalTaxabAllowance = New System.Windows.Forms.Button()
-        Me.btntotallow = New System.Windows.Forms.Button()
+        Me.ShowTaxableAllowanceButton = New System.Windows.Forms.Button()
+        Me.ShowNonTaxableAllowanceButton = New System.Windows.Forms.Button()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
@@ -255,9 +252,9 @@ Partial Class PayStubForm
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.txtTotalBonus = New System.Windows.Forms.TextBox()
-        Me.Label13 = New System.Windows.Forms.Label()
+        Me.lblTotalBonus = New System.Windows.Forms.Label()
         Me.txtTotalTaxableAllowance = New System.Windows.Forms.TextBox()
-        Me.txtTotalAllowance = New System.Windows.Forms.TextBox()
+        Me.txtTotalNonTaxableAllowance = New System.Windows.Forms.TextBox()
         Me.Label104 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -294,6 +291,8 @@ Partial Class PayStubForm
         Me.ExportNetPayDeclaredDirectDepositToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ExportNetPayActualDirectDepositToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CostCenterReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CostCenterReportDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CostCenterReportActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePaystubsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -310,8 +309,9 @@ Partial Class PayStubForm
         Me.PrintPayrollSummaryToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PrintPayrollSummaryToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
-        Me.Button3 = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
@@ -345,7 +345,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PrintPayrollSummaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -358,8 +357,8 @@ Partial Class PayStubForm
         CType(Me.pbEmpPicChk, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel6.SuspendLayout()
         Me.tabEarned.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
-        Me.TabPage4.SuspendLayout()
+        Me.DeclaredTabPage.SuspendLayout()
+        Me.ActualTabPage.SuspendLayout()
         CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
         Me.Panel4.SuspendLayout()
@@ -380,14 +379,14 @@ Partial Class PayStubForm
         Me.dgvpayper.ColumnHeadersHeight = 34
         Me.dgvpayper.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvpayper.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.PayDateFrom, Me.PayDateTo, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.StatusColumn})
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpayper.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvpayper.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvpayper.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvpayper.Location = New System.Drawing.Point(10, 204)
         Me.dgvpayper.MultiSelect = False
@@ -545,14 +544,14 @@ Partial Class PayStubForm
         Me.dgvemployees.ColumnHeadersHeight = 34
         Me.dgvemployees.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.EmployeeID, Me.LastName, Me.FirstName, Me.MiddleName, Me.EmployeeType, Me.Position, Me.Division, Me.DeletePaystubColumn})
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvemployees.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvemployees.Location = New System.Drawing.Point(103, 104)
         Me.dgvemployees.MultiSelect = False
@@ -572,8 +571,8 @@ Partial Class PayStubForm
         '
         'EmployeeID
         '
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle2
         Me.EmployeeID.HeaderText = "Employee ID"
         Me.EmployeeID.Name = "EmployeeID"
         Me.EmployeeID.ReadOnly = True
@@ -640,11 +639,11 @@ Partial Class PayStubForm
         '
         Me.lblGrossIncome.AutoSize = True
         Me.lblGrossIncome.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGrossIncome.Location = New System.Drawing.Point(14, 583)
+        Me.lblGrossIncome.Location = New System.Drawing.Point(14, 574)
         Me.lblGrossIncome.Name = "lblGrossIncome"
-        Me.lblGrossIncome.Size = New System.Drawing.Size(91, 13)
+        Me.lblGrossIncome.Size = New System.Drawing.Size(92, 13)
         Me.lblGrossIncome.TabIndex = 170
-        Me.lblGrossIncome.Text = "Gross income :"
+        Me.lblGrossIncome.Text = "Gross Income :"
         '
         'Last
         '
@@ -802,7 +801,6 @@ Partial Class PayStubForm
         'SplitContainer1.Panel1
         '
         Me.SplitContainer1.Panel1.AutoScroll = True
-        Me.SplitContainer1.Panel1.Controls.Add(Me.tstrip)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label61)
         Me.SplitContainer1.Panel1.Controls.Add(Me.LinkLabel1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.LinkLabel2)
@@ -823,7 +821,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.AutoScroll = True
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblPaidLeavePesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtLeaveHours)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.txtGrandTotalAllow)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtGrandTotalAllowance)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label106)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label107)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label105)
@@ -841,21 +839,21 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label85)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalNetPay)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblTotalNetPay)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label87)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.lblAgencyFeePesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblAgencyFee)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label14)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label32)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label6)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtLeavePay)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.LinkLabel5)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btndiscardchanges)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.AddNewAdjustmentTypeLinkLabel)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.btnDiscardChanges)
         Me.SplitContainer1.Panel2.Controls.Add(Me.tabEarned)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label18)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label65)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label66)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtHolidayHours)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btnSaveAdjustments)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label62)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.AdjustmentTitleLabel)
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvAdjustments)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label37)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtHolidayPay)
@@ -866,15 +864,15 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label46)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label45)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label44)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label43)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.lblTotalBonusPesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label41)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label40)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblSubtotal)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblPaidLeave)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btntotbon)
         Me.SplitContainer1.Panel2.Controls.Add(Me.btntotloan)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btnTotalTaxabAllowance)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btntotallow)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ShowTaxableAllowanceButton)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.ShowNonTaxableAllowanceButton)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label35)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label34)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label33)
@@ -883,9 +881,9 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label21)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label29)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalBonus)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.Label13)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.lblTotalBonus)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalTaxableAllowance)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalAllowance)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtTotalNonTaxableAllowance)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label104)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label12)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label7)
@@ -908,21 +906,6 @@ Partial Class PayStubForm
         Me.SplitContainer1.Size = New System.Drawing.Size(961, 462)
         Me.SplitContainer1.SplitterDistance = 242
         Me.SplitContainer1.TabIndex = 0
-        '
-        'tstrip
-        '
-        Me.tstrip.AutoSize = False
-        Me.tstrip.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
-        Me.tstrip.CanOverflow = False
-        Me.tstrip.Dock = System.Windows.Forms.DockStyle.None
-        Me.tstrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.tstrip.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.tstrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow
-        Me.tstrip.Location = New System.Drawing.Point(3, 104)
-        Me.tstrip.Name = "tstrip"
-        Me.tstrip.Size = New System.Drawing.Size(99, 300)
-        Me.tstrip.TabIndex = 280
-        Me.tstrip.Text = "ToolStrip1"
         '
         'Label61
         '
@@ -1021,20 +1004,19 @@ Partial Class PayStubForm
         Me.txtLeaveHours.TabIndex = 540
         Me.txtLeaveHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtGrandTotalAllow
+        'txtGrandTotalAllowance
         '
-        Me.txtGrandTotalAllow.BackColor = System.Drawing.Color.White
-        Me.txtGrandTotalAllow.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtGrandTotalAllow.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtGrandTotalAllow.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtGrandTotalAllow.Location = New System.Drawing.Point(253, 495)
-        Me.txtGrandTotalAllow.Name = "txtGrandTotalAllow"
-        Me.txtGrandTotalAllow.ReadOnly = True
-        Me.txtGrandTotalAllow.ShortcutsEnabled = False
-        Me.txtGrandTotalAllow.Size = New System.Drawing.Size(100, 16)
-        Me.txtGrandTotalAllow.TabIndex = 536
-        Me.txtGrandTotalAllow.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.txtGrandTotalAllow.Visible = False
+        Me.txtGrandTotalAllowance.BackColor = System.Drawing.Color.White
+        Me.txtGrandTotalAllowance.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtGrandTotalAllowance.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.txtGrandTotalAllowance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.txtGrandTotalAllowance.Location = New System.Drawing.Point(253, 495)
+        Me.txtGrandTotalAllowance.Name = "txtGrandTotalAllowance"
+        Me.txtGrandTotalAllowance.ReadOnly = True
+        Me.txtGrandTotalAllowance.ShortcutsEnabled = False
+        Me.txtGrandTotalAllowance.Size = New System.Drawing.Size(100, 16)
+        Me.txtGrandTotalAllowance.TabIndex = 536
+        Me.txtGrandTotalAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label106
         '
@@ -1045,7 +1027,6 @@ Partial Class PayStubForm
         Me.Label106.Size = New System.Drawing.Size(144, 13)
         Me.Label106.TabIndex = 537
         Me.Label106.Text = "Grand Total Allowance :"
-        Me.Label106.Visible = False
         '
         'Label107
         '
@@ -1055,7 +1036,6 @@ Partial Class PayStubForm
         Me.Label107.Size = New System.Drawing.Size(14, 13)
         Me.Label107.TabIndex = 539
         Me.Label107.Text = "₱"
-        Me.Label107.Visible = False
         '
         'Label105
         '
@@ -1070,7 +1050,7 @@ Partial Class PayStubForm
         'Panel6
         '
         Me.Panel6.Controls.Add(Me.txtRegularHolidayHours)
-        Me.Panel6.Controls.Add(Me.txtRestDayOtHour)
+        Me.Panel6.Controls.Add(Me.txtRestDayOtHours)
         Me.Panel6.Controls.Add(Me.Label63)
         Me.Panel6.Controls.Add(Me.Label102)
         Me.Panel6.Controls.Add(Me.txtSpecialHolidayOTPay)
@@ -1110,14 +1090,14 @@ Partial Class PayStubForm
         Me.txtRegularHolidayHours.TabIndex = 307
         Me.txtRegularHolidayHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtRestDayOtHour
+        'txtRestDayOtHours
         '
-        Me.txtRestDayOtHour.AccessibleDescription = "RestDayOTHours"
-        Me.txtRestDayOtHour.Location = New System.Drawing.Point(117, 124)
-        Me.txtRestDayOtHour.Name = "txtRestDayOtHour"
-        Me.txtRestDayOtHour.Size = New System.Drawing.Size(100, 20)
-        Me.txtRestDayOtHour.TabIndex = 533
-        Me.txtRestDayOtHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtRestDayOtHours.AccessibleDescription = "RestDayOTHours"
+        Me.txtRestDayOtHours.Location = New System.Drawing.Point(117, 124)
+        Me.txtRestDayOtHours.Name = "txtRestDayOtHours"
+        Me.txtRestDayOtHours.Size = New System.Drawing.Size(100, 20)
+        Me.txtRestDayOtHours.TabIndex = 533
+        Me.txtRestDayOtHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label63
         '
@@ -1494,14 +1474,14 @@ Partial Class PayStubForm
         Me.lblTotalNetPay.TabIndex = 523
         Me.lblTotalNetPay.Text = "Total Net pay:"
         '
-        'Label87
+        'lblAgencyFeePesoSign
         '
-        Me.Label87.AutoSize = True
-        Me.Label87.Location = New System.Drawing.Point(610, 490)
-        Me.Label87.Name = "Label87"
-        Me.Label87.Size = New System.Drawing.Size(14, 13)
-        Me.Label87.TabIndex = 522
-        Me.Label87.Text = "₱"
+        Me.lblAgencyFeePesoSign.AutoSize = True
+        Me.lblAgencyFeePesoSign.Location = New System.Drawing.Point(610, 490)
+        Me.lblAgencyFeePesoSign.Name = "lblAgencyFeePesoSign"
+        Me.lblAgencyFeePesoSign.Size = New System.Drawing.Size(14, 13)
+        Me.lblAgencyFeePesoSign.TabIndex = 522
+        Me.lblAgencyFeePesoSign.Text = "₱"
         '
         'lblAgencyFee
         '
@@ -1554,37 +1534,37 @@ Partial Class PayStubForm
         Me.txtLeavePay.TabIndex = 519
         Me.txtLeavePay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'LinkLabel5
+        'AddNewAdjustmentTypeLinkLabel
         '
-        Me.LinkLabel5.ActiveLinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.LinkLabel5.AutoSize = True
-        Me.LinkLabel5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel5.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.LinkLabel5.Location = New System.Drawing.Point(1252, 3)
-        Me.LinkLabel5.Name = "LinkLabel5"
-        Me.LinkLabel5.Size = New System.Drawing.Size(121, 13)
-        Me.LinkLabel5.TabIndex = 515
-        Me.LinkLabel5.TabStop = True
-        Me.LinkLabel5.Text = "Add an Item to the list"
-        Me.LinkLabel5.VisitedLinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.AddNewAdjustmentTypeLinkLabel.ActiveLinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(200, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.AddNewAdjustmentTypeLinkLabel.AutoSize = True
+        Me.AddNewAdjustmentTypeLinkLabel.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.AddNewAdjustmentTypeLinkLabel.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.AddNewAdjustmentTypeLinkLabel.Location = New System.Drawing.Point(1288, 3)
+        Me.AddNewAdjustmentTypeLinkLabel.Name = "AddNewAdjustmentTypeLinkLabel"
+        Me.AddNewAdjustmentTypeLinkLabel.Size = New System.Drawing.Size(87, 13)
+        Me.AddNewAdjustmentTypeLinkLabel.TabIndex = 515
+        Me.AddNewAdjustmentTypeLinkLabel.TabStop = True
+        Me.AddNewAdjustmentTypeLinkLabel.Text = "Add a new type"
+        Me.AddNewAdjustmentTypeLinkLabel.VisitedLinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
         '
-        'btndiscardchanges
+        'btnDiscardChanges
         '
-        Me.btndiscardchanges.Image = CType(resources.GetObject("btndiscardchanges.Image"), System.Drawing.Image)
-        Me.btndiscardchanges.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btndiscardchanges.Location = New System.Drawing.Point(881, 179)
-        Me.btndiscardchanges.Name = "btndiscardchanges"
-        Me.btndiscardchanges.Padding = New System.Windows.Forms.Padding(6, 0, 0, 0)
-        Me.btndiscardchanges.Size = New System.Drawing.Size(118, 34)
-        Me.btndiscardchanges.TabIndex = 514
-        Me.btndiscardchanges.Text = "Discard changes"
-        Me.btndiscardchanges.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btndiscardchanges.UseVisualStyleBackColor = True
+        Me.btnDiscardChanges.Image = CType(resources.GetObject("btnDiscardChanges.Image"), System.Drawing.Image)
+        Me.btnDiscardChanges.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnDiscardChanges.Location = New System.Drawing.Point(881, 179)
+        Me.btnDiscardChanges.Name = "btnDiscardChanges"
+        Me.btnDiscardChanges.Padding = New System.Windows.Forms.Padding(6, 0, 0, 0)
+        Me.btnDiscardChanges.Size = New System.Drawing.Size(118, 34)
+        Me.btnDiscardChanges.TabIndex = 514
+        Me.btnDiscardChanges.Text = "Discard changes"
+        Me.btnDiscardChanges.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnDiscardChanges.UseVisualStyleBackColor = True
         '
         'tabEarned
         '
-        Me.tabEarned.Controls.Add(Me.TabPage1)
-        Me.tabEarned.Controls.Add(Me.TabPage4)
+        Me.tabEarned.Controls.Add(Me.DeclaredTabPage)
+        Me.tabEarned.Controls.Add(Me.ActualTabPage)
         Me.tabEarned.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.tabEarned.ItemSize = New System.Drawing.Size(62, 25)
         Me.tabEarned.Location = New System.Drawing.Point(3, 3)
@@ -1593,55 +1573,55 @@ Partial Class PayStubForm
         Me.tabEarned.Size = New System.Drawing.Size(734, 207)
         Me.tabEarned.TabIndex = 513
         '
-        'TabPage1
+        'DeclaredTabPage
         '
-        Me.TabPage1.Controls.Add(Me.Panel2)
-        Me.TabPage1.Controls.Add(Me.txtAbsentHours)
-        Me.TabPage1.Controls.Add(Me.Label17)
-        Me.TabPage1.Controls.Add(Me.Label4)
-        Me.TabPage1.Controls.Add(Me.txtLateHours)
-        Me.TabPage1.Controls.Add(Me.Label52)
-        Me.TabPage1.Controls.Add(Me.Label16)
-        Me.TabPage1.Controls.Add(Me.txtUndertimeHours)
-        Me.TabPage1.Controls.Add(Me.Label54)
-        Me.TabPage1.Controls.Add(Me.Label15)
-        Me.TabPage1.Controls.Add(Me.Label55)
-        Me.TabPage1.Controls.Add(Me.Label27)
-        Me.TabPage1.Controls.Add(Me.Label56)
-        Me.TabPage1.Controls.Add(Me.Label28)
-        Me.TabPage1.Controls.Add(Me.Label57)
-        Me.TabPage1.Controls.Add(Me.txtAbsenceDeduction)
-        Me.TabPage1.Controls.Add(Me.txtOvertimePay)
-        Me.TabPage1.Controls.Add(Me.txtLateDeduction)
-        Me.TabPage1.Controls.Add(Me.txtNightDiffPay)
-        Me.TabPage1.Controls.Add(Me.txtUndertimeDeduction)
-        Me.TabPage1.Controls.Add(Me.txtNightDiffOvertimePay)
-        Me.TabPage1.Controls.Add(Me.Label51)
-        Me.TabPage1.Controls.Add(Me.Label50)
-        Me.TabPage1.Controls.Add(Me.Label49)
-        Me.TabPage1.Controls.Add(Me.Label58)
-        Me.TabPage1.Controls.Add(Me.txtBasicRate)
-        Me.TabPage1.Controls.Add(Me.Label8)
-        Me.TabPage1.Controls.Add(Me.txttotreghrs)
-        Me.TabPage1.Controls.Add(Me.txttotregamt)
-        Me.TabPage1.Controls.Add(Me.Label11)
-        Me.TabPage1.Controls.Add(Me.txtOvertimeHours)
-        Me.TabPage1.Controls.Add(Me.Label22)
-        Me.TabPage1.Controls.Add(Me.txtNightDiffHours)
-        Me.TabPage1.Controls.Add(Me.Label23)
-        Me.TabPage1.Controls.Add(Me.txtNightDiffOvertimeHours)
-        Me.TabPage1.Controls.Add(Me.Label20)
-        Me.TabPage1.Controls.Add(Me.Label19)
-        Me.TabPage1.Controls.Add(Me.txtRegularHours)
-        Me.TabPage1.Controls.Add(Me.txtRegularPay)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(726, 174)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Tag = "0"
-        Me.TabPage1.Text = "DECLARED               "
-        Me.TabPage1.UseVisualStyleBackColor = True
+        Me.DeclaredTabPage.Controls.Add(Me.Panel2)
+        Me.DeclaredTabPage.Controls.Add(Me.txtAbsentHours)
+        Me.DeclaredTabPage.Controls.Add(Me.Label17)
+        Me.DeclaredTabPage.Controls.Add(Me.Label4)
+        Me.DeclaredTabPage.Controls.Add(Me.txtLateHours)
+        Me.DeclaredTabPage.Controls.Add(Me.Label52)
+        Me.DeclaredTabPage.Controls.Add(Me.Label16)
+        Me.DeclaredTabPage.Controls.Add(Me.txtUndertimeHours)
+        Me.DeclaredTabPage.Controls.Add(Me.Label54)
+        Me.DeclaredTabPage.Controls.Add(Me.Label15)
+        Me.DeclaredTabPage.Controls.Add(Me.Label55)
+        Me.DeclaredTabPage.Controls.Add(Me.Label27)
+        Me.DeclaredTabPage.Controls.Add(Me.Label56)
+        Me.DeclaredTabPage.Controls.Add(Me.Label28)
+        Me.DeclaredTabPage.Controls.Add(Me.Label57)
+        Me.DeclaredTabPage.Controls.Add(Me.txtAbsenceDeduction)
+        Me.DeclaredTabPage.Controls.Add(Me.txtOvertimePay)
+        Me.DeclaredTabPage.Controls.Add(Me.txtLateDeduction)
+        Me.DeclaredTabPage.Controls.Add(Me.txtNightDiffPay)
+        Me.DeclaredTabPage.Controls.Add(Me.txtUndertimeDeduction)
+        Me.DeclaredTabPage.Controls.Add(Me.txtNightDiffOvertimePay)
+        Me.DeclaredTabPage.Controls.Add(Me.Label51)
+        Me.DeclaredTabPage.Controls.Add(Me.Label50)
+        Me.DeclaredTabPage.Controls.Add(Me.Label49)
+        Me.DeclaredTabPage.Controls.Add(Me.Label58)
+        Me.DeclaredTabPage.Controls.Add(Me.txtBasicRate)
+        Me.DeclaredTabPage.Controls.Add(Me.Label8)
+        Me.DeclaredTabPage.Controls.Add(Me.txttotreghrs)
+        Me.DeclaredTabPage.Controls.Add(Me.txttotregamt)
+        Me.DeclaredTabPage.Controls.Add(Me.Label11)
+        Me.DeclaredTabPage.Controls.Add(Me.txtOvertimeHours)
+        Me.DeclaredTabPage.Controls.Add(Me.Label22)
+        Me.DeclaredTabPage.Controls.Add(Me.txtNightDiffHours)
+        Me.DeclaredTabPage.Controls.Add(Me.Label23)
+        Me.DeclaredTabPage.Controls.Add(Me.txtNightDiffOvertimeHours)
+        Me.DeclaredTabPage.Controls.Add(Me.Label20)
+        Me.DeclaredTabPage.Controls.Add(Me.Label19)
+        Me.DeclaredTabPage.Controls.Add(Me.txtRegularHours)
+        Me.DeclaredTabPage.Controls.Add(Me.txtRegularPay)
+        Me.DeclaredTabPage.Location = New System.Drawing.Point(4, 29)
+        Me.DeclaredTabPage.Name = "DeclaredTabPage"
+        Me.DeclaredTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.DeclaredTabPage.Size = New System.Drawing.Size(726, 174)
+        Me.DeclaredTabPage.TabIndex = 0
+        Me.DeclaredTabPage.Tag = "0"
+        Me.DeclaredTabPage.Text = "DECLARED               "
+        Me.DeclaredTabPage.UseVisualStyleBackColor = True
         '
         'Panel2
         '
@@ -2033,52 +2013,52 @@ Partial Class PayStubForm
         Me.txtRegularPay.TabIndex = 253
         Me.txtRegularPay.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'TabPage4
+        'ActualTabPage
         '
-        Me.TabPage4.Controls.Add(Me.Panel3)
-        Me.TabPage4.Controls.Add(Me.Label82)
-        Me.TabPage4.Controls.Add(Me.Label68)
-        Me.TabPage4.Controls.Add(Me.Label83)
-        Me.TabPage4.Controls.Add(Me.txtRegularPayActual)
-        Me.TabPage4.Controls.Add(Me.Label84)
-        Me.TabPage4.Controls.Add(Me.txtRegularHoursActual)
-        Me.TabPage4.Controls.Add(Me.Label69)
-        Me.TabPage4.Controls.Add(Me.Label70)
-        Me.TabPage4.Controls.Add(Me.txtUndertimeDeductionActual)
-        Me.TabPage4.Controls.Add(Me.NightDiffOvertimeHoursActual)
-        Me.TabPage4.Controls.Add(Me.txtLateDeductionActual)
-        Me.TabPage4.Controls.Add(Me.Label71)
-        Me.TabPage4.Controls.Add(Me.txtAbsenceDeductionActual)
-        Me.TabPage4.Controls.Add(Me.txtNightDiffHoursActual)
-        Me.TabPage4.Controls.Add(Me.Label88)
-        Me.TabPage4.Controls.Add(Me.Label72)
-        Me.TabPage4.Controls.Add(Me.Label89)
-        Me.TabPage4.Controls.Add(Me.txtOvertimeHoursActual)
-        Me.TabPage4.Controls.Add(Me.Label90)
-        Me.TabPage4.Controls.Add(Me.Label73)
-        Me.TabPage4.Controls.Add(Me.txtUndertimeHoursActual)
-        Me.TabPage4.Controls.Add(Me.Label74)
-        Me.TabPage4.Controls.Add(Me.Label91)
-        Me.TabPage4.Controls.Add(Me.txtBasicRateActual)
-        Me.TabPage4.Controls.Add(Me.txtLateHoursActual)
-        Me.TabPage4.Controls.Add(Me.Label75)
-        Me.TabPage4.Controls.Add(Me.txtAbsentHoursActual)
-        Me.TabPage4.Controls.Add(Me.Label92)
-        Me.TabPage4.Controls.Add(Me.txtNightDiffOvertimePayActual)
-        Me.TabPage4.Controls.Add(Me.txtNightDiffPayActual)
-        Me.TabPage4.Controls.Add(Me.txtOvertimePayActual)
-        Me.TabPage4.Controls.Add(Me.Label77)
-        Me.TabPage4.Controls.Add(Me.Label78)
-        Me.TabPage4.Controls.Add(Me.Label79)
-        Me.TabPage4.Controls.Add(Me.Label81)
-        Me.TabPage4.Location = New System.Drawing.Point(4, 29)
-        Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(726, 174)
-        Me.TabPage4.TabIndex = 1
-        Me.TabPage4.Tag = "1"
-        Me.TabPage4.Text = "ACTUAL"
-        Me.TabPage4.UseVisualStyleBackColor = True
+        Me.ActualTabPage.Controls.Add(Me.Panel3)
+        Me.ActualTabPage.Controls.Add(Me.Label82)
+        Me.ActualTabPage.Controls.Add(Me.Label68)
+        Me.ActualTabPage.Controls.Add(Me.Label83)
+        Me.ActualTabPage.Controls.Add(Me.txtRegularPayActual)
+        Me.ActualTabPage.Controls.Add(Me.Label84)
+        Me.ActualTabPage.Controls.Add(Me.txtRegularHoursActual)
+        Me.ActualTabPage.Controls.Add(Me.Label69)
+        Me.ActualTabPage.Controls.Add(Me.Label70)
+        Me.ActualTabPage.Controls.Add(Me.txtUndertimeDeductionActual)
+        Me.ActualTabPage.Controls.Add(Me.NightDiffOvertimeHoursActual)
+        Me.ActualTabPage.Controls.Add(Me.txtLateDeductionActual)
+        Me.ActualTabPage.Controls.Add(Me.Label71)
+        Me.ActualTabPage.Controls.Add(Me.txtAbsenceDeductionActual)
+        Me.ActualTabPage.Controls.Add(Me.txtNightDiffHoursActual)
+        Me.ActualTabPage.Controls.Add(Me.Label88)
+        Me.ActualTabPage.Controls.Add(Me.Label72)
+        Me.ActualTabPage.Controls.Add(Me.Label89)
+        Me.ActualTabPage.Controls.Add(Me.txtOvertimeHoursActual)
+        Me.ActualTabPage.Controls.Add(Me.Label90)
+        Me.ActualTabPage.Controls.Add(Me.Label73)
+        Me.ActualTabPage.Controls.Add(Me.txtUndertimeHoursActual)
+        Me.ActualTabPage.Controls.Add(Me.Label74)
+        Me.ActualTabPage.Controls.Add(Me.Label91)
+        Me.ActualTabPage.Controls.Add(Me.txtBasicRateActual)
+        Me.ActualTabPage.Controls.Add(Me.txtLateHoursActual)
+        Me.ActualTabPage.Controls.Add(Me.Label75)
+        Me.ActualTabPage.Controls.Add(Me.txtAbsentHoursActual)
+        Me.ActualTabPage.Controls.Add(Me.Label92)
+        Me.ActualTabPage.Controls.Add(Me.txtNightDiffOvertimePayActual)
+        Me.ActualTabPage.Controls.Add(Me.txtNightDiffPayActual)
+        Me.ActualTabPage.Controls.Add(Me.txtOvertimePayActual)
+        Me.ActualTabPage.Controls.Add(Me.Label77)
+        Me.ActualTabPage.Controls.Add(Me.Label78)
+        Me.ActualTabPage.Controls.Add(Me.Label79)
+        Me.ActualTabPage.Controls.Add(Me.Label81)
+        Me.ActualTabPage.Location = New System.Drawing.Point(4, 29)
+        Me.ActualTabPage.Name = "ActualTabPage"
+        Me.ActualTabPage.Padding = New System.Windows.Forms.Padding(3)
+        Me.ActualTabPage.Size = New System.Drawing.Size(726, 174)
+        Me.ActualTabPage.TabIndex = 1
+        Me.ActualTabPage.Tag = "1"
+        Me.ActualTabPage.Text = "ACTUAL"
+        Me.ActualTabPage.UseVisualStyleBackColor = True
         '
         'Panel3
         '
@@ -2490,76 +2470,69 @@ Partial Class PayStubForm
         Me.btnSaveAdjustments.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSaveAdjustments.UseVisualStyleBackColor = True
         '
-        'Label62
+        'AdjustmentTitleLabel
         '
-        Me.Label62.AutoSize = True
-        Me.Label62.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label62.Location = New System.Drawing.Point(743, 3)
-        Me.Label62.Name = "Label62"
-        Me.Label62.Size = New System.Drawing.Size(75, 13)
-        Me.Label62.TabIndex = 507
-        Me.Label62.Text = "Adjustments"
+        Me.AdjustmentTitleLabel.AutoSize = True
+        Me.AdjustmentTitleLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.AdjustmentTitleLabel.Location = New System.Drawing.Point(743, 3)
+        Me.AdjustmentTitleLabel.Name = "AdjustmentTitleLabel"
+        Me.AdjustmentTitleLabel.Size = New System.Drawing.Size(75, 13)
+        Me.AdjustmentTitleLabel.TabIndex = 507
+        Me.AdjustmentTitleLabel.Text = "Adjustments"
         '
         'dgvAdjustments
         '
         Me.dgvAdjustments.AllowUserToOrderColumns = True
         Me.dgvAdjustments.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvAdjustments.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvAdjustments.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvAdjustments.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.dgvAdjustments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvAdjustments.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.psaRowID, Me.cboProducts, Me.DataGridViewTextBoxColumn66, Me.DataGridViewTextBoxColumn64, Me.Column15, Me.IsAdjustmentActual})
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvAdjustments.DefaultCellStyle = DataGridViewCellStyle17
+        Me.dgvAdjustments.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cboProducts, Me.DataGridViewTextBoxColumn66, Me.DataGridViewTextBoxColumn64, Me.DeleteAdjustmentColumn})
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvAdjustments.DefaultCellStyle = DataGridViewCellStyle7
         Me.dgvAdjustments.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvAdjustments.Location = New System.Drawing.Point(746, 19)
         Me.dgvAdjustments.MultiSelect = False
         Me.dgvAdjustments.Name = "dgvAdjustments"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvAdjustments.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvAdjustments.RowHeadersDefaultCellStyle = DataGridViewCellStyle8
         Me.dgvAdjustments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvAdjustments.Size = New System.Drawing.Size(626, 154)
         Me.dgvAdjustments.TabIndex = 506
-        '
-        'psaRowID
-        '
-        Me.psaRowID.DataPropertyName = "RowID"
-        Me.psaRowID.HeaderText = "RowID"
-        Me.psaRowID.Name = "psaRowID"
-        Me.psaRowID.Visible = False
         '
         'cboProducts
         '
         Me.cboProducts.DataPropertyName = "ProductID"
         Me.cboProducts.FillWeight = 30.0!
-        Me.cboProducts.HeaderText = "Item"
+        Me.cboProducts.HeaderText = "Type"
         Me.cboProducts.Name = "cboProducts"
         Me.cboProducts.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.cboProducts.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         '
         'DataGridViewTextBoxColumn66
         '
-        Me.DataGridViewTextBoxColumn66.DataPropertyName = "PayAmount"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle15
+        Me.DataGridViewTextBoxColumn66.DataPropertyName = "Amount"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridViewTextBoxColumn66.FillWeight = 15.0!
         Me.DataGridViewTextBoxColumn66.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn66.Name = "DataGridViewTextBoxColumn66"
@@ -2571,25 +2544,18 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn64.HeaderText = "Comment"
         Me.DataGridViewTextBoxColumn64.Name = "DataGridViewTextBoxColumn64"
         '
-        'Column15
+        'DeleteAdjustmentColumn
         '
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.Column15.DefaultCellStyle = DataGridViewCellStyle16
-        Me.Column15.FillWeight = 10.0!
-        Me.Column15.HeaderText = ""
-        Me.Column15.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
-        Me.Column15.LinkColor = System.Drawing.Color.Red
-        Me.Column15.Name = "Column15"
-        Me.Column15.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column15.Text = "Delete"
-        Me.Column15.UseColumnTextForLinkValue = True
-        '
-        'IsAdjustmentActual
-        '
-        Me.IsAdjustmentActual.DataPropertyName = "IsActual"
-        Me.IsAdjustmentActual.HeaderText = "IsAdjustmentActual"
-        Me.IsAdjustmentActual.Name = "IsAdjustmentActual"
-        Me.IsAdjustmentActual.Visible = False
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.DeleteAdjustmentColumn.DefaultCellStyle = DataGridViewCellStyle6
+        Me.DeleteAdjustmentColumn.FillWeight = 10.0!
+        Me.DeleteAdjustmentColumn.HeaderText = ""
+        Me.DeleteAdjustmentColumn.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.DeleteAdjustmentColumn.LinkColor = System.Drawing.Color.Red
+        Me.DeleteAdjustmentColumn.Name = "DeleteAdjustmentColumn"
+        Me.DeleteAdjustmentColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeleteAdjustmentColumn.Text = "Delete"
+        Me.DeleteAdjustmentColumn.UseColumnTextForLinkValue = True
         '
         'Label37
         '
@@ -2685,14 +2651,14 @@ Partial Class PayStubForm
         Me.Label44.TabIndex = 265
         Me.Label44.Text = "₱"
         '
-        'Label43
+        'lblTotalBonusPesoSign
         '
-        Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(233, 532)
-        Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(14, 13)
-        Me.Label43.TabIndex = 264
-        Me.Label43.Text = "₱"
+        Me.lblTotalBonusPesoSign.AutoSize = True
+        Me.lblTotalBonusPesoSign.Location = New System.Drawing.Point(233, 532)
+        Me.lblTotalBonusPesoSign.Name = "lblTotalBonusPesoSign"
+        Me.lblTotalBonusPesoSign.Size = New System.Drawing.Size(14, 13)
+        Me.lblTotalBonusPesoSign.TabIndex = 264
+        Me.lblTotalBonusPesoSign.Text = "₱"
         '
         'Label41
         '
@@ -2718,7 +2684,7 @@ Partial Class PayStubForm
         Me.lblSubtotal.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.lblSubtotal.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblSubtotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.lblSubtotal.Location = New System.Drawing.Point(253, 396)
+        Me.lblSubtotal.Location = New System.Drawing.Point(249, 405)
         Me.lblSubtotal.Name = "lblSubtotal"
         Me.lblSubtotal.ReadOnly = True
         Me.lblSubtotal.ShortcutsEnabled = False
@@ -2759,29 +2725,27 @@ Partial Class PayStubForm
         Me.btntotloan.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btntotloan.UseVisualStyleBackColor = True
         '
-        'btnTotalTaxabAllowance
+        'ShowTaxableAllowanceButton
         '
-        Me.btnTotalTaxabAllowance.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnTotalTaxabAllowance.Location = New System.Drawing.Point(360, 457)
-        Me.btnTotalTaxabAllowance.Name = "btnTotalTaxabAllowance"
-        Me.btnTotalTaxabAllowance.Size = New System.Drawing.Size(21, 22)
-        Me.btnTotalTaxabAllowance.TabIndex = 246
-        Me.btnTotalTaxabAllowance.Text = "..."
-        Me.btnTotalTaxabAllowance.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.btnTotalTaxabAllowance.UseVisualStyleBackColor = True
-        Me.btnTotalTaxabAllowance.Visible = False
+        Me.ShowTaxableAllowanceButton.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.ShowTaxableAllowanceButton.Location = New System.Drawing.Point(360, 457)
+        Me.ShowTaxableAllowanceButton.Name = "ShowTaxableAllowanceButton"
+        Me.ShowTaxableAllowanceButton.Size = New System.Drawing.Size(21, 22)
+        Me.ShowTaxableAllowanceButton.TabIndex = 246
+        Me.ShowTaxableAllowanceButton.Text = "..."
+        Me.ShowTaxableAllowanceButton.TextAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.ShowTaxableAllowanceButton.UseVisualStyleBackColor = True
         '
-        'btntotallow
+        'ShowNonTaxableAllowanceButton
         '
-        Me.btntotallow.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btntotallow.Location = New System.Drawing.Point(360, 431)
-        Me.btntotallow.Name = "btntotallow"
-        Me.btntotallow.Size = New System.Drawing.Size(21, 22)
-        Me.btntotallow.TabIndex = 246
-        Me.btntotallow.Text = "..."
-        Me.btntotallow.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.btntotallow.UseVisualStyleBackColor = True
-        Me.btntotallow.Visible = False
+        Me.ShowNonTaxableAllowanceButton.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.ShowNonTaxableAllowanceButton.Location = New System.Drawing.Point(360, 431)
+        Me.ShowNonTaxableAllowanceButton.Name = "ShowNonTaxableAllowanceButton"
+        Me.ShowNonTaxableAllowanceButton.Size = New System.Drawing.Size(21, 22)
+        Me.ShowNonTaxableAllowanceButton.TabIndex = 246
+        Me.ShowNonTaxableAllowanceButton.Text = "..."
+        Me.ShowNonTaxableAllowanceButton.TextAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.ShowNonTaxableAllowanceButton.UseVisualStyleBackColor = True
         '
         'Label35
         '
@@ -2868,15 +2832,15 @@ Partial Class PayStubForm
         Me.txtTotalBonus.TabIndex = 196
         Me.txtTotalBonus.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'Label13
+        'lblTotalBonus
         '
-        Me.Label13.AutoSize = True
-        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(14, 532)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(83, 13)
-        Me.Label13.TabIndex = 197
-        Me.Label13.Text = "Total Bonus :"
+        Me.lblTotalBonus.AutoSize = True
+        Me.lblTotalBonus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTotalBonus.Location = New System.Drawing.Point(14, 532)
+        Me.lblTotalBonus.Name = "lblTotalBonus"
+        Me.lblTotalBonus.Size = New System.Drawing.Size(83, 13)
+        Me.lblTotalBonus.TabIndex = 197
+        Me.lblTotalBonus.Text = "Total Bonus :"
         '
         'txtTotalTaxableAllowance
         '
@@ -2892,19 +2856,19 @@ Partial Class PayStubForm
         Me.txtTotalTaxableAllowance.TabIndex = 198
         Me.txtTotalTaxableAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'txtTotalAllowance
+        'txtTotalNonTaxableAllowance
         '
-        Me.txtTotalAllowance.BackColor = System.Drawing.Color.White
-        Me.txtTotalAllowance.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtTotalAllowance.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.txtTotalAllowance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtTotalAllowance.Location = New System.Drawing.Point(253, 435)
-        Me.txtTotalAllowance.Name = "txtTotalAllowance"
-        Me.txtTotalAllowance.ReadOnly = True
-        Me.txtTotalAllowance.ShortcutsEnabled = False
-        Me.txtTotalAllowance.Size = New System.Drawing.Size(100, 16)
-        Me.txtTotalAllowance.TabIndex = 198
-        Me.txtTotalAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.txtTotalNonTaxableAllowance.BackColor = System.Drawing.Color.White
+        Me.txtTotalNonTaxableAllowance.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtTotalNonTaxableAllowance.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.txtTotalNonTaxableAllowance.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.txtTotalNonTaxableAllowance.Location = New System.Drawing.Point(253, 435)
+        Me.txtTotalNonTaxableAllowance.Name = "txtTotalNonTaxableAllowance"
+        Me.txtTotalNonTaxableAllowance.ReadOnly = True
+        Me.txtTotalNonTaxableAllowance.ShortcutsEnabled = False
+        Me.txtTotalNonTaxableAllowance.Size = New System.Drawing.Size(100, 16)
+        Me.txtTotalNonTaxableAllowance.TabIndex = 198
+        Me.txtTotalNonTaxableAllowance.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label104
         '
@@ -3055,7 +3019,7 @@ Partial Class PayStubForm
         'Label36
         '
         Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(232, 397)
+        Me.Label36.Location = New System.Drawing.Point(232, 405)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(14, 13)
         Me.Label36.TabIndex = 176
@@ -3086,7 +3050,7 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayrollToolStripDropDownButton, Me.GeneratePayrollToolStripButton, Me.tsbtnClose, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.PrintPayrollSummaryToolStripDropDownButton, Me.PrintPayrollSummaryToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayrollToolStripDropDownButton, Me.GeneratePayrollToolStripButton, Me.tsbtnClose, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.PrintPayrollSummaryToolStripDropDownButton, Me.PrintPayrollSummaryToolStripButton, Me.UserActivityToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(961, 25)
@@ -3100,7 +3064,7 @@ Partial Class PayStubForm
         Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
         Me.ManagePayrollToolStripDropDownButton.Size = New System.Drawing.Size(118, 22)
-        Me.ManagePayrollToolStripDropDownButton.Text = "Manage Payroll"
+        Me.ManagePayrollToolStripDropDownButton.Text = "&Manage Payroll"
         '
         'ManagePayslipsToolStripMenuItem
         '
@@ -3211,10 +3175,23 @@ Partial Class PayStubForm
         '
         'CostCenterReportToolStripMenuItem
         '
+        Me.CostCenterReportToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CostCenterReportDeclaredToolStripMenuItem, Me.CostCenterReportActualToolStripMenuItem})
         Me.CostCenterReportToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.Document
         Me.CostCenterReportToolStripMenuItem.Name = "CostCenterReportToolStripMenuItem"
         Me.CostCenterReportToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
         Me.CostCenterReportToolStripMenuItem.Text = "Cost Center Report"
+        '
+        'CostCenterReportDeclaredToolStripMenuItem
+        '
+        Me.CostCenterReportDeclaredToolStripMenuItem.Name = "CostCenterReportDeclaredToolStripMenuItem"
+        Me.CostCenterReportDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.CostCenterReportDeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'CostCenterReportActualToolStripMenuItem
+        '
+        Me.CostCenterReportActualToolStripMenuItem.Name = "CostCenterReportActualToolStripMenuItem"
+        Me.CostCenterReportActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.CostCenterReportActualToolStripMenuItem.Text = "Actual"
         '
         'RecalculateThirteenthMonthPayToolStripMenuItem
         '
@@ -3284,7 +3261,7 @@ Partial Class PayStubForm
         Me.GeneratePayrollToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.GeneratePayrollToolStripButton.Name = "GeneratePayrollToolStripButton"
         Me.GeneratePayrollToolStripButton.Size = New System.Drawing.Size(113, 22)
-        Me.GeneratePayrollToolStripButton.Text = "Generate Payroll"
+        Me.GeneratePayrollToolStripButton.Text = "&Generate Payroll"
         '
         'tsbtnClose
         '
@@ -3325,19 +3302,35 @@ Partial Class PayStubForm
         Me.PrintPayrollSummaryToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.PrintPayrollSummaryToolStripDropDownButton.Name = "PrintPayrollSummaryToolStripDropDownButton"
         Me.PrintPayrollSummaryToolStripDropDownButton.Size = New System.Drawing.Size(154, 22)
-        Me.PrintPayrollSummaryToolStripDropDownButton.Text = "Print Payroll Summary"
+        Me.PrintPayrollSummaryToolStripDropDownButton.Text = "&Print Payroll Summary"
         '
         'PayrollSummaryDeclaredToolStripMenuItem
         '
         Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayrollSummaryActualToolStripMenuItem
         '
         Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
+        '
+        'PrintPayrollSummaryToolStripButton
+        '
+        Me.PrintPayrollSummaryToolStripButton.Image = Global.AccuPay.My.Resources.Resources.timeattendance
+        Me.PrintPayrollSummaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PrintPayrollSummaryToolStripButton.Name = "PrintPayrollSummaryToolStripButton"
+        Me.PrintPayrollSummaryToolStripButton.Size = New System.Drawing.Size(145, 22)
+        Me.PrintPayrollSummaryToolStripButton.Text = "&Print Payroll Summary"
+        '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "&User Activity"
         '
         'ImageList1
         '
@@ -3345,27 +3338,10 @@ Partial Class PayStubForm
         Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
         Me.ImageList1.Images.SetKeyName(0, "Icon_169.ico")
         '
-        'Button3
-        '
-        Me.Button3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button3.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.Button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.Button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.Button3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button3.Image = Global.AccuPay.My.Resources.Resources.r_arrow
-        Me.Button3.Location = New System.Drawing.Point(213, 11)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(32, 23)
-        Me.Button3.TabIndex = 177
-        Me.Button3.TextAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.Button3.UseVisualStyleBackColor = False
-        '
         'Panel4
         '
         Me.Panel4.Controls.Add(Me.Panel5)
         Me.Panel4.Controls.Add(Me.dgvpayper)
-        Me.Panel4.Controls.Add(Me.Button3)
         Me.Panel4.Controls.Add(Me.btnrefresh)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Left
         Me.Panel4.Location = New System.Drawing.Point(0, 21)
@@ -3504,8 +3480,8 @@ Partial Class PayStubForm
         '
         'DataGridViewTextBoxColumn19
         '
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DataGridViewTextBoxColumn19.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn19.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         '
@@ -3549,8 +3525,8 @@ Partial Class PayStubForm
         'DataGridViewTextBoxColumn27
         '
         Me.DataGridViewTextBoxColumn27.DataPropertyName = "PayAmount"
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle10
         Me.DataGridViewTextBoxColumn27.FillWeight = 15.0!
         Me.DataGridViewTextBoxColumn27.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
@@ -3570,14 +3546,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn29.HeaderText = "IsAdjustmentActual"
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.Visible = False
-        '
-        'PrintPayrollSummaryToolStripButton
-        '
-        Me.PrintPayrollSummaryToolStripButton.Image = Global.AccuPay.My.Resources.Resources.timeattendance
-        Me.PrintPayrollSummaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PrintPayrollSummaryToolStripButton.Name = "PrintPayrollSummaryToolStripButton"
-        Me.PrintPayrollSummaryToolStripButton.Size = New System.Drawing.Size(145, 22)
-        Me.PrintPayrollSummaryToolStripButton.Text = "Print Payroll Summary"
         '
         'PayStubForm
         '
@@ -3608,10 +3576,10 @@ Partial Class PayStubForm
         Me.Panel6.ResumeLayout(False)
         Me.Panel6.PerformLayout()
         Me.tabEarned.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
-        Me.TabPage4.ResumeLayout(False)
-        Me.TabPage4.PerformLayout()
+        Me.DeclaredTabPage.ResumeLayout(False)
+        Me.DeclaredTabPage.PerformLayout()
+        Me.ActualTabPage.ResumeLayout(False)
+        Me.ActualTabPage.PerformLayout()
         CType(Me.dgvAdjustments, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
@@ -3654,8 +3622,8 @@ Partial Class PayStubForm
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents txtHdmfEmployeeShare As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents txtTotalAllowance As System.Windows.Forms.TextBox
-    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents txtTotalNonTaxableAllowance As System.Windows.Forms.TextBox
+    Friend WithEvents lblTotalBonus As System.Windows.Forms.Label
     Friend WithEvents txtTotalBonus As System.Windows.Forms.TextBox
     Friend WithEvents txtTotalLoans As System.Windows.Forms.TextBox
     Friend WithEvents Label14 As System.Windows.Forms.Label
@@ -3697,7 +3665,7 @@ Partial Class PayStubForm
     Friend WithEvents Label33 As System.Windows.Forms.Label
     Friend WithEvents Label35 As System.Windows.Forms.Label
     Friend WithEvents Label34 As System.Windows.Forms.Label
-    Friend WithEvents btntotallow As System.Windows.Forms.Button
+    Friend WithEvents ShowNonTaxableAllowanceButton As System.Windows.Forms.Button
     Friend WithEvents btntotloan As System.Windows.Forms.Button
     Friend WithEvents btntotbon As System.Windows.Forms.Button
     Friend WithEvents txtRegularPay As System.Windows.Forms.TextBox
@@ -3712,7 +3680,7 @@ Partial Class PayStubForm
     Friend WithEvents Label40 As System.Windows.Forms.Label
     Friend WithEvents Label41 As System.Windows.Forms.Label
     Friend WithEvents Label42 As System.Windows.Forms.Label
-    Friend WithEvents Label43 As System.Windows.Forms.Label
+    Friend WithEvents lblTotalBonusPesoSign As System.Windows.Forms.Label
     Friend WithEvents Label44 As System.Windows.Forms.Label
     Friend WithEvents Label45 As System.Windows.Forms.Label
     Friend WithEvents Label47 As System.Windows.Forms.Label
@@ -3733,14 +3701,12 @@ Partial Class PayStubForm
     Friend WithEvents tsSearch As System.Windows.Forms.ToolStripTextBox
     Friend WithEvents tsbtnSearch As System.Windows.Forms.ToolStripButton
     Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
-    Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel3 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel4 As System.Windows.Forms.LinkLabel
     Friend WithEvents Label61 As System.Windows.Forms.Label
-    Friend WithEvents tstrip As System.Windows.Forms.ToolStrip
-    Friend WithEvents Label62 As System.Windows.Forms.Label
+    Friend WithEvents AdjustmentTitleLabel As System.Windows.Forms.Label
     Friend WithEvents dgvAdjustments As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents btnSaveAdjustments As System.Windows.Forms.Button
     Friend WithEvents Label65 As System.Windows.Forms.Label
@@ -3748,8 +3714,8 @@ Partial Class PayStubForm
     Friend WithEvents txtTotalAdjustments As System.Windows.Forms.TextBox
     Friend WithEvents Label67 As System.Windows.Forms.Label
     Friend WithEvents tabEarned As System.Windows.Forms.TabControl
-    Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
-    Friend WithEvents TabPage4 As System.Windows.Forms.TabPage
+    Friend WithEvents DeclaredTabPage As System.Windows.Forms.TabPage
+    Friend WithEvents ActualTabPage As System.Windows.Forms.TabPage
     Friend WithEvents Label68 As System.Windows.Forms.Label
     Friend WithEvents txtRegularPayActual As System.Windows.Forms.TextBox
     Friend WithEvents txtRegularHoursActual As System.Windows.Forms.TextBox
@@ -3790,23 +3756,17 @@ Partial Class PayStubForm
     Friend WithEvents txtAbsentHoursActual As System.Windows.Forms.TextBox
     Friend WithEvents Label92 As System.Windows.Forms.Label
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
-    Friend WithEvents btndiscardchanges As System.Windows.Forms.Button
-    Friend WithEvents LinkLabel5 As System.Windows.Forms.LinkLabel
+    Friend WithEvents btnDiscardChanges As System.Windows.Forms.Button
+    Friend WithEvents AddNewAdjustmentTypeLinkLabel As System.Windows.Forms.LinkLabel
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents Panel4 As System.Windows.Forms.Panel
-    Friend WithEvents psaRowID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents cboProducts As System.Windows.Forms.DataGridViewComboBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn66 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn64 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column15 As System.Windows.Forms.DataGridViewLinkColumn
-    Friend WithEvents IsAdjustmentActual As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Panel5 As System.Windows.Forms.Panel
     Friend WithEvents txtLeavePay As System.Windows.Forms.TextBox
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents lblAgencyFee As System.Windows.Forms.Label
     Friend WithEvents txtAgencyFee As System.Windows.Forms.TextBox
-    Friend WithEvents Label87 As System.Windows.Forms.Label
+    Friend WithEvents lblAgencyFeePesoSign As System.Windows.Forms.Label
     Friend WithEvents lblTotalNetPay As System.Windows.Forms.Label
     Friend WithEvents txtTotalNetPay As System.Windows.Forms.TextBox
     Friend WithEvents Label85 As System.Windows.Forms.Label
@@ -3817,7 +3777,7 @@ Partial Class PayStubForm
     Friend WithEvents Label96 As Label
     Friend WithEvents txtRestDayPay As TextBox
     Friend WithEvents txtRestDayHours As TextBox
-    Friend WithEvents txtRestDayOtHour As TextBox
+    Friend WithEvents txtRestDayOtHours As TextBox
     Friend WithEvents Label102 As Label
     Friend WithEvents txtRestDayOtPay As TextBox
     Friend WithEvents Label60 As Label
@@ -3835,12 +3795,12 @@ Partial Class PayStubForm
     Friend WithEvents txtSpecialHolidayOTPay As TextBox
     Friend WithEvents Label63 As Label
     Friend WithEvents Panel6 As Panel
-    Friend WithEvents btnTotalTaxabAllowance As Button
+    Friend WithEvents ShowTaxableAllowanceButton As Button
     Friend WithEvents txtTotalTaxableAllowance As TextBox
     Friend WithEvents Label104 As Label
     Friend WithEvents Label103 As Label
     Friend WithEvents Label105 As Label
-    Friend WithEvents txtGrandTotalAllow As TextBox
+    Friend WithEvents txtGrandTotalAllowance As TextBox
     Friend WithEvents Label106 As Label
     Friend WithEvents Label107 As Label
     Friend WithEvents ManagePayrollToolStripDropDownButton As ToolStripDropDownButton
@@ -3933,4 +3893,11 @@ Partial Class PayStubForm
     Friend WithEvents ExportNetPayDeclaredDirectDepositToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportNetPayActualDirectDepositToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PrintPayrollSummaryToolStripButton As ToolStripButton
+    Friend WithEvents CostCenterReportDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CostCenterReportActualToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents UserActivityToolStripButton As ToolStripButton
+    Friend WithEvents cboProducts As DataGridViewComboBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn66 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn64 As DataGridViewTextBoxColumn
+    Friend WithEvents DeleteAdjustmentColumn As DataGridViewLinkColumn
 End Class

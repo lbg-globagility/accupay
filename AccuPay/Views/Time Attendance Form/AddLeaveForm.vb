@@ -71,9 +71,10 @@ Public Class AddLeaveForm
 
         Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypesAsync(z_OrganizationID))
 
-        leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
-                                                Where(Function(a) a.PartNo.Trim <> String.Empty).
-                                                ToList
+        leaveList = leaveList.
+            Where(Function(a) a.PartNo IsNot Nothing).
+            Where(Function(a) a.PartNo.Trim <> String.Empty).
+            ToList
 
         Dim leaveTypes = _productRepository.ConvertToStringList(leaveList)
 
@@ -182,7 +183,13 @@ Public Class AddLeaveForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Await dataService.SaveAsync(Me._newLeave)
 
-                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLeave.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=Me._newLeave.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._newLeave.EmployeeID.Value,
+                    suffixIdentifier:=$" with date '{ Me._newLeave.StartDate.ToShortDateString()}'")
 
                 Me.IsSaved = True
 

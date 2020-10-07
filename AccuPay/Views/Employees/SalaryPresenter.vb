@@ -64,8 +64,7 @@ Namespace Global.AccuPay.Views.Employees
                 .EmployeeID = _employee.RowID,
                 .PositionID = _employee.PositionID,
                 .HDMFAmount = StandardPagIbigContribution,
-                .EffectiveFrom = Date.Today,
-                .EffectiveTo = Nothing
+                .EffectiveFrom = Date.Today
             }
 
             _view.DisplaySalary(_currentSalary)
@@ -96,13 +95,10 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Async Sub OnSave() Handles _view.SaveSalary
             Try
-                Dim effectiveTo = _view.EffectiveTo
-
                 With _currentSalary
                     .BasicSalary = _view.BasicSalary
                     .AllowanceSalary = _view.AllowanceSalary
                     .EffectiveFrom = _view.EffectiveFrom
-                    .EffectiveTo = effectiveTo
                     .PhilHealthDeduction = If(_view.PhilHealth, 0D)
                     .HDMFAmount = _view.PagIBIG
                 End With

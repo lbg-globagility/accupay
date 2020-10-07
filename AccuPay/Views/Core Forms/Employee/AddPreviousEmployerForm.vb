@@ -15,7 +15,7 @@ Public Class AddPreviousEmployerForm
 
     Private _newPreviousEmployer As PreviousEmployer
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -85,7 +85,13 @@ Public Class AddPreviousEmployerForm
                 Dim prevEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
                 Await prevEmployerRepo.CreateAsync(_newPreviousEmployer)
 
-                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPreviousEmployer.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(
+                    z_User,
+                    FormEntityName,
+                    entityId:=_newPreviousEmployer.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=_newPreviousEmployer.EmployeeID,
+                    suffixIdentifier:=$" with name '{_newPreviousEmployer.Name}'")
                 succeed = True
             End Function)
 

@@ -53,8 +53,6 @@ namespace AccuPay.Data.Entities
         public DateTime StartDate { get; set; }
         public DateTime? TerminationDate { get; set; }
         public int? NoOfDependents { get; set; }
-        public bool UndertimeOverride { get; set; }
-        public bool OvertimeOverride { get; set; }
         public bool NewEmployeeFlag { get; set; }
         public decimal LeaveBalance { get; set; }
         public decimal SickLeaveBalance { get; set; }
@@ -181,6 +179,11 @@ namespace AccuPay.Data.Entities
         public bool IsTerminated => EmploymentStatus.Trim().ToUpper() == "TERMINATED";
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
+
+        public bool IsFirstPay(PayPeriod payPeriod) =>
+            payPeriod != null &&
+            payPeriod.PayFromDate.Date <= StartDate.Date &&
+            StartDate.Date <= payPeriod.PayToDate.Date;
 
         public static Employee NewEmployee(int organizationId, int userId)
         {

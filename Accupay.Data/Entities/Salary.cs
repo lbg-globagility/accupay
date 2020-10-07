@@ -24,8 +24,6 @@ namespace AccuPay.Data.Entities
 
         public int? PositionID { get; set; }
 
-        public int? PayPhilHealthID { get; set; }
-
         public decimal PhilHealthDeduction { get; set; }
 
         public decimal HDMFAmount { get; set; }
@@ -45,10 +43,6 @@ namespace AccuPay.Data.Entities
         [Column("EffectiveDateFrom")]
         public DateTime EffectiveFrom { get; set; }
 
-        // TODO: delete this
-        [Column("EffectiveDateTo")]
-        public DateTime? EffectiveTo { get; set; }
-
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
@@ -57,8 +51,6 @@ namespace AccuPay.Data.Entities
         public bool AutoComputePhilHealthContribution { get; set; }
 
         public bool AutoComputeHDMFContribution { get; set; }
-
-        public bool IsIndefinite => !EffectiveTo.HasValue;
 
         /// <summary>
         /// Updates TotalSalary. Call this everytime BasicSalary or AllowanceSalary has changed.

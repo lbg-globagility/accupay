@@ -418,66 +418,66 @@ Public Class EmployeeLeavesForm
 
         Dim changes = New List(Of UserActivityItem)
 
-        Dim entityName = FormEntityName.ToLower()
+        Dim suffixIdentifier = $"of leave with date '{oldLeave.StartDate.ToShortDateString()}'."
 
         If newLeave.StartDate <> oldLeave.StartDate Then
             changes.Add(New UserActivityItem() With
            {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'."
-            })
-        End If
-        If newLeave.EndDate <> oldLeave.EndDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'."
+                .Description = $"Updated start date from '{oldLeave.StartDate.ToShortDateString()}' to '{newLeave.StartDate.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
         If newLeave.StartTime.ToString <> oldLeave.StartTime.ToString Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'."
+                .Description = $"Updated start time from '{oldLeave.StartTime.ToStringFormat("hh:mm tt")}' to '{newLeave.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
         If newLeave.EndTime.ToString <> oldLeave.EndTime.ToString Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'."
+                .Description = $"Updated end time from '{oldLeave.EndTime.ToStringFormat("hh:mm tt")}' to '{newLeave.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
         If newLeave.Reason <> oldLeave.Reason Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} reason from '{oldLeave.Reason}' to '{newLeave.Reason}'."
+                .Description = $"Updated reason from '{oldLeave.Reason}' to '{newLeave.Reason}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
         If newLeave.Comments <> oldLeave.Comments Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} comments from '{oldLeave.Comments}' to '{newLeave.Comments}'."
+                .Description = $"Updated comments from '{oldLeave.Comments}' to '{newLeave.Comments}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
         If newLeave.LeaveType <> oldLeave.LeaveType Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'."
+                .Description = $"Updated type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
         If newLeave.Status <> oldLeave.Status Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldLeave.RowID.Value,
-                .Description = $"Updated {entityName} status from '{oldLeave.Status}' to '{newLeave.Status}'."
+                .Description = $"Updated status from '{oldLeave.Status}' to '{newLeave.Status}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldLeave.EmployeeID.Value
             })
         End If
 
-        If changes.Count > 0 Then
+        If changes.Any() Then
 
             _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
@@ -493,7 +493,13 @@ Public Class EmployeeLeavesForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Await dataService.DeleteAsync(Me._currentLeave.RowID.Value)
 
-                _userActivityRepository.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordDelete(
+                    z_User,
+                    FormEntityName,
+                    entityId:=Me._currentLeave.RowID.Value,
+                    organizationId:=z_OrganizationID,
+                    changedEmployeeId:=Me._currentLeave.EmployeeID.Value,
+                    suffixIdentifier:=$" with date '{ Me._currentLeave.StartDate.ToShortDateString()}'")
 
                 Await LoadLeaves(currentEmployee)
 

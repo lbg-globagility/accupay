@@ -1097,7 +1097,7 @@ Public Class NewDivisionPositionForm
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldDivision.RowID),
-                        .Description = $"Updated {entityName}PhilHealth deduction schedule from '{oldDivision.PhilHealthDeductionSchedule}' to '{_currentDivision.PhilHealthDeductionSchedule}'."
+                        .Description = $"Updated {entityName} PhilHealth deduction schedule from '{oldDivision.PhilHealthDeductionSchedule}' to '{_currentDivision.PhilHealthDeductionSchedule}'."
                         })
         End If
         If _currentDivision.SssDeductionSchedule <> oldDivision.SssDeductionSchedule Then
@@ -1250,17 +1250,17 @@ Public Class NewDivisionPositionForm
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
 
         If Me._currentDivision.IsRoot Then
-            Dim userActivity As New UserActivityForm(DivisionLocationEntityName)
+            Dim userActivity As New UserActivityForm(DivisionLocationEntityName, UserActivityForm.ChangedType.Division)
             userActivity.ShowDialog()
         Else
-            Dim userActivity As New UserActivityForm(DivisionEntityName)
+            Dim userActivity As New UserActivityForm(DivisionEntityName, UserActivityForm.ChangedType.Division)
             userActivity.ShowDialog()
         End If
 
     End Sub
 
     Private Sub UserActivityPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPositionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PositionEntityName)
+        Dim userActivity As New UserActivityForm(PositionEntityName, UserActivityForm.ChangedType.Position)
         userActivity.ShowDialog()
     End Sub
 

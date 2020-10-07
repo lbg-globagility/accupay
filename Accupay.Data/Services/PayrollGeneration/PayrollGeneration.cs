@@ -223,7 +223,7 @@ namespace AccuPay.Data.Services
                         timeEntries: timeEntries,
                         leaves: leaves);
 
-            return Result.Success(employee);
+            return Result.Success(employee, paystub);
         }
 
         private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int userId)
@@ -363,8 +363,7 @@ namespace AccuPay.Data.Services
 
             // Allowances
             paystub.TotalTaxableAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => a.IsTaxable).Sum(a => a.Amount));
-            paystub.TotalAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => !a.IsTaxable).Sum(a => a.Amount));
-            var grandTotalAllowance = paystub.TotalAllowance + paystub.TotalTaxableAllowance;
+            paystub.TotalNonTaxableAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => !a.IsTaxable).Sum(a => a.Amount));
 
             // Bonuses
             paystub.TotalBonus = AccuMath.CommercialRound(bonuses.Sum(b => b.BonusAmount));
@@ -378,7 +377,7 @@ namespace AccuPay.Data.Services
             if (paystub.TotalEarnings < 0)
                 paystub.TotalEarnings = 0;
 
-            paystub.GrossPay = paystub.TotalEarnings + paystub.TotalBonus + grandTotalAllowance;
+            paystub.GrossPay = paystub.TotalEarnings + paystub.TotalBonus + paystub.GrandTotalAllowance;
 
             paystub.TotalAdjustments = paystub.Adjustments.Sum(a => a.Amount);
             // BPI Insurance feature, currently used by LA Global
@@ -413,7 +412,7 @@ namespace AccuPay.Data.Services
         private bool EligibleForNewBPIInsurance(Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payPeriod)
         {
             return settings.GetBoolean("Employee Policy.UseBPIInsurance", false) &&
-                    IsFirstPay(employee, payPeriod) &&
+                    employee.IsFirstPay(payPeriod) &&
                     employee.BPIInsurance > 0 &&
                     !paystub.Adjustments.Any(a => a.Product?.PartNo == ProductConstant.BPI_INSURANCE_ADJUSTMENT);
         }
@@ -427,9 +426,8 @@ namespace AccuPay.Data.Services
             else if (employee.IsMonthly)
             {
                 var isFirstPayAsDailyRule = settings.GetBoolean("Payroll Policy", "isfirstsalarydaily");
-                bool isFirstPay = IsFirstPay(employee, payPeriod);
 
-                if (isFirstPay && isFirstPayAsDailyRule)
+                if (employee.IsFirstPay(payPeriod) && isFirstPayAsDailyRule)
                 {
                     paystub.TotalEarnings = paystub.RegularPay +
                                             paystub.LeavePay +
@@ -451,13 +449,6 @@ namespace AccuPay.Data.Services
                                         paystub.LeavePay +
                                         paystub.AdditionalPay;
             }
-        }
-
-        private bool IsFirstPay(Employee employee, PayPeriod payPeriod)
-        {
-            // start date is within current pay period
-            return payPeriod.PayFromDate <= employee.StartDate &&
-                                employee.StartDate <= payPeriod.PayToDate;
         }
 
         private void ComputeBasicHoursAndPay(Paystub paystub,
@@ -869,6 +860,8 @@ namespace AccuPay.Data.Services
         {
             public int EmployeeId { get; set; }
 
+            public int? PaystubId { get; set; }
+
             public string EmployeeNo { get; set; }
 
             public string FullName { get; set; }
@@ -881,19 +874,21 @@ namespace AccuPay.Data.Services
 
             public bool IsError => Status == ResultStatus.Error;
 
-            private Result(int employeeId, string employeeNo, string fullName, ResultStatus status, string description)
+            private Result(int employeeId, int? paystubId, string employeeNo, string fullName, ResultStatus status, string description)
             {
                 EmployeeId = employeeId;
                 EmployeeNo = employeeNo;
                 FullName = fullName;
                 Status = status;
                 Description = description;
+                PaystubId = paystubId;
             }
 
-            public static Result Success(Employee employee)
+            public static Result Success(Employee employee, Paystub paystub)
             {
                 var result = new Result(
                     employee.RowID.Value,
+                    paystub.RowID.Value,
                     employee.EmployeeNo,
                     employee.FullNameWithMiddleInitialLastNameFirst,
                     ResultStatus.Success,
@@ -906,6 +901,7 @@ namespace AccuPay.Data.Services
             {
                 var result = new Result(
                     employee.RowID.Value,
+                    paystubId: null,
                     employee.EmployeeNo,
                     employee.FullNameWithMiddleInitialLastNameFirst,
                     ResultStatus.Error,

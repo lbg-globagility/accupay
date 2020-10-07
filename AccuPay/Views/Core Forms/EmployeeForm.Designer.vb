@@ -92,13 +92,13 @@ Partial Class EmployeeForm
         Me.txtNName = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.txtTIN = New System.Windows.Forms.MaskedTextBox()
+        Me.txtTIN = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.txtSSS = New System.Windows.Forms.MaskedTextBox()
+        Me.txtSSS = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.txtPIN = New System.Windows.Forms.MaskedTextBox()
+        Me.txtPIN = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.txtHDMF = New System.Windows.Forms.MaskedTextBox()
+        Me.txtHDMF = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.txtemail = New System.Windows.Forms.TextBox()
@@ -141,16 +141,10 @@ Partial Class EmployeeForm
         Me.BranchComboBox = New System.Windows.Forms.ComboBox()
         Me.BranchLabel = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.chkcalcRestDayOT = New System.Windows.Forms.CheckBox()
         Me.chkcalcRestDay = New System.Windows.Forms.CheckBox()
-        Me.chkcalcNightDiffOT = New System.Windows.Forms.CheckBox()
         Me.chkcalcNightDiff = New System.Windows.Forms.CheckBox()
         Me.chkcalcSpclHoliday = New System.Windows.Forms.CheckBox()
         Me.chkcalcHoliday = New System.Windows.Forms.CheckBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.chkbxRevealInPayroll = New System.Windows.Forms.CheckBox()
-        Me.Label366 = New System.Windows.Forms.Label()
-        Me.txtWorkHoursPerWeek = New System.Windows.Forms.TextBox()
         Me.AgencyLabel = New System.Windows.Forms.Label()
         Me.cboAgency = New System.Windows.Forms.ComboBox()
         Me.Label363 = New System.Windows.Forms.Label()
@@ -165,32 +159,19 @@ Partial Class EmployeeForm
         Me.Label353 = New System.Windows.Forms.Label()
         Me.Label359 = New System.Windows.Forms.Label()
         Me.Label360 = New System.Windows.Forms.Label()
-        Me.chkWed = New System.Windows.Forms.CheckBox()
-        Me.chkSat = New System.Windows.Forms.CheckBox()
-        Me.chkFri = New System.Windows.Forms.CheckBox()
-        Me.chkThu = New System.Windows.Forms.CheckBox()
-        Me.chkTue = New System.Windows.Forms.CheckBox()
-        Me.chkMon = New System.Windows.Forms.CheckBox()
-        Me.chkSun = New System.Windows.Forms.CheckBox()
         Me.cboDayOfRest = New System.Windows.Forms.ComboBox()
         Me.Label352 = New System.Windows.Forms.Label()
         Me.txtWorkDaysPerYear = New System.Windows.Forms.TextBox()
         Me.Label351 = New System.Windows.Forms.Label()
-        Me.chkAlphaListExempt = New System.Windows.Forms.CheckBox()
         Me.Label311 = New System.Windows.Forms.Label()
         Me.Label223 = New System.Windows.Forms.Label()
         Me.Label211 = New System.Windows.Forms.Label()
         Me.Label212 = New System.Windows.Forms.Label()
         Me.Label147 = New System.Windows.Forms.Label()
         Me.txtUTgrace = New System.Windows.Forms.TextBox()
-        Me.Label143 = New System.Windows.Forms.Label()
-        Me.txtOTgrace = New System.Windows.Forms.TextBox()
-        Me.chkutflag = New System.Windows.Forms.CheckBox()
-        Me.chkotflag = New System.Windows.Forms.CheckBox()
         Me.Label129 = New System.Windows.Forms.Label()
         Me.Label120 = New System.Windows.Forms.Label()
         Me.dtpempstartdate = New System.Windows.Forms.DateTimePicker()
-        Me.Label87 = New System.Windows.Forms.Label()
         Me.TabControl3 = New System.Windows.Forms.TabControl()
         Me.tbpleavebal = New System.Windows.Forms.TabPage()
         Me.txtothrbal = New System.Windows.Forms.TextBox()
@@ -226,7 +207,6 @@ Partial Class EmployeeForm
         Me.cboMaritStat = New System.Windows.Forms.ComboBox()
         Me.cboSalut = New System.Windows.Forms.ComboBox()
         Me.cboEmpStat = New System.Windows.Forms.ComboBox()
-        Me.txtSName = New System.Windows.Forms.TextBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.cboEmpType = New System.Windows.Forms.ComboBox()
@@ -286,10 +266,9 @@ Partial Class EmployeeForm
         Me.tsbtnSaveEmp = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImport = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel11 = New System.Windows.Forms.ToolStripLabel()
         Me.tsprogbarempimport = New System.Windows.Forms.ToolStripProgressBar()
-        Me.tsbtnImportEmployee = New System.Windows.Forms.ToolStripButton()
         Me.ReportsToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.Print201ReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ActiveEmployeeChecklistReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -933,7 +912,6 @@ Partial Class EmployeeForm
         Me.Panel4.SuspendLayout
         Me.LeaveGroupBox.SuspendLayout
         Me.GroupBox1.SuspendLayout
-        Me.Panel1.SuspendLayout
         Me.GroupBox2.SuspendLayout
         Me.TabControl3.SuspendLayout
         Me.tbpleavebal.SuspendLayout
@@ -1142,7 +1120,6 @@ Partial Class EmployeeForm
         '
         Me.txtTIN.Location = New System.Drawing.Point(399, 141)
         Me.txtTIN.Name = "txtTIN"
-        Me.txtTIN.ShortcutsEnabled = False
         Me.txtTIN.Size = New System.Drawing.Size(168, 20)
         Me.txtTIN.TabIndex = 27
         Me.txtTIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -1160,7 +1137,6 @@ Partial Class EmployeeForm
         '
         Me.txtSSS.Location = New System.Drawing.Point(399, 167)
         Me.txtSSS.Name = "txtSSS"
-        Me.txtSSS.ShortcutsEnabled = False
         Me.txtSSS.Size = New System.Drawing.Size(168, 20)
         Me.txtSSS.TabIndex = 28
         Me.txtSSS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -1178,7 +1154,6 @@ Partial Class EmployeeForm
         '
         Me.txtPIN.Location = New System.Drawing.Point(399, 193)
         Me.txtPIN.Name = "txtPIN"
-        Me.txtPIN.ShortcutsEnabled = False
         Me.txtPIN.Size = New System.Drawing.Size(168, 20)
         Me.txtPIN.TabIndex = 29
         Me.txtPIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -1196,7 +1171,6 @@ Partial Class EmployeeForm
         '
         Me.txtHDMF.Location = New System.Drawing.Point(399, 233)
         Me.txtHDMF.Name = "txtHDMF"
-        Me.txtHDMF.ShortcutsEnabled = False
         Me.txtHDMF.Size = New System.Drawing.Size(168, 20)
         Me.txtHDMF.TabIndex = 30
         Me.txtHDMF.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -1513,38 +1487,24 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.BranchComboBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BranchLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox1)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Panel1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AgencyLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboAgency)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label363)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label362)
         Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkWed)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkSat)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkFri)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkThu)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkTue)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkMon)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkSun)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboDayOfRest)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label352)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtWorkDaysPerYear)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label351)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkAlphaListExempt)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label311)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label223)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label211)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label212)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label147)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtUTgrace)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Label143)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.txtOTgrace)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkutflag)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.chkotflag)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label129)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label120)
         Me.SplitContainer2.Panel1.Controls.Add(Me.dtpempstartdate)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.Label87)
         Me.SplitContainer2.Panel1.Controls.Add(Me.TabControl3)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label27)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label26)
@@ -1571,7 +1531,6 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label7)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtWorkPhne)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtHomeAddr)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.txtSName)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label6)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label24)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label13)
@@ -1756,9 +1715,7 @@ Partial Class EmployeeForm
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.chkcalcRestDayOT)
         Me.GroupBox1.Controls.Add(Me.chkcalcRestDay)
-        Me.GroupBox1.Controls.Add(Me.chkcalcNightDiffOT)
         Me.GroupBox1.Controls.Add(Me.chkcalcNightDiff)
         Me.GroupBox1.Controls.Add(Me.chkcalcSpclHoliday)
         Me.GroupBox1.Controls.Add(Me.chkcalcHoliday)
@@ -1770,17 +1727,6 @@ Partial Class EmployeeForm
         Me.GroupBox1.Text = "Pay Rate Inclusion"
         Me.ToolTip1.SetToolTip(Me.GroupBox1, "If unchecked, pay rate for the day will be 1")
         '
-        'chkcalcRestDayOT
-        '
-        Me.chkcalcRestDayOT.AutoSize = True
-        Me.chkcalcRestDayOT.Location = New System.Drawing.Point(190, 72)
-        Me.chkcalcRestDayOT.Name = "chkcalcRestDayOT"
-        Me.chkcalcRestDayOT.Size = New System.Drawing.Size(135, 17)
-        Me.chkcalcRestDayOT.TabIndex = 5
-        Me.chkcalcRestDayOT.Text = "Calculate Rest Day OT"
-        Me.chkcalcRestDayOT.UseVisualStyleBackColor = True
-        Me.chkcalcRestDayOT.Visible = False
-        '
         'chkcalcRestDay
         '
         Me.chkcalcRestDay.AutoSize = True
@@ -1790,17 +1736,6 @@ Partial Class EmployeeForm
         Me.chkcalcRestDay.TabIndex = 4
         Me.chkcalcRestDay.Text = "Calculate Rest Day"
         Me.chkcalcRestDay.UseVisualStyleBackColor = True
-        '
-        'chkcalcNightDiffOT
-        '
-        Me.chkcalcNightDiffOT.AutoSize = True
-        Me.chkcalcNightDiffOT.Location = New System.Drawing.Point(22, 72)
-        Me.chkcalcNightDiffOT.Name = "chkcalcNightDiffOT"
-        Me.chkcalcNightDiffOT.Size = New System.Drawing.Size(169, 17)
-        Me.chkcalcNightDiffOT.TabIndex = 3
-        Me.chkcalcNightDiffOT.Text = "Calculate Night Differential OT"
-        Me.chkcalcNightDiffOT.UseVisualStyleBackColor = True
-        Me.chkcalcNightDiffOT.Visible = False
         '
         'chkcalcNightDiff
         '
@@ -1831,46 +1766,6 @@ Partial Class EmployeeForm
         Me.chkcalcHoliday.TabIndex = 0
         Me.chkcalcHoliday.Text = "Calculate Holiday"
         Me.chkcalcHoliday.UseVisualStyleBackColor = True
-        '
-        'Panel1
-        '
-        Me.Panel1.AccessibleDescription = "Cinema 2000"
-        Me.Panel1.Controls.Add(Me.chkbxRevealInPayroll)
-        Me.Panel1.Controls.Add(Me.Label366)
-        Me.Panel1.Controls.Add(Me.txtWorkHoursPerWeek)
-        Me.Panel1.Location = New System.Drawing.Point(298, 507)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(243, 44)
-        Me.Panel1.TabIndex = 536
-        Me.Panel1.Visible = False
-        '
-        'chkbxRevealInPayroll
-        '
-        Me.chkbxRevealInPayroll.AutoSize = True
-        Me.chkbxRevealInPayroll.Location = New System.Drawing.Point(103, 26)
-        Me.chkbxRevealInPayroll.Name = "chkbxRevealInPayroll"
-        Me.chkbxRevealInPayroll.Size = New System.Drawing.Size(105, 17)
-        Me.chkbxRevealInPayroll.TabIndex = 528
-        Me.chkbxRevealInPayroll.Text = "Hidden in Payroll"
-        Me.chkbxRevealInPayroll.UseVisualStyleBackColor = True
-        '
-        'Label366
-        '
-        Me.Label366.AutoSize = True
-        Me.Label366.Location = New System.Drawing.Point(0, 7)
-        Me.Label366.Name = "Label366"
-        Me.Label366.Size = New System.Drawing.Size(97, 13)
-        Me.Label366.TabIndex = 526
-        Me.Label366.Text = "Work hrs per week"
-        '
-        'txtWorkHoursPerWeek
-        '
-        Me.txtWorkHoursPerWeek.Location = New System.Drawing.Point(103, 0)
-        Me.txtWorkHoursPerWeek.MaxLength = 12
-        Me.txtWorkHoursPerWeek.Name = "txtWorkHoursPerWeek"
-        Me.txtWorkHoursPerWeek.Size = New System.Drawing.Size(79, 20)
-        Me.txtWorkHoursPerWeek.TabIndex = 527
-        Me.txtWorkHoursPerWeek.Text = "90"
         '
         'AgencyLabel
         '
@@ -2016,83 +1911,6 @@ Partial Class EmployeeForm
         Me.Label360.TabIndex = 519
         Me.Label360.Text = "*"
         '
-        'chkWed
-        '
-        Me.chkWed.AutoSize = True
-        Me.chkWed.Location = New System.Drawing.Point(-51, 559)
-        Me.chkWed.Name = "chkWed"
-        Me.chkWed.Size = New System.Drawing.Size(83, 17)
-        Me.chkWed.TabIndex = 521
-        Me.chkWed.Text = "Wednesday"
-        Me.chkWed.UseVisualStyleBackColor = True
-        Me.chkWed.Visible = False
-        '
-        'chkSat
-        '
-        Me.chkSat.AutoSize = True
-        Me.chkSat.Location = New System.Drawing.Point(33, 541)
-        Me.chkSat.Name = "chkSat"
-        Me.chkSat.Size = New System.Drawing.Size(68, 17)
-        Me.chkSat.TabIndex = 520
-        Me.chkSat.Text = "Saturday"
-        Me.chkSat.UseVisualStyleBackColor = True
-        Me.chkSat.Visible = False
-        '
-        'chkFri
-        '
-        Me.chkFri.AutoSize = True
-        Me.chkFri.Location = New System.Drawing.Point(33, 523)
-        Me.chkFri.Name = "chkFri"
-        Me.chkFri.Size = New System.Drawing.Size(54, 17)
-        Me.chkFri.TabIndex = 519
-        Me.chkFri.Text = "Friday"
-        Me.chkFri.UseVisualStyleBackColor = True
-        Me.chkFri.Visible = False
-        '
-        'chkThu
-        '
-        Me.chkThu.AutoSize = True
-        Me.chkThu.Location = New System.Drawing.Point(33, 505)
-        Me.chkThu.Name = "chkThu"
-        Me.chkThu.Size = New System.Drawing.Size(70, 17)
-        Me.chkThu.TabIndex = 518
-        Me.chkThu.Text = "Thursday"
-        Me.chkThu.UseVisualStyleBackColor = True
-        Me.chkThu.Visible = False
-        '
-        'chkTue
-        '
-        Me.chkTue.AutoSize = True
-        Me.chkTue.Location = New System.Drawing.Point(-51, 541)
-        Me.chkTue.Name = "chkTue"
-        Me.chkTue.Size = New System.Drawing.Size(67, 17)
-        Me.chkTue.TabIndex = 517
-        Me.chkTue.Text = "Tuesday"
-        Me.chkTue.UseVisualStyleBackColor = True
-        Me.chkTue.Visible = False
-        '
-        'chkMon
-        '
-        Me.chkMon.AutoSize = True
-        Me.chkMon.Location = New System.Drawing.Point(-51, 523)
-        Me.chkMon.Name = "chkMon"
-        Me.chkMon.Size = New System.Drawing.Size(64, 17)
-        Me.chkMon.TabIndex = 516
-        Me.chkMon.Text = "Monday"
-        Me.chkMon.UseVisualStyleBackColor = True
-        Me.chkMon.Visible = False
-        '
-        'chkSun
-        '
-        Me.chkSun.AutoSize = True
-        Me.chkSun.Location = New System.Drawing.Point(-41, 505)
-        Me.chkSun.Name = "chkSun"
-        Me.chkSun.Size = New System.Drawing.Size(62, 17)
-        Me.chkSun.TabIndex = 515
-        Me.chkSun.Text = "Sunday"
-        Me.chkSun.UseVisualStyleBackColor = True
-        Me.chkSun.Visible = False
-        '
         'cboDayOfRest
         '
         Me.cboDayOfRest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -2129,17 +1947,6 @@ Partial Class EmployeeForm
         Me.Label351.Size = New System.Drawing.Size(99, 13)
         Me.Label351.TabIndex = 506
         Me.Label351.Text = "Work days per year"
-        '
-        'chkAlphaListExempt
-        '
-        Me.chkAlphaListExempt.AutoSize = True
-        Me.chkAlphaListExempt.Location = New System.Drawing.Point(399, 458)
-        Me.chkAlphaListExempt.Name = "chkAlphaListExempt"
-        Me.chkAlphaListExempt.Size = New System.Drawing.Size(123, 17)
-        Me.chkAlphaListExempt.TabIndex = 38
-        Me.chkAlphaListExempt.Text = "Included in Alpha list"
-        Me.chkAlphaListExempt.UseVisualStyleBackColor = True
-        Me.chkAlphaListExempt.Visible = False
         '
         'Label311
         '
@@ -2184,62 +1991,20 @@ Partial Class EmployeeForm
         'Label147
         '
         Me.Label147.AutoSize = True
-        Me.Label147.Location = New System.Drawing.Point(447, 436)
+        Me.Label147.Location = New System.Drawing.Point(302, 460)
         Me.Label147.Name = "Label147"
-        Me.Label147.Size = New System.Drawing.Size(106, 13)
+        Me.Label147.Size = New System.Drawing.Size(96, 13)
         Me.Label147.TabIndex = 168
-        Me.Label147.Text = "grace period (minute)"
+        Me.Label147.Text = "Grace period (min.)"
         '
         'txtUTgrace
         '
-        Me.txtUTgrace.Location = New System.Drawing.Point(400, 432)
+        Me.txtUTgrace.Location = New System.Drawing.Point(400, 454)
         Me.txtUTgrace.MaxLength = 50
         Me.txtUTgrace.Name = "txtUTgrace"
         Me.txtUTgrace.ShortcutsEnabled = False
         Me.txtUTgrace.Size = New System.Drawing.Size(41, 20)
         Me.txtUTgrace.TabIndex = 38
-        '
-        'Label143
-        '
-        Me.Label143.AutoSize = True
-        Me.Label143.Location = New System.Drawing.Point(573, 382)
-        Me.Label143.Name = "Label143"
-        Me.Label143.Size = New System.Drawing.Size(106, 13)
-        Me.Label143.TabIndex = 166
-        Me.Label143.Text = "grace period (minute)"
-        Me.Label143.Visible = False
-        '
-        'txtOTgrace
-        '
-        Me.txtOTgrace.Location = New System.Drawing.Point(526, 383)
-        Me.txtOTgrace.MaxLength = 50
-        Me.txtOTgrace.Name = "txtOTgrace"
-        Me.txtOTgrace.ShortcutsEnabled = False
-        Me.txtOTgrace.Size = New System.Drawing.Size(41, 20)
-        Me.txtOTgrace.TabIndex = 36
-        Me.txtOTgrace.Visible = False
-        '
-        'chkutflag
-        '
-        Me.chkutflag.AutoSize = True
-        Me.chkutflag.Location = New System.Drawing.Point(399, 412)
-        Me.chkutflag.Name = "chkutflag"
-        Me.chkutflag.Size = New System.Drawing.Size(119, 17)
-        Me.chkutflag.TabIndex = 37
-        Me.chkutflag.Text = "Calculate undertime"
-        Me.chkutflag.UseVisualStyleBackColor = True
-        Me.chkutflag.Visible = False
-        '
-        'chkotflag
-        '
-        Me.chkotflag.AutoSize = True
-        Me.chkotflag.Location = New System.Drawing.Point(399, 387)
-        Me.chkotflag.Name = "chkotflag"
-        Me.chkotflag.Size = New System.Drawing.Size(113, 17)
-        Me.chkotflag.TabIndex = 35
-        Me.chkotflag.Text = "Calculate overtime"
-        Me.chkotflag.UseVisualStyleBackColor = True
-        Me.chkotflag.Visible = False
         '
         'Label129
         '
@@ -2268,15 +2033,6 @@ Partial Class EmployeeForm
         Me.dtpempstartdate.Name = "dtpempstartdate"
         Me.dtpempstartdate.Size = New System.Drawing.Size(168, 20)
         Me.dtpempstartdate.TabIndex = 3
-        '
-        'Label87
-        '
-        Me.Label87.AutoSize = True
-        Me.Label87.Location = New System.Drawing.Point(8, 247)
-        Me.Label87.Name = "Label87"
-        Me.Label87.Size = New System.Drawing.Size(49, 13)
-        Me.Label87.TabIndex = 154
-        Me.Label87.Text = "Surname"
         '
         'TabControl3
         '
@@ -2634,14 +2390,6 @@ Partial Class EmployeeForm
         Me.cboEmpStat.Name = "cboEmpStat"
         Me.cboEmpStat.Size = New System.Drawing.Size(168, 21)
         Me.cboEmpStat.TabIndex = 2
-        '
-        'txtSName
-        '
-        Me.txtSName.Location = New System.Drawing.Point(128, 240)
-        Me.txtSName.MaxLength = 50
-        Me.txtSName.Name = "txtSName"
-        Me.txtSName.Size = New System.Drawing.Size(168, 20)
-        Me.txtSName.TabIndex = 10
         '
         'Label24
         '
@@ -3154,7 +2902,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnImport, Me.tsbtnClose, Me.ToolStripLabel11, Me.tsprogbarempimport, Me.tsbtnImportEmployee, Me.ReportsToolStripDropDownButton, Me.UserActivityEmployeeToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnImport, Me.ToolStripSeparator9, Me.tsbtnClose, Me.tsprogbarempimport, Me.ReportsToolStripDropDownButton, Me.UserActivityEmployeeToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(854, 25)
@@ -3183,7 +2931,7 @@ Partial Class EmployeeForm
         Me.tsbtnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnCancel.Name = "tsbtnCancel"
         Me.tsbtnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.tsbtnCancel.Text = "Cancel"
+        Me.tsbtnCancel.Text = "&Cancel"
         '
         'tsbtnImport
         '
@@ -3191,7 +2939,12 @@ Partial Class EmployeeForm
         Me.tsbtnImport.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbtnImport.Name = "tsbtnImport"
         Me.tsbtnImport.Size = New System.Drawing.Size(63, 22)
-        Me.tsbtnImport.Text = "Import"
+        Me.tsbtnImport.Text = "&Import"
+        '
+        'ToolStripSeparator9
+        '
+        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
         '
         'tsbtnClose
         '
@@ -3202,23 +2955,12 @@ Partial Class EmployeeForm
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
         Me.tsbtnClose.Text = "Close"
         '
-        'ToolStripLabel11
-        '
-        Me.ToolStripLabel11.Name = "ToolStripLabel11"
-        Me.ToolStripLabel11.Size = New System.Drawing.Size(55, 22)
-        Me.ToolStripLabel11.Text = "                "
-        '
         'tsprogbarempimport
         '
         Me.tsprogbarempimport.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsprogbarempimport.Name = "tsprogbarempimport"
         Me.tsprogbarempimport.Size = New System.Drawing.Size(100, 22)
         Me.tsprogbarempimport.Visible = False
-        '
-        'tsbtnImportEmployee
-        '
-        Me.tsbtnImportEmployee.Name = "tsbtnImportEmployee"
-        Me.tsbtnImportEmployee.Size = New System.Drawing.Size(23, 22)
         '
         'ReportsToolStripDropDownButton
         '
@@ -3227,7 +2969,7 @@ Partial Class EmployeeForm
         Me.ReportsToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ReportsToolStripDropDownButton.Name = "ReportsToolStripDropDownButton"
         Me.ReportsToolStripDropDownButton.Size = New System.Drawing.Size(76, 22)
-        Me.ReportsToolStripDropDownButton.Text = "Reports"
+        Me.ReportsToolStripDropDownButton.Text = "&Reports"
         '
         'Print201ReportToolStripMenuItem
         '
@@ -3283,7 +3025,7 @@ Partial Class EmployeeForm
         Me.UserActivityEmployeeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.UserActivityEmployeeToolStripButton.Name = "UserActivityEmployeeToolStripButton"
         Me.UserActivityEmployeeToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivityEmployeeToolStripButton.Text = "User Activity"
+        Me.UserActivityEmployeeToolStripButton.Text = "&User Activity"
         '
         'tbpAwards
         '
@@ -9004,8 +8746,6 @@ Partial Class EmployeeForm
         Me.LeaveGroupBox.PerformLayout
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout
         Me.TabControl3.ResumeLayout(False)
@@ -9104,13 +8844,13 @@ Partial Class EmployeeForm
     Friend WithEvents txtNName As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents txtTIN As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtTIN As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents txtSSS As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtSSS As System.Windows.Forms.TextBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents txtPIN As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtPIN As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents txtHDMF As System.Windows.Forms.MaskedTextBox
+    Friend WithEvents txtHDMF As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents txtemail As System.Windows.Forms.TextBox
@@ -9138,7 +8878,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents SaveFileDialog1 As System.Windows.Forms.SaveFileDialog
     Friend WithEvents Label23 As System.Windows.Forms.Label
-    Friend WithEvents txtSName As System.Windows.Forms.TextBox
     Friend WithEvents Label24 As System.Windows.Forms.Label
     Friend WithEvents cboEmpStat As System.Windows.Forms.ComboBox
     Friend WithEvents cboSalut As System.Windows.Forms.ComboBox
@@ -9444,7 +9183,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label155 As System.Windows.Forms.Label
     Friend WithEvents errprovidSal As System.Windows.Forms.ErrorProvider
     Friend WithEvents FontDialog1 As System.Windows.Forms.FontDialog
-    Friend WithEvents Label87 As System.Windows.Forms.Label
     Friend WithEvents dtpempstartdate As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label120 As System.Windows.Forms.Label
     Friend WithEvents Label124 As System.Windows.Forms.Label
@@ -9464,10 +9202,6 @@ Partial Class EmployeeForm
     Friend WithEvents txtpositfrompromot As System.Windows.Forms.TextBox
     Friend WithEvents Label142 As System.Windows.Forms.Label
     Friend WithEvents txtempcurrbasicpay As System.Windows.Forms.Label
-    Friend WithEvents chkotflag As System.Windows.Forms.CheckBox
-    Friend WithEvents chkutflag As System.Windows.Forms.CheckBox
-    Friend WithEvents txtOTgrace As System.Windows.Forms.TextBox
-    Friend WithEvents Label143 As System.Windows.Forms.Label
     Friend WithEvents Label147 As System.Windows.Forms.Label
     Friend WithEvents txtUTgrace As System.Windows.Forms.TextBox
     Friend WithEvents tbpBonus As System.Windows.Forms.TabPage
@@ -9640,7 +9374,6 @@ Partial Class EmployeeForm
     Friend WithEvents c_compensation As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_basicpay As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents c_reasonpromot As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents tsbtnImportEmployee As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnImportDependents As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label315 As System.Windows.Forms.Label
     Friend WithEvents tsprogbarempimport As System.Windows.Forms.ToolStripProgressBar
@@ -9662,7 +9395,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label344 As System.Windows.Forms.Label
     Friend WithEvents Label343 As System.Windows.Forms.Label
     Friend WithEvents btnPrintMemo As System.Windows.Forms.ToolStripButton
-    Friend WithEvents chkAlphaListExempt As System.Windows.Forms.CheckBox
     Friend WithEvents Panel7 As System.Windows.Forms.Panel
     Friend WithEvents txtWorkDaysPerYear As System.Windows.Forms.TextBox
     Friend WithEvents Label351 As System.Windows.Forms.Label
@@ -9673,17 +9405,8 @@ Partial Class EmployeeForm
     Friend WithEvents Label354 As System.Windows.Forms.Label
     Friend WithEvents Label356 As System.Windows.Forms.Label
     Friend WithEvents txtothrbal As System.Windows.Forms.TextBox
-    Friend WithEvents chkSun As System.Windows.Forms.CheckBox
-    Friend WithEvents chkTue As System.Windows.Forms.CheckBox
-    Friend WithEvents chkMon As System.Windows.Forms.CheckBox
-    Friend WithEvents chkThu As System.Windows.Forms.CheckBox
-    Friend WithEvents chkFri As System.Windows.Forms.CheckBox
-    Friend WithEvents chkSat As System.Windows.Forms.CheckBox
-    Friend WithEvents chkWed As System.Windows.Forms.CheckBox
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents chkcalcRestDayOT As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcRestDay As System.Windows.Forms.CheckBox
-    Friend WithEvents chkcalcNightDiffOT As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcNightDiff As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcSpclHoliday As System.Windows.Forms.CheckBox
     Friend WithEvents chkcalcHoliday As System.Windows.Forms.CheckBox
@@ -9703,9 +9426,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label365 As System.Windows.Forms.Label
     Friend WithEvents ToolStripLabel8 As System.Windows.Forms.ToolStripLabel
     Friend WithEvents tsbtnDelBon As System.Windows.Forms.ToolStripButton
-    Friend WithEvents chkbxRevealInPayroll As CheckBox
-    Friend WithEvents Label366 As Label
-    Friend WithEvents txtWorkHoursPerWeek As TextBox
     Friend WithEvents tbpSalary As TabPage
     Friend WithEvents SalaryTab As SalaryTab
     Friend WithEvents BonusTab As BonusTab
@@ -9718,8 +9438,6 @@ Partial Class EmployeeForm
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton
     Friend WithEvents tsbtnImport As ToolStripButton
-    Friend WithEvents ToolStripLabel11 As ToolStripLabel
-    Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents DataGridViewTextBoxColumn64 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn65 As DataGridViewTextBoxColumn
@@ -9936,4 +9654,5 @@ Partial Class EmployeeForm
     Friend WithEvents BPIInsuranceColumn As DataGridViewTextBoxColumn
     Friend WithEvents Column37 As DataGridViewTextBoxColumn
     Friend WithEvents Label32 As Label
+    Friend WithEvents ToolStripSeparator9 As ToolStripSeparator
 End Class

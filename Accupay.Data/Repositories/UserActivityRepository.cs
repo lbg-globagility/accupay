@@ -1,9 +1,11 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
@@ -21,46 +23,94 @@ namespace AccuPay.Data.Repositories
             this._context = context;
         }
 
-        public IEnumerable<UserActivity> GetAll(int? organizationId = null, string entityName = null)
+        public async Task<PaginatedList<UserActivityItem>> GetPaginatedListAsync(
+            PageOptions options,
+            int? organizationId = null,
+            string entityName = null)
         {
-            IQueryable<UserActivity> query = _context.UserActivities.
-                                                Include(x => x.ActivityItems).
-                                                Include(x => x.User);
+            var query = _context.UserActivityItems
+                    .Include(x => x.ChangedEmployee)
+                    .Include(x => x.ChangedUser)
+                    .Include(x => x.Activity)
+                        .ThenInclude(x => x.User)
+                    .AsQueryable();
 
             if (organizationId != null)
             {
-                query = query.Where(x => x.OrganizationID == organizationId);
+                query = query.Where(x => x.Activity.OrganizationID == organizationId);
             }
 
             if (!string.IsNullOrWhiteSpace(entityName))
             {
-                query = query.Where(x => x.EntityName == entityName);
+                query = query.Where(x => x.Activity.EntityName == entityName);
             }
 
-            return query.ToList();
+            if (!string.IsNullOrWhiteSpace(options.Sort))
+            {
+                if (options.Sort == "Created")
+                {
+                    query = query.OrderBy(x => x.Created, options.Direction);
+                }
+            }
+
+            var userActivities = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedList<UserActivityItem>(userActivities, count, options.PageSize);
         }
 
-        public void RecordAdd(int userId, string entityName, int entityId, int organizationId)
+        public void RecordAdd(
+            int userId,
+            string entityName,
+            int entityId,
+            int organizationId,
+            string suffixIdentifier = "",
+            int? changedEmployeeId = null,
+            int? changedUserId = null)
         {
-            RecordSimple(userId, entityName, "Created a new", entityId, organizationId, RecordTypeAdd);
+            RecordSimple(
+                userId,
+                entityName,
+                "Created a new",
+                suffixIdentifier,
+                entityId: entityId,
+                organizationId: organizationId,
+                RecordTypeAdd,
+                changedEmployeeId: changedEmployeeId,
+                changedUserId: changedUserId);
         }
 
-        public void RecordDelete(int userId, string entityName, int entityId, int organizationId)
+        public void RecordDelete(
+            int userId,
+            string entityName,
+            int entityId,
+            int organizationId,
+            string suffixIdentifier = "",
+            int? changedEmployeeId = null,
+            int? changedUserId = null)
         {
-            RecordSimple(userId,
-                        entityName,
-                        $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}",
-                        entityId,
-                        organizationId,
-                        RecordTypeDelete);
+            RecordSimple(
+                userId,
+                entityName,
+                $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}",
+                suffixIdentifier,
+                entityId: entityId,
+                organizationId: organizationId,
+                RecordTypeDelete,
+                changedEmployeeId: changedEmployeeId,
+                changedUserId: changedUserId);
         }
 
-        private void RecordSimple(int userId,
-                                    string entityName,
-                                    string simpleDescription,
-                                    int entityId,
-                                    int organizationId,
-                                    string recordType)
+        private void RecordSimple(
+            int userId,
+            string entityName,
+            string simpleDescription,
+            string suffixIdentifier,
+            int entityId,
+            int organizationId,
+            string recordType,
+            int? changedEmployeeId,
+            int? changedUserId)
         {
             entityName = SetStringToPascalCase(entityName);
 
@@ -69,18 +119,43 @@ namespace AccuPay.Data.Repositories
                     new UserActivityItem()
                     {
                         EntityId = entityId,
-                        Description = $"{simpleDescription} {entityName?.ToLower()}."
+                        Description = $"{simpleDescription} {entityName?.ToLower()}{suffixIdentifier}.",
+                        ChangedEmployeeId = changedEmployeeId,
+                        ChangedUserId = changedUserId
                     }
                 };
 
             CreateRecord(userId, entityName, organizationId, recordType, activityItems);
         }
 
-        public void CreateRecord(int userId,
-                                    string entityName,
-                                    int organizationId,
-                                    string recordType,
-                                    List<UserActivityItem> activityItems = null)
+        public void CreateRecord(
+            int userId,
+            string entityName,
+            int organizationId,
+            string recordType,
+            List<UserActivityItem> activityItems = null)
+        {
+            CreateUserActivityEntity(userId, entityName, organizationId, recordType, activityItems);
+            _context.SaveChanges();
+        }
+
+        public async Task CreateRecordAsync(
+            int userId,
+            string entityName,
+            int organizationId,
+            string recordType,
+            List<UserActivityItem> activityItems = null)
+        {
+            CreateUserActivityEntity(userId, entityName, organizationId, recordType, activityItems);
+            await _context.SaveChangesAsync();
+        }
+
+        private void CreateUserActivityEntity(
+            int userId,
+            string entityName,
+            int organizationId,
+            string recordType,
+            List<UserActivityItem> activityItems = null)
         {
             _context.UserActivities.Add(new UserActivity()
             {
@@ -91,8 +166,6 @@ namespace AccuPay.Data.Repositories
                 OrganizationID = organizationId,
                 RecordType = recordType
             });
-
-            _context.SaveChanges();
         }
 
         public static bool CheckIfFirstLetterIsVowel(string entityName)

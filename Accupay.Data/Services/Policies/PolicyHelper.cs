@@ -42,23 +42,23 @@ namespace AccuPay.Data.Services
         public PayRateCalculationBasis PayRateCalculationBasis =>
                 _settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
 
-        #region Pay Period Default Dates Policy ("16,31,false,true" means first day is "16", second days is "31", first day "is NOT last day of the month", second day "is last day of the month"
+        #region Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previouse month", second day "is not previous month"
 
-        public DaysSpan DefaultFirstHalfDaysSpan()
+        public DayValueSpan DefaultFirstHalfDaysSpan()
         {
             var value = _settings.GetString("Pay Period Policy.DefaultFirstHalfDaysSpan");
 
-            return ParseDaysSpan(value, DaysSpan.DefaultFirstHalf);
+            return ParseDaysSpan(value, DayValueSpan.DefaultFirstHalf);
         }
 
-        public DaysSpan DefaultEndOfTheMonthDaysSpan()
+        public DayValueSpan DefaultEndOfTheMonthDaysSpan()
         {
             var value = _settings.GetString("Pay Period Policy.DefaultEndOfTheMonthDaysSpan");
 
-            return ParseDaysSpan(value, DaysSpan.DefaultEndOfTheMonth);
+            return ParseDaysSpan(value, DayValueSpan.DefaultEndOfTheMonth);
         }
 
-        private DaysSpan ParseDaysSpan(string policyValue, DaysSpan defaultValue)
+        private DayValueSpan ParseDaysSpan(string policyValue, DayValueSpan defaultValue)
         {
             if (string.IsNullOrWhiteSpace(policyValue))
             {
@@ -66,7 +66,7 @@ namespace AccuPay.Data.Services
             }
 
             var values = policyValue.Split(',');
-            if (values.Length < 2 || values.Length > 4)
+            if (values.Length < 2 || values.Length > 6)
             {
                 return defaultValue;
             }
@@ -79,15 +79,25 @@ namespace AccuPay.Data.Services
                 return defaultValue;
             }
 
-            bool startDayIsLastDay = ObjectUtils.ToNullableBoolean(values[0]) ?? false;
-            bool endDayIsLastDay = ObjectUtils.ToNullableBoolean(values[1]) ?? false;
+            bool startDayIsLastDay = ObjectUtils.ToNullableBoolean(values[2]) ?? false;
+            bool endDayIsLastDay = ObjectUtils.ToNullableBoolean(values[3]) ?? false;
 
-            var startDayValue = DayValue.Create(startDay.Value, startDayIsLastDay);
-            var endDayValue = DayValue.Create(endDay.Value, endDayIsLastDay);
+            bool startDayIsLastMonth = ObjectUtils.ToNullableBoolean(values[4]) ?? false;
+            bool endDayIsLastMonth = ObjectUtils.ToNullableBoolean(values[5]) ?? false;
 
-            return DaysSpan.Create(startDayValue, endDayValue);
+            var startDayValue = DayValue.Create(
+                startDay.Value,
+                startDayIsLastDay,
+                startDayIsLastMonth);
+
+            var endDayValue = DayValue.Create(
+                endDay.Value,
+                endDayIsLastDay,
+                endDayIsLastMonth);
+
+            return DayValueSpan.Create(startDayValue, endDayValue);
         }
 
-        #endregion Pay Period Default Dates Policy ("16,31,false,true" means first day is "16", second days is "31", first day "is NOT last day of the month", second day "is last day of the month"
+        #endregion Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previouse month", second day "is not previous month"
     }
 }

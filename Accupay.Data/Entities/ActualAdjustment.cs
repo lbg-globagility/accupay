@@ -23,10 +23,9 @@ namespace AccuPay.Data.Entities
 
         public int? LastUpdBy { get; set; }
 
-        //[Column("PayStubID")]
-        public int? PaystubID { get; set; }
-
         public int? ProductID { get; set; }
+
+        public int? PaystubID { get; set; }
 
         [Column("PayAmount")]
         public decimal Amount { get; set; }
@@ -35,7 +34,7 @@ namespace AccuPay.Data.Entities
 
         public bool IsActual { get; set; }
 
-        [ForeignKey("PayStubID")]
+        [ForeignKey("PaystubID")]
         public virtual Paystub Paystub { get; set; }
 
         [ForeignKey("ProductID")]

@@ -50,8 +50,8 @@ namespace AccuPay.Data.Services.Imports
             string[] employeeNumberList = parsedRecords.Select(s => s.EmployeeNo).ToArray();
 
             var employees = (await _employeeRepository
-                                        .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
-                                        ).ToList();
+                            .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
+                            ).ToList();
 
             var list = new List<ShiftImportModel>();
 

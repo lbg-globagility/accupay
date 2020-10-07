@@ -56,7 +56,7 @@ Public Class Josh_CrysRepForm
         'use Entity framework here. The view that is called below is already deleted.
         adapter.SelectCommand = New MySqlCommand("SELECT * FROM VW_DisciplinaryMemoUserDetails WHERE UserID = " & z_User)
 
-        adapter.SelectCommand.Connection = getConn()
+        adapter.SelectCommand.Connection = conn
         adapter.Fill(dt)
 
         rpt.SetDataSource(dt)

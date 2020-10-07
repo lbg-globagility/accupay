@@ -27,7 +27,11 @@ Public Class CostCenterReportProvider
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    Public Property IsActual As Boolean
+
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ExcelReportColumn) = GetReportColumns()
+
+#Region "Column Keys"
 
     Private Const EmployeeIdKey As String = "EmployeeId"
     Private Const EmployeeNameKey As String = "EmployeeName"
@@ -42,6 +46,10 @@ Public Class CostCenterReportProvider
     Private Const NightDiffPayKey As String = "NightDiffPay"
     Private Const NightDiffOvertimeHoursKey As String = "NightDiffOvertimeHours"
     Private Const NightDiffOvertimePayKey As String = "NightDiffOvertimePay"
+    Private Const RestDayHoursKey As String = "RestDayHours"
+    Private Const RestDayPayKey As String = "RestDayPay"
+    Private Const RestDayOTHoursKey As String = "RestDayOTHours"
+    Private Const RestDayOTPayKey As String = "RestDayOTPay"
     Private Const SpecialHolidayHoursKey As String = "SpecialHolidayHours"
     Private Const SpecialHolidayPayKey As String = "SpecialHolidayPay"
     Private Const SpecialHolidayOTHoursKey As String = "SpecialHolidayOTHours"
@@ -61,39 +69,45 @@ Public Class CostCenterReportProvider
     Private Const FiveDaySilpAmountKey As String = "FiveDaySilpAmount" '5 Day SILP (leave)
     Private Const NetPayKey As String = "NetPay"
 
+#End Region
+
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
 
         Dim reportColumns = New List(Of ExcelReportColumn)({
-                New ExcelReportColumn("NAME OF EMPLOYEES", EmployeeNameKey, ColumnType.Text),
-                New ExcelReportColumn("NO. OF DAYS", TotalDaysKey),
-                New ExcelReportColumn("NO. OF HOURS", TotalHoursKey),
-                New ExcelReportColumn("RATE", DailyRateKey),
-                New ExcelReportColumn("HOURLY", HoulyRateKey),
-                New ExcelReportColumn("GROSS PAY", BasicPayKey),
-                New ExcelReportColumn("NO. OF OT HOURS", OvertimeHoursKey, [optional]:=True),
-                New ExcelReportColumn("OT PAY", OvertimePayKey, [optional]:=True),
-                New ExcelReportColumn("NO. OF ND HOURS", NightDiffHoursKey, [optional]:=True),
-                New ExcelReportColumn("ND PAY", NightDiffPayKey, [optional]:=True),
-                New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursKey, [optional]:=True),
-                New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayKey, [optional]:=True),
-                New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursKey, [optional]:=True),
-                New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayKey, [optional]:=True),
-                New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursKey, [optional]:=True),
-                New ExcelReportColumn("SP HOLIDAY OT PAY", SpecialHolidayOTPayKey, [optional]:=True),
-                New ExcelReportColumn("LEGAL HOLIDAY HOURS", RegularHolidayHoursKey, [optional]:=True),
-                New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayKey, [optional]:=True),
-                New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursKey, [optional]:=True),
-                New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayKey, [optional]:=True),
-                New ExcelReportColumn("ALLOWANCE", TotalAllowanceKey, [optional]:=True),
-                New ExcelReportColumn("TOTAL GROSS PAY", GrossPayKey),
-                New ExcelReportColumn("SSS", SSSAmountKey),
-                New ExcelReportColumn("EREC", ECAmountKey),
-                New ExcelReportColumn("PAG-IBIG", HDMFAmountKey),
-                New ExcelReportColumn("PHILHEALTH", PhilHealthAmountKey),
-                New ExcelReportColumn("HMO", HMOAmountKey),
-                New ExcelReportColumn("13TH MONTH PAY", ThirteenthMonthPayKey),
-                New ExcelReportColumn("5 DAY SILP", FiveDaySilpAmountKey),
-                New ExcelReportColumn("NET PAY", NetPayKey)
+            New ExcelReportColumn("NAME OF EMPLOYEES", EmployeeNameKey, ColumnType.Text),
+            New ExcelReportColumn("NO. OF DAYS", TotalDaysKey),
+            New ExcelReportColumn("NO. OF HOURS", TotalHoursKey),
+            New ExcelReportColumn("RATE", DailyRateKey),
+            New ExcelReportColumn("HOURLY", HoulyRateKey),
+            New ExcelReportColumn("GROSS PAY", BasicPayKey),
+            New ExcelReportColumn("NO. OF OT HOURS", OvertimeHoursKey, [optional]:=True),
+            New ExcelReportColumn("OT PAY", OvertimePayKey, [optional]:=True),
+            New ExcelReportColumn("NO. OF ND HOURS", NightDiffHoursKey, [optional]:=True),
+            New ExcelReportColumn("ND PAY", NightDiffPayKey, [optional]:=True),
+            New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursKey, [optional]:=True),
+            New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY HOURS", RestDayHoursKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY PAY", RestDayPayKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY OT HOURS", RestDayOTHoursKey, [optional]:=True),
+            New ExcelReportColumn("REST DAY OT PAY", RestDayOTPayKey, [optional]:=True),
+            New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursKey, [optional]:=True),
+            New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayKey, [optional]:=True),
+            New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursKey, [optional]:=True),
+            New ExcelReportColumn("SP HOLIDAY OT PAY", SpecialHolidayOTPayKey, [optional]:=True),
+            New ExcelReportColumn("LEGAL HOLIDAY HOURS", RegularHolidayHoursKey, [optional]:=True),
+            New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayKey, [optional]:=True),
+            New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursKey, [optional]:=True),
+            New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayKey, [optional]:=True),
+            New ExcelReportColumn("ALLOWANCE", TotalAllowanceKey, [optional]:=True),
+            New ExcelReportColumn("TOTAL GROSS PAY", GrossPayKey),
+            New ExcelReportColumn("SSS", SSSAmountKey),
+            New ExcelReportColumn("EREC", ECAmountKey),
+            New ExcelReportColumn("PAG-IBIG", HDMFAmountKey),
+            New ExcelReportColumn("PHILHEALTH", PhilHealthAmountKey),
+            New ExcelReportColumn("HMO", HMOAmountKey),
+            New ExcelReportColumn("13TH MONTH PAY", ThirteenthMonthPayKey),
+            New ExcelReportColumn("5 DAY SILP", FiveDaySilpAmountKey),
+            New ExcelReportColumn("NET PAY", NetPayKey)
             })
 
         Return New ReadOnlyCollection(Of ExcelReportColumn)(reportColumns)
@@ -119,9 +133,11 @@ Public Class CostCenterReportProvider
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
             Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
-            Dim payPeriodModels = dataService.GetData(selectedMonth.Value,
-                                                    selectedBranch,
-                                                    userId:=z_User)
+            Dim payPeriodModels = dataService.GetData(
+                selectedMonth.Value,
+                selectedBranch,
+                userId:=z_User,
+                isActual:=IsActual)
 
             If payPeriodModels.Any = False OrElse payPeriodModels.Sum(Function(p) p.Paystubs.Count) = 0 Then
 

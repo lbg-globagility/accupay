@@ -19,6 +19,8 @@ namespace AccuPay.Data.Services
         {
             decimal totalEarnings = 0;
 
+            // TODO: move this code to BasePaystub class so paystub and paystubactual
+            // can both use this formula
             if (employee.IsDaily || currentSystemOwner == SystemOwnerService.Benchmark)
             {
                 totalEarnings = paystub.Actual.RegularPay +
@@ -63,7 +65,7 @@ namespace AccuPay.Data.Services
             }
 
             paystub.Actual.ComputeBasicPay(employee.IsDaily, salary.TotalSalary, actualTimeEntries);
-            paystub.Actual.GrossPay = AccuMath.CommercialRound(totalEarnings + paystub.TotalAllowance);
+            paystub.Actual.GrossPay = AccuMath.CommercialRound(totalEarnings + paystub.TotalBonus + paystub.GrandTotalAllowance);
             paystub.Actual.TotalAdjustments = AccuMath.CommercialRound(paystub.TotalAdjustments + paystub.ActualAdjustments.Sum(a => a.Amount));
             paystub.Actual.NetPay = AccuMath.CommercialRound(paystub.Actual.GrossPay - paystub.NetDeductions + paystub.Actual.TotalAdjustments);
         }

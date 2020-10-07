@@ -82,19 +82,15 @@ Public Class AttachmentTab
             Case FormMode.Disabled
                 btnNew.Enabled = False
                 btnDelete.Enabled = False
-                btnCancel.Enabled = False
             Case FormMode.Empty
                 btnNew.Enabled = True
                 btnDelete.Enabled = False
-                btnCancel.Enabled = False
             Case FormMode.Creating
                 btnNew.Enabled = False
                 btnDelete.Enabled = False
-                btnCancel.Enabled = True
             Case FormMode.Editing
                 btnNew.Enabled = True
                 btnDelete.Enabled = True
-                btnCancel.Enabled = True
         End Select
     End Sub
 
@@ -124,7 +120,7 @@ Public Class AttachmentTab
         End If
     End Sub
 
-    Private Sub ToolStripButton16_Click(sender As Object, e As EventArgs) Handles ToolStripButton16.Click
+    Private Sub ToolStripButton16_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         EmployeeForm.Close()
     End Sub
 
@@ -137,7 +133,13 @@ Public Class AttachmentTab
 
                     Await _attachmentRepo.DeleteAsync(_currentAttachment)
 
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAttachment.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(
+                        z_User,
+                        FormEntityName,
+                        entityId:=_currentAttachment.RowID.Value,
+                        organizationId:=z_OrganizationID,
+                        changedEmployeeId:=_currentAttachment.EmployeeID,
+                        suffixIdentifier:=$" with type '{ _currentAttachment.Type}'")
 
                     Await LoadAttachments()
                 End Function)

@@ -268,15 +268,15 @@ Public Class ImportEmployeeForm
                 userId:=z_User)
 
             Dim importList = New List(Of UserActivityItem)
-            Dim entityName = FormEntityName.ToLower()
 
             For Each item In employees
 
                 importList.Add(New UserActivityItem() With
-                        {
-                        .Description = $"Imported a new {entityName}.",
-                        .EntityId = item.Employee.RowID.Value
-                        })
+                {
+                    .Description = $"Created a new employee.",
+                    .EntityId = item.Employee.RowID.Value,
+                    .ChangedEmployeeId = item.Employee.RowID.Value
+                })
             Next
 
             _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
@@ -377,8 +377,8 @@ Public Class ImportEmployeeForm
         Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
                 models = ExcelService(Of EmployeeModel).
-                            Read(_filePath).
-                            ToList()
+                    Read(_filePath).
+                    ToList()
 
                 models.ForEach(
                 Sub(model)
@@ -427,18 +427,17 @@ Public Class ImportEmployeeForm
             If model.Position Is Nothing Then Continue For
 
             Dim currentPosition = existingPositions.
-                           FirstOrDefault(Function(p) p.Name.ToTrimmedLowerCase() =
-                                                        model.Position.ToTrimmedLowerCase())
+                FirstOrDefault(Function(p) p.Name.ToTrimmedLowerCase() = model.Position.ToTrimmedLowerCase())
 
             If currentPosition IsNot Nothing Then
 
                 model.PositionId = currentPosition.RowID
             Else
 
-                currentPosition = Await _positionService.
-                                    GetByNameOrCreateAsync(model.Position,
-                                                           organizationId:=z_OrganizationID,
-                                                           userId:=z_User)
+                currentPosition = Await _positionService.GetByNameOrCreateAsync(
+                    model.Position,
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User)
 
                 model.PositionId = currentPosition?.RowID
 
@@ -463,8 +462,7 @@ Public Class ImportEmployeeForm
             If model.Branch Is Nothing Then Continue For
 
             Dim currentBranch = existingBranches.
-                           FirstOrDefault(Function(b) b.Name.ToTrimmedLowerCase() =
-                                                        model.Branch.ToTrimmedLowerCase())
+                FirstOrDefault(Function(b) b.Name.ToTrimmedLowerCase() = model.Branch.ToTrimmedLowerCase())
 
             If currentBranch IsNot Nothing Then
 
@@ -539,9 +537,9 @@ Public Class ImportEmployeeForm
         If Not browseFile.ShowDialog() = DialogResult.OK Then Return
 
         Await FunctionUtils.TryCatchFunctionAsync("Load Employee Data",
-                                                Async Function()
-                                                    Await SetFileDirectory(browseFile.FileName)
-                                                End Function)
+            Async Function()
+                Await SetFileDirectory(browseFile.FileName)
+            End Function)
     End Sub
 
     Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click

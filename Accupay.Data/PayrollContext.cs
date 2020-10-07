@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Data.EntityFrameworkCore;
+using AccuPay.Data.Data.EntityFrameworkCore;
 using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using Microsoft.AspNetCore.Identity;
@@ -74,7 +74,6 @@ namespace AccuPay.Data
         internal virtual DbSet<Position> Positions { get; set; }
         internal virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
         internal virtual DbSet<Product> Products { get; set; }
-        internal virtual DbSet<Promotion> Promotions { get; set; }
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<RoutePayRate> RoutePayRates { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
@@ -89,6 +88,7 @@ namespace AccuPay.Data
         public virtual DbSet<TripTicket> TripTickets { get; set; }
         public virtual DbSet<TripTicketEmployee> TripTicketEmployees { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
+        internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
         public virtual DbSet<Vehicle> Vehicles { get; set; }
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }

@@ -91,7 +91,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PositionRepository)
         services.AddTransient(Of PreviousEmployerRepository)
         services.AddTransient(Of ProductRepository)
-        services.AddTransient(Of PromotionRepository)
         services.AddTransient(Of RoleRepository)
         services.AddTransient(Of RouteRepository)
         services.AddTransient(Of RouteRateRepository)
@@ -129,7 +128,6 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of TimeEntryGenerator)
 
-        services.AddTransient(Of AdjustmentService)
         services.AddTransient(Of OvertimeRateService)
         services.AddTransient(Of LeaveAccrualService)
         services.AddTransient(Of PayPeriodDataService)
@@ -146,6 +144,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of OfficialBusinessDataService)
         services.AddTransient(Of OvertimeDataService)
         services.AddTransient(Of PaystubDataService)
+        services.AddTransient(Of PaystubEmailDataService)
         services.AddTransient(Of PositionDataService)
         services.AddTransient(Of RoleDataService)
         services.AddTransient(Of SalaryDataService)

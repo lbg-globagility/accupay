@@ -20,7 +20,7 @@ namespace AccuPay.Web.Payroll
 
         public async Task<ICollection<PaystubDto>> GetAll(int payPeriodId)
         {
-            var paystubs = await _service.GetAll(payPeriodId);
+            var paystubs = await _service.GetAllAsync(payPeriodId);
             var dtos = paystubs.Select(t => PaystubDto.Convert(t)).ToList();
 
             return dtos;
@@ -28,9 +28,9 @@ namespace AccuPay.Web.Payroll
 
         public async Task<List<AdjustmentDto>> GetAdjustments(int paystubId)
         {
-            var loanTransactions = await repository.GetAdjustmentsAsync(paystubId);
+            var adjustments = await repository.GetAdjustmentsAsync(paystubId);
 
-            return loanTransactions.Select(x => AdjustmentDto.Convert(x)).ToList();
+            return adjustments.Select(x => AdjustmentDto.Convert(x)).ToList();
         }
 
         public async Task<List<LoanTransactionDto>> GetLoanTransactions(int paystubId)

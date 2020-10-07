@@ -5,7 +5,9 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities
 Imports Indigo
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -42,6 +44,8 @@ Public Class MDIPrimaryForm
 
     Private ReadOnly _userRepository As AspNetUserRepository
 
+    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+
     Sub New()
 
         InitializeComponent()
@@ -51,6 +55,8 @@ Public Class MDIPrimaryForm
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
         _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
 
         Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
         if_sysowner_is_benchmark = currentSystemOwner = SystemOwnerService.Benchmark
@@ -100,7 +106,7 @@ Public Class MDIPrimaryForm
 
         setProperDashBoardAccordingToSystemOwner()
 
-        RunLeaveAccrual()
+        Await RunLeaveAccrual()
 
         Panel1.Focus()
         MyBase.OnLoad(e)
@@ -137,7 +143,7 @@ Public Class MDIPrimaryForm
         lblTime.Text = TimeOfDay
     End Sub
 
-    Private Async Sub RunLeaveAccrual()
+    Private Async Function RunLeaveAccrual() As Task
 
         Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
         Dim collection = Await listOfValueService.CreateAsync("LeavePolicy")
@@ -150,7 +156,7 @@ Public Class MDIPrimaryForm
                     Await service.CheckAccruals(z_OrganizationID, z_User)
                 End Function)
         End If
-    End Sub
+    End Function
 
     Dim ClosingForm As Form = Nothing 'New
 
@@ -168,6 +174,7 @@ Public Class MDIPrimaryForm
                   End Function)
 
         LockTime()
+        EmailStatusTimer.Stop()
 
         If e.Cancel = False Then
 
@@ -291,14 +298,14 @@ Public Class MDIPrimaryForm
     Private Sub MDIPrimaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Try
-            PrepareForm(sender, e)
+            PrepareForm()
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         Finally
         End Try
     End Sub
 
-    Private Sub PrepareForm(sender As Object, e As EventArgs)
+    Private Sub PrepareForm()
         If dbnow = Nothing Then
             dbnow = EXECQUER(CURDATE_MDY)
         End If
@@ -309,9 +316,18 @@ Public Class MDIPrimaryForm
         lblUser.Text = userFirstName &
                        If(userLastName = Nothing, "", " " & userLastName)
         lblPosition.Text = z_postName
-        HomeToolStripButton_Click(sender, e)
+        SelectHomeToolStrip()
         PictureBox1.Image = ImageList1.Images(1)
         LoadVersionNo()
+
+        If _policyHelper.UseEmailPayslip Then
+
+            EmailServiceStatusToolStripLabel.Visible = True
+            AddHandler EmailStatusTimer.Tick, AddressOf EmailStatusTimer_Tick
+
+            EmailStatusTimer.Start()
+        End If
+
     End Sub
 
     Private Sub PrepareFormForBenchmark()
@@ -321,7 +337,7 @@ Public Class MDIPrimaryForm
         End If
     End Sub
 
-    Private Async Sub RestrictByUserLevel()
+    Private Async Function RestrictByUserLevel() As Task
 
         Dim user = Await _userRepository.GetByIdAsync(z_User)
 
@@ -350,7 +366,7 @@ Public Class MDIPrimaryForm
 
         End If
 
-    End Sub
+    End Function
 
     Private Sub LoadVersionNo()
         Dim appSettings = ConfigurationManager.AppSettings
@@ -373,7 +389,11 @@ Public Class MDIPrimaryForm
     Dim isHome As SByte = 0
 
     Private Sub HomeToolStripButton_Click(sender As Object, e As EventArgs) Handles HomeToolStripButton.Click
+        SelectHomeToolStrip()
 
+    End Sub
+
+    Private Sub SelectHomeToolStrip()
         isHome = 1
 
         UnlockTime()
@@ -410,7 +430,7 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Sub GeneralToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
+    Private Async Sub GeneralToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
 
         isHome = 0
 
@@ -440,10 +460,10 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(0, sender, e)
+        Await refresh_previousForm(0)
     End Sub
 
-    Sub TimeAndAttendanceToolStripButton_Click(sender As Object, e As EventArgs) Handles TimeAndAttendanceToolStripButton.Click
+    Private Async Sub TimeAndAttendanceToolStripButton_Click(sender As Object, e As EventArgs) Handles TimeAndAttendanceToolStripButton.Click
 
         isHome = 0
 
@@ -473,25 +493,12 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(2, sender, e)
+        Await refresh_previousForm(2)
     End Sub
 
     Dim theemployeetable As New DataTable
 
-    Sub refresh_previousForm(Optional groupindex As Object = 0,
-                             Optional sndr As Object = 0,
-                             Optional ee As EventArgs = Nothing)
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-            'once = 1
-
-            Exit Sub
-
-        End If
-
-        Static countchanges As Integer = -1
+    Private Async Function refresh_previousForm(Optional groupindex As Object = 0) As Task
 
         If previousForm IsNot Nothing Then
 
@@ -523,7 +530,7 @@ Public Class MDIPrimaryForm
 
                             Case .GetEmployeeProfileTabPageIndex
                                 If .listofEditDepen.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
+                                    Await EmployeeForm.SearchEmployee()
                                 Else
 
                                 End If
@@ -556,17 +563,14 @@ Public Class MDIPrimaryForm
 
             ElseIf groupindex = 3 Then 'Payroll
                 If previousForm.Name = "Paystub" Then
-                    With PayStubForm
-                        .btnrefresh_Click(sndr, ee)
-                    End With
+                    Await PayStubForm.VIEW_payperiodofyear()
                 End If
             End If
 
-            countchanges = theemployeetable.Rows.Count
         End If
-    End Sub
+    End Function
 
-    Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
+    Private Async Sub PayrollToolStripButton_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
 
         isHome = 0
 
@@ -596,11 +600,11 @@ Public Class MDIPrimaryForm
         TimeAndAttendanceToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(3, sender, e)
+        Await refresh_previousForm(3)
 
     End Sub
 
-    Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
+    Private Async Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
 
         isHome = 0
 
@@ -630,7 +634,7 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(1, sender, e)
+        Await refresh_previousForm(1)
     End Sub
 
     'Toggling pin status
@@ -711,7 +715,6 @@ Public Class MDIPrimaryForm
     Sub UnlockTime()
 
         Timer2.Enabled = True
-
         Timer2.Start()
 
         Static once As SByte = 0
@@ -920,7 +923,7 @@ Public Class MDIPrimaryForm
 
         If _policyHelper.UseUserLevel Then
 
-            RestrictByUserLevel()
+            Await RestrictByUserLevel()
         Else
 
             RestrictByRole()
@@ -1048,7 +1051,7 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Sub NotifyIcon1_Click(sender As Object, e As EventArgs)
-        HomeToolStripButton_Click(sender, e)
+        SelectHomeToolStrip()
     End Sub
 
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
@@ -1120,6 +1123,52 @@ Public Class MDIPrimaryForm
             collapgpbox.Visible = _bool
 
         Next
+
+    End Sub
+
+    Private Async Sub EmailStatusTimer_Tick(sender As Object, e As EventArgs)
+
+        EmailServiceStatusToolStripLabel.Enabled = True
+
+        Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
+        Dim queueCount = onQueue.Count()
+
+        Dim connectionString = ConnectionStringRegistry.GetCurrent()
+        Dim service = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)
+        Dim status = Await service.GetStatus()
+
+        Dim isOnline = status = ServiceProcess.ServiceControllerStatus.Running
+
+        UpdateEmailStatusToolStripLabel(isOnline, queueCount)
+
+    End Sub
+
+    Private Sub UpdateEmailStatusToolStripLabel(isOnline As Boolean, queueCount As Integer)
+
+        Dim foreColor = Color.DarkGreen
+        Dim status = "Online"
+
+        If Not isOnline Then
+
+            foreColor = Color.DarkRed
+            status = "OFFLINE"
+        End If
+
+        Dim queueDescription = String.Empty
+
+        If queueCount > 0 Then
+            EmailServiceStatusToolStripLabel.ForeColor = Color.DarkOrange
+            queueDescription = $"{queueCount} email{If(queueCount > 1, "s", "")} on queue."
+        End If
+
+        EmailServiceStatusToolStripLabel.Text = $"Email Service is {status}. {queueDescription}"
+        EmailServiceStatusToolStripLabel.ForeColor = foreColor
+    End Sub
+
+    Private Sub EmailServiceStatusToolStripLabel_Click(sender As Object, e As EventArgs) Handles EmailServiceStatusToolStripLabel.Click
+
+        Dim form As New EmailDashboardForm()
+        form.ShowDialog()
 
     End Sub
 

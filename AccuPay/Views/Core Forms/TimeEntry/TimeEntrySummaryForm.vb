@@ -20,6 +20,8 @@ Imports MySql.Data.MySqlClient
 
 Public Class TimeEntrySummaryForm
 
+    Private Const FormEntityName As String = "TimeEntry"
+
     Private Const Clock24HourFormat As String = "HH:mm"
     Private Const Clock12HourFormat As String = "hh:mm tt"
 
@@ -57,6 +59,8 @@ Public Class TimeEntrySummaryForm
     Private _hideMoneyColumns As Boolean
 
     Private _formHasLoaded As Boolean = False
+
+    Private _generateDefaultShiftAndTimeLogsButtonHidden As Boolean
 
     Private _regenerateTimeEntryButtonHidden As Boolean
 
@@ -114,9 +118,9 @@ Public Class TimeEntrySummaryForm
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
-        ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
         RegenerateTimeEntryButton.Visible = False
+        GenerateDefaultShiftAndTimeLogsButton.Visible = False
 
         Await LoadEmployees()
         Await LoadPayPeriods()
@@ -179,19 +183,23 @@ Public Class TimeEntrySummaryForm
             shiftPermission.Update = False Then
 
             GenerateDefaultShiftAndTimeLogsButton.Visible = False
+            _generateDefaultShiftAndTimeLogsButtonHidden = True
         End If
 
-        If timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Update = False Then
+        Dim updateTimeEntryPermission = timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Update
+        Dim deleteTimeEntryPermission = timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Delete
+
+        If Not updateTimeEntryPermission Then
             RegenerateTimeEntryButton.Visible = False
             _regenerateTimeEntryButtonHidden = True
         End If
 
-        If timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Delete = False Then
+        If Not deleteTimeEntryPermission Then
             tsBtnDeleteTimeEntry.Visible = False
             _tsBtnDeleteTimeEntryHidden = True
         End If
 
-        GenerateTimeEntryButton.Visible =
+        StartNewPayrollButton.Visible =
             If(timeEntryPermission?.Create, False) AndAlso
             If(payPeriodPermission?.Create, False)
     End Function
@@ -301,6 +309,10 @@ Public Class TimeEntrySummaryForm
 
         If Not _regenerateTimeEntryButtonHidden Then
             RegenerateTimeEntryButton.Visible = _selectedPayPeriod.IsOpen
+        End If
+
+        If Not _generateDefaultShiftAndTimeLogsButtonHidden Then
+            GenerateDefaultShiftAndTimeLogsButton.Visible = Not _selectedPayPeriod.IsClosed
         End If
 
     End Function
@@ -930,7 +942,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Async Sub generateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles GenerateTimeEntryButton.Click
+    Private Async Sub StartNewPayrollButton_Click(sender As Object, e As EventArgs) Handles StartNewPayrollButton.Click
 
         Dim currentOpenPayPeriod = Await _payPeriodRepository.GetCurrentOpenAsync(z_OrganizationID)
         If currentOpenPayPeriod IsNot Nothing Then
@@ -1011,12 +1023,54 @@ Public Class TimeEntrySummaryForm
 
         End If
 
-        Await LoadTimeEntries()
-        MsgBox(msgBoxText)
+        Try
+            Me.Cursor = Cursors.WaitCursor
+
+            Await LoadTimeEntries()
+            Await RecordMultipleTimeEntriesUserActivity()
+        Finally
+
+            MsgBox(msgBoxText)
+            Me.Cursor = Cursors.Default
+        End Try
 
     End Sub
 
-    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
+    Private Async Function RecordMultipleTimeEntriesUserActivity() As Task
+
+        Dim changes = New List(Of UserActivityItem)
+
+        Dim timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
+
+        Dim currentPayPeriod = New TimePeriod(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
+
+        Dim timeEntries = timeEntryRepository.GetByDatePeriod(z_OrganizationID, currentPayPeriod).ToList()
+
+        Dim employeesWithTimeEntry = timeEntries.GroupBy(Function(e) e.EmployeeID).ToList()
+
+        For Each employee In employeesWithTimeEntry
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = _selectedPayPeriod.RowID.Value,
+                .Description = $"Generated time entries for payroll {GetPayPeriodString()}.",
+                .ChangedEmployeeId = employee.Key.Value
+            })
+        Next
+
+        If changes.Any() Then
+
+            Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            Await repo.CreateRecordAsync(
+              z_User,
+              FormEntityName,
+              z_OrganizationID,
+              UserActivityRepository.RecordTypeEdit,
+              changes)
+
+        End If
+    End Function
+
+    Private Async Sub RegenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
 
         Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(_selectedPayPeriod.RowID)
 
@@ -1067,10 +1121,14 @@ Public Class TimeEntrySummaryForm
             RegenerateTimeEntryButton.Visible = isOpen
         End If
 
+        If Not _generateDefaultShiftAndTimeLogsButtonHidden Then
+            GenerateDefaultShiftAndTimeLogsButton.Visible = _selectedPayPeriod IsNot Nothing AndAlso Not _selectedPayPeriod.IsClosed
+        End If
+
         Await LoadTimeEntries()
     End Sub
 
-    Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
+    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
         Close()
         TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
@@ -1605,11 +1663,13 @@ Public Class TimeEntrySummaryForm
 
         End If
 
-        Dim ask = String.Concat($"Proceed deleting employee's [{_selectedEmployee.EmployeeNo}] time entries between ",
-                                _selectedPayPeriod.PayFromDate.ToShortDateString(),
-                                " and ",
-                                _selectedPayPeriod.PayToDate.ToShortDateString(),
-                                " ?")
+        Dim ask = String.Concat(
+            $"Proceed deleting employee's [{_selectedEmployee.EmployeeNo}] time entries between ",
+            _selectedPayPeriod.PayFromDate.ToShortDateString(),
+            " and ",
+            _selectedPayPeriod.PayToDate.ToShortDateString(),
+            " ?")
+
         Dim askConfirmation = MessageBox.Show(ask, "Confirm delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If askConfirmation = DialogResult.No Then Return
@@ -1621,11 +1681,36 @@ Public Class TimeEntrySummaryForm
                     payPeriodId:=_selectedPayPeriod.RowID.Value
                 )
 
+                Await RecordDeleteTimeEntriesUserActivity()
+
                 MessageBoxHelper.Information("Time entries successfully deleted.")
 
                 Await LoadTimeEntries()
             End Function)
     End Sub
+
+    Private Async Function RecordDeleteTimeEntriesUserActivity() As Task
+        Dim activityItem = New List(Of UserActivityItem) From {
+            New UserActivityItem() With
+            {
+                .EntityId = _selectedPayPeriod.RowID.Value,
+                .Description = $"Deleted time entries for payroll {GetPayPeriodString()}.",
+                .ChangedEmployeeId = _selectedEmployee.RowID.Value
+            }
+        }
+
+        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        Await userActivityService.CreateRecordAsync(
+          z_User,
+          FormEntityName,
+          z_OrganizationID,
+          UserActivityRepository.RecordTypeDelete,
+          activityItem)
+    End Function
+
+    Private Function GetPayPeriodString() As String
+        Return $"'{_selectedPayPeriod.PayFromDate.ToShortDateString()}' to '{_selectedPayPeriod.PayToDate.ToShortDateString()}'"
+    End Function
 
     Private Sub TimeEntriesDataGridView_DataSourceChanged(sender As Object, e As EventArgs) Handles timeEntriesDataGridView.DataSourceChanged
         timeEntriesDataGridView.Rows.OfType(Of DataGridViewRow).
@@ -1653,6 +1738,11 @@ Public Class TimeEntrySummaryForm
         Dim form = New DefaultShiftAndTimeLogsForm(_selectedPayPeriod)
         form.ShowDialog()
 
+    End Sub
+
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm(FormEntityName)
+        userActivity.ShowDialog()
     End Sub
 
 End Class

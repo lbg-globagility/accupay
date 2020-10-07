@@ -126,7 +126,7 @@ Public Class PaystubView
 
         txtTotalEarnings.Text = Format(declared.TotalEarnings)
 
-        txtTotalAllowance.Text = Format(declared.TotalAllowance)
+        txtTotalAllowance.Text = Format(declared.TotalNonTaxableAllowance)
         txtGrossPay.Text = Format(If(isActual, actual.GrossPay, declared.GrossPay))
 
         txtSss.Text = Format(-declared.SssEmployeeShare)

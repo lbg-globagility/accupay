@@ -18,8 +18,6 @@ Namespace Global.AccuPay.Entity
 
         Public Property EmployeeShiftID As Integer?
 
-        Public Property EmployeeSalaryID As Integer?
-
         Public Property PayRateID As Integer?
 
         <Column("Date")>

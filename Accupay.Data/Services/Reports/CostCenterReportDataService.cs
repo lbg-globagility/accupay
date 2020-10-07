@@ -2,7 +2,6 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using AccuPay.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -36,7 +35,8 @@ namespace AccuPay.Data.Services
         public List<PayPeriodModel> GetData(
             DateTime selectedMonth,
             Branch selectedBranch,
-            int userId)
+            int userId,
+            bool isActual)
         {
             _selectedMonth = selectedMonth;
             _selectedBranch = selectedBranch;
@@ -140,6 +140,7 @@ namespace AccuPay.Data.Services
                 .Where(x => x.Month == _selectedMonth.Month)
                 .ToList();
             payPeriodModels = CreatePayPeriodModels(
+                isActual,
                 payPeriods,
                 employees,
                 salaries,
@@ -344,17 +345,14 @@ namespace AccuPay.Data.Services
                     }
                 }
 
-                var divideTheDeductions = employeePaystubs.Count == 2;
-
                 employeeMonthlyDeductions.Add(
-                    MonthlyDeduction.
-                    Create(divideTheDeductions,
-                            employeeId: employeeId,
-                            sssAmount: sssAmount,
-                            ecAmount: ecAmount,
-                            hdmfAmount: hdmfAmount,
-                            philhealthAmount: philhealthAmount,
-                            thirteenthMonthPay: thirteenthMonthPay));
+                    MonthlyDeduction.Create(
+                        employeeId: employeeId,
+                        sssAmount: sssAmount,
+                        ecAmount: ecAmount,
+                        hdmfAmount: hdmfAmount,
+                        philhealthAmount: philhealthAmount,
+                        thirteenthMonthPay: thirteenthMonthPay));
             }
 
             return employeeMonthlyDeductions;
@@ -389,6 +387,7 @@ namespace AccuPay.Data.Services
         }
 
         private List<PayPeriodModel> CreatePayPeriodModels(
+            bool isActual,
             List<TimePeriod> payPeriods,
             List<Employee> employees,
             List<Salary> salaries,
@@ -417,10 +416,12 @@ namespace AccuPay.Data.Services
                     .ToList();
 
                 var paystubModels = CreatePaystubModels(
+                    isActual,
                     employees,
                     salaries,
                     payPeriod,
-                    payPeriodPaystubs,
+                    payPeriodPaystubs: payPeriodPaystubs,
+                    allPaystubs: paystubs,
                     monthlyDeductions,
                     payPeriodHmoLoans,
                     dailyAllowances,
@@ -441,11 +442,13 @@ namespace AccuPay.Data.Services
             return payPeriodModels;
         }
 
-        private List<PaystubModel> CreatePaystubModels(
+        private List<CostCenterPaystubModel> CreatePaystubModels(
+            bool isActual,
             List<Employee> employees,
             List<Salary> salaries,
             TimePeriod payPeriod,
-            List<Paystub> paystubs,
+            List<Paystub> payPeriodPaystubs,
+            List<Paystub> allPaystubs,
             List<MonthlyDeduction> monthlyDeductions,
             List<LoanTransaction> hmoLoans,
             List<Allowance> dailyAllowances,
@@ -456,7 +459,7 @@ namespace AccuPay.Data.Services
             List<TimeEntry> branchTimeEntries,
             List<ActualTimeEntry> branchActualTimeEntries)
         {
-            List<PaystubModel> paystubModels = new List<PaystubModel>();
+            List<CostCenterPaystubModel> paystubModels = new List<CostCenterPaystubModel>();
 
             foreach (var employee in employees)
             {
@@ -477,10 +480,10 @@ namespace AccuPay.Data.Services
                     .ToList();
 
                 var employeeBranchActualTimeEntries = branchActualTimeEntries
-                                    .Where(t => t.Date >= payPeriod.Start)
-                                    .Where(t => t.Date <= payPeriod.End)
-                                    .Where(t => t.EmployeeID == employee.RowID)
-                                    .ToList();
+                    .Where(t => t.Date >= payPeriod.Start)
+                    .Where(t => t.Date <= payPeriod.End)
+                    .Where(t => t.EmployeeID == employee.RowID)
+                    .ToList();
 
                 var employeeAllowances = dailyAllowances
                     .Where(x => x.EmployeeID == employee.RowID)
@@ -492,9 +495,13 @@ namespace AccuPay.Data.Services
                     .OrderByDescending(s => s.EffectiveFrom)
                     .FirstOrDefault();
 
-                var paystub = paystubs
+                var currentPaystub = payPeriodPaystubs
                     .Where(p => p.EmployeeID == employee.RowID)
                     .FirstOrDefault();
+
+                var monthlyPaystubs = allPaystubs
+                    .Where(d => d.EmployeeID == employee.RowID)
+                    .ToList();
 
                 var monthlyDeduction = monthlyDeductions
                     .Where(d => d.EmployeeID == employee.RowID)
@@ -515,10 +522,12 @@ namespace AccuPay.Data.Services
                     .Where(x => x.PayToDate == payPeriod.End)
                     .FirstOrDefault();
 
-                var createdPaystubModel = PaystubModel.Create(
+                var createdPaystubModel = CostCenterPaystubModel.Create(
                     employee,
                     salary,
-                    paystub,
+                    currentPaystub,
+                    monthlyPaystubs,
+                    isActual,
                     monthlyDeduction,
                     hmoLoan,
                     employeeAllowances,
@@ -543,7 +552,7 @@ namespace AccuPay.Data.Services
         {
             public TimePeriod PayPeriod { get; set; }
 
-            public List<PaystubModel> Paystubs { get; set; }
+            public List<CostCenterPaystubModel> Paystubs { get; set; }
         }
 
         public class SSSEmployerShare
@@ -558,382 +567,6 @@ namespace AccuPay.Data.Services
             public decimal ECamount { get; }
 
             internal static SSSEmployerShare Zero => new SSSEmployerShare(0, 0);
-        }
-
-        public class PaystubModel
-        {
-            public static PaystubModel Create(
-                Employee employee,
-                Salary salary,
-                Paystub currentPaystub,
-                MonthlyDeduction monthlyDeduction,
-                LoanTransaction hmoLoan,
-                List<Allowance> dailyAllowances,
-                ListOfValueCollection settings,
-                CalendarCollection calendarCollection,
-                int userId,
-                PayPeriod payPeriod,
-                List<TimeEntry> allTimeEntries,
-                List<TimeEntry> branchTimeEntries,
-                List<ActualTimeEntry> branchActualTimeEntries)
-            {
-                if (employee == null)
-                    return null;
-                if (branchTimeEntries == null || branchTimeEntries.Any() == false)
-                    return null;
-
-                PaystubModel paystubModel = new PaystubModel();
-                paystubModel.Employee = employee;
-
-                if (salary != null)
-                    paystubModel = ComputeHoursAndPay(paystubModel, employee, salary, branchTimeEntries);
-
-                if (currentPaystub != null && currentPaystub.RegularHours > 0)
-                {
-                    // Check the percentage of work hours the employee worked in this branch
-                    // If employee worked for 100 hours in total, and he worked 40 hours in this branch,
-                    // then he worked 40% of his total worked hours in this branch.
-                    var workedPercentage = AccuMath.CommercialRound(paystubModel.RegularHours / currentPaystub.RegularHours); // 40 / 100
-                    paystubModel = ComputeGovernmentDeductions(
-                        hmoLoan,
-                        monthlyDeduction,
-                        paystubModel,
-                        workedPercentage);
-                }
-
-                paystubModel.TotalAllowance = ComputeTotalAllowance(
-                    dailyAllowances,
-                    settings,
-                    calendarCollection,
-                    userId,
-                    currentPaystub,
-                    paystubModel.Employee,
-                    payPeriod,
-                    allTimeEntries: allTimeEntries,
-                    branchTimeEntries: branchTimeEntries);
-
-                paystubModel.ThirteenthMonthPay = ComputeThirteenthMonthPay(
-                    employee,
-                    branchTimeEntries: branchTimeEntries,
-                    branchActualTimeEntries: branchActualTimeEntries);
-                return paystubModel;
-            }
-
-            private static decimal ComputeThirteenthMonthPay(
-                Employee employee,
-                List<TimeEntry> branchTimeEntries,
-                List<ActualTimeEntry> branchActualTimeEntries)
-            {
-                var thirteenthMonthPay = ThirteenthMonthPayCalculator
-                    .ComputeByRegularPayAndAllowanceDaily(
-                        employee,
-                        branchTimeEntries,
-                        branchActualTimeEntries);
-
-                return AccuMath.CommercialRound(thirteenthMonthPay / CalendarConstants.MonthsInAYear);
-            }
-
-            private static decimal ComputeTotalAllowance(
-                List<Allowance> dailyAllowances,
-                ListOfValueCollection settings,
-                CalendarCollection calendarCollection,
-                int userId,
-                Paystub currentPaystub,
-                Employee employee,
-                PayPeriod payPeriod,
-                List<TimeEntry> allTimeEntries,
-                List<TimeEntry> branchTimeEntries)
-            {
-                var allowanceCalculator = new DailyAllowanceCalculator(
-                    settings,
-                    calendarCollection,
-                    allTimeEntries,
-                    organizationId: employee.OrganizationID.Value,
-                    userId: userId);
-
-                decimal totalAllowance = 0;
-
-                foreach (var allowance in dailyAllowances)
-                {
-                    var allowanceItem = allowanceCalculator.Compute(
-                        payPeriod,
-                        allowance,
-                        employee,
-                        currentPaystub,
-                        branchTimeEntries);
-
-                    if (allowanceItem != null)
-                    {
-                        totalAllowance += allowanceItem.Amount;
-                    }
-                }
-
-                return totalAllowance;
-            }
-
-            private static PaystubModel ComputeGovernmentDeductions(
-                LoanTransaction hmoLoan,
-                MonthlyDeduction monthlyDeduction,
-                PaystubModel paystubModel,
-                decimal workedPercentage)
-            {
-                paystubModel.HMOAmount = MonthlyDeductionAmount
-                    .ComputeBranchPercentage(hmoLoan?.Amount ?? 0, workedPercentage);
-
-                paystubModel.SSSAmount = monthlyDeduction.SSSAmount
-                    .GetBranchPercentage(workedPercentage);
-
-                paystubModel.ECAmount = monthlyDeduction.ECAmount
-                    .GetBranchPercentage(workedPercentage);
-
-                paystubModel.HDMFAmount = monthlyDeduction.HDMFAmount.
-                                            GetBranchPercentage(workedPercentage);
-
-                paystubModel.PhilHealthAmount = monthlyDeduction.PhilHealthAmount
-                    .GetBranchPercentage(workedPercentage);
-
-                return paystubModel;
-            }
-
-            private PaystubModel()
-            {
-            }
-
-            private static PaystubModel ComputeHoursAndPay(PaystubModel paystubModel, Employee employee, Salary salary, List<TimeEntry> timeEntries)
-            {
-                var totalTimeEntries = TotalTimeEntryCalculator.Calculate(
-                    timeEntries,
-                    salary,
-                    employee,
-                    new List<ActualTimeEntry>());
-
-                paystubModel.RegularHours = totalTimeEntries.RegularHours;
-                paystubModel.HourlyRate = totalTimeEntries.HourlyRate;
-
-                paystubModel.OvertimeHours = AccuMath.CommercialRound(totalTimeEntries.OvertimeHours);
-                paystubModel.OvertimePay = totalTimeEntries.OvertimePay;
-
-                paystubModel.NightDiffHours = AccuMath.CommercialRound(totalTimeEntries.NightDifferentialHours);
-                paystubModel.NightDiffPay = totalTimeEntries.NightDiffPay;
-
-                paystubModel.NightDiffOvertimeHours = AccuMath.CommercialRound(totalTimeEntries.NightDifferentialOvertimeHours);
-                paystubModel.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay;
-
-                paystubModel.SpecialHolidayHours = AccuMath.CommercialRound(totalTimeEntries.SpecialHolidayHours);
-                paystubModel.SpecialHolidayPay = totalTimeEntries.SpecialHolidayPay;
-
-                paystubModel.SpecialHolidayOTHours = AccuMath.CommercialRound(totalTimeEntries.SpecialHolidayOTHours);
-                paystubModel.SpecialHolidayOTPay = totalTimeEntries.SpecialHolidayOTPay;
-
-                paystubModel.RegularHolidayHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayHours);
-                paystubModel.RegularHolidayPay = totalTimeEntries.RegularHolidayPay;
-
-                paystubModel.RegularHolidayOTHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayOTHours);
-                paystubModel.RegularHolidayOTPay = totalTimeEntries.RegularHolidayOTPay;
-                return paystubModel;
-            }
-
-            private Employee Employee { get; set; }
-
-            private int EmployeeId => Employee.RowID.Value;
-
-            private string EmployeeName => Employee.FullNameWithMiddleInitialLastNameFirst.ToUpper()/* +
-                                            " " +
-                                            Employee.EmployeeNo*/;
-
-            private decimal RegularDays => RegularHours / PayrollTools.WorkHoursPerDay;
-
-            private decimal RegularHours { get; set; }
-
-            private decimal DailyRate => AccuMath.CommercialRound(_hourlyRate * PayrollTools.WorkHoursPerDay);
-
-            private decimal _hourlyRate;
-
-            private decimal HourlyRate
-            {
-                get => AccuMath.CommercialRound(_hourlyRate);
-                set => _hourlyRate = value;
-            }
-
-            private decimal RegularPay => AccuMath.CommercialRound(_hourlyRate * RegularHours);
-
-            private decimal OvertimeHours { get; set; }
-            private decimal OvertimePay { get; set; }
-            private decimal NightDiffHours { get; set; }
-            private decimal NightDiffPay { get; set; }
-            private decimal NightDiffOvertimeHours { get; set; }
-            private decimal NightDiffOvertimePay { get; set; }
-            private decimal SpecialHolidayHours { get; set; }
-            private decimal SpecialHolidayPay { get; set; }
-            private decimal SpecialHolidayOTHours { get; set; }
-            private decimal SpecialHolidayOTPay { get; set; }
-            private decimal RegularHolidayHours { get; set; }
-            private decimal RegularHolidayPay { get; set; }
-            private decimal RegularHolidayOTHours { get; set; }
-            private decimal RegularHolidayOTPay { get; set; }
-            private decimal TotalAllowance { get; set; }
-
-            public decimal GrossPay => AccuMath.CommercialRound(
-                RegularPay +
-                OvertimePay +
-                NightDiffPay +
-                NightDiffOvertimePay +
-                SpecialHolidayPay +
-                SpecialHolidayOTPay +
-                RegularHolidayPay +
-                RegularHolidayOTPay +
-                TotalAllowance);
-
-            private decimal SSSAmount { get; set; }
-            private decimal ECAmount { get; set; }
-            private decimal HDMFAmount { get; set; }
-            private decimal PhilHealthAmount { get; set; }
-            private decimal HMOAmount { get; set; }
-            private decimal ThirteenthMonthPay { get; set; }
-
-            private decimal FiveDaySilpAmount
-            {
-                get
-                {
-                    if (Employee.WorkDaysPerYear == 0 || Employee.VacationLeaveAllowance == 0) return 0;
-
-                    var vacationLeavePerYearInDays = Employee.VacationLeaveAllowance / PayrollTools.WorkHoursPerDay;
-                    var daysPerMonths = Employee.WorkDaysPerYear / PayrollTools.MonthsPerYear;
-
-                    return AccuMath.CommercialRound(this.RegularPay * vacationLeavePerYearInDays / PayrollTools.MonthsPerYear / daysPerMonths);
-                }
-            }
-
-            private decimal TotalDeductions
-            {
-                get
-                {
-                    return SSSAmount + ECAmount + HDMFAmount + PhilHealthAmount + HMOAmount + ThirteenthMonthPay + FiveDaySilpAmount;
-                }
-            }
-
-            private decimal NetPay
-            {
-                get
-                {
-                    // Total deductions are added since cost center report is for
-                    // franchise/branch owners. They will pay the employer deductions.
-                    // Net pay is how much they will per employee
-                    return GrossPay + TotalDeductions;
-                }
-            }
-
-            private Dictionary<string, string> _lookUp;
-
-            public Dictionary<string, string> LookUp
-            {
-                get
-                {
-                    if (_lookUp != null)
-                        return _lookUp;
-
-                    _lookUp = new Dictionary<string, string>();
-                    _lookUp["EmployeeId"] = this.EmployeeId.ToString();
-                    _lookUp["EmployeeName"] = this.EmployeeName;
-                    _lookUp["TotalDays"] = this.RegularDays.ToString();
-                    _lookUp["TotalHours"] = this.RegularHours.ToString();
-                    _lookUp["DailyRate"] = this.DailyRate.ToString();
-                    _lookUp["HoulyRate"] = this.HourlyRate.ToString();
-                    _lookUp["BasicPay"] = this.RegularPay.ToString();
-                    _lookUp["OvertimeHours"] = this.OvertimeHours.ToString();
-                    _lookUp["OvertimePay"] = this.OvertimePay.ToString();
-                    _lookUp["NightDiffHours"] = this.NightDiffHours.ToString();
-                    _lookUp["NightDiffPay"] = this.NightDiffPay.ToString();
-                    _lookUp["NightDiffOvertimeHours"] = this.NightDiffOvertimeHours.ToString();
-                    _lookUp["NightDiffOvertimePay"] = this.NightDiffOvertimePay.ToString();
-                    _lookUp["SpecialHolidayHours"] = this.SpecialHolidayHours.ToString();
-                    _lookUp["SpecialHolidayPay"] = this.SpecialHolidayPay.ToString();
-                    _lookUp["SpecialHolidayOTHours"] = this.SpecialHolidayOTHours.ToString();
-                    _lookUp["SpecialHolidayOTPay"] = this.SpecialHolidayOTPay.ToString();
-                    _lookUp["RegularHolidayHours"] = this.RegularHolidayHours.ToString();
-                    _lookUp["RegularHolidayPay"] = this.RegularHolidayPay.ToString();
-                    _lookUp["RegularHolidayOTHours"] = this.RegularHolidayOTHours.ToString();
-                    _lookUp["RegularHolidayOTPay"] = this.RegularHolidayOTPay.ToString();
-                    _lookUp["TotalAllowanceKey"] = this.TotalAllowance.ToString();
-                    _lookUp["GrossPay"] = this.GrossPay.ToString();
-                    _lookUp["SSSAmount"] = this.SSSAmount.ToString();
-                    _lookUp["ECAmount"] = this.ECAmount.ToString();
-                    _lookUp["HDMFAmount"] = this.HDMFAmount.ToString();
-                    _lookUp["PhilHealthAmount"] = this.PhilHealthAmount.ToString();
-                    _lookUp["HMOAmount"] = this.HMOAmount.ToString();
-                    _lookUp["ThirteenthMonthPay"] = this.ThirteenthMonthPay.ToString();
-                    _lookUp["FiveDaySilpAmount"] = this.FiveDaySilpAmount.ToString();
-                    _lookUp["NetPay"] = this.NetPay.ToString();
-
-                    return _lookUp;
-                }
-            }
-        }
-
-        public class MonthlyDeduction
-        {
-            public static MonthlyDeduction Create(
-                bool divideTheDeductions,
-                int employeeId,
-                decimal sssAmount,
-                decimal ecAmount,
-                decimal hdmfAmount,
-                decimal philhealthAmount,
-                decimal thirteenthMonthPay)
-            {
-                return new MonthlyDeduction()
-                {
-                    EmployeeID = employeeId,
-                    SSSAmount = MonthlyDeductionAmount.Create(divideTheDeductions, sssAmount),
-                    ECAmount = MonthlyDeductionAmount.Create(divideTheDeductions, ecAmount),
-                    HDMFAmount = MonthlyDeductionAmount.Create(divideTheDeductions, hdmfAmount),
-                    PhilHealthAmount = MonthlyDeductionAmount.Create(divideTheDeductions, philhealthAmount),
-                    ThirteenthMonthPay = MonthlyDeductionAmount.Create(divideTheDeductions, thirteenthMonthPay)
-                };
-            }
-
-            private MonthlyDeduction()
-            {
-            }
-
-            public int EmployeeID { get; set; }
-
-            public MonthlyDeductionAmount SSSAmount { get; set; }
-            public MonthlyDeductionAmount ECAmount { get; set; }
-            public MonthlyDeductionAmount HDMFAmount { get; set; }
-            public MonthlyDeductionAmount PhilHealthAmount { get; set; }
-            public MonthlyDeductionAmount ThirteenthMonthPay { get; set; }
-        }
-
-        public class MonthlyDeductionAmount
-        {
-            private readonly bool _divideTheDeductions;
-
-            public static MonthlyDeductionAmount Create(bool divideTheDeductions, decimal amount)
-            {
-                return new MonthlyDeductionAmount(divideTheDeductions, amount);
-            }
-
-            private MonthlyDeductionAmount(bool divideTheDeductions, decimal amount)
-            {
-                MonthlyAmount = AccuMath.CommercialRound(amount);
-                _divideTheDeductions = divideTheDeductions;
-            }
-
-            public decimal MonthlyAmount { get; }
-
-            public decimal SemiMonthlyAmount => AccuMath.CommercialRound(MonthlyAmount / 2);
-
-            public decimal Amount => MonthlyAmount;
-
-            public decimal GetBranchPercentage(decimal branchPercentage) =>
-                ComputeBranchPercentage(
-                    _divideTheDeductions ?
-                    SemiMonthlyAmount : MonthlyAmount,
-                    branchPercentage);
-
-            public static decimal ComputeBranchPercentage(decimal amount, decimal branchPercentage) =>
-                AccuMath.CommercialRound(amount * branchPercentage);
         }
 
         #endregion Custom Classes

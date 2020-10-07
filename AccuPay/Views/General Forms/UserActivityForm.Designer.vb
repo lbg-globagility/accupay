@@ -26,15 +26,22 @@ Partial Class UserActivityForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(UserActivityForm))
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.NameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ChangedEntityColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DescriptionColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DateandTimeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CloseButton = New System.Windows.Forms.Button()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.NameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DescriptionColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DateandTimeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastLinkLabel = New System.Windows.Forms.LinkLabel()
+        Me.NextLinkLabel = New System.Windows.Forms.LinkLabel()
+        Me.PreviousLinkLabel = New System.Windows.Forms.LinkLabel()
+        Me.FirstLinkLabel = New System.Windows.Forms.LinkLabel()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -56,18 +63,52 @@ Partial Class UserActivityForm
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.NameColumn, Me.DescriptionColumn, Me.DateandTimeColumn})
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.NameColumn, Me.ChangedEntityColumn, Me.DescriptionColumn, Me.DateandTimeColumn})
         Me.DataGridView1.Location = New System.Drawing.Point(12, 12)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
-        Me.DataGridView1.Size = New System.Drawing.Size(810, 371)
+        Me.DataGridView1.Size = New System.Drawing.Size(1160, 368)
         Me.DataGridView1.TabIndex = 0
+        '
+        'NameColumn
+        '
+        Me.NameColumn.DataPropertyName = "ChangedBy"
+        Me.NameColumn.FillWeight = 1.25!
+        Me.NameColumn.HeaderText = "Changed By"
+        Me.NameColumn.Name = "NameColumn"
+        Me.NameColumn.ReadOnly = True
+        '
+        'ChangedEntityColumn
+        '
+        Me.ChangedEntityColumn.DataPropertyName = "ChangedEntity"
+        DataGridViewCellStyle2.NullValue = "--"
+        Me.ChangedEntityColumn.DefaultCellStyle = DataGridViewCellStyle2
+        Me.ChangedEntityColumn.FillWeight = 1.55!
+        Me.ChangedEntityColumn.HeaderText = "ChangedEntity"
+        Me.ChangedEntityColumn.Name = "ChangedEntityColumn"
+        Me.ChangedEntityColumn.ReadOnly = True
+        '
+        'DescriptionColumn
+        '
+        Me.DescriptionColumn.DataPropertyName = "Description"
+        Me.DescriptionColumn.FillWeight = 6.1!
+        Me.DescriptionColumn.HeaderText = "Description"
+        Me.DescriptionColumn.Name = "DescriptionColumn"
+        Me.DescriptionColumn.ReadOnly = True
+        '
+        'DateandTimeColumn
+        '
+        Me.DateandTimeColumn.DataPropertyName = "DateandTime"
+        Me.DateandTimeColumn.FillWeight = 1.1!
+        Me.DateandTimeColumn.HeaderText = "Date and Time"
+        Me.DateandTimeColumn.Name = "DateandTimeColumn"
+        Me.DateandTimeColumn.ReadOnly = True
         '
         'CloseButton
         '
         Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.CloseButton.Location = New System.Drawing.Point(726, 399)
+        Me.CloseButton.Location = New System.Drawing.Point(1076, 417)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(96, 32)
         Me.CloseButton.TabIndex = 2
@@ -101,45 +142,85 @@ Partial Class UserActivityForm
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.Width = 102
         '
-        'NameColumn
+        'DataGridViewTextBoxColumn4
         '
-        Me.NameColumn.DataPropertyName = "Name"
-        Me.NameColumn.FillWeight = 2.8!
-        Me.NameColumn.HeaderText = "Name"
-        Me.NameColumn.Name = "NameColumn"
-        Me.NameColumn.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.DataPropertyName = "DateandTime"
+        Me.DataGridViewTextBoxColumn4.FillWeight = 1.8!
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Date and Time"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.Width = 112
         '
-        'DescriptionColumn
+        'LastLinkLabel
         '
-        Me.DescriptionColumn.DataPropertyName = "Description"
-        Me.DescriptionColumn.FillWeight = 7.908267!
-        Me.DescriptionColumn.HeaderText = "Description"
-        Me.DescriptionColumn.Name = "DescriptionColumn"
-        Me.DescriptionColumn.ReadOnly = True
+        Me.LastLinkLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.LastLinkLabel.AutoSize = True
+        Me.LastLinkLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LastLinkLabel.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.LastLinkLabel.Location = New System.Drawing.Point(659, 395)
+        Me.LastLinkLabel.Name = "LastLinkLabel"
+        Me.LastLinkLabel.Size = New System.Drawing.Size(44, 15)
+        Me.LastLinkLabel.TabIndex = 154
+        Me.LastLinkLabel.TabStop = True
+        Me.LastLinkLabel.Text = "Last>>"
         '
-        'DateandTimeColumn
+        'NextLinkLabel
         '
-        Me.DateandTimeColumn.DataPropertyName = "DateandTime"
-        Me.DateandTimeColumn.FillWeight = 2.2!
-        Me.DateandTimeColumn.HeaderText = "Date and Time"
-        Me.DateandTimeColumn.Name = "DateandTimeColumn"
-        Me.DateandTimeColumn.ReadOnly = True
+        Me.NextLinkLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.NextLinkLabel.AutoSize = True
+        Me.NextLinkLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.NextLinkLabel.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.NextLinkLabel.Location = New System.Drawing.Point(614, 395)
+        Me.NextLinkLabel.Name = "NextLinkLabel"
+        Me.NextLinkLabel.Size = New System.Drawing.Size(39, 15)
+        Me.NextLinkLabel.TabIndex = 153
+        Me.NextLinkLabel.TabStop = True
+        Me.NextLinkLabel.Text = "Next>"
+        '
+        'PreviousLinkLabel
+        '
+        Me.PreviousLinkLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.PreviousLinkLabel.AutoSize = True
+        Me.PreviousLinkLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.PreviousLinkLabel.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.PreviousLinkLabel.Location = New System.Drawing.Point(544, 395)
+        Me.PreviousLinkLabel.Name = "PreviousLinkLabel"
+        Me.PreviousLinkLabel.Size = New System.Drawing.Size(38, 15)
+        Me.PreviousLinkLabel.TabIndex = 152
+        Me.PreviousLinkLabel.TabStop = True
+        Me.PreviousLinkLabel.Text = "<Prev"
+        '
+        'FirstLinkLabel
+        '
+        Me.FirstLinkLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.FirstLinkLabel.AutoSize = True
+        Me.FirstLinkLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.FirstLinkLabel.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.FirstLinkLabel.Location = New System.Drawing.Point(495, 395)
+        Me.FirstLinkLabel.Name = "FirstLinkLabel"
+        Me.FirstLinkLabel.Size = New System.Drawing.Size(44, 15)
+        Me.FirstLinkLabel.TabIndex = 151
+        Me.FirstLinkLabel.TabStop = True
+        Me.FirstLinkLabel.Text = "<<First"
         '
         'UserActivityForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(834, 450)
+        Me.ClientSize = New System.Drawing.Size(1184, 461)
+        Me.Controls.Add(Me.LastLinkLabel)
+        Me.Controls.Add(Me.NextLinkLabel)
+        Me.Controls.Add(Me.PreviousLinkLabel)
+        Me.Controls.Add(Me.FirstLinkLabel)
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.DataGridView1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MaximizeBox = False
         Me.Name = "UserActivityForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "User Activity"
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -148,7 +229,13 @@ Partial Class UserActivityForm
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
     Friend WithEvents CloseButton As Button
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
     Friend WithEvents NameColumn As DataGridViewTextBoxColumn
+    Friend WithEvents ChangedEntityColumn As DataGridViewTextBoxColumn
     Friend WithEvents DescriptionColumn As DataGridViewTextBoxColumn
     Friend WithEvents DateandTimeColumn As DataGridViewTextBoxColumn
+    Friend WithEvents LastLinkLabel As LinkLabel
+    Friend WithEvents NextLinkLabel As LinkLabel
+    Friend WithEvents PreviousLinkLabel As LinkLabel
+    Friend WithEvents FirstLinkLabel As LinkLabel
 End Class
