@@ -2586,9 +2586,6 @@
     <EmbeddedResource Include="Views\Core Forms\ShiftList.resx">
       <DependentUpon>ShiftList.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\ShiftTemplater.resx">
-      <DependentUpon>ShiftTemplater.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SSSCntrib.resx">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
     </EmbeddedResource>
