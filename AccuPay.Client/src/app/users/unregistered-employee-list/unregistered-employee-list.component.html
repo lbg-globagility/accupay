@@ -1,0 +1,73 @@
+<div mat-dialog>
+  <div mat-dialog-title>Unregistered Employees</div>
+
+  <div mat-dialog-content>
+    <mat-form-field appearance="standard" class="w-2/3">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Search"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilter()"
+      />
+      <button
+        *ngIf="searchTerm"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="clearSearchBox()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-content>
+    <div *ngIf="loadingState.isLoading">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-selection-list
+      *ngIf="loadingState.isSuccess"
+      dense
+      [multiple]="isMultiple"
+      [(ngModel)]="selectedEmployees"
+      (selectionChange)="selectionChange($event)"
+    >
+      <mat-list-option *ngFor="let employee of employees" [value]="employee">
+        <img
+          matListAvatar
+          appImgFallback
+          src="/api/employees/{{ employee.id }}/image"
+        />
+        <div mat-line>{{ employee.fullName }}</div>
+        <div mat-line>#{{ employee.employeeNo }}</div>
+        <div mat-line>{{ employee.emailAddress | ifEmpty }}</div>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+
+  <div mat-dialog-actions>
+    <div>
+      <mat-paginator
+        [pageSize]="pageSize"
+        [length]="totalCount"
+        (page)="page($event)"
+        class="flex-none"
+      >
+      </mat-paginator>
+    </div>
+    <div>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="clickOK()"
+        [disabled]="selectedCount == 0"
+      >
+        OK {{ selectedCount > 1 ? "(" + selectedCount + ")" : "" }}
+      </button>
+      <button mat-button color="accent" (click)="clickCancel()">CANCEL</button>
+    </div>
+  </div>
+</div>

@@ -322,6 +322,36 @@ namespace AccuPay.Data.Repositories
             return listOfValues.Select(t => t.DisplayValue).ToList();
         }
 
+        public async Task<PaginatedList<Employee>> GetUnregisteredEmployeeAsync(PageOptions options, string searchTerm, int clientId, int organizationId)
+        {
+            var registeredEmployeeIds= await _context.Users
+                .Where(u => u.EmployeeId != null)
+                .Where(u => u.ClientId == clientId)
+                .Select(u => u.EmployeeId.Value)
+                .ToListAsync();
+
+            var query = _context.Employees
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(e => !registeredEmployeeIds.Contains(e.RowID.Value))
+                .OrderBy(x => x.FullNameLastNameFirst)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.LastName, searchTerm) ||
+                    EF.Functions.Like(x.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.EmployeeNo, searchTerm));
+            }
+
+            var employees = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedList<Employee>(employees, count);
+        }
+
         #endregion List of entities
 
         #region Single entity

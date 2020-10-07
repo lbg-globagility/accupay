@@ -6,6 +6,7 @@ import { UserFormComponent } from './user-form/user-form.component';
 import { NewUserComponent } from './new-user/new-user.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { SecurityComponent } from './security/security.component';
+import { UnregisteredEmployeeListComponent } from './unregistered-employee-list/unregistered-employee-list.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { SecurityComponent } from './security/security.component';
     NewUserComponent,
     EditUserComponent,
     SecurityComponent,
+    UnregisteredEmployeeListComponent,
   ],
   imports: [SharedModule],
 })
