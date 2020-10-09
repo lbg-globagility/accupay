@@ -24,8 +24,6 @@ DECLARE e_agencyID INT(11);
 DECLARE pay_freq_type VARCHAR(50);
 
 
-SET NEW.FilingStatusID = IFNULL(NEW.FilingStatusID, 1);
-
 SELECT
     e.EmploymentStatus,
     e.EmployeeType,

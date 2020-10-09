@@ -13,8 +13,6 @@ Namespace Global.PayrollSys
 
         Public Property OrganizationID As Integer?
 
-        Public Property FilingStatusID As Integer?
-
         Public Property PositionID As Integer?
 
         Public Property PaySocialSecurityID As Integer?

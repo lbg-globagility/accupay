@@ -16,7 +16,6 @@ SELECT RowID FROM `view` WHERE ViewName='Employee Salary' AND OrganizationID=NEW
 
 INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
 ) VALUES (CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeID',NEW.RowID,'',NEW.EmployeeID,'Insert')
-,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'FilingStatusID',NEW.RowID,'',NEW.FilingStatusID,'Insert')
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'HDMFAmount',NEW.RowID,'',NEW.HDMFAmount,'Insert')
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'BasicPay',NEW.RowID,'',NEW.BasicPay,'Insert')
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'Salary',NEW.RowID,'',NEW.Salary,'Insert')

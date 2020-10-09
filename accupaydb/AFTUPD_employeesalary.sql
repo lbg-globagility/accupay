@@ -13,13 +13,6 @@ DECLARE viewID INT(11);
 
 SELECT RowID FROM `view` WHERE ViewName='Employee Salary' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
-IF OLD.FilingStatusID != NEW.FilingStatusID THEN
-
-INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
-) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'FilingStatusID',NEW.RowID,OLD.FilingStatusID,NEW.FilingStatusID,'Update');
-
-END IF;
-
 IF OLD.HDMFAmount != NEW.HDMFAmount THEN
 
 INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
