@@ -119,9 +119,7 @@ namespace AccuPay.Data.Services
             bool policyPaidAsLongAsPresent = _policy.PaidAsLongAsPresent;
             if (policyPaidAsLongAsPresent)
             {
-                bool hasTheTimeLog = timeLog != null;
-
-                TimeSpan?[] timeLogs = { timeLog.TimeIn, timeLog.TimeOut };
+                TimeSpan?[] timeLogs = { timeLog?.TimeIn, timeLog?.TimeOut };
                 bool hasMinimumTimeLog = timeLogs.Any(t => t.HasValue);
                 bool hasOfficialBusiness = officialBusiness != null;
 
