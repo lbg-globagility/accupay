@@ -68,6 +68,7 @@ namespace AccuPay.Web
             services.AddScoped<PreviousEmployerRepository>();
             services.AddScoped<ProductRepository>();
             services.AddScoped<RoleRepository>();
+            services.AddScoped<RouteRateRepository>();
             services.AddScoped<SalaryRepository>();
             services.AddScoped<ShiftRepository>();
             services.AddScoped<ShiftScheduleRepository>();
@@ -75,6 +76,7 @@ namespace AccuPay.Web
             services.AddScoped<TimeAttendanceLogRepository>();
             services.AddScoped<TimeEntryRepository>();
             services.AddScoped<TimeLogRepository>();
+            services.AddScoped<TripTicketRepository>();
             services.AddScoped<UserActivityRepository>();
             services.AddScoped<WithholdingTaxBracketRepository>();
 
