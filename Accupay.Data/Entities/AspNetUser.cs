@@ -30,7 +30,7 @@ namespace AccuPay.Data.Entities
 
         public string FullName => $"{FirstName} {LastName}".Trim();
 
-        public int CreatedById { get; set; }
+        public int? CreatedById { get; set; }
 
         public int? EmployeeId { get; set; }
 

@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS `employeesalary` (
   `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `OrganizationID` int(10) NOT NULL,
-  `FilingStatusID` int(10) DEFAULT NULL,
   `PhilHealthDeduction` decimal(15,4) DEFAULT 0.0000,
   `HDMFAmount` decimal(11,2) DEFAULT NULL,
   `TrueSalary` decimal(11,2) DEFAULT 0.00,
@@ -36,12 +35,10 @@ CREATE TABLE IF NOT EXISTS `employeesalary` (
   KEY `FK_EmployeeSalary_user` (`CreatedBy`),
   KEY `FK_EmployeeSalary_user_2` (`LastUpdBy`),
   KEY `FK_EmployeeSalary_organization` (`OrganizationID`),
-  KEY `FK_employeesalary_filingstatus` (`FilingStatusID`),
   CONSTRAINT `FK_EmployeeSalary_employee` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
   CONSTRAINT `FK_EmployeeSalary_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `FK_EmployeeSalary_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `FK_EmployeeSalary_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `FK_employeesalary_filingstatus` FOREIGN KEY (`FilingStatusID`) REFERENCES `filingstatus` (`RowID`)
+  CONSTRAINT `FK_EmployeeSalary_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

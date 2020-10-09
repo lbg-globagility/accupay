@@ -37,41 +37,6 @@ DECLARE the_date DATE;
 
 
 SELECT IF(NEW.MaritalStatus IN ('Single','Married'),NEW.MaritalStatus,'Zero') INTO marit_stat;
-/*
-    INSERT INTO employeesalary
-    (
-        EmployeeID
-        ,Created
-        ,CreatedBy
-        ,OrganizationID
-        ,HDMFAmount
-        ,BasicPay
-        ,Salary
-        ,BasicDailyPay
-        ,BasicHourlyPay
-        ,FilingStatusID
-        ,NoofDependents
-        ,MaritalStatus
-        ,PositionID
-        ,EffectiveDateFrom
-    ) VALUES (
-        NEW.RowID
-        ,CURRENT_TIMESTAMP()
-        ,NEW.CreatedBy
-        ,NEW.OrganizationID
-        ,100.0
-        ,0
-        ,0
-        ,0
-        ,0
-        ,(SELECT RowID FROM filingstatus WHERE MaritalStatus=marit_stat AND Dependent=COALESCE(NEW.NoOfDependents,0))
-        ,COALESCE(NEW.NoOfDependents,0)
-        ,NEW.MaritalStatus
-        ,NEW.PositionID
-        ,NEW.StartDate
-    );
-
-*/
 
 INSERT INTO employeechecklist
 (
