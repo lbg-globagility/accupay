@@ -148,6 +148,7 @@ namespace AccuPay.Data.Entities
             {
                 OrganizationID = organizationId,
                 CreatedBy = userId,
+                LastUpdBy = userId, // if LastUpdBy is null even if it is on INSERT, saving it to the database can throw and error in the trigger when there is no divisionminimumwage data yet
                 GracePeriod = 0,
                 WorkDaysPerYear = 313,
                 PhilHealthDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
