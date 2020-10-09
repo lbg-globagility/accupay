@@ -1725,15 +1725,6 @@ Public Class EmployeeForm
         End If
     End Sub
 
-    Private Sub cboPosit_SelectedIndexChanged(sender As Object, e As EventArgs) 'Handles cboPosit.SelectedIndexChanged ', cboPosit.SelectedValueChanged
-
-        positID = cboPosit.SelectedValue
-        Dim n_ExecuteQuery As _
-            New ExecuteQuery("SELECT d.GracePeriod FROM `division` d INNER JOIN position pos ON pos.RowID='" & positID & "' AND d.RowID=pos.DivisionId;")
-        txtUTgrace.Text = ValNoComma(n_ExecuteQuery.Result)
-
-    End Sub
-
     Dim noCurrCellChange As SByte
     Dim EmployeeImage As Image
 
@@ -1749,7 +1740,6 @@ Public Class EmployeeForm
     End Sub
 
     Public Async Function PopulateEmployeeData() As Task
-        RemoveHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
         RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
 
         If tsbtnNewEmp.Enabled = 0 Then
@@ -1956,8 +1946,6 @@ Public Class EmployeeForm
         reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)
 
         cboPosit.Text = dgvEmp.CurrentRow.Cells("Column8").Value
-
-        AddHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
 
         SetComboBoxValue(dgvEmp.CurrentRow.Cells("Column9").Value, cboSalut)
 
