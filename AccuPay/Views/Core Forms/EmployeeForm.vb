@@ -1030,8 +1030,9 @@ Public Class EmployeeForm
             .Cells("Column5").Value = txtNName.Text
             .Cells("Column6").Value = Format(dtpempbdate.Value, machineShortDateFormat) 'dtpBDate.Value
 
-            .Cells("Column8").Value = If(cboPosit.SelectedIndex = -1, "",
-                                         If(cboPosit.SelectedIndex = (cboPosit.Items.Count - 1), Nothing, Trim(cboPosit.Text)))
+            .Cells("Column8").Value =
+                If(cboPosit.SelectedIndex = -1, "",
+                    If(String.IsNullOrWhiteSpace(cboPosit.Text), Nothing, Trim(cboPosit.Text)))
 
             .Cells("Column9").Value = cboSalut.Text : .Cells("Column10").Value = txtTIN.Text
             .Cells("Column11").Value = txtSSS.Text : .Cells("Column12").Value = txtHDMF.Text
