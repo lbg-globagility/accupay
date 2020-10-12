@@ -107,27 +107,13 @@ namespace AccuPay.Data.Services
 
             timeEntry.EmployeeShiftID = currentShift.ShiftSchedule?.RowID;
 
-            var hasTimeLog = (timeLog?.TimeIn != null && timeLog?.TimeOut != null) ||
-                                officialBusiness != null;
+            bool policyPaidAsLongAsPresent = _policy.PaidAsLongAsPresent;
+            bool hasTimeLog = HasTimeLog(timeEntry, timeLog, officialBusiness, policyPaidAsLongAsPresent);
 
             TimePeriod logPeriod = null;
             if (hasTimeLog)
             {
                 logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate);
-            }
-
-            bool policyPaidAsLongAsPresent = _policy.PaidAsLongAsPresent;
-            if (policyPaidAsLongAsPresent)
-            {
-                bool hasTheTimeLog = timeLog != null;
-
-                TimeSpan?[] timeLogs = { timeLog.TimeIn, timeLog.TimeOut };
-                bool hasMinimumTimeLog = timeLogs.Any(t => t.HasValue);
-                bool hasOfficialBusiness = officialBusiness != null;
-
-                bool satisfied = hasMinimumTimeLog || hasOfficialBusiness;
-
-                timeEntry.RegularHours = satisfied ? DEFAULT_WORK_HOURS : 0;
             }
 
             if (logPeriod != null)
@@ -206,7 +192,7 @@ namespace AccuPay.Data.Services
                     ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
                 }
 
-                ComputeHolidayHours(payrate, timeEntry, hasWorkedLastDay);
+                ComputeHolidayHours(payrate, timeEntry);
                 ComputeRestDayHours(currentShift, timeEntry, logPeriod);
 
                 timeEntry.BasicHours = timeEntry.RegularHours +
@@ -214,14 +200,41 @@ namespace AccuPay.Data.Services
                                         timeEntry.RegularHolidayHours +
                                         timeEntry.SpecialHolidayHours;
             }
+            else if (logPeriod == null && policyPaidAsLongAsPresent)
+            {
+                ComputeHolidayHours(payrate, timeEntry);
+            }
 
             if (tripTickets.Any())
             {
                 ComputeTripTicketPay(timeEntry, tripTickets, routeRates);
             }
 
-            ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves);
+            ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves, policyPaidAsLongAsPresent);
             ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry, payrate, policyPaidAsLongAsPresent);
+        }
+
+        private static bool HasTimeLog(TimeEntry timeEntry, TimeLog timeLog, OfficialBusiness officialBusiness, bool policyPaidAsLongAsPresent)
+        {
+            if (policyPaidAsLongAsPresent)
+            {
+                bool hasTheTimeLog = timeLog != null;
+
+                TimeSpan?[] timeLogs = new TimeSpan?[] { new TimeSpan?(), new TimeSpan?() };
+                if (hasTheTimeLog) timeLogs = new TimeSpan?[] { timeLog.TimeIn, timeLog.TimeOut };
+                bool hasMinimumTimeLog = timeLogs.Any(t => t.HasValue);
+
+                bool hasOfficialBusiness = officialBusiness != null;
+
+                bool satisfied = hasMinimumTimeLog || hasOfficialBusiness;
+
+                timeEntry.RegularHours = satisfied ? DEFAULT_WORK_HOURS : 0;
+
+                return hasMinimumTimeLog;
+            }
+
+            return (timeLog?.TimeIn != null && timeLog?.TimeOut != null) ||
+                officialBusiness != null;
         }
 
         private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, ICollection<RoutePayRate> routeRates)
@@ -504,13 +517,13 @@ namespace AccuPay.Data.Services
             return TimePeriod.FromTime(nightDiffTimeFrom, nightDiffTimeTo, date);
         }
 
-        private void ComputeHolidayHours(IPayrate payrate, TimeEntry timeEntry, bool hasWorkedLastDay)
+        private void ComputeHolidayHours(IPayrate payrate, TimeEntry timeEntry)
         {
             if (!((_employmentPolicy.ComputeRegularHoliday && payrate.IsRegularHoliday) ||
                 (_employmentPolicy.ComputeSpecialHoliday && payrate.IsSpecialNonWorkingHoliday)))
                 return;
 
-            if (payrate.IsRegularHoliday && hasWorkedLastDay)
+            if (payrate.IsRegularHoliday)
             {
                 timeEntry.RegularHolidayHours = timeEntry.RegularHours;
                 timeEntry.RegularHolidayOTHours = timeEntry.OvertimeHours;
@@ -554,7 +567,8 @@ namespace AccuPay.Data.Services
                                         IPayrate payrate,
                                         bool hasWorkedLastDay,
                                         CurrentShift currentshift,
-                                        IList<Leave> leaves)
+                                        IList<Leave> leaves,
+                                        bool policyPaidAsLongAsPresent)
         {
             if (leaves.Any())
                 return;
@@ -568,7 +582,7 @@ namespace AccuPay.Data.Services
             if (IsExemptDueToHoliday(payrate, hasWorkedLastDay))
                 return;
 
-            timeEntry.AbsentHours = currentshift.WorkingHours;
+            timeEntry.AbsentHours = policyPaidAsLongAsPresent ? 0 : currentshift.WorkingHours;
         }
 
         /// <summary>

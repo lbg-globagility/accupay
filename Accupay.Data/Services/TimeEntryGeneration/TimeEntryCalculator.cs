@@ -33,6 +33,8 @@ namespace AccuPay.Data.Services
                                         bool computeBreakTimeLate,
                                         bool paidAsLongAsPresent = false)
         {
+            if (paidAsLongAsPresent) return 0;
+
             var shiftPeriod = currentShift.ShiftPeriod;
 
             if (workPeriod.EarlierThan(shiftPeriod))
