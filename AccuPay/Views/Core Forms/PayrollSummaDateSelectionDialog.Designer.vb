@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class PayrollSummaDateSelection
+Partial Class PayrollSummaDateSelectionDialog
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -23,14 +23,7 @@ Partial Class PayrollSummaDateSelection
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.dgvpayperiod = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PayperiodsGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.btnClose = New System.Windows.Forms.Button()
         Me.btnOK = New System.Windows.Forms.Button()
         Me.linkNxt = New System.Windows.Forms.LinkLabel()
@@ -57,7 +50,10 @@ Partial Class PayrollSummaDateSelection
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.cboxLoanType = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        CType(Me.dgvpayperiod, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.IsCheckedColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DateFromColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DateToColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        CType(Me.PayperiodsGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -69,19 +65,19 @@ Partial Class PayrollSummaDateSelection
         '
         'dgvpayperiod
         '
-        Me.dgvpayperiod.AllowUserToAddRows = False
-        Me.dgvpayperiod.AllowUserToDeleteRows = False
-        Me.dgvpayperiod.AllowUserToOrderColumns = True
-        Me.dgvpayperiod.AllowUserToResizeColumns = False
-        Me.dgvpayperiod.AllowUserToResizeRows = False
-        Me.dgvpayperiod.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.PayperiodsGridView.AllowUserToAddRows = False
+        Me.PayperiodsGridView.AllowUserToDeleteRows = False
+        Me.PayperiodsGridView.AllowUserToOrderColumns = True
+        Me.PayperiodsGridView.AllowUserToResizeColumns = False
+        Me.PayperiodsGridView.AllowUserToResizeRows = False
+        Me.PayperiodsGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.dgvpayperiod.BackgroundColor = System.Drawing.Color.White
-        Me.dgvpayperiod.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.dgvpayperiod.ColumnHeadersHeight = 34
-        Me.dgvpayperiod.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvpayperiod.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column6, Me.Column7, Me.Column4, Me.Column5})
+        Me.PayperiodsGridView.BackgroundColor = System.Drawing.Color.White
+        Me.PayperiodsGridView.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.PayperiodsGridView.ColumnHeadersHeight = 34
+        Me.PayperiodsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.PayperiodsGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.IsCheckedColumn, Me.DateFromColumn, Me.DateToColumn})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -89,71 +85,15 @@ Partial Class PayrollSummaDateSelection
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpayperiod.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvpayperiod.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvpayperiod.Location = New System.Drawing.Point(0, 39)
-        Me.dgvpayperiod.MultiSelect = False
-        Me.dgvpayperiod.Name = "dgvpayperiod"
-        Me.dgvpayperiod.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvpayperiod.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpayperiod.Size = New System.Drawing.Size(438, 345)
-        Me.dgvpayperiod.TabIndex = 0
-        '
-        'Column1
-        '
-        Me.Column1.HeaderText = ""
-        Me.Column1.Name = "Column1"
-        Me.Column1.Width = 28
-        '
-        'Column2
-        '
-        Me.Column2.HeaderText = "Column2"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column2.Visible = False
-        Me.Column2.Width = 175
-        '
-        'Column3
-        '
-        Me.Column3.HeaderText = "Column3"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column3.Visible = False
-        Me.Column3.Width = 175
-        '
-        'Column6
-        '
-        Me.Column6.HeaderText = "Date from"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column6.Width = 175
-        '
-        'Column7
-        '
-        Me.Column7.HeaderText = "Date to"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column7.Width = 175
-        '
-        'Column4
-        '
-        Me.Column4.HeaderText = "Column4"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        Me.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column4.Visible = False
-        '
-        'Column5
-        '
-        Me.Column5.HeaderText = "Column5"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column5.Visible = False
+        Me.PayperiodsGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.PayperiodsGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.PayperiodsGridView.Location = New System.Drawing.Point(0, 39)
+        Me.PayperiodsGridView.MultiSelect = False
+        Me.PayperiodsGridView.Name = "dgvpayperiod"
+        Me.PayperiodsGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.PayperiodsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.PayperiodsGridView.Size = New System.Drawing.Size(438, 345)
+        Me.PayperiodsGridView.TabIndex = 0
         '
         'btnClose
         '
@@ -395,7 +335,7 @@ Partial Class PayrollSummaDateSelection
         '
         'Panel4
         '
-        Me.Panel4.Controls.Add(Me.dgvpayperiod)
+        Me.Panel4.Controls.Add(Me.PayperiodsGridView)
         Me.Panel4.Controls.Add(Me.TabControl1)
         Me.Panel4.Controls.Add(Me.Panel1)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
@@ -435,6 +375,31 @@ Partial Class PayrollSummaDateSelection
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "Loan Type"
         '
+        'IsCheckedColumn
+        '
+        Me.IsCheckedColumn.DataPropertyName = "IsChecked"
+        Me.IsCheckedColumn.HeaderText = ""
+        Me.IsCheckedColumn.Name = "IsCheckedColumn"
+        Me.IsCheckedColumn.Width = 28
+        '
+        'DateFromColumn
+        '
+        Me.DateFromColumn.DataPropertyName = "DateFrom"
+        Me.DateFromColumn.HeaderText = "Date from"
+        Me.DateFromColumn.Name = "DateFromColumn"
+        Me.DateFromColumn.ReadOnly = True
+        Me.DateFromColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DateFromColumn.Width = 175
+        '
+        'DateToColumn
+        '
+        Me.DateToColumn.DataPropertyName = "DateTo"
+        Me.DateToColumn.HeaderText = "Date to"
+        Me.DateToColumn.Name = "DateToColumn"
+        Me.DateToColumn.ReadOnly = True
+        Me.DateToColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DateToColumn.Width = 175
+        '
         'PayrollSummaDateSelection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -453,7 +418,7 @@ Partial Class PayrollSummaDateSelection
         Me.MinimizeBox = False
         Me.Name = "PayrollSummaDateSelection"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        CType(Me.dgvpayperiod, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PayperiodsGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
@@ -469,7 +434,7 @@ Partial Class PayrollSummaDateSelection
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents dgvpayperiod As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents PayperiodsGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents btnClose As System.Windows.Forms.Button
     Friend WithEvents btnOK As System.Windows.Forms.Button
     Friend WithEvents linkNxt As System.Windows.Forms.LinkLabel
@@ -484,13 +449,6 @@ Partial Class PayrollSummaDateSelection
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents SemiMonthlyTab As System.Windows.Forms.TabPage
-    Friend WithEvents Column1 As System.Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents Column2 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column7 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column4 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents panelSalarySwitch As Panel
@@ -503,4 +461,7 @@ Partial Class PayrollSummaDateSelection
     Friend WithEvents cboxLoanType As ComboBox
     Friend WithEvents Label4 As Label
     Friend WithEvents chkHideEmptyColumns As CheckBox
+    Friend WithEvents IsCheckedColumn As DataGridViewCheckBoxColumn
+    Friend WithEvents DateFromColumn As DataGridViewTextBoxColumn
+    Friend WithEvents DateToColumn As DataGridViewTextBoxColumn
 End Class

@@ -56,9 +56,9 @@ Public Class ExcelFormatReport
         End While
     End Function
 
-    Protected Shared Function GetPayrollSelector() As PayrollSummaDateSelection
+    Protected Shared Function GetPayrollSelector() As PayrollSummaDateSelectionDialog
 
-        Dim payrollSelector = New PayrollSummaDateSelection With {
+        Dim payrollSelector = New PayrollSummaDateSelectionDialog With {
             .ReportIndex = 6
         }
 

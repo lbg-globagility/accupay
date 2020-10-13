@@ -251,7 +251,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<PayPeriod>> GetYearlyPayPeriodsAsync(int organizationId, int year)
+        public async Task<ICollection<PayPeriod>> GetYearlyPayPeriodsAsync(int organizationId, int year, int currentUserId)
         {
             var yearlyPayPeriods = new List<PayPeriod>();
 
@@ -268,12 +268,24 @@ namespace AccuPay.Data.Repositories
 
                 if (firstHalf == null)
                 {
-                    firstHalf = PayPeriod.NewPayPeriod(organizationId, month, year, isFirstHalf: true, _policy);
+                    firstHalf = PayPeriod.NewPayPeriod(
+                        organizationId: organizationId,
+                        month: month,
+                        year: year,
+                        isFirstHalf: true,
+                        policy: _policy,
+                        createdByUserId: currentUserId);
                 }
 
                 if (endOfTheMonth == null)
                 {
-                    endOfTheMonth = PayPeriod.NewPayPeriod(organizationId, month, year, isFirstHalf: false, _policy);
+                    endOfTheMonth = PayPeriod.NewPayPeriod(
+                        organizationId: organizationId,
+                        month: month,
+                        year: year,
+                        isFirstHalf: false,
+                        policy: _policy,
+                        createdByUserId: currentUserId);
                 }
 
                 yearlyPayPeriods.Add(firstHalf);

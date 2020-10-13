@@ -7,7 +7,7 @@ Public Class EmployeeOffenseReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim payperiodSelector = New PayrollSummaDateSelection()
+        Dim payperiodSelector = New PayrollSummaDateSelectionDialog()
 
         If Not payperiodSelector.ShowDialog() = DialogResult.OK Then
             Return

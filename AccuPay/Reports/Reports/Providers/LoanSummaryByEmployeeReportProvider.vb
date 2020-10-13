@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports AccuPay.CrystalReports
-Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LoanSummaryByEmployeeReportProvider
@@ -12,11 +11,10 @@ Public Class LoanSummaryByEmployeeReportProvider
 
     Public Sub Run() Implements IReportProvider.Run
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
+        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelectionDialog
 
         Try
             If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
-
 
                 Dim date_from, date_to As Object
 
@@ -27,7 +25,6 @@ Public Class LoanSummaryByEmployeeReportProvider
 
                 Dim loanSummaryByEmployeeReport = service.CreateReportDocument(z_OrganizationID, CDate(date_from), CDate(date_to))
 
-
                 Dim crvwr As New CrysRepForm
                 crvwr.crysrepvwr.ReportSource = loanSummaryByEmployeeReport.GetReportDocument
 
@@ -36,7 +33,6 @@ Public Class LoanSummaryByEmployeeReportProvider
             End If
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
-
         Finally
 
         End Try

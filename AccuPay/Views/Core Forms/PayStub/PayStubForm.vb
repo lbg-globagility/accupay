@@ -1914,7 +1914,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub Include13thMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Include13thMonthPayToolStripMenuItem.Click
-        Dim payPeriodSelector = New PayrollSummaDateSelection()
+        Dim payPeriodSelector = New PayrollSummaDateSelectionDialog()
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return
@@ -1933,7 +1933,7 @@ Public Class PayStubForm
             Return
         End If
 
-        Dim payPeriodSelector = New PayrollSummaDateSelection()
+        Dim payPeriodSelector = New PayrollSummaDateSelectionDialog()
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return

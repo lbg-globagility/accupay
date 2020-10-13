@@ -76,7 +76,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private Function GetDefaultFileName(
         reportName As String,
-        payrollSelector As PayrollSummaDateSelection) As String
+        payrollSelector As PayrollSummaDateSelectionDialog) As String
 
         Return String.Concat(
             orgNam,
