@@ -11,7 +11,7 @@ Public Class LoanSummaryByEmployeeReportProvider
 
     Public Sub Run() Implements IReportProvider.Run
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelectionDialog
+        Dim n_PayrollSummaDateSelection As New MultiplePayPeriodSelectionDialog
 
         Try
             If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then

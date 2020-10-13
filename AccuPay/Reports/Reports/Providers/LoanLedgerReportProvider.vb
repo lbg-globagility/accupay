@@ -36,7 +36,9 @@ Public Class LoanLedgerReportProvider
         WHERE og.RowID = ?ogId;"
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim payPeriodSelector = New PayrollSummaDateSelectionDialog() With {.ReportIndex = 4}
+        Dim payPeriodSelector = New MultiplePayPeriodSelectionDialog() With {
+            .ShowLoanTypePanel = True
+        }
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return

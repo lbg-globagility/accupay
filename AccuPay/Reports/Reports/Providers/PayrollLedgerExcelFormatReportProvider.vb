@@ -98,11 +98,9 @@ Public Class PayrollLedgerExcelFormatReportProvider
     Private Function ParameterAssignment() As Boolean
         Dim boolResult As Boolean = True
 
-        Dim periodSelector As New PayrollSummaDateSelectionDialog()
-
-        periodSelector.Panel3.Visible = False
-        periodSelector.panelSalarySwitch.Visible = True
-        periodSelector.Label5.Visible = False
+        Dim periodSelector As New MultiplePayPeriodSelectionDialog() With {
+            .ShowDeclaredOrActualOptionsPanel = True
+        }
 
         If periodSelector.ShowDialog = DialogResult.OK Then
             fromPeriodId = periodSelector.PayPeriodFromID.Value

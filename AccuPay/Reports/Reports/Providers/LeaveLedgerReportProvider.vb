@@ -13,7 +13,7 @@ Public Class LeaveLedgerReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim dateSelector As New PayrollSummaDateSelectionDialog()
+        Dim dateSelector As New MultiplePayPeriodSelectionDialog()
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

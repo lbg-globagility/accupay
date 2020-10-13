@@ -186,9 +186,6 @@ Public Class PayStubForm
 
         Dim showActual = _policy.ShowActual
 
-        PayrollSummaryDeclaredToolStripMenuItem.Visible = showActual
-        PayrollSummaryActualToolStripMenuItem.Visible = showActual
-
         PayslipDeclaredToolStripMenuItem.Visible = showActual
         PayslipActualToolStripMenuItem.Visible = showActual
 
@@ -211,13 +208,7 @@ Public Class PayStubForm
             ActualTabPage.Text = str_empty
 
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
-
-            PrintPayrollSummaryToolStripDropDownButton.Visible = False
-            PrintPayrollSummaryToolStripButton.Visible = True
         Else
-
-            PrintPayrollSummaryToolStripDropDownButton.Visible = True
-            PrintPayrollSummaryToolStripButton.Visible = False
 
             RemoveHandler CostCenterReportToolStripMenuItem.Click, AddressOf CostCenterReportToolStripMenuItem_Click
 
@@ -946,12 +937,10 @@ Public Class PayStubForm
     End Function
 
     Private Sub PayrollSummaryDeclaredAndActualToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles _
-        PrintPayrollSummaryToolStripButton.Click,
-        PayrollSummaryDeclaredToolStripMenuItem.Click,
-        PayrollSummaryActualToolStripMenuItem.Click
+        PrintPayrollSummaryToolStripButton.Click
 
-        Dim isActual = sender Is PayrollSummaryActualToolStripMenuItem
-        ShowPayrollSummary(isActual)
+        Dim reportProvider As New PayrollSummaryExcelFormatReportProvider()
+        reportProvider.Run()
 
     End Sub
 
@@ -1914,7 +1903,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub Include13thMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Include13thMonthPayToolStripMenuItem.Click
-        Dim payPeriodSelector = New PayrollSummaDateSelectionDialog()
+        Dim payPeriodSelector = New MultiplePayPeriodSelectionDialog()
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return
@@ -1933,7 +1922,7 @@ Public Class PayStubForm
             Return
         End If
 
-        Dim payPeriodSelector = New PayrollSummaDateSelectionDialog()
+        Dim payPeriodSelector = New MultiplePayPeriodSelectionDialog()
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return
@@ -2121,14 +2110,6 @@ Public Class PayStubForm
 
             End Sub,
             "Error generating payslips.")
-    End Sub
-
-    Private Shared Sub ShowPayrollSummary(isActual As Boolean)
-        Dim reportProvider As New PayrollSummaryExcelFormatReportProvider With {
-            .IsActual = isActual
-        }
-
-        reportProvider.Run()
     End Sub
 
     Private Sub ManageEmailPayslipsToolStripMenuItem_Click(sender As Object, e As EventArgs) _

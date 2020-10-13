@@ -17,20 +17,18 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private _reportBuilder As IPayrollSummaryReportBuilder
 
-    Public Property IsActual As Boolean
-
     Sub New()
         _reportBuilder = MainServiceProvider.GetRequiredService(Of IPayrollSummaryReportBuilder)
     End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim bool_result As Short = Convert.ToInt16(IsActual)
 
         Dim payrollSelector = GetPayrollSelector()
         If payrollSelector Is Nothing Then Return
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
-        Dim salaryDistribution = payrollSelector.cboStringParameter.Text
+        Dim salaryDistribution = payrollSelector.SalaryDistributionComboBox.Text
+        Dim isActual = payrollSelector.IsActual
 
         Dim distributionTypes = {PayrollSummaryCategory.Cash, PayrollSummaryCategory.DirectDeposit, PayrollSummaryCategory.All}
         If distributionTypes.Contains(salaryDistribution) = False Then
@@ -61,7 +59,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 payPeriodFromId:=payrollSelector.PayPeriodFromID.Value,
                 payPeriodToId:=payrollSelector.PayPeriodToID.Value,
                 salaryDistributionType:=salaryDistribution,
-                isActual:=IsActual,
+                isActual:=isActual,
                 saveFilePath:=saveFilePath)
 
             Process.Start(saveFilePath)
@@ -76,12 +74,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private Function GetDefaultFileName(
         reportName As String,
-        payrollSelector As PayrollSummaDateSelectionDialog) As String
+        payrollSelector As MultiplePayPeriodSelectionDialog) As String
 
         Return String.Concat(
             orgNam,
             reportName,
-            payrollSelector.cboStringParameter.Text.Replace(" ", ""),
+            payrollSelector.SalaryDistributionComboBox.Text.Replace(" ", ""),
             "Report",
             String.Concat(
                 payrollSelector.DateFrom.Value.

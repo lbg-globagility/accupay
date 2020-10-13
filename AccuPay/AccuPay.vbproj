@@ -1380,10 +1380,10 @@
     <Compile Include="Views\Core Forms\Payrate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\PayrollSummaDateSelectionDialog.Designer.vb">
-      <DependentUpon>PayrollSummaDateSelectionDialog.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.Designer.vb">
+      <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\PayrollSummaDateSelectionDialog.vb">
+    <Compile Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\PayStub\PayStubForm.Designer.vb">
@@ -2384,8 +2384,8 @@
     <EmbeddedResource Include="Views\Core Forms\Payrate.resx">
       <DependentUpon>Payrate.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\PayrollSummaDateSelectionDialog.resx">
-      <DependentUpon>PayrollSummaDateSelectionDialog.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.resx">
+      <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\PayStubForm.resx">
       <DependentUpon>PayStubForm.vb</DependentUpon>

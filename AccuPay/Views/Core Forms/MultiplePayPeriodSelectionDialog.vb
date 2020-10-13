@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
@@ -9,29 +8,24 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
-Imports MySql.Data.MySqlClient
 
-Public Class PayrollSummaDateSelectionDialog
+Public Class MultiplePayPeriodSelectionDialog
 
     Public Property ReportIndex As Integer
 
-    Private _showLoanType As Boolean = False
+    Public Property ShowLoanTypePanel As Boolean = False
+    Public Property SHowPayrollSummaryPanel As Boolean = False
+    Public Property ShowDeclaredOrActualOptionsPanel As Boolean = False
 
-    Private _loanTypeId As Integer?
-
-    Dim yearnow As Integer = CDate(dbnow).Year
-
-    Dim numofweekdays As Integer = 0
-
-    Dim numofweekends As Integer = 0
-
-    Dim paypFrom As Object = Nothing
-
-    Dim paypTo As Object = Nothing
+    Private _currentYear As Integer = CDate(dbnow).Year
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _productRepository As ProductRepository
+
+    Private ReadOnly _policy As PolicyHelper
 
     Sub New()
 
@@ -39,6 +33,9 @@ Public Class PayrollSummaDateSelectionDialog
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
     End Sub
 
     Public ReadOnly Property PayPeriodFromID As Integer?
@@ -87,135 +84,73 @@ Public Class PayrollSummaDateSelectionDialog
 
     Public ReadOnly Property IsActual As Boolean
         Get
-            Return RadioButton2.Checked
+            Return ActualRadioButton.Checked
         End Get
     End Property
 
-    Public Property ShowLoanType As Boolean
+    Public ReadOnly Property LoanTypeId As Integer?
         Get
-            Return _showLoanType
+            Return CInt(LoanTypeComboBox.SelectedValue)
         End Get
-        Set(value As Boolean)
-            _showLoanType = value
-        End Set
     End Property
-
-    Public Property LoanTypeId As Integer?
-        Get
-            Return _loanTypeId
-        End Get
-        Set(value As Integer?)
-            _loanTypeId = value
-        End Set
-    End Property
-
-    Public Property PayPeriodID As Object
 
     Private _selectedPayPeriods As List(Of PayPeriod)
 
 #Region "Loan Types"
 
-    Protected Overrides Sub OnLoad(e As EventArgs)
-        Dim boolResult = True
+    Protected Overrides Async Sub OnLoad(e As EventArgs)
 
-        Select Case ReportIndex
+        Dim desiredHeight = Me.Height - LoanTypePanel.Height - PayrollSummaryPanel.Height - DeclaredOrActualPanel.Height
 
-            Case 4 'Employee Loan Report
+        If ShowLoanTypePanel Then
 
-                cboStringParameter.Visible = boolResult
-                TextBox1.Visible = boolResult
-                Label360.Visible = boolResult
-                Label5.Visible = boolResult
+            Await LoadLoanTypesAsync()
+            LoanTypePanel.Visible = True
+            ReminderLabel.Visible = True
 
-                enlistToCboBox("SELECT p.PartNo" &
-                               " FROM product p" &
-                               " INNER JOIN category c ON c.OrganizationID='" & orgztnID & "' AND c.CategoryName='Loan Type'" &
-                               " WHERE p.CategoryID=c.RowID" &
-                               " AND p.OrganizationID=" & orgztnID & ";",
-                               cboxLoanType)
+            desiredHeight += LoanTypePanel.Height
 
-                cboStringParameter.DropDownStyle = ComboBoxStyle.DropDownList
-                TextBox1.Text = "Loan Type"
-
-            Case 6 'Payroll Summary Report
-                Panel3.Visible = boolResult
-
-                TextBox1.Visible = True
-                Label360.Visible = True
-                Label5.Visible = True
-
-                With cboStringParameter
-                    .Visible = True
-                    .Items.Add(PayrollSummaryCategory.All)
-                    .Items.Add(PayrollSummaryCategory.Cash)
-                    .Items.Add(PayrollSummaryCategory.DirectDeposit)
-                    .DropDownStyle = ComboBoxStyle.DropDownList
-                End With
-
-                TextBox1.Text = "Salary Distribution"
-            Case Else
-                Me.Height = 578
-        End Select
-
-        If _showLoanType Then
-            LoadLoanTypesAsync()
-            Panel5.Visible = _showLoanType
-
-            AddHandler cboxLoanType.SelectedIndexChanged, AddressOf cboxLoanType_SelectedIndexChanged
         End If
+
+        If SHowPayrollSummaryPanel Then
+
+            PayrollSummaryPanel.Visible = True
+            ReminderLabel.Visible = True
+
+            With SalaryDistributionComboBox
+                .Visible = True
+                .Items.Add(PayrollSummaryCategory.All)
+                .Items.Add(PayrollSummaryCategory.Cash)
+                .Items.Add(PayrollSummaryCategory.DirectDeposit)
+            End With
+
+            desiredHeight += PayrollSummaryPanel.Height
+
+        End If
+
+        If ShowDeclaredOrActualOptionsPanel Then
+
+            DeclaredOrActualPanel.Visible = True
+
+            If _policy.ShowActual = False Then
+
+                DeclaredOrActualPanel.Visible = False
+                DeclaredRadioButton.Checked = True
+            End If
+
+            desiredHeight += DeclaredOrActualPanel.Height
+
+        End If
+
+        Me.Height = desiredHeight
 
         MyBase.OnLoad(e)
     End Sub
 
-    Private Async Sub LoadLoanTypesAsync()
-        Dim loanTypes = Await GetLoanTypes()
+    Private Async Function LoadLoanTypesAsync() As Task
+        Dim loanTypes = Await _productRepository.GetLoanTypesAsync(z_OrganizationID)
 
-        cboxLoanType.DataSource = loanTypes.ToList()
-    End Sub
-
-    Private Async Function GetLoanTypes() As Task(Of ICollection(Of Product))
-        'Select Case NULL `RowID`, 'All' `PartNo`
-        '        UNION
-        '    Select Case i.RowID, i.PartNo
-        '            FROM() i
-        Dim sql = <![CDATA[
-                    SELECT p.PartNo, p.RowID
-                    FROM category c
-                    INNER JOIN product p ON p.CategoryID=c.RowID AND p.OrganizationID=c.OrganizationID AND p.ActiveData=TRUE
-                    WHERE c.OrganizationID = @orgId
-                    AND c.CategoryName=@leaveType
-                    ORDER BY p.PartNo
-                    ;
-        ]]>.Value
-
-        Dim products = New Collection(Of Product)
-        Dim noRowId As Integer?
-
-        Using connection As New MySqlConnection(connectionString),
-            command As New MySqlCommand(sql, connection)
-
-            command.Parameters.AddWithValue("@orgId", CStr(z_OrganizationID))
-            command.Parameters.AddWithValue("@leaveType", ProductConstant.LEAVE_TYPE_CATEGORY)
-
-            Await connection.OpenAsync()
-
-            Dim reader = Await command.ExecuteReaderAsync()
-
-            products.Insert(0, New Product() With {.RowID = noRowId, .PartNo = "All"})
-            While Await reader.ReadAsync()
-                Dim partNo = reader.GetValue(Of String)("PartNo")
-                Dim rowId = reader.GetValue(Of Integer)("RowID")
-
-                Dim product = New Product() With {
-                    .PartNo = partNo,
-                    .RowID = rowId
-                }
-
-                products.Add(product)
-            End While
-        End Using
-
-        Return products
+        LoanTypeComboBox.DataSource = loanTypes.ToList()
     End Function
 
 #End Region
@@ -224,13 +159,13 @@ Public Class PayrollSummaDateSelectionDialog
 
         PayperiodsGridView.AutoGenerateColumns = False
 
-        linkPrev.Text = "← " & (yearnow - 1)
-        linkNxt.Text = (yearnow + 1) & " →"
+        linkPrev.Text = "← " & (_currentYear - 1)
+        linkNxt.Text = (_currentYear + 1) & " →"
 
         _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
-        DateFromLabel.Text = ""
-        DateToLabel.Text = ""
+        DateFromTextLabel.Text = ""
+        DateToTextLabel.Text = ""
 
         _selectedPayPeriods = New List(Of PayPeriod)
         Await LoadPayPeriods()
@@ -286,23 +221,21 @@ Public Class PayrollSummaDateSelectionDialog
     End Sub
 
     Private Async Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
-        yearnow = yearnow + 1
+        _currentYear = _currentYear + 1
         Await ChangePageLinks()
     End Sub
 
     Private Async Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
-        yearnow = yearnow - 1
+        _currentYear = _currentYear - 1
         Await ChangePageLinks()
     End Sub
 
     Private Async Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         PayperiodsGridView.EndEdit()
 
-        If cboStringParameter.Visible Then
-            If cboStringParameter.Text = String.Empty Then
-                WarnBalloon("Please select a " & TextBox1.Text, "Invalid " & TextBox1.Text, cboStringParameter, cboStringParameter.Width - 17, -69)
-                Return
-            End If
+        If SalaryDistributionComboBox.Visible AndAlso SalaryDistributionComboBox.Text = String.Empty Then
+            WarnBalloon("Please select a Salary Distribution", "Invalid Salary Distribution", SalaryDistributionComboBox, SalaryDistributionComboBox.Width - 17, -69)
+            Return
         End If
 
         If _selectedPayPeriods.Any() AndAlso DateFrom.HasValue AndAlso DateTo.HasValue Then
@@ -362,17 +295,13 @@ Public Class PayrollSummaDateSelectionDialog
         End If
     End Function
 
-    Private Sub ComboBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboStringParameter.KeyPress
+    Private Sub ComboBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles SalaryDistributionComboBox.KeyPress
         Dim e_asc = Asc(e.KeyChar)
 
         If e_asc = 8 Then
-            cboStringParameter.Text = String.Empty
-            cboStringParameter.SelectedIndex = -1
+            SalaryDistributionComboBox.Text = String.Empty
+            SalaryDistributionComboBox.SelectedIndex = -1
         End If
-    End Sub
-
-    Private Sub cboxLoanType_SelectedIndexChanged(sender As Object, e As EventArgs)
-        _loanTypeId = CInt(cboxLoanType.SelectedValue)
     End Sub
 
     Private Async Function LoadPayPeriods() As Task
@@ -380,7 +309,7 @@ Public Class PayrollSummaDateSelectionDialog
         Dim payPeriods = (Await _payPeriodRepository.
             GetYearlyPayPeriodsAsync(
                 organizationId:=z_OrganizationID,
-                year:=Me.yearnow,
+                year:=Me._currentYear,
                 currentUserId:=z_User)).
             Select(Function(p) New PayPeriodWrapper(p)).
             ToList()
@@ -455,8 +384,8 @@ Public Class PayrollSummaDateSelectionDialog
 
     Private Sub UpdateDateDescription()
 
-        DateFromLabel.Text = FormatDateString(DateFrom)
-        DateToLabel.Text = FormatDateString(DateTo)
+        DateFromTextLabel.Text = FormatDateString(DateFrom)
+        DateToTextLabel.Text = FormatDateString(DateTo)
     End Sub
 
     Private Shared Function FormatDateString(dateInput As Date?) As String
@@ -464,8 +393,8 @@ Public Class PayrollSummaDateSelectionDialog
     End Function
 
     Private Async Function ChangePageLinks() As Task
-        linkPrev.Text = "← " & (yearnow - 1)
-        linkNxt.Text = (yearnow + 1) & " →"
+        linkPrev.Text = "← " & (_currentYear - 1)
+        linkNxt.Text = (_currentYear + 1) & " →"
 
         Dim sel_tab_pg = TabControl1.SelectedTab
 

@@ -306,9 +306,6 @@ Partial Class PayStubForm
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.tsbtnSearch = New System.Windows.Forms.ToolStripButton()
-        Me.PrintPayrollSummaryToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrintPayrollSummaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
@@ -3050,7 +3047,7 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayrollToolStripDropDownButton, Me.GeneratePayrollToolStripButton, Me.tsbtnClose, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.PrintPayrollSummaryToolStripDropDownButton, Me.PrintPayrollSummaryToolStripButton, Me.UserActivityToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayrollToolStripDropDownButton, Me.GeneratePayrollToolStripButton, Me.tsbtnClose, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.PrintPayrollSummaryToolStripButton, Me.UserActivityToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(961, 25)
@@ -3294,27 +3291,6 @@ Partial Class PayStubForm
         Me.tsbtnSearch.Name = "tsbtnSearch"
         Me.tsbtnSearch.Size = New System.Drawing.Size(23, 22)
         Me.tsbtnSearch.Text = "Search Employee"
-        '
-        'PrintPayrollSummaryToolStripDropDownButton
-        '
-        Me.PrintPayrollSummaryToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayrollSummaryDeclaredToolStripMenuItem, Me.PayrollSummaryActualToolStripMenuItem})
-        Me.PrintPayrollSummaryToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.timeattendance
-        Me.PrintPayrollSummaryToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PrintPayrollSummaryToolStripDropDownButton.Name = "PrintPayrollSummaryToolStripDropDownButton"
-        Me.PrintPayrollSummaryToolStripDropDownButton.Size = New System.Drawing.Size(154, 22)
-        Me.PrintPayrollSummaryToolStripDropDownButton.Text = "&Print Payroll Summary"
-        '
-        'PayrollSummaryDeclaredToolStripMenuItem
-        '
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'PayrollSummaryActualToolStripMenuItem
-        '
-        Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
         '
         'PrintPayrollSummaryToolStripButton
         '
@@ -3880,9 +3856,6 @@ Partial Class PayStubForm
     Friend WithEvents Division As DataGridViewTextBoxColumn
     Friend WithEvents DeletePaystubColumn As DataGridViewLinkColumn
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents PrintPayrollSummaryToolStripDropDownButton As ToolStripDropDownButton
-    Friend WithEvents PayrollSummaryDeclaredToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents PayrollSummaryActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportNetPayAllToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportNetPayDeclaredAllToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ExportNetPayActualAllToolStripMenuItem As ToolStripMenuItem

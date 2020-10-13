@@ -294,9 +294,7 @@ Partial Class PaystubView
         Me.DatTab1BindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.DeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayrollSummaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.btnActualToggle = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
@@ -2274,7 +2272,7 @@ Partial Class PaystubView
         '
         'ToolStrip1
         '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.ToolStripDropDownButton1, Me.ToolStripButton1, Me.btnActualToggle, Me.ToolStripButton3})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton2, Me.PayrollSummaryToolStripButton, Me.ToolStripButton1, Me.btnActualToggle, Me.ToolStripButton3})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1280, 25)
@@ -2290,27 +2288,14 @@ Partial Class PaystubView
         Me.ToolStripButton2.Size = New System.Drawing.Size(108, 22)
         Me.ToolStripButton2.Text = "Generate Paystubs"
         '
-        'ToolStripDropDownButton1
+        'PayrollSummaryToolStripButton
         '
-        Me.ToolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.ToolStripDropDownButton1.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem, Me.ActualToolStripMenuItem})
-        Me.ToolStripDropDownButton1.Image = CType(resources.GetObject("ToolStripDropDownButton1.Image"), System.Drawing.Image)
-        Me.ToolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripDropDownButton1.Name = "ToolStripDropDownButton1"
-        Me.ToolStripDropDownButton1.Size = New System.Drawing.Size(94, 22)
-        Me.ToolStripDropDownButton1.Text = "Payroll Report"
-        '
-        'DeclaredToolStripMenuItem
-        '
-        Me.DeclaredToolStripMenuItem.Name = "DeclaredToolStripMenuItem"
-        Me.DeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'ActualToolStripMenuItem
-        '
-        Me.ActualToolStripMenuItem.Name = "ActualToolStripMenuItem"
-        Me.ActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem.Text = "Actual"
+        Me.PayrollSummaryToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.PayrollSummaryToolStripButton.Image = CType(resources.GetObject("PayrollSummaryToolStripButton.Image"), System.Drawing.Image)
+        Me.PayrollSummaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PayrollSummaryToolStripButton.Name = "PayrollSummaryToolStripButton"
+        Me.PayrollSummaryToolStripButton.Size = New System.Drawing.Size(85, 22)
+        Me.PayrollSummaryToolStripButton.Text = "Payroll Report"
         '
         'ToolStripButton1
         '
@@ -2336,7 +2321,7 @@ Partial Class PaystubView
         Me.ToolStripButton3.Image = CType(resources.GetObject("ToolStripButton3.Image"), System.Drawing.Image)
         Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(73, 22)
+        Me.ToolStripButton3.Size = New System.Drawing.Size(74, 22)
         Me.ToolStripButton3.Text = "Export Bank"
         '
         'Panel1
@@ -3123,11 +3108,9 @@ Partial Class PaystubView
     Friend WithEvents Column48 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn61 As DataGridViewTextBoxColumn
     Friend WithEvents Column47 As DataGridViewTextBoxColumn
-    Friend WithEvents ToolStripDropDownButton1 As ToolStripDropDownButton
-    Friend WithEvents DeclaredToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents colAdjustmentsName As EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn
     Friend WithEvents colAdjustmentsAmount As DataGridViewTextBoxColumn
     Friend WithEvents Column46 As DataGridViewTextBoxColumn
     Friend WithEvents Column44 As DataGridViewImageColumn
+    Friend WithEvents PayrollSummaryToolStripButton As ToolStripButton
 End Class
