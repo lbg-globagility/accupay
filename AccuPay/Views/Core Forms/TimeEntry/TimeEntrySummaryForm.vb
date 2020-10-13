@@ -148,6 +148,8 @@ Public Class TimeEntrySummaryForm
 
         GenerateDefaultShiftAndTimeLogsButton.Visible = _policy.UseDefaultShiftAndTimeLogs
 
+        _generateDefaultShiftAndTimeLogsButtonHidden = Not _policy.UseDefaultShiftAndTimeLogs
+
         CheckIfMoneyColumnsAreGoingToBeHidden()
     End Sub
 
@@ -183,7 +185,9 @@ Public Class TimeEntrySummaryForm
             shiftPermission.Update = False Then
 
             GenerateDefaultShiftAndTimeLogsButton.Visible = False
+
             _generateDefaultShiftAndTimeLogsButtonHidden = True
+
         End If
 
         Dim updateTimeEntryPermission = timeEntryPermission IsNot Nothing AndAlso timeEntryPermission.Update
