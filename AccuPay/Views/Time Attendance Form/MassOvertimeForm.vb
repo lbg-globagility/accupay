@@ -271,7 +271,7 @@ Public Class MassOvertimePresenter
         Dim dateTo = _view.DateTo
         Dim employees = _view.GetActiveEmployees()
 
-        Dim overtimesByEmployee = LoadOvertimes(dateFrom, dateTo, employees)
+        Dim overtimesByEmployee = LoadOvertimes(dateFrom.Date, dateTo.Date, employees)
 
         _models = New List(Of OvertimeModel)
 
@@ -344,16 +344,29 @@ Public Class MassOvertimePresenter
     End Function
 
     Private Shared Function ConverToOvertime(model As OvertimeModel) As Overtime
-        Return New Overtime() With {
+        Dim convertedOvertime = New Overtime() With {
             .EmployeeID = model.EmployeeID,
             .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
+            .LastUpd = Date.Now,
+            .LastUpdBy = z_User,
             .OTStartDate = model.Date,
             .OTEndDate = model.Date,
             .Status = Overtime.StatusApproved,
             .OTStartTime = model.StartTime,
             .OTEndTime = model.EndTime
         }
+
+        If model.IsUpdate Then
+            convertedOvertime.RowID = model.Overtime.RowID
+            convertedOvertime.Created = model.Overtime.Created
+            convertedOvertime.CreatedBy = model.Overtime.CreatedBy
+        End If
+        If model.IsNew Then
+            convertedOvertime.Created = Date.Now
+            convertedOvertime.CreatedBy = z_User
+        End If
+
+        Return convertedOvertime
     End Function
 
 End Class
