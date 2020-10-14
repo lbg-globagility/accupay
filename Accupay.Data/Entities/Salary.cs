@@ -18,6 +18,8 @@ namespace AccuPay.Data.Entities
 
         public int? EmployeeID { get; set; }
 
+        public int? FilingStatusID { get; set; }
+
         public int? OrganizationID { get; set; }
 
         public int? PositionID { get; set; }
