@@ -85,6 +85,18 @@ Public Class SalaryCutoffTest
         Assert.That(result, [Is].Null)
     End Sub
 
+    <Test>
+    Public Sub ShouldReturnSalary_WhenSalaryIsBeforeCutoff()
+        Dim salaries = New Collection(Of Salary) From {
+            New Salary() With {.EffectiveFrom = Date.Parse("2020-01-01"), .BasicSalary = 1000}
+        }
+        Dim cutoff = New TimePeriod(Date.Parse("2020-05-01"), Date.Parse("2020-05-15"))
+
+        Dim result = GetSalary(salaries, cutoff)
+
+        Assert.That(result?.BasicSalary, [Is].EqualTo(1000))
+    End Sub
+
     Private Function GetSalary(salaries As ICollection(Of Salary), cutoff As TimePeriod) As Salary
         Return salaries.Where(Function(s) s.EffectiveFrom <= cutoff.End).
             OrderByDescending(Function(s) s.EffectiveFrom).
