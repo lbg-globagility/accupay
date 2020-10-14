@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -319,28 +320,31 @@ Public Class MassOvertimePresenter
             Select(Function(ot) ConverToOvertime(ot)).
             ToList()
 
-        If changedOvertimes.Any Then
+        Await FunctionUtils.TryCatchFunctionAsync("Saving Mass Overtimes",
+        Async Function()
+            If changedOvertimes.Any Then
 
-            changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
-            Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
+                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
-            service.CheckMassOvertimeFeature(featureChecker.HasAccess(Feature.MassOvertime))
-            Await service.SaveManyAsync(changedOvertimes)
+                service.CheckMassOvertimeFeature(featureChecker.HasAccess(Feature.MassOvertime))
+                Await service.SaveManyAsync(changedOvertimes)
 
-        End If
+            End If
 
-        Dim deletableOvertimeIDs = _models.
-            Where(Function(ot) ot.IsDelete).
-            Where(Function(ot) ot.Overtime.RowID IsNot Nothing).
-            Select(Function(ot) ot.Overtime.RowID.Value).
-            ToList()
+            Dim deletableOvertimeIDs = _models.
+                Where(Function(ot) ot.IsDelete).
+                Where(Function(ot) ot.Overtime.RowID IsNot Nothing).
+                Select(Function(ot) ot.Overtime.RowID.Value).
+                ToList()
 
-        If deletableOvertimeIDs.Any Then
+            If deletableOvertimeIDs.Any Then
 
-            Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-            Await service.DeleteManyAsync(deletableOvertimeIDs)
+                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Await service.DeleteManyAsync(deletableOvertimeIDs)
 
-        End If
+            End If
+        End Function)
     End Function
 
     Private Shared Function ConverToOvertime(model As OvertimeModel) As Overtime
