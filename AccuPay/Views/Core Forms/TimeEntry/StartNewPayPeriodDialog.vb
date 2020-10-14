@@ -173,7 +173,7 @@ Public Class StartNewPayPeriodDialog
 
                 Await TimeEntrySummaryForm.LoadPayPeriods()
 
-                Await PayStubForm.VIEW_payperiodofyear(PayStubForm.CurrentYear)
+                Await PayStubForm.VIEW_payperiodofyear()
 
                 DialogResult = DialogResult.OK
             End Function)

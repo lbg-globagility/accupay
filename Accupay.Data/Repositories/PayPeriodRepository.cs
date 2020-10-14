@@ -295,12 +295,18 @@ namespace AccuPay.Data.Repositories
             return yearlyPayPeriods;
         }
 
-        public async Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, int? year = null, string searchTerm = "")
         {
             var query = CreateBaseQuery(organizationId)
+                .AsNoTracking()
                 .Where(t => t.Status != PayPeriodStatus.Pending)
                 .OrderByDescending(t => t.PayFromDate)
                 .AsQueryable();
+
+            if (year != null)
+            {
+                query = query.Where(x => x.Year == year);
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
