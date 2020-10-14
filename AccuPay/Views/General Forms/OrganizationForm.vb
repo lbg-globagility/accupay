@@ -351,11 +351,6 @@ Public Class OrganizationForm
 
     End Sub
 
-    'Private Sub addAddressLink1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles addAddressLink1.Click
-    '    address.ShowDialog()
-
-    'End Sub
-
     Private Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
         isNew = 1
         cleartextbox()

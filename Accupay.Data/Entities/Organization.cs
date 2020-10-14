@@ -1,16 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("organization")]
-    public class Organization
+    public class Organization : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
@@ -47,6 +42,7 @@ namespace AccuPay.Data.Entities
             {
                 CreatedBy = userId,
                 ClientId = clientId,
+                IsInActive = false,
                 NightDifferentialTimeFrom = new TimeSpan(22, 0, 0),
                 NightDifferentialTimeTo = new TimeSpan(6, 0, 0),
             };

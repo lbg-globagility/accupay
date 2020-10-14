@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users.Services;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,7 @@ namespace AccuPay.Web.Clients
         private readonly UserManager<AspNetUser> _users;
         private readonly RoleManager<AspNetRole> _roles;
         private readonly UserEmailService _emailService;
-        private OrganizationRepository _organizationRepository;
+        private OrganizationDataService _organizationDataService;
         private readonly ICurrentUser _currentUser;
 
         public ClientService(
@@ -23,14 +24,14 @@ namespace AccuPay.Web.Clients
             UserManager<AspNetUser> users,
             RoleManager<AspNetRole> roles,
             UserEmailService emailService,
-            OrganizationRepository organizationRepository,
+            OrganizationDataService organizationDataService,
             ICurrentUser currentUser)
         {
             _clientRepository = clientRepository;
             _users = users;
             _roles = roles;
             _emailService = emailService;
-            _organizationRepository = organizationRepository;
+            _organizationDataService = organizationDataService;
             _currentUser = currentUser;
         }
 
@@ -94,7 +95,7 @@ namespace AccuPay.Web.Clients
 
                 organization.Name = dto.Name;
 
-                await _organizationRepository.Create(organization);
+                await _organizationDataService.SaveAsync(organization);
             }
 
             return ConvertToDto(client);

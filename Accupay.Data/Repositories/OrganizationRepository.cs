@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,23 +8,31 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class OrganizationRepository
+    public class OrganizationRepository : SavableRepository<Organization>
     {
-        private readonly PayrollContext _context;
-
-        public OrganizationRepository(PayrollContext context)
+        public OrganizationRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        public Organization GetById(int id)
+        protected override void DetachNavigationProperties(Organization organization)
         {
-            return _context.Organizations.FirstOrDefault(x => x.RowID == id);
+            if (organization.Address != null)
+            {
+                _context.Entry(organization.Address).State = EntityState.Detached;
+            }
         }
 
-        public async Task<Organization> GetByIdAsync(int id)
+        public async Task<bool> CheckIfNameExistsAsync(string name, int? id)
         {
-            return await _context.Organizations.FirstOrDefaultAsync(x => x.RowID == id);
+            var query = _context.Organizations
+                .Where(x => x.Name.Trim().ToLower() == name.ToTrimmedLowerCase());
+
+            if (id != null)
+            {
+                query = query.Where(x => x.RowID != id);
+            }
+
+            return await query.AnyAsync();
         }
 
         public async Task<Organization> GetByIdWithAddressAsync(int id)
@@ -39,18 +48,6 @@ namespace AccuPay.Data.Repositories
                 .Where(o => o.ClientId == clientId)
                 .Where(o => o.IsInActive == false)
                 .FirstOrDefaultAsync();
-        }
-
-        public async Task Create(Organization organization)
-        {
-            _context.Organizations.Add(organization);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task Update(Organization organization)
-        {
-            _context.Entry(organization).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
         }
 
         public async Task<(ICollection<Organization> organizations, int total)> List(OrganizationPageOptions options, int clientId)

@@ -30,14 +30,47 @@ namespace AccuPay.Data.Services
             _context = context;
 
             EntityName = entityName;
-            EntityNamePlural = entityNamePlural == null ? entityName + "s" : entityNamePlural;
+            EntityNamePlural = entityNamePlural ?? entityName + "s";
         }
+
+        #region Protected Methods
 
         protected bool IsNewEntity(int? id)
         {
             // sometimes it's not int.MinValue
             return id == null || id <= 0;
         }
+
+        protected int? ValidateOrganization(int? currentOrganizationId, int? entityOrganizationId)
+        {
+            if (currentOrganizationId == null)
+            {
+                currentOrganizationId = entityOrganizationId;
+            }
+            else
+            {
+                if (currentOrganizationId != entityOrganizationId)
+                    throw new BusinessLogicException("Cannot save multiple data from different organizations.");
+            }
+
+            return currentOrganizationId;
+        }
+
+        protected async Task<ICollection<T>> GetOldEntitiesAsync(List<T> entities)
+        {
+            var updatedEntityIds = entities
+                .Where(x => !IsNewEntity(x.RowID))
+                .Select(x => x.RowID.Value)
+                .Distinct()
+                .ToArray();
+
+            var oldEntities = await _repository.GetManyByIdsAsync(updatedEntityIds);
+            return oldEntities;
+        }
+
+        #endregion Protected Methods
+
+        #region Virtual Methods
 
         public async virtual Task DeleteAsync(int id)
         {
@@ -51,6 +84,11 @@ namespace AccuPay.Data.Services
             await _repository.DeleteAsync(entity);
         }
 
+        /// <summary>
+        /// Create or update the entity. If the entity has a RowID, it will be updated, otherwise it will be created.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public virtual async Task SaveAsync(T entity)
         {
             T oldEntity = null;
@@ -89,26 +127,6 @@ namespace AccuPay.Data.Services
             await _repository.SaveManyAsync(entities);
         }
 
-        protected async Task<ICollection<T>> GetOldEntitiesAsync(List<T> entities)
-        {
-            var updatedEntityIds = entities
-                .Where(x => !IsNewEntity(x.RowID))
-                .Select(x => x.RowID.Value)
-                .Distinct()
-                .ToArray();
-
-            var oldEntities = await _repository.GetManyByIdsAsync(updatedEntityIds);
-            return oldEntities;
-        }
-
-        protected async Task ValidateData(T entity, T oldEntity)
-        {
-            if (entity == null)
-                throw new BusinessLogicException("Invalid data.");
-
-            await SanitizeEntity(entity, oldEntity);
-        }
-
         // TODO: change this to a synchronus method. All validations that needs database
         // operations (they usually need async methods) should be moved to SaveValidation methods
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -139,20 +157,7 @@ namespace AccuPay.Data.Services
         {
         }
 
-        protected int? ValidateOrganization(int? currentOrganizationId, int? entityOrganizationId)
-        {
-            if (currentOrganizationId == null)
-            {
-                currentOrganizationId = entityOrganizationId;
-            }
-            else
-            {
-                if (currentOrganizationId != entityOrganizationId)
-                    throw new BusinessLogicException("Cannot save multiple data from different organizations.");
-            }
-
-            return currentOrganizationId;
-        }
+        #endregion Virtual Methods
 
         #region Private Methods
 
@@ -173,6 +178,14 @@ namespace AccuPay.Data.Services
                     DetachOldEntity(oldEntity);
                 }
             }
+        }
+
+        private async Task ValidateData(T entity, T oldEntity)
+        {
+            if (entity == null)
+                throw new BusinessLogicException("Invalid data.");
+
+            await SanitizeEntity(entity, oldEntity);
         }
 
         #endregion Private Methods

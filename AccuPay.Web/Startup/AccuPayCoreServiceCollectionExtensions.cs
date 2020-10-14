@@ -108,6 +108,7 @@ namespace AccuPay.Web
             services.AddScoped<LeaveDataService>();
             services.AddScoped<LoanDataService>();
             services.AddScoped<OfficialBusinessDataService>();
+            services.AddScoped<OrganizationDataService>();
             services.AddScoped<OvertimeDataService>();
             services.AddScoped<PaystubDataService>();
             services.AddScoped<PositionDataService>();

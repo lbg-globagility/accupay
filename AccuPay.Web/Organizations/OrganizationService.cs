@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,11 +13,13 @@ namespace AccuPay.Web.Organizations
     public class OrganizationService
     {
         private readonly OrganizationRepository _repository;
+        private readonly OrganizationDataService _dataService;
         private readonly ICurrentUser _currentUser;
 
-        public OrganizationService(OrganizationRepository repository, ICurrentUser currentUser)
+        public OrganizationService(OrganizationRepository repository, OrganizationDataService dataService, ICurrentUser currentUser)
         {
             _repository = repository;
+            _dataService = dataService;
             _currentUser = currentUser;
         }
 
@@ -34,7 +37,7 @@ namespace AccuPay.Web.Organizations
 
             organization.Name = dto.Name;
 
-            await _repository.Create(organization);
+            await _dataService.SaveAsync(organization);
 
             return ConvertToDto(organization);
         }
@@ -45,7 +48,7 @@ namespace AccuPay.Web.Organizations
             organization.Name = dto.Name;
             organization.LastUpdBy = _currentUser.UserId;
 
-            await _repository.Update(organization);
+            await _dataService.SaveAsync(organization);
 
             return ConvertToDto(organization);
         }
