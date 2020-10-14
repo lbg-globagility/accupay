@@ -136,8 +136,8 @@ Public Class BenchmarkPayrollForm
         Await LoadPayrollResourcesAsync()
 
         _salaries = (Await _salaryRepository.
-                            GetByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)).
-                    ToList()
+            GetByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayToDate)).
+            ToList()
 
         Await ShowEmployees()
 

@@ -102,7 +102,7 @@ Public Class SelectThirteenthMonthEmployeesForm
                                     ToList()
 
             Dim salaries = (Await _salaryRepository.
-                                    GetByCutOffAsync(z_OrganizationID, datePeriod.Start)).
+                                    GetByCutOffAsync(z_OrganizationID, datePeriod.End)).
                                     ToList()
 
             For Each employee In _employeeModels

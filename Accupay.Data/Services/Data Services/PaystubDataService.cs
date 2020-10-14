@@ -102,7 +102,7 @@ namespace AccuPay.Data.Services
 
             var employeeIds = paystubs.Select(x => x.EmployeeID.Value).ToArray();
 
-            var salaries = await _salaryRepository.GetByMultipleEmployeeAsync(employeeIds, payPeriod.PayFromDate);
+            var salaries = await _salaryRepository.GetByMultipleEmployeeAsync(employeeIds, payPeriod.PayToDate);
 
             var paystubsWithSalary = paystubs
                 .Select(paystub => new PaystubData(

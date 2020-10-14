@@ -158,7 +158,7 @@ namespace AccuPay.Data.Services
             var organization = _organizationRepository.GetById(_organizationId);
 
             _salaries = _salaryRepository
-                .GetByCutOff(_organizationId, _cutoffStart, _cutoffEnd)
+                .GetByCutOff(_organizationId, _cutoffEnd)
                 .ToList();
 
             var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart);
@@ -331,7 +331,7 @@ namespace AccuPay.Data.Services
                 if (!currentTimeEntries.Any())
                     return;
             }
-            
+
             // If there aren't any attendance data, that means there aren't any time entries to compute.
             if (!(timeLogs.Any() || leavesInCutoff.Any() || officialBusinesses.Any()) && (!employee.IsFixed))
                 return; // TODO: return this as one the list of errors of Time entry generation

@@ -407,8 +407,8 @@ namespace AccuPay.Data.Services
             try
             {
                 Salaries = (await _salaryRepository.
-                                GetByCutOffAsync(_organizationId, _payDateFrom)).
-                                ToList();
+                    GetByCutOffAsync(_organizationId, _payDateTo)).
+                    ToList();
             }
             catch (Exception ex)
             {

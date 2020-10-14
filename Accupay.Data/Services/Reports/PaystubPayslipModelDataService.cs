@@ -54,8 +54,8 @@ namespace AccuPay.Data.Services
                                     ToListAsync();
 
             var employeeSalaries = (await _salaryRepository.GetByCutOffAsync(organizationId,
-                                                                            payPeriod.PayFromDate)).
-                                            ToList();
+                                    payPeriod.PayToDate)).
+                                    ToList();
 
             var ecolas = await _context.AllowanceItems.
                         Include(p => p.Allowance).

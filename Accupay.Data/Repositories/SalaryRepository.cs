@@ -108,23 +108,21 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public ICollection<Salary> GetByCutOff(int organizationId, DateTime cutoffStart, DateTime? cutoffEnd = null)
+        public ICollection<Salary> GetByCutOff(int organizationId, DateTime cutoffEnd)
         {
-            return CreateBaseQueryByCutOff(cutoffStart, cutoffEnd)
-                .Where(x => x.OrganizationID == organizationId)
+            return CreateBaseGetByCutOffAndOrganization(organizationId, cutoffEnd)
                 .ToList();
         }
 
-        public async Task<ICollection<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffStart)
+        public async Task<ICollection<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffEnd)
         {
-            return await CreateBaseQueryByCutOff(cutoffStart)
-                .Where(x => x.OrganizationID == organizationId)
+            return await CreateBaseGetByCutOffAndOrganization(organizationId, cutoffEnd)
                 .ToListAsync();
         }
 
-        public async Task<ICollection<Salary>> GetByMultipleEmployeeAsync(int[] employeeIds, DateTime cutoffStart)
+        public async Task<ICollection<Salary>> GetByMultipleEmployeeAsync(int[] employeeIds, DateTime cutoffEnd)
         {
-            return await CreateBaseQueryByCutOff(cutoffStart)
+            return await CreateBaseQueryByCutOff(cutoffEnd)
                 .Where(x => employeeIds.Contains(x.EmployeeID.Value))
                 .ToListAsync();
         }
@@ -133,21 +131,19 @@ namespace AccuPay.Data.Repositories
 
         #endregion Queries
 
-        private IQueryable<Salary> CreateBaseQueryByCutOff(DateTime cutoffStart, DateTime? cutoffEnd = null)
+        private IQueryable<Salary> CreateBaseGetByCutOffAndOrganization(int organizationId, DateTime cutoffEnd)
         {
-            if (cutoffEnd != null)
-            {
-                return _context.Salaries
-                    .Where(sal => sal.EffectiveFrom <= cutoffEnd)
-                    .OrderByDescending(x => x.EffectiveFrom)
-                    .GroupBy(x => x.EmployeeID)
-                    .Select(g => g.FirstOrDefault());
-            }
+            return CreateBaseQueryByCutOff(cutoffEnd)
+                .Where(x => x.OrganizationID == organizationId);
+        }
 
-            // Obsolete: replace all queries with cutoffEnd and remove this code
-            return _context.Salaries
-                .Where(x => x.EffectiveFrom <= cutoffStart)
-                .OrderByDescending(x => x.EffectiveFrom)
+        private IQueryable<Salary> CreateBaseQueryByCutOff(DateTime cutoffEnd)
+        {
+            var query = _context.Salaries.AsQueryable();
+
+            query = SalaryQueryHelper.GetLatestSalaryQuery(query, cutoffEnd);
+
+            return query
                 .GroupBy(x => x.EmployeeID)
                 .Select(g => g.FirstOrDefault());
         }

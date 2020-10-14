@@ -1414,7 +1414,7 @@ Public Class PayStubForm
         Dim datePeriod = GetPayPeriodDates()
         If datePeriod Is Nothing Then Return
 
-        Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.Start)
+        Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.End)
         If salary Is Nothing Then Return
 
         Dim basicRate = If(employee.IsDaily, salary.BasicSalary, salary.BasicSalary / 2)
@@ -1523,7 +1523,7 @@ Public Class PayStubForm
         Dim datePeriod = GetPayPeriodDates()
         If datePeriod Is Nothing Then Return
 
-        Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.Start)
+        Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.End)
         If salary Is Nothing Then Return
 
         Dim basicRate = If(employee.IsDaily, salary.TotalSalary, salary.TotalSalary / 2)

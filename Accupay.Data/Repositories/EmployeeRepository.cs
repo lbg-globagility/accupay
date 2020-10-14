@@ -322,7 +322,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<PaginatedList<Employee>> GetUnregisteredEmployeeAsync(PageOptions options, string searchTerm, int clientId, int organizationId)
         {
-            var registeredEmployeeIds= await _context.Users
+            var registeredEmployeeIds = await _context.Users
                 .Where(u => u.EmployeeId != null)
                 .Where(u => u.ClientId == clientId)
                 .Select(u => u.EmployeeId.Value)
@@ -391,9 +391,9 @@ namespace AccuPay.Data.Repositories
 
         #region Others
 
-        public async Task<Salary> GetCurrentSalaryAsync(int employeeId, DateTime? date = null)
+        public async Task<Salary> GetCurrentSalaryAsync(int employeeId, DateTime? cutOffEnd = null)
         {
-            return await CreateBaseQueryCurrentSalary(employeeId, date)
+            return await CreateBaseQueryCurrentSalary(employeeId, cutOffEnd)
                 .FirstOrDefaultAsync();
         }
 
@@ -430,14 +430,10 @@ namespace AccuPay.Data.Repositories
             return leaveTransaction.Balance;
         }
 
-        private IOrderedQueryable<Salary> CreateBaseQueryCurrentSalary(int employeeId, DateTime? date = null)
+        private IOrderedQueryable<Salary> CreateBaseQueryCurrentSalary(int employeeId, DateTime? cutOffEnd)
         {
-            date = date ?? DateTime.Now;
-
-            return _context.Salaries
-                .Where(x => x.EmployeeID == employeeId)
-                .Where(x => x.EffectiveFrom <= date)
-                .OrderByDescending(x => x.EffectiveFrom);
+            var query = _context.Salaries.Where(x => x.EmployeeID == employeeId);
+            return SalaryQueryHelper.GetLatestSalaryQuery(query, cutOffEnd);
         }
 
         #endregion Others
