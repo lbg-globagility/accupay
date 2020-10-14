@@ -1,0 +1,10 @@
+
+ALTER TABLE `employeesalary`
+	ADD COLUMN IF NOT EXISTS `FilingStatusID` INT(10) NULL DEFAULT NULL AFTER `OrganizationID`;
+
+# relation to filingstatus table were removed
+# accpets null or any integer value
+ALTER TABLE `employeesalary`
+	DROP FOREIGN KEY IF EXISTS `FK_employeesalary_filingstatus`;
+ALTER TABLE `employeesalary`
+	DROP INDEX IF EXISTS `FK_employeesalary_filingstatus`;
