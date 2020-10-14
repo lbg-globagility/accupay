@@ -136,6 +136,9 @@ Public Class TimeEntrySummaryForm
         End If
 
         LoadYears()
+
+        AddHandler employeesDataGridView.SelectionChanged, AddressOf employeesDataGridView_SelectionChanged
+        AddHandler payPeriodsDataGridView.SelectionChanged, AddressOf payPeriodDataGridView_SelectionChanged
     End Sub
 
     Private Sub UpdateFormBaseOnPolicy()
@@ -302,6 +305,13 @@ Public Class TimeEntrySummaryForm
 
         If _selectedPayPeriod IsNot payPeriodsDataGridView.CurrentCell Then
             _selectedPayPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
+
+            If _selectedEmployee Is Nothing AndAlso employeesDataGridView.CurrentRow IsNot Nothing Then
+
+                _selectedEmployee = CType(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+
+            End If
+
             Await LoadTimeEntries()
         End If
 
@@ -1029,7 +1039,7 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
+    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
         If employeesDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -1043,7 +1053,7 @@ Public Class TimeEntrySummaryForm
         Await LoadTimeEntries()
     End Sub
 
-    Private Async Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
+    Private Async Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs)
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
         End If

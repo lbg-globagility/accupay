@@ -354,6 +354,7 @@ namespace AccuPay.Data.Repositories
         private IQueryable<PayPeriod> CreateBaseQuery(int organizationId)
         {
             return _context.PayPeriods
+                .AsNoTracking()
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(p => p.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId);
         }
