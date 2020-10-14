@@ -56,10 +56,11 @@ Public Class ExcelFormatReport
         End While
     End Function
 
-    Protected Shared Function GetPayrollSelector() As PayrollSummaDateSelection
+    Protected Shared Function GetPayrollSelector() As MultiplePayPeriodSelectionDialog
 
-        Dim payrollSelector = New PayrollSummaDateSelection With {
-            .ReportIndex = 6
+        Dim payrollSelector = New MultiplePayPeriodSelectionDialog With {
+            .SHowPayrollSummaryPanel = True,
+            .ShowDeclaredOrActualOptionsPanel = True
         }
 
         If payrollSelector.ShowDialog() <> DialogResult.OK Then

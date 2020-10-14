@@ -24,7 +24,7 @@ Partial Class StartNewPayPeriodDialog
     Private Sub InitializeComponent()
         Me.OkButton = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
-        Me.PayperiodsDataGridView = New System.Windows.Forms.DataGridView()
+        Me.PayperiodsGridView = New System.Windows.Forms.DataGridView()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -37,7 +37,7 @@ Partial Class StartNewPayPeriodDialog
         Me.btnIncrementYear = New System.Windows.Forms.Button()
         Me.btnDecrementYear = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        CType(Me.PayperiodsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PayperiodsGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
@@ -63,21 +63,21 @@ Partial Class StartNewPayPeriodDialog
         '
         'PayperiodsDataGridView
         '
-        Me.PayperiodsDataGridView.AllowUserToAddRows = False
-        Me.PayperiodsDataGridView.AllowUserToDeleteRows = False
-        Me.PayperiodsDataGridView.AllowUserToResizeColumns = False
-        Me.PayperiodsDataGridView.AllowUserToResizeRows = False
-        Me.PayperiodsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.PayperiodsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.PayperiodsDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column3, Me.Column1, Me.Column2})
-        Me.PayperiodsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.PayperiodsDataGridView.Location = New System.Drawing.Point(0, 0)
-        Me.PayperiodsDataGridView.MultiSelect = False
-        Me.PayperiodsDataGridView.Name = "PayperiodsDataGridView"
-        Me.PayperiodsDataGridView.ReadOnly = True
-        Me.PayperiodsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.PayperiodsDataGridView.Size = New System.Drawing.Size(440, 224)
-        Me.PayperiodsDataGridView.TabIndex = 4
+        Me.PayperiodsGridView.AllowUserToAddRows = False
+        Me.PayperiodsGridView.AllowUserToDeleteRows = False
+        Me.PayperiodsGridView.AllowUserToResizeColumns = False
+        Me.PayperiodsGridView.AllowUserToResizeRows = False
+        Me.PayperiodsGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.PayperiodsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.PayperiodsGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column3, Me.Column1, Me.Column2})
+        Me.PayperiodsGridView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.PayperiodsGridView.Location = New System.Drawing.Point(0, 0)
+        Me.PayperiodsGridView.MultiSelect = False
+        Me.PayperiodsGridView.Name = "PayperiodsDataGridView"
+        Me.PayperiodsGridView.ReadOnly = True
+        Me.PayperiodsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.PayperiodsGridView.Size = New System.Drawing.Size(440, 224)
+        Me.PayperiodsGridView.TabIndex = 4
         '
         'Column3
         '
@@ -123,7 +123,7 @@ Partial Class StartNewPayPeriodDialog
         '
         'Panel1
         '
-        Me.Panel1.Controls.Add(Me.PayperiodsDataGridView)
+        Me.Panel1.Controls.Add(Me.PayperiodsGridView)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(0, 32)
         Me.Panel1.Name = "Panel1"
@@ -197,7 +197,7 @@ Partial Class StartNewPayPeriodDialog
         Me.Name = "StartNewPayPeriodDialog"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Pay Period Picker"
-        CType(Me.PayperiodsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PayperiodsGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
@@ -206,7 +206,7 @@ Partial Class StartNewPayPeriodDialog
     End Sub
     Friend WithEvents OkButton As Button
     Friend WithEvents Button2 As Button
-    Friend WithEvents PayperiodsDataGridView As DataGridView
+    Friend WithEvents PayperiodsGridView As DataGridView
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn

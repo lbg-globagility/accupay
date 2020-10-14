@@ -40,8 +40,6 @@ Public Class TimeEntrySummaryForm
 
     Private _semiMonthlyPayPeriods As ICollection(Of PayPeriod)
 
-    Private _payPeriods As ICollection(Of PayPeriod)
-
     Private _employees As ICollection(Of Employee)
 
     Private _selectedEmployee As Employee
@@ -220,9 +218,10 @@ Public Class TimeEntrySummaryForm
 
         Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
 
-        Return calendarService.GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
-                                                    _policy.PayRateCalculationBasis,
-                                                    z_OrganizationID)
+        Return calendarService.GetCalendarCollection(
+            New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
+            _policy.PayRateCalculationBasis,
+            z_OrganizationID)
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -246,12 +245,12 @@ Public Class TimeEntrySummaryForm
 
         Dim numOfRows = 2
 
-        _payPeriods = Await GetPayPeriods(z_OrganizationID, _selectedYear, 1)
+        Dim payPeriods = Await GetPayPeriods(_selectedYear)
         payPeriodsDataGridView.Rows.Add(numOfRows)
 
         Dim monthRowCounters(11) As Integer
 
-        For Each payperiod In Me._payPeriods
+        For Each payperiod In payPeriods
             Dim monthNo = payperiod.Month
 
             Dim columnIndex = monthNo - 1
@@ -294,7 +293,7 @@ Public Class TimeEntrySummaryForm
 
             Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
-            _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
+            _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
 
             Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
@@ -321,51 +320,15 @@ Public Class TimeEntrySummaryForm
 
     End Function
 
-    Private Async Function GetPayPeriods(
-        organizationID As Integer,
-        year As Integer,
-        salaryType As Integer) As Task(Of ICollection(Of PayPeriod))
+    Private Async Function GetPayPeriods(year As Integer) As Task(Of ICollection(Of PayPeriod))
 
-        Dim sql = <![CDATA[
-            SELECT RowID, PayFromDate, PayToDate, Year, Month, OrdinalValue, Status
-            FROM payperiod
-            WHERE payperiod.OrganizationID = @OrganizationID
-                AND payperiod.Year = @Year
-                AND payperiod.TotalGrossSalary = @SalaryType;
-        ]]>.Value
-
-        Dim payPeriods = New Collection(Of PayPeriod)
-
-        Using connection As New MySqlConnection(connectionString),
-            command As New MySqlCommand(sql, connection)
-
-            With command.Parameters
-                .AddWithValue("@OrganizationID", CStr(z_OrganizationID))
-                .AddWithValue("@Year", CStr(year))
-                .AddWithValue("@SalaryType", CStr(salaryType))
-            End With
-
-            Await connection.OpenAsync()
-
-            Dim reader = Await command.ExecuteReaderAsync()
-            While Await reader.ReadAsync()
-
-                Dim payPeriod = New PayPeriod() With {
-                    .RowID = reader.GetValue(Of Integer?)("RowID"),
-                    .PayFromDate = reader.GetValue(Of Date)("PayFromDate"),
-                    .PayToDate = reader.GetValue(Of Date)("PayToDate"),
-                    .Year = reader.GetValue(Of Integer)("Year"),
-                    .Month = reader.GetValue(Of Integer)("Month"),
-                    .OrdinalValue = reader.GetValue(Of Integer)("OrdinalValue"),
-                    .Status = Enums(Of PayPeriodStatus).Parse(reader.GetValue(Of String)("Status"))
-                }
-
-                payPeriods.Add(payPeriod)
-
-            End While
-        End Using
-
-        Return payPeriods
+        Return (Await _payPeriodRepository.
+            GetYearlyPayPeriodsAsync(
+                organizationId:=z_OrganizationID,
+                year:=year,
+                currentUserId:=z_User)).
+            Select(Function(p) New PayPeriod(p)).
+            ToList()
     End Function
 
     Private Async Function LoadTimeEntries() As Task
@@ -437,37 +400,15 @@ Public Class TimeEntrySummaryForm
         timeEntriesDataGridView.ResumeLayout()
     End Sub
 
-    Private Async Sub LoadYears()
-        Dim years = Await GetYears()
+    Private Sub LoadYears()
+
+        Dim years = Enumerable.Range(2010, 26).ToList()
+
         cboYears.ComboBox.DataSource = years
         cboYears.ComboBox.SelectedItem = _selectedYear
 
         AddHandler cboYears.SelectedIndexChanged, AddressOf cboYears_SelectedIndexChanged
     End Sub
-
-    Private Async Function GetYears() As Task(Of ICollection(Of Integer))
-        Dim sql = <![CDATA[
-            SELECT payperiod.Year
-            FROM payperiod
-            WHERE payperiod.OrganizationID
-            GROUP BY payperiod.Year
-        ]]>.Value
-
-        Dim years = New Collection(Of Integer)
-
-        Using connection As New MySqlConnection(connectionString),
-            command As New MySqlCommand(sql, connection)
-
-            Await connection.OpenAsync()
-
-            Dim reader = Await command.ExecuteReaderAsync()
-            While Await reader.ReadAsync()
-                years.Add(reader.GetValue(Of Integer)("Year"))
-            End While
-        End Using
-
-        Return years
-    End Function
 
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
@@ -1204,6 +1145,18 @@ Public Class TimeEntrySummaryForm
         Public Property Month As Integer
         Public Property OrdinalValue As Integer
         Public Property Status As PayPeriodStatus
+
+        Sub New(payPeriodData As Entities.PayPeriod)
+
+            RowID = payPeriodData.RowID
+            PayFromDate = payPeriodData.PayFromDate
+            PayToDate = payPeriodData.PayToDate
+            Year = payPeriodData.Year
+            Month = payPeriodData.Month
+            OrdinalValue = payPeriodData.OrdinalValue
+            Status = payPeriodData.Status
+
+        End Sub
 
         Public Overrides Function ToString() As String
             Dim dateFrom = PayFromDate.ToString("MMM dd")

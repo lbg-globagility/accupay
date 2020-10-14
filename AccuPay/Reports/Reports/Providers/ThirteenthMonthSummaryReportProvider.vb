@@ -9,7 +9,7 @@ Public Class ThirteenthMonthSummaryReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim payperiodSelector As New PayrollSummaDateSelection()
+        Dim payperiodSelector As New MultiplePayPeriodSelectionDialog()
 
         If Not payperiodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

@@ -1,4 +1,9 @@
-﻿Imports CrystalDecisions.CrystalReports.Engine
+﻿Option Strict On
+
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Utilities.Extensions
+Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeIdentificationNumberReportProvider
     Implements IReportProvider
@@ -6,7 +11,13 @@ Public Class EmployeeIdentificationNumberReportProvider
     Public Property Name As String = "Employee's Identification Number" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Public Sub Run() Implements IReportProvider.Run
+    Private ReadOnly _organizationRepository As OrganizationRepository
+
+    Sub New()
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+    End Sub
+
+    Public Async Sub Run() Implements IReportProvider.Run
 
         Dim params =
             New Object() {orgztnID}
@@ -24,14 +35,16 @@ Public Class EmployeeIdentificationNumberReportProvider
                 Dim dt As New DataTable
                 dt = sql.GetFoundRows.Tables(0)
 
+                Dim organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
                 Dim report = New Employees_Identification_Number
 
                 Dim objText As TextObject = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtOrgName"), TextObject)
-                objText.Text = orgNam.ToUpper
+                objText.Text = organization?.Name.ToTrimmedUpperCase()
 
                 objText = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtAddress"), TextObject)
 
-                objText.Text = PayrollTools.GetOrganizationAddress()
+                objText.Text = organization?.Address?.FullAddress
 
                 report.SetDataSource(dt)
 

@@ -72,7 +72,7 @@ namespace AccuPay.Data.Entities
         public bool IsFirstPayPeriodOfTheYear => IsFirstHalf && Month == IsJanuary;
         public bool IsLastPayPeriodOfTheYear => IsEndOfTheMonth && Month == IsDecember;
 
-        public static PayPeriod NewPayPeriod(int organizationId, int month, int year, bool isFirstHalf, PolicyHelper policy)
+        public static PayPeriod NewPayPeriod(int organizationId, int month, int year, bool isFirstHalf, PolicyHelper policy, int createdByUserId)
         {
             var ordinalValue = month * 2;
 
@@ -102,9 +102,9 @@ namespace AccuPay.Data.Entities
                 Half = isFirstHalf ? FirstHalfValue : EndOftheMonthValue,
                 Status = PayPeriodStatus.Pending,
                 OrdinalValue = ordinalValue,
-
                 PayFromDate = payFromDate,
-                PayToDate = payToDate
+                PayToDate = payToDate,
+                CreatedBy = createdByUserId
             };
         }
     }

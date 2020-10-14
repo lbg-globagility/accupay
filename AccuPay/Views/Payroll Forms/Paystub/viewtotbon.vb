@@ -12,7 +12,7 @@
             categBonusID = INSUPD_category(, "Bonus")
         End If
 
-        enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categBonusID & "' AND OrganizationID=" & orgztnID & ";", _
+        enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categBonusID & "' AND OrganizationID=" & orgztnID & ";",
                        bonus_type) 'cboallowtype
 
         'For Each strval In bonus_type
@@ -21,9 +21,9 @@
 
     End Sub
 
-    Sub VIEW_employeebonus_indate(Optional ebon_EmployeeID As Object = Nothing, _
-                               Optional datefrom As Object = Nothing, _
-                               Optional dateto As Object = Nothing)
+    Sub VIEW_employeebonus_indate(Optional ebon_EmployeeID As Object = Nothing,
+                               Optional datefrom As Date? = Nothing,
+                               Optional dateto As Date? = Nothing)
 
         Dim params(3, 2) As Object
 
@@ -37,8 +37,8 @@
         params(2, 1) = datefrom
         params(3, 1) = dateto
 
-        EXEC_VIEW_PROCEDURE(params, _
-                             "VIEW_employeebonus_indate", _
+        EXEC_VIEW_PROCEDURE(params,
+                             "VIEW_employeebonus_indate",
                              dgvempbon)
 
     End Sub
@@ -52,4 +52,5 @@
             Me.Close()
         End If
     End Sub
+
 End Class

@@ -25,8 +25,8 @@ Public Class Form1
         _encryptor = encryptor
     End Sub
 
-    Private Sub PrintPayslipButton_Click(sender As Object, e As EventArgs) Handles PrintPayslipButton.Click
-        Dim reportDocument As CrystalDecisions.CrystalReports.Engine.ReportClass = GetPayslipReport()
+    Private Async Sub PrintPayslipButton_Click(sender As Object, e As EventArgs) Handles PrintPayslipButton.Click
+        Dim reportDocument As CrystalDecisions.CrystalReports.Engine.ReportClass = Await GetPayslipReport()
 
         Dim crvwr As New CrystalReportsFormViewer
         crvwr.CrystalReportViewer1.ReportSource = reportDocument
@@ -34,8 +34,8 @@ Public Class Form1
 
     End Sub
 
-    Private Sub PDFPayslipButton_Click(sender As Object, e As EventArgs) Handles PDFPayslipButton.Click
-        Dim reportDocument As CrystalDecisions.CrystalReports.Engine.ReportClass = GetPayslipReport()
+    Private Async Sub PDFPayslipButton_Click(sender As Object, e As EventArgs) Handles PDFPayslipButton.Click
+        Dim reportDocument As CrystalDecisions.CrystalReports.Engine.ReportClass = Await GetPayslipReport()
 
         Dim pdfName = "Payslip1.pdf"
         Dim password = "admin"
@@ -75,7 +75,7 @@ Public Class Form1
         document.Save(filepath)
     End Sub
 
-    Private Function GetPayslipReport() As CrystalDecisions.CrystalReports.Engine.ReportClass
+    Private Async Function GetPayslipReport() As Task(Of CrystalDecisions.CrystalReports.Engine.ReportClass)
         Dim currentPayPeriod As New PayPeriod With {
             .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
@@ -84,17 +84,16 @@ Public Class Form1
 
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
-        Dim reportDocument = _payslipBuilder.
-                CreateReportDocument(currentPayPeriod.RowID.Value,
-                                     isActual:=False,
-                                     employeeIds:=employeeIds).
-                GetReportDocument()
+        Dim builder = Await _payslipBuilder.CreateReportDocumentAsync(
+            currentPayPeriod.RowID.Value,
+            isActual:=False,
+            employeeIds:=employeeIds)
 
-        Return reportDocument
+        Return builder.GetReportDocument()
     End Function
 
-    Private Sub ViewPayslipFromLibraryButton_Click(sender As Object, e As EventArgs) Handles ViewPayslipFromLibraryButton.Click
-        Dim pdfFile = GetPDF()
+    Private Async Sub ViewPayslipFromLibraryButton_Click(sender As Object, e As EventArgs) Handles ViewPayslipFromLibraryButton.Click
+        Dim pdfFile = Await GetPDF()
 
         MessageBox.Show("Finished")
     End Sub
@@ -119,8 +118,8 @@ Public Class Form1
 
     End Sub
 
-    Private Sub EmailPayslipButton_Click(sender As Object, e As EventArgs) Handles EmailPayslipButton.Click
-        Dim pdfFile = GetPDF()
+    Private Async Sub EmailPayslipButton_Click(sender As Object, e As EventArgs) Handles EmailPayslipButton.Click
+        Dim pdfFile = Await GetPDF()
 
         Dim emailSender As New EmailSender(New EmailConfig())
 
@@ -140,7 +139,7 @@ Public Class Form1
 
     End Sub
 
-    Private Function GetPDF() As String
+    Private Async Function GetPDF() As Task(Of String)
         Dim currentPayPeriod As New PayPeriod With {
             .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
@@ -153,19 +152,20 @@ Public Class Form1
         Dim fileName = FileNameTextBox.Text
         Dim password = PasswordTextBox.Text
 
-        Dim builder = CType(_payslipBuilder.
-                CreateReportDocument(
-                    currentPayPeriod.RowID.Value,
-                    isActual:=False,
-                    employeeIds:=employeeIds).
-                GeneratePDF(saveFolderPath, fileName), PayslipBuilder)
+        Dim builder = Await _payslipBuilder.
+            CreateReportDocumentAsync(
+                currentPayPeriod.RowID.Value,
+                isActual:=False,
+                employeeIds:=employeeIds)
+
+        builder.GeneratePDF(saveFolderPath, fileName)
 
         Return builder.
                 AddPdfPassword(password).
                 GetPDF()
     End Function
 
-    Private Sub OfficialPayslipButton_Click(sender As Object, e As EventArgs) Handles OfficialPayslipButton.Click
+    Private Async Sub OfficialPayslipButton_Click(sender As Object, e As EventArgs) Handles OfficialPayslipButton.Click
         Dim currentPayPeriod As New PayPeriod With {
             .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
@@ -180,9 +180,10 @@ Public Class Form1
 
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
-        _payslipBuilder.CreateReportDocument(currentPayPeriod.RowID.Value,
-                                            isActual:=False,
-                                            employeeIds:=employeeIds)
+        Await _payslipBuilder.CreateReportDocumentAsync(
+            currentPayPeriod.RowID.Value,
+            isActual:=False,
+            employeeIds:=employeeIds)
 
         Dim employee = _payslipBuilder.GetFirstEmployee()
 

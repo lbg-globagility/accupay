@@ -76,8 +76,9 @@ Public Class ReportsList
 
         If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
-            lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem("(Declared)"))
-            lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem(ActualDescription))
+            'Payroll Summary
+            Dim reportProvider As New PayrollSummaryExcelFormatReportProvider()
+            lvMainMenu.Items.Add(CreateNewListViewItem(reportProvider, reportProvider.Name))
 
             'Payslip
             Dim payslipProvider As New DefaultPayslipFullOvertimeBreakdownProvider()
@@ -148,20 +149,7 @@ Public Class ReportsList
             Dim provider = DirectCast(listviewitem.Tag, IReportProvider)
 
             Try
-                If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso
-                    TypeOf provider Is PayrollSummaryExcelFormatReportProvider Then
-
-                    Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)
-
-                    Dim isActual = listviewitem.Text.EndsWith(ActualDescription)
-
-                    payrollSummary.IsActual = isActual
-
-                    payrollSummary.Run()
-                Else
-
-                    provider.Run()
-                End If
+                provider.Run()
             Catch ex As NotImplementedException
                 MsgBox($"Report Is Not Yet Done: {ex.Message}", MsgBoxStyle.OkOnly)
             End Try

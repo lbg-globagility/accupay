@@ -298,17 +298,8 @@ Public Class PaystubView
         Await exporter.Extract()
     End Sub
 
-    Private Sub DeclaredToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click
-        Dim report = New PayrollSummaryExcelFormatReportProvider() With {
-            .IsActual = False
-        }
-        report.Run()
-    End Sub
-
-    Private Sub ActualToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ActualToolStripMenuItem.Click
-        Dim report = New PayrollSummaryExcelFormatReportProvider() With {
-            .IsActual = True
-        }
+    Private Sub PayrollSummaryToolStripButton_Click(sender As Object, e As EventArgs) Handles PayrollSummaryToolStripButton.Click
+        Dim report = New PayrollSummaryExcelFormatReportProvider()
         report.Run()
     End Sub
 

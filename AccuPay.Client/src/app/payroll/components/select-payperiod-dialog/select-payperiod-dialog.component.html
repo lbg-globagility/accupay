@@ -76,7 +76,7 @@
   <button
     mat-raised-button
     color="primary"
-    [disabled]="selection?.selected[0]?.id == null"
+    [disabled]="!selection?.selected.length"
     cdkFocusInitial
     (click)="startPayroll()"
   >

@@ -3,7 +3,6 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using CrystalDecisions.CrystalReports.Engine;
-using CrystalDecisions.Shared;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using PdfSharp.Pdf.Security;
@@ -11,6 +10,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.CrystalReports
 {
@@ -23,8 +23,6 @@ namespace AccuPay.CrystalReports
         private const string CinemaEmployeeIdColumn = "EmployeeRowID";
 
         private const string DefaultEmployeeIdColumn = "RowID";
-
-        private readonly AddressRepository _addressRepository;
 
         private readonly OrganizationRepository _organizationRepository;
 
@@ -39,14 +37,11 @@ namespace AccuPay.CrystalReports
         private readonly string _currentSystemOwner;
 
         public PayslipBuilder(
-            AddressRepository addressRepository,
             OrganizationRepository organizationRepository,
             PayPeriodRepository payPeriodRepository,
             PayslipDataService dataService,
             SystemOwnerService systemOwnerService)
         {
-            _addressRepository = addressRepository;
-
             _organizationRepository = organizationRepository;
 
             _payPeriodRepository = payPeriodRepository;
@@ -81,7 +76,7 @@ namespace AccuPay.CrystalReports
             return _payslipDatatable.Rows.Count > 0 ? _payslipDatatable.Rows[0] : null;
         }
 
-        public PayslipBuilder CreateReportDocument(int payPeriodId, bool isActual = false, int[] employeeIds = null)
+        public async Task<PayslipBuilder> CreateReportDocumentAsync(int payPeriodId, bool isActual = false, int[] employeeIds = null)
         {
             // Use dapper or entity framework for procedure calls
             var payPeriod = _payPeriodRepository.GetById(payPeriodId);
@@ -89,7 +84,7 @@ namespace AccuPay.CrystalReports
             if (payPeriod == null || payPeriod.OrganizationID == null)
                 throw new Exception("Pay Period or OrganizationID cannot be null");
 
-            var organization = _organizationRepository.GetById(payPeriod.OrganizationID.Value);
+            var organization = await _organizationRepository.GetByIdWithAddressAsync(payPeriod.OrganizationID.Value);
 
             if (_currentSystemOwner == SystemOwnerService.Goldwings)
             {
@@ -145,8 +140,6 @@ namespace AccuPay.CrystalReports
 
         private ReportClass CreateCinemaReport(Organization organization, int payPeriodId)
         {
-            Address address = organization?.PrimaryAddressId == null ? null : _addressRepository.GetById(organization.PrimaryAddressId.Value);
-
             var rptdoc = new TwoEmpIn1PaySlip();
 
             var nextPayPeriod = _payPeriodRepository.GetNextPayPeriod(payPeriodId);
@@ -164,7 +157,7 @@ namespace AccuPay.CrystalReports
             txtOrgName.Text = organization.Name.ToUpper();
 
             var txtOrgAddress = (TextObject)rptdoc.ReportDefinition.Sections[2].ReportObjects["OrgAddress"];
-            txtOrgAddress.Text = address?.FullAddress ?? "";
+            txtOrgAddress.Text = organization?.Address?.FullAddress ?? "";
 
             return rptdoc;
         }

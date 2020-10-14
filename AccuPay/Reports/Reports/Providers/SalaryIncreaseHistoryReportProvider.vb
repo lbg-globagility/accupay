@@ -7,7 +7,7 @@ Public Class SalaryIncreaseHistoryReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim payPeriodSelector As New PayrollSummaDateSelection()
+        Dim payPeriodSelector As New MultiplePayPeriodSelectionDialog()
 
         If Not payPeriodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

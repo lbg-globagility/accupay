@@ -1,6 +1,7 @@
 ﻿using AccuPay.CrystalReports;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AccuPay.CrystalReportsWeb.Services
 {
@@ -35,13 +36,12 @@ namespace AccuPay.CrystalReportsWeb.Services
             _thirteenthMonthSummaryReportBuilder = thirteenthMonthSummaryReportBuilder;
         }
 
-        public string GeneratePayslip(int payPeriodId)
+        public async Task<string> GeneratePayslip(int payPeriodId)
         {
             string pdfFullPath = Path.GetTempFileName();
 
-            _payslipCreator
-                .CreateReportDocument(payPeriodId: payPeriodId)
-                .GeneratePDF(pdfFullPath);
+            var builder = await _payslipCreator.CreateReportDocumentAsync(payPeriodId: payPeriodId);
+            builder.GeneratePDF(pdfFullPath);
 
             return pdfFullPath;
         }

@@ -43,7 +43,6 @@ namespace AccuPay.CrystalReportsWeb
                         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
-            services.AddScoped<AddressRepository>();
             services.AddScoped<OrganizationRepository>();
             services.AddScoped<ListOfValueService>();
             services.AddScoped<PolicyHelper>();

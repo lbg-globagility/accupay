@@ -17,7 +17,7 @@ Public Class StartNewPayPeriodDialog
 
     Private _payperiodModels As IList(Of PayperiodModel)
 
-    Private _payperiods As IList(Of PayPeriod)
+    Private _payPeriods As IList(Of PayPeriod)
 
     Public Year As Integer = Date.Today.Year
 
@@ -60,7 +60,7 @@ Public Class StartNewPayPeriodDialog
     End Property
 
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        PayperiodsDataGridView.AutoGenerateColumns = False
+        PayperiodsGridView.AutoGenerateColumns = False
 
         Await LoadPayPeriods()
 
@@ -92,15 +92,15 @@ Public Class StartNewPayPeriodDialog
 
         Dim currentPayPeriodIndex = _payperiodModels.IndexOf(currentPayPeriodModel)
 
-        If currentPayPeriodIndex > PayperiodsDataGridView.Rows.Count - 1 Then Return
+        If currentPayPeriodIndex > PayperiodsGridView.Rows.Count - 1 Then Return
 
-        PayperiodsDataGridView.ClearSelection()
+        PayperiodsGridView.ClearSelection()
 
-        PayperiodsDataGridView.Rows(currentPayPeriodIndex).Selected = True
+        PayperiodsGridView.Rows(currentPayPeriodIndex).Selected = True
 
-        PayperiodsDataGridView.Rows(currentPayPeriodIndex).Cells(0).Selected = True
+        PayperiodsGridView.Rows(currentPayPeriodIndex).Cells(0).Selected = True
 
-        PayperiodsDataGridView.CurrentCell = PayperiodsDataGridView.Rows(currentPayPeriodIndex).Cells(0)
+        PayperiodsGridView.CurrentCell = PayperiodsGridView.Rows(currentPayPeriodIndex).Cells(0)
 
         UpdateCurrentPayPeriod(currentPayPeriodModel)
 
@@ -108,27 +108,28 @@ Public Class StartNewPayPeriodDialog
 
     Private Async Function LoadPayPeriods() As Task
 
-        _payperiods = (Await _payPeriodRepository.
+        _payPeriods = (Await _payPeriodRepository.
             GetYearlyPayPeriodsAsync(
                 organizationId:=z_OrganizationID,
-                year:=Me.Year)).
+                year:=Me.Year,
+                currentUserId:=z_User)).
             ToList()
 
-        _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
+        _payperiodModels = _payPeriods.Select(Function(p) New PayperiodModel(p)).ToList()
 
-        PayperiodsDataGridView.DataSource = _payperiodModels
+        PayperiodsGridView.DataSource = _payperiodModels
 
         Dim index = 0
         For Each payperiod In _payperiodModels
 
             If payperiod.IsClosed Then
-                PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Black
+                PayperiodsGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Black
 
             ElseIf payperiod.IsOpen Then
-                PayperiodsDataGridView.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
-                PayperiodsDataGridView.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
+                PayperiodsGridView.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
+                PayperiodsGridView.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
             Else
-                PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
+                PayperiodsGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
 
             End If
 
@@ -138,8 +139,8 @@ Public Class StartNewPayPeriodDialog
 
     End Function
 
-    Private Sub PayperiodsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles PayperiodsDataGridView.SelectionChanged
-        Dim payperiod = DirectCast(PayperiodsDataGridView.CurrentRow.DataBoundItem, PayperiodModel)
+    Private Sub PayperiodsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles PayperiodsGridView.SelectionChanged
+        Dim payperiod = DirectCast(PayperiodsGridView.CurrentRow.DataBoundItem, PayperiodModel)
 
         UpdateCurrentPayPeriod(payperiod)
     End Sub
@@ -166,13 +167,13 @@ Public Class StartNewPayPeriodDialog
                     month:=_currentPayperiod.Month,
                     year:=_currentPayperiod.Year,
                     isFirstHalf:=_currentPayperiod.IsFirstHalf,
-                    userId:=z_User)
+                    createdByUserId:=z_User)
 
                 Await RecordStartPayrollUserAcitivity()
 
                 Await TimeEntrySummaryForm.LoadPayPeriods()
 
-                Await PayStubForm.VIEW_payperiodofyear(PayStubForm.CurrentYear)
+                Await PayStubForm.VIEW_payperiodofyear()
 
                 DialogResult = DialogResult.OK
             End Function)

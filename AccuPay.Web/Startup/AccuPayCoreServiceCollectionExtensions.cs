@@ -21,7 +21,6 @@ namespace AccuPay.Web
         public static IServiceCollection AddAccuPayCoreServices(this IServiceCollection services)
         {
             services.AddScoped<ActualTimeEntryRepository>();
-            services.AddScoped<AddressRepository>();
             services.AddScoped<AgencyFeeRepository>();
             services.AddScoped<AgencyRepository>();
             services.AddScoped<AllowanceRepository>();

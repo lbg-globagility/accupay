@@ -269,7 +269,7 @@ Public Class SelectPayslipEmployeesForm
         Me.Close()
     End Sub
 
-    Private Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles _
+    Private Async Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles _
         PreviewToolStripButton.Click,
         PreviewDeclaredToolStripMenuItem.Click,
         PreviewActualToolStripMenuItem.Click
@@ -278,14 +278,14 @@ Public Class SelectPayslipEmployeesForm
 
         DisableAllButtons()
 
-        FunctionUtils.TryCatchFunction("Print Payslip",
-            Sub()
+        Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
+            Async Function()
                 Dim employeeIds = _employeeModels.
                     Where(Function(m) m.IsSelected).
                     Select(Function(m) m.EmployeeId).
                     ToArray()
 
-                Dim reportDocument = _payslipCreator.CreateReportDocument(
+                Dim reportDocument = Await _payslipCreator.CreateReportDocumentAsync(
                     payPeriodId:=_currentPayPeriod.RowID.Value,
                     isActual:=isActual,
                     employeeIds:=employeeIds)
@@ -295,7 +295,7 @@ Public Class SelectPayslipEmployeesForm
                 crvwr.Show()
 
                 DisableAllButtons(disable:=False)
-            End Sub)
+            End Function)
 
         DisableAllButtons(disable:=False)
 

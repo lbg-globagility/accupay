@@ -86,7 +86,7 @@ namespace AccuPay.Web.Payroll
                 month: dto.Month,
                 year: dto.Year,
                 isFirstHalf: dto.IsFirstHalf,
-                userId: _currentUser.UserId);
+                createdByUserId: _currentUser.UserId);
 
             return ConvertToDto(newPayPeriod);
         }
@@ -137,7 +137,10 @@ namespace AccuPay.Web.Payroll
 
         public async Task<List<PayPeriodDto>> GetYearlyPayPeriods(int year)
         {
-            var payPeriods = await _repository.GetYearlyPayPeriodsAsync(_currentUser.OrganizationId, year);
+            var payPeriods = await _repository.GetYearlyPayPeriodsAsync(
+                organizationId: _currentUser.OrganizationId,
+                year: year,
+                currentUserId: _currentUser.UserId);
 
             var payPeriodDtos = payPeriods.Select(x => ConvertToDto(x)).ToList();
 

@@ -207,7 +207,7 @@ Public Class MetroLogin
 
         End If
 
-        Dim organization = _organizationRepository.GetById(z_OrganizationID)
+        Dim organization = Await _organizationRepository.GetByIdAsync(z_OrganizationID)
 
         If organization Is Nothing Then
 

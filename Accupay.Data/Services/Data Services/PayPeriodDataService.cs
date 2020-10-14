@@ -63,7 +63,21 @@ namespace AccuPay.Data.Services
             return FunctionResult.Success();
         }
 
-        public async Task<PayPeriod> StartStatusAsync(int organizationId, int month, int year, bool isFirstHalf, int userId)
+        public async Task<PayPeriod> CreatesAsync(int organizationId, int month, int year, bool isFirstHalf, int createdByUserId)
+        {
+            var payPeriod = PayPeriod.NewPayPeriod(
+                organizationId: organizationId,
+                month: month,
+                year: year,
+                isFirstHalf: isFirstHalf,
+                policy: _policy,
+                createdByUserId: createdByUserId);
+            await _payPeriodRepository.CreateAsync(payPeriod);
+
+            return payPeriod;
+        }
+
+        public async Task<PayPeriod> StartStatusAsync(int organizationId, int month, int year, bool isFirstHalf, int createdByUserId)
         {
             var payPeriod = await _payPeriodRepository.GetAsync(
                 organizationId,
@@ -73,11 +87,15 @@ namespace AccuPay.Data.Services
 
             if (payPeriod == null)
             {
-                payPeriod = PayPeriod.NewPayPeriod(organizationId, month, year, isFirstHalf, _policy);
-                await _payPeriodRepository.CreateAsync(payPeriod);
+                payPeriod = await CreatesAsync(
+                    organizationId: organizationId,
+                    month: month,
+                    year: year,
+                    isFirstHalf: isFirstHalf,
+                    createdByUserId: createdByUserId);
             }
 
-            await UpdateStatusAsync(payPeriod, userId, PayPeriodStatus.Open);
+            await UpdateStatusAsync(payPeriod, createdByUserId, PayPeriodStatus.Open);
 
             return payPeriod;
         }

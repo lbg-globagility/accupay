@@ -1,8 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Utilities.Extensions
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -12,8 +14,14 @@ Public Class FiledLeaveReportProvider
     Public Property Name As String = "Filed Leave" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    Private ReadOnly _organizationRepository As OrganizationRepository
+
+    Sub New()
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+    End Sub
+
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim dateSelector As New PayrollSummaDateSelection()
+        Dim dateSelector As New MultiplePayPeriodSelectionDialog()
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return
@@ -26,6 +34,8 @@ Public Class FiledLeaveReportProvider
 
         Dim data = Await CreateFiledLeaveDataTable(datePeriod)
 
+        Dim organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
         Dim report = New FiledLeaveReport()
         report.SetDataSource(data)
 
@@ -35,10 +45,10 @@ Public Class FiledLeaveReportProvider
         title.Text = $"From {dateFromTitle} to {dateToTitle}"
 
         Dim txtCompanyName = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("txtCompanyName"), TextObject)
-        txtCompanyName.Text = orgNam.ToUpper
+        txtCompanyName.Text = organization?.Name.ToTrimmedUpperCase()
 
         Dim txtAddress = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("txtAddress"), TextObject)
-        txtAddress.Text = PayrollTools.GetOrganizationAddress()
+        txtAddress.Text = organization?.Address?.FullAddress
 
         Dim viewer As New CrysRepForm()
         viewer.crysrepvwr.ReportSource = report

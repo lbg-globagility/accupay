@@ -1,4 +1,6 @@
-﻿Imports System.Collections.ObjectModel
+﻿Option Strict On
+
+Imports System.Collections.ObjectModel
 Imports System.IO
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
@@ -96,20 +98,18 @@ Public Class PayrollLedgerExcelFormatReportProvider
     Private Function ParameterAssignment() As Boolean
         Dim boolResult As Boolean = True
 
-        Dim periodSelector As New PayrollSummaDateSelection()
-
-        periodSelector.Panel3.Visible = False
-        periodSelector.panelSalarySwitch.Visible = True
-        periodSelector.Label5.Visible = False
+        Dim periodSelector As New MultiplePayPeriodSelectionDialog() With {
+            .ShowDeclaredOrActualOptionsPanel = True
+        }
 
         If periodSelector.ShowDialog = DialogResult.OK Then
-            fromPeriodId = periodSelector.PayPeriodFromID
-            toPeriodId = periodSelector.PayPeriodToID
+            fromPeriodId = periodSelector.PayPeriodFromID.Value
+            toPeriodId = periodSelector.PayPeriodToID.Value
 
             actualSwitch = periodSelector.IsActual
 
-            dateFrom = periodSelector.DateFrom
-            dateTo = periodSelector.DateTo
+            dateFrom = periodSelector.DateFrom.Value
+            dateTo = periodSelector.DateTo.Value
         Else
             boolResult = False
         End If

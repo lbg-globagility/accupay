@@ -38,6 +38,28 @@ namespace AccuPay.Utilities.Extensions
             // Ex: .Where(x => x.Trim()?.ToLower() == str.ToTrimmedLowerCase()) is valid
             // Best practice is to use this on the variables since lambda does not allow a
             // null propagating operator.
+            // Using Trim() and ToLower() to null variable will crash the system
+            return text?.Trim()?.ToLower();
+        }
+
+        /// <summary>
+        /// Safely trims and convert the string to upper case even if it is null.
+        /// Inside EF Core queries, best practice is to use this on the variable
+        /// and not on the database column.
+        /// </summary>
+        /// <param name="text">The string to trim and convert to upper case.</param>
+        /// <returns></returns>
+
+        public static string ToTrimmedUpperCase(this string text)
+        {
+            // Calling this from EF core would not result to this
+            // being translated into sql queries. Instead the database will
+            // query all data then filter this in memory.
+
+            // ALTHOUGH this will work to variables but not to database columns.
+            // Ex: .Where(x => x.Trim()?.ToUpper() == str.ToTrimmedUpperCase()) is valid
+            // Best practice is to use this on the variables since lambda does not allow a
+            // null propagating operator.
             // Using Trim() and ToUpper() to null variable will crash the system
             return text?.Trim()?.ToLower();
         }

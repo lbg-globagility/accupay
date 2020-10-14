@@ -988,7 +988,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Payroll Forms\Loans\LoanRowRecord.vb" />
-    <Compile Include="Domain\Commons\PayrollTools.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1380,10 +1379,10 @@
     <Compile Include="Views\Core Forms\Payrate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\PayrollSummaDateSelection.Designer.vb">
-      <DependentUpon>PayrollSummaDateSelection.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.Designer.vb">
+      <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\PayrollSummaDateSelection.vb">
+    <Compile Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\PayStub\PayStubForm.Designer.vb">
@@ -2384,8 +2383,8 @@
     <EmbeddedResource Include="Views\Core Forms\Payrate.resx">
       <DependentUpon>Payrate.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\PayrollSummaDateSelection.resx">
-      <DependentUpon>PayrollSummaDateSelection.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.resx">
+      <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\PayStubForm.resx">
       <DependentUpon>PayStubForm.vb</DependentUpon>

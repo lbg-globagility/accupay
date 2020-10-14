@@ -42,7 +42,6 @@ namespace AccupayWindowsService
             services.AddScoped<PolicyHelper>();
             services.AddScoped<ListOfValueService>();
 
-            services.AddScoped<AddressRepository>();
             services.AddScoped<OrganizationRepository>();
             services.AddScoped<PaystubEmailRepository>();
             services.AddScoped<PayPeriodRepository>();
