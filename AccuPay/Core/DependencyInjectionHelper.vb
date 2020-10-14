@@ -46,7 +46,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of OvertimeRateService)
 
         services.AddTransient(Of ActualTimeEntryRepository)
-        services.AddTransient(Of AddressRepository)
         services.AddTransient(Of AgencyFeeRepository)
         services.AddTransient(Of AgencyRepository)
         services.AddTransient(Of AllowanceRepository)

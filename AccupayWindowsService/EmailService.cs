@@ -119,7 +119,7 @@ namespace AccupayWindowsService
                 DateTime payDate = GetPayDate(currentPayPeriod);
                 var employeeIds = new int[] { employeeId.Value };
 
-                var builder = payslipBuilder.CreateReportDocument(
+                var builder = await payslipBuilder.CreateReportDocumentAsync(
                     payPeriodId: currentPayPeriod.RowID.Value,
                     isActual: paystubEmail.IsActual,
                     employeeIds: employeeIds);

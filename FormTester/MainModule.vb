@@ -41,7 +41,6 @@ Module MainModule
                 options.EnableSensitiveDataLogging()
             End Sub)
 
-        services.AddScoped(Of AddressRepository)
         services.AddScoped(Of OrganizationRepository)
         services.AddScoped(Of PayPeriodRepository)
         services.AddScoped(Of PayslipDataService)

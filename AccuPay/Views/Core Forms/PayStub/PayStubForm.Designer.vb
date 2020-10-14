@@ -3094,14 +3094,14 @@ Partial Class PayStubForm
         'PayslipDeclaredToolStripMenuItem
         '
         Me.PayslipDeclaredToolStripMenuItem.Name = "PayslipDeclaredToolStripMenuItem"
-        Me.PayslipDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayslipDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PayslipDeclaredToolStripMenuItem.Tag = "0"
         Me.PayslipDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayslipActualToolStripMenuItem
         '
         Me.PayslipActualToolStripMenuItem.Name = "PayslipActualToolStripMenuItem"
-        Me.PayslipActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayslipActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PayslipActualToolStripMenuItem.Tag = "1"
         Me.PayslipActualToolStripMenuItem.Text = "Actual"
         '

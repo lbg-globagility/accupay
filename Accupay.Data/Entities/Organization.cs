@@ -38,6 +38,9 @@ namespace AccuPay.Data.Entities
 
         public Byte[] Image { get; set; }
 
+        [ForeignKey("PrimaryAddressId")]
+        public Address Address { get; set; }
+
         public static Organization NewOrganization(int userId, int clientId)
         {
             return new Organization()

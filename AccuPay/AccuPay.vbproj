@@ -988,7 +988,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Payroll Forms\Loans\LoanRowRecord.vb" />
-    <Compile Include="Domain\Commons\PayrollTools.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

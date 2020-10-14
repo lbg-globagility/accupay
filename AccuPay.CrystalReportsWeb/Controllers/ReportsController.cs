@@ -1,6 +1,7 @@
 ﻿using AccuPay.CrystalReportsWeb.Services;
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace AccuPay.CrystalReportsWeb.Controllers
@@ -27,9 +28,9 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         /// <param name="payPeriodId">The pay period ID which determines the organization and cutoff dates of the report.</param>
         /// <returns></returns>
         [Route("payslip/{payPeriodId}")]
-        public HttpResponseMessage GetPayslip(int payPeriodId)
+        public async Task<HttpResponseMessage> GetPayslip(int payPeriodId)
         {
-            string pdfFullPath = _reportingService.GeneratePayslip(payPeriodId);
+            string pdfFullPath = await _reportingService.GeneratePayslip(payPeriodId);
 
             return PdfReportResult(pdfFullPath);
         }

@@ -216,6 +216,8 @@ Public Class PayStubForm
             RemoveHandler ExportNetPayCashToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
             RemoveHandler ExportNetPayDirectDepositToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
 
+            RemoveHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintAllPaySlip_Click
+
         End If
 
     End Sub
@@ -2069,25 +2071,17 @@ Public Class PayStubForm
         CancelPayrollToolStripMenuItem.Enabled = True
     End Sub
 
-    Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs)
-
-        If _policy.ShowActual = False Then
-
-            PrintPayslip(isActual:=False)
-
-        End If
-    End Sub
-
-    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles _
+    Private Async Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles _
         PayslipDeclaredToolStripMenuItem.Click,
-        PayslipActualToolStripMenuItem.Click
+        PayslipActualToolStripMenuItem.Click,
+        PrintPaySlipToolStripMenuItem.Click
 
         Dim isActual = sender Is PayslipActualToolStripMenuItem
 
-        PrintPayslip(isActual)
+        Await PrintPayslip(isActual)
     End Sub
 
-    Private Sub PrintPayslip(isActual As Boolean)
+    Private Async Function PrintPayslip(isActual As Boolean) As Task
 
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
 
@@ -2097,11 +2091,11 @@ Public Class PayStubForm
             Return
         End If
 
-        FunctionUtils.TryCatchFunction("Print Payslip",
-            Sub()
+        Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
+            Async Function()
                 Dim payslipBuilder = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
-                Dim reportDocument = payslipBuilder.CreateReportDocument(
+                Dim reportDocument = Await payslipBuilder.CreateReportDocumentAsync(
                     payPeriodId:=payPeriodId.Value,
                     isActual:=isActual)
 
@@ -2109,9 +2103,9 @@ Public Class PayStubForm
                 crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
                 crvwr.Show()
 
-            End Sub,
+            End Function,
             "Error generating payslips.")
-    End Sub
+    End Function
 
     Private Sub ManageEmailPayslipsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles ManagePrintPayslipsToolStripMenuItem.Click,
