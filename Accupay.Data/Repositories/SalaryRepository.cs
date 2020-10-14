@@ -138,22 +138,18 @@ namespace AccuPay.Data.Repositories
             if (cutoffEnd != null)
             {
                 return _context.Salaries
-                    .Where(sal => SatisfiedDate(sal.EffectiveFrom, cutoffStart, cutoffEnd))
+                    .Where(sal => sal.EffectiveFrom <= cutoffEnd)
                     .OrderByDescending(x => x.EffectiveFrom)
                     .GroupBy(x => x.EmployeeID)
                     .Select(g => g.FirstOrDefault());
             }
 
+            // Obsolete: replace all queries with cutoffEnd and remove this code
             return _context.Salaries
                 .Where(x => x.EffectiveFrom <= cutoffStart)
                 .OrderByDescending(x => x.EffectiveFrom)
                 .GroupBy(x => x.EmployeeID)
                 .Select(g => g.FirstOrDefault());
-        }
-
-        private bool SatisfiedDate(DateTime salaryEffectiveFrom, DateTime cutoffStart, DateTime? cutoffEnd)
-        {
-            return !(salaryEffectiveFrom <= cutoffStart) ? salaryEffectiveFrom <= cutoffEnd : salaryEffectiveFrom <= cutoffStart;
         }
     }
 }
