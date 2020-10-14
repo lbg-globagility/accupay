@@ -491,6 +491,7 @@ Public Class PayStubForm
 
         EnableAdjustmentButtons(False)
         ResetNumberTextBox()
+        dgvAdjustments.DataSource = Nothing
 
         dgvemployees.Tag = Nothing
 
