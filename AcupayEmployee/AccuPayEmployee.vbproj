@@ -349,7 +349,6 @@
     <Compile Include="Core Forms\Commons\ExecSQLMultiDimArrProcedure.vb" />
     <Compile Include="Core Forms\Commons\ExecSQLProcedure.vb" />
     <Compile Include="Core Forms\Commons\ExecuteQuery.vb" />
-    <Compile Include="Core Forms\Commons\ImportLoans.vb" />
     <Compile Include="Core Forms\Commons\KillAppCatcher.vb" />
     <Compile Include="Core Forms\Commons\myModule.vb" />
     <Compile Include="Core Forms\Commons\ReadSQLFunction.vb" />

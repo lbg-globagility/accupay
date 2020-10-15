@@ -193,7 +193,6 @@ Public Class MDIPrimaryForm
                 Dim listofExtraForm As New List(Of String)
 
                 listofExtraForm.Add("CrysVwr")
-                listofExtraForm.Add("dutyshift")
                 listofExtraForm.Add("leavtyp")
                 listofExtraForm.Add("LoanType")
                 listofExtraForm.Add("newEmpStat")
@@ -513,8 +512,6 @@ Public Class MDIPrimaryForm
                 ElseIf previousForm.Name = "SSSCntrib" Then
 
                 ElseIf previousForm.Name = "Payrate" Then
-
-                ElseIf previousForm.Name = "ShiftEntryForm" Then
 
                 ElseIf previousForm.Name = "Revised_Withholding_Tax_Tables" Then
 
