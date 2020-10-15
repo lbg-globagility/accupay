@@ -1,4 +1,6 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Option Strict On
+
+Imports MySql.Data.MySqlClient
 
 Public Class ExecuteQuery
 
@@ -8,7 +10,7 @@ Public Class ExecuteQuery
 
     Private priv_cmd As New MySqlCommand
 
-    Private getResult = Nothing
+    Private getResult As Object = Nothing
 
     Dim dr As MySqlDataReader
 
@@ -23,7 +25,6 @@ Public Class ExecuteQuery
             'n_DataBaseConnection.GetStringMySQLConnectionString
             priv_conn.ConnectionString = mysql_conn_text &
                 "default command timeout=" & cmd_time_out & ";"
-
         Else
             'n_DataBaseConnection.GetStringMySQLConnectionString
             priv_conn.ConnectionString = mysql_conn_text
@@ -49,7 +50,7 @@ Public Class ExecuteQuery
                 If cmd_time_out > 0 Then
                     .CommandTimeout = cmd_time_out
                 End If
-                
+
                 If cmdsql.Contains("CALL") Then
 
                     .ExecuteNonQuery()
@@ -58,7 +59,6 @@ Public Class ExecuteQuery
                                             except_this_string) Then
 
                     .ExecuteNonQuery()
-
                 Else
 
                     dr = .ExecuteReader()
@@ -82,20 +82,17 @@ Public Class ExecuteQuery
                         getResult = dr(0)
 
                     End If
-
                 Else
                     getResult = Nothing
 
                 End If
 
             End If
-
         Catch ex As Exception
-            
+
             _hasError = True
             _error_message = getErrExcptn(ex, "ExecuteQuery")
             MsgBox(_error_message, , cmdsql)
-
         Finally
 
             If dr IsNot Nothing Then
@@ -124,10 +121,6 @@ Public Class ExecuteQuery
         End Set
 
     End Property
-
-    Sub ExecuteQuery()
-
-    End Sub
 
     Dim _hasError As Boolean = False
 

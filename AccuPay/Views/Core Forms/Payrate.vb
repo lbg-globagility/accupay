@@ -7,6 +7,16 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class PayRateForm
     Dim _now
 
+    Public Enum DGVHeaderImageAlignments As Int32
+        [Default] = 0
+        FillCell = 1
+        SingleCentered = 2
+        SingleLeft = 3
+        SingleRight = 4
+        Stretch = [Default]
+        Tile = 5
+    End Enum
+
     Private Sub Payrate_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         If previousForm IsNot Nothing Then
@@ -1136,26 +1146,6 @@ Public Class PayRateForm
         Next
 
         MsgBox("Done inserting payrates.", MsgBoxStyle.Information, "Finish")
-    End Sub
-
-    Private Sub Panel2_Enter(sender As Object, e As EventArgs) Handles Panel2.Enter
-        Static once As SByte = 0
-
-        If once = 0 Then
-
-            once = 1
-
-            For Each objctrl As Control In Panel2.Controls
-                If TypeOf objctrl Is TextBox Or
-                    TypeOf objctrl Is ComboBox Then
-                    OjbAssignNoContextMenu(objctrl)
-                Else
-                    Continue For
-                End If
-            Next
-
-            cbopaytype.ContextMenu = New ContextMenu
-        End If
     End Sub
 
 End Class

@@ -1,4 +1,6 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Option Strict On
+
+Imports MySql.Data.MySqlClient
 
 Public Class ReadSQLProcedureToDatatable
 
@@ -9,8 +11,6 @@ Public Class ReadSQLProcedureToDatatable
     Private priv_cmd As New MySqlCommand
 
     Sub New(SQLProcedureName As String, ParamArray ParameterInput() As Object)
-
-        'Dim n_DataBaseConnection As New DataBaseConnection
 
         priv_conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString
 
@@ -26,7 +26,13 @@ Public Class ReadSQLProcedureToDatatable
 
         Dim paramName = n_ExecuteQuery.Result
 
-        Dim paramNames = Split(paramName, ",")
+        Dim paramNames() As String
+
+        If Not IsDBNull(paramName) AndAlso paramName IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(paramName.ToString()) Then
+
+            paramNames = Split(paramName.ToString(), ",")
+
+        End If
 
         Try
 
@@ -80,7 +86,6 @@ Public Class ReadSQLProcedureToDatatable
                 priv_da.Fill(n_ResultTable)
 
             End With
-
         Catch ex As Exception
             _hasError = True
             MsgBox(getErrExcptn(ex, MyBase.ToString), , SQLProcedureName)

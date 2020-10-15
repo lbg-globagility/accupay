@@ -41,6 +41,7 @@ Partial Class ForgotPasswordForm
         '
         'btnSend
         '
+        Me.btnSend.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnSend.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSend.Location = New System.Drawing.Point(220, 75)
         Me.btnSend.Name = "btnSend"
@@ -69,9 +70,11 @@ Partial Class ForgotPasswordForm
         '
         'ForgotPasswordForm
         '
+        Me.AcceptButton = Me.btnSend
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(242, Byte), Integer), CType(CType(242, Byte), Integer))
+        Me.CancelButton = Me.btnSend
         Me.ClientSize = New System.Drawing.Size(399, 130)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnSend)

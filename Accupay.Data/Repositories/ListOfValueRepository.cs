@@ -49,20 +49,36 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("DutyShift");
         }
 
-        public ICollection<ListOfValue> GetListOfValues(string type)
+        public async Task<ICollection<ListOfValue>> GetDutyReportProvidersAsync()
         {
-            return _context.ListOfValues
-                .Where(l => l.Type == type)
-                .Where(l => l.Active == ListOfValue.ActiveYesOption)
-                .ToList();
+            return await GetListOfValuesAsync("ReportProviders", checkIfActive: false);
         }
 
-        public async Task<ICollection<ListOfValue>> GetListOfValuesAsync(string type)
+        public ICollection<ListOfValue> GetListOfValues(string type, bool checkIfActive = true)
         {
-            return await _context.ListOfValues
-                .Where(l => l.Type == type)
-                .Where(l => l.Active == ListOfValue.ActiveYesOption)
-                .ToListAsync();
+            IQueryable<ListOfValue> query = CreateBaseGetListOfValues(type, checkIfActive);
+
+            return query.ToList();
+        }
+
+        public async Task<ICollection<ListOfValue>> GetListOfValuesAsync(string type, bool checkIfActive = true)
+        {
+            IQueryable<ListOfValue> query = CreateBaseGetListOfValues(type, checkIfActive);
+
+            return await query.ToListAsync();
+        }
+
+        private IQueryable<ListOfValue> CreateBaseGetListOfValues(string type, bool checkIfActive)
+        {
+            var query = _context.ListOfValues
+                            .Where(l => l.Type == type);
+
+            if (checkIfActive)
+            {
+                query = query.Where(l => l.Active == ListOfValue.ActiveYesOption);
+            }
+
+            return query;
         }
 
         public List<string> ConvertToStringList(IEnumerable<ListOfValue> listOfValues, string columnName = "DisplayValue")

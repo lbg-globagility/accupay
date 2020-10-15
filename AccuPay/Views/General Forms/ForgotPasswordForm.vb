@@ -1,42 +1,47 @@
-﻿Imports System.Net
+﻿Option Strict On
+
+Imports System.Net
 Imports System.Net.Mail
 Imports AccuPay.Data.Interfaces
+Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ForgotPasswordForm
 
     Private ReadOnly _encryptor As IEncryption
+    Private ReadOnly _userRepository As AspNetUserRepository
 
     Sub New()
 
         InitializeComponent()
 
         _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
     End Sub
 
-    Private Sub btnSend_Click(sender As Object, e As EventArgs) Handles btnSend.Click
+    Private Async Sub btnSend_Click(sender As Object, e As EventArgs) Handles btnSend.Click
 
-        If txtUserID.Text = "" Then
+        If String.IsNullOrWhiteSpace(txtUserID.Text) Then
             MsgBox("Please enter your User ID", MsgBoxStyle.Exclamation, "System message.")
-
+            Return
         End If
 
-        Dim emailadd As String = getStringItem("Select Email from aspnetusers where UserName = '" & txtUserID.Text & "'")
-        Dim getemailadd As String = emailadd
+        Dim user = Await _userRepository.GetByUserNameAsync(txtUserID.Text)
 
-        If emailadd = "" Then
+        Dim emailAddress As String = user.Email
+
+        If String.IsNullOrWhiteSpace(emailAddress) Then
             MsgBox("You don't have an email address, the system failed to send your password.", MsgBoxStyle.Exclamation, "No email address detected")
-            Exit Sub
+            Return
         End If
 
         Try
-            Dim pw As String = getStringItem("Select DesktopPassword from aspnetusers where userid = '" & txtUserID.Text & "'")
+            Dim password As String = _encryptor.Decrypt(user.DesktopPassword)
 
-            Dim getpw As String = _encryptor.Decrypt(pw)
+            SendEmail(emailAddress, password)
 
-            SendEmail(emailadd, getpw)
-
-            MsgBox("Your Password will be sent to the email address associated to your user name", MsgBoxStyle.Information, "Sent Successfully.")
+            MsgBox("Your Password was sent to the email address associated to your user name", MsgBoxStyle.Information, "Sent Successfully.")
 
             Me.Close()
         Catch ex As Exception
@@ -85,30 +90,5 @@ Public Class ForgotPasswordForm
         MetroLogin.UserNameTextBox.Focus()
 
     End Sub
-
-    Private Sub txtUserID_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtUserID.KeyPress
-
-        Dim e_asc As String = Asc(e.KeyChar)
-
-        If e_asc = 13 Then
-            btnSend_Click(sender, e)
-        End If
-
-    End Sub
-
-    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
-
-        If keyData = Keys.Escape Then
-
-            Me.Close()
-
-            Return True
-        Else
-
-            Return MyBase.ProcessCmdKey(msg, keyData)
-
-        End If
-
-    End Function
 
 End Class

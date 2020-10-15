@@ -1,4 +1,6 @@
-﻿Public Class SetEmployeeEndDate
+﻿Option Strict On
+
+Public Class SetEmployeeEndDate
 
     Dim n_EmployementStatus As String = String.Empty
 
@@ -11,21 +13,14 @@
 
         End If
 
-        ' This call is required by the designer.
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-
-    End Sub
-
-    Sub SetEmployeeEndDate()
 
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         If n_EmployementStatus.Length > 0 Then
-            
+
             Label1.Text = n_EmployementStatus & Space(1) & Label1.Text
 
             Label1.Text = StrConv(Label1.Text, VbStrConv.ProperCase)
@@ -51,7 +46,6 @@
         Return Me.ShowDialog
 
     End Function
-
 
     '                MessageBoxManager.OK = "Actual"
 
@@ -109,7 +103,6 @@
             Me.Close()
 
             Return True
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -131,8 +124,6 @@
     End Property
 
     Private Sub CustomDatePicker1_ValueChanged(sender As Object, e As EventArgs) Handles CustomDatePicker1.ValueChanged
-
-
 
     End Sub
 

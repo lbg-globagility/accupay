@@ -1,7 +1,8 @@
-﻿Imports CrystalDecisions.CrystalReports.Engine
+﻿Option Strict On
+
+Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
 Imports MySql.Data.MySqlClient
-Imports MySql.Data
 
 Public Class Josh_CrysRepForm
 

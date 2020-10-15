@@ -1,5 +1,4 @@
 ﻿Imports MySql.Data.MySqlClient
-Imports System.IO
 
 Public Class ProdCtrlForm
 

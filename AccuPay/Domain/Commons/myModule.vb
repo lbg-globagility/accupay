@@ -43,8 +43,6 @@ Module myModule
 
     Public userLastName As String = Nothing
 
-    Public backgroundworking As SByte = 0
-
     Public db_connectinstring = ""
 
     Public MachineLocalization As New DataTable
@@ -177,14 +175,6 @@ Module myModule
             TrapCharKey = True
         Else
             TrapCharKey = False
-        End If
-    End Function
-
-    Public Function TrapSpaceKey(ByVal KCode As String) As Boolean      '//textbox keypress event disable space key
-        If KCode = 32 Then
-            TrapSpaceKey = True
-        Else
-            TrapSpaceKey = False
         End If
     End Function
 
@@ -462,105 +452,6 @@ Module myModule
         End Try
 
     End Sub
-
-    Public Function INS_employee(Optional EmployeeID As Object = Nothing, Optional EmploymentStatus As Object = Nothing, Optional Gender As Object = Nothing,
-                Optional JobTitle As Object = Nothing, Optional PositionID As Object = Nothing, Optional Salutation As Object = Nothing,
-                Optional FirstName As Object = Nothing, Optional MiddleName As Object = Nothing, Optional LastName As Object = Nothing,
-                Optional Nickname As Object = Nothing, Optional Birthdate As Object = Nothing, Optional TINNo As Object = Nothing,
-                Optional SSSNo As Object = Nothing, Optional HDMFNo As Object = Nothing, Optional PhilHealthNo As Object = Nothing,
-                Optional EmailAddress As Object = Nothing, Optional WorkPhone As Object = Nothing, Optional HomePhone As Object = Nothing,
-                Optional MobilePhone As Object = Nothing, Optional HomeAddress As Object = Nothing, Optional PayFrequencyID As Object = Nothing,
-                Optional UndertimeOverride As Object = Nothing, Optional OvertimeOverride As Object = Nothing, Optional Surname As Object = Nothing,
-                Optional MaritalStatus As Object = Nothing, Optional NoOfDependents As String = Nothing, Optional LeavePerPayPeriod As String = Nothing,
-                Optional EmployeeType As String = Nothing) As String '
-
-        JobTitle = If(JobTitle = Nothing, "NULL", "'" & JobTitle & "'") : Salutation = If(Salutation = Nothing, "NULL", "'" & Salutation & "'")
-        Nickname = If(Nickname = Nothing, "NULL", "'" & Nickname & "'") : TINNo = If(TINNo = Nothing, "NULL", "'" & TINNo & "'")
-        SSSNo = If(SSSNo = Nothing, "NULL", "'" & SSSNo & "'") : HDMFNo = If(HDMFNo = Nothing, "NULL", "'" & HDMFNo & "'")
-        PhilHealthNo = If(PhilHealthNo = Nothing, "NULL", "'" & PhilHealthNo & "'") : EmailAddress = If(EmailAddress = Nothing, "NULL", "'" & EmailAddress & "'")
-        WorkPhone = If(WorkPhone = Nothing, "NULL", "'" & WorkPhone & "'") : HomePhone = If(HomePhone = Nothing, "NULL", "'" & HomePhone & "'")
-        MobilePhone = If(MobilePhone = Nothing, "NULL", "'" & MobilePhone & "'") : HomeAddress = If(HomeAddress = Nothing, "NULL", "'" & HomeAddress & "'")
-        PayFrequencyID = If(PayFrequencyID = Nothing, "NULL", PayFrequencyID) : UndertimeOverride = If(UndertimeOverride = Nothing, "0", "'" & UndertimeOverride & "'")
-        OvertimeOverride = If(OvertimeOverride = Nothing, "0", "'" & OvertimeOverride & "'") : PositionID = If(PositionID = Nothing, "NULL", PositionID)
-        FirstName = If(FirstName = Nothing, "NULL", "'" & FirstName & "'") : MiddleName = If(MiddleName = Nothing, "NULL", "'" & MiddleName & "'")
-        LastName = If(LastName = Nothing, "NULL", "'" & LastName & "'") : EmployeeID = If(EmployeeID = Nothing, "NULL", "'" & EmployeeID & "'")
-
-        Surname = If(Surname = Nothing, "NULL", "'" & Surname & "'")
-        MaritalStatus = If(MaritalStatus = Nothing, "NULL", "'" & MaritalStatus & "'")
-        EmployeeType = If(EmployeeType = Nothing, "NULL", "'" & EmployeeType & "'")
-
-        Dim getemployee = EXECQUER("INSERT INTO employee (CreatedBy,LastUpdBy,OrganizationID,EmployeeID,EmploymentStatus,Gender,JobTitle," &
-        "PositionID,Salutation,FirstName,MiddleName,LastName,Nickname,Birthdate,TINNo,SSSNo,HDMFNo,PhilHealthNo,EmailAddress,WorkPhone,HomePhone,MobilePhone,HomeAddress," &
-        "PayFrequencyID,UndertimeOverride,OvertimeOverride,Surname,MaritalStatus,NoOfDependents,LeavePerPayPeriod,EmployeeType) VALUES (" &
-        "" & z_User &
-        "," & z_User &
-        "," & orgztnID &
-        "," & EmployeeID &
-        ",'" & EmploymentStatus &
-        "','" & Gender &
-        "'," & JobTitle &
-        "," & PositionID &
-        "," & Salutation &
-        "," & FirstName &
-        "," & MiddleName &
-        "," & LastName &
-        "," & Nickname &
-        ",'" & Birthdate &
-        "'," & TINNo &
-        "," & SSSNo &
-        "," & HDMFNo &
-        "," & PhilHealthNo &
-        "," & EmailAddress &
-        "," & WorkPhone &
-        "," & HomePhone &
-        "," & MobilePhone &
-        "," & HomeAddress &
-        "," & PayFrequencyID &
-        "," & UndertimeOverride &
-        "," & OvertimeOverride &
-        "," & Surname &
-        "," & MaritalStatus &
-        "," & NoOfDependents &
-        "," & LeavePerPayPeriod &
-        "," & EmployeeType &
-        ");" &
-        "SELECT RowID " &
-        "FROM employee " &
-        "WHERE CreatedBy=" & z_User &
-        " AND LastUpdBy=" & z_User &
-        " AND OrganizationID=" & orgztnID &
-        " AND EmployeeID" & If(EmployeeID = "NULL", " IS NULL", "=" & EmployeeID) &
-        " AND EmploymentStatus='" & EmploymentStatus &
-        "' AND Gender='" & Gender &
-        "' AND JobTitle" & If(JobTitle = "NULL", " IS NULL", "=" & JobTitle) &
-        " AND PositionID" & If(PositionID = "NULL", " IS NULL", "=" & PositionID) &
-        " AND Salutation" & If(Salutation = "NULL", " IS NULL", "=" & Salutation) &
-        " AND FirstName" & If(FirstName = "NULL", " IS NULL", "=" & FirstName) &
-        " AND MiddleName" & If(MiddleName = "NULL", " IS NULL", "=" & MiddleName) &
-        " AND LastName" & If(LastName = "NULL", " IS NULL", "=" & LastName) &
-        " AND Nickname" & If(Nickname = "NULL", " IS NULL", "=" & Nickname) &
-        " AND Birthdate='" & Birthdate &
-        "' AND TINNo" & If(TINNo = "NULL", " IS NULL", "=" & TINNo) &
-        " AND SSSNo" & If(SSSNo = "NULL", " IS NULL", "=" & SSSNo) &
-        " AND HDMFNo" & If(HDMFNo = "NULL", " IS NULL", "=" & HDMFNo) &
-        " AND PhilHealthNo" & If(PhilHealthNo = "NULL", " IS NULL", "=" & PhilHealthNo) &
-        " AND EmailAddress" & If(EmailAddress = "NULL", " IS NULL", "=" & EmailAddress) &
-        " AND WorkPhone" & If(WorkPhone = "NULL", " IS NULL", "=" & WorkPhone) &
-        " AND HomePhone" & If(HomePhone = "NULL", " IS NULL", "=" & HomePhone) &
-        " AND MobilePhone" & If(MobilePhone = "NULL", " IS NULL", "=" & MobilePhone) &
-        " AND HomeAddress" & If(HomeAddress = "NULL", " IS NULL", "=" & HomeAddress) &
-        " AND PayFrequencyID" & If(PayFrequencyID = "NULL", " IS NULL", "=" & PayFrequencyID) &
-        " AND PayFrequencyID" & If(PayFrequencyID = "NULL", " IS NULL", "=" & PayFrequencyID) &
-        " AND UndertimeOverride=" & UndertimeOverride &
-        " AND OvertimeOverride=" & OvertimeOverride &
-        " AND Surname" & If(Surname = "NULL", " IS NULL", "=" & Surname) &
-        " AND MaritalStatus" & If(MaritalStatus = "NULL", " IS NULL", "=" & MaritalStatus) &
-        " AND NoOfDependents=" & NoOfDependents &
-        " AND LeavePerPayPeriod=" & LeavePerPayPeriod &
-        " AND EmployeeType" & If(EmployeeType = "NULL", " IS NULL", "=" & EmployeeType) & ";")
-
-        Return getemployee
-    End Function
 
     Function INS_employeedepen(Optional Salutation As Object = Nothing, Optional FirstName As Object = Nothing,
                                Optional MiddleName As Object = Nothing, Optional LastName As Object = Nothing,
@@ -888,16 +779,6 @@ Module myModule
 
     End Function
 
-    Public Enum DGVHeaderImageAlignments As Int32
-        [Default] = 0
-        FillCell = 1
-        SingleCentered = 2
-        SingleLeft = 3
-        SingleRight = 4
-        Stretch = [Default]
-        Tile = 5
-    End Enum
-
     Function callProcAsDatTab(Optional ParamsCollection As Array = Nothing,
                               Optional ProcedureName As String = Nothing) As Object
 
@@ -949,99 +830,6 @@ Module myModule
         Finally
 
             mysqlda.Dispose()
-
-        End Try
-
-        Return returnvalue
-
-    End Function
-
-    Function getWorkBookAsDataSet(ByVal opfiledir As String,
-                             Optional FormName As String = "") As Object
-
-        Dim StrConn As String
-
-        Dim DA As New OleDbDataAdapter
-
-        Dim DS As New DataSet
-
-        Dim Str As String = Nothing
-
-        Dim ColumnCount As Integer = 0
-
-        Dim OuterCount As Integer = 0
-
-        Dim InnerCount As Integer = 0
-
-        Dim RowCount As Integer = 0
-
-        StrConn = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & opfiledir & ";Extended Properties='Excel 12.0;';"
-
-        Dim returnvalue = Nothing
-
-        Try
-            Dim objConn As New OleDbConnection(StrConn)
-
-            objConn.Open()
-
-            If objConn.State = ConnectionState.Closed Then
-
-                Console.Write("Connection cannot be opened")
-            Else
-
-                Console.Write("Welcome")
-
-            End If
-
-            'Dim datasheet As DataTable = GetSchemaTable(StrConn)
-
-            'returnvalue = datasheet
-
-            Dim schemaTable As DataTable =
-                objConn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables,
-                                            Nothing)
-
-            Dim i = 0
-
-            'Dim datset As DataSet = New DataSet("dsImport")
-
-            For Each drow As DataRow In schemaTable.Rows
-
-                Dim objCmd As New OleDbCommand("Select * from [" & drow(2).ToString & "]", objConn)
-
-                'objCmd.CommandType = CommandType.Text
-
-                DA.SelectCommand = objCmd
-
-                DA.Fill(DS, drow(2).ToString)
-
-                'Dim dtimport As New DataTable
-
-                'dtimport = DS.Tables(i)
-
-                'Dim row_count = dtimport.Rows.Count
-
-                'datset.Tables.Add(DS.Tables(i))
-
-                i += 1
-
-            Next
-
-            returnvalue = DS
-
-            objConn.Close()
-
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-
-            returnvalue = Nothing
-
-            MsgBox(getErrExcptn(ex, FormName), MsgBoxStyle.Critical)
-        Finally
-
-            DA.Dispose()
-            'DS.Dispose()
 
         End Try
 
@@ -1107,32 +895,6 @@ Module myModule
         Return returnval
 
     End Function
-
-    Function ObjectCopyToClipBoard(Optional KeyEvArgs As KeyEventArgs = Nothing,
-                                   Optional objObject As Object = Nothing) As Boolean
-
-        Dim returnvalue As Boolean = False
-
-        If KeyEvArgs.Control AndAlso KeyEvArgs.KeyCode = Keys.C Then
-
-            returnvalue = True
-
-            objObject.Copy()
-        Else
-
-            returnvalue = False
-
-        End If
-
-        Return returnvalue
-
-    End Function
-
-    Sub OjbAssignNoContextMenu(ByVal obj As Object)
-
-        obj.ContextMenu = New ContextMenu
-
-    End Sub
 
     Function StringToArray(ByVal ParamString As String) As String()
 
@@ -1251,8 +1013,6 @@ Module myModule
         Return new_listofStr.ToArray
 
     End Function
-
-    Public installerpath As String = String.Empty
 
     Function MYSQLDateFormat(ParamDate As Date) As Object
 

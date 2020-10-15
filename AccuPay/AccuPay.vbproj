@@ -406,19 +406,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\DB\DataBaseConnection.vb" />
-    <Compile Include="Core\DB\ExecSQLMultiDimArrProcedure.vb" />
-    <Compile Include="Core\DB\ExecSQLProcedure.vb" />
     <Compile Include="Core\DB\ExecuteQuery.vb" />
     <Compile Include="Core\DB\MySQL\IMySQLCommander.vb" />
     <Compile Include="Core\DB\MySQL\MySQLCommander.vb" />
     <Compile Include="Core\DB\MySQL\MySQLExecuteCommand.vb" />
     <Compile Include="Core\DB\MySQL\SQL.vb" />
     <Compile Include="Core\DB\ReadSQLFunction.vb" />
-    <Compile Include="Core\DB\ReadSQLFunctionV2.vb" />
     <Compile Include="Core\DB\ReadSQLProcedureToDatatable.vb" />
     <Compile Include="Core\DB\SQLQueryToDatatable.vb" />
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
-    <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\Enums\ExcelOption.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
@@ -436,7 +432,6 @@
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
-    <Compile Include="Domain\Commons\DebugUtility.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
@@ -1295,22 +1290,10 @@
     <Compile Include="Views\Core Forms\AddressClass.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\CopyRightExpirationPrompt.Designer.vb">
-      <DependentUpon>CopyRightExpirationPrompt.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\CopyRightExpirationPrompt.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\CrysRepForm.Designer.vb">
       <DependentUpon>CrysRepForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\CrysRepForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\CrysVwr.Designer.vb">
-      <DependentUpon>CrysVwr.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\CrysVwr.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Dataset\AlphalistDataset.Designer.vb">
@@ -1343,12 +1326,6 @@
     <Compile Include="Views\Core Forms\EmployeeSelection.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\importWithholdingTax.Designer.vb">
-      <DependentUpon>importWithholdingTax.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\importWithholdingTax.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\Josh_CrysRepForm.Designer.vb">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
     </Compile>
@@ -1359,12 +1336,6 @@
       <DependentUpon>newProdBonus.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\newProdBonus.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\OrganizationPrompt.Designer.vb">
-      <DependentUpon>OrganizationPrompt.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\OrganizationPrompt.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Payrate.Designer.vb">
@@ -1395,12 +1366,6 @@
       <DependentUpon>ProductControlForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\ProductControlForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\promptyear.Designer.vb">
-      <DependentUpon>promptyear.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\promptyear.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\ReportsList.Designer.vb">
@@ -1680,28 +1645,16 @@
     <Compile Include="Views\Core Forms\SetEmployeeEndDate.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\ShiftList.designer.vb">
-      <DependentUpon>ShiftList.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\ShiftList.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\SSSCntrib.Designer.vb">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\SSSCntrib.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\cboListOfValue.vb">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\CustomColoredTabControl.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\CustomDatePicker.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\CustomPictureBox.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\DataGridViewDateColumn.vb" />
@@ -1713,27 +1666,6 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\DiscipAction.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.Designer.vb">
-      <DependentUpon>TextBoxDateTime.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\txtEmployeeFullName.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\txtEmployeeNumber.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.Designer.vb">
-      <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\txtPlaceHolder.vb">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Views\General Forms\User Role\UserRoleForm.Designer.vb">
       <DependentUpon>UserRoleForm.vb</DependentUpon>
     </Compile>
@@ -1742,7 +1674,6 @@
     </Compile>
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelWriter.vb" />
-    <Compile Include="Domain\Commons\FileObserver.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.Designer.vb">
@@ -1798,13 +1729,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CrystalReport2.rpt</DependentUpon>
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\Revised_Withholding_Tax_Tables.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\Revised_Withholding_Tax_Tables.Designer.vb">
-      <DependentUpon>Revised_Withholding_Tax_Tables.vb</DependentUpon>
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -2325,29 +2249,17 @@
     <EmbeddedResource Include="Views\Core Forms\AddressClass.resx">
       <DependentUpon>AddressClass.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\CopyRightExpirationPrompt.resx">
-      <DependentUpon>CopyRightExpirationPrompt.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\CrysRepForm.resx">
       <DependentUpon>CrysRepForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\CrysVwr.resx">
-      <DependentUpon>CrysVwr.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\EmployeeSelection.resx">
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\importWithholdingTax.resx">
-      <DependentUpon>importWithholdingTax.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Josh_CrysRepForm.resx">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\newProdBonus.resx">
       <DependentUpon>newProdBonus.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\OrganizationPrompt.resx">
-      <DependentUpon>OrganizationPrompt.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Payrate.resx">
       <DependentUpon>Payrate.vb</DependentUpon>
@@ -2363,9 +2275,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\ProductControlForm.resx">
       <DependentUpon>ProductControlForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\promptyear.resx">
-      <DependentUpon>promptyear.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\ReportsList.resx">
       <DependentUpon>ReportsList.vb</DependentUpon>
@@ -2548,20 +2457,11 @@
     <EmbeddedResource Include="Views\Core Forms\SetEmployeeEndDate.resx">
       <DependentUpon>SetEmployeeEndDate.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\ShiftList.resx">
-      <DependentUpon>ShiftList.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SSSCntrib.resx">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\DiscipAction.resx">
       <DependentUpon>DiscipAction.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.resx">
-      <DependentUpon>TextBoxDateTime.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
-      <DependentUpon>txtIDOfEmployee.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\User Role\UserRoleForm.resx">
       <DependentUpon>UserRoleForm.vb</DependentUpon>
@@ -2591,9 +2491,6 @@
     <EmbeddedResource Include="Reports\rpt\CrystalReport2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport2.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\Revised_Withholding_Tax_Tables.resx">
-      <DependentUpon>Revised_Withholding_Tax_Tables.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -2728,9 +2625,7 @@
       <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

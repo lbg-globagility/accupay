@@ -31,6 +31,46 @@ Partial Class ProductControlForm
         Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.dgvproducts = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SupplierID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ProdName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Description = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CategoryID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Status = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Fixed = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.UnitPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VATPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FirstBillFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SecondBillFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ThirdBillFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PDCFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MonthlyBIllFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PenaltyFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WithholdingTaxPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CostPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UnitOfMeasure = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SKU = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LeadTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BarCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BusinessUnitID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastRcvdFromShipmentDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastRcvdFromShipmentCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TotalShipmentCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BookPageNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BrandName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastPurchaseDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastSoldDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LastSoldCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ReOrderPoint = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AllocateBelowSafetyFlag = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Strength = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UnitsBackordered = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UnitsBackorderAsOf = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DateLastInventoryCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TaxVAT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WithholdingTax = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.DeleteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -73,46 +113,6 @@ Partial Class ProductControlForm
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SupplierID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ProdName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Description = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PartNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Category = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CategoryID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Status = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Fixed = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.UnitPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VATPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.FirstBillFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SecondBillFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ThirdBillFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PDCFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MonthlyBIllFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PenaltyFlag = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WithholdingTaxPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CostPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UnitOfMeasure = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SKU = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LeadTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BarCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BusinessUnitID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastRcvdFromShipmentDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastRcvdFromShipmentCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TotalShipmentCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BookPageNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BrandName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastPurchaseDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastSoldDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LastSoldCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ReOrderPoint = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AllocateBelowSafetyFlag = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Strength = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UnitsBackordered = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UnitsBackorderAsOf = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DateLastInventoryCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.TaxVAT = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WithholdingTax = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.dgvproducts, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
@@ -187,6 +187,286 @@ Partial Class ProductControlForm
         Me.dgvproducts.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvproducts.Size = New System.Drawing.Size(701, 357)
         Me.dgvproducts.TabIndex = 0
+        '
+        'RowID
+        '
+        Me.RowID.HeaderText = "RowID"
+        Me.RowID.Name = "RowID"
+        Me.RowID.ReadOnly = True
+        Me.RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.RowID.Visible = False
+        '
+        'SupplierID
+        '
+        Me.SupplierID.HeaderText = "SupplierID"
+        Me.SupplierID.Name = "SupplierID"
+        Me.SupplierID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.SupplierID.Visible = False
+        '
+        'ProdName
+        '
+        Me.ProdName.HeaderText = "ProdName"
+        Me.ProdName.Name = "ProdName"
+        Me.ProdName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ProdName.Visible = False
+        '
+        'Description
+        '
+        Me.Description.HeaderText = "Description"
+        Me.Description.Name = "Description"
+        Me.Description.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Description.Visible = False
+        '
+        'PartNo
+        '
+        Me.PartNo.HeaderText = "PartNo"
+        Me.PartNo.Name = "PartNo"
+        Me.PartNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PartNo.Width = 159
+        '
+        'Category
+        '
+        Me.Category.HeaderText = "Category"
+        Me.Category.Name = "Category"
+        Me.Category.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Category.Visible = False
+        '
+        'CategoryID
+        '
+        Me.CategoryID.HeaderText = "CategoryID"
+        Me.CategoryID.Name = "CategoryID"
+        Me.CategoryID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.CategoryID.Visible = False
+        '
+        'Status
+        '
+        Me.Status.HeaderText = "Status"
+        Me.Status.Name = "Status"
+        Me.Status.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Status.Width = 141
+        '
+        'Fixed
+        '
+        Me.Fixed.HeaderText = "Is Fixed"
+        Me.Fixed.Name = "Fixed"
+        Me.Fixed.Width = 142
+        '
+        'UnitPrice
+        '
+        Me.UnitPrice.HeaderText = "UnitPrice"
+        Me.UnitPrice.Name = "UnitPrice"
+        Me.UnitPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.UnitPrice.Visible = False
+        '
+        'VATPercent
+        '
+        Me.VATPercent.HeaderText = "VATPercent"
+        Me.VATPercent.Name = "VATPercent"
+        Me.VATPercent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.VATPercent.Visible = False
+        '
+        'FirstBillFlag
+        '
+        Me.FirstBillFlag.HeaderText = "FirstBillFlag"
+        Me.FirstBillFlag.Name = "FirstBillFlag"
+        Me.FirstBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.FirstBillFlag.Visible = False
+        '
+        'SecondBillFlag
+        '
+        Me.SecondBillFlag.HeaderText = "SecondBillFlag"
+        Me.SecondBillFlag.Name = "SecondBillFlag"
+        Me.SecondBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.SecondBillFlag.Visible = False
+        '
+        'ThirdBillFlag
+        '
+        Me.ThirdBillFlag.HeaderText = "ThirdBillFlag"
+        Me.ThirdBillFlag.Name = "ThirdBillFlag"
+        Me.ThirdBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ThirdBillFlag.Visible = False
+        '
+        'PDCFlag
+        '
+        Me.PDCFlag.HeaderText = "PDCFlag"
+        Me.PDCFlag.Name = "PDCFlag"
+        Me.PDCFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PDCFlag.Visible = False
+        '
+        'MonthlyBIllFlag
+        '
+        Me.MonthlyBIllFlag.HeaderText = "MonthlyBIllFlag"
+        Me.MonthlyBIllFlag.Name = "MonthlyBIllFlag"
+        Me.MonthlyBIllFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.MonthlyBIllFlag.Visible = False
+        '
+        'PenaltyFlag
+        '
+        Me.PenaltyFlag.HeaderText = "PenaltyFlag"
+        Me.PenaltyFlag.Name = "PenaltyFlag"
+        Me.PenaltyFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PenaltyFlag.Visible = False
+        '
+        'WithholdingTaxPercent
+        '
+        Me.WithholdingTaxPercent.HeaderText = "WithholdingTaxPercent"
+        Me.WithholdingTaxPercent.Name = "WithholdingTaxPercent"
+        Me.WithholdingTaxPercent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.WithholdingTaxPercent.Visible = False
+        '
+        'CostPrice
+        '
+        Me.CostPrice.HeaderText = "CostPrice"
+        Me.CostPrice.Name = "CostPrice"
+        Me.CostPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.CostPrice.Visible = False
+        '
+        'UnitOfMeasure
+        '
+        Me.UnitOfMeasure.HeaderText = "UnitOfMeasure"
+        Me.UnitOfMeasure.Name = "UnitOfMeasure"
+        Me.UnitOfMeasure.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.UnitOfMeasure.Visible = False
+        '
+        'SKU
+        '
+        Me.SKU.HeaderText = "SKU"
+        Me.SKU.Name = "SKU"
+        Me.SKU.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.SKU.Visible = False
+        '
+        'LeadTime
+        '
+        Me.LeadTime.HeaderText = "LeadTime"
+        Me.LeadTime.Name = "LeadTime"
+        Me.LeadTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.LeadTime.Visible = False
+        '
+        'BarCode
+        '
+        Me.BarCode.HeaderText = "BarCode"
+        Me.BarCode.Name = "BarCode"
+        Me.BarCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.BarCode.Visible = False
+        '
+        'BusinessUnitID
+        '
+        Me.BusinessUnitID.HeaderText = "BusinessUnitID"
+        Me.BusinessUnitID.Name = "BusinessUnitID"
+        Me.BusinessUnitID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.BusinessUnitID.Visible = False
+        '
+        'LastRcvdFromShipmentDate
+        '
+        Me.LastRcvdFromShipmentDate.HeaderText = "LastRcvdFromShipmentDate"
+        Me.LastRcvdFromShipmentDate.Name = "LastRcvdFromShipmentDate"
+        Me.LastRcvdFromShipmentDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.LastRcvdFromShipmentDate.Visible = False
+        '
+        'LastRcvdFromShipmentCount
+        '
+        Me.LastRcvdFromShipmentCount.HeaderText = "LastRcvdFromShipmentCount"
+        Me.LastRcvdFromShipmentCount.Name = "LastRcvdFromShipmentCount"
+        Me.LastRcvdFromShipmentCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.LastRcvdFromShipmentCount.Visible = False
+        '
+        'TotalShipmentCount
+        '
+        Me.TotalShipmentCount.HeaderText = "TotalShipmentCount"
+        Me.TotalShipmentCount.Name = "TotalShipmentCount"
+        Me.TotalShipmentCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.TotalShipmentCount.Visible = False
+        '
+        'BookPageNo
+        '
+        Me.BookPageNo.HeaderText = "BookPageNo"
+        Me.BookPageNo.Name = "BookPageNo"
+        Me.BookPageNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.BookPageNo.Visible = False
+        '
+        'BrandName
+        '
+        Me.BrandName.HeaderText = "BrandName"
+        Me.BrandName.Name = "BrandName"
+        Me.BrandName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.BrandName.Visible = False
+        '
+        'LastPurchaseDate
+        '
+        Me.LastPurchaseDate.HeaderText = "LastPurchaseDate"
+        Me.LastPurchaseDate.Name = "LastPurchaseDate"
+        Me.LastPurchaseDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.LastPurchaseDate.Visible = False
+        '
+        'LastSoldDate
+        '
+        Me.LastSoldDate.HeaderText = "LastSoldDate"
+        Me.LastSoldDate.Name = "LastSoldDate"
+        Me.LastSoldDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.LastSoldDate.Visible = False
+        '
+        'LastSoldCount
+        '
+        Me.LastSoldCount.HeaderText = "LastSoldCount"
+        Me.LastSoldCount.Name = "LastSoldCount"
+        Me.LastSoldCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.LastSoldCount.Visible = False
+        '
+        'ReOrderPoint
+        '
+        Me.ReOrderPoint.HeaderText = "ReOrderPoint"
+        Me.ReOrderPoint.Name = "ReOrderPoint"
+        Me.ReOrderPoint.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ReOrderPoint.Visible = False
+        '
+        'AllocateBelowSafetyFlag
+        '
+        Me.AllocateBelowSafetyFlag.HeaderText = "Included in 13th month pay"
+        Me.AllocateBelowSafetyFlag.Name = "AllocateBelowSafetyFlag"
+        Me.AllocateBelowSafetyFlag.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.AllocateBelowSafetyFlag.Width = 141
+        '
+        'Strength
+        '
+        Me.Strength.HeaderText = "Strength"
+        Me.Strength.Name = "Strength"
+        Me.Strength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Strength.Visible = False
+        '
+        'UnitsBackordered
+        '
+        Me.UnitsBackordered.HeaderText = "UnitsBackordered"
+        Me.UnitsBackordered.Name = "UnitsBackordered"
+        Me.UnitsBackordered.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.UnitsBackordered.Visible = False
+        '
+        'UnitsBackorderAsOf
+        '
+        Me.UnitsBackorderAsOf.HeaderText = "UnitsBackorderAsOf"
+        Me.UnitsBackorderAsOf.Name = "UnitsBackorderAsOf"
+        Me.UnitsBackorderAsOf.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.UnitsBackorderAsOf.Visible = False
+        '
+        'DateLastInventoryCount
+        '
+        Me.DateLastInventoryCount.HeaderText = "DateLastInventoryCount"
+        Me.DateLastInventoryCount.Name = "DateLastInventoryCount"
+        Me.DateLastInventoryCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DateLastInventoryCount.Visible = False
+        '
+        'TaxVAT
+        '
+        Me.TaxVAT.HeaderText = "TaxVAT"
+        Me.TaxVAT.Name = "TaxVAT"
+        Me.TaxVAT.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.TaxVAT.Visible = False
+        '
+        'WithholdingTax
+        '
+        Me.WithholdingTax.HeaderText = "WithholdingTax"
+        Me.WithholdingTax.Name = "WithholdingTax"
+        Me.WithholdingTax.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.WithholdingTax.Visible = False
         '
         'lblforballoon
         '
@@ -484,286 +764,6 @@ Partial Class ProductControlForm
         Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
         Me.DataGridViewTextBoxColumn37.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn37.Visible = False
-        '
-        'RowID
-        '
-        Me.RowID.HeaderText = "RowID"
-        Me.RowID.Name = "RowID"
-        Me.RowID.ReadOnly = True
-        Me.RowID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.RowID.Visible = False
-        '
-        'SupplierID
-        '
-        Me.SupplierID.HeaderText = "SupplierID"
-        Me.SupplierID.Name = "SupplierID"
-        Me.SupplierID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.SupplierID.Visible = False
-        '
-        'ProdName
-        '
-        Me.ProdName.HeaderText = "ProdName"
-        Me.ProdName.Name = "ProdName"
-        Me.ProdName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.ProdName.Visible = False
-        '
-        'Description
-        '
-        Me.Description.HeaderText = "Description"
-        Me.Description.Name = "Description"
-        Me.Description.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Description.Visible = False
-        '
-        'PartNo
-        '
-        Me.PartNo.HeaderText = "PartNo"
-        Me.PartNo.Name = "PartNo"
-        Me.PartNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PartNo.Width = 159
-        '
-        'Category
-        '
-        Me.Category.HeaderText = "Category"
-        Me.Category.Name = "Category"
-        Me.Category.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Category.Visible = False
-        '
-        'CategoryID
-        '
-        Me.CategoryID.HeaderText = "CategoryID"
-        Me.CategoryID.Name = "CategoryID"
-        Me.CategoryID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.CategoryID.Visible = False
-        '
-        'Status
-        '
-        Me.Status.HeaderText = "Status"
-        Me.Status.Name = "Status"
-        Me.Status.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Status.Width = 141
-        '
-        'Fixed
-        '
-        Me.Fixed.HeaderText = "Is Fixed"
-        Me.Fixed.Name = "Fixed"
-        Me.Fixed.Width = 142
-        '
-        'UnitPrice
-        '
-        Me.UnitPrice.HeaderText = "UnitPrice"
-        Me.UnitPrice.Name = "UnitPrice"
-        Me.UnitPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.UnitPrice.Visible = False
-        '
-        'VATPercent
-        '
-        Me.VATPercent.HeaderText = "VATPercent"
-        Me.VATPercent.Name = "VATPercent"
-        Me.VATPercent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.VATPercent.Visible = False
-        '
-        'FirstBillFlag
-        '
-        Me.FirstBillFlag.HeaderText = "FirstBillFlag"
-        Me.FirstBillFlag.Name = "FirstBillFlag"
-        Me.FirstBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.FirstBillFlag.Visible = False
-        '
-        'SecondBillFlag
-        '
-        Me.SecondBillFlag.HeaderText = "SecondBillFlag"
-        Me.SecondBillFlag.Name = "SecondBillFlag"
-        Me.SecondBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.SecondBillFlag.Visible = False
-        '
-        'ThirdBillFlag
-        '
-        Me.ThirdBillFlag.HeaderText = "ThirdBillFlag"
-        Me.ThirdBillFlag.Name = "ThirdBillFlag"
-        Me.ThirdBillFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.ThirdBillFlag.Visible = False
-        '
-        'PDCFlag
-        '
-        Me.PDCFlag.HeaderText = "PDCFlag"
-        Me.PDCFlag.Name = "PDCFlag"
-        Me.PDCFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PDCFlag.Visible = False
-        '
-        'MonthlyBIllFlag
-        '
-        Me.MonthlyBIllFlag.HeaderText = "MonthlyBIllFlag"
-        Me.MonthlyBIllFlag.Name = "MonthlyBIllFlag"
-        Me.MonthlyBIllFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.MonthlyBIllFlag.Visible = False
-        '
-        'PenaltyFlag
-        '
-        Me.PenaltyFlag.HeaderText = "PenaltyFlag"
-        Me.PenaltyFlag.Name = "PenaltyFlag"
-        Me.PenaltyFlag.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PenaltyFlag.Visible = False
-        '
-        'WithholdingTaxPercent
-        '
-        Me.WithholdingTaxPercent.HeaderText = "WithholdingTaxPercent"
-        Me.WithholdingTaxPercent.Name = "WithholdingTaxPercent"
-        Me.WithholdingTaxPercent.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.WithholdingTaxPercent.Visible = False
-        '
-        'CostPrice
-        '
-        Me.CostPrice.HeaderText = "CostPrice"
-        Me.CostPrice.Name = "CostPrice"
-        Me.CostPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.CostPrice.Visible = False
-        '
-        'UnitOfMeasure
-        '
-        Me.UnitOfMeasure.HeaderText = "UnitOfMeasure"
-        Me.UnitOfMeasure.Name = "UnitOfMeasure"
-        Me.UnitOfMeasure.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.UnitOfMeasure.Visible = False
-        '
-        'SKU
-        '
-        Me.SKU.HeaderText = "SKU"
-        Me.SKU.Name = "SKU"
-        Me.SKU.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.SKU.Visible = False
-        '
-        'LeadTime
-        '
-        Me.LeadTime.HeaderText = "LeadTime"
-        Me.LeadTime.Name = "LeadTime"
-        Me.LeadTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.LeadTime.Visible = False
-        '
-        'BarCode
-        '
-        Me.BarCode.HeaderText = "BarCode"
-        Me.BarCode.Name = "BarCode"
-        Me.BarCode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.BarCode.Visible = False
-        '
-        'BusinessUnitID
-        '
-        Me.BusinessUnitID.HeaderText = "BusinessUnitID"
-        Me.BusinessUnitID.Name = "BusinessUnitID"
-        Me.BusinessUnitID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.BusinessUnitID.Visible = False
-        '
-        'LastRcvdFromShipmentDate
-        '
-        Me.LastRcvdFromShipmentDate.HeaderText = "LastRcvdFromShipmentDate"
-        Me.LastRcvdFromShipmentDate.Name = "LastRcvdFromShipmentDate"
-        Me.LastRcvdFromShipmentDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.LastRcvdFromShipmentDate.Visible = False
-        '
-        'LastRcvdFromShipmentCount
-        '
-        Me.LastRcvdFromShipmentCount.HeaderText = "LastRcvdFromShipmentCount"
-        Me.LastRcvdFromShipmentCount.Name = "LastRcvdFromShipmentCount"
-        Me.LastRcvdFromShipmentCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.LastRcvdFromShipmentCount.Visible = False
-        '
-        'TotalShipmentCount
-        '
-        Me.TotalShipmentCount.HeaderText = "TotalShipmentCount"
-        Me.TotalShipmentCount.Name = "TotalShipmentCount"
-        Me.TotalShipmentCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TotalShipmentCount.Visible = False
-        '
-        'BookPageNo
-        '
-        Me.BookPageNo.HeaderText = "BookPageNo"
-        Me.BookPageNo.Name = "BookPageNo"
-        Me.BookPageNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.BookPageNo.Visible = False
-        '
-        'BrandName
-        '
-        Me.BrandName.HeaderText = "BrandName"
-        Me.BrandName.Name = "BrandName"
-        Me.BrandName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.BrandName.Visible = False
-        '
-        'LastPurchaseDate
-        '
-        Me.LastPurchaseDate.HeaderText = "LastPurchaseDate"
-        Me.LastPurchaseDate.Name = "LastPurchaseDate"
-        Me.LastPurchaseDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.LastPurchaseDate.Visible = False
-        '
-        'LastSoldDate
-        '
-        Me.LastSoldDate.HeaderText = "LastSoldDate"
-        Me.LastSoldDate.Name = "LastSoldDate"
-        Me.LastSoldDate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.LastSoldDate.Visible = False
-        '
-        'LastSoldCount
-        '
-        Me.LastSoldCount.HeaderText = "LastSoldCount"
-        Me.LastSoldCount.Name = "LastSoldCount"
-        Me.LastSoldCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.LastSoldCount.Visible = False
-        '
-        'ReOrderPoint
-        '
-        Me.ReOrderPoint.HeaderText = "ReOrderPoint"
-        Me.ReOrderPoint.Name = "ReOrderPoint"
-        Me.ReOrderPoint.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.ReOrderPoint.Visible = False
-        '
-        'AllocateBelowSafetyFlag
-        '
-        Me.AllocateBelowSafetyFlag.HeaderText = "Included in 13th month pay"
-        Me.AllocateBelowSafetyFlag.Name = "AllocateBelowSafetyFlag"
-        Me.AllocateBelowSafetyFlag.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.AllocateBelowSafetyFlag.Width = 141
-        '
-        'Strength
-        '
-        Me.Strength.HeaderText = "Strength"
-        Me.Strength.Name = "Strength"
-        Me.Strength.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Strength.Visible = False
-        '
-        'UnitsBackordered
-        '
-        Me.UnitsBackordered.HeaderText = "UnitsBackordered"
-        Me.UnitsBackordered.Name = "UnitsBackordered"
-        Me.UnitsBackordered.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.UnitsBackordered.Visible = False
-        '
-        'UnitsBackorderAsOf
-        '
-        Me.UnitsBackorderAsOf.HeaderText = "UnitsBackorderAsOf"
-        Me.UnitsBackorderAsOf.Name = "UnitsBackorderAsOf"
-        Me.UnitsBackorderAsOf.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.UnitsBackorderAsOf.Visible = False
-        '
-        'DateLastInventoryCount
-        '
-        Me.DateLastInventoryCount.HeaderText = "DateLastInventoryCount"
-        Me.DateLastInventoryCount.Name = "DateLastInventoryCount"
-        Me.DateLastInventoryCount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DateLastInventoryCount.Visible = False
-        '
-        'TaxVAT
-        '
-        Me.TaxVAT.HeaderText = "TaxVAT"
-        Me.TaxVAT.Name = "TaxVAT"
-        Me.TaxVAT.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.TaxVAT.Visible = False
-        '
-        'WithholdingTax
-        '
-        Me.WithholdingTax.HeaderText = "WithholdingTax"
-        Me.WithholdingTax.Name = "WithholdingTax"
-        Me.WithholdingTax.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.WithholdingTax.Visible = False
         '
         'ProductControlForm
         '

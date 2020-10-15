@@ -6,8 +6,6 @@ Module mdlValidation
     Public z_User As Integer
     Public z_postName As String
     Public z_CompanyName As String
-    Public Z_ErrorProvider As New ErrorProvider
-    Public z_datetime As String = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
 
     Public connectionString As String = n_DataBaseConnection.GetStringMySQLConnectionString
 
@@ -98,79 +96,6 @@ Module mdlValidation
         Finally
             command.Connection.Close()
         End Try
-    End Function
-
-    Public Function SQL_ArrayList(ByVal Sqlcommand As String) As ArrayList
-        connection = New MySqlConnection(connectionString)
-
-        Dim ArString As New ArrayList
-        Try
-            connection.Open()
-            Dim command As MySqlCommand =
-                   New MySqlCommand(Sqlcommand, connection)
-            command.CommandType = CommandType.Text
-            Dim DR As MySqlDataReader = command.ExecuteReader
-            Do While DR.Read
-                ArString.Add(DR.GetValue(0))
-            Loop
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        Finally
-            connection.Close()
-        End Try
-        Return ArString
-
-    End Function
-
-    Public Function DirectCommand(ByVal SqCommand As String)
-        Dim NumberitemInserted As Integer
-        Dim command As MySqlCommand = New MySqlCommand(SqCommand, New MySqlConnection(connectionString))
-        Try
-            Dim DataReturn As New DataSet
-            command.CommandType = CommandType.Text
-            command.Connection.Open()
-            NumberitemInserted = command.ExecuteNonQuery()
-            command.Connection.Close()
-        Catch ex As Exception
-            NumberitemInserted = -1
-        Finally
-            command.Connection.Close()
-        End Try
-        Return NumberitemInserted
-    End Function
-
-    Public Function ObjectToString(ByVal obj As Object) As String
-        Try
-            If IsDBNull(obj) Then
-                Return ""
-            ElseIf obj = Nothing Then
-                Return ""
-            Else
-                Return obj
-            End If
-        Catch ex As Exception
-            Return ""
-        End Try
-    End Function
-
-    Public Function getStringItem(ByVal Sqlcommand As String) As String
-        connection = New MySqlConnection(connectionString)
-        Dim itemSTR As String = Nothing
-        Try
-            connection.Open()
-            Dim command As MySqlCommand =
-                   New MySqlCommand(Sqlcommand, connection)
-            command.CommandType = CommandType.Text
-            Dim DR As MySqlDataReader = command.ExecuteReader
-            Do While DR.Read
-                itemSTR = ObjectToString(DR.GetValue(0))
-            Loop
-        Catch ex As Exception
-            itemSTR = ""
-        Finally
-            connection.Close()
-        End Try
-        Return itemSTR
     End Function
 
     Public Function ConvertByteToImage(ByVal ImgByte As Byte()) As Image

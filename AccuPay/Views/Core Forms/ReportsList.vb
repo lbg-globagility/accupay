@@ -1,16 +1,17 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ReportsList
 
-    Private Const ActualDescription As String = "(Actual)"
-
     Private ReadOnly curr_sys_owner_name As String
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
 
     Sub New()
 
@@ -18,10 +19,12 @@ Public Class ReportsList
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
         curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
     End Sub
 
-    Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'This has errors
         'New EmployeeOffenseReportProvider(),
@@ -48,24 +51,19 @@ Public Class ReportsList
         }
         'New PayrollLedgerReportProvider(),
 
-        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If curr_sys_owner_name = SystemOwnerService.Benchmark Then
             providers = GetBenchmarkReports()
         End If
+
+        Dim allowedProviders = Await _listOfValueRepository.GetDutyReportProvidersAsync()
 
         For Each provider In providers
 
             If provider.IsHidden Then Continue For
 
-            Dim dataTable = New SqlToDataTable($"
-                SELECT l.DisplayValue
-                FROM listofval l
-                WHERE l.`Type` = 'ReportProviders'
-            ").Read()
-
             Dim type = provider.GetType().Name
-            Dim found = dataTable.Select($"DisplayValue = '{type}'").Count >= 1
 
-            If found Then
+            If allowedProviders.Any(Function(p) p.DisplayValue = type) Then
 
                 Dim newListItem = New ListViewItem(provider.Name)
                 newListItem.Tag = provider
@@ -74,7 +72,7 @@ Public Class ReportsList
             End If
         Next
 
-        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If curr_sys_owner_name = SystemOwnerService.Benchmark Then
 
             'Payroll Summary
             Dim reportProvider As New PayrollSummaryExcelFormatReportProvider()
@@ -86,18 +84,7 @@ Public Class ReportsList
         End If
     End Sub
 
-    Private Shared Function CreatePayrollSummaryListViewItem(suffix As String) As ListViewItem
-
-        Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider()
-
-        Dim reportName = summaryProvider.Name & " " & suffix
-        Return CreateNewListViewItem(summaryProvider, reportName)
-    End Function
-
-    Private Shared Function CreateNewListViewItem(
-                                reportProvider As IReportProvider,
-                                reportName As String) As ListViewItem
-
+    Private Shared Function CreateNewListViewItem(reportProvider As IReportProvider, reportName As String) As ListViewItem
         Dim listItem = New ListViewItem(reportName)
         listItem.Tag = reportProvider
         Return listItem
@@ -105,19 +92,19 @@ Public Class ReportsList
 
     Private Shared Function GetBenchmarkReports() As Collection(Of IReportProvider)
         Return New Collection(Of IReportProvider) From {
-                    New SalaryIncreaseHistoryReportProvider(),
-                    New EmployeeProfilesReportProvider(),
-                    New EmployeeIdentificationNumberReportProvider(),
-                    New LoanSummaryByEmployeeReportProvider(),
-                    New LoanSummaryByTypeReportProvider(),
-                    New SSSMonthlyReportProvider(),
-                    New PhilHealthReportProvider(),
-                    New PagIBIGMonthlyReportProvider(),
-                    New TaxReportProvider(),
-                    New ThirteenthMonthSummaryReportProvider(),
-                    New LoanLedgerReportProvider(),
-                    New PayrollSummaryExcelFormatReportProvider()
-                }
+            New SalaryIncreaseHistoryReportProvider(),
+            New EmployeeProfilesReportProvider(),
+            New EmployeeIdentificationNumberReportProvider(),
+            New LoanSummaryByEmployeeReportProvider(),
+            New LoanSummaryByTypeReportProvider(),
+            New SSSMonthlyReportProvider(),
+            New PhilHealthReportProvider(),
+            New PagIBIGMonthlyReportProvider(),
+            New TaxReportProvider(),
+            New ThirteenthMonthSummaryReportProvider(),
+            New LoanLedgerReportProvider(),
+            New PayrollSummaryExcelFormatReportProvider()
+        }
     End Function
 
     Private Sub lvMainMenu_KeyDown(sender As Object, e As KeyEventArgs) Handles lvMainMenu.KeyDown

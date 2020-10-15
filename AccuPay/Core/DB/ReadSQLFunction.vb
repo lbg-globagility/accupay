@@ -1,8 +1,10 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Option Strict On
+
+Imports MySql.Data.MySqlClient
 
 Public Class ReadSQLFunction
 
-    Dim n_ReturnValue = Nothing
+    Dim n_ReturnValue As Object = Nothing
 
     Private priv_conn As New MySqlConnection
 
@@ -28,28 +30,12 @@ Public Class ReadSQLFunction
             returnName As String,
             ParamArray ParameterInput() As Object)
 
-        'If cmd_time_out > 0 Then
-
-        '    priv_conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString &
-        '        "default command timeout=" & cmd_time_out & ";"
-
-        'Else
-
-        '    priv_conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString
-
-        'End If
-
-        'Dim n_DataBaseConnection As New DataBaseConnection
-
         priv_conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString
-
-        ''priv_conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString &
-        ''    "default command timeout=" & 500 & ";"
 
         SQLProcedureName = SQLProcedureName.Trim
 
-        Dim n_ExecuteQuery = _
-        New ExecuteQuery("SET group_concat_max_len = 2048;" & _
+        Dim n_ExecuteQuery =
+        New ExecuteQuery("SET group_concat_max_len = 2048;" &
                          "SELECT GROUP_CONCAT(ii.PARAMETER_NAME)" &
                          " FROM information_schema.PARAMETERS ii" &
                          " WHERE ii.SPECIFIC_NAME = '" & SQLProcedureName & "'" &
@@ -58,7 +44,13 @@ Public Class ReadSQLFunction
 
         Dim paramName = n_ExecuteQuery.Result
 
-        Dim paramNames = Split(paramName, ",")
+        Dim paramNames() As String
+
+        If Not IsDBNull(paramName) AndAlso paramName IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(paramName.ToString()) Then
+
+            paramNames = Split(paramName.ToString(), ",")
+
+        End If
 
         Try
 
@@ -95,7 +87,6 @@ Public Class ReadSQLFunction
                 n_ReturnValue = datread(0)
 
             End With
-
         Catch ex As Exception
             _hasError = True
             MsgBox(getErrExcptn(ex, MyBase.ToString), , SQLProcedureName)
