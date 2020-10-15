@@ -23,38 +23,6 @@ INSERT INTO `view`
     GROUP BY v.ViewName
     ORDER BY v.ViewName;
 
-INSERT INTO payperiod
-(
-    OrganizationID
-    ,Created
-    ,CreatedBy
-    ,PayFromDate
-    ,PayToDate
-    ,TotalGrossSalary
-    ,`Year`
-    ,`Month`
-    ,`Half`
-    ,OrdinalValue
-) SELECT
-    NEW.RowID
-    ,CURRENT_TIMESTAMP()
-    ,NEW.CreatedBy
-    ,PayFromDate
-    ,PayToDate
-    ,TotalGrossSalary
-    ,`Year`
-    ,`Month`
-    ,`Half`
-    ,OrdinalValue
-FROM payperiod
-GROUP BY PayFromDate,PayToDate
-ORDER BY PayFromDate,PayToDate
-ON
-DUPLICATE
-KEY
-UPDATE
-    LastUpd=CURRENT_TIMESTAMP();
-
 INSERT INTO payrate
 (
     OrganizationID
