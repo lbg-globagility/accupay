@@ -311,6 +311,8 @@ Public Class OrganizationForm
                         currentlyLoggedInUserId:=z_User,
                         firstHalf:=firstHalf,
                         endOfTheMonth:=endOfTheMonth)
+
+                    Await _policy.Refresh()
                 End If
 
                 If _currentOrganization.RowID = z_OrganizationID Then

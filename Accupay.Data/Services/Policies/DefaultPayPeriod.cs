@@ -19,7 +19,7 @@ namespace AccuPay.Data.Services.Policies
             StartDayIsLastDayOfTheMonth = period.Start.Day == DateTime.DaysInMonth(period.Start.Year, period.Start.Month);
             EndDayIsLastDayOfTheMonth = period.End.Day == DateTime.DaysInMonth(period.End.Year, period.End.Month); ;
             StartDayIsPreviousMonth = period.Start.Month == 12;
-            EndDayIsPreviousMonth = period.Start.Month == 12;
+            EndDayIsPreviousMonth = period.End.Month == 12;
         }
 
         public override string ToString()

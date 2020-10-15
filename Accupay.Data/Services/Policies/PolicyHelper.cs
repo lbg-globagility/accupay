@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Enums;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
@@ -10,24 +11,33 @@ namespace AccuPay.Data.Services
         public const string DefaultFirstHalfDaysSpanPolicyLIC = "DefaultFirstHalfDaysSpan";
         public const string DefaultEndOfTheMonthDaysSpanPolicyLIC = "DefaultEndOfTheMonthDaysSpan";
 
-        private readonly TimeEntryPolicy _policy;
+        private readonly ListOfValueService _listOfValueService;
 
-        private readonly ListOfValueCollection _settings;
+        private TimeEntryPolicy _timeEntryPolicy;
+        private ListOfValueCollection _settings;
 
         public PolicyHelper(ListOfValueService listOfValueService)
         {
-            _settings = listOfValueService.Create();
+            _listOfValueService = listOfValueService;
 
-            _policy = new TimeEntryPolicy(_settings);
+            _settings = _listOfValueService.Create();
+            _timeEntryPolicy = new TimeEntryPolicy(_settings);
         }
 
-        public bool ComputeBreakTimeLate => _policy.ComputeBreakTimeLate;
+        public async Task Refresh()
+        {
+            _settings = await _listOfValueService.CreateAsync();
 
-        public bool UseShiftSchedule => _policy.UseShiftSchedule;
+            _timeEntryPolicy = new TimeEntryPolicy(_settings);
+        }
 
-        public bool RespectDefaultRestDay => _policy.RespectDefaultRestDay;
+        public bool ComputeBreakTimeLate => _timeEntryPolicy.ComputeBreakTimeLate;
 
-        public bool ValidateLeaveBalance => _policy.ValidateLeaveBalance;
+        public bool UseShiftSchedule => _timeEntryPolicy.UseShiftSchedule;
+
+        public bool RespectDefaultRestDay => _timeEntryPolicy.RespectDefaultRestDay;
+
+        public bool ValidateLeaveBalance => _timeEntryPolicy.ValidateLeaveBalance;
 
         public bool ShowActual => _settings.GetBoolean("Policy.ShowActual", true);
 
