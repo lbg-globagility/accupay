@@ -95,8 +95,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of RouteRepository)
         services.AddTransient(Of RouteRateRepository)
         services.AddTransient(Of SalaryRepository)
-        services.AddTransient(Of ShiftRepository)
-        services.AddTransient(Of ShiftScheduleRepository)
         services.AddTransient(Of SocialSecurityBracketRepository)
         services.AddTransient(Of TimeAttendanceLogRepository)
         services.AddTransient(Of TimeEntryRepository)

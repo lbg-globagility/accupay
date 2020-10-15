@@ -77,8 +77,6 @@ namespace AccuPay.Data
         public virtual DbSet<Route> Routes { get; set; }
         public virtual DbSet<RoutePayRate> RoutePayRates { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
-        internal virtual DbSet<Shift> Shifts { get; set; }
-        internal virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
         internal virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
         internal virtual DbSet<TardinessRecord> TardinessRecords { get; set; }

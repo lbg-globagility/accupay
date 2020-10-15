@@ -42,9 +42,6 @@
       <None Update="ImportTemplates\accupay-employeelist-template.xlsx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="ImportTemplates\accupay-employeeshift-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
       <None Update="ImportTemplates\accupay-leave-template.xlsx">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

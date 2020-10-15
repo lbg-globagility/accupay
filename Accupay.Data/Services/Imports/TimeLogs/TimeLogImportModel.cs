@@ -24,7 +24,6 @@ namespace AccuPay.Data.Services.Imports
 
         public DateTime? LogDate { get; set; }
         public Employee Employee { get; set; }
-        public ShiftSchedule ShiftSchedule { get; set; }
         public EmployeeDutySchedule EmployeeDutySchedule { get; set; }
         public DateTime ShiftTimeInBounds { get; set; }
         public DateTime ShiftTimeOutBounds { get; set; }
@@ -52,9 +51,7 @@ namespace AccuPay.Data.Services.Imports
         {
             get
             {
-                if (ShiftSchedule != null && ShiftSchedule.Shift != null)
-                    return $"{ShiftSchedule.Shift.TimeFrom.ToStringFormat("hh:mm tt")} - {ShiftSchedule.Shift.TimeTo.ToStringFormat("hh:mm tt")}";
-                else if (EmployeeDutySchedule != null)
+                if (EmployeeDutySchedule != null)
                     return $"{EmployeeDutySchedule.StartTime.ToStringFormat("hh:mm tt")} - {EmployeeDutySchedule.EndTime.ToStringFormat("hh:mm tt")}";
 
                 return "-";

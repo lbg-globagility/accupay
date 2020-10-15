@@ -5,7 +5,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.[Imports]
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Helpers
+Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportedShiftSchedulesForm
@@ -74,7 +74,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.NewShift)
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.Shift)
 
     End Sub
 

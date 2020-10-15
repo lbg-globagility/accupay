@@ -13,25 +13,18 @@ namespace AccuPay.Data.Services.Imports
     {
         private readonly TimeLogsReader _reader;
         private readonly EmployeeRepository _employeeRepository;
-        private readonly PolicyHelper _policy;
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
         private readonly OvertimeRepository _overtimeRepository;
-        private readonly ShiftScheduleRepository _shiftScheduleRepository;
 
         public TimeLogImportParser(TimeLogsReader reader,
-                                    PolicyHelper policy,
                                     EmployeeRepository employeeRepository,
                                     EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
-                                    OvertimeRepository overtimeRepository,
-                                    ShiftScheduleRepository shiftScheduleRepository)
+                                    OvertimeRepository overtimeRepository)
         {
             _reader = reader;
-            _policy = policy;
-
             _employeeRepository = employeeRepository;
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
             _overtimeRepository = overtimeRepository;
-            _shiftScheduleRepository = shiftScheduleRepository;
         }
 
         public async Task<TimeLogImportParserOutput> Parse(string importFile, int organizationId, int userId)
@@ -94,20 +87,11 @@ namespace AccuPay.Data.Services.Imports
 
             TimePeriod datePeriod = new TimePeriod(firstDate, lastDate);
 
-            if (_policy.UseShiftSchedule)
-            {
-                List<EmployeeDutySchedule> employeeShifts = await GetEmployeeDutyShifts(datePeriod, organizationId);
+            List<EmployeeDutySchedule> employeeShifts = await GetEmployeeDutyShifts(datePeriod, organizationId);
 
-                List<Overtime> employeeOvertimes = await GetEmployeeOvertime(datePeriod, organizationId);
+            List<Overtime> employeeOvertimes = await GetEmployeeOvertime(datePeriod, organizationId);
 
-                timeAttendanceHelper = new TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId: organizationId, userId: userId);
-            }
-            else
-            {
-                List<ShiftSchedule> employeeShifts = await GetEmployeeShifts(datePeriod, organizationId);
-
-                timeAttendanceHelper = new TimeAttendanceHelper(logs, employees, employeeShifts, organizationId: organizationId, userId: userId);
-            }
+            timeAttendanceHelper = new TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId: organizationId, userId: userId);
 
             return timeAttendanceHelper;
         }
@@ -132,11 +116,6 @@ namespace AccuPay.Data.Services.Imports
         private async Task<List<Overtime>> GetEmployeeOvertime(TimePeriod timePeriod, int organizationId)
         {
             return (await _overtimeRepository.GetByDatePeriodAsync(organizationId, timePeriod)).ToList();
-        }
-
-        private async Task<List<ShiftSchedule>> GetEmployeeShifts(TimePeriod timePeriod, int organizationId)
-        {
-            return (await _shiftScheduleRepository.GetByDatePeriodAsync(organizationId, timePeriod)).ToList();
         }
 
         public class AllParsedLogOutput

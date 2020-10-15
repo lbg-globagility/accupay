@@ -28,7 +28,6 @@ INNER JOIN employee e ON e.RowID=ete.EmployeeID AND e.OrganizationID=ete.Organiz
 INNER JOIN payperiod pp ON pp.OrganizationID=ete.OrganizationID AND pp.TotalGrossSalary=e.PayFrequencyID AND ete.`Date` BETWEEN pp.PayFromDate AND pp.PayToDate
 WHERE ete.OrganizationID=OrganizID
 AND ete.Absent > 0
-AND ete.EmployeeShiftID IS NOT NULL
 
 GROUP BY pp.PayFromDate DESC,pp.PayToDate DESC,e.LastName,e.FirstName;
 

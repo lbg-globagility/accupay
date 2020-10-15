@@ -237,8 +237,8 @@ Namespace TimeEntrySummary
                     employeetimeentry.Date,
                     employeetimeentrydetails.TimeIn,
                     employeetimeentrydetails.TimeOut,
-                    shift.TimeFrom AS ShiftFrom,
-                    shift.TimeTo AS ShiftTo,
+                    IFNULL(shiftschedules.StartTime, NULL) AS ShiftFrom,
+                    IFNULL(shiftschedules.EndTime, NULL) AS ShiftTo,
                     employeetimeentry.RegularHoursWorked,
                     employeetimeentry.RegularHoursAmount,
                     employeetimeentry.NightDifferentialHours,
@@ -263,13 +263,10 @@ Namespace TimeEntrySummary
                 LEFT JOIN employeetimeentrydetails
                 ON employeetimeentrydetails.Date = employeetimeentry.Date AND
                     employeetimeentrydetails.OrganizationID = employeetimeentry.OrganizationID AND
-                    employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID
-                LEFT JOIN employeeshift
-                ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
-                LEFT JOIN shift
-                ON shift.RowID = employeeshift.ShiftID
-                WHERE employeetimeentry.EmployeeID = @EmployeeID AND
-                    employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo;
+                    employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID;
+                LEFT JOIN shiftschedules
+                    ON shiftschedules.EmployeeID = employeetimeentry.EmployeeID AND
+                        shiftschedules.`Date` = employeetimeentry.`Date`
             ]]>.Value
 
             Dim timeEntries = New Collection(Of TimeEntry)

@@ -307,7 +307,6 @@
     <Compile Include="OvertimeHoursTest.vb" />
     <Compile Include="Import Logs\TimeAnalyzer.vb" />
     <Compile Include="Import Logs\TimeAttendanceHelperNewTest.vb" />
-    <Compile Include="Import Logs\TimeAttendanceHelperTest.vb" />
     <Compile Include="RegexTimelogParserTest.vb" />
     <Compile Include="SalaryCutoffTest.vb" />
     <Compile Include="ServiceProvider.vb" />

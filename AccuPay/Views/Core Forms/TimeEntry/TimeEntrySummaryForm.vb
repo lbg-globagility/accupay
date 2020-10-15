@@ -434,8 +434,8 @@ Public Class TimeEntrySummaryForm
                 etd.TimeIn,
                 etd.TimeOut,
                 etd.RowID,
-                IF(@useNewSchedule, IFNULL(shiftschedules.StartTime, NULL), IFNULL(shift.TimeFrom, NULL)) AS ShiftFrom,
-                IF(@useNewSchedule, IFNULL(shiftschedules.EndTime, NULL), IFNULL(shift.TimeTo, NULL)) AS ShiftTo,
+                IFNULL(shiftschedules.StartTime, NULL) AS ShiftFrom,
+                IFNULL(shiftschedules.EndTime, NULL) AS ShiftTo,
                 ete.RegularHoursWorked,
                 ete.RegularHoursAmount,
                 ete.NightDifferentialHours,
@@ -479,7 +479,7 @@ Public Class TimeEntrySummaryForm
                 etd.TimeStampOut,
                 l.LeaveStartTime,
                 l.LeaveEndTime,
-                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`,
+                IFNULL(shiftschedules.IsRestDay, FALSE) `IsRestDay`,
                 ete.BranchID,
                 branch.BranchName
             FROM employeetimeentry ete
@@ -502,8 +502,6 @@ Public Class TimeEntrySummaryForm
                     etd.OrganizationID = ete.OrganizationID AND
                     etd.EmployeeID = ete.EmployeeID AND
                     etd.RowID = latest.RowID
-            LEFT JOIN employeeshift
-                ON employeeshift.RowID = ete.EmployeeShiftID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -531,9 +529,6 @@ Public Class TimeEntrySummaryForm
                 ON shiftschedules.EmployeeID = ete.EmployeeID AND
                     shiftschedules.`Date` = ete.`Date`
 
-            LEFT JOIN shift
-                ON employeeshift.ShiftID = shift.RowID
-
             LEFT JOIN branch
                 ON ete.BranchID = branch.RowID
 
@@ -551,7 +546,6 @@ Public Class TimeEntrySummaryForm
                 .AddWithValue("@EmployeeID", employee.RowID)
                 .AddWithValue("@DateFrom", payPeriod.PayFromDate)
                 .AddWithValue("@DateTo", payPeriod.PayToDate)
-                .AddWithValue("@UseNewSchedule", _policy.UseShiftSchedule)
             End With
 
             Await connection.OpenAsync()
@@ -681,8 +675,8 @@ Public Class TimeEntrySummaryForm
                 eta.Date,
                 employeetimeentrydetails.TimeIn,
                 employeetimeentrydetails.TimeOut,
-                IF(@useNewSchedule, IFNULL(shiftschedules.StartTime, NULL), IFNULL(shift.TimeFrom, NULL)) AS ShiftFrom,
-                IF(@useNewSchedule, IFNULL(shiftschedules.EndTime, NULL), IFNULL(shift.TimeTo, NULL)) AS ShiftTo,
+                IFNULL(shiftschedules.StartTime, NULL) AS ShiftFrom,
+                IFNULL(shiftschedules.EndTime, NULL) AS ShiftTo,
                 eta.RegularHoursWorked,
                 eta.RegularHoursAmount,
                 eta.NightDifferentialHours,
@@ -720,7 +714,7 @@ Public Class TimeEntrySummaryForm
                 l.LeaveStartTime,
                 l.LeaveEndTime,
                 payrate.PayType,
-                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`,
+                IFNULL(shiftschedules.IsRestDay, FALSE) `IsRestDay`,
                 ete.BranchID,
                 branch.BranchName
             FROM employeetimeentryactual eta
@@ -749,8 +743,6 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
                 employeetimeentrydetails.RowID = latest.RowID
-            LEFT JOIN employeeshift
-                ON employeeshift.RowID = eta.EmployeeShiftID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -767,8 +759,6 @@ Public Class TimeEntrySummaryForm
                 ON ofb.OffBusStartDate = eta.Date AND
                     ofb.EmployeeID = eta.EmployeeID AND
                     latestOb.Created = ofb.Created
-            LEFT JOIN shift
-                ON shift.RowID = employeeshift.ShiftID
 
             LEFT JOIN branch
                 ON ete.BranchID = branch.RowID
@@ -791,7 +781,6 @@ Public Class TimeEntrySummaryForm
                 .AddWithValue("@EmployeeID", employee.RowID)
                 .AddWithValue("@DateFrom", payPeriod.PayFromDate)
                 .AddWithValue("@DateTo", payPeriod.PayToDate)
-                .AddWithValue("@UseNewSchedule", _policy.UseShiftSchedule)
             End With
 
             Await connection.OpenAsync()

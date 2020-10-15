@@ -27,7 +27,6 @@ Partial Class TimeAttendForm
         Me.LeaveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OfficialBusinessToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OvertimeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.OldShiftToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShiftScheduleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimeLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TripTicketsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -39,7 +38,7 @@ Partial Class TimeAttendForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MassOvertimeToolStripMenuItem, Me.LeaveToolStripMenuItem, Me.OfficialBusinessToolStripMenuItem, Me.OvertimeToolStripMenuItem, Me.OldShiftToolStripMenuItem, Me.ShiftScheduleToolStripMenuItem, Me.TimeLogsToolStripMenuItem, Me.TripTicketsToolStripMenuItem, Me.SummaryToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MassOvertimeToolStripMenuItem, Me.LeaveToolStripMenuItem, Me.OfficialBusinessToolStripMenuItem, Me.OvertimeToolStripMenuItem, Me.ShiftScheduleToolStripMenuItem, Me.TimeLogsToolStripMenuItem, Me.TripTicketsToolStripMenuItem, Me.SummaryToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -69,12 +68,6 @@ Partial Class TimeAttendForm
         Me.OvertimeToolStripMenuItem.Name = "OvertimeToolStripMenuItem"
         Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
         Me.OvertimeToolStripMenuItem.Text = "Overtimes"
-        '
-        'OldShiftToolStripMenuItem
-        '
-        Me.OldShiftToolStripMenuItem.Name = "OldShiftToolStripMenuItem"
-        Me.OldShiftToolStripMenuItem.Size = New System.Drawing.Size(98, 20)
-        Me.OldShiftToolStripMenuItem.Text = "Employee Shift"
         '
         'ShiftScheduleToolStripMenuItem
         '
@@ -126,7 +119,6 @@ Partial Class TimeAttendForm
 
     End Sub
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
-    Friend WithEvents OldShiftToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PanelTimeAttend As System.Windows.Forms.Panel
     Friend WithEvents SummaryToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents MassOvertimeToolStripMenuItem As ToolStripMenuItem

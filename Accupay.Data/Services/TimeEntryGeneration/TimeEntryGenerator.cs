@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
@@ -30,7 +29,6 @@ namespace AccuPay.Data.Services
         private IList<Leave> _leaves;
         private IList<OfficialBusiness> _officialBusinesses;
         private IList<AgencyFee> _agencyFees;
-        private IList<ShiftSchedule> _employeeShifts;
         private IList<Salary> _salaries;
         private ICollection<EmploymentPolicy> _employmentPolicies;
         private IList<EmployeeDutySchedule> _shiftSchedules;
@@ -55,7 +53,6 @@ namespace AccuPay.Data.Services
         private readonly OvertimeRepository _overtimeRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly SalaryRepository _salaryRepository;
-        private readonly ShiftScheduleRepository _shiftScheduleRepository;
         private readonly TimeAttendanceLogRepository _timeAttendanceLogRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
         private readonly TimeLogRepository _timeLogRepository;
@@ -98,7 +95,6 @@ namespace AccuPay.Data.Services
             OvertimeRepository overtimeRepository,
             PayPeriodRepository payPeriodRepository,
             SalaryRepository salaryRepository,
-            ShiftScheduleRepository shiftScheduleRepository,
             TimeAttendanceLogRepository timeAttendanceLogRepository,
             TimeEntryRepository timeEntryRepository,
             TimeLogRepository timeLogRepository,
@@ -121,7 +117,6 @@ namespace AccuPay.Data.Services
             _overtimeRepository = overtimeRepository;
             _payPeriodRepository = payPeriodRepository;
             _salaryRepository = salaryRepository;
-            _shiftScheduleRepository = shiftScheduleRepository;
             _timeAttendanceLogRepository = timeAttendanceLogRepository;
             _timeEntryRepository = timeEntryRepository;
             _timeLogRepository = timeLogRepository;
@@ -194,10 +189,6 @@ namespace AccuPay.Data.Services
                 .ToList();
 
             _agencyFees = _agencyFeeRepository
-                .GetByDatePeriod(_organizationId, cuttOffPeriod)
-                .ToList();
-
-            _employeeShifts = _shiftScheduleRepository
                 .GetByDatePeriod(_organizationId, cuttOffPeriod)
                 .ToList();
 
@@ -285,10 +276,6 @@ namespace AccuPay.Data.Services
                 .Where(t => t.EmployeeID == employee.RowID)
                 .ToList();
 
-            var shiftSchedules = _employeeShifts
-                .Where(s => s.EmployeeID == employee.RowID)
-                .ToList();
-
             var overtimesInCutoff = _overtimes
                 .Where(o => o.EmployeeID == employee.RowID)
                 .ToList();
@@ -346,7 +333,6 @@ namespace AccuPay.Data.Services
                 try
                 {
                     var timelog = timeLogs.OrderByDescending(t => t.LastUpd).FirstOrDefault(t => t.LogDate == currentDate);
-                    var employeeShift = shiftSchedules.FirstOrDefault(s => s.EffectiveFrom <= currentDate && currentDate <= s.EffectiveTo);
                     var overtimes = overtimesInCutoff.Where(o => o.OTStartDate <= currentDate && currentDate <= o.OTEndDate).ToList();
                     var leaves = leavesInCutoff.Where(l => l.StartDate == currentDate).ToList();
                     var officialBusiness = officialBusinesses.FirstOrDefault(o => o.StartDate.Value == currentDate);
@@ -361,7 +347,6 @@ namespace AccuPay.Data.Services
                         currentDate,
                         salary,
                         previousTimeEntries,
-                        employeeShift,
                         dutyShiftSched,
                         timelog,
                         overtimes,

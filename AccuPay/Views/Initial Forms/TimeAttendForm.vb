@@ -35,8 +35,6 @@ Public Class TimeAttendForm
         Dim checker = FeatureListChecker.Instance
         MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
 
-        LoadShiftSchedulePolicy()
-
         If Not _policyHelper.UseUserLevel Then
 
             Await CheckRolePermissions()
@@ -68,7 +66,6 @@ Public Class TimeAttendForm
         If shiftPermission Is Nothing OrElse shiftPermission.Read = False Then
 
             ShiftScheduleToolStripMenuItem.Visible = False
-            OldShiftToolStripMenuItem.Visible = False
         End If
 
         If overtimePermission Is Nothing OrElse overtimePermission.Read = False Then
@@ -76,12 +73,6 @@ Public Class TimeAttendForm
         End If
 
     End Function
-
-    Private Sub LoadShiftSchedulePolicy()
-        Dim _bool = _policyHelper.UseShiftSchedule
-        ShiftScheduleToolStripMenuItem.Visible = _bool
-        OldShiftToolStripMenuItem.Visible = Not _bool
-    End Sub
 
     Private Async Sub PrepareFormForUserLevelAuthorizations()
 
@@ -168,11 +159,6 @@ Public Class TimeAttendForm
             pb.Enabled = True
             Exit For
         Next
-    End Sub
-
-    Private Async Sub OldShiftToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OldShiftToolStripMenuItem.Click
-        Await ChangeForm(EmployeeShiftEntryForm, PermissionConstant.SHIFT)
-        previousForm = EmployeeShiftEntryForm
     End Sub
 
     Private Async Sub SummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SummaryToolStripMenuItem.Click

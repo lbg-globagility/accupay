@@ -142,7 +142,15 @@ Public Class OvertimeHoursTest
     End Sub
 
     Private Function GetShift(timeIn As String, timeOut As String, [date] As Date) As CurrentShift
-        Dim shift = New Shift(TimeSpan.Parse(timeIn), TimeSpan.Parse(timeOut))
+
+        Dim currentDay = New DateTime(2020, 1, 1)
+
+        Dim shift = New EmployeeDutySchedule() With {
+            .DateSched = currentDay,
+            .StartTime = TimeSpan.Parse(timeIn),
+            .EndTime = TimeSpan.Parse(timeOut)
+        }
+
         Return New CurrentShift(shift, [date])
     End Function
 

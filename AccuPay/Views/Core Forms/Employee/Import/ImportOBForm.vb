@@ -4,7 +4,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Helpers
+Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportOBForm

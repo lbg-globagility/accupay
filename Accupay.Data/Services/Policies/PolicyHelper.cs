@@ -33,8 +33,6 @@ namespace AccuPay.Data.Services
 
         public bool ComputeBreakTimeLate => _timeEntryPolicy.ComputeBreakTimeLate;
 
-        public bool UseShiftSchedule => _timeEntryPolicy.UseShiftSchedule;
-
         public bool RespectDefaultRestDay => _timeEntryPolicy.RespectDefaultRestDay;
 
         public bool ValidateLeaveBalance => _timeEntryPolicy.ValidateLeaveBalance;

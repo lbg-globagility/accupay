@@ -1774,7 +1774,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DSReportList.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Core\Modules\mdlStoredProcedure.vb" />
     <Compile Include="Core\Modules\mdlValidation.vb" />
     <Compile Include="Views\General Forms\OrganizationForm.Designer.vb">
       <DependentUpon>OrganizationForm.vb</DependentUpon>
@@ -1835,12 +1834,6 @@
       <DependentUpon>rptRF-1.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.designer.vb">
-      <DependentUpon>EmployeeShiftMassUpdate.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Time Attendance Form\EmployeeTreeView.Designer.vb">
       <DependentUpon>EmployeeTreeView.vb</DependentUpon>
     </Compile>
@@ -1858,18 +1851,6 @@
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Time Attendance Form\MassOvertimeForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\ShiftEntryForm.Designer.vb">
-      <DependentUpon>ShiftEntryForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\ShiftEntryForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\EmployeeShiftEntryForm.Designer.vb">
-      <DependentUpon>EmployeeShiftEntryForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\EmployeeShiftEntryForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\ShiftScheduleForm.Designer.vb">
@@ -1891,9 +1872,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ImportTemplates\accupay-employeelist-template.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ImportTemplates\accupay-employeeshift-template.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ImportTemplates\accupay-leave-template.xlsx">
@@ -2631,17 +2609,8 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptRF-1.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\EmployeeShiftMassUpdate.resx">
-      <DependentUpon>EmployeeShiftMassUpdate.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\MassOvertimeForm.resx">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\ShiftEntryForm.resx">
-      <DependentUpon>ShiftEntryForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\EmployeeShiftEntryForm.resx">
-      <DependentUpon>EmployeeShiftEntryForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

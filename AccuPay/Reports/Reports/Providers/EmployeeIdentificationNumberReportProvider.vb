@@ -44,7 +44,8 @@ Public Class EmployeeIdentificationNumberReportProvider
 
                 objText = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtAddress"), TextObject)
 
-                objText.Text = organization?.Address?.FullAddress
+                'this throws an error if we assign Nothing to objText.Text
+                objText.Text = If(organization?.Address?.FullAddress, "")
 
                 report.SetDataSource(dt)
 

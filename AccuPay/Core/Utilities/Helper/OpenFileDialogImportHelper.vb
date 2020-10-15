@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Namespace Global.AccuPay.Helpers
+Namespace Global.AccuPay.Desktop.Helpers
 
     Public Class OpenFileDialogImportHelper
 

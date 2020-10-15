@@ -6,7 +6,7 @@ Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
-Namespace Global.AccuPay.Helpers
+Namespace Global.AccuPay.Desktop.Helpers
 
     Public Class DownloadTemplateHelper
 

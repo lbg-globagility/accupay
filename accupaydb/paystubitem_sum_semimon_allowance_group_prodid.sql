@@ -16,7 +16,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW 
         0 AS Column1,
         IF(
             pr.PayType = 'Special Non-Working Holiday' AND e.CalcSpecialHoliday = TRUE,
-            IFNULL(et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2) / sh.DivisorToDailyRate) * (pr.PayRate - 1), 0),
+            IFNULL(et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2) / 8) * (pr.PayRate - 1), 0),
             IF(
                 pr.PayType = 'Regular Holiday' AND e.CalcHoliday = TRUE,
                 IFNULL(et.RegularHoursWorked * (ea.AllowanceAmount / (e.WorkDaysPerYear / 12 / 2)) * (pr.PayRate - 1), 0),
@@ -37,10 +37,6 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW 
         e.EmployeeType != 'Fixed'
     INNER JOIN payfrequency pf
     ON pf.RowID = e.PayFrequencyID
-    LEFT JOIN employeeshift es
-    ON es.RowID = et.EmployeeShiftID
-    LEFT JOIN shift sh
-    ON sh.RowID = es.ShiftID
     INNER JOIN employeeallowance ea
     ON ea.AllowanceFrequency = 'Semi-monthly' AND
         ea.EmployeeID = e.RowID AND
@@ -70,8 +66,6 @@ UNION
     FROM employeetimeentry et
     INNER JOIN employee e ON e.OrganizationID=et.OrganizationID AND e.RowID=et.EmployeeID AND e.EmploymentStatus NOT IN ('Resigned','Terminated') AND e.EmployeeType='Fixed'
     INNER JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID
-    INNER JOIN employeeshift es ON es.RowID=et.EmployeeShiftID
-    INNER JOIN shift sh ON sh.RowID=es.ShiftID
     INNER JOIN employeeallowance ea ON ea.AllowanceFrequency='Semi-monthly' AND ea.EmployeeID=e.RowID AND ea.OrganizationID=e.OrganizationID AND et.`Date` BETWEEN ea.EffectiveStartDate AND ea.EffectiveEndDate
     INNER JOIN product p ON p.RowID=ea.ProductID
     INNER JOIN payrate pr ON pr.RowID=et.PayRateID ;

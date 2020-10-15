@@ -11,8 +11,6 @@ CREATE TRIGGER `AFTINS_employee_then_employeesalary` AFTER INSERT ON `employee` 
 
 DECLARE viewID INT(11);
 
-DECLARE marit_stat CHAR(50);
-
 DECLARE exist_empstatus INT(1);
 
 DECLARE exist_emptype INT(1);
@@ -20,23 +18,6 @@ DECLARE exist_emptype INT(1);
 DECLARE exist_empsalutat INT(1);
 
 DECLARE anyint INT(11);
-
-DECLARE div_RowID INT(11);
-
-DECLARE hasShiftForThisYear CHAR(1);
-
-DECLARE EndingDate DATE DEFAULT LAST_DAY(DATE_FORMAT(CURDATE(),'%Y-12-01'));
-
-DECLARE StartingDate DATE;
-
-DECLARE dept_mate_empRowID INT(11);
-
-DECLARE ordervaloforigin INT(11);
-
-DECLARE the_date DATE;
-
-
-SELECT IF(NEW.MaritalStatus IN ('Single','Married'),NEW.MaritalStatus,'Zero') INTO marit_stat;
 
 INSERT INTO employeechecklist
 (
@@ -170,109 +151,6 @@ END IF;
 IF NEW.BankName IS NOT NULL THEN
 
     SELECT `INSUPD_listofval`(NEW.BankName,NEW.BankName, 'Bank Names',NEW.BankName, 'Yes', NEW.BankName, NEW.CreatedBy, '1') INTO anyint;
-
-END IF;
-
-SELECT pos.DivisionId FROM position pos WHERE pos.RowID=IFNULL(NEW.PositionID,0) AND pos.OrganizationID=NEW.OrganizationID INTO div_RowID;
-
-IF div_RowID IS NOT NULL THEN
-
-
-
-    SELECT e.RowID FROM employee e INNER JOIN position pos ON pos.DivisionId=div_RowID AND pos.OrganizationID=e.OrganizationID WHERE e.OrganizationID=NEW.OrganizationID LIMIT 1 INTO dept_mate_empRowID;
-
-    INSERT INTO `employeeshiftbyday`
-    (
-        OrganizationID
-        ,Created
-        ,CreatedBy
-        ,EmployeeID
-        ,ShiftID
-        ,NameOfDay
-        ,NightShift
-        ,RestDay
-        ,OrderByValue
-        ,IsEncodedByDay
-        ,UniqueShift
-    ) SELECT
-        NEW.OrganizationID
-        ,CURRENT_TIMESTAMP()
-        ,NEW.CreatedBy
-        ,NEW.RowID
-        ,esd.ShiftID
-        ,esd.NameOfDay
-        ,esd.NightShift
-        ,esd.RestDay
-        ,esd.OrderByValue
-        ,esd.IsEncodedByDay
-        ,esd.UniqueShift
-        FROM employeeshiftbyday esd
-        WHERE esd.OrganizationID=NEW.OrganizationID
-        AND esd.EmployeeID=dept_mate_empRowID
-        ORDER BY esd.OrderByValue
-        LIMIT 7;
-
-        SELECT OrderByValue,SampleDate FROM employeeshiftbyday WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID AND OriginDay=0 LIMIT 1 INTO ordervaloforigin,the_date;
-
-        UPDATE employeeshiftbyday esb
-        SET esb.OriginDay = esb.OrderByValue - ordervaloforigin
-        WHERE esb.EmployeeID=NEW.RowID
-        AND esb.OrganizationID=NEW.OrganizationID
-        ORDER BY esb.OrderByValue;
-
-        UPDATE employeeshiftbyday esb
-        SET esb.SampleDate=ADDDATE(the_date,esb.OriginDay)
-        WHERE esb.EmployeeID=NEW.RowID
-        AND esb.OrganizationID=NEW.OrganizationID
-        ORDER BY esb.OrderByValue;
-
-        SET @uniqueshift = 0;
-
-        SET @indxcount = 0;
-
-        UPDATE employeeshiftbyday esd
-        INNER JOIN (
-                        SELECT *
-                        ,(@indxcount := @indxcount + 1) AS IncrementUnique
-                        FROM (
-                                SELECT esd.RowID
-                                ,esd.ShiftID
-                                FROM employeeshiftbyday esd
-                                WHERE esd.EmployeeID=NEW.RowID
-                                AND esd.OrganizationID=NEW.OrganizationID
-                                AND esd.ShiftID IS NOT NULL
-                                GROUP BY esd.ShiftID
-                                ORDER BY esd.SampleDate
-                        ) i
-        ) esdd ON esdd.ShiftID = esd.ShiftID
-        SET esd.UniqueShift=esdd.IncrementUnique
-        WHERE esd.EmployeeID=NEW.RowID
-        AND esd.OrganizationID=NEW.OrganizationID;
-
-        INSERT INTO employeefirstweekshift
-        (
-            OrganizationID
-            ,CreatedBy
-            ,EmployeeID
-            ,ShiftID
-            ,EffectiveFrom
-            ,EffectiveTo
-            ,NightShift
-            ,RestDay
-            ,IsEncodedByDay
-        )   SELECT esd.OrganizationID
-            ,esd.CreatedBy
-            ,esd.EmployeeID
-            ,esd.ShiftID
-            ,esd.SampleDate
-            ,ADDDATE(esd.SampleDate,INTERVAL (COUNT(RowID) - 1) DAY)
-            ,esd.NightShift
-            ,esd.RestDay
-            ,esd.IsEncodedByDay
-            FROM employeeshiftbyday esd
-            WHERE esd.EmployeeID=NEW.RowID
-            GROUP BY esd.ShiftID
-            HAVING esd.OrganizationID = NEW.OrganizationID;
 
 END IF;
 

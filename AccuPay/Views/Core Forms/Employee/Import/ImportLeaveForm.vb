@@ -7,7 +7,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Helpers
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Utilities.Attributes
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml

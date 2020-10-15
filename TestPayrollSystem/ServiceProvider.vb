@@ -91,8 +91,6 @@ Public Class ServiceProvider
         services.AddTransient(Of PreviousEmployerRepository)
         services.AddTransient(Of ProductRepository)
         services.AddTransient(Of SalaryRepository)
-        services.AddTransient(Of ShiftRepository)
-        services.AddTransient(Of ShiftScheduleRepository)
         services.AddTransient(Of SocialSecurityBracketRepository)
         services.AddTransient(Of TimeAttendanceLogRepository)
         services.AddTransient(Of TimeEntryRepository)

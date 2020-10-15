@@ -73,8 +73,6 @@ Public Class GeneralForm
 
         End If
 
-        DutyShiftingToolStripMenuItem.Visible = Not _policyHelper.UseShiftSchedule
-
     End Sub
 
     Private Sub ShowAgency()
@@ -104,7 +102,6 @@ Public Class GeneralForm
         Dim organizationPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ORGANIZATION).FirstOrDefault()
         Dim branchPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.BRANCH).FirstOrDefault()
         Dim rolePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ROLE).FirstOrDefault()
-        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
         Dim calendarPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.CALENDAR).FirstOrDefault()
         Dim agencyPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.AGENCY).FirstOrDefault()
 
@@ -112,7 +109,7 @@ Public Class GeneralForm
         OrganizationToolStripMenuItem.Visible = If(organizationPermission?.Read, False)
         UserRoleToolStripMenuItem.Visible = If(rolePermission?.Read, False)
 
-        'Branch, Calendar, Agency and Duty Shift only overrides the visibility if Read is False
+        'Branch, Calendar and Agency only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If branchPermission Is Nothing OrElse branchPermission.Read = False Then
             BranchToolStripMenuItem.Visible = False
@@ -121,10 +118,6 @@ Public Class GeneralForm
         If calendarPermission Is Nothing OrElse calendarPermission.Read = False Then
             CalendarsToolStripMenuItem.Visible = False
             PayRateToolStripMenuItem.Visible = False
-        End If
-
-        If shiftPermission Is Nothing OrElse shiftPermission.Read = False Then
-            DutyShiftingToolStripMenuItem.Visible = False
         End If
 
         If agencyPermission Is Nothing OrElse agencyPermission.Read = False Then
@@ -214,13 +207,6 @@ Public Class GeneralForm
 
         Await ChangeForm(SSSCntrib)
         previousForm = SSSCntrib
-
-    End Sub
-
-    Private Async Sub DutyShiftingToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DutyShiftingToolStripMenuItem.Click
-
-        Await ChangeForm(ShiftEntryForm, PermissionConstant.SHIFT)
-        previousForm = ShiftEntryForm
 
     End Sub
 

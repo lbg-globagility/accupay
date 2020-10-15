@@ -16,8 +16,6 @@ Namespace Global.AccuPay.Entity
 
         Public Property EmployeeID As Integer?
 
-        Public Property EmployeeShiftID As Integer?
-
         Public Property PayRateID As Integer?
 
         <Column("Date")>
@@ -93,9 +91,6 @@ Namespace Global.AccuPay.Entity
 
         <NotMapped>
         Public Property DutyEnd As Date
-
-        <ForeignKey("EmployeeShiftID")>
-        Public Overridable Property ShiftSchedule As ShiftSchedule
 
         Public Sub New()
         End Sub

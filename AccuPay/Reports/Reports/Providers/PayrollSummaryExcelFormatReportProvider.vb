@@ -5,7 +5,7 @@ Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Interfaces
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Helpers
+Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayrollSummaryExcelFormatReportProvider

@@ -9,8 +9,6 @@ namespace AccuPay.Data.Entities
 
         public int? EmployeeID { get; set; }
 
-        public int? EmployeeShiftID { get; set; }
-
         public int? PayRateID { get; set; }
 
         [Column("Date")]

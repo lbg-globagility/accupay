@@ -24,7 +24,6 @@ namespace AccuPay.Data.Services
         private readonly EmployeeRepository _employeeRepository;
         private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
         private readonly LeaveLedgerRepository _leaveLedgerRepository;
-        private readonly ShiftScheduleRepository _shiftScheduleRepository;
 
         public LeaveDataService(
             PayrollContext context,
@@ -33,8 +32,7 @@ namespace AccuPay.Data.Services
             EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
             LeaveRepository leaveRepository,
             LeaveLedgerRepository leaveLedgerRepository,
-            PayPeriodRepository payPeriodRepository,
-            ShiftScheduleRepository shiftScheduleRepository) :
+            PayPeriodRepository payPeriodRepository) :
 
             base(leaveRepository,
                 payPeriodRepository,
@@ -45,7 +43,6 @@ namespace AccuPay.Data.Services
             _employeeRepository = employeeRepository;
             _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
-            _shiftScheduleRepository = shiftScheduleRepository;
         }
 
         protected override async Task SanitizeEntity(Leave leave, Leave oldLeave)
@@ -135,7 +132,6 @@ namespace AccuPay.Data.Services
         {
             var leaveRepository = new LeaveRepository(_context);
 
-            var employeeShifts = new List<ShiftSchedule>();
             var shiftSchedules = new List<EmployeeDutySchedule>();
             var employees = new List<Employee>();
 
@@ -152,7 +148,6 @@ namespace AccuPay.Data.Services
                     .Distinct()
                     .ToArray();
 
-                employeeShifts = await GetEmployeeShifts(employeeIds, organizationId, firstLeave, lastLeave);
                 shiftSchedules = await GetShiftSchedules(employeeIds, organizationId, firstLeave, lastLeave);
                 employees = await GetEmployees(employeeIds);
             }
@@ -189,27 +184,19 @@ namespace AccuPay.Data.Services
 
                                 if (leave.EmployeeID.HasValue)
                                 {
-                                    var earlierEmployeeShifts = await GetEmployeeShifts(
-                                        new int[] { leave.EmployeeID.Value },
-                                        organizationId,
-                                        firstShiftDate,
-                                        lastShiftDate);
-
                                     var earlierShiftSchedules = await GetShiftSchedules(
                                         new int[] { leave.EmployeeID.Value },
                                         organizationId,
                                         firstShiftDate,
                                         lastShiftDate);
 
-                                    employeeShifts.InsertRange(0, earlierEmployeeShifts);
                                     shiftSchedules.InsertRange(0, earlierShiftSchedules);
                                 }
 
-                                employeeShifts = employeeShifts.OrderBy(s => s.EffectiveFrom).ToList();
                                 shiftSchedules = shiftSchedules.OrderBy(s => s.DateSched).ToList();
                             }
 
-                            await ValidateLeaveBalance(employeeShifts, shiftSchedules, unusedApprovedLeaves, employee, leave);
+                            await ValidateLeaveBalance(shiftSchedules, unusedApprovedLeaves, employee, leave);
                         }
                     }
                     transaction.Commit();
@@ -237,19 +224,6 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task<List<ShiftSchedule>> GetEmployeeShifts(
-                int[] employeeIds,
-                int organizationId,
-                DateTime firstLeave,
-                DateTime lastLeave)
-        {
-            return (await _shiftScheduleRepository.GetByEmployeeAndDatePeriodAsync(
-                organizationId,
-                employeeIds,
-                new TimePeriod(firstLeave, lastLeave)))
-                .ToList();
-        }
-
         private async Task<List<EmployeeDutySchedule>> GetShiftSchedules(
             int[] employeeIds,
             int organizationId,
@@ -264,7 +238,6 @@ namespace AccuPay.Data.Services
         }
 
         private async Task ValidateLeaveBalance(
-            List<ShiftSchedule> employeeShifts,
             List<EmployeeDutySchedule> shiftSchedules,
             List<Leave> unusedApprovedLeaves,
             Employee employee,
@@ -277,7 +250,6 @@ namespace AccuPay.Data.Services
             {
                 var totalLeaveHours = ComputeTotalLeaveHours(
                     unusedApprovedLeaves,
-                    employeeShifts,
                     shiftSchedules,
                     employee);
 
@@ -307,7 +279,6 @@ namespace AccuPay.Data.Services
 
         private decimal ComputeTotalLeaveHours(
             List<Leave> leaves,
-            List<ShiftSchedule> employeeShifts,
             List<EmployeeDutySchedule> shiftSchedules,
             Employee employee)
         {
@@ -322,18 +293,11 @@ namespace AccuPay.Data.Services
             {
                 var currentDate = leave.StartDate;
 
-                var employeeShift = employeeShifts
-                    .Where(s => s.EffectiveFrom <= currentDate)
-                    .Where(s => currentDate <= s.EffectiveTo)
-                    .FirstOrDefault();
-
                 var dutyShiftSched = shiftSchedules.FirstOrDefault(es => es.DateSched == currentDate);
 
                 var currentShift = DayCalculator.GetCurrentShift(
                     currentDate,
-                    employeeShift,
                     dutyShiftSched,
-                    _policy.UseShiftSchedule,
                     _policy.RespectDefaultRestDay,
                     employee.DayOfRest);
 

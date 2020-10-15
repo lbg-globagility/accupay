@@ -22,9 +22,15 @@ Public Class UndertimeHoursTest
     <TestCase("8:00", "15:00", 4)>
     <TestCase("8:00", "18:00", 1)>
     Public Sub Should_Compute_Correct_Undertime_Hours(timeIn As String, timeOut As String, answer As Decimal)
-        Dim shift = New Shift(
-            TimeSpan.Parse("8:00"), TimeSpan.Parse("19:00"),
-            TimeSpan.Parse("12:00"), TimeSpan.Parse("13:00"))
+
+        Dim shift = New EmployeeDutySchedule() With {
+            .DateSched = Date.Parse("2018-01-01"),
+            .StartTime = TimeSpan.Parse("8:00"),
+            .EndTime = TimeSpan.Parse("19:00"),
+            .BreakStartTime = TimeSpan.Parse("12:00"),
+            .BreakLength = 1
+        }
+
         Dim currentShift = New CurrentShift(shift, Date.Parse("2018-01-01"))
 
         Dim workStart = Date.Parse($"2018-01-01 {timeIn}")

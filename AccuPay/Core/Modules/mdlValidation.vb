@@ -9,6 +9,10 @@ Module mdlValidation
     Public Z_ErrorProvider As New ErrorProvider
     Public z_datetime As String = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
 
+    Public connectionString As String = n_DataBaseConnection.GetStringMySQLConnectionString
+
+    Public connection As MySqlConnection = New MySqlConnection(connectionString)
+
     Public Sub TextboxTestNumeric(ByVal textboxConts As TextBox, ByVal IntLen As Integer, ByVal DeciLen As Integer)
         If textboxConts.ReadOnly Then
             Exit Sub
@@ -60,19 +64,6 @@ Module mdlValidation
         End If
 
     End Sub
-
-    Public Function SetWarningIfEmpty(ByVal co As Control,
-                                      Optional SetErrorString As String = Nothing)
-        Z_ErrorProvider.Clear()
-        Z_ErrorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink
-        If co.Text.Trim = Nothing Then
-            Dim errorMessage = If(SetErrorString = Nothing, "Required to fill", SetErrorString)
-            Z_ErrorProvider.SetError(co, errorMessage)
-            If errorMessage.Trim.Length > 0 Then co.Focus()
-            Return False
-        End If
-        Return True
-    End Function
 
     Public Function SQL_GetDataTable(ByVal sql_Queery As String) As DataTable
         Dim DataReturn As New DataTable

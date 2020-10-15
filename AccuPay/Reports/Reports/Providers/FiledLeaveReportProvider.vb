@@ -48,7 +48,8 @@ Public Class FiledLeaveReportProvider
         txtCompanyName.Text = organization?.Name.ToTrimmedUpperCase()
 
         Dim txtAddress = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("txtAddress"), TextObject)
-        txtAddress.Text = organization?.Address?.FullAddress
+        'this throws an error if we assign Nothing to txtAddress.Text
+        txtAddress.Text = If(organization?.Address?.FullAddress, "")
 
         Dim viewer As New CrysRepForm()
         viewer.crysrepvwr.ReportSource = report

@@ -45,8 +45,6 @@ Public Class TimeLogsForm2
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private ReadOnly _shiftScheduleRepository As ShiftScheduleRepository
-
     Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Private _currentRolePermission As RolePermission
@@ -71,8 +69,6 @@ Public Class TimeLogsForm2
         _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-
-        _shiftScheduleRepository = MainServiceProvider.GetRequiredService(Of ShiftScheduleRepository)
 
         _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub

@@ -34,7 +34,6 @@ namespace AccuPay.Data.Services
             DateTime currentDate,
             Salary salary,
             IList<TimeEntry> oldTimeEntries,
-            ShiftSchedule employeeShift,
             EmployeeDutySchedule shiftSched,
             TimeLog timeLog,
             IList<Overtime> overtimes,
@@ -67,7 +66,7 @@ namespace AccuPay.Data.Services
             if (hasSalaryForThisDate == false)
                 return timeEntry;
 
-            var currentShift = GetCurrentShift(currentDate, employeeShift, shiftSched, _policy.UseShiftSchedule, _policy.RespectDefaultRestDay, _employee.DayOfRest);
+            var currentShift = GetCurrentShift(currentDate, shiftSched, _policy.RespectDefaultRestDay, _employee.DayOfRest);
 
             timeEntry.BranchID = branchId;
             timeEntry.IsRestDay = currentShift.IsRestDay;
@@ -104,8 +103,6 @@ namespace AccuPay.Data.Services
         {
             var previousDay = currentDate.AddDays(-1);
             var calculator = new TimeEntryCalculator();
-
-            timeEntry.EmployeeShiftID = currentShift.ShiftSchedule?.RowID;
 
             bool policyPaidAsLongAsPresent = _policy.PaidAsLongAsPresent;
             bool hasTimeLog = HasTimeLog(timeEntry, timeLog, officialBusiness, policyPaidAsLongAsPresent);
@@ -786,14 +783,11 @@ namespace AccuPay.Data.Services
         #region Public static methods
 
         public static CurrentShift GetCurrentShift(DateTime currentDate,
-                                            ShiftSchedule employeeShift,
-                                            EmployeeDutySchedule shiftSched,
-                                            bool useShiftSchedule,
-                                            bool respectDefaultRestDay,
-                                            int? employeeDayOfRest)
+            EmployeeDutySchedule shiftSched,
+            bool respectDefaultRestDay,
+            int? employeeDayOfRest)
         {
-            var currentShift = useShiftSchedule ? new CurrentShift(shiftSched, currentDate) :
-                                                new CurrentShift(employeeShift, currentDate);
+            var currentShift = new CurrentShift(shiftSched, currentDate);
 
             if (respectDefaultRestDay)
             {

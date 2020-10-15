@@ -52,7 +52,8 @@ Public Class Cinema2000TardinessReportProvider
 
             Dim txtAddress = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtAddress"), TextObject)
 
-            txtAddress.Text = organization?.Address?.FullAddress
+            'this throws an error if we assign Nothing to txtAddress.Text
+            txtAddress.Text = If(organization?.Address?.FullAddress, "")
 
             Dim dataService = MainServiceProvider.GetRequiredService(Of CinemaTardinessReportDataService)
             Dim tardinessReportModels = Await dataService.GetData(

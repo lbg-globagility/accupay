@@ -39,9 +39,6 @@
         public bool RestDayInclusive =>
                         _settings.GetBoolean("Payroll Policy.restday.inclusiveofbasicpay");
 
-        public bool UseShiftSchedule =>
-                        _settings.GetBoolean("ShiftPolicy.UseShiftSchedule");
-
         public bool ValidateLeaveBalance =>
                         _settings.GetBoolean("LeaveBalancePolicy.Validate");
 

@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS `employeetimeentryactual` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) DEFAULT NULL,
   `Date` date NOT NULL DEFAULT '1900-01-01' COMMENT 'time entry date',
-  `EmployeeShiftID` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
   `EmployeeFixedSalaryFlag` char(1) DEFAULT '0' COMMENT 'Flag is derived from EmployeeSalary table. flag to indicate if employee is on fixed salary, thus no overtime pay is calculated. TotalDayPay is fixed regardless of hours worked.',
   `ShiftHours` decimal(10,2) NOT NULL DEFAULT 0.00,

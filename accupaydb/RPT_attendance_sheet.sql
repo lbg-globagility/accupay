@@ -10,10 +10,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_attendance_sheet`(IN `Organizat
     DETERMINISTIC
 BEGIN
 
-DECLARE usesShiftSchedule BOOLEAN DEFAULT FALSE;
-
-SET usesShiftSchedule = EXISTS(SELECT l.RowID FROM listofval l WHERE l.`Type` = 'ShiftPolicy' AND l.DisplayValue = 'True');
-
 SET @customDateFormat = '%c/%e/%Y';
 SET @customTimeFormat = '%l:%i';
 
@@ -21,16 +17,12 @@ SELECT
 	CONCAT_WS(' / ', e.EmployeeID, CONCAT_WS(', ', e.LastName, e.FirstName)) `DatCol1`
 	, UCASE(LEFT(DAYNAME(ete.`Date`), 3)) `DatCol2`
 	, DATE_FORMAT(ete.`Date`, @customDateFormat) `DatCol3`
-	,IF(usesShiftSchedule = TRUE,
-		CONCAT_WS(' to '
-						, CONCAT(TIME_FORMAT(shiftschedules.StartTime, IF(MINUTE(shiftschedules.StartTime)=0, '%l', @customTimeFormat))
-									, LEFT(TIME_FORMAT(shiftschedules.StartTime, ' %p'), 2))
-						, CONCAT(TIME_FORMAT(shiftschedules.EndTime, IF(MINUTE(shiftschedules.EndTime)=0, '%l', @customTimeFormat))
-									, LEFT(TIME_FORMAT(shiftschedules.EndTime, ' %p'), 2))
-						),
-					
-		IFNULL(CONCAT(TIME_FORMAT(shift.TimeFrom,'%l'), IF(TIME_FORMAT(shift.TimeFrom,'%i') > 0, CONCAT(':', TIME_FORMAT(shift.TimeFrom,'%i')),''),'to', TIME_FORMAT(shift.TimeTo,'%l'), IF(TIME_FORMAT(shift.TimeTo,'%i') > 0, CONCAT(':', TIME_FORMAT(shift.TimeTo,'%i')),'')),'')
-	)`DatCol4`
+    , CONCAT_WS(' to '
+        , CONCAT(TIME_FORMAT(shiftschedules.StartTime, IF(MINUTE(shiftschedules.StartTime)=0, '%l', @customTimeFormat))
+                    , LEFT(TIME_FORMAT(shiftschedules.StartTime, ' %p'), 2))
+        , CONCAT(TIME_FORMAT(shiftschedules.EndTime, IF(MINUTE(shiftschedules.EndTime)=0, '%l', @customTimeFormat))
+                    , LEFT(TIME_FORMAT(shiftschedules.EndTime, ' %p'), 2))
+    )`DatCol4`
 	,REPLACE(TIME_FORMAT(etd.TimeIn,'%l:%i %p'),'M','') `DatCol5`
 	,'' AS `DatCol6`
 	,'' AS `DatCol7`
@@ -62,8 +54,6 @@ LEFT JOIN employeetimeentrydetails etd
         etd.OrganizationID = ete.OrganizationID AND
         etd.EmployeeID = ete.EmployeeID AND
         etd.RowID = latest.RowID
-LEFT JOIN employeeshift
-    ON employeeshift.RowID = ete.EmployeeShiftID
 LEFT JOIN (
     SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
     FROM employeeofficialbusiness
@@ -86,9 +76,6 @@ LEFT JOIN payrate
 LEFT JOIN shiftschedules
     ON shiftschedules.EmployeeID = ete.EmployeeID AND
         shiftschedules.`Date` = ete.`Date`
-    
-LEFT JOIN shift
-    ON employeeshift.ShiftID = shift.RowID
     
 INNER JOIN employee e
     ON ete.EmployeeID = e.RowID

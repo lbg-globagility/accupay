@@ -549,11 +549,7 @@ Public Class MDIPrimaryForm
 
             ElseIf groupindex = 2 Then 'Time Attendance
 
-                If previousForm.Name = "ShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "EmployeeShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "Payrate" Then 'ShiftEntryForm
+                If previousForm.Name = "Payrate" Then
 
                 ElseIf previousForm.Name = "EmpTimeDetail" Then
 

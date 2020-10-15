@@ -8,7 +8,7 @@ Imports AccuPay.Data.Services.CostCenterReportDataService
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.ExcelReportColumn
-Imports AccuPay.Helpers
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
