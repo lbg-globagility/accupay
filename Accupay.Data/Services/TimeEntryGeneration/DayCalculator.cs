@@ -104,7 +104,7 @@ namespace AccuPay.Data.Services
             var previousDay = currentDate.AddDays(-1);
             var calculator = new TimeEntryCalculator();
 
-            bool policyPaidAsLongAsPresent = _policy.PaidAsLongAsPresent;
+            bool policyPaidAsLongAsPresent = _policy.PaidAsLongAsPresent ? _organization.IsTimeLogsOnlyAttendanceRequirement : false;
             bool hasTimeLog = HasTimeLog(timeEntry, timeLog, officialBusiness, policyPaidAsLongAsPresent);
 
             TimePeriod logPeriod = null;

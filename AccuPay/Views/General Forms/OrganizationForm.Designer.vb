@@ -80,11 +80,12 @@ Partial Class OrganizationForm
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.OrganizationGridView = New System.Windows.Forms.DataGridView()
+        Me.c_companyname = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_companyname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.chkTimeLogsOnlyRequirement = New System.Windows.Forms.CheckBox()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -121,6 +122,7 @@ Partial Class OrganizationForm
         'SplitContainer1.Panel1
         '
         Me.SplitContainer1.Panel1.AutoScroll = True
+        Me.SplitContainer1.Panel1.Controls.Add(Me.chkTimeLogsOnlyRequirement)
         Me.SplitContainer1.Panel1.Controls.Add(Me.FirstPayPeriodGroupBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.IsAgencyCheckBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label71)
@@ -681,6 +683,14 @@ Partial Class OrganizationForm
         Me.OrganizationGridView.Size = New System.Drawing.Size(255, 554)
         Me.OrganizationGridView.TabIndex = 303
         '
+        'c_companyname
+        '
+        Me.c_companyname.DataPropertyName = "Name"
+        Me.c_companyname.HeaderText = "Organization Name"
+        Me.c_companyname.Name = "c_companyname"
+        Me.c_companyname.ReadOnly = True
+        Me.c_companyname.Width = 200
+        '
         'SearchTextBox
         '
         Me.SearchTextBox.Location = New System.Drawing.Point(9, 55)
@@ -717,13 +727,15 @@ Partial Class OrganizationForm
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.Width = 200
         '
-        'c_companyname
+        'chkTimeLogsOnlyRequirement
         '
-        Me.c_companyname.DataPropertyName = "Name"
-        Me.c_companyname.HeaderText = "Organization Name"
-        Me.c_companyname.Name = "c_companyname"
-        Me.c_companyname.ReadOnly = True
-        Me.c_companyname.Width = 200
+        Me.chkTimeLogsOnlyRequirement.AutoSize = True
+        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(360, 468)
+        Me.chkTimeLogsOnlyRequirement.Name = "chkTimeLogsOnlyRequirement"
+        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(232, 17)
+        Me.chkTimeLogsOnlyRequirement.TabIndex = 379
+        Me.chkTimeLogsOnlyRequirement.Text = "Allow Time Logs as attendance requirement"
+        Me.chkTimeLogsOnlyRequirement.UseVisualStyleBackColor = True
         '
         'OrganizationForm
         '
@@ -822,4 +834,5 @@ Partial Class OrganizationForm
     Friend WithEvents Label14 As Label
     Friend WithEvents Label16 As Label
     Friend WithEvents Label15 As Label
+    Friend WithEvents chkTimeLogsOnlyRequirement As CheckBox
 End Class

@@ -19,7 +19,7 @@ Public Class OrganizationForm
     Private _currentRolePermission As RolePermission
     Private _currentOrganization As Organization
     Private _organizations As List(Of Organization)
-
+    Private _timeEntryPolicy As TimeEntryPolicy
     Private ReadOnly _addressRepository As AddressRepository
     Private ReadOnly _organizationRepository As OrganizationRepository
     Private ReadOnly _policy As PolicyHelper
@@ -53,6 +53,10 @@ Public Class OrganizationForm
         AddHandler OrganizationGridView.SelectionChanged, AddressOf OrganizationGridView_SelectionChanged
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
+        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        Dim settings = listOfValueService.Create()
+        _timeEntryPolicy = New TimeEntryPolicy(settings)
+        chkTimeLogsOnlyRequirement.Visible = _timeEntryPolicy.PaidAsLongAsPresent
     End Sub
 
     Private Async Function RestrictByRole() As Task
@@ -170,6 +174,7 @@ Public Class OrganizationForm
 
             End If
 
+            chkTimeLogsOnlyRequirement.Checked = _currentOrganization.IsTimeLogsOnlyAttendanceRequirement
         End If
 
     End Sub
@@ -254,6 +259,7 @@ Public Class OrganizationForm
         _currentOrganization.NightDifferentialTimeFrom = nightdiffshiftfrom.Value.TimeOfDay
         _currentOrganization.NightDifferentialTimeTo = nightdiffshiftto.Value.TimeOfDay
 
+        _currentOrganization.IsTimeLogsOnlyAttendanceRequirement = chkTimeLogsOnlyRequirement.Checked
     End Sub
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
