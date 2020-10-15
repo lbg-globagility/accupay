@@ -76,8 +76,8 @@ namespace AccuPay.Data.Entities
         {
             var ordinalValue = month * 2;
 
-            var firstHalfDaySpan = policy.DefaultFirstHalfDaysSpan();
-            var endOfTheMonthDaySpan = policy.DefaultEndOfTheMonthDaysSpan();
+            var firstHalfDaySpan = policy.DefaultFirstHalfDaysSpan(organizationId);
+            var endOfTheMonthDaySpan = policy.DefaultEndOfTheMonthDaysSpan(organizationId);
 
             DateTime payFromDate, payToDate;
 

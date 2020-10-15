@@ -73,7 +73,7 @@ namespace AccuPay.Data.Repositories
 
             if (dateRange != null)
             {
-                var cutOff = GetCutOffPeriodUsingDefault(dateRange);
+                var cutOff = GetCutOffPeriodUsingDefault(dateRange, organizationId);
 
                 query = query
                     .Where(x => x.PayFromDate >= cutOff.Start)
@@ -88,7 +88,10 @@ namespace AccuPay.Data.Repositories
             var query = CreateBaseQuery(organizationId)
                 .Where(p => p.Status == PayPeriodStatus.Closed);
 
-            var cutOffStart = GetCutOffPeriodUsingDefault(new TimePeriod(date, date)).Start;
+            var cutOffStart = GetCutOffPeriodUsingDefault(
+                    new TimePeriod(date, date),
+                    organizationId)
+                .Start;
             query = query.Where(x => x.PayFromDate >= cutOffStart);
 
             return await query.AnyAsync();
@@ -368,18 +371,25 @@ namespace AccuPay.Data.Repositories
             return query;
         }
 
-        private TimePeriod GetCutOffPeriodUsingDefault(TimePeriod dateRange)
+        private TimePeriod GetCutOffPeriodUsingDefault(TimePeriod dateRange, int organizationId)
         {
-            var cutOffStartDate = GetCutOffDateUsingDefault(dateRange.Start.ToMinimumHourValue(), isCutOffStart: true);
-            var cutOffEndDate = GetCutOffDateUsingDefault(dateRange.End.ToMinimumHourValue(), isCutOffStart: false);
+            var cutOffStartDate = GetCutOffDateUsingDefault(
+                dateRange.Start.ToMinimumHourValue(),
+                isCutOffStart: true,
+                organizationId: organizationId);
+
+            var cutOffEndDate = GetCutOffDateUsingDefault(
+                dateRange.End.ToMinimumHourValue(),
+                isCutOffStart: false,
+                organizationId: organizationId);
 
             return new TimePeriod(cutOffStartDate, cutOffEndDate);
         }
 
-        private DateTime GetCutOffDateUsingDefault(DateTime date, bool isCutOffStart)
+        private DateTime GetCutOffDateUsingDefault(DateTime date, bool isCutOffStart, int organizationId)
         {
-            DayValueSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
-            DayValueSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
+            DayValueSpan firstHalf = _policy.DefaultFirstHalfDaysSpan(organizationId);
+            DayValueSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan(organizationId);
 
             (DayValueSpan currentDaySpan, int month, int year) = PayPeriodHelper.GetCutOffDayValueSpan(date, firstHalf, endOfTheMonth);
 

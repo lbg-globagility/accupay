@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class ListOfValueRepository
+    public class ListOfValueRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -53,7 +53,7 @@ namespace AccuPay.Data.Repositories
         {
             return _context.ListOfValues
                 .Where(l => l.Type == type)
-                .Where(l => l.Active == "Yes")
+                .Where(l => l.Active == ListOfValue.ActiveYesOption)
                 .ToList();
         }
 
@@ -61,7 +61,7 @@ namespace AccuPay.Data.Repositories
         {
             return await _context.ListOfValues
                 .Where(l => l.Type == type)
-                .Where(l => l.Active == "Yes")
+                .Where(l => l.Active == ListOfValue.ActiveYesOption)
                 .ToListAsync();
         }
 
@@ -87,6 +87,16 @@ namespace AccuPay.Data.Repositories
             return stringList;
         }
 
+        public async Task<ListOfValue> GetPolicyAsync(string type, string lic, int organizationId)
+        {
+            return await _context.ListOfValues
+                .AsNoTracking()
+                .Where(f => f.Type == type)
+                .Where(f => f.LIC == lic)
+                .Where(f => f.OrganizationID == organizationId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task DeleteAsync(ListOfValue value)
         {
             _context.ListOfValues.Remove(value);
@@ -103,6 +113,24 @@ namespace AccuPay.Data.Repositories
         {
             _context.ListOfValues.Add(value);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveManyAsync(List<ListOfValue> listOfvalues)
+        {
+            listOfvalues.ForEach(entity => SaveFunction(entity, IsNewEntity(entity.RowID)));
+            await _context.SaveChangesAsync();
+        }
+
+        private void SaveFunction(ListOfValue listOfValue, bool newEntity)
+        {
+            if (newEntity)
+            {
+                _context.Set<ListOfValue>().Add(listOfValue);
+            }
+            else
+            {
+                _context.Entry(listOfValue).State = EntityState.Modified;
+            }
         }
     }
 }

@@ -1223,12 +1223,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="Views\General Forms\AddListOfValueForm.Designer.vb">
-      <DependentUpon>AddListOfValueForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\AddListOfValueForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\General Forms\AgencyForm.designer.vb">
       <DependentUpon>AgencyForm.vb</DependentUpon>
     </Compile>
@@ -2301,9 +2295,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Alphalist\WithholdingTax.resx">
       <DependentUpon>WithholdingTax.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\AddListOfValueForm.resx">
-      <DependentUpon>AddListOfValueForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\AgencyForm.resx">
       <DependentUpon>AgencyForm.vb</DependentUpon>

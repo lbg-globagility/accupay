@@ -6,6 +6,10 @@ namespace AccuPay.Data.Services
 {
     public class PolicyHelper
     {
+        public const string PayPeriodPolicyType = "Pay Period Policy";
+        public const string DefaultFirstHalfDaysSpanPolicyLIC = "DefaultFirstHalfDaysSpan";
+        public const string DefaultEndOfTheMonthDaysSpanPolicyLIC = "DefaultEndOfTheMonthDaysSpan";
+
         private readonly TimeEntryPolicy _policy;
 
         private readonly ListOfValueCollection _settings;
@@ -42,21 +46,36 @@ namespace AccuPay.Data.Services
         public PayRateCalculationBasis PayRateCalculationBasis =>
                 _settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
 
-        #region Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previouse month", second day "is not previous month"
+        public bool HasDifferentPayPeriodDates => _settings.GetBoolean("Payroll Policy.HasDifferentPayPeriodDates", false);
 
-        public DayValueSpan DefaultFirstHalfDaysSpan()
+        #region Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previous month", second day "is not previous month"
+
+        public DayValueSpan DefaultFirstHalfDaysSpan(int? organizationId)
         {
-            var value = _settings.GetString("Pay Period Policy.DefaultFirstHalfDaysSpan");
+            bool findByOrganization = DefaultPayPeriodFindByOrganization(organizationId);
+
+            var value = _settings.GetString(
+                name: $"{PayPeriodPolicyType}.{DefaultFirstHalfDaysSpanPolicyLIC}",
+                findByOrganization: findByOrganization,
+                organizationId: organizationId);
 
             return ParseDaysSpan(value, DayValueSpan.DefaultFirstHalf);
         }
 
-        public DayValueSpan DefaultEndOfTheMonthDaysSpan()
+        public DayValueSpan DefaultEndOfTheMonthDaysSpan(int? organizationId)
         {
-            var value = _settings.GetString("Pay Period Policy.DefaultEndOfTheMonthDaysSpan");
+            bool findByOrganization = DefaultPayPeriodFindByOrganization(organizationId);
+
+            var value = _settings.GetString(
+                name: $"{PayPeriodPolicyType}.{DefaultEndOfTheMonthDaysSpanPolicyLIC}",
+                findByOrganization: findByOrganization,
+                organizationId: organizationId);
 
             return ParseDaysSpan(value, DayValueSpan.DefaultEndOfTheMonth);
         }
+
+        private bool DefaultPayPeriodFindByOrganization(int? organizationId) =>
+            HasDifferentPayPeriodDates && organizationId.HasValue;
 
         private DayValueSpan ParseDaysSpan(string policyValue, DayValueSpan defaultValue)
         {
@@ -98,6 +117,6 @@ namespace AccuPay.Data.Services
             return DayValueSpan.Create(startDayValue, endDayValue);
         }
 
-        #endregion Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previouse month", second day "is not previous month"
+        #endregion Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previous month", second day "is not previous month"
     }
 }

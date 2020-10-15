@@ -111,8 +111,8 @@ namespace AccuPay.Data.Services
 
         private async Task<bool> CheckIfSalaryHasBeenUsed(Salary salary)
         {
-            DayValueSpan firstHalf = _policy.DefaultFirstHalfDaysSpan();
-            DayValueSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan();
+            DayValueSpan firstHalf = _policy.DefaultFirstHalfDaysSpan(salary.OrganizationID.Value);
+            DayValueSpan endOfTheMonth = _policy.DefaultEndOfTheMonthDaysSpan(salary.OrganizationID.Value);
 
             (DayValueSpan currentDaySpan, int month, int year) = PayPeriodHelper
                 .GetCutOffDayValueSpan(salary.EffectiveFrom, firstHalf, endOfTheMonth);

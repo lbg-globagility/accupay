@@ -7,6 +7,8 @@ namespace AccuPay.Data.Entities
     [Table("listofval")]
     public class ListOfValue
     {
+        public const string ActiveYesOption = "Yes";
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
@@ -34,5 +36,21 @@ namespace AccuPay.Data.Entities
         public string Description { get; set; }
 
         public int? OrderBy { get; set; }
+
+        public static ListOfValue NewPolicy(string value, string lic, string type, int? organizationId, int currentlyLoggedInUserId, int? orderBy = null)
+        {
+            return new ListOfValue()
+            {
+                DisplayValue = value,
+                LIC = lic,
+                Type = type,
+                Active = ActiveYesOption,
+                OrganizationID = organizationId,
+                CreatedBy = currentlyLoggedInUserId,
+                LastUpdBy = currentlyLoggedInUserId,
+                Created = DateTime.Now,
+                LastUpd = DateTime.Now
+            };
+        }
     }
 }

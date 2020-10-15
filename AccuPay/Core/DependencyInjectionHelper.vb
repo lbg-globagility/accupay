@@ -46,6 +46,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of OvertimeRateService)
 
         services.AddTransient(Of ActualTimeEntryRepository)
+        services.AddTransient(Of AddressRepository)
         services.AddTransient(Of AgencyFeeRepository)
         services.AddTransient(Of AgencyRepository)
         services.AddTransient(Of AllowanceRepository)
@@ -139,8 +140,10 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of EmployeeDataService)
         services.AddTransient(Of EmployeeDutyScheduleDataService)
         services.AddTransient(Of LeaveDataService)
+        services.AddTransient(Of ListOfValueDataService)
         services.AddTransient(Of LoanDataService)
         services.AddTransient(Of OfficialBusinessDataService)
+        services.AddTransient(Of OrganizationDataService)
         services.AddTransient(Of OvertimeDataService)
         services.AddTransient(Of PaystubDataService)
         services.AddTransient(Of PaystubEmailDataService)

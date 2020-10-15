@@ -4,17 +4,10 @@ Module mdlValidation
     Public Z_Client As Integer
     Public z_OrganizationID As Integer
     Public z_User As Integer
-    Public Z_UserName As String
     Public z_postName As String
     Public z_CompanyName As String
-    Public z_CompanyAddr As String
-    Public Z_Mouseleaver As Boolean = False
     Public Z_ErrorProvider As New ErrorProvider
     Public z_datetime As String = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
-    Public z_ssid As Integer
-    Public z_phID As Integer
-    Public Z_encryptdata As String
-    Public Z_encryptdata2 As String
 
     Public Sub TextboxTestNumeric(ByVal textboxConts As TextBox, ByVal IntLen As Integer, ByVal DeciLen As Integer)
         If textboxConts.ReadOnly Then
@@ -81,19 +74,6 @@ Module mdlValidation
         Return True
     End Function
 
-    Public Function execute(ByVal query As String) As DataTable
-        Try
-            Dim con As New MySqlConnection(connectionString)
-            Dim da As New MySqlDataAdapter(query, con)
-            Dim cb As New MySqlCommandBuilder(da)
-            Dim dt As New DataTable
-            da.Fill(dt)
-            Return dt
-        Catch ex As Exception
-            Return Nothing
-        End Try
-    End Function
-
     Public Function SQL_GetDataTable(ByVal sql_Queery As String) As DataTable
         Dim DataReturn As New DataTable
         Try
@@ -128,17 +108,6 @@ Module mdlValidation
             command.Connection.Close()
         End Try
     End Function
-
-    Public Sub fillCombobox(ByVal sqlCommand As String, ByVal LvName As ComboBox)
-        LvName.Items.Clear()
-        Dim dtFiller As New DataTable
-        dtFiller = execute(sqlCommand)
-
-        For rowCounter = 0 To dtFiller.Rows.Count - 1
-            LvName.Items.Add(dtFiller.Rows(rowCounter).Item(0))
-
-        Next
-    End Sub
 
     Public Function SQL_ArrayList(ByVal Sqlcommand As String) As ArrayList
         connection = New MySqlConnection(connectionString)
@@ -245,32 +214,6 @@ Module mdlValidation
         Catch ex As Exception
             'MsgBox(ex.Message & " ERR_NO 77-10 : myBalloon")
         End Try
-    End Sub
-
-    Public hintWarn As ToolTip 'New ToolTip
-
-    Public Sub myBalloonWarn(Optional ToolTipStringContent As String = Nothing, Optional ToolTipStringTitle As String = Nothing, Optional objct As System.Windows.Forms.IWin32Window = Nothing, Optional x As Integer = 0, Optional y As Integer = 0, Optional dispo As Byte = 0, Optional duration As Integer = 2275)
-
-        'Dim hint As New ToolTip
-        Try
-            If hintWarn IsNot Nothing Then
-                If dispo = 1 Then
-                    hintWarn.Hide(objct)
-                    hintWarn.Dispose()
-                    'Exit Try
-                    'Exit Sub
-                Else
-                    hintWarn = New ToolTip
-                    hintWarn.IsBalloon = True
-                    hintWarn.ToolTipTitle = ToolTipStringTitle
-                    hintWarn.ToolTipIcon = ToolTipIcon.Warning
-                    hintWarn.Show(ToolTipStringContent, objct, x - 2, y - 2, duration)
-                End If
-            End If
-        Catch ex As Exception
-            'MsgBox(ex.Message & " ERR_NO 77-10 : myBalloonWarn")
-        End Try
-
     End Sub
 
 End Module

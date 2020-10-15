@@ -29,6 +29,13 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync(x => x.RowID == id);
         }
 
+        public async Task<ICollection<T>> GetAllAsync()
+        {
+            return await _context.Set<T>()
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<ICollection<T>> GetManyByIdsAsync(int[] ids)
         {
             return await _context.Set<T>()

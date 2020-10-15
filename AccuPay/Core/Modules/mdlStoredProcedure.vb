@@ -84,46 +84,6 @@ Module mdlStoredProcedure
         Return F_return
     End Function
 
-    Public Function sp_list(ByVal DisplayValue As String,
-                                           ByVal LIC As String,
-                                           ByVal Type As String,
-                                           ByVal ParentLIC As String,
-                                           ByVal Active As String,
-                                           ByVal Description As String,
-                                          ByVal Created As DateTime,
-                                          ByVal CreatedBy As String,
-                                          ByVal LastUpD As DateTime,
-                                          ByVal orderby As Integer,
-                                          ByVal lastupdby As String) As Boolean
-
-        Dim F_return As Boolean = False
-        Dim SQL_command As MySqlCommand =
-                  New MySqlCommand("I_ListValue", connection)
-        With SQL_command
-            Try
-                .Connection.Open()
-                .Parameters.AddWithValue("I_DisplayValue", DisplayValue)
-                .Parameters.AddWithValue("I_LIC", LIC)
-                .Parameters.AddWithValue("I_Type", Type)
-                .Parameters.AddWithValue("I_ParentLIC", ParentLIC)
-                .Parameters.AddWithValue("I_Active", Active)
-                .Parameters.AddWithValue("I_Description", Description)
-                .Parameters.AddWithValue("I_Created", Created)
-                .Parameters.AddWithValue("I_Createdby", CreatedBy)
-                .Parameters.AddWithValue("I_lastupd", LastUpD)
-                .Parameters.AddWithValue("I_orderby", orderby)
-                .Parameters.AddWithValue("I_lastupdby", lastupdby)
-                .CommandType = CommandType.StoredProcedure
-                F_return = (.ExecuteNonQuery > 0)
-            Catch ex As Exception
-                MsgBox(ex.Message, MsgBoxStyle.Critical, "Error")
-            Finally
-                connection.Close()
-            End Try
-        End With
-        Return F_return
-    End Function
-
     Public Function SP_Organization(ByVal Name As String,
                                      ByVal PrimaryAddressID As Integer,
                                      ByVal PrimaryContactID As Integer,

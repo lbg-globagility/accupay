@@ -70,31 +70,26 @@ namespace AccuPay.Data.Services
             return value?.DisplayValue;
         }
 
-        public ListOfValueCollection GetSublist(string type)
-        {
-            return new ListOfValueCollection(_values.Where(l => l.Type == type));
-        }
-
-        public string GetString(string name, string @default = "")
+        public string GetString(string name, string @default = "", bool findByOrganization = false, int? organizationId = null)
         {
             var names = Split(name);
-            var value = GetStringValue(names.Item1, names.Item2);
+            var value = GetStringValue(names.Item1, names.Item2, findByOrganization, organizationId);
 
             return value ?? @default;
         }
 
-        public string GetStringOrNull(string name)
+        public string GetStringOrNull(string name, bool findByOrganization = false, int? organizationId = null)
         {
             var names = Split(name);
 
-            return GetStringValue(names.Item1, names.Item2);
+            return GetStringValue(names.Item1, names.Item2, findByOrganization, organizationId);
         }
 
-        public string GetStringOrDefault(string name, string @default = "")
+        public string GetStringOrDefault(string name, string @default = "", bool findByOrganization = false, int? organizationId = null)
         {
             var names = Split(name);
 
-            return GetStringValue(names.Item1, names.Item2) ?? @default;
+            return GetStringValue(names.Item1, names.Item2, findByOrganization, organizationId) ?? @default;
         }
 
         public T GetEnum<T>(string name, T @default = default(T), bool findByOrganization = false) where T : struct
@@ -170,14 +165,35 @@ namespace AccuPay.Data.Services
             return new Tuple<string, string>(null, null);
         }
 
-        private string GetStringValue(string type, string lic)
+        private string GetStringValue(string type, string lic, bool findByOrganization = false, int? organizationId = null)
         {
             ListOfValue value = null;
 
+            var query = _values.AsQueryable();
+
             if (type == null)
-                value = _values?.FirstOrDefault(f => f.LIC == lic);
+                query = query.Where(f => f.LIC == lic);
             else
-                value = _values?.FirstOrDefault(f => f.LIC == lic && f.Type == type);
+                query = query.Where(f => f.LIC == lic && f.Type == type);
+
+            if (findByOrganization)
+            {
+                value = query
+                    .Where(f => f.OrganizationID != null)
+                    .Where(f => f.OrganizationID == organizationId)
+                    .FirstOrDefault();
+
+                if (value == null)
+                {
+                    value = query
+                        .Where(f => f.OrganizationID == null)
+                        .FirstOrDefault();
+                }
+            }
+            else
+            {
+                value = query.FirstOrDefault();
+            }
 
             return value?.DisplayValue;
         }
