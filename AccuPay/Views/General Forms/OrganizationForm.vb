@@ -52,7 +52,7 @@ Public Class OrganizationForm
         AddHandler OrganizationGridView.SelectionChanged, AddressOf OrganizationGridView_SelectionChanged
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
-        chkTimeLogsOnlyRequirement.Visible = _policy.TimeEntryPolicy.PaidAsLongAsPresent
+        chkTimeLogsOnlyRequirement.Visible = _policy.PaidAsLongAsPresent
     End Sub
 
     Private Async Function RestrictByRole() As Task
