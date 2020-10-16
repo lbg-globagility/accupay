@@ -52,7 +52,7 @@ Public Class OrganizationForm
         AddHandler OrganizationGridView.SelectionChanged, AddressOf OrganizationGridView_SelectionChanged
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
-        chkTimeLogsOnlyRequirement.Visible = _policy.PaidAsLongAsPresent
+        chkTimeLogsOnlyRequirement.Visible = _policy.PaidAsLongAsHasTimeLog
     End Sub
 
     Private Async Function RestrictByRole() As Task
@@ -170,7 +170,7 @@ Public Class OrganizationForm
 
             End If
 
-            chkTimeLogsOnlyRequirement.Checked = _currentOrganization.IsTimeLogsOnlyAttendanceRequirement
+            chkTimeLogsOnlyRequirement.Checked = _currentOrganization.PaidAsLongAsHasTimeLog
         End If
 
     End Sub
@@ -255,7 +255,7 @@ Public Class OrganizationForm
         _currentOrganization.NightDifferentialTimeFrom = nightdiffshiftfrom.Value.TimeOfDay
         _currentOrganization.NightDifferentialTimeTo = nightdiffshiftto.Value.TimeOfDay
 
-        _currentOrganization.IsTimeLogsOnlyAttendanceRequirement = chkTimeLogsOnlyRequirement.Checked
+        _currentOrganization.PaidAsLongAsHasTimeLog = chkTimeLogsOnlyRequirement.Checked
     End Sub
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click

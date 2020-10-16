@@ -51,7 +51,8 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("PrimaryAddressId")]
         public Address Address { get; set; }
-        public bool IsTimeLogsOnlyAttendanceRequirement { get; set; }
+
+        public bool PaidAsLongAsHasTimeLog { get; set; }
 
         public static Organization NewOrganization(int userId, int clientId)
         {

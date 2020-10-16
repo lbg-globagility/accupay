@@ -42,8 +42,8 @@
         public bool ValidateLeaveBalance =>
                         _settings.GetBoolean("LeaveBalancePolicy.Validate");
 
-        public bool PaidAsLongAsPresent =>
-                        _settings.GetBoolean("TimeEntry.TimeLogAsPaymentRequirement");
+        public bool PaidAsLongAsHasTimeLog =>
+                        _settings.GetBoolean("TimeEntry Policy.PaidAsLongAsHasTimeLog");
 
         public bool PostLegalHolidayCheck =>
                         _settings.GetBoolean("HolidayPolicy.PostLegalHolidayCheck");

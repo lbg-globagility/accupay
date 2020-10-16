@@ -9,12 +9,12 @@ namespace AccuPay.Data.Services
 {
     public class TimeEntryCalculator
     {
-        public decimal ComputeRegularHours(TimePeriod workPeriod,
-                                        CurrentShift currentShift,
-                                        bool computeBreakTimeLate)
+        public decimal ComputeRegularHours(
+            TimePeriod workPeriod,
+            CurrentShift currentShift,
+            bool computeBreakTimeLate)
         {
             var shiftPeriod = currentShift.ShiftPeriod;
-
             var coveredPeriod = workPeriod.Overlap(shiftPeriod);
 
             if (currentShift.HasBreaktime && computeBreakTimeLate == false)
@@ -28,12 +28,13 @@ namespace AccuPay.Data.Services
             return coveredPeriod.TotalHours;
         }
 
-        public decimal ComputeLateHours(TimePeriod workPeriod,
-                                        CurrentShift currentShift,
-                                        bool computeBreakTimeLate,
-                                        bool paidAsLongAsPresent = false)
+        public decimal ComputeLateHours(
+            TimePeriod workPeriod,
+            CurrentShift currentShift,
+            bool computeBreakTimeLate,
+            bool paidAsLongAsHasTimeLog = false)
         {
-            if (paidAsLongAsPresent) return 0;
+            if (paidAsLongAsHasTimeLog) return 0;
 
             var shiftPeriod = currentShift.ShiftPeriod;
 
@@ -53,24 +54,25 @@ namespace AccuPay.Data.Services
             return latePeriod.TotalHours;
         }
 
-        public decimal ComputeBreakTimeLateHours(TimePeriod workPeriod,
-                                                CurrentShift currentShift,
-                                                IList<TimeAttendanceLog> timeAttendanceLogs,
-                                                IList<BreakTimeBracket> breakTimeBrackets,
-                                                bool paidAsLongAsPresent = false)
+        public decimal ComputeBreakTimeLateHours(
+            TimePeriod workPeriod,
+            CurrentShift currentShift,
+            IList<TimeAttendanceLog> timeAttendanceLogs,
+            IList<BreakTimeBracket> breakTimeBrackets,
+            bool paidAsLongAsHasTimeLog = false)
         {
-            if (paidAsLongAsPresent) return 0;
+            if (paidAsLongAsHasTimeLog) return 0;
 
             var shiftPeriod = currentShift.ShiftPeriod;
 
             var startTime = workPeriod.Start >= shiftPeriod.Start ? workPeriod.Start : shiftPeriod.Start;
             var endTime = workPeriod.End >= shiftPeriod.End ? shiftPeriod.End : workPeriod.End;
 
-            var logs = timeAttendanceLogs.
-                            Where(l => l.TimeStamp >= startTime).
-                            Where(l => l.TimeStamp <= endTime).
-                            OrderBy(l => l.TimeStamp).
-                            ToList();
+            var logs = timeAttendanceLogs
+                .Where(l => l.TimeStamp >= startTime)
+                .Where(l => l.TimeStamp <= endTime)
+                .OrderBy(l => l.TimeStamp)
+                .ToList();
 
             var totalBreakTimeLateHours = GetTotalBreakTimeLateHours(logs);
 
@@ -87,9 +89,9 @@ namespace AccuPay.Data.Services
             return finalBreakTimeLateHours;
         }
 
-        public decimal ComputeUndertimeHours(TimePeriod workPeriod, CurrentShift currentShift, bool computeBreakTimeLate, bool paidAsLongAsPresent = false)
+        public decimal ComputeUndertimeHours(TimePeriod workPeriod, CurrentShift currentShift, bool computeBreakTimeLate, bool paidAsLongAsHasTimeLog = false)
         {
-            if (paidAsLongAsPresent) return 0;
+            if (paidAsLongAsHasTimeLog) return 0;
 
             var shiftPeriod = currentShift.ShiftPeriod;
 
