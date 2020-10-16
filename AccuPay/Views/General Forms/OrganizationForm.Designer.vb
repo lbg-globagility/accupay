@@ -24,6 +24,7 @@ Partial Class OrganizationForm
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.chkTimeLogsOnlyRequirement = New System.Windows.Forms.CheckBox()
         Me.FirstPayPeriodGroupBox = New System.Windows.Forms.GroupBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -80,11 +81,11 @@ Partial Class OrganizationForm
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.OrganizationGridView = New System.Windows.Forms.DataGridView()
+        Me.c_companyname = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_companyname = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -121,6 +122,7 @@ Partial Class OrganizationForm
         'SplitContainer1.Panel1
         '
         Me.SplitContainer1.Panel1.AutoScroll = True
+        Me.SplitContainer1.Panel1.Controls.Add(Me.chkTimeLogsOnlyRequirement)
         Me.SplitContainer1.Panel1.Controls.Add(Me.FirstPayPeriodGroupBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.IsAgencyCheckBox)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label71)
@@ -168,6 +170,16 @@ Partial Class OrganizationForm
         Me.SplitContainer1.SplitterDistance = 527
         Me.SplitContainer1.TabIndex = 310
         '
+        'chkTimeLogsOnlyRequirement
+        '
+        Me.chkTimeLogsOnlyRequirement.AutoSize = True
+        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(367, 267)
+        Me.chkTimeLogsOnlyRequirement.Name = "chkTimeLogsOnlyRequirement"
+        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(232, 17)
+        Me.chkTimeLogsOnlyRequirement.TabIndex = 379
+        Me.chkTimeLogsOnlyRequirement.Text = "Allow Time Logs as attendance requirement"
+        Me.chkTimeLogsOnlyRequirement.UseVisualStyleBackColor = True
+        '
         'FirstPayPeriodGroupBox
         '
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label16)
@@ -180,7 +192,7 @@ Partial Class OrganizationForm
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label12)
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label13)
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label14)
-        Me.FirstPayPeriodGroupBox.Location = New System.Drawing.Point(360, 275)
+        Me.FirstPayPeriodGroupBox.Location = New System.Drawing.Point(360, 290)
         Me.FirstPayPeriodGroupBox.Name = "FirstPayPeriodGroupBox"
         Me.FirstPayPeriodGroupBox.Size = New System.Drawing.Size(271, 144)
         Me.FirstPayPeriodGroupBox.TabIndex = 378
@@ -681,6 +693,14 @@ Partial Class OrganizationForm
         Me.OrganizationGridView.Size = New System.Drawing.Size(255, 554)
         Me.OrganizationGridView.TabIndex = 303
         '
+        'c_companyname
+        '
+        Me.c_companyname.DataPropertyName = "Name"
+        Me.c_companyname.HeaderText = "Organization Name"
+        Me.c_companyname.Name = "c_companyname"
+        Me.c_companyname.ReadOnly = True
+        Me.c_companyname.Width = 200
+        '
         'SearchTextBox
         '
         Me.SearchTextBox.Location = New System.Drawing.Point(9, 55)
@@ -716,14 +736,6 @@ Partial Class OrganizationForm
         Me.DataGridViewTextBoxColumn1.HeaderText = "Organization Name"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.Width = 200
-        '
-        'c_companyname
-        '
-        Me.c_companyname.DataPropertyName = "Name"
-        Me.c_companyname.HeaderText = "Organization Name"
-        Me.c_companyname.Name = "c_companyname"
-        Me.c_companyname.ReadOnly = True
-        Me.c_companyname.Width = 200
         '
         'OrganizationForm
         '
@@ -822,4 +834,5 @@ Partial Class OrganizationForm
     Friend WithEvents Label14 As Label
     Friend WithEvents Label16 As Label
     Friend WithEvents Label15 As Label
+    Friend WithEvents chkTimeLogsOnlyRequirement As CheckBox
 End Class

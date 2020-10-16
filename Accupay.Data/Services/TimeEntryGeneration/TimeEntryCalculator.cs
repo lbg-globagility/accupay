@@ -59,6 +59,8 @@ namespace AccuPay.Data.Services
                                                 IList<BreakTimeBracket> breakTimeBrackets,
                                                 bool paidAsLongAsPresent = false)
         {
+            if (paidAsLongAsPresent) return 0;
+
             var shiftPeriod = currentShift.ShiftPeriod;
 
             var startTime = workPeriod.Start >= shiftPeriod.Start ? workPeriod.Start : shiftPeriod.Start;

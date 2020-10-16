@@ -37,6 +37,8 @@ namespace AccuPay.Data.Services
 
         public bool ValidateLeaveBalance => _timeEntryPolicy.ValidateLeaveBalance;
 
+        public bool PaidAsLongAsPresent => _timeEntryPolicy.PaidAsLongAsPresent;
+
         public bool ShowActual => _settings.GetBoolean("Policy.ShowActual", true);
 
         public bool UseUserLevel => _settings.GetBoolean("User Policy.UseUserLevel", false);
