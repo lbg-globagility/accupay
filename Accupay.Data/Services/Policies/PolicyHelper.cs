@@ -126,5 +126,7 @@ namespace AccuPay.Data.Services
         }
 
         #endregion Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previous month", second day "is not previous month"
+
+        public TimeEntryPolicy TimeEntryPolicy => _timeEntryPolicy;
     }
 }

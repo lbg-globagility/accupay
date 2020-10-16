@@ -24,6 +24,7 @@ Partial Class OrganizationForm
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.chkTimeLogsOnlyRequirement = New System.Windows.Forms.CheckBox()
         Me.FirstPayPeriodGroupBox = New System.Windows.Forms.GroupBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -85,7 +86,6 @@ Partial Class OrganizationForm
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.chkTimeLogsOnlyRequirement = New System.Windows.Forms.CheckBox()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -170,6 +170,16 @@ Partial Class OrganizationForm
         Me.SplitContainer1.SplitterDistance = 527
         Me.SplitContainer1.TabIndex = 310
         '
+        'chkTimeLogsOnlyRequirement
+        '
+        Me.chkTimeLogsOnlyRequirement.AutoSize = True
+        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(367, 267)
+        Me.chkTimeLogsOnlyRequirement.Name = "chkTimeLogsOnlyRequirement"
+        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(232, 17)
+        Me.chkTimeLogsOnlyRequirement.TabIndex = 379
+        Me.chkTimeLogsOnlyRequirement.Text = "Allow Time Logs as attendance requirement"
+        Me.chkTimeLogsOnlyRequirement.UseVisualStyleBackColor = True
+        '
         'FirstPayPeriodGroupBox
         '
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label16)
@@ -182,7 +192,7 @@ Partial Class OrganizationForm
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label12)
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label13)
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label14)
-        Me.FirstPayPeriodGroupBox.Location = New System.Drawing.Point(360, 275)
+        Me.FirstPayPeriodGroupBox.Location = New System.Drawing.Point(360, 290)
         Me.FirstPayPeriodGroupBox.Name = "FirstPayPeriodGroupBox"
         Me.FirstPayPeriodGroupBox.Size = New System.Drawing.Size(271, 144)
         Me.FirstPayPeriodGroupBox.TabIndex = 378
@@ -726,16 +736,6 @@ Partial Class OrganizationForm
         Me.DataGridViewTextBoxColumn1.HeaderText = "Organization Name"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.Width = 200
-        '
-        'chkTimeLogsOnlyRequirement
-        '
-        Me.chkTimeLogsOnlyRequirement.AutoSize = True
-        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(360, 468)
-        Me.chkTimeLogsOnlyRequirement.Name = "chkTimeLogsOnlyRequirement"
-        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(232, 17)
-        Me.chkTimeLogsOnlyRequirement.TabIndex = 379
-        Me.chkTimeLogsOnlyRequirement.Text = "Allow Time Logs as attendance requirement"
-        Me.chkTimeLogsOnlyRequirement.UseVisualStyleBackColor = True
         '
         'OrganizationForm
         '
