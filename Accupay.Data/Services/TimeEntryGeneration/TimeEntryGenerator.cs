@@ -31,7 +31,7 @@ namespace AccuPay.Data.Services
         private IList<AgencyFee> _agencyFees;
         private IList<Salary> _salaries;
         private ICollection<EmploymentPolicy> _employmentPolicies;
-        private IList<EmployeeDutySchedule> _shiftSchedules;
+        private IList<EmployeeDutySchedule> _shifts;
         private List<TimeAttendanceLog> _timeAttendanceLogs;
         private List<BreakTimeBracket> _breakTimeBrackets;
         private ICollection<TripTicket> _tripTickets;
@@ -192,7 +192,7 @@ namespace AccuPay.Data.Services
                 .GetByDatePeriod(_organizationId, cuttOffPeriod)
                 .ToList();
 
-            _shiftSchedules = _employeeDutyScheduleRepository
+            _shifts = _employeeDutyScheduleRepository
                 .GetByDatePeriod(_organizationId, cuttOffPeriod)
                 .ToList();
 
@@ -292,7 +292,7 @@ namespace AccuPay.Data.Services
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
-            var dutyShiftSchedules = _shiftSchedules
+            var dutyShifts = _shifts
                 .Where(es => es.EmployeeID == employee.RowID)
                 .ToList();
 
@@ -336,7 +336,7 @@ namespace AccuPay.Data.Services
                     var overtimes = overtimesInCutoff.Where(o => o.OTStartDate <= currentDate && currentDate <= o.OTEndDate).ToList();
                     var leaves = leavesInCutoff.Where(l => l.StartDate == currentDate).ToList();
                     var officialBusiness = officialBusinesses.FirstOrDefault(o => o.StartDate.Value == currentDate);
-                    var dutyShiftSched = dutyShiftSchedules.FirstOrDefault(es => es.DateSched == currentDate);
+                    var shift = dutyShifts.FirstOrDefault(es => es.DateSched == currentDate);
                     var currentTimeAttendanceLogs = timeAttendanceLogs.Where(l => l.WorkDay == currentDate).ToList();
                     var tripTicketsForDate = tripTickets.Where(t => t.Date == currentDate).ToList();
 
@@ -347,7 +347,7 @@ namespace AccuPay.Data.Services
                         currentDate,
                         salary,
                         previousTimeEntries,
-                        dutyShiftSched,
+                        shift,
                         timelog,
                         overtimes,
                         officialBusiness,

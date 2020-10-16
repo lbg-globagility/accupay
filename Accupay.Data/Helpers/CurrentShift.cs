@@ -11,26 +11,29 @@ namespace AccuPay.Data.Helpers
 
         private int? _defaultRestDay;
 
-        private EmployeeDutySchedule _shiftSchedule2;
+        private readonly EmployeeDutySchedule _shift;
 
-        public CurrentShift(EmployeeDutySchedule shiftSchedule, DateTime date)
+        public CurrentShift(EmployeeDutySchedule shift, DateTime date)
         {
             this.Date = date;
 
-            if (shiftSchedule == null || shiftSchedule.StartTime == null || shiftSchedule.EndTime == null)
+            if (shift == null || shift.StartTime == null || shift.EndTime == null)
                 return;
 
-            _shiftSchedule2 = shiftSchedule;
+            _shift = shift;
 
-            this.ShiftPeriod = TimePeriod.FromTime(new TimeSpan(shiftSchedule.StartTime.Value.Hours, shiftSchedule.StartTime.Value.Minutes, 0), new TimeSpan(shiftSchedule.EndTime.Value.Hours, shiftSchedule.EndTime.Value.Minutes, 0), this.Date);
+            this.ShiftPeriod = TimePeriod.FromTime(
+                new TimeSpan(shift.StartTime.Value.Hours, shift.StartTime.Value.Minutes, 0),
+                new TimeSpan(shift.EndTime.Value.Hours, shift.EndTime.Value.Minutes, 0),
+                this.Date);
 
-            if (shiftSchedule.BreakStartTime.HasValue)
+            if (shift.BreakStartTime.HasValue)
             {
                 var nextDay = this.Date.AddDays(1);
-                var breakDate = shiftSchedule.BreakStartTime > shiftSchedule.StartTime ? this.Date : nextDay;
+                var breakDate = shift.BreakStartTime > shift.StartTime ? this.Date : nextDay;
 
-                var breakTimeEnd = shiftSchedule.BreakStartTime.Value.AddHours(Convert.ToInt32(shiftSchedule.BreakLength));
-                this.BreakPeriod = TimePeriod.FromTime(shiftSchedule.BreakStartTime.Value, breakTimeEnd, breakDate);
+                var breakTimeEnd = shift.BreakStartTime.Value.AddHours(Convert.ToInt32(shift.BreakLength));
+                this.BreakPeriod = TimePeriod.FromTime(shift.BreakStartTime.Value, breakTimeEnd, breakDate);
             }
         }
 
@@ -48,11 +51,11 @@ namespace AccuPay.Data.Helpers
 
         public TimePeriod BreakPeriod { get; }
 
-        public decimal WorkingHours => _shiftSchedule2?.WorkHours ?? StandardWorkingHours;
+        public decimal WorkingHours => _shift?.WorkHours ?? StandardWorkingHours;
 
-        public decimal ShiftHours => _shiftSchedule2?.ShiftHours ?? StandardWorkingHours + 1;
+        public decimal ShiftHours => _shift?.ShiftHours ?? StandardWorkingHours + 1;
 
-        public bool HasShift => _shiftSchedule2 != null;
+        public bool HasShift => _shift != null;
 
         public bool HasBreaktime => BreakPeriod != null;
 
@@ -62,8 +65,8 @@ namespace AccuPay.Data.Helpers
             {
                 var isRestDayOffset = false;
 
-                if (_shiftSchedule2 != null)
-                    isRestDayOffset = _shiftSchedule2.IsRestDay;
+                if (_shift != null)
+                    isRestDayOffset = _shift.IsRestDay;
 
                 var isDefaultRestDay = false;
                 if (_defaultRestDay.HasValue)
@@ -80,9 +83,9 @@ namespace AccuPay.Data.Helpers
 
         public bool IsNightShift => true;
 
-        public TimeSpan? StartTime => _shiftSchedule2?.StartTime;
+        public TimeSpan? StartTime => _shift?.StartTime;
 
-        public TimeSpan? EndTime => _shiftSchedule2?.EndTime;
+        public TimeSpan? EndTime => _shift?.EndTime;
 
         public void SetDefaultRestDay(int? dayOfWeek) => _defaultRestDay = dayOfWeek;
 

@@ -50,9 +50,6 @@ namespace AccuPay.Data.Entities
 
         public decimal AbsentHours { get; set; }
 
-        [NotMapped]
-        public decimal BasicHours { get; set; }
-
         [Column("TotalHoursWorked")]
         public decimal TotalHours { get; set; }
 
@@ -95,21 +92,29 @@ namespace AccuPay.Data.Entities
             }
         }
 
-        public decimal TotalLeaveHours => VacationLeaveHours +
-                                            SickLeaveHours +
-                                            MaternityLeaveHours +
-                                            OtherLeaveHours;
+        public decimal BasicHours =>
+            RegularHours +
+            RestDayHours +
+            RegularHolidayHours +
+            SpecialHolidayHours;
+
+        public decimal TotalLeaveHours =>
+            VacationLeaveHours +
+            SickLeaveHours +
+            MaternityLeaveHours +
+            OtherLeaveHours;
 
         public void ComputeTotalHours()
         {
-            TotalHours = RegularHours +
-                            OvertimeHours +
-                            RestDayHours +
-                            RestDayOTHours +
-                            SpecialHolidayHours +
-                            SpecialHolidayOTHours +
-                            RegularHolidayHours +
-                            RegularHolidayOTHours;
+            TotalHours =
+                RegularHours +
+                OvertimeHours +
+                RestDayHours +
+                RestDayOTHours +
+                SpecialHolidayHours +
+                SpecialHolidayOTHours +
+                RegularHolidayHours +
+                RegularHolidayOTHours;
         }
 
         public void ComputeTotalPay()
@@ -117,17 +122,18 @@ namespace AccuPay.Data.Entities
             TotalDayPay = GetTotalDayPay();
         }
 
-        public decimal GetTotalDayPay() => RegularPay +
-                                            OvertimePay +
-                                            NightDiffPay +
-                                            NightDiffOTPay +
-                                            RestDayPay +
-                                            RestDayOTPay +
-                                            SpecialHolidayPay +
-                                            SpecialHolidayOTPay +
-                                            RegularHolidayPay +
-                                            RegularHolidayOTPay +
-                                            LeavePay;
+        public decimal GetTotalDayPay() =>
+            RegularPay +
+            OvertimePay +
+            NightDiffPay +
+            NightDiffOTPay +
+            RestDayPay +
+            RestDayOTPay +
+            SpecialHolidayPay +
+            SpecialHolidayOTPay +
+            RegularHolidayPay +
+            RegularHolidayOTPay +
+            LeavePay;
 
         public void Reset()
         {
@@ -139,7 +145,6 @@ namespace AccuPay.Data.Entities
 
         private void ResetHours()
         {
-            BasicHours = 0;
             RegularHours = 0;
             OvertimeHours = 0;
             NightDiffHours = 0;

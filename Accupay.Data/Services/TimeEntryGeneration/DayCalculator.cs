@@ -34,7 +34,7 @@ namespace AccuPay.Data.Services
             DateTime currentDate,
             Salary salary,
             IList<TimeEntry> oldTimeEntries,
-            EmployeeDutySchedule shiftSched,
+            EmployeeDutySchedule shift,
             TimeLog timeLog,
             IList<Overtime> overtimes,
             OfficialBusiness officialBusiness,
@@ -66,7 +66,7 @@ namespace AccuPay.Data.Services
             if (hasSalaryForThisDate == false)
                 return timeEntry;
 
-            var currentShift = GetCurrentShift(currentDate, shiftSched, _policy.RespectDefaultRestDay, _employee.DayOfRest);
+            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest);
 
             timeEntry.BranchID = branchId;
             timeEntry.IsRestDay = currentShift.IsRestDay;
@@ -103,139 +103,142 @@ namespace AccuPay.Data.Services
         {
             var previousDay = currentDate.AddDays(-1);
             var calculator = new TimeEntryCalculator();
+            bool hasTimeLog = officialBusiness != null || (timeLog?.TimeIn != null && timeLog?.TimeOut != null);
 
-            bool paidAsLongAsHasTimeLog =
-                _policy.PaidAsLongAsHasTimeLog ?
-                _organization.PaidAsLongAsHasTimeLog :
-               false;
-
-            bool hasTimeLog = HasTimeLog(timeEntry, timeLog, officialBusiness, paidAsLongAsHasTimeLog);
-
-            TimePeriod logPeriod = null;
-            if (hasTimeLog)
+            bool regularHoursIsOverriden = _policy.PaidAsLongAsHasTimeLog && _organization.PaidAsLongAsHasTimeLog;
+            if (regularHoursIsOverriden)
             {
-                logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate);
-            }
+                bool consideredPresent = officialBusiness != null || timeLog?.TimeIn != null || timeLog?.TimeOut != null;
 
-            if (logPeriod != null)
-            {
-                TimePeriod dutyPeriod = null;
+                // the original hasTimeLog evalulation and consideredPresent can be different
+                // if the employee only has one time log, original hasTimeLog evalulation would be false but consideredPresent will be true
+                // hasTimeLog is needed in computing leave hours so it's value needs to be updated
+                hasTimeLog = consideredPresent;
 
-                var shiftPeriod = currentShift.ShiftPeriod;
-
-                if (shiftPeriod != null)
+                // based on Leonel's policy, they don't give OT and other extra payments to field workers
+                // only field workers has the policy of PaidAsLongAsHasTimeLog, their regular employees has fixed salaries
+                // so it's either RegularHours, LeaveHours (if no time logs), or AbsentHours
+                if (currentShift.HasShift && consideredPresent)
                 {
-                    dutyPeriod = shiftPeriod.Overlap(logPeriod);
+                    timeEntry.RegularHours = currentShift.WorkingHours;
+                }
+            }
+            else
+            {
+                TimePeriod logPeriod = null;
+                if (hasTimeLog)
+                {
+                    logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate);
                 }
 
-                if (dutyPeriod != null)
+                if (logPeriod != null)
                 {
-                    if (!paidAsLongAsHasTimeLog) timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift, _policy.ComputeBreakTimeLate);
+                    TimePeriod dutyPeriod = null;
 
-                    var coveredPeriod = dutyPeriod;
+                    var shiftPeriod = currentShift.ShiftPeriod;
 
-                    TimePeriod leavePeriod = null;
-                    if (leaves.Any())
+                    if (shiftPeriod != null)
                     {
-                        var leave = leaves.FirstOrDefault();
-                        leavePeriod = GetLeavePeriod(leave, currentShift);
-
-                        coveredPeriod = new TimePeriod(
-                                    new DateTime[] { dutyPeriod.Start, leavePeriod.Start }.Min(),
-                                    new DateTime[] { dutyPeriod.End, leavePeriod.End }.Max());
-
-                        var leaveHours = TimeEntryCalculator.ComputeLeaveHours(
-                                                                        leavePeriod,
-                                                                        currentShift,
-                                                                        _policy.ComputeBreakTimeLate);
-
-                        timeEntry.SetLeaveHours(leave.LeaveType, leaveHours);
+                        dutyPeriod = shiftPeriod.Overlap(logPeriod);
                     }
 
-                    timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate, paidAsLongAsHasTimeLog);
-
-                    timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate, paidAsLongAsHasTimeLog);
-
-                    OverrideLateAndUndertimeHoursComputations(timeEntry, currentShift, dutyPeriod, leavePeriod, _policy);
-
-                    if (_policy.ComputeBreakTimeLate)
-                        timeEntry.LateHours += calculator.ComputeBreakTimeLateHours(coveredPeriod, currentShift, timeAttendanceLogs, breakTimeBrackets, paidAsLongAsHasTimeLog);
-
-                    if (_policy.LateHoursRoundingUp && !paidAsLongAsHasTimeLog)
+                    if (dutyPeriod != null)
                     {
-                        var lateHours = timeEntry.LateHours;
+                        ComputeWorkingPeriodHours(timeEntry, leaves, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, dutyPeriod);
 
-                        if (lateHours > 0.5M && lateHours <= 1)
-                            timeEntry.LateHours = 1;
-                        else if (lateHours >= 2 && lateHours <= 4)
-                            timeEntry.LateHours = 4;
+                        ComputeExtraPeriodHours(currentDate, timeEntry, overtimes, currentShift, previousDay, calculator, logPeriod, dutyPeriod);
                     }
 
-                    if (!paidAsLongAsHasTimeLog) timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours);
-
-                    if (leavePeriod != null && !paidAsLongAsHasTimeLog)
-                    {
-                        var coveredLeavePeriod = new TimePeriod(
-                                    new DateTime[] { currentShift.Start, leavePeriod.Start }.Max(),
-                                    new DateTime[] { currentShift.End, leavePeriod.End }.Min());
-
-                        timeEntry.RegularHours -= calculator.ComputeRegularHours(coveredLeavePeriod, currentShift, _policy.ComputeBreakTimeLate);
-                    }
-
-                    TimePeriod nightBreaktime = null;
-                    if (_policy.HasNightBreaktime)
-                        nightBreaktime = new TimePeriod(
-                                                currentDate.Add(TimeSpan.Parse("21:00")),
-                                                currentDate.Add(TimeSpan.Parse("22:00")));
-
-                    timeEntry.OvertimeHours = overtimes.Sum(o => calculator.ComputeOvertimeHours(logPeriod, o, currentShift, nightBreaktime));
-
-                    ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
+                    ComputeHolidayHours(payrate, timeEntry);
+                    ComputeRestDayHours(currentShift, timeEntry, logPeriod);
                 }
 
-                ComputeHolidayHours(payrate, timeEntry);
-                ComputeRestDayHours(currentShift, timeEntry, logPeriod);
-
-                timeEntry.BasicHours = timeEntry.RegularHours +
-                                        timeEntry.RestDayHours +
-                                        timeEntry.RegularHolidayHours +
-                                        timeEntry.SpecialHolidayHours;
-            }
-            else if (logPeriod == null && paidAsLongAsHasTimeLog)
-            {
-                ComputeHolidayHours(payrate, timeEntry);
+                if (tripTickets.Any())
+                {
+                    ComputeTripTicketPay(timeEntry, tripTickets, routeRates);
+                }
             }
 
-            if (tripTickets.Any())
-            {
-                ComputeTripTicketPay(timeEntry, tripTickets, routeRates);
-            }
-
-            ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves, paidAsLongAsHasTimeLog);
-            ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry, payrate, paidAsLongAsHasTimeLog);
+            ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves);
+            ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry, payrate);
         }
 
-        private static bool HasTimeLog(TimeEntry timeEntry, TimeLog timeLog, OfficialBusiness officialBusiness, bool paidAsLongAsHasTimeLog)
+        private void ComputeWorkingPeriodHours(
+            TimeEntry timeEntry,
+            IList<Leave> leaves,
+            IList<TimeAttendanceLog> timeAttendanceLogs,
+            IList<BreakTimeBracket> breakTimeBrackets,
+            CurrentShift currentShift,
+            TimeEntryCalculator calculator,
+            TimePeriod dutyPeriod)
         {
-            if (paidAsLongAsHasTimeLog)
+            timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift, _policy.ComputeBreakTimeLate);
+
+            var coveredPeriod = dutyPeriod;
+
+            TimePeriod leavePeriod = null;
+            if (leaves.Any())
             {
-                bool hasTheTimeLog = timeLog != null;
+                var leave = leaves.FirstOrDefault();
+                leavePeriod = GetLeavePeriod(leave, currentShift);
 
-                TimeSpan?[] timeLogs = new TimeSpan?[] { new TimeSpan?(), new TimeSpan?() };
-                if (hasTheTimeLog) timeLogs = new TimeSpan?[] { timeLog.TimeIn, timeLog.TimeOut };
-                bool hasMinimumTimeLog = timeLogs.Any(t => t.HasValue);
+                coveredPeriod = new TimePeriod(
+                    new DateTime[] { dutyPeriod.Start, leavePeriod.Start }.Min(),
+                    new DateTime[] { dutyPeriod.End, leavePeriod.End }.Max());
 
-                bool hasOfficialBusiness = officialBusiness != null;
+                var leaveHours = TimeEntryCalculator.ComputeLeaveHours(
+                    leavePeriod,
+                    currentShift,
+                    _policy.ComputeBreakTimeLate);
 
-                bool satisfied = hasMinimumTimeLog || hasOfficialBusiness;
-
-                timeEntry.RegularHours = satisfied ? DEFAULT_WORK_HOURS : 0;
-
-                return hasMinimumTimeLog;
+                timeEntry.SetLeaveHours(leave.LeaveType, leaveHours);
             }
 
-            return (timeLog?.TimeIn != null && timeLog?.TimeOut != null) ||
-                officialBusiness != null;
+            timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate);
+            timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate);
+
+            OverrideLateAndUndertimeHoursComputations(timeEntry, currentShift, dutyPeriod, leavePeriod, _policy);
+            UpdateLateHoursByPolicies(timeEntry, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, coveredPeriod);
+
+            timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours);
+
+            if (leavePeriod != null)
+            {
+                var coveredLeavePeriod = new TimePeriod(
+                    new DateTime[] { currentShift.Start, leavePeriod.Start }.Max(),
+                    new DateTime[] { currentShift.End, leavePeriod.End }.Min());
+
+                timeEntry.RegularHours -= calculator.ComputeRegularHours(coveredLeavePeriod, currentShift, _policy.ComputeBreakTimeLate);
+            }
+        }
+
+        private void UpdateLateHoursByPolicies(TimeEntry timeEntry, IList<TimeAttendanceLog> timeAttendanceLogs, IList<BreakTimeBracket> breakTimeBrackets, CurrentShift currentShift, TimeEntryCalculator calculator, TimePeriod coveredPeriod)
+        {
+            if (_policy.ComputeBreakTimeLate)
+                timeEntry.LateHours += calculator.ComputeBreakTimeLateHours(coveredPeriod, currentShift, timeAttendanceLogs, breakTimeBrackets);
+
+            if (_policy.LateHoursRoundingUp)
+            {
+                var lateHours = timeEntry.LateHours;
+
+                if (lateHours > 0.5M && lateHours <= 1)
+                    timeEntry.LateHours = 1;
+                else if (lateHours >= 2 && lateHours <= 4)
+                    timeEntry.LateHours = 4;
+            }
+        }
+
+        private void ComputeExtraPeriodHours(DateTime currentDate, TimeEntry timeEntry, IList<Overtime> overtimes, CurrentShift currentShift, DateTime previousDay, TimeEntryCalculator calculator, TimePeriod logPeriod, TimePeriod dutyPeriod)
+        {
+            TimePeriod nightBreaktime = null;
+            if (_policy.HasNightBreaktime)
+                nightBreaktime = new TimePeriod(
+                    currentDate.Add(TimeSpan.Parse("21:00")),
+                    currentDate.Add(TimeSpan.Parse("22:00")));
+
+            timeEntry.OvertimeHours = overtimes.Sum(o => calculator.ComputeOvertimeHours(logPeriod, o, currentShift, nightBreaktime));
+
+            ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
         }
 
         private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, ICollection<RoutePayRate> routeRates)
@@ -264,18 +267,19 @@ namespace AccuPay.Data.Services
             timeEntry.RegularPay += tripTicketPay;
         }
 
-        private TimePeriod GetLogPeriod(TimeLog timeLog,
-                                    OfficialBusiness officialBusiness,
-                                    CurrentShift currentShift,
-                                    DateTime currentDate)
+        private TimePeriod GetLogPeriod(
+            TimeLog timeLog,
+            OfficialBusiness officialBusiness,
+            CurrentShift currentShift,
+            DateTime currentDate)
         {
-            var appliedIn = new TimeSpan?[] { timeLog?.TimeIn, officialBusiness?.StartTime }.
-                                            Where(i => i.HasValue).
-                                            Min();
+            var appliedIn = new TimeSpan?[] { timeLog?.TimeIn, officialBusiness?.StartTime }
+                .Where(i => i.HasValue)
+                .Min();
 
-            var appliedOut = new TimeSpan?[] { timeLog?.TimeOut, officialBusiness?.EndTime }.
-                                            Where(i => i.HasValue).
-                                            Max();
+            var appliedOut = new TimeSpan?[] { timeLog?.TimeOut, officialBusiness?.EndTime }
+                .Where(i => i.HasValue)
+                .Max();
 
             if (!appliedIn.HasValue || !appliedOut.HasValue)
                 return null;
@@ -354,10 +358,10 @@ namespace AccuPay.Data.Services
         }
 
         private static Tuple<TimePeriod, TimePeriod, TimePeriod> GetLateAndUndertimePeriods(
-                                                        TimePeriod shiftPeriod,
-                                                        TimePeriod dutyPeriod,
-                                                        TimePeriod leavePeriod,
-                                                        List<TimePeriod> shiftAndDutyDifference)
+            TimePeriod shiftPeriod,
+            TimePeriod dutyPeriod,
+            TimePeriod leavePeriod,
+            List<TimePeriod> shiftAndDutyDifference)
         {
             TimePeriod undertimePeriod = null;
             TimePeriod latePeriod = null;
@@ -429,15 +433,17 @@ namespace AccuPay.Data.Services
                 }
             }
 
-            return new Tuple<TimePeriod, TimePeriod, TimePeriod>(latePeriod,
-                                                                inBetweenUndertimePeriod,
-                                                                undertimePeriod);
+            return new Tuple<TimePeriod, TimePeriod, TimePeriod>(
+                latePeriod,
+                inBetweenUndertimePeriod,
+                undertimePeriod);
         }
 
-        private static decimal ComputeHoursNotCoveredByLeave(TimePeriod breakPeriod,
-                                                            bool computeBreakTimeLatePolicy,
-                                                            TimePeriod notCoveredByLeavePeriod,
-                                                            TimePeriod leavePeriod)
+        private static decimal ComputeHoursNotCoveredByLeave(
+            TimePeriod breakPeriod,
+            bool computeBreakTimeLatePolicy,
+            TimePeriod notCoveredByLeavePeriod,
+            TimePeriod leavePeriod)
         {
             decimal hours = 0;
 
@@ -472,9 +478,10 @@ namespace AccuPay.Data.Services
             return hours;
         }
 
-        private static decimal ComputeHoursWithBreaktime(TimePeriod breakPeriod,
-                                                        bool computeBreakTimeLatePolicy,
-                                                        TimePeriod hoursPeriod)
+        private static decimal ComputeHoursWithBreaktime(
+            TimePeriod breakPeriod,
+            bool computeBreakTimeLatePolicy,
+            TimePeriod hoursPeriod)
         {
             decimal hours = 0;
 
@@ -489,15 +496,16 @@ namespace AccuPay.Data.Services
             return hours;
         }
 
-        private void ComputeNightDiffHours(TimeEntryCalculator calculator,
-                                            TimeEntry timeEntry,
-                                            CurrentShift currentShift,
-                                            TimePeriod dutyPeriod,
-                                            TimePeriod logPeriod,
-                                            DateTime currentDate,
-                                            DateTime previousDay,
-                                            IList<Overtime> overtimes,
-                                            TimePeriod nightBreaktime)
+        private void ComputeNightDiffHours(
+            TimeEntryCalculator calculator,
+            TimeEntry timeEntry,
+            CurrentShift currentShift,
+            TimePeriod dutyPeriod,
+            TimePeriod logPeriod,
+            DateTime currentDate,
+            DateTime previousDay,
+            IList<Overtime> overtimes,
+            TimePeriod nightBreaktime)
         {
             if (_employmentPolicy.ComputeNightDiff && currentShift.IsNightShift)
             {
@@ -542,9 +550,10 @@ namespace AccuPay.Data.Services
             timeEntry.UndertimeHours = 0;
         }
 
-        private void ComputeRestDayHours(CurrentShift currentShift,
-                                        TimeEntry timeEntry,
-                                        TimePeriod logPeriod)
+        private void ComputeRestDayHours(
+            CurrentShift currentShift,
+            TimeEntry timeEntry,
+            TimePeriod logPeriod)
         {
             if (!(currentShift.IsRestDay && _employmentPolicy.ComputeRestDay))
                 return;
@@ -569,8 +578,7 @@ namespace AccuPay.Data.Services
             IPayrate payrate,
             bool hasWorkedLastDay,
             CurrentShift currentshift,
-            IList<Leave> leaves,
-            bool paidAsLongAsHasTimeLog)
+            IList<Leave> leaves)
         {
             if (leaves.Any())
                 return;
@@ -584,7 +592,7 @@ namespace AccuPay.Data.Services
             if (IsExemptDueToHoliday(payrate, hasWorkedLastDay))
                 return;
 
-            timeEntry.AbsentHours = paidAsLongAsHasTimeLog ? 0 : currentshift.WorkingHours;
+            timeEntry.AbsentHours = currentshift.WorkingHours;
         }
 
         /// <summary>
@@ -625,6 +633,7 @@ namespace AccuPay.Data.Services
         /// <summary>
         /// Updates timeentry. This sets the leave hours only if there is no time logs. This will also increment the undertime hours if its is a working day (with timelogs or not).
         /// </summary>
+        /// <param name="hasTimeLog">True if employee has official business or both time in and time out. (that rule will be different if PaidAsLongAsHasTimeLog policy is true)</param>
         /// <param name="leaves">The list of leave for this day.</param>
         /// <param name="currentShift">The shift for this day.</param>
         /// <param name="timeEntry">The timeEntry object that will be updated.</param>
@@ -634,10 +643,32 @@ namespace AccuPay.Data.Services
             IList<Leave> leaves,
             CurrentShift currentShift,
             TimeEntry timeEntry,
-            IPayrate payrate,
-            bool paidAsLongAsHasTimeLog)
+            IPayrate payrate)
         {
-            if (!hasTimeLog && leaves.Any())
+            if (!leaves.Any()) return;
+
+            if (hasTimeLog)
+            {
+                // if PaidAsLongAsHasTimeLog policy is true, employee can only have leave hours
+                // if the employee has a leave and the employee has no time logs
+                if (_policy.PaidAsLongAsHasTimeLog) return;
+
+                if (currentShift.IsWorkingDay)
+                {
+                    var requiredHours = currentShift.WorkingHours;
+                    var missingHours = requiredHours -
+                        (timeEntry.TotalLeaveHours +
+                        timeEntry.RegularHours +
+                        timeEntry.LateHours +
+                        timeEntry.UndertimeHours);
+
+                    if (missingHours > 0 && !payrate.IsHoliday)
+                    {
+                        timeEntry.UndertimeHours += missingHours;
+                    }
+                }
+            }
+            else
             {
                 var leave = leaves.FirstOrDefault();
                 decimal leaveHours = ComputeLeaveHoursWithoutTimelog(
@@ -646,21 +677,6 @@ namespace AccuPay.Data.Services
                     _policy.ComputeBreakTimeLate);
 
                 timeEntry.SetLeaveHours(leave.LeaveType, leaveHours);
-            }
-
-            if (leaves.Any() && currentShift.IsWorkingDay && !paidAsLongAsHasTimeLog)
-            {
-                var requiredHours = currentShift.WorkingHours;
-                var missingHours = requiredHours -
-                    (timeEntry.TotalLeaveHours +
-                    timeEntry.RegularHours +
-                    timeEntry.LateHours +
-                    timeEntry.UndertimeHours);
-
-                if (missingHours > 0 && !payrate.IsHoliday)
-                {
-                    timeEntry.UndertimeHours += missingHours;
-                }
             }
         }
 
@@ -769,10 +785,11 @@ namespace AccuPay.Data.Services
 
                     var isPaidToday = timeEntry.GetTotalDayPay() > 0;
 
-                    var isEntitledToHolidayPay = (isHolidayPayInclusive == false) &&
-                                                    (hasWorkedLastDay ||
-                                                    isPaidToday ||
-                                                    _policy.RequiredToWorkTheDayBeforeHoliday == false);
+                    var isEntitledToHolidayPay =
+                        (isHolidayPayInclusive == false) &&
+                        (hasWorkedLastDay ||
+                        isPaidToday ||
+                        _policy.RequiredToWorkTheDayBeforeHoliday == false);
 
                     if (isEntitledToHolidayPay)
                     {
@@ -792,11 +809,11 @@ namespace AccuPay.Data.Services
         #region Public static methods
 
         public static CurrentShift GetCurrentShift(DateTime currentDate,
-            EmployeeDutySchedule shiftSched,
+            EmployeeDutySchedule shift,
             bool respectDefaultRestDay,
             int? employeeDayOfRest)
         {
-            var currentShift = new CurrentShift(shiftSched, currentDate);
+            var currentShift = new CurrentShift(shift, currentDate);
 
             if (respectDefaultRestDay)
             {
@@ -806,9 +823,10 @@ namespace AccuPay.Data.Services
             return currentShift;
         }
 
-        public static decimal ComputeLeaveHoursWithoutTimelog(CurrentShift currentShift,
-                                                            Leave leave,
-                                                            bool computeBreakTimeLate)
+        public static decimal ComputeLeaveHoursWithoutTimelog(
+            CurrentShift currentShift,
+            Leave leave,
+            bool computeBreakTimeLate)
         {
             var leaveHours = 0M;
             if (currentShift.HasShift == false && (leave.StartTime == null || leave.EndTime == null))

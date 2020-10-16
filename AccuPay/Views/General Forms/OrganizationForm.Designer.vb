@@ -173,11 +173,11 @@ Partial Class OrganizationForm
         'chkTimeLogsOnlyRequirement
         '
         Me.chkTimeLogsOnlyRequirement.AutoSize = True
-        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(367, 267)
+        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(367, 194)
         Me.chkTimeLogsOnlyRequirement.Name = "chkTimeLogsOnlyRequirement"
-        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(232, 17)
+        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(327, 17)
         Me.chkTimeLogsOnlyRequirement.TabIndex = 379
-        Me.chkTimeLogsOnlyRequirement.Text = "Allow Time Logs as attendance requirement"
+        Me.chkTimeLogsOnlyRequirement.Text = "Employees with at least one time log or OB is present for the day"
         Me.chkTimeLogsOnlyRequirement.UseVisualStyleBackColor = True
         '
         'FirstPayPeriodGroupBox
@@ -194,7 +194,7 @@ Partial Class OrganizationForm
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label14)
         Me.FirstPayPeriodGroupBox.Location = New System.Drawing.Point(360, 290)
         Me.FirstPayPeriodGroupBox.Name = "FirstPayPeriodGroupBox"
-        Me.FirstPayPeriodGroupBox.Size = New System.Drawing.Size(271, 144)
+        Me.FirstPayPeriodGroupBox.Size = New System.Drawing.Size(289, 144)
         Me.FirstPayPeriodGroupBox.TabIndex = 378
         Me.FirstPayPeriodGroupBox.TabStop = False
         Me.FirstPayPeriodGroupBox.Text = "First pay period"
@@ -350,7 +350,7 @@ Partial Class OrganizationForm
         '
         Me.nightdiffshiftto.CustomFormat = "hh:mm tt"
         Me.nightdiffshiftto.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightdiffshiftto.Location = New System.Drawing.Point(531, 231)
+        Me.nightdiffshiftto.Location = New System.Drawing.Point(531, 251)
         Me.nightdiffshiftto.Name = "nightdiffshiftto"
         Me.nightdiffshiftto.ShowUpDown = True
         Me.nightdiffshiftto.Size = New System.Drawing.Size(95, 20)
@@ -360,7 +360,7 @@ Partial Class OrganizationForm
         '
         Me.nightdiffshiftfrom.CustomFormat = "hh:mm tt"
         Me.nightdiffshiftfrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightdiffshiftfrom.Location = New System.Drawing.Point(408, 231)
+        Me.nightdiffshiftfrom.Location = New System.Drawing.Point(408, 251)
         Me.nightdiffshiftfrom.Name = "nightdiffshiftfrom"
         Me.nightdiffshiftfrom.ShowUpDown = True
         Me.nightdiffshiftfrom.Size = New System.Drawing.Size(95, 20)
@@ -370,7 +370,7 @@ Partial Class OrganizationForm
         '
         Me.Label60.AutoSize = True
         Me.Label60.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label60.Location = New System.Drawing.Point(509, 237)
+        Me.Label60.Location = New System.Drawing.Point(509, 257)
         Me.Label60.Name = "Label60"
         Me.Label60.Size = New System.Drawing.Size(16, 13)
         Me.Label60.TabIndex = 352
@@ -380,7 +380,7 @@ Partial Class OrganizationForm
         '
         Me.Label59.AutoSize = True
         Me.Label59.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label59.Location = New System.Drawing.Point(375, 237)
+        Me.Label59.Location = New System.Drawing.Point(375, 257)
         Me.Label59.Name = "Label59"
         Me.Label59.Size = New System.Drawing.Size(27, 13)
         Me.Label59.TabIndex = 351
@@ -389,7 +389,7 @@ Partial Class OrganizationForm
         'Label58
         '
         Me.Label58.AutoSize = True
-        Me.Label58.Location = New System.Drawing.Point(364, 214)
+        Me.Label58.Location = New System.Drawing.Point(364, 234)
         Me.Label58.Name = "Label58"
         Me.Label58.Size = New System.Drawing.Size(105, 13)
         Me.Label58.TabIndex = 350
