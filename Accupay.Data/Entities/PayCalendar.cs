@@ -22,5 +22,7 @@ namespace AccuPay.Data.Entities
         public int? LastUpdBy { get; set; }
 
         public string Name { get; set; }
+
+        public bool IsDefault { get; set; }
     }
 }

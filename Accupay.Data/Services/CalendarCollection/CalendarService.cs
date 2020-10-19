@@ -28,6 +28,8 @@ namespace AccuPay.Data.Services
                 Where(p => p.Date <= timePeriod.End).
                 ToList();
 
+            var defaultCalendar = _context.Calendars.FirstOrDefault(t => t.IsDefault);
+
             if (calculationBasis == PayRateCalculationBasis.Branch)
             {
                 var dayType = _context.DayTypes.FirstOrDefault(t => t.Name == "Regular Day");
@@ -52,7 +54,7 @@ namespace AccuPay.Data.Services
                     Where(t => t.Date <= timePeriod.End).
                     ToList();
 
-                return new CalendarCollection(payrates, branches, calendarDays, organizationId, defaultRates);
+                return new CalendarCollection(payrates, branches, calendarDays, organizationId, defaultRates, defaultCalendar);
             }
             else
             {

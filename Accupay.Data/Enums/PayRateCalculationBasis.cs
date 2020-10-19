@@ -3,6 +3,7 @@
     public enum PayRateCalculationBasis
     {
         Organization,
+        Calendar,
         Branch
     }
 }
