@@ -291,6 +291,7 @@
   <ItemGroup>
     <Compile Include="AccuMathTest.vb" />
     <Compile Include="BenchmarkPaystubRateTest.vb" />
+    <Compile Include="CalendarCollectionTest.vb" />
     <Compile Include="CalendarTest.vb" />
     <Compile Include="CinemaTardinessReportModelTest.vb" />
     <Compile Include="CurrentShiftTest.vb" />
