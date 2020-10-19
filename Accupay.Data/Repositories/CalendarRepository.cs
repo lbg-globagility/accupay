@@ -63,6 +63,8 @@ namespace AccuPay.Data.Repositories
             foreach (var calendarDay in added)
             {
                 _context.CalendarDays.Add(calendarDay);
+                // Detach `DayType` from calendar day so it doesn't get reinserted accidentally
+                _context.Entry(calendarDay.DayType).State = EntityState.Detached;
             }
 
             foreach (var calendarDay in updated)

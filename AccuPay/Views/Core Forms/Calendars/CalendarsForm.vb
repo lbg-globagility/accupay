@@ -8,6 +8,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CalendarsForm
@@ -102,6 +103,7 @@ Public Class CalendarsForm
 
         _currentYear = Date.Today.Year
         MonthSelectorControl.Year = _currentYear
+        LoadCalendarDayTypes()
         LoadCalendars()
     End Sub
 
@@ -127,8 +129,40 @@ Public Class CalendarsForm
 
     Private Async Function LoadCalendarDays() As Task
         Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
-        _calendarDays = Await repository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
+        Dim calendarDays = Await repository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
+        _calendarDays = FillMissingDays(calendarDays)
+
         DisplayCalendarDays()
+    End Function
+
+    Private Async Sub LoadCalendarDayTypes()
+        Dim repository = MainServiceProvider.GetRequiredService(Of DayTypeRepository)
+        Dim dayTypes = Await repository.GetAllAsync()
+
+        Editor.DayTypes = dayTypes
+    End Sub
+
+    Private Function FillMissingDays(calendarDays As ICollection(Of CalendarDay)) As ICollection(Of CalendarDay)
+        Dim firstDayOfTheYear = New Date(_currentYear, 1, 1)
+        Dim lastDayOfTheYear = New Date(_currentYear, 12, 31)
+
+        Dim completeList = New Collection(Of CalendarDay)
+
+        For Each currentDay In Calendar.EachDay(firstDayOfTheYear, lastDayOfTheYear)
+            Dim existingDay = calendarDays.FirstOrDefault(Function(t) t.Date = currentDay)
+
+            If existingDay Is Nothing Then
+                Dim calendarDay = New CalendarDay() With {
+                    .[Date] = currentDay
+                }
+
+                completeList.Add(calendarDay)
+            Else
+                completeList.Add(existingDay)
+            End If
+        Next
+
+        Return completeList
     End Function
 
     Private Sub DisplayCalendarDays()
@@ -179,8 +213,11 @@ Public Class CalendarsForm
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
 
+                Dim added = _changeTracker.Where(Function(t) Not t.RowID.HasValue)
+                Dim updated = _changeTracker.Where(Function(t) t.RowID.HasValue)
+
                 Await dataService.UpdateAsync(_currentCalendar)
-                Await dataService.UpdateDaysAsync(Enumerable.Empty(Of CalendarDay).ToList(), _changeTracker)
+                Await dataService.UpdateDaysAsync(added.ToList(), updated.ToList())
 
                 ClearChangeTracker()
 
@@ -209,6 +246,10 @@ Public Class CalendarsForm
         SaveToolStripButton.Enabled = True
     End Sub
 
+    ''' <summary>
+    ''' Toggles the appearance of the <see cref="CalendarDayEditorControl"/>.
+    ''' </summary>
+    ''' <param name="m"></param>
     Protected Overrides Sub WndProc(ByRef m As Message)
         ' Capture all mouse left button clicks
         If (m.Msg = WM_LBUTTONDOWN Or (m.Msg = WM_PARENTNOTIFY AndAlso m.WParam.ToInt32() = WM_LBUTTONDOWN)) Then
@@ -233,7 +274,10 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub AddToChangeTracker(calendarDay As CalendarDay)
+        ' Add the current calendarid to the calendarday
+        calendarDay.CalendarID = _currentCalendar.RowID
         _changeTracker.Add(calendarDay)
+
         CancelToolStripButton.Enabled = True
         SaveToolStripButton.Enabled = True
     End Sub
@@ -270,7 +314,6 @@ Public Class CalendarsForm
         myBalloon(, , MonthSelectorControl, , , 1)
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
-
     End Sub
 
 End Class

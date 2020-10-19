@@ -46,13 +46,13 @@ namespace AccuPay.Data.Entities
 
         public decimal RestDayNDOTRate => DayType.RestDayNDOTRate;
 
-        public bool IsRegularDay => DayType.DayConsideredAs == "Regular Day";
+        public bool IsRegularDay => DayType?.DayConsideredAs == "Regular Day" || DayType is null;
 
-        public bool IsSpecialNonWorkingHoliday => DayType.DayConsideredAs == "Special Non-Working Holiday";
+        public bool IsSpecialNonWorkingHoliday => DayType?.DayConsideredAs == "Special Non-Working Holiday";
 
-        public bool IsRegularHoliday => DayType.DayConsideredAs == "Regular Holiday" || DayType.DayConsideredAs == "Double Holiday";
+        public bool IsRegularHoliday => DayType?.DayConsideredAs == "Regular Holiday" || DayType?.DayConsideredAs == "Double Holiday";
 
-        public bool IsDoubleHoliday => DayType.DayConsideredAs == "Double Holiday";
+        public bool IsDoubleHoliday => DayType?.DayConsideredAs == "Double Holiday";
 
         public bool IsHoliday => IsRegularHoliday || IsSpecialNonWorkingHoliday;
     }
