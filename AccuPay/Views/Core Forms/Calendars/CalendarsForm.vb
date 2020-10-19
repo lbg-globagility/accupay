@@ -103,7 +103,6 @@ Public Class CalendarsForm
 
         _currentYear = Date.Today.Year
         YearLabel.Text = _currentYear.ToString()
-        MonthSelectorControl.Year = _currentYear
         LoadCalendarDayTypes()
         LoadCalendars()
     End Sub
@@ -232,11 +231,6 @@ Public Class CalendarsForm
     Private Sub DayTypesToolStripButton_Click(sender As Object, e As EventArgs) Handles DayTypesToolStripButton.Click
         Dim dialog = New DayTypesDialog()
         dialog.ShowDialog()
-    End Sub
-
-    Private Async Sub MonthSelectorControl_MonthChanged(year As Integer, month As Integer) Handles MonthSelectorControl.MonthChanged
-        _currentYear = year
-        Await LoadCalendarDays()
     End Sub
 
     Private Sub MonthSelectorControl_NameChanged(name As String) Handles MonthSelectorControl.NameChanged

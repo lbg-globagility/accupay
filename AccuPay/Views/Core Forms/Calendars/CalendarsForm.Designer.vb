@@ -286,7 +286,6 @@ Partial Class CalendarsForm
         Me.MonthSelectorControl.Name = "MonthSelectorControl"
         Me.MonthSelectorControl.Size = New System.Drawing.Size(136, 480)
         Me.MonthSelectorControl.TabIndex = 510
-        Me.MonthSelectorControl.Year = 0
         '
         'Column_Name
         '
