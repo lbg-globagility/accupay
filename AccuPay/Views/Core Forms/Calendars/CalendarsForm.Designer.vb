@@ -34,12 +34,17 @@ Partial Class CalendarsForm
         Me.DayTypesToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.MainPanel = New System.Windows.Forms.Panel()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.YearLabel = New System.Windows.Forms.Label()
+        Me.PreviousLinkLabel = New System.Windows.Forms.LinkLabel()
+        Me.NextLinkLabel = New System.Windows.Forms.LinkLabel()
         Me.CalendarLabel = New System.Windows.Forms.Label()
         Me.CalendarPanel = New System.Windows.Forms.Panel()
-        Me.MonthSelectorControl = New AccuPay.CalendarMonthSelectorControl()
         Me.CalendarsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MonthSelectorControl = New AccuPay.CalendarMonthSelectorControl()
+        Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -52,6 +57,8 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip12.SuspendLayout()
         Me.MainPanel.SuspendLayout()
+        Me.TableLayoutPanel1.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         CType(Me.CalendarsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -117,7 +124,7 @@ Partial Class CalendarsForm
         Me.DayTypesToolStripButton.Image = Global.AccuPay.My.Resources.Resources.application_view_list_icon
         Me.DayTypesToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.DayTypesToolStripButton.Name = "DayTypesToolStripButton"
-        Me.DayTypesToolStripButton.Size = New System.Drawing.Size(80, 22)
+        Me.DayTypesToolStripButton.Size = New System.Drawing.Size(79, 22)
         Me.DayTypesToolStripButton.Text = "Day &Types"
         '
         'FormTitleLabel
@@ -139,6 +146,7 @@ Partial Class CalendarsForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.MainPanel.AutoScroll = True
         Me.MainPanel.BackColor = System.Drawing.Color.White
+        Me.MainPanel.Controls.Add(Me.TableLayoutPanel1)
         Me.MainPanel.Controls.Add(Me.CalendarLabel)
         Me.MainPanel.Controls.Add(Me.CalendarPanel)
         Me.MainPanel.Controls.Add(Me.MonthSelectorControl)
@@ -147,6 +155,61 @@ Partial Class CalendarsForm
         Me.MainPanel.Name = "MainPanel"
         Me.MainPanel.Size = New System.Drawing.Size(849, 503)
         Me.MainPanel.TabIndex = 156
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.ColumnCount = 3
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 0)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(136, 56)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 1
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(712, 32)
+        Me.TableLayoutPanel1.TabIndex = 516
+        '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.YearLabel)
+        Me.Panel2.Controls.Add(Me.PreviousLinkLabel)
+        Me.Panel2.Controls.Add(Me.NextLinkLabel)
+        Me.Panel2.Location = New System.Drawing.Point(252, 3)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(208, 26)
+        Me.Panel2.TabIndex = 515
+        '
+        'YearLabel
+        '
+        Me.YearLabel.Location = New System.Drawing.Point(80, 0)
+        Me.YearLabel.Name = "YearLabel"
+        Me.YearLabel.Size = New System.Drawing.Size(56, 24)
+        Me.YearLabel.TabIndex = 512
+        Me.YearLabel.Text = "<Year>"
+        Me.YearLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'PreviousLinkLabel
+        '
+        Me.PreviousLinkLabel.Location = New System.Drawing.Point(0, 0)
+        Me.PreviousLinkLabel.Name = "PreviousLinkLabel"
+        Me.PreviousLinkLabel.Size = New System.Drawing.Size(61, 24)
+        Me.PreviousLinkLabel.TabIndex = 514
+        Me.PreviousLinkLabel.TabStop = True
+        Me.PreviousLinkLabel.Text = "< Previous"
+        Me.PreviousLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'NextLinkLabel
+        '
+        Me.NextLinkLabel.Location = New System.Drawing.Point(168, 0)
+        Me.NextLinkLabel.Name = "NextLinkLabel"
+        Me.NextLinkLabel.Size = New System.Drawing.Size(41, 24)
+        Me.NextLinkLabel.TabIndex = 513
+        Me.NextLinkLabel.TabStop = True
+        Me.NextLinkLabel.Text = "Next >"
+        Me.NextLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'CalendarLabel
         '
@@ -168,23 +231,10 @@ Partial Class CalendarsForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CalendarPanel.AutoScroll = True
         Me.CalendarPanel.BackColor = System.Drawing.Color.Transparent
-        Me.CalendarPanel.Location = New System.Drawing.Point(136, 56)
+        Me.CalendarPanel.Location = New System.Drawing.Point(136, 88)
         Me.CalendarPanel.Name = "CalendarPanel"
-        Me.CalendarPanel.Size = New System.Drawing.Size(712, 448)
+        Me.CalendarPanel.Size = New System.Drawing.Size(712, 416)
         Me.CalendarPanel.TabIndex = 509
-        '
-        'MonthSelectorControl
-        '
-        Me.MonthSelectorControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.MonthSelectorControl.CalendarName = ""
-        Me.MonthSelectorControl.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.MonthSelectorControl.Location = New System.Drawing.Point(0, 24)
-        Me.MonthSelectorControl.Margin = New System.Windows.Forms.Padding(0)
-        Me.MonthSelectorControl.Name = "MonthSelectorControl"
-        Me.MonthSelectorControl.Size = New System.Drawing.Size(136, 480)
-        Me.MonthSelectorControl.TabIndex = 510
-        Me.MonthSelectorControl.Year = 0
         '
         'CalendarsDataGridView
         '
@@ -217,13 +267,6 @@ Partial Class CalendarsForm
         Me.CalendarsDataGridView.Size = New System.Drawing.Size(352, 503)
         Me.CalendarsDataGridView.TabIndex = 2
         '
-        'Column_Name
-        '
-        Me.Column_Name.DataPropertyName = "Name"
-        Me.Column_Name.HeaderText = "Calendar"
-        Me.Column_Name.Name = "Column_Name"
-        Me.Column_Name.ReadOnly = True
-        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
@@ -231,6 +274,26 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 103
+        '
+        'MonthSelectorControl
+        '
+        Me.MonthSelectorControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.MonthSelectorControl.CalendarName = ""
+        Me.MonthSelectorControl.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.MonthSelectorControl.Location = New System.Drawing.Point(0, 24)
+        Me.MonthSelectorControl.Margin = New System.Windows.Forms.Padding(0)
+        Me.MonthSelectorControl.Name = "MonthSelectorControl"
+        Me.MonthSelectorControl.Size = New System.Drawing.Size(136, 480)
+        Me.MonthSelectorControl.TabIndex = 510
+        Me.MonthSelectorControl.Year = 0
+        '
+        'Column_Name
+        '
+        Me.Column_Name.DataPropertyName = "Name"
+        Me.Column_Name.HeaderText = "Calendar"
+        Me.Column_Name.Name = "Column_Name"
+        Me.Column_Name.ReadOnly = True
         '
         'DataGridViewTextBoxColumn2
         '
@@ -328,11 +391,13 @@ Partial Class CalendarsForm
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "CalendarsForm"
-        Me.Text = "EmployeeLeavesForm"
+        Me.Text = "CalendarsForm"
         Me.ToolStrip12.ResumeLayout(False)
         Me.ToolStrip12.PerformLayout()
         Me.MainPanel.ResumeLayout(False)
         Me.MainPanel.PerformLayout()
+        Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.Panel2.ResumeLayout(False)
         CType(Me.CalendarsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -363,4 +428,9 @@ Partial Class CalendarsForm
     Friend WithEvents MonthSelectorControl As CalendarMonthSelectorControl
     Friend WithEvents CalendarLabel As Label
     Friend WithEvents DeleteToolStripButton As ToolStripButton
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents YearLabel As Label
+    Friend WithEvents PreviousLinkLabel As LinkLabel
+    Friend WithEvents NextLinkLabel As LinkLabel
 End Class

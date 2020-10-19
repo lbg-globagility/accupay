@@ -102,6 +102,7 @@ Public Class CalendarsForm
         End If
 
         _currentYear = Date.Today.Year
+        YearLabel.Text = _currentYear.ToString()
         MonthSelectorControl.Year = _currentYear
         LoadCalendarDayTypes()
         LoadCalendars()
@@ -200,11 +201,9 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
-
         Dim dialog = New NewCalendarDialog()
         If dialog.ShowDialog() = DialogResult.OK Then
             LoadCalendars()
-
         End If
     End Sub
 
@@ -314,6 +313,18 @@ Public Class CalendarsForm
         myBalloon(, , MonthSelectorControl, , , 1)
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
+    End Sub
+
+    Private Async Sub PreviousLinkLabel_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles PreviousLinkLabel.LinkClicked
+        _currentYear -= 1
+        YearLabel.Text = _currentYear.ToString()
+        Await LoadCalendarDays()
+    End Sub
+
+    Private Async Sub NextLinkLabel_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles NextLinkLabel.LinkClicked
+        _currentYear += 1
+        YearLabel.Text = _currentYear.ToString()
+        Await LoadCalendarDays()
     End Sub
 
 End Class
