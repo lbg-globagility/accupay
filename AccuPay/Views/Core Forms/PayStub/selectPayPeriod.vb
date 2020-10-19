@@ -186,7 +186,7 @@ Public Class selectPayPeriod
         Dim currentlyWorkedOnPayPeriodIndex As Integer = 0
         For Each drow As DataRow In dt.Rows
 
-            If _currentlyWorkedOnPayPeriod IsNot Nothing AndAlso Nullable.Equals(drow(0), _currentlyWorkedOnPayPeriod.RowID) Then
+            If _currentlyWorkedOnPayPeriod IsNot Nothing AndAlso Nullable.Equals(drow(0), _currentlyWorkedOnPayPeriod?.RowID) Then
 
                 currentlyWorkedOnPayPeriodIndex = index
 

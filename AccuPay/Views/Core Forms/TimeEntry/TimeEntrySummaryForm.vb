@@ -296,7 +296,7 @@ Public Class TimeEntrySummaryForm
 
             Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
-            _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
+            _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod?.RowID))
 
             Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)

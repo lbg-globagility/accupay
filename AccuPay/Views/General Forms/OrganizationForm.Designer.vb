@@ -24,7 +24,11 @@ Partial Class OrganizationForm
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.UserRoleLabel = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.chkTimeLogsOnlyRequirement = New System.Windows.Forms.CheckBox()
+        Me.Label40 = New System.Windows.Forms.Label()
         Me.FirstPayPeriodGroupBox = New System.Windows.Forms.GroupBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -36,42 +40,40 @@ Partial Class OrganizationForm
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.IsAgencyCheckBox = New System.Windows.Forms.CheckBox()
-        Me.txtZIP = New System.Windows.Forms.TextBox()
-        Me.txtRDO = New System.Windows.Forms.TextBox()
-        Me.Label68 = New System.Windows.Forms.Label()
-        Me.Label70 = New System.Windows.Forms.Label()
-        Me.nightdiffshiftto = New System.Windows.Forms.DateTimePicker()
-        Me.nightdiffshiftfrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label60 = New System.Windows.Forms.Label()
-        Me.Label59 = New System.Windows.Forms.Label()
-        Me.Label58 = New System.Windows.Forms.Label()
-        Me.txtcompEmailTxt = New System.Windows.Forms.TextBox()
-        Me.RemoveImageLink = New System.Windows.Forms.LinkLabel()
-        Me.BrowseImageButton = New System.Windows.Forms.Button()
-        Me.PhotoImages = New System.Windows.Forms.PictureBox()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.txtorgTinNumTxt = New System.Windows.Forms.TextBox()
-        Me.Label51 = New System.Windows.Forms.Label()
-        Me.addAddressLink1 = New System.Windows.Forms.LinkLabel()
-        Me.txttradeName = New System.Windows.Forms.TextBox()
-        Me.Label32 = New System.Windows.Forms.Label()
-        Me.txtcompUrl = New System.Windows.Forms.TextBox()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.txtcompAltPhoneTxt = New System.Windows.Forms.TextBox()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.txtcompAltEmailTxt = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.txtcompFaxNumTxt = New System.Windows.Forms.TextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.txtcompMainPhoneTxt = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.AddressComboBox = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.txtcompanyName = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label40 = New System.Windows.Forms.Label()
+        Me.IsAgencyCheckBox = New System.Windows.Forms.CheckBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtZIP = New System.Windows.Forms.TextBox()
+        Me.AddressComboBox = New System.Windows.Forms.ComboBox()
+        Me.txtRDO = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label68 = New System.Windows.Forms.Label()
+        Me.txtcompMainPhoneTxt = New System.Windows.Forms.TextBox()
+        Me.Label70 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.nightdiffshiftto = New System.Windows.Forms.DateTimePicker()
+        Me.txtcompFaxNumTxt = New System.Windows.Forms.TextBox()
+        Me.nightdiffshiftfrom = New System.Windows.Forms.DateTimePicker()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label60 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label59 = New System.Windows.Forms.Label()
+        Me.txtcompAltEmailTxt = New System.Windows.Forms.TextBox()
+        Me.Label58 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.txtcompEmailTxt = New System.Windows.Forms.TextBox()
+        Me.txtcompAltPhoneTxt = New System.Windows.Forms.TextBox()
+        Me.RemoveImageLink = New System.Windows.Forms.LinkLabel()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.BrowseImageButton = New System.Windows.Forms.Button()
+        Me.txtcompUrl = New System.Windows.Forms.TextBox()
+        Me.PhotoImages = New System.Windows.Forms.PictureBox()
+        Me.Label32 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.txttradeName = New System.Windows.Forms.TextBox()
+        Me.txtorgTinNumTxt = New System.Windows.Forms.TextBox()
+        Me.addAddressLink1 = New System.Windows.Forms.LinkLabel()
+        Me.Label51 = New System.Windows.Forms.Label()
         Me.lblSaveMsg = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.NewButton = New System.Windows.Forms.ToolStripButton()
@@ -85,10 +87,13 @@ Partial Class OrganizationForm
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OrganizationUserRolesControl = New AccuPay.OrganizationUserRolesControl()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.FirstPayPeriodGroupBox.SuspendLayout()
         CType(Me.PhotoImages, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip1.SuspendLayout()
@@ -121,44 +126,9 @@ Partial Class OrganizationForm
         'SplitContainer1.Panel1
         '
         Me.SplitContainer1.Panel1.AutoScroll = True
-        Me.SplitContainer1.Panel1.Controls.Add(Me.chkTimeLogsOnlyRequirement)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.FirstPayPeriodGroupBox)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.IsAgencyCheckBox)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtZIP)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtRDO)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label68)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label70)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.nightdiffshiftto)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.nightdiffshiftfrom)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label60)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label59)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label58)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompEmailTxt)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.RemoveImageLink)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.BrowseImageButton)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.PhotoImages)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label10)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtorgTinNumTxt)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label51)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.addAddressLink1)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txttradeName)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label32)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompUrl)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label9)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompAltPhoneTxt)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label8)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompAltEmailTxt)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label7)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label6)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompFaxNumTxt)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label5)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompMainPhoneTxt)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label3)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.AddressComboBox)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompanyName)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label4)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label40)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.OrganizationUserRolesControl)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.UserRoleLabel)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.GroupBox1)
         '
         'SplitContainer1.Panel2
         '
@@ -168,15 +138,91 @@ Partial Class OrganizationForm
         Me.SplitContainer1.SplitterDistance = 527
         Me.SplitContainer1.TabIndex = 310
         '
+        'UserRoleLabel
+        '
+        Me.UserRoleLabel.AutoSize = True
+        Me.UserRoleLabel.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
+        Me.UserRoleLabel.Location = New System.Drawing.Point(18, 460)
+        Me.UserRoleLabel.Name = "UserRoleLabel"
+        Me.UserRoleLabel.Size = New System.Drawing.Size(145, 24)
+        Me.UserRoleLabel.TabIndex = 382
+        Me.UserRoleLabel.Text = "USER ROLES"
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.Label4)
+        Me.GroupBox1.Controls.Add(Me.chkTimeLogsOnlyRequirement)
+        Me.GroupBox1.Controls.Add(Me.Label40)
+        Me.GroupBox1.Controls.Add(Me.FirstPayPeriodGroupBox)
+        Me.GroupBox1.Controls.Add(Me.txtcompanyName)
+        Me.GroupBox1.Controls.Add(Me.IsAgencyCheckBox)
+        Me.GroupBox1.Controls.Add(Me.Label1)
+        Me.GroupBox1.Controls.Add(Me.txtZIP)
+        Me.GroupBox1.Controls.Add(Me.AddressComboBox)
+        Me.GroupBox1.Controls.Add(Me.txtRDO)
+        Me.GroupBox1.Controls.Add(Me.Label3)
+        Me.GroupBox1.Controls.Add(Me.Label68)
+        Me.GroupBox1.Controls.Add(Me.txtcompMainPhoneTxt)
+        Me.GroupBox1.Controls.Add(Me.Label70)
+        Me.GroupBox1.Controls.Add(Me.Label5)
+        Me.GroupBox1.Controls.Add(Me.nightdiffshiftto)
+        Me.GroupBox1.Controls.Add(Me.txtcompFaxNumTxt)
+        Me.GroupBox1.Controls.Add(Me.nightdiffshiftfrom)
+        Me.GroupBox1.Controls.Add(Me.Label6)
+        Me.GroupBox1.Controls.Add(Me.Label60)
+        Me.GroupBox1.Controls.Add(Me.Label7)
+        Me.GroupBox1.Controls.Add(Me.Label59)
+        Me.GroupBox1.Controls.Add(Me.txtcompAltEmailTxt)
+        Me.GroupBox1.Controls.Add(Me.Label58)
+        Me.GroupBox1.Controls.Add(Me.Label8)
+        Me.GroupBox1.Controls.Add(Me.txtcompEmailTxt)
+        Me.GroupBox1.Controls.Add(Me.txtcompAltPhoneTxt)
+        Me.GroupBox1.Controls.Add(Me.RemoveImageLink)
+        Me.GroupBox1.Controls.Add(Me.Label9)
+        Me.GroupBox1.Controls.Add(Me.BrowseImageButton)
+        Me.GroupBox1.Controls.Add(Me.txtcompUrl)
+        Me.GroupBox1.Controls.Add(Me.PhotoImages)
+        Me.GroupBox1.Controls.Add(Me.Label32)
+        Me.GroupBox1.Controls.Add(Me.Label10)
+        Me.GroupBox1.Controls.Add(Me.txttradeName)
+        Me.GroupBox1.Controls.Add(Me.txtorgTinNumTxt)
+        Me.GroupBox1.Controls.Add(Me.addAddressLink1)
+        Me.GroupBox1.Controls.Add(Me.Label51)
+        Me.GroupBox1.Location = New System.Drawing.Point(18, 15)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(818, 425)
+        Me.GroupBox1.TabIndex = 380
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Organization Details"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(24, 28)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(88, 13)
+        Me.Label4.TabIndex = 320
+        Me.Label4.Text = "Company Name :"
+        '
         'chkTimeLogsOnlyRequirement
         '
-        Me.chkTimeLogsOnlyRequirement.AutoSize = True
-        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(18, 370)
+        Me.chkTimeLogsOnlyRequirement.Location = New System.Drawing.Point(27, 381)
         Me.chkTimeLogsOnlyRequirement.Name = "chkTimeLogsOnlyRequirement"
-        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(327, 17)
+        Me.chkTimeLogsOnlyRequirement.Size = New System.Drawing.Size(214, 36)
         Me.chkTimeLogsOnlyRequirement.TabIndex = 379
         Me.chkTimeLogsOnlyRequirement.Text = "Employees with at least one time log or OB is present for the day"
         Me.chkTimeLogsOnlyRequirement.UseVisualStyleBackColor = True
+        '
+        'Label40
+        '
+        Me.Label40.AutoSize = True
+        Me.Label40.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label40.ForeColor = System.Drawing.Color.Red
+        Me.Label40.Location = New System.Drawing.Point(108, 22)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(18, 24)
+        Me.Label40.TabIndex = 321
+        Me.Label40.Text = "*"
         '
         'FirstPayPeriodGroupBox
         '
@@ -190,7 +236,7 @@ Partial Class OrganizationForm
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label12)
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label13)
         Me.FirstPayPeriodGroupBox.Controls.Add(Me.Label14)
-        Me.FirstPayPeriodGroupBox.Location = New System.Drawing.Point(360, 243)
+        Me.FirstPayPeriodGroupBox.Location = New System.Drawing.Point(291, 272)
         Me.FirstPayPeriodGroupBox.Name = "FirstPayPeriodGroupBox"
         Me.FirstPayPeriodGroupBox.Size = New System.Drawing.Size(289, 144)
         Me.FirstPayPeriodGroupBox.TabIndex = 378
@@ -292,321 +338,301 @@ Partial Class OrganizationForm
         Me.Label14.TabIndex = 360
         Me.Label14.Text = "First Half"
         '
+        'txtcompanyName
+        '
+        Me.txtcompanyName.Location = New System.Drawing.Point(27, 47)
+        Me.txtcompanyName.Name = "txtcompanyName"
+        Me.txtcompanyName.Size = New System.Drawing.Size(245, 20)
+        Me.txtcompanyName.TabIndex = 309
+        '
         'IsAgencyCheckBox
         '
         Me.IsAgencyCheckBox.AutoSize = True
-        Me.IsAgencyCheckBox.Location = New System.Drawing.Point(18, 341)
+        Me.IsAgencyCheckBox.Location = New System.Drawing.Point(27, 354)
         Me.IsAgencyCheckBox.Name = "IsAgencyCheckBox"
         Me.IsAgencyCheckBox.Size = New System.Drawing.Size(73, 17)
         Me.IsAgencyCheckBox.TabIndex = 377
         Me.IsAgencyCheckBox.Text = "Is Agency"
         Me.IsAgencyCheckBox.UseVisualStyleBackColor = True
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(24, 109)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(88, 13)
+        Me.Label1.TabIndex = 322
+        Me.Label1.Text = "Primary Address :"
+        '
         'txtZIP
         '
-        Me.txtZIP.Location = New System.Drawing.Point(18, 311)
+        Me.txtZIP.Location = New System.Drawing.Point(27, 324)
         Me.txtZIP.MaxLength = 8
         Me.txtZIP.Name = "txtZIP"
         Me.txtZIP.Size = New System.Drawing.Size(245, 20)
         Me.txtZIP.TabIndex = 375
-        '
-        'txtRDO
-        '
-        Me.txtRDO.Location = New System.Drawing.Point(18, 268)
-        Me.txtRDO.MaxLength = 8
-        Me.txtRDO.Name = "txtRDO"
-        Me.txtRDO.Size = New System.Drawing.Size(245, 20)
-        Me.txtRDO.TabIndex = 374
-        '
-        'Label68
-        '
-        Me.Label68.AutoSize = True
-        Me.Label68.Location = New System.Drawing.Point(15, 295)
-        Me.Label68.Name = "Label68"
-        Me.Label68.Size = New System.Drawing.Size(58, 13)
-        Me.Label68.TabIndex = 373
-        Me.Label68.Text = "ZIP Code :"
-        '
-        'Label70
-        '
-        Me.Label70.AutoSize = True
-        Me.Label70.Location = New System.Drawing.Point(15, 253)
-        Me.Label70.Name = "Label70"
-        Me.Label70.Size = New System.Drawing.Size(65, 13)
-        Me.Label70.TabIndex = 372
-        Me.Label70.Text = "RDO Code :"
-        '
-        'nightdiffshiftto
-        '
-        Me.nightdiffshiftto.CustomFormat = "hh:mm tt"
-        Me.nightdiffshiftto.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightdiffshiftto.Location = New System.Drawing.Point(531, 204)
-        Me.nightdiffshiftto.Name = "nightdiffshiftto"
-        Me.nightdiffshiftto.ShowUpDown = True
-        Me.nightdiffshiftto.Size = New System.Drawing.Size(95, 20)
-        Me.nightdiffshiftto.TabIndex = 323
-        '
-        'nightdiffshiftfrom
-        '
-        Me.nightdiffshiftfrom.CustomFormat = "hh:mm tt"
-        Me.nightdiffshiftfrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightdiffshiftfrom.Location = New System.Drawing.Point(408, 204)
-        Me.nightdiffshiftfrom.Name = "nightdiffshiftfrom"
-        Me.nightdiffshiftfrom.ShowUpDown = True
-        Me.nightdiffshiftfrom.Size = New System.Drawing.Size(95, 20)
-        Me.nightdiffshiftfrom.TabIndex = 322
-        '
-        'Label60
-        '
-        Me.Label60.AutoSize = True
-        Me.Label60.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label60.Location = New System.Drawing.Point(509, 210)
-        Me.Label60.Name = "Label60"
-        Me.Label60.Size = New System.Drawing.Size(16, 13)
-        Me.Label60.TabIndex = 352
-        Me.Label60.Text = "to"
-        '
-        'Label59
-        '
-        Me.Label59.AutoSize = True
-        Me.Label59.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label59.Location = New System.Drawing.Point(375, 210)
-        Me.Label59.Name = "Label59"
-        Me.Label59.Size = New System.Drawing.Size(27, 13)
-        Me.Label59.TabIndex = 351
-        Me.Label59.Text = "from"
-        '
-        'Label58
-        '
-        Me.Label58.AutoSize = True
-        Me.Label58.Location = New System.Drawing.Point(364, 187)
-        Me.Label58.Name = "Label58"
-        Me.Label58.Size = New System.Drawing.Size(105, 13)
-        Me.Label58.TabIndex = 350
-        Me.Label58.Text = "Night differential shift"
-        '
-        'txtcompEmailTxt
-        '
-        Me.txtcompEmailTxt.Location = New System.Drawing.Point(18, 230)
-        Me.txtcompEmailTxt.Name = "txtcompEmailTxt"
-        Me.txtcompEmailTxt.Size = New System.Drawing.Size(245, 20)
-        Me.txtcompEmailTxt.TabIndex = 314
-        '
-        'RemoveImageLink
-        '
-        Me.RemoveImageLink.AutoSize = True
-        Me.RemoveImageLink.Location = New System.Drawing.Point(843, 213)
-        Me.RemoveImageLink.Name = "RemoveImageLink"
-        Me.RemoveImageLink.Size = New System.Drawing.Size(79, 13)
-        Me.RemoveImageLink.TabIndex = 341
-        Me.RemoveImageLink.TabStop = True
-        Me.RemoveImageLink.Text = "Remove Image"
-        '
-        'BrowseImageButton
-        '
-        Me.BrowseImageButton.Location = New System.Drawing.Point(751, 210)
-        Me.BrowseImageButton.Name = "BrowseImageButton"
-        Me.BrowseImageButton.Size = New System.Drawing.Size(75, 23)
-        Me.BrowseImageButton.TabIndex = 338
-        Me.BrowseImageButton.Text = "Browse"
-        Me.BrowseImageButton.UseVisualStyleBackColor = True
-        '
-        'PhotoImages
-        '
-        Me.PhotoImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
-        Me.PhotoImages.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.PhotoImages.Location = New System.Drawing.Point(727, 39)
-        Me.PhotoImages.Name = "PhotoImages"
-        Me.PhotoImages.Size = New System.Drawing.Size(215, 165)
-        Me.PhotoImages.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.PhotoImages.TabIndex = 340
-        Me.PhotoImages.TabStop = False
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(728, 23)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(42, 13)
-        Me.Label10.TabIndex = 339
-        Me.Label10.Text = "Image :"
-        '
-        'txtorgTinNumTxt
-        '
-        Me.txtorgTinNumTxt.Location = New System.Drawing.Point(367, 113)
-        Me.txtorgTinNumTxt.Name = "txtorgTinNumTxt"
-        Me.txtorgTinNumTxt.Size = New System.Drawing.Size(214, 20)
-        Me.txtorgTinNumTxt.TabIndex = 318
-        '
-        'Label51
-        '
-        Me.Label51.AutoSize = True
-        Me.Label51.Location = New System.Drawing.Point(364, 96)
-        Me.Label51.Name = "Label51"
-        Me.Label51.Size = New System.Drawing.Size(71, 13)
-        Me.Label51.TabIndex = 335
-        Me.Label51.Text = "TIN Number :"
-        '
-        'addAddressLink1
-        '
-        Me.addAddressLink1.AutoSize = True
-        Me.addAddressLink1.Location = New System.Drawing.Point(269, 120)
-        Me.addAddressLink1.Name = "addAddressLink1"
-        Me.addAddressLink1.Size = New System.Drawing.Size(92, 13)
-        Me.addAddressLink1.TabIndex = 312
-        Me.addAddressLink1.TabStop = True
-        Me.addAddressLink1.Text = "Add New Address"
-        '
-        'txttradeName
-        '
-        Me.txttradeName.Location = New System.Drawing.Point(18, 73)
-        Me.txttradeName.Name = "txttradeName"
-        Me.txttradeName.Size = New System.Drawing.Size(245, 20)
-        Me.txttradeName.TabIndex = 310
-        '
-        'Label32
-        '
-        Me.Label32.AutoSize = True
-        Me.Label32.Location = New System.Drawing.Point(15, 57)
-        Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(72, 13)
-        Me.Label32.TabIndex = 332
-        Me.Label32.Text = "Trade Name :"
-        '
-        'txtcompUrl
-        '
-        Me.txtcompUrl.Location = New System.Drawing.Point(367, 34)
-        Me.txtcompUrl.Name = "txtcompUrl"
-        Me.txtcompUrl.Size = New System.Drawing.Size(214, 20)
-        Me.txtcompUrl.TabIndex = 316
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(364, 17)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(35, 13)
-        Me.Label9.TabIndex = 328
-        Me.Label9.Text = "URL :"
-        '
-        'txtcompAltPhoneTxt
-        '
-        Me.txtcompAltPhoneTxt.Location = New System.Drawing.Point(367, 73)
-        Me.txtcompAltPhoneTxt.Name = "txtcompAltPhoneTxt"
-        Me.txtcompAltPhoneTxt.Size = New System.Drawing.Size(214, 20)
-        Me.txtcompAltPhoneTxt.TabIndex = 317
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(364, 57)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(89, 13)
-        Me.Label8.TabIndex = 327
-        Me.Label8.Text = "Alternate Phone :"
-        '
-        'txtcompAltEmailTxt
-        '
-        Me.txtcompAltEmailTxt.Location = New System.Drawing.Point(367, 152)
-        Me.txtcompAltEmailTxt.Name = "txtcompAltEmailTxt"
-        Me.txtcompAltEmailTxt.Size = New System.Drawing.Size(214, 20)
-        Me.txtcompAltEmailTxt.TabIndex = 319
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(364, 136)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(124, 13)
-        Me.Label7.TabIndex = 326
-        Me.Label7.Text = "Alternate Email Address :"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(15, 214)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(79, 13)
-        Me.Label6.TabIndex = 325
-        Me.Label6.Text = "Email Address :"
-        '
-        'txtcompFaxNumTxt
-        '
-        Me.txtcompFaxNumTxt.Location = New System.Drawing.Point(18, 191)
-        Me.txtcompFaxNumTxt.Name = "txtcompFaxNumTxt"
-        Me.txtcompFaxNumTxt.Size = New System.Drawing.Size(245, 20)
-        Me.txtcompFaxNumTxt.TabIndex = 313
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(15, 175)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(70, 13)
-        Me.Label5.TabIndex = 324
-        Me.Label5.Text = "Fax Number :"
-        '
-        'txtcompMainPhoneTxt
-        '
-        Me.txtcompMainPhoneTxt.Location = New System.Drawing.Point(18, 152)
-        Me.txtcompMainPhoneTxt.Name = "txtcompMainPhoneTxt"
-        Me.txtcompMainPhoneTxt.Size = New System.Drawing.Size(245, 20)
-        Me.txtcompMainPhoneTxt.TabIndex = 312
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(15, 136)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(70, 13)
-        Me.Label3.TabIndex = 323
-        Me.Label3.Text = "Main Phone :"
         '
         'AddressComboBox
         '
         Me.AddressComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.AddressComboBox.FormattingEnabled = True
         Me.AddressComboBox.ImeMode = System.Windows.Forms.ImeMode.[On]
-        Me.AddressComboBox.Location = New System.Drawing.Point(18, 112)
+        Me.AddressComboBox.Location = New System.Drawing.Point(27, 125)
         Me.AddressComboBox.Name = "AddressComboBox"
         Me.AddressComboBox.Size = New System.Drawing.Size(245, 21)
         Me.AddressComboBox.TabIndex = 311
         '
-        'Label1
+        'txtRDO
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(15, 96)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(88, 13)
-        Me.Label1.TabIndex = 322
-        Me.Label1.Text = "Primary Address :"
+        Me.txtRDO.Location = New System.Drawing.Point(27, 281)
+        Me.txtRDO.MaxLength = 8
+        Me.txtRDO.Name = "txtRDO"
+        Me.txtRDO.Size = New System.Drawing.Size(245, 20)
+        Me.txtRDO.TabIndex = 374
         '
-        'txtcompanyName
+        'Label3
         '
-        Me.txtcompanyName.Location = New System.Drawing.Point(18, 34)
-        Me.txtcompanyName.Name = "txtcompanyName"
-        Me.txtcompanyName.Size = New System.Drawing.Size(245, 20)
-        Me.txtcompanyName.TabIndex = 309
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(24, 149)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(70, 13)
+        Me.Label3.TabIndex = 323
+        Me.Label3.Text = "Main Phone :"
         '
-        'Label4
+        'Label68
         '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(15, 15)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(88, 13)
-        Me.Label4.TabIndex = 320
-        Me.Label4.Text = "Company Name :"
+        Me.Label68.AutoSize = True
+        Me.Label68.Location = New System.Drawing.Point(24, 308)
+        Me.Label68.Name = "Label68"
+        Me.Label68.Size = New System.Drawing.Size(58, 13)
+        Me.Label68.TabIndex = 373
+        Me.Label68.Text = "ZIP Code :"
         '
-        'Label40
+        'txtcompMainPhoneTxt
         '
-        Me.Label40.AutoSize = True
-        Me.Label40.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label40.ForeColor = System.Drawing.Color.Red
-        Me.Label40.Location = New System.Drawing.Point(100, 15)
-        Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(18, 24)
-        Me.Label40.TabIndex = 321
-        Me.Label40.Text = "*"
+        Me.txtcompMainPhoneTxt.Location = New System.Drawing.Point(27, 165)
+        Me.txtcompMainPhoneTxt.Name = "txtcompMainPhoneTxt"
+        Me.txtcompMainPhoneTxt.Size = New System.Drawing.Size(245, 20)
+        Me.txtcompMainPhoneTxt.TabIndex = 312
+        '
+        'Label70
+        '
+        Me.Label70.AutoSize = True
+        Me.Label70.Location = New System.Drawing.Point(24, 266)
+        Me.Label70.Name = "Label70"
+        Me.Label70.Size = New System.Drawing.Size(65, 13)
+        Me.Label70.TabIndex = 372
+        Me.Label70.Text = "RDO Code :"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(24, 188)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(70, 13)
+        Me.Label5.TabIndex = 324
+        Me.Label5.Text = "Fax Number :"
+        '
+        'nightdiffshiftto
+        '
+        Me.nightdiffshiftto.CustomFormat = "hh:mm tt"
+        Me.nightdiffshiftto.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.nightdiffshiftto.Location = New System.Drawing.Point(462, 233)
+        Me.nightdiffshiftto.Name = "nightdiffshiftto"
+        Me.nightdiffshiftto.ShowUpDown = True
+        Me.nightdiffshiftto.Size = New System.Drawing.Size(95, 20)
+        Me.nightdiffshiftto.TabIndex = 323
+        '
+        'txtcompFaxNumTxt
+        '
+        Me.txtcompFaxNumTxt.Location = New System.Drawing.Point(27, 204)
+        Me.txtcompFaxNumTxt.Name = "txtcompFaxNumTxt"
+        Me.txtcompFaxNumTxt.Size = New System.Drawing.Size(245, 20)
+        Me.txtcompFaxNumTxt.TabIndex = 313
+        '
+        'nightdiffshiftfrom
+        '
+        Me.nightdiffshiftfrom.CustomFormat = "hh:mm tt"
+        Me.nightdiffshiftfrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.nightdiffshiftfrom.Location = New System.Drawing.Point(339, 233)
+        Me.nightdiffshiftfrom.Name = "nightdiffshiftfrom"
+        Me.nightdiffshiftfrom.ShowUpDown = True
+        Me.nightdiffshiftfrom.Size = New System.Drawing.Size(95, 20)
+        Me.nightdiffshiftfrom.TabIndex = 322
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(24, 227)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(79, 13)
+        Me.Label6.TabIndex = 325
+        Me.Label6.Text = "Email Address :"
+        '
+        'Label60
+        '
+        Me.Label60.AutoSize = True
+        Me.Label60.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
+        Me.Label60.Location = New System.Drawing.Point(440, 239)
+        Me.Label60.Name = "Label60"
+        Me.Label60.Size = New System.Drawing.Size(16, 13)
+        Me.Label60.TabIndex = 352
+        Me.Label60.Text = "to"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(295, 149)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(124, 13)
+        Me.Label7.TabIndex = 326
+        Me.Label7.Text = "Alternate Email Address :"
+        '
+        'Label59
+        '
+        Me.Label59.AutoSize = True
+        Me.Label59.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
+        Me.Label59.Location = New System.Drawing.Point(306, 239)
+        Me.Label59.Name = "Label59"
+        Me.Label59.Size = New System.Drawing.Size(27, 13)
+        Me.Label59.TabIndex = 351
+        Me.Label59.Text = "from"
+        '
+        'txtcompAltEmailTxt
+        '
+        Me.txtcompAltEmailTxt.Location = New System.Drawing.Point(298, 165)
+        Me.txtcompAltEmailTxt.Name = "txtcompAltEmailTxt"
+        Me.txtcompAltEmailTxt.Size = New System.Drawing.Size(214, 20)
+        Me.txtcompAltEmailTxt.TabIndex = 319
+        '
+        'Label58
+        '
+        Me.Label58.AutoSize = True
+        Me.Label58.Location = New System.Drawing.Point(295, 216)
+        Me.Label58.Name = "Label58"
+        Me.Label58.Size = New System.Drawing.Size(105, 13)
+        Me.Label58.TabIndex = 350
+        Me.Label58.Text = "Night differential shift"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(295, 70)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(89, 13)
+        Me.Label8.TabIndex = 327
+        Me.Label8.Text = "Alternate Phone :"
+        '
+        'txtcompEmailTxt
+        '
+        Me.txtcompEmailTxt.Location = New System.Drawing.Point(27, 243)
+        Me.txtcompEmailTxt.Name = "txtcompEmailTxt"
+        Me.txtcompEmailTxt.Size = New System.Drawing.Size(245, 20)
+        Me.txtcompEmailTxt.TabIndex = 314
+        '
+        'txtcompAltPhoneTxt
+        '
+        Me.txtcompAltPhoneTxt.Location = New System.Drawing.Point(298, 86)
+        Me.txtcompAltPhoneTxt.Name = "txtcompAltPhoneTxt"
+        Me.txtcompAltPhoneTxt.Size = New System.Drawing.Size(214, 20)
+        Me.txtcompAltPhoneTxt.TabIndex = 317
+        '
+        'RemoveImageLink
+        '
+        Me.RemoveImageLink.AutoSize = True
+        Me.RemoveImageLink.Location = New System.Drawing.Point(692, 221)
+        Me.RemoveImageLink.Name = "RemoveImageLink"
+        Me.RemoveImageLink.Size = New System.Drawing.Size(79, 13)
+        Me.RemoveImageLink.TabIndex = 341
+        Me.RemoveImageLink.TabStop = True
+        Me.RemoveImageLink.Text = "Remove Image"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(295, 30)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(35, 13)
+        Me.Label9.TabIndex = 328
+        Me.Label9.Text = "URL :"
+        '
+        'BrowseImageButton
+        '
+        Me.BrowseImageButton.Location = New System.Drawing.Point(600, 218)
+        Me.BrowseImageButton.Name = "BrowseImageButton"
+        Me.BrowseImageButton.Size = New System.Drawing.Size(75, 23)
+        Me.BrowseImageButton.TabIndex = 338
+        Me.BrowseImageButton.Text = "Browse"
+        Me.BrowseImageButton.UseVisualStyleBackColor = True
+        '
+        'txtcompUrl
+        '
+        Me.txtcompUrl.Location = New System.Drawing.Point(298, 47)
+        Me.txtcompUrl.Name = "txtcompUrl"
+        Me.txtcompUrl.Size = New System.Drawing.Size(214, 20)
+        Me.txtcompUrl.TabIndex = 316
+        '
+        'PhotoImages
+        '
+        Me.PhotoImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.PhotoImages.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.PhotoImages.Location = New System.Drawing.Point(576, 47)
+        Me.PhotoImages.Name = "PhotoImages"
+        Me.PhotoImages.Size = New System.Drawing.Size(215, 165)
+        Me.PhotoImages.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.PhotoImages.TabIndex = 340
+        Me.PhotoImages.TabStop = False
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Location = New System.Drawing.Point(24, 70)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(72, 13)
+        Me.Label32.TabIndex = 332
+        Me.Label32.Text = "Trade Name :"
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(573, 31)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(42, 13)
+        Me.Label10.TabIndex = 339
+        Me.Label10.Text = "Image :"
+        '
+        'txttradeName
+        '
+        Me.txttradeName.Location = New System.Drawing.Point(27, 86)
+        Me.txttradeName.Name = "txttradeName"
+        Me.txttradeName.Size = New System.Drawing.Size(245, 20)
+        Me.txttradeName.TabIndex = 310
+        '
+        'txtorgTinNumTxt
+        '
+        Me.txtorgTinNumTxt.Location = New System.Drawing.Point(298, 126)
+        Me.txtorgTinNumTxt.Name = "txtorgTinNumTxt"
+        Me.txtorgTinNumTxt.Size = New System.Drawing.Size(214, 20)
+        Me.txtorgTinNumTxt.TabIndex = 318
+        '
+        'addAddressLink1
+        '
+        Me.addAddressLink1.AutoSize = True
+        Me.addAddressLink1.Location = New System.Drawing.Point(180, 109)
+        Me.addAddressLink1.Name = "addAddressLink1"
+        Me.addAddressLink1.Size = New System.Drawing.Size(92, 13)
+        Me.addAddressLink1.TabIndex = 312
+        Me.addAddressLink1.TabStop = True
+        Me.addAddressLink1.Text = "Add New Address"
+        '
+        'Label51
+        '
+        Me.Label51.AutoSize = True
+        Me.Label51.Location = New System.Drawing.Point(295, 109)
+        Me.Label51.Name = "Label51"
+        Me.Label51.Size = New System.Drawing.Size(71, 13)
+        Me.Label51.TabIndex = 335
+        Me.Label51.Text = "TIN Number :"
         '
         'lblSaveMsg
         '
@@ -678,6 +704,7 @@ Partial Class OrganizationForm
         Me.OrganizationGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.OrganizationGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_companyname})
         Me.OrganizationGridView.Location = New System.Drawing.Point(9, 83)
+        Me.OrganizationGridView.MultiSelect = False
         Me.OrganizationGridView.Name = "OrganizationGridView"
         Me.OrganizationGridView.ReadOnly = True
         Me.OrganizationGridView.Size = New System.Drawing.Size(255, 554)
@@ -725,7 +752,24 @@ Partial Class OrganizationForm
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "Name"
         Me.DataGridViewTextBoxColumn1.HeaderText = "Organization Name"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 200
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.DataPropertyName = "Name"
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Organization Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.Width = 200
+        '
+        'OrganizationUserRolesControl1
+        '
+        Me.OrganizationUserRolesControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.OrganizationUserRolesControl.Location = New System.Drawing.Point(18, 500)
+        Me.OrganizationUserRolesControl.Name = "OrganizationUserRolesControl1"
+        Me.OrganizationUserRolesControl.Size = New System.Drawing.Size(818, 70)
+        Me.OrganizationUserRolesControl.TabIndex = 383
         '
         'OrganizationForm
         '
@@ -751,6 +795,8 @@ Partial Class OrganizationForm
         Me.SplitContainer1.Panel1.PerformLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.FirstPayPeriodGroupBox.ResumeLayout(False)
         Me.FirstPayPeriodGroupBox.PerformLayout()
         CType(Me.PhotoImages, System.ComponentModel.ISupportInitialize).EndInit()
@@ -824,4 +870,8 @@ Partial Class OrganizationForm
     Friend WithEvents Label16 As Label
     Friend WithEvents Label15 As Label
     Friend WithEvents chkTimeLogsOnlyRequirement As CheckBox
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents UserRoleLabel As Label
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents OrganizationUserRolesControl As OrganizationUserRolesControl
 End Class
