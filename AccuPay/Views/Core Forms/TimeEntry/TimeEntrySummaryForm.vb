@@ -294,7 +294,7 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
+            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(z_OrganizationID)
 
             _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod?.RowID))
 

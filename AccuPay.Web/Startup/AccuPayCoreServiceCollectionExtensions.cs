@@ -9,6 +9,7 @@ using AccuPay.Data.Services.Imports.Loans;
 using AccuPay.Data.Services.Imports.OfficialBusiness;
 using AccuPay.Data.Services.Imports.Overtimes;
 using AccuPay.Data.Services.Imports.Salaries;
+using AccuPay.Data.Services.Reports;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
@@ -132,6 +133,8 @@ namespace AccuPay.Web
 
             services.AddScoped<PayrollSummaryExcelFormatReportDataService>();
             services.AddScoped<IPayrollSummaryReportBuilder, PayrollSummaryReportBuilder>();
+            services.AddScoped<EmployeePersonalProfilesExcelFormatReportDataService>();
+            services.AddScoped<IEmployeePersonalProfilesReportBuilder, EmployeePersonalProfilesReportBuilder>();
 
             return services;
         }

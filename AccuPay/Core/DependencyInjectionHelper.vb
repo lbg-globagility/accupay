@@ -8,6 +8,7 @@ Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Data.Services.Reports
 Imports AccuPay.Infrastructure.Reports
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
@@ -177,6 +178,8 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of PayrollSummaryExcelFormatReportDataService)
         services.AddTransient(Of IPayrollSummaryReportBuilder, PayrollSummaryReportBuilder)
+        services.AddTransient(Of EmployeePersonalProfilesExcelFormatReportDataService)
+        services.AddTransient(Of IEmployeePersonalProfilesReportBuilder, EmployeePersonalProfilesReportBuilder)
 
         'services.AddTransient(Of MetroLogin)
         'services.AddTransient(Of MDIPrimaryForm)

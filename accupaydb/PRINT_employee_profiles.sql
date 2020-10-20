@@ -15,123 +15,97 @@ DECLARE pp_rowid
 
 DECLARE preferred_dateformat VARCHAR(50) DEFAULT '%c/%e/%Y';
 
-SELECT ps.PayPeriodID
-,COUNT(e.RowID)
-FROM paystub ps
-INNER JOIN employee e
-        ON e.RowID=ps.EmployeeID
-           AND e.OrganizationID=ps.OrganizationID
-           AND e.EmployeeType NOT IN ('Resigned', 'Terminated')
-           AND e.RevealInPayroll IN ('1', 'Y')
-INNER JOIN payperiod pp
-        ON pp.RowID=ps.PayPeriodID
-           AND pp.OrganizationID=ps.OrganizationID
-           AND pp.`Year`=YEAR(CURDATE())
-           AND pp.TotalGrossSalary=e.PayFrequencyID
-WHERE ps.OrganizationID=og_rowid
-LIMIT 1
-INTO pp_rowid
-     ,result_count;
+DROP TEMPORARY TABLE if EXISTS `daynameconvert`;
+CREATE TEMPORARY TABLE `daynameconvert`
+SELECT 1 `Index`, 'Sunday' `DayName`
+UNION SELECT 2,  'Monday'
+UNION SELECT 3,  'Tuesday'
+UNION SELECT 4,  'Wednesday'
+UNION SELECT 5,  'Thursday'
+UNION SELECT 6,  'Friday'
+UNION SELECT 7,  'Saturday'
+;
 
-IF pp_rowid IS NOT NULL THEN
+SELECT
+	e.Salutation,
+	e.FirstName,
+	e.MiddleName,
+	e.LastName,
+	e.EmployeeID,
+	e.TINNo,
+	e.SSSNo,
+	e.HDMFNo,
+	e.PhilHealthNo,
+	e.EmploymentStatus,
+	e.EmailAddress,
+	e.WorkPhone,
+	e.HomePhone,
+	e.MobilePhone,
+	e.HomeAddress,
+	e.Nickname,
+	IF(e.Gender='F', 'Female', 'Male') `Gender`,
+	e.EmployeeType,
+	e.MaritalStatus,
+	DATE_FORMAT(e.Birthdate, preferred_dateformat) `Birthdate`,
+	DATE_FORMAT(e.StartDate, preferred_dateformat) `StartDate`,
+	DATE_FORMAT(e.TerminationDate, preferred_dateformat) `TerminationDate`,
+	pos.PositionName, # PositionID
+	pf.PayFrequencyType, # PayFrequencyID
+#	e.NoOfDependents,
+	e.LeaveBalance,
+	e.SickLeaveBalance,
+	e.MaternityLeaveBalance,
+	e.OtherLeaveBalance,
+	e.LeaveAllowance,
+	e.SickLeaveAllowance,
+	e.MaternityLeaveAllowance,
+	e.OtherLeaveAllowance,
+	e.LeavePerPayPeriod,
+	e.SickLeavePerPayPeriod,
+	e.MaternityLeavePerPayPeriod,
+	e.OtherLeavePerPayPeriod,
+	e.WorkDaysPerYear,	
+	dc.`DayName` `DayOfRest`,
+	e.ATMNo,
+	e.BankName,
+	IF(e.CalcHoliday, 'Yes', 'No') `CalcHoliday`,
+	IF(e.CalcSpecialHoliday, 'Yes', 'No') `CalcSpecialHoliday`,
+	IF(e.CalcNightDiff, 'Yes', 'No') `CalcNightDiff`,
+	IF(e.CalcNightDiffOT, 'Yes', 'No') `CalcNightDiffOT`,
+	IF(e.CalcRestDay, 'Yes', 'No') `CalcRestDay`,
+	IF(e.CalcRestDayOT, 'Yes', 'No') `CalcRestDayOT`,
+	DATE_FORMAT(e.DateRegularized, preferred_dateformat) `DateRegularized`,
+	DATE_FORMAT(e.DateEvaluated, preferred_dateformat) `DateEvaluated`,
+	e.LateGracePeriod,
+	ag.AgencyName, # AgencyID
+	e.OffsetBalance,
+	b.BranchName, # BranchID
+	TIME_FORMAT(e.MinimumOvertime, '%H:%i') `MinimumOvertime`, # MinimumOvertime
+	e.AdvancementPoints,
+	e.BPIInsurance,
+	ep.`Name` `EmploymentPolicyName` # EmploymentPolicyId
+FROM employee e
 
-	SELECT
-	# e.RowID `DatCol1`,
-	e.EmployeeID	`Employee ID`
-	,e.LastName	`Last Name`
-	,e.FirstName	`First name`
-	,e.MiddleName	`Middle Name`
-	,IFNULL(DATE_FORMAT(e.Birthdate, preferred_dateformat), '') `Birthdate`
-	,e.Gender	`Sex`
-	,e.MaritalStatus	`Marital Status`
-	,e.EmployeeType	`Employee Type`
-	,IFNULL(DATE_FORMAT(e.StartDate, preferred_dateformat), '') `Start Date`
-	,IFNULL(DATE_FORMAT(e.DateRegularized, preferred_dateformat), '') `Date Regularized`
-	,pf.PayFrequencyType	`Pay Frequency`
-	,e.EmploymentStatus	`Employment Status`
-	,pos.PositionName	`Position Name`
-	,e.MobilePhone	`Mobile no.`
-	,e.HomeAddress	`Address`
-	,e.TINNo	`TIN`
-	,e.SSSNo	`SSS No.`
-	,e.HDMFNo	`HDMF No.`
-	,e.PhilHealthNo	`PHIC No.`
-	# ,e.ATMNo
-	,IFNULL(COUNT(edp.RowID), 0) `Dependent count`
-	/*
-	,(@dependent_lists := REPLACE(	
-	                      GROUP_CONCAT( CONCAT_WS('', CONCAT_WS(' ', edp.FirstName, edp.LastName), CONCAT('(', edp.RelationToEmployee, ')')) )
-								 , ',', '\n')
-								 )	`DatCol22`
-   */
-	FROM employee e
-	LEFT JOIN employeedependents edp
-	       ON edp.ParentEmployeeID=e.RowID
-	          AND edp.OrganizationID=e.OrganizationID
-	INNER JOIN payfrequency pf
-	        ON pf.RowID=e.PayFrequencyID
-	INNER JOIN `position` pos
-	        ON pos.RowID=e.PositionID
-	
-	INNER JOIN paystub ps
-	        ON ps.OrganizationID=e.OrganizationID
-	           AND ps.EmployeeID=e.RowID
-	           AND ps.PayPeriodID=pp_rowid
-	
-	WHERE e.OrganizationID=og_rowid
-	AND e.EmployeeType NOT IN ('Resigned', 'Terminated')
-	AND e.RevealInPayroll IN ('1', 'Y')
-	GROUP BY e.RowID
-	ORDER BY CONCAT_WS(',', e.LastName, e.FirstName, e.MiddleName)
-	;
-	
-ELSE
+INNER JOIN organization og ON og.RowID=e.OrganizationID
 
-	SELECT
-	# e.RowID `DatCol1`,
-	e.EmployeeID	`Employee ID`
-	,e.LastName	`Last Name`
-	,e.FirstName	`First name`
-	,e.MiddleName	`Middle Name`
-	,IFNULL(DATE_FORMAT(e.Birthdate, preferred_dateformat), '') `Birthdate`
-	,e.Gender	`Sex`
-	,e.MaritalStatus	`Marital Status`
-	,e.EmployeeType	`Employee Type`
-	,IFNULL(DATE_FORMAT(e.StartDate, preferred_dateformat), '') `Start Date`
-	,IFNULL(DATE_FORMAT(e.DateRegularized, preferred_dateformat), '') `Date Regularized`
-	,pf.PayFrequencyType	`Pay Frequency`
-	,e.EmploymentStatus	`Employment Status`
-	,pos.PositionName	`Position Name`
-	,e.MobilePhone	`Mobile no.`
-	,e.HomeAddress	`Address`
-	,e.TINNo	`TIN`
-	,e.SSSNo	`SSS No.`
-	,e.HDMFNo	`HDMF No.`
-	,e.PhilHealthNo	`PHIC No.`
-	# ,e.ATMNo
-	,IFNULL(COUNT(edp.RowID), 0) `Dependent count`
-	/*
-	,(@dependent_lists := REPLACE(	
-	                      GROUP_CONCAT( CONCAT_WS('', CONCAT_WS(' ', edp.FirstName, edp.LastName), CONCAT('(', edp.RelationToEmployee, ')')) )
-								 , ',', '\n')
-								 )	`DatCol22`
-   */
-	FROM employee e
-	LEFT JOIN employeedependents edp
-	       ON edp.ParentEmployeeID=e.RowID
-	          AND edp.OrganizationID=e.OrganizationID
-	INNER JOIN payfrequency pf
-	        ON pf.RowID=e.PayFrequencyID
-	INNER JOIN `position` pos
-	        ON pos.RowID=e.PositionID
-	WHERE e.OrganizationID=og_rowid
-	AND e.EmployeeType NOT IN ('Resigned', 'Terminated')
-	AND e.RevealInPayroll IN ('1', 'Y')
-	GROUP BY e.RowID
-	ORDER BY CONCAT_WS(',', e.LastName, e.FirstName, e.MiddleName)
-	;
-	
-END IF;
+LEFT JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID
+
+LEFT JOIN branch b ON b.RowID=e.BranchID
+
+LEFT JOIN `position` pos ON pos.RowID=e.PositionID
+
+LEFT JOIN agency ag ON ag.RowID=e.AgencyID
+
+LEFT JOIN employmentpolicy ep ON ep.Id=e.EmploymentPolicyId
+
+LEFT JOIN `daynameconvert` dc ON dc.`Index`=e.DayOfRest
+
+WHERE e.OrganizationID=og_rowid
+AND e.EmploymentStatus NOT IN ('Resigned', 'Terminated')
+AND e.RevealInPayroll IN ('1', 'Y')
+
+ORDER BY CONCAT(e.LastName,e.FirstName,e.MiddleName)
+;
 
 END//
 DELIMITER ;
