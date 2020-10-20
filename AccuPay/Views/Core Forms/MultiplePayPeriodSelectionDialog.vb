@@ -162,7 +162,7 @@ Public Class MultiplePayPeriodSelectionDialog
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
+        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(z_OrganizationID)
 
         DateFromTextLabel.Text = ""
         DateToTextLabel.Text = ""

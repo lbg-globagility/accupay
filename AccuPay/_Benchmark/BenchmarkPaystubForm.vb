@@ -138,7 +138,7 @@ Public Class BenchmarkPaystubForm
 
     Private Sub UpdateCutOffLabel()
         PayPeriodLabel.Text = $"For the Period:
-            {_currentPayPeriod.PayFromDate.ToString("MMMM d")} - {_currentPayPeriod.PayToDate.ToString("MMMM d")}, {_currentPayPeriod.PayToDate.Year}"
+            {_currentPayPeriod?.PayFromDate:MMMM d} - {_currentPayPeriod?.PayToDate:MMMM d}, {_currentPayPeriod?.PayToDate.Year}"
     End Sub
 
     Private Async Function ShowEmployees() As Task

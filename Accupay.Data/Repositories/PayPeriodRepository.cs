@@ -28,7 +28,7 @@ namespace AccuPay.Data.Repositories
         #region Single entity
 
         /// <summary>
-        /// Get the latest payperiod that was Closed or Open based on Status property. (Used in Web)
+        /// Gets the latest payperiod that was Closed or Open based on Status property. (Used in Web)
         /// </summary>
         /// <param name="organizationId"></param>
         /// <returns></returns>
@@ -52,6 +52,11 @@ namespace AccuPay.Data.Repositories
             return recentPeriod;
         }
 
+        /// <summary>
+        /// Gets the current open pay period asyncrhonously.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
         public async Task<PayPeriod> GetCurrentOpenAsync(int organizationId)
         {
             IQueryable<PayPeriod> query = CreateBaseQueryGetCurrentOpen(organizationId);
@@ -59,6 +64,11 @@ namespace AccuPay.Data.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Gets the current open pay period.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
         public PayPeriod GetCurrentOpen(int organizationId)
         {
             IQueryable<PayPeriod> query = CreateBaseQueryGetCurrentOpen(organizationId);
@@ -83,6 +93,12 @@ namespace AccuPay.Data.Repositories
             return await query.ToListAsync();
         }
 
+        /// <summary>
+        /// Check if there is a closed pay period after the date.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public async Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date)
         {
             var query = CreateBaseQuery(organizationId)
@@ -97,6 +113,28 @@ namespace AccuPay.Data.Repositories
             return await query.AnyAsync();
         }
 
+        /// <summary>
+        /// Gets the current Open pay period. If there is no Open pay period, get the current pay period based on current date.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetOpenOrCurrentPayPeriodAsync(int organizationId)
+        {
+            var payPeriod = await GetCurrentOpenAsync(organizationId);
+
+            if (payPeriod == null)
+            {
+                payPeriod = await GetCurrentPayPeriodAsync(organizationId);
+            }
+
+            return payPeriod;
+        }
+
+        /// <summary>
+        /// Gets the current pay period based on current date.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
         public async Task<PayPeriod> GetCurrentPayPeriodAsync(int organizationId)
         {
             var currentDay = DateTime.Now;
