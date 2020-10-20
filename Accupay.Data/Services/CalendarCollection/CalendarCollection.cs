@@ -7,43 +7,22 @@ namespace AccuPay.Data.Services
 {
     public class CalendarCollection
     {
-        private readonly bool _isUsingCalendars;
-
         private readonly IDictionary<int?, PayratesCalendar> _calendars;
 
         private readonly ICollection<Branch> _branches;
-
-        [Obsolete]
-        private readonly PayratesCalendar _organizationCalendar;
 
         private readonly DefaultRates _defaultRates;
 
         private readonly PayratesCalendar _defaultCalendar;
 
-        // For identifying the _organizationCalendar
-        public int OrganizationId { get; }
-
         public CalendarCollection(
-            ICollection<PayRate> payrates,
-            int organizationId,
-            DefaultRates defaultRates)
-        {
-            _defaultRates = defaultRates;
-            OrganizationId = organizationId;
-            _isUsingCalendars = false;
-            _organizationCalendar = new PayratesCalendar(payrates, _defaultRates);
-        }
-
-        public CalendarCollection(
-            ICollection<PayRate> payrates,
             ICollection<Branch> branches,
             ICollection<CalendarDay> calendarDays,
-            int organizationId,
             DefaultRates defaultRates,
             PayCalendar defaultPayCalendar)
-            : this(payrates, organizationId, defaultRates)
         {
             _branches = branches;
+            _defaultRates = defaultRates;
 
             // Group the days based on the CalendarID into separate PayratesCalendar
             _calendars = calendarDays
@@ -56,13 +35,11 @@ namespace AccuPay.Data.Services
             var defaultCalendarDays = calendarDays
                 .Where(t => t.CalendarID == defaultPayCalendar.RowID);
             _defaultCalendar = new PayratesCalendar(defaultCalendarDays, defaultRates);
-
-            _isUsingCalendars = true;
         }
 
         public PayratesCalendar GetCalendar(int? branchId = null)
         {
-            var calendar = _isUsingCalendars ? FindCalendarByBranch(branchId) : _defaultCalendar;
+            var calendar = FindCalendarByBranch(branchId);
 
             if (calendar is null)
                 throw new Exception("No calendar was found");

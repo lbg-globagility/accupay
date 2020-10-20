@@ -1344,12 +1344,6 @@
     <Compile Include="Views\Core Forms\newProdBonus.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Payrate.Designer.vb">
-      <DependentUpon>Payrate.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Payrate.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.Designer.vb">
       <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>
     </Compile>
@@ -2269,9 +2263,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\newProdBonus.resx">
       <DependentUpon>newProdBonus.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Payrate.resx">
-      <DependentUpon>Payrate.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\MultiplePayPeriodSelectionDialog.resx">
       <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>

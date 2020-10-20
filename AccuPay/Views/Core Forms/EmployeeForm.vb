@@ -3211,16 +3211,6 @@ Public Class EmployeeForm
 
         _branches = New List(Of Branch)
 
-        If _policy.PayRateCalculationBasis <> PayRateCalculationBasis.Branch Then
-
-            BranchComboBox.Visible = False
-            BranchLabel.Visible = False
-            AddBranchLinkButton.Visible = False
-
-            Return
-
-        End If
-
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
         _branches = branchRepository.
             GetAll().

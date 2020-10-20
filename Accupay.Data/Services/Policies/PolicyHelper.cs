@@ -1,5 +1,4 @@
-﻿using AccuPay.Data.Enums;
-using AccuPay.Data.Services.Policies;
+﻿using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities;
 using System.Threading.Tasks;
 
@@ -50,9 +49,6 @@ namespace AccuPay.Data.Services
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
 
         public bool UseDefaultShiftAndTimeLogs => _settings.GetBoolean("Data Policy.UseDefaultShiftAndTimeLogs", false);
-
-        public PayRateCalculationBasis PayRateCalculationBasis =>
-                _settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
 
         public bool HasDifferentPayPeriodDates => _settings.GetBoolean("Payroll Policy.HasDifferentPayPeriodDates", false);
 

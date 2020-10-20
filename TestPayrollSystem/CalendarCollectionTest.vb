@@ -62,10 +62,8 @@ Public Class CalendarCollectionTest
         Dim defaultRates = New DefaultRates()
 
         _calendarCollection = New CalendarCollection(
-            Enumerable.Empty(Of PayRate)().ToList(),
             branches,
             calendarDays,
-            1,
             defaultRates,
             defaultCalendar)
     End Sub

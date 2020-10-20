@@ -216,18 +216,6 @@ Public Class TimeEntrySummaryForm
 
     End Function
 
-    Private Function GetCalendarCollection(payPeriod As PayPeriod) As CalendarCollection
-
-        If payPeriod Is Nothing Then Return Nothing
-
-        Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
-
-        Return calendarService.GetCalendarCollection(
-            New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
-            _policy.PayRateCalculationBasis,
-            z_OrganizationID)
-    End Function
-
     Private Async Function LoadEmployees() As Task
         _employees = Await GetEmployeesWithPosition()
         employeesDataGridView.DataSource = _employees
@@ -423,11 +411,6 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
-        Dim calendarCollection As CalendarCollection = Nothing
-        If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
-            calendarCollection = GetCalendarCollection(payPeriod)
-        End If
-
         Dim sql = <![CDATA[
             SELECT
                 ete.RowID,
@@ -475,7 +458,6 @@ Public Class TimeEntrySummaryForm
                 ofb.OffBusEndTime,
                 ot.OTStartTime,
                 ot.OTEndTIme,
-                payrate.PayType,
                 etd.TimeStampIn,
                 etd.TimeStampOut,
                 l.LeaveStartTime,
@@ -523,9 +505,6 @@ Public Class TimeEntrySummaryForm
                 ON l.LeaveStartDate = ete.Date AND
                     l.EmployeeID = ete.EmployeeID AND
                     l.Status = 'Approved'
-            LEFT JOIN payrate
-                ON payrate.Date = ete.Date AND
-                    payrate.OrganizationID = ete.OrganizationID
             LEFT JOIN shiftschedules
                 ON shiftschedules.EmployeeID = ete.EmployeeID AND
                     shiftschedules.`Date` = ete.`Date`
@@ -539,6 +518,7 @@ Public Class TimeEntrySummaryForm
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
+        Dim calendarCollection As CalendarCollection = GetCalendarCollection(payPeriod)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -601,16 +581,12 @@ Public Class TimeEntrySummaryForm
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay"),
-                    .HolidayType = reader.GetValue(Of String)("PayType"),
                     .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay"),
                     .BranchID = reader.GetValue(Of Integer?)("BranchID"),
                     .BranchName = reader.GetValue(Of String)("BranchName")
                 }
 
-                If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch AndAlso
-                    calendarCollection IsNot Nothing Then
-                    timeEntry.UseBranchHolidayType(calendarCollection)
-                End If
+                timeEntry.GetHolidayType(calendarCollection)
 
                 'check first if there is duplicate
                 If timeEntries.
@@ -665,11 +641,6 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
-        Dim calendarCollection As CalendarCollection = Nothing
-        If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
-            calendarCollection = GetCalendarCollection(payPeriod)
-        End If
-
         Dim sql = <![CDATA[
             SELECT
                 eta.RowID,
@@ -714,7 +685,6 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.TimeStampOut,
                 l.LeaveStartTime,
                 l.LeaveEndTime,
-                payrate.PayType,
                 IFNULL(shiftschedules.IsRestDay, FALSE) `IsRestDay`,
                 ete.BranchID,
                 branch.BranchName
@@ -722,9 +692,6 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN employeetimeentry ete
                 ON ete.EmployeeID = eta.EmployeeID AND
                     ete.Date = eta.Date
-            LEFT JOIN payrate
-                ON payrate.Date = ete.Date AND
-                    payrate.OrganizationID = ete.OrganizationID
             LEFT JOIN (
                 SELECT EmployeeID, DATE,
 				    (SELECT RowID
@@ -788,6 +755,7 @@ Public Class TimeEntrySummaryForm
             Dim reader = Await command.ExecuteReaderAsync()
 
             Dim totalTimeEntry = New TimeEntry()
+            Dim calendarCollection As CalendarCollection = GetCalendarCollection(payPeriod)
 
             While Await reader.ReadAsync()
                 Dim timeEntry = New TimeEntry() With {
@@ -830,16 +798,12 @@ Public Class TimeEntrySummaryForm
                     .HolidayPay = reader.GetValue(Of Decimal)("HolidayPayAmount"),
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay"),
-                    .HolidayType = reader.GetValue(Of String)("PayType"),
                     .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay"),
                     .BranchID = reader.GetValue(Of Integer?)("BranchID"),
                     .BranchName = reader.GetValue(Of String)("BranchName")
                 }
 
-                If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch AndAlso
-                    calendarCollection IsNot Nothing Then
-                    timeEntry.UseBranchHolidayType(calendarCollection)
-                End If
+                timeEntry.GetHolidayType(calendarCollection)
 
                 'check first if there is duplicate
                 If timeEntries.
@@ -885,6 +849,15 @@ Public Class TimeEntrySummaryForm
         End Using
 
         Return timeEntries
+    End Function
+
+    Private Function GetCalendarCollection(payPeriod As PayPeriod) As CalendarCollection
+
+        If payPeriod Is Nothing Then Return Nothing
+
+        Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
+
+        Return calendarService.GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
     End Function
 
     Private Async Sub StartNewPayrollButton_Click(sender As Object, e As EventArgs) Handles StartNewPayrollButton.Click
@@ -1365,40 +1338,49 @@ Public Class TimeEntrySummaryForm
             End Get
         End Property
 
-        Public Sub UseBranchHolidayType(calendarCollection As CalendarCollection)
+        Public Sub GetHolidayType(calendarCollection As CalendarCollection)
 
-            Dim currentPayRate = calendarCollection.
-                                        GetCalendar(BranchID).
-                                        Find(EntryDate.Value)
-
-            If TypeOf currentPayRate Is CalendarDay Then
-
-                Dim calendarDayName = DirectCast(currentPayRate, CalendarDay)?.DayType?.Name
-
-                If {PayRate.DoubleHoliday,
-                    PayRate.RegularHoliday,
-                    PayRate.SpecialNonWorkingHoliday,
-                    PayRate.RegularDay,
-                    PayRate.RegularDayAndSpecialHoliday}.
-                    Contains(calendarDayName) Then
-
-                    Me.HolidayType = calendarDayName
-                    Return
-                End If
-
+            If calendarCollection Is Nothing Then
+                Me.HolidayType = PayratesCalendar.RegularDay
+                Return
             End If
 
-            If currentPayRate.IsDoubleHoliday Then
-                Me.HolidayType = PayRate.DoubleHoliday
+            Dim currentPayRate = calendarCollection.
+                GetCalendar(BranchID).
+                Find(EntryDate.Value)
 
-            ElseIf currentPayRate.IsRegularHoliday Then
-                Me.HolidayType = PayRate.RegularHoliday
+            If currentPayRate IsNot Nothing Then
 
-            ElseIf currentPayRate.IsSpecialNonWorkingHoliday Then
-                Me.HolidayType = PayRate.SpecialNonWorkingHoliday
+                If TypeOf currentPayRate Is CalendarDay Then
 
-            ElseIf currentPayRate.IsRegularDay Then
-                Me.HolidayType = PayRate.RegularDay
+                    Dim calendarDayName = DirectCast(currentPayRate, CalendarDay)?.DayType?.Name
+
+                    If {PayratesCalendar.DoubleHoliday,
+                        PayratesCalendar.RegularHoliday,
+                        PayratesCalendar.SpecialNonWorkingHoliday,
+                        PayratesCalendar.RegularDay,
+                        PayratesCalendar.RegularDayAndSpecialHoliday}.
+                        Contains(calendarDayName) Then
+
+                        Me.HolidayType = calendarDayName
+                        Return
+                    End If
+
+                End If
+
+                If currentPayRate.IsDoubleHoliday Then
+                    Me.HolidayType = PayratesCalendar.DoubleHoliday
+
+                ElseIf currentPayRate.IsRegularHoliday Then
+                    Me.HolidayType = PayratesCalendar.RegularHoliday
+
+                ElseIf currentPayRate.IsSpecialNonWorkingHoliday Then
+                    Me.HolidayType = PayratesCalendar.SpecialNonWorkingHoliday
+                Else
+                    Me.HolidayType = PayratesCalendar.RegularDay
+                End If
+            Else
+                Me.HolidayType = PayratesCalendar.RegularDay
             End If
 
         End Sub

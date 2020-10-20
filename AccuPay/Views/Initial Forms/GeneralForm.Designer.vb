@@ -29,7 +29,6 @@ Partial Class GeneralForm
         Me.BranchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GovernmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SSSTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PayRateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AgencyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CalendarsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelGeneral = New System.Windows.Forms.Panel()
@@ -39,7 +38,7 @@ Partial Class GeneralForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserRoleToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserRoleToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -82,12 +81,6 @@ Partial Class GeneralForm
         Me.SSSTableToolStripMenuItem.Name = "SSSTableToolStripMenuItem"
         Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(121, 22)
         Me.SSSTableToolStripMenuItem.Text = "SSS table"
-        '
-        'PayRateToolStripMenuItem
-        '
-        Me.PayRateToolStripMenuItem.Name = "PayRateToolStripMenuItem"
-        Me.PayRateToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
-        Me.PayRateToolStripMenuItem.Text = "Pay rate"
         '
         'AgencyToolStripMenuItem
         '
@@ -134,7 +127,6 @@ Partial Class GeneralForm
     Friend WithEvents PanelGeneral As System.Windows.Forms.Panel
     Friend WithEvents GovernmentToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SSSTableToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents PayRateToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AgencyToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BranchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CalendarsToolStripMenuItem As ToolStripMenuItem
