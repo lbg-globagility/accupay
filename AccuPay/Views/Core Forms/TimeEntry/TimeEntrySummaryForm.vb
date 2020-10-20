@@ -145,7 +145,8 @@ Public Class TimeEntrySummaryForm
 
         actualButton.Visible = _policy.ShowActual
 
-        ColumnBranch.Visible = _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch
+        ' maybe show this always because employee can have different calendars if they are in different branches
+        ColumnBranch.Visible = _policy.UseCostCenter
 
         GenerateDefaultShiftAndTimeLogsButton.Visible = _policy.UseDefaultShiftAndTimeLogs
 

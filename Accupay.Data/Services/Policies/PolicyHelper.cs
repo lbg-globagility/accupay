@@ -47,8 +47,6 @@ namespace AccuPay.Data.Services
 
         public decimal DefaultBPIInsurance => _settings.GetDecimal("Default.BPIInsurance");
 
-        public bool ShowBranch => _settings.GetBoolean("Employee Policy.ShowBranch", false);
-
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
 
         public bool UseDefaultShiftAndTimeLogs => _settings.GetBoolean("Data Policy.UseDefaultShiftAndTimeLogs", false);
@@ -57,6 +55,8 @@ namespace AccuPay.Data.Services
                 _settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
 
         public bool HasDifferentPayPeriodDates => _settings.GetBoolean("Payroll Policy.HasDifferentPayPeriodDates", false);
+
+        public bool UseCostCenter => _settings.GetBoolean("Policy.UseCostCenter", false);
 
         #region Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previous month", second day "is not previous month"
 

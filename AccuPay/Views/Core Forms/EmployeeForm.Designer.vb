@@ -3011,7 +3011,7 @@ Partial Class EmployeeForm
         '
         Me.DeploymentEndorsementToolStripMenuItem.Name = "DeploymentEndorsementToolStripMenuItem"
         Me.DeploymentEndorsementToolStripMenuItem.Size = New System.Drawing.Size(251, 22)
-        Me.DeploymentEndorsementToolStripMenuItem.Text = "SM Demployment Endorsement"
+        Me.DeploymentEndorsementToolStripMenuItem.Text = "SM Deployment Endorsement"
         '
         'WorkOrderToolStripMenuItem
         '

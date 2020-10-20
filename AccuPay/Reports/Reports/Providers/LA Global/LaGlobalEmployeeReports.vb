@@ -1,15 +1,16 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 
 Public Class LaGlobalEmployeeReports
     Private ReadOnly _employee As Employee
 
-    Private reportProviders = New Dictionary(Of LaGlobalEmployeeReportName, ILaGlobalEmployeeReport) From {
+    Private reportProviders As New Dictionary(Of LaGlobalEmployeeReportName, ILaGlobalEmployeeReport) From {
         {LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport, New ActiveEmployeeChecklistReportProvider()},
         {LaGlobalEmployeeReportName.BpiInsurancePaymentReport, New BpiInsurancePaymentReportProvider()},
         {LaGlobalEmployeeReportName.EmploymentContractPage, New EmploymentContractReportProvider()},
         {LaGlobalEmployeeReportName.MonthlyEndofContractReport, New MonthlyEndofContractReportProvider()},
         {LaGlobalEmployeeReportName.MonthlyBirthdayReport, New MonthlyBirthdayCelebrantsReportProvider()},
-        {LaGlobalEmployeeReportName.PayrollSummaryByBranch, New SmDeploymentEndorsementReportProvider()},
         {LaGlobalEmployeeReportName.SmDeploymentEndorsement, New SmDeploymentEndorsementReportProvider()},
         {LaGlobalEmployeeReportName.WorkOrder, New WorkOrderReportProvider()}
     }
@@ -32,7 +33,6 @@ Public Enum LaGlobalEmployeeReportName
     EmploymentContractPage
     MonthlyEndofContractReport
     MonthlyBirthdayReport
-    PayrollSummaryByBranch
     SmDeploymentEndorsement
     WorkOrder
 End Enum

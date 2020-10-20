@@ -144,7 +144,7 @@ Public Class PayStubForm
 
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
-        ShowOrHidePayrollSummaryByBranch()
+        ShowOrHideCostCenterReport()
 
         Await RefreshForm()
 
@@ -179,8 +179,8 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub ShowOrHidePayrollSummaryByBranch()
-        CostCenterReportToolStripMenuItem.Visible = _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch
+    Private Sub ShowOrHideCostCenterReport()
+        CostCenterReportToolStripMenuItem.Visible = _policy.UseCostCenter
     End Sub
 
     Private Sub ShowOrHideActual()

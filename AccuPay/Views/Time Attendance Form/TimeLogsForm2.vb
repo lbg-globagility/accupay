@@ -793,11 +793,7 @@ Public Class TimeLogsForm2
 
         Await PopulateBranchComboBox()
 
-        If _policyHelper.PayRateCalculationBasis <> PayRateCalculationBasis.Branch Then
-
-            colBranchID.Visible = False
-
-        End If
+        colBranchID.Visible = _policyHelper.UseCostCenter
 
     End Sub
 
