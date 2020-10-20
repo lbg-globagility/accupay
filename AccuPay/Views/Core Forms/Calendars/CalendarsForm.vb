@@ -133,6 +133,9 @@ Public Class CalendarsForm
 
         If _currentCalendar Is Nothing Then
             _currentCalendar = _calendars.FirstOrDefault()
+        Else
+            ' Refresh the currently selected calendar
+            _currentCalendar = _calendars.FirstOrDefault(Function(t) t.RowID.Value = _currentCalendar.RowID.Value)
         End If
 
         For Each row As DataGridViewRow In CalendarsDataGridView.Rows
