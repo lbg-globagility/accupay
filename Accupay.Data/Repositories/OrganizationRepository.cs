@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -69,6 +70,13 @@ namespace AccuPay.Data.Repositories
             var total = await query.CountAsync();
 
             return (organizations, total);
+        }
+
+        public async Task<ICollection<UserRoleData>> GetUserRolesAsync(int organizationId)
+        {
+            IQueryable<UserRoleData> query = UserRoleQueryHelper.GetBaseQuery(_context);
+
+            return await query.Where(x => x.OrganizationId == organizationId).ToListAsync();
         }
     }
 }

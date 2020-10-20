@@ -42,7 +42,7 @@ Public Class OrganizationForm
         OrganizationGridView.AutoGenerateColumns = False
         Await FillOrganizationList()
 
-        FillOrganizationData()
+        Await FillOrganizationData()
 
         FirstPayPeriodGroupBox.Visible = _policy.HasDifferentPayPeriodDates
         SetMaxAndMinDateOfFirstPayPeriod()
@@ -80,7 +80,7 @@ Public Class OrganizationForm
         End If
     End Function
 
-    Private Sub ClearTextBoxes()
+    Private Async Function ClearTextBoxes() As Task
 
         txtcompanyName.Clear()
         txttradeName.Clear()
@@ -109,7 +109,9 @@ Public Class OrganizationForm
 
         End If
 
-    End Sub
+        Await OrganizationUserRolesControl.SetOrganization(Nothing, isReadOnly:=False)
+
+    End Function
 
     Async Function FillAddress() As Task
         AddressComboBox.DataSource = (Await _addressRepository.GetAllAsync()).
@@ -120,16 +122,28 @@ Public Class OrganizationForm
     Private Async Function FillOrganizationList() As Task
         Dim list = Await _organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)
 
-        _organizations = list.organizations.
+        Dim organizations = list.organizations.
             OrderBy(Function(o) o.Name).
             ToList()
+
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim userRoles = Await userRepository.GetUserRolesAsync(z_User)
+
+        Dim allowedOrganizations = userRoles.
+            GroupBy(Function(o) o.OrganizationId).
+            Select(Function(o) o.Key).
+            ToArray()
+
+        _organizations = organizations.
+        Where(Function(o) allowedOrganizations.Contains(o.RowID.Value)).
+        ToList()
 
         OrganizationGridView.DataSource = _organizations
     End Function
 
-    Private Sub FillOrganizationData()
+    Private Async Function FillOrganizationData() As Task
 
-        ClearTextBoxes()
+        Await ClearTextBoxes()
 
         _currentOrganization = GetSelectedOrganization()
 
@@ -171,9 +185,11 @@ Public Class OrganizationForm
             End If
 
             chkTimeLogsOnlyRequirement.Checked = _currentOrganization.PaidAsLongAsHasTimeLog
+
+            Await OrganizationUserRolesControl.SetOrganization(_currentOrganization.RowID, isReadOnly:=False)
         End If
 
-    End Sub
+    End Function
 
     Private Sub FillFirstPayPeriodData(Optional organizationId As Integer? = Nothing)
         Dim firstHalf = _policy.DefaultFirstHalfDaysSpan(organizationId)
@@ -205,8 +221,9 @@ Public Class OrganizationForm
         EndOfTheMonthEndDate.MaxDate = New Date(CurrentYear, januaryMonth, daysInJanuary)
     End Sub
 
-    Private Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
-        ClearTextBoxes()
+    Private Async Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
+
+        Await ClearTextBoxes()
         SaveButton.Enabled = True
         OrganizationGridView.Enabled = False
         NewButton.Enabled = False
@@ -219,12 +236,12 @@ Public Class OrganizationForm
 
     End Sub
 
-    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
+    Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
 
         OrganizationGridView.Enabled = True
         NewButton.Enabled = True
 
-        FillOrganizationData()
+        Await FillOrganizationData()
     End Sub
 
     Private Sub ApplyChanges()
@@ -262,9 +279,11 @@ Public Class OrganizationForm
 
         PhotoImages.Focus()
 
+        Const messageTitle = "Save Organization"
+
         If _currentOrganization Is Nothing Then
 
-            MessageBoxHelper.Warning("No selected organization.")
+            MessageBoxHelper.Warning("No selected organization.", messageTitle)
             Return
 
         End If
@@ -276,24 +295,36 @@ Public Class OrganizationForm
         If isNew Then
 
             If _currentRolePermission.Create = False Then
-                MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                MessageBoxHelper.DefaultUnauthorizedActionMessage(messageTitle)
                 Return
             End If
         Else
 
             If _currentRolePermission.Update = False Then
-                MessageBoxHelper.DefaultUnauthorizedActionMessage()
+                MessageBoxHelper.DefaultUnauthorizedActionMessage(messageTitle)
                 Return
             End If
 
         End If
 
-        Await SaveOrganzation(isNew)
+        Dim userRoles = OrganizationUserRolesControl.GetUserRoles(allowNullUserId:=isNew)
+
+        If Not userRoles.Any(Function(r) r.RoleId.HasValue AndAlso r.RoleId.Value > 0) Then
+            MessageBoxHelper.Warning("Should have at least one user with access to this organization.", messageTitle)
+            Return
+        End If
+
+        Await SaveOrganzation(isNew, userRoles, messageTitle)
 
     End Sub
 
-    Private Async Function SaveOrganzation(isNew As Boolean) As Task
-        Await FunctionUtils.TryCatchFunctionAsync("Save Organization",
+    Private Async Function SaveOrganzation(isNew As Boolean, userRoles As List(Of UserRoleIdData), messageTitle As String) As Task
+
+        If userRoles.Any(Function(r) r.RoleId.HasValue AndAlso r.RoleId.Value > 0) Then
+
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of ListOfValueDataService)
@@ -304,18 +335,32 @@ Public Class OrganizationForm
                     dataService.ValidateDefaultPayPeriodData(firstHalf, endOfTheMonth)
                 End If
 
-                Dim organizationDataService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
-                Await organizationDataService.SaveAsync(_currentOrganization)
+                Dim organizationService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
+                Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
 
-                If isNew AndAlso _policy.HasDifferentPayPeriodDates Then
-                    Await dataService.CreateOrUpdateDefaultPayPeriod(
-                        organizationId:=_currentOrganization.RowID.Value,
-                        currentlyLoggedInUserId:=z_User,
-                        firstHalf:=firstHalf,
-                        endOfTheMonth:=endOfTheMonth)
+                Await organizationService.SaveAsync(_currentOrganization)
 
-                    Await _policy.Refresh()
+                If isNew Then
+
+                    For Each userRole In userRoles
+
+                        userRole.OrganizationId = _currentOrganization.RowID.Value
+
+                    Next
+
+                    If _policy.HasDifferentPayPeriodDates Then
+                        Await dataService.CreateOrUpdateDefaultPayPeriod(
+                            organizationId:=_currentOrganization.RowID.Value,
+                            currentlyLoggedInUserId:=z_User,
+                            firstHalf:=firstHalf,
+                            endOfTheMonth:=endOfTheMonth)
+
+                        Await _policy.Refresh()
+                    End If
+
                 End If
+
+                Await roleService.UpdateUserRolesAsync(userRoles, Z_Client)
 
                 If _currentOrganization.RowID = z_OrganizationID Then
                     MDIPrimaryForm.Text = _currentOrganization.Name
@@ -388,9 +433,9 @@ Public Class OrganizationForm
         End Try
     End Sub
 
-    Private Sub OrganizationGridView_SelectionChanged(sender As Object, e As EventArgs)
+    Private Async Sub OrganizationGridView_SelectionChanged(sender As Object, e As EventArgs)
 
-        FillOrganizationData()
+        Await FillOrganizationData()
     End Sub
 
     Private Function GetSelectedOrganization() As Organization
@@ -405,8 +450,6 @@ Public Class OrganizationForm
     End Sub
 
     Private Sub addAddressLink1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles addAddressLink1.LinkClicked
-        'address.ShowDialog()
-
         Dim n_AddressClass As New AddressClass
 
         n_AddressClass.IsAddNew = True

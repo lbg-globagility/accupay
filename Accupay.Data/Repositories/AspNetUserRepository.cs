@@ -58,22 +58,9 @@ namespace AccuPay.Data.Repositories
 
         public async Task<ICollection<UserRoleData>> GetUserRolesAsync(int userId)
         {
-            return await (
-                from user in _context.Users
-                join userRole in _context.UserRoles
-                on user.Id
-                equals userRole.UserId
-                join role in _context.Roles
-                on userRole.RoleId
-                equals role.Id
-                where user.Id == userId
-                select new UserRoleData()
-                {
-                    OrganizationId = userRole.OrganizationId,
-                    User = user,
-                    Role = role
-                })
-                .ToListAsync();
+            IQueryable<UserRoleData> query = UserRoleQueryHelper.GetBaseQuery(_context);
+
+            return await query.Where(x => x.User.Id == userId).ToListAsync();
         }
 
         public async Task<(ICollection<AspNetUser> users, int total)> List(PageOptions options, int clientId, string searchTerm = "")

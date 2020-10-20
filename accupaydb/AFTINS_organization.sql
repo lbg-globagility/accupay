@@ -195,26 +195,6 @@ KEY
 UPDATE
     LastUpd=CURRENT_TIMESTAMP();
 
-
-INSERT INTO shift
-(
-    OrganizationID
-    ,CreatedBy
-    ,Created
-    ,TimeFrom
-    ,TimeTo
-) VALUES (
-    NEW.RowID
-    ,NEW.CreatedBy
-    ,CURRENT_TIMESTAMP()
-    ,NEW.NightShiftTimeFrom
-    ,NEW.NightShiftTimeTo
-) ON
-DUPLICATE
-KEY
-UPDATE
-    LastUpd=CURRENT_TIMESTAMP();
-
 	
 	
 	INSERT INTO `division` (Name,TradeName,OrganizationID,MainPhone,FaxNumber,BusinessAddress,ContactName,EmailAddress,AltEmailAddress,AltPhone,URL,TINNo,Created,CreatedBy,DivisionType,GracePeriod,WorkDaysPerYear,PhHealthDeductSched,HDMFDeductSched,SSSDeductSched,WTaxDeductSched,DefaultVacationLeave,DefaultSickLeave,DefaultMaternityLeave,DefaultPaternityLeave,DefaultOtherLeave,PayFrequencyID,PhHealthDeductSchedAgency,HDMFDeductSchedAgency,SSSDeductSchedAgency,WTaxDeductSchedAgency,DivisionUniqueID) VALUES ( 'Default Location', '', NEW.RowID, '', '', '', '', '', '', '', '', '', CURRENT_TIMESTAMP(), NEW.CreatedBy, 'Department', 15.00, 313, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period', 40.00, 40.00, 40.00, 40.00, 40.00, 1, 'Per pay period', 'Per pay period', 'Per pay period', 'Per pay period',2);SELECT @@Identity AS ID INTO INS_audit_ID;

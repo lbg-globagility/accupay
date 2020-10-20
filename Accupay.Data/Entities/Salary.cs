@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace AccuPay.Data.Entities
 {
@@ -54,5 +56,11 @@ namespace AccuPay.Data.Entities
         /// Updates TotalSalary. Call this everytime BasicSalary or AllowanceSalary has changed.
         /// </summary>
         public void UpdateTotalSalary() => TotalSalary = BasicSalary + AllowanceSalary;
+
+        public string AutoComputeSSSDisplay => DoPaySSSContribution ? "AUTO" : "NO";
+
+        public string AutoComputePhilHealthDisplay => AutoComputePhilHealthContribution ? "AUTO" : PhilHealthDeduction.ToString("N", CultureInfo.CurrentCulture);
+
+        public string AutoComputeHDMFDisplay => AutoComputeHDMFContribution ? "AUTO" : HDMFAmount.ToString("N", CultureInfo.CurrentCulture);
     }
 }
