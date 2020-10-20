@@ -22,26 +22,9 @@ Partial Class CalendarMonthSelectorControl
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.YearTextBox = New System.Windows.Forms.TextBox()
         Me.NameTextBox = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
-        '
-        'Label1
-        '
-        Me.Label1.Location = New System.Drawing.Point(8, 64)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(100, 24)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Enter the year"
-        '
-        'YearTextBox
-        '
-        Me.YearTextBox.Location = New System.Drawing.Point(8, 88)
-        Me.YearTextBox.Name = "YearTextBox"
-        Me.YearTextBox.Size = New System.Drawing.Size(120, 22)
-        Me.YearTextBox.TabIndex = 2
         '
         'NameTextBox
         '
@@ -64,8 +47,6 @@ Partial Class CalendarMonthSelectorControl
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.NameTextBox)
-        Me.Controls.Add(Me.YearTextBox)
-        Me.Controls.Add(Me.Label1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Margin = New System.Windows.Forms.Padding(0)
         Me.Name = "CalendarMonthSelectorControl"
@@ -74,8 +55,6 @@ Partial Class CalendarMonthSelectorControl
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents Label1 As Label
-    Friend WithEvents YearTextBox As TextBox
     Friend WithEvents NameTextBox As TextBox
     Friend WithEvents Label2 As Label
 End Class

@@ -319,15 +319,15 @@ Public Class MultiplePayPeriodSelectionDialog
         If _selectedPayPeriods.Any() Then
 
             Dim startPayPeriod = _selectedPayPeriods(0)
-            focusedPayPeriod = CheckPayPeriodIfItIsInCurrentPage(startPayPeriod.PayFromDate, payPeriods)
+            focusedPayPeriod = CheckPayPeriodIfItIsInCurrentPage(startPayPeriod?.PayFromDate, payPeriods)
 
             If _selectedPayPeriods.Count > 1 Then
 
                 Dim endPayPeriod = _selectedPayPeriods(1)
-                CheckPayPeriodIfItIsInCurrentPage(endPayPeriod.PayFromDate, payPeriods)
+                CheckPayPeriodIfItIsInCurrentPage(endPayPeriod?.PayFromDate, payPeriods)
             End If
         Else
-            focusedPayPeriod = CheckPayPeriodIfItIsInCurrentPage(_currentlyWorkedOnPayPeriod.PayFromDate, payPeriods)
+            focusedPayPeriod = CheckPayPeriodIfItIsInCurrentPage(_currentlyWorkedOnPayPeriod?.PayFromDate, payPeriods)
 
             If focusedPayPeriod IsNot Nothing Then
 
@@ -342,8 +342,11 @@ Public Class MultiplePayPeriodSelectionDialog
 
     End Function
 
-    Private Function CheckPayPeriodIfItIsInCurrentPage(payPeriodPayFromDate As Date, payPeriods As List(Of PayPeriodWrapper)) As PayPeriodWrapper
-        Dim currentPayPeriod = payPeriods.Where(Function(p) p.DateFrom = payPeriodPayFromDate).FirstOrDefault()
+    Private Function CheckPayPeriodIfItIsInCurrentPage(payPeriodPayFromDate As Date?, payPeriods As List(Of PayPeriodWrapper)) As PayPeriodWrapper
+
+        If payPeriodPayFromDate Is Nothing Then Return Nothing
+
+        Dim currentPayPeriod = payPeriods.Where(Function(p) p.DateFrom = payPeriodPayFromDate.Value).FirstOrDefault()
 
         If currentPayPeriod Is Nothing Then Return Nothing
 

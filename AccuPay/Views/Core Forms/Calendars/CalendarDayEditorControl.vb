@@ -2,8 +2,6 @@
 
 Imports System.Globalization
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CalendarDayEditorControl
 
@@ -17,20 +15,18 @@ Public Class CalendarDayEditorControl
 
     Private _dayTypes As ICollection(Of DayType)
 
-    Private ReadOnly _repository As DayTypeRepository
+    ''' <summary>
+    ''' The day types that are available for selection
+    ''' </summary>
+    Public WriteOnly Property DayTypes As ICollection(Of DayType)
+        Set(value As ICollection(Of DayType))
+            _dayTypes = value
+            DayTypesComboBox.DataSource = _dayTypes
+        End Set
+    End Property
 
     Public Sub New()
-        _repository = MainServiceProvider.GetRequiredService(Of DayTypeRepository)
         InitializeComponent()
-    End Sub
-
-    Private Sub CalendarDayEditor_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LoadDayTypes()
-    End Sub
-
-    Private Async Sub LoadDayTypes()
-        _dayTypes = Await _repository.GetAllAsync()
-        DayTypesComboBox.DataSource = _dayTypes
     End Sub
 
     Public Sub ChangeCalendarDay(calendarDay As CalendarDay)
@@ -38,7 +34,13 @@ Public Class CalendarDayEditorControl
 
         DayLabel.Text = _calendarDay.Date.ToString("MMM d", CultureInfo.InvariantCulture)
         DescriptionTextBox.Text = _calendarDay.Description
-        DayTypesComboBox.SelectedValue = _calendarDay.DayTypeID
+
+        ' If the calendar day has no day type select the first day type as the default
+        If _calendarDay.DayTypeID Is Nothing Then
+            DayTypesComboBox.SelectedIndex = 0
+        Else
+            DayTypesComboBox.SelectedValue = _calendarDay.DayTypeID
+        End If
     End Sub
 
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click

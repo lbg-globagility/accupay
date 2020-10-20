@@ -13,9 +13,12 @@ namespace AccuPay.Data.Services
 
         private readonly ICollection<Branch> _branches;
 
+        [Obsolete]
         private readonly PayratesCalendar _organizationCalendar;
 
         private readonly DefaultRates _defaultRates;
+
+        private readonly PayratesCalendar _defaultCalendar;
 
         // For identifying the _organizationCalendar
         public int OrganizationId { get; }
@@ -36,23 +39,32 @@ namespace AccuPay.Data.Services
             ICollection<Branch> branches,
             ICollection<CalendarDay> calendarDays,
             int organizationId,
-            DefaultRates defaultRates)
+            DefaultRates defaultRates,
+            PayCalendar defaultPayCalendar)
             : this(payrates, organizationId, defaultRates)
         {
             _branches = branches;
+
+            // Group the days based on the CalendarID into separate PayratesCalendar
             _calendars = calendarDays
                 .GroupBy(t => t.CalendarID)
                 .ToDictionary(
                     t => t.Key,
                     t => new PayratesCalendar(t, _defaultRates));
+
+            // Create the default PayratesCalendar
+            var defaultCalendarDays = calendarDays
+                .Where(t => t.CalendarID == defaultPayCalendar.RowID);
+            _defaultCalendar = new PayratesCalendar(defaultCalendarDays, defaultRates);
+
             _isUsingCalendars = true;
         }
 
         public PayratesCalendar GetCalendar(int? branchId = null)
         {
-            var calendar = _isUsingCalendars ? FindCalendarByBranch(branchId) : _organizationCalendar;
+            var calendar = _isUsingCalendars ? FindCalendarByBranch(branchId) : _defaultCalendar;
 
-            if (calendar == null)
+            if (calendar is null)
                 throw new Exception("No calendar was found");
 
             return calendar;
@@ -60,13 +72,13 @@ namespace AccuPay.Data.Services
 
         private PayratesCalendar FindCalendarByBranch(int? branchId)
         {
-            if (branchId == null)
-                return _organizationCalendar;
+            if (branchId is null)
+                return _defaultCalendar;
 
             var branch = _branches.FirstOrDefault(t => t.RowID == branchId);
 
-            if (branch.CalendarID == null || !_calendars.ContainsKey(branch.CalendarID))
-                return _organizationCalendar;
+            if (branch.CalendarID is null || !_calendars.ContainsKey(branch.CalendarID))
+                return _defaultCalendar;
 
             return _calendars[branch.CalendarID];
         }
