@@ -7,7 +7,7 @@ namespace AccuPay.Data.Entities
     [Table("calendar")]
     public class PayCalendar
     {
-        public const string DefaultName = "Default";
+        public const string DefaultName = "[Default]";
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
