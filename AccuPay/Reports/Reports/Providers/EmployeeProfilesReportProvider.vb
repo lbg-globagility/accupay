@@ -22,7 +22,7 @@ Public Class EmployeeProfilesReportProvider
     End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile("EmployeePersonalProfiles", ".xlsx")
+        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile("EmployeePersonalInfo", ".xlsx")
 
         If saveFileDialogHelperOutPut.IsSuccess = False Then
             Return
