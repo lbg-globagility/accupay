@@ -107,24 +107,46 @@ Public Class CalendarsForm
         LoadCalendars()
     End Sub
 
-    Private Async Sub CalendarsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles CalendarsDataGridView.SelectionChanged
-        Dim selectedCalendar = DirectCast(CalendarsDataGridView.CurrentRow.DataBoundItem, PayCalendar)
+    Private Sub CalendarsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles CalendarsDataGridView.SelectionChanged
+        Dim selectedCalendar = DirectCast(CalendarsDataGridView.CurrentRow?.DataBoundItem, PayCalendar)
 
         If _currentCalendar?.RowID = selectedCalendar?.RowID Then
             Return
         End If
 
         _currentCalendar = selectedCalendar
-        ClearChangeTracker()
-        CalendarLabel.Text = _currentCalendar.Name
-        MonthSelectorControl.CalendarName = _currentCalendar.Name
-        Await LoadCalendarDays()
+
+        If _currentCalendar Is Nothing Then
+            Return
+        End If
+
+        DisplayCalendar()
     End Sub
 
     Private Async Sub LoadCalendars()
+        RemoveHandler CalendarsDataGridView.SelectionChanged, AddressOf CalendarsDataGridView_SelectionChanged
+
         Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
         _calendars = Await repository.GetAllAsync()
+
         CalendarsDataGridView.DataSource = _calendars
+
+        If _currentCalendar Is Nothing Then
+            _currentCalendar = _calendars.FirstOrDefault()
+        End If
+
+        For Each row As DataGridViewRow In CalendarsDataGridView.Rows
+            Dim calendar = DirectCast(row.DataBoundItem, PayCalendar)
+
+            If _currentCalendar?.RowID = calendar.RowID Then
+                row.Selected = True
+                CalendarsDataGridView.CurrentCell = row.Cells(0)
+            End If
+        Next
+
+        DisplayCalendar()
+
+        AddHandler CalendarsDataGridView.SelectionChanged, AddressOf CalendarsDataGridView_SelectionChanged
     End Sub
 
     Private Async Function LoadCalendarDays() As Task
@@ -164,6 +186,13 @@ Public Class CalendarsForm
 
         Return completeList
     End Function
+
+    Private Async Sub DisplayCalendar()
+        ClearChangeTracker()
+        CalendarLabel.Text = _currentCalendar.Name
+        MonthSelectorControl.CalendarName = _currentCalendar.Name
+        Await LoadCalendarDays()
+    End Sub
 
     Private Sub DisplayCalendarDays()
         If _calendarDays Is Nothing Then Return
@@ -219,12 +248,15 @@ Public Class CalendarsForm
 
                 ClearChangeTracker()
 
+                LoadCalendars()
+
                 ShowBalloonInfo("Changes have been saved.", "Changes Saved")
             End Function)
     End Sub
 
     Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
         ClearChangeTracker()
+        LoadCalendars()
         Await LoadCalendarDays()
     End Sub
 
