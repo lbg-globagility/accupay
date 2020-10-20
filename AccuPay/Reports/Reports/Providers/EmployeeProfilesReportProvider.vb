@@ -22,17 +22,22 @@ Public Class EmployeeProfilesReportProvider
     End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile("EmployeePersonalInfo", ".xlsx")
+        Try
+            Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile("EmployeePersonalInfo", ".xlsx")
 
-        If saveFileDialogHelperOutPut.IsSuccess = False Then
-            Return
-        End If
+            If saveFileDialogHelperOutPut.IsSuccess = False Then
+                Return
+            End If
 
-        Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
+            Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
 
-        Await _reportBuilder.CreateReport(z_OrganizationID, saveFilePath)
+            Await _reportBuilder.CreateReport(z_OrganizationID, saveFilePath)
 
-        Process.Start(saveFilePath)
+            Process.Start(saveFilePath)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+
+        End Try
     End Sub
 
 End Class

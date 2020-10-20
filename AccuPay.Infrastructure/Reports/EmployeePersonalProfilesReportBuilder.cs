@@ -102,14 +102,14 @@ namespace AccuPay.Infrastructure.Reports
         {
             var organization = await _organizationRepository.GetByIdAsync(organizationId);
             if (organization == null)
-                throw new BusinessLogicException("Organization does not exists.");
+                throw new Exception("Organization does not exists.");
 
             var employeeTable = _reportDataService.GetData(organizationId);
 
             var allEmployees = employeeTable.Rows.OfType<DataRow>().ToList();
 
             if (allEmployees.Count <= 0)
-                throw new BusinessLogicException("No employees.");
+                throw new Exception("No employees.");
 
             var newFile = new FileInfo(saveFilePath);
 
