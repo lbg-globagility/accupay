@@ -71,7 +71,7 @@ namespace AccuPay.Infrastructure.Reports
                 new ExcelReportColumn("Other Leave Allowance", "OtherLeaveAllowance", ColumnType.Numeric, optional: true),
                 new ExcelReportColumn("Vacation Leave Per PayPeriod", "LeavePerPayPeriod", ColumnType.Numeric, optional: true),
                 new ExcelReportColumn("Sick Leave Per Pay Period", "SickLeavePerPayPeriod", ColumnType.Numeric, optional: true),
-                new ExcelReportColumn("Maternity Leave Per Pay Period", "MaternityLeavePerPayPeriod", ColumnType.Numeric, optional: true),
+                new ExcelReportColumn("Maternal/Paternal Leave Per Pay Period", "MaternityLeavePerPayPeriod", ColumnType.Numeric, optional: true),
                 new ExcelReportColumn("Other Leave Per Pay Period", "OtherLeavePerPayPeriod", ColumnType.Numeric, optional: true),
                 new ExcelReportColumn("Work Days Per Year", "WorkDaysPerYear", ColumnType.Numeric, optional: true),
                 new ExcelReportColumn("Day Of Rest", "DayOfRest", ColumnType.Text, optional: true),
