@@ -17,7 +17,7 @@ namespace AccuPay.Infrastructure.Reports
 {
     public class EmployeePersonalProfilesReportBuilder : ExcelFormatReport, IEmployeePersonalProfilesReportBuilder
     {
-        private const string REPORT_NAME = "EmployeePersonalProfiles";
+        private const string REPORT_NAME = "EmployeePersonalInfo";
         private readonly OrganizationRepository _organizationRepository;
         private readonly EmployeePersonalProfilesExcelFormatReportDataService _reportDataService;
         private readonly IReadOnlyCollection<ExcelReportColumn> _reportColumns;
