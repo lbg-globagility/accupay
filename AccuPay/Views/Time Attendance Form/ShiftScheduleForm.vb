@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.Policies
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -36,6 +37,7 @@ Public Class ShiftScheduleForm
     Private _originalDates As TimePeriod
 
     Private _currentRolePermission As RolePermission
+    Private _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
     Private WriteOnly Property ChangesCount As Integer
         Set(value As Integer)
@@ -69,7 +71,9 @@ Public Class ShiftScheduleForm
     Public Async Function LoadShiftScheduleConfigurablePolicy() As Task
         _dutyShiftPolicy = Await DutyShiftPolicy.Load1
 
-        txtBreakLength.Value = _dutyShiftPolicy.BreakHour
+        _shiftBasedAutoOvertimePolicy = _dutyShiftPolicy.ShiftBasedAutomaticOvertimePolicy
+
+        txtBreakLength.Value = GetDefaultBreakHour()
     End Function
 
     Private Sub LoadWeek()
@@ -212,7 +216,7 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub AutomaticShiftCompute(shiftSched As ShiftScheduleModel)
-        Dim shiftHours = _dutyShiftPolicy.DefaultWorkHour
+        Dim shiftHours = GetDefaultShiftHours()
         Dim breakHours = shiftSched.BreakLength
 
         Dim _empty = String.Empty
@@ -227,14 +231,18 @@ Public Class ShiftScheduleForm
             Dim breakStartTime As TimeSpan? = Calendar.ToTimespan(.BreakFrom)
 
             If startTime.HasValue Then
-                .TimeTo = MilitarDateTime(ToDateTime(startTime.Value).Value.AddHours(shiftHours))
+                If .IsEmptyTimeTo Then .TimeTo = MilitarDateTime(ToDateTime(startTime.Value).Value.AddHours(shiftHours))
                 'If breakHours = 0 Then breakHours = _dutyShiftPolicy.BreakHour : .BreakLength = breakHours
+
+                If Not .IsEmptyTimeTo And _shiftBasedAutoOvertimePolicy.Enabled Then
+                    AssignEndTimeBaseOnShiftAutoOvertimePolicy(startTime, .TimeTo)
+                End If
 
                 If String.IsNullOrWhiteSpace(.BreakFrom) And .BreakLength > 0 Then
                     Dim firstHalf = Math.Floor(shiftHours / 2)
                     Dim breakStart = ToDateTime(startTime.Value).Value.AddHours(firstHalf)
 
-                    breakHours = _dutyShiftPolicy.BreakHour
+                    breakHours = GetDefaultBreakHour()
                     .BreakLength = breakHours
 
                     breakStartTime = breakStart.TimeOfDay
@@ -247,7 +255,7 @@ Public Class ShiftScheduleForm
 
                 ElseIf Not String.IsNullOrWhiteSpace(.BreakFrom) Then
                     If Nullable.Equals(.BreakLength, Nothing) Then
-                        breakHours = _dutyShiftPolicy.BreakHour
+                        breakHours = GetDefaultBreakHour()
                         .BreakLength = breakHours
                     End If
                 Else
@@ -385,7 +393,7 @@ Public Class ShiftScheduleForm
         If dataGrid.Name = grid.Name Then
             timeColumnIndexes = New Integer() {colTimeFrom.Index, colTimeTo.Index, colBreakTimeFrom.Index}
         ElseIf dataGrid.Name = gridWeek.Name Then
-            timeColumnIndexes = New Integer() {Column3.Index, Column4.Index, Column5.Index}
+            timeColumnIndexes = New Integer() {colStartTime.Index, colEndTime.Index, Column5.Index}
         End If
 
         Return timeColumnIndexes.Any(Function(i) Equals(i, columnIndexNumber))
@@ -395,8 +403,10 @@ Public Class ShiftScheduleForm
         Dim timeColumnIndexes() = New Integer() {}
         If dataGrid.Name = grid.Name Then
             timeColumnIndexes = New Integer() {colTimeFrom.Index, colBreakTimeFrom.Index, colBreakLength.Index, colIsRestDay.Index}
+            If _shiftBasedAutoOvertimePolicy.Enabled Then timeColumnIndexes = timeColumnIndexes.Concat({colTimeTo.Index}).ToArray()
         ElseIf dataGrid.Name = gridWeek.Name Then
-            timeColumnIndexes = New Integer() {Column3.Index, Column5.Index, gridWeekBreakLength.Index, Column7.Index}
+            timeColumnIndexes = New Integer() {colStartTime.Index, Column5.Index, gridWeekBreakLength.Index, Column7.Index}
+            If _shiftBasedAutoOvertimePolicy.Enabled Then timeColumnIndexes = timeColumnIndexes.Concat({colEndTime.Index}).ToArray()
         End If
 
         Return timeColumnIndexes.Any(Function(i) Equals(i, columnIndexNumber))
@@ -744,6 +754,12 @@ Public Class ShiftScheduleForm
             origOffset = _IsRestDay
         End Sub
 
+        Public ReadOnly Property IsEmptyTimeTo As Boolean
+            Get
+                Return String.IsNullOrWhiteSpace(_timeTo)
+            End Get
+        End Property
+
     End Class
 
     Private Class DutyShiftPolicy
@@ -759,6 +775,7 @@ Public Class ShiftScheduleForm
         Private settings As ListOfValueCollection = Nothing
 
         Private _defaultWorkHour, _breakHour As Decimal
+        Private _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
         Private Sub New()
 
@@ -780,6 +797,8 @@ Public Class ShiftScheduleForm
 
             _defaultWorkHour = settings.GetDecimal("DefaultShiftHour", DEFAULT_SHIFT_HOUR)
             _breakHour = settings.GetDecimal("BreakHour", DEFAULT_BREAK_HOUR)
+
+            _shiftBasedAutoOvertimePolicy = New ShiftBasedAutomaticOvertimePolicy(settings)
         End Function
 
         Public ReadOnly Property DefaultWorkHour() As Decimal
@@ -803,6 +822,12 @@ Public Class ShiftScheduleForm
         Public ReadOnly Property IsBreakUserDefine As Boolean
             Get
                 Return BreakHour = 0
+            End Get
+        End Property
+
+        Public ReadOnly Property ShiftBasedAutomaticOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
+            Get
+                Return _shiftBasedAutoOvertimePolicy
             End Get
         End Property
 
@@ -1061,6 +1086,7 @@ Public Class ShiftScheduleForm
             dtpDateTo.Value = currentlyWorkedOnPayPeriod.PayToDate
 
         End If
+
     End Sub
 
     Private Async Function CheckRolePermissions() As Task
@@ -1135,20 +1161,32 @@ Public Class ShiftScheduleForm
 
     End Sub
 
+    Private Sub AssignEndTimeBaseOnShiftAutoOvertimePolicy(startTime As TimeSpan?, ByRef shiftEndTime As String)
+        Dim endTime As TimeSpan? = Calendar.ToTimespan(shiftEndTime)
+        Dim isValid = _shiftBasedAutoOvertimePolicy.Validate(ToDateTime(startTime.Value), ToDateTime(endTime.Value))
+        If Not isValid Then
+            Dim defaultWorkHourBasedEndTime = _shiftBasedAutoOvertimePolicy.GetDefaultEndTime(ToDateTime(startTime.Value))
+            Dim formattedEndTime = MilitarDateTime(defaultWorkHourBasedEndTime.Value)
+            shiftEndTime = formattedEndTime
+        End If
+    End Sub
+
     Private Sub txtTimeFrom_TextChanged(sender As Object, e As EventArgs) Handles txtTimeFrom.TextChanged
         Dim _value = txtTimeFrom.Text.Trim
         If Not _dutyShiftPolicy.IsUserDefine Then
             Dim tsFrom As TimeSpan? = Calendar.ToTimespan(_value)
-            Dim shiftHours = _dutyShiftPolicy.DefaultWorkHour
+            Dim shiftHours = GetDefaultShiftHours()
 
             If tsFrom.HasValue Then
                 Dim startDateTime = ToDateTime(tsFrom.Value).Value
                 Dim nextTimeTo = startDateTime.AddHours(shiftHours)
                 txtTimeTo.Text = MilitarDateTime(nextTimeTo)
 
+                If _shiftBasedAutoOvertimePolicy.Enabled Then AssignEndTimeBaseOnShiftAutoOvertimePolicy(tsFrom, txtTimeTo.Text)
+
                 If String.IsNullOrWhiteSpace(txtBreakFrom.Text) Then
                     txtBreakFrom.Text = MilitarDateTime(startDateTime.AddHours(Math.Floor(shiftHours / 2)))
-                    txtBreakLength.Value = _dutyShiftPolicy.BreakHour
+                    txtBreakLength.Value = GetDefaultBreakHour()
                     'Else
                     '    txtBreakFrom.Clear()
                     '    txtBreakLength.Value = 0
@@ -1159,6 +1197,14 @@ Public Class ShiftScheduleForm
             End If
         End If
     End Sub
+
+    Private Function GetDefaultShiftHours() As Decimal
+        Return If(_shiftBasedAutoOvertimePolicy.Enabled, _shiftBasedAutoOvertimePolicy.DefaultShiftHours, _dutyShiftPolicy.DefaultWorkHour)
+    End Function
+
+    Private Function GetDefaultBreakHour() As Decimal
+        Return If(_shiftBasedAutoOvertimePolicy.Enabled, _shiftBasedAutoOvertimePolicy.DefaultBreakLength, _dutyShiftPolicy.BreakHour)
+    End Function
 
     Private Sub txtTimeTo_TextChanged(sender As Object, e As EventArgs) Handles txtTimeTo.TextChanged
 

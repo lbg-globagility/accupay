@@ -1123,17 +1123,20 @@ Public Class MDIPrimaryForm
 
         EmailServiceStatusToolStripLabel.Enabled = True
 
-        Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
-        Dim queueCount = onQueue.Count()
+        Try
+            Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
+            Dim queueCount = onQueue.Count()
 
-        Dim connectionString = ConnectionStringRegistry.GetCurrent()
-        Dim service = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)
-        Dim status = Await service.GetStatus()
+            Dim connectionString = ConnectionStringRegistry.GetCurrent()
+            Dim service = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)
+            Dim status = Await service.GetStatus()
 
-        Dim isOnline = status = ServiceProcess.ServiceControllerStatus.Running
+            Dim isOnline = status = ServiceProcess.ServiceControllerStatus.Running
 
-        UpdateEmailStatusToolStripLabel(isOnline, queueCount)
+            UpdateEmailStatusToolStripLabel(isOnline, queueCount)
+        Catch ex As Exception
 
+        End Try
     End Sub
 
     Private Sub UpdateEmailStatusToolStripLabel(isOnline As Boolean, queueCount As Integer)
