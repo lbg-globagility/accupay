@@ -84,22 +84,20 @@ Public Class ShiftScheduleForm
 
         Dim _models = New List(Of ShiftScheduleModel)
         For Each d In sevenDays
-            _models.Add(New ShiftScheduleModel With {.DateValue = d})
+            _models.Add(New ShiftScheduleModel(_shiftBasedAutoOvertimePolicy) With {.DateValue = d})
         Next
 
         RefreshDataSource(gridWeek, _models)
     End Sub
 
-    Private Sub CollectShiftSchedModel(ee As ShiftScheduleModel, dateVal As Date, modelList As ICollection(Of ShiftScheduleModel), isRaw As Boolean)
-        Dim newEe As New ShiftScheduleModel With {
-            .EmployeeId = ee.EmployeeId,
-            .EmployeeNo = ee.EmployeeNo,
-            .FullName = ee.FullName,
+    Private Sub CollectShiftSchedModel(ee As Employee, dateVal As Date, modelList As ICollection(Of ShiftScheduleModel), isRaw As Boolean)
+        Dim newShiftSchedModel =
+            New ShiftScheduleModel(ee, _shiftBasedAutoOvertimePolicy) With {
             .DateValue = dateVal}
 
-        If Not isRaw Then ApplyChangesToModel(newEe)
+        If Not isRaw Then ApplyChangesToModel(newShiftSchedModel)
 
-        modelList.Add(newEe)
+        modelList.Add(newShiftSchedModel)
     End Sub
 
     Private Sub ApplyChangesToModel(ssm As ShiftScheduleModel)
@@ -450,13 +448,14 @@ Public Class ShiftScheduleForm
         Dim employeeList = From emp In employees
                            Order By String.Concat(emp.LastName, emp.FirstName)
                            Let ee = emp
-                           Select New ShiftScheduleModel(ee)
+                           Select New ShiftScheduleModel(ee, _shiftBasedAutoOvertimePolicy)
 
         Dim _models = New List(Of ShiftScheduleModel)
 
         For Each ee In employeeList.ToList
+            Dim emloyee = employees.Where(Function(e) CBool(e.RowID = ee.EmployeeId)).FirstOrDefault()
             For Each dateVal In dates
-                CollectShiftSchedModel(ee,
+                CollectShiftSchedModel(emloyee,
                                        dateVal,
                                        _models,
                                        isRawData)
@@ -555,23 +554,23 @@ Public Class ShiftScheduleForm
         Private _timeFrom, _timeTo, _breakFrom As String
         Private _isNew, _madeChanges, _isValid As Boolean
         Private _eds As EmployeeDutySchedule
-        Private ReadOnly _isShiftBasedAutoOvertimeEnabled As Boolean
-        Private ReadOnly _shiftAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
+        Private _isShiftBasedAutoOvertimeEnabled As Boolean
+        Private _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
-        Public Sub New()
-
+        Public Sub New(shiftAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
+            SetShiftBasedAutoOvertimePolicy(shiftAutoOvertimePolicy)
         End Sub
 
-        Public Sub New(employee As Employee)
+        Public Sub New(employee As Employee, shiftAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
             AssignEmployee(employee)
 
+            SetShiftBasedAutoOvertimePolicy(shiftAutoOvertimePolicy)
         End Sub
 
         Public Sub New(ess As EmployeeDutySchedule, shiftAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
             InitModel(ess)
 
-            _shiftAutoOvertimePolicy = shiftAutoOvertimePolicy
-            _isShiftBasedAutoOvertimeEnabled = _shiftAutoOvertimePolicy.Enabled
+            SetShiftBasedAutoOvertimePolicy(shiftAutoOvertimePolicy)
         End Sub
 
         Private Sub InitModel(ess As EmployeeDutySchedule)
@@ -610,6 +609,11 @@ Public Class ShiftScheduleForm
 
             _overtime = ess.Overtime
             _hasOvertime = _overtime IsNot Nothing
+        End Sub
+
+        Private Sub SetShiftBasedAutoOvertimePolicy(shiftAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
+            _shiftBasedAutoOvertimePolicy = shiftAutoOvertimePolicy
+            _isShiftBasedAutoOvertimeEnabled = _shiftBasedAutoOvertimePolicy.Enabled
         End Sub
 
         Private Sub AssignEmployee(employee As Employee)
@@ -757,7 +761,11 @@ Public Class ShiftScheduleForm
                     .BreakLength = _BreakLength
                     .IsRestDay = _IsRestDay
                     .IsShiftBasedAutoOvertimeEnabled = _isShiftBasedAutoOvertimeEnabled
-                    .Overtime = _overtime
+
+                    If _isShiftBasedAutoOvertimeEnabled Then
+                        .OvertimeId = _overtime.RowID
+                        .Overtime = _overtime
+                    End If
                 End With
 
                 Return _eds
@@ -787,23 +795,26 @@ Public Class ShiftScheduleForm
         End Property
 
         Private Sub SetOvertimeStart()
-            If _hasOvertime Then CreateOvertime()
+            If Not _hasOvertime Then CreateOvertime()
             _overtime.OTStartTimeFull = Nothing
         End Sub
 
         Private Sub SetOvertimeEnd()
-            If _hasOvertime Then CreateOvertime()
+            If Not _hasOvertime Then CreateOvertime()
+
             Dim startTime As TimeSpan? = Calendar.ToTimespan(_timeFrom)
             Dim endTime As TimeSpan? = Calendar.ToTimespan(_timeTo)
+            Dim hasBothValue = startTime.HasValue AndAlso endTime.HasValue
 
+            _overtime.OTEndTimeFull = Nothing
+            _overtime.Status = Overtime.StatusPending
+
+            If Not hasBothValue Then Return
             Dim otEndTime = TimeUtility.ToDateTime(endTime.Value)
-            Dim isValid = _shiftAutoOvertimePolicy.IsValidDefaultShiftPeriod(TimeUtility.ToDateTime(startTime.Value), otEndTime)
+            Dim isValid = _shiftBasedAutoOvertimePolicy.IsValidDefaultShiftPeriod(TimeUtility.ToDateTime(startTime.Value), otEndTime)
             If isValid Then
                 _overtime.OTEndTimeFull = otEndTime
                 _overtime.Status = Overtime.StatusApproved
-            Else
-                _overtime.OTEndTimeFull = Nothing
-                _overtime.Status = Overtime.StatusPending
             End If
         End Sub
 
@@ -815,6 +826,7 @@ Public Class ShiftScheduleForm
                 .CreatedBy = z_User,
                 .EmployeeID = EmployeeId,
                 .OTStartDate = DateValue,
+                .OTEndDate = DateValue,
                 .Status = Overtime.StatusApproved}
 
             _hasOvertime = True
