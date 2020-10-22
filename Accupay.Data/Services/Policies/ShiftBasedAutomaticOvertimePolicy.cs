@@ -21,19 +21,11 @@ namespace AccuPay.Data.Services.Policies
 
         public decimal Denominator => _settings.GetDecimal($"{POLICY_TYPE}.DivisibleBy");
 
-        //public TimeSpan DenominatorTime => TimeSpan.FromSeconds(Convert.ToDouble(Denominator));
-
         public decimal Minimum => _settings.GetDecimal($"{POLICY_TYPE}.MinimumDuration");
-
-        //public TimeSpan MinimumTime => TimeSpan.FromSeconds(Convert.ToDouble(Minimum));
 
         public decimal DefaultWorkHours => _settings.GetDecimal($"{POLICY_TYPE}.DefaultWorkHours", STANDARD_LABOR_HOURS);
 
-        //public decimal DefaultWorkHoursBySeconds => DefaultWorkHours * SECONDS_PER_MINUTE;
-
         public decimal DefaultShiftHours => _settings.GetDecimal($"{POLICY_TYPE}.DefaultShiftHours", STANDARD_LABOR_HOURS_WOUT_BREAK);
-
-        //public decimal DefaultShiftHoursBySeconds => DefaultShiftHours * SECONDS_PER_MINUTE;
 
         public decimal DefaultBreakLength => DefaultShiftHours - DefaultWorkHours;
 
