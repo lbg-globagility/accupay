@@ -738,8 +738,6 @@ Public Class ShiftScheduleForm
                     .IsRestDay = _IsRestDay
                 End With
 
-                _eds.ComputeShiftHours()
-
                 Return _eds
             End Get
         End Property

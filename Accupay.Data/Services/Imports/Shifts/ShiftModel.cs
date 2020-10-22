@@ -33,8 +33,6 @@ namespace AccuPay.Data.Services
                 IsRestDay = IsRestDay,
             };
 
-            shift.ComputeShiftHours();
-
             return shift;
         }
     }
