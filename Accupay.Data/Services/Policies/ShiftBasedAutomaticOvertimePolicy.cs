@@ -9,15 +9,13 @@ namespace AccuPay.Data.Services.Policies
         private const int STANDARD_LABOR_HOURS = 8;
         private const int STANDARD_LABOR_HOURS_WOUT_BREAK = 9;
 
-        private const int MINUTE_PER_HOUR = 60;
-        private const int SECONDS_PER_MINUTE = 3600;
+        private const int MINUTES_PER_HOUR = 60;
+        private const int SECONDS_PER_HOUR = 3600;
+
         private const string POLICY_TYPE = "DutyShift";
         private readonly ListOfValueCollection _settings;
 
-        public ShiftBasedAutomaticOvertimePolicy(ListOfValueCollection settings)
-        {
-            _settings = settings;
-        }
+        public ShiftBasedAutomaticOvertimePolicy(ListOfValueCollection settings) => _settings = settings;
 
         public bool Enabled => _settings.GetBoolean($"{POLICY_TYPE}.ShiftBasedAutomaticOvertime");
 
@@ -64,13 +62,13 @@ namespace AccuPay.Data.Services.Policies
         {
             if (startTimeSpan == null) return default(DateTime?);
 
-            var standardLaborSecondsWoutBreak = STANDARD_LABOR_HOURS_WOUT_BREAK * SECONDS_PER_MINUTE;
+            var standardLaborSecondsWoutBreak = STANDARD_LABOR_HOURS_WOUT_BREAK * SECONDS_PER_HOUR;
             var expectedEndTimeSpan = startTimeSpan.Value.AddSeconds(standardLaborSecondsWoutBreak);
 
             return expectedEndTimeSpan;
         }
 
-        private decimal ConvertHourToMinute(decimal valueHours) => MINUTE_PER_HOUR * valueHours;
+        private decimal ConvertHourToMinute(decimal valueHours) => MINUTES_PER_HOUR * valueHours;
 
         public decimal TrimOvertimeHoursWroked(decimal overtimeHoursWorked)
         {
