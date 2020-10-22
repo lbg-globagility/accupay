@@ -580,13 +580,16 @@ namespace AccuPay.Data.Services
             CurrentShift currentshift,
             IList<Leave> leaves)
         {
+            if (!currentshift.HasShift)
+                return;
+
             if (leaves.Any())
                 return;
 
             if (timeEntry.BasicHours > 0)
                 return;
 
-            if (payrate.IsRegularDay && (currentshift.IsRestDay || (!currentshift.HasShift)))
+            if (payrate.IsRegularDay && currentshift.IsRestDay)
                 return;
 
             if (IsExemptDueToHoliday(payrate, hasWorkedLastDay))
