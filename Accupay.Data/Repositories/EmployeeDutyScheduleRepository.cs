@@ -47,10 +47,23 @@ namespace AccuPay.Data.Repositories
                     .GroupBy(x => x.RowID)
                     .Select(x => x.FirstOrDefault())
                     .ToList();
+
+                DeleteAssocOvertime(deleted);
+
                 _context.EmployeeDutySchedules.RemoveRange(deleted);
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        private void DeleteAssocOvertime(List<EmployeeDutySchedule> deleted)
+        {
+            var overtimes = deleted
+                .Where(s => s.IsShiftBasedAutoOvertimeEnabled)
+                .Where(s => s.OvertimeId != null)
+                .Select(s => s.Overtime)
+                .ToList();
+            if (overtimes.Any()) _context.Overtimes.RemoveRange(overtimes);
         }
 
         #endregion Save
@@ -160,6 +173,26 @@ namespace AccuPay.Data.Repositories
                     employeeIds,
                     datePeriod)
                 .Include(x => x.Employee)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodWithEmployeeAsync(
+            int organizationId,
+            int[] employeeIds,
+            TimePeriod datePeriod,
+            bool isShiftBasedAutoOvertimeEnabled)
+        {
+            if (!isShiftBasedAutoOvertimeEnabled)
+            {
+                return await GetByEmployeeAndDatePeriodWithEmployeeAsync(organizationId, employeeIds, datePeriod);
+            }
+
+            return await CreateBaseQueryByMultipleEmployeeDatePeriod(
+                    organizationId,
+                    employeeIds,
+                    datePeriod)
+                .Include(x => x.Employee)
+                .Include(l => l.Overtime)
                 .ToListAsync();
         }
 

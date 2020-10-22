@@ -471,11 +471,13 @@ Public Class ShiftScheduleForm
         Dim employees = EmployeeTreeView1.GetTickedEmployees
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToArray()
 
+        Dim isShiftBasedAutoOvertimeEnabled = _shiftBasedAutoOvertimePolicy.Enabled
         Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
         Dim empShiftScheds = Await repository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
             z_OrganizationID,
             employeeIds,
-            datePeriod)
+            datePeriod,
+            isShiftBasedAutoOvertimeEnabled)
 
         If empShiftScheds.Any Then
             Dim notExists = Function(shSched As ShiftScheduleModel)
@@ -489,7 +491,7 @@ Public Class ShiftScheduleForm
 
             models.Clear()
             For Each ess In empShiftScheds
-                models.Add(New ShiftScheduleModel(ess))
+                models.Add(New ShiftScheduleModel(ess, _shiftBasedAutoOvertimePolicy))
             Next
 
             For Each ssm In notInDb
@@ -547,10 +549,14 @@ Public Class ShiftScheduleForm
         Private Const MINUTES_PER_HOUR As Integer = 60
         Private origStartTime, origEndTime, origBreakStart As String
         Private origOffset As Boolean
+        Private _overtime As Overtime
+        Private _hasOvertime As Boolean
         Private origBreakLength As Decimal
         Private _timeFrom, _timeTo, _breakFrom As String
         Private _isNew, _madeChanges, _isValid As Boolean
         Private _eds As EmployeeDutySchedule
+        Private ReadOnly _isShiftBasedAutoOvertimeEnabled As Boolean
+        Private ReadOnly _shiftAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
         Public Sub New()
 
@@ -561,7 +567,14 @@ Public Class ShiftScheduleForm
 
         End Sub
 
-        Public Sub New(ess As EmployeeDutySchedule)
+        Public Sub New(ess As EmployeeDutySchedule, shiftAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
+            InitModel(ess)
+
+            _shiftAutoOvertimePolicy = shiftAutoOvertimePolicy
+            _isShiftBasedAutoOvertimeEnabled = _shiftAutoOvertimePolicy.Enabled
+        End Sub
+
+        Private Sub InitModel(ess As EmployeeDutySchedule)
             _eds = ess
 
             _RowID = ess.RowID
@@ -594,6 +607,9 @@ Public Class ShiftScheduleForm
             origBreakLength = _BreakLength
 
             origOffset = _IsRestDay
+
+            _overtime = ess.Overtime
+            _hasOvertime = _overtime IsNot Nothing
         End Sub
 
         Private Sub AssignEmployee(employee As Employee)
@@ -615,6 +631,8 @@ Public Class ShiftScheduleForm
             End Get
             Set(value As String)
                 _timeFrom = value
+
+                If _isShiftBasedAutoOvertimeEnabled Then SetOvertimeStart()
             End Set
         End Property
 
@@ -624,6 +642,8 @@ Public Class ShiftScheduleForm
             End Get
             Set(value As String)
                 _timeTo = value
+
+                If _isShiftBasedAutoOvertimeEnabled Then SetOvertimeEnd()
             End Set
         End Property
 
@@ -736,6 +756,8 @@ Public Class ShiftScheduleForm
                     .BreakStartTime = Calendar.ToTimespan(_breakFrom)
                     .BreakLength = _BreakLength
                     .IsRestDay = _IsRestDay
+                    .IsShiftBasedAutoOvertimeEnabled = _isShiftBasedAutoOvertimeEnabled
+                    .Overtime = _overtime
                 End With
 
                 Return _eds
@@ -757,6 +779,46 @@ Public Class ShiftScheduleForm
                 Return String.IsNullOrWhiteSpace(_timeTo)
             End Get
         End Property
+
+        Public ReadOnly Property IsShiftBasedAutoOvertimeEnabled As Boolean
+            Get
+                Return _isShiftBasedAutoOvertimeEnabled
+            End Get
+        End Property
+
+        Private Sub SetOvertimeStart()
+            If _hasOvertime Then CreateOvertime()
+            _overtime.OTStartTimeFull = Nothing
+        End Sub
+
+        Private Sub SetOvertimeEnd()
+            If _hasOvertime Then CreateOvertime()
+            Dim startTime As TimeSpan? = Calendar.ToTimespan(_timeFrom)
+            Dim endTime As TimeSpan? = Calendar.ToTimespan(_timeTo)
+
+            Dim otEndTime = TimeUtility.ToDateTime(endTime.Value)
+            Dim isValid = _shiftAutoOvertimePolicy.IsValidDefaultShiftPeriod(TimeUtility.ToDateTime(startTime.Value), otEndTime)
+            If isValid Then
+                _overtime.OTEndTimeFull = otEndTime
+                _overtime.Status = Overtime.StatusApproved
+            Else
+                _overtime.OTEndTimeFull = Nothing
+                _overtime.Status = Overtime.StatusPending
+            End If
+        End Sub
+
+        Private Sub CreateOvertime()
+            _overtime = New Overtime With {
+                .RowID = Nothing,
+                .OrganizationID = z_OrganizationID,
+                .Created = Date.Now,
+                .CreatedBy = z_User,
+                .EmployeeID = EmployeeId,
+                .OTStartDate = DateValue,
+                .Status = Overtime.StatusApproved}
+
+            _hasOvertime = True
+        End Sub
 
     End Class
 
@@ -1161,9 +1223,9 @@ Public Class ShiftScheduleForm
 
     Private Sub AssignEndTimeBaseOnShiftAutoOvertimePolicy(startTime As TimeSpan?, ByRef shiftEndTime As String)
         Dim endTime As TimeSpan? = Calendar.ToTimespan(shiftEndTime)
-        Dim isValid = _shiftBasedAutoOvertimePolicy.Validate(ToDateTime(startTime.Value), ToDateTime(endTime.Value))
+        Dim isValid = _shiftBasedAutoOvertimePolicy.IsValidDefaultShiftPeriod(ToDateTime(startTime.Value), ToDateTime(endTime.Value))
         If Not isValid Then
-            Dim defaultWorkHourBasedEndTime = _shiftBasedAutoOvertimePolicy.GetDefaultEndTime(ToDateTime(startTime.Value))
+            Dim defaultWorkHourBasedEndTime = _shiftBasedAutoOvertimePolicy.GetDefaultShiftPeriodEndTime(ToDateTime(startTime.Value))
             Dim formattedEndTime = MilitarDateTime(defaultWorkHourBasedEndTime.Value)
             shiftEndTime = formattedEndTime
         End If

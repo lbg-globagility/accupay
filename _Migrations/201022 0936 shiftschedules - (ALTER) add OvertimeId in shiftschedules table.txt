@@ -1,0 +1,27 @@
+
+ALTER TABLE `shiftschedules`
+	ADD COLUMN IF NOT EXISTS `OvertimeId` INT(10) NULL DEFAULT NULL AFTER `WorkHours`,
+	DROP KEY IF EXISTS `FK_shiftschedules_employeeovertime`,
+	DROP FOREIGN KEY IF EXISTS `FK_shiftschedules_employeeovertime`;
+ALTER TABLE `shiftschedules`
+	ADD CONSTRAINT `FK_shiftschedules_employeeovertime` FOREIGN KEY (`OvertimeId`) REFERENCES `employeeovertime` (`RowID`) ON DELETE SET NULL;
+
+/******PLEASE READ ME******/
+
+/*Execute the following statement and see result*/
+SET @dutyShiftType='DutyShift';
+SET @id=(SELECT RowID FROM listofval WHERE `LIC`='ShiftBasedAutomaticOvertime' AND `Type`=@dutyShiftType LIMIT 1);
+SELECT `DisplayValue` FROM listofval WHERE RowID=@id;
+
+/*IF `DisplayValue` is any equivalent to TRUE,*/
+/*execute this command
+UPDATE `shiftschedules` ss
+INNER JOIN `employeeovertime` ot ON ot.OrganizationID=ss.OrganizationID AND ot.OTStartDate=ss.`Date` AND ot.EmployeeID=ss.EmployeeID
+SET ss.OvertimeId=ot.RowID;
+*/
+
+/*or ELSE IF is any equivalent to FALSE,*/
+/*execute this command
+UPDATE `shiftschedules` ss
+SET ss.OvertimeId=NULL;
+*/
