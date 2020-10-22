@@ -650,28 +650,14 @@ namespace AccuPay.Data.Services
         {
             if (!leaves.Any()) return;
 
-            if (hasTimeLog)
+            if (hasTimeLog && _policy.PaidAsLongAsHasTimeLog)
             {
                 // if PaidAsLongAsHasTimeLog policy is true, employee can only have leave hours
                 // if the employee has a leave and the employee has no time logs
                 if (_policy.PaidAsLongAsHasTimeLog) return;
-
-                if (currentShift.IsWorkingDay)
-                {
-                    var requiredHours = currentShift.WorkingHours;
-                    var missingHours = requiredHours -
-                        (timeEntry.TotalLeaveHours +
-                        timeEntry.RegularHours +
-                        timeEntry.LateHours +
-                        timeEntry.UndertimeHours);
-
-                    if (missingHours > 0 && !payrate.IsHoliday)
-                    {
-                        timeEntry.UndertimeHours += missingHours;
-                    }
-                }
             }
-            else
+
+            if (!hasTimeLog)
             {
                 var leave = leaves.FirstOrDefault();
                 decimal leaveHours = ComputeLeaveHoursWithoutTimelog(
@@ -680,6 +666,21 @@ namespace AccuPay.Data.Services
                     _policy.ComputeBreakTimeLate);
 
                 timeEntry.SetLeaveHours(leave.LeaveType, leaveHours);
+            }
+
+            if (currentShift.IsWorkingDay)
+            {
+                var requiredHours = currentShift.WorkingHours;
+                var missingHours = requiredHours -
+                    (timeEntry.TotalLeaveHours +
+                    timeEntry.RegularHours +
+                    timeEntry.LateHours +
+                    timeEntry.UndertimeHours);
+
+                if (missingHours > 0 && !payrate.IsHoliday)
+                {
+                    timeEntry.UndertimeHours += missingHours;
+                }
             }
         }
 
