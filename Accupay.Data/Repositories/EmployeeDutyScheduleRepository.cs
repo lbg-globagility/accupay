@@ -31,24 +31,6 @@ namespace AccuPay.Data.Repositories
                 {
                     _context.Entry(shift).State = EntityState.Added;
                 });
-
-                var addedOvertimes = updated
-                    .Where(s => s.IsShiftBasedAutoOvertimeEnabled)
-                    .Where(s => s.OvertimeId == null)
-                    .Where(s => s.Overtime != null)
-                    .Select(s => s.Overtime)
-                    .ToList();
-                if (addedOvertimes.Any())
-                {
-                    var validOvertimes = addedOvertimes
-                        .Where(ot => ot.OTStartDate == ot.OTEndDate)
-                        .Where(ot => ot.OTEndTime != null)
-                        .Where(ot => ot.OrganizationID != null)
-                        .Where(ot => ot.EmployeeID != null)
-                        .Where(ot => ot.Status == Overtime.StatusApproved)
-                        .ToList();
-                    validOvertimes.ForEach(ot => { _context.Entry(ot).State = EntityState.Added; });
-                }
             }
 
             if (updated != null)
@@ -57,22 +39,6 @@ namespace AccuPay.Data.Repositories
                 {
                     _context.Entry(shift).State = EntityState.Modified;
                 });
-
-                var addedOvertimes = updated
-                    .Where(s => s.IsShiftBasedAutoOvertimeEnabled)
-                    .Where(s => s.OvertimeId == null)
-                    .Where(s => s.Overtime != null)
-                    .Select(s => s.Overtime)
-                    .ToList();
-                if (addedOvertimes.Any()) addedOvertimes.ForEach(ot => { _context.Entry(ot).State = EntityState.Added; });
-
-                var updatedOvertimes = updated
-                    .Where(s => s.IsShiftBasedAutoOvertimeEnabled)
-                    .Where(s => s.OvertimeId != null)
-                    .Where(s => s.Overtime != null)
-                    .Select(s => s.Overtime)
-                    .ToList();
-                if (updatedOvertimes.Any()) updatedOvertimes.ForEach(ot => { _context.Entry(ot).State = EntityState.Modified; });
             }
 
             if (deleted != null)
@@ -81,24 +47,10 @@ namespace AccuPay.Data.Repositories
                     .GroupBy(x => x.RowID)
                     .Select(x => x.FirstOrDefault())
                     .ToList();
-
-                DeleteAssocOvertime(deleted);
-
                 _context.EmployeeDutySchedules.RemoveRange(deleted);
             }
 
             await _context.SaveChangesAsync();
-        }
-
-        private void DeleteAssocOvertime(List<EmployeeDutySchedule> deleted)
-        {
-            var overtimes = deleted
-                .Where(s => s.IsShiftBasedAutoOvertimeEnabled)
-                .Where(s => s.Overtime != null)
-                .Where(s => s.OvertimeId != null)
-                .Select(s => s.Overtime)
-                .ToList();
-            if (overtimes.Any()) overtimes.ForEach(ot => { _context.Entry(ot).State = EntityState.Deleted; });
         }
 
         #endregion Save
@@ -208,26 +160,6 @@ namespace AccuPay.Data.Repositories
                     employeeIds,
                     datePeriod)
                 .Include(x => x.Employee)
-                .ToListAsync();
-        }
-
-        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodWithEmployeeAsync(
-            int organizationId,
-            int[] employeeIds,
-            TimePeriod datePeriod,
-            bool isShiftBasedAutoOvertimeEnabled)
-        {
-            if (!isShiftBasedAutoOvertimeEnabled)
-            {
-                return await GetByEmployeeAndDatePeriodWithEmployeeAsync(organizationId, employeeIds, datePeriod);
-            }
-
-            return await CreateBaseQueryByMultipleEmployeeDatePeriod(
-                    organizationId,
-                    employeeIds,
-                    datePeriod)
-                .Include(x => x.Employee)
-                .Include(l => l.Overtime)
                 .ToListAsync();
         }
 

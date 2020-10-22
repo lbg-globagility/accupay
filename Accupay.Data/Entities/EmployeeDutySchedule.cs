@@ -43,11 +43,6 @@ namespace AccuPay.Data.Entities
 
         public virtual Employee Employee { get; set; }
 
-        [ForeignKey("Overtime")]
-        public int? OvertimeId { get; set; }
-
-        public virtual Overtime Overtime { get; set; }
-
         [NotMapped]
         public DateTime? StartTimeFull
         {
@@ -76,14 +71,6 @@ namespace AccuPay.Data.Entities
                         DateSched.Date.ToMinimumHourValue().Add(BreakStartTime.Value);
 
             set => BreakStartTime = value == null ? null : value?.TimeOfDay;
-        }
-
-        [NotMapped]
-        public bool IsShiftBasedAutoOvertimeEnabled
-        {
-            get => _isShiftBasedAutoOvertimeEnabled;
-
-            set => _isShiftBasedAutoOvertimeEnabled = value;
         }
 
         /// <summary>
