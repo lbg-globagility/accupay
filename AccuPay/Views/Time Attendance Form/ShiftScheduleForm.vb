@@ -1349,6 +1349,13 @@ Public Class ShiftScheduleForm
 
     Private Sub txtBreakLength_ValueChanged(sender As Object, e As EventArgs) Handles txtBreakLength.ValueChanged
         txtBreakFrom_TextChanged(txtBreakFrom, e)
+
+        If _isShiftBasedAutoOvertimeEnabled Then
+            Dim tsFrom As TimeSpan? = Calendar.ToTimespan(txtTimeFrom.Text.Trim)
+            Dim tsTo As TimeSpan? = Calendar.ToTimespan(txtTimeTo.Text.Trim)
+            Dim breakLength = txtBreakLength.Value
+            If tsFrom.HasValue And tsTo.HasValue Then AssignEndTimeBaseOnShiftAutoOvertimePolicy(tsFrom, breakLength, txtTimeTo.Text)
+        End If
     End Sub
 
     Private Sub grid_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles grid.ColumnWidthChanged
