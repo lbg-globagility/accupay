@@ -1073,7 +1073,16 @@ Public Class ShiftScheduleForm
             ToList()
 
         Dim createNewOvertime = Function(shiftModel As ShiftScheduleModel)
-                                    Return New Overtime() With {.Created = Date.Now, .CreatedBy = z_User, .EmployeeID = shiftModel.EmployeeId, .OrganizationID = z_OrganizationID, .OTStartDate = shiftModel.DateValue, .OTEndDate = shiftModel.DateValue, .OTStartTimeFull = getOTStartTime(shiftModel.TimeFromDateTime, shiftModel.BreakLength), .OTEndTimeFull = shiftModel.TimeToDateTime, .Status = Overtime.StatusApproved}
+                                    Return New Overtime() With {
+                                    .Created = Date.Now,
+                                    .CreatedBy = z_User,
+                                    .EmployeeID = shiftModel.EmployeeId,
+                                    .OrganizationID = z_OrganizationID,
+                                    .OTStartDate = shiftModel.DateValue,
+                                    .OTEndDate = shiftModel.DateValue,
+                                    .OTStartTimeFull = getOTStartTime(shiftModel.TimeFromDateTime, shiftModel.BreakLength),
+                                    .OTEndTimeFull = shiftModel.TimeToDateTime,
+                                    .Status = Overtime.StatusApproved}
                                 End Function
 
         addedShifts.ForEach(Sub(shiftModel) saveOvertimes.Add(createNewOvertime(shiftModel)))
@@ -1605,7 +1614,7 @@ Public Class ShiftScheduleForm
 
     Private Async Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
 
-        Using form = New ImportedShiftSchedulesForm()
+        Using form = New ImportedShiftSchedulesForm(_shiftBasedAutoOvertimePolicy)
             form.ShowDialog()
 
             If form.IsSaved Then

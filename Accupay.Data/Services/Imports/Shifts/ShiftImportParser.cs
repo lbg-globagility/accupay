@@ -2,6 +2,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services.Policies;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,8 @@ namespace AccuPay.Data.Services.Imports
     {
         private readonly EmployeeRepository _employeeRepository;
         private readonly IExcelParser<ShiftScheduleRowRecord> _parser;
-
+        private ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
+        private bool _isShiftBasedAutoOvertimePolicyEnabled;
         private const string WorkSheetName = "ShiftSchedule";
 
         public ShiftImportParser(EmployeeRepository employeeRepository, IExcelParser<ShiftScheduleRowRecord> parser)
@@ -104,7 +106,15 @@ namespace AccuPay.Data.Services.Imports
                 });
             }
 
+            if (_isShiftBasedAutoOvertimePolicyEnabled) list.ForEach(shift => shift.SetShiftBasedAutoOvertimePolict(_shiftBasedAutoOvertimePolicy));
+
             return list;
+        }
+
+        public void SetShiftBasedAutoOvertimePolicy(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
+        {
+            _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
+            _isShiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
         }
 
         public class ShiftImportParserOutput

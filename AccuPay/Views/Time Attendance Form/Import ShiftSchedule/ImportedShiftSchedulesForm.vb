@@ -7,6 +7,7 @@ Imports AccuPay.Data.Services.[Imports]
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
+Imports AccuPay.Data.Services.Policies
 
 Public Class ImportedShiftSchedulesForm
 
@@ -23,8 +24,9 @@ Public Class ImportedShiftSchedulesForm
     Private _userActivityRepository As UserActivityRepository
 
     Private _importParser As ShiftImportParser
+    Private ReadOnly _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
-    Sub New()
+    Sub New(shiftBasedAutoOvertimePolicy As Policies.ShiftBasedAutomaticOvertimePolicy)
 
         InitializeComponent()
 
@@ -33,6 +35,9 @@ Public Class ImportedShiftSchedulesForm
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _importParser = MainServiceProvider.GetRequiredService(Of ShiftImportParser)
+
+        _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy
+        _importParser.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy)
     End Sub
 
 #End Region

@@ -15,6 +15,8 @@ namespace AccuPay.Data.Services.Policies
 
         private const string POLICY_TYPE = "DutyShift";
         private readonly ListOfValueCollection _settings;
+        private bool _atLeastDefaultWorkHoursOrMore;
+        private bool _isMinimumOTTimeOnwards;
 
         public ShiftBasedAutomaticOvertimePolicy(ListOfValueCollection settings) => _settings = settings;
 
@@ -37,11 +39,11 @@ namespace AccuPay.Data.Services.Policies
 
                 var endTimeSpanValue = shiftEnd.Value;
                 if (shiftStart.Value.Hour > endTimeSpanValue.Hour) endTimeSpanValue = endTimeSpanValue.AddDays(1);
-                var eightHoursExact = endTimeSpanValue.Subtract(expectedEndTime).TotalSeconds == 0;
-                var isMinimumOTTimeOnwards = endTimeSpanValue.Subtract(minimumOTEndTime).TotalSeconds >= 0;
+                _atLeastDefaultWorkHoursOrMore = endTimeSpanValue.Subtract(expectedEndTime).TotalSeconds == 0;
+                _isMinimumOTTimeOnwards = endTimeSpanValue.Subtract(minimumOTEndTime).TotalSeconds >= 0;
 
-                if (!isMinimumOTTimeOnwards)
-                    if (!eightHoursExact)
+                if (!_isMinimumOTTimeOnwards)
+                    if (!_atLeastDefaultWorkHoursOrMore)
                         return false;
 
                 return true;
