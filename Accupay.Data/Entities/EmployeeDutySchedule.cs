@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Helpers;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,8 @@ namespace AccuPay.Data.Entities
     [Table("shiftschedules")]
     public class EmployeeDutySchedule
     {
-        private bool _isShiftBasedAutoOvertimeEnabled;
+        private ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
+        private bool _shiftBasedAutoOvertimePolicyEnabled;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -76,6 +78,8 @@ namespace AccuPay.Data.Entities
         /// <summary>
         /// Computes the shift hours and also update the work hours.
         /// </summary>
+        ///
+
         public void ComputeShiftHours()
         {
             if (StartTime.HasValue && EndTime.HasValue)
@@ -85,6 +89,8 @@ namespace AccuPay.Data.Entities
                 double totalMinutes = (trueEndTime - StartTime).Value.TotalMinutes;
 
                 ShiftHours = Convert.ToDecimal(totalMinutes / TimeConstants.MinutesPerHour);
+
+                if (_shiftBasedAutoOvertimePolicyEnabled) ShiftHours = _shiftBasedAutoOvertimePolicy.DefaultWorkHours + BreakLength;
             }
             else
             {
@@ -94,6 +100,16 @@ namespace AccuPay.Data.Entities
             ComputeWorkHours();
         }
 
-        private void ComputeWorkHours() => WorkHours = ShiftHours > BreakLength ? ShiftHours - BreakLength : 0;
+        private void ComputeWorkHours()
+        {
+            WorkHours = ShiftHours > BreakLength ? ShiftHours - BreakLength : 0;
+            if (_shiftBasedAutoOvertimePolicyEnabled) WorkHours = _shiftBasedAutoOvertimePolicy.DefaultWorkHours;
+        }
+
+        public void SetShiftBasedAutoOvertimePolicy(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
+        {
+            _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
+            _shiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
+        }
     }
 }
