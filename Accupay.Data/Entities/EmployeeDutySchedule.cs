@@ -111,5 +111,12 @@ namespace AccuPay.Data.Entities
             _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
             _shiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
         }
+
+        internal void TransformShiftPeriods()
+        {
+            if (!_shiftBasedAutoOvertimePolicyEnabled) return;
+
+            EndTimeFull = _shiftBasedAutoOvertimePolicy.GetDefaultShiftPeriodEndTime(StartTimeFull, breakLength: BreakLength);
+        }
     }
 }

@@ -22,6 +22,8 @@ namespace AccuPay.Data.Helpers
 
             _shift = shift;
 
+            _shift.TransformShiftPeriods();
+
             this.ShiftPeriod = TimePeriod.FromTime(
                 new TimeSpan(shift.StartTime.Value.Hours, shift.StartTime.Value.Minutes, 0),
                 new TimeSpan(shift.EndTime.Value.Hours, shift.EndTime.Value.Minutes, 0),
