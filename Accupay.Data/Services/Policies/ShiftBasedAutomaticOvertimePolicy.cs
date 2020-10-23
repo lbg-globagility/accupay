@@ -7,10 +7,11 @@ namespace AccuPay.Data.Services.Policies
     public class ShiftBasedAutomaticOvertimePolicy
     {
         private const int STANDARD_LABOR_HOURS = 8;
-        private const int STANDARD_LABOR_HOURS_WOUT_BREAK = 9;
 
         private const int MINUTES_PER_HOUR = 60;
         private const int SECONDS_PER_HOUR = 3600;
+
+        private const int NO_DEFAULT_BREAK = 0;
 
         private const string POLICY_TYPE = "DutyShift";
         private readonly ListOfValueCollection _settings;
@@ -25,15 +26,13 @@ namespace AccuPay.Data.Services.Policies
 
         public decimal DefaultWorkHours => _settings.GetDecimal($"{POLICY_TYPE}.DefaultWorkHours", STANDARD_LABOR_HOURS);
 
-        public decimal DefaultShiftHours => _settings.GetDecimal($"{POLICY_TYPE}.DefaultShiftHours", STANDARD_LABOR_HOURS_WOUT_BREAK);
+        public decimal DefaultBreakLength => NO_DEFAULT_BREAK;
 
-        public decimal DefaultBreakLength => DefaultShiftHours - DefaultWorkHours;
-
-        public bool IsValidDefaultShiftPeriod(DateTime? shiftStart, DateTime? shiftEnd)
+        public bool IsValidDefaultShiftPeriod(DateTime? shiftStart, DateTime? shiftEnd, Decimal breakLength)
         {
             if (shiftStart.HasValue && shiftEnd.HasValue)
             {
-                var expectedEndTime = GetDefaultShiftPeriodEndTime(shiftStart).Value;
+                var expectedEndTime = GetDefaultShiftPeriodEndTime(shiftStart, breakLength).Value;
                 var minimumOTEndTime = expectedEndTime.AddMinutes(Convert.ToDouble(Minimum));
 
                 var endTimeSpanValue = shiftEnd.Value;
@@ -50,12 +49,13 @@ namespace AccuPay.Data.Services.Policies
             return false;
         }
 
-        public DateTime? GetDefaultShiftPeriodEndTime(DateTime? shiftStart)
+        public DateTime? GetDefaultShiftPeriodEndTime(DateTime? shiftStart, Decimal breakLength)
         {
             if (shiftStart == null) return default(DateTime?);
 
-            var standardLaborSecondsWoutBreak = STANDARD_LABOR_HOURS_WOUT_BREAK * SECONDS_PER_HOUR;
-            var expectedEndTimeSpan = shiftStart.Value.AddSeconds(standardLaborSecondsWoutBreak);
+            var userLaborHours = DefaultWorkHours + breakLength;
+            var convertedToSeconds = userLaborHours * SECONDS_PER_HOUR;
+            var expectedEndTimeSpan = shiftStart.Value.AddSeconds(Convert.ToDouble(convertedToSeconds));
 
             return expectedEndTimeSpan;
         }
