@@ -60,15 +60,18 @@ namespace AccuPay.Data.Services.Imports
                     if (!_shiftBasedAutoOvertimePolicy.IsValidDefaultShiftPeriod(TimeFromDisplay, TimeToDisplay, BreakLength))
                     {
                         var endTime = _shiftBasedAutoOvertimePolicy.GetDefaultShiftPeriodEndTime(TimeFromDisplay, BreakLength);
-                        var minOvertimeMinutes = Convert.ToDouble(_shiftBasedAutoOvertimePolicy.Minimum);
-                        var expectedEndTime = endTime.Value;
-                        var reason = $"End Time should be {expectedEndTime.ToShortTimeString()} or greater";
-                        if (minOvertimeMinutes > 0)
+                        if (endTime.HasValue)
                         {
-                            var expectedOvertime = endTime.Value.AddMinutes(minOvertimeMinutes);
-                            reason = $"End Time should be {expectedEndTime.ToShortTimeString()}, or {expectedOvertime.ToShortTimeString()} or greater";
+                            var minOvertimeMinutes = Convert.ToDouble(_shiftBasedAutoOvertimePolicy.Minimum);
+                            var expectedEndTime = endTime.Value;
+                            var reason = $"End Time should be {expectedEndTime.ToShortTimeString()} or greater";
+                            if (minOvertimeMinutes > 0)
+                            {
+                                var expectedOvertime = endTime.Value.AddMinutes(minOvertimeMinutes);
+                                reason = $"End Time should be {expectedEndTime.ToShortTimeString()}, or {expectedOvertime.ToShortTimeString()} or greater";
+                            }
+                            reasons.Add(reason);
                         }
-                        reasons.Add(reason);
                     }
 
                 var message = string.Join("; ", reasons.ToArray());
