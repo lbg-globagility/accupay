@@ -2,7 +2,7 @@
 DELIMITER $$
 IF NOT EXISTS(SELECT * FROM calendar WHERE IsDefault) THEN
 
-    INSERT INTO `accupaydb_cinema2k`.`calendar` (`Name`, `IsDefault`) VALUES ('[Default]', True);
+    INSERT INTO `calendar` (`Name`, `IsDefault`) VALUES ('[Default]', True);
     SET @calendarId = LAST_INSERT_ID();
 
 
