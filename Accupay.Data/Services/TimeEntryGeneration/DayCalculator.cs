@@ -817,7 +817,7 @@ namespace AccuPay.Data.Services
             int? employeeDayOfRest)
         {
             var currentShift = new CurrentShift(shift, currentDate);
-            currentShift.TransformShiftPeriods(_shiftBasedAutoOvertimePolicy);
+            if (_shiftBasedAutoOvertimePolicy != null) currentShift.TransformToShiftHourTimePeriod(_shiftBasedAutoOvertimePolicy);
 
             if (respectDefaultRestDay)
             {

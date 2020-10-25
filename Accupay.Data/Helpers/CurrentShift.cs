@@ -96,7 +96,7 @@ namespace AccuPay.Data.Helpers
             return $"{Start:yyyy-MM-dd hh:mm tt} - {End:yyyy-MM-dd hh:mm tt} | {BreaktimeStart?.ToString("yyyy-MM-dd hh:mm tt")} - {BreaktimeEnd?.ToString("yyyy-MM-dd hh:mm tt")} ";
         }
 
-        internal void TransformShiftPeriods(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
+        internal void TransformToShiftHourTimePeriod(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
         {
             if (shiftBasedAutoOvertimePolicy == null) return;
             _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
