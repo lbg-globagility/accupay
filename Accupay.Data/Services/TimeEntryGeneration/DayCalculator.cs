@@ -16,7 +16,7 @@ namespace AccuPay.Data.Services
         private readonly Organization _organization;
         private readonly Employee _employee;
         private readonly IEmploymentPolicy _employmentPolicy;
-        private readonly ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
+        private static ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
         private readonly TimeEntryPolicy _policy;
 
         public DayCalculator(
@@ -68,8 +68,6 @@ namespace AccuPay.Data.Services
             // No covered salary for this date
             if (hasSalaryForThisDate == false)
                 return timeEntry;
-
-            shift.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy);
 
             var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest);
 
@@ -819,6 +817,7 @@ namespace AccuPay.Data.Services
             int? employeeDayOfRest)
         {
             var currentShift = new CurrentShift(shift, currentDate);
+            currentShift.TransformShiftPeriods(_shiftBasedAutoOvertimePolicy);
 
             if (respectDefaultRestDay)
             {

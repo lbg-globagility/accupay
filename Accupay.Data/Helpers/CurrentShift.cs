@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -10,7 +11,8 @@ namespace AccuPay.Data.Helpers
         public const decimal StandardWorkingHours = 8;
 
         private int? _defaultRestDay;
-
+        private ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
+        private bool _shiftBasedAutoOvertimePolicyEnabled;
         private readonly EmployeeDutySchedule _shift;
 
         public CurrentShift(EmployeeDutySchedule shift, DateTime date)
@@ -21,8 +23,6 @@ namespace AccuPay.Data.Helpers
                 return;
 
             _shift = shift;
-
-            _shift.TransformShiftPeriods();
 
             this.ShiftPeriod = TimePeriod.FromTime(
                 new TimeSpan(shift.StartTime.Value.Hours, shift.StartTime.Value.Minutes, 0),
@@ -94,6 +94,17 @@ namespace AccuPay.Data.Helpers
         public override string ToString()
         {
             return $"{Start:yyyy-MM-dd hh:mm tt} - {End:yyyy-MM-dd hh:mm tt} | {BreaktimeStart?.ToString("yyyy-MM-dd hh:mm tt")} - {BreaktimeEnd?.ToString("yyyy-MM-dd hh:mm tt")} ";
+        }
+
+        internal void TransformShiftPeriods(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
+        {
+            if (shiftBasedAutoOvertimePolicy == null) return;
+            _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
+
+            _shiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
+            if (!_shiftBasedAutoOvertimePolicyEnabled && _shift == null) return;
+
+            _shift.EndTimeFull = _shiftBasedAutoOvertimePolicy.GetDefaultShiftPeriodEndTime(_shift.StartTimeFull, breakLength: _shift.BreakLength);
         }
     }
 }

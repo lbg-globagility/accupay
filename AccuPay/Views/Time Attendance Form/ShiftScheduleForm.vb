@@ -745,8 +745,6 @@ Public Class ShiftScheduleForm
                     .IsRestDay = _IsRestDay
                 End With
 
-                _eds.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy)
-
                 Return _eds
             End Get
         End Property
