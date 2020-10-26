@@ -1069,10 +1069,6 @@ Public Class ShiftScheduleForm
         Dim getOTStartTime = Function(starting As DateTime?, breakLength As Decimal) As DateTime?
                                  Return _shiftBasedAutoOvertimePolicy.GetDefaultShiftPeriodEndTime(starting, breakLength)
                              End Function
-        Dim addedShifts = shiftSchedSaveList.
-            Where(Function(s) s.IsNew).
-            Where(Function(s) _shiftBasedAutoOvertimePolicy.IsValidDefaultShiftPeriod(s.TimeFromDateTime, s.TimeToDateTime, s.BreakLength)).
-            ToList()
 
         Dim createNewOvertime = Function(shiftModel As ShiftScheduleModel)
                                     Return New Overtime() With {
@@ -1087,13 +1083,8 @@ Public Class ShiftScheduleForm
                                     .Status = Overtime.StatusApproved}
                                 End Function
 
-        addedShifts.ForEach(Sub(shiftModel)
-                                Dim newOvertime = createNewOvertime(shiftModel)
-                                If Not newOvertime.OTStartTime = newOvertime.OTEndTime Then saveOvertimes.Add(newOvertime)
-                            End Sub)
-
         Dim modifiedShifts = shiftSchedSaveList.
-            Where(Function(s) s.IsUpdate Or s.ConsideredDelete).
+            Where(Function(s) s.IsNew Or s.IsUpdate Or s.ConsideredDelete).
             ToList()
         modifiedShifts.ForEach(Sub(shiftModel)
                                    Dim employeeID = shiftModel.EmployeeId
@@ -1104,12 +1095,12 @@ Public Class ShiftScheduleForm
                                    Where(Function(ot) ot.OTStartDate = dateValue).
                                    ToList()
 
-                                   If shiftModel.IsUpdate Then
+                                   If shiftModel.IsNew Or shiftModel.IsUpdate Then
                                        Dim overtime = getOvertimes.FirstOrDefault()
                                        If overtime IsNot Nothing Then
                                            overtime.OTStartTimeFull = getOTStartTime(shiftModel.TimeFromDateTime, shiftModel.BreakLength)
                                            overtime.OTEndTimeFull = shiftModel.TimeToDateTime
-                                           'isValid(s.TimeFromDateTime, s.TimeToDateTime, s.BreakLength)
+
                                            If Not overtime.OTStartTime = overtime.OTEndTime Then
                                                saveOvertimes.Add(overtime)
                                            Else
