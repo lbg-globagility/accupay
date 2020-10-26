@@ -98,9 +98,6 @@ namespace AccuPay.Data.Helpers
 
         internal void TransformToShiftHourTimePeriod(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
         {
-            if (shiftBasedAutoOvertimePolicy == null) return;
-            _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
-
             _shiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
             if (!_shiftBasedAutoOvertimePolicyEnabled && _shift == null) return;
 
