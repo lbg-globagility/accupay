@@ -16,8 +16,8 @@ namespace AccuPay.Data.Services
         private readonly Organization _organization;
         private readonly Employee _employee;
         private readonly IEmploymentPolicy _employmentPolicy;
-        private static ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
-        private readonly TimeEntryPolicy _policy;
+
+        private static TimeEntryPolicy _policy;
 
         public DayCalculator(
             Organization organization,
@@ -30,7 +30,6 @@ namespace AccuPay.Data.Services
             _employee = employee;
             _policy = new TimeEntryPolicy(settings);
             _employmentPolicy = employmentPolicy;
-            _shiftBasedAutoOvertimePolicy = new ShiftBasedAutomaticOvertimePolicy(settings);
         }
 
         public TimeEntry Compute(
@@ -69,7 +68,7 @@ namespace AccuPay.Data.Services
             if (hasSalaryForThisDate == false)
                 return timeEntry;
 
-            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest);
+            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest, _policy.ShiftBasedAutomaticOvertimePolicy.Enabled);
 
             timeEntry.BranchID = branchId;
             timeEntry.IsRestDay = currentShift.IsRestDay;
@@ -824,16 +823,21 @@ namespace AccuPay.Data.Services
         public static CurrentShift GetCurrentShift(DateTime currentDate,
             EmployeeDutySchedule shift,
             bool respectDefaultRestDay,
-            int? employeeDayOfRest)
+            int? employeeDayOfRest,
+            bool shiftBasedAutomaticOvertimeEnabled)
         {
             var currentShift = new CurrentShift(shift, currentDate);
-            if (_shiftBasedAutoOvertimePolicy != null) currentShift.TransformToShiftHourTimePeriod(_shiftBasedAutoOvertimePolicy);
 
             if (respectDefaultRestDay)
             {
                 currentShift.SetDefaultRestDay(employeeDayOfRest);
             }
 
+            if (shiftBasedAutomaticOvertimeEnabled)
+            {
+                shift.EndTimeFull = _policy.ShiftBasedAutomaticOvertimePolicy.GetDefaultShiftPeriodEndTime(shift.StartTimeFull, shift.BreakLength);
+                currentShift = new CurrentShift(shift, currentDate);
+            }
             return currentShift;
         }
 
