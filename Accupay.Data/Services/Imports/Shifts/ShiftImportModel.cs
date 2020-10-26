@@ -64,11 +64,11 @@ namespace AccuPay.Data.Services.Imports
                         {
                             var minOvertimeMinutes = Convert.ToDouble(_shiftBasedAutoOvertimePolicy.Minimum);
                             var expectedEndTime = endTime.Value;
-                            var reason = $"End Time should be {expectedEndTime.ToShortTimeString()} or greater";
+                            var reason = $"End Time should be {expectedEndTime.ToShortTimeString()}";
                             if (minOvertimeMinutes > 0)
                             {
                                 var expectedOvertime = endTime.Value.AddMinutes(minOvertimeMinutes);
-                                reason = $"End Time should be {expectedEndTime.ToShortTimeString()}, or {expectedOvertime.ToShortTimeString()} or greater";
+                                reason = $"{reason}. Or should be {expectedOvertime.ToShortTimeString()} or greater";
                             }
                             reasons.Add(reason);
                         }
