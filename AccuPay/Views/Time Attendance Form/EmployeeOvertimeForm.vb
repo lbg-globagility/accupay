@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -62,26 +62,24 @@ Public Class EmployeeOvertimeForm
 
         _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
-        LoadDutyShifPolicy()
     End Sub
 
     Private Async Sub LoadDutyShifPolicy()
-        Dim sdfsd = Await _listOfValueRepository.GetDutyShiftPoliciesAsync()
+        Dim dutyShiftPolicies = Await _listOfValueRepository.GetDutyShiftPoliciesAsync()
 
-        Dim settings = _listOfValueService.Create(sdfsd.ToList)
+        Dim settings = _listOfValueService.Create(dutyShiftPolicies.ToList)
 
         _shiftBasedAutoOvertimePolicy = New ShiftBasedAutomaticOvertimePolicy(settings)
         If _shiftBasedAutoOvertimePolicy.Enabled Then
-            Dim toolStipItems = ToolStrip12.
+            Dim toolStripItems = ToolStrip12.
                 Items.
                 OfType(Of ToolStripItem).
                 Where(Function(tsi) Not tsi.Name = CloseButton.Name).
                 ToList()
 
-            toolStipItems.
+            toolStripItems.
                 ForEach(Sub(toolStripItem)
                             toolStripItem.Visible = False
-
                             toolStripItem.Enabled = False
                         End Sub)
         End If
@@ -103,6 +101,8 @@ Public Class EmployeeOvertimeForm
         Await ShowEmployeeList()
 
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        LoadDutyShifPolicy()
 
     End Sub
 
