@@ -36,7 +36,7 @@ namespace AccuPay.Data.Services.Policies
                 var minimumOTEndTime = expectedEndTime.AddMinutes(Convert.ToDouble(Minimum));
 
                 var endTimeSpanValue = shiftEnd.Value;
-                if (shiftStart.Value.Hour > endTimeSpanValue.Hour) endTimeSpanValue = endTimeSpanValue.AddDays(1);
+                if (shiftStart.Value.Hour >= endTimeSpanValue.Hour) endTimeSpanValue = endTimeSpanValue.AddDays(1);
                 var atLeastDefaultWorkHoursOrMore = endTimeSpanValue.Subtract(expectedEndTime).TotalSeconds == 0;
                 var isMinimumOTTimeOnwards = endTimeSpanValue.Subtract(minimumOTEndTime).TotalSeconds >= 0;
 
