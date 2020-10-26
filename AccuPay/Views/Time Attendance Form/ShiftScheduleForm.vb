@@ -1351,6 +1351,18 @@ Public Class ShiftScheduleForm
         End If
     End Sub
 
+    Private Sub txtBreakLength_KeyDown(sender As Object, e As KeyEventArgs) Handles txtBreakLength.KeyDown
+        If e.KeyCode = Keys.Back Or
+            e.KeyCode = Keys.Delete Then
+
+            Dim isEmpty = String.IsNullOrWhiteSpace(txtBreakLength.Text)
+            If isEmpty Then
+                e.Handled = True
+                txtBreakLength.Text = "0.00"
+            End If
+        End If
+    End Sub
+
     Private Sub grid_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles grid.ColumnWidthChanged
 
     End Sub
