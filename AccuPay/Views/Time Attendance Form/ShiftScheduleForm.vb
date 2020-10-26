@@ -1299,12 +1299,9 @@ Public Class ShiftScheduleForm
                 Dim nextTimeTo = startDateTime.AddHours(shiftHours)
                 txtTimeTo.Text = MilitarDateTime(nextTimeTo)
 
-                If _isShiftBasedAutoOvertimeEnabled Then
-                    Dim breakLength = txtBreakLength.Value
-                    AssignEndTimeBaseOnShiftAutoOvertimePolicy(tsFrom, breakLength, txtTimeTo.Text)
-                End If
+                AssignShiftEndTimeBaseOnPolicy(tsFrom)
 
-                If String.IsNullOrWhiteSpace(txtBreakFrom.Text) Then
+                If String.IsNullOrWhiteSpace(txtBreakFrom.Text) And _dutyShiftPolicy.BreakHour > 0 Then
                     txtBreakFrom.Text = MilitarDateTime(startDateTime.AddHours(Math.Floor(shiftHours / 2)))
                     txtBreakLength.Value = _dutyShiftPolicy.BreakHour
                     'Else
