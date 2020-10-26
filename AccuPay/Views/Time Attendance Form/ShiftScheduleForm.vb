@@ -1315,17 +1315,25 @@ Public Class ShiftScheduleForm
         End If
     End Sub
 
+    Private Sub AssignShiftEndTimeBaseOnPolicy(startTimeSpan As TimeSpan?)
+        If _isShiftBasedAutoOvertimeEnabled Then
+            Dim breakLength = txtBreakLength.Value
+            AssignEndTimeBaseOnShiftAutoOvertimePolicy(startTimeSpan, breakLength, txtTimeTo.Text)
+        End If
+    End Sub
+
     Private Sub txtTimeTo_TextChanged(sender As Object, e As EventArgs) Handles txtTimeTo.TextChanged
 
     End Sub
 
+    Private Sub txtTimeTo_Leave(sender As Object, e As EventArgs) Handles txtTimeTo.Leave
+        Dim startTime As TimeSpan? = Calendar.ToTimespan(txtTimeFrom.Text.Trim)
+        Dim endTime As TimeSpan? = Calendar.ToTimespan(txtTimeTo.Text.Trim)
+        If startTime.HasValue And endTime.HasValue Then AssignShiftEndTimeBaseOnPolicy(startTime)
+    End Sub
+
     Private Sub txtBreakFrom_TextChanged(sender As Object, e As EventArgs) Handles txtBreakFrom.TextChanged
-        Dim startTime = Calendar.ToTimespan(txtBreakFrom.Text.Trim)
-        If startTime.HasValue Then
-            Dim breakStart = ToDateTime(startTime.Value).Value
-        Else
-            txtBreakLength.Value = txtBreakLength.Minimum
-        End If
+
     End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
