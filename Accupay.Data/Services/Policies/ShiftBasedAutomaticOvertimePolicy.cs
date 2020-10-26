@@ -56,8 +56,7 @@ namespace AccuPay.Data.Services.Policies
             if (shiftStart == null) return default(DateTime?);
 
             var userLaborHours = DefaultWorkHours + breakLength;
-            var convertedToSeconds = userLaborHours * SECONDS_PER_HOUR;
-            var expectedEndTimeSpan = shiftStart.Value.AddSeconds(Convert.ToDouble(convertedToSeconds));
+            var expectedEndTimeSpan = shiftStart.Value.AddHours(Convert.ToDouble(userLaborHours));
 
             return expectedEndTimeSpan;
         }
