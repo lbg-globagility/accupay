@@ -1,10 +1,17 @@
-﻿namespace AccuPay.Data.Services
+﻿using AccuPay.Data.Services.Policies;
+
+namespace AccuPay.Data.Services
 {
     public class TimeEntryPolicy
     {
         private readonly ListOfValueCollection _settings;
 
-        public TimeEntryPolicy(ListOfValueCollection settings) => _settings = settings;
+        public TimeEntryPolicy(ListOfValueCollection settings)
+        {
+            _settings = settings;
+
+            ShiftBasedAutomaticOvertimePolicy = new ShiftBasedAutomaticOvertimePolicy(_settings);
+        }
 
         public bool LateHoursRoundingUp =>
                         _settings.GetBoolean("LateHours.RoundingUp");
@@ -47,5 +54,7 @@
 
         public bool PostLegalHolidayCheck =>
                         _settings.GetBoolean("HolidayPolicy.PostLegalHolidayCheck");
+
+        public ShiftBasedAutomaticOvertimePolicy ShiftBasedAutomaticOvertimePolicy { get; }
     }
 }

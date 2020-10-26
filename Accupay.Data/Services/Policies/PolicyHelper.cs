@@ -12,7 +12,6 @@ namespace AccuPay.Data.Services
         public const string DefaultEndOfTheMonthDaysSpanPolicyLIC = "DefaultEndOfTheMonthDaysSpan";
 
         private readonly ListOfValueService _listOfValueService;
-
         private TimeEntryPolicy _timeEntryPolicy;
         private ListOfValueCollection _settings;
 
@@ -21,6 +20,7 @@ namespace AccuPay.Data.Services
             _listOfValueService = listOfValueService;
 
             _settings = _listOfValueService.Create();
+
             _timeEntryPolicy = new TimeEntryPolicy(_settings);
         }
 
@@ -38,6 +38,8 @@ namespace AccuPay.Data.Services
         public bool ValidateLeaveBalance => _timeEntryPolicy.ValidateLeaveBalance;
 
         public bool PaidAsLongAsHasTimeLog => _timeEntryPolicy.PaidAsLongAsHasTimeLog;
+
+        public ShiftBasedAutomaticOvertimePolicy ShiftBasedAutomaticOvertimePolicy => _timeEntryPolicy.ShiftBasedAutomaticOvertimePolicy;
 
         public bool ShowActual => _settings.GetBoolean("Policy.ShowActual", true);
 
