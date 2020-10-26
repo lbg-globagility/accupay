@@ -243,14 +243,16 @@ namespace AccuPay.Data.Services
             ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
 
             if (_policy.ShiftBasedAutomaticOvertimePolicy.Enabled)
-                TrimOvertimeHoursWroked(timeEntry.OvertimeHours, timeEntry.NightDiffOTHours);
+                TrimOvertimeHoursWroked(timeEntry);
         }
 
-        private void TrimOvertimeHoursWroked(decimal overtimeHours, decimal nightDiffOTHours)
+        private void TrimOvertimeHoursWroked(TimeEntry timeEntry)
         {
-            overtimeHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(overtimeHours);
+            decimal overtimeHours = timeEntry.OvertimeHours;
+            if (overtimeHours > 0) timeEntry.OvertimeHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(overtimeHours);
 
-            nightDiffOTHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(nightDiffOTHours);
+            decimal nightDiffOTHours = timeEntry.NightDiffOTHours;
+            if (nightDiffOTHours > 0) timeEntry.NightDiffOTHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(nightDiffOTHours);
         }
 
         private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, ICollection<RoutePayRate> routeRates)

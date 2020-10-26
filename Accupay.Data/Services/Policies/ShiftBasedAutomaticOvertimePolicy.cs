@@ -61,12 +61,14 @@ namespace AccuPay.Data.Services.Policies
 
         private decimal ConvertHourToMinute(decimal valueHours) => MINUTES_PER_HOUR * valueHours;
 
+        private decimal ConvertMinuteToHour(decimal valueHours) => valueHours / MINUTES_PER_HOUR;
+
         public decimal TrimOvertimeHoursWroked(decimal overtimeHoursWorked)
         {
             if (Denominator > 1)
             {
                 var remainder = ConvertHourToMinute(overtimeHoursWorked) % Denominator;
-                return overtimeHoursWorked - remainder;
+                return overtimeHoursWorked - ConvertMinuteToHour(remainder);
             }
             return overtimeHoursWorked;
         }
