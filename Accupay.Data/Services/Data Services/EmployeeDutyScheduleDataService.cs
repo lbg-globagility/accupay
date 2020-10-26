@@ -122,7 +122,15 @@ namespace AccuPay.Data.Services
             if (shift.EndTime == null)
                 throw new BusinessLogicException("End Time is required.");
 
-            shift.ComputeShiftHours();
+            if (_policy.ShiftBasedAutomaticOvertimePolicy.Enabled)
+            {
+                var shiftBasedAutomaticOvertimePolicy = _policy.ShiftBasedAutomaticOvertimePolicy;
+                shift.ComputeShiftHours(shiftBasedAutomaticOvertimePolicy);
+            }
+            else
+            {
+                shift.ComputeShiftHours();
+            }
         }
     }
 }
