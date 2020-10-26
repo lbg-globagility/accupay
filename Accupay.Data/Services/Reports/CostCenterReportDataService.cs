@@ -130,7 +130,7 @@ namespace AccuPay.Data.Services
 
             var settings = _listOfValueService.Create();
 
-            var calendarCollections = GetCalendarCollections(organizationids, reportPeriod, settings);
+            var calendarCollection = _calendarService.GetCalendarCollection(reportPeriod);
 
             var dailyAllowances = GetDailyAllowances(organizationids, reportPeriod, employeeIds);
 
@@ -148,7 +148,7 @@ namespace AccuPay.Data.Services
                 employeeMonthlyDeductions,
                 hmoLoans,
                 dailyAllowances,
-                calendarCollections,
+                calendarCollection,
                 settings,
                 allPayPeriods,
                 allTimeEntries: allTimeEntries,
@@ -209,32 +209,6 @@ namespace AccuPay.Data.Services
                 new TimePeriod(payPeriods[0].PayFromDate, payPeriods[0].PayToDate),
                 new TimePeriod(payPeriods[1].PayFromDate, payPeriods[1].PayToDate)
             };
-        }
-
-        private List<CalendarCollection> GetCalendarCollections(
-            int[] organizationids,
-            TimePeriod timePeriod,
-            ListOfValueCollection settings)
-        {
-            var calendarCollections = new List<CalendarCollection>();
-            foreach (var organizationId in organizationids)
-            {
-                // maybe in the future pay rate calculation basis is configurable per organization
-                var calculationBasis = settings
-                    .GetEnum("Pay rate.CalculationBasis", Enums.PayRateCalculationBasis.Organization);
-
-                var calendarCollection = _calendarService.GetCalendarCollection(
-                    timePeriod,
-                    calculationBasis,
-                    organizationId);
-
-                if (calendarCollection != null)
-                {
-                    calendarCollections.Add(calendarCollection);
-                }
-            }
-
-            return calendarCollections;
         }
 
         private List<Employee> GetEmployeeFromSelectedBranch(
@@ -395,7 +369,7 @@ namespace AccuPay.Data.Services
             List<MonthlyDeduction> monthlyDeductions,
             List<LoanTransaction> hmoLoans,
             List<Allowance> dailyAllowances,
-            List<CalendarCollection> calendarCollections,
+            CalendarCollection calendarCollection,
             ListOfValueCollection settings,
             List<PayPeriod> allPayPeriods,
             List<TimeEntry> allTimeEntries,
@@ -425,7 +399,7 @@ namespace AccuPay.Data.Services
                     monthlyDeductions,
                     payPeriodHmoLoans,
                     dailyAllowances,
-                    calendarCollections,
+                    calendarCollection,
                     settings,
                     allPayPeriods,
                     allTimeEntries: allTimeEntries,
@@ -452,7 +426,7 @@ namespace AccuPay.Data.Services
             List<MonthlyDeduction> monthlyDeductions,
             List<LoanTransaction> hmoLoans,
             List<Allowance> dailyAllowances,
-            List<CalendarCollection> calendarCollections,
+            CalendarCollection calendarCollection,
             ListOfValueCollection settings,
             List<PayPeriod> payPeriods,
             List<TimeEntry> allTimeEntries,
@@ -512,9 +486,6 @@ namespace AccuPay.Data.Services
                     .FirstOrDefault();
 
                 var organizationId = employee.OrganizationID.Value;
-                var calendarCollection = calendarCollections
-                    .Where(x => x.OrganizationId == organizationId)
-                    .FirstOrDefault();
 
                 var currentPayPeriod = payPeriods
                     .Where(x => x.OrganizationID == organizationId)

@@ -501,23 +501,7 @@ Public Class MDIPrimaryForm
 
         If previousForm IsNot Nothing Then
 
-            If groupindex = 0 Then 'General
-
-                If previousForm.Name = "UsersFrom" Then
-
-                ElseIf previousForm.Name = "OrganizatinoForm" Then
-
-                ElseIf previousForm.Name = "PhilHealht" Then
-
-                ElseIf previousForm.Name = "SSSCntrib" Then
-
-                ElseIf previousForm.Name = "Payrate" Then
-
-                ElseIf previousForm.Name = "Revised_Withholding_Tax_Tables" Then
-
-                End If
-
-            ElseIf groupindex = 1 Then 'HRIS
+            If groupindex = 1 Then 'HRIS
 
                 If previousForm.Name = "Employee" Then
 
@@ -535,22 +519,6 @@ Public Class MDIPrimaryForm
                         End Select
 
                     End With
-
-                ElseIf previousForm.Name = "Positn" Then
-
-                ElseIf previousForm.Name = "EmpPosition" Then
-
-                ElseIf previousForm.Name = "DivisionForm" Then
-
-                End If
-
-            ElseIf groupindex = 2 Then 'Time Attendance
-
-                If previousForm.Name = "Payrate" Then
-
-                ElseIf previousForm.Name = "EmpTimeDetail" Then
-
-                ElseIf previousForm.Name = "EmpTimeEntry" Then
 
                 End If
 

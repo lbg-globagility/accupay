@@ -216,13 +216,8 @@ namespace AccuPay.Data.Services
                 _breakTimeBrackets = new List<BreakTimeBracket>();
             }
 
-            var payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
-
             CalendarCollection calendarCollection = _calendarService
-                .GetCalendarCollection(
-                    new TimePeriod(previousCutoff, _cutoffEnd),
-                    payrateCalculationBasis,
-                    _organizationId);
+                .GetCalendarCollection(new TimePeriod(previousCutoff, _cutoffEnd));
 
             var progress = new ObservableCollection<int>();
 

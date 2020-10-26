@@ -21,23 +21,17 @@ Public Class AddBranchForm
     Private _currentBranch As Branch
 
     Private _currentFormType As FormMode
-
-    Private _payrateCalculationBasis As PayRateCalculationBasis
     Public Property HasChanges As Boolean
 
     Public Property LastAddedBranchId As Integer?
 
-    Private _policyHelper As PolicyHelper
+    Private ReadOnly _calendarRepository As CalendarRepository
 
-    Private _calendarRepository As CalendarRepository
-
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
     Sub New()
 
         InitializeComponent()
-
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
         _calendarRepository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
 
@@ -74,25 +68,11 @@ Public Class AddBranchForm
 
         End If
 
-        ShowCalendar()
-
         Await RefreshForm()
 
         PopulateForm()
 
         AddHandler BranchGrid.SelectionChanged, AddressOf BranchGrid_SelectionChanged
-
-    End Sub
-
-    Private Sub ShowCalendar()
-
-        _payrateCalculationBasis = _policyHelper.PayRateCalculationBasis
-
-        If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
-
-            CalendarPanel.Visible = False
-
-        End If
 
     End Sub
 
@@ -149,8 +129,7 @@ Public Class AddBranchForm
 
         End If
 
-        If _payrateCalculationBasis = PayRateCalculationBasis.Branch AndAlso
-                CalendarComboBox.SelectedItem Is Nothing Then
+        If CalendarComboBox.SelectedItem Is Nothing Then
 
             Return CalendarComboBox
 

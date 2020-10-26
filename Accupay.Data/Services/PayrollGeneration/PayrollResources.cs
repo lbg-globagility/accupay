@@ -247,14 +247,9 @@ namespace AccuPay.Data.Services
             {
                 await Task.Run(() =>
                 {
-                    var calculationBasis = ListOfValueCollection.
-                        GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
-
                     var payPeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo);
 
-                    CalendarCollection = _calendarService.GetCalendarCollection(payPeriod,
-                                                                                calculationBasis,
-                                                                                _organizationId);
+                    CalendarCollection = _calendarService.GetCalendarCollection(payPeriod);
                 });
             }
             catch (Exception ex)

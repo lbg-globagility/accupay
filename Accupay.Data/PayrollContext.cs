@@ -63,7 +63,6 @@ namespace AccuPay.Data
         internal virtual DbSet<Overtime> Overtimes { get; set; }
         internal virtual DbSet<PayFrequency> PayFrequencies { get; set; }
         internal virtual DbSet<PayPeriod> PayPeriods { get; set; }
-        internal virtual DbSet<PayRate> PayRates { get; set; }
         internal virtual DbSet<Paystub> Paystubs { get; set; }
         internal virtual DbSet<PaystubActual> PaystubActuals { get; set; }
         internal virtual DbSet<PaystubEmail> PaystubEmails { get; set; }

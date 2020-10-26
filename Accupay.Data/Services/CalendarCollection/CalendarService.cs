@@ -17,69 +17,34 @@ namespace AccuPay.Data.Services
             _branchRepository = branchRepository;
         }
 
-        public CalendarCollection GetCalendarCollection(
-            TimePeriod timePeriod,
-            PayRateCalculationBasis calculationBasis,
-            int organizationId)
+        public CalendarCollection GetCalendarCollection(TimePeriod timePeriod)
         {
-            var payrates = _context.PayRates.
-                Where(p => p.OrganizationID == organizationId).
-                Where(p => timePeriod.Start <= p.Date).
-                Where(p => p.Date <= timePeriod.End).
-                ToList();
-
             var defaultCalendar = _context.Calendars.FirstOrDefault(t => t.IsDefault);
 
-            if (calculationBasis == PayRateCalculationBasis.Branch)
+            // TODO: create if not existing the DayType with name "Regular Day"
+            var dayType = _context.DayTypes.FirstOrDefault(t => t.Name == "Regular Day");
+
+            var defaultRates = new DefaultRates()
             {
-                var dayType = _context.DayTypes.FirstOrDefault(t => t.Name == "Regular Day");
+                RegularRate = dayType.RegularRate,
+                OvertimeRate = dayType.OvertimeRate,
+                NightDiffRate = dayType.NightDiffRate,
+                NightDiffOTRate = dayType.NightDiffOTRate,
+                RestDayRate = dayType.RestDayRate,
+                RestDayOTRate = dayType.RestDayOTRate,
+                RestDayNDRate = dayType.RestDayNDRate,
+                RestDayNDOTRate = dayType.RestDayNDOTRate,
+            };
 
-                var defaultRates = new DefaultRates()
-                {
-                    RegularRate = dayType.RegularRate,
-                    OvertimeRate = dayType.OvertimeRate,
-                    NightDiffRate = dayType.NightDiffRate,
-                    NightDiffOTRate = dayType.NightDiffOTRate,
-                    RestDayRate = dayType.RestDayRate,
-                    RestDayOTRate = dayType.RestDayOTRate,
-                    RestDayNDRate = dayType.RestDayNDRate,
-                    RestDayNDOTRate = dayType.RestDayNDOTRate,
-                };
+            var branches = _branchRepository.GetAll();
 
-                var branches = _branchRepository.GetAll();
+            var calendarDays = _context.CalendarDays.
+                Include(t => t.DayType).
+                Where(t => timePeriod.Start <= t.Date).
+                Where(t => t.Date <= timePeriod.End).
+                ToList();
 
-                var calendarDays = _context.CalendarDays.
-                    Include(t => t.DayType).
-                    Where(t => timePeriod.Start <= t.Date).
-                    Where(t => t.Date <= timePeriod.End).
-                    ToList();
-
-                return new CalendarCollection(payrates, branches, calendarDays, organizationId, defaultRates, defaultCalendar);
-            }
-            else
-            {
-                var regularDayListofValue = _context.ListOfValues
-                    .FirstOrDefault(t => t.Type == "Pay rate" && t.LIC == "Regular Day");
-
-                var values = regularDayListofValue.DisplayValue
-                    .Split(',')
-                    .Select(t => decimal.Parse(t) / 100)
-                    .ToArray();
-
-                var defaultRates = new DefaultRates()
-                {
-                    RegularRate = values[0],
-                    OvertimeRate = values[1],
-                    NightDiffRate = values[2],
-                    NightDiffOTRate = values[3],
-                    RestDayRate = values[4],
-                    RestDayOTRate = values[5],
-                    RestDayNDRate = values[6],
-                    RestDayNDOTRate = values[7],
-                };
-
-                return new CalendarCollection(payrates, organizationId, defaultRates);
-            }
+            return new CalendarCollection(branches, calendarDays, defaultRates, defaultCalendar);
         }
     }
 }

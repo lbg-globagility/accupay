@@ -1,14 +1,14 @@
-DROP TABLE IF EXISTS employeefirstweekshift;
-DROP TABLE IF EXISTS employeeshiftbyday_secondary;
-DROP TABLE IF EXISTS employeeshiftbyday;
-DROP TABLE IF EXISTS employeeshift;
-DROP TABLE IF EXISTS shift;
-
 ALTER TABLE `employeetimeentry`
 	DROP COLUMN IF EXISTS `EmployeeShiftID`,
 	DROP FOREIGN KEY IF EXISTS `FK_employeetimeentry_employeeshift_EmployeeShiftID`;
 
 ALTER TABLE `employeetimeentryactual`
 	DROP COLUMN IF EXISTS `EmployeeShiftID`;
+
+DROP TABLE IF EXISTS employeefirstweekshift;
+DROP TABLE IF EXISTS employeeshiftbyday_secondary;
+DROP TABLE IF EXISTS employeeshiftbyday;
+DROP TABLE IF EXISTS employeeshift;
+DROP TABLE IF EXISTS shift;
 
 

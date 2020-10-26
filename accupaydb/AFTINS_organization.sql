@@ -23,48 +23,6 @@ INSERT INTO `view`
     GROUP BY v.ViewName
     ORDER BY v.ViewName;
 
-INSERT INTO payrate
-(
-    OrganizationID
-    ,Created
-    ,CreatedBy
-    ,DayBefore
-    ,`Date`
-    ,PayType
-    ,Description
-    ,`PayRate`
-    ,OvertimeRate
-    ,NightDifferentialRate
-    ,NightDifferentialOTRate
-    ,RestDayRate
-    ,RestDayOvertimeRate
-    ,RestDayNDRate
-    ,RestDayNDOTRate
-) SELECT
-    NEW.RowID
-    ,CURRENT_TIMESTAMP()
-    ,NEW.CreatedBy
-    ,DayBefore
-    ,`Date`
-    ,PayType
-    ,Description
-    ,`PayRate`
-    ,OvertimeRate
-    ,NightDifferentialRate
-    ,NightDifferentialOTRate
-    ,RestDayRate
-    ,RestDayOvertimeRate
-    ,RestDayNDRate
-    ,RestDayNDOTRate
-FROM payrate
-GROUP BY `Date`
-ORDER BY `Date`
-ON
-DUPLICATE
-KEY
-UPDATE
-    LastUpd=CURRENT_TIMESTAMP();
-
 INSERT INTO category
 (
     CategoryID

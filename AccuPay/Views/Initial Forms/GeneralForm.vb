@@ -45,32 +45,13 @@ Public Class GeneralForm
             Return
         End If
 
-        CheckPolicyPermissions()
+        ShowAgency()
 
         If _policyHelper.UseUserLevel Then
             CheckUserLevelPermissions(user)
         Else
 
             Await CheckRolePermissions()
-        End If
-
-    End Sub
-
-    Private Sub CheckPolicyPermissions()
-
-        ShowAgency()
-
-        If _policyHelper.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
-
-            BranchToolStripMenuItem.Visible = True
-            CalendarsToolStripMenuItem.Visible = True
-            PayRateToolStripMenuItem.Visible = False
-        Else
-
-            BranchToolStripMenuItem.Visible = False
-            CalendarsToolStripMenuItem.Visible = False
-            PayRateToolStripMenuItem.Visible = True
-
         End If
 
     End Sub
@@ -117,7 +98,6 @@ Public Class GeneralForm
 
         If calendarPermission Is Nothing OrElse calendarPermission.Read = False Then
             CalendarsToolStripMenuItem.Visible = False
-            PayRateToolStripMenuItem.Visible = False
         End If
 
         If agencyPermission Is Nothing OrElse agencyPermission.Read = False Then
@@ -207,13 +187,6 @@ Public Class GeneralForm
 
         Await ChangeForm(SSSCntrib)
         previousForm = SSSCntrib
-
-    End Sub
-
-    Private Async Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
-
-        Await ChangeForm(PayRateForm, PermissionConstant.CALENDAR)
-        previousForm = PayRateForm
 
     End Sub
 
