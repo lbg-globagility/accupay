@@ -1025,7 +1025,7 @@ Public Class ShiftScheduleForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Shift",
             Async Function()
-                If _isShiftBasedAutoOvertimeEnabled Then SaveShiftBasedOvertimes(toSaveList)
+                If _isShiftBasedAutoOvertimeEnabled Then SaveOvertimeOfShiftBasedAutoOvertimePolicy(toSaveList)
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
                 Await dataService.ChangeManyAsync(
@@ -1057,20 +1057,25 @@ Public Class ShiftScheduleForm
             End Function)
     End Sub
 
-    Private Async Sub SaveShiftBasedOvertimes(shiftSchedSaveList As IEnumerable(Of ShiftScheduleModel))
-        If Not shiftSchedSaveList.Any() Then Return
-
-        Dim overtimeRepo = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+    Private Sub SaveOvertimeOfShiftBasedAutoOvertimePolicy(toSaveList As IEnumerable(Of ShiftScheduleModel))
+        Dim employees = EmployeeTreeView1.GetTickedEmployees
+        Dim employeeIds = employees.Select(Function(ee) ee.RowID.Value).ToList()
 
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
+        Dim modifiedShifts = toSaveList.
+            Where(Function(sh) sh.IsNew Or sh.IsUpdate Or sh.ConsideredDelete)
 
-        If start > finish Then Return
+        SaveShiftBasedOvertimes(modifiedShifts, employeeIds, New TimePeriod(start, finish))
+    End Sub
 
-        Dim employees = EmployeeTreeView1.GetTickedEmployees
-        Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
+    Public Async Sub SaveShiftBasedOvertimes(shiftSchedSaveList As IEnumerable(Of IShift), employeeIds As List(Of Integer), timePeriod As TimePeriod)
+        If Not shiftSchedSaveList.Any() Or
+            timePeriod.Start > timePeriod.End Then Return
 
-        Dim overtimes = overtimeRepo.GetByEmployeeIDsAndDatePeriod(z_OrganizationID, employeeIds, New TimePeriod(start, finish))
+        Dim overtimeRepo = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+
+        Dim overtimes = overtimeRepo.GetByEmployeeIDsAndDatePeriod(z_OrganizationID, employeeIds, timePeriod)
 
         Dim saveOvertimes = New List(Of Overtime)
         Dim deleteOvertimes = New List(Of Overtime)
@@ -1079,60 +1084,54 @@ Public Class ShiftScheduleForm
                                  Return _shiftBasedAutoOvertimePolicy.GetDefaultShiftPeriodEndTime(starting, breakLength)
                              End Function
 
-        Dim createNewOvertime = Function(shiftModel As ShiftScheduleModel)
+        Dim createNewOvertime = Function(shiftModel As IShift)
                                     Return New Overtime() With {
                                     .Created = Date.Now,
                                     .CreatedBy = z_User,
                                     .EmployeeID = shiftModel.EmployeeId,
                                     .OrganizationID = z_OrganizationID,
-                                    .OTStartDate = shiftModel.DateValue,
-                                    .OTEndDate = shiftModel.DateValue,
-                                    .OTStartTimeFull = getOTStartTime(shiftModel.TimeFromDateTime, shiftModel.BreakLength),
-                                    .OTEndTimeFull = shiftModel.TimeToDateTime,
+                                    .OTStartDate = shiftModel.Date,
+                                    .OTEndDate = shiftModel.Date,
                                     .Status = Overtime.StatusApproved}
                                 End Function
 
         Dim modifiedShifts = shiftSchedSaveList.
-            Where(Function(s) s.IsNew Or s.IsUpdate Or s.ConsideredDelete).
             ToList()
         modifiedShifts.ForEach(Sub(shiftModel)
                                    Dim employeeID = shiftModel.EmployeeId
-                                   Dim dateValue = shiftModel.DateValue
+                                   Dim dateValue = shiftModel.Date
 
                                    Dim getOvertimes = overtimes.
                                    Where(Function(ot) CBool(ot.EmployeeID = employeeID)).
                                    Where(Function(ot) ot.OTStartDate = dateValue).
                                    ToList()
 
-                                   If shiftModel.IsNew Or shiftModel.IsUpdate Then
-                                       Dim overtime = getOvertimes.FirstOrDefault()
-                                       If overtime IsNot Nothing Then
-                                           overtime.OTStartTimeFull = getOTStartTime(shiftModel.TimeFromDateTime, shiftModel.BreakLength)
-                                           overtime.OTEndTimeFull = shiftModel.TimeToDateTime
-
-                                           If Not overtime.OTStartTime = overtime.OTEndTime Then
-                                               saveOvertimes.Add(overtime)
-                                           Else
-                                               deleteOvertimes.Add(overtime)
-                                           End If
-
-                                           Dim discardOthers = getOvertimes.Where(Function(ot) CBool(overtime.RowID <> ot.RowID)).ToList()
-                                           discardOthers.ForEach(Sub(ot) deleteOvertimes.Add(ot))
-
-                                       ElseIf overtime Is Nothing Then
-                                           Dim newOvertime = createNewOvertime(shiftModel)
-                                           If Not newOvertime.OTStartTime = newOvertime.OTEndTime Then saveOvertimes.Add(newOvertime)
-
-                                       End If
-
-                                   ElseIf shiftModel.ConsideredDelete Then
-                                       Dim discardOvertimes = overtimes.
-                                       Where(Function(ot) CBool(ot.EmployeeID = employeeID)).
-                                       Where(Function(ot) ot.OTStartDate = dateValue).
-                                       ToList()
-
-                                       discardOvertimes.ForEach(Sub(ot) deleteOvertimes.Add(ot))
+                                   Dim overtime = getOvertimes.FirstOrDefault()
+                                   If overtime Is Nothing Then
+                                       overtime = createNewOvertime(shiftModel)
                                    End If
+
+                                   Dim hasShiftPeriod = shiftModel.StartTime.HasValue And shiftModel.EndTime.HasValue
+                                   If hasShiftPeriod Then
+                                       Dim shiftTimePeriod = TimePeriod.FromTime(shiftModel.StartTime.Value.TimeOfDay, shiftModel.EndTime.Value.TimeOfDay, shiftModel.Date)
+                                       Dim validOTStartTime = getOTStartTime(shiftTimePeriod.Start, shiftModel.BreakLength)
+
+                                       overtime.OTStartTimeFull = validOTStartTime
+                                       overtime.OTEndTimeFull = shiftTimePeriod.End
+                                   End If
+
+                                   Dim overtimeId = 0
+
+                                   If Not overtime.OTStartTime = overtime.OTEndTime And hasShiftPeriod Then
+                                       If overtime.RowID.HasValue Then overtimeId = overtime.RowID.Value
+
+                                       overtime.LastUpdBy = z_User
+
+                                       saveOvertimes.Add(overtime)
+                                   End If
+
+                                   Dim discardOthers = getOvertimes.Where(Function(ot) CBool(overtimeId <> ot.RowID)).ToList()
+                                   discardOthers.ForEach(Sub(ot) deleteOvertimes.Add(ot))
                                End Sub)
 
         Dim overtimeService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
