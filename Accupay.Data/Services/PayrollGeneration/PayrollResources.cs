@@ -43,8 +43,6 @@ namespace AccuPay.Data.Services
 
         public IReadOnlyCollection<Bonus> Bonuses { get; private set; }
 
-        public IReadOnlyCollection<DivisionMinimumWage> DivisionMinimumWages { get; private set; }
-
         public IReadOnlyCollection<Employee> Employees { get; private set; }
 
         public IReadOnlyCollection<Leave> Leaves { get; private set; }
@@ -72,8 +70,6 @@ namespace AccuPay.Data.Services
         private readonly BonusRepository _bonusRepository;
 
         private readonly CalendarService _calendarService;
-
-        private readonly DivisionMinimumWageRepository _divisionMinimumWageRepository;
 
         private readonly EmployeeRepository _employeeRepository;
 
@@ -108,7 +104,6 @@ namespace AccuPay.Data.Services
                                 SystemOwnerService systemOwnerService,
                                 ActualTimeEntryRepository actualTimeEntryRepository,
                                 AllowanceRepository allowanceRepository,
-                                DivisionMinimumWageRepository divisionMinimumWageRepository,
                                 EmployeeRepository employeeRepository,
                                 LeaveRepository leaveRepository,
                                 LoanRepository loanScheduleRepository,
@@ -128,7 +123,6 @@ namespace AccuPay.Data.Services
             _actualTimeEntryRepository = actualTimeEntryRepository;
             _allowanceRepository = allowanceRepository;
             _bonusRepository = bonusRepository;
-            _divisionMinimumWageRepository = divisionMinimumWageRepository;
             _employeeRepository = employeeRepository;
             _leaveRepository = leaveRepository;
             _loanScheduleRepository = loanScheduleRepository;
@@ -162,7 +156,6 @@ namespace AccuPay.Data.Services
             await LoadAllowances();
             await LoadBonuses();
             await LoadBpiInsuranceProduct();
-            await LoadDivisionMinimumWages();
             await LoadEmployees();
             await LoadLeaves();
             await LoadListOfValueCollection();
@@ -248,20 +241,6 @@ namespace AccuPay.Data.Services
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("EmployeeDutySchedules", ex);
-            }
-        }
-
-        private async Task LoadDivisionMinimumWages()
-        {
-            try
-            {
-                DivisionMinimumWages = (await _divisionMinimumWageRepository.
-                                            GetByDateAsync(_organizationId, _payDateTo)).
-                                            ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("DivisionMinimumWage", ex);
             }
         }
 

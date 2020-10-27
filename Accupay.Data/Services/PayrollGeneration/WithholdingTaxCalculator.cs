@@ -11,18 +11,15 @@ namespace AccuPay.Data.Services
     {
         private readonly IReadOnlyCollection<WithholdingTaxBracket> _withholdingTaxBrackets;
 
-        private readonly IReadOnlyCollection<DivisionMinimumWage> _divisionMinimumWages;
-
         private readonly ListOfValueCollection _settings;
 
-        public WithholdingTaxCalculator(ListOfValueCollection settings, IReadOnlyCollection<WithholdingTaxBracket> withholdingTaxBrackets, IReadOnlyCollection<DivisionMinimumWage> divisionMinimumWages)
+        public WithholdingTaxCalculator(ListOfValueCollection settings, IReadOnlyCollection<WithholdingTaxBracket> withholdingTaxBrackets)
         {
             _withholdingTaxBrackets = withholdingTaxBrackets;
-            _divisionMinimumWages = divisionMinimumWages;
             _settings = settings;
         }
 
-        public void Calculate(Paystub paystub, Paystub previousPaystub, Employee employee, PayPeriod payperiod, Salary salary)
+        public void Calculate(Paystub paystub, Paystub previousPaystub, Employee employee, PayPeriod payperiod)
         {
             // Reset the tax value before starting
             paystub.DeferredTaxableIncome = 0;
@@ -70,18 +67,6 @@ namespace AccuPay.Data.Services
                 // Nothing to do here for now
             }
 
-            var dailyRate = employee.IsDaily ? salary.BasicSalary :
-                                        salary.BasicSalary / (employee.WorkDaysPerYear / 12);
-
-            // Round the daily rate to two decimal places since amounts in the 3rd decimal place
-            // isn't significant enough to warrant the employee to be taxable.
-            dailyRate = AccuMath.CommercialRound(dailyRate, 2);
-
-            // If the employee is earning below the minimum wage, then remove the taxable income.
-            var minimumWage = GetCurrentMinimumWage(employee);
-            if (dailyRate <= minimumWage)
-                paystub.TaxableIncome = 0;
-
             // If the employee has no taxable income, then there's no need to compute for tax withheld.
             if (paystub.TaxableIncome <= 0)
                 return;
@@ -100,15 +85,6 @@ namespace AccuPay.Data.Services
             var taxBracket = GetTaxBracket(payFrequencyId, paystub, payperiod);
 
             paystub.WithholdingTax = GetTaxWithheld(taxBracket, paystub.TaxableIncome);
-        }
-
-        private decimal GetCurrentMinimumWage(Employee employee)
-        {
-            var divisionMinimumWage = _divisionMinimumWages?.
-                                        FirstOrDefault(t => t.DivisionID == employee.Position?.DivisionID);
-            var minimumWage = divisionMinimumWage?.Amount ?? 0;
-
-            return minimumWage;
         }
 
         private decimal GetTaxWithheld(WithholdingTaxBracket bracket, decimal taxableIncome)

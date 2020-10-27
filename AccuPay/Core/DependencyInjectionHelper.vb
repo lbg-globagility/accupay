@@ -63,7 +63,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of CertificationRepository)
         services.AddTransient(Of DayTypeRepository)
         services.AddTransient(Of DisciplinaryActionRepository)
-        services.AddTransient(Of DivisionMinimumWageRepository)
         services.AddTransient(Of DivisionRepository)
         services.AddTransient(Of EducationalBackgroundRepository)
         services.AddTransient(Of EmployeeDutyScheduleRepository)

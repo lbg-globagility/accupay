@@ -38,7 +38,6 @@ namespace AccuPay.Web
             services.AddScoped<ClientRepository>();
             services.AddScoped<DayTypeRepository>();
             services.AddScoped<DisciplinaryActionRepository>();
-            services.AddScoped<DivisionMinimumWageRepository>();
             services.AddScoped<DivisionRepository>();
             services.AddScoped<EducationalBackgroundRepository>();
             services.AddScoped<EmployeeDutyScheduleRepository>();
