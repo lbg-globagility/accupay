@@ -68,7 +68,6 @@ Public Class ServiceProvider
         services.AddTransient(Of EmployeeDutyScheduleRepository)
         services.AddTransient(Of EmployeeQueryBuilder)
         services.AddTransient(Of EmployeeRepository)
-        services.AddTransient(Of FilingStatusTypeRepository)
         services.AddTransient(Of JobCategoryRepository)
         services.AddTransient(Of JobLevelRepository)
         services.AddTransient(Of LeaveRepository)
@@ -76,7 +75,6 @@ Public Class ServiceProvider
         services.AddTransient(Of ListOfValueRepository)
         services.AddTransient(Of LoanPaymentFromBonusRepository)
         services.AddTransient(Of LoanRepository)
-
         services.AddTransient(Of OfficialBusinessRepository)
         services.AddTransient(Of OrganizationRepository)
         services.AddTransient(Of OvertimeRepository)

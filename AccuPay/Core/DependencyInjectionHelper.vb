@@ -70,7 +70,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of EmploymentPolicyRepository)
         services.AddTransient(Of EmployeeQueryBuilder)
         services.AddTransient(Of EmployeeRepository)
-        services.AddTransient(Of FilingStatusTypeRepository)
         services.AddTransient(Of JobCategoryRepository)
         services.AddTransient(Of JobLevelRepository)
         services.AddTransient(Of LeaveRepository)

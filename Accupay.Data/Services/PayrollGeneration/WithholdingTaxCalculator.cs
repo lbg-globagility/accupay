@@ -9,17 +9,14 @@ namespace AccuPay.Data.Services
 {
     public class WithholdingTaxCalculator
     {
-        private readonly IReadOnlyCollection<FilingStatusType> _filingStatuses;
-
         private readonly IReadOnlyCollection<WithholdingTaxBracket> _withholdingTaxBrackets;
 
         private readonly IReadOnlyCollection<DivisionMinimumWage> _divisionMinimumWages;
 
         private readonly ListOfValueCollection _settings;
 
-        public WithholdingTaxCalculator(ListOfValueCollection settings, IReadOnlyCollection<FilingStatusType> filingStatuses, IReadOnlyCollection<WithholdingTaxBracket> withholdingTaxBrackets, IReadOnlyCollection<DivisionMinimumWage> divisionMinimumWages)
+        public WithholdingTaxCalculator(ListOfValueCollection settings, IReadOnlyCollection<WithholdingTaxBracket> withholdingTaxBrackets, IReadOnlyCollection<DivisionMinimumWage> divisionMinimumWages)
         {
-            _filingStatuses = filingStatuses;
             _withholdingTaxBrackets = withholdingTaxBrackets;
             _divisionMinimumWages = divisionMinimumWages;
             _settings = settings;
@@ -100,8 +97,7 @@ namespace AccuPay.Data.Services
                 payFrequencyId = PayFrequency.SemiMonthly;
             }
 
-            var filingStatusId = GetFilingStatusID(employee.MaritalStatus, employee.NoOfDependents);
-            var taxBracket = GetTaxBracket(payFrequencyId, filingStatusId, paystub, payperiod);
+            var taxBracket = GetTaxBracket(payFrequencyId, paystub, payperiod);
 
             paystub.WithholdingTax = GetTaxWithheld(taxBracket, paystub.TaxableIncome);
         }
@@ -126,22 +122,7 @@ namespace AccuPay.Data.Services
             return AccuMath.CommercialRound(taxWithheld);
         }
 
-        private int GetFilingStatusID(string maritalStatus, int? noOfDependents)
-        {
-            var filingStatus = _filingStatuses.
-                                Where(x => x.MaritalStatus == maritalStatus).
-                                Where(x => x.Dependents <= (noOfDependents ?? 0)).
-                                OrderByDescending(x => x.Dependents).
-                                FirstOrDefault();
-
-            var filingStatusID = 1;
-            if (filingStatus != null)
-                filingStatusID = filingStatus.RowID;
-
-            return filingStatusID;
-        }
-
-        private WithholdingTaxBracket GetTaxBracket(int? payFrequencyID, int? filingStatusID, Paystub _paystub, PayPeriod _payperiod)
+        private WithholdingTaxBracket GetTaxBracket(int? payFrequencyID, Paystub _paystub, PayPeriod _payperiod)
         {
             var taxEffectivityDate = new DateTime(_payperiod.Year, _payperiod.Month, 1);
 
@@ -153,18 +134,7 @@ namespace AccuPay.Data.Services
                                         Where(w => _paystub.TaxableIncome <= w.TaxableIncomeToAmount).
                                         ToList();
 
-            // If there are more than one tax brackets that matches the previous list, filter by
-            // the tax filing status.
-            if (possibleBrackets.Count > 1)
-            {
-                return possibleBrackets.
-                        Where(b => b.FilingStatusID == filingStatusID).
-                        FirstOrDefault();
-            }
-            else if (possibleBrackets.Count == 1)
-                return possibleBrackets.First();
-
-            return null;
+            return possibleBrackets.FirstOrDefault();
         }
 
         private bool IsWithholdingTaxPaidOnFirstHalf(string deductionSchedule, PayPeriod payperiod)

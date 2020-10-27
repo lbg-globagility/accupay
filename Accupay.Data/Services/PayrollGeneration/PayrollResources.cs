@@ -47,8 +47,6 @@ namespace AccuPay.Data.Services
 
         public IReadOnlyCollection<Employee> Employees { get; private set; }
 
-        public IReadOnlyCollection<FilingStatusType> FilingStatuses { get; private set; }
-
         public IReadOnlyCollection<Leave> Leaves { get; private set; }
 
         public IReadOnlyCollection<LoanSchedule> LoanSchedules { get; private set; }
@@ -78,8 +76,6 @@ namespace AccuPay.Data.Services
         private readonly DivisionMinimumWageRepository _divisionMinimumWageRepository;
 
         private readonly EmployeeRepository _employeeRepository;
-
-        private readonly FilingStatusTypeRepository _filingStatusTypeRepository;
 
         private readonly LeaveRepository _leaveRepository;
 
@@ -114,7 +110,6 @@ namespace AccuPay.Data.Services
                                 AllowanceRepository allowanceRepository,
                                 DivisionMinimumWageRepository divisionMinimumWageRepository,
                                 EmployeeRepository employeeRepository,
-                                FilingStatusTypeRepository filingStatusTypeRepository,
                                 LeaveRepository leaveRepository,
                                 LoanRepository loanScheduleRepository,
                                 PayPeriodRepository payPeriodRepository,
@@ -135,7 +130,6 @@ namespace AccuPay.Data.Services
             _bonusRepository = bonusRepository;
             _divisionMinimumWageRepository = divisionMinimumWageRepository;
             _employeeRepository = employeeRepository;
-            _filingStatusTypeRepository = filingStatusTypeRepository;
             _leaveRepository = leaveRepository;
             _loanScheduleRepository = loanScheduleRepository;
             _payPeriodRepository = payPeriodRepository;
@@ -170,7 +164,6 @@ namespace AccuPay.Data.Services
             await LoadBpiInsuranceProduct();
             await LoadDivisionMinimumWages();
             await LoadEmployees();
-            await LoadFilingStatuses();
             await LoadLeaves();
             await LoadListOfValueCollection();
             // LoadCalendarCollection() should be executed following list of values
@@ -283,18 +276,6 @@ namespace AccuPay.Data.Services
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("Employees", ex);
-            }
-        }
-
-        private async Task LoadFilingStatuses()
-        {
-            try
-            {
-                FilingStatuses = (await _filingStatusTypeRepository.GetAllAsync()).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("Filing Statuses", ex);
             }
         }
 

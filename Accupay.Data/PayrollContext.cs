@@ -48,7 +48,6 @@ namespace AccuPay.Data
         internal virtual DbSet<EmploymentPolicy> EmploymentPolicies { get; set; }
         internal virtual DbSet<EmploymentPolicyType> EmploymentPolicyTypes { get; set; }
         internal virtual DbSet<File> Files { get; set; }
-        internal virtual DbSet<FilingStatusType> FilingStatusTypes { get; set; }
         internal virtual DbSet<JobCategory> JobCategories { get; set; }
         internal virtual DbSet<JobLevel> JobLevels { get; set; }
         internal virtual DbSet<Leave> Leaves { get; set; }
