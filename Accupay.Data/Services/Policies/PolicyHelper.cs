@@ -11,12 +11,14 @@ namespace AccuPay.Data.Services
         public const string DefaultEndOfTheMonthDaysSpanPolicyLIC = "DefaultEndOfTheMonthDaysSpan";
 
         private readonly ListOfValueService _listOfValueService;
+        private readonly string CurrentSystemOwner;
         private TimeEntryPolicy _timeEntryPolicy;
         private ListOfValueCollection _settings;
 
-        public PolicyHelper(ListOfValueService listOfValueService)
+        public PolicyHelper(ListOfValueService listOfValueService, SystemOwnerService systemOwnerService)
         {
             _listOfValueService = listOfValueService;
+            CurrentSystemOwner = systemOwnerService.GetCurrentSystemOwner();
 
             _settings = _listOfValueService.Create();
 
@@ -55,6 +57,8 @@ namespace AccuPay.Data.Services
         public bool HasDifferentPayPeriodDates => _settings.GetBoolean("Payroll Policy.HasDifferentPayPeriodDates", false);
 
         public bool UseCostCenter => _settings.GetBoolean("Policy.UseCostCenter", false);
+
+        public bool UseAgency => CurrentSystemOwner == SystemOwnerService.Hyundai || CurrentSystemOwner == SystemOwnerService.Goldwings;
 
         #region Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previous month", second day "is not previous month"
 

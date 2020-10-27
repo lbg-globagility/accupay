@@ -29,7 +29,6 @@ namespace AccuPay.Data.Entities
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
-        public string Surname { get; set; }
 
         [Column("EmployeeID")]
         public string EmployeeNo { get; set; }
@@ -45,7 +44,6 @@ namespace AccuPay.Data.Entities
         public string MobilePhone { get; set; }
         public string HomeAddress { get; set; }
         public string Nickname { get; set; }
-        public string JobTitle { get; set; }
         public string Gender { get; set; }
         public string EmployeeType { get; set; }
         public string MaritalStatus { get; set; }
@@ -53,11 +51,12 @@ namespace AccuPay.Data.Entities
         public DateTime StartDate { get; set; }
         public DateTime? TerminationDate { get; set; }
         public int? NoOfDependents { get; set; }
-        public bool NewEmployeeFlag { get; set; }
+
+        //TODO: delete this
         public decimal LeaveBalance { get; set; }
+
+        //TODO: delete this
         public decimal SickLeaveBalance { get; set; }
-        public decimal MaternityLeaveBalance { get; set; }
-        public decimal OtherLeaveBalance { get; set; }
 
         [Column("LeaveAllowance")]
         public decimal VacationLeaveAllowance { get; set; }
@@ -65,10 +64,6 @@ namespace AccuPay.Data.Entities
         public decimal SickLeaveAllowance { get; set; }
         public decimal MaternityLeaveAllowance { get; set; }
         public decimal OtherLeaveAllowance { get; set; }
-        public decimal LeavePerPayPeriod { get; set; }
-        public decimal SickLeavePerPayPeriod { get; set; }
-        public decimal MaternityLeavePerPayPeriod { get; set; }
-        public decimal OtherLeavePerPayPeriod { get; set; }
         public bool AlphalistExempted { get; set; }
 
         [Obsolete("Moved to employment policy")]

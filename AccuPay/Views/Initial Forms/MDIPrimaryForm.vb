@@ -1088,10 +1088,9 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Async Sub EmailStatusTimer_Tick(sender As Object, e As EventArgs)
-
-        EmailServiceStatusToolStripLabel.Enabled = True
-
         Try
+            EmailServiceStatusToolStripLabel.Enabled = True
+
             Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
             Dim queueCount = onQueue.Count()
 
@@ -1103,7 +1102,8 @@ Public Class MDIPrimaryForm
 
             UpdateEmailStatusToolStripLabel(isOnline, queueCount)
         Catch ex As Exception
-
+            EmailServiceStatusToolStripLabel.Text = $"Cannot access Email Service status."
+            EmailServiceStatusToolStripLabel.ForeColor = Color.Black
         End Try
     End Sub
 

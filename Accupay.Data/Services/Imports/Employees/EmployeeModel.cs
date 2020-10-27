@@ -83,7 +83,6 @@ namespace AccuPay.Data.Services.Imports.Employees
             StartDate = employee.StartDate;
             TerminationDate = employee.TerminationDate;
             NoOfDependents = employee.NoOfDependents;
-            NewEmployeeFlag = employee.NewEmployeeFlag;
             AlphalistExempted = employee.AlphalistExempted;
             DayOfRest = employee.DayOfRest;
             AtmNo = employee.AtmNo;

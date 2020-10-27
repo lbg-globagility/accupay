@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -26,14 +26,21 @@ Public Class EmailDashboardForm
 
     Private Async Sub EmailDashboardForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        ShowLoadingBar()
-        SetDefaultTexts()
+        Try
+            ShowLoadingBar()
+            SetDefaultTexts()
 
-        Await Task.Delay(1000)
-        Await UpdateDashboardData()
-        ShowLoadingBar(False)
+            Await Task.Delay(1000)
+            Await UpdateDashboardData()
+            ShowLoadingBar(False)
 
-        RefreshTimer.Start()
+            RefreshTimer.Start()
+        Catch ex As Exception
+
+            MessageBoxHelper.Warning("Cannot access Email Service.")
+            Me.Close()
+
+        End Try
     End Sub
 
     Private Sub SetDefaultTexts()

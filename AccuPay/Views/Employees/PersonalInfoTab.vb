@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -24,7 +24,6 @@ Public Class PersonalInfoTab
         TxtLastName.Text = employee.LastName
         TxtFirstName.Text = employee.FirstName
         TxtMiddleName.Text = employee.MiddleName
-        TxtSurname.Text = employee.Surname
         TxtNickname.Text = employee.Nickname
         DtpBirthDate.Value = employee.BirthDate
         ' TODO: Marital Status

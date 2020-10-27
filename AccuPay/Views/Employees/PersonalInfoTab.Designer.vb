@@ -33,7 +33,6 @@ Partial Class PersonalInfoTab
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -57,7 +56,6 @@ Partial Class PersonalInfoTab
         Me.TxtLastName = New System.Windows.Forms.TextBox()
         Me.TxtFirstName = New System.Windows.Forms.TextBox()
         Me.TxtMiddleName = New System.Windows.Forms.TextBox()
-        Me.TxtSurname = New System.Windows.Forms.TextBox()
         Me.TxtNickname = New System.Windows.Forms.TextBox()
         Me.TxtNoOfDependents = New System.Windows.Forms.TextBox()
         Me.DtpEvaluationDate = New System.Windows.Forms.DateTimePicker()
@@ -202,15 +200,6 @@ Partial Class PersonalInfoTab
         Me.Label7.TabIndex = 1
         Me.Label7.Text = "Middle Name"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'Label8
-        '
-        Me.Label8.Location = New System.Drawing.Point(8, 120)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(128, 24)
-        Me.Label8.TabIndex = 1
-        Me.Label8.Text = "Surname"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label9
         '
@@ -418,15 +407,6 @@ Partial Class PersonalInfoTab
         Me.TxtMiddleName.Name = "TxtMiddleName"
         Me.TxtMiddleName.Size = New System.Drawing.Size(168, 22)
         Me.TxtMiddleName.TabIndex = 0
-        '
-        'TxtSurname
-        '
-        Me.TxtSurname.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TxtSurname.Location = New System.Drawing.Point(136, 120)
-        Me.TxtSurname.Name = "TxtSurname"
-        Me.TxtSurname.Size = New System.Drawing.Size(168, 22)
-        Me.TxtSurname.TabIndex = 0
         '
         'TxtNickname
         '
@@ -670,7 +650,6 @@ Partial Class PersonalInfoTab
         Me.GroupBox1.Controls.Add(Me.RbMale)
         Me.GroupBox1.Controls.Add(Me.TxtFirstName)
         Me.GroupBox1.Controls.Add(Me.TxtMiddleName)
-        Me.GroupBox1.Controls.Add(Me.TxtSurname)
         Me.GroupBox1.Controls.Add(Me.TxtNickname)
         Me.GroupBox1.Controls.Add(Me.TxtNoOfDependents)
         Me.GroupBox1.Controls.Add(Me.CboMaritalStatus)
@@ -678,7 +657,6 @@ Partial Class PersonalInfoTab
         Me.GroupBox1.Controls.Add(Me.Label5)
         Me.GroupBox1.Controls.Add(Me.Label6)
         Me.GroupBox1.Controls.Add(Me.Label7)
-        Me.GroupBox1.Controls.Add(Me.Label8)
         Me.GroupBox1.Controls.Add(Me.Label9)
         Me.GroupBox1.Controls.Add(Me.Label10)
         Me.GroupBox1.Controls.Add(Me.DtpBirthDate)
@@ -842,7 +820,6 @@ Partial Class PersonalInfoTab
     Friend WithEvents Label5 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents Label7 As Label
-    Friend WithEvents Label8 As Label
     Friend WithEvents Label9 As Label
     Friend WithEvents Label10 As Label
     Friend WithEvents Label11 As Label
@@ -866,7 +843,6 @@ Partial Class PersonalInfoTab
     Friend WithEvents TxtLastName As TextBox
     Friend WithEvents TxtFirstName As TextBox
     Friend WithEvents TxtMiddleName As TextBox
-    Friend WithEvents TxtSurname As TextBox
     Friend WithEvents TxtNickname As TextBox
     Friend WithEvents TxtNoOfDependents As TextBox
     Friend WithEvents DtpEvaluationDate As DateTimePicker

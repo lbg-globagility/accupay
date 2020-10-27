@@ -33,7 +33,8 @@ ON e.RowID = p.EmployeeID AND
     FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 WHERE t.OrganizationID = $organizationID AND
     p.PayFromDate BETWEEN $dateFrom AND $endDateFrom
-GROUP BY p.EmployeeID;
+GROUP BY p.EmployeeID
+ORDER BY e.LastName, e.FirstName;
 
 END//
 DELIMITER ;
