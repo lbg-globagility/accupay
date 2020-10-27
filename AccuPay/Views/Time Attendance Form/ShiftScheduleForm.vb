@@ -1,8 +1,9 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Policies
@@ -543,6 +544,7 @@ Public Class ShiftScheduleForm
 #Region "Classes"
 
     Private Class ShiftScheduleModel
+        Implements IShift
         Private Const ONE_DAY_HOURS As Integer = 24
         Private Const MINUTES_PER_HOUR As Integer = 60
         Private origStartTime, origEndTime, origBreakStart As String
@@ -611,10 +613,10 @@ Public Class ShiftScheduleForm
         End Sub
 
         Public Property RowID As Integer
-        Public Property EmployeeId As Integer?
+        Public Property EmployeeId As Integer? Implements IShift.EmployeeId
         Public Property EmployeeNo As String
         Public Property FullName As String
-        Public Property DateValue As Date
+        Public Property DateValue As Date Implements IShift.Date
 
         Public Property TimeFrom As String
             Get
@@ -643,9 +645,9 @@ Public Class ShiftScheduleForm
             End Set
         End Property
 
-        Public Property BreakLength As Decimal
+        Public Property BreakLength As Decimal Implements IShift.BreakLength
 
-        Public Property IsRestDay As Boolean
+        Public Property IsRestDay As Boolean Implements IShift.IsRestDay
 
         Public ReadOnly Property DayName As String
             Get
@@ -765,14 +767,14 @@ Public Class ShiftScheduleForm
             End Get
         End Property
 
-        Public ReadOnly Property TimeFromDateTime As DateTime?
+        Public ReadOnly Property TimeFromDateTime As DateTime? Implements IShift.StartTime
             Get
                 Dim ts = Calendar.ToTimespan(_timeFrom)
                 Return TimeUtility.ToDateTime(ts)
             End Get
         End Property
 
-        Public ReadOnly Property TimeToDateTime As DateTime?
+        Public ReadOnly Property TimeToDateTime As DateTime? Implements IShift.EndTime
             Get
                 Dim startTime = Calendar.ToTimespan(_timeFrom)
                 Dim endTime = Calendar.ToTimespan(_timeTo)
@@ -783,6 +785,13 @@ Public Class ShiftScheduleForm
                 End If
 
                 Return TimeUtility.ToDateTime(endTime)
+            End Get
+        End Property
+
+        Public ReadOnly Property BreakTimeDateTime As DateTime? Implements IShift.BreakTime
+            Get
+                Dim breakTime = Calendar.ToTimespan(_breakFrom)
+                Return TimeUtility.ToDateTime(breakTime)
             End Get
         End Property
 
