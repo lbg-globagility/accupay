@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AccuPay.Data.Interfaces;
+using AccuPay.Data.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -46,6 +48,19 @@ namespace AccuPay.Data.Services.Policies
 
                 return true;
             }
+
+            return false;
+        }
+
+        public bool IsValidDefaultShiftPeriod(IShift shift)
+        {
+            if (shift.StartTime.HasValue && shift.EndTime.HasValue)
+            {
+                var shiftTimePeriod = TimePeriod.FromTime(shift.StartTime.Value.TimeOfDay, shift.EndTime.Value.TimeOfDay, shift.Date);
+
+                return IsValidDefaultShiftPeriod(shiftTimePeriod.Start, shiftTimePeriod.End, shift.BreakLength);
+            }
+
             return false;
         }
 
