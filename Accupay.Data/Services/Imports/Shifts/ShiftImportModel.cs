@@ -83,7 +83,7 @@ namespace AccuPay.Data.Services.Imports
             }
         }
 
-        internal void SetShiftBasedAutoOvertimePolict(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
+        internal void SetShiftBasedAutoOvertimePolicy(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
         {
             _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
             _isShiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;

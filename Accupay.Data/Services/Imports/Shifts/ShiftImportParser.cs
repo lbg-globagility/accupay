@@ -106,7 +106,7 @@ namespace AccuPay.Data.Services.Imports
                 });
             }
 
-            if (_isShiftBasedAutoOvertimePolicyEnabled) list.ForEach(shift => shift.SetShiftBasedAutoOvertimePolict(_shiftBasedAutoOvertimePolicy));
+            if (_isShiftBasedAutoOvertimePolicyEnabled) list.ForEach(shift => shift.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy));
 
             return list;
         }
