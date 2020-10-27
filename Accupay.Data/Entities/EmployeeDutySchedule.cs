@@ -77,7 +77,7 @@ namespace AccuPay.Data.Entities
         /// </summary>
         ///
 
-        public void ComputeShiftHours(ShiftBasedAutomaticOvertimePolicy shiftBasedAutomaticOvertimePolicy = null)
+        public void ComputeShiftHours()
         {
             if (StartTime.HasValue && EndTime.HasValue)
             {
@@ -92,14 +92,23 @@ namespace AccuPay.Data.Entities
                 ShiftHours = 0;
             }
 
-            ComputeWorkHours(shiftBasedAutomaticOvertimePolicy);
+            ComputeWorkHours();
         }
 
-        private void ComputeWorkHours(ShiftBasedAutomaticOvertimePolicy shiftBasedAutomaticOvertimePolicy = null)
+        private void ComputeWorkHours()
         {
             WorkHours = ShiftHours > BreakLength ? ShiftHours - BreakLength : 0;
+        }
 
-            if (shiftBasedAutomaticOvertimePolicy != null) if (shiftBasedAutomaticOvertimePolicy.Enabled) WorkHours = shiftBasedAutomaticOvertimePolicy.DefaultWorkHours;
+        internal void SetWorkHours(ShiftBasedAutomaticOvertimePolicy shiftBasedAutomaticOvertimePolicy)
+        {
+            if (shiftBasedAutomaticOvertimePolicy != null)
+            {
+                if (shiftBasedAutomaticOvertimePolicy.Enabled)
+                {
+                    WorkHours = shiftBasedAutomaticOvertimePolicy.DefaultWorkHours;
+                }
+            }
         }
     }
 }
