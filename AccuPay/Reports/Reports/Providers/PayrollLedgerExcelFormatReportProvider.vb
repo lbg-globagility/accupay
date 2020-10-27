@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.IO
@@ -132,15 +132,15 @@ Public Class PayrollLedgerExcelFormatReportProvider
                               DBNull.Value,
                               True}
 
-        Dim sql_print_employee_profiles As New SQL(
+        Dim sql_paystubs As New SQL(
             "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
             parameters)
 
         Try
-            Dim ds = sql_print_employee_profiles.GetFoundRows
+            Dim ds = sql_paystubs.GetFoundRows
 
-            If sql_print_employee_profiles.HasError Then
-                Throw sql_print_employee_profiles.ErrorException
+            If sql_paystubs.HasError Then
+                Throw sql_paystubs.ErrorException
             End If
 
             Static report_name As String = "PayrollLedger"
