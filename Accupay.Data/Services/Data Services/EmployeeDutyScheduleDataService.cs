@@ -125,7 +125,7 @@ namespace AccuPay.Data.Services
             shift.ComputeShiftHours();
 
             if (_policy.ShiftBasedAutomaticOvertimePolicy.Enabled)
-                shift.SetWorkHours(_policy.ShiftBasedAutomaticOvertimePolicy);
+                shift.RecomputeShiftHoursAndWorkHoursBaseOnPolicy(_policy.ShiftBasedAutomaticOvertimePolicy);
         }
     }
 }
