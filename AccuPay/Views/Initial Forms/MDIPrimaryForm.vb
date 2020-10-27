@@ -1089,18 +1089,23 @@ Public Class MDIPrimaryForm
 
     Private Async Sub EmailStatusTimer_Tick(sender As Object, e As EventArgs)
 
-        EmailServiceStatusToolStripLabel.Enabled = True
+        Try
+            EmailServiceStatusToolStripLabel.Enabled = True
 
-        Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
-        Dim queueCount = onQueue.Count()
+            Dim onQueue = Await _paystubEmailRepository.GetAllOnQueueAsync()
+            Dim queueCount = onQueue.Count()
 
-        Dim connectionString = ConnectionStringRegistry.GetCurrent()
-        Dim service = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)
-        Dim status = Await service.GetStatus()
+            Dim connectionString = ConnectionStringRegistry.GetCurrent()
+            Dim service = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)
+            Dim status = Await service.GetStatus()
 
-        Dim isOnline = status = ServiceProcess.ServiceControllerStatus.Running
+            Dim isOnline = status = ServiceProcess.ServiceControllerStatus.Running
 
-        UpdateEmailStatusToolStripLabel(isOnline, queueCount)
+            UpdateEmailStatusToolStripLabel(isOnline, queueCount)
+        Catch ex As Exception
+            EmailServiceStatusToolStripLabel.Text = $"Cannot access Email Service status."
+            EmailServiceStatusToolStripLabel.ForeColor = Color.Black
+        End Try
 
     End Sub
 
