@@ -198,9 +198,17 @@ Public Class MultiplePayPeriodSelectionDialog
         Dim checkBox As DataGridViewCheckBoxCell = CType(PayperiodsGridView.CurrentRow.Cells(IsCheckedColumn.Index), DataGridViewCheckBoxCell)
         Dim originalState = If(checkBox Is Nothing, False, (CType(checkBox.Value, Boolean)))
 
+        Dim payPeriods = CType(PayperiodsGridView.DataSource, List(Of PayPeriodWrapper))
+
         If originalState = True Then
 
-            _selectedPayPeriods.Remove(selectedPayPeriod.Model)
+            'If the payperiod is from the constructor, it is not in the payperiod list objects
+            Dim uncheckedPayPeriod = If(
+                _selectedPayPeriods.IndexOf(selectedPayPeriod.Model) <> -1,
+                selectedPayPeriod.Model,
+                _selectedPayPeriods.Where(Function(p) p.PayFromDate = selectedPayPeriod.Model.PayFromDate).FirstOrDefault())
+
+            _selectedPayPeriods.Remove(uncheckedPayPeriod)
         Else
 
             'If the action is to check a cell and there currently two checked cells,
@@ -211,7 +219,6 @@ Public Class MultiplePayPeriodSelectionDialog
 
                 _selectedPayPeriods.Remove(earliestSelectedPayPeriod)
 
-                Dim payPeriods = CType(PayperiodsGridView.DataSource, List(Of PayPeriodWrapper))
                 Dim earliestSelectedPayPeriodWrapper = payPeriods.FirstOrDefault(Function(p) p.DateFrom = earliestSelectedPayPeriod.PayFromDate)
 
                 If earliestSelectedPayPeriodWrapper IsNot Nothing Then
