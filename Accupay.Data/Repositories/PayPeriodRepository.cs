@@ -137,6 +137,8 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<PayPeriod> GetCurrentPayPeriodAsync(int organizationId)
         {
+            // TODO: use the policy DefaultFirstHalfDaysSpan
+
             var currentDay = DateTime.Now;
             var isFirstHalf = currentDay.Day <= 15;
 
@@ -204,21 +206,9 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefault();
         }
 
-        public async Task<DateTime?> GetFirstDayOfTheYear(PayPeriod currentPayPeriod, int organizationId)
+        public async Task<PayPeriod> GetFirstPayPeriodOfTheYear(int currentPayPeriodYear, int organizationId)
         {
-            // TODO: use the policy DefaultFirstHalfDaysSpan
-            var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(currentPayPeriod, organizationId);
-
-            return firstPayPeriodOfTheYear?.PayFromDate;
-        }
-
-        public async Task<PayPeriod> GetFirstPayPeriodOfTheYear(PayPeriod currentPayPeriod, int organizationId)
-        {
-            // TODO: use the policy DefaultFirstHalfDaysSpan
-            var currentPayPeriodYear = currentPayPeriod?.Year;
-
-            if (currentPayPeriodYear == null)
-                return null;
+            // TODO: use the policy DefaultFirstHalfDaysSpan if payperiod does not exists
 
             return await CreateBaseQuery(organizationId)
                 .Where(p => p.Year == currentPayPeriodYear)
@@ -226,13 +216,19 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<DateTime?> GetLastDayOfTheYear(PayPeriod currentPayPeriod, int organizationId)
+        public async Task<DateTime?> GetFirstDayOfTheYear(int currentPayPeriodYear, int organizationId)
         {
-            // TODO: use the policy DefaultEndMonthDaysSpan
-            var currentPayPeriodYear = currentPayPeriod?.Year;
+            // TODO: use the policy DefaultFirstHalfDaysSpan if payperiod does not exists
+            var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(
+                currentPayPeriodYear: currentPayPeriodYear,
+                organizationId: organizationId);
 
-            if (currentPayPeriodYear == null)
-                return null;
+            return firstPayPeriodOfTheYear?.PayFromDate;
+        }
+
+        public async Task<DateTime?> GetLastDayOfTheYear(int currentPayPeriodYear, int organizationId)
+        {
+            // TODO: use the policy DefaultEndMonthDaysSpan if payperiod does not exists
 
             return await CreateBaseQuery(organizationId)
                 .Where(p => p.Year == currentPayPeriodYear)

@@ -412,6 +412,16 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ICollection<Paystub>> GetByTimePeriodWithThirteenthMonthPayAsync(TimePeriod timePeriod, int organizationId)
+        {
+            return await _context.Paystubs
+                .Include(x => x.PayPeriod)
+                .Include(x => x.ThirteenthMonthPay)
+                .Where(x => x.PayPeriod.PayFromDate >= timePeriod.Start)
+                .Where(x => x.PayPeriod.PayToDate <= timePeriod.End)
+                .ToListAsync();
+        }
+
         public async Task<ICollection<Paystub>> GetPreviousCutOffPaystubsAsync(
             DateTime currentCuttOffStart,
             int organizationId)
@@ -443,21 +453,13 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<bool> HasPaystubsAfterDateAsync(DateTime date, int employeeId)
-        {
-            return await _context.Paystubs
-                .Where(x => x.EmployeeID == employeeId)
-                .Where(x => x.PayFromDate >= date)
-                .AnyAsync();
-        }
-
         /// <summary>
         /// Get a list of paystub by pay period ID including employee, position and division details.
         /// Also including the entities needed by Thirteenth Month Pay calculations like Thirteenth Month Pay entity
         /// and allowance items.
         /// </summary>
-        /// <param name="payPeriodId"></param>
-        /// <returns></returns>
+        /// <param name="payPeriodId">The Id of the pay period.</param>
+        /// <returns>List of paystubs.</returns>
         public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(int payPeriodId)
         {
             return await CreateBaseQueryByPayPeriodWithEmployeeDivision(payPeriodId)
@@ -469,22 +471,12 @@ namespace AccuPay.Data.Repositories
         /// <summary>
         /// Get a list of paystub by pay period ID including employee, position and division details.
         /// </summary>
-        /// <param name="payPeriodId"></param>
-        /// <returns></returns>
+        /// <param name="payPeriodId">The Id of the pay period.</param>
+        /// <returns>List of paystubs.</returns>
         public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeDivisionAsync(int payPeriodId)
         {
             return await CreateBaseQueryByPayPeriodWithEmployeeDivision(payPeriodId)
                 .ToListAsync();
-        }
-
-        public async Task<ICollection<Paystub>> GetAllAsync(int payPeriodId)
-        {
-            var query = CreateBaseQueryByPayPeriodWithEmployeeDivision(payPeriodId)
-                .OrderBy(x => x.Employee.LastName)
-                .ThenBy(x => x.Employee.FirstName)
-                .AsQueryable();
-
-            return await query.ToListAsync();
         }
 
         public async Task<Paystub> GetWithPayPeriod(int id)
@@ -501,6 +493,14 @@ namespace AccuPay.Data.Repositories
                 .Include(x => x.PayPeriod)
                 .Where(x => ids.Contains(x.RowID.Value))
                 .ToListAsync();
+        }
+
+        public async Task<bool> HasPaystubsAfterDateAsync(DateTime date, int employeeId)
+        {
+            return await _context.Paystubs
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.PayFromDate >= date)
+                .AnyAsync();
         }
 
         #endregion Queries

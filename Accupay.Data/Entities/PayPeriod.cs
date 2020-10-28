@@ -71,6 +71,9 @@ namespace AccuPay.Data.Entities
 
         public bool IsFirstPayPeriodOfTheYear => IsFirstHalf && Month == IsJanuary;
         public bool IsLastPayPeriodOfTheYear => IsEndOfTheMonth && Month == IsDecember;
+        public bool IsOpen => Status == PayPeriodStatus.Open;
+        public bool IsClosed => Status == PayPeriodStatus.Closed;
+        public bool IsPending => Status == PayPeriodStatus.Pending;
 
         public static PayPeriod NewPayPeriod(int organizationId, int month, int year, bool isFirstHalf, PolicyHelper policy, int createdByUserId)
         {

@@ -1,15 +1,17 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Data.Services
+Imports AccuPay.Data.Interfaces
 
 Public Class TimeEntryProgressDialog
 
-    Private _generator As TimeEntryGenerator
+    Private _generator As IProgressGenerator
 
-    Public Sub New(generator As TimeEntryGenerator)
+    Public Sub New(generator As IProgressGenerator, Optional title As String = "Progress Dialog")
         InitializeComponent()
         _generator = generator
         CompletionProgressBar.Value = 1
+
+        Me.Text = title
 
         ProgressTimer.Start()
     End Sub

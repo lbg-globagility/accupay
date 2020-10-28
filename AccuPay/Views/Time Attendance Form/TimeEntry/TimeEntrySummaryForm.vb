@@ -889,7 +889,7 @@ Public Class TimeEntrySummaryForm
 
     Private Sub GenerateTimeEntries(startDate As Date, endDate As Date)
         Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
-        Dim progressDialog = New TimeEntryProgressDialog(generator)
+        Dim progressDialog = New TimeEntryProgressDialog(generator, "Generating time entries...")
         progressDialog.Show()
 
         Dim task1 = Task.Factory.StartNew(Sub() generator.Start(
@@ -910,6 +910,7 @@ Public Class TimeEntrySummaryForm
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
+
     End Sub
 
     Private Sub TimeEntryGeneratorError(t As Task, dialog As TimeEntryProgressDialog)

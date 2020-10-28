@@ -7,6 +7,7 @@
         public const string ADJUSTMENT_TYPE_DEDUCTION = "DEDUCTION";
         public const string ALLOWANCE_TYPE_CATEGORY = "Allowance Type";
         public const string BPI_INSURANCE_ADJUSTMENT = "BPI Insurance";
+        public const string THIRTEENTH_MONTH_PAY_ADJUSTMENT = "13th Month Pay";
         public const string BONUS_TYPE_CATEGORY = "Bonus";
         public const string ECOLA = "ecola";
         public const string EMPLOYEE_DISCIPLINARY_CATEGORY = "Employee Disciplinary";

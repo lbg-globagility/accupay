@@ -54,7 +54,7 @@ Public Class PayStubForm
 
     Dim unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
-    Private _results As BlockingCollection(Of PayrollGeneration.Result)
+    Private _results As BlockingCollection(Of PaystubEmployeeResult)
 
     Private _originalActualAdjustments As List(Of ActualAdjustment)
 
@@ -80,7 +80,7 @@ Public Class PayStubForm
 
         InitializeComponent()
 
-        _results = New BlockingCollection(Of PayrollGeneration.Result)()
+        _results = New BlockingCollection(Of PaystubEmployeeResult)()
 
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
@@ -722,7 +722,7 @@ Public Class PayStubForm
             _finishedPaystubs = 0
             _totalPaystubs = resources.Employees.Count
 
-            _results = New BlockingCollection(Of PayrollGeneration.Result)()
+            _results = New BlockingCollection(Of PaystubEmployeeResult)()
 
             Dim generator = MainServiceProvider.GetRequiredService(Of PayrollGeneration)
 
@@ -780,7 +780,7 @@ Public Class PayStubForm
         End Try
     End Sub
 
-    Private Sub RecordPaytubGenerated(result As PayrollGeneration.Result)
+    Private Sub RecordPaytubGenerated(result As PaystubEmployeeResult)
 
         Dim payPeriodString = GetPayPeriodString()
 
@@ -811,7 +811,11 @@ Public Class PayStubForm
 
     Private Async Sub GeneratingPayrollOnSuccess(t As Task)
 
-        Dim dialog = New PayrollResultDialog(_results.ToList()) With {
+        Dim dialog = New PaystubEmployeeResultDialog(
+            _results.ToList(),
+            title:="Payroll Results",
+            generationDescription:="Payroll generation",
+            entityDescription:="paystubs") With {
             .Owner = Me
         }
 
@@ -1890,20 +1894,6 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub Include13thMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Include13thMonthPayToolStripMenuItem.Click
-        Dim payPeriodSelector = New MultiplePayPeriodSelectionDialog()
-
-        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
-            Return
-        End If
-
-        Dim dateFrom = payPeriodSelector.DateFrom
-        Dim dateTo = payPeriodSelector.DateTo
-
-        ' Not tested
-        'Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
-    End Sub
-
     Private Sub CashOutUnusedLeavesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CashOutUnusedLeavesToolStripMenuItem.Click
         If _currentPayperiodId Is Nothing Then
             MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
@@ -2124,9 +2114,23 @@ Public Class PayStubForm
 
         If _currentPayperiodId Is Nothing Then Return
 
-        Dim form As New SelectThirteenthMonthEmployeesForm(_currentPayperiodId.Value)
+        Dim form As New SelectRecalculateThirteenthMonthEmployeesForm(_currentPayperiodId.Value)
 
         form.ShowDialog()
+
+    End Sub
+
+    Private Async Sub ReleaseThirteenthMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Include13thMonthPayToolStripMenuItem.Click
+
+        If _currentPayperiodId Is Nothing Then Return
+
+        Dim form As New SelectReleaseThirteenthMonthEmployeesForm(_currentPayperiodId.Value)
+
+        form.ShowDialog()
+
+        If form.HasChanges Then
+            Await UpdateEmployeeDetails()
+        End If
 
     End Sub
 

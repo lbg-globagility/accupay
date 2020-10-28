@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class SelectThirteenthMonthEmployeesForm
+Partial Class SelectRecalculateThirteenthMonthEmployeesForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -36,7 +36,7 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectThirteenthMonthEmployeesForm))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectRecalculateThirteenthMonthEmployeesForm))
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.EmployeeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
@@ -53,6 +53,7 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.RecalculateButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.UncheckAllButton = New System.Windows.Forms.Button()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -63,7 +64,6 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UncheckAllButton = New System.Windows.Forms.Button()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
@@ -238,6 +238,16 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.Panel1.Size = New System.Drawing.Size(1084, 50)
         Me.Panel1.TabIndex = 15
         '
+        'UncheckAllButton
+        '
+        Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
+        Me.UncheckAllButton.Name = "UncheckAllButton"
+        Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
+        Me.UncheckAllButton.TabIndex = 10
+        Me.UncheckAllButton.Text = "&Uncheck All"
+        Me.UncheckAllButton.UseVisualStyleBackColor = True
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
@@ -350,16 +360,6 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 177
         '
-        'UncheckAllButton
-        '
-        Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
-        Me.UncheckAllButton.Name = "UncheckAllButton"
-        Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
-        Me.UncheckAllButton.TabIndex = 10
-        Me.UncheckAllButton.Text = "&Uncheck All"
-        Me.UncheckAllButton.UseVisualStyleBackColor = True
-        '
         'SelectThirteenthMonthEmployeesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -373,7 +373,7 @@ Partial Class SelectThirteenthMonthEmployeesForm
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "SelectThirteenthMonthEmployeesForm"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Select Employees Form"
+        Me.Text = "Recalculate Thirteenth Month Pay Form"
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)

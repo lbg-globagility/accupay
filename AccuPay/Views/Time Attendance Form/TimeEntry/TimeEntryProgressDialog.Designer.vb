@@ -52,7 +52,7 @@ Partial Class TimeEntryProgressDialog
         Me.Name = "TimeEntryProgressDialog"
         Me.ShowIcon = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Time Entry Progress Dialog"
+        Me.Text = "Progress Dialog"
         Me.ResumeLayout(False)
 
     End Sub

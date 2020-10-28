@@ -35,6 +35,8 @@ Partial Class PayStubForm
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.PayPeriodGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PayDateTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.dgvemployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -325,8 +327,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayDateTo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.PayPeriodGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -347,7 +347,7 @@ Partial Class PayStubForm
         Me.Panel5.SuspendLayout()
         Me.SuspendLayout()
         '
-        'dgvpayper
+        'PayPeriodGridView
         '
         Me.PayPeriodGridView.AllowUserToAddRows = False
         Me.PayPeriodGridView.AllowUserToDeleteRows = False
@@ -372,13 +372,31 @@ Partial Class PayStubForm
         Me.PayPeriodGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.PayPeriodGridView.Location = New System.Drawing.Point(10, 204)
         Me.PayPeriodGridView.MultiSelect = False
-        Me.PayPeriodGridView.Name = "dgvpayper"
+        Me.PayPeriodGridView.Name = "PayPeriodGridView"
         Me.PayPeriodGridView.ReadOnly = True
         Me.PayPeriodGridView.RowHeadersWidth = 25
         Me.PayPeriodGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.PayPeriodGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.PayPeriodGridView.Size = New System.Drawing.Size(235, 295)
         Me.PayPeriodGridView.TabIndex = 0
+        '
+        'PayDateFrom
+        '
+        Me.PayDateFrom.DataPropertyName = "PayFromDate"
+        Me.PayDateFrom.HeaderText = "Pay period from"
+        Me.PayDateFrom.Name = "PayDateFrom"
+        Me.PayDateFrom.ReadOnly = True
+        Me.PayDateFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PayDateFrom.Width = 154
+        '
+        'PayDateTo
+        '
+        Me.PayDateTo.DataPropertyName = "PayToDate"
+        Me.PayDateTo.HeaderText = "Pay period to"
+        Me.PayDateTo.Name = "PayDateTo"
+        Me.PayDateTo.ReadOnly = True
+        Me.PayDateTo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.PayDateTo.Width = 153
         '
         'Label25
         '
@@ -2339,7 +2357,7 @@ Partial Class PayStubForm
         Me.AdjustmentTitleLabel.TabIndex = 507
         Me.AdjustmentTitleLabel.Text = "Adjustments"
         '
-        'dgvAdjustments
+        'AdjustmentGridView
         '
         Me.AdjustmentGridView.AllowUserToOrderColumns = True
         Me.AdjustmentGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
@@ -2365,7 +2383,7 @@ Partial Class PayStubForm
         Me.AdjustmentGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.AdjustmentGridView.Location = New System.Drawing.Point(746, 19)
         Me.AdjustmentGridView.MultiSelect = False
-        Me.AdjustmentGridView.Name = "dgvAdjustments"
+        Me.AdjustmentGridView.Name = "AdjustmentGridView"
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -3098,14 +3116,12 @@ Partial Class PayStubForm
         Me.OthersToolStripMenuItem.Name = "OthersToolStripMenuItem"
         Me.OthersToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
         Me.OthersToolStripMenuItem.Text = "Others"
-        Me.OthersToolStripMenuItem.Visible = False
         '
         'Include13thMonthPayToolStripMenuItem
         '
         Me.Include13thMonthPayToolStripMenuItem.Name = "Include13thMonthPayToolStripMenuItem"
         Me.Include13thMonthPayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.Include13thMonthPayToolStripMenuItem.Text = "Include 13th Month Pay"
-        Me.Include13thMonthPayToolStripMenuItem.Visible = False
+        Me.Include13thMonthPayToolStripMenuItem.Text = "Release 13th Month Pay"
         '
         'CashOutUnusedLeavesToolStripMenuItem
         '
@@ -3384,24 +3400,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn29.HeaderText = "IsAdjustmentActual"
         Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
         Me.DataGridViewTextBoxColumn29.Visible = False
-        '
-        'PayDateFrom
-        '
-        Me.PayDateFrom.DataPropertyName = "PayFromDate"
-        Me.PayDateFrom.HeaderText = "Pay period from"
-        Me.PayDateFrom.Name = "PayDateFrom"
-        Me.PayDateFrom.ReadOnly = True
-        Me.PayDateFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PayDateFrom.Width = 154
-        '
-        'PayDateTo
-        '
-        Me.PayDateTo.DataPropertyName = "PayToDate"
-        Me.PayDateTo.HeaderText = "Pay period to"
-        Me.PayDateTo.Name = "PayDateTo"
-        Me.PayDateTo.ReadOnly = True
-        Me.PayDateTo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PayDateTo.Width = 153
         '
         'PayStubForm
         '

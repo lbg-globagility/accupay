@@ -2,6 +2,7 @@
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Interfaces;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -14,7 +15,7 @@ using System.Threading;
 
 namespace AccuPay.Data.Services
 {
-    public class TimeEntryGenerator
+    public class TimeEntryGenerator : IProgressGenerator
     {
         //private static ILog logger = LogManager.GetLogger("TimeEntryLogger", "TimeEntryLogger");
 

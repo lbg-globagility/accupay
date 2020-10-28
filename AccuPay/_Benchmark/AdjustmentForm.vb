@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -80,9 +80,9 @@ Public Class AdjustmentForm
 
     Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
         Return gridView.Rows.
-                        Cast(Of DataGridViewRow).
-                        Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
-                                                Any(Function(c) c.Value IsNot Nothing))
+            Cast(Of DataGridViewRow).
+            Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
+                Any(Function(c) c.Value IsNot Nothing))
     End Function
 
     Private Function GetTextBoxWithError() As TextBox
@@ -159,13 +159,13 @@ Public Class AdjustmentForm
                (confirmMessage, "Delete Adjustment", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
         Await FunctionUtils.TryCatchFunctionAsync("Delete Adjustment",
-                Async Function()
+            Async Function()
 
-                    Await _productRepository.DeleteAsync(adjustmentId.Value)
+                Await _productRepository.DeleteAsync(adjustmentId.Value)
 
-                    Await RefreshForm()
-                    MessageBoxHelper.Information($"Adjustment: '{adjustment.PartNo}' successfully deleted.")
-                End Function)
+                Await RefreshForm()
+                MessageBoxHelper.Information($"Adjustment: '{adjustment.PartNo}' successfully deleted.")
+            End Function)
 
     End Sub
 
@@ -190,41 +190,41 @@ Public Class AdjustmentForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync("Save adjustment",
-                                Async Function()
+            Async Function()
 
-                                    Dim successMessage = ""
+                Dim successMessage = ""
 
-                                    Dim adjustmentName = DescriptionTextBox.Text.Trim
+                Dim adjustmentName = DescriptionTextBox.Text.Trim
 
-                                    If _currentFormType = FormMode.Creating Then
+                If _currentFormType = FormMode.Creating Then
 
-                                        Await _productRepository.AddAdjustmentTypeAsync(
-                                                        organizationId:=z_OrganizationID,
-                                                        userId:=z_User,
-                                                        adjustmentName:=adjustmentName,
-                                                        comments:=CodeTextBox.Text.Trim,
-                                                        adjustmentType:=_adjustmentType)
+                    Await _productRepository.AddAdjustmentTypeAsync(
+                                    organizationId:=z_OrganizationID,
+                                    userId:=z_User,
+                                    adjustmentName:=adjustmentName,
+                                    comments:=CodeTextBox.Text.Trim,
+                                    adjustmentType:=_adjustmentType)
 
-                                        successMessage = $"Adjustment: '{adjustmentName}' successfully added."
+                    successMessage = $"Adjustment: '{adjustmentName}' successfully added."
 
-                                    ElseIf _currentFormType = FormMode.Editing Then
+                ElseIf _currentFormType = FormMode.Editing Then
 
-                                        Dim currentAdjustmentId = _currentAdjustment.RowID.Value
+                    Dim currentAdjustmentId = _currentAdjustment.RowID.Value
 
-                                        Await _productRepository.UpdateAdjustmentTypeAsync(
-                                                                    id:=currentAdjustmentId,
-                                                                    userId:=z_User,
-                                                                    adjustmentName:=adjustmentName,
-                                                                    code:=CodeTextBox.Text.Trim)
+                    Await _productRepository.UpdateAdjustmentTypeAsync(
+                                                id:=currentAdjustmentId,
+                                                userId:=z_User,
+                                                adjustmentName:=adjustmentName,
+                                                code:=CodeTextBox.Text.Trim)
 
-                                        successMessage = $"Adjustment: '{adjustmentName}' successfully updated."
-                                    End If
+                    successMessage = $"Adjustment: '{adjustmentName}' successfully updated."
+                End If
 
-                                    Await RefreshForm()
+                Await RefreshForm()
 
-                                    MessageBoxHelper.Information(successMessage)
+                MessageBoxHelper.Information(successMessage)
 
-                                End Function)
+            End Function)
 
     End Sub
 

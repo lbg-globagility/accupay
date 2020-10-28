@@ -85,7 +85,7 @@ namespace AccuPay.Data.Services
                 }
                 else
                 {
-                    adjustment.CreatedBy = modifiedByUserId;
+                    adjustment.LastUpdBy = modifiedByUserId;
                 }
             }
 
