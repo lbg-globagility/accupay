@@ -588,6 +588,7 @@ Partial Class MDIPrimaryForm
         Me.LinkLabel1.TabIndex = 1
         Me.LinkLabel1.TabStop = True
         Me.LinkLabel1.Text = "Regularize all"
+        Me.LinkLabel1.Visible = False
         '
         'Panel6
         '
