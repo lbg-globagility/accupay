@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
@@ -27,7 +27,9 @@ Public Class MultiplePayPeriodSelectionDialog
 
     Private ReadOnly _policy As PolicyHelper
 
-    Sub New()
+    Private _selectedPayPeriods As List(Of PayPeriod)
+
+    Sub New(Optional startingPayPeriod As PayPeriod = Nothing, Optional endingPayPeriod As PayPeriod = Nothing)
 
         InitializeComponent()
 
@@ -36,49 +38,59 @@ Public Class MultiplePayPeriodSelectionDialog
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
+        _selectedPayPeriods = New List(Of PayPeriod)
+
+        If startingPayPeriod IsNot Nothing AndAlso endingPayPeriod IsNot Nothing Then
+
+            _selectedPayPeriods.Add(startingPayPeriod)
+            _selectedPayPeriods.Add(endingPayPeriod)
+        End If
     End Sub
 
-    Public ReadOnly Property PayPeriodFromID As Integer?
+    Public ReadOnly Property PayPeriodFrom As PayPeriod
         Get
             Dim startPayPeriod = GetStartPayPeriod()
             If startPayPeriod Is Nothing Then
                 Return Nothing
             Else
-                Return startPayPeriod.RowID
+                Return startPayPeriod
             End If
+        End Get
+    End Property
+
+    Public ReadOnly Property PayPeriodTo As PayPeriod
+        Get
+            Dim endPayPeriod = GetEndPayPeriod()
+            If endPayPeriod Is Nothing Then
+                Return Nothing
+            Else
+                Return endPayPeriod
+            End If
+        End Get
+    End Property
+
+    Public ReadOnly Property PayPeriodFromID As Integer?
+        Get
+            Return PayPeriodFrom?.RowID
         End Get
     End Property
 
     Public ReadOnly Property PayPeriodToID As Integer?
         Get
-            Dim endPayPeriod = GetEndPayPeriod()
-            If endPayPeriod Is Nothing Then
-                Return Nothing
-            Else
-                Return endPayPeriod.RowID
-            End If
+            Return PayPeriodTo?.RowID
         End Get
     End Property
 
     Public ReadOnly Property DateFrom As Date?
         Get
-            Dim startPayPeriod = GetStartPayPeriod()
-            If startPayPeriod Is Nothing Then
-                Return Nothing
-            Else
-                Return startPayPeriod.PayFromDate
-            End If
+            Return PayPeriodFrom?.PayFromDate
         End Get
     End Property
 
     Public ReadOnly Property DateTo As Date?
         Get
-            Dim endPayPeriod = GetEndPayPeriod()
-            If endPayPeriod Is Nothing Then
-                Return Nothing
-            Else
-                Return endPayPeriod.PayToDate
-            End If
+            Return PayPeriodTo?.PayToDate
         End Get
     End Property
 
@@ -93,8 +105,6 @@ Public Class MultiplePayPeriodSelectionDialog
             Return CInt(LoanTypeComboBox.SelectedValue)
         End Get
     End Property
-
-    Private _selectedPayPeriods As List(Of PayPeriod)
 
 #Region "Loan Types"
 
@@ -167,7 +177,6 @@ Public Class MultiplePayPeriodSelectionDialog
         DateFromTextLabel.Text = ""
         DateToTextLabel.Text = ""
 
-        _selectedPayPeriods = New List(Of PayPeriod)
         Await LoadPayPeriods()
     End Sub
 

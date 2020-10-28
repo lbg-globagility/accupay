@@ -65,9 +65,10 @@ Partial Class SelectReleaseThirteenthMonthEmployeesForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.AdjustmentTypesComboBox = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.SelectedPayPeriodSpanLinkLabel = New System.Windows.Forms.LinkLabel()
+        Me.Label2 = New System.Windows.Forms.Label()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -76,6 +77,7 @@ Partial Class SelectReleaseThirteenthMonthEmployeesForm
         'UncheckAllButton
         '
         Me.UncheckAllButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.UncheckAllButton.Enabled = False
         Me.UncheckAllButton.Location = New System.Drawing.Point(11, 15)
         Me.UncheckAllButton.Name = "UncheckAllButton"
         Me.UncheckAllButton.Size = New System.Drawing.Size(103, 23)
@@ -359,26 +361,24 @@ Partial Class SelectReleaseThirteenthMonthEmployeesForm
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.Label2)
         Me.Panel2.Controls.Add(Me.AdjustmentTypesComboBox)
         Me.Panel2.Controls.Add(Me.Label1)
-        Me.Panel2.Controls.Add(Me.LinkLabel1)
+        Me.Panel2.Controls.Add(Me.SelectedPayPeriodSpanLinkLabel)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 21)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1084, 33)
         Me.Panel2.TabIndex = 19
         '
-        'LinkLabel1
+        'AdjustmentTypesComboBox
         '
-        Me.LinkLabel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.LinkLabel1.AutoSize = True
-        Me.LinkLabel1.Location = New System.Drawing.Point(13, 10)
-        Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Size = New System.Drawing.Size(165, 13)
-        Me.LinkLabel1.TabIndex = 0
-        Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "12/16/2019 - 10/15/2020 Period"
+        Me.AdjustmentTypesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.AdjustmentTypesComboBox.FormattingEnabled = True
+        Me.AdjustmentTypesComboBox.Location = New System.Drawing.Point(869, 6)
+        Me.AdjustmentTypesComboBox.Name = "AdjustmentTypesComboBox"
+        Me.AdjustmentTypesComboBox.Size = New System.Drawing.Size(197, 21)
+        Me.AdjustmentTypesComboBox.TabIndex = 2
         '
         'Label1
         '
@@ -389,14 +389,27 @@ Partial Class SelectReleaseThirteenthMonthEmployeesForm
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Adjustment Type:"
         '
-        'AdjustmentTypesComboBox
+        'SelectedPayPeriodSpanLinkLabel
         '
-        Me.AdjustmentTypesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.AdjustmentTypesComboBox.FormattingEnabled = True
-        Me.AdjustmentTypesComboBox.Location = New System.Drawing.Point(869, 6)
-        Me.AdjustmentTypesComboBox.Name = "AdjustmentTypesComboBox"
-        Me.AdjustmentTypesComboBox.Size = New System.Drawing.Size(197, 21)
-        Me.AdjustmentTypesComboBox.TabIndex = 2
+        Me.SelectedPayPeriodSpanLinkLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.SelectedPayPeriodSpanLinkLabel.AutoSize = True
+        Me.SelectedPayPeriodSpanLinkLabel.Enabled = False
+        Me.SelectedPayPeriodSpanLinkLabel.Location = New System.Drawing.Point(166, 10)
+        Me.SelectedPayPeriodSpanLinkLabel.Name = "SelectedPayPeriodSpanLinkLabel"
+        Me.SelectedPayPeriodSpanLinkLabel.Size = New System.Drawing.Size(58, 13)
+        Me.SelectedPayPeriodSpanLinkLabel.TabIndex = 0
+        Me.SelectedPayPeriodSpanLinkLabel.TabStop = True
+        Me.SelectedPayPeriodSpanLinkLabel.Text = "Loading..."
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(11, 10)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(158, 13)
+        Me.Label2.TabIndex = 3
+        Me.Label2.Text = "Thirteenth Month Pay Period:"
         '
         'SelectReleaseThirteenthMonthEmployeesForm
         '
@@ -448,7 +461,8 @@ Partial Class SelectReleaseThirteenthMonthEmployeesForm
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
     Friend WithEvents CurrentThirteenthMonthPayColumn As DataGridViewTextBoxColumn
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents LinkLabel1 As LinkLabel
+    Friend WithEvents SelectedPayPeriodSpanLinkLabel As LinkLabel
     Friend WithEvents AdjustmentTypesComboBox As ComboBox
     Friend WithEvents Label1 As Label
+    Friend WithEvents Label2 As Label
 End Class

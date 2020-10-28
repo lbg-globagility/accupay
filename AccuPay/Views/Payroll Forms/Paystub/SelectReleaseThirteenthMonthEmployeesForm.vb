@@ -76,6 +76,11 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         UpdateSaveButton()
 
+        UpdateSelectedPayPeriodSpanLinkLabelText()
+
+        UncheckAllButton.Enabled = True
+        SelectedPayPeriodSpanLinkLabel.Enabled = True
+
     End Sub
 
     Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
@@ -101,6 +106,23 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
         EmployeeGridView.EndEdit()
         EmployeeGridView.Refresh()
         UpdateSaveButton()
+    End Sub
+
+    Private Async Sub SelectedPayPeriodSpanLinkLabel_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) _
+        Handles SelectedPayPeriodSpanLinkLabel.LinkClicked
+
+        Dim form As New MultiplePayPeriodSelectionDialog(_startingPayPeriod, _endingPayPeriod)
+
+        If Not form.ShowDialog = Windows.Forms.DialogResult.OK Then
+            Return
+        End If
+
+        _startingPayPeriod = form.PayPeriodFrom
+        _endingPayPeriod = form.PayPeriodTo
+        UpdateSelectedPayPeriodSpanLinkLabelText()
+
+        Await UpdateThirteenthMonthAmount()
+
     End Sub
 
     Private Async Function PrepareAdjustmentTypeComboBox() As Task
@@ -154,11 +176,15 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         _employeeModels = employeeModels.OrderBy(Function(e) e.FullName).ToList
 
-        Await UpdateThirteenthMonthAmount()
-
         EmployeeGridView.DataSource = _employeeModels
 
+        Await UpdateThirteenthMonthAmount()
+
     End Function
+
+    Private Sub UpdateSelectedPayPeriodSpanLinkLabelText()
+        SelectedPayPeriodSpanLinkLabel.Text = $"{_startingPayPeriod.PayFromDate.ToShortDateString()} - {_endingPayPeriod.PayToDate.ToShortDateString()}"
+    End Sub
 
     Private Async Function UpdateThirteenthMonthAmount() As Task
 
@@ -174,13 +200,22 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
             Dim thirteenthMonthPay = thirteenthMonthPaystubs.Where(Function(t) t.Key = employee.EmployeeId).FirstOrDefault()
 
-            If thirteenthMonthPay Is Nothing Then Continue For
+            Dim amount As Decimal = 0
+            Dim basicPay As Decimal = 0
+
+            If thirteenthMonthPay IsNot Nothing Then
+                amount = thirteenthMonthPay.Sum(Function(t) t.ThirteenthMonthPay.Amount)
+                basicPay = thirteenthMonthPay.Sum(Function(t) t.ThirteenthMonthPay.BasicPay)
+            End If
 
             employee.UpdateThirteenthMonthPayAmount(
-                amount:=thirteenthMonthPay.Sum(Function(t) t.ThirteenthMonthPay.Amount),
-                basicPay:=thirteenthMonthPay.Sum(Function(t) t.ThirteenthMonthPay.BasicPay))
+                amount:=amount,
+                basicPay:=basicPay)
 
         Next
+
+        EmployeeGridView.EndEdit()
+        EmployeeGridView.Refresh()
 
     End Function
 
@@ -197,7 +232,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         Dim selectedEmployees = _employeeModels.Where(Function(m) m.IsSelected).ToList()
         Dim selectedCount = selectedEmployees.Count
-        If MessageBoxHelper.Confirm(Of Boolean)($"Are you sure you want to release the thirteenth month pay for {selectedCount} employee(s)?") = False Then
+        If MessageBoxHelper.Confirm(Of Boolean)($"Are you sure you want to release the thirteenth month pay of the {selectedCount} employee(s)?") = False Then
             Return
         End If
 
