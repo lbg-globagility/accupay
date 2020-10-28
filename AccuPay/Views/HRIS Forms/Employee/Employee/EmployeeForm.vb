@@ -3211,17 +3211,21 @@ Public Class EmployeeForm
 
         _branches = New List(Of Branch)
 
-        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-        _branches = branchRepository.
-            GetAll().
-            OrderBy(Function(b) b.Name).
-            ToList()
-
         BranchComboBox.Visible = True
         BranchLabel.Visible = True
         AddBranchLinkButton.Visible = True
 
         BranchComboBox.DisplayMember = "Name"
+
+        PopulateBranchComboBox()
+    End Sub
+
+    Private Sub PopulateBranchComboBox()
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        _branches = branchRepository.
+            GetAll().
+            OrderBy(Function(b) b.Name).
+            ToList()
         BranchComboBox.DataSource = _branches
     End Sub
 
@@ -3659,9 +3663,7 @@ Public Class EmployeeForm
 
             End If
 
-            Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-            _branches = branchRepository.GetAll()
-            BranchComboBox.DataSource = _branches
+            PopulateBranchComboBox()
 
             Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
 
