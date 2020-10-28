@@ -204,7 +204,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
         Dim selectedAdjustmentId = CType(AdjustmentTypesComboBox.SelectedValue, Integer)
 
         Dim generator As New ReleaseThirteenthMonthGeneration(selectedEmployees, selectedAdjustmentId)
-        Dim progressDialog = New TimeEntryProgressDialog(generator, "Creating 13th month pay adjustments...")
+        Dim progressDialog = New ProgressDialog(generator, "Creating 13th month pay adjustments...")
         progressDialog.Show()
 
         Dim generationTask = Task.Run(
@@ -229,7 +229,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
     End Sub
 
-    Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As TimeEntryProgressDialog)
+    Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
         progressDialog.Close()
         progressDialog.Dispose()
@@ -251,7 +251,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
         Me.Close()
     End Sub
 
-    Private Sub GenerationOnError(t As Task, progressDialog As TimeEntryProgressDialog)
+    Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
 
         progressDialog.Close()
         progressDialog.Dispose()
