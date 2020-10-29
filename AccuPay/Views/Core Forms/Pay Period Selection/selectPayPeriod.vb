@@ -284,33 +284,6 @@ Public Class selectPayPeriod
         DialogResult = DialogResult.OK
     End Sub
 
-    Dim prior_value As Object = Nothing
-
-    <Obsolete>
-    Private Sub dgvpaypers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvpaypers.CellBeginEdit
-        prior_value = ValNoComma(dgvpaypers.Item("PayPeriodMinWageValue", e.RowIndex).Value)
-    End Sub
-
-    <Obsolete>
-    Private Sub dgvpaypers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvpaypers.CellEndEdit
-        If e.RowIndex > -1 And e.ColumnIndex > -1 Then
-
-            Dim min_wage_val = ValNoComma(dgvpaypers.Item("PayPeriodMinWageValue", e.RowIndex).Value)
-
-            If prior_value <> min_wage_val Then
-                prior_value = ValNoComma(dgvpaypers.Item("PayPeriodMinWageValue", e.RowIndex).Value)
-
-                Dim n_ExecuteQuery As _
-                    New ExecuteQuery("UPDATE payperiod" &
-                                     " SET" &
-                                     " MinWageValue=" & min_wage_val & "" &
-                                     ",LastUpd=CURRENT_TIMESTAMP()" &
-                                     ",LastUpdBy='" & z_User & "'" &
-                                     " WHERE RowID='" & dgvpaypers.Item("Column1", e.RowIndex).Value & "';")
-            End If
-        End If
-    End Sub
-
     Private Sub dgvpaypers_SelectionChanged(sender As Object, e As EventArgs) Handles dgvpaypers.SelectionChanged
         If dgvpaypers.RowCount <> 0 Then
             Dim currentRow = dgvpaypers.CurrentRow

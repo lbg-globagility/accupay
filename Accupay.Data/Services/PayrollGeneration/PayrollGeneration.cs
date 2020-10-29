@@ -21,10 +21,11 @@ namespace AccuPay.Data.Services
             _dbContextOptionsService = dbContextOptionsService;
         }
 
-        public Result DoProcess(Employee employee,
-                                PayrollResources resources,
-                                int organizationId,
-                                int userId)
+        public PaystubEmployeeResult DoProcess(
+            Employee employee,
+            PayrollResources resources,
+            int organizationId,
+            int userId)
         {
             var currentSystemOwner = resources.CurrentSystemOwner;
 
@@ -109,16 +110,16 @@ namespace AccuPay.Data.Services
             }
             catch (PayrollException ex)
             {
-                return Result.Error(employee, ex.Message);
+                return PaystubEmployeeResult.Error(employee, ex.Message);
             }
             catch (Exception ex)
             {
                 //logger.Error("DoProcess", ex);
-                return Result.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo} {ex.Message}");
+                return PaystubEmployeeResult.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo} {ex.Message}");
             }
         }
 
-        private Result GeneratePayStub(
+        private PaystubEmployeeResult GeneratePayStub(
             PayrollResources resources,
             int organizationId,
             int userId,
@@ -142,13 +143,13 @@ namespace AccuPay.Data.Services
             IReadOnlyCollection<Bonus> bonuses)
         {
             if (salary == null)
-                return Result.Error(employee, "Employee has no salary for this cutoff.");
+                return PaystubEmployeeResult.Error(employee, "Employee has no salary for this cutoff.");
 
             if ((!timeEntries.Any()) && (employee.IsDaily || employee.IsMonthly))
-                return Result.Error(employee, "No time entries.");
+                return PaystubEmployeeResult.Error(employee, "No time entries.");
 
             if (employee.Position == null)
-                return Result.Error(employee, "Employee has no job position set.");
+                return PaystubEmployeeResult.Error(employee, "Employee has no job position set.");
 
             if (paystub == null)
             {
@@ -223,7 +224,7 @@ namespace AccuPay.Data.Services
                         timeEntries: timeEntries,
                         leaves: leaves);
 
-            return Result.Success(employee, paystub);
+            return PaystubEmployeeResult.Success(employee, paystub);
         }
 
         private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int userId)
@@ -856,61 +857,6 @@ namespace AccuPay.Data.Services
             paystub.PaystubItems.Add(sickLeaveBalance);
         }
 
-        public class Result
-        {
-            public int EmployeeId { get; set; }
-
-            public int? PaystubId { get; set; }
-
-            public string EmployeeNo { get; set; }
-
-            public string FullName { get; set; }
-
-            public ResultStatus Status { get; set; }
-
-            public string Description { get; set; }
-
-            public bool IsSuccess => Status == ResultStatus.Success;
-
-            public bool IsError => Status == ResultStatus.Error;
-
-            private Result(int employeeId, int? paystubId, string employeeNo, string fullName, ResultStatus status, string description)
-            {
-                EmployeeId = employeeId;
-                EmployeeNo = employeeNo;
-                FullName = fullName;
-                Status = status;
-                Description = description;
-                PaystubId = paystubId;
-            }
-
-            public static Result Success(Employee employee, Paystub paystub)
-            {
-                var result = new Result(
-                    employee.RowID.Value,
-                    paystub.RowID.Value,
-                    employee.EmployeeNo,
-                    employee.FullNameWithMiddleInitialLastNameFirst,
-                    ResultStatus.Success,
-                    "");
-
-                return result;
-            }
-
-            public static Result Error(Employee employee, string description)
-            {
-                var result = new Result(
-                    employee.RowID.Value,
-                    paystubId: null,
-                    employee.EmployeeNo,
-                    employee.FullNameWithMiddleInitialLastNameFirst,
-                    ResultStatus.Error,
-                    description);
-
-                return result;
-            }
-        }
-
         private class PaystubRate : IPaystubRate
         {
             public decimal RegularHours { get; set; }
@@ -1036,13 +982,6 @@ namespace AccuPay.Data.Services
                 this.AbsenceDeduction = totalTimeEntries.AbsenceDeduction;
                 this.ActualAbsenceDeduction = totalTimeEntries.ActualAbsenceDeduction;
             }
-        }
-
-        public enum ResultStatus
-        {
-            Success,
-            Warning,
-            Error
         }
     }
 }

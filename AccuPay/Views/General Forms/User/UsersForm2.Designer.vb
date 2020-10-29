@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UsersForm2
     Inherits System.Windows.Forms.Form
 
@@ -24,11 +24,11 @@ Partial Class UsersForm2
     Private Sub InitializeComponent()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.ToolStrip3 = New System.Windows.Forms.ToolStrip()
-        Me.NewButton = New System.Windows.Forms.ToolStripButton()
-        Me.SaveButton = New System.Windows.Forms.ToolStripButton()
-        Me.DeleteButton = New System.Windows.Forms.ToolStripButton()
-        Me.CancelButton = New System.Windows.Forms.ToolStripButton()
-        Me.CloseButton = New System.Windows.Forms.ToolStripButton()
+        Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.CloseToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.UserGrid = New System.Windows.Forms.DataGridView()
         Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -62,7 +62,7 @@ Partial Class UsersForm2
         '
         Me.ToolStrip3.AutoSize = False
         Me.ToolStrip3.BackColor = System.Drawing.Color.White
-        Me.ToolStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.DeleteButton, Me.CancelButton, Me.CloseButton})
+        Me.ToolStrip3.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.CloseToolStripButton})
         Me.ToolStrip3.Location = New System.Drawing.Point(343, 24)
         Me.ToolStrip3.Name = "ToolStrip3"
         Me.ToolStrip3.Size = New System.Drawing.Size(892, 22)
@@ -71,46 +71,46 @@ Partial Class UsersForm2
         '
         'NewButton
         '
-        Me.NewButton.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.NewButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.NewButton.Name = "NewButton"
-        Me.NewButton.Size = New System.Drawing.Size(51, 19)
-        Me.NewButton.Text = "&New"
-        Me.NewButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.NewToolStripButton.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.NewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.NewToolStripButton.Name = "NewButton"
+        Me.NewToolStripButton.Size = New System.Drawing.Size(51, 19)
+        Me.NewToolStripButton.Text = "&New"
+        Me.NewToolStripButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'SaveButton
         '
-        Me.SaveButton.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.SaveButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.SaveButton.Name = "SaveButton"
-        Me.SaveButton.Size = New System.Drawing.Size(51, 19)
-        Me.SaveButton.Text = "&Save"
+        Me.SaveToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.SaveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SaveToolStripButton.Name = "SaveButton"
+        Me.SaveToolStripButton.Size = New System.Drawing.Size(51, 19)
+        Me.SaveToolStripButton.Text = "&Save"
         '
         'DeleteButton
         '
-        Me.DeleteButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DeleteButton.Name = "DeleteButton"
-        Me.DeleteButton.Size = New System.Drawing.Size(60, 19)
-        Me.DeleteButton.Text = "&Delete"
-        Me.DeleteButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.DeleteToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteToolStripButton.Name = "DeleteButton"
+        Me.DeleteToolStripButton.Size = New System.Drawing.Size(60, 19)
+        Me.DeleteToolStripButton.Text = "&Delete"
+        Me.DeleteToolStripButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'CancelButton
         '
-        Me.CancelButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.CancelButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(63, 19)
-        Me.CancelButton.Text = "&Cancel"
+        Me.CancelToolStripButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.CancelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CancelToolStripButton.Name = "CancelButton"
+        Me.CancelToolStripButton.Size = New System.Drawing.Size(63, 19)
+        Me.CancelToolStripButton.Text = "&Cancel"
         '
         'CloseButton
         '
-        Me.CloseButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.CloseButton.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.CloseButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New System.Drawing.Size(56, 19)
-        Me.CloseButton.Text = "&Close"
+        Me.CloseToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.CloseToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.CloseToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CloseToolStripButton.Name = "CloseButton"
+        Me.CloseToolStripButton.Size = New System.Drawing.Size(56, 19)
+        Me.CloseToolStripButton.Text = "&Close"
         '
         'Panel2
         '
@@ -240,11 +240,11 @@ Partial Class UsersForm2
 
     Friend WithEvents Label8 As Label
     Friend WithEvents ToolStrip3 As ToolStrip
-    Friend WithEvents NewButton As ToolStripButton
-    Friend WithEvents SaveButton As ToolStripButton
-    Friend WithEvents DeleteButton As ToolStripButton
-    Friend WithEvents CancelButton As ToolStripButton
-    Friend WithEvents CloseButton As ToolStripButton
+    Friend WithEvents NewToolStripButton As ToolStripButton
+    Friend WithEvents SaveToolStripButton As ToolStripButton
+    Friend WithEvents DeleteToolStripButton As ToolStripButton
+    Friend WithEvents CancelToolStripButton As ToolStripButton
+    Friend WithEvents CloseToolStripButton As ToolStripButton
     Friend WithEvents Panel2 As Panel
     Friend WithEvents UserGrid As DataGridView
     Friend WithEvents UserUserControl As UserUserControl

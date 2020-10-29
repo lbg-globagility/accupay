@@ -321,9 +321,13 @@ namespace AccuPay.Data.Services
             if (currentPayPeriod == null)
                 return new List<Leave>();
 
-            var firstDayOfTheYear = await _payPeriodRepository.GetFirstDayOfTheYear(currentPayPeriod, organizationId);
+            var firstDayOfTheYear = await _payPeriodRepository.GetFirstDayOfTheYear(
+                currentPayPeriodYear: currentPayPeriod.Year,
+                organizationId: organizationId);
 
-            var lastDayOfTheYear = await _payPeriodRepository.GetLastDayOfTheYear(currentPayPeriod, organizationId);
+            var lastDayOfTheYear = await _payPeriodRepository.GetLastDayOfTheYear(
+                currentPayPeriodYear: currentPayPeriod.Year,
+                organizationId: organizationId);
 
             if (firstDayOfTheYear == null || lastDayOfTheYear == null)
                 return new List<Leave>();
@@ -355,18 +359,22 @@ namespace AccuPay.Data.Services
             decimal newAllowance)
         {
             decimal newBalance = newAllowance;
+            const string cannotRetrieveDataErrorMessage = "Cannot retrieve current pay period or the first days of the working year.";
 
             var currentPayPeriod = await _payPeriodRepository.GetCurrentPayPeriodAsync(organizationId);
 
+            if (currentPayPeriod == null)
+                throw new BusinessLogicException(cannotRetrieveDataErrorMessage);
+
             var firstPayPeriodOfTheYear = await _payPeriodRepository
                 .GetFirstPayPeriodOfTheYear(
-                    currentPayPeriod,
-                    organizationId);
+                currentPayPeriodYear: currentPayPeriod.Year,
+                organizationId: organizationId);
 
             var firstDayOfTheWorkingYear = firstPayPeriodOfTheYear?.PayFromDate;
 
-            if (currentPayPeriod == null || firstPayPeriodOfTheYear?.RowID == null || firstDayOfTheWorkingYear == null)
-                throw new Exception("Cannot retrieve current pay period or the first days of the working year.");
+            if (firstPayPeriodOfTheYear?.RowID == null || firstDayOfTheWorkingYear == null)
+                throw new BusinessLogicException(cannotRetrieveDataErrorMessage);
 
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
 

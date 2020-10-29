@@ -1,8 +1,8 @@
+using AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions;
+using AccuPay.CrystalReportsWeb.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions;
-using AccuPay.CrystalReportsWeb.Areas.HelpPage.Models;
 
 namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.Controllers
 {

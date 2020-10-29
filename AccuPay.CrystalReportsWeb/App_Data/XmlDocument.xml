@@ -316,7 +316,7 @@
         </member>
         <member name="M:AccuPay.CrystalReportsWeb.Areas.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
             <summary>
-            Gets the sample object that will be serialized by the formatters. 
+            Gets the sample object that will be serialized by the formatters.
             First, it will look at the <see cref="P:AccuPay.CrystalReportsWeb.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create
             one using <see cref="M:AccuPay.CrystalReportsWeb.Areas.HelpPage.HelpPageSampleGenerator.DefaultSampleObjectFactory(AccuPay.CrystalReportsWeb.Areas.HelpPage.HelpPageSampleGenerator,System.Type)"/> (which wraps an <see cref="T:AccuPay.CrystalReportsWeb.Areas.HelpPage.ObjectGenerator"/>) and other
             factories in <see cref="P:AccuPay.CrystalReportsWeb.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories"/>.

@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class TimeEntryProgressDialog
+Partial Class ProgressDialog
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -52,7 +52,7 @@ Partial Class TimeEntryProgressDialog
         Me.Name = "TimeEntryProgressDialog"
         Me.ShowIcon = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Time Entry Progress Dialog"
+        Me.Text = "Progress Dialog"
         Me.ResumeLayout(False)
 
     End Sub

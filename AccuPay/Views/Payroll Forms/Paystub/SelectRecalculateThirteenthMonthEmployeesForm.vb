@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -9,7 +9,7 @@ Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class SelectThirteenthMonthEmployeesForm
+Public Class SelectRecalculateThirteenthMonthEmployeesForm
 
     Private ReadOnly _currentPayPeriodId As Integer
 
@@ -87,68 +87,65 @@ Public Class SelectThirteenthMonthEmployeesForm
 
         Dim calculator As New ThirteenthMonthPayCalculator(z_OrganizationID, z_User)
 
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync("Recalculate 13th Month Pay",
+            Async Function()
+                Dim settings = _listOfValueService.Create()
 
-            Dim settings = _listOfValueService.Create()
+                Dim datePeriod = New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
 
-            Dim datePeriod = New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
+                Dim timeEntries = (Await _timeEntryRepository.
+                    GetByDatePeriodAsync(z_OrganizationID, datePeriod)).
+                    ToList()
 
-            Dim timeEntries = (Await _timeEntryRepository.
-                                    GetByDatePeriodAsync(z_OrganizationID, datePeriod)).
-                                    ToList()
+                Dim actualTimeEntries = (Await _actualTimeEntryRepository.
+                    GetByDatePeriodAsync(z_OrganizationID, datePeriod)).
+                    ToList()
 
-            Dim actualTimeEntries = (Await _actualTimeEntryRepository.
-                                    GetByDatePeriodAsync(z_OrganizationID, datePeriod)).
-                                    ToList()
+                Dim salaries = (Await _salaryRepository.
+                    GetByCutOffAsync(z_OrganizationID, datePeriod.End)).
+                    ToList()
 
-            Dim salaries = (Await _salaryRepository.
-                                    GetByCutOffAsync(z_OrganizationID, datePeriod.End)).
-                                    ToList()
+                For Each employee In _employeeModels
 
-            For Each employee In _employeeModels
+                    If employee.IsSelected = False Then
 
-                If employee.IsSelected = False Then
+                        employee.ResetNewThirteenthMonthPayAmount()
+                        Continue For
+                    End If
 
-                    employee.ResetNewThirteenthMonthPayAmount()
-                    Continue For
-                End If
+                    Dim employeeTimeEntries = timeEntries.
+                        Where(Function(t) t.EmployeeID.Value = employee.EmployeeId).
+                        ToList()
 
-                Dim employeeTimeEntries = timeEntries.
-                                            Where(Function(t) t.EmployeeID.Value = employee.EmployeeId).
-                                            ToList()
+                    Dim employeeActualTimeEntries = actualTimeEntries.
+                        Where(Function(t) t.EmployeeID.Value = employee.EmployeeId).
+                        ToList()
 
-                Dim employeeActualTimeEntries = actualTimeEntries.
-                                            Where(Function(t) t.EmployeeID.Value = employee.EmployeeId).
-                                            ToList()
+                    Dim salary = salaries.
+                        Where(Function(s) s.EmployeeID.Value = employee.EmployeeId).
+                        FirstOrDefault()
 
-                Dim salary = salaries.
-                                Where(Function(s) s.EmployeeID.Value = employee.EmployeeId).
-                                FirstOrDefault()
+                    Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
+                    Dim newPaystubThirteenthMonthPay = calculator.Calculate(
+                        employee.EmployeeObject,
+                        employee.PaystubObject,
+                        employeeTimeEntries,
+                        employeeActualTimeEntries,
+                        salary,
+                        settings,
+                        employee.PaystubObject.AllowanceItems,
+                        currentSystemOwner)
 
-                Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
-                Dim newPaystubThirteenthMonthPay = calculator.Calculate(employee.EmployeeObject,
-                                                                          employee.PaystubObject,
-                                                                          employeeTimeEntries,
-                                                                          employeeActualTimeEntries,
-                                                                          salary,
-                                                                          settings,
-                                                                          employee.PaystubObject.AllowanceItems,
-                                                                          currentSystemOwner)
+                    employee.UpdateNewThirteenthMonthPayAmount(
+                        amount:=newPaystubThirteenthMonthPay.Amount,
+                        basicPay:=newPaystubThirteenthMonthPay.BasicPay)
 
-                employee.UpdateNewThirteenthMonthPayAmount(amount:=newPaystubThirteenthMonthPay.Amount,
-                                                        basicPay:=newPaystubThirteenthMonthPay.BasicPay)
+                Next
 
-            Next
+                UpdateForm()
+            End Function)
 
-            UpdateForm()
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage("Recalculate 13th Month Pay")
-        Finally
-
-            Me.Cursor = Cursors.Default
-
-        End Try
+        Me.Cursor = Cursors.Default
 
     End Sub
 
@@ -257,6 +254,25 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     End Function
 
+    Private Sub UncheckAllButton_Click(sender As Object, e As EventArgs) Handles UncheckAllButton.Click
+
+        For Each model In _employeeModels
+            model.IsSelected = False
+        Next
+
+        EmployeeGridView.EndEdit()
+        EmployeeGridView.Refresh()
+        UpdateSaveButton()
+    End Sub
+
+    Private Sub EmployeeGridView_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) _
+        Handles EmployeeGridView.CellMouseUp
+
+        EmployeeGridView.EndEdit()
+        EmployeeGridView.Refresh()
+        UpdateSaveButton()
+    End Sub
+
     Private Class EmployeeModel
         Public ReadOnly Property EmployeeId As Integer
         Public ReadOnly Property PaystubObject As Paystub
@@ -312,8 +328,8 @@ Public Class SelectThirteenthMonthEmployeesForm
 
         Public ReadOnly Property ForSaving As Boolean
             Get
-                Return IsRecalculated AndAlso CurrentThirteenthMonthAmount <>
-                                                AccuMath.CommercialRound(NewThirteenthMonthAmount)
+                Return IsRecalculated AndAlso
+                    CurrentThirteenthMonthAmount <> AccuMath.CommercialRound(NewThirteenthMonthAmount)
             End Get
         End Property
 
@@ -343,24 +359,5 @@ Public Class SelectThirteenthMonthEmployeesForm
         End Sub
 
     End Class
-
-    Private Sub UncheckAllButton_Click(sender As Object, e As EventArgs) Handles UncheckAllButton.Click
-
-        For Each model In _employeeModels
-            model.IsSelected = False
-        Next
-
-        EmployeeGridView.EndEdit()
-        EmployeeGridView.Refresh()
-        UpdateSaveButton()
-    End Sub
-
-    Private Sub EmployeeGridView_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) _
-        Handles EmployeeGridView.CellMouseUp
-
-        EmployeeGridView.EndEdit()
-        EmployeeGridView.Refresh()
-        UpdateSaveButton()
-    End Sub
 
 End Class

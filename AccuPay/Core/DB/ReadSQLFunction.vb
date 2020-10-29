@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports MySql.Data.MySqlClient
 
@@ -44,7 +44,7 @@ Public Class ReadSQLFunction
 
         Dim paramName = n_ExecuteQuery.Result
 
-        Dim paramNames() As String
+        Dim paramNames() As String = New String() {}
 
         If Not IsDBNull(paramName) AndAlso paramName IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(paramName.ToString()) Then
 

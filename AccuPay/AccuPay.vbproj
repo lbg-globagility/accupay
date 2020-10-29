@@ -433,6 +433,13 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Views\Payroll Forms\Paystub\ReleaseThirteenthMonthGeneration.vb" />
+    <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.Designer.vb">
+      <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\Official Business\OBRowRecord.vb" />
     <Compile Include="Views\Time Attendance Form\Overtimes\OvertimeRowRecord.vb" />
     <Compile Include="Core\Parser\TimelogRegexParser.vb" />
@@ -694,10 +701,10 @@
     <Compile Include="Views\HRIS Forms\Employee\Educational Background\EducationalBackgroundTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\SelectThirteenthMonthEmployeesForm.Designer.vb">
-      <DependentUpon>SelectThirteenthMonthEmployeesForm.vb</DependentUpon>
+    <Compile Include="Views\Payroll Forms\Paystub\SelectRecalculateThirteenthMonthEmployeesForm.Designer.vb">
+      <DependentUpon>SelectRecalculateThirteenthMonthEmployeesForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\SelectThirteenthMonthEmployeesForm.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\SelectRecalculateThirteenthMonthEmployeesForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\SelectBranchForm.Designer.vb">
@@ -789,10 +796,10 @@
     </Compile>
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromBonusModel.vb" />
     <Compile Include="Core\DependencyInjectionHelper.vb" />
-    <Compile Include="Views\General Forms\UserActivityForm.Designer.vb">
+    <Compile Include="Views\Core Forms\UserActivityForm.Designer.vb">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\General Forms\UserActivityForm.vb">
+    <Compile Include="Views\Core Forms\UserActivityForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\General Forms\User\NewUserForm.Designer.vb">
@@ -1035,10 +1042,10 @@
     <Compile Include="Views\HRIS Forms\Employee\Offset\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\PayrollResultDialog.Designer.vb">
-      <DependentUpon>PayrollResultDialog.vb</DependentUpon>
+    <Compile Include="Views\Payroll Forms\Paystub\PaystubEmployeeResultDialog.Designer.vb">
+      <DependentUpon>PaystubEmployeeResultDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\PayrollResultDialog.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\PaystubEmployeeResultDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\PaystubView.Designer.vb">
@@ -1117,10 +1124,10 @@
     <Compile Include="Views\Time Attendance Form\TimeEntry\PreviewLeaveBalanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\TimeEntryProgressDialog.Designer.vb">
-      <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\ProgressDialog.Designer.vb">
+      <DependentUpon>ProgressDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\TimeEntryProgressDialog.vb">
+    <Compile Include="Views\Core Forms\ProgressDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\TimeEntry\TimeEntrySummaryForm.Designer.vb">
@@ -1917,6 +1924,9 @@
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Previous Employer\PreviousEmployerTab.resx">
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.resx">
+      <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ViewLeaveLedgerDialog.resx">
       <DependentUpon>ViewLeaveLedgerDialog.vb</DependentUpon>
     </EmbeddedResource>
@@ -1941,8 +1951,8 @@
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Educational Background\EducationalBackgroundTab.resx">
       <DependentUpon>EducationalBackgroundTab.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectThirteenthMonthEmployeesForm.resx">
-      <DependentUpon>SelectThirteenthMonthEmployeesForm.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectRecalculateThirteenthMonthEmployeesForm.resx">
+      <DependentUpon>SelectRecalculateThirteenthMonthEmployeesForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
@@ -1986,7 +1996,7 @@
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\AssignBonusToLoanForm.resx">
       <DependentUpon>AssignBonusToLoanForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\UserActivityForm.resx">
+    <EmbeddedResource Include="Views\Core Forms\UserActivityForm.resx">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\User\NewUserForm.resx">
@@ -2114,8 +2124,8 @@
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Offset\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Paystub\PayrollResultDialog.resx">
-      <DependentUpon>PayrollResultDialog.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\PaystubEmployeeResultDialog.resx">
+      <DependentUpon>PaystubEmployeeResultDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\PaystubView.resx">
       <DependentUpon>PaystubView.vb</DependentUpon>
@@ -2156,8 +2166,8 @@
     <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\TimeAttendanceLogListForm.resx">
       <DependentUpon>TimeAttendanceLogListForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\TimeEntryProgressDialog.resx">
-      <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\ProgressDialog.resx">
+      <DependentUpon>ProgressDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
