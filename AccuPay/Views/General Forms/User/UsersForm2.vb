@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -34,25 +34,25 @@ Public Class UsersForm2
     Private Async Function CheckRolePermissions() As Task
         Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.USER)
 
-        NewButton.Visible = False
-        SaveButton.Visible = False
-        CancelButton.Visible = False
-        DeleteButton.Visible = False
+        NewToolStripButton.Visible = False
+        SaveToolStripButton.Visible = False
+        CancelToolStripButton.Visible = False
+        DeleteToolStripButton.Visible = False
 
         If role.Success Then
 
             If role.RolePermission.Create Then
-                NewButton.Visible = True
+                NewToolStripButton.Visible = True
 
             End If
 
             If role.RolePermission.Update Then
-                SaveButton.Visible = True
-                CancelButton.Visible = True
+                SaveToolStripButton.Visible = True
+                CancelToolStripButton.Visible = True
             End If
 
             If role.RolePermission.Delete Then
-                DeleteButton.Visible = True
+                DeleteToolStripButton.Visible = True
 
             End If
 
@@ -98,7 +98,7 @@ Public Class UsersForm2
 
     End Function
 
-    Private Async Sub NewButton_Click(sender As Object, e As EventArgs) Handles NewButton.Click
+    Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
         Dim dialog As New NewUserForm()
         dialog.ShowDialog()
@@ -117,7 +117,7 @@ Public Class UsersForm2
 
     End Sub
 
-    Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
+    Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
 
         If UserUserControl.HasChanged = False Then
 
@@ -151,7 +151,7 @@ Public Class UsersForm2
             End Function)
     End Sub
 
-    Private Async Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+    Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
 
         Dim currentUser = GetSelectedUser()
 
@@ -189,7 +189,7 @@ Public Class UsersForm2
 
     End Sub
 
-    Private Async Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
 
         RemoveHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
 
@@ -198,7 +198,7 @@ Public Class UsersForm2
         AddHandler UserGrid.SelectionChanged, AddressOf UserGridSelectionChanged
     End Sub
 
-    Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
+    Private Sub CloseToolStripButton_Click(sender As Object, e As EventArgs) Handles CloseToolStripButton.Click
         Me.Close()
     End Sub
 

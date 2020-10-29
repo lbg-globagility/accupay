@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class NewTripTicketDialog
     Inherits System.Windows.Forms.Form
 
@@ -48,7 +48,7 @@ Partial Class NewTripTicketDialog
         Me.lblDistance = New System.Windows.Forms.Label()
         Me.lblRoute = New System.Windows.Forms.Label()
         Me.SaveButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelToolStripButton = New System.Windows.Forms.Button()
         Me.grpTripTicket.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -310,19 +310,19 @@ Partial Class NewTripTicketDialog
         '
         'CancelButton
         '
-        Me.CancelButton.Location = New System.Drawing.Point(417, 343)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 32)
-        Me.CancelButton.TabIndex = 110
-        Me.CancelButton.Text = "Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelToolStripButton.Location = New System.Drawing.Point(417, 343)
+        Me.CancelToolStripButton.Name = "CancelButton"
+        Me.CancelToolStripButton.Size = New System.Drawing.Size(75, 32)
+        Me.CancelToolStripButton.TabIndex = 110
+        Me.CancelToolStripButton.Text = "Cancel"
+        Me.CancelToolStripButton.UseVisualStyleBackColor = True
         '
         'NewTripTicketDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(505, 381)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelToolStripButton)
         Me.Controls.Add(Me.SaveButton)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.grpTripTicket)
@@ -364,5 +364,5 @@ Partial Class NewTripTicketDialog
     Friend WithEvents lblDistance As Label
     Friend WithEvents lblRoute As Label
     Friend WithEvents SaveButton As Button
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelToolStripButton As Button
 End Class
