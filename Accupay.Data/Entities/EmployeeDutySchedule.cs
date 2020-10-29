@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Helpers;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -74,6 +75,8 @@ namespace AccuPay.Data.Entities
         /// <summary>
         /// Computes the shift hours and also update the work hours.
         /// </summary>
+        ///
+
         public void ComputeShiftHours()
         {
             if (StartTime.HasValue && EndTime.HasValue)
@@ -92,6 +95,21 @@ namespace AccuPay.Data.Entities
             ComputeWorkHours();
         }
 
-        private void ComputeWorkHours() => WorkHours = ShiftHours > BreakLength ? ShiftHours - BreakLength : 0;
+        private void ComputeWorkHours()
+        {
+            WorkHours = ShiftHours > BreakLength ? ShiftHours - BreakLength : 0;
+        }
+
+        internal void RecomputeShiftHoursAndWorkHoursBaseOnPolicy(ShiftBasedAutomaticOvertimePolicy shiftBasedAutomaticOvertimePolicy)
+        {
+            if (StartTime.HasValue && EndTime.HasValue && shiftBasedAutomaticOvertimePolicy != null)
+            {
+                if (shiftBasedAutomaticOvertimePolicy.Enabled)
+                {
+                    WorkHours = shiftBasedAutomaticOvertimePolicy.DefaultWorkHours;
+                    ShiftHours = WorkHours + BreakLength;
+                }
+            }
+        }
     }
 }

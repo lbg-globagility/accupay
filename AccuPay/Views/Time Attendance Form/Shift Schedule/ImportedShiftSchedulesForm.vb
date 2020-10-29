@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -7,6 +7,8 @@ Imports AccuPay.Data.Services.[Imports]
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
+Imports AccuPay.Data.Services.Policies
+Imports AccuPay.Data.ValueObjects
 
 Public Class ImportedShiftSchedulesForm
 
@@ -23,8 +25,9 @@ Public Class ImportedShiftSchedulesForm
     Private _userActivityRepository As UserActivityRepository
 
     Private _importParser As ShiftImportParser
+    Private ReadOnly _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
-    Sub New()
+    Sub New(shiftBasedAutoOvertimePolicy As Policies.ShiftBasedAutomaticOvertimePolicy)
 
         InitializeComponent()
 
@@ -33,6 +36,9 @@ Public Class ImportedShiftSchedulesForm
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _importParser = MainServiceProvider.GetRequiredService(Of ShiftImportParser)
+
+        _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy
+        _importParser.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy)
     End Sub
 
 #End Region
@@ -107,6 +113,8 @@ Public Class ImportedShiftSchedulesForm
         Await FunctionUtils.TryCatchFunctionAsync("Import Shift Schedule",
             Async Function()
 
+                If _shiftBasedAutoOvertimePolicy.Enabled Then SaveShiftBasedOvertimes()
+
                 Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
                 Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(
                     _dataSourceOk,
@@ -148,6 +156,16 @@ Public Class ImportedShiftSchedulesForm
 
             End Function)
 
+    End Sub
+
+    Private Sub SaveShiftBasedOvertimes()
+        Dim employeeIds = _dataSourceOk.Select(Function(sh) sh.EmployeeId.Value).Distinct().ToList()
+
+        Dim minDate = _dataSourceOk.Min(Function(sh) sh.Date)
+        Dim maxDate = _dataSourceOk.Max(Function(sh) sh.Date)
+        Dim datePeriod = New TimePeriod(minDate, maxDate)
+
+        ShiftScheduleForm.SaveShiftBasedOvertimes(_dataSourceOk, employeeIds, datePeriod)
     End Sub
 
     Private Shared Function CreateSuffixIdentifier(schedule As EmployeeDutySchedule) As String

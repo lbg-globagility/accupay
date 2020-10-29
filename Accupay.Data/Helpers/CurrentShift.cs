@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -10,7 +11,6 @@ namespace AccuPay.Data.Helpers
         public const decimal StandardWorkingHours = 8;
 
         private int? _defaultRestDay;
-
         private readonly EmployeeDutySchedule _shift;
 
         public CurrentShift(EmployeeDutySchedule shift, DateTime date)

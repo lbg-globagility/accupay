@@ -1,10 +1,11 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.Policies
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -26,7 +27,8 @@ Public Class EmployeeOvertimeForm
     Private _changedOvertimes As List(Of Overtime)
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
-
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _listOfValueService As ListOfValueService
     Private ReadOnly _employeeRepository As EmployeeRepository
 
     Private ReadOnly _userActivityRepository As UserActivityRepository
@@ -36,6 +38,7 @@ Public Class EmployeeOvertimeForm
     Private isMassOvertimeEnabled As Boolean
 
     Private _currentRolePermission As RolePermission
+    Private _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
     Sub New()
 
@@ -55,6 +58,31 @@ Public Class EmployeeOvertimeForm
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+
+    End Sub
+
+    Private Async Sub LoadDutyShifPolicy()
+        Dim dutyShiftPolicies = Await _listOfValueRepository.GetDutyShiftPoliciesAsync()
+
+        Dim settings = _listOfValueService.Create(dutyShiftPolicies.ToList)
+
+        _shiftBasedAutoOvertimePolicy = New ShiftBasedAutomaticOvertimePolicy(settings)
+        If _shiftBasedAutoOvertimePolicy.Enabled Then
+            Dim toolStripItems = ToolStrip12.
+                Items.
+                OfType(Of ToolStripItem).
+                Where(Function(tsi) Not tsi.Name = CloseButton.Name).
+                ToList()
+
+            toolStripItems.
+                ForEach(Sub(toolStripItem)
+                            toolStripItem.Visible = False
+                            toolStripItem.Enabled = False
+                        End Sub)
+        End If
     End Sub
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -73,6 +101,8 @@ Public Class EmployeeOvertimeForm
         Await ShowEmployeeList()
 
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        LoadDutyShifPolicy()
 
     End Sub
 

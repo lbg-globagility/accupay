@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities;
 using System;
@@ -15,7 +16,8 @@ namespace AccuPay.Data.Services
         private readonly Organization _organization;
         private readonly Employee _employee;
         private readonly IEmploymentPolicy _employmentPolicy;
-        private readonly TimeEntryPolicy _policy;
+
+        private static TimeEntryPolicy _policy;
 
         public DayCalculator(
             Organization organization,
@@ -66,7 +68,7 @@ namespace AccuPay.Data.Services
             if (hasSalaryForThisDate == false)
                 return timeEntry;
 
-            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest);
+            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest, _policy.ShiftBasedAutomaticOvertimePolicy.Enabled);
 
             timeEntry.BranchID = branchId;
             timeEntry.IsRestDay = currentShift.IsRestDay;
@@ -239,6 +241,18 @@ namespace AccuPay.Data.Services
             timeEntry.OvertimeHours = overtimes.Sum(o => calculator.ComputeOvertimeHours(logPeriod, o, currentShift, nightBreaktime));
 
             ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
+
+            if (_policy.ShiftBasedAutomaticOvertimePolicy.Enabled)
+                TrimOvertimeHoursWroked(timeEntry);
+        }
+
+        private void TrimOvertimeHoursWroked(TimeEntry timeEntry)
+        {
+            decimal overtimeHours = timeEntry.OvertimeHours;
+            if (overtimeHours > 0) timeEntry.OvertimeHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(overtimeHours);
+
+            decimal nightDiffOTHours = timeEntry.NightDiffOTHours;
+            if (nightDiffOTHours > 0) timeEntry.NightDiffOTHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(nightDiffOTHours);
         }
 
         private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, ICollection<RoutePayRate> routeRates)
@@ -815,13 +829,20 @@ namespace AccuPay.Data.Services
         public static CurrentShift GetCurrentShift(DateTime currentDate,
             EmployeeDutySchedule shift,
             bool respectDefaultRestDay,
-            int? employeeDayOfRest)
+            int? employeeDayOfRest,
+            bool shiftBasedAutomaticOvertimeEnabled)
         {
             var currentShift = new CurrentShift(shift, currentDate);
 
             if (respectDefaultRestDay)
             {
                 currentShift.SetDefaultRestDay(employeeDayOfRest);
+            }
+
+            if (shiftBasedAutomaticOvertimeEnabled && shift != null)
+            {
+                shift.EndTimeFull = _policy.ShiftBasedAutomaticOvertimePolicy.GetDefaultShiftPeriodEndTime(shift.StartTimeFull, shift.BreakLength);
+                currentShift = new CurrentShift(shift, currentDate);
             }
 
             return currentShift;

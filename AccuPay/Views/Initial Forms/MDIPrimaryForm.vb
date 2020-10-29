@@ -1088,7 +1088,6 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Async Sub EmailStatusTimer_Tick(sender As Object, e As EventArgs)
-
         Try
             EmailServiceStatusToolStripLabel.Enabled = True
 
@@ -1106,7 +1105,6 @@ Public Class MDIPrimaryForm
             EmailServiceStatusToolStripLabel.Text = $"Cannot access Email Service status."
             EmailServiceStatusToolStripLabel.ForeColor = Color.Black
         End Try
-
     End Sub
 
     Private Sub UpdateEmailStatusToolStripLabel(isOnline As Boolean, queueCount As Integer)
