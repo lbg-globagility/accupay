@@ -19,7 +19,7 @@ namespace AccuPay.Data.Services
             _settings = settings;
         }
 
-        public void Calculate(Paystub paystub, Paystub previousPaystub, Employee employee, PayPeriod payperiod)
+        public void Calculate(Paystub paystub, Paystub previousPaystub, Employee employee, PayPeriod payperiod, Salary salary)
         {
             // Reset the tax value before starting
             paystub.DeferredTaxableIncome = 0;
@@ -66,6 +66,10 @@ namespace AccuPay.Data.Services
             {
                 // Nothing to do here for now
             }
+
+            // If the employee is earning minimum wage, then remove the taxable income.
+            if (salary.IsMinimumWage)
+                paystub.TaxableIncome = 0;
 
             // If the employee has no taxable income, then there's no need to compute for tax withheld.
             if (paystub.TaxableIncome <= 0)

@@ -278,10 +278,15 @@ Public Class SalaryTab
 
     Private Sub ClearForm()
         dtpEffectiveFrom.Value = Date.Today
+        chkIsMinimumWage.Checked = False
+
         txtAmount.Text = String.Empty
         txtAllowance.Text = String.Empty
         txtTotalSalary.Text = String.Empty
+
+        chkPayPhilHealth.Checked = True
         txtPhilHealth.Text = String.Empty
+        ChkPagIbig.Checked = True
         txtPagIbig.Text = String.Empty
         chkPaySSS.Checked = True
     End Sub
@@ -289,6 +294,7 @@ Public Class SalaryTab
     Private Sub DisplaySalary()
         RemoveHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
         dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
+        chkIsMinimumWage.Checked = _currentSalary.IsMinimumWage
 
         txtAmount.Text = CStr(_currentSalary.BasicSalary)
         txtAllowance.Text = CStr(_currentSalary.AllowanceSalary)
@@ -346,6 +352,7 @@ Public Class SalaryTab
 
                 With salary
                     .EffectiveFrom = dtpEffectiveFrom.Value
+                    .IsMinimumWage = chkIsMinimumWage.Checked
                     .BasicSalary = txtAmount.Text.ToDecimal
                     .AllowanceSalary = txtAllowance.Text.ToDecimal
                     .DoPaySSSContribution = chkPaySSS.Checked

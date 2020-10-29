@@ -52,6 +52,8 @@ namespace AccuPay.Data.Entities
 
         public bool AutoComputeHDMFContribution { get; set; }
 
+        public bool IsMinimumWage { get; set; }
+
         /// <summary>
         /// Updates TotalSalary. Call this everytime BasicSalary or AllowanceSalary has changed.
         /// </summary>

@@ -396,7 +396,7 @@ namespace AccuPay.Data.Services
             hdmfCalculator.Calculate(salary, paystub, employee, settings, payPeriod);
 
             var withholdingTaxCalculator = new WithholdingTaxCalculator(settings, resources.WithholdingTaxBrackets);
-            withholdingTaxCalculator.Calculate(paystub, previousPaystub, employee, payPeriod);
+            withholdingTaxCalculator.Calculate(paystub, previousPaystub, employee, payPeriod, salary);
 
             paystub.NetPay = AccuMath.CommercialRound(paystub.GrossPay - paystub.NetDeductions + paystub.TotalAdjustments);
 
