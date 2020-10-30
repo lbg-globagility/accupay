@@ -13,8 +13,8 @@ namespace AccuPay.Utilities
         {
             var dateTomorrow = dateToday.AddDays(1);
             return Combine(
-                    endTime > startTime ? dateToday : dateTomorrow,
-                    endTime
+                endTime > startTime ? dateToday : dateTomorrow,
+                endTime
             );
         }
 
@@ -25,15 +25,13 @@ namespace AccuPay.Utilities
             return DateTime.Parse(timestampString);
         }
 
-        public static DateTime? ToDateTime(TimeSpan? timeSpan)
+        public static DateTime? ToDateTime(TimeSpan? timeSpan, DateTime date)
         {
             if (!timeSpan.HasValue) return null;
 
-            var today = DateTime.Now;
-            var value = timeSpan.GetValueOrDefault();
-
-            var dateTime = new DateTime(today.Year, today.Month, today.Day,
-                                        value.Hours, value.Minutes, 0);
+            var dateTime = new DateTime(
+                date.Year, date.Month, date.Day,
+                timeSpan.Value.Hours, timeSpan.Value.Minutes, 0);
 
             return dateTime;
         }
