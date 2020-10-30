@@ -6,9 +6,9 @@ namespace AccuPay.Data.Interfaces
     {
         int? EmployeeId { get; set; }
         DateTime Date { get; set; }
-        DateTime? StartTime { get; }
-        DateTime? EndTime { get; }
-        DateTime? BreakTime { get; }
+        TimeSpan? StartTime { get; }
+        TimeSpan? EndTime { get; }
+        TimeSpan? BreakTime { get; }
         decimal BreakLength { get; set; }
         bool IsRestDay { get; }
     }

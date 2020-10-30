@@ -95,7 +95,7 @@ namespace AccuPay.Data.Services.Imports
 
             foreach (var date in dates)
             {
-                list.Add(new ShiftImportModel(employee)
+                list.Add(new ShiftImportModel(employee, _shiftBasedAutoOvertimePolicy)
                 {
                     Date = date,
                     BreakTime = shiftSched.BreakStartTime,
@@ -105,8 +105,6 @@ namespace AccuPay.Data.Services.Imports
                     EndTime = shiftSched.EndTime
                 });
             }
-
-            if (_isShiftBasedAutoOvertimePolicyEnabled) list.ForEach(shift => shift.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy));
 
             return list;
         }

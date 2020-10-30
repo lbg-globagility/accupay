@@ -1,8 +1,10 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Interfaces;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.Imports.Overtimes;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
@@ -95,6 +97,84 @@ namespace AccuPay.Data.Services
             await _overtimeRepository.SaveManyAsync(overtimes);
 
             return overtimes;
+        }
+
+        public async Task GenerateOvertimeByShift(IEnumerable<IShift> shiftSchedSaveList, List<int> employeeIds, TimePeriod timePeriod, int organizationId, int userId)
+        {
+            if (!shiftSchedSaveList.Any() || timePeriod.Start > timePeriod.End)
+                return;
+
+            var overtimes = _overtimeRepository.GetByEmployeeIDsAndDatePeriod(organizationId, employeeIds, timePeriod);
+
+            var saveOvertimes = new List<Overtime>();
+            var deleteOvertimes = new List<Overtime>();
+
+            Func<DateTime?, decimal, DateTime?> getOTStartTime = (DateTime? starting, decimal breakLength) =>
+            {
+                return _policy.ShiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(starting, breakLength);
+            };
+
+            Func<IShift, Overtime> createNewOvertime = (IShift shiftModel) =>
+            {
+                return new Overtime()
+                {
+                    Created = DateTime.Now,
+                    CreatedBy = userId,
+                    EmployeeID = shiftModel.EmployeeId,
+                    OrganizationID = organizationId,
+                    OTStartDate = shiftModel.Date,
+                    OTEndDate = shiftModel.Date,
+                    Status = Overtime.StatusApproved
+                };
+            };
+
+            shiftSchedSaveList.ToList().ForEach(shiftModel =>
+            {
+                var employeeID = shiftModel.EmployeeId;
+                var dateValue = shiftModel.Date;
+
+                var overtimesThisDay = overtimes
+                    .Where(ot => ot.EmployeeID == employeeID)
+                    .Where(ot => ot.OTStartDate == dateValue)
+                    .ToList();
+
+                var overtime = overtimesThisDay.FirstOrDefault();
+                if (overtime == null)
+                    overtime = createNewOvertime(shiftModel);
+
+                var hasShiftPeriod = shiftModel.StartTime.HasValue && shiftModel.EndTime.HasValue;
+                if (hasShiftPeriod)
+                {
+                    var shiftTimePeriod = TimePeriod.FromTime(shiftModel.StartTime.Value, shiftModel.EndTime.Value, shiftModel.Date);
+                    var validOTStartTime = getOTStartTime(shiftTimePeriod.Start, shiftModel.BreakLength);
+
+                    overtime.OTStartTimeFull = validOTStartTime;
+                    overtime.OTEndTimeFull = shiftTimePeriod.End;
+                }
+
+                var overtimeId = 0;
+
+                if (overtime.OTStartTime != overtime.OTEndTime && hasShiftPeriod)
+                {
+                    if (overtime.RowID.HasValue)
+                        overtimeId = overtime.RowID.Value;
+
+                    overtime.LastUpdBy = userId;
+
+                    saveOvertimes.Add(overtime);
+                }
+
+                var discardOthers = overtimesThisDay
+                    .Where(ot => overtimeId != ot.RowID)
+                    .ToList();
+                discardOthers.ForEach(ot => deleteOvertimes.Add(ot));
+            });
+
+            if (saveOvertimes.Any())
+                await SaveManyAsync(saveOvertimes);
+
+            if (deleteOvertimes.Any())
+                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value));
         }
 
         #region Other Methods

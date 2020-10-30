@@ -2,6 +2,7 @@
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,6 +57,7 @@ namespace AccuPay.Data.Services
                     existingShift.BreakLength = shifModel.BreakLength;
 
                     existingShift.IsRestDay = shifModel.IsRestDay;
+                    existingShift.LastUpd = DateTime.Now;
 
                     updatedShifts.Add(existingShift);
                 }
@@ -122,10 +124,7 @@ namespace AccuPay.Data.Services
             if (shift.EndTime == null)
                 throw new BusinessLogicException("End Time is required.");
 
-            shift.ComputeShiftHours();
-
-            if (_policy.ShiftBasedAutomaticOvertimePolicy.Enabled)
-                shift.RecomputeShiftHoursAndWorkHoursBaseOnPolicy(_policy.ShiftBasedAutomaticOvertimePolicy);
+            shift.ComputeShiftHours(_policy.ShiftBasedAutomaticOvertimePolicy);
         }
     }
 }

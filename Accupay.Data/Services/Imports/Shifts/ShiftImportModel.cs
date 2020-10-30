@@ -1,6 +1,5 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Interfaces;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities;
@@ -9,7 +8,7 @@ using System.Collections.Generic;
 
 namespace AccuPay.Data.Services.Imports
 {
-    public class ShiftImportModel : ShiftModel, IShift
+    public class ShiftImportModel : ShiftModel
     {
         private ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
         private bool _isShiftBasedAutoOvertimePolicyEnabled;
@@ -17,8 +16,11 @@ namespace AccuPay.Data.Services.Imports
         public string EmployeeNo { get; set; }
         public string FullName { get; set; }
 
-        public ShiftImportModel(Employee employee)
+        public ShiftImportModel(Employee employee, ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
         {
+            _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
+            _isShiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
+
             AssignEmployee(employee);
         }
 
@@ -30,11 +32,11 @@ namespace AccuPay.Data.Services.Imports
         }
 
         // used in DataGridView as well as TimeToDisplay and BreakFromDisplay
-        public DateTime? TimeFromDisplay => TimeUtility.ToDateTime(StartTime);
+        public DateTime? TimeFromDisplay => TimeUtility.ToDateTime(StartTime, Date);
 
-        public DateTime? TimeToDisplay => TimeUtility.ToDateTime(EndTime);
+        public DateTime? TimeToDisplay => TimeUtility.ToDateTime(EndTime, Date);
 
-        public DateTime? BreakFromDisplay => TimeUtility.ToDateTime(BreakTime);
+        public DateTime? BreakFromDisplay => TimeUtility.ToDateTime(BreakTime, Date);
 
         public bool IsValidToSave => string.IsNullOrWhiteSpace(Remarks);
 
@@ -58,22 +60,7 @@ namespace AccuPay.Data.Services.Imports
                 if (EndTime == null)
                     reasons.Add("End Time is required");
 
-                if (_isShiftBasedAutoOvertimePolicyEnabled && !_shiftBasedAutoOvertimePolicy.IsValidDefaultShiftPeriod(this))
-                {
-                    var endTime = _shiftBasedAutoOvertimePolicy.GetDefaultShiftPeriodEndTime(TimeFromDisplay, BreakLength);
-                    if (endTime.HasValue)
-                    {
-                        var minOvertimeMinutes = Convert.ToDouble(_shiftBasedAutoOvertimePolicy.Minimum);
-                        var expectedEndTime = endTime.Value;
-                        var reason = $"End Time should be {expectedEndTime.ToShortTimeString()}";
-                        if (minOvertimeMinutes > 0)
-                        {
-                            var expectedOvertime = endTime.Value.AddMinutes(minOvertimeMinutes);
-                            reason = $"{reason}. Or should be {expectedOvertime.ToShortTimeString()} or greater";
-                        }
-                        reasons.Add(reason);
-                    }
-                }
+                if (_isShiftBasedAutoOvertimePolicyEnabled) ValidateExpectedEndTimeOrMinimumOvertime(reasons);
 
                 var message = string.Join("; ", reasons.ToArray());
 
@@ -84,16 +71,28 @@ namespace AccuPay.Data.Services.Imports
             }
         }
 
-        DateTime? IShift.StartTime => TimeFromDisplay;
-
-        DateTime? IShift.EndTime => TimeToDisplay;
-
-        DateTime? IShift.BreakTime => BreakFromDisplay;
-
-        internal void SetShiftBasedAutoOvertimePolicy(ShiftBasedAutomaticOvertimePolicy shiftBasedAutoOvertimePolicy)
+        private void ValidateExpectedEndTimeOrMinimumOvertime(List<string> reasons)
         {
-            _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
-            _isShiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
+            if (!_shiftBasedAutoOvertimePolicy.IsValidDefaultShiftPeriod(TimeFromDisplay, EndTime, BreakLength))
+            {
+                var importedShiftTimePeriod = TimePeriod.FromTime(StartTime.Value, EndTime.Value, Date);
+                var expectedEndTime = _shiftBasedAutoOvertimePolicy.GetExpectedEndTime(TimeFromDisplay, BreakLength).Value;
+                var isLessThanExpectedEndTime = importedShiftTimePeriod.End < expectedEndTime;
+                var reason = isLessThanExpectedEndTime ? $"End Time should be {expectedEndTime.ToShortTimeString()}" : string.Empty;
+
+                if (!isLessThanExpectedEndTime)
+                {
+                    var minOvertimeMinutes = Convert.ToDouble(_shiftBasedAutoOvertimePolicy.Minimum);
+                    var isEqualOrMoreThanMinimumOverTime = expectedEndTime.AddMinutes(minOvertimeMinutes) <= importedShiftTimePeriod.End;
+
+                    if (!isEqualOrMoreThanMinimumOverTime)
+                    {
+                        var expectedOvertime = expectedEndTime.AddMinutes(minOvertimeMinutes);
+                        reason = $"End Time should be {expectedOvertime.ToShortTimeString()} or greater";
+                    }
+                }
+                reasons.Add(reason);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
 Imports System.Threading.Tasks
@@ -538,8 +538,8 @@ Public Class TimeLogsForm2
                     End If
                 End If
 
-                origTimeIn = TimeSpanToString(.TimeIn)
-                origTimeOut = TimeSpanToString(.TimeOut)
+                origTimeIn = TimeSpanToString(.TimeIn, DateIn)
+                origTimeOut = TimeSpanToString(.TimeOut, DateOut)
 
                 _timeIn = origTimeIn
                 _timeOut = origTimeOut
@@ -594,11 +594,7 @@ Public Class TimeLogsForm2
 
                 If Not hasShift Then Return Nothing
 
-                'Dim timeShifts = {TimeSpanToString(ShiftSchedule.StartTime), TimeSpanToString(ShiftSchedule.EndTime)}
-                'Dim properArray = timeShifts.Where(Function(shiftTime) Not String.IsNullOrWhiteSpace(shiftTime)).ToArray()
-                'Return String.Join(" - ", properArray)
-
-                Return $"{TimeSpanToString(ShiftSchedule.StartTime)} - {TimeSpanToString(ShiftSchedule.EndTime)}"
+                Return $"{TimeSpanToString(ShiftSchedule.StartTime, DateIn)} - {TimeSpanToString(ShiftSchedule.EndTime, DateOut)}"
             End Get
         End Property
 
@@ -761,9 +757,9 @@ Public Class TimeLogsForm2
             End If
         End Sub
 
-        Public Shared Function TimeSpanToString(timeSpan As TimeSpan?) As String
+        Public Shared Function TimeSpanToString(timeSpan As TimeSpan?, [date] As Date) As String
             If Not timeSpan.HasValue Then Return Nothing
-            Return TimeUtility.ToDateTime(timeSpan.Value).Value.ToString(CUSTOM_SHORT_TIME_FORMAT)
+            Return TimeUtility.ToDateTime(timeSpan.Value, [date]).Value.ToString(CUSTOM_SHORT_TIME_FORMAT)
         End Function
 
     End Class
@@ -1191,10 +1187,10 @@ Public Class TimeLogsForm2
             Dim model = GridRowToTimeLogModel(currRow)
 
             If e.ColumnIndex = colTimeIn.Index Then
-                Dim fdsfsd = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeIn))
+                Dim fdsfsd = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeIn), model.DateIn)
                 model.TimeIn = fdsfsd
             ElseIf e.ColumnIndex = colTimeOut.Index Then
-                model.TimeOut = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeOut))
+                model.TimeOut = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeOut), model.DateOut)
             End If
 
             If model.HasChanged Then

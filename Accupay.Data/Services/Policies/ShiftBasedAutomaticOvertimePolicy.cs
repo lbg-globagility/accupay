@@ -11,7 +11,6 @@ namespace AccuPay.Data.Services.Policies
         private const int STANDARD_LABOR_HOURS = 8;
 
         private const int MINUTES_PER_HOUR = 60;
-        private const int SECONDS_PER_HOUR = 3600;
 
         private const int NO_DEFAULT_BREAK = 0;
 
@@ -30,17 +29,18 @@ namespace AccuPay.Data.Services.Policies
 
         public decimal DefaultBreakLength => NO_DEFAULT_BREAK;
 
-        public bool IsValidDefaultShiftPeriod(DateTime? shiftStart, DateTime? shiftEnd, Decimal breakLength)
+        public bool IsValidDefaultShiftPeriod(DateTime? startDate, TimeSpan? endTime, decimal breakLength)
         {
-            if (shiftStart.HasValue && shiftEnd.HasValue)
+            if (startDate.HasValue && endTime.HasValue)
             {
-                var expectedEndTime = GetDefaultShiftPeriodEndTime(shiftStart, breakLength).Value;
+                var expectedEndTime = GetExpectedEndTime(startDate, breakLength).Value;
                 var minimumOTEndTime = expectedEndTime.AddMinutes(Convert.ToDouble(Minimum));
 
-                var endTimeSpanValue = shiftEnd.Value;
-                if (shiftStart.Value.Hour >= endTimeSpanValue.Hour) endTimeSpanValue = endTimeSpanValue.AddDays(1);
-                var atLeastDefaultWorkHoursOrMore = endTimeSpanValue.Subtract(expectedEndTime).TotalSeconds == 0;
-                var isMinimumOTTimeOnwards = endTimeSpanValue.Subtract(minimumOTEndTime).TotalSeconds >= 0;
+                var endDate = startDate.Value.Date.Add(endTime.Value);
+                if (startDate.Value.Hour >= endDate.Hour) endDate = endDate.AddDays(1);
+
+                var atLeastDefaultWorkHoursOrMore = endDate.Subtract(expectedEndTime).TotalSeconds == 0;
+                var isMinimumOTTimeOnwards = endDate.Subtract(minimumOTEndTime).TotalSeconds >= 0;
 
                 if (!isMinimumOTTimeOnwards)
                     if (!atLeastDefaultWorkHoursOrMore)
@@ -52,21 +52,9 @@ namespace AccuPay.Data.Services.Policies
             return false;
         }
 
-        public bool IsValidDefaultShiftPeriod(IShift shift)
+        public DateTime? GetExpectedEndTime(DateTime? shiftStart, decimal breakLength)
         {
-            if (shift.StartTime.HasValue && shift.EndTime.HasValue)
-            {
-                var shiftTimePeriod = TimePeriod.FromTime(shift.StartTime.Value.TimeOfDay, shift.EndTime.Value.TimeOfDay, shift.Date);
-
-                return IsValidDefaultShiftPeriod(shiftTimePeriod.Start, shiftTimePeriod.End, shift.BreakLength);
-            }
-
-            return false;
-        }
-
-        public DateTime? GetDefaultShiftPeriodEndTime(DateTime? shiftStart, Decimal breakLength)
-        {
-            if (shiftStart == null) return default(DateTime?);
+            if (shiftStart == null) return null;
 
             var userLaborHours = DefaultWorkHours + breakLength;
             var expectedEndTimeSpan = shiftStart.Value.AddHours(Convert.ToDouble(userLaborHours));
@@ -78,7 +66,7 @@ namespace AccuPay.Data.Services.Policies
 
         private decimal ConvertMinuteToHour(decimal valueHours) => valueHours / MINUTES_PER_HOUR;
 
-        public decimal TrimOvertimeHoursWroked(decimal overtimeHoursWorked)
+        public decimal TrimOvertimeHoursWorked(decimal overtimeHoursWorked)
         {
             if (Denominator > 1)
             {
