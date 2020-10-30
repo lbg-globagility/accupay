@@ -166,13 +166,9 @@ Public Class ImportedShiftSchedulesForm
     Private Async Function SaveShiftBasedOvertimes() As Task
         Dim employeeIds = _dataSourceOk.Select(Function(sh) sh.EmployeeId.Value).Distinct().ToList()
 
-        Dim minDate = _dataSourceOk.Min(Function(sh) sh.Date)
-        Dim maxDate = _dataSourceOk.Max(Function(sh) sh.Date)
-        Dim datePeriod = New TimePeriod(minDate, maxDate)
-
         Dim overtimeDataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
-        Await overtimeDataService.GenerateOvertimeByShift(_dataSourceOk, employeeIds, datePeriod, z_OrganizationID, z_User)
+        Await overtimeDataService.GenerateOvertimeByShift(_dataSourceOk, employeeIds, z_OrganizationID, z_User)
     End Function
 
     Private Shared Function CreateSuffixIdentifier(schedule As EmployeeDutySchedule) As String

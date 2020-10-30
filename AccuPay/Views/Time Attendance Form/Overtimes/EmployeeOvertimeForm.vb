@@ -344,6 +344,19 @@ Public Class EmployeeOvertimeForm
 
         If oldOvertime Is Nothing Then Return False
 
+        Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+
+        dataService.GenerateUpdateUserActivityItems(
+                    newOvertime:=newOvertime,
+                    oldOvertime:=oldOvertime,
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User)
+
+        Return True
+    End Function
+
+    Private Sub GenerateUpdateUserActivityItems(newOvertime As Overtime, oldOvertime As Overtime)
+
         Dim changes = New List(Of UserActivityItem)
 
         Dim suffixIdentifier = $"of overtime with date '{oldOvertime.OTStartDate.ToShortDateString()}' and time period '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'."
@@ -401,9 +414,7 @@ Public Class EmployeeOvertimeForm
 
             _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
         End If
-
-        Return True
-    End Function
+    End Sub
 
     Private Function GetSelectedOvertime() As Overtime
         Return CType(OvertimeGridView.CurrentRow.DataBoundItem, Overtime)

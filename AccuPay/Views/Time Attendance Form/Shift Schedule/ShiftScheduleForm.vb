@@ -1053,15 +1053,13 @@ Public Class ShiftScheduleForm
         Dim employees = EmployeeTreeView1.GetTickedEmployees
         Dim employeeIds = employees.Select(Function(ee) ee.RowID.Value).ToList()
 
-        Dim start As Date = dtpDateFrom.Value.Date
-        Dim finish As Date = dtpDateTo.Value.Date
         Dim modifiedShifts = toSaveList.
             Where(Function(sh) sh.IsNew OrElse sh.IsUpdate OrElse sh.ConsideredDelete).
             ToList()
 
         Dim overtimeDataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
-        Await overtimeDataService.GenerateOvertimeByShift(modifiedShifts, employeeIds, New TimePeriod(start, finish), z_OrganizationID, z_User)
+        Await overtimeDataService.GenerateOvertimeByShift(modifiedShifts, employeeIds, z_OrganizationID, z_User)
     End Function
 
     Private Sub RecordUserActivity(addedShiftSchedules As List(Of EmployeeDutySchedule), updatedShiftSchedules As List(Of EmployeeDutySchedule), deletedShiftSchedules As List(Of EmployeeDutySchedule), oldRecords As ICollection(Of EmployeeDutySchedule))

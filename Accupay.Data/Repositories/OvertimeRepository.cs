@@ -195,6 +195,7 @@ namespace AccuPay.Data.Repositories
             OvertimeStatus overtimeStatus)
         {
             var baseQuery = _context.Overtimes
+                .AsNoTracking()
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(x => datePeriod.Start <= x.OTStartDate)
                 .Where(x => x.OTStartDate <= datePeriod.End);
@@ -204,13 +205,13 @@ namespace AccuPay.Data.Repositories
                 case OvertimeStatus.All: break;
 
                 case OvertimeStatus.Approved:
-                    baseQuery = baseQuery.Where(x => x.Status.Trim().ToLower() ==
-                                                Overtime.StatusApproved.ToTrimmedLowerCase());
+                    baseQuery = baseQuery
+                        .Where(x => x.Status.Trim().ToLower() == Overtime.StatusApproved.ToTrimmedLowerCase());
                     break;
 
                 case OvertimeStatus.Pending:
-                    baseQuery = baseQuery.Where(x => x.Status.Trim().ToLower() ==
-                                                Overtime.StatusPending.ToTrimmedLowerCase());
+                    baseQuery = baseQuery
+                        .Where(x => x.Status.Trim().ToLower() == Overtime.StatusPending.ToTrimmedLowerCase());
                     break;
 
                 default: break;
