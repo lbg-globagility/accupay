@@ -106,7 +106,9 @@ Public Class SalaryTab
 
             Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
 
-            Dim currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
+            Dim currentPayPeriod = Await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
+                organizationId:=z_OrganizationID,
+                currentUserId:=z_User)
 
             If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)

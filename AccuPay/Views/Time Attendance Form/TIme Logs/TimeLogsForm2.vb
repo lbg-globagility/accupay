@@ -778,7 +778,9 @@ Public Class TimeLogsForm2
 
         BindGridCurrentCellChanged()
 
-        Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(z_OrganizationID)
+        Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
+            organizationId:=z_OrganizationID,
+            currentUserId:=z_User)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 

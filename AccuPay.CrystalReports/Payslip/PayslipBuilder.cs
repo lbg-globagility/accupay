@@ -142,7 +142,9 @@ namespace AccuPay.CrystalReports
         {
             var rptdoc = new TwoEmpIn1PaySlip();
 
-            var nextPayPeriod = _payPeriodRepository.GetNextPayPeriod(payPeriodId);
+            var nextPayPeriod = _payPeriodRepository.GetNextPayPeriod(
+                payPeriodId: payPeriodId,
+                organizationId: organization.RowID.Value);
 
             if (nextPayPeriod != null)
             {

@@ -86,7 +86,7 @@ namespace AccuPay.Web.Payroll
                 month: dto.Month,
                 year: dto.Year,
                 isFirstHalf: dto.IsFirstHalf,
-                createdByUserId: _currentUser.UserId);
+                currentUserId: _currentUser.UserId);
 
             return ConvertToDto(newPayPeriod);
         }

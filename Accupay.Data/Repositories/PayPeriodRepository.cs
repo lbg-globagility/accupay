@@ -28,7 +28,7 @@ namespace AccuPay.Data.Repositories
         #region Single entity
 
         /// <summary>
-        /// Gets the latest payperiod that was Closed or Open based on Status property. (Used in Web)
+        /// Gets the latest payperiod that is Closed or Open. (Used in Web)
         /// </summary>
         /// <param name="organizationId"></param>
         /// <returns></returns>
@@ -76,55 +76,19 @@ namespace AccuPay.Data.Repositories
             return query.FirstOrDefault();
         }
 
-        public async Task<ICollection<PayPeriod>> GetClosedPayPeriodsAsync(int organizationId, TimePeriod dateRange = null)
-        {
-            var query = CreateBaseQuery(organizationId)
-                .Where(p => p.Status == PayPeriodStatus.Closed);
-
-            if (dateRange != null)
-            {
-                var cutOff = GetCutOffPeriodUsingDefault(dateRange, organizationId);
-
-                query = query
-                    .Where(x => x.PayFromDate >= cutOff.Start)
-                    .Where(x => x.PayToDate <= cutOff.End);
-            }
-
-            return await query.ToListAsync();
-        }
-
-        /// <summary>
-        /// Check if there is a closed pay period after the date.
-        /// </summary>
-        /// <param name="organizationId"></param>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public async Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date)
-        {
-            var query = CreateBaseQuery(organizationId)
-                .Where(p => p.Status == PayPeriodStatus.Closed);
-
-            var cutOffStart = GetCutOffPeriodUsingDefault(
-                    new TimePeriod(date, date),
-                    organizationId)
-                .Start;
-            query = query.Where(x => x.PayFromDate >= cutOffStart);
-
-            return await query.AnyAsync();
-        }
-
         /// <summary>
         /// Gets the current Open pay period. If there is no Open pay period, get the current pay period based on current date.
+        /// (This can return a dynamically generated pay period. It means that it can return a complete pay period without RowID)
         /// </summary>
         /// <param name="organizationId"></param>
         /// <returns></returns>
-        public async Task<PayPeriod> GetOpenOrCurrentPayPeriodAsync(int organizationId)
+        public async Task<PayPeriod> GetOpenOrCurrentPayPeriodAsync(int organizationId, int currentUserId)
         {
             var payPeriod = await GetCurrentOpenAsync(organizationId);
 
             if (payPeriod == null)
             {
-                payPeriod = await GetCurrentPayPeriodAsync(organizationId);
+                payPeriod = await GetCurrentPayPeriodAsync(organizationId, currentUserId);
             }
 
             return payPeriod;
@@ -132,13 +96,12 @@ namespace AccuPay.Data.Repositories
 
         /// <summary>
         /// Gets the current pay period based on current date.
+        /// (This can return a dynamically generated pay period. It means that it can return a complete pay period without RowID)
         /// </summary>
         /// <param name="organizationId"></param>
         /// <returns></returns>
-        public async Task<PayPeriod> GetCurrentPayPeriodAsync(int organizationId)
+        public async Task<PayPeriod> GetCurrentPayPeriodAsync(int organizationId, int currentUserId)
         {
-            // TODO: use the policy DefaultFirstHalfDaysSpan
-
             var currentDay = DateTime.Now;
             var isFirstHalf = currentDay.Day <= 15;
 
@@ -155,7 +118,40 @@ namespace AccuPay.Data.Repositories
                 query = query.Where(x => x.IsEndOfTheMonth);
             }
 
-            return await query.FirstOrDefaultAsync();
+            var payPeriod = await query.FirstOrDefaultAsync();
+
+            if (payPeriod == null)
+            {
+                payPeriod = PayPeriod.NewPayPeriod(
+                    organizationId: organizationId,
+                    payrollMonth: currentDay.Month,
+                    payrollYear: currentDay.Year,
+                    isFirstHalf: isFirstHalf,
+                    policy: _policy,
+                    currentUserId: currentUserId);
+            }
+
+            return payPeriod;
+        }
+
+        /// <summary>
+        /// Gets the current pay period based on current date. If it does not exists, it creates a pay period based on current date.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="currentUserId"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetOrCreateCurrentPayPeriodAsync(int organizationId, int currentUserId)
+        {
+            var payPeriod = await GetCurrentPayPeriodAsync(organizationId, currentUserId);
+
+            // if pay period was auto generated (does not exists in database),
+            // save it to database
+            if (payPeriod != null && payPeriod.RowID == null)
+            {
+                await SaveAsync(payPeriod);
+            }
+
+            return payPeriod;
         }
 
         /// <summary>
@@ -167,7 +163,21 @@ namespace AccuPay.Data.Repositories
         public async Task<PayPeriod> GetAsync(int organizationId, DateTime date)
         {
             return await CreateBaseQuery(organizationId)
-                .Where(p => p.IsBetween(date))
+                .Where(x => x.IsBetween(date))
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Gets the pay period based on checking wether the passed organizationId, payFromDate, payToDate and it's half type matches the pay period.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetAsync(int organizationId, DateTime startDate, DateTime endDate)
+        {
+            return await CreateBaseQuery(organizationId)
+                .Where(x => x.PayFromDate == startDate)
+                .Where(x => x.PayToDate == endDate)
                 .FirstOrDefaultAsync();
         }
 
@@ -190,51 +200,78 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public PayPeriod GetNextPayPeriod(int payPeriodId)
+        /// <summary>
+        /// Gets the next pay period of the passed pay period.
+        /// (This can return a dynamically generated pay period. It means that it can return a complete pay period without RowID)
+        /// </summary>
+        /// <param name="payPeriodId">The passed pay period Id.</param>
+        /// <param name="organizationId">The RowID of the organization.</param>
+        /// <returns></returns>
+        public PayPeriod GetNextPayPeriod(int payPeriodId, int organizationId)
         {
-            // TODO: use the policy DefaultFirstHalfDaysSpan and DefaultEndMonthDaysSpan
             var currentPayPeriod = _context.PayPeriods.FirstOrDefault(p => p.RowID == payPeriodId);
 
             if (currentPayPeriod == null)
                 return null;
 
-            return _context.PayPeriods
+            var nextPayPeriod = _context.PayPeriods
                 .Where(p => p.OrganizationID == currentPayPeriod.OrganizationID)
                 .Where(p => p.PayFrequencyID == currentPayPeriod.PayFrequencyID)
                 .Where(p => p.PayFromDate > currentPayPeriod.PayFromDate)
                 .OrderBy(p => p.PayFromDate)
                 .FirstOrDefault();
+
+            if (nextPayPeriod == null)
+            {
+                var isFirstHalf = !currentPayPeriod.IsFirstHalf;
+
+                int year = currentPayPeriod.Year;
+                var month = currentPayPeriod.IsEndOfTheMonth ? currentPayPeriod.Month + 1 : currentPayPeriod.Month;
+
+                if (currentPayPeriod.IsLastPayPeriodOfTheYear)
+                {
+                    year = currentPayPeriod.Year + 1;
+                    month = PayPeriod.FirstPayrollMonth;
+                }
+
+                nextPayPeriod = PayPeriod.NewPayPeriod(
+                    organizationId: organizationId,
+                    payrollMonth: year,
+                    payrollYear: month,
+                    isFirstHalf: isFirstHalf,
+                    policy: _policy,
+                    currentUserId: null);
+            }
+
+            return nextPayPeriod;
         }
 
+        /// <summary>
+        /// Gets the first pay period of the year.
+        /// (This can return a dynamically generated pay period. It means that it can return a complete pay period without RowID)
+        /// </summary>
+        /// <param name="currentPayPeriodYear"></param>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
         public async Task<PayPeriod> GetFirstPayPeriodOfTheYear(int currentPayPeriodYear, int organizationId)
         {
-            // TODO: use the policy DefaultFirstHalfDaysSpan if payperiod does not exists
-
-            return await CreateBaseQuery(organizationId)
+            var firstPayPeriod = await CreateBaseQuery(organizationId)
                 .Where(p => p.Year == currentPayPeriodYear)
                 .Where(p => p.IsFirstPayPeriodOfTheYear)
                 .FirstOrDefaultAsync();
-        }
 
-        public async Task<DateTime?> GetFirstDayOfTheYear(int currentPayPeriodYear, int organizationId)
-        {
-            // TODO: use the policy DefaultFirstHalfDaysSpan if payperiod does not exists
-            var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(
-                currentPayPeriodYear: currentPayPeriodYear,
-                organizationId: organizationId);
+            if (firstPayPeriod == null)
+            {
+                firstPayPeriod = PayPeriod.NewPayPeriod(
+                    organizationId: organizationId,
+                    payrollMonth: PayPeriod.FirstPayrollMonth,
+                    payrollYear: currentPayPeriodYear,
+                    isFirstHalf: true,
+                    policy: _policy,
+                    currentUserId: null);
+            }
 
-            return firstPayPeriodOfTheYear?.PayFromDate;
-        }
-
-        public async Task<DateTime?> GetLastDayOfTheYear(int currentPayPeriodYear, int organizationId)
-        {
-            // TODO: use the policy DefaultEndMonthDaysSpan if payperiod does not exists
-
-            return await CreateBaseQuery(organizationId)
-                .Where(p => p.Year == currentPayPeriodYear)
-                .Where(p => p.IsLastPayPeriodOfTheYear)
-                .Select(p => p.PayToDate)
-                .FirstOrDefaultAsync();
+            return firstPayPeriod;
         }
 
         #endregion Single entity
@@ -307,22 +344,22 @@ namespace AccuPay.Data.Repositories
                 {
                     firstHalf = PayPeriod.NewPayPeriod(
                         organizationId: organizationId,
-                        month: month,
-                        year: year,
+                        payrollMonth: month,
+                        payrollYear: year,
                         isFirstHalf: true,
                         policy: _policy,
-                        createdByUserId: currentUserId);
+                        currentUserId: currentUserId);
                 }
 
                 if (endOfTheMonth == null)
                 {
                     endOfTheMonth = PayPeriod.NewPayPeriod(
                         organizationId: organizationId,
-                        month: month,
-                        year: year,
+                        payrollMonth: month,
+                        payrollYear: year,
                         isFirstHalf: false,
                         policy: _policy,
-                        createdByUserId: currentUserId);
+                        currentUserId: currentUserId);
                 }
 
                 yearlyPayPeriods.Add(firstHalf);
@@ -360,7 +397,81 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<PayPeriod>(payperiods, count);
         }
 
+        public async Task<ICollection<PayPeriod>> GetClosedPayPeriodsAsync(int organizationId, TimePeriod dateRange = null)
+        {
+            var query = CreateBaseQuery(organizationId)
+                .Where(p => p.Status == PayPeriodStatus.Closed);
+
+            if (dateRange != null)
+            {
+                var cutOff = GetCutOffPeriodUsingDefault(dateRange, organizationId);
+
+                query = query
+                    .Where(x => x.PayFromDate >= cutOff.Start)
+                    .Where(x => x.PayToDate <= cutOff.End);
+            }
+
+            return await query.ToListAsync();
+        }
+
         #endregion List of entities
+
+        #region Others
+
+        public async Task<DateTime?> GetFirstDayOfTheYear(int currentPayPeriodYear, int organizationId)
+        {
+            var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(
+                currentPayPeriodYear: currentPayPeriodYear,
+                organizationId: organizationId);
+
+            return firstPayPeriodOfTheYear?.PayFromDate;
+        }
+
+        public async Task<DateTime?> GetLastDayOfTheYear(int currentPayPeriodYear, int organizationId)
+        {
+            var lastDayOfTheYear = await CreateBaseQuery(organizationId)
+                .Where(p => p.Year == currentPayPeriodYear)
+                .Where(p => p.IsLastPayPeriodOfTheYear)
+                .Select(p => p.PayToDate)
+                .FirstOrDefaultAsync();
+
+            if (lastDayOfTheYear == null)
+            {
+                var lastPayPeriodOfTheYear = PayPeriod.NewPayPeriod(
+                    organizationId: organizationId,
+                    payrollMonth: PayPeriod.LastPayrollMonth,
+                    payrollYear: currentPayPeriodYear,
+                    isFirstHalf: false,
+                    policy: _policy,
+                    currentUserId: null);
+
+                lastDayOfTheYear = lastPayPeriodOfTheYear.PayToDate;
+            }
+
+            return lastDayOfTheYear;
+        }
+
+        /// <summary>
+        /// Check if there is a closed pay period after the date.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date)
+        {
+            var query = CreateBaseQuery(organizationId)
+                .Where(p => p.Status == PayPeriodStatus.Closed);
+
+            var cutOffStart = GetCutOffPeriodUsingDefault(
+                    new TimePeriod(date, date),
+                    organizationId)
+                .Start;
+            query = query.Where(x => x.PayFromDate >= cutOffStart);
+
+            return await query.AnyAsync();
+        }
+
+        #endregion Others
 
         #endregion Queries
 

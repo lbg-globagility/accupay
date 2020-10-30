@@ -7,5 +7,8 @@ namespace AccuPay.Data
         int? RowID { get; set; }
         DateTime PayFromDate { get; set; }
         DateTime PayToDate { get; set; }
+        int Month { get; set; }
+        int Year { get; set; }
+        bool IsFirstHalf { get; }
     }
 }

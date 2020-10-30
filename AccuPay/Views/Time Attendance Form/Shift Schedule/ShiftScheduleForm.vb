@@ -1124,7 +1124,9 @@ Public Class ShiftScheduleForm
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
 
-        Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(z_OrganizationID)
+        Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
+            organizationId:=z_OrganizationID,
+            currentUserId:=z_User)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 

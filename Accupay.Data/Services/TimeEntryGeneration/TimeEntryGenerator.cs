@@ -133,7 +133,7 @@ namespace AccuPay.Data.Services
 
             var currentPayPeriod = _payPeriodRepository.GetCurrentOpen(organizationId);
 
-            if (currentPayPeriod?.PayFromDate != cutoffStart || currentPayPeriod?.PayToDate != cutoffEnd)
+            if (currentPayPeriod?.RowID == null || currentPayPeriod?.PayFromDate != cutoffStart || currentPayPeriod?.PayToDate != cutoffEnd)
                 throw new BusinessLogicException("Only open pay periods can generate time entries.");
 
             ListOfValueCollection settings = _listOfValueService.Create();

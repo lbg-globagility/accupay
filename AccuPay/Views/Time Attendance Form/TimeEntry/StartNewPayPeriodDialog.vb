@@ -78,15 +78,17 @@ Public Class StartNewPayPeriodDialog
 
         If _passedPayPeriod Is Nothing Then
 
-            currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
+            currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(
+                organizationId:=z_OrganizationID,
+                currentUserId:=z_User)
         Else
             currentPayPeriod = _passedPayPeriod
 
         End If
 
         Dim currentPayPeriodModel = _payperiodModels.
-                                Where(Function(p) Nullable.Equals(p.RowID, currentPayPeriod.RowID)).
-                                LastOrDefault
+            Where(Function(p) p.PayFromDate = currentPayPeriod.PayFromDate).
+            LastOrDefault
 
         If currentPayPeriodModel Is Nothing Then Return
 
@@ -167,7 +169,7 @@ Public Class StartNewPayPeriodDialog
                     month:=_currentPayperiod.Month,
                     year:=_currentPayperiod.Year,
                     isFirstHalf:=_currentPayperiod.IsFirstHalf,
-                    createdByUserId:=z_User)
+                    currentUserId:=z_User)
 
                 Await RecordStartPayrollUserAcitivity()
 
@@ -295,7 +297,7 @@ Public Class StartNewPayPeriodDialog
         Dim linkLabel = DirectCast(sender, Button)
         Dim factor = Convert.ToInt32(linkLabel.Tag)
 
-        Year = Year + factor
+        Year += factor
 
         lblYear.Text = Convert.ToString(Year)
 

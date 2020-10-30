@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
@@ -131,7 +131,9 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
+        _currentPayPeriod = Await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
+            organizationId:=z_OrganizationID,
+            currentUserId:=z_User)
 
         UpdateCutOffLabel()
     End Function
@@ -147,9 +149,10 @@ Public Class BenchmarkPaystubForm
 
         If payPeriodId IsNot Nothing Then
 
-            _employees = (Await _employeeRepository.
-                                GetAllWithPayrollAsync(payPeriodId:=_currentPayPeriod.RowID.Value,
-                                                       organizationId:=z_OrganizationID)).ToList
+            _employees = (Await _employeeRepository.GetAllWithPayrollAsync(
+                    payPeriodId:=_currentPayPeriod.RowID.Value,
+                    organizationId:=z_OrganizationID)).
+                ToList()
         Else
             _employees = New List(Of Employee)
         End If
@@ -259,8 +262,7 @@ Public Class BenchmarkPaystubForm
 
     End Function
 
-    Private Async Function ShowSummaryData(employee As Employee,
-                                           payStub As Paystub) As Task
+    Private Async Function ShowSummaryData(employee As Employee, payStub As Paystub) As Task
         'loans
         Dim loanAmounts = GetGovernmentLoanAmounts(payStub)
         Dim pagIbigLoan = loanAmounts.Item1
@@ -370,18 +372,18 @@ Public Class BenchmarkPaystubForm
         Dim otherIncomes = paystub.Adjustments.
             Where(Function(p) p.Amount > 0).
             Select(Function(p) New Adjustments With {
-                .Amount = p.Amount,
-                .Code = p.Product.Comments,
-                .Description = p.Product.PartNo
+                    .Amount = p.Amount,
+                    .Code = p.Product.Comments,
+                    .Description = p.Product.PartNo
                 }).
             ToList()
 
         Dim deductions = paystub.Adjustments.
             Where(Function(p) p.Amount < 0).
             Select(Function(p) New Adjustments With {
-                .Amount = Math.Abs(p.Amount),
-                .Code = p.Product.Comments,
-                .Description = p.Product.PartNo
+                    .Amount = Math.Abs(p.Amount),
+                    .Code = p.Product.Comments,
+                    .Description = p.Product.PartNo
                 }).
             ToList()
 
@@ -398,8 +400,8 @@ Public Class BenchmarkPaystubForm
     Private Function GetEmployeeRate(employee As Employee) As BenchmarkPaystubRate
 
         Dim salary = _salaries.
-                        Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
-                        FirstOrDefault
+            Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
+            FirstOrDefault()
 
         If salary Is Nothing Then
 
@@ -428,231 +430,231 @@ Public Class BenchmarkPaystubForm
         If paystub.OvertimePay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.Overtime,
-                                    input:=paystub.OvertimeHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.Overtime,
+                input:=paystub.OvertimeHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.NightDiffPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.NightDifferential,
-                                    input:=paystub.NightDiffHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.NightDifferential,
+                input:=paystub.NightDiffHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.NightDiffOvertimePay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.NightDifferentialOvertime,
-                                    input:=paystub.NightDiffOvertimeHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.NightDifferentialOvertime,
+                input:=paystub.NightDiffOvertimeHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RestDayPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RestDay,
-                                    input:=paystub.RestDayHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=False))
+                overtimeType:=_overtimeRate.RestDay,
+                input:=paystub.RestDayHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=False))
         End If
 
         If paystub.RestDayOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RestDayOvertime,
-                                    input:=paystub.RestDayOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RestDayOvertime,
+                input:=paystub.RestDayOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RestDayNightDiffPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RestDayNightDifferential,
-                                    input:=paystub.RestDayNightDiffHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RestDayNightDifferential,
+                input:=paystub.RestDayNightDiffHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RestDayNightDiffOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RestDayNightDifferentialOvertime,
-                                    input:=paystub.RestDayNightDiffOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RestDayNightDifferentialOvertime,
+                input:=paystub.RestDayNightDiffOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHoliday,
-                                    input:=paystub.SpecialHolidayHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHoliday,
+                input:=paystub.SpecialHolidayHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHolidayOvertime,
-                                    input:=paystub.SpecialHolidayOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHolidayOvertime,
+                input:=paystub.SpecialHolidayOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayNightDiffPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHolidayNightDifferential,
-                                    input:=paystub.SpecialHolidayNightDiffHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHolidayNightDifferential,
+                input:=paystub.SpecialHolidayNightDiffHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayNightDiffOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHolidayNightDifferentialOvertime,
-                                    input:=paystub.SpecialHolidayNightDiffOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHolidayNightDifferentialOvertime,
+                input:=paystub.SpecialHolidayNightDiffOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHolidayRestDay,
-                                    input:=paystub.SpecialHolidayRestDayHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHolidayRestDay,
+                input:=paystub.SpecialHolidayRestDayHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHolidayRestDayOvertime,
-                                    input:=paystub.SpecialHolidayRestDayOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHolidayRestDayOvertime,
+                input:=paystub.SpecialHolidayRestDayOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayNightDiffPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHolidayRestDayNightDifferential,
-                                    input:=paystub.SpecialHolidayRestDayNightDiffHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHolidayRestDayNightDifferential,
+                input:=paystub.SpecialHolidayRestDayNightDiffHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayNightDiffOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.SpecialHolidayRestDayNightDifferentialOvertime,
-                                    input:=paystub.SpecialHolidayRestDayNightDiffOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.SpecialHolidayRestDayNightDifferentialOvertime,
+                input:=paystub.SpecialHolidayRestDayNightDiffOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHoliday,
-                                    input:=paystub.RegularHolidayHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHoliday,
+                input:=paystub.RegularHolidayHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHolidayOvertime,
-                                    input:=paystub.RegularHolidayOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHolidayOvertime,
+                input:=paystub.RegularHolidayOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayNightDiffPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHolidayNightDifferential,
-                                    input:=paystub.RegularHolidayNightDiffHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHolidayNightDifferential,
+                input:=paystub.RegularHolidayNightDiffHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayNightDiffOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHolidayNightDifferentialOvertime,
-                                    input:=paystub.RegularHolidayNightDiffOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHolidayNightDifferentialOvertime,
+                input:=paystub.RegularHolidayNightDiffOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHolidayRestDay,
-                                    input:=paystub.RegularHolidayRestDayHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHolidayRestDay,
+                input:=paystub.RegularHolidayRestDayHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHolidayRestDayOvertime,
-                                    input:=paystub.RegularHolidayRestDayOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHolidayRestDayOvertime,
+                input:=paystub.RegularHolidayRestDayOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayNightDiffPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHolidayRestDayNightDifferential,
-                                    input:=paystub.RegularHolidayRestDayNightDiffHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHolidayRestDayNightDifferential,
+                input:=paystub.RegularHolidayRestDayNightDiffHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayNightDiffOTPay <> 0 Then
 
             overtimeInputs.Add(New OvertimeInput(
-                                    overtimeType:=_overtimeRate.RegularHolidayRestDayNightDifferentialOvertime,
-                                    input:=paystub.RegularHolidayRestDayNightDiffOTHours,
-                                    isDay:=False,
-                                    payperHour:=payPerHour,
-                                    isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
+                overtimeType:=_overtimeRate.RegularHolidayRestDayNightDifferentialOvertime,
+                input:=paystub.RegularHolidayRestDayNightDiffOTHours,
+                isDay:=False,
+                payperHour:=payPerHour,
+                isHolidayInclusive:=employeeRate.Employee.IsPremiumInclusive))
 
         End If
 
@@ -754,11 +756,12 @@ Public Class BenchmarkPaystubForm
 
     Private Sub SearchEmployeeTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchEmployeeTextBox.TextChanged
 
-        _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployeeGridView()
+        _textBoxDelayedAction.ProcessAsync(
+            Async Function()
+                Await FilterEmployeeGridView()
 
-                                               Return True
-                                           End Function)
+                Return True
+            End Function)
 
     End Sub
 

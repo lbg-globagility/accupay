@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
@@ -178,9 +178,10 @@ Public Class BenchmarkPayrollForm
                     Return Nothing
                 End If
 
-                Dim resourcesTask = resources.Load(payPeriodId:=payPeriodId,
-                                                     organizationId:=z_OrganizationID,
-                                                     userId:=z_User)
+                Dim resourcesTask = resources.Load(
+                    payPeriodId:=payPeriodId,
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User)
 
                 resourcesTask.Wait()
 
@@ -199,9 +200,10 @@ Public Class BenchmarkPayrollForm
 
         If payPeriodId IsNot Nothing Then
 
-            _employees = (Await _employeeRepository.
-                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID.Value,
-                                                                z_OrganizationID)).ToList
+            _employees = (Await _employeeRepository.GetAllActiveWithoutPayrollAsync(
+                    _currentPayPeriod.RowID.Value,
+                    z_OrganizationID)).
+                ToList()
         Else
             _employees = New List(Of Employee)
         End If
@@ -222,8 +224,7 @@ Public Class BenchmarkPayrollForm
 
             If employeeId Is Nothing Then Return
 
-            Dim employee = Await _employeeRepository.
-                                    GetActiveEmployeeWithDivisionAndPositionAsync(employeeId.Value)
+            Dim employee = Await _employeeRepository.GetActiveEmployeeWithDivisionAndPositionAsync(employeeId.Value)
 
             If employee Is Nothing Then Return
 
@@ -277,9 +278,9 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
         _ecola = Await BenchmarkPayrollHelper.GetEcola(
-                                                        employeeId.Value,
-                                                        payDateFrom:=_currentPayPeriod.PayFromDate,
-                                                        payDateTo:=_currentPayPeriod.PayToDate)
+            employeeId.Value,
+            payDateFrom:=_currentPayPeriod.PayFromDate,
+            payDateTo:=_currentPayPeriod.PayToDate)
 
         If _ecola Is Nothing Then
 
@@ -358,14 +359,16 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
+        _currentPayPeriod = Await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
+            organizationId:=z_OrganizationID,
+            currentUserId:=z_User)
 
         UpdateCutOffLabel()
     End Function
 
     Private Sub UpdateCutOffLabel()
         PayPeriodLabel.Text = $"For the Period:
-            {_currentPayPeriod.PayFromDate.ToString("MMMM d")} - {_currentPayPeriod.PayToDate.ToString("MMMM d")}, {_currentPayPeriod.PayToDate.Year}"
+            {_currentPayPeriod.PayFromDate:MMMM d} - {_currentPayPeriod.PayToDate:MMMM d}, {_currentPayPeriod.PayToDate.Year}"
     End Sub
 
     Private Async Function FilterEmployeeGridView() As Task
@@ -447,11 +450,12 @@ Public Class BenchmarkPayrollForm
 
     Private Sub SearchEmployeeTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchEmployeeTextBox.TextChanged
 
-        _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployeeGridView()
+        _textBoxDelayedAction.ProcessAsync(
+            Async Function()
+                Await FilterEmployeeGridView()
 
-                                               Return True
-                                           End Function)
+                Return True
+            End Function)
 
     End Sub
 
@@ -491,19 +495,19 @@ Public Class BenchmarkPayrollForm
         End If
 
         Dim output = BenchmarkPayrollGeneration.DoProcess(
-                                                employee,
-                                                _payrollResources,
-                                                _currentPayPeriod,
-                                                _employeeRate,
-                                                regularDays:=regularDays,
-                                                lateDays:=lateDays,
-                                                leaveDays:=leaveDays,
-                                                overtimeRate:=_overtimeRate,
-                                                actualSalaryPolicy:=_actualSalaryPolicy,
-                                                selectedDeductions:=_selectedDeductions,
-                                                selectedIncomes:=_selectedIncomes,
-                                                overtimes:=_overtimes,
-                                                ecola:=_ecola)
+            employee,
+            _payrollResources,
+            _currentPayPeriod,
+            _employeeRate,
+            regularDays:=regularDays,
+            lateDays:=lateDays,
+            leaveDays:=leaveDays,
+            overtimeRate:=_overtimeRate,
+            actualSalaryPolicy:=_actualSalaryPolicy,
+            selectedDeductions:=_selectedDeductions,
+            selectedIncomes:=_selectedIncomes,
+            overtimes:=_overtimes,
+            ecola:=_ecola)
 
         'TODO
         '#1. Extract the generator here and put it in a global field DONE
@@ -586,8 +590,10 @@ Public Class BenchmarkPayrollForm
         GrossPayTextBox.Text = _currentPaystub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = _currentPaystub.LeavePay.RoundToString()
 
-        TotalDeductionTextBox.Text = (_currentPaystub.NetDeductions +
-                                    Math.Abs(_currentPaystub.TotalDeductionAdjustments)).RoundToString()
+        TotalDeductionTextBox.Text = (
+                _currentPaystub.NetDeductions +
+                Math.Abs(_currentPaystub.TotalDeductionAdjustments)).
+            RoundToString()
 
         TotalOtherIncomeTextBox.Text = _currentPaystub.TotalAdditionAdjustments.RoundToString()
         TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(_currentPaystub).RoundToString()
@@ -649,10 +655,12 @@ Public Class BenchmarkPayrollForm
 
     Private Sub SetOvertimeButton_Click(sender As Object, e As EventArgs) Handles SetOvertimeButton.Click
 
-        Dim form As New SetOvertimeForm(_employeeRate.HourlyRate,
-                                        _overtimeRate.OvertimeRateList,
-                                        _overtimes,
-                                        _employeeRate.Employee.IsPremiumInclusive)
+        Dim form As New SetOvertimeForm(
+            _employeeRate.HourlyRate,
+            _overtimeRate.OvertimeRateList,
+            _overtimes,
+            _employeeRate.Employee.IsPremiumInclusive)
+
         form.ShowDialog()
 
         _overtimes = form.Overtimes
@@ -723,9 +731,9 @@ Public Class BenchmarkPayrollForm
 
     Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
         Return gridView.Rows.
-                        Cast(Of DataGridViewRow).
-                        Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
-                                                Any(Function(c) c.Value IsNot Nothing))
+            Cast(Of DataGridViewRow).
+            Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
+                Any(Function(c) c.Value IsNot Nothing))
     End Function
 
     Private Sub AddIncomeButton_Click(sender As Object, e As EventArgs) Handles AddIncomeButton.Click

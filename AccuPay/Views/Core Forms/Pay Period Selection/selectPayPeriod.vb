@@ -1,4 +1,3 @@
-Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
@@ -40,7 +39,9 @@ Public Class selectPayPeriod
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
+        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(
+            organizationId:=z_OrganizationID,
+            currentUserId:=z_User)
 
         Dim payfrqncy As New AutoCompleteStringCollection
 

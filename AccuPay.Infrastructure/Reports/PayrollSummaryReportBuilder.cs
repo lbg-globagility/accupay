@@ -217,7 +217,7 @@ namespace AccuPay.Infrastructure.Reports
                 {
                     var worksheet = excel.Workbook.Worksheets.Add(reportName);
 
-                    RenderWorksheet(worksheet, employeeGroups, short_dates, viewableReportColumns, payPeriod, organization.Name);
+                    RenderWorksheet(worksheet, employeeGroups, short_dates, viewableReportColumns, payPeriod, organization);
                 }
                 else
                     foreach (var employeeGroup in employeeGroups)
@@ -229,7 +229,7 @@ namespace AccuPay.Infrastructure.Reports
                             employeeGroup
                         };
 
-                        RenderWorksheet(worksheet, currentGroup, short_dates, viewableReportColumns, payPeriod, organization.Name);
+                        RenderWorksheet(worksheet, currentGroup, short_dates, viewableReportColumns, payPeriod, organization);
                     }
 
                 excel.Save();
@@ -265,7 +265,7 @@ namespace AccuPay.Infrastructure.Reports
             string[] short_dates,
             IReadOnlyCollection<ExcelReportColumn> viewableReportColumns,
             SelectedPayPeriod payPeriod,
-            string organizationName)
+            Organization organization)
         {
             var subTotalRows = new List<int>();
 
@@ -275,7 +275,7 @@ namespace AccuPay.Infrastructure.Reports
                 worksheet.Cells.Style.Font.Name = "Book Antiqua";
 
             var organizationCell = worksheet.Cells[1, 1];
-            organizationCell.Value = organizationName.ToUpper();
+            organizationCell.Value = organization.Name.ToUpper();
             organizationCell.Style.Font.Bold = true;
 
             var attendancePeriodCell = worksheet.Cells[2, 1];
@@ -289,8 +289,12 @@ namespace AccuPay.Infrastructure.Reports
             {
                 attendancePeriodCell.Value = $"Attendance Period: {short_dates[0]} to {short_dates[1]}";
 
-                var payFromNextCutOff = _payPeriodRepository.GetNextPayPeriod(payPeriod.FromId);
-                var payToNextCutOff = _payPeriodRepository.GetNextPayPeriod(payPeriod.ToId);
+                var payFromNextCutOff = _payPeriodRepository.GetNextPayPeriod(
+                    payPeriodId: payPeriod.FromId,
+                    organizationId: organization.RowID.Value);
+                var payToNextCutOff = _payPeriodRepository.GetNextPayPeriod(
+                    payPeriodId: payPeriod.ToId,
+                    organizationId: organization.RowID.Value);
 
                 var payrollPeriodCell = worksheet.Cells[3, 1];
                 var payrollPeriodDescription = $"Payroll Period: {(payFromNextCutOff?.PayFromDate == null ? "" : payFromNextCutOff.PayFromDate.ToShortDateString())} to {(payToNextCutOff?.PayToDate == null ? "" : payToNextCutOff.PayToDate.ToShortDateString())}";

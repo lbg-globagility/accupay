@@ -283,13 +283,20 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(z_OrganizationID)
+            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
+                organizationId:=z_OrganizationID,
+                currentUserId:=z_User)
 
-            _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod?.RowID))
+            _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) p.PayFromDate = currentlyWorkedOnPayPeriod.PayFromDate)
 
-            Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
-            Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
-            payPeriodsDataGridView.CurrentCell = payPeriodCell
+            If _selectedPayPeriod IsNot Nothing Then
+
+                Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
+                Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
+                payPeriodsDataGridView.CurrentCell = payPeriodCell
+
+            End If
+
         End If
 
         If _selectedPayPeriod IsNot payPeriodsDataGridView.CurrentCell Then
@@ -305,16 +312,16 @@ Public Class TimeEntrySummaryForm
         End If
 
         If Not _tsBtnDeleteTimeEntryHidden Then
-            tsBtnDeleteTimeEntry.Visible = _selectedPayPeriod.IsOpen
+            tsBtnDeleteTimeEntry.Visible = _selectedPayPeriod IsNot Nothing AndAlso _selectedPayPeriod.IsOpen
 
         End If
 
         If Not _regenerateTimeEntryButtonHidden Then
-            RegenerateTimeEntryButton.Visible = _selectedPayPeriod.IsOpen
+            RegenerateTimeEntryButton.Visible = _selectedPayPeriod IsNot Nothing AndAlso _selectedPayPeriod.IsOpen
         End If
 
         If Not _generateDefaultShiftAndTimeLogsButtonHidden Then
-            GenerateDefaultShiftAndTimeLogsButton.Visible = Not _selectedPayPeriod.IsClosed
+            GenerateDefaultShiftAndTimeLogsButton.Visible = _selectedPayPeriod IsNot Nothing AndAlso Not _selectedPayPeriod.IsClosed
         End If
 
     End Function
@@ -882,12 +889,24 @@ Public Class TimeEntrySummaryForm
         End Using
 
         If result = DialogResult.OK Then
-            GenerateTimeEntries(startDate, endDate)
+
+            Dim payPeriod = Await _payPeriodRepository.GetAsync(z_OrganizationID, startDate, endDate)
+
+            If payPeriod Is Nothing OrElse payPeriod.RowID Is Nothing OrElse Not payPeriod.IsOpen Then
+                MessageBoxHelper.Warning("Pay period does not exists or is not ""Open"" yet.")
+                Return
+
+            End If
+
+            GenerateTimeEntries(
+                startDate:=startDate,
+                endDate:=endDate,
+                payPeriodId:=payPeriod.RowID.Value)
         End If
 
     End Sub
 
-    Private Sub GenerateTimeEntries(startDate As Date, endDate As Date)
+    Private Sub GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer)
         Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
         Dim progressDialog = New ProgressDialog(generator, "Generating time entries...")
         progressDialog.Show()
@@ -899,10 +918,15 @@ Public Class TimeEntrySummaryForm
             cutoffEnd:=endDate))
 
         task1.ContinueWith(
-                Sub() DoneGenerating(progressDialog, generator),
-                CancellationToken.None,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
-                TaskScheduler.FromCurrentSynchronizationContext)
+            Sub() DoneGenerating(
+                dialog:=progressDialog,
+                generator:=generator,
+                startDate:=startDate,
+                endDate:=endDate,
+                payPeriodId:=payPeriodId),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext)
 
         task1.ContinueWith(
             Sub(t As Task) TimeEntryGeneratorError(t, progressDialog),
@@ -930,7 +954,7 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Async Sub DoneGenerating(dialog As ProgressDialog, generator As TimeEntryGenerator)
+    Private Async Sub DoneGenerating(dialog As ProgressDialog, generator As TimeEntryGenerator, startDate As Date, endDate As Date, payPeriodId As Integer)
         dialog.Close()
         dialog.Dispose()
 
@@ -946,7 +970,10 @@ Public Class TimeEntrySummaryForm
             Me.Cursor = Cursors.WaitCursor
 
             Await LoadTimeEntries()
-            Await RecordMultipleTimeEntriesUserActivity()
+            Await RecordMultipleTimeEntriesUserActivity(
+                startDate:=startDate,
+                endDate:=endDate,
+                payPeriodId:=payPeriodId)
         Finally
 
             MsgBox(msgBoxText)
@@ -955,13 +982,13 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Async Function RecordMultipleTimeEntriesUserActivity() As Task
+    Private Async Function RecordMultipleTimeEntriesUserActivity(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
 
         Dim changes = New List(Of UserActivityItem)
 
         Dim timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
 
-        Dim currentPayPeriod = New TimePeriod(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
+        Dim currentPayPeriod = New TimePeriod(startDate, endDate)
 
         Dim timeEntries = timeEntryRepository.GetByDatePeriod(z_OrganizationID, currentPayPeriod).ToList()
 
@@ -970,7 +997,7 @@ Public Class TimeEntrySummaryForm
         For Each employee In employeesWithTimeEntry
             changes.Add(New UserActivityItem() With
             {
-                .EntityId = _selectedPayPeriod.RowID.Value,
+                .EntityId = payPeriodId,
                 .Description = $"Generated time entries for payroll {GetPayPeriodString()}.",
                 .ChangedEmployeeId = employee.Key.Value
             })
@@ -980,11 +1007,11 @@ Public Class TimeEntrySummaryForm
 
             Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
             Await repo.CreateRecordAsync(
-              z_User,
-              FormEntityName,
-              z_OrganizationID,
-              UserActivityRepository.RecordTypeEdit,
-              changes)
+                z_User,
+                FormEntityName,
+                z_OrganizationID,
+                UserActivityRepository.RecordTypeEdit,
+                changes)
 
         End If
     End Function
@@ -999,7 +1026,10 @@ Public Class TimeEntrySummaryForm
             Return
         End If
 
-        GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
+        GenerateTimeEntries(
+            startDate:=_selectedPayPeriod.PayFromDate,
+            endDate:=_selectedPayPeriod.PayToDate,
+            payPeriodId:=_selectedPayPeriod.RowID.Value)
 
     End Sub
 
@@ -1115,10 +1145,11 @@ Public Class TimeEntrySummaryForm
         Public Property RowID As Integer? Implements IPayPeriod.RowID
         Public Property PayFromDate As Date Implements IPayPeriod.PayFromDate
         Public Property PayToDate As Date Implements IPayPeriod.PayToDate
-        Public Property Year As Integer
-        Public Property Month As Integer
+        Public Property Year As Integer Implements IPayPeriod.Year
+        Public Property Month As Integer Implements IPayPeriod.Month
         Public Property OrdinalValue As Integer
         Public Property Status As PayPeriodStatus
+        Public Property IsFirstHalf As Boolean Implements IPayPeriod.IsFirstHalf
 
         Sub New(payPeriodData As Entities.PayPeriod)
 
@@ -1129,6 +1160,7 @@ Public Class TimeEntrySummaryForm
             Month = payPeriodData.Month
             OrdinalValue = payPeriodData.OrdinalValue
             Status = payPeriodData.Status
+            IsFirstHalf = payPeriodData.IsFirstHalf
 
         End Sub
 
@@ -1666,7 +1698,7 @@ Public Class TimeEntrySummaryForm
         End If
     End Sub
 
-    Private Sub GenerateDefaultShiftAndTimeLogsButton_Click(sender As Object, e As EventArgs) Handles GenerateDefaultShiftAndTimeLogsButton.Click
+    Private Async Sub GenerateDefaultShiftAndTimeLogsButton_Click(sender As Object, e As EventArgs) Handles GenerateDefaultShiftAndTimeLogsButton.Click
 
         If _selectedPayPeriod Is Nothing Then
 
@@ -1677,6 +1709,10 @@ Public Class TimeEntrySummaryForm
 
         Dim form = New DefaultShiftAndTimeLogsForm(_selectedPayPeriod)
         form.ShowDialog()
+
+        If form.NewPayPeriod IsNot Nothing Then
+            Await LoadPayPeriods()
+        End If
 
     End Sub
 

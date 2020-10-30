@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
@@ -14,7 +14,7 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DefaultShiftAndTimeLogsForm
 
-    Private ReadOnly _currentPayPeriod As IPayPeriod
+    Private _currentPayPeriod As IPayPeriod
 
     Private ReadOnly DefaultStartTime As New TimeSpan(8, 0, 0)
 
@@ -26,17 +26,51 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private ReadOnly _roleRepository As RoleRepository
 
+    Public Property NewPayPeriod As PayPeriod
+
     Sub New(currentPayPeriod As IPayPeriod)
 
         InitializeComponent()
 
-        Me._currentPayPeriod = currentPayPeriod
+        _currentPayPeriod = currentPayPeriod
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+
+        NewPayPeriod = Nothing
 
     End Sub
 
     Private Async Sub DefaultShiftAndTimeLogsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        If _currentPayPeriod Is Nothing Then
+
+            MessageBoxHelper.Warning("Invalid pay period.")
+            Me.Close()
+
+        End If
+
+        If _currentPayPeriod?.RowID Is Nothing Then
+
+            Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+
+            NewPayPeriod = Await dataService.CreateAsync(
+                organizationId:=z_OrganizationID,
+                month:=_currentPayPeriod.Month,
+                year:=_currentPayPeriod.Year,
+                isFirstHalf:=_currentPayPeriod.IsFirstHalf,
+                currentUserId:=z_User
+            )
+
+            _currentPayPeriod = NewPayPeriod
+
+        End If
+
+        If _currentPayPeriod Is Nothing Then
+
+            MessageBoxHelper.Warning("Invalid pay period.")
+            Me.Close()
+
+        End If
 
         EmployeeDataGrid.AutoGenerateColumns = False
 

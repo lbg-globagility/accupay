@@ -68,6 +68,13 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         End If
 
+        If _startingPayPeriod.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("Selected pay period does not exists.")
+            Me.Close()
+
+        End If
+
         _endingPayPeriod = currentPayPeriod
 
         Await PrepareAdjustmentTypeComboBox()

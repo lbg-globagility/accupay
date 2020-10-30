@@ -172,7 +172,9 @@ Public Class MultiplePayPeriodSelectionDialog
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(z_OrganizationID)
+        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
+            organizationId:=z_OrganizationID,
+            currentUserId:=z_User)
 
         DateFromTextLabel.Text = ""
         DateToTextLabel.Text = ""
@@ -286,12 +288,12 @@ Public Class MultiplePayPeriodSelectionDialog
 
     Private Shared Async Function CreateNewPayPeriod(startPayPeriod As PayPeriod) As Task(Of Integer?)
         Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
-        Dim newPayPeriod = Await dataService.CreatesAsync(
+        Dim newPayPeriod = Await dataService.CreateAsync(
             organizationId:=z_OrganizationID,
             month:=startPayPeriod.Month,
             year:=startPayPeriod.Year,
             isFirstHalf:=startPayPeriod.IsFirstHalf,
-            createdByUserId:=z_User)
+            currentUserId:=z_User)
 
         Return newPayPeriod.RowID
     End Function

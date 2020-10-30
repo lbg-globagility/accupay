@@ -362,7 +362,9 @@ namespace AccuPay.Data.Services
             decimal newBalance = newAllowance;
             const string cannotRetrieveDataErrorMessage = "Cannot retrieve current pay period or the first days of the working year.";
 
-            var currentPayPeriod = await _payPeriodRepository.GetCurrentPayPeriodAsync(organizationId);
+            var currentPayPeriod = await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
+                organizationId: organizationId,
+                currentUserId: userId);
 
             if (currentPayPeriod == null)
                 throw new BusinessLogicException(cannotRetrieveDataErrorMessage);
