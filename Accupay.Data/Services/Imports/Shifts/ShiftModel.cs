@@ -1,9 +1,10 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Interfaces;
 using System;
 
 namespace AccuPay.Data.Services
 {
-    public class ShiftModel
+    public class ShiftModel : IShift
     {
         public int? EmployeeId { get; set; }
 
