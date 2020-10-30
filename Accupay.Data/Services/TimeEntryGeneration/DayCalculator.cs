@@ -832,17 +832,16 @@ namespace AccuPay.Data.Services
             int? employeeDayOfRest,
             bool shiftBasedAutomaticOvertimeEnabled)
         {
+            if (shiftBasedAutomaticOvertimeEnabled && shift != null)
+            {
+                shift.EndTimeFull = _policy.ShiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shift.StartTimeFull, shift.BreakLength);
+            }
+
             var currentShift = new CurrentShift(shift, currentDate);
 
             if (respectDefaultRestDay)
             {
                 currentShift.SetDefaultRestDay(employeeDayOfRest);
-            }
-
-            if (shiftBasedAutomaticOvertimeEnabled && shift != null)
-            {
-                shift.EndTimeFull = _policy.ShiftBasedAutomaticOvertimePolicy.GetDefaultShiftPeriodEndTime(shift.StartTimeFull, shift.BreakLength);
-                currentShift = new CurrentShift(shift, currentDate);
             }
 
             return currentShift;
