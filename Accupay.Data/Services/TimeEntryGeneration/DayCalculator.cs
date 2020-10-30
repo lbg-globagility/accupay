@@ -249,10 +249,10 @@ namespace AccuPay.Data.Services
         private void TrimOvertimeHoursWroked(TimeEntry timeEntry)
         {
             decimal overtimeHours = timeEntry.OvertimeHours;
-            if (overtimeHours > 0) timeEntry.OvertimeHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(overtimeHours);
+            if (overtimeHours > 0) timeEntry.OvertimeHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWorked(overtimeHours);
 
             decimal nightDiffOTHours = timeEntry.NightDiffOTHours;
-            if (nightDiffOTHours > 0) timeEntry.NightDiffOTHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWroked(nightDiffOTHours);
+            if (nightDiffOTHours > 0) timeEntry.NightDiffOTHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWorked(nightDiffOTHours);
         }
 
         private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, ICollection<RoutePayRate> routeRates)
