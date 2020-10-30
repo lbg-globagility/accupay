@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
@@ -32,8 +32,7 @@ Public Class TimeAttendForm
     End Sub
 
     Private Async Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim checker = FeatureListChecker.Instance
-        MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
+        MassOvertimeToolStripMenuItem.Visible = _policyHelper.UseMassOvertime
 
         If Not _policyHelper.UseUserLevel Then
 

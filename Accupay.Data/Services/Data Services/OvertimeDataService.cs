@@ -71,7 +71,7 @@ namespace AccuPay.Data.Services
             if (overtime.OTStartDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
-            if (!nullableStartTime)
+            if (!_policy.UseMassOvertime)
                 if (overtime.OTStartTime == null)
                     throw new BusinessLogicException("Start Time is required.");
 
@@ -312,14 +312,5 @@ namespace AccuPay.Data.Services
         }
 
         #endregion Private Methods
-
-        #region Other Methods
-
-        public void CheckMassOvertimeFeature(bool isMassOvertime)
-        {
-            nullableStartTime = isMassOvertime;
-        }
-
-        #endregion Other Methods
     }
 }

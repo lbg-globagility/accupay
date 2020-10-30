@@ -17,10 +17,6 @@ public class FeatureListChecker
     private Dictionary<string, string> _featureList = new Dictionary<string, string>()
     {
         {
-            "MassOvertime",
-            "1189C349-DDA2-4654-8E7F-DC5FC62513C3"
-        },
-        {
             "JobLevel",
             "1189C349-DDA2-4654-8E7F-DC5FC62513C1"
         },
@@ -102,7 +98,6 @@ public class FeatureListChecker
 
 public enum Feature
 {
-    MassOvertime,
     JobLevel,
     AdditionalVacationLeaveType,
     LoanDeductFromBonus,

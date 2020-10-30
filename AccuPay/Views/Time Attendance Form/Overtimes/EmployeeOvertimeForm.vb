@@ -5,7 +5,6 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.Policies
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -30,10 +29,6 @@ Public Class EmployeeOvertimeForm
     Private ReadOnly _employeeRepository As EmployeeRepository
 
     Private ReadOnly _userActivityRepository As UserActivityRepository
-
-    Private featureChecker As FeatureListChecker
-
-    Private isMassOvertimeEnabled As Boolean
 
     Private _currentRolePermission As RolePermission
 
@@ -62,9 +57,7 @@ Public Class EmployeeOvertimeForm
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        featureChecker = FeatureListChecker.Instance
-        isMassOvertimeEnabled = featureChecker.HasAccess(Feature.MassOvertime)
-        StartTimePicker.ShowCheckBox = isMassOvertimeEnabled
+        StartTimePicker.ShowCheckBox = _policyHelper.UseMassOvertime
 
         InitializeComponentSettings()
 
@@ -430,7 +423,9 @@ Public Class EmployeeOvertimeForm
         EndDatePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
-        If isMassOvertimeEnabled Then StartTimePicker.Checked = _currentOvertime.OTStartTime.HasValue
+
+        'If _policyHelper.UseMassOvertime Then StartTimePicker.Checked = _currentOvertime.OTStartTime.HasValue
+
         StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndTimePicker.DataBindings.Clear()
@@ -479,7 +474,7 @@ Public Class EmployeeOvertimeForm
     Private Sub UpdateEndDateDependingOnStartAndEndTimes()
         If Me._currentOvertime Is Nothing Then Return
 
-        If EndTimePicker.Value.TimeOfDay < StartTimePicker.Value.TimeOfDay Then
+        If StartTimePicker.Value.HasValue AndAlso EndTimePicker.Value.TimeOfDay < StartTimePicker.Value.Value.TimeOfDay Then
 
             Me._currentOvertime.OTEndDate = Me._currentOvertime.OTStartDate.AddDays(1)
         Else
@@ -701,7 +696,6 @@ Public Class EmployeeOvertimeForm
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
-                dataService.CheckMassOvertimeFeature(isMassOvertimeEnabled)
                 Await dataService.SaveManyAsync(changedOvertimes)
 
                 For Each item In changedOvertimes

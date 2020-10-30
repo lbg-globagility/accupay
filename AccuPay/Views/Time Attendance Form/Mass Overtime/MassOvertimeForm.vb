@@ -204,7 +204,6 @@ Public Class MassOvertimePresenter
     Private _divisionService As DivisionDataService
 
     Private _employeeRepository As EmployeeRepository
-    Private featureChecker As FeatureListChecker
 
     Public Sub New(view As MassOvertimeForm)
         _view = view
@@ -213,7 +212,6 @@ Public Class MassOvertimePresenter
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        featureChecker = FeatureListChecker.Instance
     End Sub
 
     Public Async Function Load() As Task
@@ -327,7 +325,6 @@ Public Class MassOvertimePresenter
                 changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
                 Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
-                service.CheckMassOvertimeFeature(featureChecker.HasAccess(Feature.MassOvertime))
                 Await service.SaveManyAsync(changedOvertimes)
 
             End If

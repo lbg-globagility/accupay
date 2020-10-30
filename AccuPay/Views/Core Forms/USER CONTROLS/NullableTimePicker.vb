@@ -1,9 +1,18 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Utilities.Extensions
 
 Public Class NullableTimePicker
     Private _lastCheckValue As Boolean
+
+    Public Property ShowCheckBox As Boolean
+        Get
+            Return Me.DateTimePicker1.ShowCheckBox
+        End Get
+        Set(ByVal value As Boolean)
+            Me.DateTimePicker1.ShowCheckBox = value
+        End Set
+    End Property
 
     Private Sub NullableDatePicker_Load(sender As Object, e As EventArgs) Handles Me.Load
         DateTimePicker1.MinDate = Date.MinValue
