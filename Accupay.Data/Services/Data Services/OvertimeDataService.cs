@@ -15,12 +15,17 @@ namespace AccuPay.Data.Services
 {
     public class OvertimeDataService : BaseDailyPayrollDataService<Overtime>
     {
+        private const string USER_ACTIVITY_ENTITY_NAME = "OVERTIME";
+
         private readonly OvertimeRepository _overtimeRepository;
+        private readonly UserActivityRepository _userActivityRepository;
+
         private bool nullableStartTime;
 
         public OvertimeDataService(
             OvertimeRepository overtimeRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy) :
 
@@ -31,11 +36,25 @@ namespace AccuPay.Data.Services
                 entityName: "Overtime")
         {
             _overtimeRepository = overtimeRepository;
+            _userActivityRepository = userActivityRepository;
         }
 
-        public async Task DeleteManyAsync(IEnumerable<int> overtimeIds)
+        public async Task DeleteManyAsync(IEnumerable<int> overtimeIds, int organizationId, int userId)
         {
+            var overtimes = await _overtimeRepository.GetManyByIdsAsync(overtimeIds.ToArray());
+
             await _overtimeRepository.DeleteManyAsync(overtimeIds);
+
+            foreach (var overtime in overtimes)
+            {
+                _userActivityRepository.RecordDelete(
+                    userId,
+                    USER_ACTIVITY_ENTITY_NAME,
+                    entityId: overtime.RowID.Value,
+                    organizationId: organizationId,
+                    suffixIdentifier: $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'",
+                    changedEmployeeId: overtime.EmployeeID.Value);
+            }
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -104,28 +123,25 @@ namespace AccuPay.Data.Services
             if (!shiftSchedSaveList.Any() || timePeriod.Start > timePeriod.End)
                 return;
 
-            var overtimes = _overtimeRepository.GetByEmployeeIDsAndDatePeriod(organizationId, employeeIds, timePeriod);
+            (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) = CreateOvertimesByShift(shiftSchedSaveList, organizationId, userId, employeeIds, timePeriod);
 
+            if (saveOvertimes.Any())
+                await SaveManyAsync(saveOvertimes);
+
+            if (deleteOvertimes.Any())
+                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), organizationId, userId);
+        }
+
+        private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) CreateOvertimesByShift(IEnumerable<IShift> shiftSchedSaveList, int organizationId, int userId, List<int> employeeIds, TimePeriod timePeriod)
+        {
             var saveOvertimes = new List<Overtime>();
             var deleteOvertimes = new List<Overtime>();
+
+            var overtimes = _overtimeRepository.GetByEmployeeIDsAndDatePeriod(organizationId, employeeIds, timePeriod);
 
             Func<DateTime?, decimal, DateTime?> getOTStartTime = (DateTime? starting, decimal breakLength) =>
             {
                 return _policy.ShiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(starting, breakLength);
-            };
-
-            Func<IShift, Overtime> createNewOvertime = (IShift shiftModel) =>
-            {
-                return new Overtime()
-                {
-                    Created = DateTime.Now,
-                    CreatedBy = userId,
-                    EmployeeID = shiftModel.EmployeeId,
-                    OrganizationID = organizationId,
-                    OTStartDate = shiftModel.Date,
-                    OTEndDate = shiftModel.Date,
-                    Status = Overtime.StatusApproved
-                };
             };
 
             shiftSchedSaveList.ToList().ForEach(shiftModel =>
@@ -140,7 +156,7 @@ namespace AccuPay.Data.Services
 
                 var overtime = overtimesThisDay.FirstOrDefault();
                 if (overtime == null)
-                    overtime = createNewOvertime(shiftModel);
+                    overtime = Overtime.NewOvertime(shiftModel, organizationId, userId);
 
                 var hasShiftPeriod = shiftModel.StartTime.HasValue && shiftModel.EndTime.HasValue;
                 if (hasShiftPeriod)
@@ -170,11 +186,7 @@ namespace AccuPay.Data.Services
                 discardOthers.ForEach(ot => deleteOvertimes.Add(ot));
             });
 
-            if (saveOvertimes.Any())
-                await SaveManyAsync(saveOvertimes);
-
-            if (deleteOvertimes.Any())
-                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value));
+            return (saveOvertimes, deleteOvertimes);
         }
 
         #region Other Methods

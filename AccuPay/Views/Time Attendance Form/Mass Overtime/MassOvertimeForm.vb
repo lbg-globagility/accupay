@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -341,7 +341,7 @@ Public Class MassOvertimePresenter
             If deletableOvertimeIDs.Any Then
 
                 Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await service.DeleteManyAsync(deletableOvertimeIDs)
+                Await service.DeleteManyAsync(deletableOvertimeIDs, z_OrganizationID, z_User)
 
             End If
         End Function)

@@ -1,4 +1,5 @@
-﻿using AccuPay.Utilities.Extensions;
+﻿using AccuPay.Data.Interfaces;
+using AccuPay.Utilities.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -84,6 +85,20 @@ namespace AccuPay.Data.Entities
             {
                 OTEndDate = OTEndTime < OTStartTime ? OTStartDate.AddDays(1) : OTStartDate;
             }
+        }
+
+        public static Overtime NewOvertime(IShift shift, int organizationId, int userId)
+        {
+            return new Overtime()
+            {
+                Created = DateTime.Now,
+                CreatedBy = userId,
+                EmployeeID = shift.EmployeeId,
+                OrganizationID = organizationId,
+                OTStartDate = shift.Date,
+                OTEndDate = shift.Date,
+                Status = StatusApproved
+            };
         }
     }
 }
