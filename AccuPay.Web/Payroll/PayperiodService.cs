@@ -45,7 +45,7 @@ namespace AccuPay.Web.Payroll
 
             await resources.Load(payperiodId, _currentUser.OrganizationId, _currentUser.UserId);
 
-            var results = new List<PayrollGeneration.Result>();
+            var results = new List<PaystubEmployeeResult>();
 
             foreach (var employee in resources.Employees)
             {
