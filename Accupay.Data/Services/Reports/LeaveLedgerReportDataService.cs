@@ -126,7 +126,7 @@ namespace AccuPay.Data.Services
                             currentLeaveTransactions: currentEmployeeLeaveTransactions,
                             timeEntries: employeeTimeEntries,
                             employee: employee,
-                            leaveType: LeaveType.Vacation);
+                            leaveType: LeaveType.Sick);
         }
 
         private static LeaveLedgerReportModel GetLeave(List<LeaveTransaction> oldLeaveTransactions,
