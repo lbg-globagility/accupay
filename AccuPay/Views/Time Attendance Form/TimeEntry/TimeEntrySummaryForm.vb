@@ -138,7 +138,6 @@ Public Class TimeEntrySummaryForm
         LoadYears()
 
         AddHandler employeesDataGridView.SelectionChanged, AddressOf employeesDataGridView_SelectionChanged
-        AddHandler payPeriodsDataGridView.SelectionChanged, AddressOf payPeriodDataGridView_SelectionChanged
     End Sub
 
     Private Sub UpdateFormBaseOnPolicy()
@@ -235,10 +234,17 @@ Public Class TimeEntrySummaryForm
 
         If _formHasLoaded = False Then Return
 
+        RemoveHandler payPeriodsDataGridView.SelectionChanged, AddressOf payPeriodDataGridView_SelectionChanged
+
+        Dim currentSelectedPayPeriodInGridView = DirectCast(payPeriodsDataGridView.CurrentCell?.Value, PayPeriod)
+
         Dim numOfRows = 2
 
         Dim payPeriods = Await GetPayPeriods(_selectedYear)
+        payPeriodsDataGridView.Rows.Clear()
         payPeriodsDataGridView.Rows.Add(numOfRows)
+
+        payPeriodsDataGridView.ClearSelection()
 
         Dim monthRowCounters(11) As Integer
 
@@ -255,6 +261,10 @@ Public Class TimeEntrySummaryForm
             Dim currentCell = payPeriodsDataGridView.Rows(rowIndex).Cells(columnIndex)
 
             currentCell.Value = payperiod
+
+            If payperiod.PayFromDate = currentSelectedPayPeriodInGridView?.PayFromDate Then
+                currentCell.Selected = True
+            End If
 
             If payperiod.IsClosed Then
 
@@ -280,36 +290,7 @@ Public Class TimeEntrySummaryForm
 
         Next
 
-        If _selectedPayPeriod Is Nothing Then
-            Dim dateToday = DateTime.Today
-
-            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
-                organizationId:=z_OrganizationID,
-                currentUserId:=z_User)
-
-            _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) p.PayFromDate = currentlyWorkedOnPayPeriod.PayFromDate)
-
-            If _selectedPayPeriod IsNot Nothing Then
-
-                Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
-                Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
-                payPeriodsDataGridView.CurrentCell = payPeriodCell
-
-            End If
-
-        End If
-
-        If _selectedPayPeriod IsNot payPeriodsDataGridView.CurrentCell Then
-            _selectedPayPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
-
-            If _selectedEmployee Is Nothing AndAlso employeesDataGridView.CurrentRow IsNot Nothing Then
-
-                _selectedEmployee = CType(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
-
-            End If
-
-            Await LoadTimeEntries()
-        End If
+        Await SetSelectedPeriodAndEmployee(numOfRows, currentSelectedPayPeriodInGridView, payPeriods)
 
         If Not _tsBtnDeleteTimeEntryHidden Then
             tsBtnDeleteTimeEntry.Visible = _selectedPayPeriod IsNot Nothing AndAlso _selectedPayPeriod.IsOpen
@@ -322,6 +303,44 @@ Public Class TimeEntrySummaryForm
 
         If Not _generateDefaultShiftAndTimeLogsButtonHidden Then
             GenerateDefaultShiftAndTimeLogsButton.Visible = _selectedPayPeriod IsNot Nothing AndAlso Not _selectedPayPeriod.IsClosed
+        End If
+
+        Await LoadTimeEntries()
+
+        AddHandler payPeriodsDataGridView.SelectionChanged, AddressOf payPeriodDataGridView_SelectionChanged
+
+    End Function
+
+    Private Async Function SetSelectedPeriodAndEmployee(numOfRows As Integer, currentSelectedPayPeriodInGridView As PayPeriod, payPeriods As ICollection(Of PayPeriod)) As Task
+
+        If _selectedEmployee Is Nothing AndAlso employeesDataGridView.CurrentRow IsNot Nothing Then
+
+            _selectedEmployee = CType(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+
+        End If
+
+        If _selectedPayPeriod Is Nothing Then
+
+            If currentSelectedPayPeriodInGridView IsNot Nothing Then
+
+                _selectedPayPeriod = currentSelectedPayPeriodInGridView
+            Else
+
+                Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
+                    organizationId:=z_OrganizationID,
+                    currentUserId:=z_User)
+
+                _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) p.PayFromDate = currentlyWorkedOnPayPeriod.PayFromDate)
+
+                If _selectedPayPeriod IsNot Nothing Then
+
+                    Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
+                    Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
+                    payPeriodsDataGridView.CurrentCell = payPeriodCell
+
+                End If
+            End If
+
         End If
 
     End Function
