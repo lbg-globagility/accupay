@@ -6,4 +6,4 @@ ALTER TABLE `employeetimeentry`
 ALTER TABLE `employeetimeentryactual`
 	DROP COLUMN IF EXISTS `EmployeeSalaryID`;
 	
-DROP TABLE IF EXISTS `employeepromotions;
+DROP TABLE IF EXISTS `employeepromotions`;
