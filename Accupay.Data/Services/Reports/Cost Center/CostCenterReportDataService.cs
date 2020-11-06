@@ -1,8 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,34 +9,17 @@ namespace AccuPay.Data.Services
 {
     public class CostCenterReportDataService
     {
-        private readonly CalendarService _calendarService;
-        private readonly ListOfValueService _listOfValueService;
-        private readonly AllowanceRepository _allowanceRepository;
-        private readonly PayrollContext _context;
-
-        private DateTime _selectedMonth;
         private Branch _selectedBranch;
         private int _userId;
-
-        public CostCenterReportDataService(
-            CalendarService calendarService,
-            ListOfValueService listOfValueService,
-            AllowanceRepository allowanceRepository,
-            PayrollContext context)
-        {
-            _calendarService = calendarService;
-            _listOfValueService = listOfValueService;
-            _allowanceRepository = allowanceRepository;
-            _context = context;
-        }
+        private CostCenterReportResources _resources;
 
         public List<PayPeriodModel> GetData(
-            DateTime selectedMonth,
+            CostCenterReportResources resources,
             Branch selectedBranch,
             int userId,
             bool isActual)
         {
-            _selectedMonth = selectedMonth;
+            _resources = resources;
             _selectedBranch = selectedBranch;
             _userId = userId;
 
@@ -47,30 +28,20 @@ namespace AccuPay.Data.Services
 
             List<PayPeriodModel> payPeriodModels = new List<PayPeriodModel>();
 
-            var payPeriods = GetPayPeriod(_context);
-            DateTime startDate = new DateTime[] { payPeriods[0].Start, payPeriods[1].Start }.Min();
-            DateTime endDate = new DateTime[] { payPeriods[0].End, payPeriods[1].End }.Max();
-
-            var reportPeriod = new TimePeriod(startDate, endDate);
-
             var dateForCheckingLastWorkingDay = PayrollTools.
-                GetPreviousCutoffDateForCheckingLastWorkingDay(reportPeriod.Start);
+                GetPreviousCutoffDateForCheckingLastWorkingDay(resources.ReportPeriod.Start);
 
-            var allTimeEntries = _context.TimeEntries
-                .Include(t => t.Employee)
-                .Where(t => t.Date >= dateForCheckingLastWorkingDay)
-                .Where(t => t.Date <= reportPeriod.End)
-                .ToList();
+            var allTimeEntries = resources.TimeEntries;
 
             var payPeriodTimeEntries = allTimeEntries
-                .Where(t => t.Date >= reportPeriod.Start)
-                .Where(t => t.Date <= reportPeriod.End)
+                .Where(t => t.Date >= resources.ReportPeriod.Start)
+                .Where(t => t.Date <= resources.ReportPeriod.End)
                 .ToList();
 
             // Get all the employee in the branch
             // Also get the employees that has at least 1 timelogs on the branch
             List<Employee> employees = GetEmployeeFromSelectedBranch(
-                _context,
+                resources.Employees,
                 payPeriodTimeEntries,
                 _selectedBranch.RowID.Value);
 
@@ -92,65 +63,36 @@ namespace AccuPay.Data.Services
                 .Where(t => t.BranchID == _selectedBranch.RowID)
                 .ToList();
 
-            var branchActualTimeEntries = GetBranchActualTimeEntries(branchTimeEntries, _context);
+            var branchActualTimeEntries = GetBranchActualTimeEntries(branchTimeEntries);
 
-            var salaries = _context.Salaries
-                .Where(s => s.EffectiveFrom <= reportPeriod.Start)
-                .ToList();
-
-            salaries = salaries
+            var salaries = resources.Salaries
                 .Where(x => employeeIds.Contains(x.EmployeeID.Value))
                 .ToList();
 
-            var employeePaystubs = _context.Paystubs
-                .Include(p => p.ThirteenthMonthPay)
-                .Include(p => p.PayPeriod)
-                .Where(p => p.PayPeriod.PayFromDate >= reportPeriod.Start)
-                .Where(p => p.PayPeriod.PayToDate <= reportPeriod.End)
-                .ToList();
-
-            employeePaystubs = employeePaystubs
+            var employeePaystubs = resources.Paystubs
                 .Where(x => employeeIds.Contains(x.EmployeeID.Value))
                 .ToList();
 
-            var employeeMonthlyDeductions = GenerateMonthlyDeductionList(employeeIds, employeePaystubs);
+            var employeeMonthlyDeductions = GenerateMonthlyDeductionList(employeeIds, employeePaystubs, resources.SocialSecurityBrackets);
 
-            var hmoLoans = _context.LoanTransactions
-                .Include(l => l.Paystub)
-                .Include(p => p.PayPeriod)
-                .Include(p => p.LoanSchedule.LoanType)
-                .Where(p => p.PayPeriod.PayFromDate >= reportPeriod.Start)
-                .Where(p => p.PayPeriod.PayToDate <= reportPeriod.End)
-                .Where(p => p.LoanSchedule.LoanType.Name == ProductConstant.HMO_LOAN)
-                .ToList();
+            var hmoLoans = resources.HmoLoans;
 
             hmoLoans = hmoLoans
                 .Where(x => employeeIds.Contains(x.EmployeeID.Value))
                 .ToList();
 
-            var settings = _listOfValueService.Create();
+            var dailyAllowances = _resources.DailyAllowances.Where(x => employeeIds.Contains(x.EmployeeID.Value)).ToList();
 
-            var calendarCollection = _calendarService.GetCalendarCollection(reportPeriod);
-
-            var dailyAllowances = GetDailyAllowances(organizationids, reportPeriod, employeeIds);
-
-            var allPayPeriods = _context.PayPeriods
-                .Where(x => organizationids.Contains(x.OrganizationID.Value))
-                .Where(x => x.Year == _selectedMonth.Year)
-                .Where(x => x.Month == _selectedMonth.Month)
-                .ToList();
             payPeriodModels = CreatePayPeriodModels(
                 isActual,
-                payPeriods,
+                resources.ReportTimePeriods,
                 employees,
                 salaries,
                 employeePaystubs,
                 employeeMonthlyDeductions,
                 hmoLoans,
                 dailyAllowances,
-                calendarCollection,
-                settings,
-                allPayPeriods,
+                resources.PayPeriods,
                 allTimeEntries: allTimeEntries,
                 branchTimeEntries: branchTimeEntries,
                 branchActualTimeEntries: branchActualTimeEntries,
@@ -159,7 +101,7 @@ namespace AccuPay.Data.Services
             return payPeriodModels;
         }
 
-        private List<ActualTimeEntry> GetBranchActualTimeEntries(List<TimeEntry> branchTimeEntries, PayrollContext context)
+        private List<ActualTimeEntry> GetBranchActualTimeEntries(List<TimeEntry> branchTimeEntries)
         {
             var firstDate = branchTimeEntries.OrderBy(x => x.Date).FirstOrDefault()?.Date;
             var lastDate = branchTimeEntries.OrderBy(x => x.Date).LastOrDefault()?.Date;
@@ -169,7 +111,7 @@ namespace AccuPay.Data.Services
                 return new List<ActualTimeEntry>();
             }
 
-            var actualTimeEntries = context.ActualTimeEntries
+            var actualTimeEntries = _resources.ActualTimeEntries
                 .Where(x => x.Date >= firstDate)
                 .Where(x => x.Date <= lastDate)
                 .ToList();
@@ -189,31 +131,8 @@ namespace AccuPay.Data.Services
             return branchActualTimeEntries;
         }
 
-        private List<TimePeriod> GetPayPeriod(PayrollContext context)
-        {
-            // get a random organizationId just to get a random payperiodId
-            var organizationId = context.Organizations.Select(x => x.RowID).FirstOrDefault();
-            if (organizationId == null) return null;
-            // get a random payperiod just to get the first day and last day of the payroll month
-            var payPeriods = context.PayPeriods
-                .Where(p => p.OrganizationID == organizationId)
-                .Where(p => p.IsSemiMonthly)
-                .Where(p => p.Year == _selectedMonth.Year)
-                .Where(p => p.Month == _selectedMonth.Month)
-                .ToList();
-
-            if (payPeriods.Count != 2)
-                throw new Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, End of the month)");
-
-            return new List<TimePeriod>()
-            {
-                new TimePeriod(payPeriods[0].PayFromDate, payPeriods[0].PayToDate),
-                new TimePeriod(payPeriods[1].PayFromDate, payPeriods[1].PayToDate)
-            };
-        }
-
         private List<Employee> GetEmployeeFromSelectedBranch(
-            PayrollContext context,
+            List<Employee> dailyEmployees,
             List<TimeEntry> timeEntries,
             int branchId)
         {
@@ -224,13 +143,11 @@ namespace AccuPay.Data.Services
                 .Select(t => t.Key)
                 .ToArray();
 
-            var employeesWithTimeEntriesInBranch = context.Employees
-                .Where(e => e.IsDaily)
+            var employeesWithTimeEntriesInBranch = dailyEmployees
                 .Where(e => employeeIdsWithTimeEntriesInBranch.Contains(e.RowID.Value))
                 .ToList();
 
-            var employeesFromBranch = context.Employees
-                .Where(e => e.IsDaily)
+            var employeesFromBranch = dailyEmployees
                 .Where(e => e.BranchID != null)
                 .Where(e => e.BranchID == _selectedBranch.RowID)
                 .ToList();
@@ -249,36 +166,9 @@ namespace AccuPay.Data.Services
             return employees;
         }
 
-        private List<Allowance> GetDailyAllowances(int[] organizationids, TimePeriod reportPeriod, int[] employeeIds)
-        {
-            var dailyAllowances = new List<Allowance>();
-            foreach (var organizationId in organizationids)
-            {
-                var allowances = _allowanceRepository.GetByPayPeriodWithProduct(
-                        organizationId: organizationId,
-                        timePeriod: reportPeriod)
-                    .ToList();
-
-                if (allowances.Where(x => x.IsDaily).Any())
-                {
-                    dailyAllowances.AddRange(allowances.Where(x => x.IsDaily).ToList());
-                }
-            }
-
-            return dailyAllowances.Where(x => employeeIds.Contains(x.EmployeeID.Value)).ToList();
-        }
-
-        private List<MonthlyDeduction> GenerateMonthlyDeductionList(int[] employeeIds, List<Paystub> allPaystubs)
+        private List<MonthlyDeduction> GenerateMonthlyDeductionList(int[] employeeIds, List<Paystub> allPaystubs, List<SocialSecurityBracket> sssBrackets)
         {
             List<MonthlyDeduction> employeeMonthlyDeductions = new List<MonthlyDeduction>();
-
-            List<SocialSecurityBracket> sssBrackets;
-
-            var taxEffectivityDate = new DateTime(_selectedMonth.Year, _selectedMonth.Month, 1);
-            sssBrackets = _context.SocialSecurityBrackets
-                .Where(s => taxEffectivityDate >= s.EffectiveDateFrom)
-                .Where(s => taxEffectivityDate <= s.EffectiveDateTo)
-                .ToList();
 
             foreach (var employeeId in employeeIds)
             {
@@ -370,8 +260,6 @@ namespace AccuPay.Data.Services
             List<MonthlyDeduction> monthlyDeductions,
             List<LoanTransaction> hmoLoans,
             List<Allowance> dailyAllowances,
-            CalendarCollection calendarCollection,
-            ListOfValueCollection settings,
             List<PayPeriod> allPayPeriods,
             List<TimeEntry> allTimeEntries,
             List<TimeEntry> branchTimeEntries,
@@ -401,8 +289,6 @@ namespace AccuPay.Data.Services
                     monthlyDeductions,
                     payPeriodHmoLoans,
                     dailyAllowances,
-                    calendarCollection,
-                    settings,
                     allPayPeriods,
                     allTimeEntries: allTimeEntries,
                     branchTimeEntries: branchTimeEntries,
@@ -424,8 +310,6 @@ namespace AccuPay.Data.Services
             List<MonthlyDeduction> monthlyDeductions,
             List<LoanTransaction> hmoLoans,
             List<Allowance> dailyAllowances,
-            CalendarCollection calendarCollection,
-            ListOfValueCollection settings,
             List<PayPeriod> payPeriods,
             List<TimeEntry> allTimeEntries,
             List<TimeEntry> branchTimeEntries,
@@ -500,8 +384,8 @@ namespace AccuPay.Data.Services
                     monthlyDeduction,
                     hmoLoan,
                     employeeAllowances,
-                    settings,
-                    calendarCollection,
+                    _resources.Settings,
+                    _resources.CalendarCollection,
                     _userId,
                     currentPayPeriod,
                     allTimeEntries: employeeAllTimeEntries,

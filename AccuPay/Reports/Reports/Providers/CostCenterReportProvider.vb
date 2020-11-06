@@ -150,7 +150,7 @@ Public Class CostCenterReportProvider
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            GetData(selectedMonth, selectedBranch, newFile)
+            GenerateReport(selectedMonth.Value, selectedBranch, newFile)
 
             'GenerateExcel(branchPaystubModels, newFile)
         Catch ex As IOException
@@ -165,55 +165,79 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Sub GetData(selectedMonth As Date?, selectedBranch As Branch, newFile As FileInfo)
+    Private Sub GenerateReport(selectedMonth As Date, selectedBranch As Branch, newFile As FileInfo)
 
         Dim allPayPeriodModels As New BlockingCollection(Of PayPeriodModel)
 
         If SelectedReportType = ReportType.Branch Then
 
-            Dim payPeriodModels = GetCostCenterPayPeriodModels(selectedMonth, selectedBranch)
+            If selectedBranch Is Nothing Then
 
-            GenerateExcel(payPeriodModels.GroupBy(Function(p) p.Branch), newFile)
+                MessageBoxHelper.ErrorMessage("Please select a valid branch.")
+
+                Return
+            End If
+
+            GenerateSingleBranchReport(selectedMonth, selectedBranch, newFile)
         Else
-            Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-            Dim branches = branchRepository.GetAll().Take(50)
+            GenerateMultipleBranchReport(selectedMonth, newFile)
 
-            Dim generator As New CostCenterReportGeneration(selectedMonth, branches, IsActual)
-            Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
-            progressDialog.Show()
+        End If
+    End Sub
 
-            Dim generationTask = Task.Run(
-                Sub()
-                    generator.Start()
-                End Sub
-            )
+    Private Sub GenerateSingleBranchReport(selectedMonth As Date, selectedBranch As Branch, newFile As FileInfo)
+        GetResources(
+            selectedMonth,
+            Sub(t)
+                Dim dataService As New CostCenterReportDataService()
+                Dim payPeriodModels = dataService.GetData(
+                    t.Result,
+                    selectedBranch,
+                    userId:=z_User,
+                    isActual:=IsActual)
 
-            generationTask.ContinueWith(
+                GenerateExcel(payPeriodModels.GroupBy(Function(p) p.Branch), newFile)
+            End Sub)
+    End Sub
+
+    Private Sub GenerateMultipleBranchReport(selectedMonth As Date, newFile As FileInfo)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branches = branchRepository.GetAll()
+
+        Dim generator As New CostCenterReportGeneration(branches, IsActual)
+
+        Dim resources = MainServiceProvider.GetRequiredService(Of CostCenterReportResources)
+        resources.Load(selectedMonth)
+
+        GetResources(selectedMonth,
+            Sub()
+                Dim generationTask = Task.Run(
+                    Sub()
+                        generator.Start(resources)
+                    End Sub
+                )
+
+                RunGenerateExportTask(newFile, generator, generationTask)
+            End Sub)
+    End Sub
+
+    Private Sub RunGenerateExportTask(newFile As FileInfo, generator As CostCenterReportGeneration, generationTask As Task)
+        Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
+        progressDialog.Show()
+
+        generationTask.ContinueWith(
             Sub() GenerationOnSuccess(generator.Results, progressDialog, newFile),
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.FromCurrentSynchronizationContext
         )
 
-            generationTask.ContinueWith(
+        generationTask.ContinueWith(
             Sub(t As Task) GenerationOnError(t, progressDialog),
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
-
-            'Parallel.ForEach(branches,
-            '        New ParallelOptions() With {.MaxDegreeOfParallelism = Environment.ProcessorCount},
-            '    Sub(branch)
-            '        AddPayPeriodModels(selectedMonth, branch, allPayPeriodModels)
-
-            '    End Sub)
-
-        End If
-
-        'Dim branchPaystubModels = allPayPeriodModels.GroupBy(Function(b) b.Branch)
-
-        'Return branchPaystubModels
     End Sub
 
     Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of IResult), progressDialog As ProgressDialog, newFile As FileInfo)
@@ -249,18 +273,35 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Function GetCostCenterPayPeriodModels(selectedMonth As Date?, branch As Branch) As List(Of PayPeriodModel)
+    Private Sub GetResources(selectedMonth As Date, callBackAfterLoadResources As Action(Of Task(Of CostCenterReportResources)))
+        Dim resources = MainServiceProvider.GetRequiredService(Of CostCenterReportResources)
 
-        If branch Is Nothing Then Return Nothing
+        Dim generationTask = Task.Run(
+            Function()
+                Dim resourcesTask = resources.Load(selectedMonth)
+                resourcesTask.Wait()
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
-        Dim payPeriodModels = dataService.GetData(
-            selectedMonth.Value,
-            branch,
-            userId:=z_User,
-            isActual:=IsActual)
-        Return payPeriodModels
-    End Function
+                Return resources
+            End Function)
+
+        generationTask.ContinueWith(
+            callBackAfterLoadResources,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+
+        generationTask.ContinueWith(
+            AddressOf LoadingResourceOnError,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+    End Sub
+
+    Private Sub LoadingResourceOnError(obj As Task(Of CostCenterReportResources))
+        MsgBox("Something went wrong while loading the cost center report resources. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
+    End Sub
 
     Private Shared Function GetSelectedBranch() As Branch
 

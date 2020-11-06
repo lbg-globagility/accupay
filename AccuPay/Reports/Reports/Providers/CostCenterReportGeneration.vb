@@ -1,33 +1,29 @@
 Imports System.Collections.Concurrent
 Imports System.Threading
-Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.CostCenterReportDataService
-Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CostCenterReportGeneration
     Inherits ProgressGenerator
 
-    Private SelectedMonth As Date?
     Private Branches As IEnumerable(Of Branch)
     Private ReadOnly IsActual As Boolean
 
     Private _results As BlockingCollection(Of CostCenterReportGenerationResult)
 
-    Public Sub New(selectedMonth As Date?, branches As IEnumerable(Of Branch), isActual As Boolean)
+    Public Sub New(branches As IEnumerable(Of Branch), isActual As Boolean)
 
         MyBase.New(branches.Count())
 
-        Me.SelectedMonth = selectedMonth
         Me.Branches = branches
         Me.IsActual = isActual
 
         _results = New BlockingCollection(Of CostCenterReportGenerationResult)()
     End Sub
 
-    Public Sub Start()
+    Public Sub Start(resources As CostCenterReportResources)
 
         'Parallel.ForEach(Branches,
         '    New ParallelOptions() With {.MaxDegreeOfParallelism = Environment.ProcessorCount},
@@ -38,11 +34,12 @@ Public Class CostCenterReportGeneration
 
         For Each branch In Branches
 
-            Dim payPeriodModels = GetCostCenterPayPeriodModels(SelectedMonth, branch)
+            Dim payPeriodModels = GetCostCenterPayPeriodModels(branch, resources)
 
             Dim result = CostCenterReportGenerationResult.Success(branch, payPeriodModels)
             _results.Add(result)
 
+            'TODO: Handle error
             If result.IsError Then
                 Console.WriteLine($"------------------------------------------------------------------------ ERROR - {branch.Name} ------------------------------------------------------------------------")
             End If
@@ -54,13 +51,13 @@ Public Class CostCenterReportGeneration
 
     End Sub
 
-    Private Function GetCostCenterPayPeriodModels(selectedMonth As Date?, branch As Branch) As List(Of PayPeriodModel)
+    Private Function GetCostCenterPayPeriodModels(branch As Branch, resources As CostCenterReportResources) As List(Of PayPeriodModel)
 
         If branch Is Nothing Then Return Nothing
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
+        Dim dataService As New CostCenterReportDataService()
         Dim payPeriodModels = dataService.GetData(
-            selectedMonth.Value,
+            resources,
             branch,
             userId:=z_User,
             isActual:=IsActual)

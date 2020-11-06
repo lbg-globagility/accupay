@@ -106,6 +106,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of CalendarService)
         services.AddTransient(Of ListOfValueService)
 
+        services.AddTransient(Of CostCenterReportResources)
         services.AddTransient(Of PayrollGeneration)
         services.AddTransient(Of PayrollResources)
 
@@ -118,7 +119,6 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of BpiInsuranceAmountReportDataService)
         services.AddTransient(Of CinemaTardinessReportDataService)
-        services.AddTransient(Of CostCenterReportDataService)
         services.AddTransient(Of FiledLeaveReportDataService)
         services.AddTransient(Of LeaveLedgerReportDataService)
         services.AddTransient(Of PaystubPayslipModelDataService)
