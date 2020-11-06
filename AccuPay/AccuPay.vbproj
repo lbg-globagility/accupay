@@ -523,8 +523,6 @@
       <DependentUpon>SMDeploymentEndorsement.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Providers\ExcelFormatReport.vb" />
-    <Compile Include="Reports\Reports\Providers\ExcelReportColumn.vb" />
     <Compile Include="Reports\Reports\Providers\CostCenterReportProvider.vb" />
     <Compile Include="Reports\Reports\LA Global\WorkOrder.vb">
       <AutoGen>True</AutoGen>

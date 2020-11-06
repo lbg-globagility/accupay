@@ -13,6 +13,44 @@ namespace AccuPay.Infrastructure.Reports
         private readonly decimal[] MarginSize = new decimal[] { 0.25M, 0.75M, 0.3M };
 
         protected const float FontSize = 8;
+        protected const string NumberFormat = "#,##0.00_);(#,##0.00)";
+
+        private string _firstColumn;
+        private string _secondColumn;
+        private string _thirdColumn;
+
+        protected string FirstColumn
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_firstColumn))
+                    _firstColumn = GenerateAlphabet().FirstOrDefault();
+
+                return _firstColumn;
+            }
+        }
+
+        protected string SecondColumn
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_secondColumn))
+                    _secondColumn = GetColumnAt(1);
+
+                return _secondColumn;
+            }
+        }
+
+        protected string ThirdColumn
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_firstColumn))
+                    _thirdColumn = GetColumnAt(2);
+
+                return _thirdColumn;
+            }
+        }
 
         protected void RenderColumnHeaders(ExcelWorksheet worksheet, int rowIndex, IReadOnlyCollection<ExcelReportColumn> reportColumns)
         {
@@ -66,38 +104,94 @@ namespace AccuPay.Infrastructure.Reports
             }
         }
 
-        protected static void RenderSubTotal(ExcelWorksheet worksheet, string subTotalCellRange, int employeesStartIndex, int employeesLastIndex, int formulaColumnStart)
+        protected static void RenderSubTotal(
+            ExcelWorksheet worksheet,
+            string subTotalCellRange,
+            int employeesStartIndex,
+            int employeesLastIndex,
+            int formulaColumnStart)
         {
-            worksheet.Cells[subTotalCellRange].Formula = string.Format("SUM({0})", new ExcelAddress(employeesStartIndex, formulaColumnStart, employeesLastIndex, formulaColumnStart).Address);
+            worksheet.Cells[subTotalCellRange].Formula = string.Format(
+                "SUM({0})",
+                new ExcelAddress(employeesStartIndex, formulaColumnStart, employeesLastIndex, formulaColumnStart).Address);
 
-            worksheet.Cells[subTotalCellRange].Style.Font.Bold = true;
-            worksheet.Cells[subTotalCellRange].Style.Numberformat.Format = "#,##0.00_);(#,##0.00)";
-            worksheet.Cells[subTotalCellRange].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            ApplyTotalWorksheetStyle(worksheet, ExcelBorderStyle.Thin, subTotalCellRange);
         }
 
-        protected static void RenderGrandTotal(ExcelWorksheet worksheet, int rowIndex, string lastCellColumn, IEnumerable<int> subTotalRows, char startingLetter)
+        protected static void RenderGrandTotal(
+            ExcelWorksheet worksheet,
+            int rowIndex,
+            string firstCellLetter,
+            string lastCellLetter,
+            IEnumerable<int> subTotalRows,
+            ExcelBorderStyle borderStyle = ExcelBorderStyle.Double)
         {
-            var grandTotalRange = $"{startingLetter}{rowIndex}:{lastCellColumn}{rowIndex}";
-            worksheet.Cells[grandTotalRange].Formula = string.Format("SUM({0})", string.Join(",", subTotalRows.Select(s => $"{startingLetter}{s}")));
-            worksheet.Cells[grandTotalRange].Style.Border.Top.Style = ExcelBorderStyle.Double;
-            worksheet.Cells[grandTotalRange].Style.Font.Bold = true;
-            worksheet.Cells[grandTotalRange].Style.Numberformat.Format = "#,##0.00_);(#,##0.00)";
+            var grandTotalRange = $"{firstCellLetter}{rowIndex}:{lastCellLetter}{rowIndex}";
+            worksheet.Cells[grandTotalRange].Formula = string.Format("SUM({0})", string.Join(",", subTotalRows.Select(s => $"{firstCellLetter}{s}")));
+
+            ApplyTotalWorksheetStyle(worksheet, borderStyle, grandTotalRange);
+        }
+
+        protected static void RenderZeroTotal(
+            ExcelWorksheet worksheet,
+            int rowIndex,
+            string firstCellLetter,
+            string lastCellLetter,
+            ExcelBorderStyle borderStyle = ExcelBorderStyle.Double)
+        {
+            var grandTotalRange = $"{firstCellLetter}{rowIndex}:{lastCellLetter}{rowIndex}";
+            worksheet.Cells[grandTotalRange].Value = 0;
+
+            ApplyTotalWorksheetStyle(worksheet, borderStyle, grandTotalRange);
+        }
+
+        protected string GetColumnAt(int index)
+        {
+            var alphabets = GenerateAlphabet();
+
+            if (alphabets != null)
+            {
+                return alphabets.ElementAt(index);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        protected string GetLastColumn(IReadOnlyCollection<ExcelReportColumn> viewableReportColumns)
+        {
+            var letters = GenerateAlphabet().GetEnumerator();
+
+            string lastColumnAlphabet = GenerateAlphabet().FirstOrDefault();
+
+            foreach (var reportColumn in viewableReportColumns)
+            {
+                letters.MoveNext();
+                lastColumnAlphabet = letters.Current;
+            }
+
+            return lastColumnAlphabet;
         }
 
         protected void SetDefaultPrinterSettings(ExcelPrinterSettings settings)
         {
-            {
-                var withBlock = settings;
-                withBlock.Orientation = eOrientation.Landscape;
-                withBlock.PaperSize = ePaperSize.Legal;
-                withBlock.TopMargin = MarginSize[1];
-                withBlock.BottomMargin = MarginSize[1];
-                withBlock.LeftMargin = MarginSize[0];
-                withBlock.RightMargin = MarginSize[0];
-            }
+            settings.Orientation = eOrientation.Landscape;
+            settings.PaperSize = ePaperSize.Legal;
+            settings.TopMargin = MarginSize[1];
+            settings.BottomMargin = MarginSize[1];
+            settings.LeftMargin = MarginSize[0];
+            settings.RightMargin = MarginSize[0];
         }
 
-        protected static int Asc(char String)
+        private static void ApplyTotalWorksheetStyle(ExcelWorksheet worksheet, ExcelBorderStyle borderStyle, string subTotalCellRange)
+        {
+            worksheet.Cells[subTotalCellRange].Style.Font.Bold = true;
+            worksheet.Cells[subTotalCellRange].Style.Numberformat.Format = NumberFormat;
+            worksheet.Cells[subTotalCellRange].Style.Border.Top.Style = borderStyle;
+        }
+
+        private static int Asc(char String)
         {
             int num;
             byte[] numArray;

@@ -9,7 +9,6 @@ Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayrollSummaryExcelFormatReportProvider
-    Inherits ExcelFormatReport
     Implements IReportProvider
 
     Public Property Name As String = "Payroll Summary" Implements IReportProvider.Name
@@ -136,6 +135,21 @@ Public Class PayrollSummaryExcelFormatReportProvider
         End While
 
         Return _result
+    End Function
+
+    Private Shared Function GetPayrollSelector() As MultiplePayPeriodSelectionDialog
+
+        Dim payrollSelector = New MultiplePayPeriodSelectionDialog With {
+            .SHowPayrollSummaryPanel = True,
+            .ShowDeclaredOrActualOptionsPanel = True
+        }
+
+        If payrollSelector.ShowDialog() <> DialogResult.OK Then
+            Return Nothing
+        End If
+
+        Return payrollSelector
+
     End Function
 
 End Class

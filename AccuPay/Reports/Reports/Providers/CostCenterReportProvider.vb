@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.IO
@@ -6,9 +6,9 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.CostCenterReportDataService
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Desktop.Utilities
-Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Infrastructure.Reports
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
@@ -74,7 +74,7 @@ Public Class CostCenterReportProvider
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
 
         Dim reportColumns = New List(Of ExcelReportColumn)({
-            New ExcelReportColumn("NAME OF EMPLOYEES", EmployeeNameKey, ColumnType.Text),
+            New ExcelReportColumn("NAME OF EMPLOYEES", EmployeeNameKey, ExcelReportColumn.ColumnType.Text),
             New ExcelReportColumn("NO. OF DAYS", TotalDaysKey),
             New ExcelReportColumn("NO. OF HOURS", TotalHoursKey),
             New ExcelReportColumn("RATE", DailyRateKey),
@@ -183,19 +183,23 @@ Public Class CostCenterReportProvider
         Return CDate(selectMonthForm.MonthValue).ToMinimumDateValue
     End Function
 
-    Protected Shared Function GetDefaultFileName(reportName As String,
-                                                 selectedBranch As Branch,
-                                                 selectedMonth As Date) As String
-        Return String.Concat(selectedBranch.Name, " ",
-                            reportName, " ",
-                            "- ",
-                            selectedMonth.ToString("MMMM"),
-                            ".xlsx")
+    Protected Shared Function GetDefaultFileName(
+        reportName As String,
+        selectedBranch As Branch,
+        selectedMonth As Date) As String
+
+        Return String.Concat(
+            selectedBranch.Name, " ",
+            reportName, " ",
+            "- ",
+            selectedMonth.ToString("MMMM"),
+            ".xlsx")
     End Function
 
-    Private Sub GenerateExcel(payPeriodModels As List(Of PayPeriodModel),
-                              newFile As FileInfo,
-                              selectedBranch As Branch)
+    Private Sub GenerateExcel(
+        payPeriodModels As List(Of PayPeriodModel),
+        newFile As FileInfo,
+        selectedBranch As Branch)
 
         Using excel = New ExcelPackage(newFile)
             Dim subTotalRows = New List(Of Integer)
@@ -204,10 +208,51 @@ Public Class CostCenterReportProvider
 
             Dim viewableReportColumns = GetViewableReportColumns(payPeriodModels)
 
-            RenderWorksheet(worksheet, payPeriodModels, viewableReportColumns, selectedBranch)
+            RenderWorksheet(payPeriodModels, selectedBranch, worksheet, viewableReportColumns)
+
+            SetDefaultPrinterSettings(worksheet.PrinterSettings)
 
             excel.Save()
         End Using
+    End Sub
+
+    Private Sub RenderWorksheet(
+        payPeriodModels As List(Of PayPeriodModel),
+        selectedBranch As Branch,
+        worksheet As ExcelWorksheet,
+        viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn))
+
+        Dim rowIndex As Integer = 1
+        Dim lastColumn As String = GetLastColumn(viewableReportColumns)
+
+        worksheet.Cells.Style.Font.Size = FontSize
+
+        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        If systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+            worksheet.Cells.Style.Font.Name = "Book Antiqua"
+        End If
+
+        Dim organizationCell = worksheet.Cells(rowIndex, 1)
+        organizationCell.Value = orgNam.ToUpper()
+        organizationCell.Style.Font.Bold = True
+        rowIndex += 1
+
+        Dim monthlyBranchSubTotalRows = New List(Of Integer)
+        For index = 1 To 3
+
+            rowIndex = RenderBranchData(worksheet, payPeriodModels, viewableReportColumns, monthlyBranchSubTotalRows, selectedBranch, lastColumn, rowIndex)
+
+        Next
+
+        If monthlyBranchSubTotalRows.Count > 1 Then
+
+            rowIndex += 3
+
+            RenderGrandTotalLabel(worksheet, "GRAND TOTAL", rowIndex)
+            RenderGrandTotal(worksheet, rowIndex, SecondColumn, lastColumn, monthlyBranchSubTotalRows, ExcelBorderStyle.Thick)
+        End If
+
     End Sub
 
     Private Function GetViewableReportColumns(payPeriodModels As List(Of PayPeriodModel)) As IReadOnlyCollection(Of ExcelReportColumn)
@@ -242,57 +287,50 @@ Public Class CostCenterReportProvider
         Return viewableReportColumns
     End Function
 
-    Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
-                                payPeriods As ICollection(Of PayPeriodModel),
-                                viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
-                                selectedBranch As Branch)
-        Dim subTotalRows = New List(Of Integer)
+    Private Function RenderBranchData(
+        worksheet As ExcelWorksheet,
+        payPeriods As ICollection(Of PayPeriodModel),
+        viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
+        monthlyBranchSubTotalRows As List(Of Integer),
+        selectedBranch As Branch,
+        lastColumn As String,
+        rowIndex As Integer) As Integer
 
-        worksheet.Cells.Style.Font.Size = FontSize
-
-        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
-
-        If systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
-            worksheet.Cells.Style.Font.Name = "Book Antiqua"
-        End If
-
-        Dim rowIndex = 1
-        Dim organizationCell = worksheet.Cells(rowIndex, 1)
-        organizationCell.Value = orgNam.ToUpper()
-        organizationCell.Style.Font.Bold = True
-        rowIndex += 1
+        Dim branchName As String = selectedBranch.Name.ToUpper()
+        Dim branchSubTotalRows As New List(Of Integer)
 
         ' space after the title
         rowIndex += 1
-        Dim lastCell = String.Empty
 
         For Each payPeriodModel In payPeriods
-            Dim branchNameCell = worksheet.Cells(rowIndex, 1)
+            Dim branchNameCell As ExcelRange = worksheet.Cells(rowIndex, 1)
             branchNameCell.Value = GetPayPeriodDescription(payPeriodModel.PayPeriod)
             branchNameCell.Style.Font.Bold = True
             rowIndex += 1
-            Dim payPeriodDateCell = worksheet.Cells(rowIndex, 1)
-            payPeriodDateCell.Value = selectedBranch.Name.ToUpper()
+
+            Dim payPeriodDateCell As ExcelRange = worksheet.Cells(rowIndex, 1)
+            payPeriodDateCell.Value = branchName
             payPeriodDateCell.Style.Font.Bold = True
             rowIndex += 1
 
             RenderColumnHeaders(worksheet, rowIndex, viewableReportColumns)
             rowIndex += 1
 
-            Dim employeesStartIndex = rowIndex
-            Dim employeesLastIndex = 0
-
             If payPeriodModel.Paystubs.Count > 0 Then
-                RenderGroupedRows(worksheet,
-                                  viewableReportColumns,
-                                  subTotalRows,
-                                  rowIndex,
-                                  lastCell,
-                                  payPeriodModel,
-                                  employeesStartIndex,
-                                  employeesLastIndex)
+                rowIndex = RenderGroupedRows(
+                    worksheet,
+                    viewableReportColumns,
+                    branchSubTotalRows,
+                    rowIndex,
+                    lastColumn,
+                    payPeriodModel)
+            Else
+                RenderZeroTotal(worksheet, rowIndex, SecondColumn, lastColumn, ExcelBorderStyle.Thin)
 
+                rowIndex += 1
             End If
+
+            rowIndex += 1
 
         Next
 
@@ -302,12 +340,24 @@ Public Class CostCenterReportProvider
         rowIndex += 1
 
         If payPeriods.Count > 1 Then
-            RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows, "B"c)
+
+            RenderGrandTotalLabel(worksheet, branchName, rowIndex)
+            RenderGrandTotal(worksheet, rowIndex, SecondColumn, lastColumn, branchSubTotalRows)
+
+            monthlyBranchSubTotalRows.Add(rowIndex)
         End If
 
         rowIndex += 1
 
-        SetDefaultPrinterSettings(worksheet.PrinterSettings)
+        Return rowIndex
+    End Function
+
+    Private Sub RenderGrandTotalLabel(worksheet As ExcelWorksheet, branchName As String, rowIndex As Integer)
+        Dim column = $"{FirstColumn}{rowIndex}"
+        Dim cell = worksheet.Cells(column)
+        cell.Style.Font.Bold = True
+
+        cell.Value = branchName
     End Sub
 
     Private Function GetPayPeriodDescription(payPeriod As TimePeriod) As String
@@ -324,14 +374,16 @@ Public Class CostCenterReportProvider
 
     End Function
 
-    Private Sub RenderGroupedRows(worksheet As ExcelWorksheet,
-                                  viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
-                                  subTotalRows As List(Of Integer),
-                                  ByRef rowIndex As Integer,
-                                  ByRef lastCell As String,
-                                  payPeriodModel As PayPeriodModel,
-                                  employeesStartIndex As Integer,
-                                  ByRef employeesLastIndex As Integer)
+    Private Function RenderGroupedRows(
+        worksheet As ExcelWorksheet,
+        viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
+        subTotalRows As List(Of Integer),
+        rowIndex As Integer,
+        lastColumn As String,
+        payPeriodModel As PayPeriodModel) As Integer
+
+        Dim employeesStartRowIndex As Integer = rowIndex
+        Dim employeesLastRowIndex As Integer = rowIndex
 
         For Each paystub In payPeriodModel.Paystubs
             Dim letters = GenerateAlphabet.GetEnumerator()
@@ -346,35 +398,37 @@ Public Class CostCenterReportProvider
                 Dim cell = worksheet.Cells(column)
 
                 Dim value = propertyLookUp(reportColumn.Source)
-                If reportColumn.Type = ColumnType.Numeric Then
+                If reportColumn.Type = ExcelReportColumn.ColumnType.Numeric Then
                     cell.Value = CDec(value)
                 Else
                     cell.Value = value
 
                 End If
 
-                If reportColumn.Type = ColumnType.Numeric Then
+                If reportColumn.Type = ExcelReportColumn.ColumnType.Numeric Then
                     cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
                     cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
                 End If
             Next
 
-            lastCell = letters.Current
-            employeesLastIndex = rowIndex
+            employeesLastRowIndex = rowIndex
             rowIndex += 1
         Next
 
-        Dim subTotalCellRange = $"B{rowIndex}:{lastCell}{rowIndex}"
+        Dim subTotalCellRange = $"B{rowIndex}:{lastColumn}{rowIndex}"
 
         subTotalRows.Add(rowIndex)
 
-        RenderSubTotal(worksheet,
-                       subTotalCellRange,
-                       employeesStartIndex,
-                       employeesLastIndex,
-                       formulaColumnStart:=2)
+        RenderSubTotal(
+            worksheet,
+            subTotalCellRange,
+            employeesStartRowIndex,
+            employeesLastRowIndex,
+            formulaColumnStart:=2)
 
-        rowIndex += 2
-    End Sub
+        rowIndex += 1
+
+        Return rowIndex
+    End Function
 
 End Class

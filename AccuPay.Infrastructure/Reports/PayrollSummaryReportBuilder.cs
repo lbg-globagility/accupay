@@ -362,7 +362,7 @@ namespace AccuPay.Infrastructure.Reports
             rowIndex += 1;
 
             if (employeeGroups.Count > 1)
-                RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows, 'C');
+                RenderGrandTotal(worksheet, rowIndex, ThirdColumn, lastCell, subTotalRows);
 
             rowIndex += 1;
 
