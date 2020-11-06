@@ -433,6 +433,8 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Reports\Reports\Providers\CostCenterReportGeneration.vb" />
+    <Compile Include="Reports\Reports\Providers\CostCenterReportGenerationResult.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\ReleaseThirteenthMonthGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.Designer.vb">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>

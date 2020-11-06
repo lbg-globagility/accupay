@@ -2104,8 +2104,8 @@ Public Class PayStubForm
         CostCenterReportActualToolStripMenuItem.Click
 
         Dim provider = New CostCenterReportProvider()
-        provider.IsActual = sender Is CostCenterReportActualToolStripMenuItem
-
+        'provider.IsActual = sender Is CostCenterReportActualToolStripMenuItem
+        provider.SelectedReportType = If(sender Is CostCenterReportActualToolStripMenuItem, CostCenterReportProvider.ReportType.All, CostCenterReportProvider.ReportType.Branch)
         provider.Run()
 
     End Sub

@@ -153,7 +153,8 @@ namespace AccuPay.Data.Services
                 allPayPeriods,
                 allTimeEntries: allTimeEntries,
                 branchTimeEntries: branchTimeEntries,
-                branchActualTimeEntries: branchActualTimeEntries);
+                branchActualTimeEntries: branchActualTimeEntries,
+                selectedBranch: _selectedBranch);
 
             return payPeriodModels;
         }
@@ -374,7 +375,8 @@ namespace AccuPay.Data.Services
             List<PayPeriod> allPayPeriods,
             List<TimeEntry> allTimeEntries,
             List<TimeEntry> branchTimeEntries,
-            List<ActualTimeEntry> branchActualTimeEntries)
+            List<ActualTimeEntry> branchActualTimeEntries,
+            Branch selectedBranch)
         {
             List<PayPeriodModel> payPeriodModels = new List<PayPeriodModel>();
             foreach (var payPeriod in payPeriods)
@@ -406,11 +408,7 @@ namespace AccuPay.Data.Services
                     branchTimeEntries: branchTimeEntries,
                     branchActualTimeEntries: branchActualTimeEntries);
 
-                payPeriodModels.Add(new PayPeriodModel()
-                {
-                    PayPeriod = payPeriod,
-                    Paystubs = paystubModels
-                });
+                payPeriodModels.Add(new PayPeriodModel(payPeriod, selectedBranch, paystubModels));
             }
 
             return payPeriodModels;
@@ -521,9 +519,17 @@ namespace AccuPay.Data.Services
 
         public class PayPeriodModel
         {
-            public TimePeriod PayPeriod { get; set; }
+            public TimePeriod PayPeriod { get; }
+            public Branch Branch { get; }
 
             public List<CostCenterPaystubModel> Paystubs { get; set; }
+
+            public PayPeriodModel(TimePeriod payPeriod, Branch branch, List<CostCenterPaystubModel> paystubs)
+            {
+                PayPeriod = payPeriod;
+                Branch = branch;
+                Paystubs = paystubs;
+            }
         }
 
         public class SSSEmployerShare

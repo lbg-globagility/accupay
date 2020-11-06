@@ -1,8 +1,14 @@
 Option Strict On
 
+Imports System.Collections.Concurrent
 Imports System.Collections.ObjectModel
 Imports System.IO
+Imports System.Threading
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Exceptions
+Imports AccuPay.Data.Helpers.ProgressGenerator
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.CostCenterReportDataService
 Imports AccuPay.Data.ValueObjects
@@ -23,11 +29,17 @@ Public Class CostCenterReportProvider
     Inherits ExcelFormatReport
     Implements IReportProvider
 
+    Public Enum ReportType
+        All
+        Branch
+    End Enum
+
     Public Property Name As String = "Cost Center Report" Implements IReportProvider.Name
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Property IsActual As Boolean
+    Public Property SelectedReportType As ReportType
 
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ExcelReportColumn) = GetReportColumns()
 
@@ -119,10 +131,16 @@ Public Class CostCenterReportProvider
             Dim selectedMonth = GetSelectedMonth()
             If selectedMonth Is Nothing Then Return
 
-            Dim selectedBranch = GetSelectedBranch()
-            If selectedBranch?.RowID Is Nothing Then Return
+            Dim selectedBranch As Branch = Nothing
 
-            Dim defaultFileName = GetDefaultFileName("Cost Center Report", selectedBranch, selectedMonth.Value)
+            If SelectedReportType = ReportType.Branch Then
+
+                selectedBranch = GetSelectedBranch()
+                If selectedBranch?.RowID Is Nothing Then Return
+
+            End If
+
+            Dim defaultFileName = GetDefaultFileName("Cost Center Report", selectedMonth.Value, selectedBranch)
 
             Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
 
@@ -132,23 +150,9 @@ Public Class CostCenterReportProvider
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
-            Dim payPeriodModels = dataService.GetData(
-                selectedMonth.Value,
-                selectedBranch,
-                userId:=z_User,
-                isActual:=IsActual)
+            GetData(selectedMonth, selectedBranch, newFile)
 
-            If payPeriodModels.Any = False OrElse payPeriodModels.Sum(Function(p) p.Paystubs.Count) = 0 Then
-
-                MessageBoxHelper.ErrorMessage("No paystubs to show.")
-                Return
-
-            End If
-
-            GenerateExcel(payPeriodModels, newFile, selectedBranch)
-
-            Process.Start(newFile.FullName)
+            'GenerateExcel(branchPaystubModels, newFile)
         Catch ex As IOException
 
             MessageBoxHelper.ErrorMessage(ex.Message)
@@ -160,6 +164,103 @@ Public Class CostCenterReportProvider
         End Try
 
     End Sub
+
+    Private Sub GetData(selectedMonth As Date?, selectedBranch As Branch, newFile As FileInfo)
+
+        Dim allPayPeriodModels As New BlockingCollection(Of PayPeriodModel)
+
+        If SelectedReportType = ReportType.Branch Then
+
+            Dim payPeriodModels = GetCostCenterPayPeriodModels(selectedMonth, selectedBranch)
+
+            GenerateExcel(payPeriodModels.GroupBy(Function(p) p.Branch), newFile)
+        Else
+            Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+            Dim branches = branchRepository.GetAll().Take(50)
+
+            Dim generator As New CostCenterReportGeneration(selectedMonth, branches, IsActual)
+            Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
+            progressDialog.Show()
+
+            Dim generationTask = Task.Run(
+                Sub()
+                    generator.Start()
+                End Sub
+            )
+
+            generationTask.ContinueWith(
+            Sub() GenerationOnSuccess(generator.Results, progressDialog, newFile),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+
+            generationTask.ContinueWith(
+            Sub(t As Task) GenerationOnError(t, progressDialog),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+
+            'Parallel.ForEach(branches,
+            '        New ParallelOptions() With {.MaxDegreeOfParallelism = Environment.ProcessorCount},
+            '    Sub(branch)
+            '        AddPayPeriodModels(selectedMonth, branch, allPayPeriodModels)
+
+            '    End Sub)
+
+        End If
+
+        'Dim branchPaystubModels = allPayPeriodModels.GroupBy(Function(b) b.Branch)
+
+        'Return branchPaystubModels
+    End Sub
+
+    Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of IResult), progressDialog As ProgressDialog, newFile As FileInfo)
+
+        progressDialog.Close()
+        progressDialog.Dispose()
+
+        Dim saveResults = results.
+            Select(Function(r) CType(r, CostCenterReportGenerationResult)).
+            Where(Function(r) r.IsSuccess).
+            SelectMany(Function(r) r.Model).
+            GroupBy(Function(m) m.Branch).
+            OrderBy(Function(b) b.Key.Name).
+            ToList()
+
+        GenerateExcel(saveResults, newFile)
+    End Sub
+
+    Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
+
+        progressDialog.Close()
+        progressDialog.Dispose()
+
+        Const MessageTitle As String = "Generate Cost Center Report"
+
+        If t.Exception?.InnerException.GetType() Is GetType(BusinessLogicException) Then
+
+            MessageBoxHelper.ErrorMessage(t.Exception?.InnerException.Message, MessageTitle)
+        Else
+            Debugger.Break()
+            MessageBoxHelper.ErrorMessage("Something went wrong while generating the cost center report. Please contact Globagility Inc. for assistance.", MessageTitle)
+        End If
+
+    End Sub
+
+    Private Function GetCostCenterPayPeriodModels(selectedMonth As Date?, branch As Branch) As List(Of PayPeriodModel)
+
+        If branch Is Nothing Then Return Nothing
+
+        Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
+        Dim payPeriodModels = dataService.GetData(
+            selectedMonth.Value,
+            branch,
+            userId:=z_User,
+            isActual:=IsActual)
+        Return payPeriodModels
+    End Function
 
     Private Shared Function GetSelectedBranch() As Branch
 
@@ -183,13 +284,13 @@ Public Class CostCenterReportProvider
         Return CDate(selectMonthForm.MonthValue).ToMinimumDateValue
     End Function
 
-    Protected Shared Function GetDefaultFileName(
+    Private Function GetDefaultFileName(
         reportName As String,
-        selectedBranch As Branch,
-        selectedMonth As Date) As String
+        selectedMonth As Date,
+        Optional selectedBranch As Branch = Nothing) As String
 
         Return String.Concat(
-            selectedBranch.Name, " ",
+            If(SelectedReportType = ReportType.Branch, $"{selectedBranch?.Name} ", "All - "),
             reportName, " ",
             "- ",
             selectedMonth.ToString("MMMM"),
@@ -197,28 +298,28 @@ Public Class CostCenterReportProvider
     End Function
 
     Private Sub GenerateExcel(
-        payPeriodModels As List(Of PayPeriodModel),
-        newFile As FileInfo,
-        selectedBranch As Branch)
+        branchPaystubModels As IEnumerable(Of IGrouping(Of Branch, PayPeriodModel)),
+        newFile As FileInfo)
 
         Using excel = New ExcelPackage(newFile)
             Dim subTotalRows = New List(Of Integer)
 
             Dim worksheet = excel.Workbook.Worksheets.Add("Sheet1")
 
-            Dim viewableReportColumns = GetViewableReportColumns(payPeriodModels)
+            Dim viewableReportColumns = GetViewableReportColumns(branchPaystubModels)
 
-            RenderWorksheet(payPeriodModels, selectedBranch, worksheet, viewableReportColumns)
+            RenderWorksheet(branchPaystubModels, worksheet, viewableReportColumns)
 
             SetDefaultPrinterSettings(worksheet.PrinterSettings)
 
             excel.Save()
         End Using
+
+        Process.Start(newFile.FullName)
     End Sub
 
     Private Sub RenderWorksheet(
-        payPeriodModels As List(Of PayPeriodModel),
-        selectedBranch As Branch,
+        branchPaystubModels As IEnumerable(Of IGrouping(Of Branch, PayPeriodModel)),
         worksheet As ExcelWorksheet,
         viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn))
 
@@ -239,9 +340,13 @@ Public Class CostCenterReportProvider
         rowIndex += 1
 
         Dim monthlyBranchSubTotalRows = New List(Of Integer)
-        For index = 1 To 3
 
-            rowIndex = RenderBranchData(worksheet, payPeriodModels, viewableReportColumns, monthlyBranchSubTotalRows, selectedBranch, lastColumn, rowIndex)
+        For Each branchGroup In branchPaystubModels
+
+            If branchGroup.ToList().SelectMany(Function(p) p.Paystubs).Any() Then
+                rowIndex = RenderBranchData(worksheet, branchGroup, viewableReportColumns, monthlyBranchSubTotalRows, lastColumn, rowIndex)
+
+            End If
 
         Next
 
@@ -255,7 +360,11 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Function GetViewableReportColumns(payPeriodModels As List(Of PayPeriodModel)) As IReadOnlyCollection(Of ExcelReportColumn)
+    Private Function GetViewableReportColumns(branchPaystubModels As IEnumerable(Of IGrouping(Of Branch, PayPeriodModel))) As IReadOnlyCollection(Of ExcelReportColumn)
+
+        Dim payPeriodModels = branchPaystubModels.
+            SelectMany(Function(b) b.ToList()).
+            ToList()
 
         Dim viewableReportColumns As New List(Of ExcelReportColumn)
 
@@ -289,14 +398,17 @@ Public Class CostCenterReportProvider
 
     Private Function RenderBranchData(
         worksheet As ExcelWorksheet,
-        payPeriods As ICollection(Of PayPeriodModel),
+        branchGroup As IGrouping(Of Branch, PayPeriodModel),
         viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
         monthlyBranchSubTotalRows As List(Of Integer),
-        selectedBranch As Branch,
         lastColumn As String,
         rowIndex As Integer) As Integer
 
-        Dim branchName As String = selectedBranch.Name.ToUpper()
+        Dim branch As Branch = branchGroup.Key
+        Dim branchName As String = branch.Name
+
+        Dim payPeriods As ICollection(Of PayPeriodModel) = branchGroup.ToList()
+
         Dim branchSubTotalRows As New List(Of Integer)
 
         ' space after the title
