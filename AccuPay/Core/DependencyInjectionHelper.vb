@@ -178,6 +178,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of IPayrollSummaryReportBuilder, PayrollSummaryReportBuilder)
         services.AddTransient(Of EmployeePersonalProfilesExcelFormatReportDataService)
         services.AddTransient(Of IEmployeePersonalProfilesReportBuilder, EmployeePersonalProfilesReportBuilder)
+        services.AddTransient(Of ICostCenterReportBuilder, CostCenterReportBuilder)
 
         'services.AddTransient(Of MetroLogin)
         'services.AddTransient(Of MDIPrimaryForm)
