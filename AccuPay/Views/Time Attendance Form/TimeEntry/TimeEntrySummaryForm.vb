@@ -264,6 +264,9 @@ Public Class TimeEntrySummaryForm
 
             If payperiod.PayFromDate = currentSelectedPayPeriodInGridView?.PayFromDate Then
                 currentCell.Selected = True
+                ' To update the data of the pay period if it has changed.
+                ' For example its status may have been updated.
+                currentSelectedPayPeriodInGridView = DirectCast(payPeriodsDataGridView.CurrentCell?.Value, PayPeriod)
             End If
 
             If payperiod.IsClosed Then
@@ -319,26 +322,25 @@ Public Class TimeEntrySummaryForm
 
         End If
 
-        If _selectedPayPeriod Is Nothing Then
+        If currentSelectedPayPeriodInGridView IsNot Nothing Then
 
-            If currentSelectedPayPeriodInGridView IsNot Nothing Then
+            ' To update the data of the pay period if it has changed.
+            ' For example its status may have been updated.
+            _selectedPayPeriod = currentSelectedPayPeriodInGridView
+        Else
 
-                _selectedPayPeriod = currentSelectedPayPeriodInGridView
-            Else
+            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
+                organizationId:=z_OrganizationID,
+                currentUserId:=z_User)
 
-                Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
-                    organizationId:=z_OrganizationID,
-                    currentUserId:=z_User)
+            _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) p.PayFromDate = currentlyWorkedOnPayPeriod.PayFromDate)
 
-                _selectedPayPeriod = payPeriods.FirstOrDefault(Function(p) p.PayFromDate = currentlyWorkedOnPayPeriod.PayFromDate)
+            If _selectedPayPeriod IsNot Nothing Then
 
-                If _selectedPayPeriod IsNot Nothing Then
+                Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
+                Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
+                payPeriodsDataGridView.CurrentCell = payPeriodCell
 
-                    Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
-                    Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
-                    payPeriodsDataGridView.CurrentCell = payPeriodCell
-
-                End If
             End If
 
         End If
