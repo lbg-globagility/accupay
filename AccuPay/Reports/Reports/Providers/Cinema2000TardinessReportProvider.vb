@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -48,7 +48,7 @@ Public Class Cinema2000TardinessReportProvider
             txtOrgName.Text = organization?.Name.ToTrimmedUpperCase()
 
             Dim txtReportName As TextObject = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("txtReportName"), TextObject)
-            txtReportName.Text = $"Tadiness Report - {firstDate:MMMM yyyy}"
+            txtReportName.Text = $"Tardiness Report - {firstDate:MMMM yyyy}"
 
             Dim txtAddress = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtAddress"), TextObject)
 
