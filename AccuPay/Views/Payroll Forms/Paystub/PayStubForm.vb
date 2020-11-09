@@ -190,8 +190,10 @@ Public Class PayStubForm
         PayslipDeclaredToolStripMenuItem.Visible = showActual
         PayslipActualToolStripMenuItem.Visible = showActual
 
-        CostCenterReportDeclaredToolStripMenuItem.Visible = showActual
-        CostCenterReportActualToolStripMenuItem.Visible = showActual
+        CostCenterReportAllDeclaredToolStripMenuItem.Visible = showActual
+        CostCenterReportByBranchDeclaredToolStripMenuItem.Visible = showActual
+        CostCenterReportAllActualToolStripMenuItem.Visible = showActual
+        CostCenterReportByBranchActualToolStripMenuItem.Visible = showActual
 
         ExportNetPayDeclaredAllToolStripMenuItem.Visible = showActual
         ExportNetPayDeclaredCashToolStripMenuItem.Visible = showActual
@@ -211,7 +213,8 @@ Public Class PayStubForm
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
         Else
 
-            RemoveHandler CostCenterReportToolStripMenuItem.Click, AddressOf CostCenterReportToolStripMenuItem_Click
+            RemoveHandler CostCenterReportAllToolStripMenuItem.Click, AddressOf CostCenterReportToolStripMenuItem_Click
+            RemoveHandler CostCenterReportByBranchToolStripMenuItem.Click, AddressOf CostCenterReportToolStripMenuItem_Click
 
             RemoveHandler ExportNetPayAllToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
             RemoveHandler ExportNetPayCashToolStripMenuItem.Click, AddressOf ExportNetPayDetailsToolStripMenuItem_Click
@@ -2099,13 +2102,24 @@ Public Class PayStubForm
     End Sub
 
     Private Sub CostCenterReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles _
-        CostCenterReportToolStripMenuItem.Click,
-        CostCenterReportDeclaredToolStripMenuItem.Click,
-        CostCenterReportActualToolStripMenuItem.Click
+        CostCenterReportAllToolStripMenuItem.Click,
+        CostCenterReportAllDeclaredToolStripMenuItem.Click,
+        CostCenterReportAllActualToolStripMenuItem.Click,
+        CostCenterReportByBranchToolStripMenuItem.Click,
+        CostCenterReportByBranchDeclaredToolStripMenuItem.Click,
+        CostCenterReportByBranchActualToolStripMenuItem.Click
 
         Dim provider = New CostCenterReportProvider()
-        'provider.IsActual = sender Is CostCenterReportActualToolStripMenuItem
-        provider.SelectedReportType = If(sender Is CostCenterReportActualToolStripMenuItem, CostCenterReportProvider.ReportType.All, CostCenterReportProvider.ReportType.Branch)
+        
+        provider.IsActual = sender Is CostCenterReportAllActualToolStripMenuItem OrElse sender Is CostCenterReportByBranchActualToolStripMenuItem
+        
+        provider.SelectedReportType = If(
+            sender Is CostCenterReportByBranchToolStripMenuItem OrElse
+            sender Is CostCenterReportByBranchDeclaredToolStripMenuItem OrElse
+            sender Is CostCenterReportByBranchActualToolStripMenuItem,
+            CostCenterReportProvider.ReportType.Branch,
+            CostCenterReportProvider.ReportType.All)
+            
         provider.Run()
 
     End Sub

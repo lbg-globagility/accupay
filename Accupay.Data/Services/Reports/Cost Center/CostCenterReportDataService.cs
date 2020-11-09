@@ -347,7 +347,7 @@ namespace AccuPay.Data.Services
 
                 var salary = salaries
                     .Where(s => s.EmployeeID == employee.RowID)
-                    .Where(s => s.EffectiveFrom <= payPeriod.Start)
+                    .Where(s => s.EffectiveFrom <= payPeriod.End)
                     .OrderByDescending(s => s.EffectiveFrom)
                     .FirstOrDefault();
 

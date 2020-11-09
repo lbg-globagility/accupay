@@ -25,24 +25,12 @@ Public Class CostCenterReportGeneration
 
     Public Sub Start(resources As CostCenterReportResources)
 
-        'Parallel.ForEach(Branches,
-        '    New ParallelOptions() With {.MaxDegreeOfParallelism = Environment.ProcessorCount},
-        'Sub(branch)
-        '    AddPayPeriodModels(branch)
-
-        'End Sub)
-
         For Each branch In Branches
 
             Dim payPeriodModels = GetCostCenterPayPeriodModels(branch, resources)
 
             Dim result = CostCenterReportGenerationResult.Success(branch, payPeriodModels)
             _results.Add(result)
-
-            'TODO: Handle error
-            If result.IsError Then
-                Console.WriteLine($"------------------------------------------------------------------------ ERROR - {branch.Name} ------------------------------------------------------------------------")
-            End If
 
             Interlocked.Increment(_finished)
         Next
