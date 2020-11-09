@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -223,7 +223,8 @@ Public Class UserUserControl
                 _currentUser.UserLevel <> changedUser.UserLevel OrElse
                 _currentUser.Email.ToTrimmedLowerCase() <> changedUser.Email.ToTrimmedLowerCase() OrElse
                 _currentUser.UserName.ToTrimmedLowerCase() <> changedUser.UserName.ToTrimmedLowerCase() OrElse
-                _currentUser.DesktopPassword.ToTrimmedLowerCase() <> changedUser.DesktopPassword.ToTrimmedLowerCase()
+                _currentUser.DesktopPassword.ToTrimmedLowerCase() <> changedUser.DesktopPassword.ToTrimmedLowerCase() OrElse
+                changedUser.DesktopPassword <> _encryptor.Encrypt(ConfirmPasswordTextBox.Text.Trim())
 
     End Function
 

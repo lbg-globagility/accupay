@@ -9,7 +9,7 @@ Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class UsersForm2
+Public Class UserForm
 
     Private ReadOnly _userRepository As AspNetUserRepository
 

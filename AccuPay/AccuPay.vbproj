@@ -808,10 +808,10 @@
     <Compile Include="Views\General Forms\User\NewUserForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\User\UsersForm2.Designer.vb">
-      <DependentUpon>UsersForm2.vb</DependentUpon>
+    <Compile Include="Views\General Forms\User\UserForm.Designer.vb">
+      <DependentUpon>UserForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\General Forms\User\UsersForm2.vb">
+    <Compile Include="Views\General Forms\User\UserForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Initial Forms\EmailDashboardForm.Designer.vb">
@@ -2002,8 +2002,8 @@
     <EmbeddedResource Include="Views\General Forms\User\NewUserForm.resx">
       <DependentUpon>NewUserForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\User\UsersForm2.resx">
-      <DependentUpon>UsersForm2.vb</DependentUpon>
+    <EmbeddedResource Include="Views\General Forms\User\UserForm.resx">
+      <DependentUpon>UserForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\EmailDashboardForm.resx">
       <DependentUpon>EmailDashboardForm.vb</DependentUpon>
