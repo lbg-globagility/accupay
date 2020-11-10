@@ -2,7 +2,7 @@
 
 Imports CrystalDecisions.CrystalReports.Engine
 
-Public Class ThirteenthMonthPayReportProvider
+Public Class ThirteenthMonthDetailedReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Thirteenth Month Pay (Detailed)" Implements IReportProvider.Name

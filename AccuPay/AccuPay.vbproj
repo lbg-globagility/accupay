@@ -857,7 +857,7 @@
       <DependentUpon>ThirteenthMonthPayDetailSummary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Providers\ThirteenthMonthPayReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\ThirteenthMonthDetailedReportProvider.vb" />
     <Compile Include="Views\Core Forms\PayStub\PaystubPresenter.vb" />
     <Compile Include="Views\Core Forms\Salary\ImportSalaryForm.Designer.vb">
       <DependentUpon>ImportSalaryForm.vb</DependentUpon>
