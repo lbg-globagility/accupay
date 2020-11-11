@@ -24,12 +24,16 @@ Partial Class TripTicketForm
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TripTicketForm))
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TripTicketForm))
         Me.pnlTripTicket = New System.Windows.Forms.Panel()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.dgvTripTicketHelpers = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.dgvEmployeesName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTripTicketHelpersPosition = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dgvEmployeesPayment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTripTicketHelpersRemove = New DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn()
         Me.cboEmployees = New System.Windows.Forms.ComboBox()
         Me.btnAddHelper = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -63,7 +67,6 @@ Partial Class TripTicketForm
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnImportEmployee = New System.Windows.Forms.ToolStripButton()
         Me.tsprogbarempimport = New System.Windows.Forms.ToolStripProgressBar()
         Me.dgvTripTickets = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.dgvTripTicketsRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -82,10 +85,7 @@ Partial Class TripTicketForm
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvEmployeesName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTripTicketHelpersPosition = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dgvEmployeesPayment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTripTicketHelpersRemove = New DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn()
+        Me.btnImportTripTicket = New System.Windows.Forms.ToolStripButton()
         Me.pnlTripTicket.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.dgvTripTicketHelpers, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -163,6 +163,34 @@ Partial Class TripTicketForm
         Me.dgvTripTicketHelpers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvTripTicketHelpers.Size = New System.Drawing.Size(819, 287)
         Me.dgvTripTicketHelpers.TabIndex = 102
+        '
+        'dgvEmployeesName
+        '
+        Me.dgvEmployeesName.DataPropertyName = "FullName"
+        Me.dgvEmployeesName.HeaderText = "Name"
+        Me.dgvEmployeesName.Name = "dgvEmployeesName"
+        Me.dgvEmployeesName.ReadOnly = True
+        '
+        'colTripTicketHelpersPosition
+        '
+        Me.colTripTicketHelpersPosition.DataPropertyName = "PositionName"
+        Me.colTripTicketHelpersPosition.HeaderText = "Position"
+        Me.colTripTicketHelpersPosition.Name = "colTripTicketHelpersPosition"
+        Me.colTripTicketHelpersPosition.ReadOnly = True
+        '
+        'dgvEmployeesPayment
+        '
+        Me.dgvEmployeesPayment.DataPropertyName = "NoOfTrips"
+        Me.dgvEmployeesPayment.HeaderText = "No of Trips"
+        Me.dgvEmployeesPayment.Name = "dgvEmployeesPayment"
+        '
+        'colTripTicketHelpersRemove
+        '
+        Me.colTripTicketHelpersRemove.HeaderText = "Remove"
+        Me.colTripTicketHelpersRemove.Name = "colTripTicketHelpersRemove"
+        Me.colTripTicketHelpersRemove.ReadOnly = True
+        Me.colTripTicketHelpersRemove.Text = "Remove"
+        Me.colTripTicketHelpersRemove.UseColumnTextForButtonValue = True
         '
         'cboEmployees
         '
@@ -433,7 +461,7 @@ Partial Class TripTicketForm
         '
         Me.TripTicketMenubar.BackColor = System.Drawing.Color.Transparent
         Me.TripTicketMenubar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.TripTicketMenubar.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewTripTicket, Me.btnSaveTripTicket, Me.btnCancel, Me.tsbtnClose, Me.tsbtnAudittrail, Me.tsbtnImportEmployee, Me.tsprogbarempimport})
+        Me.TripTicketMenubar.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewTripTicket, Me.btnSaveTripTicket, Me.btnCancel, Me.tsbtnClose, Me.tsbtnAudittrail, Me.tsprogbarempimport, Me.btnImportTripTicket})
         Me.TripTicketMenubar.Location = New System.Drawing.Point(0, 0)
         Me.TripTicketMenubar.Name = "TripTicketMenubar"
         Me.TripTicketMenubar.Size = New System.Drawing.Size(842, 25)
@@ -484,14 +512,6 @@ Partial Class TripTicketForm
         Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
         Me.tsbtnAudittrail.Text = "ToolStripButton1"
         Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
-        '
-        'tsbtnImportEmployee
-        '
-        Me.tsbtnImportEmployee.Image = CType(resources.GetObject("tsbtnImportEmployee.Image"), System.Drawing.Image)
-        Me.tsbtnImportEmployee.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnImportEmployee.Name = "tsbtnImportEmployee"
-        Me.tsbtnImportEmployee.Size = New System.Drawing.Size(118, 22)
-        Me.tsbtnImportEmployee.Text = "Import Employee"
         '
         'tsprogbarempimport
         '
@@ -667,33 +687,13 @@ Partial Class TripTicketForm
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
         Me.DataGridViewTextBoxColumn8.Width = 80
         '
-        'dgvEmployeesName
+        'btnImportTripTicket
         '
-        Me.dgvEmployeesName.DataPropertyName = "FullName"
-        Me.dgvEmployeesName.HeaderText = "Name"
-        Me.dgvEmployeesName.Name = "dgvEmployeesName"
-        Me.dgvEmployeesName.ReadOnly = True
-        '
-        'colTripTicketHelpersPosition
-        '
-        Me.colTripTicketHelpersPosition.DataPropertyName = "PositionName"
-        Me.colTripTicketHelpersPosition.HeaderText = "Position"
-        Me.colTripTicketHelpersPosition.Name = "colTripTicketHelpersPosition"
-        Me.colTripTicketHelpersPosition.ReadOnly = True
-        '
-        'dgvEmployeesPayment
-        '
-        Me.dgvEmployeesPayment.DataPropertyName = "NoOfTrips"
-        Me.dgvEmployeesPayment.HeaderText = "No of Trips"
-        Me.dgvEmployeesPayment.Name = "dgvEmployeesPayment"
-        '
-        'colTripTicketHelpersRemove
-        '
-        Me.colTripTicketHelpersRemove.HeaderText = "Remove"
-        Me.colTripTicketHelpersRemove.Name = "colTripTicketHelpersRemove"
-        Me.colTripTicketHelpersRemove.ReadOnly = True
-        Me.colTripTicketHelpersRemove.Text = "Remove"
-        Me.colTripTicketHelpersRemove.UseColumnTextForButtonValue = True
+        Me.btnImportTripTicket.Image = CType(resources.GetObject("btnImportTripTicket.Image"), System.Drawing.Image)
+        Me.btnImportTripTicket.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnImportTripTicket.Name = "btnImportTripTicket"
+        Me.btnImportTripTicket.Size = New System.Drawing.Size(119, 22)
+        Me.btnImportTripTicket.Text = "Import Trip Ticket"
         '
         'TripTicketForm
         '
@@ -737,7 +737,6 @@ Partial Class TripTicketForm
     Friend WithEvents btnCancel As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnClose As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
-    Friend WithEvents tsbtnImportEmployee As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsprogbarempimport As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents dgvTripTickets As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents cboVehicles As System.Windows.Forms.ComboBox
@@ -781,4 +780,5 @@ Partial Class TripTicketForm
     Friend WithEvents colTripTicketHelpersPosition As DataGridViewTextBoxColumn
     Friend WithEvents dgvEmployeesPayment As DataGridViewTextBoxColumn
     Friend WithEvents colTripTicketHelpersRemove As DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn
+    Friend WithEvents btnImportTripTicket As ToolStripButton
 End Class

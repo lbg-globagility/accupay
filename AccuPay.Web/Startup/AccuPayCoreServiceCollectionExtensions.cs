@@ -2,6 +2,7 @@ using AccuPay.Data.Interfaces;
 using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Data_Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Data.Services.Imports.Allowances;
 using AccuPay.Data.Services.Imports.Employees;
@@ -125,6 +126,7 @@ namespace AccuPay.Web
             services.AddScoped<ShiftImportParser>();
             services.AddScoped<TimeLogImportParser>();
             services.AddScoped<TimeLogsReader>();
+            services.AddScoped<TripTicketDataService>();
 
             services.AddScoped(typeof(IExcelParser<>), typeof(ExcelParser<>));
             services.AddScoped<IEncryption, AccuPayDesktopEncryption>();

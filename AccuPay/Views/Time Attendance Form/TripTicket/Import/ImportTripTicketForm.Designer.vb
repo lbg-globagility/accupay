@@ -317,6 +317,7 @@ Partial Class ImportTripTicketForm
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ImportTripTicketForm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Import Trip Tickets Form"
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)

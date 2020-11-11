@@ -1,4 +1,4 @@
-﻿Option Explicit On
+Option Explicit On
 Option Strict On
 
 Imports AccuPay.Data.Entities
@@ -249,6 +249,13 @@ Public Class TripTicketForm
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
         Close()
+    End Sub
+
+    Private Async Sub btnImportTripTicket_Click(sender As Object, e As EventArgs) Handles btnImportTripTicket.Click
+        Dim form = New ImportTripTicketForm
+        If form.ShowDialog = DialogResult.OK Then
+            Await form.SaveAsync()
+        End If
     End Sub
 
 End Class

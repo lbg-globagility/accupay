@@ -7,6 +7,7 @@ Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.Data_Services
 Imports AccuPay.Data.Services.Imports
 Imports AccuPay.Data.Services.Reports
 Imports AccuPay.Infrastructure.Reports
@@ -171,6 +172,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TaxMonthlyReportBuilder)
         services.AddTransient(Of ThirteenthMonthSummaryReportDataService)
         services.AddTransient(Of ThirteenthMonthSummaryReportBuilder)
+        services.AddTransient(Of TripTicketDataService)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
         services.AddTransient(Of IEncryption, AccuPayDesktopEncryption)
 
