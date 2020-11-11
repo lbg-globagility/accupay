@@ -41,7 +41,7 @@ Public Class ReportsList
             New PhilHealthReportProvider(),
             New PagIBIGMonthlyReportProvider(),
             New TaxReportProvider(),
-            New ThirteenthMonthPayReportProvider(),
+            New ThirteenthMonthDetailedReportProvider(),
             New ThirteenthMonthSummaryReportProvider(),
             New AttendanceSheetReportProvider(),
             New LateUTAbsentSummaryReportProvider(),
@@ -101,6 +101,7 @@ Public Class ReportsList
             New PhilHealthReportProvider(),
             New PagIBIGMonthlyReportProvider(),
             New TaxReportProvider(),
+            New ThirteenthMonthDetailedReportProvider(),
             New ThirteenthMonthSummaryReportProvider(),
             New LoanLedgerReportProvider(),
             New PayrollSummaryExcelFormatReportProvider()

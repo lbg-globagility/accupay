@@ -1,0 +1,7 @@
+UPDATE
+	listofval
+SET
+	DisplayValue = 'ThirteenthMonthDetailedReportProvider',
+	LIC = 'ThirteenthMonthDetailedReportProvider'
+WHERE
+	DisplayValue = 'ThirteenthMonthPayReportProvider';

@@ -10,7 +10,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_13thmonthpayDetailed`(IN `Organ
     DETERMINISTIC
 BEGIN
 
-DECLARE custom_dateformat VARCHAR(50) DEFAULT '%c/%e/%Y';
+DECLARE custom_dateformat VARCHAR(50) DEFAULT '%m/%d/%Y';
 
 DECLARE month_count_peryear INT(11) DEFAULT 12;
 
