@@ -3,7 +3,7 @@ using AccuPay.Data.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AccuPay.Data.Services.Data_Services
+namespace AccuPay.Data.Services
 {
     public class TripTicketDataService
     {
