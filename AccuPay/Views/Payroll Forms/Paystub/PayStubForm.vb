@@ -2110,16 +2110,16 @@ Public Class PayStubForm
         CostCenterReportByBranchActualToolStripMenuItem.Click
 
         Dim provider = New CostCenterReportProvider()
-        
+
         provider.IsActual = sender Is CostCenterReportAllActualToolStripMenuItem OrElse sender Is CostCenterReportByBranchActualToolStripMenuItem
-        
+
         provider.SelectedReportType = If(
             sender Is CostCenterReportByBranchToolStripMenuItem OrElse
             sender Is CostCenterReportByBranchDeclaredToolStripMenuItem OrElse
             sender Is CostCenterReportByBranchActualToolStripMenuItem,
             CostCenterReportProvider.ReportType.Branch,
             CostCenterReportProvider.ReportType.All)
-            
+
         provider.Run()
 
     End Sub
@@ -2143,6 +2143,22 @@ Public Class PayStubForm
         form.ShowDialog()
 
         If form.HasChanges Then
+
+            Dim adjustmentTypes = CType(cboProducts.DataSource, List(Of Product))
+
+            If Not adjustmentTypes.Any(Function(a) a.PartNo = ProductConstant.THIRTEENTH_MONTH_PAY_ADJUSTMENT) Then
+
+                Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+                Dim thirteenthMonthPayAdjustment = Await productRepository.GetOrCreateAdjustmentTypeAsync(
+                ProductConstant.THIRTEENTH_MONTH_PAY_ADJUSTMENT,
+                organizationId:=z_OrganizationID,
+                userId:=z_User)
+
+                Await PopulateAdjustmentTypeComboBox()
+
+            End If
+
             Await UpdateEmployeeDetails()
         End If
 
