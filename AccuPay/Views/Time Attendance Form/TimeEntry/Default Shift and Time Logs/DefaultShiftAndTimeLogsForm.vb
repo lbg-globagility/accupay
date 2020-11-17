@@ -1,8 +1,10 @@
 Option Strict On
 
+Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -158,93 +160,46 @@ Public Class DefaultShiftAndTimeLogsForm
                 Return
             End If
 
-            GenerateDefaultShiftAndTimeLogs(messageTitle, selectedEmployees)
+            GenerateDefaultShiftAndTimeLogs(selectedEmployees)
         End If
 
     End Sub
 
-    Private Sub GenerateDefaultShiftAndTimeLogs(messageTitle As String, selectedEmployees As IReadOnlyCollection(Of Employee))
+    Private Sub GenerateDefaultShiftAndTimeLogs(selectedEmployees As List(Of Employee))
 
-        Me.Cursor = Cursors.WaitCursor
+        Const messageTitle As String = "Default Shift & Time Logs"
+        Const defaultErrorMessage As String = "Something went wrong while creating default shift and time logs. Please contact Globagility Inc. for assistance."
 
-        FunctionUtils.TryCatchFunction(messageTitle,
-             Sub()
+        Dim defaultValue As New DefaultValue(
+            DefaultStartTimePicker.Value.TimeOfDay,
+            DefaultEndTimePicker.Value.TimeOfDay,
+            DefaultBreakTimePicker.Value.TimeOfDay,
+            DefaultBreakLengthNumeric.Value.Round())
 
-                 Dim shifts As New List(Of ShiftModel)
-                 Dim timeLogs As New List(Of TimeLog)
+        Dim generator As New DefaultShiftAndTimeLogsGeneration(selectedEmployees, _currentPayPeriod, defaultValue)
+        Dim progressDialog = New ProgressDialog(generator, "Creating Default shift and time logs...")
+        progressDialog.Show()
 
-                 For Each currentDate In Calendar.EachDay(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
+        Dim generationTask = Task.Run(
+                Async Function()
+                    Await generator.Start()
+                End Function
+            )
 
-                     For Each employee In selectedEmployees
-
-                         If SkippableDate(currentDate, employee) = False Then
-
-                             shifts.Add(CreateShift(currentDate, employee))
-                             timeLogs.Add(CreateTimeLogs(currentDate, employee))
-
-                         End If
-
-                     Next
-                 Next
-
-                 'TODO: Add a result form to show if there are errors
-                 Parallel.ForEach(selectedEmployees,
-                    Async Sub(employee)
-
-                        Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
-                        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-
-                        Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
-                        Await timeLogService.ChangeManyAsync(z_OrganizationID, added:=employeeTimeLogs.ToList())
-
-                        Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
-                        Await shiftService.BatchApply(employeeShifts, z_OrganizationID, z_User)
-
-                    End Sub)
-
-                 MessageBoxHelper.Information("Default shift and time logs were sucessfully created.", messageTitle)
-                 Me.Close()
-             End Sub
+        generationTask.ContinueWith(
+            Sub() SaveGenerationOnSuccess(generator.Results, progressDialog),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
         )
 
-        Me.Cursor = Cursors.Default
-
+        generationTask.ContinueWith(
+            Sub(t As Task) GenerationOnError(t, progressDialog, messageTitle, defaultErrorMessage),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
     End Sub
-
-    Private Shared Function SkippableDate(currentDate As Date, employee As Employee) As Boolean
-        Return employee.IsDaily = False AndAlso
-            (
-                currentDate.DayOfWeek = DayOfWeek.Saturday OrElse
-                currentDate.DayOfWeek = DayOfWeek.Sunday)
-    End Function
-
-    Private Function CreateTimeLogs(currentDate As Date, employee As Employee) As TimeLog
-        Return New TimeLog() With {
-            .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
-            .EmployeeID = employee.RowID,
-            .LogDate = currentDate,
-            .TimeIn = DefaultStartTimePicker.Value.TimeOfDay,
-            .TimeOut = DefaultEndTimePicker.Value.TimeOfDay,
-            .BranchID = employee.BranchID
-        }
-    End Function
-
-    Private Function CreateShift(currentDate As Date, employee As Employee) As ShiftModel
-
-        Dim shift = New ShiftModel With {
-            .EmployeeId = employee.RowID,
-            .Date = currentDate,
-            .StartTime = DefaultStartTimePicker.Value.TimeOfDay,
-            .EndTime = DefaultEndTimePicker.Value.TimeOfDay,
-            .BreakTime = DefaultBreakTimePicker.Value.TimeOfDay,
-            .BreakLength = DefaultBreakLengthNumeric.Value.Round(),
-            .IsRestDay = False
-        }
-
-        Return shift
-
-    End Function
 
     Private Sub DefaultBreakLengthNumeric_Leave(sender As Object, e As EventArgs) Handles DefaultBreakLengthNumeric.Leave
         DefaultBreakLengthNumeric.Value = DefaultBreakLengthNumeric.Value.Round()
@@ -279,54 +234,114 @@ Public Class DefaultShiftAndTimeLogsForm
                 Return
             End If
 
-            Await DeleteMultipleShiftAndTImelogs(messageTitle, selectedEmployees)
+            DeleteMultipleShiftAndTImelogs(messageTitle, selectedEmployees)
         End If
 
     End Sub
 
-    Private Async Function DeleteMultipleShiftAndTImelogs(messageTitle As String, selectedEmployees As List(Of Employee)) As Task
-        Dim shiftRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+    Private Sub DeleteMultipleShiftAndTImelogs(messageTitle As String, selectedEmployees As List(Of Employee))
+        Const defaultErrorMessage As String = "Something went wrong while deleting default shift and time logs. Please contact Globagility Inc. for assistance."
 
-        Dim employeeIds = selectedEmployees.Select(Function(x) x.RowID.Value).ToList()
+        Dim defaultValue As New DefaultValue(
+            DefaultStartTimePicker.Value.TimeOfDay,
+            DefaultEndTimePicker.Value.TimeOfDay,
+            DefaultBreakTimePicker.Value.TimeOfDay,
+            DefaultBreakLengthNumeric.Value.Round())
 
-        Dim coveredPeriod = New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
+        Dim generator As New DeleteDefaultShiftAndTimeLogsGeneration(selectedEmployees, _currentPayPeriod)
+        Dim progressDialog = New ProgressDialog(generator, "Deleting multiple shift and time logs...")
+        progressDialog.Show()
 
-        Dim shifts = Await shiftRepository.GetByMultipleEmployeeAndBetweenDatePeriodAsync(
-            z_OrganizationID,
-            employeeIds,
-            coveredPeriod)
+        Dim generationTask = Task.Run(
+                Async Function()
+                    Await generator.Start()
+                End Function
+            )
 
-        Dim timeLogs = Await timeLogRepository.GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
-            employeeIds,
-            coveredPeriod)
-
-        Me.Cursor = Cursors.WaitCursor
-
-        FunctionUtils.TryCatchFunction(messageTitle,
-             Sub()
-
-                 'TODO: Add a result form to show if there are errors
-                 Parallel.ForEach(selectedEmployees,
-                    Async Sub(employee)
-
-                        Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
-                        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-
-                        Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
-                        Await timeLogService.ChangeManyAsync(z_OrganizationID, deleted:=employeeTimeLogs.ToList())
-
-                        Dim employeeShifts = shifts.Where(Function(s) s.EmployeeID.Value = employee.RowID.Value)
-                        Await shiftService.ChangeManyAsync(z_OrganizationID, deleted:=employeeShifts.ToList())
-
-                    End Sub)
-
-                 MessageBoxHelper.Information("Shift and time logs were sucessfully deleted.", messageTitle)
-                 Me.Close()
-             End Sub
+        generationTask.ContinueWith(
+            Sub() DeleteGenerationOnSuccess(generator.Results, progressDialog),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
         )
 
-        Me.Cursor = Cursors.Default
-    End Function
+        generationTask.ContinueWith(
+            Sub(t As Task) GenerationOnError(t, progressDialog, messageTitle, defaultErrorMessage),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+    End Sub
+
+    Private Sub SaveGenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
+
+        progressDialog.Close()
+        progressDialog.Dispose()
+
+        Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
+
+        Dim resultDialog = New EmployeeResultsDialog(
+            saveResults,
+            title:="Default Shift & Time Logs Results",
+            generationDescription:="Default shift and time logs generation",
+            entityDescription:="employees") With {
+            .Owner = Me
+        }
+
+        resultDialog.ShowDialog()
+
+        Me.Close()
+    End Sub
+
+    Private Sub DeleteGenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
+
+        progressDialog.Close()
+        progressDialog.Dispose()
+
+        Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
+
+        Dim resultDialog = New EmployeeResultsDialog(
+            saveResults,
+            title:="Delete Multiple Shift & Time Logs Results",
+            generationDescription:="Deleting multiple shift and time logs",
+            entityDescription:="employees") With {
+            .Owner = Me
+        }
+
+        resultDialog.ShowDialog()
+
+        Me.Close()
+    End Sub
+
+    Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog, messageTitle As String, defaultErrorMessage As String)
+
+        progressDialog.Close()
+        progressDialog.Dispose()
+
+        If t.Exception?.InnerException.GetType() Is GetType(BusinessLogicException) Then
+
+            MessageBoxHelper.ErrorMessage(t.Exception?.InnerException.Message, messageTitle)
+        Else
+            Debugger.Break()
+            MessageBoxHelper.ErrorMessage(defaultErrorMessage, messageTitle)
+        End If
+
+    End Sub
+
+    Public Class DefaultValue
+
+        Public ReadOnly Property StartTime As TimeSpan
+        Public ReadOnly Property EndTime As TimeSpan
+        Public ReadOnly Property ShiftBreakTime As TimeSpan
+        Public ReadOnly Property ShiftBreakLength As Decimal
+
+        Public Sub New(startTime As TimeSpan, endTime As TimeSpan, shiftBreakTime As TimeSpan, shiftBreakLength As Decimal)
+            Me.StartTime = startTime
+            Me.EndTime = endTime
+            Me.ShiftBreakTime = shiftBreakTime
+            Me.ShiftBreakLength = shiftBreakLength
+        End Sub
+
+    End Class
 
 End Class

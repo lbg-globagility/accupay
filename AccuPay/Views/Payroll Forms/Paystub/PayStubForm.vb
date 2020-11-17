@@ -814,7 +814,7 @@ Public Class PayStubForm
 
     Private Async Sub GeneratingPayrollOnSuccess(t As Task)
 
-        Dim dialog = New PaystubEmployeeResultDialog(
+        Dim dialog = New EmployeeResultsDialog(
             _results.ToList(),
             title:="Payroll Results",
             generationDescription:="Payroll generation",

@@ -278,7 +278,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         Dim saveResults = results.Select(Function(r) CType(r, PaystubEmployeeResult)).ToList()
 
-        Dim resultDialog = New PaystubEmployeeResultDialog(
+        Dim resultDialog = New EmployeeResultsDialog(
             saveResults,
             title:="13th Month Pay Results",
             generationDescription:="13th month pay generation",

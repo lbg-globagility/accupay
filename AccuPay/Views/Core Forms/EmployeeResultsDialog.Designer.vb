@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class PaystubEmployeeResultDialog
+Partial Class EmployeeResultsDialog
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,14 +22,10 @@ Partial Class PaystubEmployeeResultDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvSuccess = New System.Windows.Forms.DataGridView()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -41,8 +37,12 @@ Partial Class PaystubEmployeeResultDialog
         Me.dgvFailed = New System.Windows.Forms.DataGridView()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FailedResultColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SuccessResultColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvSuccess, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.tbpSuccess.SuspendLayout()
@@ -60,7 +60,7 @@ Partial Class PaystubEmployeeResultDialog
         Me.dgvSuccess.BackgroundColor = System.Drawing.Color.White
         Me.dgvSuccess.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvSuccess.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvSuccess.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column4, Me.Column1, Me.Column2, Me.Column3})
+        Me.dgvSuccess.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column4, Me.Column1, Me.SuccessResultColumn, Me.Column3})
         Me.dgvSuccess.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvSuccess.Location = New System.Drawing.Point(3, 3)
         Me.dgvSuccess.MultiSelect = False
@@ -70,40 +70,6 @@ Partial Class PaystubEmployeeResultDialog
         Me.dgvSuccess.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvSuccess.Size = New System.Drawing.Size(770, 304)
         Me.dgvSuccess.TabIndex = 0
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EmployeeNo"
-        Me.Column4.FillWeight = 15.0!
-        Me.Column4.HeaderText = "Employee No"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "FullName"
-        Me.Column1.FillWeight = 25.0!
-        Me.Column1.HeaderText = "Full Name"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "Status"
-        Me.Column2.FillWeight = 15.0!
-        Me.Column2.HeaderText = "Result"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "Description"
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
-        Me.Column3.FillWeight = 60.0!
-        Me.Column3.HeaderText = "Description"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -188,7 +154,7 @@ Partial Class PaystubEmployeeResultDialog
         Me.dgvFailed.BackgroundColor = System.Drawing.Color.White
         Me.dgvFailed.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvFailed.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvFailed.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7})
+        Me.dgvFailed.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.FailedResultColumn, Me.DataGridViewTextBoxColumn7})
         Me.dgvFailed.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvFailed.Location = New System.Drawing.Point(3, 3)
         Me.dgvFailed.MultiSelect = False
@@ -201,7 +167,7 @@ Partial Class PaystubEmployeeResultDialog
         '
         'DataGridViewTextBoxColumn4
         '
-        Me.DataGridViewTextBoxColumn4.DataPropertyName = "EmployeeNo"
+        Me.DataGridViewTextBoxColumn4.DataPropertyName = "EmployeeNumber"
         Me.DataGridViewTextBoxColumn4.FillWeight = 15.0!
         Me.DataGridViewTextBoxColumn4.HeaderText = "Employee No"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
@@ -209,19 +175,18 @@ Partial Class PaystubEmployeeResultDialog
         '
         'DataGridViewTextBoxColumn5
         '
-        Me.DataGridViewTextBoxColumn5.DataPropertyName = "FullName"
+        Me.DataGridViewTextBoxColumn5.DataPropertyName = "EmployeeFullName"
         Me.DataGridViewTextBoxColumn5.FillWeight = 25.0!
         Me.DataGridViewTextBoxColumn5.HeaderText = "Full Name"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn6
+        'FailedResultColumn
         '
-        Me.DataGridViewTextBoxColumn6.DataPropertyName = "Status"
-        Me.DataGridViewTextBoxColumn6.FillWeight = 15.0!
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Result"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        Me.FailedResultColumn.FillWeight = 15.0!
+        Me.FailedResultColumn.HeaderText = "Result"
+        Me.FailedResultColumn.Name = "FailedResultColumn"
+        Me.FailedResultColumn.ReadOnly = True
         '
         'DataGridViewTextBoxColumn7
         '
@@ -233,7 +198,40 @@ Partial Class PaystubEmployeeResultDialog
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
         '
-        'PaystubEmployeeResultDialog
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EmployeeNumber"
+        Me.Column4.FillWeight = 15.0!
+        Me.Column4.HeaderText = "Employee No"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeFullName"
+        Me.Column1.FillWeight = 25.0!
+        Me.Column1.HeaderText = "Full Name"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'SuccessResultColumn
+        '
+        Me.SuccessResultColumn.FillWeight = 15.0!
+        Me.SuccessResultColumn.HeaderText = "Result"
+        Me.SuccessResultColumn.Name = "SuccessResultColumn"
+        Me.SuccessResultColumn.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "Description"
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column3.FillWeight = 60.0!
+        Me.Column3.HeaderText = "Description"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'EmployeeResultsDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -244,7 +242,7 @@ Partial Class PaystubEmployeeResultDialog
         Me.Controls.Add(Me.btnOk)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
-        Me.Name = "PaystubEmployeeResultDialog"
+        Me.Name = "EmployeeResultsDialog"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
@@ -270,10 +268,10 @@ Partial Class PaystubEmployeeResultDialog
     Friend WithEvents dgvFailed As DataGridView
     Friend WithEvents Column4 As DataGridViewTextBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents SuccessResultColumn As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents FailedResultColumn As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
 End Class

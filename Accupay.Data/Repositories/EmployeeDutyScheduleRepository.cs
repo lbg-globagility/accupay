@@ -83,7 +83,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(
+        public async Task<ICollection<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(
             int organizationId,
             IEnumerable<int> employeeIds,
             TimePeriod timePeriod)

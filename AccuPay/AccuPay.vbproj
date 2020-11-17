@@ -714,12 +714,14 @@
     <Compile Include="Views\Core Forms\SelectBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsForm.Designer.vb">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
+    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DeleteDefaultShiftAndTimeLogsGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\TripTicket\NewTripTicketDialog.Designer.vb">
       <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
     </Compile>
@@ -1043,10 +1045,10 @@
     <Compile Include="Views\HRIS Forms\Employee\Offset\OffSetting.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\PaystubEmployeeResultDialog.Designer.vb">
-      <DependentUpon>PaystubEmployeeResultDialog.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\EmployeeResultsDialog.Designer.vb">
+      <DependentUpon>EmployeeResultsDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\PaystubEmployeeResultDialog.vb">
+    <Compile Include="Views\Core Forms\EmployeeResultsDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\PaystubView.Designer.vb">
@@ -1958,7 +1960,7 @@
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TripTicket\Import\ImportTripTicketForm.resx">
@@ -2125,8 +2127,8 @@
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Offset\OffSetting.resx">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Paystub\PaystubEmployeeResultDialog.resx">
-      <DependentUpon>PaystubEmployeeResultDialog.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\EmployeeResultsDialog.resx">
+      <DependentUpon>EmployeeResultsDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\PaystubView.resx">
       <DependentUpon>PaystubView.vb</DependentUpon>

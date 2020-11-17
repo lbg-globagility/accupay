@@ -61,8 +61,8 @@ namespace AccuPay.Web.Payroll
                 .Select(t => new PayrollResultDetailsDto
                 {
                     EmployeeId = t.EmployeeId,
-                    EmployeeNo = t.EmployeeNo,
-                    EmployeeName = t.FullName,
+                    EmployeeNo = t.EmployeeNumber,
+                    EmployeeName = t.EmployeeFullName,
                     Status = t.Status.ToString(),
                     Description = t.Description
                 })

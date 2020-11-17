@@ -1,17 +1,18 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
+using AccuPay.Data.Interfaces;
 
 namespace AccuPay.Data.Services
 {
-    public class PaystubEmployeeResult : Helpers.ProgressGenerator.IResult
+    public class PaystubEmployeeResult : IEmployeeResult
     {
         public int EmployeeId { get; set; }
 
         public int? PaystubId { get; set; }
 
-        public string EmployeeNo { get; set; }
+        public string EmployeeNumber { get; set; }
 
-        public string FullName { get; set; }
+        public string EmployeeFullName { get; set; }
 
         public ResultStatus Status { get; set; }
 
@@ -24,8 +25,8 @@ namespace AccuPay.Data.Services
         private PaystubEmployeeResult(int employeeId, int? paystubId, string employeeNo, string fullName, ResultStatus status, string description)
         {
             EmployeeId = employeeId;
-            EmployeeNo = employeeNo;
-            FullName = fullName;
+            EmployeeNumber = employeeNo;
+            EmployeeFullName = fullName;
             Status = status;
             Description = description;
             PaystubId = paystubId;
