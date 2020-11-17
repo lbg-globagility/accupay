@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class AddAllowanceForm
     Inherits System.Windows.Forms.Form
 
@@ -48,7 +48,7 @@ Partial Class AddAllowanceForm
         Me.Label167 = New System.Windows.Forms.Label()
         Me.lblEndDate = New System.Windows.Forms.Label()
         Me.Label163 = New System.Windows.Forms.Label()
-        Me.dtpallowenddate = New AccuPay.NullableDatePicker()
+        Me.dtpallowenddate = New NullableDatePicker()
         CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         Me.AllowanceDetailsTabLayout.SuspendLayout()

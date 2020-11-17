@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -47,20 +47,22 @@ Namespace Benchmark
         End Sub
 
         Public Shared Async Function GetEcola(
-                                        employeeId As Integer,
-                                        payDateFrom As Date,
-                                        payDateTo As Date) As Task(Of Allowance)
+            employeeId As Integer,
+            payDateFrom As Date,
+            payDateTo As Date) As Task(Of Allowance)
 
+            'TODO: check if the effectivity date matters in benchmark payroll generation
+            'better if there is a change in ECOLA value, a new allowance should be created.
             Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
 
             Dim productService = MainServiceProvider.GetRequiredService(Of ProductDataService)
             Return Await productService.GetOrCreateEmployeeEcola(
-                                            employeeId:=employeeId,
-                                            organizationId:=z_OrganizationID,
-                                            userId:=z_User,
-                                            timePeriod:=timePeriod,
-                                            allowanceFrequency:=Allowance.FREQUENCY_DAILY,
-                                            amount:=0)
+                employeeId:=employeeId,
+                organizationId:=z_OrganizationID,
+                userId:=z_User,
+                timePeriod:=timePeriod,
+                allowanceFrequency:=Allowance.FREQUENCY_DAILY,
+                amount:=0)
 
         End Function
 
@@ -117,10 +119,10 @@ Namespace Benchmark
         ''' </summary>
         Public Async Function CleanEmployee(employeeId As Integer) As Task
 
-            Await _loanService.
-                    DeleteAllLoansExceptGovernmentLoansAsync(employeeId:=employeeId,
-                                                            pagibigLoanId:=_pagibigLoanId,
-                                                            ssLoanId:=_sssLoanId)
+            Await _loanService.DeleteAllLoansExceptGovernmentLoansAsync(
+                    employeeId:=employeeId,
+                    pagibigLoanId:=_pagibigLoanId,
+                    ssLoanId:=_sssLoanId)
 
         End Function
 

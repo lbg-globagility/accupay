@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class CalendarsForm
     Inherits System.Windows.Forms.Form
 
@@ -43,7 +43,7 @@ Partial Class CalendarsForm
         Me.CalendarPanel = New System.Windows.Forms.Panel()
         Me.CalendarsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.MonthSelectorControl = New AccuPay.CalendarMonthSelectorControl()
+        Me.MonthSelectorControl = New CalendarMonthSelectorControl()
         Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()

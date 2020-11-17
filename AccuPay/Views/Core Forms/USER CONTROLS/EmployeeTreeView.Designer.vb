@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class EmployeeTreeView
     Inherits System.Windows.Forms.UserControl
 
@@ -25,7 +25,7 @@ Partial Class EmployeeTreeView
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.AccuPayEmployeeTreeView = New AccuPay.AccuPayTreeView()
+        Me.AccuPayEmployeeTreeView = New AccuPayTreeView()
         Me.chkActive = New System.Windows.Forms.CheckBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()

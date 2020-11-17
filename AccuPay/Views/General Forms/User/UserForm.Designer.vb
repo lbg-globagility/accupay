@@ -38,7 +38,7 @@ Partial Class UserForm
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserUserControl = New AccuPay.UserUserControl()
+        Me.UserUserControl = New UserUserControl()
         Me.LabelForBalloon = New System.Windows.Forms.Label()
         Me.ToolStrip3.SuspendLayout()
         Me.Panel2.SuspendLayout()

@@ -28,9 +28,7 @@ Partial Class AddSalaryForm
         Me.txtPayFrequency = New System.Windows.Forms.TextBox()
         Me.txtSalaryType = New System.Windows.Forms.TextBox()
         Me.Label14 = New System.Windows.Forms.Label()
-        Me.dtpEffectiveTo = New System.Windows.Forms.DateTimePicker()
         Me.dtpEffectiveFrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblPayFrequency = New System.Windows.Forms.Label()
@@ -60,6 +58,8 @@ Partial Class AddSalaryForm
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
+        Me.chkIsMinimumWage = New System.Windows.Forms.CheckBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -128,17 +128,6 @@ Partial Class AddSalaryForm
         Me.Label14.TabIndex = 399
         Me.Label14.Text = "*"
         '
-        'dtpEffectiveTo
-        '
-        Me.dtpEffectiveTo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtpEffectiveTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpEffectiveTo.Location = New System.Drawing.Point(131, 189)
-        Me.dtpEffectiveTo.Name = "dtpEffectiveTo"
-        Me.dtpEffectiveTo.ShowCheckBox = True
-        Me.dtpEffectiveTo.Size = New System.Drawing.Size(159, 20)
-        Me.dtpEffectiveTo.TabIndex = 398
-        Me.dtpEffectiveTo.Visible = False
-        '
         'dtpEffectiveFrom
         '
         Me.dtpEffectiveFrom.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -147,16 +136,6 @@ Partial Class AddSalaryForm
         Me.dtpEffectiveFrom.Name = "dtpEffectiveFrom"
         Me.dtpEffectiveFrom.Size = New System.Drawing.Size(159, 20)
         Me.dtpEffectiveFrom.TabIndex = 397
-        '
-        'Label4
-        '
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(13, 194)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(112, 16)
-        Me.Label4.TabIndex = 396
-        Me.Label4.Text = "Effective To"
-        Me.Label4.Visible = False
         '
         'Label3
         '
@@ -187,34 +166,28 @@ Partial Class AddSalaryForm
         '
         'txtEcola
         '
-        Me.txtEcola.Enabled = False
         Me.txtEcola.Location = New System.Drawing.Point(410, 192)
         Me.txtEcola.Name = "txtEcola"
         Me.txtEcola.Size = New System.Drawing.Size(160, 22)
         Me.txtEcola.TabIndex = 414
-        Me.txtEcola.Visible = False
         '
         'lblEcolaPeroSign
         '
-        Me.lblEcolaPeroSign.Enabled = False
         Me.lblEcolaPeroSign.Location = New System.Drawing.Point(394, 192)
         Me.lblEcolaPeroSign.Name = "lblEcolaPeroSign"
         Me.lblEcolaPeroSign.Size = New System.Drawing.Size(16, 16)
         Me.lblEcolaPeroSign.TabIndex = 413
         Me.lblEcolaPeroSign.Text = "₱"
         Me.lblEcolaPeroSign.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.lblEcolaPeroSign.Visible = False
         '
         'lblEcola
         '
-        Me.lblEcola.Enabled = False
         Me.lblEcola.Location = New System.Drawing.Point(301, 192)
         Me.lblEcola.Name = "lblEcola"
         Me.lblEcola.Size = New System.Drawing.Size(88, 16)
         Me.lblEcola.TabIndex = 412
         Me.lblEcola.Text = "ECOLA"
         Me.lblEcola.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lblEcola.Visible = False
         '
         'txtTotalSalary
         '
@@ -416,12 +389,30 @@ Partial Class AddSalaryForm
         Me.AddAndNewButton.Text = "Add && &New"
         Me.AddAndNewButton.UseVisualStyleBackColor = True
         '
+        'chkIsMinimumWage
+        '
+        Me.chkIsMinimumWage.Location = New System.Drawing.Point(131, 191)
+        Me.chkIsMinimumWage.Name = "chkIsMinimumWage"
+        Me.chkIsMinimumWage.Size = New System.Drawing.Size(16, 16)
+        Me.chkIsMinimumWage.TabIndex = 429
+        Me.chkIsMinimumWage.UseVisualStyleBackColor = True
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(13, 194)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(112, 16)
+        Me.Label1.TabIndex = 428
+        Me.Label1.Text = "Is Minimum Wage"
+        '
         'AddSalaryForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(831, 289)
+        Me.Controls.Add(Me.chkIsMinimumWage)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.AddAndCloseButton)
         Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.AddAndNewButton)
@@ -451,9 +442,7 @@ Partial Class AddSalaryForm
         Me.Controls.Add(Me.txtPayFrequency)
         Me.Controls.Add(Me.txtSalaryType)
         Me.Controls.Add(Me.Label14)
-        Me.Controls.Add(Me.dtpEffectiveTo)
         Me.Controls.Add(Me.dtpEffectiveFrom)
-        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.lblPayFrequency)
@@ -478,9 +467,7 @@ Partial Class AddSalaryForm
     Friend WithEvents txtPayFrequency As TextBox
     Friend WithEvents txtSalaryType As TextBox
     Friend WithEvents Label14 As Label
-    Friend WithEvents dtpEffectiveTo As DateTimePicker
     Friend WithEvents dtpEffectiveFrom As DateTimePicker
-    Friend WithEvents Label4 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents lblPayFrequency As Label
@@ -510,4 +497,6 @@ Partial Class AddSalaryForm
     Friend WithEvents AddAndCloseButton As Button
     Friend WithEvents CancelDialogButton As Button
     Friend WithEvents AddAndNewButton As Button
+    Friend WithEvents chkIsMinimumWage As CheckBox
+    Friend WithEvents Label1 As Label
 End Class

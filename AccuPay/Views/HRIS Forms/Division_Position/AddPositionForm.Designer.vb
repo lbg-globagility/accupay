@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class AddPositionForm
     Inherits System.Windows.Forms.Form
 
@@ -25,7 +25,7 @@ Partial Class AddPositionForm
         Me.btnAddAndClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnAddAndNew = New System.Windows.Forms.Button()
-        Me.PositionUserControl1 = New AccuPay.PositionUserControl()
+        Me.PositionUserControl1 = New PositionUserControl()
         Me.SuspendLayout()
         '
         'btnAddAndClose

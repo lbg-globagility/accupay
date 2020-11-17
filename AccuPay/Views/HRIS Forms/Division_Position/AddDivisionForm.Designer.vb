@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class AddDivisionForm
     Inherits System.Windows.Forms.Form
 
@@ -22,7 +22,7 @@ Partial Class AddDivisionForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.DivisionUserControl1 = New AccuPay.DivisionUserControl()
+        Me.DivisionUserControl1 = New DivisionUserControl()
         Me.btnAddAndClose = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnAddAndNew = New System.Windows.Forms.Button()

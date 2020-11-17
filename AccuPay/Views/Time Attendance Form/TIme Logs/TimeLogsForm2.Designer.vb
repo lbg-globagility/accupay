@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class TimeLogsForm2
     Inherits System.Windows.Forms.Form
 
@@ -39,7 +39,7 @@ Partial Class TimeLogsForm2
         Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.MainSplitContainer = New System.Windows.Forms.SplitContainer()
-        Me.EmployeeTreeView1 = New AccuPay.EmployeeTreeView()
+        Me.EmployeeTreeView1 = New EmployeeTreeView()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
         Me.CloseToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()

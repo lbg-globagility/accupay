@@ -1822,35 +1822,51 @@ Public Class EmployeeForm
 
                 ElseIf selectedTab Is tbpAwards Then
 
+                    RemoveHandler tbpAwards.Enter, AddressOf tbpAwards_Enter
                     Await AwardTab.SetEmployee(employee)
+                    AddHandler tbpAwards.Enter, AddressOf tbpAwards_Enter
 
                 ElseIf selectedTab Is tbpCertifications Then
 
+                    RemoveHandler tbpCertifications.Enter, AddressOf tbpCertifications_Enter
                     Await CertificationTab.SetEmployee(employee)
+                    AddHandler tbpCertifications.Enter, AddressOf tbpCertifications_Enter
 
                 ElseIf selectedTab Is tbpDiscipAct Then
 
+                    RemoveHandler tbpDiscipAct.Enter, AddressOf tbpDiscipAct_Enter
                     Await DisciplinaryActionTab.SetEmployee(employee)
+                    AddHandler tbpDiscipAct.Enter, AddressOf tbpDiscipAct_Enter
 
                 ElseIf selectedTab Is tbpEducBG Then
 
+                    RemoveHandler tbpEducBG.Enter, AddressOf tbpEducBG_Enter
                     Await EducationalBackgroundTab.SetEmployee(employee)
+                    AddHandler tbpEducBG.Enter, AddressOf tbpEducBG_Enter
 
                 ElseIf selectedTab Is tbpPrevEmp Then
 
+                    RemoveHandler tbpPrevEmp.Enter, AddressOf tbpPrevEmp_Enter
                     Await PreviousEmployerTab.SetEmployee(employee)
+                    AddHandler tbpPrevEmp.Enter, AddressOf tbpPrevEmp_Enter
 
                 ElseIf selectedTab Is tbpBonus Then
 
+                    RemoveHandler tbpBonus.Enter, AddressOf tbpBonus_Enter
                     Await BonusTab.SetEmployee(employee)
+                    AddHandler tbpBonus.Enter, AddressOf tbpBonus_Enter
 
                 ElseIf selectedTab Is tbpAttachment Then
 
+                    RemoveHandler tbpAttachment.Enter, AddressOf tbpAttachment_Enter
                     Await AttachmentTab.SetEmployee(employee)
+                    AddHandler tbpAttachment.Enter, AddressOf tbpAttachment_Enter
 
                 ElseIf selectedTab Is tbpSalary Then
 
+                    RemoveHandler tbpSalary.Enter, AddressOf tbpNewSalary_Enter
                     Await SalaryTab.SetEmployee(employee)
+                    AddHandler tbpSalary.Enter, AddressOf tbpNewSalary_Enter
                 End If
 
                 If txtdgvDepen IsNot Nothing Then

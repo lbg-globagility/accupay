@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class NewRoleForm
     Inherits System.Windows.Forms.Form
 
@@ -22,7 +22,7 @@ Partial Class NewRoleForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.RoleUserControl = New AccuPay.RoleUserControl()
+        Me.RoleUserControl = New RoleUserControl()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStrip1.SuspendLayout()

@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class NewDivisionPositionForm
     Inherits System.Windows.Forms.Form
 
@@ -30,7 +30,7 @@ Partial Class NewDivisionPositionForm
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.PositionTabPage = New System.Windows.Forms.TabPage()
         Me.PositionGroupBox = New System.Windows.Forms.GroupBox()
-        Me.PositionUserControl1 = New AccuPay.PositionUserControl()
+        Me.PositionUserControl1 = New PositionUserControl()
         Me.EmployeeDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -46,7 +46,7 @@ Partial Class NewDivisionPositionForm
         Me.UserActivityPositionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.miniToolStrip = New System.Windows.Forms.ToolStrip()
         Me.DivisionTabPage = New System.Windows.Forms.TabPage()
-        Me.DivisionUserControl1 = New AccuPay.DivisionUserControl()
+        Me.DivisionUserControl1 = New DivisionUserControl()
         Me.DivisionLocationGroupBox = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel9 = New System.Windows.Forms.Panel()

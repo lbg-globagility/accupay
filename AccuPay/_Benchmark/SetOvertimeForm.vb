@@ -1,7 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel
 Imports AccuPay.Benchmark
+Imports AccuPay.Data
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -168,7 +169,7 @@ Public Class SetOvertimeForm
         Dim isHolidayInclusive = _isHolidayInclusive
 
         'Rest day is always exclusive for Daily or Monthly
-        If overtimeRate.Name = AccuPay.Data.ValueObjects.OvertimeRate.RestDayDescription Then
+        If overtimeRate.Name = ValueObjects.OvertimeRate.RestDayDescription Then
 
             isHolidayInclusive = False
 

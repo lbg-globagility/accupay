@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class NewEmployeeForm
     Inherits System.Windows.Forms.Form
 
@@ -32,9 +32,9 @@ Partial Class NewEmployeeForm
         Me.ActiveCheckBox = New System.Windows.Forms.CheckBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.PersonalInfoTab = New AccuPay.PersonalInfoTab()
+        Me.PersonalInfoTab = New PersonalInfoTab()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.SalaryTab21 = New AccuPay.SalaryTab2()
+        Me.SalaryTab21 = New SalaryTab2()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()

@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class SetEmployeeEndDate
     Inherits System.Windows.Forms.Form
 
@@ -24,7 +24,7 @@ Partial Class SetEmployeeEndDate
     Private Sub InitializeComponent()
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
-        Me.CustomDatePicker1 = New AccuPay.CustomDatePicker()
+        Me.CustomDatePicker1 = New CustomDatePicker()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
@@ -95,7 +95,7 @@ Partial Class SetEmployeeEndDate
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents CustomDatePicker1 As AccuPay.CustomDatePicker
+    Friend WithEvents CustomDatePicker1 As CustomDatePicker
     Friend WithEvents btnOk As System.Windows.Forms.Button
     Friend WithEvents btnCancel As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label

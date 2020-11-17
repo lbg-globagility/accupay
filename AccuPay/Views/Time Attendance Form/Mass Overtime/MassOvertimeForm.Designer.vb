@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class MassOvertimeForm
     Inherits System.Windows.Forms.Form
 
@@ -45,9 +45,9 @@ Partial Class MassOvertimeForm
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EndTimeTextBox = New AccuPay.TimeTextBox()
-        Me.StartTimeTextBox = New AccuPay.TimeTextBox()
-        Me.EmployeeTreeView = New AccuPay.AccuPayTreeView()
+        Me.EndTimeTextBox = New TimeTextBox()
+        Me.StartTimeTextBox = New TimeTextBox()
+        Me.EmployeeTreeView = New AccuPayTreeView()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()

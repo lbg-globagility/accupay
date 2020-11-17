@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class ViewLeaveLedgerDialog
     Inherits System.Windows.Forms.Form
 
@@ -40,7 +40,7 @@ Partial Class ViewLeaveLedgerDialog
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ViewLeaveLedgerTypeSelector = New AccuPay.ViewLeaveLedgerTypeSelector()
+        Me.ViewLeaveLedgerTypeSelector = New ViewLeaveLedgerTypeSelector()
         CType(Me.TransactionsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '

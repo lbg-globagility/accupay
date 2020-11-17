@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class AgencyForm
     Inherits System.Windows.Forms.Form
 
@@ -50,7 +50,7 @@ Partial Class AgencyForm
         Me.agAddress = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.agAddressID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.agIsActive = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CustomColoredTabControl1 = New AccuPay.CustomColoredTabControl()
+        Me.CustomColoredTabControl1 = New CustomColoredTabControl()
         Me.tbpAgency = New System.Windows.Forms.TabPage()
         Me.AgencyFormPanel = New System.Windows.Forms.Panel()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()

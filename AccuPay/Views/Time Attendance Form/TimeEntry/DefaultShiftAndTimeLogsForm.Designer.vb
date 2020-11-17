@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class DefaultShiftAndTimeLogsForm
     Inherits System.Windows.Forms.Form
 
@@ -47,7 +47,7 @@ Partial Class DefaultShiftAndTimeLogsForm
         Me.LastNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FirstNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeTreeView = New AccuPay.EmployeeTreeView()
+        Me.EmployeeTreeView = New EmployeeTreeView()
         Me.EmployeePanel.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()

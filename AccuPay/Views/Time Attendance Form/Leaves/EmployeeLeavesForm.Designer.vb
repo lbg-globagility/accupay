@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class EmployeeLeavesForm
     Inherits System.Windows.Forms.Form
 
@@ -72,8 +72,8 @@ Partial Class EmployeeLeavesForm
         Me.Label14 = New System.Windows.Forms.Label()
         Me.SickLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
-        Me.StartTimePicker = New AccuPay.NullableTimePicker()
-        Me.EndTimePicker = New AccuPay.NullableTimePicker()
+        Me.StartTimePicker = New NullableTimePicker()
+        Me.EndTimePicker = New NullableTimePicker()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusComboBox = New System.Windows.Forms.ComboBox()

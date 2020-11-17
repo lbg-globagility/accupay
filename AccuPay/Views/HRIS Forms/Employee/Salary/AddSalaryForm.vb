@@ -1,5 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
+Imports System.Threading.Tasks
+Imports AccuPay.AccuPay.Desktop.Helpers
+Imports AccuPay.Benchmark
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -16,17 +19,29 @@ Public Class AddSalaryForm
 
     Private _employee As Employee
 
-    Private ReadOnly _userActivityRepo As UserActivityRepository
+    Private _isSystemOwnerBenchMark As Boolean
+
+    Private _ecolaAllowance As Allowance
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _userActivityRepository As UserActivityRepository
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
     Public Sub New(employee As Employee)
         InitializeComponent()
 
         _employee = employee
 
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
     End Sub
 
-    Private Sub AddSalaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub AddSalaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         txtFullName.Text = _employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = _employee.EmployeeIdWithPositionAndEmployeeType
         pbEmployee.Image = ConvByteToImage(_employee.Image)
@@ -34,13 +49,56 @@ Public Class AddSalaryForm
         txtPayFrequency.Text = _employee.PayFrequency?.Type
         txtSalaryType.Text = _employee.EmployeeType
 
+        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+
+        ToggleBenchmarkEcola()
+
+        Await InitializeBenchmarkData()
+
         ClearForm()
     End Sub
+
+    Private Async Function InitializeBenchmarkData() As Task(Of Boolean)
+        If _isSystemOwnerBenchMark Then
+
+            Dim employeeId = _employee?.RowID
+
+            Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
+
+            Dim currentPayPeriod = Await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
+                organizationId:=z_OrganizationID,
+                currentUserId:=z_User)
+
+            If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
+                MessageBoxHelper.ErrorMessage(errorMessage)
+
+                Return False
+            End If
+
+            'If we are going to enable this as a policy, check its employee type.
+            'If Daily then its allowance frequency should also be Daily.
+            'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
+            'If _employee.IsDaily Then
+            'End If
+            _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
+                employeeId.Value,
+                payDateFrom:=currentPayPeriod.PayFromDate,
+                payDateTo:=currentPayPeriod.PayToDate)
+
+            If _ecolaAllowance Is Nothing Then
+                MessageBoxHelper.ErrorMessage(errorMessage)
+                Return False
+            End If
+
+        End If
+
+        Return True
+
+    End Function
 
     Private Sub ClearForm()
 
         dtpEffectiveFrom.Value = Date.Today
-        dtpEffectiveTo.Value = Date.Today
         txtAmount.Text = "0.00"
         txtAllowance.Text = "0.00"
         txtTotalSalary.Text = "0.00"
@@ -49,6 +107,18 @@ Public Class AddSalaryForm
         chkPaySSS.Checked = True
         chkPayPhilHealth.Checked = True
         ChkPagIbig.Checked = True
+    End Sub
+
+    Private Sub ToggleBenchmarkEcola()
+
+        lblTotalSalary.Visible = Not _isSystemOwnerBenchMark
+        lblTotalSalaryPeroSign.Visible = Not _isSystemOwnerBenchMark
+        txtTotalSalary.Visible = Not _isSystemOwnerBenchMark
+
+        lblEcola.Visible = _isSystemOwnerBenchMark
+        lblEcolaPeroSign.Visible = _isSystemOwnerBenchMark
+        txtEcola.Visible = _isSystemOwnerBenchMark
+
     End Sub
 
     Private Sub ChkPayPhilHealth_CheckedChanged(sender As Object, e As EventArgs) Handles chkPayPhilHealth.CheckedChanged
@@ -69,7 +139,7 @@ Public Class AddSalaryForm
                 Dim newSalary = New Salary
                 With newSalary
                     .EffectiveFrom = dtpEffectiveFrom.Value
-                    '.EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
+                    .IsMinimumWage = chkIsMinimumWage.Checked
                     .BasicSalary = txtAmount.Text.ToDecimal
                     .AllowanceSalary = txtAllowance.Text.ToDecimal
                     .DoPaySSSContribution = chkPaySSS.Checked
@@ -77,7 +147,6 @@ Public Class AddSalaryForm
                     .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
                     .AutoComputeHDMFContribution = ChkPagIbig.Checked
                     .HDMFAmount = txtPagIbig.Text.ToDecimal
-                    .PositionID = _employee.PositionID
                     .EmployeeID = _employee.RowID
                     .OrganizationID = z_OrganizationID
                     .CreatedBy = z_User
@@ -86,7 +155,13 @@ Public Class AddSalaryForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
                 Await dataService.SaveAsync(newSalary)
 
-                _userActivityRepo.RecordAdd(
+                If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then
+
+                    Await EcolaHelper.SaveEcola(_ecolaAllowance.RowID.Value, txtEcola.Text.ToDecimal)
+
+                End If
+
+                _userActivityRepository.RecordAdd(
                     z_User,
                     FormEntityName,
                     entityId:=newSalary.RowID.Value,

@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class ImportedShiftSchedulesForm
     Inherits System.Windows.Forms.Form
 
@@ -80,9 +80,9 @@ Partial Class ImportedShiftSchedulesForm
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTimeColumn1 = New AccuPay.DataGridViewTimeColumn()
-        Me.DataGridViewTimeColumn2 = New AccuPay.DataGridViewTimeColumn()
-        Me.DataGridViewTimeColumn3 = New AccuPay.DataGridViewTimeColumn()
+        Me.DataGridViewTimeColumn1 = New DataGridViewTimeColumn()
+        Me.DataGridViewTimeColumn2 = New DataGridViewTimeColumn()
+        Me.DataGridViewTimeColumn3 = New DataGridViewTimeColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()

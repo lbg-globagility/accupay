@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class NewUserForm
     Inherits System.Windows.Forms.Form
 
@@ -24,7 +24,7 @@ Partial Class NewUserForm
     Private Sub InitializeComponent()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
-        Me.UserUserControl = New AccuPay.UserUserControl()
+        Me.UserUserControl = New UserUserControl()
         Me.ToolStrip1.SuspendLayout()
         Me.SuspendLayout()
         '

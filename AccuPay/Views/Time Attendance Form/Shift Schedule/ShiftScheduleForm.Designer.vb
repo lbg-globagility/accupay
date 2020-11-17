@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class ShiftScheduleForm
     Inherits System.Windows.Forms.Form
 
@@ -60,13 +60,13 @@ Partial Class ShiftScheduleForm
         Me.btnApply1 = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.txtBreakLength = New System.Windows.Forms.NumericUpDown()
-        Me.txtBreakFrom = New AccuPay.TimeTextBox()
+        Me.txtBreakFrom = New TimeTextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtTimeFrom = New AccuPay.TimeTextBox()
+        Me.txtTimeFrom = New TimeTextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.txtTimeTo = New AccuPay.TimeTextBox()
+        Me.txtTimeTo = New TimeTextBox()
         Me.tabWeekCycle = New System.Windows.Forms.TabPage()
         Me.btnApply2 = New System.Windows.Forms.Button()
         Me.btnDiscard2 = New System.Windows.Forms.Button()
@@ -107,7 +107,7 @@ Partial Class ShiftScheduleForm
         Me.PasteToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
-        Me.EmployeeTreeView1 = New AccuPay.EmployeeTreeView()
+        Me.EmployeeTreeView1 = New EmployeeTreeView()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()

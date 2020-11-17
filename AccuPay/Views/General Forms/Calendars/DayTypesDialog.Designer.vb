@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class DayTypesDialog
     Inherits System.Windows.Forms.Form
 
@@ -25,7 +25,7 @@ Partial Class DayTypesDialog
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.DetailsGroupBox = New System.Windows.Forms.GroupBox()
-        Me.DayTypeControl = New AccuPay.DayTypeControl()
+        Me.DayTypeControl = New DayTypeControl()
         Me.DayTypesGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()

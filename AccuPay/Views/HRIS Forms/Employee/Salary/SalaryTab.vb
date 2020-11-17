@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Benchmark
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
@@ -365,17 +366,15 @@ Public Class SalaryTab
                     .LastUpdBy = z_User
                 End With
 
-                salary.UpdateTotalSalary()
-
                 Dim repository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
                 Dim oldsalary = Await repository.GetByIdAsync(salary.RowID.Value)
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
                 Await dataService.SaveAsync(salary)
 
-                If _isSystemOwnerBenchMark Then
+                If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then
 
-                    Await SaveEcola()
+                    Await EcolaHelper.SaveEcola(_ecolaAllowance.RowID.Value, txtEcola.Text.ToDecimal)
 
                 End If
 
@@ -477,24 +476,6 @@ Public Class SalaryTab
         End If
 
         Return False
-    End Function
-
-    Private Async Function SaveEcola() As Task
-        Dim _ecolaAllowanceId = _ecolaAllowance?.RowID
-
-        If _ecolaAllowanceId IsNot Nothing Then
-
-            Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
-            Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-
-            Dim ecolaAllowance = Await repository.GetByIdAsync(_ecolaAllowanceId.Value)
-
-            ecolaAllowance.Amount = txtEcola.Text.ToDecimal
-            ecolaAllowance.LastUpdBy = z_User
-
-            Await dataService.SaveAsync(ecolaAllowance)
-
-        End If
     End Function
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click

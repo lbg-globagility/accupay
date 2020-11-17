@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class AssignBonusToLoanForm
     Inherits System.Windows.Forms.Form
 
@@ -80,13 +80,13 @@ Partial Class AssignBonusToLoanForm
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewNumberColumn1 = New AccuPay.DataGridViewNumberColumn()
+        Me.DataGridViewNumberColumn1 = New DataGridViewNumberColumn()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.BonusId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BonusAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EffectiveDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.IsFullAmount = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.AmountPayment = New AccuPay.DataGridViewNumberColumn()
+        Me.AmountPayment = New DataGridViewNumberColumn()
         Me.DetailsTabControl.SuspendLayout()
         Me.tbpDetails.SuspendLayout()
         Me.LoanDetailsTabLayout.SuspendLayout()
