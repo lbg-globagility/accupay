@@ -142,7 +142,6 @@ Partial Class MDIPrimaryForm
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.bgDashBoardReloader = New System.ComponentModel.BackgroundWorker()
-        Me.NotifyIcon1 = New System.Windows.Forms.NotifyIcon(Me.components)
         Me.ctxtmenNothing = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.EmailStatusTimer = New System.Windows.Forms.Timer(Me.components)
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -1408,15 +1407,6 @@ Partial Class MDIPrimaryForm
         Me.bgDashBoardReloader.WorkerReportsProgress = True
         Me.bgDashBoardReloader.WorkerSupportsCancellation = True
         '
-        'NotifyIcon1
-        '
-        Me.NotifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info
-        Me.NotifyIcon1.BalloonTipText = "Dashboard refreshed"
-        Me.NotifyIcon1.BalloonTipTitle = "Payroll Dashboard Notifications"
-        Me.NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), System.Drawing.Icon)
-        Me.NotifyIcon1.Text = "Payroll Dashboard Notifications"
-        Me.NotifyIcon1.Visible = True
-        '
         'ctxtmenNothing
         '
         Me.ctxtmenNothing.Name = "ctxtmenNothing"
@@ -1729,7 +1719,6 @@ Partial Class MDIPrimaryForm
     Friend WithEvents ReportsToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents bgDashBoardReloader As System.ComponentModel.BackgroundWorker
     Friend WithEvents Timer2 As System.Windows.Forms.Timer
-    Friend WithEvents NotifyIcon1 As System.Windows.Forms.NotifyIcon
     Public WithEvents ctxtmenNothing As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer

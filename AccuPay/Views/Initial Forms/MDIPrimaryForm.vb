@@ -864,10 +864,6 @@ Public Class MDIPrimaryForm
             dgvAge21Depen.Enabled = True
             dgvBDayCeleb.Enabled = True
 
-            AddHandler NotifyIcon1.DoubleClick, AddressOf NotifyIcon1_Click
-        Else
-            NotifyIcon1.Visible = True
-            NotifyIcon1.ShowBalloonTip(30000)
         End If
     End Sub
 
@@ -1007,10 +1003,6 @@ Public Class MDIPrimaryForm
             CollapsibleGroupBox4.Visible = False
             CollapsibleGroupBox6.Visible = False
         End If
-    End Sub
-
-    Private Sub NotifyIcon1_Click(sender As Object, e As EventArgs)
-        SelectHomeToolStrip()
     End Sub
 
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
