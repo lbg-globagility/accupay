@@ -1,3 +1,4 @@
+Imports System.ComponentModel
 Imports System.Configuration
 Imports System.Threading
 Imports System.Threading.Tasks
@@ -17,6 +18,8 @@ Public Class MDIPrimaryForm
     Dim DefaultFontStyle = New Font("Microsoft Sans Serif", 8.25!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim ExemptedForms As New List(Of String)
+
+    Dim ClosingForm As Form = Nothing 'New
 
     Private versionNo As String
 
@@ -158,21 +161,7 @@ Public Class MDIPrimaryForm
         End If
     End Function
 
-    Dim ClosingForm As Form = Nothing 'New
-
-    Dim busy_bgworks(1) As System.ComponentModel.BackgroundWorker
-
     Private Async Sub MDIPrimaryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        busy_bgworks(0) = bgDashBoardReloader
-
-        Dim busy_bgworker = busy_bgworks.Cast(Of System.ComponentModel.BackgroundWorker).
-            Where(Function(x)
-                      If x IsNot Nothing Then
-                          Return x.IsBusy
-                      End If
-                      Return False
-                  End Function)
-
         LockTime()
         EmailStatusTimer.Stop()
 
@@ -726,7 +715,14 @@ Public Class MDIPrimaryForm
 
     Dim dt_pend_leave As New DataTable
 
-    Private Sub bgDashBoardReloader_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgDashBoardReloader.DoWork
+    Private Sub bgDashBoardReloader_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgDashBoardReloader.DoWork
+
+        If CType(sender, BackgroundWorker).CancellationPending Then
+
+            e.Cancel = True
+            Return
+
+        End If
 
         Dim params(0, 1) As Object
 
@@ -734,38 +730,31 @@ Public Class MDIPrimaryForm
 
         params(0, 1) = orgztnID
 
-        n_bgwAge21Dependents = New DashBoardDataExtractor(params,
-                                                          "DBoard_Age21Dependents")
+        n_bgwAge21Dependents = New DashBoardDataExtractor(params, "DBoard_Age21Dependents")
 
         n_bgwAge21Dependents = n_bgwAge21Dependents.getDataTable
 
-        n_bgwBDayCelebrant = New DashBoardDataExtractor(params,
-                                                        "DBoard_BirthdayCelebrantThisMonth")
+        n_bgwBDayCelebrant = New DashBoardDataExtractor(params, "DBoard_BirthdayCelebrantThisMonth")
 
         n_bgwBDayCelebrant = n_bgwBDayCelebrant.getDataTable
 
-        n_bgwOBPending = New DashBoardDataExtractor(params,
-                                                        "DBoard_OBPending")
+        n_bgwOBPending = New DashBoardDataExtractor(params, "DBoard_OBPending")
 
         n_bgwOBPending = n_bgwOBPending.getDataTable
 
-        n_bgwOTPending = New DashBoardDataExtractor(params,
-                                                        "DBoard_OTPending")
+        n_bgwOTPending = New DashBoardDataExtractor(params, "DBoard_OTPending")
 
         n_bgwOTPending = n_bgwOTPending.getDataTable
 
-        n_bgwLoanBalances = New DashBoardDataExtractor(params,
-                                                        "DBoard_LoanBalances")
+        n_bgwLoanBalances = New DashBoardDataExtractor(params, "DBoard_LoanBalances")
 
         n_bgwLoanBalances = n_bgwLoanBalances.getDataTable
 
-        n_bgwNegaPaySlips = New DashBoardDataExtractor(params,
-                                                        "DBoard_NegativePaySlips")
+        n_bgwNegaPaySlips = New DashBoardDataExtractor(params, "DBoard_NegativePaySlips")
 
         n_bgwNegaPaySlips = n_bgwNegaPaySlips.getDataTable
 
-        n_bgwForRegularization = New DashBoardDataExtractor(params,
-                                                        "DBoard_ForRegularization")
+        n_bgwForRegularization = New DashBoardDataExtractor(params, "DBoard_ForRegularization")
 
         n_bgwForRegularization = n_bgwForRegularization.getDataTable
 
@@ -784,13 +773,22 @@ Public Class MDIPrimaryForm
 
         End If
 
+        If CType(sender, BackgroundWorker).CancellationPending Then
+
+            e.Cancel = True
+            Return
+
+        End If
+
     End Sub
 
-    Private Sub bgDashBoardReloader_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bgDashBoardReloader.RunWorkerCompleted
+    Private Sub bgDashBoardReloader_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles bgDashBoardReloader.RunWorkerCompleted
         If e.Error IsNot Nothing Then
-            MessageBox.Show("ERROR : " & e.Error.Message)
+            Console.WriteLine("bgDashBoardReloader ERROR : " & e.Error.Message)
+            Return
         ElseIf e.Cancelled Then
-            MessageBox.Show("CANCELLED" & vbNewLine & e.Error.Message)
+            Console.WriteLine("bgDashBoardReloader CANCELLED")
+            Return
         End If
 
         UnlockTime()
