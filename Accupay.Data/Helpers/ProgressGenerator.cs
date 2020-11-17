@@ -13,6 +13,8 @@ namespace AccuPay.Data.Helpers
 
         protected int _finished;
 
+        protected string _currentMessage;
+
         public ProgressGenerator(int total)
         {
             _total = total;
@@ -30,9 +32,16 @@ namespace AccuPay.Data.Helpers
             }
         }
 
+        public string CurrentMessage => _currentMessage;
+
         protected void SetResults(IEnumerable<IResult> results)
         {
             Results = results.ToList();
+        }
+
+        protected void SetCurrentMessage(string currentMessage)
+        {
+            _currentMessage = currentMessage;
         }
 
         public interface IResult

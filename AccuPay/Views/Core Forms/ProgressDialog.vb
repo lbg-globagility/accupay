@@ -12,12 +12,14 @@ Public Class ProgressDialog
         CompletionProgressBar.Value = 1
 
         Me.Text = title
+        CurrentMessageLabel.Text = String.Empty
 
         ProgressTimer.Start()
     End Sub
 
     Private Sub ProgressTimer_Tick(sender As Object, e As EventArgs) Handles ProgressTimer.Tick
         CompletionProgressBar.Value = {_generator.Progress, 1}.Max()
+        CurrentMessageLabel.Text = _generator.CurrentMessage
     End Sub
 
     Private Sub ProgressDialog_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing

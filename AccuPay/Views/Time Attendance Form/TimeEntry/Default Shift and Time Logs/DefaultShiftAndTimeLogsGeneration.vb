@@ -81,11 +81,15 @@ Public Class DefaultShiftAndTimeLogsGeneration
             Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
             Await shiftService.BatchApply(employeeShifts, z_OrganizationID, z_User)
 
+            SetCurrentMessage($"finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+
             Return EmployeeResult.Success(
                 employeeNumber:=employee.EmployeeNo,
                 employeeFullName:=employee.FullNameWithMiddleInitialLastNameFirst,
                 employeeId:=employee.RowID.Value)
         Catch ex As Exception
+
+            SetCurrentMessage($"Error generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return EmployeeResult.Error(
                 employeeNumber:=employee.EmployeeNo,

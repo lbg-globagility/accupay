@@ -79,6 +79,8 @@ namespace AccuPay.Data.Services
             }
         }
 
+        public string CurrentMessage { get; protected set; }
+
         public TimeEntryGenerator(
             DbContextOptionsService dbContextOptionsService,
             CalendarService calendarService,
@@ -231,12 +233,14 @@ namespace AccuPay.Data.Services
                 try
                 {
                     CalculateEmployeeEntries(employee, organization, userId, settings, agencies, timeEntryPolicy, calendarCollection);
+                    CurrentMessage = $"finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
                 }
                 catch (Exception ex)
                 {
                     // can error if employee type is null
                     //logger.Error(ex.Message, ex);
                     _errors += 1;
+                    CurrentMessage = $"Error generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
                 }
 
                 Interlocked.Increment(ref _finished);

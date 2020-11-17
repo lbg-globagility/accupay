@@ -25,6 +25,7 @@ Partial Class ProgressDialog
         Me.components = New System.ComponentModel.Container()
         Me.CompletionProgressBar = New System.Windows.Forms.ProgressBar()
         Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.CurrentMessageLabel = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'CompletionProgressBar
@@ -38,25 +39,37 @@ Partial Class ProgressDialog
         'ProgressTimer
         '
         Me.ProgressTimer.Enabled = True
-        Me.ProgressTimer.Interval = 500
+        Me.ProgressTimer.Interval = 50
         '
-        'TimeEntryProgressDialog
+        'CurrentMessageLabel
+        '
+        Me.CurrentMessageLabel.AutoSize = True
+        Me.CurrentMessageLabel.Location = New System.Drawing.Point(16, 102)
+        Me.CurrentMessageLabel.Name = "CurrentMessageLabel"
+        Me.CurrentMessageLabel.Size = New System.Drawing.Size(96, 13)
+        Me.CurrentMessageLabel.TabIndex = 1
+        Me.CurrentMessageLabel.Text = "<CurrentMessage>"
+        '
+        'ProgressDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(384, 161)
         Me.ControlBox = False
+        Me.Controls.Add(Me.CurrentMessageLabel)
         Me.Controls.Add(Me.CompletionProgressBar)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
-        Me.Name = "TimeEntryProgressDialog"
+        Me.Name = "ProgressDialog"
         Me.ShowIcon = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Progress Dialog"
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents CompletionProgressBar As ProgressBar
     Friend WithEvents ProgressTimer As Timer
+    Friend WithEvents CurrentMessageLabel As Label
 End Class
