@@ -14,16 +14,16 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class DefaultShiftAndTimeLogsGeneration
     Inherits ProgressGenerator
 
-    Private ReadOnly _employees As List(Of Employee)
+    Private ReadOnly _employees As IEnumerable(Of Employee)
     Private ReadOnly _currentPayPeriod As IPayPeriod
     Private ReadOnly _defaultValue As DefaultValue
 
     Private _results As BlockingCollection(Of EmployeeResult)
 
-    Public Sub New(employees As List(Of Employee), currentPayPeriod As IPayPeriod, defaultValue As DefaultValue)
-        MyBase.New(employees.Count)
+    Public Sub New(employees As IEnumerable(Of Employee), currentPayPeriod As IPayPeriod, defaultValue As DefaultValue)
+        MyBase.New(employees.Where(Function(e) e IsNot Nothing).Count)
 
-        _employees = employees
+        _employees = employees.Where(Function(e) e IsNot Nothing)
         _currentPayPeriod = currentPayPeriod
         _defaultValue = defaultValue
 

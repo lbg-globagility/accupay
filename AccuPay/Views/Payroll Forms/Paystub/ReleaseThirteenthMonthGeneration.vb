@@ -13,16 +13,16 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class ReleaseThirteenthMonthGeneration
     Inherits ProgressGenerator
 
-    Private _employeeModels As List(Of EmployeeModel)
+    Private _employeeModels As IEnumerable(Of EmployeeModel)
     Private ReadOnly _selectedAdjustmentTypeId As Integer
 
     Private _results As BlockingCollection(Of PaystubEmployeeResult)
 
-    Public Sub New(employeeModels As List(Of EmployeeModel), selectedAdjustmentTypeId As Integer)
+    Public Sub New(employeeModels As IEnumerable(Of EmployeeModel), selectedAdjustmentTypeId As Integer)
 
-        MyBase.New(employeeModels.Count)
+        MyBase.New(employeeModels.Where(Function(e) e IsNot Nothing).Count)
 
-        _employeeModels = employeeModels
+        _employeeModels = employeeModels.Where(Function(e) e IsNot Nothing)
         _selectedAdjustmentTypeId = selectedAdjustmentTypeId
 
         _results = New BlockingCollection(Of PaystubEmployeeResult)()

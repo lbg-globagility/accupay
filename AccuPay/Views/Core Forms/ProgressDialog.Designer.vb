@@ -43,10 +43,9 @@ Partial Class ProgressDialog
         '
         'CurrentMessageLabel
         '
-        Me.CurrentMessageLabel.AutoSize = True
         Me.CurrentMessageLabel.Location = New System.Drawing.Point(16, 102)
         Me.CurrentMessageLabel.Name = "CurrentMessageLabel"
-        Me.CurrentMessageLabel.Size = New System.Drawing.Size(96, 13)
+        Me.CurrentMessageLabel.Size = New System.Drawing.Size(352, 70)
         Me.CurrentMessageLabel.TabIndex = 1
         Me.CurrentMessageLabel.Text = "<CurrentMessage>"
         '
@@ -65,7 +64,6 @@ Partial Class ProgressDialog
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Progress Dialog"
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 

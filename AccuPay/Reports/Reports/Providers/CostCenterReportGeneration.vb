@@ -15,9 +15,9 @@ Public Class CostCenterReportGeneration
 
     Public Sub New(branches As IEnumerable(Of Branch), isActual As Boolean)
 
-        MyBase.New(branches.Count())
+        MyBase.New(branches.Where(Function(b) b IsNot Nothing).Count())
 
-        Me.Branches = branches
+        Me.Branches = branches.Where(Function(b) b IsNot Nothing)
         Me.IsActual = isActual
 
         _results = New BlockingCollection(Of CostCenterReportGenerationResult)()
@@ -30,6 +30,9 @@ Public Class CostCenterReportGeneration
             Dim payPeriodModels = GetCostCenterPayPeriodModels(branch, resources)
 
             Dim result = CostCenterReportGenerationResult.Success(branch, payPeriodModels)
+
+            SetCurrentMessage($"finished generating cost center report data for {branch.Name}.")
+
             _results.Add(result)
 
             Interlocked.Increment(_finished)
