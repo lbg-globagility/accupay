@@ -22,7 +22,10 @@ Public Class ReleaseThirteenthMonthGeneration
 
         MyBase.New(employeeModels.Where(Function(e) e IsNot Nothing).Count)
 
-        _employeeModels = employeeModels.Where(Function(e) e IsNot Nothing)
+        _employeeModels = employeeModels.
+            Where(Function(e) e IsNot Nothing).
+            OrderBy(Function(e) e.EmployeeObject.FullNameWithMiddleInitialLastNameFirst)
+
         _selectedAdjustmentTypeId = selectedAdjustmentTypeId
 
         _results = New BlockingCollection(Of PaystubEmployeeResult)()
@@ -56,7 +59,8 @@ Public Class ReleaseThirteenthMonthGeneration
 
             Return PaystubEmployeeResult.Error(employee.EmployeeObject, "Failure saving the 13th month pay adjustments.")
         Finally
-            Interlocked.Increment(_finished)
+
+            IncreaseProgress()
         End Try
     End Function
 

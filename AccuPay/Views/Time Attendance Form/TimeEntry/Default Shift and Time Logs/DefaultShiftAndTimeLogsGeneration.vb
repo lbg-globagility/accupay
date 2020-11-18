@@ -23,7 +23,10 @@ Public Class DefaultShiftAndTimeLogsGeneration
     Public Sub New(employees As IEnumerable(Of Employee), currentPayPeriod As IPayPeriod, defaultValue As DefaultValue)
         MyBase.New(employees.Where(Function(e) e IsNot Nothing).Count)
 
-        _employees = employees.Where(Function(e) e IsNot Nothing)
+        _employees = employees.
+            Where(Function(e) e IsNot Nothing).
+            OrderBy(Function(e) e.FullNameWithMiddleInitialLastNameFirst)
+
         _currentPayPeriod = currentPayPeriod
         _defaultValue = defaultValue
 
@@ -97,7 +100,8 @@ Public Class DefaultShiftAndTimeLogsGeneration
                 employeeId:=employee.RowID.Value,
                 description:=$"Failure to generate shift and time logs for employee {employee.EmployeeNo} {ex.Message}")
         Finally
-            Interlocked.Increment(_finished)
+
+            IncreaseProgress()
         End Try
 
     End Function

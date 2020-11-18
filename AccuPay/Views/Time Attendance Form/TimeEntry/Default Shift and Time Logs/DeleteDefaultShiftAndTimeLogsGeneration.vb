@@ -14,15 +14,18 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class DeleteDefaultShiftAndTimeLogsGeneration
     Inherits ProgressGenerator
 
-    Private ReadOnly _employees As List(Of Employee)
+    Private ReadOnly _employees As IEnumerable(Of Employee)
     Private ReadOnly _currentPayPeriod As IPayPeriod
 
     Private _results As BlockingCollection(Of EmployeeResult)
 
-    Public Sub New(employees As List(Of Employee), currentPayPeriod As IPayPeriod)
-        MyBase.New(employees.Count)
+    Public Sub New(employees As IEnumerable(Of Employee), currentPayPeriod As IPayPeriod)
+        MyBase.New(employees.Where(Function(e) e IsNot Nothing).Count)
 
-        _employees = employees
+        _employees = employees.
+            Where(Function(e) e IsNot Nothing).
+            OrderBy(Function(e) e.FullNameWithMiddleInitialLastNameFirst)
+
         _currentPayPeriod = currentPayPeriod
 
         _results = New BlockingCollection(Of EmployeeResult)()
@@ -99,7 +102,8 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
                 employeeId:=employee.RowID.Value,
                 description:=$"Failure to delete shift and time logs for employee {employee.EmployeeNo} {ex.Message}")
         Finally
-            Interlocked.Increment(_finished)
+
+            IncreaseProgress()
         End Try
 
     End Function

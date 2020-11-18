@@ -105,6 +105,7 @@ Public Class CostCenterReportProvider
     Private Sub GenerateSingleBranchReport(selectedMonth As Date, selectedBranch As Branch, saveFilePath As String)
         GetResources(
             selectedMonth,
+            Nothing,
             Sub(t)
                 Dim dataService As New CostCenterReportDataService()
                 Dim payPeriodModels = dataService.GetData(
@@ -123,10 +124,17 @@ Public Class CostCenterReportProvider
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
         Dim branches = branchRepository.GetAll()
 
-        GetResources(selectedMonth,
+        Dim generator As New CostCenterReportGeneration(branches, IsActual, additionalProgressCount:=1)
+        Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
+        progressDialog.Show()
+
+        generator.SetCurrentMessage("Loading resources...")
+        GetResources(
+            selectedMonth,
+            progressDialog,
             Sub(resourcesTask)
 
-                Dim generator As New CostCenterReportGeneration(branches, IsActual)
+                generator.IncreaseProgress("Finished loading resources.")
 
                 Dim generationTask = Task.Run(
                     Sub()
@@ -134,13 +142,11 @@ Public Class CostCenterReportProvider
                     End Sub
                 )
 
-                RunGenerateExportTask(saveFilePath, generator, generationTask)
+                RunGenerateExportTask(generationTask, saveFilePath, generator, progressDialog)
             End Sub)
     End Sub
 
-    Private Sub RunGenerateExportTask(saveFilePath As String, generator As CostCenterReportGeneration, generationTask As Task)
-        Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
-        progressDialog.Show()
+    Private Sub RunGenerateExportTask(generationTask As Task, saveFilePath As String, generator As CostCenterReportGeneration, progressDialog As ProgressDialog)
 
         generationTask.ContinueWith(
             Sub() GenerationOnSuccess(generator.Results, progressDialog, saveFilePath),
@@ -177,8 +183,8 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        If progressDialog Is Nothing Then Return
+        CloseProgressDialog(progressDialog)
 
         Const MessageTitle As String = "Generate Cost Center Report"
 
@@ -192,7 +198,7 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Sub GetResources(selectedMonth As Date, callBackAfterLoadResources As Action(Of Task(Of CostCenterReportResources)))
+    Private Sub GetResources(selectedMonth As Date, progressDialog As ProgressDialog, callBackAfterLoadResources As Action(Of Task(Of CostCenterReportResources)))
         Dim resources = MainServiceProvider.GetRequiredService(Of CostCenterReportResources)
 
         Dim generationTask = Task.Run(
@@ -211,15 +217,26 @@ Public Class CostCenterReportProvider
         )
 
         generationTask.ContinueWith(
-            AddressOf LoadingResourceOnError,
+            Sub(resourcesTask) LoadingResourcesOnError(resourcesTask, progressDialog),
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
     End Sub
 
-    Private Sub LoadingResourceOnError(obj As Task(Of CostCenterReportResources))
+    Private Sub LoadingResourcesOnError(resourcesTask As Task(Of CostCenterReportResources), progressDialog As ProgressDialog)
         MsgBox("Something went wrong while loading the cost center report resources. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
+
+        If progressDialog Is Nothing Then Return
+        CloseProgressDialog(progressDialog)
+    End Sub
+
+    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        If progressDialog Is Nothing Then Return
+
+        progressDialog.Close()
+        progressDialog.Dispose()
     End Sub
 
     Private Shared Function GetSelectedBranch() As Branch

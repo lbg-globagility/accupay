@@ -1,7 +1,8 @@
-﻿using AccuPay.Data.Interfaces;
+using AccuPay.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace AccuPay.Data.Helpers
 {
@@ -9,11 +10,9 @@ namespace AccuPay.Data.Helpers
     {
         public IReadOnlyCollection<IResult> Results { get; private set; }
 
-        protected readonly int _total;
+        private readonly int _total;
 
-        protected int _finished;
-
-        protected string _currentMessage;
+        private int _finished;
 
         public ProgressGenerator(int total)
         {
@@ -32,16 +31,27 @@ namespace AccuPay.Data.Helpers
             }
         }
 
-        public string CurrentMessage => _currentMessage;
+        public string CurrentMessage { get; private set; }
 
         protected void SetResults(IEnumerable<IResult> results)
         {
             Results = results.ToList();
         }
 
-        protected void SetCurrentMessage(string currentMessage)
+        public void SetCurrentMessage(string currentMessage)
         {
-            _currentMessage = currentMessage;
+            CurrentMessage = currentMessage;
+        }
+
+        public void IncreaseProgress(int incrementCount = 1)
+        {
+            Interlocked.Add(ref _finished, incrementCount);
+        }
+
+        public void IncreaseProgress(string currentMessage, int incrementCount = 1)
+        {
+            SetCurrentMessage(currentMessage);
+            Interlocked.Add(ref _finished, incrementCount);
         }
 
         public interface IResult
