@@ -435,6 +435,12 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Reports\Reports\Late Undertime and Absent Summary.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Late Undertime and Absent Summary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Providers\CostCenterReportGeneration.vb" />
     <Compile Include="Reports\Reports\Providers\CostCenterReportGenerationResult.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\ReleaseThirteenthMonthGeneration.vb" />
@@ -535,7 +541,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\Providers\LA Global\WorkOrderReportProvider.vb" />
-    <Compile Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.vb">
+    <Compile Include="Reports\Reports\DefaulltPayslipFullOvertimeBreakdown.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
@@ -1058,12 +1064,6 @@
     <Compile Include="Views\Payroll Forms\Paystub\PaystubView.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\AttendanceSheet2.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AttendanceSheet2.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reports\Reports\FiledLeaveReport.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1089,19 +1089,7 @@
     <Compile Include="Reports\Reports\Providers\SSSMonthlyReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\TaxReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\ThirteenthMonthSummaryReportProvider.vb" />
-    <Compile Include="Reports\rpt\rpt\HyundaiPayslip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HyundaiPayslip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\HyundaiPayslip1.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HyundaiPayslip1.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\ThirteenthMonthPayDetailSummary.vb">
+    <Compile Include="Reports\Reports\ThirteenthMonthPayDetailSummary.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ThirteenthMonthPayDetailSummary.rpt</DependentUpon>
@@ -1208,12 +1196,6 @@
     </Compile>
     <Compile Include="Views\HRIS Forms\Employee\Employee\EmployeeForm.vb">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\PayrollSumma.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PayrollSumma.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Payroll Forms\Alphalist\AlphalistGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Alphalist\TaxYearDialog.Designer.vb">
@@ -1373,13 +1355,13 @@
     <Compile Include="Views\Core Forms\ReportsList.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Alphalist.vb">
+    <Compile Include="Reports\Unused Reports\Alphalist\Alphalist.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Alphalist.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Alphalistv2.vb">
+    <Compile Include="Reports\Unused Reports\Alphalist\Alphalistv2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Alphalistv2.rpt</DependentUpon>
@@ -1390,48 +1372,6 @@
       <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee Citizenship.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee Citizenship.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee Leave Ledger.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee Leave Ledger.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee Loan Report.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee Loan Report.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee Personal Information.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee Personal Information.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee Skills.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee Skills.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee%27s 13th Month Pay Report.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee%27s 13th Month Pay Report.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee%27s Dialect.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee%27s Dialect.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\Employee%27s Employment Record.vb">
       <AutoGen>True</AutoGen>
@@ -1463,162 +1403,36 @@
       <DependentUpon>Employee%27s Payroll Ledger.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Employee%27s Religion.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee%27s Religion.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Employee%27s Spouse Information.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee%27s Spouse Information.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Loan Report.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Loan Report.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Pagibig Monthly Report.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Pagibig Monthly Report.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\Reports\Payroll Summary Report.vb">
+    <Compile Include="Reports\Unused Reports\Payroll Summary\Payroll Summary Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Payroll Summary Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\rpt\rpt\1601C_BIR.vb">
+    <Compile Include="Reports\Unused Reports\BIR\1601C_BIR.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>1601C_BIR.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\rpt\rpt\ActualReports\HalfPaySlipActual.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HalfPaySlipActual.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\ActualReports\PayrollSummaActual.vb">
+    <Compile Include="Reports\Unused Reports\Payroll Summary\PayrollSummaActual.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>PayrollSummaActual.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\rpt\rpt\ActualReports\prntAllPaySlipActual.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>prntAllPaySlipActual.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\BIR2316.vb">
+    <Compile Include="Reports\Unused Reports\BIR\BIR2316.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BIR2316.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\rpt\rpt\discplinaryActions.vb">
+    <Compile Include="Reports\Reports\discplinaryActions.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>discplinaryActions.rpt</DependentUpon>
       <SubType>Component</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\HalfPaySlip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HalfPaySlip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\MemoTemplate.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MemoTemplate.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\OBFReport.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OBFReport.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\OfficialPaySlipFormat.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OfficialPaySlipFormat.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\onepagefouremployeepayslip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>onepagefouremployeepayslip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\PaySlipHalfPage.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PaySlipHalfPage.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\printallpayslipotherformat.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>printallpayslipotherformat.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\prntAllPaySlip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>prntAllPaySlip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\prntPaySlip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>prntPaySlip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\QuadrantPaySlip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QuadrantPaySlip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\rptAllDecUndecPaySlip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>rptAllDecUndecPaySlip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\rptDecUndecPaySlip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>rptDecUndecPaySlip.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\SSS_R52.vb">
-      <DependentUpon>SSS_R5.rpt</DependentUpon>
-      <SubType>Component</SubType>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\TardinessReport.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TardinessReport.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports\rpt\rpt\TwoEmpIn1PaySlip.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TwoEmpIn1PaySlip.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\selectMonth.Designer.vb">
       <DependentUpon>selectMonth.vb</DependentUpon>
@@ -1687,7 +1501,7 @@
     <Compile Include="Views\Payroll Forms\Paystub\viewtotloan.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Reports\rpt\CrystalReport1.vb">
+    <Compile Include="Reports\Unused Reports\HDMF\CrystalReport1.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CrystalReport1.rpt</DependentUpon>
@@ -1717,7 +1531,7 @@
     <Compile Include="Reports\Report Forms\ReportForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Reports\rpt\CrystalReport2.vb">
+    <Compile Include="Reports\Unused Reports\HDMF\CrystalReport2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CrystalReport2.rpt</DependentUpon>
@@ -1739,13 +1553,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Reports\rpt\rptPFF-053.vb">
+    <Compile Include="Reports\Unused Reports\HDMF\rptPFF-053.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>rptPFF-053.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\rpt\rptRF-1.vb">
+    <Compile Include="Reports\Unused Reports\HDMF\rptRF-1.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>rptRF-1.rpt</DependentUpon>
@@ -1849,6 +1663,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>MonthlyEndOfContractReport.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\Late Undertime and Absent Summary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Late Undertime and Absent Summary.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
@@ -1861,7 +1679,7 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>WorkOrder.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.rpt">
+    <EmbeddedResource Include="Reports\Reports\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
     </EmbeddedResource>
@@ -2128,27 +1946,11 @@
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\PaystubView.resx">
       <DependentUpon>PaystubView.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\AttendanceSheet2.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>AttendanceSheet2.vb</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\FiledLeaveReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>FiledLeaveReport.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\HyundaiPayslip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HyundaiPayslip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\HyundaiPayslip1.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HyundaiPayslip1.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\PayrollSumma.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>PayrollSumma.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\ThirteenthMonthPayDetailSummary.rpt">
+    <EmbeddedResource Include="Reports\Reports\ThirteenthMonthPayDetailSummary.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ThirteenthMonthPayDetailSummary.vb</LastGenOutput>
     </EmbeddedResource>
@@ -2269,45 +2071,17 @@
     <EmbeddedResource Include="Views\Core Forms\ReportsList.resx">
       <DependentUpon>ReportsList.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Alphalist.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\Alphalist\Alphalist.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Alphalist.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Alphalistv2.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\Alphalist\Alphalistv2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Alphalistv2.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\Attendance Sheet.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Attendance Sheet.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee Citizenship.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee Citizenship.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee Leave Ledger.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee Leave Ledger.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee Loan Report.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee Loan Report.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee Personal Information.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee Personal Information.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee Skills.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee Skills.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee%27s 13th Month Pay Report.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee%27s 13th Month Pay Report.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee%27s Dialect.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee%27s Dialect.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\Employee%27s Employment Record.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -2329,111 +2103,27 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Payroll Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee%27s Religion.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee%27s Religion.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee%27s Spouse Information.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee%27s Spouse Information.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Loan Report.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Loan Report.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Pagibig Monthly Report.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Pagibig Monthly Report.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Payroll Summary Report.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\Payroll Summary\Payroll Summary Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Payroll Summary Report.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\1601C_BIR.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\BIR\1601C_BIR.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>1601C_BIR.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\ActualReports\HalfPaySlipActual.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HalfPaySlipActual.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\ActualReports\PayrollSummaActual.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\Payroll Summary\PayrollSummaActual.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>PayrollSummaActual.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\ActualReports\prntAllPaySlipActual.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>prntAllPaySlipActual.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\BIR2316.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\BIR\BIR2316.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>BIR2316.vb</LastGenOutput>
     </EmbeddedResource>
-    <Content Include="Reports\rpt\rpt\discplinaryActions.rpt">
+    <Content Include="Reports\Reports\discplinaryActions.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>discplinaryActions.vb</LastGenOutput>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Reports\rpt\rpt\HalfPaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HalfPaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\MemoTemplate.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>MemoTemplate.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\OBFReport.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>OBFReport.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\OfficialPaySlipFormat.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>OfficialPaySlipFormat.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\onepagefouremployeepayslip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>onepagefouremployeepayslip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\PaySlipHalfPage.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>PaySlipHalfPage.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\printallpayslipotherformat.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>printallpayslipotherformat.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\prntAllPaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>prntAllPaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\prntPaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>prntPaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\QuadrantPaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>QuadrantPaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\rptAllDecUndecPaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>rptAllDecUndecPaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\rptDecUndecPaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>rptDecUndecPaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\SSS_R5.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>SSS_R52.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\TardinessReport.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>TardinessReport.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\TwoEmpIn1PaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>TwoEmpIn1PaySlip.vb</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\selectMonth.resx">
       <DependentUpon>selectMonth.vb</DependentUpon>
     </EmbeddedResource>
@@ -2461,7 +2151,7 @@
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotloan.resx">
       <DependentUpon>viewtotloan.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\CrystalReport1.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\HDMF\CrystalReport1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport1.vb</LastGenOutput>
     </EmbeddedResource>
@@ -2474,7 +2164,7 @@
     <EmbeddedResource Include="Reports\Report Forms\ReportForm.resx">
       <DependentUpon>ReportForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\CrystalReport2.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\HDMF\CrystalReport2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport2.vb</LastGenOutput>
     </EmbeddedResource>
@@ -2484,11 +2174,11 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rptPFF-053.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\HDMF\rptPFF-053.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptPFF-053.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rptRF-1.rpt">
+    <EmbeddedResource Include="Reports\Unused Reports\HDMF\rptRF-1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptRF-1.vb</LastGenOutput>
     </EmbeddedResource>

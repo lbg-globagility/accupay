@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports CrystalDecisions.CrystalReports.Engine
 
@@ -34,7 +34,7 @@ Public Class LateUTAbsentSummaryReportProvider
                     Throw sql_print_late_ut_absent_summary.ErrorException
                 Else
 
-                    Dim rptdoc As New AttendanceSheet2
+                    Dim rptdoc As New Late_Undertime_and_Absent_Summary
 
                     rptdoc.SetDataSource(dt)
 
