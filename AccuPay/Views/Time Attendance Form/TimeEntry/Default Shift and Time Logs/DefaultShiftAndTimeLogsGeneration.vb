@@ -21,7 +21,7 @@ Public Class DefaultShiftAndTimeLogsGeneration
     Private _results As BlockingCollection(Of EmployeeResult)
 
     Public Sub New(employees As IEnumerable(Of Employee), currentPayPeriod As IPayPeriod, defaultValue As DefaultValue)
-        MyBase.New(employees.Where(Function(e) e IsNot Nothing).Count)
+        MyBase.New(employees.Where(Function(e) e IsNot Nothing).Count + 1) ' +1 for the resources loading
 
         _employees = employees.
             Where(Function(e) e IsNot Nothing).
@@ -35,7 +35,9 @@ Public Class DefaultShiftAndTimeLogsGeneration
 
     Public Async Function Start() As Task
 
+        SetCurrentMessage("Loading resources...")
         Dim resultData = CreateEmployeeShiftAndTimeLogs()
+        IncreaseProgress("Finished loading resources.")
 
         Dim shifts As List(Of ShiftModel) = resultData.shifts
         Dim timeLogs As List(Of TimeLog) = resultData.timeLogs

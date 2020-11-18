@@ -20,7 +20,7 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
     Private _results As BlockingCollection(Of EmployeeResult)
 
     Public Sub New(employees As IEnumerable(Of Employee), currentPayPeriod As IPayPeriod)
-        MyBase.New(employees.Where(Function(e) e IsNot Nothing).Count)
+        MyBase.New(employees.Where(Function(e) e IsNot Nothing).Count + 1) ' +1 for the resources loading
 
         _employees = employees.
             Where(Function(e) e IsNot Nothing).
@@ -33,7 +33,9 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
 
     Public Async Function Start() As Task
 
+        SetCurrentMessage("Loading resources...")
         Dim result = Await GetEmployeeShiftAndTimeLogs()
+        IncreaseProgress("Finished loading resources.")
 
         Dim shifts As List(Of EmployeeDutySchedule) = result.shifts
         Dim timeLogs As List(Of TimeLog) = result.timeLogs
