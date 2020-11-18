@@ -932,7 +932,7 @@ Public Class TimeEntrySummaryForm
         Dim progressDialog = New ProgressDialog(generator, "Generating time entries...")
         progressDialog.Show()
 
-        Dim task1 = Task.Factory.StartNew(Sub() generator.Start(
+        Dim task1 = Task.Run(Sub() generator.Start(
             organizationId:=z_OrganizationID,
             userId:=z_User,
             cutoffStart:=startDate,

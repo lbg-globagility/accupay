@@ -123,16 +123,14 @@ Public Class CostCenterReportProvider
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
         Dim branches = branchRepository.GetAll()
 
-        Dim generator As New CostCenterReportGeneration(branches, IsActual)
-
-        Dim resources = MainServiceProvider.GetRequiredService(Of CostCenterReportResources)
-        resources.Load(selectedMonth)
-
         GetResources(selectedMonth,
-            Sub()
+            Sub(resourcesTask)
+
+                Dim generator As New CostCenterReportGeneration(branches, IsActual)
+
                 Dim generationTask = Task.Run(
                     Sub()
-                        generator.Start(resources)
+                        generator.Start(resourcesTask.Result)
                     End Sub
                 )
 
