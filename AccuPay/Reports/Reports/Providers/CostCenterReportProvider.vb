@@ -126,7 +126,6 @@ Public Class CostCenterReportProvider
 
         Dim generator As New CostCenterReportGeneration(branches, IsActual, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
-        progressDialog.Show()
 
         generator.SetCurrentMessage("Loading resources...")
         GetResources(
@@ -144,6 +143,9 @@ Public Class CostCenterReportProvider
 
                 RunGenerateExportTask(generationTask, saveFilePath, generator, progressDialog)
             End Sub)
+
+        progressDialog.ShowDialog()
+
     End Sub
 
     Private Sub RunGenerateExportTask(generationTask As Task, saveFilePath As String, generator As CostCenterReportGeneration, progressDialog As ProgressDialog)

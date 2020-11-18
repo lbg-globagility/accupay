@@ -247,7 +247,6 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         Dim generator As New ReleaseThirteenthMonthGeneration(selectedEmployees, selectedAdjustmentId)
         Dim progressDialog = New ProgressDialog(generator, "Creating 13th month pay adjustments...")
-        progressDialog.Show()
 
         Dim generationTask = Task.Run(
                 Async Function()
@@ -268,6 +267,8 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
+
+        progressDialog.ShowDialog()
 
     End Sub
 

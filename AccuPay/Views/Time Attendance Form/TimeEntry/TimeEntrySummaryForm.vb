@@ -930,7 +930,6 @@ Public Class TimeEntrySummaryForm
     Private Sub GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer)
         Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
         Dim progressDialog = New ProgressDialog(generator, "Generating time entries...")
-        progressDialog.Show()
 
         Dim task1 = Task.Run(Sub() generator.Start(
             organizationId:=z_OrganizationID,
@@ -955,6 +954,8 @@ Public Class TimeEntrySummaryForm
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
+
+        progressDialog.ShowDialog()
 
     End Sub
 

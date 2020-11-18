@@ -178,7 +178,6 @@ Public Class DefaultShiftAndTimeLogsForm
 
         Dim generator As New DefaultShiftAndTimeLogsGeneration(selectedEmployees, _currentPayPeriod, defaultValue)
         Dim progressDialog = New ProgressDialog(generator, "Creating Default shift and time logs...")
-        progressDialog.Show()
 
         Dim generationTask = Task.Run(
                 Async Function()
@@ -199,6 +198,9 @@ Public Class DefaultShiftAndTimeLogsForm
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
+
+        progressDialog.ShowDialog()
+
     End Sub
 
     Private Sub DefaultBreakLengthNumeric_Leave(sender As Object, e As EventArgs) Handles DefaultBreakLengthNumeric.Leave
@@ -250,7 +252,6 @@ Public Class DefaultShiftAndTimeLogsForm
 
         Dim generator As New DeleteDefaultShiftAndTimeLogsGeneration(selectedEmployees, _currentPayPeriod)
         Dim progressDialog = New ProgressDialog(generator, "Deleting multiple shift and time logs...")
-        progressDialog.Show()
 
         Dim generationTask = Task.Run(
                 Async Function()
@@ -271,6 +272,9 @@ Public Class DefaultShiftAndTimeLogsForm
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
+
+        progressDialog.ShowDialog()
+
     End Sub
 
     Private Sub SaveGenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
