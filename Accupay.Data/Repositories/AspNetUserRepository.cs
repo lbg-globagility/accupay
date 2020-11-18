@@ -63,12 +63,16 @@ namespace AccuPay.Data.Repositories
             return await query.Where(x => x.User.Id == userId).ToListAsync();
         }
 
-        public async Task<(ICollection<AspNetUser> users, int total)> List(PageOptions options, int clientId, string searchTerm = "")
+        public async Task<(ICollection<AspNetUser> users, int total)> List(PageOptions options, int clientId, string searchTerm = "", bool includeDeleted = false)
         {
             var query = _context.Users
                 .AsNoTracking()
-                .Where(x => x.ClientId == clientId)
-                .Where(x => x.DeletedAt == null);
+                .Where(x => x.ClientId == clientId);
+
+            if (includeDeleted == false)
+            {
+                query = query.Where(x => x.DeletedAt == null);
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

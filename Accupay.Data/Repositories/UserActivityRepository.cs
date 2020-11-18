@@ -1,11 +1,13 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using static AccuPay.Data.Entities.UserActivity;
 
 namespace AccuPay.Data.Repositories
 {
@@ -20,20 +22,26 @@ namespace AccuPay.Data.Repositories
 
         public UserActivityRepository(PayrollContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public async Task<PaginatedList<UserActivityItem>> GetPaginatedListAsync(
             PageOptions options,
             int? organizationId = null,
-            string entityName = null)
+            string entityName = null,
+            int? changedByUserId = null,
+            ChangedType? changedType = null,
+            int? changedEntityId = null,
+            string description = null,
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null)
         {
             var query = _context.UserActivityItems
-                    .Include(x => x.ChangedEmployee)
-                    .Include(x => x.ChangedUser)
-                    .Include(x => x.Activity)
-                        .ThenInclude(x => x.User)
-                    .AsQueryable();
+                .Include(x => x.ChangedEmployee)
+                .Include(x => x.ChangedUser)
+                .Include(x => x.Activity)
+                    .ThenInclude(x => x.User)
+                .AsQueryable();
 
             if (organizationId != null)
             {
@@ -51,6 +59,42 @@ namespace AccuPay.Data.Repositories
                 {
                     query = query.OrderBy(x => x.Created, options.Direction);
                 }
+            }
+
+            if (changedByUserId != null)
+            {
+                query = query.Where(x => x.Activity.UserId == changedByUserId);
+            }
+
+            if (changedEntityId != null)
+            {
+                if (changedType == ChangedType.User)
+                {
+                    query = query.Where(x => x.ChangedUserId == changedEntityId);
+                }
+                else if (changedType == ChangedType.Employee)
+                {
+                    query = query.Where(x => x.ChangedEmployeeId == changedEntityId);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(description))
+            {
+                var searchTerm = $"%{description}%";
+
+                query = query.Where(x => EF.Functions.Like(x.Description, searchTerm));
+            }
+
+            if (dateFrom != null)
+            {
+                dateFrom = dateFrom.ToMinimumHourValue();
+                query = query.Where(x => x.Created >= dateFrom);
+            }
+
+            if (dateTo != null)
+            {
+                dateTo = dateTo.ToMaximumHourValue();
+                query = query.Where(x => x.Created <= dateTo);
             }
 
             var userActivities = await query.Page(options).ToListAsync();
@@ -77,7 +121,7 @@ namespace AccuPay.Data.Repositories
                 organizationId: organizationId,
                 RecordTypeAdd,
                 changedEmployeeId: changedEmployeeId,
-                changedUserId: changedUserId);
+                changedByUserId: changedUserId);
         }
 
         public void RecordDelete(
@@ -98,7 +142,7 @@ namespace AccuPay.Data.Repositories
                 organizationId: organizationId,
                 RecordTypeDelete,
                 changedEmployeeId: changedEmployeeId,
-                changedUserId: changedUserId);
+                changedByUserId: changedUserId);
         }
 
         private void RecordSimple(
@@ -110,7 +154,7 @@ namespace AccuPay.Data.Repositories
             int organizationId,
             string recordType,
             int? changedEmployeeId,
-            int? changedUserId)
+            int? changedByUserId)
         {
             entityName = SetStringToPascalCase(entityName);
 
@@ -121,7 +165,7 @@ namespace AccuPay.Data.Repositories
                         EntityId = entityId,
                         Description = $"{simpleDescription} {entityName?.ToLower()}{suffixIdentifier}.",
                         ChangedEmployeeId = changedEmployeeId,
-                        ChangedUserId = changedUserId
+                        ChangedUserId = changedByUserId
                     }
                 };
 

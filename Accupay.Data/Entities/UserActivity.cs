@@ -8,6 +8,15 @@ namespace AccuPay.Data.Entities
     [Table("useractivity")]
     public class UserActivity
     {
+        public enum ChangedType
+        {
+            Employee,
+            User,
+            Organization,
+            Division,
+            Position
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RowID { get; set; }

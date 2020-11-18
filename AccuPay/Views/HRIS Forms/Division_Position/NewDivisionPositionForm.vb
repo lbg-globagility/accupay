@@ -1,8 +1,9 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Entities.UserActivity
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -47,7 +48,7 @@ Public Class NewDivisionPositionForm
     Private _userActivityRepository As UserActivityRepository
 
     Sub New()
-        ' This call is required by the designer.
+
         InitializeComponent()
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
@@ -1250,17 +1251,17 @@ Public Class NewDivisionPositionForm
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
 
         If Me._currentDivision.IsRoot Then
-            Dim userActivity As New UserActivityForm(DivisionLocationEntityName, UserActivityForm.ChangedType.Division)
+            Dim userActivity As New UserActivityForm(DivisionLocationEntityName, ChangedType.Division)
             userActivity.ShowDialog()
         Else
-            Dim userActivity As New UserActivityForm(DivisionEntityName, UserActivityForm.ChangedType.Division)
+            Dim userActivity As New UserActivityForm(DivisionEntityName, ChangedType.Division)
             userActivity.ShowDialog()
         End If
 
     End Sub
 
     Private Sub UserActivityPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPositionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PositionEntityName, UserActivityForm.ChangedType.Position)
+        Dim userActivity As New UserActivityForm(PositionEntityName, ChangedType.Position)
         userActivity.ShowDialog()
     End Sub
 
