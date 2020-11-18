@@ -1,4 +1,4 @@
-﻿using AccuPay.CrystalReportsWeb.Services;
+using AccuPay.CrystalReportsWeb.Services;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -140,9 +140,9 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         /// <param name="dateTo">The end date of the report.</param>
         /// <returns></returns>
         [Route("thirteenth-month-report/{organizationId}/{dateFrom}/{dateTo}")]
-        public HttpResponseMessage GetThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public async Task<HttpResponseMessage> GetThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
-            string pdfFullPath = _reportingService.GenerateThirteenthMonthReport(organizationId, dateFrom, dateTo);
+            string pdfFullPath = await _reportingService.GenerateThirteenthMonthReport(organizationId, dateFrom, dateTo);
 
             return PdfReportResult(pdfFullPath);
         }

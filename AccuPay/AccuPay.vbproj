@@ -1391,12 +1391,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Reports\Reports\Employee 13th Month Pay Report.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employee 13th Month Pay Report.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reports\Reports\Employee Citizenship.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2286,10 +2280,6 @@
     <EmbeddedResource Include="Reports\Reports\Attendance Sheet.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Attendance Sheet.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Employee 13th Month Pay Report.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Employee 13th Month Pay Report.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\Employee Citizenship.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

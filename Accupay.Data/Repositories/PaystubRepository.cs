@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -412,11 +412,13 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<Paystub>> GetByTimePeriodWithThirteenthMonthPayAsync(TimePeriod timePeriod, int organizationId)
+        public async Task<ICollection<Paystub>> GetByTimePeriodWithThirteenthMonthPayAndEmployeeAsync(TimePeriod timePeriod, int organizationId)
         {
             return await _context.Paystubs
                 .Include(x => x.PayPeriod)
                 .Include(x => x.ThirteenthMonthPay)
+                .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
                 .Where(x => x.PayPeriod.PayFromDate >= timePeriod.Start)
                 .Where(x => x.PayPeriod.PayToDate <= timePeriod.End)
                 .ToListAsync();

@@ -1,36 +1,49 @@
-﻿using System;
+using AccuPay.Data.Repositories;
+using AccuPay.Data.ValueObjects;
+using AccuPay.Utilities.Extensions;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
     public class ThirteenthMonthSummaryReportDataService : StoredProcedureDataService
     {
-        public ThirteenthMonthSummaryReportDataService(PayrollContext context) : base(context)
-        {
+        private readonly PaystubRepository _paystubRepository;
 
+        public ThirteenthMonthSummaryReportDataService(PayrollContext context, PaystubRepository paystubRepository) : base(context)
+        {
+            _paystubRepository = paystubRepository;
         }
 
-        public DataTable GetData(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public async Task<DataTable> GetData(int organizationId, TimePeriod timePeriod)
         {
-            var parameters = new object[,] {
-                {
-                    "$organizationID",
-                    organizationId
-                        },
-                {
-                    "$dateFrom",
-                    dateFrom
-                        },
-                {
-                    "$dateTo",
-                    dateTo
-                }
-            };
+            var datatable = new DataTable();
 
-            var data = CallProcedure("RPT_13thmonthpay", parameters);
+            datatable.Columns.Add("DatCol1"); // Employee Number
+            datatable.Columns.Add("DatCol2"); // Employee Name
+            datatable.Columns.Add("DatCol3"); // 13th Month Basic Pay
+            datatable.Columns.Add("DatCol4"); // 13th Month Amount
 
-            return data;
+            var paystubs = (await _paystubRepository.GetByTimePeriodWithThirteenthMonthPayAndEmployeeAsync(
+                    timePeriod,
+                    organizationId))
+                .GroupBy(x => x.Employee)
+                .OrderBy(x => x.Key?.FullNameWithMiddleInitialLastNameFirst);
+
+            foreach (var paystub in paystubs)
+            {
+                DataRow newRow = datatable.NewRow();
+
+                newRow["DatCol1"] = paystub.Key?.EmployeeNo;
+                newRow["DatCol2"] = paystub.Key?.FullNameLastNameFirst;
+                newRow["DatCol3"] = paystub.Sum(x => x.ThirteenthMonthPay?.BasicPay).RoundToString();
+                newRow["DatCol4"] = paystub.Sum(x => x.ThirteenthMonthPay?.Amount).RoundToString();
+
+                datatable.Rows.Add(newRow);
+            }
+
+            return datatable;
         }
     }
-
 }
