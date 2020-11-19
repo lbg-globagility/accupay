@@ -32,16 +32,8 @@ Public Class DependencyInjectionHelper
         services.AddDbContext(Of PayrollContext)(
             Sub(options As DbContextOptionsBuilder)
                 ConfigureDbContextOptions(options)
-            End Sub, ServiceLifetime.Transient)
-
-        ' passing DbContextOptions for services that needs to directly access PayrollContext.
-        ' It Is prohibited to access PayrollContext unless there Is no other choice
-        ' Like in the case of services accessed in multiple threads.
-        services.AddSingleton(Of DbContextOptionsService)(
-            Function(service As IServiceProvider)
-                Dim options = GetDbContextOptions()
-                Return New DbContextOptionsService(options)
-            End Function)
+            End Sub,
+            ServiceLifetime.Transient)
 
         services.AddTransient(Of BenchmarkPayrollHelper)
         services.AddTransient(Of OvertimeRateService)
