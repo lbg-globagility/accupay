@@ -1,5 +1,7 @@
-﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Interfaces;
+using System;
 
 namespace AccuPay.Data.Helpers
 {
@@ -22,6 +24,17 @@ namespace AccuPay.Data.Helpers
             Status = status;
         }
 
+        public static EmployeeResult Success(Employee employee)
+        {
+            if (employee?.RowID == null)
+                throw new ArgumentNullException("Employee cannot be null.");
+
+            return Success(
+                employeeNumber: employee.EmployeeNo,
+                employeeFullName: employee.EmployeeNo,
+                employeeId: employee.RowID.Value);
+        }
+
         public static EmployeeResult Success(string employeeNumber, string employeeFullName, int employeeId)
         {
             return new EmployeeResult(
@@ -30,6 +43,18 @@ namespace AccuPay.Data.Helpers
                 employeeId: employeeId,
                 description: string.Empty,
                 status: ResultStatus.Success);
+        }
+
+        public static EmployeeResult Error(Employee employee, string description)
+        {
+            if (employee?.RowID == null)
+                throw new ArgumentNullException("Employee cannot be null.");
+
+            return Error(
+                employeeNumber: employee.EmployeeNo,
+                employeeFullName: employee.EmployeeNo,
+                employeeId: employee.RowID.Value,
+                description: description);
         }
 
         public static EmployeeResult Error(string employeeNumber, string employeeFullName, int employeeId, string description)

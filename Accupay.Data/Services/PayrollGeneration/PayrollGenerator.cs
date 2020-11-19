@@ -34,7 +34,7 @@ namespace AccuPay.Data.Services
 
             if (employee == null)
             {
-                return PaystubEmployeeResult.Error(employee, "Employee data was not loaded properly.");
+                throw new Exception("Employee was not loaded.");
             }
 
             var currentSystemOwner = resources.CurrentSystemOwner;

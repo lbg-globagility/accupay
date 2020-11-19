@@ -124,6 +124,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PaystubPayslipModelDataService)
 
         services.AddTransient(Of TimeEntryGenerator)
+        services.AddTransient(Of TimeEntryResources)
 
         services.AddTransient(Of OvertimeRateService)
         services.AddTransient(Of LeaveAccrualService)

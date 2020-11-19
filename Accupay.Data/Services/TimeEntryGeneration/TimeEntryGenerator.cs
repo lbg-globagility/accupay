@@ -1,310 +1,89 @@
 using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
-using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Interfaces;
-using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 
 namespace AccuPay.Data.Services
 {
-    public class TimeEntryGenerator : IProgressGenerator
+    public class TimeEntryGenerator
     {
         //private static ILog logger = LogManager.GetLogger("TimeEntryLogger", "TimeEntryLogger");
 
-        private int _organizationId;
-        private DateTime _cutoffStart;
-        private DateTime _cutoffEnd;
-        private int _threeDays = 3;
-        private IList<TimeEntry> _timeEntries;
-        private IList<ActualTimeEntry> _actualTimeEntries;
-        private IList<TimeLog> _timeLogs;
-        private IList<Overtime> _overtimes;
-        private IList<Leave> _leaves;
-        private IList<OfficialBusiness> _officialBusinesses;
-        private IList<AgencyFee> _agencyFees;
-        private IList<Salary> _salaries;
-        private ICollection<EmploymentPolicy> _employmentPolicies;
-        private IList<EmployeeDutySchedule> _shifts;
-        private List<TimeAttendanceLog> _timeAttendanceLogs;
-        private List<BreakTimeBracket> _breakTimeBrackets;
-        private ICollection<TripTicket> _tripTickets;
-        private ICollection<RoutePayRate> _routeRates;
-        private readonly DbContextOptionsService _dbContextOptionsService;
-        private readonly CalendarService _calendarService;
-        private readonly ListOfValueService _listOfValueService;
+        private readonly PayrollContext _context;
 
-        private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
-        private readonly AgencyRepository _agencyRepository;
-        private readonly AgencyFeeRepository _agencyFeeRepository;
-        private readonly BreakTimeBracketRepository _breakTimeBracketRepository;
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly EmploymentPolicyRepository _employmentPolicyRepository;
-        private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
-        private readonly LeaveRepository _leaveRepository;
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
-        private readonly OrganizationRepository _organizationRepository;
-        private readonly OvertimeRepository _overtimeRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
-        private readonly SalaryRepository _salaryRepository;
-        private readonly TimeAttendanceLogRepository _timeAttendanceLogRepository;
-        private readonly TimeEntryRepository _timeEntryRepository;
-        private readonly TimeLogRepository _timeLogRepository;
-        private readonly TripTicketRepository _tripTicketRepository;
-        private readonly RouteRateRepository _routeRateRepository;
-        private int _total;
-
-        private int _finished;
-
-        private int _errors;
-
-        public int ErrorCount => _errors;
-
-        public int Progress
+        public TimeEntryGenerator(PayrollContext context)
         {
-            get
-            {
-                if (_finished == 0)
-                    return 0;
-
-                //using decimal does not update the progress threading
-                return Convert.ToInt32(Math.Floor(_finished / (double)_total * 100));
-            }
+            _context = context;
         }
 
-        public string CurrentMessage { get; protected set; }
-
-        public TimeEntryGenerator(
-            DbContextOptionsService dbContextOptionsService,
-            CalendarService calendarService,
-            ListOfValueService listOfValueService,
-            ActualTimeEntryRepository actualTimeEntryRepository,
-            AgencyRepository agencyRepository,
-            AgencyFeeRepository agencyFeeRepository,
-            BreakTimeBracketRepository breakTimeBracketRepository,
-            EmployeeRepository employeeRepository,
-            EmploymentPolicyRepository employmentPolicyRepository,
-            EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
-            LeaveRepository leaveRepository,
-            OfficialBusinessRepository officialBusinessRepository,
-            OrganizationRepository organizationRepository,
-            OvertimeRepository overtimeRepository,
-            PayPeriodRepository payPeriodRepository,
-            SalaryRepository salaryRepository,
-            TimeAttendanceLogRepository timeAttendanceLogRepository,
-            TimeEntryRepository timeEntryRepository,
-            TimeLogRepository timeLogRepository,
-            TripTicketRepository tripTicketRepository,
-            RouteRateRepository routeRateRepository)
-        {
-            _dbContextOptionsService = dbContextOptionsService;
-            _calendarService = calendarService;
-            _listOfValueService = listOfValueService;
-            _actualTimeEntryRepository = actualTimeEntryRepository;
-            _agencyRepository = agencyRepository;
-            _agencyFeeRepository = agencyFeeRepository;
-            _breakTimeBracketRepository = breakTimeBracketRepository;
-            _employeeRepository = employeeRepository;
-            _employmentPolicyRepository = employmentPolicyRepository;
-            _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
-            _leaveRepository = leaveRepository;
-            _officialBusinessRepository = officialBusinessRepository;
-            _organizationRepository = organizationRepository;
-            _overtimeRepository = overtimeRepository;
-            _payPeriodRepository = payPeriodRepository;
-            _salaryRepository = salaryRepository;
-            _timeAttendanceLogRepository = timeAttendanceLogRepository;
-            _timeEntryRepository = timeEntryRepository;
-            _timeLogRepository = timeLogRepository;
-            _tripTicketRepository = tripTicketRepository;
-            _routeRateRepository = routeRateRepository;
-        }
-
-        public void Start(int organizationId, int userId, DateTime cutoffStart, DateTime cutoffEnd)
-        {
-            _organizationId = organizationId;
-            _cutoffStart = cutoffStart.ToMinimumHourValue();
-            _cutoffEnd = cutoffEnd.ToMinimumHourValue();
-
-            var currentPayPeriod = _payPeriodRepository.GetCurrentOpen(organizationId);
-
-            if (currentPayPeriod?.RowID == null || currentPayPeriod?.PayFromDate != cutoffStart || currentPayPeriod?.PayToDate != cutoffEnd)
-                throw new BusinessLogicException("Only open pay periods can generate time entries.");
-
-            ListOfValueCollection settings = _listOfValueService.Create();
-            TimeEntryPolicy timeEntryPolicy = new TimeEntryPolicy(settings);
-
-            TimePeriod cuttOffPeriod = new TimePeriod(_cutoffStart, _cutoffEnd);
-
-            ICollection<Employee> employees = _employeeRepository
-                .GetAllActiveWithPosition(_organizationId)
-                .ToList();
-
-            _employmentPolicies = _employmentPolicyRepository.GetAll();
-
-            ICollection<Agency> agencies = _agencyRepository
-                .GetAll(_organizationId)
-                .ToList();
-
-            var organization = _organizationRepository.GetById(_organizationId);
-
-            _salaries = _salaryRepository
-                .GetByCutOff(_organizationId, _cutoffEnd)
-                .ToList();
-
-            var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart);
-
-            DateTime afterCutOff = _cutoffEnd;
-            if (timeEntryPolicy.PostLegalHolidayCheck)
-            {
-                afterCutOff = _cutoffEnd.AddDays(_threeDays);
-            }
-
-            _timeEntries = _timeEntryRepository
-                .GetByDatePeriod(_organizationId, new TimePeriod(previousCutoff, afterCutOff))
-                .ToList();
-
-            _actualTimeEntries = _actualTimeEntryRepository
-                .GetByDatePeriod(_organizationId, cuttOffPeriod)
-                .ToList();
-
-            _timeLogs = _timeLogRepository
-                .GetByDatePeriod(_organizationId, cuttOffPeriod)
-                .ToList();
-
-            _leaves = _leaveRepository
-                .GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod)
-                .ToList();
-
-            _overtimes = _overtimeRepository
-                .GetByDatePeriod(_organizationId, cuttOffPeriod, OvertimeStatus.Approved)
-                .ToList();
-
-            _officialBusinesses = _officialBusinessRepository
-                .GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod)
-                .ToList();
-
-            _agencyFees = _agencyFeeRepository
-                .GetByDatePeriod(_organizationId, cuttOffPeriod)
-                .ToList();
-
-            _shifts = _employeeDutyScheduleRepository
-                .GetByDatePeriod(_organizationId, cuttOffPeriod)
-                .ToList();
-
-            _tripTickets = _tripTicketRepository.GetByDateRange(cutoffStart, cutoffEnd);
-
-            _routeRates = _routeRateRepository.GetAll();
-
-            if (timeEntryPolicy.ComputeBreakTimeLate)
-            {
-                _timeAttendanceLogs = _timeAttendanceLogRepository
-                    .GetByTimePeriod(_organizationId, cuttOffPeriod)
-                    .ToList();
-
-                _breakTimeBrackets = _breakTimeBracketRepository
-                    .GetAll(_organizationId)
-                    .ToList();
-            }
-            else
-            {
-                _timeAttendanceLogs = new List<TimeAttendanceLog>();
-                _breakTimeBrackets = new List<BreakTimeBracket>();
-            }
-
-            CalendarCollection calendarCollection = _calendarService
-                .GetCalendarCollection(new TimePeriod(previousCutoff, _cutoffEnd));
-
-            var progress = new ObservableCollection<int>();
-
-            _total = employees.Count;
-
-            // TEMPORARY set to synchronous since there is a race condition issue
-            // that is hard to debug
-            employees.ToList().ForEach(employee =>
-            {
-                try
-                {
-                    CalculateEmployeeEntries(employee, organization, userId, settings, agencies, timeEntryPolicy, calendarCollection);
-                    CurrentMessage = $"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
-                }
-                catch (Exception ex)
-                {
-                    // can error if employee type is null
-                    //logger.Error(ex.Message, ex);
-                    _errors += 1;
-                    CurrentMessage = $"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
-                }
-
-                Interlocked.Increment(ref _finished);
-            });
-        }
-
-        private void CalculateEmployeeEntries(
-            Employee employee,
-            Organization organization,
+        public EmployeeResult Start(
+            int employeeId,
+            TimeEntryResources resources,
             int userId,
-            ListOfValueCollection settings,
-            ICollection<Agency> agencies,
-            TimeEntryPolicy timeEntryPolicy,
-            CalendarCollection calendarCollection)
+            TimePeriod payPeriod)
         {
-            var previousTimeEntries = _timeEntries
+            // we use the employee data from resources.Employees instead of just passing the employee
+            // entity in the Start method because we can be sure that the data in resources.Employees
+            // are complete employee data (ex. with Position, Divisition) that are needed by PayrollGenerator.
+            var employee = resources.Employees.Where(x => x.RowID == employeeId).FirstOrDefault();
+
+            if (employee == null)
+            {
+                throw new Exception("Employee was not loaded.");
+            }
+
+            var previousTimeEntries = resources.TimeEntries
                 .Where(t => t.EmployeeID == employee.RowID)
                 .ToList();
 
-            ICollection<ActualTimeEntry> actualTimeEntries = _actualTimeEntries
+            ICollection<ActualTimeEntry> actualTimeEntries = resources.ActualTimeEntries
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
-            var salary = _salaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
+            var salary = resources.Salaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
 
-            IEmploymentPolicy employmentPolicy = _employmentPolicies.FirstOrDefault(t => t.Id == employee.EmploymentPolicyId);
+            IEmploymentPolicy employmentPolicy = resources.EmploymentPolicies.FirstOrDefault(t => t.Id == employee.EmploymentPolicyId);
             if (employmentPolicy is null)
             {
                 employmentPolicy = new SubstituteEmploymentPolicy(employee);
             }
 
-            var timeLogs = _timeLogs
+            var timeLogs = resources.TimeLogs
                 .Where(t => t.EmployeeID == employee.RowID)
                 .ToList();
 
-            var overtimesInCutoff = _overtimes
+            var overtimesInCutoff = resources.Overtimes
                 .Where(o => o.EmployeeID == employee.RowID)
                 .ToList();
 
-            var officialBusinesses = _officialBusinesses
+            var officialBusinesses = resources.OfficialBusinesses
                 .Where(o => o.EmployeeID == employee.RowID)
                 .ToList();
 
-            var leavesInCutoff = _leaves.Where(l => l.EmployeeID == employee.RowID)
+            var leavesInCutoff = resources.Leaves.Where(l => l.EmployeeID == employee.RowID)
                 .Where(l => l.LeaveType != "Leave w/o Pay")
                 .ToList();
 
-            ICollection<AgencyFee> agencyFees = _agencyFees
+            ICollection<AgencyFee> agencyFees = resources.AgencyFees
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
-            var dutyShifts = _shifts
+            var dutyShifts = resources.Shifts
                 .Where(es => es.EmployeeID == employee.RowID)
                 .ToList();
 
-            var timeAttendanceLogs = _timeAttendanceLogs
+            var timeAttendanceLogs = resources.TimeAttendanceLogs
                  .Where(t => t.EmployeeID == employee.RowID)
                  .ToList();
 
-            var breakTimeBrackets = _breakTimeBrackets
+            var breakTimeBrackets = resources.BreakTimeBrackets
                 .Where(b => b.DivisionID == employee.Position?.DivisionID)
                 .ToList();
 
-            var tripTickets = _tripTickets.Where(
+            var tripTickets = resources.TripTickets.Where(
                 t => t.Employees
                     .Any(u => u.EmployeeID == employee.RowID))
                 .ToList();
@@ -312,23 +91,26 @@ namespace AccuPay.Data.Services
             if (employee.IsActive == false)
             {
                 var currentTimeEntries = previousTimeEntries
-                    .Where(t => _cutoffStart <= t.Date && t.Date <= _cutoffEnd);
+                    .Where(t => payPeriod.Start <= t.Date && t.Date <= payPeriod.End);
 
-                // TODO: return this as one the list of errors of Time entry generation
                 if (!currentTimeEntries.Any())
-                    return;
+                {
+                    return EmployeeResult.Error(employee, "Employee is no longer active.");
+                }
             }
 
             // If there aren't any attendance data, that means there aren't any time entries to compute.
             if (!(timeLogs.Any() || leavesInCutoff.Any() || officialBusinesses.Any()) && (!employee.IsFixed))
-                return; // TODO: return this as one the list of errors of Time entry generation
+            {
+                return EmployeeResult.Error(employee, "Employee does not have any time logs, leaves or official business filed for this cutoff.");
+            }
 
-            var dayCalculator = new DayCalculator(organization, settings, employee, employmentPolicy);
+            var dayCalculator = new DayCalculator(employee, employmentPolicy, resources.Organization, resources.Policy);
 
             var timeEntries = new List<TimeEntry>();
             var regularHolidaysList = new List<DateTime>(); // Used for postlegalholidaycheck
 
-            foreach (var currentDate in CalendarHelper.EachDay(_cutoffStart, _cutoffEnd))
+            foreach (var currentDate in CalendarHelper.EachDay(payPeriod.Start, payPeriod.End))
             {
                 try
                 {
@@ -341,7 +123,7 @@ namespace AccuPay.Data.Services
                     var tripTicketsForDate = tripTickets.Where(t => t.Date == currentDate).ToList();
 
                     var branchId = timelog?.BranchID ?? employee?.BranchID;
-                    var payrate = calendarCollection.GetCalendar(branchId).Find(currentDate);
+                    var payrate = resources.CalendarCollection.GetCalendar(branchId).Find(currentDate);
 
                     var timeEntry = dayCalculator.Compute(
                         currentDate,
@@ -355,10 +137,10 @@ namespace AccuPay.Data.Services
                         currentTimeAttendanceLogs,
                         breakTimeBrackets,
                         payrate,
-                        calendarCollection,
+                        resources.CalendarCollection,
                         branchId,
                         tripTicketsForDate,
-                        _routeRates);
+                        resources.RouteRates);
 
                     if (payrate.IsRegularHoliday)
                     {
@@ -378,11 +160,11 @@ namespace AccuPay.Data.Services
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"{currentDate} #{employee.EmployeeNo}", ex);
+                    return EmployeeResult.Error(employee, $"Failure to generate time entries for employee {employee.EmployeeNo} {ex.Message}");
                 }
             }
 
-            PostLegalHolidayCheck(employee, timeEntries, timeEntryPolicy, regularHolidaysList, calendarCollection);
+            PostLegalHolidayCheck(employee, timeEntries, resources.Policy, regularHolidaysList, resources.CalendarCollection, payPeriod.End);
             timeEntries.ForEach(t =>
             {
                 t.RegularHolidayPay += t.BasicRegularHolidayPay;
@@ -391,31 +173,32 @@ namespace AccuPay.Data.Services
 
             if (employee.IsUnderAgency)
             {
-                var agency = agencies.SingleOrDefault(a => a.RowID == employee.AgencyID);
+                var agency = resources.Agencies.SingleOrDefault(a => a.RowID == employee.AgencyID);
 
                 var agencyCalculator = new AgencyFeeCalculator(employee, agency, agencyFees);
                 agencyFees = agencyCalculator.Compute(timeEntries);
             }
 
-            var actualTimeEntryCalculator = new ActualTimeEntryCalculator(salary, actualTimeEntries, new ActualTimeEntryPolicy(settings));
+            var actualTimeEntryCalculator = new ActualTimeEntryCalculator(salary, actualTimeEntries, resources.Policy);
             actualTimeEntries = actualTimeEntryCalculator.Compute(timeEntries);
 
-            using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
-            {
-                AddTimeEntriesToContext(userId, context, timeEntries);
-                AddActualTimeEntriesToContext(userId, context, actualTimeEntries);
-                AddAgencyFeesToContext(context, agencyFees);
-                context.SaveChanges();
-            }
+            AddTimeEntriesToContext(userId, timeEntries);
+            AddActualTimeEntriesToContext(actualTimeEntries);
+            AddAgencyFeesToContext(userId, agencyFees);
+            _context.SaveChanges();
+
+            return EmployeeResult.Success(employee);
         }
 
-        private void PostLegalHolidayCheck(Employee employee,
-                                            List<TimeEntry> timeEntries,
-                                            TimeEntryPolicy timeEntryPolicy,
-                                            List<DateTime> regularHolidaysList,
-                                            CalendarCollection calendarCollection)
+        private void PostLegalHolidayCheck(
+            Employee employee,
+            List<TimeEntry> timeEntries,
+            PolicyHelper policy,
+            List<DateTime> regularHolidaysList,
+            CalendarCollection calendarCollection,
+            DateTime cutOffEnd)
         {
-            if (timeEntryPolicy.PostLegalHolidayCheck)
+            if (policy.PostLegalHolidayCheck)
             {
                 if (!employee.CalcHoliday)
                     return;
@@ -426,7 +209,7 @@ namespace AccuPay.Data.Services
                     {
                         var presentAfterLegalHoliday = PayrollTools.HasWorkAfterLegalHoliday(
                             holidayDate,
-                            _cutoffEnd,
+                            cutOffEnd,
                             timeEntries,
                             calendarCollection);
 
@@ -443,42 +226,48 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void AddTimeEntriesToContext(int userId, PayrollContext context, IList<TimeEntry> timeEntries)
+        private void AddTimeEntriesToContext(int userId, IList<TimeEntry> timeEntries)
         {
             foreach (var timeEntry in timeEntries)
             {
                 if (timeEntry.RowID.HasValue)
                 {
                     timeEntry.LastUpdBy = userId;
-                    context.Entry(timeEntry).State = EntityState.Modified;
+                    _context.Entry(timeEntry).State = EntityState.Modified;
                 }
                 else
                 {
                     timeEntry.CreatedBy = userId;
-                    context.TimeEntries.Add(timeEntry);
+                    _context.TimeEntries.Add(timeEntry);
                 }
             }
         }
 
-        private void AddActualTimeEntriesToContext(int userId, PayrollContext context, ICollection<ActualTimeEntry> actualTimeEntries)
+        private void AddActualTimeEntriesToContext(ICollection<ActualTimeEntry> actualTimeEntries)
         {
             foreach (var actualTimeEntry in actualTimeEntries)
             {
                 if (actualTimeEntry.RowID.HasValue)
-                    context.Entry(actualTimeEntry).State = EntityState.Modified;
+                    _context.Entry(actualTimeEntry).State = EntityState.Modified;
                 else
-                    context.ActualTimeEntries.Add(actualTimeEntry);
+                    _context.ActualTimeEntries.Add(actualTimeEntry);
             }
         }
 
-        private void AddAgencyFeesToContext(PayrollContext context, ICollection<AgencyFee> agencyFees)
+        private void AddAgencyFeesToContext(int userId, ICollection<AgencyFee> agencyFees)
         {
             foreach (var agencyFee in agencyFees)
             {
                 if (agencyFee.RowID.HasValue)
-                    context.Entry(agencyFee).State = EntityState.Modified;
+                {
+                    agencyFee.LastUpdBy = userId;
+                    _context.Entry(agencyFee).State = EntityState.Modified;
+                }
                 else
-                    context.AgencyFees.Add(agencyFee);
+                {
+                    agencyFee.CreatedBy = userId;
+                    _context.AgencyFees.Add(agencyFee);
+                }
             }
         }
     }

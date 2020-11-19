@@ -44,7 +44,7 @@ namespace AccuPay.Web.Payroll
             if (payPeriod == null || payPeriod?.RowID == null || payPeriod?.OrganizationID == null)
                 throw new BusinessLogicException("Pay Period does not exists.");
 
-            if (payPeriod.Status != PayPeriodStatus.Open)
+            if (!payPeriod.IsOpen)
                 throw new BusinessLogicException("Only \"Open\" pay periods can be computed.");
 
             if (resources == null)

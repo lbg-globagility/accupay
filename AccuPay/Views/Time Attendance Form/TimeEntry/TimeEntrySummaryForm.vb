@@ -919,7 +919,7 @@ Public Class TimeEntrySummaryForm
 
             End If
 
-            GenerateTimeEntries(
+            Await GenerateTimeEntries(
                 startDate:=startDate,
                 endDate:=endDate,
                 payPeriodId:=payPeriod.RowID.Value)
@@ -927,63 +927,67 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer)
-        Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
+    Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
+
+        'We are using a fresh instance of EmployeeRepository
+        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        'later, we can let the user choose the employees that they want to generate.
+        Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
+
+        Dim generator As New TimeEntryGeneration(employees, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating time entries...")
 
-        Dim task1 = Task.Run(Sub() generator.Start(
-            organizationId:=z_OrganizationID,
-            userId:=z_User,
-            cutoffStart:=startDate,
-            cutoffEnd:=endDate))
+        Dim payPeriod As New TimePeriod(startDate, endDate)
 
-        task1.ContinueWith(
-            Sub() DoneGenerating(
-                dialog:=progressDialog,
-                generator:=generator,
-                startDate:=startDate,
-                endDate:=endDate,
-                payPeriodId:=payPeriodId),
-            CancellationToken.None,
-            TaskContinuationOptions.OnlyOnRanToCompletion,
-            TaskScheduler.FromCurrentSynchronizationContext)
+        generator.SetCurrentMessage("Loading resources...")
+        GetResources(
+            progressDialog,
+            payPeriod,
+            Sub(resourcesTask)
 
-        task1.ContinueWith(
-            Sub(t As Task) TimeEntryGeneratorError(t, progressDialog),
-            CancellationToken.None,
-            TaskContinuationOptions.OnlyOnFaulted,
-            TaskScheduler.FromCurrentSynchronizationContext
-        )
+                generator.IncreaseProgress("Finished loading resources.")
+
+                Dim generationTask = Task.Run(
+                    Sub()
+                        generator.Start(resourcesTask.Result, payPeriod)
+                    End Sub
+                )
+
+                generationTask.ContinueWith(
+                    Sub() DoneGenerating(
+                        progressDialog:=progressDialog,
+                        results:=generator.Results,
+                        startDate:=startDate,
+                        endDate:=endDate,
+                        payPeriodId:=payPeriodId),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext
+                )
+
+                generationTask.ContinueWith(
+                    Sub(t) TimeEntryGeneratorError(t, progressDialog),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnFaulted,
+                    TaskScheduler.FromCurrentSynchronizationContext
+                )
+            End Sub)
 
         progressDialog.ShowDialog()
 
-    End Sub
+    End Function
 
-    Private Sub TimeEntryGeneratorError(t As Task, dialog As ProgressDialog)
+    Private Async Sub DoneGenerating(progressDialog As ProgressDialog, results As IReadOnlyCollection(Of ProgressGenerator.IResult), startDate As Date, endDate As Date, payPeriodId As Integer)
 
-        dialog.Close()
-        dialog.Dispose()
-
-        Const MessageTitle As String = "Generate Time Entries"
-
-        If t.Exception?.InnerException.GetType() Is GetType(BusinessLogicException) Then
-
-            MessageBoxHelper.ErrorMessage(t.Exception?.InnerException.Message, MessageTitle)
-        Else
-            Debugger.Break()
-            MessageBoxHelper.DefaultErrorMessage(MessageTitle, t.Exception)
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
         End If
-
-    End Sub
-
-    Private Async Sub DoneGenerating(dialog As ProgressDialog, generator As TimeEntryGenerator, startDate As Date, endDate As Date, payPeriodId As Integer)
-        dialog.Close()
-        dialog.Dispose()
 
         Dim msgBoxText As String = "Done"
 
-        If generator.ErrorCount > 0 Then
-            Dim errorCount = generator.ErrorCount
+        Dim errorCount As Integer = If(results?.Where(Function(r) r.IsError).Count(), 0)
+
+        If errorCount > 0 Then
             msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
 
         End If
@@ -1002,6 +1006,73 @@ Public Class TimeEntrySummaryForm
             Me.Cursor = Cursors.Default
         End Try
 
+    End Sub
+
+    Private Sub TimeEntryGeneratorError(t As Task, progressDialog As ProgressDialog)
+
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
+
+        Const MessageTitle As String = "Generate Time Entries"
+
+        If t.Exception?.InnerException.GetType() Is GetType(BusinessLogicException) Then
+
+            MessageBoxHelper.ErrorMessage(t.Exception?.InnerException.Message, MessageTitle)
+        Else
+            Debugger.Break()
+            MessageBoxHelper.DefaultErrorMessage(MessageTitle, t.Exception)
+        End If
+
+    End Sub
+
+    Private Sub GetResources(progressDialog As ProgressDialog, payPeriod As TimePeriod, callBackAfterLoadResources As Action(Of Task(Of TimeEntryResources)))
+        Dim resources = MainServiceProvider.GetRequiredService(Of TimeEntryResources)
+
+        Dim loadTask = Task.Run(
+            Function()
+                Dim resourcesTask = resources.Load(
+                    organizationId:=z_OrganizationID,
+                    cutoffStart:=payPeriod.Start,
+                    cutoffEnd:=payPeriod.End)
+
+                resourcesTask.Wait()
+
+                Return resources
+            End Function)
+
+        loadTask.ContinueWith(
+            callBackAfterLoadResources,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+
+        loadTask.ContinueWith(
+            Sub(t) LoadingResourcesOnError(t, progressDialog),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+    End Sub
+
+    Private Sub LoadingResourcesOnError(t As Task, progressDialog As ProgressDialog)
+
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
+
+        _logger.Error("Error loading one of the payroll data.", t.Exception)
+        MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
+
+    End Sub
+
+    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        If progressDialog Is Nothing Then Return
+
+        progressDialog.Close()
+        progressDialog.Dispose()
     End Sub
 
     Private Async Function RecordMultipleTimeEntriesUserActivity(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
@@ -1048,7 +1119,7 @@ Public Class TimeEntrySummaryForm
             Return
         End If
 
-        GenerateTimeEntries(
+        Await GenerateTimeEntries(
             startDate:=_selectedPayPeriod.PayFromDate,
             endDate:=_selectedPayPeriod.PayToDate,
             payPeriodId:=_selectedPayPeriod.RowID.Value)

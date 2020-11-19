@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -245,13 +245,13 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync(organizationId);
         }
 
-        public ICollection<Employee> GetAllActiveWithPosition(int organizationId)
+        public async Task<ICollection<Employee>> GetAllActiveWithPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return builder
+            return await builder
                 .IncludePosition()
                 .IsActive()
-                .ToList(organizationId);
+                .ToListAsync(organizationId);
         }
 
         public async Task<ICollection<Employee>> GetAllWithDivisionAndPositionAsync(int organizationId)

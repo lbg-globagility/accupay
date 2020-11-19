@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,13 +8,13 @@ namespace AccuPay.Data.Services
     {
         private readonly Salary _salary;
         private readonly ICollection<ActualTimeEntry> _actualTimeEntries;
-        private readonly ActualTimeEntryPolicy _policy;
+        private readonly PolicyHelper _policy;
 
-        public ActualTimeEntryCalculator(Salary salary, ICollection<ActualTimeEntry> actualTimeEntries, ActualTimeEntryPolicy actualTimeEntryPolicy)
+        public ActualTimeEntryCalculator(Salary salary, ICollection<ActualTimeEntry> actualTimeEntries, PolicyHelper policy)
         {
             _salary = salary;
             _actualTimeEntries = actualTimeEntries;
-            _policy = actualTimeEntryPolicy;
+            _policy = policy;
         }
 
         public ICollection<ActualTimeEntry> Compute(ICollection<TimeEntry> timeEntries)

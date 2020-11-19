@@ -1,3 +1,4 @@
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -15,7 +16,7 @@ namespace AccuPay.Web.TimeEntries
     {
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly EmployeeRepository _employeeRepository;
-        private readonly TimeEntryGenerator _generator;
+        private readonly TimeEntryResources _timeEntryResources;
         private readonly ICurrentUser _currentUser;
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly LeaveRepository _leaveRepository;
@@ -26,22 +27,23 @@ namespace AccuPay.Web.TimeEntries
         private readonly EmployeeDutyScheduleRepository _shiftRepository;
         private readonly TimeEntryDataService _dataService;
 
-        public TimeEntryService(EmployeeRepository employeeRepository,
-                                PayPeriodRepository payPeriodRepository,
-                                TimeEntryGenerator generator,
-                                ICurrentUser currentUser,
-                                IServiceScopeFactory serviceScopeFactory,
-                                LeaveRepository leaveRepository,
-                                OvertimeRepository overtimeRepository,
-                                OfficialBusinessRepository officialBusinessRepository,
-                                TimeLogRepository timeLogRepository,
-                                TimeEntryRepository timeEntryRepository,
-                                EmployeeDutyScheduleRepository shiftRepository,
-                                TimeEntryDataService dataService)
+        public TimeEntryService(
+            TimeEntryResources timeEntryResources,
+            ICurrentUser currentUser,
+            IServiceScopeFactory serviceScopeFactory,
+            EmployeeRepository employeeRepository,
+            PayPeriodRepository payPeriodRepository,
+            LeaveRepository leaveRepository,
+            OvertimeRepository overtimeRepository,
+            OfficialBusinessRepository officialBusinessRepository,
+            TimeLogRepository timeLogRepository,
+            TimeEntryRepository timeEntryRepository,
+            EmployeeDutyScheduleRepository shiftRepository,
+            TimeEntryDataService dataService)
         {
+            _timeEntryResources = timeEntryResources;
             _employeeRepository = employeeRepository;
             _payPeriodRepository = payPeriodRepository;
-            _generator = generator;
             _currentUser = currentUser;
             _serviceScopeFactory = serviceScopeFactory;
             _leaveRepository = leaveRepository;
@@ -56,14 +58,34 @@ namespace AccuPay.Web.TimeEntries
         public async Task Generate(int payPeriodId)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
-            //using (var scope = _serviceScopeFactory.CreateScope())
-            //{
-            //    var generator = scope.ServiceProvider.GetRequiredService<TimeEntryGenerator>();
 
-            //    await Task.Run(() => generator.Start(_currentUser.OrganizationId, payPeriod.PayFromDate, payPeriod.PayToDate));
-            //}
+            if (payPeriod == null || payPeriod?.RowID == null || payPeriod?.OrganizationID == null)
+                throw new BusinessLogicException("Pay Period does not exists.");
 
-            _generator.Start(_currentUser.OrganizationId, _currentUser.UserId, payPeriod.PayFromDate, payPeriod.PayToDate);
+            if (!payPeriod.IsOpen)
+                throw new BusinessLogicException("Only \"Open\" pay periods can be computed.");
+
+            if (_timeEntryResources == null)
+                throw new BusinessLogicException("Failure loading resources.");
+
+            await _timeEntryResources.Load(_currentUser.OrganizationId, payPeriod.PayFromDate, payPeriod.PayToDate);
+
+            var employees = await _employeeRepository.GetAllActiveAsync(_currentUser.OrganizationId);
+
+            foreach (var employee in employees)
+            {
+                if (employee?.RowID == null) continue;
+
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var generator = scope.ServiceProvider.GetRequiredService<TimeEntryGenerator>();
+                    var result = generator.Start(
+                        employee.RowID.Value,
+                        _timeEntryResources,
+                        _currentUser.OrganizationId,
+                        new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate));
+                }
+            }
         }
 
         public async Task<PaginatedList<TimeEntryEmployeeDto>> PaginatedEmployeeList(int payPeriodId, PageOptions options, string searchTerm)
@@ -97,51 +119,51 @@ namespace AccuPay.Web.TimeEntries
             var datePayPeriod = new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate);
 
             var timeEntries = _timeEntryRepository
-                                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod);
+                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod);
 
             var timeEntryCount = timeEntries
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var absentCount = timeEntries
-                                .Where(x => x.AbsentHours >= 0)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .Where(x => x.AbsentHours >= 0)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var lateCount = timeEntries
-                                .Where(x => x.LateHours >= 0)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .Where(x => x.LateHours >= 0)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var undertimeCount = timeEntries
-                                .Where(x => x.UndertimeHours >= 0)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .Where(x => x.UndertimeHours >= 0)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var shiftCount = _shiftRepository
-                                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var timeLogCount = _timeLogRepository
-                                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var leaveCount = _leaveRepository
-                                .GetAllApprovedByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .GetAllApprovedByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var officialBusinessCount = _officialBusinessRepository
-                                .GetAllApprovedByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .GetAllApprovedByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var overtimeCount = _overtimeRepository
-                                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod, Data.Enums.OvertimeStatus.Approved)
-                                .GroupBy(x => x.EmployeeID)
-                                .Count();
+                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod, Data.Enums.OvertimeStatus.Approved)
+                .GroupBy(x => x.EmployeeID)
+                .Count();
 
             var dto = new TimeEntryPayPeriodDto();
             dto.ApplyData(payPeriod);

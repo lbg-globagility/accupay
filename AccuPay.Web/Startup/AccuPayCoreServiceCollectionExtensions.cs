@@ -92,6 +92,7 @@ namespace AccuPay.Web
             services.AddScoped<PaystubPayslipModelDataService>();
 
             services.AddScoped<TimeEntryGenerator>();
+            services.AddScoped<TimeEntryResources>();
 
             services.AddScoped<OvertimeRateService>();
             services.AddScoped<PayPeriodDataService>();

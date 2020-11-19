@@ -1,7 +1,6 @@
 Option Strict On
 
 Imports System.Collections.Concurrent
-Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
