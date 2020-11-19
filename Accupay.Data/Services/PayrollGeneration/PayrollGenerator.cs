@@ -9,24 +9,34 @@ using System.Linq;
 
 namespace AccuPay.Data.Services
 {
-    public class PayrollGeneration
+    public class PayrollGenerator
     {
-        private readonly DbContextOptionsService _dbContextOptionsService;
+        private readonly PayrollContext _context;
         private bool _usesLoanDeductFromBonus;
 
         //private static ILog logger = LogManager.GetLogger("PayrollLogger");
 
-        public PayrollGeneration(DbContextOptionsService dbContextOptionsService)
+        public PayrollGenerator(PayrollContext context)
         {
-            _dbContextOptionsService = dbContextOptionsService;
+            _context = context;
         }
 
-        public PaystubEmployeeResult DoProcess(
-            Employee employee,
+        public PaystubEmployeeResult Start(
+            int employeeId,
             PayrollResources resources,
             int organizationId,
             int userId)
         {
+            // we use the employee data from resources.Employees instead of just passing the employee
+            // entity in the Start method because we can be sure that the data in resources.Employees
+            // are complete employee data (ex. with Position, Divisition) that are needed by PayrollGenerator.
+            var employee = resources.Employees.Where(x => x.RowID == employeeId).FirstOrDefault();
+
+            if (employee == null)
+            {
+                return PaystubEmployeeResult.Error(employee, "Employee data was not loaded properly.");
+            }
+
             var currentSystemOwner = resources.CurrentSystemOwner;
 
             var settings = resources.ListOfValueCollection;
@@ -47,36 +57,36 @@ namespace AccuPay.Data.Services
 
             var previousPaystub = resources.PreviousPaystubs.FirstOrDefault(p => p.EmployeeID == employee.RowID);
 
-            var loanSchedules = resources.LoanSchedules.
-                                        Where(l => l.EmployeeID == employee.RowID).
-                                        ToList();
+            var loanSchedules = resources.LoanSchedules
+                .Where(l => l.EmployeeID == employee.RowID)
+                .ToList();
 
-            var previousTimeEntries = resources.TimeEntries.
-                                        Where(t => t.EmployeeID == employee.RowID).
-                                        ToList();
+            var previousTimeEntries = resources.TimeEntries
+                .Where(t => t.EmployeeID == employee.RowID)
+                .ToList();
 
-            var timeEntries = resources.TimeEntries.
-                                        Where(t => t.EmployeeID == employee.RowID).
-                                        Where(t => payPeriod.PayFromDate <= t.Date).
-                                        Where(t => t.Date <= payPeriod.PayToDate).
-                                        OrderBy(t => t.Date).
-                                        ToList();
+            var timeEntries = resources.TimeEntries
+                .Where(t => t.EmployeeID == employee.RowID)
+                .Where(t => payPeriod.PayFromDate <= t.Date)
+                .Where(t => t.Date <= payPeriod.PayToDate)
+                .OrderBy(t => t.Date)
+                .ToList();
 
-            var actualTimeEntries = resources.ActualTimeEntries.
-                                        Where(t => t.EmployeeID == employee.RowID).
-                                        ToList();
+            var actualTimeEntries = resources.ActualTimeEntries
+                .Where(t => t.EmployeeID == employee.RowID)
+                .ToList();
 
-            var allowances = resources.Allowances.
-                                        Where(a => a.EmployeeID == employee.RowID).
-                                        ToList();
+            var allowances = resources.Allowances
+                .Where(a => a.EmployeeID == employee.RowID)
+                .ToList();
 
             var bonuses = resources.Bonuses
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
-            var leaves = resources.Leaves.
-                                    Where(a => a.EmployeeID == employee.RowID).
-                                    ToList();
+            var leaves = resources.Leaves
+                .Where(a => a.EmployeeID == employee.RowID)
+                .ToList();
 
             var checker = resources.FeatureListChecker;
             _usesLoanDeductFromBonus = checker.HasAccess(Feature.LoanDeductFromBonus);
@@ -243,97 +253,97 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public void SavePayroll(int userId,
-                                string currentSystemOwner,
-                                ListOfValueCollection settings,
-                                PayPeriod payPeriod,
-                                Paystub paystub,
-                                Employee employee,
-                                Product bpiInsuranceProduct,
-                                Product sickLeaveProduct,
-                                Product vacationLeaveProduct,
-                                IReadOnlyCollection<LoanSchedule> loanSchedules,
-                                ICollection<AllowanceItem> allowanceItems,
-                                ICollection<LoanTransaction> loanTransactions,
-                                IReadOnlyCollection<TimeEntry> timeEntries,
-                                IReadOnlyCollection<Leave> leaves)
+        public void SavePayroll(
+            int userId,
+            string currentSystemOwner,
+            ListOfValueCollection settings,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Employee employee,
+            Product bpiInsuranceProduct,
+            Product sickLeaveProduct,
+            Product vacationLeaveProduct,
+            IReadOnlyCollection<LoanSchedule> loanSchedules,
+            ICollection<AllowanceItem> allowanceItems,
+            ICollection<LoanTransaction> loanTransactions,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Leave> leaves)
         {
-            using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
+            foreach (var loan in loanSchedules)
             {
-                foreach (var loan in loanSchedules)
+                loan.LastUpdBy = userId;
+                _context.Entry(loan).State = EntityState.Modified;
+
+                if (!_usesLoanDeductFromBonus) { continue; }
+                if (loan.LoanPaymentFromBonuses.Any())
                 {
-                    loan.LastUpdBy = userId;
-                    context.Entry(loan).State = EntityState.Modified;
+                    // this will set the value of LoanPaymentFromBonus.PaystubId
+                    loan.LoanPaymentFromBonuses.ToList().ForEach(lb => _context.Entry(lb).State = EntityState.Modified);
 
-                    if (!_usesLoanDeductFromBonus) { continue; }
-                    if (loan.LoanPaymentFromBonuses.Any())
-                    {
-                        // this will set the value of LoanPaymentFromBonus.PaystubId
-                        loan.LoanPaymentFromBonuses.ToList().ForEach(lb => context.Entry(lb).State = EntityState.Modified);
-
-                        // revert to it's original LoanSchedule.DeductionAmount
-                        loan.DeductionAmount = loan.LoanPaymentFromBonuses.FirstOrDefault().DeductionAmount;
-                    }
+                    // revert to it's original LoanSchedule.DeductionAmount
+                    loan.DeductionAmount = loan.LoanPaymentFromBonuses.FirstOrDefault().DeductionAmount;
                 }
-
-                if (paystub.RowID.HasValue)
-                {
-                    paystub.LastUpdBy = userId;
-                    context.Entry(paystub).State = EntityState.Modified;
-                    context.Entry(paystub.Actual).State = EntityState.Modified;
-
-                    if (paystub.ThirteenthMonthPay != null)
-                    {
-                        context.Entry(paystub.ThirteenthMonthPay).State = EntityState.Modified;
-                    }
-                }
-                else
-                {
-                    context.Paystubs.Add(paystub);
-                }
-
-                if (EligibleForNewBPIInsurance(paystub, employee, settings, payPeriod))
-                {
-                    context.Adjustments.Add(new Adjustment()
-                    {
-                        OrganizationID = paystub.OrganizationID,
-                        CreatedBy = userId,
-                        Created = DateTime.Now,
-                        Paystub = paystub,
-                        ProductID = bpiInsuranceProduct.RowID,
-                        Amount = -employee.BPIInsurance
-                    });
-                }
-
-                if (paystub.AllowanceItems != null)
-                {
-                    context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
-                }
-                paystub.AllowanceItems = allowanceItems;
-
-                if (paystub.LoanTransactions != null)
-                {
-                    context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
-                }
-                paystub.LoanTransactions = loanTransactions;
-
-                if (currentSystemOwner != SystemOwnerService.Benchmark)
-                {
-                    UpdateLeaveLedger(context, paystub, employee, payPeriod, timeEntries, leaves);
-
-                    UpdatePaystubItems(context,
-                                        userId,
-                                        paystub,
-                                        employee,
-                                        sickLeaveProduct: sickLeaveProduct,
-                                        vacationLeaveProduct: vacationLeaveProduct,
-                                        timeEntries);
-                }
-                else
-                    UpdateBenchmarkLeaveLedger(context, paystub, employee, payPeriod);
-
-                context.SaveChanges();
             }
+
+            if (paystub.RowID.HasValue)
+            {
+                paystub.LastUpdBy = userId;
+                _context.Entry(paystub).State = EntityState.Modified;
+                _context.Entry(paystub.Actual).State = EntityState.Modified;
+
+                if (paystub.ThirteenthMonthPay != null)
+                {
+                    _context.Entry(paystub.ThirteenthMonthPay).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                _context.Paystubs.Add(paystub);
+            }
+
+            if (EligibleForNewBPIInsurance(paystub, employee, settings, payPeriod))
+            {
+                _context.Adjustments.Add(new Adjustment()
+                {
+                    OrganizationID = paystub.OrganizationID,
+                    CreatedBy = userId,
+                    Created = DateTime.Now,
+                    Paystub = paystub,
+                    ProductID = bpiInsuranceProduct.RowID,
+                    Amount = -employee.BPIInsurance
+                });
+            }
+
+            if (paystub.AllowanceItems != null)
+            {
+                _context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
+            }
+            paystub.AllowanceItems = allowanceItems;
+
+            if (paystub.LoanTransactions != null)
+            {
+                _context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
+            }
+            paystub.LoanTransactions = loanTransactions;
+
+            if (currentSystemOwner != SystemOwnerService.Benchmark)
+            {
+                UpdateLeaveLedger(paystub, employee, payPeriod, timeEntries, leaves);
+
+                UpdatePaystubItems(
+                    userId,
+                    paystub,
+                    employee,
+                    sickLeaveProduct: sickLeaveProduct,
+                    vacationLeaveProduct: vacationLeaveProduct,
+                    timeEntries);
+            }
+            else
+            {
+                UpdateBenchmarkLeaveLedger(paystub, employee, payPeriod);
+            }
+
+            _context.SaveChanges();
         }
 
         private void ComputePayroll(PayrollResources resources,
@@ -637,58 +647,60 @@ namespace AccuPay.Data.Services
             return allowanceItems;
         }
 
-        private void UpdateBenchmarkLeaveLedger(PayrollContext context, Paystub paystub, Employee employee, PayPeriod payPeriod)
+        private void UpdateBenchmarkLeaveLedger(Paystub paystub, Employee employee, PayPeriod payPeriod)
         {
-            var vacationLedger = context.LeaveLedgers.
-                                        Include(l => l.Product).
-                                        Include(l => l.LastTransaction).
-                                        Where(l => l.EmployeeID == employee.RowID).
-                                        Where(l => l.Product.IsVacationLeave).
-                                        FirstOrDefault();
+            var vacationLedger = _context.LeaveLedgers
+                .Include(l => l.Product)
+                .Include(l => l.LastTransaction)
+                .Where(l => l.EmployeeID == employee.RowID)
+                .Where(l => l.Product.IsVacationLeave)
+                .FirstOrDefault();
 
             vacationLedger.LeaveTransactions = new List<LeaveTransaction>();
 
             if (vacationLedger == null)
                 throw new Exception($"Vacation ledger for Employee No.: {employee.EmployeeNo}");
 
-            UpdateLedgerTransaction(paystub: paystub,
-                                    payPeriod: payPeriod,
-                                    leaveId: null, ledger:
-                                    vacationLedger, totalLeaveHours:
-                                    paystub.LeaveHours,
-                                    transactionDate: payPeriod.PayToDate);
+            UpdateLedgerTransaction(
+                paystub: paystub,
+                payPeriod: payPeriod,
+                leaveId: null, ledger:
+                vacationLedger, totalLeaveHours:
+                paystub.LeaveHours,
+                transactionDate: payPeriod.PayToDate);
         }
 
-        private void UpdateLeaveLedger(PayrollContext context,
-                                        Paystub paystub,
-                                        Employee employee,
-                                        PayPeriod payPeriod,
-                                        IReadOnlyCollection<TimeEntry> timeEntries,
-                                        IReadOnlyCollection<Leave> leaves)
+        private void UpdateLeaveLedger(
+            Paystub paystub,
+            Employee employee,
+            PayPeriod payPeriod,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Leave> leaves)
         {
             // use LeaveLedgerRepository
-            var employeeLeaves = leaves.
-                                    Where(l => l.EmployeeID == employee.RowID).
-                                    OrderBy(l => l.StartDate).
-                                    ToList();
+            var employeeLeaves = leaves
+                .Where(l => l.EmployeeID == employee.RowID)
+                .OrderBy(l => l.StartDate)
+                .ToList();
 
             var leaveIds = employeeLeaves.Select(l => l.RowID).ToArray();
 
             List<LeaveTransaction> transactions = new List<LeaveTransaction>() { };
             if (leaveIds.Any())
             {
-                transactions = (from t in context.LeaveTransactions
-                                where leaveIds.Contains(t.ReferenceID)
-                                select t).ToList();
+                transactions =
+                    (from t in _context.LeaveTransactions
+                     where leaveIds.Contains(t.ReferenceID)
+                     select t).ToList();
             }
 
             var employeeId = employee.RowID;
-            var ledgers = context.LeaveLedgers.
-                                Include(x => x.Product).
-                                Include(x => x.LeaveTransactions).
-                                Include(x => x.LastTransaction).
-                                Where(x => x.EmployeeID == employeeId).
-                                ToList();
+            var ledgers = _context.LeaveLedgers
+                .Include(x => x.Product)
+                .Include(x => x.LeaveTransactions)
+                .Include(x => x.LastTransaction)
+                .Where(x => x.EmployeeID == employeeId)
+                .ToList();
 
             var newLeaveTransactions = new List<LeaveTransaction>();
             foreach (var leave in employeeLeaves)
@@ -714,12 +726,13 @@ namespace AccuPay.Data.Services
 
                     var transactionDate = leave.EndDate ?? leave.StartDate;
 
-                    UpdateLedgerTransaction(paystub: paystub,
-                                            payPeriod: payPeriod,
-                                            leaveId: leave.RowID,
-                                            ledger: ledger,
-                                            totalLeaveHours: totalLeaveHours,
-                                            transactionDate: transactionDate);
+                    UpdateLedgerTransaction(
+                        paystub: paystub,
+                        payPeriod: payPeriod,
+                        leaveId: leave.RowID,
+                        ledger: ledger,
+                        totalLeaveHours: totalLeaveHours,
+                        transactionDate: transactionDate);
                 }
             }
         }
@@ -805,21 +818,21 @@ namespace AccuPay.Data.Services
             return loanTransactions;
         }
 
-        private void UpdatePaystubItems(PayrollContext context,
-                                        int userId,
-                                        Paystub paystub,
-                                        Employee employee,
-                                        Product sickLeaveProduct,
-                                        Product vacationLeaveProduct,
-                                        IReadOnlyCollection<TimeEntry> timeEntries)
+        private void UpdatePaystubItems(
+            int userId,
+            Paystub paystub,
+            Employee employee,
+            Product sickLeaveProduct,
+            Product vacationLeaveProduct,
+            IReadOnlyCollection<TimeEntry> timeEntries)
         {
-            context.Entry(paystub).Collection(p => p.PaystubItems).Load();
-            context.Set<PaystubItem>().RemoveRange(paystub.PaystubItems);
+            _context.Entry(paystub).Collection(p => p.PaystubItems).Load();
+            _context.Set<PaystubItem>().RemoveRange(paystub.PaystubItems);
 
-            var vacationLeaveBalance = context.PaystubItems.
-                                Where(p => p.Product.PartNo == ProductConstant.VACATION_LEAVE).
-                                Where(p => p.Paystub.RowID == paystub.RowID).
-                                FirstOrDefault();
+            var vacationLeaveBalance = _context.PaystubItems
+                .Where(p => p.Product.PartNo == ProductConstant.VACATION_LEAVE)
+                .Where(p => p.Paystub.RowID == paystub.RowID)
+                .FirstOrDefault();
 
             var vacationLeaveUsed = timeEntries.Sum(t => t.VacationLeaveHours);
             var newBalance = employee.LeaveBalance - vacationLeaveUsed;
@@ -836,10 +849,10 @@ namespace AccuPay.Data.Services
 
             paystub.PaystubItems.Add(vacationLeaveBalance);
 
-            var sickLeaveBalance = context.PaystubItems.
-                                        Where(p => p.Product.PartNo == ProductConstant.SICK_LEAVE).
-                                        Where(p => p.Paystub.RowID == paystub.RowID).
-                                        FirstOrDefault();
+            var sickLeaveBalance = _context.PaystubItems
+                .Where(p => p.Product.PartNo == ProductConstant.SICK_LEAVE)
+                .Where(p => p.Paystub.RowID == paystub.RowID)
+                .FirstOrDefault();
 
             var sickLeaveUsed = timeEntries.Sum(t => t.SickLeaveHours);
             var newBalance2 = employee.SickLeaveBalance - sickLeaveUsed;

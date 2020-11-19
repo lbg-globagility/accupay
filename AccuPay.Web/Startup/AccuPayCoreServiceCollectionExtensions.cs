@@ -79,7 +79,7 @@ namespace AccuPay.Web
             services.AddScoped<CalendarService>();
             services.AddScoped<ListOfValueService>();
 
-            services.AddScoped<PayrollGeneration>();
+            services.AddScoped<PayrollGenerator>();
             services.AddScoped<PayrollResources>();
 
             services.AddScoped<PolicyHelper>();

@@ -86,7 +86,7 @@ Public Class DefaultShiftAndTimeLogsGeneration
             Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
             Await shiftService.BatchApply(employeeShifts, z_OrganizationID, z_User)
 
-            SetCurrentMessage($"finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return EmployeeResult.Success(
                 employeeNumber:=employee.EmployeeNo,
@@ -94,13 +94,13 @@ Public Class DefaultShiftAndTimeLogsGeneration
                 employeeId:=employee.RowID.Value)
         Catch ex As Exception
 
-            SetCurrentMessage($"Error generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return EmployeeResult.Error(
                 employeeNumber:=employee.EmployeeNo,
                 employeeFullName:=employee.FullNameWithMiddleInitialLastNameFirst,
                 employeeId:=employee.RowID.Value,
-                description:=$"Failure to generate shift and time logs for employee {employee.EmployeeNo} {ex.Message}")
+                description:=$"Failed to generate shift and time logs for employee {employee.EmployeeNo} {ex.Message}")
         Finally
 
             IncreaseProgress()

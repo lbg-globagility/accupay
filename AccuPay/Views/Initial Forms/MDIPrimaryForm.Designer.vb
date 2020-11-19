@@ -128,7 +128,6 @@ Partial Class MDIPrimaryForm
         Me.lblVersionName = New System.Windows.Forms.ToolStripLabel()
         Me.lblVersionValue = New System.Windows.Forms.ToolStripLabel()
         Me.EmailServiceStatusToolStripLabel = New System.Windows.Forms.ToolStripLabel()
-        Me.systemprogressbar = New System.Windows.Forms.ToolStripProgressBar()
         Me.Showmainbutton = New System.Windows.Forms.ToolStrip()
         Me.HomeToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.GeneralToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -1162,7 +1161,7 @@ Partial Class MDIPrimaryForm
         Me.ToolStrip1.CanOverflow = False
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.ToolStripLabel1, Me.lblPosition, Me.ToolStripLabel8, Me.ToolStripLabel3, Me.lblUser, Me.ToolStripLabel4, Me.ToolStripLabel5, Me.lblTime, Me.ToolStripLabel6, Me.ToolStripLabel7, Me.lblVersionName, Me.lblVersionValue, Me.EmailServiceStatusToolStripLabel, Me.systemprogressbar})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripLabel2, Me.ToolStripLabel1, Me.lblPosition, Me.ToolStripLabel8, Me.ToolStripLabel3, Me.lblUser, Me.ToolStripLabel4, Me.ToolStripLabel5, Me.lblTime, Me.ToolStripLabel6, Me.ToolStripLabel7, Me.lblVersionName, Me.lblVersionValue, Me.EmailServiceStatusToolStripLabel})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 537)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1059, 25)
@@ -1263,13 +1262,6 @@ Partial Class MDIPrimaryForm
         Me.EmailServiceStatusToolStripLabel.Size = New System.Drawing.Size(160, 22)
         Me.EmailServiceStatusToolStripLabel.Text = "Getting email service status..."
         Me.EmailServiceStatusToolStripLabel.Visible = False
-        '
-        'systemprogressbar
-        '
-        Me.systemprogressbar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.systemprogressbar.Name = "systemprogressbar"
-        Me.systemprogressbar.Size = New System.Drawing.Size(100, 22)
-        Me.systemprogressbar.Visible = False
         '
         'Showmainbutton
         '
@@ -1709,7 +1701,6 @@ Partial Class MDIPrimaryForm
     Friend WithEvents TimeAndAttendanceToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents HomeToolStripButton As System.Windows.Forms.ToolStripButton
-    Friend WithEvents systemprogressbar As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents PayrollToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents HrisToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents ImageList1 As System.Windows.Forms.ImageList

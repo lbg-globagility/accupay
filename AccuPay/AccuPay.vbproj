@@ -437,7 +437,8 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Reports\Reports\Providers\CostCenterReportGeneration.vb" />
     <Compile Include="Reports\Reports\Providers\CostCenterReportGenerationResult.vb" />
-    <Compile Include="Views\Payroll Forms\Paystub\ReleaseThirteenthMonthGeneration.vb" />
+    <Compile Include="Views\Payroll Forms\Paystub\Generators\PayrollGeneration.vb" />
+    <Compile Include="Views\Payroll Forms\Paystub\Generators\ReleaseThirteenthMonthGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.Designer.vb">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
     </Compile>

@@ -29,13 +29,15 @@ Public Class CostCenterReportGeneration
 
     Public Sub Start(resources As CostCenterReportResources)
 
+        If resources Is Nothing Then Return
+
         For Each branch In Branches
 
             Dim payPeriodModels = GetCostCenterPayPeriodModels(branch, resources)
 
             Dim result = CostCenterReportGenerationResult.Success(branch, payPeriodModels)
 
-            SetCurrentMessage($"finished generating cost center report data for {branch.Name}.")
+            SetCurrentMessage($"Finished generating cost center report data for {branch.Name}.")
 
             _results.Add(result)
 

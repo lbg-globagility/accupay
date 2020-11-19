@@ -88,7 +88,7 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
             Dim employeeShifts = shifts.Where(Function(s) s.EmployeeID.Value = employee.RowID.Value)
             Await shiftService.ChangeManyAsync(z_OrganizationID, deleted:=employeeShifts.ToList())
 
-            SetCurrentMessage($"finished deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"Finished deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return EmployeeResult.Success(
                 employeeNumber:=employee.EmployeeNo,
@@ -96,13 +96,13 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
                 employeeId:=employee.RowID.Value)
         Catch ex As Exception
 
-            SetCurrentMessage($"Error deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"An error occurred while deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return EmployeeResult.Error(
                 employeeNumber:=employee.EmployeeNo,
                 employeeFullName:=employee.FullNameWithMiddleInitialLastNameFirst,
                 employeeId:=employee.RowID.Value,
-                description:=$"Failure to delete shift and time logs for employee {employee.EmployeeNo} {ex.Message}")
+                description:=$"Failed to delete shift and time logs for employee {employee.EmployeeNo} {ex.Message}")
         Finally
 
             IncreaseProgress()

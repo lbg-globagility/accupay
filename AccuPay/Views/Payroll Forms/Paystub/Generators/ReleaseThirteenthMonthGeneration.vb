@@ -51,12 +51,12 @@ Public Class ReleaseThirteenthMonthGeneration
                 GetPaystubAdjustments(employee, employee.ThirteenthMonthAmount),
                 z_User)
 
-            SetCurrentMessage($"finished generating 13th month pay for [{employee.EmployeeObject.EmployeeNo}] {employee.EmployeeObject.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"Finished generating 13th month pay for [{employee.EmployeeObject.EmployeeNo}] {employee.EmployeeObject.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return PaystubEmployeeResult.Success(employee.EmployeeObject, employee.PaystubObject)
         Catch ex As BusinessLogicException
 
-            SetCurrentMessage($"Error in generating 13th month pay for [{employee.EmployeeObject.EmployeeNo}] {employee.EmployeeObject.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"An error occurred while generating 13th month pay for [{employee.EmployeeObject.EmployeeNo}] {employee.EmployeeObject.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return PaystubEmployeeResult.Error(employee.EmployeeObject, ex.Message)
         Catch ex As Exception

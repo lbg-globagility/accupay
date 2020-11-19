@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
@@ -233,14 +233,14 @@ namespace AccuPay.Data.Services
                 try
                 {
                     CalculateEmployeeEntries(employee, organization, userId, settings, agencies, timeEntryPolicy, calendarCollection);
-                    CurrentMessage = $"finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
+                    CurrentMessage = $"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
                 }
                 catch (Exception ex)
                 {
                     // can error if employee type is null
                     //logger.Error(ex.Message, ex);
                     _errors += 1;
-                    CurrentMessage = $"Error generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
+                    CurrentMessage = $"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.";
                 }
 
                 Interlocked.Increment(ref _finished);

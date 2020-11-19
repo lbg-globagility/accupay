@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
 using System.Collections.Generic;
@@ -23,44 +23,43 @@ namespace AccuPay.Data.Services
             // can both use this formula
             if (employee.IsDaily || currentSystemOwner == SystemOwnerService.Benchmark)
             {
-                totalEarnings = paystub.Actual.RegularPay +
-                                paystub.Actual.LeavePay +
-                                paystub.Actual.AdditionalPay;
+                totalEarnings =
+                    paystub.Actual.RegularPay +
+                    paystub.Actual.LeavePay +
+                    paystub.Actual.AdditionalPay;
             }
             else if (employee.IsFixed)
             {
-                var monthlyRate = PayrollTools.
-                                    GetEmployeeMonthlyRate(employee, salary, isActual: true);
+                var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary, isActual: true);
                 var basicPay = monthlyRate / 2;
 
                 totalEarnings = basicPay + paystub.Actual.AdditionalPay;
             }
             else if (employee.IsMonthly)
             {
-                var isFirstPayAsDailyRule = settings.
-                                GetBoolean("Payroll Policy", "isfirstsalarydaily");
+                var isFirstPayAsDailyRule = settings.GetBoolean("Payroll Policy", "isfirstsalarydaily");
 
-                var isFirstPay = payperiod.PayFromDate <= employee.StartDate &&
-                                employee.StartDate <= payperiod.PayToDate;
-
-                if (isFirstPay && isFirstPayAsDailyRule)
+                if (employee.IsFirstPay(payperiod) && isFirstPayAsDailyRule)
                 {
-                    totalEarnings = paystub.Actual.RegularPay +
-                                    paystub.Actual.LeavePay +
-                                    paystub.Actual.AdditionalPay;
+                    totalEarnings =
+                        paystub.Actual.RegularPay +
+                        paystub.Actual.LeavePay +
+                        paystub.Actual.AdditionalPay;
                 }
                 else
                 {
-                    var monthlyRate = PayrollTools.
-                                    GetEmployeeMonthlyRate(employee, salary, isActual: true);
+                    var monthlyRate = PayrollTools
+                        .GetEmployeeMonthlyRate(employee, salary, isActual: true);
+
                     var basicPay = monthlyRate / 2;
 
                     paystub.Actual.RegularPay = basicPay - paystub.Actual.LeavePay;
 
-                    totalEarnings = paystub.Actual.RegularPay +
-                                    paystub.Actual.LeavePay +
-                                    paystub.Actual.AdditionalPay -
-                                    paystub.Actual.BasicDeductions;
+                    totalEarnings =
+                        paystub.Actual.RegularPay +
+                        paystub.Actual.LeavePay +
+                        paystub.Actual.AdditionalPay -
+                        paystub.Actual.BasicDeductions;
                 }
             }
 

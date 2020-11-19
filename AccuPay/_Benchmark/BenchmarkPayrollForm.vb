@@ -31,7 +31,7 @@ Public Class BenchmarkPayrollForm
 
     Private _currentPaystub As Paystub
 
-    Private _payrollGenerator As PayrollGeneration
+    Private _payrollGenerator As PayrollGenerator
 
     Public _loanTransanctions As List(Of LoanTransaction)
 

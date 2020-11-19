@@ -8,9 +8,7 @@ Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -279,8 +277,9 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private Sub SaveGenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
 
         Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
 
@@ -299,8 +298,9 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private Sub DeleteGenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
 
         Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
 
@@ -319,8 +319,9 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog, messageTitle As String, defaultErrorMessage As String)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
 
         If t.Exception?.InnerException.GetType() Is GetType(BusinessLogicException) Then
 
@@ -330,6 +331,14 @@ Public Class DefaultShiftAndTimeLogsForm
             MessageBoxHelper.ErrorMessage(defaultErrorMessage, messageTitle)
         End If
 
+    End Sub
+
+    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        If progressDialog Is Nothing Then Return
+
+        progressDialog.Close()
+        progressDialog.Dispose()
     End Sub
 
     Public Class DefaultValue

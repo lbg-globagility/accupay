@@ -107,7 +107,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ListOfValueService)
 
         services.AddTransient(Of CostCenterReportResources)
-        services.AddTransient(Of PayrollGeneration)
+        services.AddTransient(Of PayrollGenerator)
         services.AddTransient(Of PayrollResources)
 
         services.AddTransient(Of PolicyHelper)

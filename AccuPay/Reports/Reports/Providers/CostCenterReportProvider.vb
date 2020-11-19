@@ -167,8 +167,9 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of IResult), progressDialog As ProgressDialog, saveFilePath As String)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
 
         Dim saveResults = results.
             Select(Function(r) CType(r, CostCenterReportGenerationResult)).
@@ -185,8 +186,9 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
 
-        If progressDialog Is Nothing Then Return
-        CloseProgressDialog(progressDialog)
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
 
         Const MessageTitle As String = "Generate Cost Center Report"
 
@@ -227,10 +229,13 @@ Public Class CostCenterReportProvider
     End Sub
 
     Private Sub LoadingResourcesOnError(resourcesTask As Task(Of CostCenterReportResources), progressDialog As ProgressDialog)
+
+        If progressDialog IsNot Nothing Then
+            CloseProgressDialog(progressDialog)
+        End If
+
         MsgBox("Something went wrong while loading the cost center report resources. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
 
-        If progressDialog Is Nothing Then Return
-        CloseProgressDialog(progressDialog)
     End Sub
 
     Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)

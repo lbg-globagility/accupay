@@ -98,7 +98,7 @@ Public Class ServiceProvider
         services.AddTransient(Of CalendarService)
         services.AddTransient(Of ListOfValueService)
 
-        services.AddTransient(Of PayrollGeneration)
+        services.AddTransient(Of PayrollGenerator)
         services.AddTransient(Of PayrollResources)
 
         services.AddTransient(Of PolicyHelper)
