@@ -115,6 +115,11 @@ namespace AccuPay.Data.Services
                 return EmployeeResult.Error(employee, "Employee has no salary for this cut off.");
             }
 
+            if (employee.Position == null)
+            {
+                return EmployeeResult.Error(employee, "Employee has no job position set.");
+            }
+
             var dayCalculator = new DayCalculator(employee, employmentPolicy, resources.Organization, resources.Policy);
 
             var timeEntries = new List<TimeEntry>();

@@ -30,28 +30,38 @@ Public Class TimeEntryGeneration
 
     Public Sub Start(resources As TimeEntryResources, payPeriod As TimePeriod, payPeriodId As Integer)
 
-        If resources Is Nothing Then Return
+        If resources Is Nothing Then
+            Throw New ArgumentNullException("Resources cannot be null.")
+        End If
 
         For Each employee In _employees
 
-            Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
-            Dim result = generator.Start(
-                userId:=z_User,
-                employeeId:=employee.RowID.Value,
-                resources:=resources,
-                payPeriod:=payPeriod)
+            Try
+                Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
+                Dim result = generator.Start(
+                    userId:=z_User,
+                    employeeId:=employee.RowID.Value,
+                    resources:=resources,
+                    payPeriod:=payPeriod)
 
-            _results.Add(result)
+                _results.Add(result)
 
-            If result.IsSuccess Then
+                If result.IsSuccess Then
 
-                SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+                    SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
-                RecordTimeEntryGenerated(result, payPeriod, payPeriodId)
-            Else
+                    RecordTimeEntryGenerated(result, payPeriod, payPeriodId)
+                Else
+
+                    SetCurrentMessage($"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+                End If
+            Catch ex As Exception
 
                 SetCurrentMessage($"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
-            End If
+
+                _results.Add(EmployeeResult.Error(employee, $"Failure to generate time entries for employee {employee.EmployeeNo} {ex.Message}."))
+
+            End Try
 
             IncreaseProgress()
         Next

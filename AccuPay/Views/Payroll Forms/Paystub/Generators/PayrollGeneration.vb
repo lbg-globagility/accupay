@@ -31,28 +31,38 @@ Public Class PayrollGeneration
 
     Public Sub Start(resources As PayrollResources, payPeriod As TimePeriod)
 
-        If resources Is Nothing Then Return
+        If resources Is Nothing Then
+            Throw New ArgumentNullException("Resources cannot be null.")
+        End If
 
         For Each employee In _employees
 
-            Dim generator = MainServiceProvider.GetRequiredService(Of PayrollGenerator)
-            Dim result = generator.Start(
-                organizationId:=z_OrganizationID,
-                userId:=z_User,
-                employeeId:=employee.RowID.Value,
-                resources:=resources)
+            Try
+                Dim generator = MainServiceProvider.GetRequiredService(Of PayrollGenerator)
+                Dim result = generator.Start(
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User,
+                    employeeId:=employee.RowID.Value,
+                    resources:=resources)
 
-            _results.Add(result)
+                _results.Add(result)
 
-            If result.IsSuccess Then
+                If result.IsSuccess Then
 
-                SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+                    SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
-                RecordPaystubGenerated(result, payPeriod)
-            Else
+                    RecordPaystubGenerated(result, payPeriod)
+                Else
+
+                    SetCurrentMessage($"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+                End If
+            Catch ex As Exception
 
                 SetCurrentMessage($"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
-            End If
+
+                _results.Add(PaystubEmployeeResult.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo} {ex.Message}."))
+
+            End Try
 
             IncreaseProgress()
         Next

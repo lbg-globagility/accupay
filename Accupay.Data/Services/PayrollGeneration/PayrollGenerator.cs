@@ -125,7 +125,7 @@ namespace AccuPay.Data.Services
             catch (Exception ex)
             {
                 //logger.Error("DoProcess", ex);
-                return PaystubEmployeeResult.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo} {ex.Message}");
+                return PaystubEmployeeResult.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo} {ex.Message}.");
             }
         }
 

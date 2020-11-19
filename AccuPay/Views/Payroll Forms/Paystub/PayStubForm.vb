@@ -671,6 +671,12 @@ Public Class PayStubForm
             progressDialog,
             Sub(resourcesTask)
 
+                If resourcesTask Is Nothing Then
+
+                    HandleErrorLoadingResources(progressDialog)
+                    Return
+                End If
+
                 generator.IncreaseProgress("Finished loading resources.")
 
                 Dim generationTask = Task.Run(
@@ -763,13 +769,18 @@ Public Class PayStubForm
 
     Private Sub LoadingResourcesOnError(t As Task, progressDialog As ProgressDialog)
 
+        _logger.Error("Error loading one of the payroll data.", t.Exception)
+
+        HandleErrorLoadingResources(progressDialog)
+
+    End Sub
+
+    Private Shared Sub HandleErrorLoadingResources(progressDialog As ProgressDialog)
         If progressDialog IsNot Nothing Then
             CloseProgressDialog(progressDialog)
         End If
 
-        _logger.Error("Error loading one of the payroll data.", t.Exception)
         MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
-
     End Sub
 
     Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
@@ -1676,7 +1687,7 @@ Public Class PayStubForm
           z_User,
           FormEntityName,
           z_OrganizationID,
-          UserActivityRepository.RecordTypeEdit,
+          UserActivityRepository.RecordTypeDelete,
           activityItem)
     End Function
 
