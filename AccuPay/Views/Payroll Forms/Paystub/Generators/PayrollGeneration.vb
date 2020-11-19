@@ -29,7 +29,7 @@ Public Class PayrollGeneration
 
     End Sub
 
-    Friend Sub Start(resources As PayrollResources, payPeriod As TimePeriod)
+    Public Sub Start(resources As PayrollResources, payPeriod As TimePeriod)
 
         If resources Is Nothing Then Return
 
@@ -48,7 +48,7 @@ Public Class PayrollGeneration
 
                 SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
-                RecordPaytubGenerated(result, payPeriod)
+                RecordPaystubGenerated(result, payPeriod)
             Else
 
                 SetCurrentMessage($"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
@@ -61,7 +61,7 @@ Public Class PayrollGeneration
 
     End Sub
 
-    Private Sub RecordPaytubGenerated(result As PaystubEmployeeResult, payPeriod As TimePeriod)
+    Private Sub RecordPaystubGenerated(result As PaystubEmployeeResult, payPeriod As TimePeriod)
 
         Dim payPeriodString = $"'{payPeriod.Start.ToShortDateString()}' to '{payPeriod.End.ToShortDateString()}'"
 
@@ -79,7 +79,7 @@ Public Class PayrollGeneration
           z_User,
           FormEntityName,
           z_OrganizationID,
-          UserActivityRepository.RecordTypeDelete,
+          UserActivityRepository.RecordTypeAdd,
           activityItem)
     End Sub
 

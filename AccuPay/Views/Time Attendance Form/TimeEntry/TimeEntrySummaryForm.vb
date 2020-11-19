@@ -949,17 +949,14 @@ Public Class TimeEntrySummaryForm
 
                 Dim generationTask = Task.Run(
                     Sub()
-                        generator.Start(resourcesTask.Result, payPeriod)
+                        generator.Start(resourcesTask.Result, payPeriod, payPeriodId)
                     End Sub
                 )
 
                 generationTask.ContinueWith(
                     Sub() DoneGenerating(
                         progressDialog:=progressDialog,
-                        results:=generator.Results,
-                        startDate:=startDate,
-                        endDate:=endDate,
-                        payPeriodId:=payPeriodId),
+                        results:=generator.Results),
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext
@@ -977,7 +974,7 @@ Public Class TimeEntrySummaryForm
 
     End Function
 
-    Private Async Sub DoneGenerating(progressDialog As ProgressDialog, results As IReadOnlyCollection(Of ProgressGenerator.IResult), startDate As Date, endDate As Date, payPeriodId As Integer)
+    Private Async Sub DoneGenerating(progressDialog As ProgressDialog, results As IReadOnlyCollection(Of ProgressGenerator.IResult))
 
         If progressDialog IsNot Nothing Then
             CloseProgressDialog(progressDialog)
@@ -994,19 +991,7 @@ Public Class TimeEntrySummaryForm
         }
 
         dialog.ShowDialog()
-
-        Try
-            Me.Cursor = Cursors.WaitCursor
-
-            Await LoadTimeEntries()
-            Await RecordMultipleTimeEntriesUserActivity(
-                startDate:=startDate,
-                endDate:=endDate,
-                payPeriodId:=payPeriodId)
-        Finally
-
-            Me.Cursor = Cursors.Default
-        End Try
+        Await LoadTimeEntries()
 
     End Sub
 
@@ -1076,40 +1061,6 @@ Public Class TimeEntrySummaryForm
         progressDialog.Close()
         progressDialog.Dispose()
     End Sub
-
-    Private Async Function RecordMultipleTimeEntriesUserActivity(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
-
-        Dim changes = New List(Of UserActivityItem)
-
-        Dim timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
-
-        Dim currentPayPeriod = New TimePeriod(startDate, endDate)
-
-        Dim timeEntries = timeEntryRepository.GetByDatePeriod(z_OrganizationID, currentPayPeriod).ToList()
-
-        Dim employeesWithTimeEntry = timeEntries.GroupBy(Function(e) e.EmployeeID).ToList()
-
-        For Each employee In employeesWithTimeEntry
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = payPeriodId,
-                .Description = $"Generated time entries for payroll {GetPayPeriodString()}.",
-                .ChangedEmployeeId = employee.Key.Value
-            })
-        Next
-
-        If changes.Any() Then
-
-            Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await repo.CreateRecordAsync(
-                z_User,
-                FormEntityName,
-                z_OrganizationID,
-                UserActivityRepository.RecordTypeEdit,
-                changes)
-
-        End If
-    End Function
 
     Private Async Sub RegenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
 

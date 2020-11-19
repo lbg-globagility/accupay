@@ -59,7 +59,7 @@ namespace AccuPay.Data.Services
 
             bool hasSalaryForThisDate = salary != null && currentDate.Date >= salary.EffectiveFrom;
 
-            // TODO: return this as one the list of errors of Time entry generation
+            // TODO: return this as one the list of warnings of Time entry generation
             // No covered salary for this date
             if (hasSalaryForThisDate == false)
                 return timeEntry;
@@ -709,7 +709,7 @@ namespace AccuPay.Data.Services
             IPayrate payrate,
             bool hasWorkedLastDay)
         {
-            // TODO: return this as one the list of errors of Time entry generation
+            // TODO: return this as one of the list of warnings of Time entry generation
             // Employee has not started yet according to the employee's Start Date
             if (currentDate < _employee.StartDate)
             {
