@@ -1,20 +1,13 @@
-﻿using AccuPay.CrystalReports.ThirteenthMonthSummaryReport;
-using AccuPay.Data.Services;
+using AccuPay.CrystalReports.ThirteenthMonthSummaryReport;
+using AccuPay.Data.ValueObjects;
 using CrystalDecisions.CrystalReports.Engine;
-using System;
+using System.Data;
 
 namespace AccuPay.CrystalReports
 {
     public class ThirteenthMonthSummaryReportBuilder : BaseReportBuilder, IPdfGenerator
     {
-        private readonly ThirteenthMonthSummaryReportDataService _dataService;
-
-        public ThirteenthMonthSummaryReportBuilder(ThirteenthMonthSummaryReportDataService dataService)
-        {
-            _dataService = dataService;
-        }
-
-        public ThirteenthMonthSummaryReportBuilder CreateReportDocument(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public ThirteenthMonthSummaryReportBuilder CreateReportDocument(DataTable data, TimePeriod timePeriod)
         {
             _reportDocument = new ThirteenthMonthSummary();
 
@@ -22,11 +15,11 @@ namespace AccuPay.CrystalReports
 
             objText.Text = string.Concat(
                 "Salary from ",
-                dateFrom.ToShortDateString(),
+                timePeriod.Start.ToShortDateString(),
                 " to ",
-                dateTo.ToShortDateString());
+                timePeriod.End.ToShortDateString());
 
-            _reportDocument.SetDataSource(_dataService.GetData(organizationId, dateFrom, dateTo));
+            _reportDocument.SetDataSource(data);
 
             return this;
         }

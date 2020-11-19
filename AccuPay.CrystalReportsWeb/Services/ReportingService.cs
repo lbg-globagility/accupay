@@ -1,5 +1,8 @@
-﻿using AccuPay.CrystalReports;
+using AccuPay.CrystalReports;
+using AccuPay.Data.Services;
+using AccuPay.Data.ValueObjects;
 using System;
+using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -15,16 +18,18 @@ namespace AccuPay.CrystalReportsWeb.Services
         private readonly LoanSummaryByEmployeeReportBuilder _loanSummaryByEmployeeReportBuilder;
         private readonly TaxMonthlyReportBuilder _taxMonthlyReportBuilder;
         private readonly ThirteenthMonthSummaryReportBuilder _thirteenthMonthSummaryReportBuilder;
+        private readonly ThirteenthMonthSummaryReportDataService _thirteenthMonthSummaryReportDataService;
 
         public ReportingService(
             PayslipBuilder payslipCreator,
             SSSMonthyReportBuilder sSSMonthyReportCreator,
             PhilHealthMonthlyReportBuilder philHealthMonthlyReportBuilder,
             PagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder,
-             LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder,
-             LoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder,
-             TaxMonthlyReportBuilder taxMonthlyReportBuilder,
-             ThirteenthMonthSummaryReportBuilder thirteenthMonthSummaryReportBuilder)
+            LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder,
+            LoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder,
+            TaxMonthlyReportBuilder taxMonthlyReportBuilder,
+            ThirteenthMonthSummaryReportBuilder thirteenthMonthSummaryReportBuilder,
+            ThirteenthMonthSummaryReportDataService thirteenthMonthSummaryReportDataService)
         {
             _payslipCreator = payslipCreator;
             _sSSMonthyReportBuilder = sSSMonthyReportCreator;
@@ -34,6 +39,7 @@ namespace AccuPay.CrystalReportsWeb.Services
             _loanSummaryByEmployeeReportBuilder = loanSummaryByEmployeeReportBuilder;
             _taxMonthlyReportBuilder = taxMonthlyReportBuilder;
             _thirteenthMonthSummaryReportBuilder = thirteenthMonthSummaryReportBuilder;
+            _thirteenthMonthSummaryReportDataService = thirteenthMonthSummaryReportDataService;
         }
 
         public async Task<string> GeneratePayslip(int payPeriodId)
@@ -121,12 +127,15 @@ namespace AccuPay.CrystalReportsWeb.Services
             return pdfFullPath;
         }
 
-        public string GenerateThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public async Task<string> GenerateThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
             string pdfFullPath = Path.GetTempFileName();
 
+            TimePeriod timePeriod = new TimePeriod(dateFrom, dateTo);
+            DataTable data = await _thirteenthMonthSummaryReportDataService.GetData(organizationId, timePeriod);
+
             _thirteenthMonthSummaryReportBuilder
-                .CreateReportDocument(organizationId, dateFrom, dateTo)
+                .CreateReportDocument(data, timePeriod)
                 .GeneratePDF(pdfFullPath);
 
             return pdfFullPath;

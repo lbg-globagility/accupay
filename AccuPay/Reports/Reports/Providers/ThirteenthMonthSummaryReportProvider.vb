@@ -1,5 +1,8 @@
-﻿Option Strict On
+Option Strict On
+
 Imports AccuPay.CrystalReports
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ThirteenthMonthSummaryReportProvider
@@ -8,7 +11,7 @@ Public Class ThirteenthMonthSummaryReportProvider
     Public Property Name As String = "Thirteenth Month Pay (Summary)" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Public Sub Run() Implements IReportProvider.Run
+    Public Async Sub Run() Implements IReportProvider.Run
         Dim payperiodSelector As New MultiplePayPeriodSelectionDialog()
 
         If Not payperiodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -18,13 +21,18 @@ Public Class ThirteenthMonthSummaryReportProvider
         Dim dateFrom = payperiodSelector.DateFrom
         Dim dateTo = payperiodSelector.DateTo
 
-        Dim service = MainServiceProvider.GetRequiredService(Of ThirteenthMonthSummaryReportBuilder)
+        Dim builder = MainServiceProvider.GetRequiredService(Of ThirteenthMonthSummaryReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of ThirteenthMonthSummaryReportDataService)
 
-        Dim thirteenthMonthReport = service.CreateReportDocument(z_OrganizationID, CDate(dateFrom), CDate(dateTo))
+        Dim timePeriod As New TimePeriod(CDate(dateFrom), CDate(dateTo))
+        Dim data = Await service.GetData(z_OrganizationID, timePeriod)
 
+        Dim thirteenthMonthReport = builder.
+            CreateReportDocument(data, timePeriod).
+            GetReportDocument()
 
         Dim crvwr As New CrysRepForm()
-        crvwr.crysrepvwr.ReportSource = thirteenthMonthReport.GetReportDocument
+        crvwr.crysrepvwr.ReportSource = thirteenthMonthReport
         crvwr.Show()
     End Sub
 

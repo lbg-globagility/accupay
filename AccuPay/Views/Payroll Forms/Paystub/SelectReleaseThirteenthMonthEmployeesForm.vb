@@ -199,7 +199,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         Dim timePeriod As New TimePeriod(_startingPayPeriod.PayFromDate, _endingPayPeriod.PayToDate)
 
-        Dim thirteenthMonthPaystubs = (Await _paystubRepository.GetByTimePeriodWithThirteenthMonthPayAsync(timePeriod, z_OrganizationID)).
+        Dim thirteenthMonthPaystubs = (Await _paystubRepository.GetByTimePeriodWithThirteenthMonthPayAndEmployeeAsync(timePeriod, z_OrganizationID)).
             Where(Function(p) p.EmployeeID IsNot Nothing).
             GroupBy(Function(p) p.EmployeeID.Value)
 

@@ -1,4 +1,4 @@
-﻿using AccuPay.CrystalReports;
+using AccuPay.CrystalReports;
 using AccuPay.CrystalReportsWeb.Services;
 using AccuPay.Data;
 using AccuPay.Data.Repositories;
@@ -65,6 +65,7 @@ namespace AccuPay.CrystalReportsWeb
             services.AddScoped<TaxMonthlyReportBuilder>();
             services.AddScoped<ThirteenthMonthSummaryReportDataService>();
             services.AddScoped<ThirteenthMonthSummaryReportBuilder>();
+            services.AddScoped<PaystubRepository>();
 
             var serviceProvider = services.BuildServiceProvider();
 
