@@ -850,7 +850,6 @@ Public Class PayStubForm
     End Sub
 
     Private Async Sub ShowAllowanceButton_Click(sender As Object, e As EventArgs) Handles ShowNonTaxableAllowanceButton.Click, ShowTaxableAllowanceButton.Click
-        viewtotloan.Close()
         viewtotbon.Close()
 
         Dim isTaxable = sender Is ShowTaxableAllowanceButton
@@ -878,7 +877,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
-        viewtotloan.Close()
 
         With viewtotbon
             .Show()
@@ -911,7 +909,7 @@ Public Class PayStubForm
                 frm.Close()
             Next
         End If
-        viewtotloan.Close()
+
         viewtotbon.Close()
 
         PayrollForm.listPayrollForm.Remove(Me.Name)
@@ -1258,18 +1256,27 @@ Public Class PayStubForm
         Await dataService.UpdateAdjustmentsAsync(paystub.RowID.Value, adjustments.ToList(), z_User)
     End Function
 
-    Private Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
-        viewtotbon.Close()
+    Private Async Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
+        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
+        If employeeId Is Nothing OrElse _currentPayperiodId Is Nothing Then
 
-        With viewtotloan
-            .Show()
-            .BringToFront()
+            MessageBoxHelper.Warning("No selected paystub.")
+            Return
 
-            If dgvemployees.RowCount <> 0 Then
-                .VIEW_employeeloan_indate(dgvemployees.CurrentRow.Cells("RowID").Value, _currentPayFromDate, _currentPayToDate)
-                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value.ToString()
-            End If
-        End With
+        End If
+
+        Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
+            New EmployeeCompositeKey(employeeId:=employeeId.Value, payPeriodId:=_currentPayperiodId.Value))
+
+        If paystub Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected paystub.")
+            Return
+
+        End If
+
+        Dim form As New LoanBreakdownDialog(paystub.RowID.Value)
+        form.ShowDialog()
     End Sub
 
     Private Async Function LoadAdjustmentsAsync() As Task

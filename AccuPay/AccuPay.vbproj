@@ -1495,10 +1495,10 @@
     <Compile Include="Views\Payroll Forms\Paystub\viewtotbon.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotloan.Designer.vb">
-      <DependentUpon>viewtotloan.vb</DependentUpon>
+    <Compile Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.Designer.vb">
+      <DependentUpon>LoanBreakdownDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotloan.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reports\Unused Reports\HDMF\CrystalReport1.vb">
@@ -2148,8 +2148,8 @@
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotbon.resx">
       <DependentUpon>viewtotbon.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotloan.resx">
-      <DependentUpon>viewtotloan.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.resx">
+      <DependentUpon>LoanBreakdownDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Unused Reports\HDMF\CrystalReport1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
