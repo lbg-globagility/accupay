@@ -983,14 +983,17 @@ Public Class TimeEntrySummaryForm
             CloseProgressDialog(progressDialog)
         End If
 
-        Dim msgBoxText As String = "Done"
+        Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
 
-        Dim errorCount As Integer = If(results?.Where(Function(r) r.IsError).Count(), 0)
+        Dim dialog = New EmployeeResultsDialog(
+            saveResults,
+            title:="Time Entry Results",
+            generationDescription:="Time entry generation",
+            entityDescription:="time entries") With {
+            .Owner = Me
+        }
 
-        If errorCount > 0 Then
-            msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
-
-        End If
+        dialog.ShowDialog()
 
         Try
             Me.Cursor = Cursors.WaitCursor
@@ -1002,7 +1005,6 @@ Public Class TimeEntrySummaryForm
                 payPeriodId:=payPeriodId)
         Finally
 
-            MsgBox(msgBoxText)
             Me.Cursor = Cursors.Default
         End Try
 

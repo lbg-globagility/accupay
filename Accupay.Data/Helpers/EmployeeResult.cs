@@ -31,7 +31,7 @@ namespace AccuPay.Data.Helpers
 
             return Success(
                 employeeNumber: employee.EmployeeNo,
-                employeeFullName: employee.EmployeeNo,
+                employeeFullName: employee.FullNameWithMiddleInitialLastNameFirst,
                 employeeId: employee.RowID.Value);
         }
 
@@ -52,7 +52,7 @@ namespace AccuPay.Data.Helpers
 
             return Error(
                 employeeNumber: employee.EmployeeNo,
-                employeeFullName: employee.EmployeeNo,
+                employeeFullName: employee.FullNameWithMiddleInitialLastNameFirst,
                 employeeId: employee.RowID.Value,
                 description: description);
         }

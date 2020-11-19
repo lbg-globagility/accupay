@@ -105,6 +105,16 @@ namespace AccuPay.Data.Services
                 return EmployeeResult.Error(employee, "Employee does not have any time logs, leaves or official business filed for this cutoff.");
             }
 
+            if (employee.StartDate.Date > payPeriod.End.Date)
+            {
+                return EmployeeResult.Error(employee, "Employee start date is greater than the cut off end date.");
+            }
+
+            if (salary == null)
+            {
+                return EmployeeResult.Error(employee, "Employee has no salary for this cut off.");
+            }
+
             var dayCalculator = new DayCalculator(employee, employmentPolicy, resources.Organization, resources.Policy);
 
             var timeEntries = new List<TimeEntry>();
