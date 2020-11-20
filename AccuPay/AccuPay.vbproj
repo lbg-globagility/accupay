@@ -1321,10 +1321,10 @@
     <Compile Include="Views\Core Forms\Josh_CrysRepForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\Employee\Bonus\newProdBonus.Designer.vb">
-      <DependentUpon>newProdBonus.vb</DependentUpon>
+    <Compile Include="Views\HRIS Forms\Employee\Bonus\AddBonusTypeForm.Designer.vb">
+      <DependentUpon>AddBonusTypeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\Employee\Bonus\newProdBonus.vb">
+    <Compile Include="Views\HRIS Forms\Employee\Bonus\AddBonusTypeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Pay Period Selection\MultiplePayPeriodSelectionDialog.Designer.vb">
@@ -1491,16 +1491,16 @@
     <Compile Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotbon.Designer.vb">
-      <DependentUpon>viewtotbon.vb</DependentUpon>
+    <Compile Include="Views\Payroll Forms\Paystub\BonusBreakdownDialog.Designer.vb">
+      <DependentUpon>BonusBreakdownDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotbon.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\BonusBreakdownDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotloan.Designer.vb">
-      <DependentUpon>viewtotloan.vb</DependentUpon>
+    <Compile Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.Designer.vb">
+      <DependentUpon>LoanBreakdownDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotloan.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reports\Unused Reports\HDMF\CrystalReport1.vb">
@@ -2055,8 +2055,8 @@
     <EmbeddedResource Include="Views\Core Forms\Josh_CrysRepForm.resx">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\Employee\Bonus\newProdBonus.resx">
-      <DependentUpon>newProdBonus.vb</DependentUpon>
+    <EmbeddedResource Include="Views\HRIS Forms\Employee\Bonus\AddBonusTypeForm.resx">
+      <DependentUpon>AddBonusTypeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Pay Period Selection\MultiplePayPeriodSelectionDialog.resx">
       <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>
@@ -2147,11 +2147,11 @@
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.resx">
       <DependentUpon>AllowanceBreakdownDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotbon.resx">
-      <DependentUpon>viewtotbon.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\BonusBreakdownDialog.resx">
+      <DependentUpon>BonusBreakdownDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotloan.resx">
-      <DependentUpon>viewtotloan.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.resx">
+      <DependentUpon>LoanBreakdownDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Unused Reports\HDMF\CrystalReport1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

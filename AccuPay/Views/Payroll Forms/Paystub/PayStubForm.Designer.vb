@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class PayStubForm
     Inherits System.Windows.Forms.Form
 
@@ -2589,7 +2589,6 @@ Partial Class PayStubForm
         Me.btntotbon.Text = "..."
         Me.btntotbon.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btntotbon.UseVisualStyleBackColor = True
-        Me.btntotbon.Visible = False
         '
         'btntotloan
         '

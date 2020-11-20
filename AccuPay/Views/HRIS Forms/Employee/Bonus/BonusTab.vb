@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -323,10 +323,14 @@ Public Class BonusTab
     End Sub
 
     Private Async Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-        With newProdBonus
-            .ShowDialog()
-        End With
-        Await LoadBonuses()
+
+        Dim form As New AddBonusTypeForm()
+        form.ShowDialog()
+
+        If form.HasChanges Then
+            Await LoadBonuses()
+
+        End If
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)

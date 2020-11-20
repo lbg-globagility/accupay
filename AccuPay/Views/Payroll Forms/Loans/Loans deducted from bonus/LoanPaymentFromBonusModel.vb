@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Entities
 
 Public Class LoanPaymentFromBonusModel
     Public Property Id As Integer
@@ -81,7 +81,7 @@ Partial Public Class LoanPaymentFromBonusModel
         'Return model
     End Sub
 
-    Public Shared Function Convert(bonus As Bonus, loanSchedule As LoanSchedule)
+    Public Shared Function Convert(bonus As Bonus, loanSchedule As LoanSchedule) As LoanPaymentFromBonusModel
 
         Dim model = New LoanPaymentFromBonusModel() With
             {.Bonus = bonus,
