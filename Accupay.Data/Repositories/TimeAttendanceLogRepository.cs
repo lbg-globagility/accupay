@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,21 +17,21 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public IEnumerable<TimeAttendanceLog> GetByTimePeriod(int organizationId, TimePeriod timePeriod)
+        public async Task<ICollection<TimeAttendanceLog>> GetByTimePeriodAsync(int organizationId, TimePeriod timePeriod)
         {
-            return _context.TimeAttendanceLogs.
-                        Where(x => x.OrganizationID == organizationId).
-                        Where(x => timePeriod.Start <= x.WorkDay).
-                        Where(x => x.WorkDay <= timePeriod.End).
-                        ToList();
+            return _context.TimeAttendanceLogs
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => timePeriod.Start <= x.WorkDay)
+                .Where(x => x.WorkDay <= timePeriod.End)
+                .ToList();
         }
 
-        public async Task<IEnumerable<TimeAttendanceLog>> GetByDateAndEmployeeAsync(DateTime date, int employeeId)
+        public async Task<ICollection<TimeAttendanceLog>> GetByDateAndEmployeeAsync(DateTime date, int employeeId)
         {
-            return await _context.TimeAttendanceLogs.
-                        Where(x => x.EmployeeID == employeeId).
-                        Where(x => x.WorkDay == date).
-                        ToListAsync();
+            return await _context.TimeAttendanceLogs
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.WorkDay == date)
+                .ToListAsync();
         }
     }
 }

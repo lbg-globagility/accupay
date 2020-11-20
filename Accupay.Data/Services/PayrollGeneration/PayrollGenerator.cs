@@ -475,8 +475,8 @@ namespace AccuPay.Data.Services
                 if (employee.WorkDaysPerYear > 0)
                 {
                     var workDaysPerPayPeriod = employee.WorkDaysPerYear /
-                                                CalendarConstants.MonthsInAYear /
-                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                                                CalendarConstant.MonthsInAYear /
+                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
 
                     paystub.BasicHours = workDaysPerPayPeriod * 8;
                 }

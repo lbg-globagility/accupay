@@ -1,4 +1,5 @@
-﻿using AccuPay.Data.Repositories;
+using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System.Linq;
@@ -18,10 +19,10 @@ namespace AccuPay.Data.Services
         public async Task<OvertimeRate> GetOvertimeRates()
         {
             var listOfValuesType = "Pay rate";
-            var regularDayLIC = "Regular Day";
-            var specialHolidayLIC = "Special Non-Working Holiday";
-            var regularHolidayLIC = "Regular Holiday";
-            var doubleHolidayLIC = "Double Holiday";
+            var regularDayLIC = CalendarConstant.RegularDay;
+            var specialHolidayLIC = CalendarConstant.SpecialNonWorkingHoliday;
+            var regularHolidayLIC = CalendarConstant.RegularHoliday;
+            var doubleHolidayLIC = CalendarConstant.DoubleHoliday;
 
             var payRates = await _listOfValueRepository.GetListOfValuesAsync(listOfValuesType);
 

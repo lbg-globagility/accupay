@@ -125,7 +125,7 @@ Public Class TimeEntrySummaryForm
 
         _breakTimeBrackets = New List(Of BreakTimeBracket)
         If _policy.ComputeBreakTimeLate Then
-            _breakTimeBrackets = GetBreakTimeBrackets()
+            _breakTimeBrackets = Await GetBreakTimeBrackets()
         End If
 
         UpdateFormBaseOnPolicy()
@@ -209,9 +209,11 @@ Public Class TimeEntrySummaryForm
             If(payPeriodPermission?.Create, False)
     End Function
 
-    Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
+    Private Async Function GetBreakTimeBrackets() As Task(Of List(Of BreakTimeBracket))
 
-        Return _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
+        Return (Await _breakTimeBracketRepository.
+            GetAllAsync(z_OrganizationID)).
+            ToList()
 
     End Function
 
@@ -546,7 +548,7 @@ Public Class TimeEntrySummaryForm
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
-        Dim calendarCollection As CalendarCollection = GetCalendarCollection(payPeriod)
+        Dim calendarCollection As CalendarCollection = Await GetCalendarCollection(payPeriod)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -783,7 +785,7 @@ Public Class TimeEntrySummaryForm
             Dim reader = Await command.ExecuteReaderAsync()
 
             Dim totalTimeEntry = New TimeEntry()
-            Dim calendarCollection As CalendarCollection = GetCalendarCollection(payPeriod)
+            Dim calendarCollection As CalendarCollection = Await GetCalendarCollection(payPeriod)
 
             While Await reader.ReadAsync()
                 Dim timeEntry = New TimeEntry() With {
@@ -879,13 +881,13 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Function GetCalendarCollection(payPeriod As PayPeriod) As CalendarCollection
+    Private Async Function GetCalendarCollection(payPeriod As PayPeriod) As Task(Of CalendarCollection)
 
         If payPeriod Is Nothing Then Return Nothing
 
         Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
 
-        Return calendarService.GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
+        Return Await calendarService.GetCalendarCollectionAsync(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
     End Function
 
     Private Async Sub StartNewPayrollButton_Click(sender As Object, e As EventArgs) Handles StartNewPayrollButton.Click
@@ -1306,7 +1308,7 @@ Public Class TimeEntrySummaryForm
                 Return _holidayType
             End Get
             Set(value As String)
-                _holidayType = If(value = "Regular Day", "", value)
+                _holidayType = If(value = CalendarConstant.RegularDay, "", value)
             End Set
         End Property
 
@@ -1334,13 +1336,12 @@ Public Class TimeEntrySummaryForm
 
         Private Function HolidayAcronym(holidayName As String) As String
             If String.IsNullOrWhiteSpace(holidayName) Then Return String.Empty
-            Dim nameOfHoliday = holidayName.ToLower()
 
             Dim abbreviatn As String = String.Empty
-            If nameOfHoliday = "regular holiday" Then abbreviatn = "RHol"
-            If nameOfHoliday = "special non-working holiday" Then abbreviatn = "SHol"
-            If nameOfHoliday = "double holiday" Then abbreviatn = "DHol"
-            If nameOfHoliday = "regular + special holiday" Then abbreviatn = "RHol+SHol"
+            If holidayName = CalendarConstant.RegularHoliday Then abbreviatn = "RHol"
+            If holidayName = CalendarConstant.SpecialNonWorkingHoliday Then abbreviatn = "SHol"
+            If holidayName = CalendarConstant.DoubleHoliday Then abbreviatn = "DHol"
+            If holidayName = CalendarConstant.RegularDayAndSpecialHoliday Then abbreviatn = "RHol+SHol"
             Return abbreviatn
         End Function
 
@@ -1431,7 +1432,7 @@ Public Class TimeEntrySummaryForm
         Public Sub GetHolidayType(calendarCollection As CalendarCollection)
 
             If calendarCollection Is Nothing Then
-                Me.HolidayType = PayratesCalendar.RegularDay
+                Me.HolidayType = CalendarConstant.RegularDay
                 Return
             End If
 
@@ -1445,11 +1446,11 @@ Public Class TimeEntrySummaryForm
 
                     Dim calendarDayName = DirectCast(currentPayRate, CalendarDay)?.DayType?.Name
 
-                    If {PayratesCalendar.DoubleHoliday,
-                        PayratesCalendar.RegularHoliday,
-                        PayratesCalendar.SpecialNonWorkingHoliday,
-                        PayratesCalendar.RegularDay,
-                        PayratesCalendar.RegularDayAndSpecialHoliday}.
+                    If {CalendarConstant.DoubleHoliday,
+                        CalendarConstant.RegularHoliday,
+                        CalendarConstant.SpecialNonWorkingHoliday,
+                        CalendarConstant.RegularDay,
+                        CalendarConstant.RegularDayAndSpecialHoliday}.
                         Contains(calendarDayName) Then
 
                         Me.HolidayType = calendarDayName
@@ -1459,18 +1460,18 @@ Public Class TimeEntrySummaryForm
                 End If
 
                 If currentPayRate.IsDoubleHoliday Then
-                    Me.HolidayType = PayratesCalendar.DoubleHoliday
+                    Me.HolidayType = CalendarConstant.DoubleHoliday
 
                 ElseIf currentPayRate.IsRegularHoliday Then
-                    Me.HolidayType = PayratesCalendar.RegularHoliday
+                    Me.HolidayType = CalendarConstant.RegularHoliday
 
                 ElseIf currentPayRate.IsSpecialNonWorkingHoliday Then
-                    Me.HolidayType = PayratesCalendar.SpecialNonWorkingHoliday
+                    Me.HolidayType = CalendarConstant.SpecialNonWorkingHoliday
                 Else
-                    Me.HolidayType = PayratesCalendar.RegularDay
+                    Me.HolidayType = CalendarConstant.RegularDay
                 End If
             Else
-                Me.HolidayType = PayratesCalendar.RegularDay
+                Me.HolidayType = CalendarConstant.RegularDay
             End If
 
         End Sub

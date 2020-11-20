@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -64,11 +64,6 @@ namespace AccuPay.Data.Repositories
             _context.RemoveRange(actualTimeEntries);
 
             await _context.SaveChangesAsync();
-        }
-
-        public ICollection<TimeEntry> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
-        {
-            return CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToList();
         }
 
         public async Task<ICollection<TimeEntry>> GetByDatePeriodAsync(

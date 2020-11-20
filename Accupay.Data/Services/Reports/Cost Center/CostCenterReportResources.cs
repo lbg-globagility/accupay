@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -60,6 +60,8 @@ namespace AccuPay.Data.Services
 
             TimeEntries = new List<TimeEntry>();
 
+            // TODO: move the codes below in individual method just like in PayrollResources and TimeEntryResources
+
             TimeEntries = await _context.TimeEntries
                 .Include(t => t.Employee)
                 .Where(t => t.Date >= dateForCheckingLastWorkingDay)
@@ -115,7 +117,7 @@ namespace AccuPay.Data.Services
 
             Settings = await _listOfValueService.CreateAsync();
 
-            CalendarCollection = _calendarService.GetCalendarCollection(ReportPeriod);
+            CalendarCollection = await _calendarService.GetCalendarCollectionAsync(ReportPeriod);
 
             DailyAllowances = GetDailyAllowances(organizationIds);
         }

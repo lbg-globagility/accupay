@@ -13,7 +13,7 @@ namespace AccuPay.Data.Services
                                   LeaveTransaction lastAccrual)
         {
             var lastAccrualDate = lastAccrual?.TransactionDate ?? employee.StartDate;
-            var leaveHoursPerMonth = decimal.Divide(leaveAllowance, CalendarConstants.MonthsInAYear);
+            var leaveHoursPerMonth = decimal.Divide(leaveAllowance, CalendarConstant.MonthsInAYear);
 
             var previousTotalMonths = Calendar.MonthsBetween(employee.StartDate, lastAccrualDate);
             var previousTotal = AccuMath.CommercialRound(leaveHoursPerMonth * previousTotalMonths);

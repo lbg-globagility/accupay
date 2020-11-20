@@ -71,9 +71,9 @@ namespace AccuPay.Data.Services
                 else if (IsSssPaidPerPayPeriod(deductionSchedule))
                 {
                     paystub.SssEmployeeShare = employeeShare /
-                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                     paystub.SssEmployerShare = employerShare /
-                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
         }

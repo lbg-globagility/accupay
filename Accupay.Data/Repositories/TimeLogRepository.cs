@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -108,11 +108,11 @@ namespace AccuPay.Data.Repositories
 
         #region Queries
 
-        public ICollection<TimeLog> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
+        public async Task<ICollection<TimeLog>> GetByDatePeriodAsync(int organizationId, TimePeriod datePeriod)
         {
-            return CreateBaseQueryByDatePeriod(datePeriod)
+            return await CreateBaseQueryByDatePeriod(datePeriod)
                 .Where(x => x.OrganizationID == organizationId)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<ICollection<TimeLog>> GetByEmployeeAndDateAsync(int employeeId, DateTime date)
@@ -213,10 +213,9 @@ namespace AccuPay.Data.Repositories
             int counter = 0;
 
             while (context.TimeLogs
-                .FirstOrDefault(t => t.TimeentrylogsImportID == importId) != null ||
-                                context.TimeAttendanceLogs
-                                    .FirstOrDefault(t => t.ImportNumber == importId)
-                                != null)
+                .FirstOrDefault(
+                    t => t.TimeentrylogsImportID == importId) != null ||
+                    context.TimeAttendanceLogs.FirstOrDefault(t => t.ImportNumber == importId) != null)
             {
                 counter += 1;
 

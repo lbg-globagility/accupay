@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +8,11 @@ namespace AccuPay.Data.Entities
     public class PayCalendar
     {
         public const string DefaultName = "[Default]";
+
+        private PayCalendar()
+        {
+            // create a factory method to create new Daytypes
+        }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -26,5 +31,23 @@ namespace AccuPay.Data.Entities
         public string Name { get; set; }
 
         public bool IsDefault { get; set; }
+
+        public static PayCalendar NewCalendar(string calendarName)
+        {
+            return new PayCalendar()
+            {
+                IsDefault = false,
+                Name = calendarName?.Trim(),
+            };
+        }
+
+        public static PayCalendar CreateDefaultCalendar()
+        {
+            return new PayCalendar()
+            {
+                IsDefault = true,
+                Name = DefaultName,
+            };
+        }
     }
 }

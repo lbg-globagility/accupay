@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,16 +6,6 @@ namespace AccuPay.Data.Services
 {
     public class PayratesCalendar
     {
-        public const string RegularDay = "Regular Day";
-
-        public const string SpecialNonWorkingHoliday = "Special Non-Working Holiday";
-
-        public const string RegularHoliday = "Regular Holiday";
-
-        public const string DoubleHoliday = "Double Holiday";
-
-        public const string RegularDayAndSpecialHoliday = "Regular + Special Holiday";
-
         /// <summary>
         /// List of payrates included in this calendar
         /// </summary>

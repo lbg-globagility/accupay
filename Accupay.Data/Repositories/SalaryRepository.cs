@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -108,15 +108,10 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public ICollection<Salary> GetByCutOff(int organizationId, DateTime cutoffEnd)
-        {
-            return CreateBaseGetByCutOffAndOrganization(organizationId, cutoffEnd)
-                .ToList();
-        }
-
         public async Task<ICollection<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffEnd)
         {
-            return await CreateBaseGetByCutOffAndOrganization(organizationId, cutoffEnd)
+            return await CreateBaseQueryByCutOff(cutoffEnd)
+                .Where(x => x.OrganizationID == organizationId)
                 .ToListAsync();
         }
 
@@ -130,12 +125,6 @@ namespace AccuPay.Data.Repositories
         #endregion List of entities
 
         #endregion Queries
-
-        private IQueryable<Salary> CreateBaseGetByCutOffAndOrganization(int organizationId, DateTime cutoffEnd)
-        {
-            return CreateBaseQueryByCutOff(cutoffEnd)
-                .Where(x => x.OrganizationID == organizationId);
-        }
 
         private IQueryable<Salary> CreateBaseQueryByCutOff(DateTime cutoffEnd)
         {

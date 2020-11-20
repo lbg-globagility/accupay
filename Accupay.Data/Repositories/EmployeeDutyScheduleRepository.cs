@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -58,13 +58,6 @@ namespace AccuPay.Data.Repositories
         #region Queries
 
         #region List of entities
-
-        public ICollection<EmployeeDutySchedule> GetByDatePeriod(
-            int organizationId,
-            TimePeriod datePeriod)
-        {
-            return CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToList();
-        }
 
         public async Task<ICollection<EmployeeDutySchedule>> GetByDatePeriodAsync(
             int organizationId,

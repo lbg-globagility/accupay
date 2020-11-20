@@ -49,11 +49,11 @@ namespace AccuPay.Data.Services
         private readonly OrganizationRepository _organizationRepository;
         private readonly OvertimeRepository _overtimeRepository;
         private readonly SalaryRepository _salaryRepository;
+        private readonly RouteRateRepository _routeRateRepository;
         private readonly TimeAttendanceLogRepository _timeAttendanceLogRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
         private readonly TimeLogRepository _timeLogRepository;
         private readonly TripTicketRepository _tripTicketRepository;
-        private readonly RouteRateRepository _routeRateRepository;
 
         public TimeEntryResources(
             CalendarService calendarService,
@@ -69,12 +69,12 @@ namespace AccuPay.Data.Services
             OfficialBusinessRepository officialBusinessRepository,
             OrganizationRepository organizationRepository,
             OvertimeRepository overtimeRepository,
+            RouteRateRepository routeRateRepository,
             SalaryRepository salaryRepository,
             TimeAttendanceLogRepository timeAttendanceLogRepository,
             TimeEntryRepository timeEntryRepository,
             TimeLogRepository timeLogRepository,
-            TripTicketRepository tripTicketRepository,
-            RouteRateRepository routeRateRepository)
+            TripTicketRepository tripTicketRepository)
         {
             _calendarService = calendarService;
             Policy = policy;
@@ -90,12 +90,12 @@ namespace AccuPay.Data.Services
             _officialBusinessRepository = officialBusinessRepository;
             _organizationRepository = organizationRepository;
             _overtimeRepository = overtimeRepository;
+            _routeRateRepository = routeRateRepository;
             _salaryRepository = salaryRepository;
             _timeAttendanceLogRepository = timeAttendanceLogRepository;
             _timeEntryRepository = timeEntryRepository;
             _timeLogRepository = timeLogRepository;
             _tripTicketRepository = tripTicketRepository;
-            _routeRateRepository = routeRateRepository;
         }
 
         public async Task Load(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
@@ -104,85 +104,167 @@ namespace AccuPay.Data.Services
             cutoffEnd = cutoffEnd.ToMinimumHourValue();
 
             TimePeriod cuttOffPeriod = new TimePeriod(cutoffStart, cutoffEnd);
+            var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(cutoffStart);
 
+            await LoadActualTimeEntries(organizationId, cuttOffPeriod);
+            await LoadAgencies(organizationId);
+            await LoadAgencyFees(organizationId, cuttOffPeriod);
+            await LoadBreakTimeBrackets(organizationId);
+            await LoadCalendarCollection(cutoffEnd, previousCutoff);
+            await LoadEmployeePolicies();
+            await LoadEmployees(organizationId);
+            await LoadLeaves(organizationId, cuttOffPeriod);
+            await LoadOfficialBusinesses(organizationId, cuttOffPeriod);
+            await LoadOrganization(organizationId);
+            await LoadOvertimes(organizationId, cuttOffPeriod);
+            await LoadRouteRates();
+            await LoadSalaries(organizationId, cutoffEnd);
+            await LoadShifts(organizationId, cuttOffPeriod);
+            await LoadTimeAttendanceLogs(organizationId, cuttOffPeriod);
+            await LoadTimeEntries(organizationId, previousCutoff, cutoffEnd);
+            await LoadTimeLogs(organizationId, cuttOffPeriod);
+            await LoadTripTickets(cuttOffPeriod);
+        }
+
+        private async Task LoadActualTimeEntries(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            ActualTimeEntries = (await _actualTimeEntryRepository
+                .GetByDatePeriodAsync(organizationId, cuttOffPeriod))
+                .ToList();
+        }
+
+        private async Task LoadAgencies(int organizationId)
+        {
+            Agencies = (await _agencyRepository
+                .GetAllAsync(organizationId))
+                .ToList();
+        }
+
+        private async Task LoadAgencyFees(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            AgencyFees = (await _agencyFeeRepository
+                .GetByDatePeriodAsync(organizationId, cuttOffPeriod))
+                .ToList();
+        }
+
+        private async Task LoadBreakTimeBrackets(int organizationId)
+        {
+            if (Policy.ComputeBreakTimeLate)
+            {
+                BreakTimeBrackets = (await _breakTimeBracketRepository
+                    .GetAllAsync(organizationId))
+                    .ToList();
+            }
+            else
+            {
+                BreakTimeBrackets = new List<BreakTimeBracket>();
+            }
+        }
+
+        private async Task LoadCalendarCollection(DateTime cutoffEnd, DateTime previousCutoff)
+        {
+            CalendarCollection = await _calendarService
+                .GetCalendarCollectionAsync(new TimePeriod(previousCutoff, cutoffEnd));
+        }
+
+        private async Task LoadEmployeePolicies()
+        {
+            EmploymentPolicies = (await _employmentPolicyRepository.GetAllAsync()).ToList();
+        }
+
+        private async Task LoadEmployees(int organizationId)
+        {
             Employees = (await _employeeRepository
                 .GetAllActiveWithPositionAsync(organizationId))
                 .ToList();
+        }
 
-            EmploymentPolicies = _employmentPolicyRepository.GetAll().ToList();
-
-            Agencies = _agencyRepository
-                .GetAll(organizationId)
+        private async Task LoadLeaves(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            Leaves = (await _leaveRepository
+                .GetAllApprovedByDatePeriodAsync(organizationId, cuttOffPeriod))
                 .ToList();
+        }
 
-            Organization = _organizationRepository.GetById(organizationId);
-
-            Salaries = _salaryRepository
-                .GetByCutOff(organizationId, cutoffEnd)
+        private async Task LoadOfficialBusinesses(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            OfficialBusinesses = (await _officialBusinessRepository
+                .GetAllApprovedByDatePeriodAsync(organizationId, cuttOffPeriod))
                 .ToList();
+        }
 
-            var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(cutoffStart);
+        private async Task LoadOrganization(int organizationId)
+        {
+            Organization = await _organizationRepository.GetByIdAsync(organizationId);
+        }
 
+        private async Task LoadOvertimes(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            Overtimes = (await _overtimeRepository
+                .GetByDatePeriodAsync(organizationId, cuttOffPeriod, OvertimeStatus.Approved))
+                .ToList();
+        }
+
+        private async Task LoadRouteRates()
+        {
+            RouteRates = (await _routeRateRepository
+                .GetAllAsync())
+                .ToList();
+        }
+
+        private async Task LoadSalaries(int organizationId, DateTime cutoffEnd)
+        {
+            Salaries = (await _salaryRepository
+                .GetByCutOffAsync(organizationId, cutoffEnd))
+                .ToList();
+        }
+
+        private async Task LoadShifts(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            Shifts = (await _employeeDutyScheduleRepository
+                .GetByDatePeriodAsync(organizationId, cuttOffPeriod))
+                .ToList();
+        }
+
+        private async Task LoadTimeAttendanceLogs(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            if (Policy.ComputeBreakTimeLate)
+            {
+                TimeAttendanceLogs = (await _timeAttendanceLogRepository
+                    .GetByTimePeriodAsync(organizationId, cuttOffPeriod))
+                    .ToList();
+            }
+            else
+            {
+                TimeAttendanceLogs = new List<TimeAttendanceLog>();
+            }
+        }
+
+        private async Task LoadTimeEntries(int organizationId, DateTime previousCutoff, DateTime cutoffEnd)
+        {
             DateTime afterCutOff = cutoffEnd;
             if (Policy.PostLegalHolidayCheck)
             {
                 afterCutOff = cutoffEnd.AddDays(ThreeDays);
             }
 
-            TimeEntries = _timeEntryRepository
-                .GetByDatePeriod(organizationId, new TimePeriod(previousCutoff, afterCutOff))
+            TimeEntries = (await _timeEntryRepository
+                .GetByDatePeriodAsync(organizationId, new TimePeriod(previousCutoff, afterCutOff)))
                 .ToList();
+        }
 
-            ActualTimeEntries = _actualTimeEntryRepository
-                .GetByDatePeriod(organizationId, cuttOffPeriod)
+        private async Task LoadTimeLogs(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            TimeLogs = (await _timeLogRepository
+                .GetByDatePeriodAsync(organizationId, cuttOffPeriod))
                 .ToList();
+        }
 
-            TimeLogs = _timeLogRepository
-                .GetByDatePeriod(organizationId, cuttOffPeriod)
+        private async Task LoadTripTickets(TimePeriod cuttOffPeriod)
+        {
+            TripTickets = (await _tripTicketRepository
+                .GetByDateRangeAsync(cuttOffPeriod))
                 .ToList();
-
-            Leaves = _leaveRepository
-                .GetAllApprovedByDatePeriod(organizationId, cuttOffPeriod)
-                .ToList();
-
-            Overtimes = _overtimeRepository
-                .GetByDatePeriod(organizationId, cuttOffPeriod, OvertimeStatus.Approved)
-                .ToList();
-
-            OfficialBusinesses = _officialBusinessRepository
-                .GetAllApprovedByDatePeriod(organizationId, cuttOffPeriod)
-                .ToList();
-
-            AgencyFees = _agencyFeeRepository
-                .GetByDatePeriod(organizationId, cuttOffPeriod)
-                .ToList();
-
-            Shifts = _employeeDutyScheduleRepository
-                .GetByDatePeriod(organizationId, cuttOffPeriod)
-                .ToList();
-
-            TripTickets = _tripTicketRepository.GetByDateRange(cutoffStart, cutoffEnd).ToList();
-
-            RouteRates = _routeRateRepository.GetAll().ToList();
-
-            if (Policy.ComputeBreakTimeLate)
-            {
-                TimeAttendanceLogs = _timeAttendanceLogRepository
-                    .GetByTimePeriod(organizationId, cuttOffPeriod)
-                    .ToList();
-
-                BreakTimeBrackets = _breakTimeBracketRepository
-                    .GetAll(organizationId)
-                    .ToList();
-            }
-            else
-            {
-                TimeAttendanceLogs = new List<TimeAttendanceLog>();
-                BreakTimeBrackets = new List<BreakTimeBracket>();
-            }
-
-            CalendarCollection = _calendarService
-                .GetCalendarCollection(new TimePeriod(previousCutoff, cutoffEnd));
         }
     }
 }

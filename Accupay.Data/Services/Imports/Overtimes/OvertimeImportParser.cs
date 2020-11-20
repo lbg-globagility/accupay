@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -19,9 +19,10 @@ namespace AccuPay.Data.Services.Imports.Overtimes
 
         public string XlsxExtension => _parser.XlsxExtension;
 
-        public OvertimeImportParser(EmployeeRepository employeeRepository,
-                                    OvertimeRepository overtimeRepository,
-                                    IExcelParser<OvertimeRowRecord> parser)
+        public OvertimeImportParser(
+            EmployeeRepository employeeRepository,
+            OvertimeRepository overtimeRepository,
+            IExcelParser<OvertimeRowRecord> parser)
         {
             _employeeRepository = employeeRepository;
             _overtimeRepository = overtimeRepository;
@@ -46,8 +47,8 @@ namespace AccuPay.Data.Services.Imports.Overtimes
             string[] employeeNumberList = parsedRecords.GroupBy(t => t.EmployeeNo).Select(t => t.FirstOrDefault().EmployeeNo).ToArray();
 
             var employees = (await _employeeRepository
-                            .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
-                            ).ToList();
+                .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
+                ).ToList();
 
             var list = new List<OvertimeImportModel>();
 
@@ -89,8 +90,9 @@ namespace AccuPay.Data.Services.Imports.Overtimes
                 invalidRecord.DescribeError();
             }
 
-            return new OvertimeImportParserOutput(validRecords: validRecords,
-                                                   invalidRecords: invalidRecords);
+            return new OvertimeImportParserOutput(
+                validRecords: validRecords,
+                invalidRecords: invalidRecords);
         }
 
         private OvertimeImportModel CreateOvertimeImportModel(OvertimeRowRecord parsedRecord, Employee employee, Overtime overtime)
@@ -105,8 +107,9 @@ namespace AccuPay.Data.Services.Imports.Overtimes
 
         public IReadOnlyCollection<OvertimeImportModel> InvalidRecords { get; }
 
-        public OvertimeImportParserOutput(IReadOnlyCollection<OvertimeImportModel> validRecords,
-                                           IReadOnlyCollection<OvertimeImportModel> invalidRecords)
+        public OvertimeImportParserOutput(
+            IReadOnlyCollection<OvertimeImportModel> validRecords,
+            IReadOnlyCollection<OvertimeImportModel> invalidRecords)
         {
             ValidRecords = validRecords;
             InvalidRecords = invalidRecords;

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -44,8 +44,7 @@ Public Class NewCalendarDialog
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim calendar = New PayCalendar()
-                calendar.Name = NameTextbox.Text
+                Dim calendar = PayCalendar.NewCalendar(NameTextbox.Text)
 
                 Dim copiedCalendar = DirectCast(CopyCalendarComboBox.SelectedItem, PayCalendar)
 

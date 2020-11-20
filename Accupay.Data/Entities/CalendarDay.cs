@@ -1,4 +1,5 @@
-﻿using System;
+using AccuPay.Data.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -46,13 +47,13 @@ namespace AccuPay.Data.Entities
 
         public decimal RestDayNDOTRate => DayType.RestDayNDOTRate;
 
-        public bool IsRegularDay => DayType?.DayConsideredAs == "Regular Day" || DayType is null;
+        public bool IsRegularDay => DayType?.DayConsideredAs == CalendarConstant.RegularDay || DayType is null;
 
-        public bool IsSpecialNonWorkingHoliday => DayType?.DayConsideredAs == "Special Non-Working Holiday";
+        public bool IsSpecialNonWorkingHoliday => DayType?.DayConsideredAs == CalendarConstant.SpecialNonWorkingHoliday;
 
-        public bool IsRegularHoliday => DayType?.DayConsideredAs == "Regular Holiday" || DayType?.DayConsideredAs == "Double Holiday";
+        public bool IsRegularHoliday => DayType?.DayConsideredAs == CalendarConstant.RegularHoliday || DayType?.DayConsideredAs == CalendarConstant.DoubleHoliday;
 
-        public bool IsDoubleHoliday => DayType?.DayConsideredAs == "Double Holiday";
+        public bool IsDoubleHoliday => DayType?.DayConsideredAs == CalendarConstant.DoubleHoliday;
 
         public bool IsHoliday => IsRegularHoliday || IsSpecialNonWorkingHoliday;
     }

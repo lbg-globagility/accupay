@@ -118,8 +118,8 @@ namespace AccuPay.Web.TimeEntries
 
             var datePayPeriod = new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate);
 
-            var timeEntries = _timeEntryRepository
-                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod);
+            var timeEntries = await _timeEntryRepository
+                .GetByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod);
 
             var timeEntryCount = timeEntries
                 .GroupBy(x => x.EmployeeID)
@@ -140,28 +140,28 @@ namespace AccuPay.Web.TimeEntries
                 .GroupBy(x => x.EmployeeID)
                 .Count();
 
-            var shiftCount = _shiftRepository
-                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+            var shiftCount = (await _shiftRepository
+                .GetByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod))
                 .GroupBy(x => x.EmployeeID)
                 .Count();
 
-            var timeLogCount = _timeLogRepository
-                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+            var timeLogCount = (await _timeLogRepository
+                .GetByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod))
                 .GroupBy(x => x.EmployeeID)
                 .Count();
 
-            var leaveCount = _leaveRepository
-                .GetAllApprovedByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+            var leaveCount = (await _leaveRepository
+                .GetAllApprovedByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod))
                 .GroupBy(x => x.EmployeeID)
                 .Count();
 
-            var officialBusinessCount = _officialBusinessRepository
-                .GetAllApprovedByDatePeriod(_currentUser.OrganizationId, datePayPeriod)
+            var officialBusinessCount = (await _officialBusinessRepository
+                .GetAllApprovedByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod))
                 .GroupBy(x => x.EmployeeID)
                 .Count();
 
-            var overtimeCount = _overtimeRepository
-                .GetByDatePeriod(_currentUser.OrganizationId, datePayPeriod, Data.Enums.OvertimeStatus.Approved)
+            var overtimeCount = (await _overtimeRepository
+                .GetByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod, Data.Enums.OvertimeStatus.Approved))
                 .GroupBy(x => x.EmployeeID)
                 .Count();
 
