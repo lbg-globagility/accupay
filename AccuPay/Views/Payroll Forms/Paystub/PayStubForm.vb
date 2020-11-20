@@ -680,9 +680,9 @@ Public Class PayStubForm
                 generator.IncreaseProgress("Finished loading resources.")
 
                 Dim generationTask = Task.Run(
-                    Sub()
-                        generator.Start(resourcesTask.Result, New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
-                    End Sub
+                    Async Function()
+                        Await generator.Start(resourcesTask.Result, New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
+                    End Function
                 )
 
                 generationTask.ContinueWith(

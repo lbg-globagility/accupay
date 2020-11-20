@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports System.Collections.Concurrent
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -29,7 +30,7 @@ Public Class PayrollGeneration
 
     End Sub
 
-    Public Sub Start(resources As PayrollResources, payPeriod As TimePeriod)
+    Public Async Function Start(resources As PayrollResources, payPeriod As TimePeriod) As Task
 
         If resources Is Nothing Then
             Throw New ArgumentNullException("Resources cannot be null.")
@@ -39,7 +40,7 @@ Public Class PayrollGeneration
 
             Try
                 Dim generator = MainServiceProvider.GetRequiredService(Of PayrollGenerator)
-                Dim result = generator.Start(
+                Dim result = Await generator.Start(
                     organizationId:=z_OrganizationID,
                     userId:=z_User,
                     employeeId:=employee.RowID.Value,
@@ -69,7 +70,7 @@ Public Class PayrollGeneration
 
         SetResults(_results.ToList())
 
-    End Sub
+    End Function
 
     Private Sub RecordPaystubGenerated(result As PaystubEmployeeResult, payPeriod As TimePeriod)
 

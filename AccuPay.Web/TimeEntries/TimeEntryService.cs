@@ -79,7 +79,7 @@ namespace AccuPay.Web.TimeEntries
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var generator = scope.ServiceProvider.GetRequiredService<TimeEntryGenerator>();
-                    var result = generator.Start(
+                    var result = await generator.Start(
                         employee.RowID.Value,
                         _timeEntryResources,
                         _currentUser.OrganizationId,

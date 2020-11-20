@@ -956,9 +956,9 @@ Public Class TimeEntrySummaryForm
                 generator.IncreaseProgress("Finished loading resources.")
 
                 Dim generationTask = Task.Run(
-                    Sub()
-                        generator.Start(resourcesTask.Result, payPeriod, payPeriodId)
-                    End Sub
+                    Async Function()
+                        Await generator.Start(resourcesTask.Result, payPeriod, payPeriodId)
+                    End Function
                 )
 
                 generationTask.ContinueWith(

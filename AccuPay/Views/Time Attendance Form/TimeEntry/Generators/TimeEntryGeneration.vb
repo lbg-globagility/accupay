@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports System.Collections.Concurrent
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -28,7 +29,7 @@ Public Class TimeEntryGeneration
         _results = New BlockingCollection(Of EmployeeResult)()
     End Sub
 
-    Public Sub Start(resources As TimeEntryResources, payPeriod As TimePeriod, payPeriodId As Integer)
+    Public Async Function Start(resources As TimeEntryResources, payPeriod As TimePeriod, payPeriodId As Integer) As Task
 
         If resources Is Nothing Then
             Throw New ArgumentNullException("Resources cannot be null.")
@@ -38,7 +39,7 @@ Public Class TimeEntryGeneration
 
             Try
                 Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
-                Dim result = generator.Start(
+                Dim result = Await generator.Start(
                     userId:=z_User,
                     employeeId:=employee.RowID.Value,
                     resources:=resources,
@@ -68,7 +69,7 @@ Public Class TimeEntryGeneration
 
         SetResults(_results.ToList())
 
-    End Sub
+    End Function
 
     Private Sub RecordTimeEntryGenerated(result As EmployeeResult, payPeriod As TimePeriod, payPeriodId As Integer)
 

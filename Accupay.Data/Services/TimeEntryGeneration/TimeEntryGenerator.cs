@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
@@ -19,7 +20,7 @@ namespace AccuPay.Data.Services
             _context = context;
         }
 
-        public EmployeeResult Start(
+        public async Task<EmployeeResult> Start(
             int employeeId,
             TimeEntryResources resources,
             int userId,
@@ -200,7 +201,7 @@ namespace AccuPay.Data.Services
             AddTimeEntriesToContext(userId, timeEntries);
             AddActualTimeEntriesToContext(actualTimeEntries);
             AddAgencyFeesToContext(userId, agencyFees);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return EmployeeResult.Success(employee);
         }
