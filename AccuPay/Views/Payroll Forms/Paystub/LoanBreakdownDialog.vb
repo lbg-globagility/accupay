@@ -1,9 +1,12 @@
+Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LoanBreakdownDialog
+
     Private ReadOnly _paystubRepository As PaystubRepository
     Private ReadOnly _paystubId As Integer
 
@@ -40,6 +43,8 @@ Public Class LoanBreakdownDialog
             _TotalAmount = loanTransaction.LoanSchedule.TotalLoanAmount
             _DeductionAmount = $"({FormatNumber(loanTransaction.Amount, 2)})"
             _Balance = loanTransaction.TotalBalance
+            _DeductionSchedule = loanTransaction.LoanSchedule.DeductionSchedule
+            _PayPeriodsLeft = loanTransaction.LoanSchedule.LoanPayPeriodLeft
         End Sub
 
         Public ReadOnly Property LoanNumber As String
@@ -47,6 +52,8 @@ Public Class LoanBreakdownDialog
         Public ReadOnly Property TotalAmount As Decimal
         Public ReadOnly Property DeductionAmount As String
         Public ReadOnly Property Balance As Decimal
+        Public ReadOnly Property DeductionSchedule As String
+        Public ReadOnly Property PayPeriodsLeft As Decimal
     End Class
 
 End Class
