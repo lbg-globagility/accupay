@@ -1,3 +1,5 @@
+Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -33,6 +35,9 @@ Public Class BonusBreakdownDialog
 
         Dim bonuses = bonusList.
             Select(Function(b) New BonusBreakdownItem(b)).
+            OrderBy(Function(b) b.BonusType).
+            ThenBy(Function(b) b.AllowanceFrequency).
+            ThenBy(Function(b) b.Amount).
             ToList()
 
         BonusGridView.DataSource = bonuses
@@ -43,12 +48,12 @@ Public Class BonusBreakdownDialog
         Public Sub New(bonus As Bonus)
             _BonusType = bonus.BonusType
             _Amount = If(bonus.BonusAmount, 0)
-            IsTaxable = If(bonus.Product.Status = "1", "Yes", "No")
+            _AllowanceFrequency = bonus.AllowanceFrequency
         End Sub
 
         Public ReadOnly Property BonusType As String
         Public ReadOnly Property Amount As Decimal
-        Public ReadOnly Property IsTaxable As String
+        Public ReadOnly Property AllowanceFrequency As String
     End Class
 
 End Class

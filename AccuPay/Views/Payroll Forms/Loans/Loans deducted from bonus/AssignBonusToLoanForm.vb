@@ -1,36 +1,32 @@
-﻿Imports AccuPay.Data.Entities
+Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AssignBonusToLoanForm
+
     Private ReadOnly _loanSchedule As LoanSchedule
-    Private ReadOnly _bonusRepository = MainServiceProvider.GetRequiredService(Of BonusRepository)
-    Private ReadOnly _loanPaymentFromBonusRepo = MainServiceProvider.GetRequiredService(Of LoanPaymentFromBonusRepository)
-    Private ReadOnly _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+    Private ReadOnly _bonusRepository As BonusRepository
+    Private ReadOnly _loanPaymentFromBonusRepo As LoanPaymentFromBonusRepository
+    Private ReadOnly _loanService As LoanDataService
+
     Private _loanPaymentFromBonus As IEnumerable(Of LoanPaymentFromBonus)
     Private _bonuses As IEnumerable(Of Bonus)
     Private _loanPaymentFromBonusModels As List(Of LoanPaymentFromBonusModel)
     Private newTotalBalanceLeft As Decimal
     Private newLoanPayPeriodLeft As Integer
 
-    Public Sub New()
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-
-    End Sub
-
     Public Sub New(loanSchedule As LoanSchedule)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-
         _loanSchedule = loanSchedule
+
+        _bonusRepository = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        _loanPaymentFromBonusRepo = MainServiceProvider.GetRequiredService(Of LoanPaymentFromBonusRepository)
+        _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
         newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft
         newLoanPayPeriodLeft = _loanSchedule.LoanPayPeriodLeft
@@ -112,7 +108,7 @@ Public Class AssignBonusToLoanForm
 
         txtNumberOfPayPeriodLeft.DataBindings.Clear()
         txtNumberOfPayPeriodLeft.DataBindings.Add("Text", loanSchedule, "LoanPayPeriodLeft", True, DataSourceUpdateMode.Never, Nothing, "N0")
-        lblNoOfPayPeriodLeft.Text = loanSchedule.LoanPayPeriodLeft
+        lblNoOfPayPeriodLeft.Text = loanSchedule.LoanPayPeriodLeft.ToString()
 
         txtDeductionAmount.DataBindings.Clear()
         txtDeductionAmount.DataBindings.Add("Text", loanSchedule, "DeductionAmount", True, DataSourceUpdateMode.Never, Nothing, "N2")
@@ -237,7 +233,7 @@ Public Class AssignBonusToLoanForm
             If payPeriodLeft > 0 And payPeriodLeft < 1 Then
                 newLoanPayPeriodLeft = 1
             ElseIf payPeriodLeft > -1 Then
-                newLoanPayPeriodLeft = Math.Floor(payPeriodLeft)
+                newLoanPayPeriodLeft = CInt(Math.Floor(payPeriodLeft))
             Else
                 newLoanPayPeriodLeft = 0
             End If
@@ -246,7 +242,7 @@ Public Class AssignBonusToLoanForm
 
         lblTotalAmountPayment.Text = totalAmountPayment.ToString("N")
         lblTotalBalanceLeft.Text = newTotalBalanceLeft.ToString("N")
-        lblNoOfPayPeriodLeft.Text = newLoanPayPeriodLeft
+        lblNoOfPayPeriodLeft.Text = newLoanPayPeriodLeft.ToString()
 
     End Sub
 

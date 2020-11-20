@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Services.Policies;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities;
 using System.Threading.Tasks;
 
@@ -59,6 +59,8 @@ namespace AccuPay.Data.Services
         public bool UseCostCenter => _settings.GetBoolean("Policy.UseCostCenter", false);
 
         public bool UseAgency => CurrentSystemOwner == SystemOwnerService.Hyundai || CurrentSystemOwner == SystemOwnerService.Goldwings;
+
+        public bool UseBonus => CurrentSystemOwner == SystemOwnerService.Goldwings;
 
         public bool UseMassOvertime => _settings.GetBoolean("Policy.UseMassOvertime", false);
 

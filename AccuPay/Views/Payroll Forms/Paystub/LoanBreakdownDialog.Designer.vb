@@ -41,12 +41,12 @@ Partial Class LoanBreakdownDialog
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.LoanGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
@@ -66,7 +66,7 @@ Partial Class LoanBreakdownDialog
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.LoanGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.LoanGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.LoanGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7})
+        Me.LoanGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column2, Me.Column6, Me.Column1, Me.Column3, Me.Column4, Me.Column5, Me.Column7})
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -158,19 +158,26 @@ Partial Class LoanBreakdownDialog
         Me.DataGridViewTextBoxColumn7.HeaderText = "Pay Periods Left"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "LoanNumber"
-        Me.Column1.HeaderText = "Loan Number"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
         'Column2
         '
         Me.Column2.DataPropertyName = "LoanType"
         Me.Column2.HeaderText = "Loan Type"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "DeductionSchedule"
+        Me.Column6.HeaderText = "Deduction Schedule"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "LoanNumber"
+        Me.Column1.HeaderText = "Loan Number"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
         '
         'Column3
         '
@@ -204,13 +211,6 @@ Partial Class LoanBreakdownDialog
         Me.Column5.Name = "Column5"
         Me.Column5.ReadOnly = True
         '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "DeductionSchedule"
-        Me.Column6.HeaderText = "Deduction Schedule"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
         'Column7
         '
         Me.Column7.DataPropertyName = "PayPeriodsLeft"
@@ -242,13 +242,6 @@ Partial Class LoanBreakdownDialog
     Friend WithEvents LoanGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Panel2 As Panel
     Friend WithEvents CloseButton As Button
-    Friend WithEvents Column1 As DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As DataGridViewTextBoxColumn
-    Friend WithEvents Column3 As DataGridViewTextBoxColumn
-    Friend WithEvents Column4 As DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As DataGridViewTextBoxColumn
-    Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
@@ -256,4 +249,11 @@ Partial Class LoanBreakdownDialog
     Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
+    Friend WithEvents Column6 As DataGridViewTextBoxColumn
+    Friend WithEvents Column1 As DataGridViewTextBoxColumn
+    Friend WithEvents Column3 As DataGridViewTextBoxColumn
+    Friend WithEvents Column4 As DataGridViewTextBoxColumn
+    Friend WithEvents Column5 As DataGridViewTextBoxColumn
+    Friend WithEvents Column7 As DataGridViewTextBoxColumn
 End Class

@@ -23,16 +23,15 @@ Partial Class BonusBreakdownDialog
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.BonusGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.CloseButton = New System.Windows.Forms.Button()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.BonusGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
@@ -52,32 +51,53 @@ Partial Class BonusBreakdownDialog
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.BonusGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.BonusGridView.ColumnHeadersHeight = 34
-        Me.BonusGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.BonusGridView.DefaultCellStyle = DataGridViewCellStyle4
+        Me.BonusGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column3, Me.Column2})
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.BonusGridView.DefaultCellStyle = DataGridViewCellStyle3
         Me.BonusGridView.Dock = System.Windows.Forms.DockStyle.Fill
         Me.BonusGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.BonusGridView.Location = New System.Drawing.Point(0, 0)
         Me.BonusGridView.MultiSelect = False
         Me.BonusGridView.Name = "BonusGridView"
         Me.BonusGridView.ReadOnly = True
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.BonusGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.BonusGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.BonusGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.BonusGridView.Size = New System.Drawing.Size(808, 423)
+        Me.BonusGridView.Size = New System.Drawing.Size(484, 423)
         Me.BonusGridView.TabIndex = 0
+        '
+        'Panel2
+        '
+        Me.Panel2.BackColor = System.Drawing.Color.White
+        Me.Panel2.Controls.Add(Me.CloseButton)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel2.Location = New System.Drawing.Point(0, 423)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(484, 51)
+        Me.Panel2.TabIndex = 4
+        '
+        'CloseButton
+        '
+        Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.CloseButton.Location = New System.Drawing.Point(376, 9)
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(96, 32)
+        Me.CloseButton.TabIndex = 3
+        Me.CloseButton.Text = "&Close"
+        Me.CloseButton.UseVisualStyleBackColor = True
         '
         'Column1
         '
@@ -85,6 +105,14 @@ Partial Class BonusBreakdownDialog
         Me.Column1.HeaderText = "Bonus Type"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
+        Me.Column1.Width = 200
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "AllowanceFrequency"
+        Me.Column3.HeaderText = "Frequency"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
         '
         'Column2
         '
@@ -97,42 +125,12 @@ Partial Class BonusBreakdownDialog
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
         '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "IsTaxable"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle3
-        Me.Column3.HeaderText = "Is Taxable"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Panel2
-        '
-        Me.Panel2.BackColor = System.Drawing.Color.White
-        Me.Panel2.Controls.Add(Me.CloseButton)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 423)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(808, 51)
-        Me.Panel2.TabIndex = 4
-        '
-        'CloseButton
-        '
-        Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.CloseButton.Location = New System.Drawing.Point(700, 9)
-        Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New System.Drawing.Size(96, 32)
-        Me.CloseButton.TabIndex = 3
-        Me.CloseButton.Text = "&Close"
-        Me.CloseButton.UseVisualStyleBackColor = True
-        '
         'BonusBreakdownDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(808, 474)
+        Me.ClientSize = New System.Drawing.Size(484, 474)
         Me.Controls.Add(Me.BonusGridView)
         Me.Controls.Add(Me.Panel2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -151,6 +149,6 @@ Partial Class BonusBreakdownDialog
     Friend WithEvents Panel2 As Panel
     Friend WithEvents CloseButton As Button
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
-    Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
+    Friend WithEvents Column2 As DataGridViewTextBoxColumn
 End Class

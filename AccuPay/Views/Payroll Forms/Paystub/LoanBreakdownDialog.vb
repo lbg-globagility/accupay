@@ -30,6 +30,11 @@ Public Class LoanBreakdownDialog
 
         Dim loanTransactions = loanTransactionsList.
             Select(Function(lt) New LoanTransactionDto(lt)).
+            OrderBy(Function(b) b.LoanType).
+            ThenBy(Function(b) b.DeductionSchedule).
+            ThenBy(Function(b) b.LoanNumber).
+            ThenBy(Function(b) b.TotalAmount).
+            ThenBy(Function(b) b.Balance).
             ToList()
 
         LoanGridView.DataSource = loanTransactions

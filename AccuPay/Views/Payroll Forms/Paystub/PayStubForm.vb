@@ -855,7 +855,7 @@ Public Class PayStubForm
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
         If employeeId Is Nothing OrElse _currentPayperiodId Is Nothing Then
 
-            MessageBoxHelper.Warning("No selected paystub.", "Delete Paystub")
+            MessageBoxHelper.Warning("No selected paystub.")
             Return
 
         End If
@@ -865,13 +865,36 @@ Public Class PayStubForm
 
         If paystub Is Nothing Then
 
-            MessageBoxHelper.Warning("No selected paystub.", "Delete Paystub")
+            MessageBoxHelper.Warning("No selected paystub.")
             Return
 
         End If
 
         Dim dialog As New AllowanceBreakdownDialog(paystub.RowID.Value, isTaxable)
         dialog.ShowDialog()
+    End Sub
+
+    Private Async Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
+        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
+        If employeeId Is Nothing OrElse _currentPayperiodId Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected paystub.")
+            Return
+
+        End If
+
+        Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
+            New EmployeeCompositeKey(employeeId:=employeeId.Value, payPeriodId:=_currentPayperiodId.Value))
+
+        If paystub Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected paystub.")
+            Return
+
+        End If
+
+        Dim form As New LoanBreakdownDialog(paystub.RowID.Value)
+        form.ShowDialog()
     End Sub
 
     Private Async Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
@@ -1258,29 +1281,6 @@ Public Class PayStubForm
         Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
         Await dataService.UpdateAdjustmentsAsync(paystub.RowID.Value, adjustments.ToList(), z_User)
     End Function
-
-    Private Async Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
-        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
-        If employeeId Is Nothing OrElse _currentPayperiodId Is Nothing Then
-
-            MessageBoxHelper.Warning("No selected paystub.")
-            Return
-
-        End If
-
-        Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
-            New EmployeeCompositeKey(employeeId:=employeeId.Value, payPeriodId:=_currentPayperiodId.Value))
-
-        If paystub Is Nothing Then
-
-            MessageBoxHelper.Warning("No selected paystub.")
-            Return
-
-        End If
-
-        Dim form As New LoanBreakdownDialog(paystub.RowID.Value)
-        form.ShowDialog()
-    End Sub
 
     Private Async Function LoadAdjustmentsAsync() As Task
 
@@ -1755,31 +1755,21 @@ Public Class PayStubForm
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
         End If
 
-        If Not ShowAgency() Then
+        If Not _policy.UseAgency Then
             lblAgencyFee.Visible = False
             lblAgencyFeePesoSign.Visible = False
             txtAgencyFee.Visible = False
         End If
 
-        If Not ShowBonus() Then
+        If Not _policy.UseBonus Then
             lblTotalBonus.Visible = False
             lblTotalBonusPesoSign.Visible = False
             txtTotalBonus.Visible = False
+
+            btntotbon.Visible = False
         End If
 
     End Sub
-
-    Private Function ShowBonus() As Boolean
-
-        Return _currentSystemOwner = SystemOwnerService.Goldwings
-
-    End Function
-
-    Private Function ShowAgency() As Boolean
-        Return _currentSystemOwner = SystemOwnerService.Hyundai OrElse
-            _currentSystemOwner = SystemOwnerService.Goldwings
-
-    End Function
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
 
