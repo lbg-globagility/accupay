@@ -63,7 +63,7 @@ namespace AccuPay.Web.Payroll
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var generator = scope.ServiceProvider.GetRequiredService<PayrollGenerator>();
-                    var result = generator.Start(employee.RowID.Value, resources, _currentUser.OrganizationId, _currentUser.UserId);
+                    var result = await generator.Start(employee.RowID.Value, resources, _currentUser.OrganizationId, _currentUser.UserId);
                     results.Add(result);
                 }
             }

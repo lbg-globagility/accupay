@@ -56,8 +56,7 @@ namespace AccuPay.Web.Calendars
 
         public async Task<CalendarDto> Create(CreateCalendarDto dto)
         {
-            var calendar = new PayCalendar();
-            calendar.Name = dto.Name;
+            var calendar = PayCalendar.NewCalendar(dto.Name);
             calendar.CreatedBy = _currentUser.UserId;
 
             var copiedCalendar = await _repository.GetById(dto.CopiedCalendarId);

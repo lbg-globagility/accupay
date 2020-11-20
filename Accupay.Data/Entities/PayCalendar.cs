@@ -9,11 +9,6 @@ namespace AccuPay.Data.Entities
     {
         public const string DefaultName = "[Default]";
 
-        private PayCalendar()
-        {
-            // create a factory method to create new Daytypes
-        }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }

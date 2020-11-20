@@ -8,11 +8,6 @@ namespace AccuPay.Data.Entities
     [Table("daytype")]
     public class DayType
     {
-        private DayType()
-        {
-            // create a factory method to create new Daytypes
-        }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
