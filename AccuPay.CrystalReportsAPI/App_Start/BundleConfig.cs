@@ -1,6 +1,6 @@
 using System.Web.Optimization;
 
-namespace AccuPay.CrystalReportsWeb
+namespace AccuPay.CrystalReportsAPI
 {
     public class BundleConfig
     {

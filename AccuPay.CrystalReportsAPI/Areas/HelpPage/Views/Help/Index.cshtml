@@ -2,14 +2,15 @@
 @using System.Web.Http.Controllers
 @using System.Web.Http.Description
 @using System.Collections.ObjectModel
-@using AccuPay.CrystalReportsWeb.Areas.HelpPage.Models
+@using AccuPay.CrystalReportsAPI.Areas.HelpPage.Models
 @model Collection<ApiDescription>
 
 @{
     ViewBag.Title = "AccuPay Reporting API Help Page";
 
     // Group APIs by controller
-    ILookup<HttpControllerDescriptor, ApiDescription> apiGroups = Model.ToLookup(api => api.ActionDescriptor.ControllerDescriptor);
+    ILookup<HttpControllerDescriptor, ApiDescription> apiGroups = Model.ToLookup(api =>
+    api.ActionDescriptor.ControllerDescriptor);
 }
 
 <link type="text/css" href="~/Areas/HelpPage/HelpPage.css" rel="stylesheet" />
@@ -34,5 +35,5 @@
         {
             @Html.DisplayFor(m => group, "ApiGroup")
         }
-    </section>
-</div>
+        </section>
+    </div>

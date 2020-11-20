@@ -1,4 +1,4 @@
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage
 {
     /// <summary>
     /// Indicates whether the sample is used for request or response

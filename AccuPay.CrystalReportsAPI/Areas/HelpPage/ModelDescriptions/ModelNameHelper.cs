@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions
 {
     internal static class ModelNameHelper
     {

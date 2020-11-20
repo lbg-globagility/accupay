@@ -1,4 +1,4 @@
-@using AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions
+@using AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions
 @model Type
 @{
     ModelDescription modelDescription = ViewBag.modelDescription;
@@ -7,6 +7,7 @@
         if (Model == typeof(Object))
         {
             @:Object
+
         }
         else
         {
@@ -17,7 +18,9 @@
     {
         var collectionDescription = modelDescription as CollectionModelDescription;
         var elementDescription = collectionDescription.ElementDescription;
-        @:Collection of @Html.DisplayFor(m => elementDescription.ModelType, "ModelDescriptionLink", new { modelDescription = elementDescription })
+        @:Collection of @Html.DisplayFor(m => elementDescription.ModelType, "ModelDescriptionLink", new { modelDescription =
+               elementDescription })
+
     }
     else
     {

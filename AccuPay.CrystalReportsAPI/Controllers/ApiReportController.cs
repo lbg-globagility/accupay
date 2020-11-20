@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Description;
 
-namespace AccuPay.CrystalReportsWeb.Controllers
+namespace AccuPay.CrystalReportsAPI.Controllers
 {
     public class ApiReportController : ApiController
     {

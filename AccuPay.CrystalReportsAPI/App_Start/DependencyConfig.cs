@@ -1,5 +1,5 @@
 using AccuPay.CrystalReports;
-using AccuPay.CrystalReportsWeb.Services;
+using AccuPay.CrystalReportsAPI.Services;
 using AccuPay.Data;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 
-namespace AccuPay.CrystalReportsWeb
+namespace AccuPay.CrystalReportsAPI
 {
     public class DependencyConfig
     {

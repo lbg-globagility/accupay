@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="AccuPay.CrystalReportsWeb.WebApiApplication" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="AccuPay.CrystalReportsAPI.WebApiApplication" Language="C#" %>

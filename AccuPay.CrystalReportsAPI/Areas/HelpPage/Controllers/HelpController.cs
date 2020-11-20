@@ -1,10 +1,10 @@
-using AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions;
-using AccuPay.CrystalReportsWeb.Areas.HelpPage.Models;
+using AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions;
+using AccuPay.CrystalReportsAPI.Areas.HelpPage.Models;
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
 
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.Controllers
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.

@@ -1,6 +1,6 @@
 using System;
 
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions
 {
     /// <summary>
     /// Use this attribute to change the name of the <see cref="ModelDescription"/> generated for a type.

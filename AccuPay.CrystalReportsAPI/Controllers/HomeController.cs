@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace AccuPay.CrystalReportsWeb.Controllers
+namespace AccuPay.CrystalReportsAPI.Controllers
 {
     public class HomeController : Controller
     {

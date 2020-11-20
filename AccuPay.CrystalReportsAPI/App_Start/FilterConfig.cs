@@ -1,6 +1,6 @@
 using System.Web.Mvc;
 
-namespace AccuPay.CrystalReportsWeb
+namespace AccuPay.CrystalReportsAPI
 {
     public class FilterConfig
     {

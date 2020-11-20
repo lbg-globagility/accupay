@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace AccuPay.CrystalReportsWeb
+namespace AccuPay.CrystalReportsAPI
 {
     public static class WebApiConfig
     {

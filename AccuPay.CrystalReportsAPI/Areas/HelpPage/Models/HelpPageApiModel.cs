@@ -1,10 +1,10 @@
-using AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions;
+using AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
 
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.Models
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage.Models
 {
     /// <summary>
     /// The model that represents an API displayed on the help page.

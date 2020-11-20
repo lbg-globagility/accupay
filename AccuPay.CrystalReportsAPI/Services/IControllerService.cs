@@ -1,4 +1,4 @@
-﻿namespace AccuPay.CrystalReportsWeb.Services
+﻿namespace AccuPay.CrystalReportsAPI.Services
 {
     internal interface IControllerService
     {

@@ -1,10 +1,10 @@
-using AccuPay.CrystalReportsWeb.Services;
+using AccuPay.CrystalReportsAPI.Services;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace AccuPay.CrystalReportsWeb.Controllers
+namespace AccuPay.CrystalReportsAPI.Controllers
 {
     /// <summary>
     /// Reports API endpoints returning pdf files.

@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions
 {
     public interface IModelDocumentationProvider
     {

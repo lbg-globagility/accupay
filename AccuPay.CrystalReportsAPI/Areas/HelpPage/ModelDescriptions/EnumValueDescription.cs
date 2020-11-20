@@ -1,4 +1,4 @@
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions
 {
     public class EnumValueDescription
     {

@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 
-namespace AccuPay.CrystalReportsWeb
+namespace AccuPay.CrystalReportsAPI
 {
     public class WebApiApplication : System.Web.HttpApplication
     {

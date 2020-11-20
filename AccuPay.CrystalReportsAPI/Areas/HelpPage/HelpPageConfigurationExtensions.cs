@@ -1,5 +1,5 @@
-using AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions;
-using AccuPay.CrystalReportsWeb.Areas.HelpPage.Models;
+using AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions;
+using AccuPay.CrystalReportsAPI.Areas.HelpPage.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +14,7 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage
 {
     public static class HelpPageConfigurationExtensions
     {

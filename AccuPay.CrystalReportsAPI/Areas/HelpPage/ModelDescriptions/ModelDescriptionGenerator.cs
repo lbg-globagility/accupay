@@ -11,7 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Xml.Serialization;
 
-namespace AccuPay.CrystalReportsWeb.Areas.HelpPage.ModelDescriptions
+namespace AccuPay.CrystalReportsAPI.Areas.HelpPage.ModelDescriptions
 {
     /// <summary>
     /// Generates model descriptions for given types.

@@ -6,7 +6,7 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace AccuPay.CrystalReportsWeb.Services
+namespace AccuPay.CrystalReportsAPI.Services
 {
     public class ReportingService : IControllerService
     {
