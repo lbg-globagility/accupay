@@ -1748,7 +1748,7 @@ Public Class PayStubForm
     End Function
 
     Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
-        If _currentSystemOwner = SystemOwnerService.Cinema2000 Then
+        If Not _policy.ShowActual Then
             Dim str_empty As String = String.Empty
             DeclaredTabPage.Text = str_empty
             ActualTabPage.Text = str_empty
@@ -1773,10 +1773,7 @@ Public Class PayStubForm
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
 
-        Static isCinemaUser As Boolean =
-            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
-
-        e.Cancel = isCinemaUser
+        e.Cancel = Not _policy.ShowActual
 
     End Sub
 

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -14,8 +14,6 @@ Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
-
     Private ReadOnly _policyHelper As PolicyHelper
 
     Private ReadOnly _roleRepository As RoleRepository
@@ -27,8 +25,6 @@ Public Class GeneralForm
         InitializeComponent()
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
-
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 
@@ -57,12 +53,8 @@ Public Class GeneralForm
     End Sub
 
     Private Sub ShowAgency()
-        Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
 
-        Dim showAgencyForm = currentSystemOwner = SystemOwnerService.Hyundai OrElse
-            currentSystemOwner = SystemOwnerService.Goldwings
-
-        AgencyToolStripMenuItem.Visible = showAgencyForm
+        AgencyToolStripMenuItem.Visible = _policyHelper.UseAgency
     End Sub
 
     Private Sub CheckUserLevelPermissions(user As AspNetUser)

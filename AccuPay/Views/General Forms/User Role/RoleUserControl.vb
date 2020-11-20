@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -16,7 +16,7 @@ Public Class RoleUserControl
 
     Private _formMode As FormMode
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _policy As PolicyHelper
 
     Private ReadOnly _permissionRepository As PermissionRepository
 
@@ -29,7 +29,7 @@ Public Class RoleUserControl
         'For issues in designer And also defensive programming
         If MainServiceProvider IsNot Nothing Then
 
-            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+            _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
             _permissionRepository = MainServiceProvider.GetRequiredService(Of PermissionRepository)
         End If
@@ -113,11 +113,7 @@ Public Class RoleUserControl
 
         Dim permissions = (Await _permissionRepository.GetAll(forDesktopOnly:=True)).ToList()
 
-        Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
-        Dim showAgency = currentSystemOwner = SystemOwnerService.Hyundai OrElse
-            currentSystemOwner = SystemOwnerService.Goldwings
-
-        If Not showAgency Then
+        If Not _policy.UseAgency Then
             Dim agencyPermission = permissions.
                 Where(Function(p) p.Name = PermissionConstant.AGENCY).
                 FirstOrDefault()

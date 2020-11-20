@@ -94,15 +94,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub ShowAgencyComboBox()
-        Dim show = ShowAgency()
+        Dim show = _policy.UseAgency
         AgencyLabel.Visible = show
         cboAgency.Visible = show
     End Sub
-
-    Private Function ShowAgency() As Boolean
-        Return _currentSystemOwner = SystemOwnerService.Hyundai OrElse
-            _currentSystemOwner = SystemOwnerService.Goldwings
-    End Function
 
     Private Sub CheckRolePermissions()
 
@@ -135,18 +130,12 @@ Public Class EmployeeForm
             RemoveTab(tbpSalary)
         End If
 
-        If Not ShowBonus() Then
+        If Not _policy.UseBonus Then
 
             RemoveTab(tbpBonus)
         End If
 
     End Sub
-
-    Private Function ShowBonus() As Boolean
-
-        Return _currentSystemOwner = SystemOwnerService.Goldwings
-
-    End Function
 
     Private Sub RemoveTab(page As TabPage)
 
@@ -950,12 +939,12 @@ Public Class EmployeeForm
 
                 Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Dim newleaveBalance = Await leaveService.
-                                            ForceUpdateLeaveAllowanceAsync(
-                                                        employeeId:=employeeId,
-                                                        organizationId:=z_OrganizationID,
-                                                        userId:=z_User,
-                                                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
-                                                        newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
+                    ForceUpdateLeaveAllowanceAsync(
+                        employeeId:=employeeId,
+                        organizationId:=z_OrganizationID,
+                        userId:=z_User,
+                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
+                        newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
             End If
@@ -1366,7 +1355,7 @@ Public Class EmployeeForm
                 })
             End If
         End If
-        If _currentSystemOwner = SystemOwnerService.LAGlobal AndAlso oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
+        If _policy.UseBPIInsurance AndAlso oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldEmployee.RowID,
@@ -1382,7 +1371,7 @@ Public Class EmployeeForm
                 .ChangedEmployeeId = oldEmployee.RowID.Value
             })
         End If
-        If ShowAgency() AndAlso oldEmployee.Agency?.Name <> cboAgency.Text Then
+        If _policy.UseAgency AndAlso oldEmployee.Agency?.Name <> cboAgency.Text Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldEmployee.RowID,

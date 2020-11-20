@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
@@ -12,8 +12,6 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class HRISForm
 
     Public listHRISForm As New List(Of String)
-
-    Private curr_sys_owner_name As String = ""
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -37,20 +35,16 @@ Public Class HRISForm
 
         _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
-        curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
-
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
     End Sub
 
     Private Async Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        OffSetToolStripMenuItem.Visible =
-            (curr_sys_owner_name = SystemOwnerService.Cinema2000)
+        OffSetToolStripMenuItem.Visible = _policyHelper.UseOffset
 
-        BonusToolStripMenuItem.Visible =
-            (curr_sys_owner_name = SystemOwnerService.Goldwings)
+        BonusToolStripMenuItem.Visible = _policyHelper.UseBonus
 
-        If _systemOwnerService.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
+        If Not _policyHelper.UseJobLevel Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
             PointsToolStripMenuItem.Visible = False
