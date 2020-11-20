@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class newProdBonus
+Partial Class AddBonusTypeForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,8 +22,8 @@ Partial Class newProdBonus
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.CloseButton = New System.Windows.Forms.Button()
+        Me.SaveButton = New System.Windows.Forms.Button()
         Me.Label164 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -32,85 +32,88 @@ Partial Class newProdBonus
         '
         'Button2
         '
-        Me.Button2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button2.Location = New System.Drawing.Point(252, 112)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 356
-        Me.Button2.Text = "Close"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.CloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CloseButton.Location = New System.Drawing.Point(212, 98)
+        Me.CloseButton.Name = "Button2"
+        Me.CloseButton.Size = New System.Drawing.Size(75, 23)
+        Me.CloseButton.TabIndex = 356
+        Me.CloseButton.Text = "Close"
+        Me.CloseButton.UseVisualStyleBackColor = True
         '
         'Button1
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(171, 112)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 355
-        Me.Button1.Text = "&Add"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SaveButton.Location = New System.Drawing.Point(131, 98)
+        Me.SaveButton.Name = "Button1"
+        Me.SaveButton.Size = New System.Drawing.Size(75, 23)
+        Me.SaveButton.TabIndex = 355
+        Me.SaveButton.Text = "&Add"
+        Me.SaveButton.UseVisualStyleBackColor = True
         '
         'Label164
         '
         Me.Label164.AutoSize = True
-        Me.Label164.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label164.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label164.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label164.Location = New System.Drawing.Point(83, 12)
+        Me.Label164.Location = New System.Drawing.Point(93, 21)
         Me.Label164.Name = "Label164"
-        Me.Label164.Size = New System.Drawing.Size(19, 23)
+        Me.Label164.Size = New System.Drawing.Size(18, 24)
         Me.Label164.TabIndex = 354
         Me.Label164.Text = "*"
         '
         'TextBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(107, 13)
+        Me.TextBox1.Location = New System.Drawing.Point(117, 22)
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(190, 20)
+        Me.TextBox1.Size = New System.Drawing.Size(169, 22)
         Me.TextBox1.TabIndex = 353
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(14, 20)
+        Me.Label1.Location = New System.Drawing.Point(24, 29)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(72, 13)
+        Me.Label1.Size = New System.Drawing.Size(76, 13)
         Me.Label1.TabIndex = 352
         Me.Label1.Text = "Bonus name :"
         '
         'chktaxab
         '
         Me.chktaxab.AutoSize = True
-        Me.chktaxab.Location = New System.Drawing.Point(107, 39)
+        Me.chktaxab.Location = New System.Drawing.Point(117, 48)
         Me.chktaxab.Name = "chktaxab"
         Me.chktaxab.Size = New System.Drawing.Size(64, 17)
         Me.chktaxab.TabIndex = 357
         Me.chktaxab.Text = "Taxable"
         Me.chktaxab.UseVisualStyleBackColor = True
+        Me.chktaxab.Visible = False
         '
-        'newProdBonus
+        'AddBonusTypeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(340, 147)
+        Me.BackColor = System.Drawing.SystemColors.Control
+        Me.ClientSize = New System.Drawing.Size(319, 142)
         Me.Controls.Add(Me.chktaxab)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.CloseButton)
+        Me.Controls.Add(Me.SaveButton)
         Me.Controls.Add(Me.Label164)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.Label1)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.KeyPreview = True
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "newProdBonus"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Name = "AddBonusTypeForm"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.Text = "New Bonus Type"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents CloseButton As System.Windows.Forms.Button
+    Friend WithEvents SaveButton As System.Windows.Forms.Button
     Friend WithEvents Label164 As System.Windows.Forms.Label
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label

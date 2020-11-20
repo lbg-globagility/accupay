@@ -1319,10 +1319,10 @@
     <Compile Include="Views\Core Forms\Josh_CrysRepForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\HRIS Forms\Employee\Bonus\newProdBonus.Designer.vb">
-      <DependentUpon>newProdBonus.vb</DependentUpon>
+    <Compile Include="Views\HRIS Forms\Employee\Bonus\AddBonusTypeForm.Designer.vb">
+      <DependentUpon>AddBonusTypeForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\HRIS Forms\Employee\Bonus\newProdBonus.vb">
+    <Compile Include="Views\HRIS Forms\Employee\Bonus\AddBonusTypeForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Pay Period Selection\MultiplePayPeriodSelectionDialog.Designer.vb">
@@ -2053,8 +2053,8 @@
     <EmbeddedResource Include="Views\Core Forms\Josh_CrysRepForm.resx">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\Employee\Bonus\newProdBonus.resx">
-      <DependentUpon>newProdBonus.vb</DependentUpon>
+    <EmbeddedResource Include="Views\HRIS Forms\Employee\Bonus\AddBonusTypeForm.resx">
+      <DependentUpon>AddBonusTypeForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Pay Period Selection\MultiplePayPeriodSelectionDialog.resx">
       <DependentUpon>MultiplePayPeriodSelectionDialog.vb</DependentUpon>
