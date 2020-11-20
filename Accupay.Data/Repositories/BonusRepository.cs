@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -119,6 +119,13 @@ namespace AccuPay.Data.Repositories
         {
             return await CreateBaseQueryByTimePeriod(organizationId, timePeriod).
                 ToListAsync();
+        }
+
+        public async Task<ICollection<Bonus>> GetByEmployeeAndPayPeriodAsync(int organizationId, int employeeId, TimePeriod timePeriod)
+        {
+            return await CreateBaseQueryByTimePeriod(organizationId, timePeriod)
+                .Where(b => b.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
         private IQueryable<Bonus> CreateBaseQueryByTimePeriod(int organizationId,

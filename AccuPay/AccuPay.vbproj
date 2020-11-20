@@ -1489,10 +1489,10 @@
     <Compile Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotbon.Designer.vb">
-      <DependentUpon>viewtotbon.vb</DependentUpon>
+    <Compile Include="Views\Payroll Forms\Paystub\BonusBreakdownDialog.Designer.vb">
+      <DependentUpon>BonusBreakdownDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Payroll Forms\Paystub\viewtotbon.vb">
+    <Compile Include="Views\Payroll Forms\Paystub\BonusBreakdownDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.Designer.vb">
@@ -2145,8 +2145,8 @@
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\AllowanceBreakdownDialog.resx">
       <DependentUpon>AllowanceBreakdownDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Paystub\viewtotbon.resx">
-      <DependentUpon>viewtotbon.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\BonusBreakdownDialog.resx">
+      <DependentUpon>BonusBreakdownDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\LoanBreakdownDialog.resx">
       <DependentUpon>LoanBreakdownDialog.vb</DependentUpon>

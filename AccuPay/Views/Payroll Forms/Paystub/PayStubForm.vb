@@ -850,8 +850,6 @@ Public Class PayStubForm
     End Sub
 
     Private Async Sub ShowAllowanceButton_Click(sender As Object, e As EventArgs) Handles ShowNonTaxableAllowanceButton.Click, ShowTaxableAllowanceButton.Click
-        viewtotbon.Close()
-
         Dim isTaxable = sender Is ShowTaxableAllowanceButton
 
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
@@ -876,21 +874,28 @@ Public Class PayStubForm
         dialog.ShowDialog()
     End Sub
 
-    Private Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
+    Private Async Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
+        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
+        If employeeId Is Nothing OrElse _currentPayperiodId Is Nothing Then
 
-        With viewtotbon
-            .Show()
-            .BringToFront()
-            If dgvemployees.RowCount <> 0 Then
-                .VIEW_employeebonus_indate(
-                    dgvemployees.CurrentRow.Cells("RowID").Value,
-                    _currentPayFromDate,
-                    _currentPayToDate)
+            MessageBoxHelper.Warning("No selected paystub.")
+            Return
 
-                .Text = .Text & " - ID# " & dgvemployees.CurrentRow.Cells("EmployeeID").Value.ToString()
-            End If
-        End With
+        End If
 
+        Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
+            New EmployeeCompositeKey(employeeId:=employeeId.Value, payPeriodId:=_currentPayperiodId.Value))
+
+        If paystub Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected paystub.")
+            Return
+
+        End If
+
+        Dim datePeriod = New TimePeriod(paystub.PayFromDate, paystub.PayToDate)
+        Dim form As New BonusBreakdownDialog(employeeId:=employeeId.Value, datePeriod:=datePeriod)
+        form.ShowDialog()
     End Sub
 
     Private Sub PayStub_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -909,8 +914,6 @@ Public Class PayStubForm
                 frm.Close()
             Next
         End If
-
-        viewtotbon.Close()
 
         PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
