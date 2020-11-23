@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
@@ -60,38 +60,12 @@ namespace AccuPay.Data.Services.Imports
                 if (EndTime == null)
                     reasons.Add("End Time is required");
 
-                if (_isShiftBasedAutoOvertimePolicyEnabled) ValidateExpectedEndTimeOrMinimumOvertime(reasons);
-
                 var message = string.Join("; ", reasons.ToArray());
 
                 if (!string.IsNullOrWhiteSpace(message))
                     message += ".";
 
                 return message;
-            }
-        }
-
-        private void ValidateExpectedEndTimeOrMinimumOvertime(List<string> reasons)
-        {
-            if (!_shiftBasedAutoOvertimePolicy.IsValidDefaultShiftPeriod(TimeFromDisplay, EndTime, BreakLength))
-            {
-                var importedShiftTimePeriod = TimePeriod.FromTime(StartTime.Value, EndTime.Value, Date);
-                var expectedEndTime = _shiftBasedAutoOvertimePolicy.GetExpectedEndTime(TimeFromDisplay, BreakLength).Value;
-                var isLessThanExpectedEndTime = importedShiftTimePeriod.End < expectedEndTime;
-                var reason = isLessThanExpectedEndTime ? $"End Time should be {expectedEndTime.ToShortTimeString()}" : string.Empty;
-
-                if (!isLessThanExpectedEndTime)
-                {
-                    var minOvertimeMinutes = Convert.ToDouble(_shiftBasedAutoOvertimePolicy.Minimum);
-                    var isEqualOrMoreThanMinimumOverTime = expectedEndTime.AddMinutes(minOvertimeMinutes) <= importedShiftTimePeriod.End;
-
-                    if (!isEqualOrMoreThanMinimumOverTime)
-                    {
-                        var expectedOvertime = expectedEndTime.AddMinutes(minOvertimeMinutes);
-                        reason = $"End Time should be {expectedOvertime.ToShortTimeString()} or greater";
-                    }
-                }
-                reasons.Add(reason);
             }
         }
     }

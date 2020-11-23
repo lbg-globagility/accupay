@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Interfaces;
+using AccuPay.Data.Interfaces;
 using AccuPay.Data.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,6 @@ namespace AccuPay.Data.Services.Policies
 
         private const int MINUTES_PER_HOUR = 60;
 
-        private const int NO_DEFAULT_BREAK = 0;
-
         private const string POLICY_TYPE = "DutyShift";
         private readonly ListOfValueCollection _settings;
 
@@ -25,26 +23,30 @@ namespace AccuPay.Data.Services.Policies
 
         public decimal Minimum => _settings.GetDecimal($"{POLICY_TYPE}.MinimumDuration");
 
-        public decimal DefaultWorkHours => _settings.GetDecimal($"{POLICY_TYPE}.DefaultWorkHours", STANDARD_LABOR_HOURS);
+        public decimal DefaultWorkHours => DefaultShiftHours - DefaultBreakLength;
 
-        public decimal DefaultBreakLength => NO_DEFAULT_BREAK;
+        public decimal DefaultShiftHours => _settings.GetDecimal($"{POLICY_TYPE}.DefaultShiftHour", STANDARD_LABOR_HOURS);
+
+        public decimal DefaultBreakLength => _settings.GetDecimal($"{POLICY_TYPE}.BreakHour");
+
+        public decimal DefaultWorkHoursAndMinimumOTHours => DefaultWorkHours + ConvertMinuteToHour(Minimum);
 
         public bool IsValidDefaultShiftPeriod(DateTime? startDate, TimeSpan? endTime, decimal breakLength)
         {
             if (startDate.HasValue && endTime.HasValue)
             {
-                var expectedEndTime = GetExpectedEndTime(startDate, breakLength).Value;
-                var minimumOTEndTime = expectedEndTime.AddMinutes(Convert.ToDouble(Minimum));
+                var shiftPeriod = new TimePeriod(
+                    startDate.Value,
+                    startDate.Value.Date.Add(endTime.Value));
 
-                var endDate = startDate.Value.Date.Add(endTime.Value);
-                if (startDate.Value.Hour >= endDate.Hour) endDate = endDate.AddDays(1);
+                if (!(shiftPeriod.TotalHours <= DefaultWorkHours))
+                {
+                    var expectedEndTime = GetExpectedEndTime(startDate, breakLength).Value;
+                    var minimumOTEndTime = expectedEndTime.AddMinutes(Convert.ToDouble(Minimum));
 
-                var atLeastDefaultWorkHoursOrMore = endDate.Subtract(expectedEndTime).TotalSeconds == 0;
-                var isMinimumOTTimeOnwards = endDate.Subtract(minimumOTEndTime).TotalSeconds >= 0;
-
-                if (!isMinimumOTTimeOnwards)
-                    if (!atLeastDefaultWorkHoursOrMore)
+                    if (shiftPeriod.End > expectedEndTime && shiftPeriod.End <= minimumOTEndTime)
                         return false;
+                }
 
                 return true;
             }
