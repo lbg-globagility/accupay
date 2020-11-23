@@ -1,0 +1,2 @@
+
+DELETE FROM `listofval` WHERE RowID=`LIC`='DefaultWorkHours' AND `Type`='DutyShift' AND `ParentLIC`='ShiftBasedAutomaticOvertime';

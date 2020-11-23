@@ -10,4 +10,4 @@ SET @id=(SELECT RowID FROM listofval WHERE `LIC`='MinimumDuration' AND `Type`=@d
 INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '30', 'MinimumDuration', @dutyShiftType, @parentLIC, 'Yes', 'using MINUTES', '2017-09-29 15:26:15', 1, '2020-10-20 15:46:30', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
 
 SET @id=(SELECT RowID FROM listofval WHERE `LIC`='DefaultWorkHours' AND `Type`=@dutyShiftType AND `ParentLIC`=@parentLIC LIMIT 1);
-DELETE FROM `listofval` WHERE RowID=@id;
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '8', 'DefaultWorkHours', @dutyShiftType, @parentLIC, 'Yes', 'using HOURS', '2017-09-29 15:26:15', 1, '2020-10-20 15:46:30', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
