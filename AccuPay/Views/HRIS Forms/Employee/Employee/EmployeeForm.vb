@@ -1,6 +1,7 @@
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
@@ -94,15 +95,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub ShowAgencyComboBox()
-        Dim show = ShowAgency()
+        Dim show = _policy.UseAgency
         AgencyLabel.Visible = show
         cboAgency.Visible = show
     End Sub
-
-    Private Function ShowAgency() As Boolean
-        Return _currentSystemOwner = SystemOwnerService.Hyundai OrElse
-            _currentSystemOwner = SystemOwnerService.Goldwings
-    End Function
 
     Private Sub CheckRolePermissions()
 
@@ -135,18 +131,12 @@ Public Class EmployeeForm
             RemoveTab(tbpSalary)
         End If
 
-        If Not ShowBonus() Then
+        If Not _policy.UseBonus Then
 
             RemoveTab(tbpBonus)
         End If
 
     End Sub
-
-    Private Function ShowBonus() As Boolean
-
-        Return _currentSystemOwner = SystemOwnerService.Goldwings
-
-    End Function
 
     Private Sub RemoveTab(page As TabPage)
 
@@ -939,7 +929,7 @@ Public Class EmployeeForm
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            0,
-                           GetSelectedBranch()?.RowID,
+                           BranchComboBox.SelectedValue,
                            ValNoComma(BPIinsuranceText.Text))
             succeed = new_eRowID IsNot Nothing
 
@@ -950,12 +940,12 @@ Public Class EmployeeForm
 
                 Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Dim newleaveBalance = Await leaveService.
-                                            ForceUpdateLeaveAllowanceAsync(
-                                                        employeeId:=employeeId,
-                                                        organizationId:=z_OrganizationID,
-                                                        userId:=z_User,
-                                                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
-                                                        newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
+                    ForceUpdateLeaveAllowanceAsync(
+                        employeeId:=employeeId,
+                        organizationId:=z_OrganizationID,
+                        userId:=z_User,
+                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
+                        newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
             End If
@@ -1091,7 +1081,7 @@ Public Class EmployeeForm
             .Cells("LateGracePeriod").Value = txtUTgrace.Text
             .Cells("AgencyName").Value = cboAgency.Text
 
-            .Cells("BranchID").Value = GetSelectedBranch()?.RowID
+            .Cells("BranchID").Value = BranchComboBox.SelectedValue
             .Cells("BPIInsuranceColumn").Value = BPIinsuranceText.Text
 
             Await SetEmployeeGridDataRow(dgvEmp_RowIndex)
@@ -1349,24 +1339,21 @@ Public Class EmployeeForm
                 })
             End If
         End If
-        If (oldEmployee.Branch Is Nothing And BranchComboBox.Text <> "") Then
+
+        If Not Nullable.Equals(oldEmployee.BranchID, ObjectUtils.ToNullableInteger(BranchComboBox.SelectedValue)) Then
+
+            Dim oldBranch = _branches.FirstOrDefault(Function(b) Nullable.Equals(b.RowID, oldEmployee.BranchID))
+            Dim newBranch = _branches.FirstOrDefault(Function(b) Nullable.Equals(b.RowID, ObjectUtils.ToNullableInteger(BranchComboBox.SelectedValue)))
+
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldEmployee.RowID,
-                .Description = $"Updated branch from '' to '{BranchComboBox.Text}' of employee.",
+                .Description = $"Updated branch from '{oldBranch?.Name}' to '{newBranch?.Name}' of employee.",
                 .ChangedEmployeeId = oldEmployee.RowID.Value
             })
-        ElseIf oldEmployee.Branch IsNot Nothing And BranchComboBox.Text <> "" Then
-            If oldEmployee.Branch.Name <> BranchComboBox.Text Then
-                changes.Add(New UserActivityItem() With
-                {
-                    .EntityId = oldEmployee.RowID,
-                    .Description = $"Updated branch from '{oldEmployee.Branch.Name}' to '{BranchComboBox.Text}' of employee.",
-                    .ChangedEmployeeId = oldEmployee.RowID.Value
-                })
-            End If
+
         End If
-        If _currentSystemOwner = SystemOwnerService.LAGlobal AndAlso oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
+        If _policy.UseBPIInsurance AndAlso oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldEmployee.RowID,
@@ -1382,7 +1369,7 @@ Public Class EmployeeForm
                 .ChangedEmployeeId = oldEmployee.RowID.Value
             })
         End If
-        If ShowAgency() AndAlso oldEmployee.Agency?.Name <> cboAgency.Text Then
+        If _policy.UseAgency AndAlso oldEmployee.Agency?.Name <> cboAgency.Text Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldEmployee.RowID,
@@ -1662,10 +1649,11 @@ Public Class EmployeeForm
 
     Sub reloadPositName(ByVal e_positID As String)
 
-        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT RowID,PositionName" &
-                                                             " FROM position" &
-                                                             " WHERE OrganizationID=" & orgztnID &
-                                                             " AND RowID!='" & String.Empty & "';")
+        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable(
+            "SELECT RowID,PositionName" &
+            " FROM position" &
+            " WHERE OrganizationID=" & orgztnID &
+            " AND RowID!='" & String.Empty & "';")
 
         Static once As SByte = 0
         If once = 0 Then
@@ -1698,33 +1686,34 @@ Public Class EmployeeForm
         End Select
     End Sub
 
-    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click,
-                                                                    btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click,
-                                                                   ToolStripButton18.Click,
-                                                                   ToolStripButton2.Click,
-                                                                   ToolStripButton11.Click,
-                                                                   ToolStripButton16.Click 'ToolStripButton12.Click
+    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles _
+        tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click,
+        btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click,
+        ToolStripButton18.Click,
+        ToolStripButton2.Click,
+        ToolStripButton11.Click,
+        ToolStripButton16.Click
+
         Me.Close()
     End Sub
 
-    Private Sub cboPosit_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboPosit.KeyPress
-        e.Handled = True
-    End Sub
-
     Private Async Sub cboPosit_SelectedIndexChanged_1Async(sender As Object, e As EventArgs) Handles cboPosit.SelectedIndexChanged
-        If Not tsbtnNewEmp.Enabled Then
-            Dim positionId = cboPosit.SelectedValue
-            Dim divisionName = String.Empty
-
-            Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
-
-            Dim position = Await positionService.GetByIdWithDivisionAsync(positionId)
-            If position?.Division IsNot Nothing Then
-                divisionName = position.Division.Name
-            End If
-            txtDivisionName.Text = divisionName
-        End If
+        Dim divisionName As String = Await GetDivisionName(cboPosit.Text)
+        txtDivisionName.Text = divisionName
     End Sub
+
+    Private Shared Async Function GetDivisionName(positionName As String) As Task(Of String)
+        Dim divisionName = String.Empty
+
+        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+
+        Dim position = Await repository.GetByNameWithDivisionAsync(z_OrganizationID, positionName)
+        If position?.Division IsNot Nothing Then
+            divisionName = position.Division.Name
+        End If
+
+        Return divisionName
+    End Function
 
     Dim noCurrCellChange As SByte
     Dim EmployeeImage As Image
@@ -1921,14 +1910,21 @@ Public Class EmployeeForm
 
         If dateOutput Is Nothing Then Return defaultOutput
 
-        If dateOutput < Data.Helpers.PayrollTools.SqlServerMinimumDate Then Return defaultOutput
+        If dateOutput < PayrollTools.SqlServerMinimumDate Then Return defaultOutput
 
         Return dateOutput
     End Function
 
     Private Async Function SetEmployee() As Task
+
+        Dim positionName = dgvEmp.CurrentRow.Cells("Column8").Value.ToString()
+
+        reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)
+
+        txtDivisionName.Text = Await GetDivisionName(positionName)
+        cboPosit.Text = positionName
+
         txtNName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column5").Value), "", dgvEmp.CurrentRow.Cells("Column5").Value)
-        txtDivisionName.Text = dgvEmp.CurrentRow.Cells("Column7").Value
 
         dtpempbdate.Value = GetDbDate(dgvEmp.CurrentRow.Cells("Column6").Value)
         dtpempstartdate.Value = GetDbDate(dgvEmp.CurrentRow.Cells("colstartdate").Value)
@@ -1959,10 +1955,6 @@ Public Class EmployeeForm
         Else
             cboEmpStat.Text = dgvEmp.CurrentRow.Cells("Column20").Value
         End If
-
-        reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)
-
-        cboPosit.Text = dgvEmp.CurrentRow.Cells("Column8").Value
 
         SetComboBoxValue(dgvEmp.CurrentRow.Cells("Column9").Value, cboSalut)
 
@@ -2069,26 +2061,27 @@ Public Class EmployeeForm
             dtpRegularizationDate.Checked = hasDateRegularized
         End If
 
-        Dim branchId = dgvEmp.CurrentRow.Cells("BranchID").Value
-        Dim branch = _branches.
-            Where(Function(b) Nullable.Equals(b.RowID, branchId)).
-            FirstOrDefault
+        Dim branchId = ObjectUtils.ToNullableInteger(dgvEmp.CurrentRow.Cells("BranchID").Value)
+        Dim currentBranch As LookUpItem = GetCurrentBranch(branchId)
 
-        Dim branchIndex As Integer = -1
-
-        If branch IsNot Nothing Then
-            branchIndex = _branches.IndexOf(branch)
-        End If
-
-        BranchComboBox.SelectedIndex = branchIndex
-
-        If branch Is Nothing Then
-            BranchComboBox.Text = Nothing
-        End If
+        BranchComboBox.SelectedItem = currentBranch
 
         BPIinsuranceText.Text = dgvEmp.CurrentRow.Cells("BPIInsuranceColumn").Value
 
         AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+    End Function
+
+    Private Function GetCurrentBranch(branchId As Integer?) As LookUpItem
+        Dim branchLookUpItems = CType(BranchComboBox.DataSource, List(Of LookUpItem))
+
+        Dim currentBranch = branchLookUpItems?.Where(Function(b) Nullable.Equals(b.Id, branchId)).FirstOrDefault()
+
+        If currentBranch Is Nothing Then
+
+            currentBranch = branchLookUpItems?.Where(Function(b) Nullable.Equals(b.Id, Nothing)).FirstOrDefault()
+        End If
+
+        Return currentBranch
     End Function
 
     Private Sub SetComboBoxValue(dbValue As Object, comboBox As ComboBox)
@@ -3144,7 +3137,7 @@ Public Class EmployeeForm
 
             enlistToCboBox("SELECT DisplayValue FROM listofval WHERE `Type`='Bank Names';", cbobank)
 
-            ShowBranch()
+            Await ShowBranch()
 
             ShowBPIInsurance()
 
@@ -3223,7 +3216,7 @@ Public Class EmployeeForm
         Await PopulateEmployeeData()
     End Function
 
-    Private Sub ShowBranch()
+    Private Async Function ShowBranch() As Task
 
         _branches = New List(Of Branch)
 
@@ -3231,19 +3224,26 @@ Public Class EmployeeForm
         BranchLabel.Visible = True
         AddBranchLinkButton.Visible = True
 
-        BranchComboBox.DisplayMember = "Name"
+        BranchComboBox.ValueMember = "Id"
+        BranchComboBox.DisplayMember = "DisplayMember"
 
-        PopulateBranchComboBox()
-    End Sub
+        Await PopulateBranchComboBox()
+    End Function
 
-    Private Sub PopulateBranchComboBox()
+    Private Async Function PopulateBranchComboBox() As Task
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-        _branches = branchRepository.
-            GetAll().
+        _branches = (Await branchRepository.GetAllAsync()).
             OrderBy(Function(b) b.Name).
             ToList()
-        BranchComboBox.DataSource = _branches
-    End Sub
+
+        Dim branchLookUpItems = LookUpItem.Convert(
+            _branches,
+            idPropertyName:="RowID",
+            displayMemberPropertyName:="Name",
+            hasDefaultItem:=True)
+
+        BranchComboBox.DataSource = branchLookUpItems
+    End Function
 
     Private Sub ShowBPIInsurance()
 
@@ -3260,18 +3260,6 @@ Public Class EmployeeForm
         BPIinsuranceLabel.Visible = True
 
     End Sub
-
-    Private Function GetSelectedBranch() As Branch
-
-        If BranchComboBox.SelectedIndex >= 0 AndAlso BranchComboBox.SelectedIndex < _branches.Count Then
-
-            Return _branches(BranchComboBox.SelectedIndex)
-
-        End If
-
-        Return Nothing
-
-    End Function
 
     Private Sub tbpEmployee_Leave(sender As Object, e As EventArgs) 'Handles tbpEmployee.Leave
         tbpEmployee.Text = "PERSON"
@@ -3664,14 +3652,14 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
+    Private Async Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
 
         Dim form As New AddBranchForm
         form.ShowDialog()
 
         If form.HasChanges Then
 
-            Dim branchId = GetSelectedBranch()?.RowID
+            Dim branchId = ObjectUtils.ToNullableInteger(BranchComboBox.SelectedValue)
 
             If form.LastAddedBranchId IsNot Nothing Then
 
@@ -3679,17 +3667,9 @@ Public Class EmployeeForm
 
             End If
 
-            PopulateBranchComboBox()
+            Await PopulateBranchComboBox()
 
-            Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
-
-            If currentBranch Is Nothing Then
-
-                BranchComboBox.SelectedIndex = -1
-            Else
-
-                BranchComboBox.SelectedIndex = _branches.IndexOf(currentBranch)
-            End If
+            BranchComboBox.SelectedItem = GetCurrentBranch(branchId)
 
         End If
 

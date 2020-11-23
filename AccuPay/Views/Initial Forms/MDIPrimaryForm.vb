@@ -38,7 +38,6 @@ Public Class MDIPrimaryForm
 
     Private if_sysowner_is_benchmark As Boolean
     Private if_sysowner_is_cinema2k As Boolean
-    Private if_sysowner_is_goldwings As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
     Private ReadOnly _policyHelper As PolicyHelper
@@ -64,7 +63,6 @@ Public Class MDIPrimaryForm
         Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
         if_sysowner_is_benchmark = currentSystemOwner = SystemOwnerService.Benchmark
         if_sysowner_is_cinema2k = currentSystemOwner = SystemOwnerService.Cinema2000
-        if_sysowner_is_goldwings = currentSystemOwner = SystemOwnerService.Goldwings
         if_sysowner_is_hyundai = currentSystemOwner = SystemOwnerService.Hyundai
 
         PrepareFormForBenchmark()
@@ -907,12 +905,7 @@ Public Class MDIPrimaryForm
 
             GeneralToolStripButton.Visible = False
 
-            Dim isAgencyAndHasReadPermission = (
-                if_sysowner_is_hyundai OrElse
-                if_sysowner_is_goldwings) AndAlso
-                CheckReadPermission(agencyPermission)
-
-            If isAgencyAndHasReadPermission Then
+            If _policyHelper.UseAgency AndAlso CheckReadPermission(agencyPermission) Then
                 GeneralToolStripButton.Visible = True
             End If
 

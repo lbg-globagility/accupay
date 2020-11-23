@@ -548,8 +548,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim service = MainServiceProvider.GetRequiredService(Of PositionDataService)
-        Dim positions = Await service.GetAllAsync(z_OrganizationID)
+        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim positions = Await repository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 

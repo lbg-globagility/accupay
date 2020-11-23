@@ -62,6 +62,10 @@ namespace AccuPay.Data.Services
 
         public bool UseBonus => CurrentSystemOwner == SystemOwnerService.Goldwings;
 
+        public bool UseJobLevel => CurrentSystemOwner == SystemOwnerService.Hyundai;
+
+        public bool UseOffset => CurrentSystemOwner == SystemOwnerService.Cinema2000;
+
         public bool UseMassOvertime => _settings.GetBoolean("Policy.UseMassOvertime", false);
 
         #region Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previous month", second day "is not previous month"
