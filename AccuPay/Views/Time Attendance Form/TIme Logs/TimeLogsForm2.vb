@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Exceptions
@@ -418,15 +419,15 @@ Public Class TimeLogsForm2
                 End If
             End If
             If Not Nullable.Equals(item.BranchID, oldValue.BranchID) Then
-                Dim branches As List(Of Branch) = CType(colBranchID.DataSource, List(Of Branch))
+                Dim branches As List(Of LookUpItem) = CType(colBranchID.DataSource, List(Of LookUpItem))
                 Dim oldBranch = ""
                 Dim newBranch = ""
 
                 If oldValue.BranchID.HasValue Then
-                    oldBranch = branches.Where(Function(x) x.RowID.Value = oldValue.BranchID.Value).FirstOrDefault.Name
+                    oldBranch = branches.Where(Function(x) Nullable.Equals(x.Id, oldValue.BranchID)).FirstOrDefault()?.DisplayMember
                 End If
                 If item.BranchID.HasValue Then
-                    newBranch = branches.Where(Function(x) x.RowID.Value = item.BranchID.Value).FirstOrDefault.Name
+                    newBranch = branches.Where(Function(x) Nullable.Equals(x.Id, item.BranchID)).FirstOrDefault()?.DisplayMember
                 End If
 
                 changes.Add(New UserActivityItem() With
@@ -825,13 +826,21 @@ Public Class TimeLogsForm2
 
     Private Async Function PopulateBranchComboBox() As Task
 
-        colBranchID.ValueMember = "RowID"
-        colBranchID.DisplayMember = "Name"
+        colBranchID.ValueMember = "Id"
+        colBranchID.DisplayMember = "DisplayMember"
 
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-        colBranchID.DataSource = (Await branchRepository.GetAllAsync).
+        Dim branches = (Await branchRepository.GetAllAsync).
             OrderBy(Function(b) b.Name).
-            ToList
+            ToList()
+
+        Dim branchLookUpItems = LookUpItem.Convert(
+            branches,
+            idPropertyName:="RowID",
+            displayMemberPropertyName:="Name",
+            hasDefaultItem:=True)
+
+        colBranchID.DataSource = branchLookUpItems
 
     End Function
 
@@ -1189,8 +1198,8 @@ Public Class TimeLogsForm2
             Dim model = GridRowToTimeLogModel(currRow)
 
             If e.ColumnIndex = colTimeIn.Index Then
-                Dim fdsfsd = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeIn), model.DateIn)
-                model.TimeIn = fdsfsd
+                model.TimeIn = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeIn), model.DateIn)
+
             ElseIf e.ColumnIndex = colTimeOut.Index Then
                 model.TimeOut = TimeLogModel.TimeSpanToString(Calendar.ToTimespan(model.TimeOut), model.DateOut)
             End If

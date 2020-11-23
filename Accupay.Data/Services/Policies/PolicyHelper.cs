@@ -61,6 +61,10 @@ namespace AccuPay.Data.Services
 
         public bool UseBonus => CurrentSystemOwner == SystemOwnerService.Goldwings;
 
+        public bool UseJobLevel => CurrentSystemOwner == SystemOwnerService.Hyundai;
+
+        public bool UseOffset => CurrentSystemOwner == SystemOwnerService.Cinema2000;
+
         #region ActualTimeEntryPolicy
 
         public bool AllowanceForOvertime => _actualTimeEntryPolicy.AllowanceForOvertime;

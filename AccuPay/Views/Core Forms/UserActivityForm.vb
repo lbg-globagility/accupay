@@ -84,7 +84,12 @@ Public Class UserActivityForm
 
         Dim users = Await _userRepository.List(PageOptions.AllData, Z_Client, includeDeleted:=True)
 
-        Dim userLookUpItems = LookUpItem.Convert(users.users, "Id", "FullNameLastNameFirst", "<Any>")
+        Dim userLookUpItems = LookUpItem.Convert(
+            users.users,
+            idPropertyName:="Id",
+            displayMemberPropertyName:="FullNameLastNameFirst",
+            hasDefaultItem:=True,
+            nullDefaultItem:="<Any>")
 
         ChangedByComboBox.ValueMember = "Id"
         ChangedByComboBox.DisplayMember = "DisplayMember"
@@ -101,7 +106,12 @@ Public Class UserActivityForm
             Dim employee = Await _employeeRepository.
                 GetPaginatedListAsync(New EmployeePageOptions() With {.All = True}, z_OrganizationID)
 
-            Dim employeeLookUpItems = LookUpItem.Convert(employee.Items, "RowID", "FullNameLastNameFirst", "<Any>")
+            Dim employeeLookUpItems = LookUpItem.Convert(
+                employee.Items,
+                idPropertyName:="RowID",
+                displayMemberPropertyName:="FullNameLastNameFirst",
+                hasDefaultItem:=True,
+                nullDefaultItem:="<Any>")
 
             ChangedEntityComboBox.ValueMember = "Id"
             ChangedEntityComboBox.DisplayMember = "DisplayMember"
