@@ -108,7 +108,7 @@ Public Class UserActivityForm
 
             Dim employeeLookUpItems = LookUpItem.Convert(
                 employee.Items,
-                idPropertyName:="Id",
+                idPropertyName:="RowID",
                 displayMemberPropertyName:="FullNameLastNameFirst",
                 hasDefaultItem:=True,
                 nullDefaultItem:="<Any>")

@@ -3132,7 +3132,7 @@ Public Class EmployeeForm
 
             enlistToCboBox("SELECT DisplayValue FROM listofval WHERE `Type`='Bank Names';", cbobank)
 
-            ShowBranch()
+            Await ShowBranch()
 
             ShowBPIInsurance()
 
@@ -3211,7 +3211,7 @@ Public Class EmployeeForm
         Await PopulateEmployeeData()
     End Function
 
-    Private Sub ShowBranch()
+    Private Async Function ShowBranch() As Task
 
         _branches = New List(Of Branch)
 
@@ -3222,13 +3222,12 @@ Public Class EmployeeForm
         BranchComboBox.ValueMember = "Id"
         BranchComboBox.DisplayMember = "DisplayMember"
 
-        PopulateBranchComboBox()
-    End Sub
+        Await PopulateBranchComboBox()
+    End Function
 
-    Private Sub PopulateBranchComboBox()
+    Private Async Function PopulateBranchComboBox() As Task
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-        _branches = branchRepository.
-            GetAll().
+        _branches = (Await branchRepository.GetAllAsync()).
             OrderBy(Function(b) b.Name).
             ToList()
 
@@ -3239,7 +3238,7 @@ Public Class EmployeeForm
             hasDefaultItem:=True)
 
         BranchComboBox.DataSource = branchLookUpItems
-    End Sub
+    End Function
 
     Private Sub ShowBPIInsurance()
 
@@ -3648,7 +3647,7 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
+    Private Async Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
 
         Dim form As New AddBranchForm
         form.ShowDialog()
@@ -3663,7 +3662,7 @@ Public Class EmployeeForm
 
             End If
 
-            PopulateBranchComboBox()
+            Await PopulateBranchComboBox()
 
             BranchComboBox.SelectedItem = GetCurrentBranch(branchId)
 
