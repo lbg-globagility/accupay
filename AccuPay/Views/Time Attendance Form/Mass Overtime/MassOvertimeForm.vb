@@ -201,29 +201,31 @@ Public Class MassOvertimePresenter
 
     Private _models As List(Of OvertimeModel)
 
-    Private _divisionService As DivisionDataService
+    Private ReadOnly _divisionRepository As DivisionRepository
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
     Public Sub New(view As MassOvertimeForm)
         _view = view
 
-        _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
     End Sub
 
     Public Async Function Load() As Task
-        _divisions = LoadDivisions()
+        _divisions = Await LoadDivisions()
         _employees = Await LoadEmployees()
 
         _view.ShowEmployees(_divisions, _employees)
     End Function
 
-    Private Function LoadDivisions() As IList(Of Division)
+    Private Async Function LoadDivisions() As Task(Of IList(Of Division))
 
-        Return _divisionService.GetAll(z_OrganizationID).ToList()
+        Return (Await _divisionRepository.
+            GetAllAsync(z_OrganizationID)).
+            ToList()
     End Function
 
     Private Async Function LoadEmployees() As Task(Of IList(Of Employee))

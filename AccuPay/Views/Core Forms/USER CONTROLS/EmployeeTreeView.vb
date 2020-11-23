@@ -1,9 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeTreeView
@@ -36,10 +35,7 @@ Public Class EmployeeTreeView
 
     Public Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
 
         _presenter = New EmployeeTreeViewPresenter(Me)
         tickedEmployees = New List(Of Employee)
@@ -230,9 +226,9 @@ Public Class EmployeeTreeView
 
         Private _organizationId As Integer
 
-        Private _divisionService As DivisionDataService
+        Private ReadOnly _divisionRepository As DivisionRepository
 
-        Private _employeeRepository As EmployeeRepository
+        Private ReadOnly _employeeRepository As EmployeeRepository
 
         Public Sub New(view As EmployeeTreeView)
             _view = view
@@ -240,7 +236,7 @@ Public Class EmployeeTreeView
 
             If MainServiceProvider IsNot Nothing Then
 
-                _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+                _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
 
                 _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
             End If
@@ -253,7 +249,7 @@ Public Class EmployeeTreeView
         End Function
 
         Private Async Function Reload() As Task
-            _divisions = LoadDivisions()
+            _divisions = Await LoadDivisions()
             _employees = Await LoadEmployees()
 
             Dim initialEmployees = _employees.Where(Function(e) e.IsActive).ToList()
@@ -261,9 +257,10 @@ Public Class EmployeeTreeView
             _view.ShowEmployees(_divisions, initialEmployees)
         End Function
 
-        Private Function LoadDivisions() As IList(Of Division)
+        Private Async Function LoadDivisions() As Task(Of IList(Of Division))
 
-            Return _divisionService.GetAll(_organizationId).
+            Return (Await _divisionRepository.
+                GetAllAsync(_organizationId)).
                 OrderBy(Function(d) d.Name).
                 ToList()
         End Function
