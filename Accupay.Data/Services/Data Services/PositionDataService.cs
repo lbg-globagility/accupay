@@ -1,9 +1,7 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
-using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore.Internal;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -80,10 +78,10 @@ namespace AccuPay.Data.Services
 
             if (existingPosition != null) return existingPosition;
 
-            var defaultDivision = await _divisionService.
-                                            GetOrCreateDefaultDivisionAsync(
-                                                    organizationId: organizationId,
-                                                    userId: userId);
+            var defaultDivision = await _divisionService
+                .GetOrCreateDefaultDivisionAsync(
+                    organizationId: organizationId,
+                    userId: userId);
 
             if (defaultDivision?.RowID == null)
                 throw new BusinessLogicException("Cannot create default division.");
@@ -99,26 +97,6 @@ namespace AccuPay.Data.Services
             await SaveAsync(position);
 
             return position;
-        }
-
-        public async Task<Position> GetByIdAsync(int positionId)
-        {
-            return await _positionRepository.GetByIdAsync(positionId);
-        }
-
-        public async Task<Position> GetByIdWithDivisionAsync(int positionId)
-        {
-            return await _positionRepository.GetByIdWithDivisionAsync(positionId);
-        }
-
-        public async Task<ICollection<Position>> GetAllAsync(int organizationId)
-        {
-            return await _positionRepository.GetAllAsync(organizationId);
-        }
-
-        public async Task<PaginatedList<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
-        {
-            return await _positionRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }
     }
 }

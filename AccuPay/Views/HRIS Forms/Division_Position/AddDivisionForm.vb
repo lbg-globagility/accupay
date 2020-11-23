@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -30,13 +30,13 @@ Public Class AddDivisionForm
 
     Public Property LastDivisionAdded As Division
 
-    Private _payFrequencyRepository As PayFrequencyRepository
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
 
-    Private _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _payFrequencyRepository As PayFrequencyRepository
 
-    Private _positionService As PositionDataService
+    Private ReadOnly _positionRepository As PositionRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
     Sub New()
 
@@ -46,7 +46,7 @@ Public Class AddDivisionForm
 
         _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
 
-        _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -83,7 +83,7 @@ Public Class AddDivisionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionService.GetAllAsync(z_OrganizationID)
+        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 

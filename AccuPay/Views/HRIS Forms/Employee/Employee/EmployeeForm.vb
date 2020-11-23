@@ -1649,10 +1649,11 @@ Public Class EmployeeForm
 
     Sub reloadPositName(ByVal e_positID As String)
 
-        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT RowID,PositionName" &
-                                                             " FROM position" &
-                                                             " WHERE OrganizationID=" & orgztnID &
-                                                             " AND RowID!='" & String.Empty & "';")
+        Dim n_SQLQueryToDatatable As New SQLQueryToDatatable(
+            "SELECT RowID,PositionName" &
+            " FROM position" &
+            " WHERE OrganizationID=" & orgztnID &
+            " AND RowID!='" & String.Empty & "';")
 
         Static once As SByte = 0
         If once = 0 Then
@@ -1685,33 +1686,34 @@ Public Class EmployeeForm
         End Select
     End Sub
 
-    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click,
-                                                                    btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click,
-                                                                   ToolStripButton18.Click,
-                                                                   ToolStripButton2.Click,
-                                                                   ToolStripButton11.Click,
-                                                                   ToolStripButton16.Click 'ToolStripButton12.Click
+    Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles _
+        tsbtnClose.Click, tsbtnCloseempawar.Click, tsbtnCloseempcert.Click,
+        btnClose.Click, ToolStripButton5.Click, ToolStripButton13.Click,
+        ToolStripButton18.Click,
+        ToolStripButton2.Click,
+        ToolStripButton11.Click,
+        ToolStripButton16.Click
+
         Me.Close()
     End Sub
 
-    Private Sub cboPosit_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboPosit.KeyPress
-        e.Handled = True
-    End Sub
-
     Private Async Sub cboPosit_SelectedIndexChanged_1Async(sender As Object, e As EventArgs) Handles cboPosit.SelectedIndexChanged
-        If Not tsbtnNewEmp.Enabled Then
-            Dim positionId = cboPosit.SelectedValue
-            Dim divisionName = String.Empty
-
-            Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
-
-            Dim position = Await positionService.GetByIdWithDivisionAsync(positionId)
-            If position?.Division IsNot Nothing Then
-                divisionName = position.Division.Name
-            End If
-            txtDivisionName.Text = divisionName
-        End If
+        Dim divisionName As String = Await GetDivisionName(cboPosit.Text)
+        txtDivisionName.Text = divisionName
     End Sub
+
+    Private Shared Async Function GetDivisionName(positionName As String) As Task(Of String)
+        Dim divisionName = String.Empty
+
+        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+
+        Dim position = Await repository.GetByNameWithDivisionAsync(z_OrganizationID, positionName)
+        If position?.Division IsNot Nothing Then
+            divisionName = position.Division.Name
+        End If
+
+        Return divisionName
+    End Function
 
     Dim noCurrCellChange As SByte
     Dim EmployeeImage As Image
@@ -1908,14 +1910,21 @@ Public Class EmployeeForm
 
         If dateOutput Is Nothing Then Return defaultOutput
 
-        If dateOutput < Data.Helpers.PayrollTools.SqlServerMinimumDate Then Return defaultOutput
+        If dateOutput < PayrollTools.SqlServerMinimumDate Then Return defaultOutput
 
         Return dateOutput
     End Function
 
     Private Async Function SetEmployee() As Task
+
+        Dim positionName = dgvEmp.CurrentRow.Cells("Column8").Value.ToString()
+
+        reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)
+
+        txtDivisionName.Text = Await GetDivisionName(positionName)
+        cboPosit.Text = positionName
+
         txtNName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column5").Value), "", dgvEmp.CurrentRow.Cells("Column5").Value)
-        txtDivisionName.Text = dgvEmp.CurrentRow.Cells("Column7").Value
 
         dtpempbdate.Value = GetDbDate(dgvEmp.CurrentRow.Cells("Column6").Value)
         dtpempstartdate.Value = GetDbDate(dgvEmp.CurrentRow.Cells("colstartdate").Value)
@@ -1946,10 +1955,6 @@ Public Class EmployeeForm
         Else
             cboEmpStat.Text = dgvEmp.CurrentRow.Cells("Column20").Value
         End If
-
-        reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)
-
-        cboPosit.Text = dgvEmp.CurrentRow.Cells("Column8").Value
 
         SetComboBoxValue(dgvEmp.CurrentRow.Cells("Column9").Value, cboSalut)
 
