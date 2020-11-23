@@ -14,11 +14,16 @@ Namespace AccuPay.Desktop.Helpers
             Me.DisplayMember = displayMember
         End Sub
 
-        Public Shared Function Convert(Of T)(itemList As IEnumerable(Of T), idPropertyName As String, displayMemberPropertyName As String, Optional nullDefaultItem As String = Nothing) As List(Of LookUpItem)
+        Public Shared Function Convert(Of T)(
+            itemList As IEnumerable(Of T),
+            idPropertyName As String,
+            displayMemberPropertyName As String,
+            Optional hasDefaultItem As Boolean = False,
+            Optional nullDefaultItem As String = "") As List(Of LookUpItem)
 
             Dim resultList As New List(Of LookUpItem)
 
-            If Not String.IsNullOrWhiteSpace(nullDefaultItem) Then
+            If hasDefaultItem Then
 
                 resultList.Add(New LookUpItem(Nothing, nullDefaultItem))
 

@@ -1,6 +1,7 @@
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
@@ -928,7 +929,7 @@ Public Class EmployeeForm
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            0,
-                           GetSelectedBranch()?.RowID,
+                           BranchComboBox.SelectedValue,
                            ValNoComma(BPIinsuranceText.Text))
             succeed = new_eRowID IsNot Nothing
 
@@ -1080,7 +1081,7 @@ Public Class EmployeeForm
             .Cells("LateGracePeriod").Value = txtUTgrace.Text
             .Cells("AgencyName").Value = cboAgency.Text
 
-            .Cells("BranchID").Value = GetSelectedBranch()?.RowID
+            .Cells("BranchID").Value = BranchComboBox.SelectedValue
             .Cells("BPIInsuranceColumn").Value = BPIinsuranceText.Text
 
             Await SetEmployeeGridDataRow(dgvEmp_RowIndex)
@@ -1338,22 +1339,19 @@ Public Class EmployeeForm
                 })
             End If
         End If
-        If (oldEmployee.Branch Is Nothing And BranchComboBox.Text <> "") Then
+
+        If Not Nullable.Equals(oldEmployee.BranchID, ObjectUtils.ToNullableInteger(BranchComboBox.SelectedValue)) Then
+
+            Dim oldBranch = _branches.FirstOrDefault(Function(b) Nullable.Equals(b.RowID, oldEmployee.BranchID))
+            Dim newBranch = _branches.FirstOrDefault(Function(b) Nullable.Equals(b.RowID, ObjectUtils.ToNullableInteger(BranchComboBox.SelectedValue)))
+
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldEmployee.RowID,
-                .Description = $"Updated branch from '' to '{BranchComboBox.Text}' of employee.",
+                .Description = $"Updated branch from '{oldBranch?.Name}' to '{newBranch?.Name}' of employee.",
                 .ChangedEmployeeId = oldEmployee.RowID.Value
             })
-        ElseIf oldEmployee.Branch IsNot Nothing And BranchComboBox.Text <> "" Then
-            If oldEmployee.Branch.Name <> BranchComboBox.Text Then
-                changes.Add(New UserActivityItem() With
-                {
-                    .EntityId = oldEmployee.RowID,
-                    .Description = $"Updated branch from '{oldEmployee.Branch.Name}' to '{BranchComboBox.Text}' of employee.",
-                    .ChangedEmployeeId = oldEmployee.RowID.Value
-                })
-            End If
+
         End If
         If _policy.UseBPIInsurance AndAlso oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
             changes.Add(New UserActivityItem() With
@@ -2058,26 +2056,27 @@ Public Class EmployeeForm
             dtpRegularizationDate.Checked = hasDateRegularized
         End If
 
-        Dim branchId = dgvEmp.CurrentRow.Cells("BranchID").Value
-        Dim branch = _branches.
-            Where(Function(b) Nullable.Equals(b.RowID, branchId)).
-            FirstOrDefault
+        Dim branchId = ObjectUtils.ToNullableInteger(dgvEmp.CurrentRow.Cells("BranchID").Value)
+        Dim currentBranch As LookUpItem = GetCurrentBranch(branchId)
 
-        Dim branchIndex As Integer = -1
-
-        If branch IsNot Nothing Then
-            branchIndex = _branches.IndexOf(branch)
-        End If
-
-        BranchComboBox.SelectedIndex = branchIndex
-
-        If branch Is Nothing Then
-            BranchComboBox.Text = Nothing
-        End If
+        BranchComboBox.SelectedItem = currentBranch
 
         BPIinsuranceText.Text = dgvEmp.CurrentRow.Cells("BPIInsuranceColumn").Value
 
         AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+    End Function
+
+    Private Function GetCurrentBranch(branchId As Integer?) As LookUpItem
+        Dim branchLookUpItems = CType(BranchComboBox.DataSource, List(Of LookUpItem))
+
+        Dim currentBranch = branchLookUpItems?.Where(Function(b) Nullable.Equals(b.Id, branchId)).FirstOrDefault()
+
+        If currentBranch Is Nothing Then
+
+            currentBranch = branchLookUpItems?.Where(Function(b) Nullable.Equals(b.Id, Nothing)).FirstOrDefault()
+        End If
+
+        Return currentBranch
     End Function
 
     Private Sub SetComboBoxValue(dbValue As Object, comboBox As ComboBox)
@@ -3220,7 +3219,8 @@ Public Class EmployeeForm
         BranchLabel.Visible = True
         AddBranchLinkButton.Visible = True
 
-        BranchComboBox.DisplayMember = "Name"
+        BranchComboBox.ValueMember = "Id"
+        BranchComboBox.DisplayMember = "DisplayMember"
 
         PopulateBranchComboBox()
     End Sub
@@ -3231,7 +3231,14 @@ Public Class EmployeeForm
             GetAll().
             OrderBy(Function(b) b.Name).
             ToList()
-        BranchComboBox.DataSource = _branches
+
+        Dim branchLookUpItems = LookUpItem.Convert(
+            _branches,
+            idPropertyName:="RowID",
+            displayMemberPropertyName:="Name",
+            hasDefaultItem:=True)
+
+        BranchComboBox.DataSource = branchLookUpItems
     End Sub
 
     Private Sub ShowBPIInsurance()
@@ -3249,18 +3256,6 @@ Public Class EmployeeForm
         BPIinsuranceLabel.Visible = True
 
     End Sub
-
-    Private Function GetSelectedBranch() As Branch
-
-        If BranchComboBox.SelectedIndex >= 0 AndAlso BranchComboBox.SelectedIndex < _branches.Count Then
-
-            Return _branches(BranchComboBox.SelectedIndex)
-
-        End If
-
-        Return Nothing
-
-    End Function
 
     Private Sub tbpEmployee_Leave(sender As Object, e As EventArgs) 'Handles tbpEmployee.Leave
         tbpEmployee.Text = "PERSON"
@@ -3660,7 +3655,7 @@ Public Class EmployeeForm
 
         If form.HasChanges Then
 
-            Dim branchId = GetSelectedBranch()?.RowID
+            Dim branchId = ObjectUtils.ToNullableInteger(BranchComboBox.SelectedValue)
 
             If form.LastAddedBranchId IsNot Nothing Then
 
@@ -3670,15 +3665,7 @@ Public Class EmployeeForm
 
             PopulateBranchComboBox()
 
-            Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
-
-            If currentBranch Is Nothing Then
-
-                BranchComboBox.SelectedIndex = -1
-            Else
-
-                BranchComboBox.SelectedIndex = _branches.IndexOf(currentBranch)
-            End If
+            BranchComboBox.SelectedItem = GetCurrentBranch(branchId)
 
         End If
 
