@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Divisions.Models;
@@ -13,25 +14,27 @@ namespace AccuPay.Web.Divisions
     public class DivisionService
     {
         private readonly DivisionDataService _service;
+        private readonly DivisionRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public DivisionService(DivisionDataService service, ICurrentUser currentuser)
+        public DivisionService(DivisionDataService service, DivisionRepository repository, ICurrentUser currentuser)
         {
             _service = service;
+            _repository = repository;
             _currentUser = currentuser;
         }
 
         public async Task<PaginatedList<DivisionDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
-            var paginatedList = await _service.List(options, _currentUser.OrganizationId, searchTerm);
+            var paginatedList = await _repository.List(options, _currentUser.OrganizationId, searchTerm);
 
             return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<DivisionDto> GetById(int id)
         {
-            var division = await _service.GetByIdWithParentAsync(id);
+            var division = await _repository.GetByIdWithParentAsync(id);
 
             return ConvertToDto(division);
         }
@@ -51,7 +54,7 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<DivisionDto> Update(int id, UpdateDivisionDto dto)
         {
-            var division = await _service.GetByIdWithParentAsync(id);
+            var division = await _repository.GetByIdWithParentAsync(id);
             if (division == null) return null;
 
             division.LastUpdBy = _currentUser.UserId;
@@ -70,12 +73,12 @@ namespace AccuPay.Web.Divisions
 
         internal IEnumerable<string> GetTypes()
         {
-            return _service.GetTypes();
+            return _repository.GetDivisionTypeList();
         }
 
         internal async Task<IEnumerable<DivisionDto>> GetAllParents()
         {
-            IEnumerable<Division> parents = await _service.GetAllParentsAsync(_currentUser.OrganizationId);
+            IEnumerable<Division> parents = await _repository.GetAllParentsAsync(_currentUser.OrganizationId);
 
             var dtos = parents.Select(x => ConvertToDto(x));
 

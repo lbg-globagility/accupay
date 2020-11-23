@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -18,20 +18,19 @@ Public Class AddPositionForm
     Private _newPosition As Position
 
     Public Property IsSaved As Boolean
-
     Public Property ShowBalloonSuccess As Boolean
 
     Public Property LastPositionAdded As Position
 
-    Private _divisionService As DivisionDataService
+    Private ReadOnly _divisionRepository As DivisionRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -51,9 +50,9 @@ Public Class AddPositionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim divisions = Await _divisionService.GetAllAsync(z_OrganizationID)
+        Dim divisions = Await _divisionRepository.GetAllAsync(z_OrganizationID)
 
-        _divisions = divisions.OrderBy(Function(d) d.Name).ToList
+        _divisions = divisions.OrderBy(Function(d) d.Name).ToList()
 
     End Function
 
@@ -63,7 +62,7 @@ Public Class AddPositionForm
         Me._newPosition.OrganizationID = z_OrganizationID
         Me._newPosition.CreatedBy = z_User
 
-        Dim allChildDivisions = _divisions.Where(Function(d) d.IsRoot = False).ToList
+        Dim allChildDivisions = _divisions.Where(Function(d) d.IsRoot = False).ToList()
 
         PositionUserControl1.SetPosition(Me._newPosition, allChildDivisions, _jobLevels)
 
@@ -108,9 +107,9 @@ Public Class AddPositionForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                          Async Function()
-                              Await SavePosition(sender)
-                          End Function)
+            Async Function()
+                Await SavePosition(sender)
+            End Function)
 
     End Sub
 

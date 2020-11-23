@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -31,30 +31,30 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        internal async Task<Division> GetByIdWithParentAsync(int id)
+        public async Task<Division> GetByIdWithParentAsync(int id)
         {
             return await _context.Divisions
-                                .Include(x => x.ParentDivision)
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+                .Include(x => x.ParentDivision)
+                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        internal async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
+        public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
         {
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    var defaultParentDivision = await _context.Divisions.
-                                            Where(x => x.OrganizationID == organizationId).
-                                            Where(x => x.Name.Trim().ToLower() == Division.DefaultLocationName.ToTrimmedLowerCase()).
-                                            Where(x => x.IsRoot).
-                                            FirstOrDefaultAsync();
+                    var defaultParentDivision = await _context.Divisions
+                        .Where(x => x.OrganizationID == organizationId)
+                        .Where(x => x.Name.Trim().ToLower() == Division.DefaultLocationName.ToTrimmedLowerCase())
+                        .Where(x => x.IsRoot)
+                        .FirstOrDefaultAsync();
 
                     if (defaultParentDivision == null)
                     {
                         defaultParentDivision = Division.NewDivision(
-                                                            organizationId: organizationId,
-                                                            userId: userId);
+                            organizationId: organizationId,
+                            userId: userId);
 
                         defaultParentDivision.Name = Division.DefaultLocationName;
                         defaultParentDivision.ParentDivisionID = null;
@@ -68,17 +68,17 @@ namespace AccuPay.Data.Repositories
                     if (defaultParentDivision?.RowID == null)
                         throw new Exception("Cannot create default division location.");
 
-                    var defaultDivision = await _context.Divisions.
-                                                    Where(x => x.OrganizationID == organizationId).
-                                                    Where(x => x.Name.Trim().ToLower() == Division.DefaultDivisionName.ToTrimmedLowerCase()).
-                                                    Where(x => x.ParentDivisionID == defaultParentDivision.RowID).
-                                                    FirstOrDefaultAsync();
+                    var defaultDivision = await _context.Divisions
+                        .Where(x => x.OrganizationID == organizationId)
+                        .Where(x => x.Name.Trim().ToLower() == Division.DefaultDivisionName.ToTrimmedLowerCase())
+                        .Where(x => x.ParentDivisionID == defaultParentDivision.RowID)
+                        .FirstOrDefaultAsync();
 
                     if (defaultDivision == null)
                     {
                         defaultDivision = Division.NewDivision(
-                                                            organizationId: organizationId,
-                                                            userId: userId);
+                            organizationId: organizationId,
+                            userId: userId);
 
                         defaultDivision.Name = Division.DefaultDivisionName;
                         defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
@@ -104,21 +104,14 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        internal IEnumerable<Division> GetAll(int organizationId)
+        public async Task<IEnumerable<Division>> GetAllAsync(int organizationId)
         {
-            return _context.Divisions.
-                            Where(d => d.OrganizationID == organizationId).
-                            ToList();
+            return await _context.Divisions
+                .Where(d => d.OrganizationID == organizationId)
+                .ToListAsync();
         }
 
-        internal async Task<IEnumerable<Division>> GetAllAsync(int organizationId)
-        {
-            return await _context.Divisions.
-                                Where(d => d.OrganizationID == organizationId).
-                                ToListAsync();
-        }
-
-        internal async Task<PaginatedList<Division>> List(
+        public async Task<PaginatedList<Division>> List(
             PageOptions options,
             int organizationId,
             string searchTerm = "")
@@ -145,19 +138,19 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Division>(divisions, count);
         }
 
-        internal async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)
+        public async Task<ICollection<Division>> GetAllParentsAsync(int organizationId)
         {
-            return await _context.Divisions.
-                            Where(d => d.OrganizationID == organizationId).
-                            Where(d => d.IsRoot).
-                            ToListAsync();
+            return await _context.Divisions
+                .Where(d => d.OrganizationID == organizationId)
+                .Where(d => d.IsRoot)
+                .ToListAsync();
         }
 
         #endregion List of entities
 
         #region Others
 
-        internal List<string> GetDivisionTypeList()
+        public List<string> GetDivisionTypeList()
         {
             return new List<string>()
             {
