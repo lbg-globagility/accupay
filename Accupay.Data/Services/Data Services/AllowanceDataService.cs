@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
@@ -37,10 +37,7 @@ namespace AccuPay.Data.Services
             _allowanceTypeRepository = allowanceTypeRepository;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected override Task SanitizeEntity(Allowance allowance, Allowance oldAllowance)
         {
             if (allowance.IsOneTime)
                 allowance.EffectiveEndDate = allowance.EffectiveStartDate;
@@ -62,6 +59,8 @@ namespace AccuPay.Data.Services
 
             if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
                 throw new BusinessLogicException("Start date cannot be greater than end date.");
+
+            return Task.CompletedTask;
         }
 
         protected override async Task AdditionalDeleteValidation(Allowance allowance)

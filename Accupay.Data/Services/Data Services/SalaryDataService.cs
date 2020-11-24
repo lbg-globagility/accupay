@@ -1,11 +1,10 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.Imports.Salaries;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,10 +34,7 @@ namespace AccuPay.Data.Services
             _salaryRepository = salaryRepository;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
         protected override async Task SanitizeEntity(Salary salary, Salary oldSalary)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (salary.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");

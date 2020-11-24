@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
@@ -72,16 +72,15 @@ namespace AccuPay.Data.Services
                 SanitizeUpdate(loan, oldLoan);
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
         protected override async Task AdditionalDeleteValidation(LoanSchedule loan)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (loan.Status == LoanSchedule.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
 
             if ((await _loanRepository.GetLoanTransactionsWithPayPeriodAsync(loan.RowID.Value)).Count > 0)
                 throw new BusinessLogicException("This loan has already started and therefore cannot be deleted. Try changing its Status to \"On Hold\" or \"Cancelled\" instead.");
+
+            await Task.CompletedTask;
         }
 
         protected override async Task AdditionalSaveValidation(LoanSchedule loan, LoanSchedule oldLoan)

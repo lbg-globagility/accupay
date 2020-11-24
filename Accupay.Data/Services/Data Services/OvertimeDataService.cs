@@ -55,10 +55,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-        protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected override Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
         {
             if (overtime.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
@@ -91,6 +88,8 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
 
             overtime.UpdateEndDate();
+
+            return Task.CompletedTask;
         }
 
         public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int userId)
@@ -133,7 +132,6 @@ namespace AccuPay.Data.Services
 
                 await SaveManyAsync(saveOvertimes);
 
-                // TODO: Insert user activity
                 CreateInsertAndUpdateUserActivities(
                     newOvertimes: newOvertimes,
                     updatedOvertimes: updatedOvertimes,

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -129,32 +129,25 @@ namespace AccuPay.Data.Services
 
         // TODO: change this to a synchronus method. All validations that needs database
         // operations (they usually need async methods) should be moved to SaveValidation methods
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
-        protected virtual async Task SanitizeEntity(T entity, T oldEntity)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected virtual Task SanitizeEntity(T entity, T oldEntity)
         {
+            return Task.CompletedTask;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-        protected virtual async Task AdditionalDeleteValidation(T entity)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected virtual Task AdditionalDeleteValidation(T entity)
         {
+            return Task.CompletedTask;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-        protected virtual async Task AdditionalSaveValidation(T entity, T oldEntity)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected virtual Task AdditionalSaveValidation(T entity, T oldEntity)
         {
+            return Task.CompletedTask;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-        protected virtual async Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        protected virtual Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities)
         {
+            return Task.CompletedTask;
         }
 
         #endregion Virtual Methods
