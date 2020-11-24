@@ -1,6 +1,5 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities;
 using System;
@@ -11,7 +10,6 @@ namespace AccuPay.Data.Services
 {
     public class DayCalculator
     {
-        private const int DEFAULT_WORK_HOURS = 8;
         private readonly ListOfValueCollection _settings;
         private readonly Organization _organization;
         private readonly Employee _employee;
@@ -243,10 +241,10 @@ namespace AccuPay.Data.Services
             ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
 
             if (_policy.ShiftBasedAutomaticOvertimePolicy.Enabled)
-                TrimOvertimeHoursWroked(timeEntry);
+                TrimOvertimeHoursWorked(timeEntry);
         }
 
-        private void TrimOvertimeHoursWroked(TimeEntry timeEntry)
+        private void TrimOvertimeHoursWorked(TimeEntry timeEntry)
         {
             bool isOvertimeHoursLesserMinimum = timeEntry.OvertimeHours < _policy.ShiftBasedAutomaticOvertimePolicy.MinimumHours;
             if (isOvertimeHoursLesserMinimum)

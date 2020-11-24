@@ -20,8 +20,6 @@ namespace AccuPay.Data.Services
         private readonly OvertimeRepository _overtimeRepository;
         private readonly UserActivityRepository _userActivityRepository;
 
-        private bool nullableStartTime;
-
         public OvertimeDataService(
             OvertimeRepository overtimeRepository,
             PayPeriodRepository payPeriodRepository,
