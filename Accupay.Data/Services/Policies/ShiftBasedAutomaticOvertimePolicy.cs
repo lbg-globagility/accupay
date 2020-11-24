@@ -1,16 +1,14 @@
-using AccuPay.Data.Interfaces;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AccuPay.Data.Services.Policies
 {
     public class ShiftBasedAutomaticOvertimePolicy
     {
-        private const int STANDARD_LABOR_HOURS = 8;
+        private const decimal STANDARD_LABOR_HOURS = CurrentShift.StandardWorkingHours;
 
-        private const int MINUTES_PER_HOUR = 60;
+        private const int MINUTES_PER_HOUR = TimeConstants.MinutesPerHour;
 
         private const string POLICY_TYPE = "DutyShift";
         private readonly ListOfValueCollection _settings;
