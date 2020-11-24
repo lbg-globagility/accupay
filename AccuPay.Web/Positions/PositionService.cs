@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using System.Threading.Tasks;
@@ -9,11 +10,13 @@ namespace AccuPay.Web.Positions
     public class PositionService
     {
         private readonly PositionDataService _service;
+        private readonly PositionRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public PositionService(PositionDataService service, ICurrentUser currentUser)
+        public PositionService(PositionDataService service, PositionRepository repository, ICurrentUser currentUser)
         {
             _service = service;
+            _repository = repository;
             _currentUser = currentUser;
         }
 
@@ -21,14 +24,14 @@ namespace AccuPay.Web.Positions
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _service.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
+            var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
 
             return paginatedList.Select(x => ConvertToDto(x));
         }
 
         public async Task<PositionDto> GetById(int id)
         {
-            var positions = await _service.GetByIdWithDivisionAsync(id);
+            var positions = await _repository.GetByIdWithDivisionAsync(id);
 
             return ConvertToDto(positions);
         }
@@ -49,7 +52,7 @@ namespace AccuPay.Web.Positions
 
         public async Task<PositionDto> Update(int id, UpdatePositionDto dto)
         {
-            var overtime = await _service.GetByIdAsync(id);
+            var overtime = await _repository.GetByIdAsync(id);
             if (overtime == null) return null;
 
             overtime.LastUpdBy = _currentUser.UserId;

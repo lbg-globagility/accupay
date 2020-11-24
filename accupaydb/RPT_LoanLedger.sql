@@ -52,32 +52,19 @@ IF loanTypeId IS NULL THEN
 	, p.PartNo `COL9`
 	
 	, slp.*
-	/*
-	, @isTrue := slp.EmployeeLoanRecordID != @rowId `IsAnotherEmployeeLoanID`
-	, IF(@isTrue, (@rowId := slp.EmployeeLoanRecordID), (@rowId := slp.EmployeeLoanRecordID)) `EmployeeLoanID`
-	, IF(@isTrue, (@i := 1), (@i := @i + 1)) `OrdinalIndex`
 	
-	, IF(@isTrue
-	#		, (@currBal := (els.TotalLoanAmount - IF(els.NoOfPayPeriod=1, els.DeductionAmount, slp.DeductionAmount)))
-			, (@currBal := (els.TotalLoanAmount - slp.DeductionAmount))
-			, (@currBal := (@currBal - IF(els.NoOfPayPeriod=1, els.DeductionAmount, slp.DeductionAmount)))
-			) `CurrentBalance`*/
 	
 	FROM scheduledloansperpayperiod slp
 	INNER JOIN employee e ON e.RowID=slp.EmployeeID
 	INNER JOIN employeeloanschedule els ON els.RowID=slp.EmployeeLoanRecordID
-	INNER JOIN payperiod pp ON pp.RowID=slp.PayPeriodID AND (pp.PayFromDate <= els.DedEffectiveDateTo OR pp.PayToDate <= els.DedEffectiveDateTo)
+	INNER JOIN payperiod pp ON pp.RowID=slp.PayPeriodID #AND (pp.PayFromDate <= els.DedEffectiveDateTo OR pp.PayToDate <= els.DedEffectiveDateTo)
 	INNER JOIN product p ON p.RowID=els.LoanTypeID
 	
-	/*LEFT JOIN (SELECT els.*
-			, pp.RowID `PayPeriodID`
-			FROM employeeloanschedule els
-			INNER JOIN payperiod pp ON pp.OrganizationID=els.OrganizationID AND els.DedEffectiveDateTo BETWEEN pp.PayFromDate AND pp.PayToDate
-	) i*/
+	
 	
 	WHERE slp.OrganizationID = orgId
 	AND FIND_IN_SET(slp.PayPeriodID, @periodIds) > 0
-#	AND slp.EmployeeID = 6
+
 	ORDER BY CONCAT(e.LastName, e.FirstName, e.MiddleName), slp.EmployeeLoanRecordID, p.PartNo, pp.`Year`, pp.`Month`, pp.OrdinalValue
 	;
 
@@ -100,7 +87,7 @@ ELSE
 	FROM scheduledloansperpayperiod slp
 	INNER JOIN employee e ON e.RowID=slp.EmployeeID
 	INNER JOIN employeeloanschedule els ON els.RowID=slp.EmployeeLoanRecordID
-	INNER JOIN payperiod pp ON pp.RowID=slp.PayPeriodID AND (pp.PayFromDate <= els.DedEffectiveDateTo OR pp.PayToDate <= els.DedEffectiveDateTo)
+	INNER JOIN payperiod pp ON pp.RowID=slp.PayPeriodID# AND (pp.PayFromDate <= els.DedEffectiveDateTo OR pp.PayToDate <= els.DedEffectiveDateTo)
 	INNER JOIN product p ON p.RowID=els.LoanTypeID AND p.RowID = loanTypeId
 	
 	WHERE slp.OrganizationID = orgId

@@ -1,6 +1,5 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
-using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -59,10 +58,9 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException($"Organization is required.");
 
             var doesExistQuery = _context.Divisions
-                                        .Where(d => d.Name.Trim().ToLower() ==
-                                                division.Name.ToTrimmedLowerCase())
-                                        .Where(d => d.ParentDivisionID == division.ParentDivisionID)
-                                        .Where(d => d.OrganizationID == division.OrganizationID);
+                .Where(d => d.Name.Trim().ToLower() == division.Name.ToTrimmedLowerCase())
+                .Where(d => d.ParentDivisionID == division.ParentDivisionID)
+                .Where(d => d.OrganizationID == division.OrganizationID);
 
             if (IsNewEntity(division.RowID) == false)
             {
@@ -87,17 +85,17 @@ namespace AccuPay.Data.Services
             {
                 try
                 {
-                    var defaultParentDivision = await _context.Divisions.
-                                            Where(x => x.OrganizationID == organizationId).
-                                            Where(x => x.Name.Trim().ToLower() == Division.DefaultLocationName.ToTrimmedLowerCase()).
-                                            Where(x => x.IsRoot).
-                                            FirstOrDefaultAsync();
+                    var defaultParentDivision = await _context.Divisions
+                        .Where(x => x.OrganizationID == organizationId)
+                        .Where(x => x.Name.Trim().ToLower() == Division.DefaultLocationName.ToTrimmedLowerCase())
+                        .Where(x => x.IsRoot)
+                        .FirstOrDefaultAsync();
 
                     if (defaultParentDivision == null)
                     {
                         defaultParentDivision = Division.NewDivision(
-                                                            organizationId: organizationId,
-                                                            userId: userId);
+                            organizationId: organizationId,
+                            userId: userId);
 
                         defaultParentDivision.Name = Division.DefaultLocationName;
                         defaultParentDivision.ParentDivisionID = null;
@@ -110,17 +108,17 @@ namespace AccuPay.Data.Services
                     if (defaultParentDivision?.RowID == null)
                         throw new Exception("Cannot create default division location.");
 
-                    var defaultDivision = await _context.Divisions.
-                                                    Where(x => x.OrganizationID == organizationId).
-                                                    Where(x => x.Name.Trim().ToLower() == Division.DefaultDivisionName.ToTrimmedLowerCase()).
-                                                    Where(x => x.ParentDivisionID == defaultParentDivision.RowID).
-                                                    FirstOrDefaultAsync();
+                    var defaultDivision = await _context.Divisions
+                        .Where(x => x.OrganizationID == organizationId)
+                        .Where(x => x.Name.Trim().ToLower() == Division.DefaultDivisionName.ToTrimmedLowerCase())
+                        .Where(x => x.ParentDivisionID == defaultParentDivision.RowID)
+                        .FirstOrDefaultAsync();
 
                     if (defaultDivision == null)
                     {
                         defaultDivision = Division.NewDivision(
-                                                            organizationId: organizationId,
-                                                            userId: userId);
+                            organizationId: organizationId,
+                            userId: userId);
 
                         defaultDivision.Name = Division.DefaultDivisionName;
                         defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
@@ -141,40 +139,10 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<Division> GetByIdWithParentAsync(int id)
+        public async Task<ICollection<string>> GetSchedulesAsync()
         {
-            return await _divisionRepository.GetByIdWithParentAsync(id);
-        }
-
-        public IEnumerable<Division> GetAll(int organizationId)
-        {
-            return _divisionRepository.GetAll(organizationId);
-        }
-
-        public Task<IEnumerable<Division>> GetAllAsync(int organizationId)
-        {
-            return _divisionRepository.GetAllAsync(organizationId);
-        }
-
-        public async Task<PaginatedList<Division>> List(PageOptions options, int organizationId, string searchTerm)
-        {
-            return await _divisionRepository.List(options, organizationId, searchTerm);
-        }
-
-        public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)
-        {
-            return await _divisionRepository.GetAllParentsAsync(organizationId);
-        }
-
-        public IEnumerable<string> GetTypes()
-        {
-            return _divisionRepository.GetDivisionTypeList();
-        }
-
-        public async Task<IEnumerable<string>> GetSchedulesAsync()
-        {
-            IEnumerable<ListOfValue> listOfValues = await _listOfValueRepository.GetDeductionSchedulesAsync();
-            return listOfValues.Select(x => x.DisplayValue);
+            ICollection<ListOfValue> listOfValues = await _listOfValueRepository.GetDeductionSchedulesAsync();
+            return listOfValues.Select(x => x.DisplayValue).ToList();
         }
     }
 }

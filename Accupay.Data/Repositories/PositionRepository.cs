@@ -1,8 +1,7 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,7 +34,7 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        internal async Task<Position> GetByIdWithDivisionAsync(int positionId)
+        public async Task<Position> GetByIdWithDivisionAsync(int positionId)
         {
             return await _context.Positions
                 .Include(p => p.Division)
@@ -43,13 +42,25 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        internal async Task<Position> GetByNameAsync(int organizationId, string positionName)
+        public async Task<Position> GetByNameAsync(int organizationId, string positionName)
         {
-            return await _context.Positions
-                .Where(p => p.OrganizationID == organizationId)
-                .Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase())
-                .AsNoTracking()
+            return await CreateBaseQueryByName(organizationId, positionName)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Position> GetByNameWithDivisionAsync(int organizationId, string positionName)
+        {
+            return await CreateBaseQueryByName(organizationId, positionName)
+                .Include(p => p.Division)
+                .FirstOrDefaultAsync();
+        }
+
+        private IQueryable<Position> CreateBaseQueryByName(int organizationId, string positionName)
+        {
+            return _context.Positions
+                .AsNoTracking()
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase());
         }
 
         public async Task<Position> GetFirstPositionAsync()
@@ -70,7 +81,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        internal async Task<PaginatedList<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedList<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Positions
                 .Include(x => x.Division)
@@ -100,7 +111,7 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        internal async Task<List<Position>> CreateManyAsync(List<string> jobNames, int organizationId, int userId)
+        public async Task<List<Position>> CreateManyAsync(List<string> jobNames, int organizationId, int userId)
         {
             var division = await _divisionRepository.GetOrCreateDefaultDivisionAsync(organizationId, userId);
 

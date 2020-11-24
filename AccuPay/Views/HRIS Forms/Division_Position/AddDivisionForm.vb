@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -25,18 +25,17 @@ Public Class AddDivisionForm
     Private _deductionSchedules As List(Of String)
 
     Public Property IsSaved As Boolean
-
     Public Property ShowBalloonSuccess As Boolean
 
     Public Property LastDivisionAdded As Division
 
-    Private _payFrequencyRepository As PayFrequencyRepository
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
 
-    Private _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _payFrequencyRepository As PayFrequencyRepository
 
-    Private _positionService As PositionDataService
+    Private ReadOnly _positionRepository As PositionRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
     Sub New()
 
@@ -46,7 +45,7 @@ Public Class AddDivisionForm
 
         _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
 
-        _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -74,18 +73,18 @@ Public Class AddDivisionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-        Dim divisions = Await service.GetAllParentsAsync(z_OrganizationID)
+        Dim repository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim divisions = Await repository.GetAllParentsAsync(z_OrganizationID)
 
-        _parentDivisions = divisions.OrderBy(Function(d) d.Name).ToList
+        _parentDivisions = divisions.OrderBy(Function(d) d.Name).ToList()
 
     End Function
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionService.GetAllAsync(z_OrganizationID)
+        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
 
-        _positions = positions.OrderBy(Function(p) p.Name).ToList
+        _positions = positions.OrderBy(Function(p) p.Name).ToList()
 
     End Function
 
@@ -93,35 +92,37 @@ Public Class AddDivisionForm
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
-        _payFrequencies = payFrequencies.Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly).ToList
+        _payFrequencies = payFrequencies.Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly).ToList()
 
     End Function
 
     Private Sub GetDivisionTypes()
 
-        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-        _divisionTypes = service.GetTypes().ToList()
+        Dim repository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionTypes = repository.GetDivisionTypeList().ToList()
 
     End Sub
 
     Private Async Function GetDeductionSchedules() As Task
 
         _deductionSchedules = _listOfValueRepository.
-                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
+            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
     End Function
 
     Private Sub ResetForm()
 
-        Me._newDivision = Division.NewDivision(organizationId:=z_OrganizationID,
-                                                       userId:=z_User)
+        Me._newDivision = Division.NewDivision(
+            organizationId:=z_OrganizationID,
+            userId:=z_User)
 
-        DivisionUserControl1.SetDivision(Me._newDivision,
-                                         _parentDivisions,
-                                         Me._positions,
-                                        Me._divisionTypes,
-                                        Me._payFrequencies,
-                                        Me._deductionSchedules)
+        DivisionUserControl1.SetDivision(
+            Me._newDivision,
+            _parentDivisions,
+            Me._positions,
+            Me._divisionTypes,
+            Me._payFrequencies,
+            Me._deductionSchedules)
 
     End Sub
 
@@ -143,9 +144,9 @@ Public Class AddDivisionForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                          Async Function()
-                              Await SaveDivision(sender)
-                          End Function)
+            Async Function()
+                Await SaveDivision(sender)
+            End Function)
 
     End Sub
 

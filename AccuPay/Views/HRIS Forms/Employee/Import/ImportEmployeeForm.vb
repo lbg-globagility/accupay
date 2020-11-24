@@ -21,7 +21,6 @@ Public Class ImportEmployeeForm
     Private _failModels As List(Of EmployeeModel)
 
     Private _divisionService As DivisionDataService
-    Private _positionService As PositionDataService
     Private _branchRepository As BranchRepository
     Private _employeeRepository As EmployeeRepository
     Private _userActivityRepository As UserActivityRepository
@@ -33,8 +32,6 @@ Public Class ImportEmployeeForm
         InitializeComponent()
 
         _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-
-        _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
 
         _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
@@ -420,7 +417,9 @@ Public Class ImportEmployeeForm
 
     Private Async Function AddPositionIdToModels(models As List(Of EmployeeModel)) As Task
 
-        Dim existingPositions = (Await _positionService.GetAllAsync(z_OrganizationID)).ToList()
+        'fresh instance of repository
+        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim existingPositions = (Await repository.GetAllAsync(z_OrganizationID)).ToList()
 
         For Each model In models
 
@@ -434,7 +433,8 @@ Public Class ImportEmployeeForm
                 model.PositionId = currentPosition.RowID
             Else
 
-                currentPosition = Await _positionService.GetByNameOrCreateAsync(
+                Dim dataService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+                currentPosition = Await dataService.GetByNameOrCreateAsync(
                     model.Position,
                     organizationId:=z_OrganizationID,
                     userId:=z_User)
