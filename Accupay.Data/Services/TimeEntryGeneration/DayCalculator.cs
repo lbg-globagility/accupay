@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
@@ -248,6 +248,14 @@ namespace AccuPay.Data.Services
 
         private void TrimOvertimeHoursWroked(TimeEntry timeEntry)
         {
+            bool isOvertimeHoursLesserMinimum = timeEntry.OvertimeHours < _policy.ShiftBasedAutomaticOvertimePolicy.MinimumHours;
+            if (isOvertimeHoursLesserMinimum)
+            {
+                timeEntry.OvertimeHours = 0;
+                timeEntry.NightDiffOTHours = 0;
+                return;
+            }
+
             decimal overtimeHours = timeEntry.OvertimeHours;
             if (overtimeHours > 0) timeEntry.OvertimeHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWorked(overtimeHours);
 
