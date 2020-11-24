@@ -21,7 +21,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveAsync(Employee employee)
         {
-            if (IsNewEntity(employee.RowID))
+            if (employee.IsNewEntity)
             {
                 _context.Employees.AddRange(employee);
             }
@@ -72,13 +72,13 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveManyAsync(List<Employee> employees)
         {
-            var updated = employees.Where(e => !IsNewEntity(e.RowID)).ToList();
+            var updated = employees.Where(e => !e.IsNewEntity).ToList();
             if (updated.Any())
             {
                 updated.ForEach(x => _context.Entry(x).State = EntityState.Modified);
             }
 
-            var added = employees.Where(e => IsNewEntity(e.RowID)).ToList();
+            var added = employees.Where(e => e.IsNewEntity).ToList();
             if (added.Any())
             {
                 _context.Employees.AddRange(added);

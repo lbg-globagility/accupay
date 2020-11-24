@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
@@ -75,7 +75,7 @@ namespace AccuPay.Data.Services
                 .Where(l => l.EmployeeID == leave.EmployeeID)
                 .Where(l => l.StartDate.Date == leave.StartDate.Date);
 
-            if (IsNewEntity(leave.RowID) == false)
+            if (leave.IsNewEntity == false)
             {
                 doesExistQuery = doesExistQuery.Where(l => leave.RowID != l.RowID);
             }

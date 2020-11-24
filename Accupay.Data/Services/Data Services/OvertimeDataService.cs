@@ -127,8 +127,8 @@ namespace AccuPay.Data.Services
 
             if (saveOvertimes.Any())
             {
-                IList<Overtime> newOvertimes = saveOvertimes.Where(ot => IsNewEntity(ot.RowID)).ToList();
-                IList<Overtime> updatedOvertimes = saveOvertimes.Where(ot => !IsNewEntity(ot.RowID)).ToList();
+                IList<Overtime> newOvertimes = saveOvertimes.Where(ot => ot.IsNewEntity).ToList();
+                IList<Overtime> updatedOvertimes = saveOvertimes.Where(ot => !ot.IsNewEntity).ToList();
 
                 await SaveManyAsync(saveOvertimes);
 

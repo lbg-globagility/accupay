@@ -66,7 +66,7 @@ namespace AccuPay.Data.Services
 
             await SanitizeProperties(loan);
 
-            if (IsNewEntity(loan.RowID))
+            if (loan.IsNewEntity)
                 SanitizeInsert(loan);
             else
                 SanitizeUpdate(loan, oldLoan);
@@ -341,7 +341,7 @@ namespace AccuPay.Data.Services
         private bool CheckIfStartDateNeedsToBeValidated(List<LoanSchedule> oldLoans, LoanSchedule loan)
         {
             // either a new loan
-            if (IsNewEntity(loan.RowID)) return true;
+            if (loan.IsNewEntity) return true;
 
             // or an existing loan where its Start Date is to be updated
             var oldLoan = oldLoans.Where(o => o.RowID == loan.RowID).FirstOrDefault();

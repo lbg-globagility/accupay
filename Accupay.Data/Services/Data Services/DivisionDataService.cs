@@ -62,7 +62,7 @@ namespace AccuPay.Data.Services
                 .Where(d => d.ParentDivisionID == division.ParentDivisionID)
                 .Where(d => d.OrganizationID == division.OrganizationID);
 
-            if (IsNewEntity(division.RowID) == false)
+            if (division.IsNewEntity == false)
             {
                 doesExistQuery = doesExistQuery.Where(d => division.RowID != d.RowID);
             }

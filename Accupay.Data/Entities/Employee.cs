@@ -1,18 +1,14 @@
-﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employee")]
-    public class Employee
+    public class Employee : BaseEntity
     {
-        [Key]
-        public int? RowID { get; set; }
-
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Created { get; set; }
 

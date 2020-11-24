@@ -55,7 +55,7 @@ namespace AccuPay.Data.Services
                 salary.EmployeeID.Value,
                 salary.EffectiveFrom);
 
-            if (IsNewEntity(salary.RowID))
+            if (salary.IsNewEntity)
             {
                 if (salariesWithSameDate.Any())
                     throw new BusinessLogicException("Salary already exists!");
@@ -92,13 +92,13 @@ namespace AccuPay.Data.Services
 
         private async Task ValidateSalaryIfAlreadyUsed(Salary salary, Salary oldSalary)
         {
-            if (IsNewEntity(salary.RowID) || salary.EffectiveFrom.ToMinimumHourValue() != oldSalary.EffectiveFrom.ToMinimumHourValue())
+            if (salary.IsNewEntity || salary.EffectiveFrom.ToMinimumHourValue() != oldSalary.EffectiveFrom.ToMinimumHourValue())
             {
                 if (await _payPeriodRepository.HasClosedPayPeriodAfterDateAsync(salary.OrganizationID.Value, salary.EffectiveFrom))
                     throw new BusinessLogicException("Salary cannot be saved in or before a \"Closed\" pay period.");
             }
 
-            if (IsNewEntity(salary.RowID) == false)
+            if (salary.IsNewEntity == false)
             {
                 if (await CheckIfSalaryHasBeenUsed(salary))
                     throw new BusinessLogicException("This salary has already been used and therefore cannot be modified.");

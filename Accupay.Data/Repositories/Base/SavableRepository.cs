@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,25 +52,33 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveAsync(T entity)
         {
-            SaveFunction(entity, IsNewEntity(entity.RowID));
+            await SaveFunction(entity);
             await _context.SaveChangesAsync();
         }
 
         public async Task SaveManyAsync(List<T> entities)
         {
-            entities.ForEach(entity => SaveFunction(entity, IsNewEntity(entity.RowID)));
+            foreach (var entity in entities)
+            {
+                await SaveFunction(entity);
+            }
+
             await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(T entity)
         {
-            SaveFunction(entity, newEntity: true);
+            _context.Set<T>().Add(entity);
+            DetachNavigationProperties(entity);
+
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(T entity)
         {
-            SaveFunction(entity, newEntity: false);
+            _context.Entry(entity).State = EntityState.Modified;
+            DetachNavigationProperties(entity);
+
             await _context.SaveChangesAsync();
         }
 
@@ -79,18 +87,16 @@ namespace AccuPay.Data.Repositories
             // no action
         }
 
-        private void SaveFunction(T entity, bool newEntity)
+        private async Task SaveFunction(T entity)
         {
-            if (newEntity)
+            if (entity.IsNewEntity)
             {
-                _context.Set<T>().Add(entity);
+                await CreateAsync(entity);
             }
             else
             {
-                _context.Entry(entity).State = EntityState.Modified;
+                await UpdateAsync(entity);
             }
-
-            DetachNavigationProperties(entity);
         }
     }
 }

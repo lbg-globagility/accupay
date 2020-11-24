@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -133,7 +133,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveManyAsync(List<ListOfValue> listOfvalues)
         {
-            listOfvalues.ForEach(entity => SaveFunction(entity, IsNewEntity(entity.RowID)));
+            listOfvalues.ForEach(entity => SaveFunction(entity, entity.IsNewEntity));
             await _context.SaveChangesAsync();
         }
 

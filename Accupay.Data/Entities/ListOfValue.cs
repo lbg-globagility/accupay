@@ -1,17 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("listofval")]
-    public class ListOfValue
+    public class ListOfValue : BaseEntity
     {
         public const string ActiveYesOption = "Yes";
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
 
         public DateTime Created { get; set; }
 

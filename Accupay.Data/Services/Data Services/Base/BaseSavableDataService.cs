@@ -35,12 +35,6 @@ namespace AccuPay.Data.Services
 
         #region Protected Methods
 
-        protected bool IsNewEntity(int? id)
-        {
-            // sometimes it's not int.MinValue
-            return id == null || id <= 0;
-        }
-
         protected int? ValidateOrganization(int? currentOrganizationId, int? entityOrganizationId)
         {
             if (currentOrganizationId == null)
@@ -59,7 +53,7 @@ namespace AccuPay.Data.Services
         protected async Task<ICollection<T>> GetOldEntitiesAsync(List<T> entities)
         {
             var updatedEntityIds = entities
-                .Where(x => !IsNewEntity(x.RowID))
+                .Where(x => !x.IsNewEntity)
                 .Select(x => x.RowID.Value)
                 .Distinct()
                 .ToArray();
@@ -92,7 +86,7 @@ namespace AccuPay.Data.Services
         public virtual async Task SaveAsync(T entity)
         {
             T oldEntity = null;
-            if (!IsNewEntity(entity.RowID))
+            if (!entity.IsNewEntity)
             {
                 oldEntity = await _repository.GetByIdAsync(entity.RowID.Value);
 
@@ -115,7 +109,7 @@ namespace AccuPay.Data.Services
             {
                 var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity.RowID);
 
-                if (!IsNewEntity(entity.RowID) && oldEntity == null)
+                if (!entity.IsNewEntity && oldEntity == null)
                     throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");
 
                 await ValidateData(entity, oldEntity);

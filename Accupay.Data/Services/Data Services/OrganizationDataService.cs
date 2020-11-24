@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using System;
@@ -32,7 +32,7 @@ namespace AccuPay.Data.Services
             if (string.IsNullOrWhiteSpace(entity.Name))
                 throw new BusinessLogicException("Name is required.");
 
-            if (IsNewEntity(entity.ClientId))
+            if (BaseEntity.CheckIfNewEntity(entity.ClientId))
                 throw new BusinessLogicException("Client is required.");
 
             return Task.CompletedTask;

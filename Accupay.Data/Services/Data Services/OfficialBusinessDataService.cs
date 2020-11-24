@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
@@ -62,7 +62,7 @@ namespace AccuPay.Data.Services
                 .Where(l => l.EmployeeID == officialBusiness.EmployeeID)
                 .Where(l => l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date);
 
-            if (IsNewEntity(officialBusiness.RowID) == false)
+            if (officialBusiness.IsNewEntity == false)
             {
                 doesExistQuery = doesExistQuery.Where(l => officialBusiness.RowID != l.RowID);
             }

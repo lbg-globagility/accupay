@@ -86,7 +86,7 @@ namespace AccuPay.Data.Services
                 await CheckIfDataIsWithinClosedPayPeriod(allowance.EffectiveStartDate, allowance.OrganizationID.Value);
             }
 
-            if (!IsNewEntity(allowance.RowID))
+            if (!allowance.IsNewEntity)
             {
                 // validate entities that are for update
                 var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(allowance.RowID.Value);
@@ -182,7 +182,7 @@ namespace AccuPay.Data.Services
             int? organizationId = await ValidateStartDates(allowances, oldAllowances);
 
             var forUpdateAllowances = allowances
-                .Where(x => !IsNewEntity(x.RowID))
+                .Where(x => !x.IsNewEntity)
                 .ToArray();
 
             var ids = forUpdateAllowances.Select(x => x.RowID.Value).Distinct().ToArray();
@@ -212,7 +212,7 @@ namespace AccuPay.Data.Services
 
             // end date cannot be in a closed pay period
             var endDates = allowances
-                 .Where(x => !IsNewEntity(x.RowID))
+                 .Where(x => !x.IsNewEntity)
                  .Where(x => x.EffectiveEndDate.HasValue)
                  .Select(x => x.EffectiveEndDate.Value)
                  .ToArray();
@@ -246,7 +246,7 @@ namespace AccuPay.Data.Services
         private bool CheckIfStartDateNeedsToBeValidated(List<Allowance> oldAllowances, Allowance allowance)
         {
             // either a new allowance
-            if (IsNewEntity(allowance.RowID)) return true;
+            if (allowance.IsNewEntity) return true;
 
             // or an existing allowance where its Start Date is to be updated
             var oldAllowance = oldAllowances.Where(o => o.RowID == allowance.RowID).FirstOrDefault();
