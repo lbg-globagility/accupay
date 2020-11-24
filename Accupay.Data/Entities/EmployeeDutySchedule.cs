@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Helpers;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -106,7 +106,7 @@ namespace AccuPay.Data.Entities
         {
             if (StartTime.HasValue && EndTime.HasValue && shiftBasedAutomaticOvertimePolicy != null)
             {
-                if (shiftBasedAutomaticOvertimePolicy.Enabled)
+                if (shiftBasedAutomaticOvertimePolicy.Enabled && WorkHours > shiftBasedAutomaticOvertimePolicy.DefaultWorkHours)
                 {
                     WorkHours = shiftBasedAutomaticOvertimePolicy.DefaultWorkHours;
                     ShiftHours = WorkHours + BreakLength;
