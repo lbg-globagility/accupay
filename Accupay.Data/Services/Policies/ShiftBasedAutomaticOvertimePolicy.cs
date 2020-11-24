@@ -19,7 +19,7 @@ namespace AccuPay.Data.Services.Policies
 
         public decimal Denominator => _settings.GetDecimal($"{POLICY_TYPE}.DivisibleBy");
 
-        public decimal MinimumMinutes => _settings.GetDecimal($"{POLICY_TYPE}.MinimumDuration");
+        public decimal MinimumMinutes => _settings.GetDecimal($"{POLICY_TYPE}.MinimumDuration", 30);
 
         public decimal MinimumHours => ConvertMinuteToHour(MinimumMinutes);
 
