@@ -2067,6 +2067,8 @@ Public Class PayStubForm
             CostCenterReportProvider.ReportType.Branch,
             CostCenterReportProvider.ReportType.All)
 
+        provider.Owner = Me
+
         provider.Run()
 
     End Sub

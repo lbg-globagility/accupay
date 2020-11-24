@@ -35,6 +35,10 @@ Public Class CostCenterReportProvider
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    'Passing the Owner Form is kind of hackish. Maybe replace this with
+    'a better approach of disabling the parent form in the future.
+    Public Property Owner As Form
+
     Public Property IsActual As Boolean
     Public Property SelectedReportType As ReportType
 
@@ -127,6 +131,11 @@ Public Class CostCenterReportProvider
         Dim generator As New CostCenterReportGeneration(branches, IsActual, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
 
+        If Owner IsNot Nothing Then
+            Owner.Enabled = False
+        End If
+        progressDialog.Show()
+
         generator.SetCurrentMessage("Loading resources...")
         GetResources(
             selectedMonth,
@@ -143,8 +152,6 @@ Public Class CostCenterReportProvider
 
                 RunGenerateExportTask(generationTask, saveFilePath, generator, progressDialog)
             End Sub)
-
-        progressDialog.ShowDialog()
 
     End Sub
 
@@ -167,9 +174,7 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of IResult), progressDialog As ProgressDialog, saveFilePath As String)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.
             Select(Function(r) CType(r, CostCenterReportGenerationResult)).
@@ -186,9 +191,7 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Const MessageTitle As String = "Generate Cost Center Report"
 
@@ -230,20 +233,24 @@ Public Class CostCenterReportProvider
 
     Private Sub LoadingResourcesOnError(resourcesTask As Task(Of CostCenterReportResources), progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         MsgBox("Something went wrong while loading the cost center report resources. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
 
     End Sub
 
-    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+    Private Sub CloseProgressDialog(progressDialog As ProgressDialog)
 
-        If progressDialog Is Nothing Then Return
+        If Owner IsNot Nothing Then
+            Owner.Enabled = True
+        End If
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        If progressDialog IsNot Nothing Then
+
+            progressDialog.Close()
+            progressDialog.Dispose()
+
+        End If
     End Sub
 
     Private Shared Function GetSelectedBranch() As Branch
