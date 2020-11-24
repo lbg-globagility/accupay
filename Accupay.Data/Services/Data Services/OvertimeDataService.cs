@@ -20,8 +20,6 @@ namespace AccuPay.Data.Services
         private readonly OvertimeRepository _overtimeRepository;
         private readonly UserActivityRepository _userActivityRepository;
 
-        private bool nullableStartTime;
-
         public OvertimeDataService(
             OvertimeRepository overtimeRepository,
             PayPeriodRepository payPeriodRepository,
@@ -252,11 +250,6 @@ namespace AccuPay.Data.Services
 
             var existingOvertimes = _overtimeRepository.GetByEmployeeIDsAndDatePeriod(organizationId, employeeIds, timePeriod);
 
-            Func<DateTime?, decimal, DateTime?> getOTStartTime = (DateTime? starting, decimal breakLength) =>
-            {
-                return _policy.ShiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(starting, breakLength);
-            };
-
             shiftSchedSaveList.ToList().ForEach(shiftModel =>
             {
                 var employeeID = shiftModel.EmployeeId;
@@ -281,10 +274,16 @@ namespace AccuPay.Data.Services
                 if (hasShiftPeriod)
                 {
                     var shiftTimePeriod = TimePeriod.FromTime(shiftModel.StartTime.Value, shiftModel.EndTime.Value, shiftModel.Date);
-                    var validOTStartTime = getOTStartTime(shiftTimePeriod.Start, shiftModel.BreakLength);
+                    var validOTStartTime = _policy.ShiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shiftTimePeriod.Start, shiftModel.BreakLength);
 
                     overtime.OTStartTimeFull = validOTStartTime;
-                    overtime.OTEndTimeFull = shiftTimePeriod.End;
+                    overtime.OTEndTimeFull = validOTStartTime;
+
+                    var shiftPeriod = new TimePeriod(shiftTimePeriod.Start, shiftTimePeriod.End);
+                    if (shiftPeriod.TotalHours >= (_policy.ShiftBasedAutomaticOvertimePolicy.DefaultWorkHoursAndMinimumOTHours + shiftModel.BreakLength))
+                    {
+                        overtime.OTEndTimeFull = shiftTimePeriod.End;
+                    }
                 }
 
                 var overtimeId = 0;

@@ -247,11 +247,19 @@ namespace AccuPay.Data.Services
             ComputeNightDiffHours(calculator, timeEntry, currentShift, dutyPeriod, logPeriod, currentDate, previousDay, overtimes, nightBreaktime);
 
             if (_policy.ShiftBasedAutomaticOvertimePolicy.Enabled)
-                TrimOvertimeHoursWroked(timeEntry);
+                TrimOvertimeHoursWorked(timeEntry);
         }
 
-        private void TrimOvertimeHoursWroked(TimeEntry timeEntry)
+        private void TrimOvertimeHoursWorked(TimeEntry timeEntry)
         {
+            bool isOvertimeHoursLesserMinimum = timeEntry.OvertimeHours < _policy.ShiftBasedAutomaticOvertimePolicy.MinimumHours;
+            if (isOvertimeHoursLesserMinimum)
+            {
+                timeEntry.OvertimeHours = 0;
+                timeEntry.NightDiffOTHours = 0;
+                return;
+            }
+
             decimal overtimeHours = timeEntry.OvertimeHours;
             if (overtimeHours > 0) timeEntry.OvertimeHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWorked(overtimeHours);
 
