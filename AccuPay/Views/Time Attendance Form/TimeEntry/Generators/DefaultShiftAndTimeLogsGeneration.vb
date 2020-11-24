@@ -93,7 +93,7 @@ Public Class DefaultShiftAndTimeLogsGeneration
                 employeeId:=employee.RowID.Value)
         Catch ex As Exception
 
-            SetCurrentMessage($"An error occurred while generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"Failure generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return EmployeeResult.Error(
                 employeeNumber:=employee.EmployeeNo,

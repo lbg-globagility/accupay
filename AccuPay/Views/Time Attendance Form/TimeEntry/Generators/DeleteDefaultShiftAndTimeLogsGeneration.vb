@@ -95,7 +95,7 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
                 employeeId:=employee.RowID.Value)
         Catch ex As Exception
 
-            SetCurrentMessage($"An error occurred while deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
+            SetCurrentMessage($"Failure deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
             Return EmployeeResult.Error(
                 employeeNumber:=employee.EmployeeNo,
