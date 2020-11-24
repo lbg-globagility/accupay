@@ -248,6 +248,9 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
         Dim generator As New ReleaseThirteenthMonthGeneration(selectedEmployees, selectedAdjustmentId)
         Dim progressDialog = New ProgressDialog(generator, "Creating 13th month pay adjustments...")
 
+        Me.Enabled = False
+        progressDialog.Show()
+
         Dim generationTask = Task.Run(
                 Async Function()
                     Await generator.Start()
@@ -268,15 +271,11 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
             TaskScheduler.FromCurrentSynchronizationContext
         )
 
-        progressDialog.ShowDialog()
-
     End Sub
 
     Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.Select(Function(r) CType(r, PaystubEmployeeResult)).ToList()
 
@@ -297,9 +296,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Const MessageTitle As String = "Release 13th Month Pay"
 
@@ -313,7 +310,9 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
     End Sub
 
-    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+    Private Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        Me.Enabled = True
 
         If progressDialog Is Nothing Then Return
 

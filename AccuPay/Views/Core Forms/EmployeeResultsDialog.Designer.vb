@@ -22,9 +22,9 @@ Partial Class EmployeeResultsDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvSuccess = New System.Windows.Forms.DataGridView()
         Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -97,8 +97,8 @@ Partial Class EmployeeResultsDialog
         'Column3
         '
         Me.Column3.DataPropertyName = "Description"
-        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle34
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
         Me.Column3.FillWeight = 60.0!
         Me.Column3.HeaderText = "Description"
         Me.Column3.Name = "Column3"
@@ -120,8 +120,8 @@ Partial Class EmployeeResultsDialog
         '
         'DataGridViewTextBoxColumn3
         '
-        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle35
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridViewTextBoxColumn3.FillWeight = 60.0!
         Me.DataGridViewTextBoxColumn3.HeaderText = "Description"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
@@ -178,7 +178,7 @@ Partial Class EmployeeResultsDialog
         Me.tbpFailed.Location = New System.Drawing.Point(4, 22)
         Me.tbpFailed.Name = "tbpFailed"
         Me.tbpFailed.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpFailed.Size = New System.Drawing.Size(840, 310)
+        Me.tbpFailed.Size = New System.Drawing.Size(878, 310)
         Me.tbpFailed.TabIndex = 1
         Me.tbpFailed.Text = "Failed"
         Me.tbpFailed.UseVisualStyleBackColor = True
@@ -199,7 +199,7 @@ Partial Class EmployeeResultsDialog
         Me.dgvFailed.ReadOnly = True
         Me.dgvFailed.RowHeadersVisible = False
         Me.dgvFailed.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvFailed.Size = New System.Drawing.Size(834, 304)
+        Me.dgvFailed.Size = New System.Drawing.Size(872, 304)
         Me.dgvFailed.TabIndex = 1
         '
         'DataGridViewTextBoxColumn4
@@ -228,8 +228,8 @@ Partial Class EmployeeResultsDialog
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Description"
-        DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle36
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn7.FillWeight = 60.0!
         Me.DataGridViewTextBoxColumn7.HeaderText = "Description"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
@@ -249,7 +249,7 @@ Partial Class EmployeeResultsDialog
         Me.Name = "EmployeeResultsDialog"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "<Title>"
         CType(Me.dgvSuccess, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)

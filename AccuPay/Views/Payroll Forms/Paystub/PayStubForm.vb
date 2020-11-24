@@ -666,6 +666,9 @@ Public Class PayStubForm
         Dim generator As New PayrollGeneration(employees, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating payroll...")
 
+        MDIPrimaryForm.Enabled = False
+        progressDialog.Show()
+
         generator.SetCurrentMessage("Loading resources...")
         GetResources(
             progressDialog,
@@ -700,14 +703,11 @@ Public Class PayStubForm
                 )
             End Sub)
 
-        progressDialog.ShowDialog()
     End Function
 
     Private Async Sub GeneratePayrollOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.Select(Function(r) CType(r, PaystubEmployeeResult)).ToList()
 
@@ -728,9 +728,7 @@ Public Class PayStubForm
 
     Private Sub GeneratePayrollOnError(t As Task, progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         _logger.Error("Error on generating payroll.", t.Exception)
         MsgBox("Something went wrong while generating the payroll . Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Generation")
@@ -776,14 +774,14 @@ Public Class PayStubForm
     End Sub
 
     Private Shared Sub HandleErrorLoadingResources(progressDialog As ProgressDialog)
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
     End Sub
 
     Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        MDIPrimaryForm.Enabled = True
 
         If progressDialog Is Nothing Then Return
 

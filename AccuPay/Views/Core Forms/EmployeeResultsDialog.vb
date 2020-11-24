@@ -42,6 +42,7 @@ Public Class EmployeeResultsDialog
 
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
         DialogResult = DialogResult.OK
+        Me.Close()
     End Sub
 
     Private Sub dgvSuccess_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvSuccess.CellFormatting

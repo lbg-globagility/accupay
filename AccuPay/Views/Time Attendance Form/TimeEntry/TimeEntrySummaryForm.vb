@@ -941,6 +941,9 @@ Public Class TimeEntrySummaryForm
 
         Dim payPeriod As New TimePeriod(startDate, endDate)
 
+        MDIPrimaryForm.Enabled = False
+        progressDialog.Show()
+
         generator.SetCurrentMessage("Loading resources...")
         GetResources(
             progressDialog,
@@ -978,15 +981,11 @@ Public Class TimeEntrySummaryForm
                 )
             End Sub)
 
-        progressDialog.ShowDialog()
-
     End Function
 
     Private Async Sub DoneGenerating(progressDialog As ProgressDialog, results As IReadOnlyCollection(Of ProgressGenerator.IResult))
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
 
@@ -1005,9 +1004,7 @@ Public Class TimeEntrySummaryForm
 
     Private Sub TimeEntryGeneratorError(t As Task, progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Const MessageTitle As String = "Generate Time Entries"
 
@@ -1053,21 +1050,21 @@ Public Class TimeEntrySummaryForm
 
     Private Sub LoadingResourcesOnError(t As Task, progressDialog As ProgressDialog)
 
-        _logger.Error("Error loading one of the payroll data.", t.Exception)
+        _logger.Error("Error loading one of the time entry data.", t.Exception)
 
         HandleErrorLoadingResources(progressDialog)
 
     End Sub
 
     Private Shared Sub HandleErrorLoadingResources(progressDialog As ProgressDialog)
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
-        MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Time Entry Resources")
+        MsgBox("Something went wrong while loading the time entry data needed for calculation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Time Entry Resources")
     End Sub
 
     Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        MDIPrimaryForm.Enabled = True
 
         If progressDialog Is Nothing Then Return
 

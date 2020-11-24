@@ -177,6 +177,9 @@ Public Class DefaultShiftAndTimeLogsForm
         Dim generator As New DefaultShiftAndTimeLogsGeneration(selectedEmployees, _currentPayPeriod, defaultValue)
         Dim progressDialog = New ProgressDialog(generator, "Creating Default shift and time logs...")
 
+        Me.Enabled = False
+        progressDialog.Show()
+
         Dim generationTask = Task.Run(
                 Async Function()
                     Await generator.Start()
@@ -196,8 +199,6 @@ Public Class DefaultShiftAndTimeLogsForm
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
-
-        progressDialog.ShowDialog()
 
     End Sub
 
@@ -251,6 +252,9 @@ Public Class DefaultShiftAndTimeLogsForm
         Dim generator As New DeleteDefaultShiftAndTimeLogsGeneration(selectedEmployees, _currentPayPeriod)
         Dim progressDialog = New ProgressDialog(generator, "Deleting multiple shift and time logs...")
 
+        Me.Enabled = False
+        progressDialog.Show()
+
         Dim generationTask = Task.Run(
                 Async Function()
                     Await generator.Start()
@@ -271,15 +275,11 @@ Public Class DefaultShiftAndTimeLogsForm
             TaskScheduler.FromCurrentSynchronizationContext
         )
 
-        progressDialog.ShowDialog()
-
     End Sub
 
     Private Sub SaveGenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
 
@@ -298,9 +298,7 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private Sub DeleteGenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
 
@@ -319,9 +317,7 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog, messageTitle As String, defaultErrorMessage As String)
 
-        If progressDialog IsNot Nothing Then
-            CloseProgressDialog(progressDialog)
-        End If
+        CloseProgressDialog(progressDialog)
 
         If t.Exception?.InnerException.GetType() Is GetType(BusinessLogicException) Then
 
@@ -333,7 +329,9 @@ Public Class DefaultShiftAndTimeLogsForm
 
     End Sub
 
-    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
+    Private Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        Me.Enabled = True
 
         If progressDialog Is Nothing Then Return
 
