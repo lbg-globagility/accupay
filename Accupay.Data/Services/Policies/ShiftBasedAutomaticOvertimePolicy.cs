@@ -21,7 +21,9 @@ namespace AccuPay.Data.Services.Policies
 
         public decimal Denominator => _settings.GetDecimal($"{POLICY_TYPE}.DivisibleBy");
 
-        public decimal Minimum => _settings.GetDecimal($"{POLICY_TYPE}.MinimumDuration");
+        public decimal MinimumMinutes => _settings.GetDecimal($"{POLICY_TYPE}.MinimumDuration");
+
+        public decimal MinimumHours => ConvertMinuteToHour(MinimumMinutes);
 
         public decimal DefaultWorkHours => DefaultShiftHours - DefaultBreakLength;
 
@@ -29,7 +31,7 @@ namespace AccuPay.Data.Services.Policies
 
         public decimal DefaultBreakLength => _settings.GetDecimal($"{POLICY_TYPE}.BreakHour");
 
-        public decimal DefaultWorkHoursAndMinimumOTHours => DefaultWorkHours + ConvertMinuteToHour(Minimum);
+        public decimal DefaultWorkHoursAndMinimumOTHours => DefaultWorkHours + MinimumHours;
 
         public bool IsValidDefaultShiftPeriod(DateTime? startDate, TimeSpan? endTime, decimal breakLength)
         {
@@ -42,7 +44,7 @@ namespace AccuPay.Data.Services.Policies
                 if (!(shiftPeriod.TotalHours <= DefaultWorkHours))
                 {
                     var expectedEndTime = GetExpectedEndTime(startDate, breakLength).Value;
-                    var minimumOTEndTime = expectedEndTime.AddMinutes(Convert.ToDouble(Minimum));
+                    var minimumOTEndTime = expectedEndTime.AddMinutes(Convert.ToDouble(MinimumMinutes));
 
                     if (shiftPeriod.End > expectedEndTime && shiftPeriod.End <= minimumOTEndTime)
                         return false;
@@ -66,7 +68,7 @@ namespace AccuPay.Data.Services.Policies
 
         private decimal ConvertHourToMinute(decimal valueHours) => MINUTES_PER_HOUR * valueHours;
 
-        private decimal ConvertMinuteToHour(decimal valueHours) => valueHours / MINUTES_PER_HOUR;
+        private decimal ConvertMinuteToHour(decimal valueMinutes) => valueMinutes / MINUTES_PER_HOUR;
 
         public decimal TrimOvertimeHoursWorked(decimal overtimeHoursWorked)
         {
