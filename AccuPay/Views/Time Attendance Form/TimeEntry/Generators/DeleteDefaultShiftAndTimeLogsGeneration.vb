@@ -93,7 +93,7 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
                 Sub(t)
                     t.LastUpdBy = z_User
                 End Sub)
-            Await shiftService.ChangeManyAsync(z_OrganizationID, deleted:=employeeShifts.ToList())
+            Await shiftService.SaveManyAsync(deleted:=employeeShifts.ToList())
 
             SetCurrentMessage($"Finished deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 

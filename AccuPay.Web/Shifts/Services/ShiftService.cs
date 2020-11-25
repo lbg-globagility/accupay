@@ -101,13 +101,13 @@ namespace AccuPay.Web.Shifts.Services
                     }
                     else
                     {
+                        existingShift.LastUpdBy = _currentUser.UserId;
                         deleted.Add(existingShift);
                     }
                 }
             }
 
-            await _service.ChangeManyAsync(
-                organizationId: _currentUser.OrganizationId,
+            await _service.SaveManyAsync(
                 added: added,
                 updated: updated,
                 deleted: deleted);

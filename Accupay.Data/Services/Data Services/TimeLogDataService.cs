@@ -14,7 +14,6 @@ namespace AccuPay.Data.Services
     {
         private const string UserActivityName = "Time Log";
 
-        private readonly TimeLogRepository _timeLogRepository;
         private readonly UserActivityRepository _userActivityRepository;
         private readonly BranchRepository _branchRepository;
 
@@ -32,7 +31,6 @@ namespace AccuPay.Data.Services
                 policy,
                 entityName: "Time log")
         {
-            _timeLogRepository = timeLogRepository;
             _userActivityRepository = userActivityRepository;
             _branchRepository = branchRepository;
         }
@@ -53,9 +51,6 @@ namespace AccuPay.Data.Services
 
         protected override Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog)
         {
-            if (timeLog == null)
-                throw new BusinessLogicException("Invalid data.");
-
             if (timeLog.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
 
@@ -160,6 +155,8 @@ namespace AccuPay.Data.Services
                     .Where(tl => tl.EmployeeID.Value == item.EmployeeID.Value)
                     .Where(tl => tl.LogDate == item.LogDate)
                     .FirstOrDefault();
+
+                if (oldValue == null) continue;
 
                 var suffixIdentifier = $"of time log{CreateUserActivitySuffixIdentifier(item)}.";
 
