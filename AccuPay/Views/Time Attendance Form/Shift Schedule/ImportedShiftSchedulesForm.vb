@@ -123,7 +123,7 @@ Public Class ImportedShiftSchedulesForm
                 Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(
                     _dataSourceOk,
                     organizationId:=z_OrganizationID,
-                    userId:=z_User)
+                    changedByUserId:=z_User)
 
                 Dim importList = New List(Of UserActivityItem)
 

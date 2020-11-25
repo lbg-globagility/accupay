@@ -80,7 +80,7 @@ Public Class DefaultShiftAndTimeLogsGeneration
             Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
 
             Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
-            Await timeLogService.ChangeManyAsync(z_OrganizationID, added:=employeeTimeLogs.ToList())
+            Await timeLogService.SaveManyAsync(added:=employeeTimeLogs.ToList())
 
             Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
             Await shiftService.BatchApply(employeeShifts, z_OrganizationID, z_User)

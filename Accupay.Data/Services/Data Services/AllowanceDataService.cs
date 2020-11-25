@@ -109,7 +109,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected async override Task AdditionalSaveManyValidation(List<Allowance> allowances, List<Allowance> oldAllowances)
+        protected async override Task AdditionalSaveManyValidation(List<Allowance> allowances, List<Allowance> oldAllowances, SaveType saveType)
         {
             var allowanceTypeIds = allowances
                 .Where(x => x.ProductID.HasValue)

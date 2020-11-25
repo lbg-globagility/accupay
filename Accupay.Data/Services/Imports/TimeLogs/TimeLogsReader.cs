@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Services.Imports;
+using AccuPay.Data.Services.Imports;
 using AccuPay.Utilities;
 using System;
 using System.Collections.Generic;
@@ -82,9 +82,11 @@ namespace AccuPay.Data.Services
             try
             {
                 if (string.IsNullOrEmpty(lineContent))
+                {
                     // not considered error if it's just an empty line
                     // but it won't still be added to TimeAttendanceLog
                     return null;
+                }
 
                 var parts = Regex.Split(lineContent, @"\t");
 
@@ -97,9 +99,11 @@ namespace AccuPay.Data.Services
                     });
 
                 if (string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
+                {
                     // happens when blank lines was still read
                     // usually because it received an input like tab
                     return null;
+                }
 
                 var employeeNo = parts[0].Trim();
 

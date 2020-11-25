@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class SavableRepository<T> : BaseRepository where T : BaseEntity
+    public abstract class SavableRepository<T> : BaseRepository where T : BaseEntity
     {
         protected readonly PayrollContext _context;
 
@@ -56,16 +56,6 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveManyAsync(List<T> entities)
-        {
-            foreach (var entity in entities)
-            {
-                await SaveFunction(entity);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task CreateAsync(T entity)
         {
             _context.Set<T>().Add(entity);
@@ -82,7 +72,14 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task ChangeManyAsync(
+        public virtual async Task SaveManyAsync(List<T> entities)
+        {
+            await SaveManyAsync(
+                added: entities.Where(x => x.IsNewEntity).ToList(),
+                updated: entities.Where(x => x.IsNewEntity).ToList());
+        }
+
+        public async Task SaveManyAsync(
             List<T> added = null,
             List<T> updated = null,
             List<T> deleted = null)
@@ -92,6 +89,7 @@ namespace AccuPay.Data.Repositories
                 added.ForEach(entity =>
                 {
                     _context.Entry(entity).State = EntityState.Added;
+                    DetachNavigationProperties(entity);
                 });
             }
 
@@ -100,6 +98,7 @@ namespace AccuPay.Data.Repositories
                 updated.ForEach(entity =>
                 {
                     _context.Entry(entity).State = EntityState.Modified;
+                    DetachNavigationProperties(entity);
                 });
             }
 

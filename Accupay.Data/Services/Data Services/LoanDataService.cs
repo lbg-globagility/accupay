@@ -108,7 +108,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected async override Task AdditionalSaveManyValidation(List<LoanSchedule> loans, List<LoanSchedule> oldLoans)
+        protected async override Task AdditionalSaveManyValidation(List<LoanSchedule> loans, List<LoanSchedule> oldLoans, SaveType saveType)
         {
             // validate start date should not be in a Closed Payroll
             int? organizationId = null;

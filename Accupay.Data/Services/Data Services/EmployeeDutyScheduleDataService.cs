@@ -27,7 +27,7 @@ namespace AccuPay.Data.Services
         public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
             IEnumerable<ShiftModel> shiftModels,
             int organizationId,
-            int userId)
+            int changedByUserId)
         {
             var minDate = shiftModels.Min(x => x.Date);
             var maxDate = shiftModels.Max(x => x.Date);
@@ -58,19 +58,23 @@ namespace AccuPay.Data.Services
 
                     existingShift.IsRestDay = shifModel.IsRestDay;
                     existingShift.LastUpd = DateTime.Now;
+                    existingShift.LastUpdBy = changedByUserId;
 
                     updatedShifts.Add(existingShift);
                 }
                 else
                 {
-                    addedShifts.Add(shifModel.ToEmployeeDutySchedule(organizationId: organizationId, userId: userId));
+                    addedShifts.Add(
+                        shifModel.ToEmployeeDutySchedule(
+                            organizationId: organizationId,
+                            changedByUserId: changedByUserId));
                 }
             }
 
             addedShifts.ForEach(x => SanitizeEntity(x));
             updatedShifts.ForEach(x => SanitizeEntity(x));
 
-            await _shiftRepository.ChangeManyAsync(added: addedShifts, updated: updatedShifts);
+            await _shiftRepository.SaveManyAsync(added: addedShifts, updated: updatedShifts);
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
         }
@@ -101,7 +105,7 @@ namespace AccuPay.Data.Services
                 await CheckIfDataIsWithinClosedPayPeriod(deleted.Select(x => x.DateSched).Distinct(), organizationId);
             }
 
-            await _shiftRepository.ChangeManyAsync(
+            await _shiftRepository.SaveManyAsync(
                 added: added,
                 updated: updated,
                 deleted: deleted);

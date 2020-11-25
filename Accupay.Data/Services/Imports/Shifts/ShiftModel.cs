@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Interfaces;
 using System;
 
@@ -16,16 +16,16 @@ namespace AccuPay.Data.Services
         public decimal BreakLength { get; set; }
         public bool IsRestDay { get; set; }
 
-        public EmployeeDutySchedule ToEmployeeDutySchedule(int organizationId, int userId)
+        public EmployeeDutySchedule ToEmployeeDutySchedule(int organizationId, int changedByUserId)
         {
             var shift = new EmployeeDutySchedule()
             {
                 EmployeeID = EmployeeId,
                 OrganizationID = organizationId,
                 DateSched = Date,
-                CreatedBy = userId,
+                CreatedBy = changedByUserId,
                 Created = DateTime.Now,
-                LastUpdBy = userId,
+                LastUpdBy = changedByUserId,
                 LastUpd = DateTime.Now,
                 StartTime = StartTime,
                 EndTime = EndTime,

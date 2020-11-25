@@ -2,6 +2,7 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,13 @@ namespace AccuPay.Data.Services
 {
     public abstract class BaseSavableDataService<T> : BaseDataService where T : BaseEntity
     {
+        public enum SaveType
+        {
+            Insert,
+            Update,
+            Delete
+        }
+
         protected readonly SavableRepository<T> _repository;
         protected readonly PayrollContext _context;
         protected readonly string EntityName;
@@ -103,22 +111,47 @@ namespace AccuPay.Data.Services
 
         public virtual async Task SaveManyAsync(List<T> entities)
         {
-            ICollection<T> oldEntities = await GetOldEntitiesAsync(entities);
+            if (entities == null)
+                throw new BusinessLogicException($"No {EntityNamePlural} to be saved.");
 
-            foreach (var entity in entities)
-            {
-                var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity.RowID);
+            var insertEntities = entities.Where(x => x.IsNewEntity).ToList();
+            var updateEntities = entities.Where(x => !x.IsNewEntity).ToList();
 
-                if (!entity.IsNewEntity && oldEntity == null)
-                    throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");
+            await SaveManyAsync(added: insertEntities, updated: updateEntities);
+        }
 
-                await ValidateData(entity, oldEntity);
-            }
+        public virtual async Task SaveManyAsync(
+            List<T> added = null,
+            List<T> updated = null,
+            List<T> deleted = null)
+        {
+            if (added == null && updated == null && deleted == null)
+                throw new BusinessLogicException($"No {EntityNamePlural} to be saved.");
 
-            await AdditionalSaveManyValidation(entities, oldEntities.ToList());
+            var allEntities = new List<T>();
+            if (added != null) allEntities.AddRange(added);
+            if (updated != null) allEntities.AddRange(updated);
+            if (deleted != null) allEntities.AddRange(deleted);
+
+            ICollection<T> oldEntities = await ValidateMultipleEntities(
+                added: added,
+                updated: updated,
+                deleted: deleted);
+
+            await CallAdditionalSaveManyValidation(added, oldEntities, SaveType.Insert);
+            await CallAdditionalSaveManyValidation(updated, oldEntities, SaveType.Update);
+            await CallAdditionalSaveManyValidation(deleted, oldEntities, SaveType.Delete);
 
             DetachOldEntities(oldEntities);
-            await _repository.SaveManyAsync(entities);
+
+            await _repository.SaveManyAsync(
+                added: added,
+                updated: updated,
+                deleted: deleted);
+
+            await CallPostSaveManyAction(added, oldEntities, SaveType.Insert);
+            await CallPostSaveManyAction(updated, oldEntities, SaveType.Update);
+            await CallPostSaveManyAction(deleted, oldEntities, SaveType.Delete);
         }
 
         // TODO: change this to a synchronus method. All validations that needs database
@@ -139,7 +172,12 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected virtual Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities)
+        protected virtual Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities, SaveType saveType)
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task PostSaveManyAction(List<T> entities, List<T> oldEntities, SaveType saveType)
         {
             return Task.CompletedTask;
         }
@@ -170,9 +208,82 @@ namespace AccuPay.Data.Services
         private async Task ValidateData(T entity, T oldEntity)
         {
             if (entity == null)
-                throw new BusinessLogicException("Invalid data.");
+                throw new BusinessLogicException($"Invalid {EntityName}.");
+
+            if (entity.IsNewEntity && oldEntity != null)
+                throw new BusinessLogicException("Your data is no longer up to date. Please refresh the form/page.");
 
             await SanitizeEntity(entity, oldEntity);
+        }
+
+        private async Task<ICollection<T>> ValidateMultipleEntities(
+            List<T> added,
+            List<T> updated,
+            List<T> deleted)
+        {
+            var allEntities = new List<T>();
+            if (added != null) allEntities.AddRange(added);
+            if (updated != null) allEntities.AddRange(updated);
+            if (deleted != null) allEntities.AddRange(deleted);
+
+            ICollection<T> oldEntities = await GetOldEntitiesAsync(allEntities);
+
+            if (added != null && added.Any())
+            {
+                foreach (var entity in added)
+                {
+                    var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity?.RowID);
+                    await ValidateData(entity, oldEntity);
+                }
+            }
+
+            if (updated != null && updated.Any())
+            {
+                foreach (var entity in updated)
+                {
+                    var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity?.RowID);
+
+                    if (oldEntity == null)
+                        throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");
+
+                    await ValidateData(entity, oldEntity);
+                }
+            }
+
+            if (deleted != null && deleted.Any())
+            {
+                foreach (var entity in deleted)
+                {
+                    if (entity == null)
+                        throw new BusinessLogicException("Invalid data.");
+
+                    var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity.RowID);
+
+                    if (oldEntity == null)
+                        throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");
+                }
+            }
+
+            return oldEntities;
+        }
+
+        private static List<T> GetOldEntitiesOfPassedEntities(List<T> entities, ICollection<T> oldEntities)
+        {
+            var entityIds = entities.Select(a => a.RowID);
+
+            return oldEntities.Where(x => entityIds.Contains(x.RowID)).ToList();
+        }
+
+        private async Task CallPostSaveManyAction(List<T> updated, ICollection<T> oldEntities, SaveType saveType)
+        {
+            if (updated != null && updated.Any())
+                await PostSaveManyAction(updated, GetOldEntitiesOfPassedEntities(updated, oldEntities), saveType);
+        }
+
+        private async Task CallAdditionalSaveManyValidation(List<T> entities, ICollection<T> oldEntities, SaveType saveType)
+        {
+            if (entities != null && entities.Any())
+                await AdditionalSaveManyValidation(entities, GetOldEntitiesOfPassedEntities(entities, oldEntities), saveType);
         }
 
         #endregion Private Methods

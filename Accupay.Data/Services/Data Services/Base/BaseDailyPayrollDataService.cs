@@ -44,7 +44,7 @@ namespace AccuPay.Data.Services
             await ValidateDate(entity, oldEntity);
         }
 
-        protected override async Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities)
+        protected override async Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities, SaveType saveType)
         {
             int? organizationId = null;
             foreach (var entity in entities)

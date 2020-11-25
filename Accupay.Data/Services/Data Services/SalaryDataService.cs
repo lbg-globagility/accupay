@@ -80,11 +80,11 @@ namespace AccuPay.Data.Services
             await ValidateSalaryIfAlreadyUsed(salary, oldSalary);
         }
 
-        protected override async Task AdditionalSaveManyValidation(List<Salary> salaries, List<Salary> oldEntities)
+        protected override async Task AdditionalSaveManyValidation(List<Salary> salaries, List<Salary> oldSalaries, SaveType saveType)
         {
             foreach (var salary in salaries)
             {
-                var oldSalary = salaries.FirstOrDefault(x => x.RowID == salary.RowID);
+                var oldSalary = oldSalaries.FirstOrDefault(x => x.RowID == salary.RowID);
                 // TODO: think of a better way to not call this query for every salary
                 await ValidateSalaryIfAlreadyUsed(salary, oldSalary);
             }

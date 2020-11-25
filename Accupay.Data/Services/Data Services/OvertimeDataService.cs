@@ -15,7 +15,7 @@ namespace AccuPay.Data.Services
 {
     public class OvertimeDataService : BaseDailyPayrollDataService<Overtime>
     {
-        private const string USER_ACTIVITY_ENTITY_NAME = "OVERTIME";
+        private const string UserActivityName = "Overtime";
 
         private readonly OvertimeRepository _overtimeRepository;
         private readonly UserActivityRepository _userActivityRepository;
@@ -47,7 +47,7 @@ namespace AccuPay.Data.Services
             {
                 _userActivityRepository.RecordDelete(
                     userId,
-                    USER_ACTIVITY_ENTITY_NAME,
+                    UserActivityName,
                     entityId: overtime.RowID.Value,
                     organizationId: organizationId,
                     suffixIdentifier: CreateUserActivitySuffixIdentifier(overtime),
@@ -148,7 +148,7 @@ namespace AccuPay.Data.Services
         {
             var changes = new List<UserActivityItem>();
 
-            var suffixIdentifier = $"of overtime {CreateUserActivitySuffixIdentifier(oldOvertime)}.";
+            var suffixIdentifier = $"of overtime{CreateUserActivitySuffixIdentifier(oldOvertime)}.";
 
             if (newOvertime.OTStartDate != oldOvertime.OTStartDate)
                 changes.Add(new UserActivityItem()
@@ -194,7 +194,7 @@ namespace AccuPay.Data.Services
                 });
 
             if (changes.Any())
-                _userActivityRepository.CreateRecord(userId, USER_ACTIVITY_ENTITY_NAME, organizationId, UserActivityRepository.RecordTypeEdit, changes);
+                _userActivityRepository.CreateRecord(userId, UserActivityName, organizationId, UserActivityRepository.RecordTypeEdit, changes);
         }
 
         #region Private Methods
@@ -211,7 +211,7 @@ namespace AccuPay.Data.Services
                 var suffixIdentifier = CreateUserActivitySuffixIdentifier(overtime);
                 _userActivityRepository.RecordAdd(
                     userId,
-                    USER_ACTIVITY_ENTITY_NAME,
+                    UserActivityName,
                     entityId: overtime.RowID.Value,
                     organizationId: organizationId,
                     changedEmployeeId: overtime.EmployeeID.Value,
