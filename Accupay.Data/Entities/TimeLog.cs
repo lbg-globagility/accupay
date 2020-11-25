@@ -1,17 +1,12 @@
-﻿using AccuPay.Utilities.Extensions;
+using AccuPay.Utilities.Extensions;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeetimeentrydetails")]
-    public class TimeLog
+    public class TimeLog : BaseEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
-
         public int? OrganizationID { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

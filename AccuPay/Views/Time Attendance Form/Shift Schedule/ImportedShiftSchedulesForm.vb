@@ -1,15 +1,14 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.[Imports]
-Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Desktop.Helpers
-Imports Microsoft.Extensions.DependencyInjection
 Imports AccuPay.Data.Services.Policies
-Imports AccuPay.Data.ValueObjects
-Imports System.Threading.Tasks
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportedShiftSchedulesForm
 
@@ -135,7 +134,7 @@ Public Class ImportedShiftSchedulesForm
                     importList.Add(New UserActivityItem() With
                     {
                         .Description = $"Imported a new shift {suffixIdentifier}",
-                        .EntityId = schedule.RowID
+                        .EntityId = schedule.RowID.Value
                     })
                 Next
                 For Each schedule In result.UpdatedList
@@ -145,7 +144,7 @@ Public Class ImportedShiftSchedulesForm
                     importList.Add(New UserActivityItem() With
                     {
                         .Description = $"Updated a shift on import {suffixIdentifier}",
-                        .EntityId = schedule.RowID
+                        .EntityId = schedule.RowID.Value
                     })
                 Next
 

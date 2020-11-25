@@ -10,55 +10,13 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class TimeLogRepository
+    public class TimeLogRepository : SavableRepository<TimeLog>
     {
-        private readonly PayrollContext _context;
-
-        public TimeLogRepository(PayrollContext context)
+        public TimeLogRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
         #region Save
-
-        public async Task ChangeManyAsync(
-            List<TimeLog> added,
-            List<TimeLog> updated,
-            List<TimeLog> deleted)
-        {
-            if (added != null)
-            {
-                added.ForEach(timeLog =>
-                {
-                    _context.Entry(timeLog).State = EntityState.Added;
-                });
-            }
-
-            if (updated != null)
-            {
-                updated.ForEach(timeLog =>
-                {
-                    _context.Entry(timeLog).State = EntityState.Modified;
-                });
-            }
-
-            if (deleted != null)
-            {
-                deleted = deleted
-                    .GroupBy(x => x.RowID)
-                    .Select(x => x.FirstOrDefault())
-                    .ToList();
-                _context.TimeLogs.RemoveRange(deleted);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(TimeLog timeLog)
-        {
-            _context.Remove(timeLog);
-            await _context.SaveChangesAsync();
-        }
 
         public async Task SaveImportAsync(
             IReadOnlyCollection<TimeLog> timeLogs,
@@ -189,11 +147,6 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
 
             return (employees, total, timeLogs);
-        }
-
-        public async Task<TimeLog> GetByIdAsync(int id)
-        {
-            return await _context.TimeLogs.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         private IQueryable<TimeLog> CreateBaseQueryByDatePeriod(TimePeriod datePeriod)

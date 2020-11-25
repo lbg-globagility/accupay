@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -37,7 +37,7 @@ namespace AccuPay.Data.Services
             var employeeIds = shiftModels.Select(x => x.EmployeeId.Value).Distinct().ToArray();
 
             var existingShifts = await _shiftRepository
-                    .GetByEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
+                .GetByEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
 
             List<EmployeeDutySchedule> addedShifts = new List<EmployeeDutySchedule>();
             List<EmployeeDutySchedule> updatedShifts = new List<EmployeeDutySchedule>();
@@ -45,9 +45,9 @@ namespace AccuPay.Data.Services
             foreach (var shifModel in shiftModels)
             {
                 var existingShift = existingShifts
-                        .Where(x => x.EmployeeID == shifModel.EmployeeId)
-                        .Where(x => x.DateSched == shifModel.Date)
-                        .FirstOrDefault();
+                    .Where(x => x.EmployeeID == shifModel.EmployeeId)
+                    .Where(x => x.DateSched == shifModel.Date)
+                    .FirstOrDefault();
 
                 if (existingShift != null)
                 {

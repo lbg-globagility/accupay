@@ -319,7 +319,7 @@ Public Class ShiftScheduleForm
             Dim changes As New List(Of UserActivityItem)
             Dim entityName = FormEntityName.ToLower()
 
-            Dim oldShifts = oldRecords.Where(Function(x) x.RowID = ssm.RowID).FirstOrDefault()
+            Dim oldShifts = oldRecords.Where(Function(x) Nullable.Equals(x.RowID, ssm.RowID)).FirstOrDefault()
 
             If oldShifts Is Nothing Then Return
 
@@ -328,7 +328,7 @@ Public Class ShiftScheduleForm
             If Not Nullable.Equals(ssm.StartTime, oldShifts.StartTime) Then
                 changes.Add(New UserActivityItem() With
                 {
-                    .EntityId = ssm.RowID,
+                    .EntityId = ssm.RowID.Value,
                     .Description = $"Updated start time from '{oldShifts.StartTime.ToStringFormat("hh:mm tt")}' to '{ssm.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                     .ChangedEmployeeId = oldShifts.EmployeeID.Value
                 })
@@ -336,7 +336,7 @@ Public Class ShiftScheduleForm
             If Not Nullable.Equals(ssm.EndTime, oldShifts.EndTime) Then
                 changes.Add(New UserActivityItem() With
                 {
-                    .EntityId = ssm.RowID,
+                    .EntityId = ssm.RowID.Value,
                     .Description = $"Updated end time from '{oldShifts.EndTime.ToStringFormat("hh:mm tt")}' to '{ssm.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                     .ChangedEmployeeId = oldShifts.EmployeeID.Value
                 })
@@ -344,7 +344,7 @@ Public Class ShiftScheduleForm
             If Not Nullable.Equals(ssm.BreakStartTime, oldShifts.BreakStartTime) Then
                 changes.Add(New UserActivityItem() With
                 {
-                    .EntityId = ssm.RowID,
+                    .EntityId = ssm.RowID.Value,
                     .Description = $"Updated break start from '{oldShifts.BreakStartTime.ToStringFormat("hh:mm tt")}' to '{ssm.BreakStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
                     .ChangedEmployeeId = oldShifts.EmployeeID.Value
                 })
@@ -352,7 +352,7 @@ Public Class ShiftScheduleForm
             If oldShifts.BreakLength <> ssm.BreakLength Then
                 changes.Add(New UserActivityItem() With
                 {
-                    .EntityId = ssm.RowID,
+                    .EntityId = ssm.RowID.Value,
                     .Description = $"Updated break length from '{oldShifts.BreakLength}' to '{ssm.BreakLength}' {suffixIdentifier}",
                     .ChangedEmployeeId = oldShifts.EmployeeID.Value
                 })
@@ -360,7 +360,7 @@ Public Class ShiftScheduleForm
             If oldShifts.IsRestDay <> ssm.IsRestDay Then
                 changes.Add(New UserActivityItem() With
                 {
-                    .EntityId = ssm.RowID,
+                    .EntityId = ssm.RowID.Value,
                     .Description = $"Updated offset from '{oldShifts.IsRestDay}' to '{ssm.IsRestDay}' {suffixIdentifier}",
                     .ChangedEmployeeId = oldShifts.EmployeeID.Value
                 })
@@ -606,7 +606,7 @@ Public Class ShiftScheduleForm
 
         End Sub
 
-        Public Property RowID As Integer
+        Public Property RowID As Integer?
         Public Property EmployeeId As Integer? Implements IShift.EmployeeId
         Public Property EmployeeNo As String
         Public Property FullName As String
@@ -637,7 +637,7 @@ Public Class ShiftScheduleForm
 
         Public ReadOnly Property IsExisting As Boolean
             Get
-                Return _RowID > 0
+                Return BaseEntity.CheckIfNewEntity(_RowID)
             End Get
         End Property
 
@@ -1059,7 +1059,7 @@ Public Class ShiftScheduleForm
             _userActivityRepo.RecordAdd(
                 z_User,
                 FormEntityName,
-                entityId:=ssm.RowID,
+                entityId:=ssm.RowID.Value,
                 organizationId:=z_OrganizationID,
                 suffixIdentifier:=$" with date '{ssm.DateSched.ToShortDateString()}'",
                 changedEmployeeId:=ssm.EmployeeID.Value)
@@ -1071,7 +1071,7 @@ Public Class ShiftScheduleForm
             _userActivityRepo.RecordDelete(
                 z_User,
                 FormEntityName,
-                entityId:=ssm.RowID,
+                entityId:=ssm.RowID.Value,
                 organizationId:=z_OrganizationID,
                 suffixIdentifier:=$" with date '{ssm.DateSched.ToShortDateString()}'",
                 changedEmployeeId:=ssm.EmployeeID.Value)
