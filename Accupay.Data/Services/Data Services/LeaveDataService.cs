@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
@@ -300,7 +300,7 @@ namespace AccuPay.Data.Services
                     dutyShiftSched,
                     _policy.RespectDefaultRestDay,
                     employee.DayOfRest,
-                    _policy.ShiftBasedAutomaticOvertimePolicy.Enabled);
+                    _policy.ShiftBasedAutomaticOvertimePolicy);
 
                 totalHours += DayCalculator.ComputeLeaveHoursWithoutTimelog(
                     currentShift,
