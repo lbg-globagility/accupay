@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports log4net
 
@@ -8,7 +8,7 @@ Namespace Global.AccuPay.Desktop.Utilities
 
         Private Const MessageTitle As String = "AccuPay"
 
-        Private Shared _logger As ILog = LogManager.GetLogger("TimeLogsLogger")
+        Private Shared ReadOnly _logger As ILog = LogManager.GetLogger("ExceptionLogger")
 
         Public Shared Sub DefaultErrorMessage(Optional title As String = MessageTitle, Optional exception As Exception = Nothing, Optional errorMessageTitle As String = "DefaultErrorMessage")
 

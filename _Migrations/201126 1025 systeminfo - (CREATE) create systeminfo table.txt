@@ -1,0 +1,9 @@
+CREATE TABLE `systeminfo` (
+	`Name` VARCHAR(50) NOT NULL,
+	`Value` VARCHAR(50) NOT NULL,
+    PRIMARY KEY (`Name`)
+)
+COLLATE='utf8_general_ci'
+;
+
+INSERT INTO `systeminfo` (`Name`, `Value`) VALUES ('desktop.version', '1.25.4');

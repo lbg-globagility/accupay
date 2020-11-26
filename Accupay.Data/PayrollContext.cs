@@ -75,6 +75,7 @@ namespace AccuPay.Data
         public virtual DbSet<RoutePayRate> RoutePayRates { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
         internal virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
+        internal virtual DbSet<SystemInfo> SystemInfo { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
         internal virtual DbSet<TardinessRecord> TardinessRecords { get; set; }
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
@@ -189,6 +190,13 @@ namespace AccuPay.Data
                 .HasOne(t => t.Role)
                 .WithMany(t => t.RolePermissions)
                 .HasForeignKey(t => t.RoleId);
+
+            modelBuilder.Entity<SystemInfo>(
+            b =>
+            {
+                b.HasKey(e => e.Name);
+                b.Property(e => e.Value);
+            });
         }
     }
 }

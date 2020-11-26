@@ -264,7 +264,9 @@ Public Class MDIPrimaryForm
 
                     .OrganizationComboBox.SelectedIndex = -1
 
-                    Await MetroLogin.ReloadOrganizationAsync()
+                    Await .CheckAppVersion()
+
+                    Await .ReloadOrganizationAsync()
 
                     If Debugger.IsAttached Then
                         .AssignDefaultCredentials()

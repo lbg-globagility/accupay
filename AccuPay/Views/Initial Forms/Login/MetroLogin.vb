@@ -1,5 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
+Imports System.Configuration
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
@@ -8,6 +9,7 @@ Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
+Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MetroLogin
@@ -20,9 +22,13 @@ Public Class MetroLogin
 
     Private ReadOnly _roleRepository As RoleRepository
 
+    Private ReadOnly _systemInfoRepository As SystemInfoRepository
+
     Private ReadOnly _userRepository As AspNetUserRepository
 
     Private ReadOnly _encryptor As IEncryption
+
+    Private Shared ReadOnly _logger As ILog = LogManager.GetLogger("LoginLogger")
 
     Sub New()
 
@@ -35,6 +41,8 @@ Public Class MetroLogin
         _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+
+        _systemInfoRepository = MainServiceProvider.GetRequiredService(Of SystemInfoRepository)
 
         _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
 
@@ -69,7 +77,10 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub MetroLogin_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Async Sub MetroLogin_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+        Await CheckAppVersion()
+
         If Debugger.IsAttached Then
             AssignDefaultCredentials()
 
@@ -77,6 +88,34 @@ Public Class MetroLogin
 
         OrganizationComboBox.DisplayMember = "Name"
     End Sub
+
+    Public Async Function CheckAppVersion() As Task
+
+        Const warningMessage As String = "Please install the latest version of AccuPay. Contact your IT Department or Globagility Inc. for assistance."
+
+        Try
+
+            Dim appSettings = ConfigurationManager.AppSettings
+            Dim currentVersion = appSettings.Get("payroll.version")
+
+            Dim latestVersion = Await _systemInfoRepository.GetDesktopVersion()
+
+            If currentVersion <> latestVersion Then
+
+                MessageBoxHelper.Warning(warningMessage)
+                _logger.Error($"Incorrect version. Current version '{currentVersion}' | Latest version '{latestVersion}'")
+                Me.Close()
+
+            End If
+        Catch ex As Exception
+
+            MessageBoxHelper.Warning(warningMessage)
+            _logger.Error("Exception in checking app version in desktop login.", ex)
+            Me.Close()
+
+        End Try
+
+    End Function
 
     Public Sub AssignDefaultCredentials()
         UserNameTextBox.Text = "admin"
