@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities;
 using System;
@@ -64,7 +65,7 @@ namespace AccuPay.Data.Services
             if (hasSalaryForThisDate == false)
                 return timeEntry;
 
-            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest, _policy.ShiftBasedAutomaticOvertimePolicy.Enabled);
+            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest, _policy.ShiftBasedAutomaticOvertimePolicy);
 
             timeEntry.BranchID = branchId;
             timeEntry.IsRestDay = currentShift.IsRestDay;
@@ -839,11 +840,11 @@ namespace AccuPay.Data.Services
             EmployeeDutySchedule shift,
             bool respectDefaultRestDay,
             int? employeeDayOfRest,
-            bool shiftBasedAutomaticOvertimeEnabled)
+            ShiftBasedAutomaticOvertimePolicy shiftBasedAutomaticOvertimePolicy)
         {
-            if (shiftBasedAutomaticOvertimeEnabled && shift != null)
+            if (shiftBasedAutomaticOvertimePolicy.Enabled && shift != null)
             {
-                shift.EndTimeFull = _policy.ShiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shift.StartTimeFull, shift.BreakLength);
+                shift.EndTimeFull = shiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shift.StartTimeFull, shift.BreakLength);
             }
 
             var currentShift = new CurrentShift(shift, currentDate);

@@ -300,7 +300,7 @@ namespace AccuPay.Data.Services
                     dutyShiftSched,
                     _policy.RespectDefaultRestDay,
                     employee.DayOfRest,
-                    _policy.ShiftBasedAutomaticOvertimePolicy.Enabled);
+                    _policy.ShiftBasedAutomaticOvertimePolicy);
 
                 totalHours += DayCalculator.ComputeLeaveHoursWithoutTimelog(
                     currentShift,
