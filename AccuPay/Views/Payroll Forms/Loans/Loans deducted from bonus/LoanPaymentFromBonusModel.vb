@@ -1,168 +1,183 @@
 Imports AccuPay.Data.Entities
 
 Public Class LoanPaymentFromBonusModel
-    Public Property Id As Integer
-    Public Property LoanId As Integer
-    Public Property BonusId As Integer
-    Public Property PaystubId As Integer?
-
-    'Private _amountPayment As Decimal
-
-    Public Property AmountPayment As Decimal
-    '    Get
-    '        Return _amountPayment
-    '    End Get
-    '    Set(ByVal value As Decimal)
-    '        _amountPayment = value
-
-    '        'If _amountPayment = Bonus.BonusAmount _
-    '        '    And Not isFullAmount Then isFullAmount = True
-
-    '        'If _amountPayment < Bonus.BonusAmount Then isFullAmount = False
-    '    End Set
-    'End Property
-
-    Private _isFullAmount As Boolean
-
-    Public Property IsFullPayment() As Boolean
-        Get
-            Return _isFullAmount
-        End Get
-        Set(ByVal value As Boolean)
-            _isFullAmount = value
-
-            'If isFullAmount _
-            '    And Not _amountPayment = Bonus.BonusAmount Then _amountPayment = Bonus.BonusAmount
-        End Set
-    End Property
-
-    Public Property BonusAmount As Decimal
-
-    Public Property DeductionAmount As Decimal
-
-    Public Property EffectiveDate As Date
-
+    Public ReadOnly Property Id As Integer
+    Public ReadOnly Property LoanId As Integer
+    Public ReadOnly Property BonusId As Integer
+    Public ReadOnly Property BonusAmount As Decimal
+    Public ReadOnly Property EffectiveDate As Date
+    Public ReadOnly Property EffectiveEndDate As Date
+    Public ReadOnly Property Frequency As String
+    Public ReadOnly Property IsEditable As Boolean
+    Public ReadOnly Property IsNew As Boolean
+    Public ReadOnly Property DeductionAmount As Decimal
+    Public ReadOnly Property TotalPayment As Decimal
     Public Overridable Property Bonus As Bonus
-
     Public Overridable Property LoanSchedule As LoanSchedule
+    Public Overridable Property LoanPaymentFromBonus As LoanPaymentFromBonus
 End Class
 
 Partial Public Class LoanPaymentFromBonusModel
-    Private Shared _loanPaymentFromBonus As LoanPaymentFromBonus
+    Private ReadOnly _originalAmountPayment As Decimal
+    Private _amountPayment As Decimal
+    Private _isFullPayment As Boolean
 
-    Public Sub New()
+    Public Sub New(bonus As Bonus, loanSchedule As LoanSchedule)
+        _Bonus = bonus
+        BonusAmount = bonus.BonusAmount
+        EffectiveDate = bonus.EffectiveStartDate
+        EffectiveEndDate = bonus.EffectiveEndDate
+        Frequency = bonus.AllowanceFrequency
+        BonusId = bonus.RowID.Value
 
-    End Sub
+        _LoanSchedule = loanSchedule
+        DeductionAmount = loanSchedule.DeductionAmount
 
-    Public Sub New(loanPaymentFromBonus As LoanPaymentFromBonus)
-        _loanPaymentFromBonus = loanPaymentFromBonus
-        Convert(_loanPaymentFromBonus)
-    End Sub
+        LoanId = loanSchedule.RowID.Value
+        Dim loanPaymentFromBonus = bonus.LoanPaymentFromBonuses.FirstOrDefault(Function(l) l.LoanId = LoanId)
 
-    Private Sub Convert(loanPaymentFromBonus As LoanPaymentFromBonus)
-        'Dim bonus = loanPaymentFromBonus.Bonus
-        'Dim model = New LoanPaymentFromBonusModel() With {}
-        Bonus = loanPaymentFromBonus.Bonus
-        BonusId = loanPaymentFromBonus.BonusId
-        Id = loanPaymentFromBonus.Id
-        LoanSchedule = loanPaymentFromBonus.LoanSchedule
-        LoanId = loanPaymentFromBonus.LoanId
-        AmountPayment = loanPaymentFromBonus.AmountPayment
-        DeductionAmount = loanPaymentFromBonus.DeductionAmount
-        PaystubId = loanPaymentFromBonus.PaystubId
+        Dim hasItems As Boolean
 
-        Dim difference = Bonus.BonusAmount - AmountPayment
-        IsFullPayment = (AmountPayment = Bonus.BonusAmount) Or
-            (difference >= 0 And difference <= DeductionAmount)
+        If loanPaymentFromBonus IsNot Nothing Then
+            _LoanPaymentFromBonus = loanPaymentFromBonus
 
-        BonusAmount = Bonus.BonusAmount
-        EffectiveDate = Bonus.EffectiveEndDate
+            Id = loanPaymentFromBonus.Id
 
-        'Return model
-    End Sub
+            AmountPayment = loanPaymentFromBonus.AmountPayment
+            _originalAmountPayment = AmountPayment
+            DeductionAmount = loanPaymentFromBonus.DeductionAmount
 
-    Public Shared Function Convert(bonus As Bonus, loanSchedule As LoanSchedule) As LoanPaymentFromBonusModel
-
-        Dim model = New LoanPaymentFromBonusModel() With
-            {.Bonus = bonus,
-            .LoanSchedule = loanSchedule,
-            .BonusId = bonus.RowID,
-            .LoanId = loanSchedule.RowID,
-            .DeductionAmount = loanSchedule.DeductionAmount}
-
-        'model.isFullAmount = loanSchedule.TotalBalanceLeft <= bonus.BonusAmount
-        model.BonusAmount = bonus.BonusAmount
-        model.EffectiveDate = bonus.EffectiveEndDate
-
-        Return model
-    End Function
-
-    Public Sub Scrutinize(newTotalBalanceLeft As Decimal)
-        If _isFullAmount Then
-            Dim remainder As Decimal = Bonus.BonusAmount Mod LoanSchedule.DeductionAmount
-            Dim isValid = Bonus.BonusAmount - newTotalBalanceLeft > -1
-            If isValid Then
-                AmountPayment = newTotalBalanceLeft
-            Else
-                AmountPayment = Bonus.BonusAmount - remainder
-            End If
-
-            'ElseIf Not _isFullAmount Then
-            '    If AmountPayment > 0 Then
-            '        AmountPayment = 0
-            '    End If
+            hasItems = If(loanPaymentFromBonus.Items?.Any(), False)
         End If
+
+        _isFullPayment = If(AmountPayment = 0, False, AmountPayment >= MaxAvailablePayment)
+
+        IsEditable = Not hasItems
+
+        IsNew = Id = 0
+
+        _TotalPayment = If(bonus.LoanPaymentFromBonuses?.
+            Where(Function(l) l.BonusId = BonusId).
+            Where(Function(l) l.LoanId <> LoanId).
+            Sum(Function(l) l.AmountPayment), 0)
     End Sub
 
-    Public ReadOnly Property IsNew() As Boolean
+    Public ReadOnly Property IsFulfilled As Boolean
         Get
-            Return Id = 0
+            Return LoanSchedule.TotalBalanceLeft <= TotalPayment + AmountPayment
         End Get
     End Property
 
-    Public ReadOnly Property InvalidAmountPayment As Boolean
+    Public Property AmountPayment As Decimal
         Get
-            If LoanSchedule Is Nothing Then Return False
+            Return _amountPayment
+        End Get
+        Set(value As Decimal)
+            _amountPayment = value
 
-            If AmountPayment = 0 Then Return False
+            Dim overPaysLoan = _amountPayment > LoanSchedule.TotalBalanceLeft
 
-            Dim deductAmount = If(Id = 0, LoanSchedule.DeductionAmount, DeductionAmount)
+            Dim overUseBonus = _amountPayment > ExclusiveCurrentBonusAmount
 
-            Return Not (AmountPayment Mod deductAmount) = 0
+            'Dim overPaysDeductionAmount = _amountPayment > DeductionAmount
 
-            'Return AmountPayment < LoanSchedule.DeductionAmount
+            If overPaysLoan OrElse overUseBonus Then
+                SetPaymentToMaxAvailable()
+            End If
+        End Set
+    End Property
+
+    Public ReadOnly Property ValidPayment As Decimal
+        Get
+            Return ModDivision(AmountPayment, DeductionAmount)
+        End Get
+    End Property
+
+    Public Property IsFullPayment As Boolean
+        Get
+            Return _isFullPayment
+        End Get
+        Set(value As Boolean)
+            _isFullPayment = value
+
+            If value Then
+                SetPaymentToMaxAvailable()
+            Else
+                _amountPayment = 0
+            End If
+        End Set
+    End Property
+
+    Private Sub SetPaymentToMaxAvailable()
+        'Dim remainder = MaxAvailablePayment Mod DeductionAmount
+        '_amountPayment = MaxAvailablePayment - remainder
+        'If MaxAvailablePayment - remainder = 0 Then
+        '    _amountPayment = MaxAvailablePayment
+        'End If
+        _amountPayment = ModDivision(MaxAvailablePayment, DeductionAmount)
+        _isFullPayment = True
+    End Sub
+
+    Private Function ModDivision(dividend As Decimal, divisor As Decimal) As Decimal
+        Dim remainder = dividend Mod divisor
+        If dividend - remainder = 0 Then
+            Return dividend
+        Else
+            Return dividend - remainder
+        End If
+    End Function
+
+    Public ReadOnly Property CurrentBonusAmount As Decimal
+        Get
+            Dim totalSharedLoanPayment = ExclusiveCurrentBonusAmount + AmountPayment
+            Return BonusAmount - totalSharedLoanPayment
+        End Get
+    End Property
+
+    Public ReadOnly Property ExclusiveCurrentBonusAmount As Decimal
+        Get
+            Return BonusAmount - TotalPayment
+        End Get
+    End Property
+
+    Public ReadOnly Property MaxAvailablePayment As Decimal
+        Get
+            Dim totalBalanceLeft = LoanSchedule.TotalBalanceLeft
+
+            Dim insufficientToPayMinimumDeductionAmount = ExclusiveCurrentBonusAmount < DeductionAmount
+            If insufficientToPayMinimumDeductionAmount Then
+                Return ExclusiveCurrentBonusAmount
+            End If
+
+            Dim sufficientToPayBalance = ExclusiveCurrentBonusAmount - totalBalanceLeft > -1
+            If sufficientToPayBalance Then
+                Return totalBalanceLeft
+            Else
+                Return ExclusiveCurrentBonusAmount
+            End If
         End Get
     End Property
 
     Public ReadOnly Property HasChanged As Boolean
         Get
-            Dim isFullPaymentChanged = Not IsFullPayment And AmountPayment > 0
-            'Dim isAmountPaymentChanged = AmountPayment > 0
-            Dim notNew = Not IsNew
-            Dim existingAndChanged1 = notNew And IsFullPayment = False
-            Dim existingAndChanged2 = notNew And AmountPayment > 0 And IsFullPayment
-            Dim newlyAdded = IsNew And AmountPayment > 0
-
-            Dim satisfiedList = {isFullPaymentChanged, existingAndChanged1, existingAndChanged2, newlyAdded}
-            Dim satisfied = satisfiedList.Any(Function(t) t)
-
-            Return satisfied
+            Return AmountPayment <> _originalAmountPayment
         End Get
     End Property
 
     Public Function Export() As LoanPaymentFromBonus
-        If Id > 0 Then
-            _loanPaymentFromBonus.AmountPayment = AmountPayment
-            Return _loanPaymentFromBonus
+        If Not IsNew Then
+            LoanPaymentFromBonus.AmountPayment = AmountPayment
+            LoanPaymentFromBonus.LastUpdBy = z_User
+            Return LoanPaymentFromBonus
         Else
             Return New LoanPaymentFromBonus() With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
                 .AmountPayment = AmountPayment,
                 .BonusId = BonusId,
-                .LoanId = LoanId,
-                .PaystubId = PaystubId,
-                .DeductionAmount = LoanSchedule.DeductionAmount
+                .DeductionAmount = LoanSchedule.DeductionAmount,
+                .LoanId = LoanId
             }
-
         End If
     End Function
 

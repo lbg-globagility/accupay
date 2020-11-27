@@ -776,6 +776,11 @@ namespace AccuPay.Data.Services
                     }
                 }
 
+                if (!_usesLoanDeductFromBonus)
+                {
+                    var fsdfsd = loanSchedule.LoanPaymentFromBonuses.Where(l => l.LoanId == loanSchedule.RowID.Value);
+                }
+
                 loanSchedule.TotalBalanceLeft -= deductionAmount;
                 loanSchedule.RecomputePayPeriodLeft();
 
@@ -795,11 +800,11 @@ namespace AccuPay.Data.Services
 
                 loanTransactions.Add(loanTransaction);
 
-                if (!_usesLoanDeductFromBonus) { continue; }
-                foreach (var loanPaidBonus in loanSchedule.LoanPaymentFromBonuses)
-                {
-                    loanPaidBonus.Paystub = paystub;
-                }
+                //if (!_usesLoanDeductFromBonus) { continue; }
+                //foreach (var loanPaidBonus in loanSchedule.LoanPaymentFromBonuses)
+                //{
+                //    //loanPaidBonus.Paystub = paystub;
+                //}
             }
 
             return loanTransactions;

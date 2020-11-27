@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -63,5 +64,7 @@ namespace AccuPay.Data.Entities
                 return Product?.Name;
             }
         }
+
+        public virtual ICollection<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
     }
 }

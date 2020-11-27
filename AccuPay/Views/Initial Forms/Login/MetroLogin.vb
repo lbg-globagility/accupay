@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -79,8 +79,8 @@ Public Class MetroLogin
     End Sub
 
     Public Sub AssignDefaultCredentials()
-        UserNameTextBox.Text = "admin"
-        PasswordTextBox.Text = "admin"
+        UserNameTextBox.Text = "jacq"
+        PasswordTextBox.Text = "*passwor"
     End Sub
 
     Private Sub OrganizationComboBox_DropDown(sender As Object, e As EventArgs) Handles OrganizationComboBox.DropDown
