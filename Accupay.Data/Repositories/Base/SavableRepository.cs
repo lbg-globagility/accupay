@@ -76,7 +76,7 @@ namespace AccuPay.Data.Repositories
         {
             await SaveManyAsync(
                 added: entities.Where(x => x.IsNewEntity).ToList(),
-                updated: entities.Where(x => x.IsNewEntity).ToList());
+                updated: entities.Where(x => !x.IsNewEntity).ToList());
         }
 
         public async Task SaveManyAsync(
