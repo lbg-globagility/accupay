@@ -1,3 +1,4 @@
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using System;
@@ -62,6 +63,16 @@ namespace AccuPay.Data.Services.Policies
             var expectedEndTimeSpan = shiftStart.Value.AddHours(Convert.ToDouble(userLaborHours));
 
             return expectedEndTimeSpan;
+        }
+
+        public DateTime? GetExpectedEndTime(EmployeeDutySchedule shift)
+        {
+            if (shift.WorkHours < DefaultWorkHours)
+            {
+                return shift.EndTimeFull;
+            }
+
+            return GetExpectedEndTime(shift.StartTimeFull, shift.BreakLength);
         }
 
         private decimal ConvertHourToMinute(decimal valueHours) => MINUTES_PER_HOUR * valueHours;
