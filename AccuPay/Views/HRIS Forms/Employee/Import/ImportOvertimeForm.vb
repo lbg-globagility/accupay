@@ -1,16 +1,13 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
-Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportOvertimeForm
-
-    Private Const FormEntityName As String = "Overtime"
 
     Private _overtimes As List(Of Overtime)
 
@@ -18,15 +15,11 @@ Public Class ImportOvertimeForm
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _userActivityRepository As UserActivityRepository
-
     Sub New()
 
         InitializeComponent()
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -189,22 +182,6 @@ Public Class ImportOvertimeForm
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
                 Await dataService.SaveManyAsync(_overtimes)
-
-                Dim importlist = New List(Of UserActivityItem)
-
-                For Each overtime In _overtimes
-
-                    Dim suffixIdentifier = $"with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'."
-
-                    importlist.Add(New UserActivityItem() With
-                    {
-                        .Description = $"Create a new overtime {suffixIdentifier}",
-                        .EntityId = overtime.RowID.Value,
-                        .ChangedEmployeeId = overtime.EmployeeID.Value
-                    })
-                Next
-
-                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
                 Me.IsSaved = True
 

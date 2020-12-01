@@ -55,6 +55,48 @@ namespace AccuPay.Data.Services
             }
         }
 
+        public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int userId)
+        {
+            List<Overtime> overtimes = new List<Overtime>();
+
+            foreach (var ot in validRecords)
+            {
+                overtimes.Add(new Overtime()
+                {
+                    CreatedBy = userId,
+                    EmployeeID = ot.EmployeeID,
+                    OrganizationID = organizationId,
+                    OTEndTimeFull = ot.EndTime.Value,
+                    OTStartDate = ot.StartDate.Value,
+                    OTStartTimeFull = ot.StartTime.Value,
+                    Status = Overtime.StatusPending
+                });
+            }
+
+            await _overtimeRepository.SaveManyAsync(overtimes);
+
+            return overtimes;
+        }
+
+        public async Task GenerateOvertimeByShift(IEnumerable<IShift> modifiedShifts, List<int> employeeIds, int organizationId, int userId)
+        {
+            if (!modifiedShifts.Any())
+                return;
+
+            var timePeriod = new TimePeriod(modifiedShifts.Min(s => s.Date), modifiedShifts.Max(s => s.Date));
+
+            (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) =
+                CreateOvertimesByShift(modifiedShifts, organizationId, userId, employeeIds, timePeriod);
+
+            if (saveOvertimes.Any())
+            {
+                await SaveManyAsync(saveOvertimes);
+            }
+
+            if (deleteOvertimes.Any())
+                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), organizationId, userId);
+        }
+
         protected override Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
         {
             if (overtime.OrganizationID == null)
@@ -92,142 +134,117 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int userId)
+        protected override Task PostSaveManyAction(IReadOnlyCollection<Overtime> entities, IReadOnlyCollection<Overtime> oldEntities, SaveType saveType)
         {
-            List<Overtime> overtimes = new List<Overtime>();
-
-            foreach (var ot in validRecords)
+            switch (saveType)
             {
-                overtimes.Add(new Overtime()
-                {
-                    CreatedBy = userId,
-                    EmployeeID = ot.EmployeeID,
-                    OrganizationID = organizationId,
-                    OTEndTimeFull = ot.EndTime.Value,
-                    OTStartDate = ot.StartDate.Value,
-                    OTStartTimeFull = ot.StartTime.Value,
-                    Status = Overtime.StatusPending
-                });
+                case SaveType.Insert:
+
+                    foreach (var item in entities)
+                    {
+                        _userActivityRepository.RecordAdd(
+                            item.CreatedBy.Value,
+                            UserActivityName,
+                            entityId: item.RowID.Value,
+                            organizationId: item.OrganizationID.Value,
+                            suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
+                            changedEmployeeId: item.EmployeeID.Value);
+                    }
+
+                    break;
+
+                case SaveType.Update:
+
+                    RecordUpdate(entities, oldEntities);
+                    break;
+
+                case SaveType.Delete:
+
+                    foreach (var item in entities)
+                    {
+                        _userActivityRepository.RecordDelete(
+                            item.LastUpdBy.Value,
+                            UserActivityName,
+                            entityId: item.RowID.Value,
+                            organizationId: item.OrganizationID.Value,
+                            suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
+                            changedEmployeeId: item.EmployeeID.Value);
+                    }
+                    break;
+
+                default:
+                    break;
             }
 
-            await _overtimeRepository.SaveManyAsync(overtimes);
-
-            return overtimes;
-        }
-
-        public async Task GenerateOvertimeByShift(IEnumerable<IShift> modifiedShifts, List<int> employeeIds, int organizationId, int userId)
-        {
-            if (!modifiedShifts.Any())
-                return;
-
-            var timePeriod = new TimePeriod(modifiedShifts.Min(s => s.Date), modifiedShifts.Max(s => s.Date));
-
-            (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes, List<Overtime> existingOvertimes) =
-                CreateOvertimesByShift(modifiedShifts, organizationId, userId, employeeIds, timePeriod);
-
-            if (saveOvertimes.Any())
-            {
-                IList<Overtime> newOvertimes = saveOvertimes.Where(ot => ot.IsNewEntity).ToList();
-                IList<Overtime> updatedOvertimes = saveOvertimes.Where(ot => !ot.IsNewEntity).ToList();
-
-                await SaveManyAsync(saveOvertimes);
-
-                CreateInsertAndUpdateUserActivities(
-                    newOvertimes: newOvertimes,
-                    updatedOvertimes: updatedOvertimes,
-                    existingOvertimes: existingOvertimes,
-                    organizationId: organizationId,
-                    userId: userId);
-            }
-
-            if (deleteOvertimes.Any())
-                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), organizationId, userId);
-        }
-
-        public void GenerateUpdateUserActivityItems(Overtime newOvertime, Overtime oldOvertime, int organizationId, int userId)
-        {
-            var changes = new List<UserActivityItem>();
-
-            var suffixIdentifier = $"of overtime{CreateUserActivitySuffixIdentifier(oldOvertime)}.";
-
-            if (newOvertime.OTStartDate != oldOvertime.OTStartDate)
-                changes.Add(new UserActivityItem()
-                {
-                    EntityId = oldOvertime.RowID.Value,
-                    Description = $"Updated start date from '{oldOvertime.OTStartDate.ToShortDateString()}' to '{newOvertime.OTStartDate.ToShortDateString()}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldOvertime.EmployeeID.Value
-                });
-            if (newOvertime.OTStartTime != oldOvertime.OTStartTime)
-                changes.Add(new UserActivityItem()
-                {
-                    EntityId = oldOvertime.RowID.Value,
-                    Description = $"Updated start time from '{oldOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldOvertime.EmployeeID.Value
-                });
-            if (newOvertime.OTEndTime != oldOvertime.OTEndTime)
-                changes.Add(new UserActivityItem()
-                {
-                    EntityId = oldOvertime.RowID.Value,
-                    Description = $"Updated end time from '{oldOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' to '{newOvertime.OTEndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldOvertime.EmployeeID.Value
-                });
-            if (newOvertime.Reason != oldOvertime.Reason)
-                changes.Add(new UserActivityItem()
-                {
-                    EntityId = oldOvertime.RowID.Value,
-                    Description = $"Updated reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldOvertime.EmployeeID.Value
-                });
-            if (newOvertime.Comments != oldOvertime.Comments)
-                changes.Add(new UserActivityItem()
-                {
-                    EntityId = oldOvertime.RowID.Value,
-                    Description = $"Updated comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldOvertime.EmployeeID.Value
-                });
-            if (newOvertime.Status != oldOvertime.Status)
-                changes.Add(new UserActivityItem()
-                {
-                    EntityId = oldOvertime.RowID.Value,
-                    Description = $"Updated status from '{oldOvertime.Status}' to '{newOvertime.Status}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldOvertime.EmployeeID.Value
-                });
-
-            if (changes.Any())
-                _userActivityRepository.CreateRecord(userId, UserActivityName, organizationId, UserActivityRepository.RecordTypeEdit, changes);
+            return Task.CompletedTask;
         }
 
         #region Private Methods
 
-        private void CreateInsertAndUpdateUserActivities(
-            IList<Overtime> newOvertimes,
-            IList<Overtime> updatedOvertimes,
-            IList<Overtime> existingOvertimes,
-            int organizationId,
-            int userId)
+        private void RecordUpdate(IReadOnlyCollection<Overtime> updatedShifts, IReadOnlyCollection<Overtime> oldRecords)
         {
-            foreach (var overtime in newOvertimes)
+            foreach (var newValue in updatedShifts)
             {
-                var suffixIdentifier = CreateUserActivitySuffixIdentifier(overtime);
-                _userActivityRepository.RecordAdd(
-                    userId,
-                    UserActivityName,
-                    entityId: overtime.RowID.Value,
-                    organizationId: organizationId,
-                    changedEmployeeId: overtime.EmployeeID.Value,
-                    suffixIdentifier: suffixIdentifier);
-            }
+                var changes = new List<UserActivityItem>();
+                var entityName = UserActivityName.ToLower();
 
-            foreach (var overtime in updatedOvertimes)
-            {
-                var oldOvertime = existingOvertimes.Where(ot => ot.RowID == overtime.RowID).FirstOrDefault();
-                if (oldOvertime == null) continue;
+                var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
+                if (oldValue == null) continue;
 
-                GenerateUpdateUserActivityItems(
-                    newOvertime: overtime,
-                    oldOvertime: oldOvertime,
-                    organizationId: organizationId,
-                    userId: userId);
+                var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
+
+                if (newValue.OTStartDate != oldValue.OTStartDate)
+                    changes.Add(new UserActivityItem()
+                    {
+                        EntityId = oldValue.RowID.Value,
+                        Description = $"Updated start date from '{oldValue.OTStartDate.ToShortDateString()}' to '{newValue.OTStartDate.ToShortDateString()}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
+                    });
+                if (newValue.OTStartTime != oldValue.OTStartTime)
+                    changes.Add(new UserActivityItem()
+                    {
+                        EntityId = oldValue.RowID.Value,
+                        Description = $"Updated start time from '{oldValue.OTStartTime.ToStringFormat("hh:mm tt")}' to '{newValue.OTStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
+                    });
+                if (newValue.OTEndTime != oldValue.OTEndTime)
+                    changes.Add(new UserActivityItem()
+                    {
+                        EntityId = oldValue.RowID.Value,
+                        Description = $"Updated end time from '{oldValue.OTEndTime.ToStringFormat("hh:mm tt")}' to '{newValue.OTEndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
+                    });
+                if (newValue.Reason != oldValue.Reason)
+                    changes.Add(new UserActivityItem()
+                    {
+                        EntityId = oldValue.RowID.Value,
+                        Description = $"Updated reason from '{oldValue.Reason}' to '{newValue.Reason}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
+                    });
+                if (newValue.Comments != oldValue.Comments)
+                    changes.Add(new UserActivityItem()
+                    {
+                        EntityId = oldValue.RowID.Value,
+                        Description = $"Updated comments from '{oldValue.Comments}' to '{newValue.Comments}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
+                    });
+                if (newValue.Status != oldValue.Status)
+                    changes.Add(new UserActivityItem()
+                    {
+                        EntityId = oldValue.RowID.Value,
+                        Description = $"Updated status from '{oldValue.Status}' to '{newValue.Status}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
+                    });
+
+                if (changes.Any())
+                {
+                    _userActivityRepository.CreateRecord(
+                        newValue.LastUpdBy.Value,
+                        UserActivityName,
+                        newValue.OrganizationID.Value,
+                        UserActivityRepository.RecordTypeEdit,
+                        changes);
+                }
             }
         }
 
@@ -236,7 +253,7 @@ namespace AccuPay.Data.Services
             return $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
         }
 
-        private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes, List<Overtime> existingOvertimes) CreateOvertimesByShift(
+        private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) CreateOvertimesByShift(
             IEnumerable<IShift> shiftSchedSaveList,
             int organizationId,
             int userId,
@@ -304,8 +321,7 @@ namespace AccuPay.Data.Services
 
             return (
                 saveOvertimes: saveOvertimes,
-                deleteOvertimes: deleteOvertimes,
-                existingOvertimes: existingOvertimes.ToList());
+                deleteOvertimes: deleteOvertimes);
         }
 
         #endregion Private Methods

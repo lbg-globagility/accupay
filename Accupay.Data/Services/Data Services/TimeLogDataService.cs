@@ -93,7 +93,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task PostSaveManyAction(List<TimeLog> entities, List<TimeLog> oldEntities, SaveType saveType)
+        protected override async Task PostSaveManyAction(IReadOnlyCollection<TimeLog> entities, IReadOnlyCollection<TimeLog> oldEntities, SaveType saveType)
         {
             switch (saveType)
             {
@@ -145,81 +145,81 @@ namespace AccuPay.Data.Services
 
         #endregion Save
 
-        private void RecordUpdate(List<TimeLog> updatedTimeLogs, List<TimeLog> oldRecords, List<Branch> branches)
+        private void RecordUpdate(IReadOnlyCollection<TimeLog> updatedTimeLogs, IReadOnlyCollection<TimeLog> oldRecords, IReadOnlyCollection<Branch> branches)
         {
-            foreach (var item in updatedTimeLogs)
+            foreach (var newValue in updatedTimeLogs)
             {
                 List<UserActivityItem> changes = new List<UserActivityItem>();
                 var entityName = UserActivityName.ToLower();
-                var oldValue = oldRecords
-                    .Where(tl => tl.EmployeeID.Value == item.EmployeeID.Value)
-                    .Where(tl => tl.LogDate == item.LogDate)
-                    .FirstOrDefault();
 
+                var oldValue = oldRecords
+                    .Where(tl => tl.EmployeeID.Value == newValue.EmployeeID.Value)
+                    .Where(tl => tl.LogDate == newValue.LogDate)
+                    .FirstOrDefault();
                 if (oldValue == null) continue;
 
-                var suffixIdentifier = $"of time log{CreateUserActivitySuffixIdentifier(item)}.";
+                var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
 
-                if (item.TimeIn != oldValue.TimeIn)
+                if (newValue.TimeIn != oldValue.TimeIn)
                 {
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
-                        Description = $"Updated time in from '{oldValue.TimeIn.ToStringFormat("hh:mm tt")}' to '{item.TimeIn.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = item.EmployeeID.Value
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated time in from '{oldValue.TimeIn.ToStringFormat("hh:mm tt")}' to '{newValue.TimeIn.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        ChangedEmployeeId = newValue.EmployeeID.Value
                     });
                 }
-                if (item.TimeOut != oldValue.TimeOut)
+                if (newValue.TimeOut != oldValue.TimeOut)
                 {
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
-                        Description = $"Updated time out from '{oldValue.TimeOut.ToStringFormat("hh:mm tt")}' to '{item.TimeOut.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = item.EmployeeID.Value
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated time out from '{oldValue.TimeOut.ToStringFormat("hh:mm tt")}' to '{newValue.TimeOut.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        ChangedEmployeeId = newValue.EmployeeID.Value
                     });
                 }
 
-                var currentDateOut = item.TimeStampOut == null ? item.TimeStampOut : item.TimeStampOut.Value.Date;
+                var currentDateOut = newValue.TimeStampOut == null ? newValue.TimeStampOut : newValue.TimeStampOut.Value.Date;
                 var oldDateOut = oldValue.TimeStampOut == null ? oldValue.TimeStampOut : oldValue.TimeStampOut.Value.Date;
                 if (currentDateOut.NullableEquals(oldDateOut) == false)
                 {
                     // TimeStampOut is null by default. It means TimeStampOut is equals to LogDate
-                    var dontSave = oldValue.TimeStampOut == null && item.TimeStampOut != null && item.TimeStampOut.Value.Date == item.LogDate.Date;
+                    var dontSave = oldValue.TimeStampOut == null && newValue.TimeStampOut != null && newValue.TimeStampOut.Value.Date == newValue.LogDate.Date;
 
                     if (dontSave == false)
                     {
                         changes.Add(new UserActivityItem()
                         {
-                            EntityId = item.RowID.Value,
-                            Description = $"Updated date out from '{oldValue.TimeStampOut.ToShortDateString()}' to '{item.TimeStampOut.ToShortDateString()}' {suffixIdentifier}",
-                            ChangedEmployeeId = item.EmployeeID.Value
+                            EntityId = newValue.RowID.Value,
+                            Description = $"Updated date out from '{oldValue.TimeStampOut.ToShortDateString()}' to '{newValue.TimeStampOut.ToShortDateString()}' {suffixIdentifier}",
+                            ChangedEmployeeId = newValue.EmployeeID.Value
                         });
                     }
                 }
-                if (item.BranchID != oldValue.BranchID)
+                if (newValue.BranchID != oldValue.BranchID)
                 {
                     var oldBranch = "";
                     var newBranch = "";
 
                     if (oldValue.BranchID.HasValue)
                         oldBranch = branches.Where(x => x.RowID == oldValue.BranchID).FirstOrDefault()?.Name;
-                    if (item.BranchID.HasValue)
-                        newBranch = branches.Where(x => x.RowID == item.BranchID).FirstOrDefault()?.Name;
+                    if (newValue.BranchID.HasValue)
+                        newBranch = branches.Where(x => x.RowID == newValue.BranchID).FirstOrDefault()?.Name;
 
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
+                        EntityId = newValue.RowID.Value,
                         Description = $"Updated branch from '{oldBranch}' to '{newBranch}' {suffixIdentifier}",
-                        ChangedEmployeeId = item.EmployeeID.Value
+                        ChangedEmployeeId = newValue.EmployeeID.Value
                     });
                 }
 
                 if (changes.Any())
                 {
                     _userActivityRepository.CreateRecord(
-                        item.LastUpdBy.Value,
+                        newValue.LastUpdBy.Value,
                         UserActivityName,
-                        item.OrganizationID.Value,
+                        newValue.OrganizationID.Value,
                         UserActivityRepository.RecordTypeEdit,
                         changes);
                 }

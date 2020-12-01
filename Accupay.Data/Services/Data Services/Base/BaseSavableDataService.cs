@@ -177,7 +177,7 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected virtual Task PostSaveManyAction(List<T> entities, List<T> oldEntities, SaveType saveType)
+        protected virtual Task PostSaveManyAction(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities, SaveType saveType)
         {
             return Task.CompletedTask;
         }

@@ -126,7 +126,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override Task PostSaveManyAction(List<EmployeeDutySchedule> entities, List<EmployeeDutySchedule> oldEntities, SaveType saveType)
+        protected override Task PostSaveManyAction(IReadOnlyCollection<EmployeeDutySchedule> entities, IReadOnlyCollection<EmployeeDutySchedule> oldEntities, SaveType saveType)
         {
             switch (saveType)
             {
@@ -171,71 +171,70 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        private void RecordUpdate(List<EmployeeDutySchedule> updatedShifts, List<EmployeeDutySchedule> oldRecords)
+        private void RecordUpdate(IReadOnlyCollection<EmployeeDutySchedule> updatedShifts, IReadOnlyCollection<EmployeeDutySchedule> oldRecords)
         {
-            foreach (var item in updatedShifts)
+            foreach (var newValue in updatedShifts)
             {
                 List<UserActivityItem> changes = new List<UserActivityItem>();
                 var entityName = UserActivityName.ToLower();
 
-                var oldShifts = oldRecords.Where(x => x.RowID == item.RowID).FirstOrDefault();
+                var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
+                if (oldValue == null) continue;
 
-                if (oldShifts == null) continue;
+                var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
 
-                var suffixIdentifier = $"of shift{CreateUserActivitySuffixIdentifier(item)}.";
-
-                if (item.StartTime != oldShifts.StartTime)
+                if (newValue.StartTime != oldValue.StartTime)
                 {
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
-                        Description = $"Updated start time from '{oldShifts.StartTime.ToStringFormat("hh:mm tt")}' to '{item.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldShifts.EmployeeID.Value
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated start time from '{oldValue.StartTime.ToStringFormat("hh:mm tt")}' to '{newValue.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
                     });
                 }
-                if (item.EndTime != oldShifts.EndTime)
+                if (newValue.EndTime != oldValue.EndTime)
                 {
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
-                        Description = $"Updated end time from '{oldShifts.EndTime.ToStringFormat("hh:mm tt")}' to '{item.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldShifts.EmployeeID.Value
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated end time from '{oldValue.EndTime.ToStringFormat("hh:mm tt")}' to '{newValue.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
                     });
                 }
-                if (item.BreakStartTime != oldShifts.BreakStartTime)
+                if (newValue.BreakStartTime != oldValue.BreakStartTime)
                 {
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
-                        Description = $"Updated break start from '{oldShifts.BreakStartTime.ToStringFormat("hh:mm tt")}' to '{item.BreakStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldShifts.EmployeeID.Value
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated break start from '{oldValue.BreakStartTime.ToStringFormat("hh:mm tt")}' to '{newValue.BreakStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
                     });
                 }
-                if (item.BreakLength != oldShifts.BreakLength)
+                if (newValue.BreakLength != oldValue.BreakLength)
                 {
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
-                        Description = $"Updated break length from '{oldShifts.BreakLength}' to '{item.BreakLength}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldShifts.EmployeeID.Value
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated break length from '{oldValue.BreakLength}' to '{newValue.BreakLength}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
                     });
                 }
-                if (item.IsRestDay != oldShifts.IsRestDay)
+                if (newValue.IsRestDay != oldValue.IsRestDay)
                 {
                     changes.Add(new UserActivityItem()
                     {
-                        EntityId = item.RowID.Value,
-                        Description = $"Updated offset from '{oldShifts.IsRestDay}' to '{item.IsRestDay}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldShifts.EmployeeID.Value
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated offset from '{oldValue.IsRestDay}' to '{newValue.IsRestDay}' {suffixIdentifier}",
+                        ChangedEmployeeId = oldValue.EmployeeID.Value
                     });
                 }
 
                 if (changes.Any())
                 {
                     _userActivityRepository.CreateRecord(
-                        item.LastUpdBy.Value,
+                        newValue.LastUpdBy.Value,
                         UserActivityName,
-                        item.OrganizationID.Value,
+                        newValue.OrganizationID.Value,
                         UserActivityRepository.RecordTypeEdit,
                         changes);
                 }
