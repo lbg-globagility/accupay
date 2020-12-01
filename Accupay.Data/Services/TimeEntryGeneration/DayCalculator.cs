@@ -844,7 +844,7 @@ namespace AccuPay.Data.Services
         {
             if (shiftBasedAutomaticOvertimePolicy.Enabled && shift != null)
             {
-                shift.EndTimeFull = shiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shift.StartTimeFull, shift.BreakLength);
+                shift.EndTimeFull = shiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shift);
             }
 
             var currentShift = new CurrentShift(shift, currentDate);
