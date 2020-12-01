@@ -10,8 +10,12 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class DivisionDataService : BaseSavableDataService<Division>
+    public class DivisionDataService : BaseOrganizationDataService<Division>
     {
+        private const string UserActivityDivisionName = "Division";
+
+        private const string UserActivityDivisionLocationName = "Division Location";
+
         private readonly DivisionRepository _divisionRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
 
@@ -19,11 +23,13 @@ namespace AccuPay.Data.Services
             DivisionRepository divisionRepository,
             ListOfValueRepository listOfValueRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(divisionRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Division")
@@ -34,7 +40,7 @@ namespace AccuPay.Data.Services
 
         #region Save
 
-        public async override Task DeleteAsync(int divisionId)
+        public async override Task DeleteAsync(int divisionId, int changedByUserId)
         {
             var division = await _divisionRepository.GetByIdWithParentAsync(divisionId);
 
@@ -49,8 +55,17 @@ namespace AccuPay.Data.Services
             else if (_context.Positions.Any(p => p.DivisionID == divisionId))
                 throw new BusinessLogicException("Division already has positions therefore cannot be deleted.");
 
-            await _divisionRepository.DeleteAsync(division);
+            await base.DeleteAsync(
+                id: divisionId,
+                changedByUserId: changedByUserId);
         }
+
+        protected override string GetUserActivityName(Division division) =>
+            division.IsRoot ?
+            UserActivityDivisionLocationName :
+            UserActivityDivisionName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Division allowance) => string.Empty;
 
         protected override async Task SanitizeEntity(Division division, Division oldDivision)
         {

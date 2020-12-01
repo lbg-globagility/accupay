@@ -10,22 +10,31 @@ namespace AccuPay.Data.Services
 {
     public class OrganizationDataService : BaseSavableDataService<Organization>
     {
+        private const string UserActivityName = "Organization";
+
         private readonly OrganizationRepository _organizationRepository;
 
         public OrganizationDataService(
             OrganizationRepository organizationRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(organizationRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Organization")
         {
             _organizationRepository = organizationRepository;
         }
+
+        protected override string GetUserActivityName(Organization organization) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Organization organization) =>
+            $" with name '{organization.Name}'";
 
         protected override Task SanitizeEntity(Organization entity, Organization oldEntity)
         {
@@ -44,6 +53,11 @@ namespace AccuPay.Data.Services
 
             if (doesExists)
                 throw new BusinessLogicException("Name already exists!");
+        }
+
+        protected override Task PostDeleteAction(Organization entity, int changedByUserId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

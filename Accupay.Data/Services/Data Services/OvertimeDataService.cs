@@ -18,7 +18,6 @@ namespace AccuPay.Data.Services
         private const string UserActivityName = "Overtime";
 
         private readonly OvertimeRepository _overtimeRepository;
-        private readonly UserActivityRepository _userActivityRepository;
 
         public OvertimeDataService(
             OvertimeRepository overtimeRepository,
@@ -29,12 +28,12 @@ namespace AccuPay.Data.Services
 
             base(overtimeRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Overtime")
         {
             _overtimeRepository = overtimeRepository;
-            _userActivityRepository = userActivityRepository;
         }
 
         public async Task DeleteManyAsync(IEnumerable<int> overtimeIds, int organizationId, int userId)
@@ -96,6 +95,13 @@ namespace AccuPay.Data.Services
             if (deleteOvertimes.Any())
                 await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), organizationId, userId);
         }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(Overtime overtime) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Overtime overtime) =>
+            $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
 
         protected override Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
         {
@@ -179,6 +185,8 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
+        #endregion Overrides
+
         #region Private Methods
 
         private void RecordUpdate(IReadOnlyCollection<Overtime> updatedShifts, IReadOnlyCollection<Overtime> oldRecords)
@@ -246,11 +254,6 @@ namespace AccuPay.Data.Services
                         changes);
                 }
             }
-        }
-
-        private static string CreateUserActivitySuffixIdentifier(Overtime overtime)
-        {
-            return $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
         }
 
         private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) CreateOvertimesByShift(

@@ -14,16 +14,20 @@ namespace AccuPay.Data.Services
 {
     public class OfficialBusinessDataService : BaseDailyPayrollDataService<OfficialBusiness>
     {
+        private const string UserActivityName = "Official Business";
+
         private readonly OfficialBusinessRepository _officialBusinessRepository;
 
         public OfficialBusinessDataService(
             OfficialBusinessRepository officialBusinessRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(officialBusinessRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Official Business",
@@ -31,6 +35,36 @@ namespace AccuPay.Data.Services
         {
             _officialBusinessRepository = officialBusinessRepository;
         }
+
+        public async Task<List<OfficialBusiness>> BatchApply(IReadOnlyCollection<OfficialBusinessImportModel> validRecords, int organizationId, int userId)
+        {
+            List<OfficialBusiness> officialBusinesses = new List<OfficialBusiness>();
+
+            foreach (var ob in validRecords)
+            {
+                officialBusinesses.Add(new OfficialBusiness()
+                {
+                    CreatedBy = userId,
+                    EmployeeID = ob.EmployeeID,
+                    OrganizationID = organizationId,
+                    EndTimeFull = ob.EndTime.Value,
+                    StartDate = ob.StartDate.Value,
+                    StartTimeFull = ob.StartTime.Value,
+                    Status = Overtime.StatusPending
+                });
+            }
+
+            await _officialBusinessRepository.SaveManyAsync(officialBusinesses);
+
+            return officialBusinesses;
+        }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(OfficialBusiness officialBusiness) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(OfficialBusiness officialBusiness) =>
+            $" with date '{officialBusiness.StartDate.ToShortDateString()}'";
 
         protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness)
         {
@@ -79,27 +113,6 @@ namespace AccuPay.Data.Services
             officialBusiness.UpdateEndDate();
         }
 
-        public async Task<List<OfficialBusiness>> BatchApply(IReadOnlyCollection<OfficialBusinessImportModel> validRecords, int organizationId, int userId)
-        {
-            List<OfficialBusiness> officialBusinesses = new List<OfficialBusiness>();
-
-            foreach (var ob in validRecords)
-            {
-                officialBusinesses.Add(new OfficialBusiness()
-                {
-                    CreatedBy = userId,
-                    EmployeeID = ob.EmployeeID,
-                    OrganizationID = organizationId,
-                    EndTimeFull = ob.EndTime.Value,
-                    StartDate = ob.StartDate.Value,
-                    StartTimeFull = ob.StartTime.Value,
-                    Status = Overtime.StatusPending
-                });
-            }
-
-            await _officialBusinessRepository.SaveManyAsync(officialBusinesses);
-
-            return officialBusinesses;
-        }
+        #endregion Overrides
     }
 }

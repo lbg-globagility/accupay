@@ -1,5 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -51,10 +52,10 @@ Namespace Global.AccuPay.Views.Employees
             _view.ChangeMode(SalaryTab2.Mode.Disabled)
         End Sub
 
-        Private Sub OnSelectedEmployee(employee As Employee) Handles _view.SelectEmployee
+        Private Async Sub OnSelectedEmployee(employee As Employee) Handles _view.SelectEmployee
             _employee = employee
             _view.ShowEmployee(employee)
-            LoadSalaries()
+            Await LoadSalaries()
         End Sub
 
         Private Sub OnNew() Handles _view.NewSalary
@@ -88,9 +89,11 @@ Namespace Global.AccuPay.Views.Employees
             If _currentSalary?.RowID Is Nothing Then Return
 
             Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
-            Await dataService.DeleteAsync(_currentSalary.RowID.Value)
+            Await dataService.DeleteAsync(
+                id:=_currentSalary.RowID.Value,
+                changedByUserId:=z_User)
             _currentSalary = Nothing
-            LoadSalaries()
+            Await LoadSalaries()
         End Sub
 
         Private Async Sub OnSave() Handles _view.SaveSalary
@@ -116,7 +119,7 @@ Namespace Global.AccuPay.Views.Employees
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation) ' Remove this
                 Throw
             End Try
-            LoadSalaries()
+            Await LoadSalaries()
         End Sub
 
         Private Sub OnAmountChanged(amount As Decimal) Handles _view.SalaryChanged
@@ -167,12 +170,12 @@ Namespace Global.AccuPay.Views.Employees
                     _philHealthBracketRepository.GetAll().ToList())
         End Sub
 
-        Private Sub LoadSalaries()
+        Private Async Function LoadSalaries() As Task
             If _employee?.RowID Is Nothing Then
                 Return
             End If
 
-            _salaries = _salaryRepository.GetByEmployee(_employee.RowID.Value).
+            _salaries = (Await _salaryRepository.GetByEmployeeAsync(_employee.RowID.Value)).
                 OrderByDescending(Function(s) s.EffectiveFrom).
                 ToList()
 
@@ -189,7 +192,7 @@ Namespace Global.AccuPay.Views.Employees
             Else
                 _view.ChangeMode(SalaryTab2.Mode.Empty)
             End If
-        End Sub
+        End Function
 
         Private Sub LoadSocialSecurityBrackets()
             Dim socialSecurityBrackets = _socialSecurityBracketRepository.GetAll().ToList()

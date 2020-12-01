@@ -50,11 +50,11 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public ICollection<Salary> GetByEmployee(int employeeId)
+        public async Task<ICollection<Salary>> GetByEmployeeAsync(int employeeId)
         {
-            return _context.Salaries
+            return await _context.Salaries
                 .Where(x => x.EmployeeID == employeeId)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<PaginatedList<Salary>> List(

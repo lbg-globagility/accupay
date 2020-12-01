@@ -88,7 +88,9 @@ namespace AccuPay.Web.Allowances.Services
 
         public async Task Delete(int id)
         {
-            await _dataService.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                id: id,
+                changedByUserId: _currentUser.UserId);
         }
 
         public async Task<List<ProductDto>> GetAllowanceTypes()

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Interfaces;
+using AccuPay.Data.Interfaces;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,25 +6,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeovertime")]
-    public class Overtime : BaseEntity, IPayrollEntity
+    public class Overtime : BaseEmployeeDataEntity, IPayrollEntity
     {
         public const string StatusApproved = "Approved";
 
         public const string StatusPending = "Pending";
-
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
-        public int? EmployeeID { get; set; }
 
         [Column("OTType")]
         public string Type { get; set; }

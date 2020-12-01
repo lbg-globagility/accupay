@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,30 +6,16 @@ using System.Linq;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeloanschedule")]
-    public class LoanSchedule : BaseEntity
+    public class LoanSchedule : BaseEmployeeDataEntity
     {
         public const string STATUS_IN_PROGRESS = "In Progress";
         public const string STATUS_ON_HOLD = "On hold";
         public const string STATUS_CANCELLED = "Cancelled";
         public const string STATUS_COMPLETE = "Complete";
 
-        public int? OrganizationID { get; set; }
-
-        public int? EmployeeID { get; set; }
-
         public int? LoanTypeID { get; set; }
 
         public int? BonusID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
 
         public string LoanNumber { get; set; }
 

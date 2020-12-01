@@ -34,6 +34,7 @@ namespace AccuPay.Data.Repositories
         public async Task<Division> GetByIdWithParentAsync(int id)
         {
             return await _context.Divisions
+                .AsNoTracking()
                 .Include(x => x.ParentDivision)
                 .FirstOrDefaultAsync(l => l.RowID == id);
         }

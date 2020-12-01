@@ -16,7 +16,6 @@ namespace AccuPay.Web.Overtimes
     public class OvertimeService
     {
         private readonly OvertimeRepository _repository;
-        private readonly OvertimeDataService _service;
         private readonly ICurrentUser _currentUser;
         private readonly OvertimeImportParser _importParser;
         private readonly OvertimeDataService _dataService;
@@ -25,14 +24,12 @@ namespace AccuPay.Web.Overtimes
             OvertimeRepository repository,
             OvertimeDataService dataService,
             ICurrentUser currentUser,
-            OvertimeImportParser importParser,
-            OvertimeDataService overtimeDataService)
+            OvertimeImportParser importParser)
         {
             _repository = repository;
-            _service = dataService;
             _currentUser = currentUser;
             _importParser = importParser;
-            _dataService = overtimeDataService;
+            _dataService = dataService;
         }
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(OvertimePageOptions options)
@@ -59,7 +56,7 @@ namespace AccuPay.Web.Overtimes
             };
             ApplyChanges(dto, overtime);
 
-            await _service.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime);
 
             return ConvertToDto(overtime);
         }
@@ -78,7 +75,7 @@ namespace AccuPay.Web.Overtimes
             overtime.OTEndTime = dto.EndTime.TimeOfDay;
             overtime.Reason = dto.Reason;
 
-            await _service.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime);
 
             return ConvertToDto(overtime);
         }
@@ -92,14 +89,16 @@ namespace AccuPay.Web.Overtimes
 
             ApplyChanges(dto, overtime);
 
-            await _service.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime);
 
             return ConvertToDto(overtime);
         }
 
         public async Task Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                id: id,
+                changedByUserId: _currentUser.UserId);
         }
 
         public List<string> GetStatusList()

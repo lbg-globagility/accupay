@@ -10,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class TimeLogDataService : BaseSavableDataService<TimeLog>
+    public class TimeLogDataService : BaseOrganizationDataService<TimeLog>
     {
         private const string UserActivityName = "Time Log";
 
-        private readonly UserActivityRepository _userActivityRepository;
         private readonly BranchRepository _branchRepository;
 
         public TimeLogDataService(
@@ -27,11 +26,11 @@ namespace AccuPay.Data.Services
 
             base(timeLogRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Time log")
         {
-            _userActivityRepository = userActivityRepository;
             _branchRepository = branchRepository;
         }
 
@@ -48,6 +47,15 @@ namespace AccuPay.Data.Services
 
             await SaveManyAsync(timeLogs);
         }
+
+        #endregion Save
+
+        #region Overrides
+
+        protected override string GetUserActivityName(TimeLog leave) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(TimeLog log) =>
+            $" with date '{log.LogDate.ToShortDateString()}'";
 
         protected override Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog)
         {
@@ -143,7 +151,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        #endregion Save
+        #endregion Overrides
 
         private void RecordUpdate(IReadOnlyCollection<TimeLog> updatedTimeLogs, IReadOnlyCollection<TimeLog> oldRecords, IReadOnlyCollection<Branch> branches)
         {
@@ -224,11 +232,6 @@ namespace AccuPay.Data.Services
                         changes);
                 }
             }
-        }
-
-        private static string CreateUserActivitySuffixIdentifier(TimeLog log)
-        {
-            return $" with date '{log.LogDate.ToShortDateString()}'";
         }
     }
 }

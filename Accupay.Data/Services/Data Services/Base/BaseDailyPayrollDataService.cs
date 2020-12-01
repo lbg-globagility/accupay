@@ -9,11 +9,14 @@ namespace AccuPay.Data.Services
 {
     // this is not for daily employees
     // might want to rename this class name
-    public abstract class BaseDailyPayrollDataService<T> : BaseSavableDataService<T> where T : BaseEntity, IPayrollEntity
+    // check the IPayrollEntity interface
+    // to get a better idea of this abstraction
+    public abstract class BaseDailyPayrollDataService<T> : BaseEmployeeDataService<T> where T : BaseEmployeeDataEntity, IPayrollEntity
     {
         public BaseDailyPayrollDataService(
             SavableRepository<T> savableRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy,
             string entityName,
@@ -21,6 +24,7 @@ namespace AccuPay.Data.Services
 
             base(savableRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName,

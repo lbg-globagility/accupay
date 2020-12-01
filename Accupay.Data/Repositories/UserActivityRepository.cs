@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -145,31 +145,25 @@ namespace AccuPay.Data.Repositories
                 changedByUserId: changedUserId);
         }
 
-        private void RecordSimple(
+        public async Task RecordDeleteAsync(
             int userId,
             string entityName,
-            string simpleDescription,
-            string suffixIdentifier,
             int entityId,
             int organizationId,
-            string recordType,
-            int? changedEmployeeId,
-            int? changedByUserId)
+            string suffixIdentifier = "",
+            int? changedEmployeeId = null,
+            int? changedUserId = null)
         {
-            entityName = SetStringToPascalCase(entityName);
-
-            var activityItems = new List<UserActivityItem>()
-                {
-                    new UserActivityItem()
-                    {
-                        EntityId = entityId,
-                        Description = $"{simpleDescription} {entityName?.ToLower()}{suffixIdentifier}.",
-                        ChangedEmployeeId = changedEmployeeId,
-                        ChangedUserId = changedByUserId
-                    }
-                };
-
-            CreateRecord(userId, entityName, organizationId, recordType, activityItems);
+            await RecordSimpleAsync(
+                userId,
+                entityName,
+                $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}",
+                suffixIdentifier,
+                entityId: entityId,
+                organizationId: organizationId,
+                RecordTypeDelete,
+                changedEmployeeId: changedEmployeeId,
+                changedByUserId: changedUserId);
         }
 
         public void CreateRecord(
@@ -194,6 +188,8 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        #region Private Methods
+
         private void CreateUserActivityEntity(
             int userId,
             string entityName,
@@ -212,7 +208,75 @@ namespace AccuPay.Data.Repositories
             });
         }
 
-        public static bool CheckIfFirstLetterIsVowel(string entityName)
+        private void RecordSimple(
+            int userId,
+            string entityName,
+            string simpleDescription,
+            string suffixIdentifier,
+            int entityId,
+            int organizationId,
+            string recordType,
+            int? changedEmployeeId,
+            int? changedByUserId)
+        {
+            entityName = SetStringToPascalCase(entityName);
+
+            List<UserActivityItem> activityItems = CreateSimpleUserActivityItem(
+                entityName: entityName,
+                simpleDescription: simpleDescription,
+                suffixIdentifier: suffixIdentifier,
+                entityId: entityId,
+                changedEmployeeId: changedEmployeeId,
+                changedByUserId: changedByUserId);
+
+            CreateRecord(userId, entityName, organizationId, recordType, activityItems);
+        }
+
+        private async Task RecordSimpleAsync(
+            int userId,
+            string entityName,
+            string simpleDescription,
+            string suffixIdentifier,
+            int entityId,
+            int organizationId,
+            string recordType,
+            int? changedEmployeeId,
+            int? changedByUserId)
+        {
+            entityName = SetStringToPascalCase(entityName);
+
+            List<UserActivityItem> activityItems = CreateSimpleUserActivityItem(
+                entityName: entityName,
+                simpleDescription: simpleDescription,
+                suffixIdentifier: suffixIdentifier,
+                entityId: entityId,
+                changedEmployeeId: changedEmployeeId,
+                changedByUserId: changedByUserId);
+
+            await CreateRecordAsync(userId, entityName, organizationId, recordType, activityItems);
+        }
+
+        private static List<UserActivityItem> CreateSimpleUserActivityItem(
+            string entityName,
+            string simpleDescription,
+            string suffixIdentifier,
+            int entityId,
+            int? changedEmployeeId,
+            int? changedByUserId)
+        {
+            return new List<UserActivityItem>()
+            {
+                new UserActivityItem()
+                {
+                    EntityId = entityId,
+                    Description = $"{simpleDescription} {entityName?.ToLower()}{suffixIdentifier}.",
+                    ChangedEmployeeId = changedEmployeeId,
+                    ChangedUserId = changedByUserId
+                }
+            };
+        }
+
+        private static bool CheckIfFirstLetterIsVowel(string entityName)
         {
             if (!string.IsNullOrWhiteSpace(entityName))
             {
@@ -232,5 +296,7 @@ namespace AccuPay.Data.Repositories
 
             return entityName;
         }
+
+        #endregion Private Methods
     }
 }

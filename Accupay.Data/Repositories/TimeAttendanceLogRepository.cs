@@ -19,11 +19,11 @@ namespace AccuPay.Data.Repositories
 
         public async Task<ICollection<TimeAttendanceLog>> GetByTimePeriodAsync(int organizationId, TimePeriod timePeriod)
         {
-            return _context.TimeAttendanceLogs
+            return await _context.TimeAttendanceLogs
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(x => timePeriod.Start <= x.WorkDay)
                 .Where(x => x.WorkDay <= timePeriod.End)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<ICollection<TimeAttendanceLog>> GetByDateAndEmployeeAsync(DateTime date, int employeeId)

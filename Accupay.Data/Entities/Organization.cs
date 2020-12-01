@@ -1,23 +1,13 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("organization")]
-    public class Organization : BaseEntity
+    public class Organization : BaseRecordEntity
     {
         public static readonly TimeSpan DefaultNightDifferentialTimeFrom = new TimeSpan(22, 0, 0);
         public static readonly TimeSpan DefaultNightDifferentialTimeTo = new TimeSpan(6, 0, 0);
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
 
         public string Name { get; set; }
 

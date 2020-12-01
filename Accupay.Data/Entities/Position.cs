@@ -1,23 +1,10 @@
-﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("position")]
-    public class Position : BaseEntity
+    public class Position : BaseOrganizationalEntity
     {
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
         public int? ParentPositionID { get; set; }
 
         public int? DivisionID { get; set; }

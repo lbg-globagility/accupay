@@ -97,7 +97,7 @@ Public Class SalaryTab
         pbEmployee.Image = ConvByteToImage(employee.Image)
 
         ChangeMode(FormMode.Empty)
-        LoadSalaries()
+        Await LoadSalaries()
     End Function
 
     Private Async Function InitializeBenchmarkData() As Task(Of Boolean)
@@ -156,7 +156,7 @@ Public Class SalaryTab
         End If
 
         ChangeMode(FormMode.Disabled)
-        LoadSalaries()
+        Await LoadSalaries()
 
         Await CheckRolePermissions()
 
@@ -223,7 +223,7 @@ Public Class SalaryTab
         End Select
     End Sub
 
-    Private Sub LoadSalaries()
+    Private Async Function LoadSalaries() As Task
 
         If _employee?.RowID Is Nothing Then
             Return
@@ -231,7 +231,7 @@ Public Class SalaryTab
 
         Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
-        _salaries = salaryRepository.GetByEmployee(_employee.RowID.Value).
+        _salaries = (Await salaryRepository.GetByEmployeeAsync(_employee.RowID.Value)).
             OrderByDescending(Function(s) s.EffectiveFrom).
             ToList()
 
@@ -260,7 +260,7 @@ Public Class SalaryTab
         End If
 
         AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
-    End Sub
+    End Function
 
     Private Sub FormToolsControl(enabled As Boolean)
 
@@ -314,7 +314,7 @@ Public Class SalaryTab
         AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
     End Sub
 
-    Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
+    Private Async Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         If _employee Is Nothing Then
             MessageBoxHelper.ErrorMessage("Please select an employee first.")
             Return
@@ -324,7 +324,7 @@ Public Class SalaryTab
         form.ShowDialog()
 
         If form.isSaved Then
-            LoadSalaries()
+            Await LoadSalaries()
             FormToolsControl(True)
             If form.showBalloon Then
                 ShowBalloonInfo("Salary successfuly added.", "Saved")
@@ -384,7 +384,7 @@ Public Class SalaryTab
                 RecordUpdateSalary(oldsalary)
 
                 ShowBalloonInfo("Salary successfuly saved.", messageTitle)
-                LoadSalaries()
+                Await LoadSalaries()
                 ChangeMode(FormMode.Editing)
             End Function)
     End Sub
@@ -421,11 +421,11 @@ Public Class SalaryTab
                 .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
-        If _currentSalary.TotalSalary <> oldSalary.TotalSalary Then
+        If _currentSalary.PhilHealthDeduction <> oldSalary.PhilHealthDeduction Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldSalary.RowID.Value,
-                .Description = $"Updated total salary from '{oldSalary.TotalSalary}' to '{_currentSalary.TotalSalary}' {suffixIdentifier}",
+                .Description = $"Updated PhilHealth deduction from '{oldSalary.PhilHealthDeduction}' to '{_currentSalary.PhilHealthDeduction}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
@@ -437,14 +437,6 @@ Public Class SalaryTab
                 .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
-        If _currentSalary.PhilHealthDeduction <> oldSalary.PhilHealthDeduction Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldSalary.RowID.Value,
-                .Description = $"Updated PhilHealth deduction from '{oldSalary.PhilHealthDeduction}' to '{_currentSalary.PhilHealthDeduction}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldSalary.EmployeeID.Value
-            })
-        End If
         If _currentSalary.DoPaySSSContribution <> oldSalary.DoPaySSSContribution Then
             changes.Add(New UserActivityItem() With
             {
@@ -453,19 +445,19 @@ Public Class SalaryTab
                 .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
-        If _currentSalary.AutoComputeHDMFContribution <> oldSalary.AutoComputeHDMFContribution Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldSalary.RowID.Value,
-                .Description = $"Updated PAGIBIG autocompute option from '{oldSalary.AutoComputeHDMFContribution}' to '{_currentSalary.AutoComputeHDMFContribution}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldSalary.EmployeeID.Value
-            })
-        End If
         If _currentSalary.HDMFAmount <> oldSalary.HDMFAmount Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = oldSalary.RowID.Value,
                 .Description = $"Updated PAGIBIG deduction from '{oldSalary.HDMFAmount}' to '{_currentSalary.HDMFAmount}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldSalary.EmployeeID.Value
+            })
+        End If
+        If _currentSalary.AutoComputeHDMFContribution <> oldSalary.AutoComputeHDMFContribution Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldSalary.RowID.Value,
+                .Description = $"Updated PAGIBIG autocompute option from '{oldSalary.AutoComputeHDMFContribution}' to '{_currentSalary.AutoComputeHDMFContribution}' {suffixIdentifier}",
                 .ChangedEmployeeId = oldSalary.EmployeeID.Value
             })
         End If
@@ -494,24 +486,19 @@ Public Class SalaryTab
         Await FunctionUtils.TryCatchFunctionAsync("Delete Salary",
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
-                Await dataService.DeleteAsync(_currentSalary.RowID.Value)
+                Await dataService.DeleteAsync(
+                    id:=_currentSalary.RowID.Value,
+                    changedByUserId:=z_User)
 
-                Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-                userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=_currentSalary.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=_currentSalary.EmployeeID,
-                    suffixIdentifier:=$" with start date '{_currentSalary.EffectiveFrom.ToShortDateString()}'")
+                Await LoadSalaries()
 
-                LoadSalaries()
+                ShowBalloonInfo($"Salary successfully deleted.", "Delete Salary")
             End Function)
     End Sub
 
-    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+    Private Async Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         If _mode = FormMode.Editing Then
-            LoadSalaries()
+            Await LoadSalaries()
         End If
 
         If _currentSalary Is Nothing Then
@@ -553,7 +540,7 @@ Public Class SalaryTab
             Return
         End If
 
-        Dim monthlyRate = Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(_employee, _currentSalary)
+        Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(_employee, _currentSalary)
 
         UpdateTotalSalary()
     End Sub
@@ -578,14 +565,14 @@ Public Class SalaryTab
         txtPagIbig.Enabled = Not ChkPagIbig.Checked
     End Sub
 
-    Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
+    Private Async Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
         Using dialog = New ImportSalaryForm()
             dialog.ShowDialog()
 
             If dialog.IsSaved Then
 
                 ShowBalloonInfo("Salaries Successfully Imported.", "Import Salary")
-                LoadSalaries()
+                Await LoadSalaries()
                 ChangeMode(FormMode.Editing)
 
             End If
@@ -599,7 +586,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
-        myBalloon(content, title, pbEmployee, 100, -20)
+        myBalloon(content, title, pbEmployee, 70, -50)
     End Sub
 
     Private Sub UserActivitySalaryToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivitySalaryToolStripButton.Click

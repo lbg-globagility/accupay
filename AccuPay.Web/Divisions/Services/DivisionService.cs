@@ -13,13 +13,13 @@ namespace AccuPay.Web.Divisions
 {
     public class DivisionService
     {
-        private readonly DivisionDataService _service;
+        private readonly DivisionDataService _dataService;
         private readonly DivisionRepository _repository;
         private readonly ICurrentUser _currentUser;
 
         public DivisionService(DivisionDataService service, DivisionRepository repository, ICurrentUser currentuser)
         {
-            _service = service;
+            _dataService = service;
             _repository = repository;
             _currentUser = currentuser;
         }
@@ -47,7 +47,7 @@ namespace AccuPay.Web.Divisions
 
             ApplyChanges(dto, division);
 
-            await _service.SaveAsync(division);
+            await _dataService.SaveAsync(division);
 
             return ConvertToDto(division);
         }
@@ -61,14 +61,16 @@ namespace AccuPay.Web.Divisions
 
             ApplyChanges(dto, division);
 
-            await _service.SaveAsync(division);
+            await _dataService.SaveAsync(division);
 
             return ConvertToDto(division);
         }
 
         public async Task Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                divisionId: id,
+                changedByUserId: _currentUser.UserId);
         }
 
         internal IEnumerable<string> GetTypes()
@@ -87,7 +89,7 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<IEnumerable<string>> GetSchedules()
         {
-            return await _service.GetSchedulesAsync();
+            return await _dataService.GetSchedulesAsync();
         }
 
         private static DivisionDto ConvertToDto(Division division)

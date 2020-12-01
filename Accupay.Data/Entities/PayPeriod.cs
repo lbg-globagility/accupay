@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Utilities.Extensions;
@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("payperiod")]
-    public class PayPeriod : BaseEntity, IPayPeriod
+    public class PayPeriod : BaseRecordEntity, IPayPeriod
     {
         public const int FirstPayrollMonth = 1;
         public const int LastPayrollMonth = 12;
@@ -18,16 +18,6 @@ namespace AccuPay.Data.Entities
         public const int EndOftheMonthValue = 0;
 
         public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
 
         [Column("TotalGrossSalary")]
         public int? PayFrequencyID { get; set; }

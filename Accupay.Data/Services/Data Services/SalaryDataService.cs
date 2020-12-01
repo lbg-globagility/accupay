@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class SalaryDataService : BaseSavableDataService<Salary>
+    public class SalaryDataService : BaseEmployeeDataService<Salary>
     {
+        private const string UserActivityName = "Salary";
+
         private readonly PaystubRepository _paystubRepository;
         private readonly SalaryRepository _salaryRepository;
 
@@ -20,11 +22,13 @@ namespace AccuPay.Data.Services
             SalaryRepository salaryRepository,
             PayPeriodRepository payPeriodRepository,
             PaystubRepository paystubRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(salaryRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Salary",
@@ -33,6 +37,36 @@ namespace AccuPay.Data.Services
             _paystubRepository = paystubRepository;
             _salaryRepository = salaryRepository;
         }
+
+        public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int userId)
+        {
+            List<Salary> added = new List<Salary>();
+            foreach (var validRecord in validRecords)
+            {
+                var salary = new Salary
+                {
+                    OrganizationID = organizationId,
+                    EmployeeID = validRecord.EmployeeId,
+                    CreatedBy = userId,
+                    BasicSalary = validRecord.BasicSalary.Value,
+                    AllowanceSalary = validRecord.AllowanceSalary.HasValue ? validRecord.AllowanceSalary.Value : 0,
+                    EffectiveFrom = validRecord.EffectiveFrom.Value
+                };
+
+                added.Add(salary);
+            }
+
+            await _salaryRepository.SaveManyAsync(added);
+
+            return added;
+        }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(Salary salary) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Salary salary) =>
+            $" with start date '{salary.EffectiveFrom.ToShortDateString()}'";
 
         protected override async Task SanitizeEntity(Salary salary, Salary oldSalary)
         {
@@ -90,6 +124,10 @@ namespace AccuPay.Data.Services
             }
         }
 
+        #endregion Overrides
+
+        #region Private Methods
+
         private async Task ValidateSalaryIfAlreadyUsed(Salary salary, Salary oldSalary)
         {
             if (salary.IsNewEntity || salary.EffectiveFrom.ToMinimumHourValue() != oldSalary.EffectiveFrom.ToMinimumHourValue())
@@ -118,27 +156,6 @@ namespace AccuPay.Data.Services
             return await _paystubRepository.HasPaystubsAfterDateAsync(salaryFirstCutOffStartDate, salary.EmployeeID.Value);
         }
 
-        public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int userId)
-        {
-            List<Salary> added = new List<Salary>();
-            foreach (var validRecord in validRecords)
-            {
-                var salary = new Salary
-                {
-                    OrganizationID = organizationId,
-                    EmployeeID = validRecord.EmployeeId,
-                    CreatedBy = userId,
-                    BasicSalary = validRecord.BasicSalary.Value,
-                    AllowanceSalary = validRecord.AllowanceSalary.HasValue ? validRecord.AllowanceSalary.Value : 0,
-                    EffectiveFrom = validRecord.EffectiveFrom.Value
-                };
-
-                added.Add(salary);
-            }
-
-            await _salaryRepository.SaveManyAsync(added);
-
-            return added;
-        }
+        #endregion Private Methods
     }
 }

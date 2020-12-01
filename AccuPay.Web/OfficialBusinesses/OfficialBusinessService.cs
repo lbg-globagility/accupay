@@ -95,7 +95,9 @@ namespace AccuPay.Web.OfficialBusinesses
 
         public async Task Delete(int id)
         {
-            await _dataService.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                id: id,
+                changedByUserId: _currentUser.UserId);
         }
 
         public List<string> GetStatusList()

@@ -11,12 +11,11 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class EmployeeDutyScheduleDataService : BaseSavableDataService<EmployeeDutySchedule>
+    public class EmployeeDutyScheduleDataService : BaseOrganizationDataService<EmployeeDutySchedule>
     {
         private const string UserActivityName = "Shift Schedule";
 
         private readonly EmployeeDutyScheduleRepository _shiftRepository;
-        private readonly UserActivityRepository _userActivityRepository;
 
         public EmployeeDutyScheduleDataService(
             EmployeeDutyScheduleRepository shiftRepository,
@@ -27,12 +26,12 @@ namespace AccuPay.Data.Services
 
             base(shiftRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Shift")
         {
             _shiftRepository = shiftRepository;
-            _userActivityRepository = userActivityRepository;
         }
 
         public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
@@ -86,6 +85,13 @@ namespace AccuPay.Data.Services
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
         }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(EmployeeDutySchedule shift) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(EmployeeDutySchedule shift) =>
+            $" with date '{shift.DateSched.ToShortDateString()}'";
 
         protected override Task SanitizeEntity(EmployeeDutySchedule shift, EmployeeDutySchedule oldShift)
         {
@@ -171,6 +177,8 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
+        #endregion Overrides
+
         private void RecordUpdate(IReadOnlyCollection<EmployeeDutySchedule> updatedShifts, IReadOnlyCollection<EmployeeDutySchedule> oldRecords)
         {
             foreach (var newValue in updatedShifts)
@@ -239,11 +247,6 @@ namespace AccuPay.Data.Services
                         changes);
                 }
             }
-        }
-
-        private static string CreateUserActivitySuffixIdentifier(EmployeeDutySchedule shift)
-        {
-            return $" with date '{shift.DateSched.ToShortDateString()}'";
         }
     }
 }

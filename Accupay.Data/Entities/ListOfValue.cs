@@ -4,17 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("listofval")]
-    public class ListOfValue : BaseEntity
+    public class ListOfValue : BaseRecordEntity
     {
         public const string ActiveYesOption = "Yes";
-
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
 
         public int? OrganizationID { get; set; }
 

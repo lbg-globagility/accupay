@@ -19,6 +19,7 @@ namespace AccuPay.Data.Services
         }
 
         protected readonly SavableRepository<T> _repository;
+        protected readonly UserActivityRepository _userActivityRepository;
         protected readonly PayrollContext _context;
         protected readonly string EntityName;
         protected readonly string EntityNamePlural;
@@ -26,6 +27,7 @@ namespace AccuPay.Data.Services
         public BaseSavableDataService(
             SavableRepository<T> repository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy,
             string entityName,
@@ -35,6 +37,7 @@ namespace AccuPay.Data.Services
                 policy)
         {
             _repository = repository;
+            _userActivityRepository = userActivityRepository;
             _context = context;
 
             EntityName = entityName;
@@ -74,7 +77,7 @@ namespace AccuPay.Data.Services
 
         #region Virtual Methods
 
-        public async virtual Task DeleteAsync(int id)
+        public async virtual Task DeleteAsync(int id, int changedByUserId)
         {
             var entity = await _repository.GetByIdAsync(id);
 
@@ -84,6 +87,8 @@ namespace AccuPay.Data.Services
             await AdditionalDeleteValidation(entity);
 
             await _repository.DeleteAsync(entity);
+
+            await PostDeleteAction(entity, changedByUserId);
         }
 
         /// <summary>
@@ -182,6 +187,12 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
+        protected abstract Task PostDeleteAction(T entity, int changedByUserId);
+
+        protected abstract string GetUserActivityName(T entity);
+
+        protected abstract string CreateUserActivitySuffixIdentifier(T entity);
+
         #endregion Virtual Methods
 
         #region Private Methods
@@ -274,16 +285,16 @@ namespace AccuPay.Data.Services
             return oldEntities.Where(x => entityIds.Contains(x.RowID)).ToList();
         }
 
-        private async Task CallPostSaveManyAction(List<T> updated, ICollection<T> oldEntities, SaveType saveType)
-        {
-            if (updated != null && updated.Any())
-                await PostSaveManyAction(updated, GetOldEntitiesOfPassedEntities(updated, oldEntities), saveType);
-        }
-
         private async Task CallAdditionalSaveManyValidation(List<T> entities, ICollection<T> oldEntities, SaveType saveType)
         {
             if (entities != null && entities.Any())
                 await AdditionalSaveManyValidation(entities, GetOldEntitiesOfPassedEntities(entities, oldEntities), saveType);
+        }
+
+        private async Task CallPostSaveManyAction(List<T> updated, ICollection<T> oldEntities, SaveType saveType)
+        {
+            if (updated != null && updated.Any())
+                await PostSaveManyAction(updated, GetOldEntitiesOfPassedEntities(updated, oldEntities), saveType);
         }
 
         #endregion Private Methods

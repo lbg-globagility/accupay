@@ -373,17 +373,9 @@ Public Class EmployeeOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await dataService.DeleteAsync(Me._currentOvertime.RowID.Value)
-
-                Dim suffixIdentifier = $" with date '{Me._currentOvertime.OTStartDate.ToShortDateString()}' and time period '{Me._currentOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {Me._currentOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'"
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentOvertime.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentOvertime.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
+                Await dataService.DeleteAsync(
+                    id:=Me._currentOvertime.RowID.Value,
+                    changedByUserId:=z_User)
 
                 Await LoadOvertimes(currentEmployee)
 

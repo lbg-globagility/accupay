@@ -7,23 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("shiftschedules")]
-    public class EmployeeDutySchedule : BaseEntity
+    public class EmployeeDutySchedule : BaseEmployeeDataEntity
     {
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
-        [ForeignKey("Employee")]
-        public int? EmployeeID { get; set; }
-
         [Column("Date")]
         public DateTime DateSched { get; set; }
 
@@ -35,6 +20,7 @@ namespace AccuPay.Data.Entities
         public decimal ShiftHours { get; internal set; }
         public decimal WorkHours { get; internal set; }
 
+        [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
         [NotMapped]

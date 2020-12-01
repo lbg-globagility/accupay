@@ -491,15 +491,9 @@ Public Class EmployeeLeavesForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                Await dataService.DeleteAsync(Me._currentLeave.RowID.Value)
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentLeave.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentLeave.EmployeeID.Value,
-                    suffixIdentifier:=$" with date '{ Me._currentLeave.StartDate.ToShortDateString()}'")
+                Await dataService.DeleteAsync(
+                    id:=Me._currentLeave.RowID.Value,
+                    changedByUserId:=z_User)
 
                 Await LoadLeaves(currentEmployee)
 

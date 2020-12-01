@@ -840,9 +840,9 @@ Public Class NewDivisionPositionForm
         End If
 
         Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
-        Await positionService.DeleteAsync(Me._currentPosition.RowID.Value)
-
-        _userActivityRepository.RecordDelete(z_User, PositionEntityName, CInt(Me._currentPosition.RowID), z_OrganizationID)
+        Await positionService.DeleteAsync(
+            positionId:=Me._currentPosition.RowID.Value,
+            changedByUserId:=z_User)
 
         Await RefreshTreeView()
 
@@ -855,16 +855,9 @@ Public Class NewDivisionPositionForm
         Dim divisionName = Me._currentDivision.Name
 
         Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-        Await service.DeleteAsync(Me._currentDivision.RowID.Value)
-
-        If Me._currentDivision.IsRoot Then
-
-            _userActivityRepository.RecordDelete(z_User, DivisionLocationEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
-        Else
-
-            _userActivityRepository.RecordDelete(z_User, DivisionEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
-
-        End If
+        Await service.DeleteAsync(
+            divisionId:=Me._currentDivision.RowID.Value,
+            changedByUserId:=z_User)
 
         Await RefreshTreeView()
 
@@ -1154,21 +1147,21 @@ Public Class NewDivisionPositionForm
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} vacation leave from '{oldDivision.DefaultVacationLeave.ToString}' to '{_currentDivision.DefaultVacationLeave.ToString}'."
+                .Description = $"Updated {entityName} vacation leave from '{oldDivision.DefaultVacationLeave}' to '{_currentDivision.DefaultVacationLeave}'."
             })
         End If
         If _currentDivision.DefaultSickLeave <> oldDivision.DefaultSickLeave Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} sick leave from '{oldDivision.DefaultSickLeave.ToString}' to '{_currentDivision.DefaultSickLeave.ToString}'."
+                .Description = $"Updated {entityName} sick leave from '{oldDivision.DefaultSickLeave}' to '{_currentDivision.DefaultSickLeave}'."
             })
         End If
         If _currentDivision.DefaultOtherLeave <> oldDivision.DefaultOtherLeave Then
             changes.Add(New UserActivityItem() With
             {
                 .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} other leave from '{oldDivision.DefaultOtherLeave.ToString}' to '{_currentDivision.DefaultOtherLeave.ToString}'."
+                .Description = $"Updated {entityName} other leave from '{oldDivision.DefaultOtherLeave}' to '{_currentDivision.DefaultOtherLeave}'."
             })
         End If
 

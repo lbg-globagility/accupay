@@ -132,7 +132,9 @@ namespace AccuPay.Web.Leaves
 
         public async Task Delete(int id)
         {
-            await _dataService.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                id: id,
+                changedByUserId: _currentUser.UserId);
         }
 
         public async Task<List<string>> GetLeaveTypes()

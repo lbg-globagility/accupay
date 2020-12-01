@@ -92,7 +92,9 @@ namespace AccuPay.Web.Salaries.Services
 
         public async Task Delete(int id)
         {
-            await _dataService.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                id: id,
+                changedByUserId: _currentUser.UserId);
         }
 
         private static void ApplyChanges(CrudSalaryDto dto, Salary salary)

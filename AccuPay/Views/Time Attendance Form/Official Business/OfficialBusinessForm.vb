@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -444,15 +444,9 @@ Public Class OfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await dataService.DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentOfficialBusiness.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentOfficialBusiness.EmployeeID.Value,
-                    suffixIdentifier:=$" with date '{ Me._currentOfficialBusiness.StartDate.ToShortDateString()}'")
+                Await dataService.DeleteAsync(
+                    Me._currentOfficialBusiness.RowID.Value,
+                    changedByUserId:=z_User)
 
                 Await LoadOfficialBusinesses(currentEmployee)
 

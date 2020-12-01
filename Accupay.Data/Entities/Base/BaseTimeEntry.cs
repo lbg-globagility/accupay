@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
-    public class BaseTimeEntry : BaseEntity
+    public abstract class BaseTimeEntry : BaseEntity
     {
         public int? OrganizationID { get; set; }
 

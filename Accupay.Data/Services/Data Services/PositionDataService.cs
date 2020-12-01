@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class PositionDataService : BaseSavableDataService<Position>
+    public class PositionDataService : BaseOrganizationDataService<Position>
     {
+        private const string UserActivityName = "Position";
+
         private readonly PositionRepository _positionRepository;
         private readonly EmployeeRepository _employeeRepository;
         private readonly DivisionDataService _divisionService;
@@ -17,12 +19,14 @@ namespace AccuPay.Data.Services
             PositionRepository positionRepository,
             EmployeeRepository employeeRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             DivisionDataService divisionService,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(positionRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Position")
@@ -34,7 +38,11 @@ namespace AccuPay.Data.Services
             _divisionService = divisionService;
         }
 
-        public async override Task DeleteAsync(int positionId)
+        protected override string GetUserActivityName(Position salary) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Position salary) => string.Empty;
+
+        public override async Task DeleteAsync(int positionId, int changedByUserId)
         {
             var position = await _positionRepository.GetByIdAsync(positionId);
 
@@ -44,7 +52,9 @@ namespace AccuPay.Data.Services
             if ((await _employeeRepository.GetByPositionAsync(positionId)).Any())
                 throw new BusinessLogicException("Position already has at least one assigned employee therefore cannot be deleted.");
 
-            await _positionRepository.DeleteAsync(position);
+            await base.DeleteAsync(
+                id: positionId,
+                changedByUserId: changedByUserId);
         }
 
         protected override async Task SanitizeEntity(Position position, Position oldPosition)

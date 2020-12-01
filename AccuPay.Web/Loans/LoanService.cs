@@ -96,7 +96,9 @@ namespace AccuPay.Web.Loans
 
         public async Task Delete(int id)
         {
-            await _loanService.DeleteAsync(id);
+            await _loanService.DeleteAsync(
+                id: id,
+                changedByUserId: _currentUser.UserId);
         }
 
         public List<string> GetStatusList()

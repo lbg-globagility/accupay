@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -407,17 +407,9 @@ Public Class EmployeeAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                Await dataService.DeleteAsync(Me._currentAllowance.RowID.Value)
-
-                Dim suffixIdentifier = $" with type '{Me._currentAllowance.Product?.Name}' and start date '{Me._currentAllowance.EffectiveStartDate.ToShortDateString()}'"
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentAllowance.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentAllowance.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
+                Await dataService.DeleteAsync(
+                    id:=Me._currentAllowance.RowID.Value,
+                    changedByUserId:=z_User)
 
                 Await LoadAllowances(currentEmployee)
 

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -511,17 +511,9 @@ Public Class EmployeeLoansForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                Await dataService.DeleteAsync(Me._currentLoan.RowID.Value)
-
-                Dim suffixIdentifier = $" with type '{cboLoanType.Text}' and start date '{Me._currentLoan.DedEffectiveDateFrom.ToShortDateString()}'"
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentLoan.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentLoan.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
+                Await dataService.DeleteAsync(
+                    id:=Me._currentLoan.RowID.Value,
+                    changedByUserId:=z_User)
 
                 Await LoadLoans(currentEmployee)
 
