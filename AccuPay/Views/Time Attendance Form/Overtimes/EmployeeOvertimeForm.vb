@@ -604,7 +604,7 @@ Public Class EmployeeOvertimeForm
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
-                Await dataService.SaveManyAsync(changedOvertimes)
+                Await dataService.SaveManyAsync(changedOvertimes, z_User)
 
                 ShowBalloonInfo($"{changedOvertimes.Count} Overtime(s) Successfully Updated.", messageTitle)
 

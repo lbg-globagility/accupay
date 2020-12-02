@@ -327,7 +327,7 @@ Public Class MassOvertimePresenter
                 changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
                 Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
-                Await service.SaveManyAsync(changedOvertimes)
+                Await service.SaveManyAsync(changedOvertimes, z_User)
 
             End If
 

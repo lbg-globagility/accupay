@@ -53,12 +53,29 @@ namespace AccuPay.Data.Services
 
         public override async Task SaveAsync(Leave leave)
         {
-            await SaveManyAsync(new List<Leave> { leave });
+            int changedByUserId;
+
+            if (leave.IsNewEntity)
+            {
+                if (leave.CreatedBy == null)
+                    throw new BusinessLogicException("Created By is required.");
+
+                changedByUserId = leave.CreatedBy.Value;
+            }
+            else
+            {
+                if (leave.LastUpdBy == null)
+                    throw new BusinessLogicException("Last Updated By is required.");
+
+                changedByUserId = leave.LastUpdBy.Value;
+            }
+
+            await SaveManyAsync(new List<Leave> { leave }, changedByUserId);
 
             await RecordAdd(leave);
         }
 
-        public override async Task SaveManyAsync(List<Leave> leaves)
+        public override async Task SaveManyAsync(List<Leave> leaves, int changedByUserId)
         {
             if (leaves.Any() == false) return;
 

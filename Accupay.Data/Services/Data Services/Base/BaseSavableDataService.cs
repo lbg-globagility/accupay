@@ -116,7 +116,7 @@ namespace AccuPay.Data.Services
             await PostSaveAction(entity, oldEntity, saveType);
         }
 
-        public virtual async Task SaveManyAsync(List<T> entities)
+        public virtual async Task SaveManyAsync(List<T> entities, int changedByUserId)
         {
             if (entities == null)
                 throw new BusinessLogicException($"No {EntityNamePlural} to be saved.");
@@ -124,10 +124,14 @@ namespace AccuPay.Data.Services
             var insertEntities = entities.Where(x => x.IsNewEntity).ToList();
             var updateEntities = entities.Where(x => !x.IsNewEntity).ToList();
 
-            await SaveManyAsync(added: insertEntities, updated: updateEntities);
+            await SaveManyAsync(
+                changedByUserId,
+                added: insertEntities,
+                updated: updateEntities);
         }
 
         public virtual async Task SaveManyAsync(
+            int changedByUserId,
             List<T> added = null,
             List<T> updated = null,
             List<T> deleted = null)
@@ -156,9 +160,9 @@ namespace AccuPay.Data.Services
                 updated: updated,
                 deleted: deleted);
 
-            await CallPostSaveManyAction(added, oldEntities, SaveType.Insert);
-            await CallPostSaveManyAction(updated, oldEntities, SaveType.Update);
-            await CallPostSaveManyAction(deleted, oldEntities, SaveType.Delete);
+            await CallPostSaveManyAction(added, oldEntities, SaveType.Insert, changedByUserId);
+            await CallPostSaveManyAction(updated, oldEntities, SaveType.Update, changedByUserId);
+            await CallPostSaveManyAction(deleted, oldEntities, SaveType.Delete, changedByUserId);
         }
 
         // TODO: change this to a synchronus method. All validations that needs database
@@ -194,7 +198,7 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected virtual Task PostSaveManyAction(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities, SaveType saveType)
+        protected virtual Task PostSaveManyAction(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities, SaveType saveType, int changedByUserId)
         {
             return Task.CompletedTask;
         }
@@ -297,10 +301,10 @@ namespace AccuPay.Data.Services
                 await AdditionalSaveManyValidation(entities, GetOldEntitiesOfPassedEntities(entities, oldEntities), saveType);
         }
 
-        private async Task CallPostSaveManyAction(List<T> updated, ICollection<T> oldEntities, SaveType saveType)
+        private async Task CallPostSaveManyAction(List<T> updated, ICollection<T> oldEntities, SaveType saveType, int changedByUserId)
         {
             if (updated != null && updated.Any())
-                await PostSaveManyAction(updated, GetOldEntitiesOfPassedEntities(updated, oldEntities), saveType);
+                await PostSaveManyAction(updated, GetOldEntitiesOfPassedEntities(updated, oldEntities), saveType, changedByUserId);
         }
 
         #endregion Private Methods

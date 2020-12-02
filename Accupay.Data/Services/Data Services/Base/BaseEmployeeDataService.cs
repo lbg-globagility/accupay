@@ -46,11 +46,5 @@ namespace AccuPay.Data.Services
                 organizationId: entity.OrganizationID.Value,
                 changedEmployeeId: entity.EmployeeID.Value);
         }
-
-        // TODO: delete this later. Every data service should implement this.
-        protected override Task RecordUpdate(T entity, T oldEntity)
-        {
-            return Task.CompletedTask;
-        }
     }
 }

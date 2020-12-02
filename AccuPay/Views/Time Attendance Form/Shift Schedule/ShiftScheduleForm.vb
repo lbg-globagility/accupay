@@ -946,6 +946,7 @@ Public Class ShiftScheduleForm
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
                 Await dataService.SaveManyAsync(
+                    changedByUserId:=z_User,
                     added:=addedShifts,
                     updated:=updatedShifts,
                     deleted:=deletedShifts)

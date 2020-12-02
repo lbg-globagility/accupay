@@ -151,7 +151,7 @@ namespace AccuPay.Web.Overtimes
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, changedByUserId: userId);
 
             return parsedResult;
         }

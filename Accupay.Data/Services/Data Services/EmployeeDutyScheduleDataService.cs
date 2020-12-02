@@ -81,7 +81,10 @@ namespace AccuPay.Data.Services
                 }
             }
 
-            await SaveManyAsync(added: addedShifts, updated: updatedShifts);
+            await SaveManyAsync(
+                changedByUserId: changedByUserId,
+                added: addedShifts,
+                updated: updatedShifts);
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
         }
@@ -132,107 +135,85 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task PostSaveManyAction(IReadOnlyCollection<EmployeeDutySchedule> entities, IReadOnlyCollection<EmployeeDutySchedule> oldEntities, SaveType saveType)
-        {
-            switch (saveType)
-            {
-                case SaveType.Insert:
-
-                    foreach (var item in entities)
-                    {
-                        await RecordAdd(item);
-                    }
-
-                    break;
-
-                case SaveType.Update:
-
-                    RecordUpdate(entities, oldEntities);
-                    break;
-
-                case SaveType.Delete:
-
-                    foreach (var item in entities)
-                    {
-                        await RecordDelete(item, item.LastUpdBy.Value);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        #endregion Overrides
-
-        private void RecordUpdate(IReadOnlyCollection<EmployeeDutySchedule> updatedShifts, IReadOnlyCollection<EmployeeDutySchedule> oldRecords)
+        protected override Task RecordUpdate(IReadOnlyCollection<EmployeeDutySchedule> updatedShifts, IReadOnlyCollection<EmployeeDutySchedule> oldRecords)
         {
             foreach (var newValue in updatedShifts)
             {
-                List<UserActivityItem> changes = new List<UserActivityItem>();
-                var entityName = UserActivityName.ToLower();
-
                 var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
                 if (oldValue == null) continue;
 
-                var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
-
-                if (newValue.StartTime != oldValue.StartTime)
-                {
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = newValue.RowID.Value,
-                        Description = $"Updated start time from '{oldValue.StartTime.ToStringFormat("hh:mm tt")}' to '{newValue.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                }
-                if (newValue.EndTime != oldValue.EndTime)
-                {
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = newValue.RowID.Value,
-                        Description = $"Updated end time from '{oldValue.EndTime.ToStringFormat("hh:mm tt")}' to '{newValue.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                }
-                if (newValue.BreakStartTime != oldValue.BreakStartTime)
-                {
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = newValue.RowID.Value,
-                        Description = $"Updated break start from '{oldValue.BreakStartTime.ToStringFormat("hh:mm tt")}' to '{newValue.BreakStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                }
-                if (newValue.BreakLength != oldValue.BreakLength)
-                {
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = newValue.RowID.Value,
-                        Description = $"Updated break length from '{oldValue.BreakLength}' to '{newValue.BreakLength}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                }
-                if (newValue.IsRestDay != oldValue.IsRestDay)
-                {
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = newValue.RowID.Value,
-                        Description = $"Updated offset from '{oldValue.IsRestDay}' to '{newValue.IsRestDay}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                }
-
-                if (changes.Any())
-                {
-                    _userActivityRepository.CreateRecord(
-                        newValue.LastUpdBy.Value,
-                        UserActivityName,
-                        newValue.OrganizationID.Value,
-                        UserActivityRepository.RecordTypeEdit,
-                        changes);
-                }
+                RecordUpdate(newValue, oldValue);
             }
+
+            return Task.CompletedTask;
         }
+
+        protected override Task RecordUpdate(EmployeeDutySchedule newValue, EmployeeDutySchedule oldValue)
+        {
+            List<UserActivityItem> changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
+
+            if (newValue.StartTime != oldValue.StartTime)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated start time from '{oldValue.StartTime.ToStringFormat("hh:mm tt")}' to '{newValue.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            }
+            if (newValue.EndTime != oldValue.EndTime)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated end time from '{oldValue.EndTime.ToStringFormat("hh:mm tt")}' to '{newValue.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            }
+            if (newValue.BreakStartTime != oldValue.BreakStartTime)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated break start from '{oldValue.BreakStartTime.ToStringFormat("hh:mm tt")}' to '{newValue.BreakStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            }
+            if (newValue.BreakLength != oldValue.BreakLength)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated break length from '{oldValue.BreakLength}' to '{newValue.BreakLength}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            }
+            if (newValue.IsRestDay != oldValue.IsRestDay)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated offset from '{oldValue.IsRestDay}' to '{newValue.IsRestDay}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            }
+
+            if (changes.Any())
+            {
+                _userActivityRepository.CreateRecord(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        #endregion Overrides
     }
 }

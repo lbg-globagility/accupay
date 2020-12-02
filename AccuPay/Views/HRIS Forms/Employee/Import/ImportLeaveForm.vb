@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -152,7 +152,7 @@ Public Class ImportLeaveForm
             Async Function() As Task(Of Boolean)
 
                 Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                Await leaveService.SaveManyAsync(leaves)
+                Await leaveService.SaveManyAsync(leaves, z_User)
 
                 Dim importList = New List(Of UserActivityItem)
                 Dim entityName = FormEntityName.ToLower()

@@ -108,6 +108,7 @@ namespace AccuPay.Web.Shifts.Services
             }
 
             await _service.SaveManyAsync(
+                changedByUserId: _currentUser.UserId,
                 added: added,
                 updated: updated,
                 deleted: deleted);

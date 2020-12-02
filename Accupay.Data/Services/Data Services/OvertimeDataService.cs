@@ -42,13 +42,10 @@ namespace AccuPay.Data.Services
 
             await _overtimeRepository.DeleteManyAsync(overtimeIds);
 
-            foreach (var overtime in overtimes)
-            {
-                await RecordDelete(overtime, changedByUserId);
-            }
+            await PostDeleteManyAction(overtimes.ToList(), changedByUserId);
         }
 
-        public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int userId)
+        public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int changedByUserId)
         {
             List<Overtime> overtimes = new List<Overtime>();
 
@@ -56,7 +53,7 @@ namespace AccuPay.Data.Services
             {
                 overtimes.Add(new Overtime()
                 {
-                    CreatedBy = userId,
+                    CreatedBy = changedByUserId,
                     EmployeeID = ot.EmployeeID,
                     OrganizationID = organizationId,
                     OTEndTimeFull = ot.EndTime.Value,
@@ -71,7 +68,7 @@ namespace AccuPay.Data.Services
             return overtimes;
         }
 
-        public async Task GenerateOvertimeByShift(IEnumerable<IShift> modifiedShifts, List<int> employeeIds, int organizationId, int userId)
+        public async Task GenerateOvertimeByShift(IEnumerable<IShift> modifiedShifts, List<int> employeeIds, int organizationId, int changedByUserId)
         {
             if (!modifiedShifts.Any())
                 return;
@@ -79,15 +76,15 @@ namespace AccuPay.Data.Services
             var timePeriod = new TimePeriod(modifiedShifts.Min(s => s.Date), modifiedShifts.Max(s => s.Date));
 
             (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) =
-                CreateOvertimesByShift(modifiedShifts, organizationId, userId, employeeIds, timePeriod);
+                CreateOvertimesByShift(modifiedShifts, organizationId, changedByUserId, employeeIds, timePeriod);
 
             if (saveOvertimes.Any())
             {
-                await SaveManyAsync(saveOvertimes);
+                await SaveManyAsync(saveOvertimes, changedByUserId);
             }
 
             if (deleteOvertimes.Any())
-                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), userId);
+                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), changedByUserId);
         }
 
         #region Overrides
@@ -140,49 +137,14 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected override async Task PostSaveManyAction(IReadOnlyCollection<Overtime> entities, IReadOnlyCollection<Overtime> oldEntities, SaveType saveType)
-        {
-            switch (saveType)
-            {
-                case SaveType.Insert:
-
-                    foreach (var item in entities)
-                    {
-                        await RecordAdd(item);
-                    }
-
-                    break;
-
-                case SaveType.Update:
-
-                    RecordUpdate(entities, oldEntities);
-                    break;
-
-                case SaveType.Delete:
-
-                    foreach (var item in entities)
-                    {
-                        await RecordDelete(item, item.LastUpdBy.Value);
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        #endregion Overrides
-
-        #region Private Methods
-
-        private void RecordUpdate(IReadOnlyCollection<Overtime> updatedShifts, IReadOnlyCollection<Overtime> oldRecords)
+        protected override async Task RecordUpdate(IReadOnlyCollection<Overtime> updatedShifts, IReadOnlyCollection<Overtime> oldRecords)
         {
             foreach (var newValue in updatedShifts)
             {
                 var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
                 if (oldValue == null) continue;
 
-                RecordUpdate(newValue, oldValue);
+                await RecordUpdate(newValue, oldValue);
             }
         }
 
@@ -248,6 +210,10 @@ namespace AccuPay.Data.Services
 
             return Task.CompletedTask;
         }
+
+        #endregion Overrides
+
+        #region Private Methods
 
         private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) CreateOvertimesByShift(
             IEnumerable<IShift> shiftSchedSaveList,

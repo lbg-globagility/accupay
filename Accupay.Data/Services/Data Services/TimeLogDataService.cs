@@ -36,7 +36,7 @@ namespace AccuPay.Data.Services
 
         #region Save
 
-        public async Task SaveImportAsync(List<TimeLog> timeLogs)
+        public async Task SaveImportAsync(List<TimeLog> timeLogs, int changedByUserId)
         {
             string importId = Guid.NewGuid().ToString();
 
@@ -45,7 +45,7 @@ namespace AccuPay.Data.Services
                 timeLog.TimeentrylogsImportID = importId;
             }
 
-            await SaveManyAsync(timeLogs);
+            await SaveManyAsync(timeLogs, changedByUserId);
         }
 
         #endregion Save
@@ -101,42 +101,24 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task PostSaveManyAction(IReadOnlyCollection<TimeLog> entities, IReadOnlyCollection<TimeLog> oldEntities, SaveType saveType)
+        protected override async Task PostDeleteManyAction(IReadOnlyCollection<TimeLog> entities, int changedByUserId)
         {
-            switch (saveType)
+            // user can add multiple time logs in a day specially when they import multiple times.
+            var groupedDeletedTimeLogs = entities.GroupBy(x => new { x.EmployeeID, x.LogDate });
+
+            foreach (var group in groupedDeletedTimeLogs)
             {
-                case SaveType.Insert:
-
-                    foreach (var item in entities)
-                    {
-                        await RecordAdd(item);
-                    }
-
-                    break;
-
-                case SaveType.Update:
-
-                    var branches = await _branchRepository.GetAllAsync();
-                    RecordUpdate(entities, oldEntities, branches.ToList());
-                    break;
-
-                case SaveType.Delete:
-
-                    // user can add multiple time logs in a day specially when they import multiple times.
-                    var groupedDeletedTimeLogs = entities.GroupBy(x => new { x.EmployeeID, x.LogDate });
-
-                    foreach (var group in groupedDeletedTimeLogs)
-                    {
-                        foreach (var item in group.ToList())
-                        {
-                            await RecordDelete(item, item.LastUpdBy.Value);
-                        }
-                    }
-                    break;
-
-                default:
-                    break;
+                foreach (var item in group.ToList())
+                {
+                    await RecordDelete(item, changedByUserId);
+                }
             }
+        }
+
+        protected override async Task PostUpdateManyAction(IReadOnlyCollection<TimeLog> entities, IReadOnlyCollection<TimeLog> oldEntities)
+        {
+            var branches = await _branchRepository.GetAllAsync();
+            RecordUpdate(entities, oldEntities, branches.ToList());
         }
 
         #endregion Overrides
@@ -145,80 +127,85 @@ namespace AccuPay.Data.Services
         {
             foreach (var newValue in updatedTimeLogs)
             {
-                List<UserActivityItem> changes = new List<UserActivityItem>();
-                var entityName = UserActivityName.ToLower();
-
                 var oldValue = oldRecords
                     .Where(tl => tl.EmployeeID.Value == newValue.EmployeeID.Value)
                     .Where(tl => tl.LogDate == newValue.LogDate)
                     .FirstOrDefault();
                 if (oldValue == null) continue;
 
-                var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
+                RecordUpdate(branches, newValue, oldValue);
+            }
+        }
 
-                if (newValue.TimeIn != oldValue.TimeIn)
+        private void RecordUpdate(IReadOnlyCollection<Branch> branches, TimeLog newValue, TimeLog oldValue)
+        {
+            List<UserActivityItem> changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
+
+            if (newValue.TimeIn != oldValue.TimeIn)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated time in from '{oldValue.TimeIn.ToStringFormat("hh:mm tt")}' to '{newValue.TimeIn.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = newValue.EmployeeID.Value
+                });
+            }
+            if (newValue.TimeOut != oldValue.TimeOut)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated time out from '{oldValue.TimeOut.ToStringFormat("hh:mm tt")}' to '{newValue.TimeOut.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = newValue.EmployeeID.Value
+                });
+            }
+
+            var currentDateOut = newValue.TimeStampOut == null ? newValue.TimeStampOut : newValue.TimeStampOut.Value.Date;
+            var oldDateOut = oldValue.TimeStampOut == null ? oldValue.TimeStampOut : oldValue.TimeStampOut.Value.Date;
+            if (currentDateOut.NullableEquals(oldDateOut) == false)
+            {
+                // TimeStampOut is null by default. It means TimeStampOut is equals to LogDate
+                var dontSave = oldValue.TimeStampOut == null && newValue.TimeStampOut != null && newValue.TimeStampOut.Value.Date == newValue.LogDate.Date;
+
+                if (dontSave == false)
                 {
                     changes.Add(new UserActivityItem()
                     {
                         EntityId = newValue.RowID.Value,
-                        Description = $"Updated time in from '{oldValue.TimeIn.ToStringFormat("hh:mm tt")}' to '{newValue.TimeIn.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                        Description = $"Updated date out from '{oldValue.TimeStampOut.ToShortDateString()}' to '{newValue.TimeStampOut.ToShortDateString()}' {suffixIdentifier}",
                         ChangedEmployeeId = newValue.EmployeeID.Value
                     });
                 }
-                if (newValue.TimeOut != oldValue.TimeOut)
+            }
+            if (newValue.BranchID != oldValue.BranchID)
+            {
+                var oldBranch = "";
+                var newBranch = "";
+
+                if (oldValue.BranchID.HasValue)
+                    oldBranch = branches.Where(x => x.RowID == oldValue.BranchID).FirstOrDefault()?.Name;
+                if (newValue.BranchID.HasValue)
+                    newBranch = branches.Where(x => x.RowID == newValue.BranchID).FirstOrDefault()?.Name;
+
+                changes.Add(new UserActivityItem()
                 {
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = newValue.RowID.Value,
-                        Description = $"Updated time out from '{oldValue.TimeOut.ToStringFormat("hh:mm tt")}' to '{newValue.TimeOut.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = newValue.EmployeeID.Value
-                    });
-                }
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated branch from '{oldBranch}' to '{newBranch}' {suffixIdentifier}",
+                    ChangedEmployeeId = newValue.EmployeeID.Value
+                });
+            }
 
-                var currentDateOut = newValue.TimeStampOut == null ? newValue.TimeStampOut : newValue.TimeStampOut.Value.Date;
-                var oldDateOut = oldValue.TimeStampOut == null ? oldValue.TimeStampOut : oldValue.TimeStampOut.Value.Date;
-                if (currentDateOut.NullableEquals(oldDateOut) == false)
-                {
-                    // TimeStampOut is null by default. It means TimeStampOut is equals to LogDate
-                    var dontSave = oldValue.TimeStampOut == null && newValue.TimeStampOut != null && newValue.TimeStampOut.Value.Date == newValue.LogDate.Date;
-
-                    if (dontSave == false)
-                    {
-                        changes.Add(new UserActivityItem()
-                        {
-                            EntityId = newValue.RowID.Value,
-                            Description = $"Updated date out from '{oldValue.TimeStampOut.ToShortDateString()}' to '{newValue.TimeStampOut.ToShortDateString()}' {suffixIdentifier}",
-                            ChangedEmployeeId = newValue.EmployeeID.Value
-                        });
-                    }
-                }
-                if (newValue.BranchID != oldValue.BranchID)
-                {
-                    var oldBranch = "";
-                    var newBranch = "";
-
-                    if (oldValue.BranchID.HasValue)
-                        oldBranch = branches.Where(x => x.RowID == oldValue.BranchID).FirstOrDefault()?.Name;
-                    if (newValue.BranchID.HasValue)
-                        newBranch = branches.Where(x => x.RowID == newValue.BranchID).FirstOrDefault()?.Name;
-
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = newValue.RowID.Value,
-                        Description = $"Updated branch from '{oldBranch}' to '{newBranch}' {suffixIdentifier}",
-                        ChangedEmployeeId = newValue.EmployeeID.Value
-                    });
-                }
-
-                if (changes.Any())
-                {
-                    _userActivityRepository.CreateRecord(
-                        newValue.LastUpdBy.Value,
-                        UserActivityName,
-                        newValue.OrganizationID.Value,
-                        UserActivityRepository.RecordTypeEdit,
-                        changes);
-                }
+            if (changes.Any())
+            {
+                _userActivityRepository.CreateRecord(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
             }
         }
     }

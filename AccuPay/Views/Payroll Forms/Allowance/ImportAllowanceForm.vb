@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -132,7 +132,7 @@ Public Class ImportAllowanceForm
 
         UpdateStatusLabel(rejectedRecords.Count)
 
-        ParsedTabControl.Text = $"Ok ({Me._allowances.Count})"
+        ParsedTabControl.Text = $"Ok ({_allowances.Count})"
         ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
 
         SaveButton.Enabled = _allowances.Count > 0
@@ -257,7 +257,7 @@ Public Class ImportAllowanceForm
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                Await dataService.SaveManyAsync(_allowances)
+                Await dataService.SaveManyAsync(_allowances, z_User)
 
                 Await RecordUserActivity()
 

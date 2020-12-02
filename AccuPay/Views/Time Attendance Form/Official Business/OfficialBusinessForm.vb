@@ -641,7 +641,7 @@ Public Class OfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await dataService.SaveManyAsync(changedOfficialBusinesses)
+                Await dataService.SaveManyAsync(changedOfficialBusinesses, z_User)
 
                 For Each item In changedOfficialBusinesses
                     RecordUpdate(item)

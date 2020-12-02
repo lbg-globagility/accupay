@@ -86,14 +86,18 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
                 Sub(t)
                     t.LastUpdBy = z_User
                 End Sub)
-            Await timeLogService.SaveManyAsync(deleted:=employeeTimeLogs.ToList())
+            Await timeLogService.SaveManyAsync(
+                changedByUserId:=z_User,
+                deleted:=employeeTimeLogs.ToList())
 
             Dim employeeShifts = shifts.Where(Function(s) s.EmployeeID.Value = employee.RowID.Value).ToList()
             employeeShifts.ForEach(
                 Sub(t)
                     t.LastUpdBy = z_User
                 End Sub)
-            Await shiftService.SaveManyAsync(deleted:=employeeShifts.ToList())
+            Await shiftService.SaveManyAsync(
+                changedByUserId:=z_User,
+                deleted:=employeeShifts.ToList())
 
             SetCurrentMessage($"Finished deleting [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 

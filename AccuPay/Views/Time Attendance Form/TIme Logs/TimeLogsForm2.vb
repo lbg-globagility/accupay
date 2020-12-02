@@ -336,7 +336,7 @@ Public Class TimeLogsForm2
         Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-        Await timeLogService.SaveImportAsync(timeLogs)
+        Await timeLogService.SaveImportAsync(timeLogs, z_User)
     End Function
 
     Private Sub ResetGridRowsDefaultCellStyle()
@@ -875,6 +875,7 @@ Public Class TimeLogsForm2
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
                 Await dataService.SaveManyAsync(
+                    changedByUserId:=z_User,
                     added:=addedTimeLogs,
                     updated:=updatedTimeLogs,
                     deleted:=deletedTimeLogs)
@@ -1203,7 +1204,7 @@ Public Class TimeLogsForm2
         Next
 
         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-        Await timeLogService.SaveImportAsync(timeLogs)
+        Await timeLogService.SaveImportAsync(timeLogs, z_User)
 
     End Sub
 

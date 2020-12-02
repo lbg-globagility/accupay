@@ -312,7 +312,7 @@ Public Class EmployeeLoansForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                Await dataService.SaveManyAsync(changedLoans)
+                Await dataService.SaveManyAsync(changedLoans, z_User)
 
                 For Each item In changedLoans
                     RecordUpdate(item)

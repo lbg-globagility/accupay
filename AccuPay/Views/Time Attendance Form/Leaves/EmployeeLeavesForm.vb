@@ -690,7 +690,7 @@ Public Class EmployeeLeavesForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                Await dataService.SaveManyAsync(changedLeaves)
+                Await dataService.SaveManyAsync(changedLeaves, z_User)
 
                 For Each item In changedLeaves
                     RecordUpdate(item)

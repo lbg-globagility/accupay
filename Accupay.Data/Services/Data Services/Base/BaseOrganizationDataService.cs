@@ -44,11 +44,5 @@ namespace AccuPay.Data.Services
                 suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
                 organizationId: entity.OrganizationID.Value);
         }
-
-        // TODO: delete this later. Every data service should implement this.
-        protected override Task RecordUpdate(T entity, T oldEntity)
-        {
-            return Task.CompletedTask;
-        }
     }
 }

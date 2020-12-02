@@ -99,7 +99,11 @@ namespace AccuPay.Web.TimeLogs
                 }
             }
 
-            await _dataService.SaveManyAsync(added, updated, deleted);
+            await _dataService.SaveManyAsync(
+                changedByUserId: _currentUser.UserId,
+                added: added,
+                updated: updated,
+                deleted: deleted);
         }
 
         internal async Task<TimeLogImportResultDto> Import(IFormFile file)

@@ -107,7 +107,7 @@ Public Class ImportOvertimeForm
 
         UpdateStatusLabel(rejectedRecords.Count)
 
-        ParsedTabControl.Text = $"Ok ({Me._overtimes.Count})"
+        ParsedTabControl.Text = $"Ok ({_overtimes.Count})"
         ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
 
         SaveButton.Enabled = _overtimes.Count > 0
@@ -181,7 +181,7 @@ Public Class ImportOvertimeForm
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await dataService.SaveManyAsync(_overtimes)
+                Await dataService.SaveManyAsync(_overtimes, z_User)
 
                 Me.IsSaved = True
 

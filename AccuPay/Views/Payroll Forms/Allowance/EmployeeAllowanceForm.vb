@@ -231,7 +231,7 @@ Public Class EmployeeAllowanceForm
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                Await dataService.SaveManyAsync(changedAllowances)
+                Await dataService.SaveManyAsync(changedAllowances, z_User)
 
                 For Each item In changedAllowances
                     RecordUpdate(item)
