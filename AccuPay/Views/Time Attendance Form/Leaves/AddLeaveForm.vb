@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -11,17 +11,13 @@ Public Class AddLeaveForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private Const FormEntityName As String = "Leave"
-
     Private _currentEmployee As Employee
 
     Private _newLeave As New Leave
 
-    Private _leaveRepository As LeaveRepository
+    Private ReadOnly _leaveRepository As LeaveRepository
 
-    Private _productRepository As ProductRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _productRepository As ProductRepository
 
     Sub New(employee As Employee)
 
@@ -32,8 +28,6 @@ Public Class AddLeaveForm
         _leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -182,14 +176,6 @@ Public Class AddLeaveForm
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Await dataService.SaveAsync(Me._newLeave)
-
-                _userActivityRepository.RecordAdd(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._newLeave.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._newLeave.EmployeeID.Value,
-                    suffixIdentifier:=$" with date '{ Me._newLeave.StartDate.ToShortDateString()}'")
 
                 Me.IsSaved = True
 

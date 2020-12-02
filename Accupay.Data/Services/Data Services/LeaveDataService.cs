@@ -54,6 +54,8 @@ namespace AccuPay.Data.Services
         public override async Task SaveAsync(Leave leave)
         {
             await SaveManyAsync(new List<Leave> { leave });
+
+            await RecordAdd(leave);
         }
 
         public override async Task SaveManyAsync(List<Leave> leaves)

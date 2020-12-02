@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -96,7 +96,7 @@ Public Class AddDisciplinaryAction
 
                 Await _disciplinaryActionRepo.CreateAsync(_newDisciplinaryAction)
 
-                _userActivityRepo.RecordAdd(
+                Await _userActivityRepo.RecordAddAsync(
                     z_User,
                     FormEntityName,
                     entityId:=_newDisciplinaryAction.RowID.Value,

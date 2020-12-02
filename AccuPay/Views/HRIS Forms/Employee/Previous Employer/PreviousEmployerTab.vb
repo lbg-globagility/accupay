@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -196,7 +196,7 @@ Public Class PreviousEmployerTab
                     Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
                     Await previousEmployerRepo.DeleteAsync(_currentPrevEmployer)
 
-                    _userActivityRepo.RecordDelete(
+                    Await _userActivityRepo.RecordDeleteAsync(
                         z_User,
                         FormEntityName,
                         entityId:=_currentPrevEmployer.RowID.Value,

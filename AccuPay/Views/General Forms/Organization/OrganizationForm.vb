@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -331,8 +331,15 @@ Public Class OrganizationForm
                 Dim firstHalf = New TimePeriod(FirstHalfStartDate.Value.Date, FirstHalfEndDate.Value.Date)
                 Dim endOfTheMonth = New TimePeriod(EndOfTheMonthStartDate.Value.Date, EndOfTheMonthEndDate.Value.Date)
 
-                If isNew AndAlso _policy.HasDifferentPayPeriodDates Then
-                    dataService.ValidateDefaultPayPeriodData(firstHalf, endOfTheMonth)
+                If isNew Then
+
+                    If _policy.HasDifferentPayPeriodDates Then
+                        dataService.ValidateDefaultPayPeriodData(firstHalf, endOfTheMonth)
+
+                    End If
+                Else
+
+                    _currentOrganization.LastUpdBy = z_User
                 End If
 
                 Dim organizationService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)

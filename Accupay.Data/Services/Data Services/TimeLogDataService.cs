@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class TimeLogDataService : BaseOrganizationDataService<TimeLog>
+    public class TimeLogDataService : BaseEmployeeDataService<TimeLog>
     {
         private const string UserActivityName = "Time Log";
 
@@ -109,13 +109,7 @@ namespace AccuPay.Data.Services
 
                     foreach (var item in entities)
                     {
-                        _userActivityRepository.RecordAdd(
-                            item.CreatedBy.Value,
-                            UserActivityName,
-                            entityId: item.RowID.Value,
-                            organizationId: item.OrganizationID.Value,
-                            suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
-                            changedEmployeeId: item.EmployeeID.Value);
+                        await RecordAdd(item);
                     }
 
                     break;
@@ -135,13 +129,7 @@ namespace AccuPay.Data.Services
                     {
                         foreach (var item in group.ToList())
                         {
-                            _userActivityRepository.RecordDelete(
-                                item.LastUpdBy.Value,
-                                UserActivityName,
-                                entityId: item.RowID.Value,
-                                organizationId: item.OrganizationID.Value,
-                                suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
-                                changedEmployeeId: item.EmployeeID.Value);
+                            await RecordDelete(item, item.LastUpdBy.Value);
                         }
                     }
                     break;

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -65,7 +65,7 @@ Public Class AddCertificationForm
                 Dim awardRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
                 Await awardRepo.CreateAsync(_newCertification)
 
-                _userActivityRepo.RecordAdd(
+                Await _userActivityRepo.RecordAddAsync(
                     z_User,
                     FormEntityName,
                     entityId:=_newCertification.RowID.Value,

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -9,8 +9,6 @@ Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLoanScheduleForm
-
-    Private Const FormEntityName As String = "Loan"
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -28,9 +26,7 @@ Public Class AddLoanScheduleForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Private _systemOwnerService As SystemOwnerService
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
     Sub New(employee As Employee)
 
@@ -43,8 +39,6 @@ Public Class AddLoanScheduleForm
         Me.NewLoanTypes = New List(Of Product)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
@@ -187,16 +181,6 @@ Public Class AddLoanScheduleForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
                 Await dataService.SaveAsync(Me._newLoanSchedule)
-
-                Dim suffixIdentifier = $" with type '{cboLoanType.Text}' and start date '{Me._newLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}'"
-
-                _userActivityRepository.RecordAdd(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._newLoanSchedule.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._newLoanSchedule.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
 
                 Me.IsSaved = True
 

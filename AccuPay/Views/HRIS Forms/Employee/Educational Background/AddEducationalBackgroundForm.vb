@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -83,7 +83,7 @@ Public Class AddEducationalBackgroundForm
                 Dim educBGRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
                 Await educBGRepo.CreateAsync(_newEducBg)
 
-                _userActivityRepo.RecordAdd(
+                Await _userActivityRepo.RecordAddAsync(
                     z_User,
                     FormEntityName,
                     entityId:=_newEducBg.RowID.Value,

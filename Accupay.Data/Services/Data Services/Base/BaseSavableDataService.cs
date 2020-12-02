@@ -19,7 +19,6 @@ namespace AccuPay.Data.Services
         }
 
         protected readonly SavableRepository<T> _repository;
-        protected readonly UserActivityRepository _userActivityRepository;
         protected readonly PayrollContext _context;
         protected readonly string EntityName;
         protected readonly string EntityNamePlural;
@@ -27,7 +26,6 @@ namespace AccuPay.Data.Services
         public BaseSavableDataService(
             SavableRepository<T> repository,
             PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy,
             string entityName,
@@ -37,7 +35,6 @@ namespace AccuPay.Data.Services
                 policy)
         {
             _repository = repository;
-            _userActivityRepository = userActivityRepository;
             _context = context;
 
             EntityName = entityName;
@@ -98,8 +95,10 @@ namespace AccuPay.Data.Services
         /// <returns></returns>
         public virtual async Task SaveAsync(T entity)
         {
+            bool isNew = entity.IsNewEntity;
+
             T oldEntity = null;
-            if (!entity.IsNewEntity)
+            if (!isNew)
             {
                 oldEntity = await _repository.GetByIdAsync(entity.RowID.Value);
 
@@ -112,6 +111,9 @@ namespace AccuPay.Data.Services
 
             DetachOldEntity(oldEntity);
             await _repository.SaveAsync(entity);
+
+            SaveType saveType = isNew ? SaveType.Insert : SaveType.Update;
+            await PostSaveAction(entity, oldEntity, saveType);
         }
 
         public virtual async Task SaveManyAsync(List<T> entities)
@@ -182,16 +184,20 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected virtual Task PostSaveManyAction(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities, SaveType saveType)
+        protected virtual Task PostDeleteAction(T entity, int changedByUserId)
         {
             return Task.CompletedTask;
         }
 
-        protected abstract Task PostDeleteAction(T entity, int changedByUserId);
+        protected virtual Task PostSaveAction(T entity, T oldEntity, SaveType saveType)
+        {
+            return Task.CompletedTask;
+        }
 
-        protected abstract string GetUserActivityName(T entity);
-
-        protected abstract string CreateUserActivitySuffixIdentifier(T entity);
+        protected virtual Task PostSaveManyAction(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities, SaveType saveType)
+        {
+            return Task.CompletedTask;
+        }
 
         #endregion Virtual Methods
 

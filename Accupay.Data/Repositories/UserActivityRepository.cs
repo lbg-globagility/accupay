@@ -124,7 +124,7 @@ namespace AccuPay.Data.Repositories
                 changedByUserId: changedUserId);
         }
 
-        public void RecordDelete(
+        public async Task RecordAddAsync(
             int userId,
             string entityName,
             int entityId,
@@ -133,14 +133,14 @@ namespace AccuPay.Data.Repositories
             int? changedEmployeeId = null,
             int? changedUserId = null)
         {
-            RecordSimple(
+            await RecordSimpleAsync(
                 userId,
                 entityName,
-                $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}",
+                "Created a new",
                 suffixIdentifier,
                 entityId: entityId,
                 organizationId: organizationId,
-                RecordTypeDelete,
+                RecordTypeAdd,
                 changedEmployeeId: changedEmployeeId,
                 changedByUserId: changedUserId);
         }

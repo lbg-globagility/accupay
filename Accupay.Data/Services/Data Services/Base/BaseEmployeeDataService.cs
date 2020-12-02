@@ -25,15 +25,32 @@ namespace AccuPay.Data.Services
         {
         }
 
-        protected override async Task PostDeleteAction(T entity, int changedByUserId)
+        protected override async Task RecordDelete(T entity, int changedByUserId)
         {
             await _userActivityRepository.RecordDeleteAsync(
-                userId: changedByUserId,
+                changedByUserId,
                 entityId: entity.RowID.Value,
                 entityName: GetUserActivityName(entity),
                 suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
                 organizationId: entity.OrganizationID.Value,
-                changedEmployeeId: entity.EmployeeID);
+                changedEmployeeId: entity.EmployeeID.Value);
+        }
+
+        protected override async Task RecordAdd(T entity)
+        {
+            await _userActivityRepository.RecordAddAsync(
+                entity.CreatedBy.Value,
+                entityId: entity.RowID.Value,
+                entityName: GetUserActivityName(entity),
+                suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
+                organizationId: entity.OrganizationID.Value,
+                changedEmployeeId: entity.EmployeeID.Value);
+        }
+
+        // TODO: delete this later. Every data service should implement this.
+        protected override Task RecordUpdate(T entity, T oldEntity)
+        {
+            return Task.CompletedTask;
         }
     }
 }

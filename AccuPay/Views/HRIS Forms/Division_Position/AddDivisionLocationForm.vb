@@ -1,29 +1,16 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDivisionLocationForm
 
-    Private Const FormEntityName As String = "Division Location"
-
     Public Property NewDivision As Division
 
     Public Property IsSaved As Boolean
-
-    Private _userActivityRepository As UserActivityRepository
-
-    Sub New()
-
-        InitializeComponent()
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-
-    End Sub
 
     Private Sub AddDivisionLocationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -60,8 +47,6 @@ Public Class AddDivisionLocationForm
         Dim divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
         Await divisionService.SaveAsync(Me.NewDivision)
-
-        _userActivityRepository.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

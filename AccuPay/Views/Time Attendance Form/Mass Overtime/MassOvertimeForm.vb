@@ -340,7 +340,7 @@ Public Class MassOvertimePresenter
             If deletableOvertimeIDs.Any Then
 
                 Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await service.DeleteManyAsync(deletableOvertimeIDs, z_OrganizationID, z_User)
+                Await service.DeleteManyAsync(deletableOvertimeIDs, z_User)
 
             End If
         End Function)

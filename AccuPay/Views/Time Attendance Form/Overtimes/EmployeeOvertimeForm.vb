@@ -13,8 +13,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeOvertimeForm
 
-    Private Const FormEntityName As String = "Overtime"
-
     Private _currentOvertime As Overtime
 
     Private _employees As List(Of Employee)
@@ -26,13 +24,12 @@ Public Class EmployeeOvertimeForm
     Private _changedOvertimes As List(Of Overtime)
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
+
     Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private ReadOnly _userActivityRepository As UserActivityRepository
+    Private ReadOnly _policyHelper As PolicyHelper
 
     Private _currentRolePermission As RolePermission
-
-    Private _policyHelper As PolicyHelper
 
     Sub New()
 
@@ -47,8 +44,6 @@ Public Class EmployeeOvertimeForm
         _changedOvertimes = New List(Of Overtime)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
@@ -715,7 +710,10 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Overtime"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 

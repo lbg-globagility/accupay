@@ -13,7 +13,7 @@ Public Class ImportOvertimeForm
 
     Public IsSaved As Boolean
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
     Sub New()
 

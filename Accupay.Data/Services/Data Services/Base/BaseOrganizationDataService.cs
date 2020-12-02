@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public abstract class BaseOrganizationDataService<T> : BaseSavableDataService<T> where T : BaseOrganizationalEntity
+    public abstract class BaseOrganizationDataService<T> : BaseAuditableDataService<T> where T : BaseOrganizationalEntity
     {
         public BaseOrganizationDataService(
             SavableRepository<T> repository,
@@ -25,7 +25,7 @@ namespace AccuPay.Data.Services
         {
         }
 
-        protected override async Task PostDeleteAction(T entity, int changedByUserId)
+        protected override async Task RecordDelete(T entity, int changedByUserId)
         {
             await _userActivityRepository.RecordDeleteAsync(
                 changedByUserId,
@@ -33,6 +33,22 @@ namespace AccuPay.Data.Services
                 entityName: GetUserActivityName(entity),
                 suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
                 organizationId: entity.OrganizationID.Value);
+        }
+
+        protected override async Task RecordAdd(T entity)
+        {
+            await _userActivityRepository.RecordAddAsync(
+                entity.CreatedBy.Value,
+                entityId: entity.RowID.Value,
+                entityName: GetUserActivityName(entity),
+                suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
+                organizationId: entity.OrganizationID.Value);
+        }
+
+        // TODO: delete this later. Every data service should implement this.
+        protected override Task RecordUpdate(T entity, T oldEntity)
+        {
+            return Task.CompletedTask;
         }
     }
 }

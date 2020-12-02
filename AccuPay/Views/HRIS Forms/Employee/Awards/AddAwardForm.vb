@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -60,7 +60,7 @@ Public Class AddAwardForm
                 Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
                 Await awardRepo.CreateAsync(_newAward)
 
-                _userActivityRepo.RecordAdd(
+                Await _userActivityRepo.RecordAddAsync(
                     z_User,
                     FormEntityName,
                     entityId:=_newAward.RowID.Value,

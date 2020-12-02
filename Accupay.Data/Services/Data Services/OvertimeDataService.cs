@@ -36,7 +36,7 @@ namespace AccuPay.Data.Services
             _overtimeRepository = overtimeRepository;
         }
 
-        public async Task DeleteManyAsync(IEnumerable<int> overtimeIds, int organizationId, int userId)
+        public async Task DeleteManyAsync(IEnumerable<int> overtimeIds, int changedByUserId)
         {
             var overtimes = await _overtimeRepository.GetManyByIdsAsync(overtimeIds.ToArray());
 
@@ -44,13 +44,7 @@ namespace AccuPay.Data.Services
 
             foreach (var overtime in overtimes)
             {
-                _userActivityRepository.RecordDelete(
-                    userId,
-                    UserActivityName,
-                    entityId: overtime.RowID.Value,
-                    organizationId: organizationId,
-                    suffixIdentifier: CreateUserActivitySuffixIdentifier(overtime),
-                    changedEmployeeId: overtime.EmployeeID.Value);
+                await RecordDelete(overtime, changedByUserId);
             }
         }
 
@@ -93,7 +87,7 @@ namespace AccuPay.Data.Services
             }
 
             if (deleteOvertimes.Any())
-                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), organizationId, userId);
+                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), userId);
         }
 
         #region Overrides
@@ -122,10 +116,16 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time is required.");
 
             if (new string[] { Overtime.StatusPending, Overtime.StatusApproved }
-                            .Contains(overtime.Status) == false)
+                .Contains(overtime.Status) == false)
             {
                 throw new BusinessLogicException("Status is not valid.");
             }
+
+            if (overtime.IsNewEntity && overtime.CreatedBy == null)
+                throw new BusinessLogicException("Created By is required.");
+
+            if (!overtime.IsNewEntity && overtime.LastUpdBy == null)
+                throw new BusinessLogicException("Last Updated By is required.");
 
             if (overtime.OTStartTime.HasValue)
                 overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
@@ -140,7 +140,7 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected override Task PostSaveManyAction(IReadOnlyCollection<Overtime> entities, IReadOnlyCollection<Overtime> oldEntities, SaveType saveType)
+        protected override async Task PostSaveManyAction(IReadOnlyCollection<Overtime> entities, IReadOnlyCollection<Overtime> oldEntities, SaveType saveType)
         {
             switch (saveType)
             {
@@ -148,13 +148,7 @@ namespace AccuPay.Data.Services
 
                     foreach (var item in entities)
                     {
-                        _userActivityRepository.RecordAdd(
-                            item.CreatedBy.Value,
-                            UserActivityName,
-                            entityId: item.RowID.Value,
-                            organizationId: item.OrganizationID.Value,
-                            suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
-                            changedEmployeeId: item.EmployeeID.Value);
+                        await RecordAdd(item);
                     }
 
                     break;
@@ -168,21 +162,13 @@ namespace AccuPay.Data.Services
 
                     foreach (var item in entities)
                     {
-                        _userActivityRepository.RecordDelete(
-                            item.LastUpdBy.Value,
-                            UserActivityName,
-                            entityId: item.RowID.Value,
-                            organizationId: item.OrganizationID.Value,
-                            suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
-                            changedEmployeeId: item.EmployeeID.Value);
+                        await RecordDelete(item, item.LastUpdBy.Value);
                     }
                     break;
 
                 default:
                     break;
             }
-
-            return Task.CompletedTask;
         }
 
         #endregion Overrides
@@ -193,67 +179,74 @@ namespace AccuPay.Data.Services
         {
             foreach (var newValue in updatedShifts)
             {
-                var changes = new List<UserActivityItem>();
-                var entityName = UserActivityName.ToLower();
-
                 var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
                 if (oldValue == null) continue;
 
-                var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
-
-                if (newValue.OTStartDate != oldValue.OTStartDate)
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = oldValue.RowID.Value,
-                        Description = $"Updated start date from '{oldValue.OTStartDate.ToShortDateString()}' to '{newValue.OTStartDate.ToShortDateString()}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                if (newValue.OTStartTime != oldValue.OTStartTime)
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = oldValue.RowID.Value,
-                        Description = $"Updated start time from '{oldValue.OTStartTime.ToStringFormat("hh:mm tt")}' to '{newValue.OTStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                if (newValue.OTEndTime != oldValue.OTEndTime)
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = oldValue.RowID.Value,
-                        Description = $"Updated end time from '{oldValue.OTEndTime.ToStringFormat("hh:mm tt")}' to '{newValue.OTEndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                if (newValue.Reason != oldValue.Reason)
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = oldValue.RowID.Value,
-                        Description = $"Updated reason from '{oldValue.Reason}' to '{newValue.Reason}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                if (newValue.Comments != oldValue.Comments)
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = oldValue.RowID.Value,
-                        Description = $"Updated comments from '{oldValue.Comments}' to '{newValue.Comments}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-                if (newValue.Status != oldValue.Status)
-                    changes.Add(new UserActivityItem()
-                    {
-                        EntityId = oldValue.RowID.Value,
-                        Description = $"Updated status from '{oldValue.Status}' to '{newValue.Status}' {suffixIdentifier}",
-                        ChangedEmployeeId = oldValue.EmployeeID.Value
-                    });
-
-                if (changes.Any())
-                {
-                    _userActivityRepository.CreateRecord(
-                        newValue.LastUpdBy.Value,
-                        UserActivityName,
-                        newValue.OrganizationID.Value,
-                        UserActivityRepository.RecordTypeEdit,
-                        changes);
-                }
+                RecordUpdate(newValue, oldValue);
             }
+        }
+
+        protected override Task RecordUpdate(Overtime newValue, Overtime oldValue)
+        {
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
+
+            if (newValue.OTStartDate != oldValue.OTStartDate)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start date from '{oldValue.OTStartDate.ToShortDateString()}' to '{newValue.OTStartDate.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.OTStartTime != oldValue.OTStartTime)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start time from '{oldValue.OTStartTime.ToStringFormat("hh:mm tt")}' to '{newValue.OTStartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.OTEndTime != oldValue.OTEndTime)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated end time from '{oldValue.OTEndTime.ToStringFormat("hh:mm tt")}' to '{newValue.OTEndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Reason != oldValue.Reason)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated reason from '{oldValue.Reason}' to '{newValue.Reason}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Comments != oldValue.Comments)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated comments from '{oldValue.Comments}' to '{newValue.Comments}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Status != oldValue.Status)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated status from '{oldValue.Status}' to '{newValue.Status}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+
+            if (changes.Any())
+            {
+                _userActivityRepository.CreateRecord(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
+
+            return Task.CompletedTask;
         }
 
         private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) CreateOvertimesByShift(

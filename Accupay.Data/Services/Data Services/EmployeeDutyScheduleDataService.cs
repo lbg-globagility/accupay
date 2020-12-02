@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class EmployeeDutyScheduleDataService : BaseOrganizationDataService<EmployeeDutySchedule>
+    public class EmployeeDutyScheduleDataService : BaseEmployeeDataService<EmployeeDutySchedule>
     {
         private const string UserActivityName = "Shift Schedule";
 
@@ -132,7 +132,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override Task PostSaveManyAction(IReadOnlyCollection<EmployeeDutySchedule> entities, IReadOnlyCollection<EmployeeDutySchedule> oldEntities, SaveType saveType)
+        protected override async Task PostSaveManyAction(IReadOnlyCollection<EmployeeDutySchedule> entities, IReadOnlyCollection<EmployeeDutySchedule> oldEntities, SaveType saveType)
         {
             switch (saveType)
             {
@@ -140,13 +140,7 @@ namespace AccuPay.Data.Services
 
                     foreach (var item in entities)
                     {
-                        _userActivityRepository.RecordAdd(
-                            item.CreatedBy.Value,
-                            UserActivityName,
-                            entityId: item.RowID.Value,
-                            organizationId: item.OrganizationID.Value,
-                            suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
-                            changedEmployeeId: item.EmployeeID.Value);
+                        await RecordAdd(item);
                     }
 
                     break;
@@ -160,21 +154,13 @@ namespace AccuPay.Data.Services
 
                     foreach (var item in entities)
                     {
-                        _userActivityRepository.RecordDelete(
-                            item.LastUpdBy.Value,
-                            UserActivityName,
-                            entityId: item.RowID.Value,
-                            organizationId: item.OrganizationID.Value,
-                            suffixIdentifier: CreateUserActivitySuffixIdentifier(item),
-                            changedEmployeeId: item.EmployeeID.Value);
+                        await RecordDelete(item, item.LastUpdBy.Value);
                     }
                     break;
 
                 default:
                     break;
             }
-
-            return Task.CompletedTask;
         }
 
         #endregion Overrides

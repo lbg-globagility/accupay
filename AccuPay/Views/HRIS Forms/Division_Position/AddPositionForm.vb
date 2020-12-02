@@ -9,8 +9,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddPositionForm
 
-    Private Const FormEntityName As String = "Position"
-
     Private _divisions As List(Of Division)
 
     Private _jobLevels As List(Of JobLevel)
@@ -24,15 +22,11 @@ Public Class AddPositionForm
 
     Private ReadOnly _divisionRepository As DivisionRepository
 
-    Private ReadOnly _userActivityRepository As UserActivityRepository
-
     Sub New()
 
         InitializeComponent()
 
         _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -119,8 +113,6 @@ Public Class AddPositionForm
         Await positionService.SaveAsync(Me._newPosition)
 
         Me.LastPositionAdded = Me._newPosition
-
-        _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newPosition.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

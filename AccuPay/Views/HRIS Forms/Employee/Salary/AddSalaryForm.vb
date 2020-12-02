@@ -15,8 +15,6 @@ Public Class AddSalaryForm
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
-    Private Const FormEntityName As String = "Salary"
-
     Private _employee As Employee
 
     Private _isSystemOwnerBenchMark As Boolean
@@ -24,8 +22,6 @@ Public Class AddSalaryForm
     Private _ecolaAllowance As Allowance
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
-
-    Private ReadOnly _userActivityRepository As UserActivityRepository
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
@@ -35,8 +31,6 @@ Public Class AddSalaryForm
         _employee = employee
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
     End Sub
@@ -160,14 +154,6 @@ Public Class AddSalaryForm
                     Await EcolaHelper.SaveEcola(_ecolaAllowance.RowID.Value, txtEcola.Text.ToDecimal)
 
                 End If
-
-                _userActivityRepository.RecordAdd(
-                    z_User,
-                    FormEntityName,
-                    entityId:=newSalary.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=newSalary.EmployeeID,
-                    suffixIdentifier:=$" with start date '{newSalary.EffectiveFrom.ToShortDateString()}'")
 
                 succeed = True
             End Function)
