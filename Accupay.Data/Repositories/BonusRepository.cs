@@ -79,6 +79,14 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<Bonus> GetByIdAsync(int id)
+        {
+            return await _context.Bonuses
+                .Include(b => b.LoanPaymentFromBonuses)
+                .Where(b => b.RowID == id)
+                .FirstOrDefaultAsync();
+        }
+
         private IQueryable<Bonus> CreateBaseQueryByTimePeriod(int organizationId, TimePeriod timePeriod)
         {
             return _context.Bonuses

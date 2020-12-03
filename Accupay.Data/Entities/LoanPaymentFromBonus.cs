@@ -33,8 +33,6 @@ namespace AccuPay.Data.Entities
         [ForeignKey("BonusId")]
         public virtual Bonus Bonus { get; set; }
 
-        public decimal DeductionAmount { get; set; }
-
         public virtual ICollection<LoanPaymentFromBonusItem> Items { get; set; }
     }
 }

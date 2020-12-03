@@ -190,7 +190,7 @@ namespace AccuPay.Data.Services
                                                     timeEntries: timeEntries,
                                                     allowances);
 
-            var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules);
+            var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules, bonuses: bonuses);
 
             ComputePayroll(resources,
                             userId: userId,
@@ -222,7 +222,8 @@ namespace AccuPay.Data.Services
                         allowanceItems: allowanceItems,
                         loanTransactions: loanTransactions,
                         timeEntries: timeEntries,
-                        leaves: leaves);
+                        leaves: leaves,
+                        bonuses: bonuses);
 
             return PaystubEmployeeResult.Success(employee, paystub);
         }
@@ -256,7 +257,8 @@ namespace AccuPay.Data.Services
                                 ICollection<AllowanceItem> allowanceItems,
                                 ICollection<LoanTransaction> loanTransactions,
                                 IReadOnlyCollection<TimeEntry> timeEntries,
-                                IReadOnlyCollection<Leave> leaves)
+                                IReadOnlyCollection<Leave> leaves,
+                                IReadOnlyCollection<Bonus> bonuses)
         {
             using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
             {
@@ -265,14 +267,25 @@ namespace AccuPay.Data.Services
                     loan.LastUpdBy = userId;
                     context.Entry(loan).State = EntityState.Modified;
 
-                    if (!_usesLoanDeductFromBonus) { continue; }
-                    if (loan.LoanPaymentFromBonuses.Any())
+                    if (_usesLoanDeductFromBonus)
                     {
-                        // this will set the value of LoanPaymentFromBonus.PaystubId
-                        loan.LoanPaymentFromBonuses.ToList().ForEach(lb => context.Entry(lb).State = EntityState.Modified);
+                        var loanPaymentFromBonuses = GetLoanPaymentFromBonuses(bonuses, loan, payPeriod: payPeriod);
 
-                        // revert to it's original LoanSchedule.DeductionAmount
-                        loan.DeductionAmount = loan.LoanPaymentFromBonuses.FirstOrDefault().DeductionAmount;
+                        foreach (var lb in loanPaymentFromBonuses)
+                        {
+                            var existingItem = lb.Items
+                                .Where(i => i.LoanPaidBonusId == lb.Id)
+                                .Where(i => i.PaystubId == paystub.RowID)
+                                .FirstOrDefault();
+
+                            if (existingItem != null) continue;
+
+                            var lbItem = LoanPaymentFromBonusItem.CreateNew(lb.Id, paystub);
+
+                            lb.Items.Add(lbItem);
+
+                            context.Entry(lbItem).State = EntityState.Added;
+                        }
                     }
                 }
 
@@ -334,6 +347,26 @@ namespace AccuPay.Data.Services
 
                 context.SaveChanges();
             }
+        }
+
+        private static IEnumerable<LoanPaymentFromBonus> GetLoanPaymentFromBonuses(IReadOnlyCollection<Bonus> bonuses, LoanSchedule loan, PayPeriod payPeriod)
+        {
+            var bonusIds = bonuses
+                .Select(b => b.RowID.Value)
+                .ToArray();
+            if (!payPeriod.IsEndOfTheMonth)
+            {
+                bonusIds = bonuses
+                    .Where(b => b.AllowanceFrequency != Bonus.FREQUENCY_MONTHLY)
+                    .Select(b => b.RowID.Value)
+                    .ToArray();
+            }
+
+            var loanPaymentFromBonuses = loan
+                .LoanPaymentFromBonuses
+                .Where(l => l.LoanId == loan.RowID.Value)
+                .Where(l => bonusIds.Contains(l.BonusId));
+            return loanPaymentFromBonuses;
         }
 
         private void ComputePayroll(PayrollResources resources,
@@ -751,7 +784,8 @@ namespace AccuPay.Data.Services
 
         private List<LoanTransaction> CreateLoanTransactions(Paystub paystub,
                                                             PayPeriod payPeriod,
-                                                            IReadOnlyCollection<LoanSchedule> loanSchedules)
+                                                            IReadOnlyCollection<LoanSchedule> loanSchedules,
+                                                            IReadOnlyCollection<Bonus> bonuses)
         {
             var loanTransactions = new List<LoanTransaction>();
             var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
@@ -769,16 +803,11 @@ namespace AccuPay.Data.Services
                 else
                 {
                     deductionAmount = loanSchedule.DeductionAmount;
-
-                    if (_usesLoanDeductFromBonus)
-                    {
-                        if (loanSchedule.LoanPaymentFromBonuses.Any()) deductionAmount = loanSchedule.LoanPaymentFromBonuses.Sum(l => l.AmountPayment);
-                    }
                 }
 
-                if (!_usesLoanDeductFromBonus)
+                if (_usesLoanDeductFromBonus)
                 {
-                    var fsdfsd = loanSchedule.LoanPaymentFromBonuses.Where(l => l.LoanId == loanSchedule.RowID.Value);
+                    deductionAmount += GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod).Sum(l => l.AmountPayment);
                 }
 
                 loanSchedule.TotalBalanceLeft -= deductionAmount;
@@ -799,12 +828,6 @@ namespace AccuPay.Data.Services
                 };
 
                 loanTransactions.Add(loanTransaction);
-
-                //if (!_usesLoanDeductFromBonus) { continue; }
-                //foreach (var loanPaidBonus in loanSchedule.LoanPaymentFromBonuses)
-                //{
-                //    //loanPaidBonus.Paystub = paystub;
-                //}
             }
 
             return loanTransactions;

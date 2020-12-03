@@ -1,19 +1,20 @@
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.ValueObjects
 
 Public Class LoanPaymentFromBonusModel
     Public ReadOnly Property Id As Integer
     Public ReadOnly Property LoanId As Integer
     Public ReadOnly Property BonusId As Integer
     Public ReadOnly Property BonusAmount As Decimal
-    Public ReadOnly Property EffectiveDate As Date
+    Public ReadOnly Property EffectiveStartDate As Date
     Public ReadOnly Property EffectiveEndDate As Date
     Public ReadOnly Property Frequency As String
     Public ReadOnly Property IsEditable As Boolean
     Public ReadOnly Property IsNew As Boolean
     Public ReadOnly Property DeductionAmount As Decimal
     Public ReadOnly Property TotalPayment As Decimal
-    Public Overridable Property Bonus As Bonus
-    Public Overridable Property LoanSchedule As LoanSchedule
+    Public ReadOnly Property LoanSchedule As LoanSchedule
+
     Public Overridable Property LoanPaymentFromBonus As LoanPaymentFromBonus
 End Class
 
@@ -23,9 +24,8 @@ Partial Public Class LoanPaymentFromBonusModel
     Private _isFullPayment As Boolean
 
     Public Sub New(bonus As Bonus, loanSchedule As LoanSchedule)
-        _Bonus = bonus
         BonusAmount = bonus.BonusAmount
-        EffectiveDate = bonus.EffectiveStartDate
+        EffectiveStartDate = bonus.EffectiveStartDate
         EffectiveEndDate = bonus.EffectiveEndDate
         Frequency = bonus.AllowanceFrequency
         BonusId = bonus.RowID.Value
@@ -45,7 +45,6 @@ Partial Public Class LoanPaymentFromBonusModel
 
             AmountPayment = loanPaymentFromBonus.AmountPayment
             _originalAmountPayment = AmountPayment
-            DeductionAmount = loanPaymentFromBonus.DeductionAmount
 
             hasItems = If(loanPaymentFromBonus.Items?.Any(), False)
         End If
@@ -140,6 +139,12 @@ Partial Public Class LoanPaymentFromBonusModel
         End Get
     End Property
 
+    Public ReadOnly Property InclusiveCurrentBonusAmount As Decimal
+        Get
+            Return BonusAmount - (TotalPayment + AmountPayment)
+        End Get
+    End Property
+
     Public ReadOnly Property MaxAvailablePayment As Decimal
         Get
             Dim totalBalanceLeft = LoanSchedule.TotalBalanceLeft
@@ -175,7 +180,6 @@ Partial Public Class LoanPaymentFromBonusModel
                 .CreatedBy = z_User,
                 .AmountPayment = AmountPayment,
                 .BonusId = BonusId,
-                .DeductionAmount = LoanSchedule.DeductionAmount,
                 .LoanId = LoanId
             }
         End If

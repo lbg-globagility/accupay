@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +34,14 @@ namespace AccuPay.Data.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<LoanPaymentFromBonus>> GetByBonusIdAsync(int bonusId)
+        {
+            return await _context.LoanPaymentFromBonuses
+                .Include(b => b.Items)
+                .Where(b => b.BonusId == bonusId)
+                .ToListAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.ValueObjects
@@ -15,6 +16,8 @@ Public Class AssignBonusToLoanForm
     Private _loanPaymentFromBonusModels As List(Of LoanPaymentFromBonusModel)
     Private _newTotalBalanceLeft As Decimal
     Private _newLoanPayPeriodLeft As Integer
+    Private _payAtLeastDeductionAmount As Boolean
+    Public Property ChangedBonus As Bonus
 
     Public Sub New(loanSchedule As LoanSchedule)
 
@@ -28,15 +31,13 @@ Public Class AssignBonusToLoanForm
         _newLoanPayPeriodLeft = _loanSchedule.LoanPayPeriodLeft
 
         DisplayLoanScheduleDetails(loanSchedule)
-
-        LoadLoanPaymentFromBonus()
     End Sub
 
-    Private Sub AssignBonusToLoan_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+    Private Async Sub AssignBonusToLoan_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Await LoadLoanPaymentFromBonus()
     End Sub
 
-    Private Async Sub LoadLoanPaymentFromBonus()
+    Private Async Function LoadLoanPaymentFromBonus() As Task
         _loanPaymentFromBonusModels = New List(Of LoanPaymentFromBonusModel)
 
         _bonuses = Await _bonusRepository.GetByEmployeeAndPayPeriodForLoanPaymentAsync(
@@ -45,15 +46,19 @@ Public Class AssignBonusToLoanForm
             timePeriod:=New TimePeriod(_loanSchedule.DedEffectiveDateFrom, _loanSchedule.DedEffectiveDateFrom.AddYears(1)))
 
         For Each bonus In _bonuses
-            _loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusModel(bonus:=bonus, loanSchedule:=_loanSchedule))
+            Dim paramBonus = bonus
+            If ChangedBonus IsNot Nothing AndAlso bonus.RowID = ChangedBonus.RowID Then
+                paramBonus = ChangedBonus
+            End If
+            _loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusModel(bonus:=paramBonus, loanSchedule:=_loanSchedule))
         Next
 
         dgvBonuses.AutoGenerateColumns = False
         dgvBonuses.DataSource = _loanPaymentFromBonusModels.
-            OrderBy(Function(l) l.EffectiveDate).
+            OrderBy(Function(l) l.EffectiveStartDate).
             ThenByDescending(Function(l) l.BonusAmount).
             ToList()
-    End Sub
+    End Function
 
     Private Sub DisplayLoanScheduleDetails(loanSchedule As LoanSchedule)
         txtLoanNumber.DataBindings.Clear()
@@ -100,7 +105,10 @@ Public Class AssignBonusToLoanForm
     End Sub
 
     Private Sub dgvBonuses_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvBonuses.CellBeginEdit
-        Dim models = GetModels().Where(Function(m) m.IsEditable).Where(Function(m) m.HasChanged)
+        Dim models = GetModels().
+            Where(Function(m) m.IsEditable).
+            Where(Function(m) m.HasChanged)
+
         If models.Any(Function(m) m.IsFulfilled) Then
             Dim idList = models.Select(Function(m) m.BonusId).ToArray()
 
@@ -141,13 +149,14 @@ Public Class AssignBonusToLoanForm
 
     Private Sub UpdateSaveButton()
         Dim models = GetModels()
-        Dim totalPayment = models.Sum(Function(m) m.AmountPayment)
+        Dim totalPayment = GetTotalPayment() 'models.Sum(Function(m) m.AmountPayment)
         Dim overPays = totalPayment > _loanSchedule.TotalBalanceLeft
         If overPays Then
             btnSave.Enabled = False
             btnSave.Text = "&Save"
+
             MessageBox.Show(
-                $"Total Payment Amount exceeds Loan Balance({_loanSchedule.TotalBalanceLeft.ToString("N")}). Please correct the Payment.",
+                $"Total Payment Amount exceeds Loan Balance({_loanSchedule.TotalBalanceLeft.ToString("N")}).{Environment.NewLine}Please correct the Payment.",
                 "Payment exceed",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Stop)
@@ -156,19 +165,26 @@ Public Class AssignBonusToLoanForm
             Dim hasChanges = hasChangedList.Any()
 
             Dim remainder = totalPayment Mod _loanSchedule.DeductionAmount
-            Dim payExact = remainder = 0
+            _payAtLeastDeductionAmount = remainder = 0 OrElse totalPayment >= _loanSchedule.DeductionAmount
 
-            Dim saveAbility = hasChanges AndAlso payExact
+            Dim saveAbility = hasChanges AndAlso _payAtLeastDeductionAmount
 
             btnSave.Enabled = saveAbility
             btnSave.Text = If(saveAbility, $"&Save ({hasChangedList.Count()})", "&Save")
         End If
     End Sub
 
+    Private Function GetTotalPayment() As Decimal
+        Dim models = GetModels()
+        Return models.
+            Where(Function(m) m.IsEditable).
+            Sum(Function(m) m.AmountPayment)
+    End Function
+
     Private Sub UpdatedLoanDisplayDetails()
         Dim models = GetModels()
         If Not models.Any() Then Return
-        Dim totalAmountPayment As Decimal = models.Sum(Function(m) m.AmountPayment)
+        Dim totalAmountPayment As Decimal = GetTotalPayment() + _loanSchedule.DeductionAmount
 
         _newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft
         _newLoanPayPeriodLeft = _loanSchedule.LoanPayPeriodLeft
@@ -195,6 +211,7 @@ Public Class AssignBonusToLoanForm
         lblTotalAmountPayment.Text = totalAmountPayment.ToString("N")
         lblTotalBalanceLeft.Text = _newTotalBalanceLeft.ToString("N")
         lblLoanPayPeriodLeft.Text = _newLoanPayPeriodLeft.ToString()
+        Label7.Text = $"{_loanSchedule.DeductionAmount.ToString("N")} + {(totalAmountPayment - _loanSchedule.DeductionAmount).ToString("N")}"
     End Sub
 
     Private Sub dgvBonuses_DataSourceChanged(sender As Object, e As EventArgs) Handles dgvBonuses.DataSourceChanged
@@ -214,19 +231,32 @@ Public Class AssignBonusToLoanForm
         Return DirectCast(currentRow.DataBoundItem, LoanPaymentFromBonusModel)
     End Function
 
-    Private Function GetModels() As IEnumerable(Of LoanPaymentFromBonusModel)
+    Public Function GetModels() As IEnumerable(Of LoanPaymentFromBonusModel)
         Return dgvBonuses.Rows.OfType(Of DataGridViewRow).Select(Function(r) GetModel(r)).ToList()
     End Function
 
     Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         dgvBonuses.EndEdit()
 
+        UpdateSaveButton()
+
         Dim saveList = GetModels().
             Where(Function(t) t.HasChanged).
             Select(Function(t) t.Export()).
             ToList()
 
-        If Not saveList.Any() Then Return
+        If Not (btnSave.Enabled AndAlso saveList.Any()) Then
+
+            If Not _payAtLeastDeductionAmount Then
+                MessageBox.Show(
+                    $"Total Payment Amount should be at least {_loanSchedule.DeductionAmount.ToString("N")}.{Environment.NewLine}Please correct the Payment.",
+                    "Payment insufficient",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Stop)
+            End If
+
+            Return
+        End If
 
         btnSave.Enabled = False
 

@@ -15,5 +15,23 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("LoanPaidBonusId")]
         public virtual LoanPaymentFromBonus LoanPaymentFromBonus { get; set; }
+
+        [ForeignKey("PaystubId")]
+        public virtual Paystub Paystub { get; internal set; }
+
+        public static LoanPaymentFromBonusItem CreateNew(int loanPaidBonusId, Paystub paystub)
+        {
+            var item = new LoanPaymentFromBonusItem() { LoanPaidBonusId = loanPaidBonusId };
+            if (paystub.RowID.HasValue)
+            {
+                item.PaystubId = paystub.RowID.Value;
+            }
+            else
+            {
+                item.Paystub = paystub;
+            }
+
+            return item;
+        }
     }
 }
