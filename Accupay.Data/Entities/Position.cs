@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("position")]
-    public class Position : BaseOrganizationalEntity
+    public class Position : OrganizationalEntity
     {
         public int? ParentPositionID { get; set; }
 

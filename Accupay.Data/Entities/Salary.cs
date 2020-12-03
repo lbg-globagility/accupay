@@ -5,7 +5,7 @@ using System.Globalization;
 namespace AccuPay.Data.Entities
 {
     [Table("employeesalary")]
-    public class Salary : BaseEmployeeDataEntity
+    public class Salary : EmployeeDataEntity
     {
         public int? PositionID { get; set; }
 

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public abstract class BaseAuditableDataService<T> : BaseSavableDataService<T> where T : BaseEntity
+    public abstract class AuditableDataService<T> : BaseSavableDataService<T> where T : AuditableEntity
     {
         protected readonly UserActivityRepository _userActivityRepository;
 
-        public BaseAuditableDataService(
+        public AuditableDataService(
                SavableRepository<T> repository,
                PayPeriodRepository payPeriodRepository,
                UserActivityRepository userActivityRepository,
@@ -26,6 +26,14 @@ namespace AccuPay.Data.Services
                    entityNamePlural)
         {
             _userActivityRepository = userActivityRepository;
+        }
+
+        protected override Task SanitizeEntity(T entity, T oldEntity)
+        {
+            base.SanitizeEntity(entity, oldEntity);
+
+            // TODO: validate CreatedBy and LastUpdBy
+            return Task.CompletedTask;
         }
 
         #region Abstract

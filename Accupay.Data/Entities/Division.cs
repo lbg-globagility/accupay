@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("division")]
-    public class Division : BaseOrganizationalEntity
+    public class Division : OrganizationalEntity
     {
         public const string DefaultLocationName = "Default Location";
         public const string DefaultDivisionName = "Default Division";

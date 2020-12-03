@@ -11,7 +11,7 @@ namespace AccuPay.Data.Services
     // might want to rename this class name
     // check the IPayrollEntity interface
     // to get a better idea of this abstraction
-    public abstract class BaseDailyPayrollDataService<T> : BaseEmployeeDataService<T> where T : BaseEmployeeDataEntity, IPayrollEntity
+    public abstract class BaseDailyPayrollDataService<T> : BaseEmployeeDataService<T> where T : EmployeeDataEntity, IPayrollEntity
     {
         public BaseDailyPayrollDataService(
             SavableRepository<T> savableRepository,

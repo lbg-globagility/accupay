@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("organization")]
-    public class Organization : BaseRecordEntity
+    public class Organization : AuditableEntity
     {
         public static readonly TimeSpan DefaultNightDifferentialTimeFrom = new TimeSpan(22, 0, 0);
         public static readonly TimeSpan DefaultNightDifferentialTimeTo = new TimeSpan(6, 0, 0);

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("address")]
-    public class Address : BaseRecordEntity
+    public class Address : AuditableEntity
     {
         public string StreetAddress1 { get; set; }
         public string StreetAddress2 { get; set; }

@@ -6,7 +6,7 @@ using System.Linq;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeleave")]
-    public class Leave : BaseEmployeeDataEntity, IPayrollEntity
+    public class Leave : EmployeeDataEntity, IPayrollEntity
     {
         public const string StatusApproved = "Approved";
 

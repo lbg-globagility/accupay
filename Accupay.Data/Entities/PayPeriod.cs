@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("payperiod")]
-    public class PayPeriod : BaseRecordEntity, IPayPeriod
+    public class PayPeriod : AuditableEntity, IPayPeriod
     {
         public const int FirstPayrollMonth = 1;
         public const int LastPayrollMonth = 12;

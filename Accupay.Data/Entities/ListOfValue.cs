@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("listofval")]
-    public class ListOfValue : BaseRecordEntity
+    public class ListOfValue : AuditableEntity
     {
         public const string ActiveYesOption = "Yes";
 

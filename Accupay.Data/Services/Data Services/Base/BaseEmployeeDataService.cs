@@ -1,10 +1,11 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public abstract class BaseEmployeeDataService<T> : BaseOrganizationDataService<T> where T : BaseEmployeeDataEntity
+    public abstract class BaseEmployeeDataService<T> : BaseOrganizationDataService<T> where T : EmployeeDataEntity
     {
         public BaseEmployeeDataService(
             SavableRepository<T> repository,
@@ -23,6 +24,14 @@ namespace AccuPay.Data.Services
                 entityName,
                 entityNamePlural)
         {
+        }
+
+        protected override async Task SanitizeEntity(T entity, T oldEntity)
+        {
+            await base.SanitizeEntity(entity, oldEntity);
+
+            if (entity.EmployeeID == null)
+                throw new BusinessLogicException("Employee is required.");
         }
 
         protected override async Task RecordDelete(T entity, int changedByUserId)

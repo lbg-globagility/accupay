@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
-    public abstract class BaseRecordEntity : BaseEntity
+    public abstract class AuditableEntity : BaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }

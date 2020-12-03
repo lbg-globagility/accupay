@@ -106,7 +106,7 @@ namespace AccuPay.Data.Services
                     throw new BusinessLogicException($"{EntityName} no longer exists.");
             }
 
-            await ValidateData(entity, oldEntity);
+            await SanitizeEntity(entity, oldEntity);
             await AdditionalSaveValidation(entity, oldEntity);
 
             DetachOldEntity(oldEntity);
@@ -170,6 +170,12 @@ namespace AccuPay.Data.Services
 
         protected virtual Task SanitizeEntity(T entity, T oldEntity)
         {
+            if (entity == null)
+                throw new BusinessLogicException($"Invalid {EntityName}.");
+
+            if (entity.IsNewEntity && oldEntity != null)
+                throw new BusinessLogicException("Your data is no longer up to date. Please refresh the form/page.");
+
             return Task.CompletedTask;
         }
 
@@ -226,17 +232,6 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task ValidateData(T entity, T oldEntity)
-        {
-            if (entity == null)
-                throw new BusinessLogicException($"Invalid {EntityName}.");
-
-            if (entity.IsNewEntity && oldEntity != null)
-                throw new BusinessLogicException("Your data is no longer up to date. Please refresh the form/page.");
-
-            await SanitizeEntity(entity, oldEntity);
-        }
-
         private async Task<ICollection<T>> ValidateMultipleEntities(
             List<T> added,
             List<T> updated,
@@ -254,7 +249,7 @@ namespace AccuPay.Data.Services
                 foreach (var entity in added)
                 {
                     var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity?.RowID);
-                    await ValidateData(entity, oldEntity);
+                    await SanitizeEntity(entity, oldEntity);
                 }
             }
 
@@ -267,7 +262,7 @@ namespace AccuPay.Data.Services
                     if (oldEntity == null)
                         throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");
 
-                    await ValidateData(entity, oldEntity);
+                    await SanitizeEntity(entity, oldEntity);
                 }
             }
 

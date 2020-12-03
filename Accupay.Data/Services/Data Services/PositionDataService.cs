@@ -59,11 +59,10 @@ namespace AccuPay.Data.Services
 
         protected override async Task SanitizeEntity(Position position, Position oldPosition)
         {
+            await base.SanitizeEntity(entity: position, oldEntity: oldPosition);
+
             if (position.DivisionID == null)
                 throw new BusinessLogicException("Division is required.");
-
-            if (position.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
 
             var existingPosition = await _positionRepository.GetByNameAsync(position.OrganizationID.Value, position.Name);
 

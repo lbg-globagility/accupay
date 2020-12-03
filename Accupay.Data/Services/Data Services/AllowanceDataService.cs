@@ -108,16 +108,12 @@ namespace AccuPay.Data.Services
                 changedEmployeeId: allowance.EmployeeID);
         }
 
-        protected override Task SanitizeEntity(Allowance allowance, Allowance oldAllowance)
+        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance)
         {
+            await base.SanitizeEntity(entity: allowance, oldEntity: oldAllowance);
+
             if (allowance.IsOneTime)
                 allowance.EffectiveEndDate = allowance.EffectiveStartDate;
-
-            if (allowance.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (allowance.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
 
             if (_allowanceRepository.GetFrequencyList().Contains(allowance.AllowanceFrequency) == false)
                 throw new BusinessLogicException("Invalid frequency.");
@@ -130,8 +126,6 @@ namespace AccuPay.Data.Services
 
             if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
                 throw new BusinessLogicException("Start date cannot be greater than end date.");
-
-            return Task.CompletedTask;
         }
 
         protected override async Task AdditionalDeleteValidation(Allowance allowance)

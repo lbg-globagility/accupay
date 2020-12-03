@@ -118,10 +118,12 @@ namespace AccuPay.Data.Services
         protected override string GetUserActivityName(LoanSchedule loan) => UserActivityName;
 
         protected override string CreateUserActivitySuffixIdentifier(LoanSchedule loan) =>
-            $"  with type '{loan.LoanName}' and start date '{loan.DedEffectiveDateFrom.ToShortDateString()}'";
+            $" with type '{loan.LoanName}' and start date '{loan.DedEffectiveDateFrom.ToShortDateString()}'";
 
         protected override async Task SanitizeEntity(LoanSchedule loan, LoanSchedule oldLoan)
         {
+            await base.SanitizeEntity(entity: loan, oldEntity: oldLoan);
+
             Validate(loan, oldLoan);
 
             await SanitizeProperties(loan);
@@ -296,12 +298,6 @@ namespace AccuPay.Data.Services
         {
             if ((oldLoan?.Status ?? loan.Status) == LoanSchedule.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
-
-            if (loan.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (loan.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
 
             if (loan.LoanTypeID == null)
                 throw new BusinessLogicException("Loan type is required.");

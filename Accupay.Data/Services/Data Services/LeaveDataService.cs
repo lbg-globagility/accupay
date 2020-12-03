@@ -532,11 +532,7 @@ namespace AccuPay.Data.Services
 
         protected override async Task SanitizeEntity(Leave leave, Leave oldLeave)
         {
-            if (leave.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (leave.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+            await base.SanitizeEntity(entity: leave, oldEntity: oldLeave);
 
             if (leave.StartDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");

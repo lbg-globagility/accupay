@@ -96,13 +96,9 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(EmployeeDutySchedule shift) =>
             $" with date '{shift.DateSched.ToShortDateString()}'";
 
-        protected override Task SanitizeEntity(EmployeeDutySchedule shift, EmployeeDutySchedule oldShift)
+        protected override async Task SanitizeEntity(EmployeeDutySchedule shift, EmployeeDutySchedule oldShift)
         {
-            if (shift.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (shift.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+            await base.SanitizeEntity(entity: shift, oldEntity: oldShift);
 
             if (shift.DateSched < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
@@ -120,8 +116,6 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Last Updated By is required.");
 
             shift.ComputeShiftHours(_policy.ShiftBasedAutomaticOvertimePolicy);
-
-            return Task.CompletedTask;
         }
 
         protected override async Task AdditionalSaveManyValidation(List<EmployeeDutySchedule> entities, List<EmployeeDutySchedule> oldEntities, SaveType saveType)

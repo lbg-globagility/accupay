@@ -465,7 +465,7 @@ Public Class EmployeeLoansForm
 
         Dim loanNumber = Me._currentLoan.LoanNumber
 
-        Dim loanNumberString = If(String.IsNullOrWhiteSpace(loanNumber), "", $": {loanNumber} ")
+        Dim loanNumberString = If(String.IsNullOrWhiteSpace(loanNumber), "", $": {loanNumber}")
 
         If MessageBoxHelper.Confirm(Of Boolean) _
         ($"Are you sure you want to delete loan{loanNumberString}?", "Confirm Deletion") = False Then
@@ -517,7 +517,7 @@ Public Class EmployeeLoansForm
 
                 Await LoadLoans(currentEmployee)
 
-                ShowBalloonInfo($"Loan {If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)} Successfully Deleted.", messageTitle)
+                ShowBalloonInfo($"Loan{If(String.IsNullOrWhiteSpace(loanNumberString), "", loanNumberString)} Successfully Deleted.", messageTitle)
             End Function)
     End Function
 

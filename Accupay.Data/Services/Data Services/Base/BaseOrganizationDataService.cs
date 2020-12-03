@@ -1,10 +1,11 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public abstract class BaseOrganizationDataService<T> : BaseAuditableDataService<T> where T : BaseOrganizationalEntity
+    public abstract class BaseOrganizationDataService<T> : AuditableDataService<T> where T : OrganizationalEntity
     {
         public BaseOrganizationDataService(
             SavableRepository<T> repository,
@@ -23,6 +24,14 @@ namespace AccuPay.Data.Services
                 entityName,
                 entityNamePlural)
         {
+        }
+
+        protected override async Task SanitizeEntity(T entity, T oldEntity)
+        {
+            await base.SanitizeEntity(entity, oldEntity);
+
+            if (entity.OrganizationID == null)
+                throw new BusinessLogicException("Organization is required.");
         }
 
         protected override async Task RecordDelete(T entity, int changedByUserId)

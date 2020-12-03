@@ -94,13 +94,9 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(Overtime overtime) =>
             $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
 
-        protected override Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
+        protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
         {
-            if (overtime.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (overtime.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+            await base.SanitizeEntity(entity: overtime, oldEntity: oldOvertime);
 
             if (overtime.OTStartDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
@@ -133,8 +129,6 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
 
             overtime.UpdateEndDate();
-
-            return Task.CompletedTask;
         }
 
         protected override async Task RecordUpdate(IReadOnlyCollection<Overtime> updatedShifts, IReadOnlyCollection<Overtime> oldRecords)

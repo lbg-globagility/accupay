@@ -69,8 +69,7 @@ namespace AccuPay.Data.Services
 
         protected override async Task SanitizeEntity(Division division, Division oldDivision)
         {
-            if (division.OrganizationID == null)
-                throw new BusinessLogicException($"Organization is required.");
+            await base.SanitizeEntity(entity: division, oldEntity: oldDivision);
 
             var doesExistQuery = _context.Divisions
                 .Where(d => d.Name.Trim().ToLower() == division.Name.ToTrimmedLowerCase())

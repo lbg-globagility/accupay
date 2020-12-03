@@ -70,11 +70,7 @@ namespace AccuPay.Data.Services
 
         protected override async Task SanitizeEntity(Salary salary, Salary oldSalary)
         {
-            if (salary.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (salary.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+            await base.SanitizeEntity(entity: salary, oldEntity: oldSalary);
 
             if (salary.EffectiveFrom < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");

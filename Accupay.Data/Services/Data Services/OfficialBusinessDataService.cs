@@ -68,11 +68,7 @@ namespace AccuPay.Data.Services
 
         protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness)
         {
-            if (officialBusiness.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (officialBusiness.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+            await base.SanitizeEntity(entity: officialBusiness, oldEntity: oldOfficialBusiness);
 
             if (officialBusiness.StartDate == null)
                 throw new BusinessLogicException("Start Date is required.");

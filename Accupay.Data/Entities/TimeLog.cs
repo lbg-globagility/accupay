@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeetimeentrydetails")]
-    public class TimeLog : BaseEmployeeDataEntity
+    public class TimeLog : EmployeeDataEntity
     {
         [Column("Date")]
         public DateTime LogDate { get; set; }

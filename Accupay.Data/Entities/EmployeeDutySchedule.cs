@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("shiftschedules")]
-    public class EmployeeDutySchedule : BaseEmployeeDataEntity
+    public class EmployeeDutySchedule : EmployeeDataEntity
     {
         [Column("Date")]
         public DateTime DateSched { get; set; }

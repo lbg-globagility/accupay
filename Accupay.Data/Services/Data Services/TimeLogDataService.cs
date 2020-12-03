@@ -57,13 +57,9 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(TimeLog log) =>
             $" with date '{log.LogDate.ToShortDateString()}'";
 
-        protected override Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog)
+        protected override async Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog)
         {
-            if (timeLog.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (timeLog.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+            await base.SanitizeEntity(entity: timeLog, oldEntity: oldTimeLog);
 
             if (timeLog.LogDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
@@ -86,8 +82,6 @@ namespace AccuPay.Data.Services
             {
                 timeLog.TimeStampOut = timeLog.TimeOutFull;
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task AdditionalSaveManyValidation(List<TimeLog> entities, List<TimeLog> oldEntities, SaveType saveType)

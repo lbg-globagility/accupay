@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeallowance")]
-    public class Allowance : BaseEmployeeDataEntity
+    public class Allowance : EmployeeDataEntity
     {
         public const string FREQUENCY_ONE_TIME = "One time";
 

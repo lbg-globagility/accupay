@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeofficialbusiness")]
-    public class OfficialBusiness : BaseEmployeeDataEntity, IPayrollEntity
+    public class OfficialBusiness : EmployeeDataEntity, IPayrollEntity
     {
         public const string StatusApproved = "Approved";
 
