@@ -190,7 +190,7 @@ namespace AccuPay.Data.Services
                                                     timeEntries: timeEntries,
                                                     allowances);
 
-            var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules);
+            var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules, bonuses: bonuses);
 
             ComputePayroll(resources,
                             userId: userId,
@@ -222,7 +222,8 @@ namespace AccuPay.Data.Services
                         allowanceItems: allowanceItems,
                         loanTransactions: loanTransactions,
                         timeEntries: timeEntries,
-                        leaves: leaves);
+                        leaves: leaves,
+                        bonuses: bonuses);
 
             return PaystubEmployeeResult.Success(employee, paystub);
         }
@@ -771,7 +772,8 @@ namespace AccuPay.Data.Services
 
         private List<LoanTransaction> CreateLoanTransactions(Paystub paystub,
                                                             PayPeriod payPeriod,
-                                                            IReadOnlyCollection<LoanSchedule> loanSchedules)
+                                                            IReadOnlyCollection<LoanSchedule> loanSchedules,
+                                                            IReadOnlyCollection<Bonus> bonuses)
         {
             var loanTransactions = new List<LoanTransaction>();
             var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
