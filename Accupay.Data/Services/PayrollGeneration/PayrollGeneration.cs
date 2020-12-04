@@ -336,6 +336,26 @@ namespace AccuPay.Data.Services
             }
         }
 
+        private static IEnumerable<LoanPaymentFromBonus> GetLoanPaymentFromBonuses(IReadOnlyCollection<Bonus> bonuses, LoanSchedule loan, PayPeriod payPeriod)
+        {
+            var bonusIds = bonuses
+                .Select(b => b.RowID.Value)
+                .ToArray();
+            if (!payPeriod.IsEndOfTheMonth)
+            {
+                bonusIds = bonuses
+                    .Where(b => b.AllowanceFrequency != Bonus.FREQUENCY_MONTHLY)
+                    .Select(b => b.RowID.Value)
+                    .ToArray();
+            }
+
+            var loanPaymentFromBonuses = loan
+                .LoanPaymentFromBonuses
+                .Where(l => l.LoanId == loan.RowID.Value)
+                .Where(l => bonusIds.Contains(l.BonusId));
+            return loanPaymentFromBonuses;
+        }
+
         private void ComputePayroll(PayrollResources resources,
                                     int userId,
                                     string currentSystemOwner,
