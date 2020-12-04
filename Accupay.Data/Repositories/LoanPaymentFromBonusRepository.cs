@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,22 +13,6 @@ namespace AccuPay.Data.Repositories
         public LoanPaymentFromBonusRepository(PayrollContext context)
         {
             _context = context;
-        }
-
-        public async Task<List<LoanPaymentFromBonus>> GetByLoanIdAsync(int loanId)
-        {
-            return await _context.LoanPaymentFromBonuses.
-                Include(l => l.LoanSchedule).
-                    ThenInclude(l => l.LoanType).
-                Include(l => l.Bonus).
-                Where(l => l.LoanId == loanId).
-                ToListAsync();
-        }
-
-        public async Task SaveAsync(LoanPaymentFromBonus loanPaymentFromBonus)
-        {
-            _context.LoanPaymentFromBonuses.Add(loanPaymentFromBonus);
-            await _context.SaveChangesAsync();
         }
 
         public async Task SaveManyAsync(List<LoanPaymentFromBonus> loanPaymentFromBonuses)
@@ -50,6 +34,14 @@ namespace AccuPay.Data.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<LoanPaymentFromBonus>> GetByBonusIdAsync(int bonusId)
+        {
+            return await _context.LoanPaymentFromBonuses
+                .Include(b => b.Items)
+                .Where(b => b.BonusId == bonusId)
+                .ToListAsync();
         }
     }
 }
