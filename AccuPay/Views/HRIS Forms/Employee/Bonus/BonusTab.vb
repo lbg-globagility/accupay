@@ -2,7 +2,9 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -27,6 +29,7 @@ Public Class BonusTab
     Private ReadOnly _productRepo As ProductRepository
 
     Private ReadOnly _userActivityRepo As UserActivityRepository
+    Private ReadOnly _featureListChecker As FeatureListChecker
 
     Public Sub New()
 
@@ -41,6 +44,7 @@ Public Class BonusTab
             _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         End If
 
+        _featureListChecker = FeatureListChecker.Instance
     End Sub
 
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -254,6 +258,8 @@ Public Class BonusTab
                         .LastUpdBy = z_User
                     End With
 
+                    Await ValidateUsedBonusForLoanPayment(oldBonus:=oldBonus)
+
                     Dim repo = MainServiceProvider.GetRequiredService(Of BonusRepository)
 
                     _currentBonus.LastUpdBy = z_User
@@ -274,6 +280,78 @@ Public Class BonusTab
         End If
         Return False
 
+    End Function
+
+    Private Async Function ValidateUsedBonusForLoanPayment(oldBonus As Bonus) As Task
+        If Not _featureListChecker.HasAccess(Feature.LoanDeductFromBonus) Then Return
+
+        Dim lbRepo = MainServiceProvider.GetRequiredService(Of LoanPaymentFromBonusRepository)
+        Dim loanPaymentFromBonuses = Await lbRepo.GetByBonusIdAsync(_currentBonus.RowID.Value)
+
+        Dim loansPaidByThisBonus = loanPaymentFromBonuses.Where(Function(b) b.Items.Any())
+        If loansPaidByThisBonus.Any() Then
+            SelectBonus(oldBonus)
+
+            Dim loanText = If(loansPaidByThisBonus.Count() > 1, "one or more Loans", "a Loan")
+            Throw New BusinessLogicException(
+                $"This Bonus has already used as payment for {loanText}, therefore this can't be changed.")
+        Else
+            Dim loanIds = loanPaymentFromBonuses.Select(Function(b) b.LoanId).ToArray()
+            Dim loanRepo = MainServiceProvider.GetRequiredService(Of LoanRepository)
+            Dim loans = (Await loanRepo.GetByEmployeeAsync(oldBonus.EmployeeID.Value)).
+                Where(Function(l) loanIds.Contains(l.RowID.Value)).
+                ToList()
+
+            'bonus effective date became out of period of loans
+            Dim loansIdsThatNotWithinBonusPeriod = loans.
+                Where(Function(l) l.DedEffectiveDateFrom > _currentBonus.EffectiveEndDate).
+                Select(Function(l) l.RowID.Value).
+                ToArray()
+            If loansIdsThatNotWithinBonusPeriod.Any() Then
+                Dim affectedLoanPaymentFromBonusList = loanPaymentFromBonuses.
+                    Where(Function(l) loansIdsThatNotWithinBonusPeriod.Contains(l.LoanId)).
+                    ToList()
+                affectedLoanPaymentFromBonusList.
+                    ForEach(Sub(l)
+                                'set to zero, so when save it'll be deleted
+                                l.AmountPayment = 0
+                            End Sub)
+                Await lbRepo.SaveManyAsync(affectedLoanPaymentFromBonusList)
+
+                'bonus amount became smaller
+            Else
+                Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+                Dim thisBonus = Await bonusRepo.GetByIdAsync(_currentBonus.RowID.Value)
+                thisBonus.BonusAmount = _currentBonus.BonusAmount
+                Dim models1 = loans.Select(Function(l) New LoanPaymentFromBonusModel(bonus:=thisBonus, loanSchedule:=l))
+
+                If models1.FirstOrDefault().InclusiveCurrentBonusAmount < 0 Then
+                    Dim loanschedIds = models1.
+                        Select(Function(b) b.LoanId).
+                        ToArray()
+
+                    If Not loanschedIds.Any() Then Return
+
+                    Dim loanscheds = loans.
+                        Where(Function(l) loanIds.Contains(l.RowID.Value)).
+                        ToList()
+                    If loanscheds.Any Then MessageBox.Show("Bonus Amount shrunk. Please update the affected Loan Payment(s).", "Affected Loan Payment from Bonus", MessageBoxButtons.OK, MessageBoxIcon.Asterisk)
+                    Dim newModels As New List(Of LoanPaymentFromBonusModel)
+                    For Each loan In loanscheds
+                        Dim form = New AssignBonusToLoanForm(loan) With {.ChangedBonus = thisBonus}
+                        If {DialogResult.OK, DialogResult.Cancel}.Contains(form.ShowDialog()) Then
+                            newModels.AddRange(form.GetModels())
+                        End If
+                    Next
+
+                    Dim stillHaveIssue = newModels.Where(Function(m) m.InclusiveCurrentBonusAmount < 0).Any()
+                    If stillHaveIssue Then
+                        SelectBonus(oldBonus)
+                        Throw New BusinessLogicException("Changes to Bonus did not saved. Bonus Amount shrunk resulting to Loan Payment(s) insufficient.")
+                    End If
+                End If
+            End If
+        End If
     End Function
 
     Private Function IsChanged(product As Product) As Boolean
