@@ -183,6 +183,7 @@ namespace AccuPay.Data.Repositories
             // this loan's balance should be reset and this will not apply to the current payroll.
             var loans = await _context.LoanSchedules
                 .Include(l => l.LoanPaymentFromBonuses)
+                    .ThenInclude(l => l.Items)
                 .Where(l => l.OrganizationID == organizationId)
                 .Where(l => l.DedEffectiveDateFrom <= payPeriod.PayToDate)
                 .Where(l => acceptedLoans.Contains(l.DeductionSchedule.Trim().ToUpper()))
