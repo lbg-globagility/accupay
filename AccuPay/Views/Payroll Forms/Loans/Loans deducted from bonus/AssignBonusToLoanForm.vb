@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -10,13 +11,9 @@ Public Class AssignBonusToLoanForm
 
     Private ReadOnly _loanSchedule As LoanSchedule
     Private ReadOnly _bonusRepository As BonusRepository
-    Private _loanPaymentFromBonusRepo As LoanPaymentFromBonusRepository
 
     Private _bonuses As IEnumerable(Of Bonus)
     Private _loanPaymentFromBonusModels As List(Of LoanPaymentFromBonusModel)
-    Private _newTotalBalanceLeft As Decimal
-    Private _newLoanPayPeriodLeft As Integer
-    Private _payAtLeastDeductionAmount As Boolean
     Public Property ChangedBonus As Bonus
 
     Public Sub New(loanSchedule As LoanSchedule)
@@ -26,9 +23,6 @@ Public Class AssignBonusToLoanForm
         _loanSchedule = loanSchedule
 
         _bonusRepository = MainServiceProvider.GetRequiredService(Of BonusRepository)
-
-        _newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft
-        _newLoanPayPeriodLeft = _loanSchedule.LoanPayPeriodLeft
 
         DisplayLoanScheduleDetails(loanSchedule)
     End Sub
@@ -45,9 +39,11 @@ Public Class AssignBonusToLoanForm
             employeeId:=_loanSchedule.EmployeeID.Value,
             timePeriod:=New TimePeriod(_loanSchedule.DedEffectiveDateFrom, _loanSchedule.DedEffectiveDateFrom.AddYears(1)))
 
+        Dim hasChangedBonus = ChangedBonus IsNot Nothing
+
         For Each bonus In _bonuses
             Dim paramBonus = bonus
-            If ChangedBonus IsNot Nothing AndAlso bonus.RowID = ChangedBonus.RowID Then
+            If hasChangedBonus AndAlso bonus.RowID = ChangedBonus.RowID Then
                 paramBonus = ChangedBonus
             End If
             _loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusModel(bonus:=paramBonus, loanSchedule:=_loanSchedule))
@@ -137,6 +133,8 @@ Public Class AssignBonusToLoanForm
         If {colIsFullAmount.Index, colAmountPayment.Index}.Contains(e.ColumnIndex) Then
             Dim model = GetModel(currentRow)
 
+            If model.IsExcessivePayment Then model.IsFullPayment = True
+
             currentRow.Cells(colAmountPayment.Index).ReadOnly = model.IsFullPayment
 
             UpdatedLoanDisplayDetails()
@@ -148,70 +146,73 @@ Public Class AssignBonusToLoanForm
     End Sub
 
     Private Sub UpdateSaveButton()
-        Dim models = GetModels()
-        Dim totalPayment = GetTotalPayment() 'models.Sum(Function(m) m.AmountPayment)
+        Dim changedCount = GetChangesCount()
+        Dim isValid = changedCount > 0
+
+        btnSave.Enabled = isValid
+        btnSave.Text = If(isValid, $"&Save ({changedCount})", "&Save")
+    End Sub
+
+    Private Function GetChangesCount() As Integer
+        If _loanSchedule.Status = LoanSchedule.STATUS_COMPLETE Then Return 0
+
+        Dim totalPayment = GetTotalPayment()
         Dim overPays = totalPayment > _loanSchedule.TotalBalanceLeft
         If overPays Then
-            btnSave.Enabled = False
-            btnSave.Text = "&Save"
-
             MessageBox.Show(
                 $"Total Payment Amount exceeds Loan Balance({_loanSchedule.TotalBalanceLeft.ToString("N")}).{Environment.NewLine}Please correct the Payment.",
                 "Payment exceed",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Stop)
+            Return 0
         Else
-            Dim hasChangedList = models.Where(Function(t) t.HasChanged)
+            Dim hasChangedList = GetModels().Where(Function(t) t.HasChanged)
             Dim hasChanges = hasChangedList.Any()
 
-            Dim remainder = totalPayment Mod _loanSchedule.DeductionAmount
-            _payAtLeastDeductionAmount = remainder = 0 OrElse totalPayment >= _loanSchedule.DeductionAmount
+            Dim payAtLeastDeductionAmount = totalPayment = 0 OrElse totalPayment >= _loanSchedule.DeductionAmount
 
-            Dim saveAbility = hasChanges AndAlso _payAtLeastDeductionAmount
-
-            btnSave.Enabled = saveAbility
-            btnSave.Text = If(saveAbility, $"&Save ({hasChangedList.Count()})", "&Save")
+            If hasChanges AndAlso payAtLeastDeductionAmount Then
+                Return hasChangedList.Count()
+            Else
+                Return 0
+            End If
         End If
-    End Sub
+    End Function
 
     Private Function GetTotalPayment() As Decimal
         Dim models = GetModels()
-        Return models.
-            Where(Function(m) m.IsEditable).
-            Sum(Function(m) m.AmountPayment)
+        Return models.Sum(Function(m) m.AmountPayment)
     End Function
 
     Private Sub UpdatedLoanDisplayDetails()
         Dim models = GetModels()
         If Not models.Any() Then Return
-        Dim totalAmountPayment As Decimal = GetTotalPayment() + _loanSchedule.DeductionAmount
+        Dim totalAmountPayment As Decimal = GetTotalPayment()
 
-        _newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft
-        _newLoanPayPeriodLeft = _loanSchedule.LoanPayPeriodLeft
+        Dim newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft
+        Dim newLoanPayPeriodLeft = _loanSchedule.LoanPayPeriodLeft
 
         If totalAmountPayment >= _loanSchedule.TotalBalanceLeft Then
-            _newTotalBalanceLeft = 0
-            _newLoanPayPeriodLeft = 0
-            'totalAmountPayment = _loanSchedule.TotalBalanceLeft
+            newTotalBalanceLeft = 0
+            newLoanPayPeriodLeft = 0
 
         ElseIf totalAmountPayment >= _loanSchedule.DeductionAmount _
             And totalAmountPayment < _loanSchedule.TotalBalanceLeft Then
-            _newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft - totalAmountPayment
+            newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft - totalAmountPayment
 
-            Dim payPeriodLeft = _newTotalBalanceLeft / _loanSchedule.DeductionAmount
+            Dim payPeriodLeft = newTotalBalanceLeft / _loanSchedule.DeductionAmount
             If payPeriodLeft > 0 And payPeriodLeft < 1 Then
-                _newLoanPayPeriodLeft = 1
+                newLoanPayPeriodLeft = 1
             ElseIf payPeriodLeft > -1 Then
-                _newLoanPayPeriodLeft = CInt(Math.Round(payPeriodLeft, 2))
+                newLoanPayPeriodLeft = CInt(Math.Round(payPeriodLeft, 2))
             Else
-                _newLoanPayPeriodLeft = 0
+                newLoanPayPeriodLeft = 0
             End If
         End If
 
         lblTotalAmountPayment.Text = totalAmountPayment.ToString("N")
-        lblTotalBalanceLeft.Text = _newTotalBalanceLeft.ToString("N")
-        lblLoanPayPeriodLeft.Text = _newLoanPayPeriodLeft.ToString()
-        Label7.Text = $"{_loanSchedule.DeductionAmount.ToString("N")} + {(totalAmountPayment - _loanSchedule.DeductionAmount).ToString("N")}"
+        lblTotalBalanceLeft.Text = newTotalBalanceLeft.ToString("N")
+        lblLoanPayPeriodLeft.Text = newLoanPayPeriodLeft.ToString()
     End Sub
 
     Private Sub dgvBonuses_DataSourceChanged(sender As Object, e As EventArgs) Handles dgvBonuses.DataSourceChanged
@@ -238,31 +239,20 @@ Public Class AssignBonusToLoanForm
     Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         dgvBonuses.EndEdit()
 
-        UpdateSaveButton()
-
-        Dim saveList = GetModels().
-            Where(Function(t) t.HasChanged).
-            Select(Function(t) t.Export()).
-            ToList()
-
-        If Not (btnSave.Enabled AndAlso saveList.Any()) Then
-
-            If Not _payAtLeastDeductionAmount Then
-                MessageBox.Show(
-                    $"Total Payment Amount should be at least {_loanSchedule.DeductionAmount.ToString("N")}.{Environment.NewLine}Please correct the Payment.",
-                    "Payment insufficient",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Stop)
-            End If
-
+        If GetChangesCount() = 0 Then
             Return
         End If
 
+        Dim saveList = GetModels().
+            Where(Function(t) t.HasChanged).
+            Select(Function(t) t.Export(organizationId:=z_OrganizationID, userId:=z_User)).
+            ToList()
+
         btnSave.Enabled = False
 
-        _loanPaymentFromBonusRepo = MainServiceProvider.GetRequiredService(Of LoanPaymentFromBonusRepository)
+        Dim loanPaymentFromBonusRepo = MainServiceProvider.GetRequiredService(Of LoanPaymentFromBonusRepository)
 
-        Await _loanPaymentFromBonusRepo.SaveManyAsync(saveList)
+        Await loanPaymentFromBonusRepo.SaveManyAsync(saveList)
 
         DialogResult = DialogResult.OK
         btnSave.Enabled = True

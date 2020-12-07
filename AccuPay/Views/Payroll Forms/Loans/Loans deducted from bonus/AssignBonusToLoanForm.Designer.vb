@@ -87,11 +87,11 @@ Partial Class AssignBonusToLoanForm
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.lblLoanPayPeriodLeft = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.lblTotalBalanceLeft = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.lblTotalAmountPayment = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -99,8 +99,6 @@ Partial Class AssignBonusToLoanForm
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
         Me.DetailsTabControl.SuspendLayout()
         Me.tbpDetails.SuspendLayout()
         Me.LoanDetailsTabLayout.SuspendLayout()
@@ -631,7 +629,7 @@ Partial Class AssignBonusToLoanForm
         DataGridViewCellStyle2.Format = "N2"
         DataGridViewCellStyle2.NullValue = Nothing
         Me.Column1.DefaultCellStyle = DataGridViewCellStyle2
-        Me.Column1.HeaderText = "Sufficient Bonus Amount"
+        Me.Column1.HeaderText = "Bonus Balance"
         Me.Column1.Name = "Column1"
         '
         'Frequency
@@ -747,19 +745,16 @@ Partial Class AssignBonusToLoanForm
         '
         'TableLayoutPanel1
         '
-        Me.TableLayoutPanel1.ColumnCount = 4
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.3343!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.33216!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.33216!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.00137!))
-        Me.TableLayoutPanel1.Controls.Add(Me.lblLoanPayPeriodLeft, 3, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label6, 3, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label9, 2, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.lblTotalBalanceLeft, 2, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label8, 1, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.lblTotalAmountPayment, 1, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label5, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label7, 0, 1)
+        Me.TableLayoutPanel1.ColumnCount = 3
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel1.Controls.Add(Me.lblLoanPayPeriodLeft, 2, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label6, 2, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label9, 1, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblTotalBalanceLeft, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label8, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblTotalAmountPayment, 0, 1)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
@@ -769,63 +764,63 @@ Partial Class AssignBonusToLoanForm
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(753, 37)
         Me.TableLayoutPanel1.TabIndex = 0
         '
-        'Label9
-        '
-        Me.Label9.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label9.Location = New System.Drawing.Point(444, 0)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(184, 18)
-        Me.Label9.TabIndex = 4
-        Me.Label9.Text = "New Total Balance left"
-        Me.Label9.TextAlign = System.Drawing.ContentAlignment.BottomRight
-        '
-        'Label8
-        '
-        Me.Label8.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label8.Location = New System.Drawing.Point(254, 0)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(184, 18)
-        Me.Label8.TabIndex = 3
-        Me.Label8.Text = "Total Payment"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.BottomRight
-        '
-        'Label6
-        '
-        Me.Label6.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label6.Location = New System.Drawing.Point(634, 0)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(116, 18)
-        Me.Label6.TabIndex = 2
-        Me.Label6.Text = "No. of Pay Period left"
-        Me.Label6.TextAlign = System.Drawing.ContentAlignment.BottomRight
-        '
         'lblLoanPayPeriodLeft
         '
         Me.lblLoanPayPeriodLeft.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblLoanPayPeriodLeft.Location = New System.Drawing.Point(634, 18)
+        Me.lblLoanPayPeriodLeft.Location = New System.Drawing.Point(503, 18)
         Me.lblLoanPayPeriodLeft.Name = "lblLoanPayPeriodLeft"
-        Me.lblLoanPayPeriodLeft.Size = New System.Drawing.Size(116, 19)
+        Me.lblLoanPayPeriodLeft.Size = New System.Drawing.Size(247, 19)
         Me.lblLoanPayPeriodLeft.TabIndex = 8
         Me.lblLoanPayPeriodLeft.Text = "Label5"
         Me.lblLoanPayPeriodLeft.TextAlign = System.Drawing.ContentAlignment.BottomRight
         '
+        'Label6
+        '
+        Me.Label6.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label6.Location = New System.Drawing.Point(503, 0)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(247, 18)
+        Me.Label6.TabIndex = 2
+        Me.Label6.Text = "No. of Pay Period left"
+        Me.Label6.TextAlign = System.Drawing.ContentAlignment.BottomRight
+        '
+        'Label9
+        '
+        Me.Label9.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label9.Location = New System.Drawing.Point(253, 0)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(244, 18)
+        Me.Label9.TabIndex = 4
+        Me.Label9.Text = "New Total Balance left"
+        Me.Label9.TextAlign = System.Drawing.ContentAlignment.BottomRight
+        '
         'lblTotalBalanceLeft
         '
         Me.lblTotalBalanceLeft.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblTotalBalanceLeft.Location = New System.Drawing.Point(444, 18)
+        Me.lblTotalBalanceLeft.Location = New System.Drawing.Point(253, 18)
         Me.lblTotalBalanceLeft.Name = "lblTotalBalanceLeft"
-        Me.lblTotalBalanceLeft.Size = New System.Drawing.Size(184, 19)
+        Me.lblTotalBalanceLeft.Size = New System.Drawing.Size(244, 19)
         Me.lblTotalBalanceLeft.TabIndex = 9
         Me.lblTotalBalanceLeft.Text = "Label11"
         Me.lblTotalBalanceLeft.TextAlign = System.Drawing.ContentAlignment.BottomRight
+        '
+        'Label8
+        '
+        Me.Label8.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label8.Location = New System.Drawing.Point(3, 0)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(244, 18)
+        Me.Label8.TabIndex = 3
+        Me.Label8.Text = "Total Payment"
+        Me.Label8.TextAlign = System.Drawing.ContentAlignment.BottomRight
         '
         'lblTotalAmountPayment
         '
         Me.lblTotalAmountPayment.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lblTotalAmountPayment.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalAmountPayment.Location = New System.Drawing.Point(254, 18)
+        Me.lblTotalAmountPayment.Location = New System.Drawing.Point(3, 18)
         Me.lblTotalAmountPayment.Name = "lblTotalAmountPayment"
-        Me.lblTotalAmountPayment.Size = New System.Drawing.Size(184, 19)
+        Me.lblTotalAmountPayment.Size = New System.Drawing.Size(244, 19)
         Me.lblTotalAmountPayment.TabIndex = 10
         Me.lblTotalAmountPayment.Text = "Label12"
         Me.lblTotalAmountPayment.TextAlign = System.Drawing.ContentAlignment.BottomRight
@@ -875,26 +870,6 @@ Partial Class AssignBonusToLoanForm
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "AmountPayment"
         Me.DataGridViewTextBoxColumn5.HeaderText = "Column2"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        '
-        'Label5
-        '
-        Me.Label5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label5.Location = New System.Drawing.Point(3, 0)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(245, 18)
-        Me.Label5.TabIndex = 11
-        Me.Label5.Text = "Deduction Amount + Payment from Bonus"
-        Me.Label5.TextAlign = System.Drawing.ContentAlignment.BottomRight
-        '
-        'Label7
-        '
-        Me.Label7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label7.Location = New System.Drawing.Point(3, 18)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(245, 19)
-        Me.Label7.TabIndex = 12
-        Me.Label7.Text = "Label7"
-        Me.Label7.TextAlign = System.Drawing.ContentAlignment.BottomRight
         '
         'AssignBonusToLoanForm
         '
@@ -1003,6 +978,4 @@ Partial Class AssignBonusToLoanForm
     Friend WithEvents colIsFullAmount As DataGridViewCheckBoxColumn
     Friend WithEvents colAmountPayment As DevComponents.DotNetBar.Controls.DataGridViewDoubleInputColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
-    Friend WithEvents Label5 As Label
-    Friend WithEvents Label7 As Label
 End Class
