@@ -70,6 +70,11 @@ namespace AccuPay.Data.Services
             return oldEntities;
         }
 
+        protected T GetOldEntity(ICollection<T> oldEntities, T entity)
+        {
+            return oldEntities.FirstOrDefault(x => x.RowID == entity?.RowID);
+        }
+
         #endregion Protected Methods
 
         #region Public Virtual Methods
@@ -253,7 +258,7 @@ namespace AccuPay.Data.Services
             {
                 foreach (var entity in added)
                 {
-                    var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity?.RowID);
+                    T oldEntity = GetOldEntity(oldEntities, entity);
                     await SanitizeEntity(entity, oldEntity, currentlyLoggedInUserId);
                 }
             }
@@ -262,7 +267,7 @@ namespace AccuPay.Data.Services
             {
                 foreach (var entity in updated)
                 {
-                    var oldEntity = oldEntities.FirstOrDefault(x => x.RowID == entity?.RowID);
+                    var oldEntity = GetOldEntity(oldEntities, entity);
 
                     if (oldEntity == null)
                         throw new BusinessLogicException($"One of the {EntityNamePlural} no longer exists.");

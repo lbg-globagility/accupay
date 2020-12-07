@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
@@ -60,11 +61,6 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected virtual Task RecordUpdate(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities)
-        {
-            return Task.CompletedTask;
-        }
-
         protected virtual async Task PostDeleteManyAction(IReadOnlyCollection<T> entities, int currentlyLoggedInUserId)
         {
             foreach (var item in entities)
@@ -81,16 +77,15 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected virtual async Task PostUpdateManyAction(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities)
+        protected virtual async Task PostUpdateManyAction(IReadOnlyCollection<T> updatedEntities, IReadOnlyCollection<T> oldEntities)
         {
-            // TODO: create an equality comparer Interface for the entities to implement
-            // or override the Equals method of the entities to use here to determine
-            // the oldEntity from the oldEntities list.
-            // If the above TODO will be implemented, PostUpdateManyAction will loop through
-            // the entities list just like in PostDeleteManyAction and PostInsertManyAction
-            // and there will be no need of a virtual
-            // RecordUpdate(IReadOnlyCollection<T> entities, IReadOnlyCollection<T> oldEntities)
-            await RecordUpdate(entities, oldEntities);
+            foreach (var updatedEntity in updatedEntities)
+            {
+                var oldEntity = GetOldEntity(oldEntities.ToList(), updatedEntity);
+                if (oldEntity == null) continue;
+
+                await RecordUpdate(updatedEntity, oldEntity);
+            }
         }
 
         #endregion Virtual

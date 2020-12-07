@@ -129,17 +129,6 @@ namespace AccuPay.Data.Services
             overtime.UpdateEndDate();
         }
 
-        protected override async Task RecordUpdate(IReadOnlyCollection<Overtime> updatedShifts, IReadOnlyCollection<Overtime> oldRecords)
-        {
-            foreach (var newValue in updatedShifts)
-            {
-                var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
-                if (oldValue == null) continue;
-
-                await RecordUpdate(newValue, oldValue);
-            }
-        }
-
         protected override async Task RecordUpdate(Overtime newValue, Overtime oldValue)
         {
             var changes = new List<UserActivityItem>();

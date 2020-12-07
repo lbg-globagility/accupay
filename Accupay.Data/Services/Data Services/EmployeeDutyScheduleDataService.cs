@@ -121,17 +121,6 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task RecordUpdate(IReadOnlyCollection<EmployeeDutySchedule> updatedShifts, IReadOnlyCollection<EmployeeDutySchedule> oldRecords)
-        {
-            foreach (var newValue in updatedShifts)
-            {
-                var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
-                if (oldValue == null) continue;
-
-                await RecordUpdate(newValue, oldValue);
-            }
-        }
-
         protected override async Task RecordUpdate(EmployeeDutySchedule newValue, EmployeeDutySchedule oldValue)
         {
             List<UserActivityItem> changes = new List<UserActivityItem>();
