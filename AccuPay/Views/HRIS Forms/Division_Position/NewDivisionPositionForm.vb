@@ -766,10 +766,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function SavePosition(messageTitle As String) As Task
 
-        Me._currentPosition.LastUpdBy = z_User
-
         Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
-        Await positionService.SaveAsync(Me._currentPosition)
+        Await positionService.SaveAsync(Me._currentPosition, z_User)
 
         RecordUpdatePosition()
 
@@ -842,7 +840,7 @@ Public Class NewDivisionPositionForm
         Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
         Await positionService.DeleteAsync(
             positionId:=Me._currentPosition.RowID.Value,
-            changedByUserId:=z_User)
+            currentlyLoggedInUserId:=z_User)
 
         Await RefreshTreeView()
 
@@ -857,7 +855,7 @@ Public Class NewDivisionPositionForm
         Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
         Await service.DeleteAsync(
             divisionId:=Me._currentDivision.RowID.Value,
-            changedByUserId:=z_User)
+            currentlyLoggedInUserId:=z_User)
 
         Await RefreshTreeView()
 
@@ -1178,10 +1176,9 @@ Public Class NewDivisionPositionForm
 
         Dim division = Me._currentDivision.CloneJson()
         division.ParentDivision = Nothing
-        division.LastUpdBy = z_User
 
         Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-        Await divisionRepository.SaveAsync(division)
+        Await divisionRepository.SaveAsync(division, z_User)
 
         If isRoot Then
             RecordUpdateDivisionLocation()

@@ -51,10 +51,9 @@ Public Class AddPositionForm
     End Function
 
     Private Sub ResetForm()
-
-        Me._newPosition = New Position
-        Me._newPosition.OrganizationID = z_OrganizationID
-        Me._newPosition.CreatedBy = z_User
+        Me._newPosition = New Position With {
+            .OrganizationID = z_OrganizationID
+        }
 
         Dim allChildDivisions = _divisions.Where(Function(d) d.IsRoot = False).ToList()
 
@@ -110,7 +109,7 @@ Public Class AddPositionForm
     Private Async Function SavePosition(sender As Object) As Task
 
         Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
-        Await positionService.SaveAsync(Me._newPosition)
+        Await positionService.SaveAsync(Me._newPosition, z_User)
 
         Me.LastPositionAdded = Me._newPosition
 

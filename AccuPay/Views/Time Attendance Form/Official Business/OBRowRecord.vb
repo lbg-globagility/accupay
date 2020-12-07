@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
@@ -35,7 +35,6 @@ Public Class OBRowRecord
         Dim newOfficialBusiness = New OfficialBusiness With {
             .RowID = Nothing,
             .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
             .EmployeeID = employeeId,
             .StartDate = StartDate.Value,
             .StartTime = StartTime,

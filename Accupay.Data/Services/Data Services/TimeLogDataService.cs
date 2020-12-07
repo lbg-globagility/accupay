@@ -57,21 +57,18 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(TimeLog log) =>
             $" with date '{log.LogDate.ToShortDateString()}'";
 
-        protected override async Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog)
+        protected override async Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: timeLog, oldEntity: oldTimeLog);
+            await base.SanitizeEntity(
+                entity: timeLog,
+                oldEntity: oldTimeLog,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (timeLog.LogDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
             if (timeLog.TimeIn == null && timeLog.TimeOut == null)
                 throw new BusinessLogicException("Time-in and Time-out cannot be both empty.");
-
-            if (timeLog.IsNewEntity && timeLog.CreatedBy == null)
-                throw new BusinessLogicException("Created By is required.");
-
-            if (!timeLog.IsNewEntity && timeLog.LastUpdBy == null)
-                throw new BusinessLogicException("Last Updated By is required.");
 
             if (timeLog.TimeIn != null && timeLog.TimeStampIn == null)
             {
@@ -112,12 +109,12 @@ namespace AccuPay.Data.Services
         protected override async Task PostUpdateManyAction(IReadOnlyCollection<TimeLog> entities, IReadOnlyCollection<TimeLog> oldEntities)
         {
             var branches = await _branchRepository.GetAllAsync();
-            RecordUpdate(entities, oldEntities, branches.ToList());
+            await RecordUpdate(entities, oldEntities, branches.ToList());
         }
 
         #endregion Overrides
 
-        private void RecordUpdate(IReadOnlyCollection<TimeLog> updatedTimeLogs, IReadOnlyCollection<TimeLog> oldRecords, IReadOnlyCollection<Branch> branches)
+        private async Task RecordUpdate(IReadOnlyCollection<TimeLog> updatedTimeLogs, IReadOnlyCollection<TimeLog> oldRecords, IReadOnlyCollection<Branch> branches)
         {
             foreach (var newValue in updatedTimeLogs)
             {
@@ -127,11 +124,11 @@ namespace AccuPay.Data.Services
                     .FirstOrDefault();
                 if (oldValue == null) continue;
 
-                RecordUpdate(branches, newValue, oldValue);
+                await RecordUpdate(branches, newValue, oldValue);
             }
         }
 
-        private void RecordUpdate(IReadOnlyCollection<Branch> branches, TimeLog newValue, TimeLog oldValue)
+        private async Task RecordUpdate(IReadOnlyCollection<Branch> branches, TimeLog newValue, TimeLog oldValue)
         {
             List<UserActivityItem> changes = new List<UserActivityItem>();
             var entityName = UserActivityName.ToLower();
@@ -194,7 +191,7 @@ namespace AccuPay.Data.Services
 
             if (changes.Any())
             {
-                _userActivityRepository.CreateRecord(
+                await _userActivityRepository.CreateRecordAsync(
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,

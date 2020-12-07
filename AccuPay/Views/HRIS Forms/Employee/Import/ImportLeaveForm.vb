@@ -218,22 +218,18 @@ Public Class ImportLeaveForm
                         .StartDate = model.StartDate.Value
                         .EndDate = model.EndDate
                         .EndTime = model.EndTime
-                        .LastUpd = Now
-                        .LastUpdBy = z_User
                         .IsNew = False
                     End With
 
                     leaves.Add(leave)
                 Else
                     Dim newLeave = model.ToLeave()
-                    newLeave.CreatedBy = z_User
                     leaves.Add(newLeave)
                 End If
             Next
         Else
             For Each model In _okModels
                 Dim newLeave = model.ToLeave()
-                newLeave.CreatedBy = z_User
                 leaves.Add(model.ToLeave())
             Next
 
@@ -430,8 +426,6 @@ Public Class ImportLeaveForm
                 .LeaveType = LeaveType,
                 .Reason = Reason,
                 .Comments = Comment,
-                .CreatedBy = z_User,
-                .LastUpdBy = z_User,
                 .IsNew = isNew
             }
         End Function

@@ -24,7 +24,7 @@ namespace AccuPay.Data.Entities
 
         public int? OrderBy { get; set; }
 
-        public static ListOfValue NewPolicy(string value, string lic, string type, int? organizationId, int currentlyLoggedInUserId, int? orderBy = null)
+        public static ListOfValue NewPolicy(string value, string lic, string type, int? organizationId)
         {
             return new ListOfValue()
             {
@@ -33,10 +33,6 @@ namespace AccuPay.Data.Entities
                 Type = type,
                 Active = ActiveYesOption,
                 OrganizationID = organizationId,
-                CreatedBy = currentlyLoggedInUserId,
-                LastUpdBy = currentlyLoggedInUserId,
-                Created = DateTime.Now,
-                LastUpd = DateTime.Now
             };
         }
     }

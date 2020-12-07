@@ -45,25 +45,24 @@ namespace AccuPay.Data.Services
             await PostDeleteManyAction(overtimes.ToList(), changedByUserId);
         }
 
-        public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int changedByUserId)
+        public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
             List<Overtime> overtimes = new List<Overtime>();
 
             foreach (var ot in validRecords)
             {
-                overtimes.Add(new Overtime()
-                {
-                    CreatedBy = changedByUserId,
-                    EmployeeID = ot.EmployeeID,
-                    OrganizationID = organizationId,
-                    OTEndTimeFull = ot.EndTime.Value,
-                    OTStartDate = ot.StartDate.Value,
-                    OTStartTimeFull = ot.StartTime.Value,
-                    Status = Overtime.StatusPending
-                });
+                var overtime = Overtime.NewOvertime(
+                    organizationId: organizationId,
+                    employeeId: ot.EmployeeID.Value,
+                    startDate: ot.StartDate.Value,
+                    startTime: ot.StartTime.Value.TimeOfDay,
+                    endTime: ot.EndTime.Value.TimeOfDay,
+                    status: Overtime.StatusPending);
+
+                overtimes.Add(overtime);
             }
 
-            await _overtimeRepository.SaveManyAsync(overtimes);
+            await SaveManyAsync(overtimes, currentlyLoggedInUserId);
 
             return overtimes;
         }
@@ -76,7 +75,7 @@ namespace AccuPay.Data.Services
             var timePeriod = new TimePeriod(modifiedShifts.Min(s => s.Date), modifiedShifts.Max(s => s.Date));
 
             (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) =
-                CreateOvertimesByShift(modifiedShifts, organizationId, changedByUserId, employeeIds, timePeriod);
+                CreateOvertimesByShift(modifiedShifts, organizationId, employeeIds, timePeriod);
 
             if (saveOvertimes.Any())
             {
@@ -94,9 +93,12 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(Overtime overtime) =>
             $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
 
-        protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime)
+        protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: overtime, oldEntity: oldOvertime);
+            await base.SanitizeEntity(
+                entity: overtime,
+                oldEntity: oldOvertime,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (overtime.OTStartDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
@@ -114,19 +116,15 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Status is not valid.");
             }
 
-            if (overtime.IsNewEntity && overtime.CreatedBy == null)
-                throw new BusinessLogicException("Created By is required.");
-
-            if (!overtime.IsNewEntity && overtime.LastUpdBy == null)
-                throw new BusinessLogicException("Last Updated By is required.");
-
             if (overtime.OTStartTime.HasValue)
                 overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
 
             overtime.OTEndTime = overtime.OTEndTime.Value.StripSeconds();
 
             if (overtime.OTStartTime == overtime.OTEndTime)
+            {
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
+            }
 
             overtime.UpdateEndDate();
         }
@@ -142,7 +140,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override Task RecordUpdate(Overtime newValue, Overtime oldValue)
+        protected override async Task RecordUpdate(Overtime newValue, Overtime oldValue)
         {
             var changes = new List<UserActivityItem>();
             var entityName = UserActivityName.ToLower();
@@ -194,15 +192,13 @@ namespace AccuPay.Data.Services
 
             if (changes.Any())
             {
-                _userActivityRepository.CreateRecord(
+                await _userActivityRepository.CreateRecordAsync(
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
                     UserActivityRepository.RecordTypeEdit,
                     changes);
             }
-
-            return Task.CompletedTask;
         }
 
         #endregion Overrides
@@ -212,7 +208,6 @@ namespace AccuPay.Data.Services
         private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) CreateOvertimesByShift(
             IEnumerable<IShift> shiftSchedSaveList,
             int organizationId,
-            int userId,
             List<int> employeeIds,
             TimePeriod timePeriod)
         {
@@ -234,7 +229,7 @@ namespace AccuPay.Data.Services
                 var overtime = overtimesThisDay.FirstOrDefault();
                 if (overtime == null)
                 {
-                    overtime = Overtime.NewOvertime(shiftModel, organizationId, userId);
+                    overtime = Overtime.NewOvertime(shiftModel, organizationId);
                 }
                 else
                 {
@@ -263,8 +258,6 @@ namespace AccuPay.Data.Services
                 {
                     if (overtime.RowID.HasValue)
                         overtimeId = overtime.RowID.Value;
-
-                    overtime.LastUpdBy = userId;
 
                     saveOvertimes.Add(overtime);
                 }

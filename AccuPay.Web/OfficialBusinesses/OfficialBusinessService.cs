@@ -50,12 +50,11 @@ namespace AccuPay.Web.OfficialBusinesses
             var officialBusiness = new OfficialBusiness()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.UserId,
                 OrganizationID = organizationId,
             };
             ApplyChanges(dto, officialBusiness);
 
-            await _dataService.SaveAsync(officialBusiness);
+            await _dataService.SaveAsync(officialBusiness, _currentUser.UserId);
 
             return ConvertToDto(officialBusiness);
         }
@@ -65,7 +64,6 @@ namespace AccuPay.Web.OfficialBusinesses
             var officialBusiness = new OfficialBusiness()
             {
                 EmployeeID = _currentUser.EmployeeId,
-                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId
             };
 
@@ -74,7 +72,7 @@ namespace AccuPay.Web.OfficialBusinesses
             officialBusiness.EndTime = dto.EndTime?.TimeOfDay;
             officialBusiness.Reason = dto.Reason;
 
-            await _repository.CreateAsync(officialBusiness);
+            await _dataService.SaveAsync(officialBusiness, _currentUser.UserId);
 
             return ConvertToDto(officialBusiness);
         }
@@ -84,11 +82,9 @@ namespace AccuPay.Web.OfficialBusinesses
             var officialBusiness = await _repository.GetByIdAsync(id);
             if (officialBusiness == null) return null;
 
-            officialBusiness.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, officialBusiness);
 
-            await _dataService.SaveAsync(officialBusiness);
+            await _dataService.SaveAsync(officialBusiness, _currentUser.UserId);
 
             return ConvertToDto(officialBusiness);
         }
@@ -97,7 +93,7 @@ namespace AccuPay.Web.OfficialBusinesses
         {
             await _dataService.DeleteAsync(
                 id: id,
-                changedByUserId: _currentUser.UserId);
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         public List<string> GetStatusList()
@@ -119,7 +115,10 @@ namespace AccuPay.Web.OfficialBusinesses
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            await _dataService.BatchApply(
+                parsedResult.ValidRecords,
+                organizationId: _currentUser.OrganizationId,
+                currentlyLoggedInUserId: userId);
 
             return parsedResult;
         }

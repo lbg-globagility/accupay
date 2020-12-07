@@ -51,25 +51,8 @@ namespace AccuPay.Data.Services
 
         #region SaveManyAsync
 
-        public override async Task SaveAsync(Leave leave)
+        public override async Task SaveAsync(Leave leave, int changedByUserId)
         {
-            int changedByUserId;
-
-            if (leave.IsNewEntity)
-            {
-                if (leave.CreatedBy == null)
-                    throw new BusinessLogicException("Created By is required.");
-
-                changedByUserId = leave.CreatedBy.Value;
-            }
-            else
-            {
-                if (leave.LastUpdBy == null)
-                    throw new BusinessLogicException("Last Updated By is required.");
-
-                changedByUserId = leave.LastUpdBy.Value;
-            }
-
             await SaveManyAsync(new List<Leave> { leave }, changedByUserId);
 
             await RecordAdd(leave);
@@ -89,7 +72,7 @@ namespace AccuPay.Data.Services
             foreach (var leave in leaves)
             {
                 var oldLeave = oldLeaves.Where(x => x.RowID == leave.RowID).FirstOrDefault();
-                await SanitizeEntity(leave, oldLeave);
+                await SanitizeEntity(leave, oldLeave, changedByUserId);
             }
 
             await ValidateDates(leaves, oldLeaves.ToList(), organizationId);
@@ -180,11 +163,6 @@ namespace AccuPay.Data.Services
                     foreach (var leave in leaves)
                     {
                         leave.RowID = oldRowIds[index];
-
-                        if (leave.RowID == null)
-                        {
-                            leave.Created = DateTime.MinValue;
-                        }
 
                         index++;
                     }
@@ -530,9 +508,12 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(Leave leave) =>
             $" with date '{leave.StartDate.ToShortDateString()}'";
 
-        protected override async Task SanitizeEntity(Leave leave, Leave oldLeave)
+        protected override async Task SanitizeEntity(Leave leave, Leave oldLeave, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: leave, oldEntity: oldLeave);
+            await base.SanitizeEntity(
+                entity: leave,
+                oldEntity: oldLeave,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (leave.StartDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");

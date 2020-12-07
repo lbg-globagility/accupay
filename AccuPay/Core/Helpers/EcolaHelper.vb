@@ -17,9 +17,8 @@ Namespace AccuPay.Desktop.Helpers
             Dim ecolaAllowance = Await repository.GetByIdAsync(ecolaAllowanceId)
 
             ecolaAllowance.Amount = ecolaAmount
-            ecolaAllowance.LastUpdBy = z_User
 
-            Await dataService.SaveAsync(ecolaAllowance)
+            Await dataService.SaveAsync(ecolaAllowance, z_User)
 
         End Function
 

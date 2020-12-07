@@ -7,7 +7,6 @@ using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -66,12 +65,11 @@ namespace AccuPay.Web.Salaries.Services
             {
                 OrganizationID = _currentUser.OrganizationId,
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.UserId
             };
 
             ApplyChanges(dto, salary);
 
-            await _dataService.SaveAsync(salary);
+            await _dataService.SaveAsync(salary, _currentUser.UserId);
 
             return ConvertToDto(salary);
         }
@@ -81,11 +79,9 @@ namespace AccuPay.Web.Salaries.Services
             var salary = await _repository.GetByIdAsync(id);
             if (salary == null) return null;
 
-            salary.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, salary);
 
-            await _dataService.SaveAsync(salary);
+            await _dataService.SaveAsync(salary, _currentUser.UserId);
 
             return ConvertToDto(salary);
         }
@@ -94,7 +90,7 @@ namespace AccuPay.Web.Salaries.Services
         {
             await _dataService.DeleteAsync(
                 id: id,
-                changedByUserId: _currentUser.UserId);
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         private static void ApplyChanges(CrudSalaryDto dto, Salary salary)
@@ -146,7 +142,10 @@ namespace AccuPay.Web.Salaries.Services
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            await _dataService.BatchApply(
+                parsedResult.ValidRecords,
+                organizationId: _currentUser.OrganizationId,
+                currentlyLoggedInUserId: userId);
 
             return parsedResult;
         }

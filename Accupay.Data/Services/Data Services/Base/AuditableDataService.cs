@@ -28,12 +28,11 @@ namespace AccuPay.Data.Services
             _userActivityRepository = userActivityRepository;
         }
 
-        protected override Task SanitizeEntity(T entity, T oldEntity)
+        protected override async Task SanitizeEntity(T entity, T oldEntity, int currentlyLoggedInUserId)
         {
-            base.SanitizeEntity(entity, oldEntity);
+            await base.SanitizeEntity(entity, oldEntity, currentlyLoggedInUserId);
 
-            // TODO: validate CreatedBy and LastUpdBy
-            return Task.CompletedTask;
+            entity.AuditUser(currentlyLoggedInUserId);
         }
 
         #region Abstract
@@ -46,7 +45,7 @@ namespace AccuPay.Data.Services
 
         #region Virtual
 
-        protected virtual Task RecordDelete(T entity, int changedByUserId)
+        protected virtual Task RecordDelete(T entity, int currentlyLoggedInUserId)
         {
             return Task.CompletedTask;
         }
@@ -66,11 +65,11 @@ namespace AccuPay.Data.Services
             return Task.CompletedTask;
         }
 
-        protected virtual async Task PostDeleteManyAction(IReadOnlyCollection<T> entities, int changedByUserId)
+        protected virtual async Task PostDeleteManyAction(IReadOnlyCollection<T> entities, int currentlyLoggedInUserId)
         {
             foreach (var item in entities)
             {
-                await RecordDelete(item, changedByUserId);
+                await RecordDelete(item, currentlyLoggedInUserId);
             }
         }
 
@@ -98,9 +97,9 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override async Task PostDeleteAction(T entity, int changedByUserId)
+        protected override async Task PostDeleteAction(T entity, int currentlyLoggedInUserId)
         {
-            await RecordDelete(entity, changedByUserId);
+            await RecordDelete(entity, currentlyLoggedInUserId);
         }
 
         protected override async Task PostSaveAction(T entity, T oldEntity, SaveType saveType)
@@ -119,7 +118,7 @@ namespace AccuPay.Data.Services
             IReadOnlyCollection<T> entities,
             IReadOnlyCollection<T> oldEntities,
             SaveType saveType,
-            int changedByUserId)
+            int currentlyLoggedInUserId)
         {
             switch (saveType)
             {
@@ -136,7 +135,7 @@ namespace AccuPay.Data.Services
 
                 case SaveType.Delete:
 
-                    await PostDeleteManyAction(entities, changedByUserId);
+                    await PostDeleteManyAction(entities, currentlyLoggedInUserId);
                     break;
 
                 default:

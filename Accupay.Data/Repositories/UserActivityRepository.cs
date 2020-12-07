@@ -103,29 +103,8 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<UserActivityItem>(userActivities, count, options.PageSize);
         }
 
-        public void RecordAdd(
-            int userId,
-            string entityName,
-            int entityId,
-            int organizationId,
-            string suffixIdentifier = "",
-            int? changedEmployeeId = null,
-            int? changedUserId = null)
-        {
-            RecordSimple(
-                userId,
-                entityName,
-                "Created a new",
-                suffixIdentifier,
-                entityId: entityId,
-                organizationId: organizationId,
-                RecordTypeAdd,
-                changedEmployeeId: changedEmployeeId,
-                changedByUserId: changedUserId);
-        }
-
         public async Task RecordAddAsync(
-            int userId,
+            int currentlyLoggedInUserId,
             string entityName,
             int entityId,
             int organizationId,
@@ -134,7 +113,7 @@ namespace AccuPay.Data.Repositories
             int? changedUserId = null)
         {
             await RecordSimpleAsync(
-                userId,
+                currentlyLoggedInUserId,
                 entityName,
                 "Created a new",
                 suffixIdentifier,
@@ -146,7 +125,7 @@ namespace AccuPay.Data.Repositories
         }
 
         public async Task RecordDeleteAsync(
-            int userId,
+            int currentlyLoggedInUserId,
             string entityName,
             int entityId,
             int organizationId,
@@ -155,7 +134,7 @@ namespace AccuPay.Data.Repositories
             int? changedUserId = null)
         {
             await RecordSimpleAsync(
-                userId,
+                currentlyLoggedInUserId,
                 entityName,
                 $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}",
                 suffixIdentifier,
@@ -167,31 +146,31 @@ namespace AccuPay.Data.Repositories
         }
 
         public void CreateRecord(
-            int userId,
+            int currentlyLoggedInUserId,
             string entityName,
             int organizationId,
             string recordType,
             List<UserActivityItem> activityItems = null)
         {
-            CreateUserActivityEntity(userId, entityName, organizationId, recordType, activityItems);
+            CreateUserActivityEntity(currentlyLoggedInUserId, entityName, organizationId, recordType, activityItems);
             _context.SaveChanges();
         }
 
         public async Task CreateRecordAsync(
-            int userId,
+            int currentlyLoggedInUserId,
             string entityName,
             int organizationId,
             string recordType,
             List<UserActivityItem> activityItems = null)
         {
-            CreateUserActivityEntity(userId, entityName, organizationId, recordType, activityItems);
+            CreateUserActivityEntity(currentlyLoggedInUserId, entityName, organizationId, recordType, activityItems);
             await _context.SaveChangesAsync();
         }
 
         #region Private Methods
 
         private void CreateUserActivityEntity(
-            int userId,
+            int currentlyLoggedInUserId,
             string entityName,
             int organizationId,
             string recordType,
@@ -200,7 +179,7 @@ namespace AccuPay.Data.Repositories
             _context.UserActivities.Add(new UserActivity()
             {
                 Created = DateTime.Now,
-                UserId = userId,
+                UserId = currentlyLoggedInUserId,
                 EntityName = entityName.ToUpper(),
                 ActivityItems = activityItems,
                 OrganizationID = organizationId,
@@ -208,32 +187,8 @@ namespace AccuPay.Data.Repositories
             });
         }
 
-        private void RecordSimple(
-            int userId,
-            string entityName,
-            string simpleDescription,
-            string suffixIdentifier,
-            int entityId,
-            int organizationId,
-            string recordType,
-            int? changedEmployeeId,
-            int? changedByUserId)
-        {
-            entityName = SetStringToPascalCase(entityName);
-
-            List<UserActivityItem> activityItems = CreateSimpleUserActivityItem(
-                entityName: entityName,
-                simpleDescription: simpleDescription,
-                suffixIdentifier: suffixIdentifier,
-                entityId: entityId,
-                changedEmployeeId: changedEmployeeId,
-                changedByUserId: changedByUserId);
-
-            CreateRecord(userId, entityName, organizationId, recordType, activityItems);
-        }
-
         private async Task RecordSimpleAsync(
-            int userId,
+            int currentlyLoggedInUserId,
             string entityName,
             string simpleDescription,
             string suffixIdentifier,
@@ -253,7 +208,7 @@ namespace AccuPay.Data.Repositories
                 changedEmployeeId: changedEmployeeId,
                 changedByUserId: changedByUserId);
 
-            await CreateRecordAsync(userId, entityName, organizationId, recordType, activityItems);
+            await CreateRecordAsync(currentlyLoggedInUserId, entityName, organizationId, recordType, activityItems);
         }
 
         private static List<UserActivityItem> CreateSimpleUserActivityItem(

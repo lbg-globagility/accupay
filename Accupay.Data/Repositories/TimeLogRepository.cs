@@ -40,6 +40,7 @@ namespace AccuPay.Data.Repositories
             int employeeId,
             TimePeriod datePeriod)
         {
+            // TODO: employeetimeentrydetails date should be unique so no query like this should be needed.
             return await CreateBaseQueryByDatePeriod(datePeriod)
                 .Where(x => x.EmployeeID == employeeId)
                 .OrderByDescending(x => x.LastUpd)

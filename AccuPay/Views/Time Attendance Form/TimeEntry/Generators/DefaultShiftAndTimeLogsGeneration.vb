@@ -81,7 +81,7 @@ Public Class DefaultShiftAndTimeLogsGeneration
 
             Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
             Await timeLogService.SaveManyAsync(
-                changedByUserId:=z_User,
+                currentlyLoggedInUserId:=z_User,
                 added:=employeeTimeLogs.ToList())
 
             Dim employeeShifts = shifts.Where(Function(s) s.EmployeeId.Value = employee.RowID.Value)
@@ -119,7 +119,6 @@ Public Class DefaultShiftAndTimeLogsGeneration
     Private Function CreateTimeLogs(currentDate As Date, employee As Employee) As TimeLog
         Return New TimeLog() With {
             .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
             .EmployeeID = employee.RowID,
             .LogDate = currentDate,
             .TimeIn = _defaultValue.StartTime,

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +28,9 @@ namespace AccuPay.Data.Services.Imports.Employees
         private readonly Employee _employee;
         private readonly EmployeeRowRecord _parsedEmployee;
         private readonly Position _job;
+        private readonly int _organizationId;
 
-        public EmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee, Position job)
+        public EmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee, Position job, int organizationId)
         {
             _employeeAlreadyExists = employee != null;
             _jobNotYetExists = job == null;
@@ -37,8 +38,8 @@ namespace AccuPay.Data.Services.Imports.Employees
             _employee = employee;
             _parsedEmployee = parsedEmployee;
             _job = job;
-
-            ApplyData(_employee, _parsedEmployee, _job);
+            _organizationId = organizationId;
+            ApplyData();
         }
 
         public string Remarks { get; internal set; }
@@ -65,7 +66,7 @@ namespace AccuPay.Data.Services.Imports.Employees
 
         public bool IsExistingEmployee { get; internal set; }
 
-        private void ApplyData(Employee _employee, EmployeeRowRecord _parsedEmployee, Position _job)
+        private void ApplyData()
         {
             _noEmployeeNo = string.IsNullOrWhiteSpace(_parsedEmployee.EmployeeNo);
             _noEmployeeType = string.IsNullOrWhiteSpace(_parsedEmployee.EmployeeType);
@@ -213,6 +214,7 @@ namespace AccuPay.Data.Services.Imports.Employees
 
                 var employee = new Employee()
                 {
+                    OrganizationID = _organizationId,
                     HomeAddress = Address,
                     AtmNo = AtmNo,
                     //Branch= _parsedEmployee.Branch,

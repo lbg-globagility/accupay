@@ -59,7 +59,6 @@ Public Class AddOfficialBusinessForm
         Me._newOfficialBusiness = New OfficialBusiness
         Me._newOfficialBusiness.EmployeeID = _currentEmployee.RowID
         Me._newOfficialBusiness.OrganizationID = z_OrganizationID
-        Me._newOfficialBusiness.CreatedBy = z_User
 
         Me._newOfficialBusiness.StartDate = Date.Now
         Me._newOfficialBusiness.EndDate = Date.Now
@@ -139,7 +138,7 @@ Public Class AddOfficialBusinessForm
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await dataService.SaveAsync(Me._newOfficialBusiness)
+                Await dataService.SaveAsync(Me._newOfficialBusiness, z_User)
 
                 Me.IsSaved = True
 

@@ -289,11 +289,10 @@ Public Class EmployeeLoansForm
 
         Dim messageTitle = "Update Loans"
 
-        For Each loan In Me._currentloans
+        For Each item In Me._currentloans
 
-            If CheckIfLoanIsChanged(loan) Then
-                loan.LastUpdBy = z_User
-                changedLoans.Add(loan)
+            If CheckIfLoanIsChanged(item) Then
+                changedLoans.Add(item)
             End If
 
         Next
@@ -513,7 +512,7 @@ Public Class EmployeeLoansForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
                 Await dataService.DeleteAsync(
                     id:=Me._currentLoan.RowID.Value,
-                    changedByUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadLoans(currentEmployee)
 

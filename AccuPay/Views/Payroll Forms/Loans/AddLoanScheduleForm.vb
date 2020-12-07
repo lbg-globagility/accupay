@@ -62,7 +62,6 @@ Public Class AddLoanScheduleForm
         Me._newLoanSchedule = New LoanSchedule
         Me._newLoanSchedule.EmployeeID = _currentEmployee.RowID
         Me._newLoanSchedule.OrganizationID = z_OrganizationID
-        Me._newLoanSchedule.CreatedBy = z_User
 
         Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
         Me._newLoanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS
@@ -180,7 +179,7 @@ Public Class AddLoanScheduleForm
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-                Await dataService.SaveAsync(Me._newLoanSchedule)
+                Await dataService.SaveAsync(Me._newLoanSchedule, z_User)
 
                 Me.IsSaved = True
 

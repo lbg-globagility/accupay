@@ -26,7 +26,7 @@ namespace AccuPay.Data.Services
         public async Task<Allowance> GetOrCreateEmployeeEcola(
             int employeeId,
             int organizationId,
-            int userId,
+            int currentlyLoggedInUserId,
             TimePeriod timePeriod,
             string allowanceFrequency = Allowance.FREQUENCY_SEMI_MONTHLY,
             decimal amount = 0)
@@ -41,7 +41,7 @@ namespace AccuPay.Data.Services
                 var ecolaProductId = (await _productRepository.GetOrCreateAllowanceTypeAsync(
                     ProductConstant.ECOLA,
                     organizationId,
-                    userId))?.RowID;
+                    currentlyLoggedInUserId))?.RowID;
 
                 DateTime? effectiveEndDate = null;
 
@@ -52,10 +52,10 @@ namespace AccuPay.Data.Services
                 ecolaAllowance.EffectiveStartDate = timePeriod.Start;
                 ecolaAllowance.EffectiveEndDate = effectiveEndDate;
                 ecolaAllowance.Amount = amount;
-                ecolaAllowance.CreatedBy = userId;
                 ecolaAllowance.OrganizationID = organizationId;
 
-                await _allowanceService.SaveAsync(ecolaAllowance);
+                // TODO: refactor this out. A data service should not be a dependency of another data service
+                await _allowanceService.SaveAsync(ecolaAllowance, currentlyLoggedInUserId);
 
                 ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(
                     employeeId: employeeId,

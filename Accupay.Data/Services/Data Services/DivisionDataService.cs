@@ -40,7 +40,7 @@ namespace AccuPay.Data.Services
 
         #region Save
 
-        public async override Task DeleteAsync(int divisionId, int changedByUserId)
+        public async override Task DeleteAsync(int divisionId, int currentlyLoggedInUserId)
         {
             var division = await _divisionRepository.GetByIdWithParentAsync(divisionId);
 
@@ -57,7 +57,7 @@ namespace AccuPay.Data.Services
 
             await base.DeleteAsync(
                 id: divisionId,
-                changedByUserId: changedByUserId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
         }
 
         protected override string GetUserActivityName(Division division) =>
@@ -67,9 +67,12 @@ namespace AccuPay.Data.Services
 
         protected override string CreateUserActivitySuffixIdentifier(Division allowance) => string.Empty;
 
-        protected override async Task SanitizeEntity(Division division, Division oldDivision)
+        protected override async Task SanitizeEntity(Division division, Division oldDivision, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: division, oldEntity: oldDivision);
+            await base.SanitizeEntity(
+                entity: division,
+                oldEntity: oldDivision,
+                currentlyLoggedInUserId: changedByUserId);
 
             var doesExistQuery = _context.Divisions
                 .Where(d => d.Name.Trim().ToLower() == division.Name.ToTrimmedLowerCase())
@@ -92,7 +95,7 @@ namespace AccuPay.Data.Services
 
         #endregion Save
 
-        public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
+        public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int changedByUserId)
         {
             var divisionRepository = new DivisionRepository(_context);
             using (var transaction = await _context.Database.BeginTransactionAsync())
@@ -107,14 +110,12 @@ namespace AccuPay.Data.Services
 
                     if (defaultParentDivision == null)
                     {
-                        defaultParentDivision = Division.NewDivision(
-                            organizationId: organizationId,
-                            userId: userId);
+                        defaultParentDivision = Division.NewDivision(organizationId);
 
                         defaultParentDivision.Name = Division.DefaultLocationName;
                         defaultParentDivision.ParentDivisionID = null;
 
-                        await SanitizeEntity(defaultParentDivision, null);
+                        await SanitizeEntity(defaultParentDivision, null, changedByUserId);
                         await divisionRepository.SaveAsync(defaultParentDivision);
                         // querying the new default parent division from here can already
                         // get the new row data. This can replace the context.local in leaverepository
@@ -130,14 +131,12 @@ namespace AccuPay.Data.Services
 
                     if (defaultDivision == null)
                     {
-                        defaultDivision = Division.NewDivision(
-                            organizationId: organizationId,
-                            userId: userId);
+                        defaultDivision = Division.NewDivision(organizationId);
 
                         defaultDivision.Name = Division.DefaultDivisionName;
                         defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
 
-                        await SanitizeEntity(defaultDivision, null);
+                        await SanitizeEntity(defaultDivision, null, changedByUserId);
                         await divisionRepository.SaveAsync(defaultDivision);
                     }
 

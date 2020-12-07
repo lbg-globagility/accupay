@@ -61,7 +61,6 @@ Namespace Global.AccuPay.Views.Employees
         Private Sub OnNew() Handles _view.NewSalary
             _currentSalary = New Salary() With {
                 .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
                 .EmployeeID = _employee.RowID,
                 .PositionID = _employee.PositionID,
                 .HDMFAmount = StandardPagIbigContribution,
@@ -91,7 +90,7 @@ Namespace Global.AccuPay.Views.Employees
             Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
             Await dataService.DeleteAsync(
                 id:=_currentSalary.RowID.Value,
-                changedByUserId:=z_User)
+                currentlyLoggedInUserId:=z_User)
             _currentSalary = Nothing
             Await LoadSalaries()
         End Sub
@@ -106,15 +105,8 @@ Namespace Global.AccuPay.Views.Employees
                     .HDMFAmount = _view.PagIBIG
                 End With
 
-                _currentSalary.UpdateTotalSalary()
-
-                If _currentSalary.RowID.HasValue Then
-                    _currentSalary.LastUpdBy = z_User
-
-                End If
-
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
-                Await dataService.SaveAsync(_currentSalary)
+                Await dataService.SaveAsync(_currentSalary, z_User)
             Catch ex As Exception
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation) ' Remove this
                 Throw

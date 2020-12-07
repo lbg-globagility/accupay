@@ -374,7 +374,7 @@ Public Class DisciplinaryActionTab
 
     Private Async Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
 
-        Dim form As New NewListOfValDisciplinaryPenaltyForm(_listOfValRepo)
+        Dim form As New NewListOfValDisciplinaryPenaltyForm()
 
         With form
             .ShowDialog()

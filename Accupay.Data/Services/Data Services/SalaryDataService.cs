@@ -38,7 +38,7 @@ namespace AccuPay.Data.Services
             _salaryRepository = salaryRepository;
         }
 
-        public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int userId)
+        public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
             List<Salary> added = new List<Salary>();
             foreach (var validRecord in validRecords)
@@ -47,7 +47,6 @@ namespace AccuPay.Data.Services
                 {
                     OrganizationID = organizationId,
                     EmployeeID = validRecord.EmployeeId,
-                    CreatedBy = userId,
                     BasicSalary = validRecord.BasicSalary.Value,
                     AllowanceSalary = validRecord.AllowanceSalary.HasValue ? validRecord.AllowanceSalary.Value : 0,
                     EffectiveFrom = validRecord.EffectiveFrom.Value
@@ -56,7 +55,7 @@ namespace AccuPay.Data.Services
                 added.Add(salary);
             }
 
-            await _salaryRepository.SaveManyAsync(added);
+            await SaveManyAsync(added, currentlyLoggedInUserId);
 
             return added;
         }
@@ -68,9 +67,12 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(Salary salary) =>
             $" with start date '{salary.EffectiveFrom.ToShortDateString()}'";
 
-        protected override async Task SanitizeEntity(Salary salary, Salary oldSalary)
+        protected override async Task SanitizeEntity(Salary salary, Salary oldSalary, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: salary, oldEntity: oldSalary);
+            await base.SanitizeEntity(
+                entity: salary,
+                oldEntity: oldSalary,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (salary.EffectiveFrom < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");

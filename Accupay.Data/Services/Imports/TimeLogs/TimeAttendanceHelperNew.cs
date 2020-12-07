@@ -203,7 +203,6 @@ namespace AccuPay.Data.Services
                     timeLogs.Add(new TimeLog()
                     {
                         LogDate = logDate,
-                        CreatedBy = _userId,
                         OrganizationID = _organizationId,
                         Employee = currentEmployee,
                         EmployeeID = currentEmployee.RowID,

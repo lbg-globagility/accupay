@@ -166,14 +166,12 @@ namespace AccuPay.Data.Entities
             payPeriod.PayFromDate.Date <= StartDate.Date &&
             StartDate.Date <= payPeriod.PayToDate.Date;
 
-        public static Employee NewEmployee(int organizationId, int userId)
+        public static Employee NewEmployee(int organizationId)
         {
             return new Employee
             {
                 RowID = null,
                 OrganizationID = organizationId,
-                Created = DateTime.Now,
-                CreatedBy = userId,
                 PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId,
                 CalcHoliday = true,
                 CalcNightDiff = true,

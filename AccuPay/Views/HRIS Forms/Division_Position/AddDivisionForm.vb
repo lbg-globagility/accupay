@@ -106,9 +106,7 @@ Public Class AddDivisionForm
 
     Private Sub ResetForm()
 
-        Me._newDivision = Division.NewDivision(
-            organizationId:=z_OrganizationID,
-            userId:=z_User)
+        Me._newDivision = Division.NewDivision(z_OrganizationID)
 
         DivisionUserControl1.SetDivision(
             Me._newDivision,
@@ -147,7 +145,7 @@ Public Class AddDivisionForm
     Private Async Function SaveDivision(sender As Object) As Task
 
         Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-        Await service.SaveAsync(Me._newDivision)
+        Await service.SaveAsync(Me._newDivision, z_User)
 
         Me.LastDivisionAdded = Me._newDivision
 

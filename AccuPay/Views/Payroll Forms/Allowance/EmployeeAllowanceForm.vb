@@ -210,8 +210,8 @@ Public Class EmployeeAllowanceForm
         Dim messageTitle = "Update Allowances"
 
         For Each allowance In Me._currentAllowances
+
             If CheckIfAllowanceIsChanged(allowance) Then
-                allowance.LastUpdBy = z_User
                 changedAllowances.Add(allowance)
             End If
         Next
@@ -409,7 +409,7 @@ Public Class EmployeeAllowanceForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
                 Await dataService.DeleteAsync(
                     id:=Me._currentAllowance.RowID.Value,
-                    changedByUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadAllowances(currentEmployee)
 

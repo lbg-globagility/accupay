@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
+using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
@@ -31,19 +32,20 @@ namespace AccuPay.Data.Services
         //protected override string CreateUserActivitySuffixIdentifier(Organization organization) =>
         //    $" with name '{organization.Name}'";
 
-        protected override Task SanitizeEntity(Organization entity, Organization oldEntity)
+        protected override Task SanitizeEntity(Organization entity, Organization oldEntity, int changedByUserId)
         {
+            base.SanitizeEntity(
+                entity: entity,
+                oldEntity: oldEntity,
+                currentlyLoggedInUserId: changedByUserId);
+
             if (string.IsNullOrWhiteSpace(entity.Name))
                 throw new BusinessLogicException("Name is required.");
 
             if (BaseEntity.CheckIfNewEntity(entity.ClientId))
                 throw new BusinessLogicException("Client is required.");
 
-            if (entity.IsNewEntity && entity.CreatedBy == null)
-                throw new BusinessLogicException("Created By is required.");
-
-            if (!entity.IsNewEntity && entity.LastUpdBy == null)
-                throw new BusinessLogicException("Last Updated By is required.");
+            entity.AuditUser(changedByUserId);
 
             return Task.CompletedTask;
         }

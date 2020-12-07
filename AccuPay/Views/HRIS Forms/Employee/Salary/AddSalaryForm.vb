@@ -143,11 +143,10 @@ Public Class AddSalaryForm
                     .HDMFAmount = txtPagIbig.Text.ToDecimal
                     .EmployeeID = _employee.RowID
                     .OrganizationID = z_OrganizationID
-                    .CreatedBy = z_User
                 End With
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
-                Await dataService.SaveAsync(newSalary)
+                Await dataService.SaveAsync(newSalary, z_User)
 
                 If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then
 

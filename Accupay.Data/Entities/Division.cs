@@ -130,13 +130,11 @@ namespace AccuPay.Data.Entities
             return ParentDivisionID == division.RowID;
         }
 
-        public static Division NewDivision(int organizationId, int userId)
+        public static Division NewDivision(int organizationId)
         {
             return new Division()
             {
                 OrganizationID = organizationId,
-                CreatedBy = userId,
-                LastUpdBy = userId, // if LastUpdBy is null even if it is on INSERT, saving it to the database can throw and error in the trigger when there is no divisionminimumwage data yet
                 GracePeriod = 0,
                 WorkDaysPerYear = 313,
                 PhilHealthDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,

@@ -44,12 +44,10 @@ namespace AccuPay.Data.Entities
 
         public bool PaidAsLongAsHasTimeLog { get; set; }
 
-        public static Organization NewOrganization(int userId, int clientId)
+        public static Organization NewOrganization(int clientId)
         {
             return new Organization()
             {
-                Created = DateTime.Now,
-                CreatedBy = userId,
                 ClientId = clientId,
                 IsAgency = false,
                 IsInActive = false,

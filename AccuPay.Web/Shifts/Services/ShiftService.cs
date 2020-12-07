@@ -73,8 +73,6 @@ namespace AccuPay.Web.Shifts.Services
                         {
                             OrganizationID = _currentUser.OrganizationId,
                             EmployeeID = dto.EmployeeId,
-                            CreatedBy = _currentUser.UserId,
-                            LastUpdBy = _currentUser.UserId,
                             DateSched = dto.Date,
                             StartTimeFull = dto.StartTime,
                             EndTimeFull = dto.EndTime,
@@ -95,20 +93,18 @@ namespace AccuPay.Web.Shifts.Services
                         existingShift.ShiftBreakStartTimeFull = dto.BreakStartTime;
                         existingShift.BreakLength = dto.BreakLength;
                         existingShift.IsRestDay = dto.IsOffset;
-                        existingShift.LastUpdBy = _currentUser.UserId;
 
                         updated.Add(existingShift);
                     }
                     else
                     {
-                        existingShift.LastUpdBy = _currentUser.UserId;
                         deleted.Add(existingShift);
                     }
                 }
             }
 
             await _service.SaveManyAsync(
-                changedByUserId: _currentUser.UserId,
+                currentlyLoggedInUserId: _currentUser.UserId,
                 added: added,
                 updated: updated,
                 deleted: deleted);
@@ -128,7 +124,7 @@ namespace AccuPay.Web.Shifts.Services
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            if (parsedResult.ValidRecords.Any()) await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, changedByUserId: userId);
+            if (parsedResult.ValidRecords.Any()) await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, currentlyLoggedInUserId: userId);
 
             return parsedResult;
         }

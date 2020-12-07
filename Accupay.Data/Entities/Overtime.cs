@@ -36,7 +36,7 @@ namespace AccuPay.Data.Entities
 
         public DateTime? PayrollDate => OTStartDate;
 
-        public Overtime()
+        private Overtime()
         {
             Status = StatusPending;
         }
@@ -45,8 +45,8 @@ namespace AccuPay.Data.Entities
         public DateTime? OTStartTimeFull
         {
             get => OTStartTime == null ?
-                        (DateTime?)null :
-                        OTStartDate.Date.ToMinimumHourValue().Add(OTStartTime.Value);
+                (DateTime?)null :
+                OTStartDate.Date.ToMinimumHourValue().Add(OTStartTime.Value);
 
             set => OTStartTime = value == null ? null : value?.TimeOfDay;
         }
@@ -55,8 +55,8 @@ namespace AccuPay.Data.Entities
         public DateTime? OTEndTimeFull
         {
             get => OTEndTime == null ?
-                        (DateTime?)null :
-                        OTEndDate.Date.ToMinimumHourValue().Add(OTEndTime.Value);
+                (DateTime?)null :
+                OTEndDate.Date.ToMinimumHourValue().Add(OTEndTime.Value);
 
             set => OTEndTime = value == null ? null : value?.TimeOfDay;
         }
@@ -73,18 +73,42 @@ namespace AccuPay.Data.Entities
             }
         }
 
-        public static Overtime NewOvertime(IShift shift, int organizationId, int userId)
+        public static Overtime NewOvertime(IShift shift, int organizationId)
         {
-            return new Overtime()
+            return NewOvertime(
+                organizationId: organizationId,
+                employeeId: shift.EmployeeId.Value,
+                startDate: shift.Date,
+                startTime: null,
+                endTime: null,
+                status: StatusApproved);
+        }
+
+        public static Overtime NewOvertime(
+            int organizationId,
+            int employeeId,
+            DateTime startDate,
+            TimeSpan? startTime,
+            TimeSpan? endTime,
+            string status = StatusApproved,
+            string reason = null,
+            string comments = null)
+        {
+            var overtime = new Overtime()
             {
-                Created = DateTime.Now,
-                CreatedBy = userId,
-                EmployeeID = shift.EmployeeId,
                 OrganizationID = organizationId,
-                OTStartDate = shift.Date,
-                OTEndDate = shift.Date,
-                Status = StatusApproved
+                EmployeeID = employeeId,
+                OTStartDate = startDate,
+                OTStartTime = startTime,
+                OTEndTime = endTime,
+                Status = status,
+                Reason = reason,
+                Comments = comments
             };
+
+            overtime.UpdateEndDate();
+
+            return overtime;
         }
     }
 }

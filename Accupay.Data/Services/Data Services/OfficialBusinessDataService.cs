@@ -36,7 +36,7 @@ namespace AccuPay.Data.Services
             _officialBusinessRepository = officialBusinessRepository;
         }
 
-        public async Task<List<OfficialBusiness>> BatchApply(IReadOnlyCollection<OfficialBusinessImportModel> validRecords, int organizationId, int userId)
+        public async Task<List<OfficialBusiness>> BatchApply(IReadOnlyCollection<OfficialBusinessImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
             List<OfficialBusiness> officialBusinesses = new List<OfficialBusiness>();
 
@@ -44,7 +44,6 @@ namespace AccuPay.Data.Services
             {
                 officialBusinesses.Add(new OfficialBusiness()
                 {
-                    CreatedBy = userId,
                     EmployeeID = ob.EmployeeID,
                     OrganizationID = organizationId,
                     EndTimeFull = ob.EndTime.Value,
@@ -54,7 +53,7 @@ namespace AccuPay.Data.Services
                 });
             }
 
-            await _officialBusinessRepository.SaveManyAsync(officialBusinesses);
+            await SaveManyAsync(officialBusinesses, currentlyLoggedInUserId);
 
             return officialBusinesses;
         }
@@ -66,9 +65,12 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(OfficialBusiness officialBusiness) =>
             $" with date '{officialBusiness.StartDate.ToShortDateString()}'";
 
-        protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness)
+        protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: officialBusiness, oldEntity: oldOfficialBusiness);
+            await base.SanitizeEntity(
+                entity: officialBusiness,
+                oldEntity: oldOfficialBusiness,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (officialBusiness.StartDate == null)
                 throw new BusinessLogicException("Start Date is required.");

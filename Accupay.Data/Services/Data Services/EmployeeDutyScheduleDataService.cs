@@ -37,7 +37,7 @@ namespace AccuPay.Data.Services
         public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
             IEnumerable<ShiftModel> shiftModels,
             int organizationId,
-            int changedByUserId)
+            int currentlyLoggedInUserId)
         {
             var minDate = shiftModels.Min(x => x.Date);
             var maxDate = shiftModels.Max(x => x.Date);
@@ -67,22 +67,17 @@ namespace AccuPay.Data.Services
                     existingShift.BreakLength = shifModel.BreakLength;
 
                     existingShift.IsRestDay = shifModel.IsRestDay;
-                    existingShift.LastUpd = DateTime.Now;
-                    existingShift.LastUpdBy = changedByUserId;
 
                     updatedShifts.Add(existingShift);
                 }
                 else
                 {
-                    addedShifts.Add(
-                        shifModel.ToEmployeeDutySchedule(
-                            organizationId: organizationId,
-                            changedByUserId: changedByUserId));
+                    addedShifts.Add(shifModel.ToEmployeeDutySchedule(organizationId));
                 }
             }
 
             await SaveManyAsync(
-                changedByUserId: changedByUserId,
+                currentlyLoggedInUserId: currentlyLoggedInUserId,
                 added: addedShifts,
                 updated: updatedShifts);
 
@@ -96,9 +91,12 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(EmployeeDutySchedule shift) =>
             $" with date '{shift.DateSched.ToShortDateString()}'";
 
-        protected override async Task SanitizeEntity(EmployeeDutySchedule shift, EmployeeDutySchedule oldShift)
+        protected override async Task SanitizeEntity(EmployeeDutySchedule shift, EmployeeDutySchedule oldShift, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: shift, oldEntity: oldShift);
+            await base.SanitizeEntity(
+                entity: shift,
+                oldEntity: oldShift,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (shift.DateSched < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
@@ -108,12 +106,6 @@ namespace AccuPay.Data.Services
 
             if (shift.EndTime == null)
                 throw new BusinessLogicException("End Time is required.");
-
-            if (shift.IsNewEntity && shift.CreatedBy == null)
-                throw new BusinessLogicException("Created By is required.");
-
-            if (!shift.IsNewEntity && shift.LastUpdBy == null)
-                throw new BusinessLogicException("Last Updated By is required.");
 
             shift.ComputeShiftHours(_policy.ShiftBasedAutomaticOvertimePolicy);
         }
@@ -129,20 +121,18 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override Task RecordUpdate(IReadOnlyCollection<EmployeeDutySchedule> updatedShifts, IReadOnlyCollection<EmployeeDutySchedule> oldRecords)
+        protected override async Task RecordUpdate(IReadOnlyCollection<EmployeeDutySchedule> updatedShifts, IReadOnlyCollection<EmployeeDutySchedule> oldRecords)
         {
             foreach (var newValue in updatedShifts)
             {
                 var oldValue = oldRecords.Where(x => x.RowID == newValue.RowID).FirstOrDefault();
                 if (oldValue == null) continue;
 
-                RecordUpdate(newValue, oldValue);
+                await RecordUpdate(newValue, oldValue);
             }
-
-            return Task.CompletedTask;
         }
 
-        protected override Task RecordUpdate(EmployeeDutySchedule newValue, EmployeeDutySchedule oldValue)
+        protected override async Task RecordUpdate(EmployeeDutySchedule newValue, EmployeeDutySchedule oldValue)
         {
             List<UserActivityItem> changes = new List<UserActivityItem>();
             var entityName = UserActivityName.ToLower();
@@ -197,15 +187,13 @@ namespace AccuPay.Data.Services
 
             if (changes.Any())
             {
-                _userActivityRepository.CreateRecord(
+                await _userActivityRepository.CreateRecordAsync(
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
                     UserActivityRepository.RecordTypeEdit,
                     changes);
             }
-
-            return Task.CompletedTask;
         }
 
         #endregion Overrides

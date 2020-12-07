@@ -363,14 +363,13 @@ Public Class SalaryTab
                     .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
                     .AutoComputeHDMFContribution = ChkPagIbig.Checked
                     .HDMFAmount = txtPagIbig.Text.ToDecimal
-                    .LastUpdBy = z_User
                 End With
 
                 Dim repository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
                 Dim oldsalary = Await repository.GetByIdAsync(salary.RowID.Value)
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
-                Await dataService.SaveAsync(salary)
+                Await dataService.SaveAsync(salary, z_User)
 
                 If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then
 
@@ -488,7 +487,7 @@ Public Class SalaryTab
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
                 Await dataService.DeleteAsync(
                     id:=_currentSalary.RowID.Value,
-                    changedByUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadSalaries()
 

@@ -80,7 +80,6 @@ Public Class AddLeaveForm
         Me._newLeave = New Leave
         Me._newLeave.EmployeeID = _currentEmployee.RowID
         Me._newLeave.OrganizationID = z_OrganizationID
-        Me._newLeave.CreatedBy = z_User
 
         Me._newLeave.StartDate = Date.Now
         Me._newLeave.EndDate = Date.Now
@@ -175,7 +174,7 @@ Public Class AddLeaveForm
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                Await dataService.SaveAsync(Me._newLeave)
+                Await dataService.SaveAsync(Me._newLeave, z_User)
 
                 Me.IsSaved = True
 

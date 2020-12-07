@@ -1,5 +1,4 @@
 using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;

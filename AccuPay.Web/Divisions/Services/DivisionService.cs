@@ -41,13 +41,11 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<ActionResult<DivisionDto>> Create(CreateDivisionDto dto)
         {
-            var division = Division.NewDivision(
-                organizationId: _currentUser.OrganizationId,
-                userId: _currentUser.UserId);
+            var division = Division.NewDivision(_currentUser.OrganizationId);
 
             ApplyChanges(dto, division);
 
-            await _dataService.SaveAsync(division);
+            await _dataService.SaveAsync(division, _currentUser.UserId);
 
             return ConvertToDto(division);
         }
@@ -57,11 +55,9 @@ namespace AccuPay.Web.Divisions
             var division = await _repository.GetByIdWithParentAsync(id);
             if (division == null) return null;
 
-            division.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, division);
 
-            await _dataService.SaveAsync(division);
+            await _dataService.SaveAsync(division, _currentUser.UserId);
 
             return ConvertToDto(division);
         }
@@ -70,7 +66,7 @@ namespace AccuPay.Web.Divisions
         {
             await _dataService.DeleteAsync(
                 divisionId: id,
-                changedByUserId: _currentUser.UserId);
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         internal IEnumerable<string> GetTypes()

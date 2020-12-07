@@ -4,7 +4,6 @@ using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,13 +30,11 @@ namespace AccuPay.Web.Organizations
 
         public async Task<OrganizationDto> Create(CreateOrganizationDto dto)
         {
-            var organization = Organization.NewOrganization(
-                userId: _currentUser.UserId,
-                clientId: _currentUser.ClientId);
+            var organization = Organization.NewOrganization(_currentUser.ClientId);
 
             organization.Name = dto.Name;
 
-            await _dataService.SaveAsync(organization);
+            await _dataService.SaveAsync(organization, _currentUser.UserId);
 
             return ConvertToDto(organization);
         }
@@ -46,9 +43,8 @@ namespace AccuPay.Web.Organizations
         {
             var organization = await _repository.GetByIdAsync(organizationId);
             organization.Name = dto.Name;
-            organization.LastUpdBy = _currentUser.UserId;
 
-            await _dataService.SaveAsync(organization);
+            await _dataService.SaveAsync(organization, _currentUser.UserId);
 
             return ConvertToDto(organization);
         }

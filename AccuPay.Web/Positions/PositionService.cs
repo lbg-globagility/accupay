@@ -40,12 +40,11 @@ namespace AccuPay.Web.Positions
         {
             var overtime = new Position()
             {
-                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
 
-            await _dataService.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
 
             return ConvertToDto(overtime);
         }
@@ -55,11 +54,9 @@ namespace AccuPay.Web.Positions
             var overtime = await _repository.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            overtime.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, overtime);
 
-            await _dataService.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
 
             return ConvertToDto(overtime);
         }
@@ -68,7 +65,7 @@ namespace AccuPay.Web.Positions
         {
             await _dataService.DeleteAsync(
                 positionId: id,
-                changedByUserId: _currentUser.UserId);
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         private static void ApplyChanges(CrudPositionDto dto, Position position)

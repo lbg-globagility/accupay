@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
@@ -43,7 +43,6 @@ Public Class AllowanceRowRecord
         Return New Allowance With {
             .RowID = Nothing,
             .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
             .EmployeeID = employeeId,
             .AllowanceFrequency = AllowanceFrequency,
             .Amount = Amount.Value,

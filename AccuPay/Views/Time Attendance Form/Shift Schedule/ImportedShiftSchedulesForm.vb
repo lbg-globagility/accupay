@@ -115,7 +115,7 @@ Public Class ImportedShiftSchedulesForm
                 Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(
                     _dataSourceOk,
                     organizationId:=z_OrganizationID,
-                    changedByUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Me.IsSaved = True
                 DialogResult = DialogResult.OK

@@ -14,7 +14,7 @@ Public Class AddDivisionLocationForm
 
     Private Sub AddDivisionLocationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.NewDivision = Division.NewDivision(organizationId:=z_OrganizationID, userId:=z_User)
+        Me.NewDivision = Division.NewDivision(z_OrganizationID)
 
         Me.IsSaved = False
 
@@ -46,7 +46,7 @@ Public Class AddDivisionLocationForm
 
         Dim divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
-        Await divisionService.SaveAsync(Me.NewDivision)
+        Await divisionService.SaveAsync(Me.NewDivision, z_User)
 
         Me.IsSaved = True
 

@@ -643,15 +643,11 @@ Public Class ShiftScheduleForm
                     _eds = New EmployeeDutySchedule With {
                         .EmployeeID = _EmployeeId,
                         .OrganizationID = z_OrganizationID,
-                        .DateSched = _DateValue,
-                        .CreatedBy = z_User,
-                        .Created = Now
+                        .DateSched = _DateValue
                     }
                 End If
 
                 With _eds
-                    .LastUpdBy = z_User
-                    .LastUpd = Now
                     .StartTime = TimeFromTimeSpan
                     .EndTime = TimeToTimeSpan
                     .BreakStartTime = BreakFromTimeSpan
@@ -946,7 +942,7 @@ Public Class ShiftScheduleForm
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
                 Await dataService.SaveManyAsync(
-                    changedByUserId:=z_User,
+                    currentlyLoggedInUserId:=z_User,
                     added:=addedShifts,
                     updated:=updatedShifts,
                     deleted:=deletedShifts)

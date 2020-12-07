@@ -89,13 +89,11 @@ namespace AccuPay.Web.Clients
 
             if (dto.Organization != null)
             {
-                var organization = Organization.NewOrganization(
-                    userId: _currentUser.UserId,
-                    clientId: client.Id);
+                var organization = Organization.NewOrganization(client.Id);
 
                 organization.Name = dto.Name;
 
-                await _organizationDataService.SaveAsync(organization);
+                await _organizationDataService.SaveAsync(organization, _currentUser.UserId);
             }
 
             return ConvertToDto(client);

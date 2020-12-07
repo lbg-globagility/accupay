@@ -370,7 +370,7 @@ Public Class EmployeeOvertimeForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
                 Await dataService.DeleteAsync(
                     id:=Me._currentOvertime.RowID.Value,
-                    changedByUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadOvertimes(currentEmployee)
 
@@ -582,9 +582,8 @@ Public Class EmployeeOvertimeForm
         Dim changedOvertimes As New List(Of Overtime)
 
         For Each item In Me._currentOvertimes
-            If CheckIfOvertimeIsChanged(item) Then
 
-                item.LastUpdBy = z_User
+            If CheckIfOvertimeIsChanged(item) Then
                 changedOvertimes.Add(item)
             End If
         Next

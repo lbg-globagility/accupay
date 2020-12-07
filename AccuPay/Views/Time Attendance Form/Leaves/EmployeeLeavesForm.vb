@@ -493,7 +493,7 @@ Public Class EmployeeLeavesForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Await dataService.DeleteAsync(
                     id:=Me._currentLeave.RowID.Value,
-                    changedByUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadLeaves(currentEmployee)
 
@@ -669,9 +669,8 @@ Public Class EmployeeLeavesForm
         Dim messageTitle = "Update Leaves"
 
         For Each item In Me._currentLeaves
-            If CheckIfLeaveIsChanged(item) Then
 
-                item.LastUpdBy = z_User
+            If CheckIfLeaveIsChanged(item) Then
                 changedLeaves.Add(item)
             End If
         Next

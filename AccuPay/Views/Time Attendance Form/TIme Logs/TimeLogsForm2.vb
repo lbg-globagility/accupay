@@ -135,6 +135,7 @@ Public Class TimeLogsForm2
             Dim hasShiftSched = seekShiftSched.Any()
 
             If seek.Any Then
+                'TODO: employeetimeentrydetails date should be unique so no query like this should be needed.
                 Dim timeLog = seek.
                     OrderByDescending(Function(t) t.LastUpd).
                     FirstOrDefault
@@ -605,16 +606,11 @@ Public Class TimeLogsForm2
                         .RowID = RowID,
                         .EmployeeID = EmployeeID,
                         .OrganizationID = z_OrganizationID,
-                        .LogDate = DateIn,
-                        .CreatedBy = z_User,
-                        .Created = Now
+                        .LogDate = DateIn
                     }
                 End If
 
                 With _timeLog
-                    .LastUpd = Now
-                    .LastUpdBy = z_User
-
                     .TimeIn = Calendar.ToTimespan(TimeIn)
                     .TimeOut = Calendar.ToTimespan(TimeOut)
                     .BranchID = _branchId
@@ -792,6 +788,7 @@ Public Class TimeLogsForm2
         Dim deletedTimeLogs As New List(Of TimeLog)
 
         For Each model In toSaveList
+            'TODO: employeetimeentrydetails date should be unique so no query like this should be needed.
             Dim seek = existingRecords.
                 Where(Function(tl) tl.EmployeeID.Value = model.EmployeeID).
                 Where(Function(tl) tl.LogDate = model.DateIn).
@@ -803,7 +800,6 @@ Public Class TimeLogsForm2
             If model.ConsideredDelete Then
 
                 deletedTimeLogs.AddRange(seek.ToList())
-                deletedTimeLogs.ForEach(Sub(t) t.LastUpdBy = z_User)
 
             ElseIf model.IsExisting Then
                 Dim timeOut = Calendar.ToTimespan(model.TimeOut)
@@ -816,9 +812,6 @@ Public Class TimeLogsForm2
                 End If
 
                 timeLog.BranchID = model.BranchID
-
-                timeLog.LastUpdBy = z_User
-                timeLog.LastUpd = Now
 
                 updatedTimeLogs.Add(timeLog)
             ElseIf Not exists And model.IsValidToSave Then
@@ -875,7 +868,7 @@ Public Class TimeLogsForm2
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
                 Await dataService.SaveManyAsync(
-                    changedByUserId:=z_User,
+                    currentlyLoggedInUserId:=z_User,
                     added:=addedTimeLogs,
                     updated:=updatedTimeLogs,
                     deleted:=deletedTimeLogs)
@@ -1168,8 +1161,6 @@ Public Class TimeLogsForm2
         Dim employeeNos = parsedTimeLogsGroupedByEmployee.Select(Function(emp) emp.Key).ToArray()
         Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
-        Dim dateCreated = Date.Now
-
         Dim timeLogs As New List(Of TimeLog)
         For Each timeLogList In parsedTimeLogsGroupedByEmployee
             Dim employee = employees.
@@ -1185,8 +1176,6 @@ Public Class TimeLogsForm2
                 Dim t = New TimeLog() With {
                     .OrganizationID = z_OrganizationID,
                     .EmployeeID = employee.RowID,
-                    .Created = dateCreated,
-                    .CreatedBy = z_User,
                     .LogDate = timeLog.DateOccurred,
                     .BranchID = employee.BranchID
                 }

@@ -228,7 +228,7 @@ Public Class OrganizationForm
         OrganizationGridView.Enabled = False
         NewButton.Enabled = False
 
-        _currentOrganization = Organization.NewOrganization(z_User, Z_Client)
+        _currentOrganization = Organization.NewOrganization(Z_Client)
 
         txtcompanyName.Focus()
 
@@ -331,21 +331,15 @@ Public Class OrganizationForm
                 Dim firstHalf = New TimePeriod(FirstHalfStartDate.Value.Date, FirstHalfEndDate.Value.Date)
                 Dim endOfTheMonth = New TimePeriod(EndOfTheMonthStartDate.Value.Date, EndOfTheMonthEndDate.Value.Date)
 
-                If isNew Then
+                If isNew AndAlso _policy.HasDifferentPayPeriodDates Then
+                    dataService.ValidateDefaultPayPeriodData(firstHalf, endOfTheMonth)
 
-                    If _policy.HasDifferentPayPeriodDates Then
-                        dataService.ValidateDefaultPayPeriodData(firstHalf, endOfTheMonth)
-
-                    End If
-                Else
-
-                    _currentOrganization.LastUpdBy = z_User
                 End If
 
                 Dim organizationService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
                 Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
 
-                Await organizationService.SaveAsync(_currentOrganization)
+                Await organizationService.SaveAsync(_currentOrganization, z_User)
 
                 If isNew Then
 

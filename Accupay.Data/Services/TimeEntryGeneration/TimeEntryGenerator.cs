@@ -130,7 +130,9 @@ namespace AccuPay.Data.Services
             {
                 try
                 {
+                    // TODO: employeetimeentrydetails date should be unique so no query like this should be needed.
                     var timelog = timeLogs.OrderByDescending(t => t.LastUpd).FirstOrDefault(t => t.LogDate == currentDate);
+
                     var overtimes = overtimesInCutoff.Where(o => o.OTStartDate <= currentDate && currentDate <= o.OTEndDate).ToList();
                     var leaves = leavesInCutoff.Where(l => l.StartDate == currentDate).ToList();
                     var officialBusiness = officialBusinesses.FirstOrDefault(o => o.StartDate.Value == currentDate);

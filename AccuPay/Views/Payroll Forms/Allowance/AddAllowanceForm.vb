@@ -65,12 +65,12 @@ Public Class AddAllowanceForm
     End Sub
 
     Private Sub ResetForm()
-        Me._newAllowance = New Allowance
-        Me._newAllowance.EmployeeID = _currentEmployee.RowID
-        Me._newAllowance.EffectiveStartDate = Date.Now
-        Me._newAllowance.EffectiveEndDate = Date.Now
-        Me._newAllowance.CreatedBy = z_User
-        Me._newAllowance.OrganizationID = z_OrganizationID
+        Me._newAllowance = New Allowance With {
+            .EmployeeID = _currentEmployee.RowID,
+            .EffectiveStartDate = Date.Now,
+            .EffectiveEndDate = Date.Now,
+            .OrganizationID = z_OrganizationID
+        }
 
         Dim firstAllowanceType = Me._allowanceTypeList.FirstOrDefault()
 
@@ -150,7 +150,7 @@ Public Class AddAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                Await dataService.SaveAsync(Me._newAllowance)
+                Await dataService.SaveAsync(Me._newAllowance, z_User)
 
                 Me.IsSaved = True
 

@@ -446,7 +446,7 @@ Public Class OfficialBusinessForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
                 Await dataService.DeleteAsync(
                     Me._currentOfficialBusiness.RowID.Value,
-                    changedByUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadOfficialBusinesses(currentEmployee)
 
@@ -620,9 +620,8 @@ Public Class OfficialBusinessForm
         Dim messageTitle = "Update Official Business"
 
         For Each item In Me._currentOfficialBusinesses
-            If CheckIfOfficialBusinessIsChanged(item) Then
 
-                item.LastUpdBy = z_User
+            If CheckIfOfficialBusinessIsChanged(item) Then
                 changedOfficialBusinesses.Add(item)
             End If
         Next

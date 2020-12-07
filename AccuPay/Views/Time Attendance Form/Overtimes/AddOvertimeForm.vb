@@ -12,7 +12,7 @@ Public Class AddOvertimeForm
 
     Private _currentEmployee As Employee
 
-    Private _newOvertime As New Overtime()
+    Private _newOvertime As Overtime
 
     Private ReadOnly _overtimeRepository As OvertimeRepository
 
@@ -56,19 +56,15 @@ Public Class AddOvertimeForm
 
     Private Sub ResetForm()
 
-        Me._newOvertime = New Overtime
-        Me._newOvertime.EmployeeID = _currentEmployee.RowID
-        Me._newOvertime.OrganizationID = z_OrganizationID
-        Me._newOvertime.CreatedBy = z_User
-
-        Me._newOvertime.OTStartDate = Date.Now
-        Me._newOvertime.OTEndDate = Date.Now
-        Me._newOvertime.OTStartTime = Date.Now.TimeOfDay
-        Me._newOvertime.OTEndTime = Date.Now.TimeOfDay
-
-        Me._newOvertime.Reason = String.Empty
-        Me._newOvertime.Comments = String.Empty
-        Me._newOvertime.Status = Nothing
+        Me._newOvertime = Overtime.NewOvertime(
+            organizationId:=z_OrganizationID,
+            employeeId:=_currentEmployee.RowID.Value,
+            startDate:=Date.Now,
+            startTime:=Date.Now.TimeOfDay,
+            endTime:=Date.Now.TimeOfDay,
+            reason:=String.Empty,
+            comments:=String.Empty,
+            status:=Nothing)
 
         CreateDataBindings()
     End Sub
@@ -136,7 +132,7 @@ Public Class AddOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await dataService.SaveAsync(Me._newOvertime)
+                Await dataService.SaveAsync(Me._newOvertime, z_User)
 
                 Me.IsSaved = True
 

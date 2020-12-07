@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.Policies;
@@ -9,13 +9,31 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class ListOfValueDataService
+    public class ListOfValueDataService : BaseSavableDataService<ListOfValue>
     {
-        private readonly ListOfValueRepository _repository;
+        private readonly ListOfValueRepository _listOfValueRepository;
 
-        public ListOfValueDataService(ListOfValueRepository repository)
+        public ListOfValueDataService(
+            ListOfValueRepository listOfValueRepository,
+            PayPeriodRepository payPeriodRepository,
+            PayrollContext payrollContext,
+            PolicyHelper policy) :
+
+            base(listOfValueRepository,
+                payPeriodRepository,
+                payrollContext,
+                policy,
+                "List of value")
         {
-            _repository = repository;
+            _listOfValueRepository = listOfValueRepository;
+        }
+
+        protected override async Task SanitizeEntity(ListOfValue entity, ListOfValue oldEntity, int currentlyLoggedInUserId)
+        {
+            await base.SanitizeEntity(entity, oldEntity, currentlyLoggedInUserId);
+
+            entity.CreatedBy = currentlyLoggedInUserId;
+            entity.LastUpdBy = currentlyLoggedInUserId;
         }
 
         public async Task CreateOrUpdateDefaultPayPeriod(
@@ -35,12 +53,12 @@ namespace AccuPay.Data.Services
 
         public async Task SaveDefaultPayPeriodData(int organizationId, int currentlyLoggedInUserId, TimePeriod firstHalf, TimePeriod endOfTheMonth)
         {
-            var currentFirstHalfPolicy = await _repository.GetPolicyAsync(
+            var currentFirstHalfPolicy = await _listOfValueRepository.GetPolicyAsync(
                 PolicyHelper.PayPeriodPolicyType,
                 PolicyHelper.DefaultFirstHalfDaysSpanPolicyLIC,
                 organizationId);
 
-            var currentEndOfTheMonthPolicy = await _repository.GetPolicyAsync(
+            var currentEndOfTheMonthPolicy = await _listOfValueRepository.GetPolicyAsync(
                 PolicyHelper.PayPeriodPolicyType,
                 PolicyHelper.DefaultEndOfTheMonthDaysSpanPolicyLIC,
                 organizationId);
@@ -51,9 +69,7 @@ namespace AccuPay.Data.Services
                     value: null,
                     lic: PolicyHelper.DefaultFirstHalfDaysSpanPolicyLIC,
                     type: PolicyHelper.PayPeriodPolicyType,
-                    organizationId: organizationId,
-                    currentlyLoggedInUserId: currentlyLoggedInUserId,
-                    orderBy: 1
+                    organizationId: organizationId
                 );
             }
 
@@ -63,20 +79,19 @@ namespace AccuPay.Data.Services
                     value: null,
                     lic: PolicyHelper.DefaultEndOfTheMonthDaysSpanPolicyLIC,
                     type: PolicyHelper.PayPeriodPolicyType,
-                    organizationId: organizationId,
-                    currentlyLoggedInUserId: currentlyLoggedInUserId,
-                    orderBy: 1
+                    organizationId: organizationId
                 );
             }
 
             currentFirstHalfPolicy.DisplayValue = new DefaultPayPeriod(firstHalf).ToString();
             currentEndOfTheMonthPolicy.DisplayValue = new DefaultPayPeriod(endOfTheMonth).ToString();
 
-            await _repository.SaveManyAsync(new List<ListOfValue>()
+            await SaveManyAsync(new List<ListOfValue>()
             {
                 currentFirstHalfPolicy,
                 currentEndOfTheMonthPolicy
-            });
+            },
+            currentlyLoggedInUserId);
         }
 
         public void ValidateDefaultPayPeriodData(TimePeriod firstHalf, TimePeriod endOfTheMonth)

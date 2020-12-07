@@ -297,7 +297,7 @@ Public Class AssignBonusToLoanForm
             _loanSchedule.DeductionAmount = totalAmountPayment
         End If
 
-        Await _loanService.SaveAsync(_loanSchedule)
+        Await _loanService.SaveAsync(_loanSchedule, z_User)
 
         Await _loanPaymentFromBonusRepo.SaveManyAsync(saveList)
 

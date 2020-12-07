@@ -38,11 +38,11 @@ namespace AccuPay.Data.Services
             _divisionService = divisionService;
         }
 
-        protected override string GetUserActivityName(Position salary) => UserActivityName;
+        protected override string GetUserActivityName(Position position) => UserActivityName;
 
-        protected override string CreateUserActivitySuffixIdentifier(Position salary) => string.Empty;
+        protected override string CreateUserActivitySuffixIdentifier(Position position) => string.Empty;
 
-        public override async Task DeleteAsync(int positionId, int changedByUserId)
+        public override async Task DeleteAsync(int positionId, int currentlyLoggedInUserId)
         {
             var position = await _positionRepository.GetByIdAsync(positionId);
 
@@ -54,12 +54,15 @@ namespace AccuPay.Data.Services
 
             await base.DeleteAsync(
                 id: positionId,
-                changedByUserId: changedByUserId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
         }
 
-        protected override async Task SanitizeEntity(Position position, Position oldPosition)
+        protected override async Task SanitizeEntity(Position position, Position oldPosition, int changedByUserId)
         {
-            await base.SanitizeEntity(entity: position, oldEntity: oldPosition);
+            await base.SanitizeEntity(
+                entity: position,
+                oldEntity: oldPosition,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (position.DivisionID == null)
                 throw new BusinessLogicException("Division is required.");
@@ -81,7 +84,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)
+        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int currentlyLoggedInUserId)
         {
             var existingPosition = await _positionRepository.GetByNameAsync(organizationId, positionName);
 
@@ -90,20 +93,19 @@ namespace AccuPay.Data.Services
             var defaultDivision = await _divisionService
                 .GetOrCreateDefaultDivisionAsync(
                     organizationId: organizationId,
-                    userId: userId);
+                    changedByUserId: currentlyLoggedInUserId);
 
             if (defaultDivision?.RowID == null)
                 throw new BusinessLogicException("Cannot create default division.");
 
             var position = new Position()
             {
-                CreatedBy = userId,
                 OrganizationID = organizationId,
                 Name = positionName,
                 DivisionID = defaultDivision.RowID.Value
             };
 
-            await SaveAsync(position);
+            await SaveAsync(position, currentlyLoggedInUserId);
 
             return position;
         }

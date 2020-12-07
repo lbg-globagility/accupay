@@ -26,18 +26,18 @@ namespace AccuPay.Data.Services
         {
         }
 
-        protected override async Task SanitizeEntity(T entity, T oldEntity)
+        protected override async Task SanitizeEntity(T entity, T oldEntity, int currentlyLoggedInUserId)
         {
-            await base.SanitizeEntity(entity, oldEntity);
+            await base.SanitizeEntity(entity, oldEntity, currentlyLoggedInUserId);
 
             if (entity.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
         }
 
-        protected override async Task RecordDelete(T entity, int changedByUserId)
+        protected override async Task RecordDelete(T entity, int currentlyLoggedInUserId)
         {
             await _userActivityRepository.RecordDeleteAsync(
-                changedByUserId,
+                currentlyLoggedInUserId,
                 entityId: entity.RowID.Value,
                 entityName: GetUserActivityName(entity),
                 suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),

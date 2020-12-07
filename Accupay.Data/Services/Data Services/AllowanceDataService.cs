@@ -40,9 +40,10 @@ namespace AccuPay.Data.Services
             _allowanceTypeRepository = allowanceTypeRepository;
         }
 
-        public async Task BatchApply(IReadOnlyCollection<AllowanceImportModel> validRecords, int organizationId, int userId)
+        public async Task BatchApply(IReadOnlyCollection<AllowanceImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
-            AllowanceType setAllowanceType(IGrouping<string, AllowanceImportModel> a) => new AllowanceType() { DisplayString = a.FirstOrDefault().AllowanceName, Frequency = a.FirstOrDefault().AllowanceFrequency, Name = a.FirstOrDefault().AllowanceName };
+            AllowanceType setAllowanceType(IGrouping<string, AllowanceImportModel> a) =>
+                new AllowanceType() { DisplayString = a.FirstOrDefault().AllowanceName, Frequency = a.FirstOrDefault().AllowanceFrequency, Name = a.FirstOrDefault().AllowanceName };
 
             var notYetExistsAllowanceTypes = validRecords
                 .Where(a => a.IsAllowanceTypeNotYetExists)
@@ -76,13 +77,12 @@ namespace AccuPay.Data.Services
                     EffectiveEndDate = record.EffectiveEndDate,
                     EffectiveStartDate = record.EffectiveStartDate.Value,
                     OrganizationID = organizationId,
-                    CreatedBy = userId
                 };
 
                 allowances.Add(allowance);
             }
 
-            await _allowanceRepository.SaveManyAsync(allowances);
+            await SaveManyAsync(allowances, currentlyLoggedInUserId);
         }
 
         #region Overrides
@@ -95,22 +95,12 @@ namespace AccuPay.Data.Services
         private string CreateUserActivitySuffixIdentifier(Allowance allowance, string allowanceType) =>
             $" with type '{allowanceType}' and start date '{allowance.EffectiveStartDate.ToShortDateString()}'";
 
-        protected override async Task PostDeleteAction(Allowance allowance, int changedByUserId)
+        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance, int changedByUserId)
         {
-            var allowanceType = await _productRepository.GetByIdAsync(allowance.ProductID.Value);
-
-            await _userActivityRepository.RecordDeleteAsync(
-                userId: changedByUserId,
-                entityId: allowance.RowID.Value,
-                entityName: GetUserActivityName(allowance),
-                suffixIdentifier: CreateUserActivitySuffixIdentifier(allowance, allowanceType?.PartNo),
-                organizationId: allowance.OrganizationID.Value,
-                changedEmployeeId: allowance.EmployeeID);
-        }
-
-        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance)
-        {
-            await base.SanitizeEntity(entity: allowance, oldEntity: oldAllowance);
+            await base.SanitizeEntity(
+                entity: allowance,
+                oldEntity: oldAllowance,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (allowance.IsOneTime)
                 allowance.EffectiveEndDate = allowance.EffectiveStartDate;
@@ -194,6 +184,19 @@ namespace AccuPay.Data.Services
             }
 
             await CheckForClosedPayPeriod(allowances, oldAllowances);
+        }
+
+        protected override async Task PostDeleteAction(Allowance allowance, int changedByUserId)
+        {
+            var allowanceType = await _productRepository.GetByIdAsync(allowance.ProductID.Value);
+
+            await _userActivityRepository.RecordDeleteAsync(
+                currentlyLoggedInUserId: changedByUserId,
+                entityId: allowance.RowID.Value,
+                entityName: GetUserActivityName(allowance),
+                suffixIdentifier: CreateUserActivitySuffixIdentifier(allowance, allowanceType?.PartNo),
+                organizationId: allowance.OrganizationID.Value,
+                changedEmployeeId: allowance.EmployeeID);
         }
 
         #endregion Overrides
