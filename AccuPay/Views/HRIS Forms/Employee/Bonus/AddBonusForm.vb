@@ -1,7 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -121,8 +122,8 @@ Public Class AddBonusForm
                 .TaxableFlag = product.Status
             End With
 
-            Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
-            Await bonusRepo.CreateAsync(_newBonus)
+            Dim bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
+            Await bonusDataService.CreateAsync(_newBonus)
 
             _userActivityRepo.RecordAdd(
                 z_User,
