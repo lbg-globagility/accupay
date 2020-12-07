@@ -1,5 +1,4 @@
-﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -97,8 +96,6 @@ namespace AccuPay.Data.Services
 
         private readonly WithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
-        public FeatureListChecker FeatureListChecker { get; private set; }
-
         public PayrollResources(CalendarService calendarService,
                                 ListOfValueService listOfValueService,
                                 SystemOwnerService systemOwnerService,
@@ -173,8 +170,6 @@ namespace AccuPay.Data.Services
             await LoadTimeEntries();
             await LoadVacationLeaveProduct();
             await LoadWithholdingTaxBrackets();
-
-            FeatureListChecker = FeatureListChecker.Instance;
         }
 
         private async Task LoadAllowances()

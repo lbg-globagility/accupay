@@ -307,10 +307,10 @@ Partial Class EmployeeLoansForm
         Me.lnkBonusPayment.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.lnkBonusPayment.Location = New System.Drawing.Point(714, 407)
         Me.lnkBonusPayment.Name = "lnkBonusPayment"
-        Me.lnkBonusPayment.Size = New System.Drawing.Size(97, 15)
+        Me.lnkBonusPayment.Size = New System.Drawing.Size(98, 15)
         Me.lnkBonusPayment.TabIndex = 514
         Me.lnkBonusPayment.TabStop = True
-        Me.lnkBonusPayment.Text = "pay using Bonus"
+        Me.lnkBonusPayment.Text = "Pay using Bonus"
         Me.lnkBonusPayment.Visible = False
         '
         'chkCompleteFilter
@@ -611,7 +611,7 @@ Partial Class EmployeeLoansForm
         Me.lblLoanType.Location = New System.Drawing.Point(20, 3)
         Me.lblLoanType.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblLoanType.Name = "lblLoanType"
-        Me.lblLoanType.Size = New System.Drawing.Size(69, 13)
+        Me.lblLoanType.Size = New System.Drawing.Size(70, 13)
         Me.lblLoanType.TabIndex = 379
         Me.lblLoanType.Text = "Type of loan"
         '
@@ -736,7 +736,7 @@ Partial Class EmployeeLoansForm
         Me.lblTotalLoanAmount.Location = New System.Drawing.Point(20, 99)
         Me.lblTotalLoanAmount.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblTotalLoanAmount.Name = "lblTotalLoanAmount"
-        Me.lblTotalLoanAmount.Size = New System.Drawing.Size(103, 13)
+        Me.lblTotalLoanAmount.Size = New System.Drawing.Size(104, 13)
         Me.lblTotalLoanAmount.TabIndex = 362
         Me.lblTotalLoanAmount.Text = "Total Loan Amount"
         '

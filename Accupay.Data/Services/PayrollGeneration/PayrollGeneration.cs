@@ -12,7 +12,6 @@ namespace AccuPay.Data.Services
     public class PayrollGeneration
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
-        private bool _usesLoanDeductFromBonus;
 
         //private static ILog logger = LogManager.GetLogger("PayrollLogger");
 
@@ -77,9 +76,6 @@ namespace AccuPay.Data.Services
             var leaves = resources.Leaves.
                                     Where(a => a.EmployeeID == employee.RowID).
                                     ToList();
-
-            var checker = resources.FeatureListChecker;
-            _usesLoanDeductFromBonus = checker.HasAccess(Feature.LoanDeductFromBonus);
 
             try
             {
@@ -190,7 +186,14 @@ namespace AccuPay.Data.Services
                                                     timeEntries: timeEntries,
                                                     allowances);
 
-            var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules, bonuses: bonuses);
+            var useLoanDeductFromBonus = settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
+
+            var loanTransactions = CreateLoanTransactions(
+                paystub,
+                payPeriod,
+                loanSchedules,
+                bonuses: bonuses,
+                useLoanDeductFromBonus: useLoanDeductFromBonus);
 
             ComputePayroll(resources,
                             userId: userId,
@@ -223,7 +226,8 @@ namespace AccuPay.Data.Services
                         loanTransactions: loanTransactions,
                         timeEntries: timeEntries,
                         leaves: leaves,
-                        bonuses: bonuses);
+                        bonuses: bonuses,
+                        useLoanDeductFromBonus: useLoanDeductFromBonus);
 
             return PaystubEmployeeResult.Success(employee, paystub);
         }
@@ -258,7 +262,8 @@ namespace AccuPay.Data.Services
                                 ICollection<LoanTransaction> loanTransactions,
                                 IReadOnlyCollection<TimeEntry> timeEntries,
                                 IReadOnlyCollection<Leave> leaves,
-                                IReadOnlyCollection<Bonus> bonuses)
+                                IReadOnlyCollection<Bonus> bonuses,
+                                bool useLoanDeductFromBonus)
         {
             using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
             {
@@ -267,26 +272,13 @@ namespace AccuPay.Data.Services
                     loan.LastUpdBy = userId;
                     context.Entry(loan).State = EntityState.Modified;
 
-                    if (_usesLoanDeductFromBonus)
-                    {
-                        var loanPaymentFromBonuses = GetLoanPaymentFromBonuses(bonuses, loan, payPeriod: payPeriod);
-
-                        foreach (var lb in loanPaymentFromBonuses)
-                        {
-                            var existingItem = lb.Items
-                                .Where(i => i.LoanPaidBonusId == lb.Id)
-                                .Where(i => i.PaystubId == paystub.RowID)
-                                .FirstOrDefault();
-
-                            if (existingItem != null) continue;
-
-                            var lbItem = LoanPaymentFromBonusItem.CreateNew(lb.Id, paystub);
-
-                            lb.Items.Add(lbItem);
-
-                            context.Entry(lbItem).State = EntityState.Added;
-                        }
-                    }
+                    SaveLoanPaymentFromBonusItems(
+                        context: context,
+                        payPeriod: payPeriod,
+                        paystub: paystub,
+                        loan: loan,
+                        bonuses: bonuses,
+                        useLoanDeductFromBonus: useLoanDeductFromBonus);
                 }
 
                 if (paystub.RowID.HasValue)
@@ -346,6 +338,36 @@ namespace AccuPay.Data.Services
                     UpdateBenchmarkLeaveLedger(context, paystub, employee, payPeriod);
 
                 context.SaveChanges();
+            }
+        }
+
+        private void SaveLoanPaymentFromBonusItems(
+            PayrollContext context,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            LoanSchedule loan,
+            IReadOnlyCollection<Bonus> bonuses,
+            bool useLoanDeductFromBonus)
+        {
+            if (useLoanDeductFromBonus)
+            {
+                var loanPaymentFromBonuses = GetLoanPaymentFromBonuses(bonuses, loan, payPeriod: payPeriod);
+
+                foreach (var lb in loanPaymentFromBonuses)
+                {
+                    var existingItem = lb.Items
+                        .Where(i => i.LoanPaidBonusId == lb.Id)
+                        .Where(i => i.PaystubId == paystub.RowID)
+                        .FirstOrDefault();
+
+                    if (existingItem != null) continue;
+
+                    var lbItem = LoanPaymentFromBonusItem.CreateNew(lb.Id, paystub);
+
+                    lb.Items.Add(lbItem);
+
+                    context.Entry(lbItem).State = EntityState.Added;
+                }
             }
         }
 
@@ -785,7 +807,8 @@ namespace AccuPay.Data.Services
         private List<LoanTransaction> CreateLoanTransactions(Paystub paystub,
                                                             PayPeriod payPeriod,
                                                             IReadOnlyCollection<LoanSchedule> loanSchedules,
-                                                            IReadOnlyCollection<Bonus> bonuses)
+                                                            IReadOnlyCollection<Bonus> bonuses,
+                                                            bool useLoanDeductFromBonus)
         {
             var loanTransactions = new List<LoanTransaction>();
             var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
@@ -794,21 +817,7 @@ namespace AccuPay.Data.Services
             {
                 if (loanSchedule.LoanPayPeriodLeft == 0) continue;
 
-                decimal deductionAmount = 0;
-
-                if (loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft)
-                {
-                    deductionAmount = loanSchedule.TotalBalanceLeft;
-                }
-                else
-                {
-                    deductionAmount = loanSchedule.DeductionAmount;
-                }
-
-                if (_usesLoanDeductFromBonus)
-                {
-                    deductionAmount += GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod).Sum(l => l.AmountPayment);
-                }
+                decimal deductionAmount = GetValidDeductionAmount(loanSchedule, payPeriod, bonuses, useLoanDeductFromBonus);
 
                 loanSchedule.TotalBalanceLeft -= deductionAmount;
                 loanSchedule.RecomputePayPeriodLeft();
@@ -831,6 +840,31 @@ namespace AccuPay.Data.Services
             }
 
             return loanTransactions;
+        }
+
+        private decimal GetValidDeductionAmount(LoanSchedule loanSchedule, PayPeriod payPeriod, IReadOnlyCollection<Bonus> bonuses, bool useLoanDeductFromBonus)
+        {
+            if (loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft)
+            {
+                return loanSchedule.TotalBalanceLeft;
+            }
+            else
+            {
+                if (useLoanDeductFromBonus && GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod).Any())
+                {
+                    var newDeductionAmount =
+                        GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod)
+                        .Sum(l => l.AmountPayment);
+                    if (newDeductionAmount > loanSchedule.TotalBalanceLeft)
+                    {
+                        return loanSchedule.TotalBalanceLeft;
+                    }
+
+                    return newDeductionAmount;
+                }
+
+                return loanSchedule.DeductionAmount;
+            }
         }
 
         private void UpdatePaystubItems(PayrollContext context,

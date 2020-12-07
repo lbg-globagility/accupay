@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -49,6 +49,8 @@ Public Class EmployeeLoansForm
 
     Private _currentRolePermission As RolePermission
 
+    Private ReadOnly _policyHelper As PolicyHelper
+
     Sub New()
 
         InitializeComponent()
@@ -71,6 +73,8 @@ Public Class EmployeeLoansForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
     End Sub
 
@@ -89,8 +93,7 @@ Public Class EmployeeLoansForm
 
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
-        Dim checker = FeatureListChecker.Instance
-        lnkBonusPayment.Visible = checker.HasAccess(Feature.LoanDeductFromBonus)
+        lnkBonusPayment.Visible = _policyHelper.UseLoanDeductFromBonus
     End Sub
 
     Private Async Function CheckRolePermissions() As Task
@@ -1055,8 +1058,10 @@ Public Class EmployeeLoansForm
         userActivity.ShowDialog()
     End Sub
 
-    Private Sub lnkBonusPayment_Click(sender As Object, e As EventArgs) Handles lnkBonusPayment.Click
-        Dim from As New AssignBonusToLoanForm(GetSelectedLoan())
+    Private Async Sub lnkBonusPayment_Click(sender As Object, e As EventArgs) Handles lnkBonusPayment.Click
+        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        Dim loan = Await repository.GetByIdAsync(GetSelectedLoan().RowID.Value)
+        Dim from As New AssignBonusToLoanForm(loan)
         If from.ShowDialog() = DialogResult.OK Then
             EmployeesDataGridView_SelectionChanged(EmployeesDataGridView, New EventArgs)
         End If

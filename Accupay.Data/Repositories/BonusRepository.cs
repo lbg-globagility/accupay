@@ -1,7 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,7 +81,9 @@ namespace AccuPay.Data.Repositories
         public async Task<Bonus> GetByIdAsync(int id)
         {
             return await _context.Bonuses
+                .AsNoTracking()
                 .Include(b => b.LoanPaymentFromBonuses)
+                    .ThenInclude(lb => lb.Items)
                 .Where(b => b.RowID == id)
                 .FirstOrDefaultAsync();
         }
