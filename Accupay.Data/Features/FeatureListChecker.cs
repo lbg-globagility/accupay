@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,10 +23,6 @@ public class FeatureListChecker
         {
             "AdditionalVacationLeaveType",
             "29abbfc8-4645-4153-9a9f-84794fad672f"
-        },
-        {
-            "LoanDeductFromBonus",
-            "8d066d73-775d-44b3-bd86-0bff6824aea5"
         },
         {
             "TripTicket",
@@ -100,6 +96,5 @@ public enum Feature
 {
     JobLevel,
     AdditionalVacationLeaveType,
-    LoanDeductFromBonus,
     TripTicket
 }
