@@ -129,7 +129,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public bool OverUseBonus
+        public bool IsExcessivePayment
         {
             get
             {
