@@ -119,7 +119,7 @@ namespace AccuPay.Data.Services
                     if ((updatedBonus.BonusAmount - totalPayment) < 0)
                     {
                         updatedBonus.BonusAmount = oldBonus.BonusAmount;
-                        throw new BusinessLogicException("Bonus Amount shrunk resulting to Loan Payment(s) became insufficient.");
+                        throw new BusinessLogicException("Bonus Amount shrunk resulting to Loan Payment(s) became insufficient. Try correcting the Loan Payment(s) first then edit this Bonus.");
                     }
                 }
             }
