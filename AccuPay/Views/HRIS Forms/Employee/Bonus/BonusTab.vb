@@ -29,7 +29,8 @@ Public Class BonusTab
     Private ReadOnly _productRepo As ProductRepository
 
     Private ReadOnly _userActivityRepo As UserActivityRepository
-    Private ReadOnly _featureListChecker As FeatureListChecker
+
+    Private ReadOnly _policyHelper As PolicyHelper
 
     Public Sub New()
 
@@ -44,7 +45,7 @@ Public Class BonusTab
             _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         End If
 
-        _featureListChecker = FeatureListChecker.Instance
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
     End Sub
 
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
