@@ -12,7 +12,6 @@ namespace AccuPay.Data.Services
     public class PayrollGeneration
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
-        private bool _usesLoanDeductFromBonus;
 
         //private static ILog logger = LogManager.GetLogger("PayrollLogger");
 
@@ -77,9 +76,6 @@ namespace AccuPay.Data.Services
             var leaves = resources.Leaves.
                                     Where(a => a.EmployeeID == employee.RowID).
                                     ToList();
-
-            var checker = resources.FeatureListChecker;
-            _usesLoanDeductFromBonus = checker.HasAccess(Feature.LoanDeductFromBonus);
 
             try
             {
@@ -190,7 +186,14 @@ namespace AccuPay.Data.Services
                                                     timeEntries: timeEntries,
                                                     allowances);
 
-            var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules, bonuses: bonuses);
+            var useLoanDeductFromBonus = settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
+
+            var loanTransactions = CreateLoanTransactions(
+                paystub,
+                payPeriod,
+                loanSchedules,
+                bonuses: bonuses,
+                useLoanDeductFromBonus: useLoanDeductFromBonus);
 
             ComputePayroll(resources,
                             userId: userId,
