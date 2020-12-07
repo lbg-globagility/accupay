@@ -2,9 +2,8 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -172,8 +171,8 @@ Public Class BonusTab
             If result = MsgBoxResult.Yes Then
                 Await FunctionUtils.TryCatchFunctionAsync("Delete Bonus",
                 Async Function()
-                    Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
-                    Await bonusRepo.DeleteAsync(_currentBonus)
+                    Dim bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
+                    Await bonusDataService.DeleteAsync(_currentBonus)
 
                     _userActivityRepo.RecordDelete(
                         z_User,
@@ -259,12 +258,9 @@ Public Class BonusTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await ValidateUsedBonusForLoanPayment(oldBonus:=oldBonus)
+                    Dim bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
 
-                    Dim repo = MainServiceProvider.GetRequiredService(Of BonusRepository)
-
-                    _currentBonus.LastUpdBy = z_User
-                    Await repo.UpdateAsync(_currentBonus)
+                    Await bonusDataService.UpdateAsync(updatedBonus:=_currentBonus, oldBonus:=oldBonus, _policyHelper.UseLoanDeductFromBonus)
 
                     RecordUpdateBonus(oldBonus)
 
