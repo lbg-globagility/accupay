@@ -450,73 +450,26 @@ Public Class OrganizationForm
         Me.Close()
     End Sub
 
-    Private Sub addAddressLink1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles addAddressLink1.LinkClicked
+    Private Async Sub addAddressLink1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles addAddressLink1.LinkClicked
         Dim n_AddressClass As New AddressClass
 
         n_AddressClass.IsAddNew = True
 
         If n_AddressClass.ShowDialog("") = Windows.Forms.DialogResult.OK Then
 
-            Dim full_address = String.Empty
+            Dim originalAddressId = _currentOrganization.PrimaryAddressId
 
-            With n_AddressClass
+            Await FillAddress()
 
-                If .StreetAddress1 = Nothing Then
-                    full_address = Nothing
-                Else
-                    full_address = .StreetAddress1 & ","
-                End If
+            Dim address = CType(AddressComboBox.DataSource, List(Of Address))
 
-                If .StreetAddress2 <> Nothing Then
-                    full_address &= .StreetAddress2 & ","
-                End If
+            If originalAddressId.HasValue AndAlso address.Any(Function(a) a.RowID.Value = originalAddressId.Value) Then
 
-                If .Barangay <> Nothing Then
-                    full_address &= .Barangay & ","
-                End If
+                AddressComboBox.SelectedValue = originalAddressId
+            Else
 
-                If .City <> Nothing Then
-                    full_address &= .City & ","
-                End If
-
-                If .State <> Nothing Then
-                    full_address &= "," & .State & ","
-                End If
-
-                If .Country <> Nothing Then
-                    full_address &= .Country & ","
-                End If
-
-                If .ZipCode <> Nothing Then
-                    full_address &= .ZipCode
-                End If
-
-            End With
-
-            Dim addressstringlength = full_address.Length
-
-            Dim LastCharIsComma = String.Empty
-
-            Try
-                LastCharIsComma =
-                full_address.Substring((addressstringlength - 1), 1)
-            Catch ex As Exception
-                LastCharIsComma = String.Empty
-            End Try
-
-            If LastCharIsComma.Trim = "," Then
-                full_address = full_address.Substring(0, (addressstringlength - 1))
-
+                AddressComboBox.SelectedIndex = EmptyIndex
             End If
-
-            full_address = full_address.Replace(",,", ",")
-
-            If AddressComboBox.Items.Contains(full_address) = False Then
-                AddressComboBox.Items.Add(full_address)
-
-            End If
-
-            AddressComboBox.Text = full_address
 
         End If
 
