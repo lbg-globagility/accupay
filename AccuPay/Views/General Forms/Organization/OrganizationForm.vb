@@ -324,6 +324,8 @@ Public Class OrganizationForm
 
         End If
 
+        SaveButton.Enabled = False
+
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
@@ -379,6 +381,9 @@ Public Class OrganizationForm
                 End If
 
             End Function)
+
+        SaveButton.Enabled = True
+
     End Function
 
     Private Sub txtcompFaxNumTxt_TextChanged(sender As Object, e As EventArgs) Handles txtcompFaxNumTxt.TextChanged
