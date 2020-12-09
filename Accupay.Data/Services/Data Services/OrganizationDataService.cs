@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using System;
 using System.Threading.Tasks;
@@ -48,6 +49,16 @@ namespace AccuPay.Data.Services
             entity.AuditUser(changedByUserId);
 
             return Task.CompletedTask;
+        }
+
+        protected override async Task AdditionalDeleteValidation(Organization entity)
+        {
+            var clientOrganizations = await _organizationRepository.List(OrganizationPageOptions.AllData, entity.ClientId);
+
+            if (clientOrganizations.organizations.Count <= 1)
+            {
+                throw new BusinessLogicException("There should be at least one active organization!");
+            }
         }
 
         protected override async Task AdditionalSaveValidation(Organization entity, Organization oldEntity)

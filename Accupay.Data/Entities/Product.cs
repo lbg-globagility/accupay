@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Helpers;
+using AccuPay.Data.Helpers;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,42 +10,42 @@ namespace AccuPay.Data.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual int? RowID { get; set; }
+        public int? RowID { get; set; }
 
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
-        public virtual int? OrganizationID { get; set; }
+        public int? OrganizationID { get; set; }
 
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
 
-        public virtual string PartNo { get; set; }
+        public string PartNo { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual DateTime Created { get; set; }
+        public DateTime Created { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public virtual DateTime? LastUpd { get; set; }
+        public DateTime? LastUpd { get; set; }
 
-        public virtual int? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
 
-        public virtual int? LastUpdBy { get; set; }
+        public int? LastUpdBy { get; set; }
 
-        public virtual string Category { get; set; }
+        public string Category { get; set; }
 
         [ForeignKey("CategoryID")]
-        public virtual Category CategoryEntity { get; set; }
+        public Category CategoryEntity { get; set; }
 
-        public virtual int? CategoryID { get; set; }
+        public int? CategoryID { get; set; }
 
-        public virtual string Comments { get; set; }
+        public string Comments { get; set; }
 
-        public virtual string Status { get; set; }
+        public string Status { get; set; }
 
-        public virtual bool Fixed { get; set; }
+        public bool Fixed { get; set; }
 
-        public virtual char AllocateBelowSafetyFlag { get; set; }
+        public char AllocateBelowSafetyFlag { get; set; }
 
-        public virtual bool ActiveData { get; set; }
+        public bool ActiveData { get; set; }
 
         public string DisplayName => PartNo;
 

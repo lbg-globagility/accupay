@@ -20,6 +20,12 @@ namespace AccuPay.Data
             RoleClaim,
             UserToken>
     {
+        //////// Created solely for deleting their data when organization is Deleted
+        internal virtual DbSet<AuditTrail> AuditTrails { get; set; }
+
+        internal virtual DbSet<View> Views { get; set; }
+        ////////////////////////////////////////
+
         internal virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
         internal virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
         internal virtual DbSet<Address> Addresses { get; set; }
@@ -99,7 +105,17 @@ namespace AccuPay.Data
         {
             //base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Category>()
+                .HasMany(x => x.Products)
+                .WithOne(x => x.CategoryEntity)
+                .OnDelete(DeleteBehavior.Cascade);
+
             SetGeneratedColumnsToReadOnly(modelBuilder);
+
+            modelBuilder.Entity<Organization>()
+                .HasMany(x => x.Categories)
+                .WithOne(x => x.Organization)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Paystub>().
             HasOne(x => x.ThirteenthMonthPay).
@@ -116,9 +132,9 @@ namespace AccuPay.Data
 
             // Leave transaction should be tied to Time Entry Generation not Payroll Generation
             // thus leave transactions should be processed when we generate time entries.
-            modelBuilder.Entity<Paystub>().
-                HasMany(x => x.LeaveTransactions).
-                WithOne(x => x.Paystub);
+            modelBuilder.Entity<Paystub>()
+                .HasMany(x => x.LeaveTransactions)
+                .WithOne(x => x.Paystub);
 
             modelBuilder.Entity<TardinessRecord>().
                 HasKey(t => new { t.EmployeeId, t.Year });

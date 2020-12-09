@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,5 +23,9 @@ namespace AccuPay.Data.Entities
         public int? CatalogID { get; set; }
 
         public DateTime? LastUpd { get; set; }
+
+        public Organization Organization { get; set; }
+        
+        public ICollection<Product> Products { get; set; }
     }
 }

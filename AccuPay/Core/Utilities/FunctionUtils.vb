@@ -1,45 +1,20 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Exceptions
 Imports AccuPay.Infrastructure.Services.Excel
+Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Desktop.Utilities
 
     Public Class FunctionUtils
 
-        Public Shared Sub TryCatchFunction(
-            messageTitle As String,
-            action As Action,
-            Optional baseExceptionErrorMessage As String = Nothing)
-
-            Try
-
-                action()
-            Catch ex As ArgumentException
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As BusinessLogicException
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As Exception
-                Debugger.Break()
-
-                If baseExceptionErrorMessage Is Nothing Then
-
-                    MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-                Else
-
-                    MessageBoxHelper.ErrorMessage(baseExceptionErrorMessage, messageTitle)
-                End If
-
-            End Try
-
-        End Sub
-
         Public Shared Async Function TryCatchFunctionAsync(
             messageTitle As String,
             action As Func(Of Task),
             Optional baseExceptionErrorMessage As String = Nothing,
-            Optional errorCallBack As Action = Nothing) As Task
+            Optional errorCallBack As Action = Nothing,
+            Optional dbUpdateCallBack As Action(Of DbUpdateException) = Nothing) As Task
             Try
 
                 Await action()
@@ -55,24 +30,37 @@ Namespace Global.AccuPay.Desktop.Utilities
                 If errorCallBack IsNot Nothing Then
                     errorCallBack()
                 End If
-            Catch ex As Exception
-                Debugger.Break()
+            Catch ex As DbUpdateException
 
-                If baseExceptionErrorMessage Is Nothing Then
-
-                    MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+                If dbUpdateCallBack IsNot Nothing Then
+                    dbUpdateCallBack(ex)
                 Else
+                    HandleDefaultError(messageTitle, baseExceptionErrorMessage, errorCallBack, ex)
 
-                    MessageBoxHelper.ErrorMessage(baseExceptionErrorMessage, messageTitle)
                 End If
+            Catch ex As Exception
 
-                If errorCallBack IsNot Nothing Then
-                    errorCallBack()
-                End If
+                HandleDefaultError(messageTitle, baseExceptionErrorMessage, errorCallBack, ex)
 
             End Try
 
         End Function
+
+        Private Shared Sub HandleDefaultError(messageTitle As String, baseExceptionErrorMessage As String, errorCallBack As Action, ex As Exception)
+            Debugger.Break()
+
+            If baseExceptionErrorMessage Is Nothing Then
+
+                MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+            Else
+
+                MessageBoxHelper.ErrorMessage(baseExceptionErrorMessage, messageTitle)
+            End If
+
+            If errorCallBack IsNot Nothing Then
+                errorCallBack()
+            End If
+        End Sub
 
         Public Shared Async Function TryCatchFunctionAsync(
             messageTitle As String,

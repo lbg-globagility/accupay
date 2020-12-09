@@ -1,0 +1,5 @@
+ALTER TABLE `organization`
+	DROP COLUMN IF EXISTS `PrimaryContactID`;
+
+DROP TABLE IF EXISTS annualunusedleave;
+DROP TABLE IF EXISTS contact;

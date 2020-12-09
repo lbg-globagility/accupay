@@ -15,28 +15,28 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             return _context.Set<T>()
                 .AsNoTracking()
                 .FirstOrDefault(x => x.RowID == id);
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async virtual Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.RowID == id);
         }
 
-        public async Task<ICollection<T>> GetAllAsync()
+        public async virtual Task<ICollection<T>> GetAllAsync()
         {
             return await _context.Set<T>()
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<ICollection<T>> GetManyByIdsAsync(int[] ids)
+        public async virtual Task<ICollection<T>> GetManyByIdsAsync(int[] ids)
         {
             return await _context.Set<T>()
                 .AsNoTracking()
@@ -44,19 +44,19 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public async virtual Task DeleteAsync(T entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(T entity)
+        public async virtual Task SaveAsync(T entity)
         {
             await SaveFunction(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task CreateAsync(T entity)
+        public async virtual Task CreateAsync(T entity)
         {
             _context.Set<T>().Add(entity);
             DetachNavigationProperties(entity);
@@ -64,7 +64,7 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T entity)
+        public async virtual Task UpdateAsync(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
             DetachNavigationProperties(entity);
@@ -72,14 +72,14 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public virtual async Task SaveManyAsync(List<T> entities)
+        public async virtual Task SaveManyAsync(List<T> entities)
         {
             await SaveManyAsync(
                 added: entities.Where(x => x.IsNewEntity).ToList(),
                 updated: entities.Where(x => !x.IsNewEntity).ToList());
         }
 
-        public async Task SaveManyAsync(
+        public async virtual Task SaveManyAsync(
             List<T> added = null,
             List<T> updated = null,
             List<T> deleted = null)

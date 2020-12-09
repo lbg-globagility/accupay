@@ -1,0 +1,6 @@
+DELETE FROM product WHERE `Name` IN ('123', 'Communication');
+
+ALTER TABLE `product`
+	ALTER `CategoryID` DROP DEFAULT;
+ALTER TABLE `product`
+	CHANGE COLUMN `CategoryID` `CategoryID` INT(11) NOT NULL AFTER `Category`;

@@ -9,6 +9,7 @@ Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
+Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class OrganizationForm
@@ -41,8 +42,6 @@ Public Class OrganizationForm
 
         OrganizationGridView.AutoGenerateColumns = False
         Await FillOrganizationList()
-
-        Await FillOrganizationData()
 
         FirstPayPeriodGroupBox.Visible = _policy.HasDifferentPayPeriodDates
         SetMaxAndMinDateOfFirstPayPeriod()
@@ -120,6 +119,9 @@ Public Class OrganizationForm
     End Function
 
     Private Async Function FillOrganizationList() As Task
+
+        RemoveHandler OrganizationGridView.SelectionChanged, AddressOf OrganizationGridView_SelectionChanged
+
         Dim list = Await _organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)
 
         Dim organizations = list.organizations.
@@ -139,6 +141,11 @@ Public Class OrganizationForm
         ToList()
 
         OrganizationGridView.DataSource = _organizations
+
+        Await FillOrganizationData()
+
+        AddHandler OrganizationGridView.SelectionChanged, AddressOf OrganizationGridView_SelectionChanged
+
     End Function
 
     Private Async Function FillOrganizationData() As Task
@@ -318,6 +325,54 @@ Public Class OrganizationForm
 
     End Sub
 
+    Private Async Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+
+        If _currentOrganization?.RowID Is Nothing Then
+            MessageBoxHelper.Warning("No organization selected!")
+            Return
+        End If
+
+        Const messageTitle As String = "Delete Organization"
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete organization: {_currentOrganization.Name}?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
+        DeleteButton.Enabled = False
+        Me.Cursor = Cursors.WaitCursor
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
+                Await dataService.DeleteAsync(
+                    id:=_currentOrganization.RowID.Value,
+                    currentlyLoggedInUserId:=z_User)
+
+                myBalloon("Successfully Deleted", "Deleted", lblSaveMsg, , -100)
+
+                Await FillOrganizationList()
+
+            End Function,
+            dbUpdateCallBack:=
+            Sub(dbu As DbUpdateException)
+
+                For Each result In dbu.Entries
+                    Console.WriteLine($"Type: {result.Entity.GetType().Name} was part of the problem. | Error Message: {dbu.Message} | Inner Exception: {dbu.InnerException?.Message}")
+                Next
+
+                MessageBoxHelper.ErrorMessage(
+                    $"Organization: {_currentOrganization.Name} cannot be deleted because it already has transactions in the system. You can try renaming the organization instead.",
+                    messageTitle)
+
+            End Sub)
+
+        DeleteButton.Enabled = True
+        Me.Cursor = Cursors.Default
+
+    End Sub
+
     Private Async Function SaveOrganzation(isNew As Boolean, userRoles As List(Of UserRoleIdData), messageTitle As String) As Task
 
         If userRoles.Any(Function(r) r.RoleId.HasValue AndAlso r.RoleId.Value > 0) Then
@@ -325,6 +380,7 @@ Public Class OrganizationForm
         End If
 
         SaveButton.Enabled = False
+        Me.Cursor = Cursors.WaitCursor
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
@@ -383,6 +439,7 @@ Public Class OrganizationForm
             End Function)
 
         SaveButton.Enabled = True
+        Me.Cursor = Cursors.Default
 
     End Function
 
@@ -451,7 +508,7 @@ Public Class OrganizationForm
         Return CType(OrganizationGridView.CurrentRow.DataBoundItem, Organization).CloneJson()
     End Function
 
-    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         Me.Close()
     End Sub
 

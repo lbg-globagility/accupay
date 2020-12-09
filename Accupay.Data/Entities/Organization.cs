@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
@@ -43,6 +44,8 @@ namespace AccuPay.Data.Entities
         public Address Address { get; set; }
 
         public bool PaidAsLongAsHasTimeLog { get; set; }
+
+        public ICollection<Category> Categories { get; set; }
 
         public static Organization NewOrganization(int clientId)
         {
