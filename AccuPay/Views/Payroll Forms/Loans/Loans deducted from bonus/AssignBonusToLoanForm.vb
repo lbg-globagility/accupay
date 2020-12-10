@@ -13,14 +13,16 @@ Public Class AssignBonusToLoanForm
     Private ReadOnly _bonusDataService As BonusDataService
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
     Private _bonuses As IEnumerable(Of Bonus)
-    Private _loanPaymentFromBonusModels As List(Of LoanPaymentFromBonusData)
+    Private _loanTransactions As ICollection(Of LoanTransaction)
     Public Property ChangedBonus As Bonus
 
-    Public Sub New(loanSchedule As LoanSchedule)
+    Public Sub New(loanSchedule As LoanSchedule, loanTransactions As ICollection(Of LoanTransaction))
 
         InitializeComponent()
 
         _loanSchedule = loanSchedule
+
+        _loanTransactions = loanTransactions
 
         _bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
 
@@ -30,18 +32,23 @@ Public Class AssignBonusToLoanForm
     End Sub
 
     Private Async Sub AssignBonusToLoan_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        dgvBonuses.AutoGenerateColumns = False
+
+        DataGridView1.AutoGenerateColumns = False
+
+        btnSave.Visible = _loanSchedule.Status <> LoanSchedule.STATUS_COMPLETE
+
         Await LoadLoanPaymentFromBonus()
     End Sub
 
     Private Async Function LoadLoanPaymentFromBonus() As Task
-        _loanPaymentFromBonusModels = New List(Of LoanPaymentFromBonusData)
+        Dim loanPaymentFromBonusModels = New List(Of LoanPaymentFromBonusData)
 
-        Dim coveredPeriods = Await _payPeriodRepository.
-            GetLoanScheduleRemainingPayPeriodsAsync(_loanSchedule)
+        Dim loanCoveredPeriods = Await GetLoanCoveredPeriods()
 
         Dim loanTimerPeriod = New TimePeriod(
             _loanSchedule.DedEffectiveDateFrom,
-            coveredPeriods.Max(Function(pp) pp.PayToDate))
+            loanCoveredPeriods.Max(Function(pp) pp.PayToDate))
 
         _bonuses = Await _bonusDataService.GetByEmployeeAndPayPeriodForLoanPaymentAsync(
             organizationId:=z_OrganizationID,
@@ -55,14 +62,18 @@ Public Class AssignBonusToLoanForm
             If hasChangedBonus AndAlso bonus.RowID = ChangedBonus.RowID Then
                 paramBonus = ChangedBonus
             End If
-            _loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusData(bonus:=paramBonus, loanSchedule:=_loanSchedule))
+            loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusData(bonus:=paramBonus, loanSchedule:=_loanSchedule))
         Next
 
-        dgvBonuses.AutoGenerateColumns = False
-        dgvBonuses.DataSource = _loanPaymentFromBonusModels.
+        dgvBonuses.DataSource = loanPaymentFromBonusModels.
             OrderBy(Function(l) l.EffectiveStartDate).
             ThenByDescending(Function(l) l.BonusAmount).
             ToList()
+    End Function
+
+    Private Async Function GetLoanCoveredPeriods() As Task(Of ICollection(Of PayPeriod))
+        Return Await _payPeriodRepository.
+            GetLoanScheduleRemainingPayPeriodsAsync(_loanSchedule)
     End Function
 
     Private Sub DisplayLoanScheduleDetails(loanSchedule As LoanSchedule)
@@ -274,5 +285,94 @@ Public Class AssignBonusToLoanForm
         DialogResult = DialogResult.OK
         btnSave.Enabled = True
     End Sub
+
+    Private Async Sub TabPage2_Enter(sender As Object, e As EventArgs) Handles TabPage2.Enter
+        If dgvBonuses.Rows.Count() = 0 Then Return
+
+        Dim models = GetModels()
+
+        Dim coveredPeriod = Await GetLoanCoveredPeriods()
+
+        Dim dataSource = New List(Of PreviewLoanPayment)
+
+        Dim loanBalance = _loanSchedule.TotalLoanAmount
+
+        Dim totalPayment = 0D
+
+        For Each period In coveredPeriod
+            Dim periodicTotalPayment = 0D
+
+            For Each model In models
+                Dim isWithinPeriod = model.EffectiveStartDate <= period.PayToDate AndAlso
+                    period.PayFromDate <= model.EffectiveEndDate
+
+                If Not isWithinPeriod Then Continue For
+
+                totalPayment += model.AmountPayment
+
+                periodicTotalPayment += model.AmountPayment
+
+                dataSource.Add(New PreviewLoanPayment(model))
+            Next
+
+            If periodicTotalPayment = 0 Then
+                totalPayment += _loanSchedule.DeductionAmount
+                periodicTotalPayment = _loanSchedule.DeductionAmount
+            End If
+
+            Dim currentLoanBalance = loanBalance - totalPayment
+
+            If currentLoanBalance < 0 Then
+                totalPayment += currentLoanBalance
+                periodicTotalPayment += currentLoanBalance
+                currentLoanBalance -= currentLoanBalance
+            End If
+
+            Dim periodDataRow = New PreviewLoanPayment(period, payment:=periodicTotalPayment, loanBalance:=currentLoanBalance)
+            dataSource.Add(periodDataRow)
+
+            If currentLoanBalance = 0 Then Exit For
+        Next
+
+        DataGridView1.DataSource = dataSource.ToList()
+    End Sub
+
+    Private Sub DataGridView1_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridView1.DataSourceChanged
+        For Each row In DataGridView1.Rows.OfType(Of DataGridViewRow)
+            Dim data = DirectCast(row.DataBoundItem, PreviewLoanPayment)
+            If data.IsPeriod Then
+                Dim cellStyle = row.DefaultCellStyle
+                cellStyle.Font = New Font("Segoe UI", 8.25!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
+
+                If data.LoanBalance = _loanSchedule.TotalBalanceLeft Then
+                    cellStyle.BackColor = Color.Yellow
+                End If
+                row.DefaultCellStyle.ApplyStyle(cellStyle)
+            End If
+        Next
+    End Sub
+
+    Private Class PreviewLoanPayment
+
+        Public Sub New(model As LoanPaymentFromBonusData)
+            BonusType = model.BonusType
+            BonusAmount = model.BonusAmount
+            Payment = model.AmountPayment
+        End Sub
+
+        Public Sub New(payPeriod As PayPeriod, payment As Decimal, loanBalance As Decimal)
+            Period = $"{payPeriod.PayFromDate.ToShortDateString()} to {payPeriod.PayToDate.ToShortDateString()}"
+            Me.Payment = payment
+            Me.LoanBalance = loanBalance
+            IsPeriod = True
+        End Sub
+
+        Public ReadOnly Property IsPeriod As Boolean
+        Public ReadOnly Property Period As String
+        Public ReadOnly Property BonusType As String
+        Public ReadOnly Property BonusAmount As Decimal?
+        Public ReadOnly Property Payment As Decimal?
+        Public ReadOnly Property LoanBalance As Decimal?
+    End Class
 
 End Class

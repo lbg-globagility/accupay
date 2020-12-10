@@ -419,7 +419,7 @@ namespace AccuPay.Data.Repositories
             int organizationId = loanSchedule.OrganizationID.Value;
             DateTime startDate = loanSchedule.DedEffectiveDateFrom;
             string frequencySchedule = loanSchedule.DeductionSchedule;
-            int count = loanSchedule.LoanPayPeriodLeft < 0 ? 0 : loanSchedule.LoanPayPeriodLeft;
+            int count = (int)loanSchedule.TotalPayPeriod;
 
             var query = CreateBaseQuery(organizationId)
                 .Where(pp => pp.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId)
