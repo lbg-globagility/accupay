@@ -36,7 +36,7 @@ e.EmployeeID `DatCol1`
 ,ttmp.Amount `DatCol5`
 
 ,e.EmployeeType `DatCol6`
-,esa.BasicPay `DatCol7`
+,GET_employeerateperday(e.RowID, e.OrganizationID, ps.PayFromDate)  `DatCol7`
 ,IFNULL(ea.AllowanceAmount, 0) `DatCol8`
 
 FROM thirteenthmonthpay ttmp
@@ -47,11 +47,6 @@ INNER JOIN employee e
         ON e.RowID=ps.EmployeeID
 		     AND e.OrganizationID=ttmp.OrganizationID
 		     AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
-
-INNER JOIN employeesalary esa
-        ON esa.EmployeeID=e.RowID
-           AND (esa.EffectiveDateFrom >= pay_date_from OR ADDDATE(esa.EffectiveDateFrom, INTERVAL 99 YEAR) >= pay_date_from)
-           AND (esa.EffectiveDateFrom <= pay_date_to OR ADDDATE(esa.EffectiveDateFrom, INTERVAL 99 YEAR) <= pay_date_to)
 
 INNER JOIN payperiod pyp
         ON pyp.RowID=ps.PayPeriodID
