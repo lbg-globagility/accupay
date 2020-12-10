@@ -23,15 +23,16 @@ Partial Class AssignBonusToLoanForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.DetailsTabControl = New System.Windows.Forms.TabControl()
         Me.tbpDetails = New System.Windows.Forms.TabPage()
         Me.LoanDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
@@ -72,16 +73,8 @@ Partial Class AssignBonusToLoanForm
         Me.cmbDeductionSchedule = New System.Windows.Forms.ComboBox()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.dgvBonuses = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.BonusId = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BonusAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EffectiveDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EffectiveEndDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colIsFullAmount = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.colAmountPayment = New DevComponents.DotNetBar.Controls.DataGridViewDoubleInputColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.DataGridView1 = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.btnSave = New System.Windows.Forms.Button()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -99,6 +92,16 @@ Partial Class AssignBonusToLoanForm
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BonusId = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BonusType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BonusAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EffectiveDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EffectiveEndDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colIsFullAmount = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.colAmountPayment = New DevComponents.DotNetBar.Controls.DataGridViewDoubleInputColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DetailsTabControl.SuspendLayout()
         Me.tbpDetails.SuspendLayout()
         Me.LoanDetailsTabLayout.SuspendLayout()
@@ -114,6 +117,7 @@ Partial Class AssignBonusToLoanForm
         Me.SplitContainer1.SuspendLayout()
         CType(Me.dgvBonuses, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
@@ -125,7 +129,7 @@ Partial Class AssignBonusToLoanForm
         Me.DetailsTabControl.Location = New System.Drawing.Point(0, 0)
         Me.DetailsTabControl.Name = "DetailsTabControl"
         Me.DetailsTabControl.SelectedIndex = 0
-        Me.DetailsTabControl.Size = New System.Drawing.Size(753, 270)
+        Me.DetailsTabControl.Size = New System.Drawing.Size(860, 270)
         Me.DetailsTabControl.TabIndex = 6
         '
         'tbpDetails
@@ -134,7 +138,7 @@ Partial Class AssignBonusToLoanForm
         Me.tbpDetails.Location = New System.Drawing.Point(4, 22)
         Me.tbpDetails.Name = "tbpDetails"
         Me.tbpDetails.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpDetails.Size = New System.Drawing.Size(745, 244)
+        Me.tbpDetails.Size = New System.Drawing.Size(852, 244)
         Me.tbpDetails.TabIndex = 0
         Me.tbpDetails.Text = "Loan Details"
         Me.tbpDetails.UseVisualStyleBackColor = True
@@ -184,7 +188,7 @@ Partial Class AssignBonusToLoanForm
         Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
         Me.LoanDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.LoanDetailsTabLayout.Size = New System.Drawing.Size(739, 238)
+        Me.LoanDetailsTabLayout.Size = New System.Drawing.Size(846, 238)
         Me.LoanDetailsTabLayout.TabIndex = 4
         '
         'dtpDateFrom
@@ -205,7 +209,7 @@ Partial Class AssignBonusToLoanForm
         Me.pnlTxtLoanBalance.Location = New System.Drawing.Point(0, 160)
         Me.pnlTxtLoanBalance.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlTxtLoanBalance.Name = "pnlTxtLoanBalance"
-        Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(246, 32)
+        Me.pnlTxtLoanBalance.Size = New System.Drawing.Size(281, 32)
         Me.pnlTxtLoanBalance.TabIndex = 356
         '
         'Label3
@@ -247,7 +251,7 @@ Partial Class AssignBonusToLoanForm
         Me.plnCboLoanType.Location = New System.Drawing.Point(0, 16)
         Me.plnCboLoanType.Margin = New System.Windows.Forms.Padding(0)
         Me.plnCboLoanType.Name = "plnCboLoanType"
-        Me.plnCboLoanType.Size = New System.Drawing.Size(246, 32)
+        Me.plnCboLoanType.Size = New System.Drawing.Size(281, 32)
         Me.plnCboLoanType.TabIndex = 353
         '
         'cboLoanType
@@ -295,7 +299,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.lblRemarks.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblRemarks.AutoSize = True
-        Me.lblRemarks.Location = New System.Drawing.Point(504, 3)
+        Me.lblRemarks.Location = New System.Drawing.Point(573, 3)
         Me.lblRemarks.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblRemarks.Name = "lblRemarks"
         Me.lblRemarks.Size = New System.Drawing.Size(50, 13)
@@ -316,7 +320,7 @@ Partial Class AssignBonusToLoanForm
         'txtRemarks
         '
         Me.txtRemarks.BackColor = System.Drawing.Color.White
-        Me.txtRemarks.Location = New System.Drawing.Point(504, 19)
+        Me.txtRemarks.Location = New System.Drawing.Point(573, 19)
         Me.txtRemarks.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.txtRemarks.MaxLength = 2000
         Me.txtRemarks.Multiline = True
@@ -346,7 +350,7 @@ Partial Class AssignBonusToLoanForm
         Me.pnlTxtLoanAmount.Location = New System.Drawing.Point(0, 112)
         Me.pnlTxtLoanAmount.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlTxtLoanAmount.Name = "pnlTxtLoanAmount"
-        Me.pnlTxtLoanAmount.Size = New System.Drawing.Size(246, 32)
+        Me.pnlTxtLoanAmount.Size = New System.Drawing.Size(281, 32)
         Me.pnlTxtLoanAmount.TabIndex = 355
         '
         'Label220
@@ -375,7 +379,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.lblNumberOfPayPeriodLeft.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblNumberOfPayPeriodLeft.AutoSize = True
-        Me.lblNumberOfPayPeriodLeft.Location = New System.Drawing.Point(266, 3)
+        Me.lblNumberOfPayPeriodLeft.Location = New System.Drawing.Point(301, 3)
         Me.lblNumberOfPayPeriodLeft.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblNumberOfPayPeriodLeft.Name = "lblNumberOfPayPeriodLeft"
         Me.lblNumberOfPayPeriodLeft.Size = New System.Drawing.Size(115, 13)
@@ -385,7 +389,7 @@ Partial Class AssignBonusToLoanForm
         'txtNumberOfPayPeriodLeft
         '
         Me.txtNumberOfPayPeriodLeft.BackColor = System.Drawing.Color.White
-        Me.txtNumberOfPayPeriodLeft.Location = New System.Drawing.Point(266, 19)
+        Me.txtNumberOfPayPeriodLeft.Location = New System.Drawing.Point(301, 19)
         Me.txtNumberOfPayPeriodLeft.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.txtNumberOfPayPeriodLeft.Name = "txtNumberOfPayPeriodLeft"
         Me.txtNumberOfPayPeriodLeft.ReadOnly = True
@@ -396,7 +400,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.lblDeductionAmount.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblDeductionAmount.AutoSize = True
-        Me.lblDeductionAmount.Location = New System.Drawing.Point(266, 51)
+        Me.lblDeductionAmount.Location = New System.Drawing.Point(301, 51)
         Me.lblDeductionAmount.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblDeductionAmount.Name = "lblDeductionAmount"
         Me.lblDeductionAmount.Size = New System.Drawing.Size(105, 13)
@@ -408,10 +412,10 @@ Partial Class AssignBonusToLoanForm
         Me.pnlTxtDeductionAmount.Controls.Add(Me.Label1)
         Me.pnlTxtDeductionAmount.Controls.Add(Me.txtDeductionAmount)
         Me.pnlTxtDeductionAmount.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlTxtDeductionAmount.Location = New System.Drawing.Point(246, 64)
+        Me.pnlTxtDeductionAmount.Location = New System.Drawing.Point(281, 64)
         Me.pnlTxtDeductionAmount.Margin = New System.Windows.Forms.Padding(0)
         Me.pnlTxtDeductionAmount.Name = "pnlTxtDeductionAmount"
-        Me.pnlTxtDeductionAmount.Size = New System.Drawing.Size(238, 32)
+        Me.pnlTxtDeductionAmount.Size = New System.Drawing.Size(272, 32)
         Me.pnlTxtDeductionAmount.TabIndex = 360
         '
         'Label1
@@ -441,9 +445,9 @@ Partial Class AssignBonusToLoanForm
         Me.Panel1.Controls.Add(Me.txtLoanStatus)
         Me.Panel1.Controls.Add(Me.cmbLoanStatus)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(249, 115)
+        Me.Panel1.Location = New System.Drawing.Point(284, 115)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(232, 26)
+        Me.Panel1.Size = New System.Drawing.Size(266, 26)
         Me.Panel1.TabIndex = 361
         '
         'txtLoanStatus
@@ -471,7 +475,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.lblLoanStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblLoanStatus.AutoSize = True
-        Me.lblLoanStatus.Location = New System.Drawing.Point(266, 99)
+        Me.lblLoanStatus.Location = New System.Drawing.Point(301, 99)
         Me.lblLoanStatus.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblLoanStatus.Name = "lblLoanStatus"
         Me.lblLoanStatus.Size = New System.Drawing.Size(39, 13)
@@ -482,7 +486,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.lblLoanInterestPercentage.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblLoanInterestPercentage.AutoSize = True
-        Me.lblLoanInterestPercentage.Location = New System.Drawing.Point(266, 147)
+        Me.lblLoanInterestPercentage.Location = New System.Drawing.Point(301, 147)
         Me.lblLoanInterestPercentage.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblLoanInterestPercentage.Name = "lblLoanInterestPercentage"
         Me.lblLoanInterestPercentage.Size = New System.Drawing.Size(135, 13)
@@ -493,7 +497,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.Panel3.Controls.Add(Me.Label2)
         Me.Panel3.Controls.Add(Me.txtLoanInterestPercentage)
-        Me.Panel3.Location = New System.Drawing.Point(246, 160)
+        Me.Panel3.Location = New System.Drawing.Point(281, 160)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(223, 32)
@@ -522,7 +526,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.lblNumberOfPayPeriod.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblNumberOfPayPeriod.AutoSize = True
-        Me.lblNumberOfPayPeriod.Location = New System.Drawing.Point(504, 195)
+        Me.lblNumberOfPayPeriod.Location = New System.Drawing.Point(573, 195)
         Me.lblNumberOfPayPeriod.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblNumberOfPayPeriod.Name = "lblNumberOfPayPeriod"
         Me.lblNumberOfPayPeriod.Size = New System.Drawing.Size(95, 13)
@@ -533,7 +537,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.lblDeductionSchedule.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblDeductionSchedule.AutoSize = True
-        Me.lblDeductionSchedule.Location = New System.Drawing.Point(266, 195)
+        Me.lblDeductionSchedule.Location = New System.Drawing.Point(301, 195)
         Me.lblDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.lblDeductionSchedule.Name = "lblDeductionSchedule"
         Me.lblDeductionSchedule.Size = New System.Drawing.Size(111, 13)
@@ -543,7 +547,7 @@ Partial Class AssignBonusToLoanForm
         'txtNumberOfPayPeriod
         '
         Me.txtNumberOfPayPeriod.BackColor = System.Drawing.Color.White
-        Me.txtNumberOfPayPeriod.Location = New System.Drawing.Point(504, 211)
+        Me.txtNumberOfPayPeriod.Location = New System.Drawing.Point(573, 211)
         Me.txtNumberOfPayPeriod.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.txtNumberOfPayPeriod.Name = "txtNumberOfPayPeriod"
         Me.txtNumberOfPayPeriod.ReadOnly = True
@@ -557,7 +561,7 @@ Partial Class AssignBonusToLoanForm
         Me.cmbDeductionSchedule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple
         Me.cmbDeductionSchedule.Enabled = False
         Me.cmbDeductionSchedule.FormattingEnabled = True
-        Me.cmbDeductionSchedule.Location = New System.Drawing.Point(266, 211)
+        Me.cmbDeductionSchedule.Location = New System.Drawing.Point(301, 211)
         Me.cmbDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.cmbDeductionSchedule.Name = "cmbDeductionSchedule"
         Me.cmbDeductionSchedule.Size = New System.Drawing.Size(195, 21)
@@ -579,7 +583,7 @@ Partial Class AssignBonusToLoanForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgvBonuses)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Panel4)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Panel2)
-        Me.SplitContainer1.Size = New System.Drawing.Size(753, 512)
+        Me.SplitContainer1.Size = New System.Drawing.Size(860, 512)
         Me.SplitContainer1.SplitterDistance = 270
         Me.SplitContainer1.TabIndex = 7
         '
@@ -589,127 +593,60 @@ Partial Class AssignBonusToLoanForm
         Me.dgvBonuses.AllowUserToDeleteRows = False
         Me.dgvBonuses.BackgroundColor = System.Drawing.Color.White
         Me.dgvBonuses.ColumnHeadersHeight = 34
-        Me.dgvBonuses.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.BonusId, Me.BonusAmount, Me.Column1, Me.Frequency, Me.EffectiveDate, Me.EffectiveEndDate, Me.colIsFullAmount, Me.colAmountPayment, Me.Column2})
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvBonuses.DefaultCellStyle = DataGridViewCellStyle7
+        Me.dgvBonuses.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.BonusId, Me.BonusType, Me.BonusAmount, Me.Column1, Me.Frequency, Me.EffectiveDate, Me.EffectiveEndDate, Me.colIsFullAmount, Me.colAmountPayment, Me.Column2})
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvBonuses.DefaultCellStyle = DataGridViewCellStyle16
         Me.dgvBonuses.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvBonuses.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvBonuses.Location = New System.Drawing.Point(0, 42)
         Me.dgvBonuses.Name = "dgvBonuses"
-        Me.dgvBonuses.Size = New System.Drawing.Size(753, 160)
+        Me.dgvBonuses.Size = New System.Drawing.Size(860, 160)
         Me.dgvBonuses.TabIndex = 370
-        '
-        'BonusId
-        '
-        Me.BonusId.DataPropertyName = "BonusId"
-        Me.BonusId.HeaderText = "BonusId"
-        Me.BonusId.Name = "BonusId"
-        Me.BonusId.Visible = False
-        '
-        'BonusAmount
-        '
-        Me.BonusAmount.DataPropertyName = "BonusAmount"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle1.Format = "N2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.BonusAmount.DefaultCellStyle = DataGridViewCellStyle1
-        Me.BonusAmount.HeaderText = "Bonus Amount"
-        Me.BonusAmount.Name = "BonusAmount"
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "InclusiveCurrentBonusAmount"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.Format = "N2"
-        DataGridViewCellStyle2.NullValue = Nothing
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle2
-        Me.Column1.HeaderText = "Bonus Balance"
-        Me.Column1.Name = "Column1"
-        '
-        'Frequency
-        '
-        Me.Frequency.DataPropertyName = "Frequency"
-        Me.Frequency.HeaderText = "Frequency"
-        Me.Frequency.Name = "Frequency"
-        '
-        'EffectiveDate
-        '
-        Me.EffectiveDate.DataPropertyName = "EffectiveStartDate"
-        DataGridViewCellStyle3.Format = "d"
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.EffectiveDate.DefaultCellStyle = DataGridViewCellStyle3
-        Me.EffectiveDate.HeaderText = "Effective Start Date"
-        Me.EffectiveDate.Name = "EffectiveDate"
-        '
-        'EffectiveEndDate
-        '
-        Me.EffectiveEndDate.DataPropertyName = "EffectiveEndDate"
-        DataGridViewCellStyle4.Format = "d"
-        DataGridViewCellStyle4.NullValue = Nothing
-        Me.EffectiveEndDate.DefaultCellStyle = DataGridViewCellStyle4
-        Me.EffectiveEndDate.HeaderText = "Effective End Date"
-        Me.EffectiveEndDate.Name = "EffectiveEndDate"
-        '
-        'colIsFullAmount
-        '
-        Me.colIsFullAmount.DataPropertyName = "IsFullPayment"
-        Me.colIsFullAmount.HeaderText = "Use Max Valid Payment"
-        Me.colIsFullAmount.Name = "colIsFullAmount"
-        Me.colIsFullAmount.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colIsFullAmount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'colAmountPayment
-        '
-        '
-        '
-        '
-        Me.colAmountPayment.BackgroundStyle.Class = "DataGridViewNumericBorder"
-        Me.colAmountPayment.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.colAmountPayment.DataPropertyName = "AmountPayment"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.Format = "N2"
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.colAmountPayment.DefaultCellStyle = DataGridViewCellStyle5
-        Me.colAmountPayment.HeaderText = "Payment Amount"
-        Me.colAmountPayment.Increment = 1.0R
-        Me.colAmountPayment.MinValue = 0R
-        Me.colAmountPayment.Name = "colAmountPayment"
-        Me.colAmountPayment.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.colAmountPayment.ShowUpDown = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "ValidPayment"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "N2"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle6
-        Me.Column2.HeaderText = "Valid Payment"
-        Me.Column2.Name = "Column2"
-        Me.Column2.Visible = False
         '
         'Panel4
         '
+        Me.Panel4.Controls.Add(Me.DataGridView1)
         Me.Panel4.Controls.Add(Me.btnCancel)
         Me.Panel4.Controls.Add(Me.btnSave)
         Me.Panel4.Controls.Add(Me.Label4)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel4.Location = New System.Drawing.Point(0, 202)
         Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(753, 36)
+        Me.Panel4.Size = New System.Drawing.Size(860, 36)
         Me.Panel4.TabIndex = 369
+        '
+        'DataGridView1
+        '
+        Me.DataGridView1.AllowUserToAddRows = False
+        Me.DataGridView1.AllowUserToDeleteRows = False
+        Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
+        Me.DataGridView1.ColumnHeadersHeight = 34
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle17
+        Me.DataGridView1.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.DataGridView1.Location = New System.Drawing.Point(0, 0)
+        Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.Size = New System.Drawing.Size(24, 24)
+        Me.DataGridView1.TabIndex = 372
+        Me.DataGridView1.Visible = False
         '
         'btnCancel
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(666, 7)
+        Me.btnCancel.Location = New System.Drawing.Point(773, 7)
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 2
@@ -720,7 +657,7 @@ Partial Class AssignBonusToLoanForm
         '
         Me.btnSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnSave.Enabled = False
-        Me.btnSave.Location = New System.Drawing.Point(585, 7)
+        Me.btnSave.Location = New System.Drawing.Point(692, 7)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(75, 23)
         Me.btnSave.TabIndex = 2
@@ -729,7 +666,7 @@ Partial Class AssignBonusToLoanForm
         '
         'Label4
         '
-        Me.Label4.Location = New System.Drawing.Point(568, 0)
+        Me.Label4.Location = New System.Drawing.Point(660, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(64, 8)
         Me.Label4.TabIndex = 1
@@ -740,7 +677,7 @@ Partial Class AssignBonusToLoanForm
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(753, 42)
+        Me.Panel2.Size = New System.Drawing.Size(860, 42)
         Me.Panel2.TabIndex = 368
         '
         'TableLayoutPanel1
@@ -761,15 +698,15 @@ Partial Class AssignBonusToLoanForm
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(753, 37)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(860, 37)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'lblLoanPayPeriodLeft
         '
         Me.lblLoanPayPeriodLeft.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblLoanPayPeriodLeft.Location = New System.Drawing.Point(503, 18)
+        Me.lblLoanPayPeriodLeft.Location = New System.Drawing.Point(575, 18)
         Me.lblLoanPayPeriodLeft.Name = "lblLoanPayPeriodLeft"
-        Me.lblLoanPayPeriodLeft.Size = New System.Drawing.Size(247, 19)
+        Me.lblLoanPayPeriodLeft.Size = New System.Drawing.Size(282, 19)
         Me.lblLoanPayPeriodLeft.TabIndex = 8
         Me.lblLoanPayPeriodLeft.Text = "Label5"
         Me.lblLoanPayPeriodLeft.TextAlign = System.Drawing.ContentAlignment.BottomRight
@@ -777,9 +714,9 @@ Partial Class AssignBonusToLoanForm
         'Label6
         '
         Me.Label6.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label6.Location = New System.Drawing.Point(503, 0)
+        Me.Label6.Location = New System.Drawing.Point(575, 0)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(247, 18)
+        Me.Label6.Size = New System.Drawing.Size(282, 18)
         Me.Label6.TabIndex = 2
         Me.Label6.Text = "No. of Pay Period left"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.BottomRight
@@ -787,9 +724,9 @@ Partial Class AssignBonusToLoanForm
         'Label9
         '
         Me.Label9.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label9.Location = New System.Drawing.Point(253, 0)
+        Me.Label9.Location = New System.Drawing.Point(289, 0)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(244, 18)
+        Me.Label9.Size = New System.Drawing.Size(280, 18)
         Me.Label9.TabIndex = 4
         Me.Label9.Text = "New Total Balance left"
         Me.Label9.TextAlign = System.Drawing.ContentAlignment.BottomRight
@@ -797,9 +734,9 @@ Partial Class AssignBonusToLoanForm
         'lblTotalBalanceLeft
         '
         Me.lblTotalBalanceLeft.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblTotalBalanceLeft.Location = New System.Drawing.Point(253, 18)
+        Me.lblTotalBalanceLeft.Location = New System.Drawing.Point(289, 18)
         Me.lblTotalBalanceLeft.Name = "lblTotalBalanceLeft"
-        Me.lblTotalBalanceLeft.Size = New System.Drawing.Size(244, 19)
+        Me.lblTotalBalanceLeft.Size = New System.Drawing.Size(280, 19)
         Me.lblTotalBalanceLeft.TabIndex = 9
         Me.lblTotalBalanceLeft.Text = "Label11"
         Me.lblTotalBalanceLeft.TextAlign = System.Drawing.ContentAlignment.BottomRight
@@ -809,7 +746,7 @@ Partial Class AssignBonusToLoanForm
         Me.Label8.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label8.Location = New System.Drawing.Point(3, 0)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(244, 18)
+        Me.Label8.Size = New System.Drawing.Size(280, 18)
         Me.Label8.TabIndex = 3
         Me.Label8.Text = "Total Payment"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.BottomRight
@@ -820,9 +757,9 @@ Partial Class AssignBonusToLoanForm
         Me.lblTotalAmountPayment.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTotalAmountPayment.Location = New System.Drawing.Point(3, 18)
         Me.lblTotalAmountPayment.Name = "lblTotalAmountPayment"
-        Me.lblTotalAmountPayment.Size = New System.Drawing.Size(244, 19)
+        Me.lblTotalAmountPayment.Size = New System.Drawing.Size(280, 19)
         Me.lblTotalAmountPayment.TabIndex = 10
-        Me.lblTotalAmountPayment.Text = "Label12"
+        Me.lblTotalAmountPayment.Text = "0.00"
         Me.lblTotalAmountPayment.TextAlign = System.Drawing.ContentAlignment.BottomRight
         '
         'ToolTip1
@@ -839,10 +776,10 @@ Partial Class AssignBonusToLoanForm
         'DataGridViewTextBoxColumn2
         '
         Me.DataGridViewTextBoxColumn2.DataPropertyName = "BonusAmount"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.Format = "N2"
-        DataGridViewCellStyle8.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle18.Format = "N2"
+        DataGridViewCellStyle18.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewTextBoxColumn2.HeaderText = "Bonus Amount"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
         Me.DataGridViewTextBoxColumn2.Width = 133
@@ -850,10 +787,10 @@ Partial Class AssignBonusToLoanForm
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "ExclusiveCurrentBonusAmount"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "N2"
-        DataGridViewCellStyle9.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle19.Format = "N2"
+        DataGridViewCellStyle19.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn3.HeaderText = "Sufficient Bonus Amount"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.Width = 133
@@ -871,12 +808,107 @@ Partial Class AssignBonusToLoanForm
         Me.DataGridViewTextBoxColumn5.HeaderText = "Column2"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         '
+        'BonusId
+        '
+        Me.BonusId.DataPropertyName = "BonusId"
+        Me.BonusId.HeaderText = "BonusId"
+        Me.BonusId.Name = "BonusId"
+        Me.BonusId.Visible = False
+        '
+        'BonusType
+        '
+        Me.BonusType.DataPropertyName = "BonusType"
+        Me.BonusType.HeaderText = "Bonus Type"
+        Me.BonusType.Name = "BonusType"
+        '
+        'BonusAmount
+        '
+        Me.BonusAmount.DataPropertyName = "BonusAmount"
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle11.Format = "N2"
+        DataGridViewCellStyle11.NullValue = Nothing
+        Me.BonusAmount.DefaultCellStyle = DataGridViewCellStyle11
+        Me.BonusAmount.HeaderText = "Bonus Amount"
+        Me.BonusAmount.Name = "BonusAmount"
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "InclusiveCurrentBonusAmount"
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle12.Format = "N2"
+        DataGridViewCellStyle12.NullValue = Nothing
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle12
+        Me.Column1.HeaderText = "Bonus Balance"
+        Me.Column1.Name = "Column1"
+        '
+        'Frequency
+        '
+        Me.Frequency.DataPropertyName = "Frequency"
+        Me.Frequency.HeaderText = "Frequency"
+        Me.Frequency.Name = "Frequency"
+        '
+        'EffectiveDate
+        '
+        Me.EffectiveDate.DataPropertyName = "EffectiveStartDate"
+        DataGridViewCellStyle13.Format = "d"
+        DataGridViewCellStyle13.NullValue = Nothing
+        Me.EffectiveDate.DefaultCellStyle = DataGridViewCellStyle13
+        Me.EffectiveDate.HeaderText = "Effective Start Date"
+        Me.EffectiveDate.Name = "EffectiveDate"
+        '
+        'EffectiveEndDate
+        '
+        Me.EffectiveEndDate.DataPropertyName = "EffectiveEndDate"
+        DataGridViewCellStyle14.Format = "d"
+        DataGridViewCellStyle14.NullValue = Nothing
+        Me.EffectiveEndDate.DefaultCellStyle = DataGridViewCellStyle14
+        Me.EffectiveEndDate.HeaderText = "Effective End Date"
+        Me.EffectiveEndDate.Name = "EffectiveEndDate"
+        '
+        'colIsFullAmount
+        '
+        Me.colIsFullAmount.DataPropertyName = "IsFullPayment"
+        Me.colIsFullAmount.HeaderText = "Use Max Valid Payment"
+        Me.colIsFullAmount.Name = "colIsFullAmount"
+        Me.colIsFullAmount.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colIsFullAmount.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'colAmountPayment
+        '
+        '
+        '
+        '
+        Me.colAmountPayment.BackgroundStyle.Class = "DataGridViewNumericBorder"
+        Me.colAmountPayment.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.colAmountPayment.DataPropertyName = "AmountPayment"
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle15.Format = "N2"
+        DataGridViewCellStyle15.NullValue = Nothing
+        Me.colAmountPayment.DefaultCellStyle = DataGridViewCellStyle15
+        Me.colAmountPayment.HeaderText = "Payment Amount"
+        Me.colAmountPayment.Increment = 1.0R
+        Me.colAmountPayment.MinValue = 0R
+        Me.colAmountPayment.Name = "colAmountPayment"
+        Me.colAmountPayment.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.colAmountPayment.ShowUpDown = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "ValidPayment"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle5.Format = "N2"
+        DataGridViewCellStyle5.NullValue = Nothing
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle5
+        Me.Column2.HeaderText = "Valid Payment"
+        Me.Column2.Name = "Column2"
+        Me.Column2.Visible = False
+        '
         'AssignBonusToLoanForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(753, 512)
+        Me.ClientSize = New System.Drawing.Size(860, 512)
         Me.Controls.Add(Me.SplitContainer1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -905,6 +937,7 @@ Partial Class AssignBonusToLoanForm
         Me.SplitContainer1.ResumeLayout(False)
         CType(Me.dgvBonuses, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel4.ResumeLayout(False)
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -969,7 +1002,9 @@ Partial Class AssignBonusToLoanForm
     Friend WithEvents lblLoanPayPeriodLeft As Label
     Friend WithEvents lblTotalBalanceLeft As Label
     Friend WithEvents lblTotalAmountPayment As Label
+    Friend WithEvents DataGridView1 As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents BonusId As DataGridViewTextBoxColumn
+    Friend WithEvents BonusType As DataGridViewTextBoxColumn
     Friend WithEvents BonusAmount As DataGridViewTextBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Frequency As DataGridViewTextBoxColumn

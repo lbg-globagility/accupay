@@ -10,10 +10,10 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class AssignBonusToLoanForm
 
     Private ReadOnly _loanSchedule As LoanSchedule
-    Private ReadOnly _bonusRepository As BonusRepository
-
+    Private ReadOnly _bonusDataService As BonusDataService
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
     Private _bonuses As IEnumerable(Of Bonus)
-    Private _loanPaymentFromBonusModels As List(Of LoanPaymentFromBonusModel)
+    Private _loanPaymentFromBonusModels As List(Of LoanPaymentFromBonusData)
     Public Property ChangedBonus As Bonus
 
     Public Sub New(loanSchedule As LoanSchedule)
@@ -22,7 +22,9 @@ Public Class AssignBonusToLoanForm
 
         _loanSchedule = loanSchedule
 
-        _bonusRepository = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        _bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
         DisplayLoanScheduleDetails(loanSchedule)
     End Sub
@@ -32,12 +34,19 @@ Public Class AssignBonusToLoanForm
     End Sub
 
     Private Async Function LoadLoanPaymentFromBonus() As Task
-        _loanPaymentFromBonusModels = New List(Of LoanPaymentFromBonusModel)
+        _loanPaymentFromBonusModels = New List(Of LoanPaymentFromBonusData)
 
-        _bonuses = Await _bonusRepository.GetByEmployeeAndPayPeriodForLoanPaymentAsync(
+        Dim coveredPeriods = Await _payPeriodRepository.
+            GetLoanScheduleRemainingPayPeriodsAsync(_loanSchedule)
+
+        Dim loanTimerPeriod = New TimePeriod(
+            _loanSchedule.DedEffectiveDateFrom,
+            coveredPeriods.Max(Function(pp) pp.PayToDate))
+
+        _bonuses = Await _bonusDataService.GetByEmployeeAndPayPeriodForLoanPaymentAsync(
             organizationId:=z_OrganizationID,
             employeeId:=_loanSchedule.EmployeeID.Value,
-            timePeriod:=New TimePeriod(_loanSchedule.DedEffectiveDateFrom, _loanSchedule.DedEffectiveDateFrom.AddYears(1)))
+            timePeriod:=loanTimerPeriod)
 
         Dim hasChangedBonus = ChangedBonus IsNot Nothing
 
@@ -46,7 +55,7 @@ Public Class AssignBonusToLoanForm
             If hasChangedBonus AndAlso bonus.RowID = ChangedBonus.RowID Then
                 paramBonus = ChangedBonus
             End If
-            _loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusModel(bonus:=paramBonus, loanSchedule:=_loanSchedule))
+            _loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusData(bonus:=paramBonus, loanSchedule:=_loanSchedule))
         Next
 
         dgvBonuses.AutoGenerateColumns = False
@@ -134,6 +143,14 @@ Public Class AssignBonusToLoanForm
             Dim model = GetModel(currentRow)
 
             If model.IsExcessivePayment Then model.IsFullPayment = True
+
+            If colIsFullAmount.Index = e.ColumnIndex Then
+                If model.IsFullPayment Then
+                    model.SetValidAmountPayment()
+                Else
+                    model.SetNoAmountPayment()
+                End If
+            End If
 
             currentRow.Cells(colAmountPayment.Index).ReadOnly = model.IsFullPayment
 
@@ -228,11 +245,11 @@ Public Class AssignBonusToLoanForm
         'e.ThrowException = False
     End Sub
 
-    Private Function GetModel(currentRow As DataGridViewRow) As LoanPaymentFromBonusModel
-        Return DirectCast(currentRow.DataBoundItem, LoanPaymentFromBonusModel)
+    Private Function GetModel(currentRow As DataGridViewRow) As LoanPaymentFromBonusData
+        Return DirectCast(currentRow.DataBoundItem, LoanPaymentFromBonusData)
     End Function
 
-    Public Function GetModels() As IEnumerable(Of LoanPaymentFromBonusModel)
+    Public Function GetModels() As IEnumerable(Of LoanPaymentFromBonusData)
         Return dgvBonuses.Rows.OfType(Of DataGridViewRow).Select(Function(r) GetModel(r)).ToList()
     End Function
 

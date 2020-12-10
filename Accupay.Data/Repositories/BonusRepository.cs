@@ -68,11 +68,16 @@ namespace AccuPay.Data.Repositories
 
         public async Task<ICollection<Bonus>> GetByEmployeeAndPayPeriodForLoanPaymentAsync(int organizationId, int employeeId, TimePeriod timePeriod)
         {
-            return await CreateBaseQueryByTimePeriod(organizationId, timePeriod)
+            return await _context.Bonuses
+                .AsNoTracking()
+                .Include(a => a.Product)
                 .Include(b => b.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.LoanSchedule)
                 .Include(b => b.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.Items)
+                .Where(a => a.OrganizationID == organizationId)
+                .Where(a => timePeriod.Start <= a.EffectiveStartDate)
+                .Where(a => a.EffectiveStartDate <= timePeriod.End)
                 .Where(b => b.EmployeeID == employeeId)
                 .Where(b => b.BonusAmount > 0)
                 .ToListAsync();
