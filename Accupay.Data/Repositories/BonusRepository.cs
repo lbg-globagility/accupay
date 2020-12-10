@@ -70,14 +70,15 @@ namespace AccuPay.Data.Repositories
         {
             return await _context.Bonuses
                 .AsNoTracking()
-                .Include(a => a.Product)
+                .Include(b => b.Product)
                 .Include(b => b.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.LoanSchedule)
                 .Include(b => b.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.Items)
-                .Where(a => a.OrganizationID == organizationId)
-                .Where(a => timePeriod.Start <= a.EffectiveStartDate)
-                .Where(a => a.EffectiveStartDate <= timePeriod.End)
+                .Where(b => b.OrganizationID == organizationId)
+                //.Where(b => timePeriod.Start <= b.EffectiveStartDate).Where(b => b.EffectiveStartDate <= timePeriod.End)
+                .Where(b => (timePeriod.Start <= b.EffectiveStartDate && b.EffectiveStartDate <= timePeriod.End) ||
+                    (timePeriod.Start <= b.EffectiveEndDate && b.EffectiveEndDate <= timePeriod.End))
                 .Where(b => b.EmployeeID == employeeId)
                 .Where(b => b.BonusAmount > 0)
                 .ToListAsync();

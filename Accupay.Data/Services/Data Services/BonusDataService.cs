@@ -108,7 +108,8 @@ namespace AccuPay.Data.Services
                 }
 
                 var loansUncoveredByThisBonus = models
-                    .Where(m => !(m.DedEffectiveDateFrom <= updatedBonus.EffectiveStartDate && updatedBonus.EffectiveStartDate <= m.DedEffectiveDateTo))
+                    .Where(m => !((m.DedEffectiveDateFrom <= updatedBonus.EffectiveStartDate && updatedBonus.EffectiveStartDate <= m.DedEffectiveDateTo) ||
+                        (m.DedEffectiveDateFrom <= updatedBonus.EffectiveEndDate && updatedBonus.EffectiveEndDate <= m.DedEffectiveDateTo)))
                     .ToList();
                 if (loansUncoveredByThisBonus.Any())// bonus effective dates became out of period of loans
                 {
