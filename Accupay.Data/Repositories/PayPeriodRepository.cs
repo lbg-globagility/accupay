@@ -414,6 +414,47 @@ namespace AccuPay.Data.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<ICollection<PayPeriod>> GetLoanScheduleRemainingPayPeriodsAsync(LoanSchedule loanSchedule)
+        {
+            int organizationId = loanSchedule.OrganizationID.Value;
+            DateTime startDate = loanSchedule.DedEffectiveDateFrom;
+            string frequencySchedule = loanSchedule.DeductionSchedule;
+            int count = (int)loanSchedule.TotalPayPeriod;
+
+            return await GetLoanScheduleRemainingPayPeriodsAsync(
+                organizationId: organizationId,
+                startDate: startDate,
+                frequencySchedule: frequencySchedule,
+                count: count);
+        }
+
+        public async Task<ICollection<PayPeriod>> GetLoanScheduleRemainingPayPeriodsAsync(
+            int organizationId,
+            DateTime startDate,
+            string frequencySchedule,
+            int count)
+        {
+            var query = CreateBaseQuery(organizationId)
+                .Where(pp => pp.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId)
+                .Where(pp => pp.PayToDate >= startDate);
+
+            if (frequencySchedule == ContributionSchedule.FIRST_HALF)
+            {
+                query = query.Where(pp => pp.IsFirstHalf);
+            }
+            else if (frequencySchedule == ContributionSchedule.END_OF_THE_MONTH)
+            {
+                query = query.Where(pp => pp.IsEndOfTheMonth);
+            }
+
+            return await query
+                .AsNoTracking()
+                .OrderBy(pp => pp.Year)
+                    .ThenBy(pp => pp.PayFromDate)
+                .Take(count)
+                .ToListAsync();
+        }
+
         #endregion List of entities
 
         #region Others
