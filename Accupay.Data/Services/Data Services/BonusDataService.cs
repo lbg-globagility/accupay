@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services.DTOs;
 using AccuPay.Data.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -14,15 +15,18 @@ namespace AccuPay.Data.Services
         private readonly BonusRepository _bonusRepository;
         private readonly LoanPaymentFromBonusRepository _loanPaymentFromBonusRepository;
         private readonly LoanRepository _loanRepository;
+        private readonly PayPeriodRepository _payPeriodRepository;
 
         public BonusDataService(
             BonusRepository bonusRepository,
             LoanPaymentFromBonusRepository loanPaymentFromBonusRepository,
-            LoanRepository loanRepository)
+            LoanRepository loanRepository,
+            PayPeriodRepository payPeriodRepository)
         {
             _bonusRepository = bonusRepository;
             _loanPaymentFromBonusRepository = loanPaymentFromBonusRepository;
             _loanRepository = loanRepository;
+            _payPeriodRepository = payPeriodRepository;
         }
 
         public async Task DeleteAsync(Bonus bonus)
@@ -96,14 +100,22 @@ namespace AccuPay.Data.Services
                     .Where(l => loanIds.Contains(l.RowID.Value))
                     .ToList();
 
-                var loansIdsThatNotWithinBonusPeriod = loans
-                    .Where(l => l.DedEffectiveDateFrom > updatedBonus.EffectiveEndDate)
-                    .Select(l => l.RowID.Value)
-                    .ToArray();
-                if (loansIdsThatNotWithinBonusPeriod.Any())// bonus effective date became out of period of loans
+                var models = new List<LoanScheduleWithEndDateData>();
+                foreach (var loan in loans)
                 {
+                    var coveredPeriods = await _payPeriodRepository.GetLoanScheduleRemainingPayPeriodsAsync(loan);
+                    models.Add(new LoanScheduleWithEndDateData(loan, coveredPeriods));
+                }
+
+                var loansUncoveredByThisBonus = models
+                    .Where(m => !((m.DedEffectiveDateFrom <= updatedBonus.EffectiveStartDate && updatedBonus.EffectiveStartDate <= m.DedEffectiveDateTo) ||
+                        (m.DedEffectiveDateFrom <= updatedBonus.EffectiveEndDate && updatedBonus.EffectiveEndDate <= m.DedEffectiveDateTo)))
+                    .ToList();
+                if (loansUncoveredByThisBonus.Any())// bonus effective dates became out of period of loans
+                {
+                    var ids = loansUncoveredByThisBonus.Select(m => m.Id).ToArray();
                     var affectedLoanPaymentFromBonusList = loanPaymentFromBonuses
-                        .Where(l => loansIdsThatNotWithinBonusPeriod.Contains(l.LoanId))
+                        .Where(l => ids.Contains(l.LoanId))
                         .ToList();
                     affectedLoanPaymentFromBonusList.ForEach(l =>
                     {
