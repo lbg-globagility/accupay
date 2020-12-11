@@ -4,18 +4,19 @@ using System.Linq;
 
 namespace AccuPay.Data.Services
 {
-    public class LoanPaymentFromBonusModel
+    public class LoanPaymentFromBonusData
     {
         private readonly decimal _originalAmountPayment;
-        private bool _isFullPayment;
+        //private bool _isFullPayment;
 
-        public LoanPaymentFromBonusModel(Bonus bonus, LoanSchedule loanSchedule)
+        public LoanPaymentFromBonusData(Bonus bonus, LoanSchedule loanSchedule)
         {
             BonusAmount = bonus.BonusAmount.Value;
             EffectiveStartDate = bonus.EffectiveStartDate;
             EffectiveEndDate = bonus.EffectiveEndDate;
             Frequency = bonus.AllowanceFrequency;
             BonusId = bonus.RowID.Value;
+            BonusType = bonus.BonusType;
 
             LoanSchedule = loanSchedule;
             DeductionAmount = loanSchedule.DeductionAmount;
@@ -37,7 +38,7 @@ namespace AccuPay.Data.Services
                 hasItems = loanPaymentFromBonus.Items?.Any() ?? false;
             }
 
-            _isFullPayment = AmountPayment == 0 ? false : AmountPayment == MaxAvailablePayment;
+            IsFullPayment = AmountPayment == 0 ? false : AmountPayment == MaxAvailablePayment;
 
             if (loanSchedule.Status != LoanSchedule.STATUS_COMPLETE)
                 IsEditable = !hasItems;
@@ -50,6 +51,7 @@ namespace AccuPay.Data.Services
         public int Id { get; }
         public int LoanId { get; }
         public int BonusId { get; }
+        public string BonusType { get; }
         public decimal BonusAmount { get; }
         public DateTime EffectiveStartDate { get; }
         public DateTime EffectiveEndDate { get; }
@@ -60,7 +62,7 @@ namespace AccuPay.Data.Services
         public decimal AmountPayment { get; set; }
         public decimal TotalPayment { get; }
         public LoanSchedule LoanSchedule { get; }
-        public virtual LoanPaymentFromBonus LoanPaymentFromBonus { get; set; }
+        public LoanPaymentFromBonus LoanPaymentFromBonus { get; }
 
         public bool IsFulfilled
         {
@@ -78,21 +80,16 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public bool IsFullPayment
-        {
-            get
-            {
-                return _isFullPayment;
-            }
-            set
-            {
-                _isFullPayment = value;
+        public bool IsFullPayment { get; set; }
 
-                if (value)
-                    AmountPayment = ModDivision(MaxAvailablePayment, DeductionAmount);
-                else
-                    AmountPayment = 0;
-            }
+        public void SetNoAmountPayment()
+        {
+            AmountPayment = 0;
+        }
+
+        public void SetValidAmountPayment()
+        {
+            AmountPayment = ModDivision(MaxAvailablePayment, DeductionAmount);
         }
 
         private decimal ModDivision(decimal dividend, decimal divisor)
