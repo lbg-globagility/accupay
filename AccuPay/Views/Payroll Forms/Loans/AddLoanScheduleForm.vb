@@ -10,23 +10,13 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLoanScheduleForm
 
-    Private if_sysowner_is_benchmark As Boolean
-
     Private _currentEmployee As Employee
 
     Private _newLoanSchedule As New LoanSchedule()
 
-    Private _loanTypeList As List(Of Product)
-
-    Private _deductionSchedulesList As List(Of String)
-
-    Public Property NewLoanTypes As List(Of Product)
-
     Public Property IsSaved As Boolean
 
     Public Property ShowBalloonSuccess As Boolean
-
-    Private ReadOnly _systemOwnerService As SystemOwnerService
 
     Sub New(employee As Employee)
 
@@ -36,23 +26,11 @@ Public Class AddLoanScheduleForm
 
         Me.IsSaved = False
 
-        Me.NewLoanTypes = New List(Of Product)
-
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
-
-        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-
     End Sub
 
-    Private Async Sub AddLoanScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub AddLoanScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         PopulateEmployeeData()
-
-        LoadLoanStatus()
-
-        Await LoadLoanTypes()
-
-        Await LoadDeductionSchedules()
 
         ResetForm()
 
@@ -66,18 +44,7 @@ Public Class AddLoanScheduleForm
         Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
         Me._newLoanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS
 
-        Dim firstLoanType = Me._loanTypeList.FirstOrDefault()
-
-        If firstLoanType IsNot Nothing Then
-            Me._newLoanSchedule.LoanTypeID = firstLoanType.RowID
-            Me._newLoanSchedule.LoanName = firstLoanType.PartNo
-        End If
-
-        If _deductionSchedulesList IsNot Nothing Then
-            Me._newLoanSchedule.DeductionSchedule = _deductionSchedulesList.FirstOrDefault
-        End If
-
-        CreateDataBindings()
+        LoanUserControl1.SetLoan(Me._newLoanSchedule, isNew:=True)
     End Sub
 
     Private Sub PopulateEmployeeData()
@@ -90,68 +57,12 @@ Public Class AddLoanScheduleForm
 
     End Sub
 
-    Private Sub CreateDataBindings()
-
-        txtLoanNumber.DataBindings.Clear()
-        txtLoanNumber.DataBindings.Add("Text", Me._newLoanSchedule, "LoanNumber")
-
-        txtRemarks.DataBindings.Clear()
-        txtRemarks.DataBindings.Add("Text", Me._newLoanSchedule, "Comments")
-
-        txtTotalLoanAmount.DataBindings.Clear()
-        txtTotalLoanAmount.DataBindings.Add("Text", Me._newLoanSchedule, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
-
-        txtLoanBalance.DataBindings.Clear()
-        txtLoanBalance.DataBindings.Add("Text", Me._newLoanSchedule, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
-
-        dtpDateFrom.DataBindings.Clear()
-        dtpDateFrom.DataBindings.Add("Value", Me._newLoanSchedule, "DedEffectiveDateFrom")
-
-        txtNumberOfPayPeriod.DataBindings.Clear()
-        txtNumberOfPayPeriod.DataBindings.Add("Text", Me._newLoanSchedule, "NoOfPayPeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
-
-        txtNumberOfPayPeriodLeft.DataBindings.Clear()
-        txtNumberOfPayPeriodLeft.DataBindings.Add("Text", Me._newLoanSchedule, "LoanPayPeriodLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
-
-        txtDeductionAmount.DataBindings.Clear()
-        txtDeductionAmount.DataBindings.Add("Text", Me._newLoanSchedule, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
-
-        txtLoanInterestPercentage.DataBindings.Clear()
-        txtLoanInterestPercentage.DataBindings.Add("Text", Me._newLoanSchedule, "DeductionPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
-
-        cboLoanType.DataBindings.Clear()
-        cboLoanType.DataBindings.Add("Text", Me._newLoanSchedule, "LoanName")
-
-        cmbLoanStatus.DataBindings.Clear()
-        cmbLoanStatus.DataBindings.Add("Text", Me._newLoanSchedule, "Status")
-
-        cmbDeductionSchedule.DataBindings.Clear()
-        cmbDeductionSchedule.DataBindings.Add("Text", Me._newLoanSchedule, "DeductionSchedule")
-    End Sub
-
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Me.Close()
     End Sub
 
-    Private Sub cboLoanType_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboLoanType.SelectedValueChanged
-        If Me._newLoanSchedule IsNot Nothing Then
-            Dim selectedLoanType = Me._loanTypeList.FirstOrDefault(Function(l) l.PartNo = cboLoanType.Text)
-
-            If selectedLoanType Is Nothing Then
-
-                Me._newLoanSchedule.LoanTypeID = Nothing
-            Else
-
-                Me._newLoanSchedule.LoanTypeID = selectedLoanType.RowID
-
-            End If
-        End If
-    End Sub
-
     Private Async Sub AddLoanScheduleButtonClicked(sender As Object, e As EventArgs) _
         Handles btnAddAndNew.Click, btnAddAndClose.Click
-
-        ForceLoanScheduleDataBindingsCommit()
 
         Dim confirmMessage = ""
         Dim messageTitle = "New Loan"
@@ -174,12 +85,14 @@ Public Class AddLoanScheduleForm
 
         End If
 
+        Dim loan = LoanUserControl1.GetLoan()
+
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-                Await dataService.SaveAsync(Me._newLoanSchedule, z_User)
+                Me._newLoanSchedule = Await dataService.SaveAsync(loan, z_User)
 
                 Me.IsSaved = True
 
@@ -196,144 +109,7 @@ Public Class AddLoanScheduleForm
 
     End Sub
 
-    Private loanAmountBeforeTextChange As Decimal
-
-    Private loanInterestPercentageBeforeTextChange As Decimal
-
-    Private Sub txtLoanInterestPercentage_Enter(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Enter
-
-        If Me._newLoanSchedule Is Nothing Then Return
-
-        loanInterestPercentageBeforeTextChange = Me._newLoanSchedule.DeductionPercentage
-
-    End Sub
-
-    Private Sub txtLoanInterestPercentage_Leave(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Leave
-
-        If Me._newLoanSchedule Is Nothing Then Return
-
-        If loanInterestPercentageBeforeTextChange = Me._newLoanSchedule.DeductionPercentage Then Return
-
-        Dim totalPlusInterestRate As Decimal = 1 + (Me._newLoanSchedule.DeductionPercentage * 0.01D)
-
-        Me._newLoanSchedule.TotalLoanAmount = Me._newLoanSchedule.TotalLoanAmount * totalPlusInterestRate
-
-        UpdateBalanceAndNumberOfPayPeriod()
-
-    End Sub
-
-    Private Sub txtTotalLoanAmount_Enter(sender As Object, e As EventArgs) Handles txtTotalLoanAmount.Enter
-
-        If Me._newLoanSchedule Is Nothing Then Return
-
-        loanAmountBeforeTextChange = Me._newLoanSchedule.TotalLoanAmount
-
-    End Sub
-
-    Private Sub txtTotalLoanAmount_Leave(sender As Object, e As EventArgs) _
-        Handles txtTotalLoanAmount.Leave, txtDeductionAmount.Leave
-
-        If Me._newLoanSchedule Is Nothing Then Return
-
-        If sender Is txtTotalLoanAmount Then
-            If loanAmountBeforeTextChange <> Me._newLoanSchedule.TotalLoanAmount Then
-                Me._newLoanSchedule.DeductionPercentage = 0
-            End If
-        End If
-
-        UpdateBalanceAndNumberOfPayPeriod()
-
-    End Sub
-
-    Private Sub UpdateBalanceAndNumberOfPayPeriod()
-        Me._newLoanSchedule.TotalLoanAmount = AccuMath.CommercialRound(Me._newLoanSchedule.TotalLoanAmount)
-        Me._newLoanSchedule.DeductionAmount = AccuMath.CommercialRound(Me._newLoanSchedule.DeductionAmount)
-
-        Me._newLoanSchedule.TotalBalanceLeft = Me._newLoanSchedule.TotalLoanAmount
-
-        Me._newLoanSchedule.RecomputeTotalPayPeriod()
-        Me._newLoanSchedule.RecomputePayPeriodLeft()
-    End Sub
-
-    Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
-        Dim form As New AddLoanTypeForm()
-        form.ShowDialog()
-
-        If form.IsSaved Then
-
-            Me._loanTypeList.Add(form.NewLoanType)
-
-            Me.NewLoanTypes.Add(form.NewLoanType)
-
-            PopulateLoanTypeCombobox()
-
-            If Me._newLoanSchedule IsNot Nothing Then
-
-                Me._newLoanSchedule.LoanTypeID = form.NewLoanType.RowID
-                Me._newLoanSchedule.LoanName = form.NewLoanType.PartNo
-
-                Dim orderedLoanTypeList = Me._loanTypeList.OrderBy(Function(p) p.PartNo).ToList
-
-                cboLoanType.SelectedIndex = orderedLoanTypeList.IndexOf(form.NewLoanType)
-
-            End If
-
-            ShowBalloonInfo("Loan Type Successfully Added", "Saved")
-        End If
-    End Sub
-
 #Region "Private Functions"
-
-    Private Sub LoadLoanStatus()
-
-        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
-        Dim statusList = repository.GetStatusList()
-
-        statusList.Remove(LoanSchedule.STATUS_CANCELLED)
-        statusList.Remove(LoanSchedule.STATUS_COMPLETE)
-
-        cmbLoanStatus.DataSource = statusList
-    End Sub
-
-    Private Async Function LoadLoanTypes() As Task
-
-        Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        If if_sysowner_is_benchmark Then
-
-            Me._loanTypeList = New List(Of Product)(Await productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID))
-        Else
-            Me._loanTypeList = New List(Of Product)(Await productRepository.GetLoanTypesAsync(z_OrganizationID))
-
-        End If
-
-        PopulateLoanTypeCombobox()
-
-    End Function
-
-    Private Sub PopulateLoanTypeCombobox()
-        Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        Dim loanTypes = productRepository.ConvertToStringList(Me._loanTypeList)
-
-        cboLoanType.DataSource = loanTypes
-    End Sub
-
-    Private Async Function LoadDeductionSchedules() As Task
-
-        Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
-
-        Me._deductionSchedulesList = listOfValueRepository.
-            ConvertToStringList(Await listOfValueRepository.GetDeductionSchedulesAsync())
-
-        cmbDeductionSchedule.DataSource = Me._deductionSchedulesList
-
-    End Function
-
-    Private Sub ForceLoanScheduleDataBindingsCommit()
-        'Workaround. Focus other control to lose focus on current control
-        pbEmployeePicture.Focus()
-    End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, EmployeeInfoTabLayout, 400)

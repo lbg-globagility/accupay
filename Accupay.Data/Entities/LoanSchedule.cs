@@ -57,6 +57,10 @@ namespace AccuPay.Data.Entities
 
         public bool HasStarted => TotalBalanceLeft != TotalLoanAmount;
 
+        public bool IsUnEditable => Status == STATUS_CANCELLED || Status == STATUS_COMPLETE;
+
+        public bool HasTransactions => LoanTransactions != null && LoanTransactions.Any();
+
         /// <summary>
         /// Recomputes TotalPayPeriod. Call this everytime TotalLoanAmount has changed.
         /// </summary>

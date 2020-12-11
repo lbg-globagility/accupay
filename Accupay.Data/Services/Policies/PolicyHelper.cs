@@ -55,6 +55,8 @@ namespace AccuPay.Data.Services
 
         public bool UseMassOvertime => _settings.GetBoolean("Policy.UseMassOvertime", false);
 
+        public bool UseGoldWingsLoanInterest => _settings.GetBoolean("Policy.UseGoldWingsLoanInterest", false);
+
         public string HolidayCalculationType => _settings.GetStringOrDefault("Payroll Policy.HolidayPay", "Daily");
 
         public bool UseAgency => CurrentSystemOwner == SystemOwnerService.Hyundai || CurrentSystemOwner == SystemOwnerService.Goldwings;

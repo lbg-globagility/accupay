@@ -419,6 +419,7 @@
     <Compile Include="Core\Enums\FormMode.vb" />
     <Compile Include="Core\Helpers\LookUpItem.vb" />
     <Compile Include="Core\Helpers\EcolaHelper.vb" />
+    <Compile Include="Core\Helpers\LookUpStringItem.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelHelper.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelService.vb" />
@@ -443,6 +444,12 @@
     </Compile>
     <Compile Include="Reports\Reports\Providers\CostCenterReportGeneration.vb" />
     <Compile Include="Reports\Reports\Providers\CostCenterReportGenerationResult.vb" />
+    <Compile Include="Views\Payroll Forms\Loans\LoanUserControl.Designer.vb">
+      <DependentUpon>LoanUserControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Payroll Forms\Loans\LoanUserControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\Generators\PayrollGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\Generators\ReleaseThirteenthMonthGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.Designer.vb">
@@ -1741,6 +1748,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Previous Employer\PreviousEmployerTab.resx">
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Payroll Forms\Loans\LoanUserControl.resx">
+      <DependentUpon>LoanUserControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.resx">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>

@@ -310,10 +310,10 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
             if (loan.TotalLoanAmount < 0)
-                throw new BusinessLogicException("Total loan amount cannot be less than 0.");
+                throw new BusinessLogicException("Total loan amount cannot be less than or equal to 0.");
 
             if (loan.DeductionAmount < 0)
-                throw new BusinessLogicException("Deduction amount cannot be less than 0.");
+                throw new BusinessLogicException("Deduction amount cannot be less than or equal to 0.");
 
             if (string.IsNullOrWhiteSpace(loan.DeductionSchedule))
                 throw new BusinessLogicException("Deduction schedule is required.");
