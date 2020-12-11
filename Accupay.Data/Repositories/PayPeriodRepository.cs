@@ -421,6 +421,19 @@ namespace AccuPay.Data.Repositories
             string frequencySchedule = loanSchedule.DeductionSchedule;
             int count = (int)loanSchedule.TotalPayPeriod;
 
+            return await GetLoanScheduleRemainingPayPeriodsAsync(
+                organizationId: organizationId,
+                startDate: startDate,
+                frequencySchedule: frequencySchedule,
+                count: count);
+        }
+
+        public async Task<ICollection<PayPeriod>> GetLoanScheduleRemainingPayPeriodsAsync(
+            int organizationId,
+            DateTime startDate,
+            string frequencySchedule,
+            int count)
+        {
             var query = CreateBaseQuery(organizationId)
                 .Where(pp => pp.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId)
                 .Where(pp => pp.PayToDate >= startDate);
