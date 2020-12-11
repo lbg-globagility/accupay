@@ -1060,8 +1060,14 @@ Public Class EmployeeLoansForm
 
     Private Async Sub lnkBonusPayment_Click(sender As Object, e As EventArgs) Handles lnkBonusPayment.Click
         Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
-        Dim loan = Await repository.GetByIdAsync(GetSelectedLoan().RowID.Value)
-        Dim from As New AssignBonusToLoanForm(loan)
+
+        Dim currLoan = GetSelectedLoan()
+
+        Dim loan = Await repository.GetByIdAsync(currLoan.RowID.Value)
+
+        Dim loanTransactions = Await repository.GetLoanTransactionsWithPayPeriodAsync(currLoan.RowID.Value)
+
+        Dim from As New AssignBonusToLoanForm(loan, loanTransactions:=loanTransactions)
         If from.ShowDialog() = DialogResult.OK Then
             EmployeesDataGridView_SelectionChanged(EmployeesDataGridView, New EventArgs)
         End If
