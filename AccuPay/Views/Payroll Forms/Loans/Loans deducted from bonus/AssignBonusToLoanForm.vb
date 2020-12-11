@@ -384,8 +384,16 @@ Public Class AssignBonusToLoanForm
             Next
 
             If periodicTotalPayment = 0 Then
-                totalPayment += _loanSchedule.DeductionAmount
-                periodicTotalPayment = _loanSchedule.DeductionAmount
+                Dim loanTransaction = _loanTransactions.
+                    FirstOrDefault(Function(lt) CBool(lt.PayPeriodID = period.RowID.Value))
+
+                If loanTransaction IsNot Nothing Then
+                    totalPayment += loanTransaction.Amount
+                    periodicTotalPayment = loanTransaction.Amount
+                Else
+                    totalPayment += _loanSchedule.DeductionAmount
+                    periodicTotalPayment = _loanSchedule.DeductionAmount
+                End If
             End If
 
             Dim updatedLoanBalance = loanBalance - totalPayment
