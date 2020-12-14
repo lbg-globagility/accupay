@@ -79,8 +79,8 @@ Public Class MetroLogin
     End Sub
 
     Public Sub AssignDefaultCredentials()
-        UserNameTextBox.Text = "jacq"
-        PasswordTextBox.Text = "*passwor"
+        UserNameTextBox.Text = "admin"
+        PasswordTextBox.Text = "admin"
     End Sub
 
     Private Sub OrganizationComboBox_DropDown(sender As Object, e As EventArgs) Handles OrganizationComboBox.DropDown
