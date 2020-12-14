@@ -145,7 +145,11 @@ Public Class AssignBonusToLoanForm
     End Sub
 
     Private Sub dgvBonuses_SelectionChanged(sender As Object, e As EventArgs) Handles dgvBonuses.SelectionChanged
-
+        If dgvBonuses.Rows.Count() > 0 Then
+            TabPage2.Text = $"Preview {GetModel(dgvBonuses.CurrentRow).BonusType}"
+        Else
+            TabPage2.Text = "Preview"
+        End If
     End Sub
 
     Private Sub dgvBonuses_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvBonuses.CellEndEdit
@@ -307,12 +311,12 @@ Public Class AssignBonusToLoanForm
 
         DataGridViewX1.DataSource = dataSource
 
-        If _lastSelectedRowIndex2 > -1 AndAlso
-            _lastSelectedCellIndex2 > -1 AndAlso
-            DataGridViewX1.Rows.Count() > 0 AndAlso
-            _lastSelectedRowIndex2 < DataGridViewX1.Rows.Count() Then
+        If _lastSelectedRowIndex1 > -1 AndAlso
+            _lastSelectedCellIndex1 > -1 AndAlso
+            dataSource.Any() AndAlso
+            _lastSelectedRowIndex1 <= dataSource.Count() Then
 
-            DataGridViewX1.CurrentCell = DataGridViewX1.Item(_lastSelectedCellIndex2, _lastSelectedRowIndex2)
+            DataGridViewX1.CurrentCell = DataGridViewX1.Item(_lastSelectedCellIndex1, _lastSelectedRowIndex1)
             AddHandler DataGridViewX1.SelectionChanged, AddressOf DataGridViewX1_SelectionChanged
         End If
     End Sub
@@ -341,12 +345,12 @@ Public Class AssignBonusToLoanForm
         DataGridView1.DataSource = dataSource
         'End If
 
-        If _lastSelectedRowIndex1 > -1 AndAlso
-            _lastSelectedCellIndex1 > -1 AndAlso
-            DataGridView1.Rows.Count() > 0 AndAlso
-            _lastSelectedRowIndex1 < DataGridView1.Rows.Count() Then
+        If _lastSelectedRowIndex2 > -1 AndAlso
+            _lastSelectedCellIndex2 > -1 AndAlso
+            dataSource.Any() AndAlso
+            _lastSelectedRowIndex1 < dataSource.Count() Then
 
-            DataGridView1.CurrentCell = DataGridView1.Item(_lastSelectedCellIndex1, _lastSelectedRowIndex1)
+            DataGridView1.CurrentCell = DataGridView1.Item(_lastSelectedCellIndex2, _lastSelectedRowIndex2)
             AddHandler DataGridView1.SelectionChanged, AddressOf DataGridView1_SelectionChanged
         End If
     End Sub
@@ -410,7 +414,7 @@ Public Class AssignBonusToLoanForm
 
             Dim periodDataRow = New PreviewLoanPayment(
                 period,
-                bonusBalance:=bonusBalance,
+                bonusBalance:=periodicTotalBonus,
                 payment:=periodicTotalPayment,
                 loanBalance:=updatedLoanBalance)
             dataSource.Add(periodDataRow)
@@ -459,14 +463,14 @@ Public Class AssignBonusToLoanForm
         Next
     End Sub
 
-    Private Sub DataGridView1_SelectionChanged(sender As Object, e As EventArgs)
-        _lastSelectedCellIndex1 = DataGridView1.CurrentCell.ColumnIndex
-        _lastSelectedRowIndex1 = DataGridView1.CurrentRow.Index
+    Private Sub DataGridViewX1_SelectionChanged(sender As Object, e As EventArgs)
+        _lastSelectedCellIndex1 = DataGridViewX1.CurrentCell.ColumnIndex
+        _lastSelectedRowIndex1 = DataGridViewX1.CurrentRow.Index
     End Sub
 
-    Private Sub DataGridViewX1_SelectionChanged(sender As Object, e As EventArgs)
-        _lastSelectedCellIndex2 = DataGridViewX1.CurrentCell.ColumnIndex
-        _lastSelectedRowIndex2 = DataGridViewX1.CurrentRow.Index
+    Private Sub DataGridView1_SelectionChanged(sender As Object, e As EventArgs)
+        _lastSelectedCellIndex2 = DataGridView1.CurrentCell.ColumnIndex
+        _lastSelectedRowIndex2 = DataGridView1.CurrentRow.Index
     End Sub
 
     Private Sub TabPage1_Enter(sender As Object, e As EventArgs) Handles TabPage1.Enter
