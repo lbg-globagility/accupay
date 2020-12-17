@@ -670,7 +670,8 @@ namespace AccuPay.Data.Repositories
                 // Allowance not included yet since it is not needed currently
                 .Include(p => p.AllowanceItems)
                 .Include(p => p.ThirteenthMonthPay)
-                .Include(p => p.Actual);
+                .Include(p => p.Actual)
+                .Include(p => p.LoanPaymentFromThirteenthMonthPays);
         }
 
         private IQueryable<Paystub> AddGetByEmployeeCompositeKeyQuery(EmployeeCompositeKey key, IQueryable<Paystub> query)
