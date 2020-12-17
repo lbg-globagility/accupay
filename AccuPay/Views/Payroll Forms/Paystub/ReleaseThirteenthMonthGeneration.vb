@@ -69,6 +69,10 @@ Public Class ReleaseThirteenthMonthGeneration
                 allAdjustments.Add(a)
             End Sub)
 
+        For Each adj In allAdjustments
+            adj.Is13thMonthPay = False
+        Next
+
         Dim thirteenthMonthAdjustment = allAdjustments.
             Where(Function(a) a.ProductID.Value = _selectedAdjustmentTypeId).
             Where(Function(a) Not a.IsActual).
@@ -79,6 +83,7 @@ Public Class ReleaseThirteenthMonthGeneration
             thirteenthMonthAdjustment.LastUpd = Date.Now
             thirteenthMonthAdjustment.LastUpdBy = z_User
             thirteenthMonthAdjustment.Amount = amount
+            thirteenthMonthAdjustment.Is13thMonthPay = True
         Else
             Dim adjustment As New Adjustment() With
             {
@@ -91,7 +96,8 @@ Public Class ReleaseThirteenthMonthGeneration
                 .OrganizationID = z_OrganizationID,
                 .Amount = amount,
                 .PaystubID = employee.PaystubObject.RowID.Value,
-                .ProductID = _selectedAdjustmentTypeId
+                .ProductID = _selectedAdjustmentTypeId,
+                .Is13thMonthPay = True
             }
 
             allAdjustments.Add(adjustment)

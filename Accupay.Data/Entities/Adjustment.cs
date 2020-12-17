@@ -39,5 +39,7 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("ProductID")]
         public virtual Product Product { get; set; }
+
+        public bool Is13thMonthPay { get; set; }
     }
 }

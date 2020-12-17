@@ -30,5 +30,7 @@ namespace AccuPay.Data
         Paystub Paystub { get; set; }
 
         Product Product { get; set; }
+
+        bool Is13thMonthPay { get; set; }
     }
 }
