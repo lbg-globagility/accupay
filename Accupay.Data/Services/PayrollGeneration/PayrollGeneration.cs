@@ -77,6 +77,10 @@ namespace AccuPay.Data.Services
                                     Where(a => a.EmployeeID == employee.RowID).
                                     ToList();
 
+            var useLoanDeductFromBonus = settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
+
+            var useLoanDeductFromThirteenthMonthPay = settings.GetBoolean("Policy.UseLoanDeductFromThirteenthMonthPay", false);
+
             try
             {
                 var result = GeneratePayStub(
@@ -100,7 +104,9 @@ namespace AccuPay.Data.Services
                     actualTimeEntries: actualTimeEntries,
                     allowances: allowances,
                     leaves: leaves,
-                    bonuses: bonuses);
+                    bonuses: bonuses,
+                    useLoanDeductFromBonus: useLoanDeductFromBonus,
+                    useLoanDeductFromThirteenthMonthPay: useLoanDeductFromThirteenthMonthPay);
 
                 return result;
             }
@@ -136,7 +142,9 @@ namespace AccuPay.Data.Services
             IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
             IReadOnlyCollection<Allowance> allowances,
             IReadOnlyCollection<Leave> leaves,
-            IReadOnlyCollection<Bonus> bonuses)
+            IReadOnlyCollection<Bonus> bonuses,
+            bool useLoanDeductFromBonus,
+            bool useLoanDeductFromThirteenthMonthPay)
         {
             if (salary == null)
                 return PaystubEmployeeResult.Error(employee, "Employee has no salary for this cutoff.");
@@ -186,14 +194,13 @@ namespace AccuPay.Data.Services
                                                     timeEntries: timeEntries,
                                                     allowances);
 
-            var useLoanDeductFromBonus = settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
-
             var loanTransactions = CreateLoanTransactions(
                 paystub,
                 payPeriod,
                 loanSchedules,
                 bonuses: bonuses,
-                useLoanDeductFromBonus: useLoanDeductFromBonus);
+                useLoanDeductFromBonus: useLoanDeductFromBonus,
+                useLoanDeductFromThirteenthMonthPay: useLoanDeductFromThirteenthMonthPay);
 
             ComputePayroll(resources,
                             userId: userId,
@@ -808,7 +815,8 @@ namespace AccuPay.Data.Services
                                                             PayPeriod payPeriod,
                                                             IReadOnlyCollection<LoanSchedule> loanSchedules,
                                                             IReadOnlyCollection<Bonus> bonuses,
-                                                            bool useLoanDeductFromBonus)
+                                                            bool useLoanDeductFromBonus,
+                                                            bool useLoanDeductFromThirteenthMonthPay)
         {
             var loanTransactions = new List<LoanTransaction>();
             var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
@@ -817,7 +825,7 @@ namespace AccuPay.Data.Services
             {
                 if (loanSchedule.LoanPayPeriodLeft == 0) continue;
 
-                decimal deductionAmount = GetValidDeductionAmount(loanSchedule, payPeriod, bonuses, useLoanDeductFromBonus);
+                decimal deductionAmount = GetLoanDeductionAmount(paystub: paystub, loanSchedule, payPeriod, bonuses, useLoanDeductFromBonus, useLoanDeductFromThirteenthMonthPay: useLoanDeductFromThirteenthMonthPay);
 
                 loanSchedule.TotalBalanceLeft -= deductionAmount;
                 loanSchedule.RecomputePayPeriodLeft();
@@ -842,29 +850,49 @@ namespace AccuPay.Data.Services
             return loanTransactions;
         }
 
-        private decimal GetValidDeductionAmount(LoanSchedule loanSchedule, PayPeriod payPeriod, IReadOnlyCollection<Bonus> bonuses, bool useLoanDeductFromBonus)
+        private decimal GetLoanDeductionAmount(Paystub paystub, LoanSchedule loanSchedule, PayPeriod payPeriod, IReadOnlyCollection<Bonus> bonuses, bool useLoanDeductFromBonus, bool useLoanDeductFromThirteenthMonthPay)
         {
+            decimal loanDeductionAmount = 0;
+
             if (loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft)
             {
                 return loanSchedule.TotalBalanceLeft;
             }
+            else if (useLoanDeductFromBonus && GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod).Any())
+            {
+                var newDeductionAmount =
+                    GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod)
+                    .Sum(l => l.AmountPayment);
+                if (newDeductionAmount > loanSchedule.TotalBalanceLeft)
+                {
+                    loanDeductionAmount = loanSchedule.TotalBalanceLeft;
+                }
+                else
+                {
+                    loanDeductionAmount = newDeductionAmount;
+                }
+            }
             else
             {
-                if (useLoanDeductFromBonus && GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod).Any())
-                {
-                    var newDeductionAmount =
-                        GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod)
-                        .Sum(l => l.AmountPayment);
-                    if (newDeductionAmount > loanSchedule.TotalBalanceLeft)
-                    {
-                        return loanSchedule.TotalBalanceLeft;
-                    }
+                loanDeductionAmount = loanSchedule.DeductionAmount;
+            }
 
-                    return newDeductionAmount;
+            if (useLoanDeductFromThirteenthMonthPay &&
+                (paystub.LoanPaymentFromThirteenthMonthPays != null && paystub.LoanPaymentFromThirteenthMonthPays.Any()))
+            {
+                var addedLoanDeduction = paystub.LoanPaymentFromThirteenthMonthPays
+                    .Where(l => l.LoanId == loanSchedule.RowID.Value)
+                    .Sum(l => l.AmountPayment);
+
+                if ((addedLoanDeduction + loanDeductionAmount) > loanSchedule.TotalBalanceLeft)
+                {
+                    loanDeductionAmount = loanSchedule.TotalBalanceLeft;
                 }
 
-                return loanSchedule.DeductionAmount;
+                loanDeductionAmount += addedLoanDeduction;
             }
+
+            return loanDeductionAmount;
         }
 
         private void UpdatePaystubItems(PayrollContext context,
