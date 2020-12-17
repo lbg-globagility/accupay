@@ -184,6 +184,7 @@ namespace AccuPay.Data.Repositories
             var loans = await _context.LoanSchedules
                 .Include(l => l.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.Items)
+                .Include(l => l.LoanType)
                 .Where(l => l.OrganizationID == organizationId)
                 .Where(l => l.DedEffectiveDateFrom <= payPeriod.PayToDate)
                 .Where(l => acceptedLoans.Contains(l.DeductionSchedule.Trim().ToUpper()))
