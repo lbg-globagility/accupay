@@ -203,6 +203,7 @@ namespace AccuPay.Data.Repositories
                     adjustment.Amount = updatedAdjustment.Amount;
                     adjustment.ProductID = updatedAdjustment.ProductID;
                     adjustment.Comment = updatedAdjustment.Comment;
+                    adjustment.Is13thMonthPay = updatedAdjustment.Is13thMonthPay;
 
                     _context.Entry(adjustment).State = EntityState.Modified;
                 }
