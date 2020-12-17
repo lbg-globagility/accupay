@@ -134,5 +134,17 @@ namespace AccuPay.Data.Services
 
             return adjustments;
         }
+
+        public async Task<ICollection<Paystub>> GetByPaystubsForLoanPaymentFrom13thMonthAsync(int payPeriodId)
+        {
+            var result = await _paystubRepository.GetByPaystubsForLoanPaymentFrom13thMonthAsync(payPeriodId);
+
+            if (!result.Any())
+            {
+                throw new BusinessLogicException("Thirteenth Month pay is not released on this period.");
+            }
+
+            return result;
+        }
     }
 }

@@ -163,6 +163,16 @@ namespace AccuPay.Data.Repositories
             return modifiedAdjustments;
         }
 
+        internal async Task<ICollection<Paystub>> GetByPaystubsForLoanPaymentFrom13thMonthAsync(int payPeriodId)
+        {
+            return await CreateBaseQueryWithFullPaystub()
+                .Include(x => x.LoanPaymentFromThirteenthMonthPays)
+                .Where(x => x.PayPeriodID == payPeriodId)
+                .Where(x => x.Adjustments.Any(a => a.Is13thMonthPay))
+                //.Where(x => x.ActualAdjustments.Any(a => a.Is13thMonthPay))
+                .ToListAsync();
+        }
+
         private void AddContextState<T>(Paystub paystub, List<T> originalAdjustments, List<T> modifiedAdjustments) where T : IAdjustment
         {
             List<T> newAdjustments = modifiedAdjustments.Where(x => IsNewEntity(x.RowID)).ToList();
