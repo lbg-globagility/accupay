@@ -73,6 +73,7 @@ Public Class ServiceProvider
         services.AddTransient(Of LeaveLedgerRepository)
         services.AddTransient(Of ListOfValueRepository)
         services.AddTransient(Of LoanPaymentFromBonusRepository)
+        services.AddTransient(Of LoanPaymentFromThirteenthMonthPayRepository)
         services.AddTransient(Of LoanRepository)
         services.AddTransient(Of OfficialBusinessRepository)
         services.AddTransient(Of OrganizationRepository)
