@@ -435,6 +435,12 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
+      <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Late Undertime and Absent Summary.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1628,6 +1634,9 @@
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
+    <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.resx">
+      <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Report Forms\LaGlobalEmployeeReportForm.resx">
       <DependentUpon>LaGlobalEmployeeReportForm.vb</DependentUpon>
     </EmbeddedResource>
