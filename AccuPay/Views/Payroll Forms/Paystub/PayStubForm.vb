@@ -145,6 +145,7 @@ Public Class PayStubForm
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
         ShowOrHideCostCenterReport()
+        ShowOrHideLoanDeductFromThirteenthMonthPay()
 
         Await RefreshForm()
 
@@ -181,6 +182,10 @@ Public Class PayStubForm
 
     Private Sub ShowOrHideCostCenterReport()
         CostCenterReportToolStripMenuItem.Visible = _policy.UseCostCenter
+    End Sub
+
+    Private Sub ShowOrHideLoanDeductFromThirteenthMonthPay()
+        PayLoansUsing13thMonthToolStripMenuItem.Visible = _policy.UseLoanDeductFromThirteenthMonthPay
     End Sub
 
     Private Sub ShowOrHideActual()
@@ -421,6 +426,8 @@ Public Class PayStubForm
         ReopenPayrollToolStripMenuItem.Visible = enable
         ClosePayrollToolStripMenuItem.Visible = enable
         'OthersToolStripMenuItem.Visible = enable
+        Include13thMonthPayToolStripMenuItem.Visible = enable
+        PayLoansUsing13thMonthToolStripMenuItem.Visible = enable AndAlso _policy.UseLoanDeductFromThirteenthMonthPay
     End Sub
 
     Private Sub EnableAdjustmentsInput(Optional enable As Boolean = True)
@@ -2287,6 +2294,20 @@ Public Class PayStubForm
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
         Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
+    End Sub
+
+    Private Async Sub PayLoansUsing13thMonthToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayLoansUsing13thMonthToolStripMenuItem.Click
+        If Not _currentPayperiodId.HasValue Then Return
+
+        Dim payperiod = Await _payPeriodRepository.GetByIdAsync(_currentPayperiodId.Value)
+
+        Dim form As New LoanPaymentFromThirteenthMonthForm(payperiod)
+
+        form.ShowDialog()
+
+        If form.HasChanges AndAlso GeneratePayrollToolStripButton.Visible Then
+            GeneratePayrollToolStripMenuItem_Click(sender, e)
+        End If
     End Sub
 
 End Class
