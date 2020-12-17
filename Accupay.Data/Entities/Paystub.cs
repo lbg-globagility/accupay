@@ -187,5 +187,7 @@ namespace AccuPay.Data.Entities
             LeaveTransactions = new List<LeaveTransaction>();
             LoanTransactions = new List<LoanTransaction>();
         }
+
+        public virtual ICollection<LoanPaymentFromThirteenthMonthPay> LoanPaymentFromThirteenthMonthPays { get; set; }
     }
 }
