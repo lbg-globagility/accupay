@@ -354,5 +354,19 @@ namespace AccuPay.Data.Services
         }
 
         #endregion Save
+
+        #region List of entities
+
+        public async Task<ICollection<LoanSchedule>> GetCurrentPayrollLoansAsync(int organizationId,
+            PayPeriod payPeriod,
+            IReadOnlyCollection<Paystub> paystubs)
+        {
+            return await _loanRepository.GetCurrentPayrollLoansAsync(
+                organizationId: organizationId,
+                payPeriod: payPeriod,
+                paystubs: paystubs);
+        }
+
+        #endregion List of entities
     }
 }
