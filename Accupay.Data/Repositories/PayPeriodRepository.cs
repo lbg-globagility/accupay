@@ -455,6 +455,17 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
+        internal async Task<ICollection<PayPeriod>> GetPeriodsFromThisPeriodOnwardsAsync(PayPeriod currentPayPeriod)
+        {
+            var query = CreateBaseQuery(currentPayPeriod.OrganizationID.Value)
+                .Include(pp => pp.Paystubs)
+                    .ThenInclude(ps => ps.LoanTransactions)
+                .Where(pp => pp.PayFromDate > currentPayPeriod.PayFromDate)
+                .Where(pp => pp.Paystubs.Any());
+
+            return await query.ToListAsync();
+        }
+
         #endregion List of entities
 
         #region Others
