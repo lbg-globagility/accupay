@@ -60,6 +60,8 @@ namespace AccuPay.Data.Services
 
         public bool UseLoanDeductFromBonus => _settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
 
+        public bool UseLoanDeductFromThirteenthMonthPay => _settings.GetBoolean("Policy.UseLoanDeductFromThirteenthMonthPay", false);
+
         public bool UseAgency => CurrentSystemOwner == SystemOwnerService.Hyundai || CurrentSystemOwner == SystemOwnerService.Goldwings;
 
         public bool UseBonus => CurrentSystemOwner == SystemOwnerService.Goldwings;
