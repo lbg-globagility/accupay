@@ -1,4 +1,4 @@
-﻿using AccuPay.Utilities.Extensions;
+using AccuPay.Utilities.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,27 +6,13 @@ using System.Linq;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeleave")]
-    public class Leave : BaseEntity, IPayrollEntity
+    public class Leave : EmployeeDataEntity, IPayrollEntity
     {
         public const string StatusApproved = "Approved";
 
         public const string StatusPending = "Pending";
 
         public const string StatusRejected = "Rejected";
-
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
-        public int? EmployeeID { get; set; }
 
         public string LeaveType { get; set; }
 

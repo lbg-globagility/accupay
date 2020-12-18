@@ -1,4 +1,4 @@
-﻿using AccuPay.Utilities;
+using AccuPay.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
-    public class BasePaystub
+    public abstract class BasePaystub
     {
         public int? OrganizationID { get; set; }
 

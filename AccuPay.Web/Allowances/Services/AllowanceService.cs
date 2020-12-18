@@ -62,12 +62,11 @@ namespace AccuPay.Web.Allowances.Services
             var allowance = new Allowance
             {
                 OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = _currentUser.UserId,
                 EmployeeID = dto.EmployeeId
             };
             ApplyChanges(dto, allowance);
 
-            await _dataService.SaveAsync(allowance);
+            await _dataService.SaveAsync(allowance, _currentUser.UserId);
 
             return ConvertToDto(allowance);
         }
@@ -77,18 +76,18 @@ namespace AccuPay.Web.Allowances.Services
             var allowance = await _allowanceRepository.GetByIdAsync(id);
             if (allowance == null) return null;
 
-            allowance.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, allowance);
 
-            await _dataService.SaveAsync(allowance);
+            await _dataService.SaveAsync(allowance, _currentUser.UserId);
 
             return ConvertToDto(allowance);
         }
 
         public async Task Delete(int id)
         {
-            await _dataService.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                id: id,
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         public async Task<List<ProductDto>> GetAllowanceTypes()
@@ -159,7 +158,7 @@ namespace AccuPay.Web.Allowances.Services
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, currentlyLoggedInUserId: userId);
 
             return parsedResult;
         }

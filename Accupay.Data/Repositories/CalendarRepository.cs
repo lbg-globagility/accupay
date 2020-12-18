@@ -17,6 +17,8 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
+        #region Save
+
         public async Task CreateAsync(PayCalendar calendar, PayCalendar copiedCalendar)
         {
             var transaction = await _context.Database.BeginTransactionAsync();
@@ -78,12 +80,16 @@ namespace AccuPay.Data.Repositories
         public async Task DeleteAsync(PayCalendar payCalendar)
         {
             var calendarDays = await _context.CalendarDays
-                    .Where(d => d.CalendarID == payCalendar.RowID)
-                    .ToListAsync();
+                .Where(d => d.CalendarID == payCalendar.RowID)
+                .ToListAsync();
 
             _context.Calendars.Remove(payCalendar);
             await _context.SaveChangesAsync();
         }
+
+        #endregion Save
+
+        #region Queries
 
         public async Task<ICollection<PayCalendar>> GetAllAsync()
         {
@@ -95,12 +101,29 @@ namespace AccuPay.Data.Repositories
             return await _context.Calendars.FindAsync(calendarId);
         }
 
+        public async Task<PayCalendar> GetOrCreateDefaultCalendar()
+        {
+            var defaultCalendar = await _context.Calendars.FirstOrDefaultAsync(t => t.IsDefault);
+
+            if (defaultCalendar == null)
+            {
+                defaultCalendar = PayCalendar.CreateDefaultCalendar();
+
+                _context.Calendars.Add(defaultCalendar);
+                await _context.SaveChangesAsync();
+            }
+
+            return defaultCalendar;
+        }
+
+        #region CalendarDay
+
         /// <summary>
-        ///         ''' Gets all days of a calendar that is part of a given year
-        ///         ''' </summary>
-        ///         ''' <param name="calendarId"></param>
-        ///         ''' <param name="year"></param>
-        ///         ''' <returns></returns>
+        /// Gets all days of a calendar that is part of a given year
+        /// </summary>
+        /// <param name="calendarId"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
         public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId, int year)
         {
             var firstDayOfYear = new DateTime(year, 1, 1);
@@ -120,53 +143,76 @@ namespace AccuPay.Data.Repositories
         }
 
         /// <summary>
-        ///         ''' Gets all days of a calendar that is from and to the given date range
-        ///         ''' </summary>
-        ///         ''' <param name="calendarId"></param>
-        ///         ''' <param name="from"></param>
-        ///         ''' <param name="[to]"></param>
-        ///         ''' <returns></returns>
-        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId,
-                                                                    DateTime from,
-                                                                    DateTime to)
+        /// Gets all days of a calendar that is from and to the given date range
+        /// </summary>
+        /// <param name="calendarId"></param>
+        /// <param name="from"></param>
+        /// <param name="[to]"></param>
+        /// <returns></returns>
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(
+            int calendarId,
+            DateTime from,
+            DateTime to)
         {
-            return await _context.CalendarDays.
-                                Include(t => t.DayType).
-                                Where(t => from <= t.Date && t.Date <= to).
-                                Where(t => t.CalendarID == calendarId).
-                                ToListAsync();
+            return await _context.CalendarDays
+                .Include(t => t.DayType)
+                .Where(t => from <= t.Date && t.Date <= to)
+                .Where(t => t.CalendarID == calendarId)
+                .ToListAsync();
         }
 
         /// <summary>
-        ///         ''' Gets holidays of a calendar that is from and to the given date range
-        ///         ''' </summary>
-        ///         ''' <param name="calendarId"></param>
-        ///         ''' <param name="from"></param>
-        ///         ''' <param name="[to]"></param>
-        ///         ''' <returns></returns>
-        public async Task<ICollection<CalendarDay>> GetHolidays(int calendarId,
-                                                                DateTime from,
-                                                                DateTime to)
+        /// Gets all days of ALL calendar that is from and to the given date range
+        /// </summary>
+        /// <param name="calendarId"></param>
+        /// <param name="from"></param>
+        /// <param name="[to]"></param>
+        /// <returns></returns>
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(
+            DateTime from,
+            DateTime to)
         {
-            return await _context.CalendarDays.
-                                Include(t => t.DayType).
-                                Where(t => !t.IsRegularDay).
-                                Where(t => from <= t.Date && t.Date <= to).
-                                Where(t => t.CalendarID == calendarId).
-                                ToListAsync();
+            return await _context.CalendarDays
+                .Include(t => t.DayType)
+                .Where(t => from <= t.Date && t.Date <= to)
+                .ToListAsync();
         }
 
         /// <summary>
-        ///         ''' Gets all days of a calendar
-        ///         ''' </summary>
-        ///         ''' <param name="calendarId"></param>
-        ///         ''' <returns></returns>
+        /// Gets holidays of a calendar that is from and to the given date range
+        /// </summary>
+        /// <param name="calendarId"></param>
+        /// <param name="from"></param>
+        /// <param name="[to]"></param>
+        /// <returns></returns>
+        public async Task<ICollection<CalendarDay>> GetHolidays(
+            int calendarId,
+            DateTime from,
+            DateTime to)
+        {
+            return await _context.CalendarDays
+                .Include(t => t.DayType)
+                .Where(t => !t.IsRegularDay)
+                .Where(t => from <= t.Date && t.Date <= to)
+                .Where(t => t.CalendarID == calendarId)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Gets all days of a calendar
+        /// </summary>
+        /// <param name="calendarId"></param>
+        /// <returns></returns>
         public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId)
         {
-            return await _context.CalendarDays.
-                            Include(t => t.DayType).
-                            Where(t => t.CalendarID == calendarId).
-                            ToListAsync();
+            return await _context.CalendarDays
+                .Include(t => t.DayType)
+                .Where(t => t.CalendarID == calendarId)
+                .ToListAsync();
         }
+
+        #endregion CalendarDay
+
+        #endregion Queries
     }
 }

@@ -1,24 +1,40 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.Imports.Employees;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class EmployeeDataService
+    public class EmployeeDataService : BaseOrganizationDataService<Employee>
     {
-        private readonly EmployeeRepository _employeeRepository;
+        private const string UserActivityName = "Employee";
+
         private readonly LeaveLedgerRepository _leaveLedgerRepository;
         private readonly ProductRepository _productRepository;
         private readonly PositionRepository _positionRepository;
 
-        public EmployeeDataService(EmployeeRepository employeeRepository, LeaveLedgerRepository leaveLedgerRepository, ProductRepository productRepository, PositionRepository positionRepository)
+        public EmployeeDataService(
+            EmployeeRepository employeeRepository,
+            LeaveLedgerRepository leaveLedgerRepository,
+            PayPeriodRepository payPeriodRepository,
+            ProductRepository productRepository,
+            PositionRepository positionRepository,
+            UserActivityRepository userActivityRepository,
+            PayrollContext context,
+            PolicyHelper policy) :
+
+            base(employeeRepository,
+                payPeriodRepository,
+                userActivityRepository,
+                context,
+                policy,
+                entityName: "Employee")
         {
-            _employeeRepository = employeeRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
             _productRepository = productRepository;
             _positionRepository = positionRepository;
@@ -43,7 +59,7 @@ namespace AccuPay.Data.Services
 
             var employees = employeeWithLeaveBalanceModels.Select(x => x.Employee).ToList();
 
-            await _employeeRepository.SaveManyAsync(employees);
+            await SaveManyAsync(employees, userId);
 
             foreach (var model in employeeWithLeaveBalanceModels)
             {
@@ -65,38 +81,35 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, List<string> jobNames, int organizationId, int userId)
+        public async Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, List<string> jobNames, int organizationId, int changedByUserId)
         {
-            // TODO: create a SanitizeEntity method
-            // should:
-            // 1. Set TerminationDate to null if IsActive = true
-            var jobs = await _positionRepository.CreateManyAsync(jobNames, organizationId, userId);
+            var jobs = await _positionRepository.CreateManyAsync(jobNames, organizationId, changedByUserId);
             foreach (var parsedEmployee in validRecords.Where(t => t.JobNotYetExists))
             {
                 var job = jobs.FirstOrDefault(j => j.Name == parsedEmployee.JobPosition);
                 parsedEmployee.SetPositionId(job.RowID);
             }
 
-            var added = validRecords.Where(e => !e.Employee.RowID.HasValue).Select(e => e.Employee).ToList();
-            added.ForEach(e =>
-            {
-                e.OrganizationID = organizationId;
-                e.CreatedBy = userId;
-            });
+            var employees = validRecords.Select(x => x.Employee).ToList();
 
-            var updated = validRecords.Where(e => e.Employee.RowID.HasValue).Select(e => e.Employee).ToList();
-            updated.ForEach(e =>
-            {
-                e.LastUpdBy = userId;
-            });
+            await SaveManyAsync(employees, changedByUserId);
 
-            await _employeeRepository.ChangeManyAsync(added: added, updated: updated);
-
-            List<Employee> employees = new List<Employee>();
-            if (added.Any()) employees.AddRange(added);
-            if (updated.Any()) employees.AddRange(updated);
-
-            return employees;
+            return validRecords.Select(x => x.Employee).ToList();
         }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(Employee employee) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Employee employee) => string.Empty;
+
+        protected override async Task SanitizeEntity(Employee entity, Employee oldEntity, int changedByUserId)
+        {
+            await base.SanitizeEntity(entity, oldEntity, changedByUserId);
+
+            // 1. Set TerminationDate to null if IsActive = true
+        }
+
+        #endregion Overrides
     }
 }

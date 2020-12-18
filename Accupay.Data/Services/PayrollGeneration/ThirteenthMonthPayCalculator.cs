@@ -54,7 +54,7 @@ namespace AccuPay.Data.Services
                 allowanceItems.ToList(),
                 currentSystemOwner);
 
-            var thirteenthMonthAmount = thirteenthMonthBasicPay / CalendarConstants.MonthsInAYear;
+            var thirteenthMonthAmount = thirteenthMonthBasicPay / CalendarConstant.MonthsInAYear;
 
             paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthBasicPay;
             paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount;
@@ -125,7 +125,7 @@ namespace AccuPay.Data.Services
                 if (salary == null) return 0;
 
                 var trueSalary = salary.TotalSalary;
-                var basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                var basicPay = trueSalary / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
 
                 var totalDeductions = actualtimeentries.Sum(t => t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction);
 

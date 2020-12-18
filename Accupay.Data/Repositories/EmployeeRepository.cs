@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,29 +8,15 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class EmployeeRepository : BaseRepository
+    public class EmployeeRepository : SavableRepository<Employee>
     {
-        private readonly PayrollContext _context;
-
-        public EmployeeRepository(PayrollContext context)
+        public EmployeeRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        #region CRUD
+        #region Queries
 
-        public async Task SaveAsync(Employee employee)
-        {
-            if (IsNewEntity(employee.RowID))
-            {
-                _context.Employees.AddRange(employee);
-            }
-            else
-            {
-                _context.Entry(employee).State = EntityState.Modified;
-            }
-            await _context.SaveChangesAsync();
-        }
+        #region List of entities
 
         public async Task<PaginatedList<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
         {
@@ -69,61 +55,6 @@ namespace AccuPay.Data.Repositories
 
             return new PaginatedList<Employee>(employees, count);
         }
-
-        public async Task SaveManyAsync(List<Employee> employees)
-        {
-            var updated = employees.Where(e => !IsNewEntity(e.RowID)).ToList();
-            if (updated.Any())
-            {
-                updated.ForEach(x => _context.Entry(x).State = EntityState.Modified);
-            }
-
-            var added = employees.Where(e => IsNewEntity(e.RowID)).ToList();
-            if (added.Any())
-            {
-                _context.Employees.AddRange(added);
-            }
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task ChangeManyAsync(
-            List<Employee> added = null,
-            List<Employee> updated = null,
-            List<Employee> deleted = null)
-        {
-            if (added != null)
-            {
-                added.ForEach(shift =>
-                {
-                    _context.Entry(shift).State = EntityState.Added;
-                });
-            }
-
-            if (updated != null)
-            {
-                updated.ForEach(shift =>
-                {
-                    _context.Entry(shift).State = EntityState.Modified;
-                });
-            }
-
-            if (deleted != null)
-            {
-                deleted = deleted
-                    .GroupBy(x => x.RowID)
-                    .Select(x => x.FirstOrDefault())
-                    .ToList();
-                _context.Employees.RemoveRange(deleted);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        #endregion CRUD
-
-        #region Queries
-
-        #region List of entities
 
         public async Task<ICollection<Employee>> GetAllAsync(int organizationId)
         {
@@ -245,13 +176,13 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync(organizationId);
         }
 
-        public ICollection<Employee> GetAllActiveWithPosition(int organizationId)
+        public async Task<ICollection<Employee>> GetAllActiveWithPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
-            return builder
+            return await builder
                 .IncludePosition()
                 .IsActive()
-                .ToList(organizationId);
+                .ToListAsync(organizationId);
         }
 
         public async Task<ICollection<Employee>> GetAllWithDivisionAndPositionAsync(int organizationId)

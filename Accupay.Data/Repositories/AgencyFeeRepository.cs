@@ -1,7 +1,9 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
@@ -14,25 +16,25 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public ICollection<AgencyFee> GetByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public async Task<ICollection<AgencyFee>> GetByDatePeriodAsync(int organizationId, TimePeriod timePeriod)
         {
-            return CreateBaseQueryGetByDatePeriod(organizationId, timePeriod)
-                        .ToList();
+            return await CreateBaseQueryGetByDatePeriod(organizationId, timePeriod)
+                .ToListAsync();
         }
 
         public decimal GetPaystubAmount(int organizationId, TimePeriod timePeriod, int employeeId)
         {
             return CreateBaseQueryGetByDatePeriod(organizationId, timePeriod)
-                        .Where(x => x.EmployeeID == employeeId)
-                        .Sum(x => x.Amount);
+                .Where(x => x.EmployeeID == employeeId)
+                .Sum(x => x.Amount);
         }
 
-        public IQueryable<AgencyFee> CreateBaseQueryGetByDatePeriod(int organizationId, TimePeriod timePeriod)
+        private IQueryable<AgencyFee> CreateBaseQueryGetByDatePeriod(int organizationId, TimePeriod timePeriod)
         {
             return _context.AgencyFees
-                    .Where(x => x.OrganizationID == organizationId)
-                    .Where(x => timePeriod.Start <= x.Date)
-                    .Where(x => x.Date <= timePeriod.End);
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => timePeriod.Start <= x.Date)
+                .Where(x => x.Date <= timePeriod.End);
         }
     }
 }

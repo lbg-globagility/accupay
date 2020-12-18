@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using System.Collections.Generic;
@@ -9,11 +9,14 @@ namespace AccuPay.Data.Services
 {
     // this is not for daily employees
     // might want to rename this class name
-    public abstract class BaseDailyPayrollDataService<T> : BaseSavableDataService<T> where T : BaseEntity, IPayrollEntity
+    // check the IPayrollEntity interface
+    // to get a better idea of this abstraction
+    public abstract class BaseDailyPayrollDataService<T> : BaseEmployeeDataService<T> where T : EmployeeDataEntity, IPayrollEntity
     {
         public BaseDailyPayrollDataService(
             SavableRepository<T> savableRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy,
             string entityName,
@@ -21,6 +24,7 @@ namespace AccuPay.Data.Services
 
             base(savableRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName,
@@ -44,7 +48,7 @@ namespace AccuPay.Data.Services
             await ValidateDate(entity, oldEntity);
         }
 
-        protected override async Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities)
+        protected override async Task AdditionalSaveManyValidation(List<T> entities, List<T> oldEntities, SaveType saveType)
         {
             int? organizationId = null;
             foreach (var entity in entities)
@@ -63,7 +67,7 @@ namespace AccuPay.Data.Services
 
         protected async Task ValidateDate(T entity, T oldEntity, bool checkOldEntity = true)
         {
-            if (checkOldEntity && IsNewEntity(entity.RowID) == false)
+            if (checkOldEntity && entity.IsNewEntity == false)
             {
                 if (oldEntity.PayrollDate != entity.PayrollDate)
                 {

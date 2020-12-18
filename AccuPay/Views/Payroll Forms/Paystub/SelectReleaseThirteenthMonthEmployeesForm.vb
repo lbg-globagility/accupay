@@ -247,6 +247,8 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         Dim generator As New ReleaseThirteenthMonthGeneration(selectedEmployees, selectedAdjustmentId)
         Dim progressDialog = New ProgressDialog(generator, "Creating 13th month pay adjustments...")
+
+        Me.Enabled = False
         progressDialog.Show()
 
         Dim generationTask = Task.Run(
@@ -273,8 +275,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
     Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.Select(Function(r) CType(r, PaystubEmployeeResult)).ToList()
 
@@ -295,8 +296,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        CloseProgressDialog(progressDialog)
 
         Const MessageTitle As String = "Release 13th Month Pay"
 
@@ -308,6 +308,16 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
             MessageBoxHelper.ErrorMessage("Something went wrong while saving the 13th month pay adjustments. Please contact Globagility Inc. for assistance.", MessageTitle)
         End If
 
+    End Sub
+
+    Private Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        Me.Enabled = True
+
+        If progressDialog Is Nothing Then Return
+
+        progressDialog.Close()
+        progressDialog.Dispose()
     End Sub
 
 #End Region

@@ -88,7 +88,7 @@ namespace AccuPay.Data.Services
                     branchTimeEntries,
                     branchActualTimeEntries);
 
-            return AccuMath.CommercialRound(thirteenthMonthPay / CalendarConstants.MonthsInAYear);
+            return AccuMath.CommercialRound(thirteenthMonthPay / CalendarConstant.MonthsInAYear);
         }
 
         private static decimal ComputeTotalAllowance(

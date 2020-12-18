@@ -9,20 +9,7 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTINS_employeeofficialbusiness_then_employeetimeentrydetails` AFTER INSERT ON `employeeofficialbusiness` FOR EACH ROW BEGIN
 
-DECLARE eob_dayrange INT(11);
-
-DECLARE i INT(11) DEFAULT 0;
-
-DECLARE etetn_RowID INT(11);
-
-DECLARE one_datetimestamp DATETIME DEFAULT CURRENT_TIMESTAMP();
-
 DECLARE viewID INT(11);
-
-SET eob_dayrange = DATEDIFF(COALESCE(NEW.OffBusEndDate,NEW.OffBusStartDate),NEW.OffBusStartDate) + 1;
-SET one_datetimestamp = (SELECT etd.Created FROM employeetimeentrydetails etd INNER JOIN (SELECT pp.RowID,pp.PayFromDate, pp.PayToDate FROM employee e INNER JOIN payperiod pp ON pp.TotalGrossSalary=e.PayFrequencyID AND pp.OrganizationID=e.OrganizationID AND NEW.OffBusStartDate BETWEEN pp.PayFromDate AND pp.PayToDate WHERE e.RowID=NEW.EmployeeID AND e.OrganizationID=NEW.OrganizationID LIMIT 1) i ON i.RowID IS NOT NULL OR i.RowID IS NULL WHERE etd.EmployeeID=NEW.EmployeeID AND etd.OrganizationID=NEW.OrganizationID AND etd.`Date` BETWEEN i.PayFromDate AND i.PayToDate LIMIT 1);
-SET one_datetimestamp = IFNULL(one_datetimestamp,CURRENT_TIMESTAMP());
-SET i=0;
 
 SELECT RowID FROM `view` WHERE ViewName='Official Business filing' AND OrganizationID=NEW.OrganizationID LIMIT 1 INTO viewID;
 
@@ -35,12 +22,6 @@ INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldC
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'Reason',NEW.RowID,'',NEW.Reason,'Insert')
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'Comments',NEW.RowID,'',NEW.Comments,'Insert')
 ,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,NEW.OrganizationID,viewID,'EmployeeID',NEW.RowID,'',NEW.EmployeeID,'Insert');
-
-
-
-
-
-
 
 END//
 DELIMITER ;

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -103,8 +103,8 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<UserActivityItem>(userActivities, count, options.PageSize);
         }
 
-        public void RecordAdd(
-            int userId,
+        public async Task RecordAddAsync(
+            int currentlyLoggedInUserId,
             string entityName,
             int entityId,
             int organizationId,
@@ -112,8 +112,8 @@ namespace AccuPay.Data.Repositories
             int? changedEmployeeId = null,
             int? changedUserId = null)
         {
-            RecordSimple(
-                userId,
+            await RecordSimpleAsync(
+                currentlyLoggedInUserId,
                 entityName,
                 "Created a new",
                 suffixIdentifier,
@@ -124,8 +124,8 @@ namespace AccuPay.Data.Repositories
                 changedByUserId: changedUserId);
         }
 
-        public void RecordDelete(
-            int userId,
+        public async Task RecordDeleteAsync(
+            int currentlyLoggedInUserId,
             string entityName,
             int entityId,
             int organizationId,
@@ -133,8 +133,8 @@ namespace AccuPay.Data.Repositories
             int? changedEmployeeId = null,
             int? changedUserId = null)
         {
-            RecordSimple(
-                userId,
+            await RecordSimpleAsync(
+                currentlyLoggedInUserId,
                 entityName,
                 $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}",
                 suffixIdentifier,
@@ -145,8 +145,50 @@ namespace AccuPay.Data.Repositories
                 changedByUserId: changedUserId);
         }
 
-        private void RecordSimple(
-            int userId,
+        public void CreateRecord(
+            int currentlyLoggedInUserId,
+            string entityName,
+            int organizationId,
+            string recordType,
+            List<UserActivityItem> activityItems = null)
+        {
+            CreateUserActivityEntity(currentlyLoggedInUserId, entityName, organizationId, recordType, activityItems);
+            _context.SaveChanges();
+        }
+
+        public async Task CreateRecordAsync(
+            int currentlyLoggedInUserId,
+            string entityName,
+            int organizationId,
+            string recordType,
+            List<UserActivityItem> activityItems = null)
+        {
+            CreateUserActivityEntity(currentlyLoggedInUserId, entityName, organizationId, recordType, activityItems);
+            await _context.SaveChangesAsync();
+        }
+
+        #region Private Methods
+
+        private void CreateUserActivityEntity(
+            int currentlyLoggedInUserId,
+            string entityName,
+            int organizationId,
+            string recordType,
+            List<UserActivityItem> activityItems = null)
+        {
+            _context.UserActivities.Add(new UserActivity()
+            {
+                Created = DateTime.Now,
+                UserId = currentlyLoggedInUserId,
+                EntityName = entityName.ToUpper(),
+                ActivityItems = activityItems,
+                OrganizationID = organizationId,
+                RecordType = recordType
+            });
+        }
+
+        private async Task RecordSimpleAsync(
+            int currentlyLoggedInUserId,
             string entityName,
             string simpleDescription,
             string suffixIdentifier,
@@ -158,61 +200,38 @@ namespace AccuPay.Data.Repositories
         {
             entityName = SetStringToPascalCase(entityName);
 
-            var activityItems = new List<UserActivityItem>()
-                {
-                    new UserActivityItem()
-                    {
-                        EntityId = entityId,
-                        Description = $"{simpleDescription} {entityName?.ToLower()}{suffixIdentifier}.",
-                        ChangedEmployeeId = changedEmployeeId,
-                        ChangedUserId = changedByUserId
-                    }
-                };
+            List<UserActivityItem> activityItems = CreateSimpleUserActivityItem(
+                entityName: entityName,
+                simpleDescription: simpleDescription,
+                suffixIdentifier: suffixIdentifier,
+                entityId: entityId,
+                changedEmployeeId: changedEmployeeId,
+                changedByUserId: changedByUserId);
 
-            CreateRecord(userId, entityName, organizationId, recordType, activityItems);
+            await CreateRecordAsync(currentlyLoggedInUserId, entityName, organizationId, recordType, activityItems);
         }
 
-        public void CreateRecord(
-            int userId,
+        private static List<UserActivityItem> CreateSimpleUserActivityItem(
             string entityName,
-            int organizationId,
-            string recordType,
-            List<UserActivityItem> activityItems = null)
+            string simpleDescription,
+            string suffixIdentifier,
+            int entityId,
+            int? changedEmployeeId,
+            int? changedByUserId)
         {
-            CreateUserActivityEntity(userId, entityName, organizationId, recordType, activityItems);
-            _context.SaveChanges();
-        }
-
-        public async Task CreateRecordAsync(
-            int userId,
-            string entityName,
-            int organizationId,
-            string recordType,
-            List<UserActivityItem> activityItems = null)
-        {
-            CreateUserActivityEntity(userId, entityName, organizationId, recordType, activityItems);
-            await _context.SaveChangesAsync();
-        }
-
-        private void CreateUserActivityEntity(
-            int userId,
-            string entityName,
-            int organizationId,
-            string recordType,
-            List<UserActivityItem> activityItems = null)
-        {
-            _context.UserActivities.Add(new UserActivity()
+            return new List<UserActivityItem>()
             {
-                Created = DateTime.Now,
-                UserId = userId,
-                EntityName = entityName.ToUpper(),
-                ActivityItems = activityItems,
-                OrganizationID = organizationId,
-                RecordType = recordType
-            });
+                new UserActivityItem()
+                {
+                    EntityId = entityId,
+                    Description = $"{simpleDescription} {entityName?.ToLower()}{suffixIdentifier}.",
+                    ChangedEmployeeId = changedEmployeeId,
+                    ChangedUserId = changedByUserId
+                }
+            };
         }
 
-        public static bool CheckIfFirstLetterIsVowel(string entityName)
+        private static bool CheckIfFirstLetterIsVowel(string entityName)
         {
             if (!string.IsNullOrWhiteSpace(entityName))
             {
@@ -232,5 +251,7 @@ namespace AccuPay.Data.Repositories
 
             return entityName;
         }
+
+        #endregion Private Methods
     }
 }

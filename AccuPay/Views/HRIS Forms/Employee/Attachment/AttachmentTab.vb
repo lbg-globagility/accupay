@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
 Imports System.Threading.Tasks
@@ -133,7 +133,7 @@ Public Class AttachmentTab
 
                     Await _attachmentRepo.DeleteAsync(_currentAttachment)
 
-                    _userActivityRepo.RecordDelete(
+                    Await _userActivityRepo.RecordDeleteAsync(
                         z_User,
                         FormEntityName,
                         entityId:=_currentAttachment.RowID.Value,

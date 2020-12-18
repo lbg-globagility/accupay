@@ -1,8 +1,7 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -86,7 +85,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<OfficialBusiness>(officialBusinesses, count);
         }
 
-        internal async Task<List<OfficialBusiness>> GetByEmployeeIdsBetweenDatesAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
+        public async Task<List<OfficialBusiness>> GetByEmployeeIdsBetweenDatesAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
         {
             var result = await _context.OfficialBusinesses
                 .Include(ot => ot.Employee)
@@ -99,10 +98,10 @@ namespace AccuPay.Data.Repositories
             return result;
         }
 
-        public ICollection<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
+        public async Task<ICollection<OfficialBusiness>> GetAllApprovedByDatePeriodAsync(int organizationId, TimePeriod datePeriod)
         {
-            return CreateByQueryAllApprovedByDatePeriod(organizationId, datePeriod)
-                .ToList();
+            return await CreateByQueryAllApprovedByDatePeriod(organizationId, datePeriod)
+                .ToListAsync();
         }
 
         public async Task<ICollection<OfficialBusiness>> GetAllApprovedByEmployeeAndDatePeriodAsync(int organizationId, int employeeId, TimePeriod datePeriod)

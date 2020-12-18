@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -164,7 +164,7 @@ Public Class EducationalBackgroundTab
                     Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
                     Await educbgRepo.DeleteAsync(_currentEducBg)
 
-                    _userActivityRepo.RecordDelete(
+                    Await _userActivityRepo.RecordDeleteAsync(
                         z_User,
                         FormEntityName,
                         entityId:=_currentEducBg.RowID.Value,

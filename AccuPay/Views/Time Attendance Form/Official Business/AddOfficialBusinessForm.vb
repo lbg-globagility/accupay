@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -10,15 +10,11 @@ Public Class AddOfficialBusinessForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private Const FormEntityName As String = "Official Business"
-
     Private _currentEmployee As Employee
 
     Private _newOfficialBusiness As New OfficialBusiness()
 
-    Private _officialBusinessRepository As OfficialBusinessRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _officialBusinessRepository As OfficialBusinessRepository
 
     Sub New(employee As Employee)
 
@@ -27,8 +23,6 @@ Public Class AddOfficialBusinessForm
         _currentEmployee = employee
 
         _officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -65,7 +59,6 @@ Public Class AddOfficialBusinessForm
         Me._newOfficialBusiness = New OfficialBusiness
         Me._newOfficialBusiness.EmployeeID = _currentEmployee.RowID
         Me._newOfficialBusiness.OrganizationID = z_OrganizationID
-        Me._newOfficialBusiness.CreatedBy = z_User
 
         Me._newOfficialBusiness.StartDate = Date.Now
         Me._newOfficialBusiness.EndDate = Date.Now
@@ -145,15 +138,7 @@ Public Class AddOfficialBusinessForm
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await dataService.SaveAsync(Me._newOfficialBusiness)
-
-                _userActivityRepository.RecordAdd(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._newOfficialBusiness.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._newOfficialBusiness.EmployeeID.Value,
-                    suffixIdentifier:=$" with date '{ Me._newOfficialBusiness.StartDate.Value.ToShortDateString()}'")
+                Await dataService.SaveAsync(Me._newOfficialBusiness, z_User)
 
                 Me.IsSaved = True
 

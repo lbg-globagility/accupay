@@ -24,7 +24,7 @@ namespace AccuPay.Web.Employees.Services
         private readonly GenerateDefaultImageService _generateDefaultImageService;
         private readonly IFilesystem _filesystem;
         private readonly FileRepository _fileRepository;
-        private readonly EmployeeDataService _service;
+        private readonly EmployeeDataService _dataService;
         private readonly EmployeeImportParser _importParser;
 
         public EmployeeService(EmployeeRepository employeeRepository,
@@ -32,7 +32,7 @@ namespace AccuPay.Web.Employees.Services
             GenerateDefaultImageService generateDefaultImageService,
             IFilesystem filesystem,
             FileRepository fileRepository,
-            EmployeeDataService service,
+            EmployeeDataService dataService,
             EmployeeImportParser importParser)
         {
             _employeeRepository = employeeRepository;
@@ -40,7 +40,7 @@ namespace AccuPay.Web.Employees.Services
             _generateDefaultImageService = generateDefaultImageService;
             _filesystem = filesystem;
             _fileRepository = fileRepository;
-            _service = service;
+            _dataService = dataService;
             _importParser = importParser;
         }
 
@@ -71,17 +71,13 @@ namespace AccuPay.Web.Employees.Services
 
         public async Task<EmployeeDto> Create(CreateEmployeeDto dto)
         {
-            var employee = new Employee()
-            {
-                OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = _currentUser.UserId,
-            };
+            var employee = Employee.NewEmployee(_currentUser.OrganizationId);
 
             Map(dto, employee);
-            await _employeeRepository.SaveAsync(employee);
+            await _dataService.SaveAsync(employee, _currentUser.UserId);
 
             employee.OriginalImageId = (await CreateOriginalImage(employee)).Id;
-            await _employeeRepository.SaveAsync(employee);
+            await _dataService.SaveAsync(employee, _currentUser.UserId);
 
             return EmployeeDto.Convert(employee);
         }
@@ -89,10 +85,9 @@ namespace AccuPay.Web.Employees.Services
         public async Task<EmployeeDto> Update(int id, UpdateEmployeeDto dto)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
-            employee.LastUpdBy = _currentUser.UserId;
             Map(dto, employee);
 
-            await _employeeRepository.SaveAsync(employee);
+            await _dataService.SaveAsync(employee, _currentUser.UserId);
 
             return EmployeeDto.Convert(employee);
         }
@@ -153,7 +148,7 @@ namespace AccuPay.Web.Employees.Services
                 employee.OriginalImage = await CreateOriginalImage(employee);
             }
 
-            await _employeeRepository.SaveManyAsync(employees);
+            await _dataService.SaveManyAsync(employees, _currentUser.UserId);
         }
 
         internal async Task<EmployeeImportParser.EmployeeImportParserOutput> Import(IFormFile file)
@@ -177,13 +172,13 @@ namespace AccuPay.Web.Employees.Services
                 .Select(e => e.FirstOrDefault().JobPosition)
                 .ToList();
 
-            var employees = await _service.BatchApply(parsedResult.ValidRecords, jobNames, _currentUser.OrganizationId, userId);
+            var employees = await _dataService.BatchApply(parsedResult.ValidRecords, jobNames, _currentUser.OrganizationId, userId);
 
             foreach (var employee in employees)
             {
                 employee.OriginalImage = await CreateOriginalImage(employee);
             }
-            if (employees.Any()) await _employeeRepository.SaveManyAsync(employees);
+            if (employees.Any()) await _dataService.SaveManyAsync(employees, _currentUser.UserId);
 
             return parsedResult;
         }

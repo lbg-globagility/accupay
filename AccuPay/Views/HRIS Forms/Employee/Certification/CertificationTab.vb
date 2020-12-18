@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -153,7 +153,7 @@ Public Class CertificationTab
                     Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
                     Await certificationRepo.DeleteAsync(_currentCertification)
 
-                    _userActivityRepo.RecordDelete(
+                    Await _userActivityRepo.RecordDeleteAsync(
                         z_User,
                         FormEntityName,
                         entityId:=_currentCertification.RowID.Value,

@@ -89,9 +89,9 @@ namespace AccuPay.Data.Services
                 else if (IsPhilHealthPaidPerPayPeriod(deductionSchedule))
                 {
                     paystub.PhilHealthEmployeeShare = employeeShare /
-                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                     paystub.PhilHealthEmployerShare = employerShare /
-                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace AccuPay.Data.Services
                     {
                         var ecola = ecolas.FirstOrDefault();
 
-                        ecolaPerMonth = ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear);
+                        ecolaPerMonth = ecola.Amount * (employee.WorkDaysPerYear / CalendarConstant.MonthsInAYear);
                     }
 
                     basisPay = monthlyRate2 + ecolaPerMonth;

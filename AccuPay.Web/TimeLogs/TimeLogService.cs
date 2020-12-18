@@ -72,8 +72,6 @@ namespace AccuPay.Web.TimeLogs
                         {
                             OrganizationID = _currentUser.OrganizationId,
                             EmployeeID = dto.EmployeeId,
-                            CreatedBy = _currentUser.UserId,
-                            LastUpdBy = _currentUser.UserId,
                             LogDate = dto.Date,
                             TimeInFull = dto.StartTime,
                             TimeOutFull = dto.EndTime
@@ -88,7 +86,6 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existingTimeLog.TimeInFull = dto.StartTime;
                         existingTimeLog.TimeOutFull = dto.EndTime;
-                        existingTimeLog.LastUpdBy = _currentUser.UserId;
 
                         updated.Add(existingTimeLog);
                     }
@@ -99,7 +96,11 @@ namespace AccuPay.Web.TimeLogs
                 }
             }
 
-            await _dataService.ChangeManyAsync(_currentUser.OrganizationId, added, updated, deleted);
+            await _dataService.SaveManyAsync(
+                currentlyLoggedInUserId: _currentUser.UserId,
+                added: added,
+                updated: updated,
+                deleted: deleted);
         }
 
         internal async Task<TimeLogImportResultDto> Import(IFormFile file)

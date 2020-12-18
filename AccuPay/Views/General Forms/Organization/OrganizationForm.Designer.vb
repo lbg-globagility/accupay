@@ -24,6 +24,7 @@ Partial Class OrganizationForm
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.OrganizationUserRolesControl = New OrganizationUserRolesControl()
         Me.UserRoleLabel = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -78,9 +79,9 @@ Partial Class OrganizationForm
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.NewButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveButton = New System.Windows.Forms.ToolStripButton()
-        Me.btnDelete = New System.Windows.Forms.ToolStripButton()
+        Me.DeleteButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.btnClose = New System.Windows.Forms.ToolStripButton()
+        Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.OrganizationGridView = New System.Windows.Forms.DataGridView()
         Me.c_companyname = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
@@ -88,7 +89,6 @@ Partial Class OrganizationForm
         Me.Label35 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OrganizationUserRolesControl = New OrganizationUserRolesControl()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -137,6 +137,15 @@ Partial Class OrganizationForm
         Me.SplitContainer1.Size = New System.Drawing.Size(1011, 585)
         Me.SplitContainer1.SplitterDistance = 527
         Me.SplitContainer1.TabIndex = 310
+        '
+        'OrganizationUserRolesControl
+        '
+        Me.OrganizationUserRolesControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.OrganizationUserRolesControl.Location = New System.Drawing.Point(18, 500)
+        Me.OrganizationUserRolesControl.Name = "OrganizationUserRolesControl"
+        Me.OrganizationUserRolesControl.Size = New System.Drawing.Size(818, 70)
+        Me.OrganizationUserRolesControl.TabIndex = 383
         '
         'UserRoleLabel
         '
@@ -645,7 +654,7 @@ Partial Class OrganizationForm
         'ToolStrip1
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.White
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.btnDelete, Me.CancelToolStripButton, Me.btnClose})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewButton, Me.SaveButton, Me.DeleteButton, Me.CancelToolStripButton, Me.CloseButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1011, 25)
@@ -670,12 +679,11 @@ Partial Class OrganizationForm
         '
         'btnDelete
         '
-        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.deleteuser
-        Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(60, 22)
-        Me.btnDelete.Text = "&Delete"
-        Me.btnDelete.Visible = False
+        Me.DeleteButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteButton.Name = "btnDelete"
+        Me.DeleteButton.Size = New System.Drawing.Size(60, 22)
+        Me.DeleteButton.Text = "&Delete"
         '
         'CancelToolStripButton
         '
@@ -687,12 +695,12 @@ Partial Class OrganizationForm
         '
         'btnClose
         '
-        Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(56, 22)
-        Me.btnClose.Text = "&Close"
+        Me.CloseButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.CloseButton.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.CloseButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CloseButton.Name = "btnClose"
+        Me.CloseButton.Size = New System.Drawing.Size(56, 22)
+        Me.CloseButton.Text = "&Close"
         '
         'OrganizationGridView
         '
@@ -762,15 +770,6 @@ Partial Class OrganizationForm
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
         Me.DataGridViewTextBoxColumn2.Width = 200
         '
-        'OrganizationUserRolesControl1
-        '
-        Me.OrganizationUserRolesControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.OrganizationUserRolesControl.Location = New System.Drawing.Point(18, 500)
-        Me.OrganizationUserRolesControl.Name = "OrganizationUserRolesControl1"
-        Me.OrganizationUserRolesControl.Size = New System.Drawing.Size(818, 70)
-        Me.OrganizationUserRolesControl.TabIndex = 383
-        '
         'OrganizationForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -812,11 +811,11 @@ Partial Class OrganizationForm
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents NewButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents SaveButton As System.Windows.Forms.ToolStripButton
-    Friend WithEvents btnDelete As System.Windows.Forms.ToolStripButton
+    Friend WithEvents DeleteButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents CancelToolStripButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents SearchTextBox As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents btnClose As System.Windows.Forms.ToolStripButton
+    Friend WithEvents CloseButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents lblSaveMsg As System.Windows.Forms.Label
     Friend WithEvents Label35 As System.Windows.Forms.Label
     Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer

@@ -1,7 +1,8 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
@@ -14,12 +15,12 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public IEnumerable<BreakTimeBracket> GetAll(int organizationId)
+        public async Task<ICollection<BreakTimeBracket>> GetAllAsync(int organizationId)
         {
-            return _context.BreakTimeBrackets.
-                            Include(x => x.Division).
-                            Where(x => x.Division.OrganizationID == organizationId).
-                            ToList();
+            return await _context.BreakTimeBrackets
+                .Include(x => x.Division)
+                .Where(x => x.Division.OrganizationID == organizationId)
+                .ToListAsync();
         }
     }
 }

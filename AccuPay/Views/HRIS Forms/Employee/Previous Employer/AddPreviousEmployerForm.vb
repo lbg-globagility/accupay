@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -85,7 +85,7 @@ Public Class AddPreviousEmployerForm
                 Dim prevEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
                 Await prevEmployerRepo.CreateAsync(_newPreviousEmployer)
 
-                _userActivityRepo.RecordAdd(
+                Await _userActivityRepo.RecordAddAsync(
                     z_User,
                     FormEntityName,
                     entityId:=_newPreviousEmployer.RowID.Value,

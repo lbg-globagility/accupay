@@ -16,7 +16,6 @@ namespace AccuPay.Web.Overtimes
     public class OvertimeService
     {
         private readonly OvertimeRepository _repository;
-        private readonly OvertimeDataService _service;
         private readonly ICurrentUser _currentUser;
         private readonly OvertimeImportParser _importParser;
         private readonly OvertimeDataService _dataService;
@@ -25,14 +24,12 @@ namespace AccuPay.Web.Overtimes
             OvertimeRepository repository,
             OvertimeDataService dataService,
             ICurrentUser currentUser,
-            OvertimeImportParser importParser,
-            OvertimeDataService overtimeDataService)
+            OvertimeImportParser importParser)
         {
             _repository = repository;
-            _service = dataService;
             _currentUser = currentUser;
             _importParser = importParser;
-            _dataService = overtimeDataService;
+            _dataService = dataService;
         }
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(OvertimePageOptions options)
@@ -51,34 +48,32 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Create(CreateOvertimeDto dto)
         {
-            var overtime = new Overtime()
-            {
-                EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.UserId,
-                OrganizationID = _currentUser.OrganizationId,
-            };
-            ApplyChanges(dto, overtime);
+            var overtime = Overtime.NewOvertime(
+                organizationId: _currentUser.OrganizationId,
+                employeeId: dto.EmployeeId,
+                startDate: dto.StartDate,
+                startTime: dto.StartTime.TimeOfDay,
+                endTime: dto.EndTime.TimeOfDay,
+                status: dto.Status,
+                reason: dto.Reason,
+                comments: dto.Comments);
 
-            await _service.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
 
             return ConvertToDto(overtime);
         }
 
         public async Task<OvertimeDto> Create(SelfServiceCreateOvertimeDto dto)
         {
-            var overtime = new Overtime()
-            {
-                EmployeeID = _currentUser.EmployeeId,
-                CreatedBy = _currentUser.UserId,
-                OrganizationID = _currentUser.OrganizationId,
-            };
+            var overtime = Overtime.NewOvertime(
+                organizationId: _currentUser.OrganizationId,
+                employeeId: _currentUser.EmployeeId.Value,
+                startDate: dto.StartDate,
+                startTime: dto.StartTime.TimeOfDay,
+                endTime: dto.EndTime.TimeOfDay,
+                reason: dto.Reason);
 
-            overtime.OTStartDate = dto.StartDate;
-            overtime.OTStartTime = dto.StartTime.TimeOfDay;
-            overtime.OTEndTime = dto.EndTime.TimeOfDay;
-            overtime.Reason = dto.Reason;
-
-            await _service.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
 
             return ConvertToDto(overtime);
         }
@@ -88,33 +83,28 @@ namespace AccuPay.Web.Overtimes
             var overtime = await _repository.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            overtime.LastUpdBy = _currentUser.UserId;
-
-            ApplyChanges(dto, overtime);
-
-            await _service.SaveAsync(overtime);
-
-            return ConvertToDto(overtime);
-        }
-
-        public async Task Delete(int id)
-        {
-            await _service.DeleteAsync(id);
-        }
-
-        public List<string> GetStatusList()
-        {
-            return _repository.GetStatusList();
-        }
-
-        private static void ApplyChanges(CrudOvertimeDto dto, Overtime overtime)
-        {
             overtime.Status = dto.Status;
             overtime.OTStartDate = dto.StartDate;
             overtime.OTStartTime = dto.StartTime.TimeOfDay;
             overtime.OTEndTime = dto.EndTime.TimeOfDay;
             overtime.Reason = dto.Reason;
             overtime.Comments = dto.Comments;
+
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
+
+            return ConvertToDto(overtime);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _dataService.DeleteAsync(
+                id: id,
+                currentlyLoggedInUserId: _currentUser.UserId);
+        }
+
+        public List<string> GetStatusList()
+        {
+            return _repository.GetStatusList();
         }
 
         private static OvertimeDto ConvertToDto(Overtime overtime)
@@ -152,7 +142,7 @@ namespace AccuPay.Web.Overtimes
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            await _dataService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, currentlyLoggedInUserId: userId);
 
             return parsedResult;
         }

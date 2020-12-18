@@ -193,8 +193,6 @@ SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowI
 
 SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PrimaryAddressID',NEW.RowID,'',NEW.PrimaryAddressID,'Insert') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PrimaryContactID',NEW.RowID,'',NEW.PrimaryContactID,'Insert') INTO INS_audit_ID;
-
 SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'PremiseAddressID',NEW.RowID,'',NEW.PremiseAddressID,'Insert') INTO INS_audit_ID;
 
 SELECT `INS_audittrail_RETRowID`(NEW.CreatedBy,NEW.CreatedBy,New.RowID,view_RowID,'MainPhone',NEW.RowID,'',NEW.MainPhone,'Insert') INTO INS_audit_ID;

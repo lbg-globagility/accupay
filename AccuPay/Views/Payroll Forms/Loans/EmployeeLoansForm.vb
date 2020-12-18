@@ -292,11 +292,10 @@ Public Class EmployeeLoansForm
 
         Dim messageTitle = "Update Loans"
 
-        For Each loan In Me._currentloans
+        For Each item In Me._currentloans
 
-            If CheckIfLoanIsChanged(loan) Then
-                loan.LastUpdBy = z_User
-                changedLoans.Add(loan)
+            If CheckIfLoanIsChanged(item) Then
+                changedLoans.Add(item)
             End If
 
         Next
@@ -315,7 +314,7 @@ Public Class EmployeeLoansForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                Await dataService.SaveManyAsync(changedLoans)
+                Await dataService.SaveManyAsync(changedLoans, z_User)
 
                 For Each item In changedLoans
                     RecordUpdate(item)
@@ -468,7 +467,7 @@ Public Class EmployeeLoansForm
 
         Dim loanNumber = Me._currentLoan.LoanNumber
 
-        Dim loanNumberString = If(String.IsNullOrWhiteSpace(loanNumber), "", $": {loanNumber} ")
+        Dim loanNumberString = If(String.IsNullOrWhiteSpace(loanNumber), "", $": {loanNumber}")
 
         If MessageBoxHelper.Confirm(Of Boolean) _
         ($"Are you sure you want to delete loan{loanNumberString}?", "Confirm Deletion") = False Then
@@ -514,21 +513,13 @@ Public Class EmployeeLoansForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                Await dataService.DeleteAsync(Me._currentLoan.RowID.Value)
-
-                Dim suffixIdentifier = $" with type '{cboLoanType.Text}' and start date '{Me._currentLoan.DedEffectiveDateFrom.ToShortDateString()}'"
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentLoan.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentLoan.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
+                Await dataService.DeleteAsync(
+                    id:=Me._currentLoan.RowID.Value,
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadLoans(currentEmployee)
 
-                ShowBalloonInfo($"Loan {If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)} Successfully Deleted.", messageTitle)
+                ShowBalloonInfo($"Loan{If(String.IsNullOrWhiteSpace(loanNumberString), "", loanNumberString)} Successfully Deleted.", messageTitle)
             End Function)
     End Function
 

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -444,15 +444,9 @@ Public Class OfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await dataService.DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentOfficialBusiness.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentOfficialBusiness.EmployeeID.Value,
-                    suffixIdentifier:=$" with date '{ Me._currentOfficialBusiness.StartDate.ToShortDateString()}'")
+                Await dataService.DeleteAsync(
+                    Me._currentOfficialBusiness.RowID.Value,
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadOfficialBusinesses(currentEmployee)
 
@@ -626,9 +620,8 @@ Public Class OfficialBusinessForm
         Dim messageTitle = "Update Official Business"
 
         For Each item In Me._currentOfficialBusinesses
-            If CheckIfOfficialBusinessIsChanged(item) Then
 
-                item.LastUpdBy = z_User
+            If CheckIfOfficialBusinessIsChanged(item) Then
                 changedOfficialBusinesses.Add(item)
             End If
         Next
@@ -647,7 +640,7 @@ Public Class OfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await dataService.SaveManyAsync(changedOfficialBusinesses)
+                Await dataService.SaveManyAsync(changedOfficialBusinesses, z_User)
 
                 For Each item In changedOfficialBusinesses
                     RecordUpdate(item)

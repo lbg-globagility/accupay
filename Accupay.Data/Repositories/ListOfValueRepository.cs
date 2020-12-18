@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,13 +8,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class ListOfValueRepository : BaseRepository
+    public class ListOfValueRepository : SavableRepository<ListOfValue>
     {
-        private readonly PayrollContext _context;
-
-        public ListOfValueRepository(PayrollContext context)
+        public ListOfValueRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
         public ICollection<ListOfValue> GetLeaveConvertiblePolicies()
@@ -68,10 +65,20 @@ namespace AccuPay.Data.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<ListOfValue> GetPolicyAsync(string type, string lic, int organizationId)
+        {
+            return await _context.ListOfValues
+                .AsNoTracking()
+                .Where(f => f.Type == type)
+                .Where(f => f.LIC == lic)
+                .Where(f => f.OrganizationID == organizationId)
+                .FirstOrDefaultAsync();
+        }
+
         private IQueryable<ListOfValue> CreateBaseGetListOfValues(string type, bool checkIfActive)
         {
             var query = _context.ListOfValues
-                            .Where(l => l.Type == type);
+                .Where(l => l.Type == type);
 
             if (checkIfActive)
             {
@@ -101,52 +108,6 @@ namespace AccuPay.Data.Repositories
             }
 
             return stringList;
-        }
-
-        public async Task<ListOfValue> GetPolicyAsync(string type, string lic, int organizationId)
-        {
-            return await _context.ListOfValues
-                .AsNoTracking()
-                .Where(f => f.Type == type)
-                .Where(f => f.LIC == lic)
-                .Where(f => f.OrganizationID == organizationId)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task DeleteAsync(ListOfValue value)
-        {
-            _context.ListOfValues.Remove(value);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(ListOfValue value)
-        {
-            _context.Entry(value).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CreateAsync(ListOfValue value)
-        {
-            _context.ListOfValues.Add(value);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task SaveManyAsync(List<ListOfValue> listOfvalues)
-        {
-            listOfvalues.ForEach(entity => SaveFunction(entity, IsNewEntity(entity.RowID)));
-            await _context.SaveChangesAsync();
-        }
-
-        private void SaveFunction(ListOfValue listOfValue, bool newEntity)
-        {
-            if (newEntity)
-            {
-                _context.Set<ListOfValue>().Add(listOfValue);
-            }
-            else
-            {
-                _context.Entry(listOfValue).State = EntityState.Modified;
-            }
         }
     }
 }

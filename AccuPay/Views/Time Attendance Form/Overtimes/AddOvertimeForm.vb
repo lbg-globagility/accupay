@@ -1,25 +1,20 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddOvertimeForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private Const FormEntityName As String = "Overtime"
-
     Private _currentEmployee As Employee
 
-    Private _newOvertime As New Overtime()
+    Private _newOvertime As Overtime
 
-    Private _overtimeRepository As OvertimeRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _overtimeRepository As OvertimeRepository
 
     Sub New(employee As Employee)
 
@@ -28,8 +23,6 @@ Public Class AddOvertimeForm
         _currentEmployee = employee
 
         _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -63,19 +56,15 @@ Public Class AddOvertimeForm
 
     Private Sub ResetForm()
 
-        Me._newOvertime = New Overtime
-        Me._newOvertime.EmployeeID = _currentEmployee.RowID
-        Me._newOvertime.OrganizationID = z_OrganizationID
-        Me._newOvertime.CreatedBy = z_User
-
-        Me._newOvertime.OTStartDate = Date.Now
-        Me._newOvertime.OTEndDate = Date.Now
-        Me._newOvertime.OTStartTime = Date.Now.TimeOfDay
-        Me._newOvertime.OTEndTime = Date.Now.TimeOfDay
-
-        Me._newOvertime.Reason = String.Empty
-        Me._newOvertime.Comments = String.Empty
-        Me._newOvertime.Status = Nothing
+        Me._newOvertime = Overtime.NewOvertime(
+            organizationId:=z_OrganizationID,
+            employeeId:=_currentEmployee.RowID.Value,
+            startDate:=Date.Now,
+            startTime:=Date.Now.TimeOfDay,
+            endTime:=Date.Now.TimeOfDay,
+            reason:=String.Empty,
+            comments:=String.Empty,
+            status:=Nothing)
 
         CreateDataBindings()
     End Sub
@@ -143,16 +132,7 @@ Public Class AddOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await dataService.SaveAsync(Me._newOvertime)
-
-                Dim suffixIdentifier = $" with date '{Me._newOvertime.OTStartDate.ToShortDateString()}' and time period '{Me._newOvertime.OTStartTime.ToStringFormat("hh:mm tt")} to {Me._newOvertime.OTEndTime.ToStringFormat("hh:mm tt")}'"
-                _userActivityRepository.RecordAdd(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._newOvertime.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._newOvertime.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
+                Await dataService.SaveAsync(Me._newOvertime, z_User)
 
                 Me.IsSaved = True
 

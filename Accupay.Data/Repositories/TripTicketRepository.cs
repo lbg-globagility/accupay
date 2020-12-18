@@ -31,12 +31,13 @@ namespace AccuPay.Data.Repositories
             return tripTickets;
         }
 
-        public ICollection<TripTicket> GetByDateRange(DateTime from, DateTime to)
+        public async Task<ICollection<TripTicket>> GetByDateRangeAsync(TimePeriod datePeriod)
         {
-            var tripTickets = _context.TripTickets
+            // TODO: check if there should be Organization filter here
+            var tripTickets = await _context.TripTickets
                 .Include(t => t.Employees)
-                .Where(t => from <= t.Date && t.Date <= to)
-                .ToList();
+                .Where(t => datePeriod.Start <= t.Date && t.Date <= datePeriod.End)
+                .ToListAsync();
 
             return tripTickets;
         }

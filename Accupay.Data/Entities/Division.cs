@@ -1,26 +1,14 @@
-﻿using AccuPay.Data.Helpers;
+using AccuPay.Data.Helpers;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("division")]
-    public class Division : BaseEntity
+    public class Division : OrganizationalEntity
     {
         public const string DefaultLocationName = "Default Location";
         public const string DefaultDivisionName = "Default Division";
-
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
 
         public string Name { get; set; }
 
@@ -142,13 +130,11 @@ namespace AccuPay.Data.Entities
             return ParentDivisionID == division.RowID;
         }
 
-        public static Division NewDivision(int organizationId, int userId)
+        public static Division NewDivision(int organizationId)
         {
             return new Division()
             {
                 OrganizationID = organizationId,
-                CreatedBy = userId,
-                LastUpdBy = userId, // if LastUpdBy is null even if it is on INSERT, saving it to the database can throw and error in the trigger when there is no divisionminimumwage data yet
                 GracePeriod = 0,
                 WorkDaysPerYear = 313,
                 PhilHealthDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,

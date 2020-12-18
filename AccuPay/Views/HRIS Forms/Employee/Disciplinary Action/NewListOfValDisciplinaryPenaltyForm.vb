@@ -1,10 +1,12 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewListOfValDisciplinaryPenaltyForm
 
@@ -14,15 +16,15 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As ListOfValueRepository
 
-    Public Sub New(listOfValRepo As ListOfValueRepository)
+    Public Sub New()
 
         InitializeComponent()
 
         dgvActions.AutoGenerateColumns = False
 
-        _listOfValRepo = listOfValRepo
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
     End Sub
 
@@ -101,12 +103,21 @@ Public Class NewListOfValDisciplinaryPenaltyForm
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        If _currentAction?.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select an action.")
+            Return
+        End If
+
         Dim result = MsgBox("Are you sure you want to delete this Action?", MsgBoxStyle.YesNo, "Delete Action")
 
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Disciplinary Action Penalty",
                 Async Function()
-                    Await _listOfValRepo.DeleteAsync(_currentAction)
+
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of ListOfValueDataService)
+                    Await dataService.DeleteAsync(_currentAction.RowID.Value, z_User)
 
                     Await LoadActions()
                 End Function)
@@ -135,30 +146,24 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
                     With _currentAction
                         .DisplayValue = txtName.Text
+                        .LIC = txtName.Text
                         .Description = txtDescription.Text
 
                         If Not .RowID.HasValue Then
 
-                            .LIC = txtName.Text
                             .Active = "Yes"
                             .Type = "Employee Disciplinary Penalty"
-                            .CreatedBy = z_User
-                            .Created = Date.Now
-                            .LastUpdBy = z_User
-                            .LastUpd = Date.Now
                             .OrderBy = GetMaxOrderBy()
-
-                            Await _listOfValRepo.CreateAsync(_currentAction)
 
                             messageTitle = "Save Disciplinary Action Penalty"
                         Else
-                            .LastUpdBy = z_User
-                            .LastUpd = Now
-                            Await _listOfValRepo.UpdateAsync(_currentAction)
 
                             messageTitle = "Update Disciplinary Action Penalty"
                         End If
                     End With
+
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of ListOfValueDataService)
+                    Await dataService.SaveAsync(_currentAction, z_User)
 
                     succeed = True
                 Else

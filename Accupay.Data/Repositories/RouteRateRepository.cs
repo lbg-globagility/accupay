@@ -31,13 +31,6 @@ namespace AccuPay.Data.Repositories
             return routeRates;
         }
 
-        public ICollection<RoutePayRate> GetAll()
-        {
-            var routeRates = _context.RoutePayRates.ToList();
-
-            return routeRates;
-        }
-
         public async Task SaveMany(ICollection<RoutePayRate> routeRates)
         {
             var added = routeRates.Where(t => t.IsNew);

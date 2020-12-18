@@ -25,8 +25,6 @@ SELECT `INS_audittrail_RETRowID`(NEW.LastUpdBy,NEW.LastUpdBy,NEW.RowID,view_RowI
 
 SELECT `INS_audittrail_RETRowID`(NEW.LastUpdBy,NEW.LastUpdBy,NEW.RowID,view_RowID,'PrimaryAddressID',NEW.RowID,OLD.PrimaryAddressID,NEW.PrimaryAddressID,'Update') INTO INS_audit_ID;
 
-SELECT `INS_audittrail_RETRowID`(NEW.LastUpdBy,NEW.LastUpdBy,NEW.RowID,view_RowID,'PrimaryContactID',NEW.RowID,OLD.PrimaryContactID,NEW.PrimaryContactID,'Update') INTO INS_audit_ID;
-
 SELECT `INS_audittrail_RETRowID`(NEW.LastUpdBy,NEW.LastUpdBy,NEW.RowID,view_RowID,'PremiseAddressID',NEW.RowID,OLD.PremiseAddressID,NEW.PremiseAddressID,'Update') INTO INS_audit_ID;
 
 SELECT `INS_audittrail_RETRowID`(NEW.LastUpdBy,NEW.LastUpdBy,NEW.RowID,view_RowID,'MainPhone',NEW.RowID,OLD.MainPhone,NEW.MainPhone,'Update') INTO INS_audit_ID;

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -26,12 +26,12 @@ namespace AccuPay.Data.Repositories
             return employmentPolicy;
         }
 
-        public ICollection<EmploymentPolicy> GetAll()
+        public async Task<ICollection<EmploymentPolicy>> GetAllAsync()
         {
-            var employmentPolicies = _context.EmploymentPolicies
+            var employmentPolicies = await _context.EmploymentPolicies
                 .Include(t => t.Items)
                     .ThenInclude(t => t.Type)
-                .ToList();
+                .ToListAsync();
 
             return employmentPolicies;
         }

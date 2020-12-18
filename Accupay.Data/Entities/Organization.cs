@@ -1,23 +1,14 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("organization")]
-    public class Organization : BaseEntity
+    public class Organization : AuditableEntity
     {
         public static readonly TimeSpan DefaultNightDifferentialTimeFrom = new TimeSpan(22, 0, 0);
         public static readonly TimeSpan DefaultNightDifferentialTimeTo = new TimeSpan(6, 0, 0);
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
 
         public string Name { get; set; }
 
@@ -54,12 +45,12 @@ namespace AccuPay.Data.Entities
 
         public bool PaidAsLongAsHasTimeLog { get; set; }
 
-        public static Organization NewOrganization(int userId, int clientId)
+        public ICollection<Category> Categories { get; set; }
+
+        public static Organization NewOrganization(int clientId)
         {
             return new Organization()
             {
-                Created = DateTime.Now,
-                CreatedBy = userId,
                 ClientId = clientId,
                 IsAgency = false,
                 IsInActive = false,

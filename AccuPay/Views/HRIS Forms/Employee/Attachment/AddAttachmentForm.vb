@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
 Imports AccuPay.Data.Entities
@@ -119,7 +119,7 @@ Public Class AddAttachmentForm
 
             Await _attachmentRepo.CreateAsync(_newAttachment)
 
-            _userActivityRepo.RecordAdd(
+            Await _userActivityRepo.RecordAddAsync(
                 z_User,
                 FormEntityName,
                 entityId:=_newAttachment.RowID.Value,

@@ -1,4 +1,5 @@
-﻿using System;
+using AccuPay.Data.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -40,5 +41,22 @@ namespace AccuPay.Data.Entities
         public decimal RestDayNDOTRate { get; set; }
 
         public string DayConsideredAs { get; set; }
+
+        public static DayType CreateRegularDayType()
+        {
+            return new DayType()
+            {
+                Name = CalendarConstant.RegularDay,
+                RegularRate = 1,
+                OvertimeRate = 1.25M,
+                NightDiffRate = 1.1M,
+                NightDiffOTRate = 1.375M,
+                RestDayRate = 1.3M,
+                RestDayOTRate = 1.69M,
+                RestDayNDRate = 1.43M,
+                RestDayNDOTRate = 1.859M,
+                DayConsideredAs = CalendarConstant.RegularDay
+            };
+        }
     }
 }

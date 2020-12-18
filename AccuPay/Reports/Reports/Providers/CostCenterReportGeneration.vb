@@ -1,5 +1,6 @@
+Option Strict On
+
 Imports System.Collections.Concurrent
-Imports System.Threading
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
@@ -13,11 +14,14 @@ Public Class CostCenterReportGeneration
 
     Private _results As BlockingCollection(Of CostCenterReportGenerationResult)
 
-    Public Sub New(branches As IEnumerable(Of Branch), isActual As Boolean)
+    Public Sub New(branches As IEnumerable(Of Branch), isActual As Boolean, Optional additionalProgressCount As Integer = 0)
 
-        MyBase.New(branches.Where(Function(b) b IsNot Nothing).Count())
+        MyBase.New(branches.Where(Function(b) b IsNot Nothing).Count() + additionalProgressCount)
 
-        Me.Branches = branches.Where(Function(b) b IsNot Nothing)
+        Me.Branches = branches.
+            Where(Function(b) b IsNot Nothing).
+            OrderBy(Function(b) b.Name)
+
         Me.IsActual = isActual
 
         _results = New BlockingCollection(Of CostCenterReportGenerationResult)()
@@ -25,17 +29,19 @@ Public Class CostCenterReportGeneration
 
     Public Sub Start(resources As CostCenterReportResources)
 
+        If resources Is Nothing Then Return
+
         For Each branch In Branches
 
             Dim payPeriodModels = GetCostCenterPayPeriodModels(branch, resources)
 
             Dim result = CostCenterReportGenerationResult.Success(branch, payPeriodModels)
 
-            SetCurrentMessage($"finished generating cost center report data for {branch.Name}.")
+            SetCurrentMessage($"Finished generating cost center report data for {branch.Name}.")
 
             _results.Add(result)
 
-            Interlocked.Increment(_finished)
+            IncreaseProgress()
         Next
 
         SetResults(_results.ToList())

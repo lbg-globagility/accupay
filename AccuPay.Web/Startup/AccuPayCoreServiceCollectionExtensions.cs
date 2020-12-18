@@ -79,7 +79,7 @@ namespace AccuPay.Web
             services.AddScoped<CalendarService>();
             services.AddScoped<ListOfValueService>();
 
-            services.AddScoped<PayrollGeneration>();
+            services.AddScoped<PayrollGenerator>();
             services.AddScoped<PayrollResources>();
 
             services.AddScoped<PolicyHelper>();
@@ -92,6 +92,7 @@ namespace AccuPay.Web
             services.AddScoped<PaystubPayslipModelDataService>();
 
             services.AddScoped<TimeEntryGenerator>();
+            services.AddScoped<TimeEntryResources>();
 
             services.AddScoped<OvertimeRateService>();
             services.AddScoped<PayPeriodDataService>();

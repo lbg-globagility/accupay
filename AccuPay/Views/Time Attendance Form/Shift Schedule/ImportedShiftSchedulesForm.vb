@@ -1,21 +1,16 @@
 Option Strict On
 
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.[Imports]
-Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Desktop.Helpers
-Imports Microsoft.Extensions.DependencyInjection
 Imports AccuPay.Data.Services.Policies
-Imports AccuPay.Data.ValueObjects
-Imports System.Threading.Tasks
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportedShiftSchedulesForm
 
 #Region "VariableDeclarations"
-
-    Private Const FormEntityName As String = "Shift Schedule"
 
     Private _dataSourceOk As IReadOnlyCollection(Of ShiftImportModel)
 
@@ -23,9 +18,7 @@ Public Class ImportedShiftSchedulesForm
 
     Public IsSaved As Boolean
 
-    Private _userActivityRepository As UserActivityRepository
-
-    Private _importParser As ShiftImportParser
+    Private ReadOnly _importParser As ShiftImportParser
     Private ReadOnly _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
     Sub New(shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
@@ -33,8 +26,6 @@ Public Class ImportedShiftSchedulesForm
         InitializeComponent()
 
         _dataSourceFailed = New List(Of ShiftImportModel)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _importParser = MainServiceProvider.GetRequiredService(Of ShiftImportParser)
 
@@ -124,37 +115,7 @@ Public Class ImportedShiftSchedulesForm
                 Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(
                     _dataSourceOk,
                     organizationId:=z_OrganizationID,
-                    userId:=z_User)
-
-                Dim importList = New List(Of UserActivityItem)
-
-                For Each schedule In result.AddedList
-
-                    Dim suffixIdentifier = CreateSuffixIdentifier(schedule)
-
-                    importList.Add(New UserActivityItem() With
-                    {
-                        .Description = $"Imported a new shift {suffixIdentifier}",
-                        .EntityId = schedule.RowID
-                    })
-                Next
-                For Each schedule In result.UpdatedList
-
-                    Dim suffixIdentifier = CreateSuffixIdentifier(schedule)
-
-                    importList.Add(New UserActivityItem() With
-                    {
-                        .Description = $"Updated a shift on import {suffixIdentifier}",
-                        .EntityId = schedule.RowID
-                    })
-                Next
-
-                _userActivityRepository.CreateRecord(
-                    z_User,
-                    FormEntityName,
-                    z_OrganizationID,
-                    UserActivityRepository.RecordTypeImport,
-                    importList)
+                    currentlyLoggedInUserId:=z_User)
 
                 Me.IsSaved = True
                 DialogResult = DialogResult.OK
@@ -169,10 +130,6 @@ Public Class ImportedShiftSchedulesForm
         Dim overtimeDataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
         Await overtimeDataService.GenerateOvertimeByShift(_dataSourceOk, employeeIds, z_OrganizationID, z_User)
-    End Function
-
-    Private Shared Function CreateSuffixIdentifier(schedule As EmployeeDutySchedule) As String
-        Return $"with date '{schedule.DateSched.ToShortDateString()}'."
     End Function
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

@@ -85,12 +85,11 @@ namespace AccuPay.Web.Leaves
             var leave = new Leave()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, leave);
 
-            await _dataService.SaveAsync(leave);
+            await _dataService.SaveAsync(leave, _currentUser.UserId);
 
             return ConvertToDto(leave);
         }
@@ -100,7 +99,6 @@ namespace AccuPay.Web.Leaves
             var leave = new Leave()
             {
                 EmployeeID = _currentUser.EmployeeId,
-                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
 
@@ -111,7 +109,7 @@ namespace AccuPay.Web.Leaves
             leave.Reason = dto.Reason;
             leave.Status = Leave.StatusPending;
 
-            await _dataService.SaveAsync(leave);
+            await _dataService.SaveAsync(leave, _currentUser.UserId);
 
             return ConvertToDto(leave);
         }
@@ -121,18 +119,18 @@ namespace AccuPay.Web.Leaves
             var leave = await _leaveRepository.GetByIdAsync(id);
             if (leave == null) return null;
 
-            leave.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, leave);
 
-            await _dataService.SaveAsync(leave);
+            await _dataService.SaveAsync(leave, _currentUser.UserId);
 
             return ConvertToDto(leave);
         }
 
         public async Task Delete(int id)
         {
-            await _dataService.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                id: id,
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         public async Task<List<string>> GetLeaveTypes()

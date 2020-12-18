@@ -235,10 +235,7 @@ Public Class ImportEmployeeForm
 
         For Each model In _okModels
 
-            Dim newEmployee = Employee.NewEmployee(
-                organizationId:=z_OrganizationID,
-                userId:=z_User
-            )
+            Dim newEmployee = Employee.NewEmployee(z_OrganizationID)
 
             AssignChanges(model, newEmployee)
 
@@ -437,7 +434,7 @@ Public Class ImportEmployeeForm
                 currentPosition = Await dataService.GetByNameOrCreateAsync(
                     model.Position,
                     organizationId:=z_OrganizationID,
-                    userId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 model.PositionId = currentPosition?.RowID
 

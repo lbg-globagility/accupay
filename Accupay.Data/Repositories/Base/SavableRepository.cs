@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class SavableRepository<T> : BaseRepository where T : BaseEntity
+    public abstract class SavableRepository<T> : BaseRepository where T : BaseEntity
     {
         protected readonly PayrollContext _context;
 
@@ -15,28 +15,28 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             return _context.Set<T>()
                 .AsNoTracking()
                 .FirstOrDefault(x => x.RowID == id);
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async virtual Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.RowID == id);
         }
 
-        public async Task<ICollection<T>> GetAllAsync()
+        public async virtual Task<ICollection<T>> GetAllAsync()
         {
             return await _context.Set<T>()
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<ICollection<T>> GetManyByIdsAsync(int[] ids)
+        public async virtual Task<ICollection<T>> GetManyByIdsAsync(int[] ids)
         {
             return await _context.Set<T>()
                 .AsNoTracking()
@@ -44,33 +44,73 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public async virtual Task DeleteAsync(T entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(T entity)
+        public async virtual Task SaveAsync(T entity)
         {
-            SaveFunction(entity, IsNewEntity(entity.RowID));
+            await SaveFunction(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveManyAsync(List<T> entities)
+        public async virtual Task CreateAsync(T entity)
         {
-            entities.ForEach(entity => SaveFunction(entity, IsNewEntity(entity.RowID)));
+            _context.Set<T>().Add(entity);
+            DetachNavigationProperties(entity);
+
             await _context.SaveChangesAsync();
         }
 
-        public async Task CreateAsync(T entity)
+        public async virtual Task UpdateAsync(T entity)
         {
-            SaveFunction(entity, newEntity: true);
+            _context.Entry(entity).State = EntityState.Modified;
+            DetachNavigationProperties(entity);
+
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T entity)
+        public async virtual Task SaveManyAsync(List<T> entities)
         {
-            SaveFunction(entity, newEntity: false);
+            await SaveManyAsync(
+                added: entities.Where(x => x.IsNewEntity).ToList(),
+                updated: entities.Where(x => !x.IsNewEntity).ToList());
+        }
+
+        public async virtual Task SaveManyAsync(
+            List<T> added = null,
+            List<T> updated = null,
+            List<T> deleted = null)
+        {
+            if (added != null)
+            {
+                added.ForEach(entity =>
+                {
+                    _context.Entry(entity).State = EntityState.Added;
+                    DetachNavigationProperties(entity);
+                });
+            }
+
+            if (updated != null)
+            {
+                updated.ForEach(entity =>
+                {
+                    _context.Entry(entity).State = EntityState.Modified;
+                    DetachNavigationProperties(entity);
+                });
+            }
+
+            if (deleted != null)
+            {
+                deleted = deleted
+                    .GroupBy(x => x.RowID)
+                    .Select(x => x.FirstOrDefault())
+                    .ToList();
+                _context.Set<T>().RemoveRange(deleted);
+            }
+
             await _context.SaveChangesAsync();
         }
 
@@ -79,18 +119,16 @@ namespace AccuPay.Data.Repositories
             // no action
         }
 
-        private void SaveFunction(T entity, bool newEntity)
+        private async Task SaveFunction(T entity)
         {
-            if (newEntity)
+            if (entity.IsNewEntity)
             {
-                _context.Set<T>().Add(entity);
+                await CreateAsync(entity);
             }
             else
             {
-                _context.Entry(entity).State = EntityState.Modified;
+                await UpdateAsync(entity);
             }
-
-            DetachNavigationProperties(entity);
         }
     }
 }

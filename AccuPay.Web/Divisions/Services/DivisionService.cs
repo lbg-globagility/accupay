@@ -13,13 +13,13 @@ namespace AccuPay.Web.Divisions
 {
     public class DivisionService
     {
-        private readonly DivisionDataService _service;
+        private readonly DivisionDataService _dataService;
         private readonly DivisionRepository _repository;
         private readonly ICurrentUser _currentUser;
 
         public DivisionService(DivisionDataService service, DivisionRepository repository, ICurrentUser currentuser)
         {
-            _service = service;
+            _dataService = service;
             _repository = repository;
             _currentUser = currentuser;
         }
@@ -41,13 +41,11 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<ActionResult<DivisionDto>> Create(CreateDivisionDto dto)
         {
-            var division = Division.NewDivision(
-                organizationId: _currentUser.OrganizationId,
-                userId: _currentUser.UserId);
+            var division = Division.NewDivision(_currentUser.OrganizationId);
 
             ApplyChanges(dto, division);
 
-            await _service.SaveAsync(division);
+            await _dataService.SaveAsync(division, _currentUser.UserId);
 
             return ConvertToDto(division);
         }
@@ -57,18 +55,18 @@ namespace AccuPay.Web.Divisions
             var division = await _repository.GetByIdWithParentAsync(id);
             if (division == null) return null;
 
-            division.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, division);
 
-            await _service.SaveAsync(division);
+            await _dataService.SaveAsync(division, _currentUser.UserId);
 
             return ConvertToDto(division);
         }
 
         public async Task Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                divisionId: id,
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         internal IEnumerable<string> GetTypes()
@@ -87,7 +85,7 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<IEnumerable<string>> GetSchedules()
         {
-            return await _service.GetSchedulesAsync();
+            return await _dataService.GetSchedulesAsync();
         }
 
         private static DivisionDto ConvertToDto(Division division)

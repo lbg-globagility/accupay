@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services.Policies;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities;
 using System;
@@ -10,23 +11,21 @@ namespace AccuPay.Data.Services
 {
     public class DayCalculator
     {
-        private readonly ListOfValueCollection _settings;
         private readonly Organization _organization;
         private readonly Employee _employee;
         private readonly IEmploymentPolicy _employmentPolicy;
 
-        private static TimeEntryPolicy _policy;
+        private static PolicyHelper _policy;
 
         public DayCalculator(
-            Organization organization,
-            ListOfValueCollection settings,
             Employee employee,
-            IEmploymentPolicy employmentPolicy)
+            IEmploymentPolicy employmentPolicy,
+            Organization organization,
+            PolicyHelper policy)
         {
-            _settings = settings;
             _organization = organization;
             _employee = employee;
-            _policy = new TimeEntryPolicy(settings);
+            _policy = policy;
             _employmentPolicy = employmentPolicy;
         }
 
@@ -45,7 +44,7 @@ namespace AccuPay.Data.Services
             CalendarCollection calendarCollection,
             int? branchId,
             ICollection<TripTicket> tripTickets,
-            ICollection<RoutePayRate> routeRates)
+            IReadOnlyCollection<RoutePayRate> routeRates)
         {
             var timeEntry = oldTimeEntries.Where(t => t.Date == currentDate).SingleOrDefault();
 
@@ -61,12 +60,12 @@ namespace AccuPay.Data.Services
 
             bool hasSalaryForThisDate = salary != null && currentDate.Date >= salary.EffectiveFrom;
 
-            // TODO: return this as one the list of errors of Time entry generation
+            // TODO: return this as one the list of warnings of Time entry generation
             // No covered salary for this date
             if (hasSalaryForThisDate == false)
                 return timeEntry;
 
-            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest, _policy.ShiftBasedAutomaticOvertimePolicy.Enabled);
+            var currentShift = GetCurrentShift(currentDate, shift, _policy.RespectDefaultRestDay, _employee.DayOfRest, _policy.ShiftBasedAutomaticOvertimePolicy);
 
             timeEntry.BranchID = branchId;
             timeEntry.IsRestDay = currentShift.IsRestDay;
@@ -99,7 +98,7 @@ namespace AccuPay.Data.Services
             bool hasWorkedLastDay,
             IPayrate payrate,
             ICollection<TripTicket> tripTickets,
-            ICollection<RoutePayRate> routeRates)
+            IReadOnlyCollection<RoutePayRate> routeRates)
         {
             var previousDay = currentDate.AddDays(-1);
             var calculator = new TimeEntryCalculator();
@@ -197,7 +196,7 @@ namespace AccuPay.Data.Services
             timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate);
             timeEntry.UndertimeHours = calculator.ComputeUndertimeHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate);
 
-            OverrideLateAndUndertimeHoursComputations(timeEntry, currentShift, dutyPeriod, leavePeriod, _policy);
+            OverrideLateAndUndertimeHoursComputations(timeEntry, currentShift, dutyPeriod, leavePeriod);
             UpdateLateHoursByPolicies(timeEntry, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, coveredPeriod);
 
             timeEntry.RegularHours = currentShift.WorkingHours - (timeEntry.LateHours + timeEntry.UndertimeHours);
@@ -228,7 +227,15 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void ComputeExtraPeriodHours(DateTime currentDate, TimeEntry timeEntry, IList<Overtime> overtimes, CurrentShift currentShift, DateTime previousDay, TimeEntryCalculator calculator, TimePeriod logPeriod, TimePeriod dutyPeriod)
+        private void ComputeExtraPeriodHours(
+            DateTime currentDate,
+            TimeEntry timeEntry,
+            IList<Overtime> overtimes,
+            CurrentShift currentShift,
+            DateTime previousDay,
+            TimeEntryCalculator calculator,
+            TimePeriod logPeriod,
+            TimePeriod dutyPeriod)
         {
             TimePeriod nightBreaktime = null;
             if (_policy.HasNightBreaktime)
@@ -261,7 +268,7 @@ namespace AccuPay.Data.Services
             if (nightDiffOTHours > 0) timeEntry.NightDiffOTHours = _policy.ShiftBasedAutomaticOvertimePolicy.TrimOvertimeHoursWorked(nightDiffOTHours);
         }
 
-        private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, ICollection<RoutePayRate> routeRates)
+        private void ComputeTripTicketPay(TimeEntry timeEntry, ICollection<TripTicket> tripTickets, IReadOnlyCollection<RoutePayRate> routeRates)
         {
             var tripTicketPay = 0m;
 
@@ -324,12 +331,11 @@ namespace AccuPay.Data.Services
             TimeEntry timeEntry,
             CurrentShift currentShift,
             TimePeriod dutyPeriod,
-            TimePeriod leavePeriod,
-            TimeEntryPolicy policy)
+            TimePeriod leavePeriod)
         {
-            if (policy.PaidAsLongAsHasTimeLog) return;
+            if (_policy.PaidAsLongAsHasTimeLog) return;
 
-            var output = ComputeLateAndUndertimeHours(currentShift.ShiftPeriod, dutyPeriod, leavePeriod, currentShift.BreakPeriod, policy.ComputeBreakTimeLate);
+            var output = ComputeLateAndUndertimeHours(currentShift.ShiftPeriod, dutyPeriod, leavePeriod, currentShift.BreakPeriod, _policy.ComputeBreakTimeLate);
 
             if (output.Item1 != null && output.Item2 != null)
             {
@@ -712,7 +718,7 @@ namespace AccuPay.Data.Services
             IPayrate payrate,
             bool hasWorkedLastDay)
         {
-            // TODO: return this as one the list of errors of Time entry generation
+            // TODO: return this as one of the list of warnings of Time entry generation
             // Employee has not started yet according to the employee's Start Date
             if (currentDate < _employee.StartDate)
             {
@@ -799,12 +805,10 @@ namespace AccuPay.Data.Services
                 {
                     timeEntry.RegularHolidayPay = timeEntry.RegularHolidayHours * hourlyRate * (holidayRate - 1);
 
-                    var holidayCalculationType = _settings.GetStringOrDefault("Payroll Policy.HolidayPay", "Daily");
-
                     var basicHolidayPay = 0M;
-                    if (holidayCalculationType == "Hourly")
+                    if (_policy.HolidayCalculationType == "Hourly")
                         basicHolidayPay = currentShift.WorkingHours * hourlyRate;
-                    else if (holidayCalculationType == "Daily")
+                    else if (_policy.HolidayCalculationType == "Daily")
                         basicHolidayPay = dailyRate;
 
                     var isPaidToday = timeEntry.GetTotalDayPay() > 0;
@@ -836,11 +840,11 @@ namespace AccuPay.Data.Services
             EmployeeDutySchedule shift,
             bool respectDefaultRestDay,
             int? employeeDayOfRest,
-            bool shiftBasedAutomaticOvertimeEnabled)
+            ShiftBasedAutomaticOvertimePolicy shiftBasedAutomaticOvertimePolicy)
         {
-            if (shiftBasedAutomaticOvertimeEnabled && shift != null)
+            if (shiftBasedAutomaticOvertimePolicy.Enabled && shift != null)
             {
-                shift.EndTimeFull = _policy.ShiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shift.StartTimeFull, shift.BreakLength);
+                shift.EndTimeFull = shiftBasedAutomaticOvertimePolicy.GetExpectedEndTime(shift);
             }
 
             var currentShift = new CurrentShift(shift, currentDate);

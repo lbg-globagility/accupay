@@ -125,7 +125,7 @@ Public Class TimeEntrySummaryForm
 
         _breakTimeBrackets = New List(Of BreakTimeBracket)
         If _policy.ComputeBreakTimeLate Then
-            _breakTimeBrackets = GetBreakTimeBrackets()
+            _breakTimeBrackets = Await GetBreakTimeBrackets()
         End If
 
         UpdateFormBaseOnPolicy()
@@ -209,9 +209,11 @@ Public Class TimeEntrySummaryForm
             If(payPeriodPermission?.Create, False)
     End Function
 
-    Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
+    Private Async Function GetBreakTimeBrackets() As Task(Of List(Of BreakTimeBracket))
 
-        Return _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
+        Return (Await _breakTimeBracketRepository.
+            GetAllAsync(z_OrganizationID)).
+            ToList()
 
     End Function
 
@@ -546,7 +548,7 @@ Public Class TimeEntrySummaryForm
         ]]>.Value
 
         Dim timeEntries = New Collection(Of TimeEntry)
-        Dim calendarCollection As CalendarCollection = GetCalendarCollection(payPeriod)
+        Dim calendarCollection As CalendarCollection = Await GetCalendarCollection(payPeriod)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -783,7 +785,7 @@ Public Class TimeEntrySummaryForm
             Dim reader = Await command.ExecuteReaderAsync()
 
             Dim totalTimeEntry = New TimeEntry()
-            Dim calendarCollection As CalendarCollection = GetCalendarCollection(payPeriod)
+            Dim calendarCollection As CalendarCollection = Await GetCalendarCollection(payPeriod)
 
             While Await reader.ReadAsync()
                 Dim timeEntry = New TimeEntry() With {
@@ -879,13 +881,13 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Function GetCalendarCollection(payPeriod As PayPeriod) As CalendarCollection
+    Private Async Function GetCalendarCollection(payPeriod As PayPeriod) As Task(Of CalendarCollection)
 
         If payPeriod Is Nothing Then Return Nothing
 
         Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
 
-        Return calendarService.GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
+        Return Await calendarService.GetCalendarCollectionAsync(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
     End Function
 
     Private Async Sub StartNewPayrollButton_Click(sender As Object, e As EventArgs) Handles StartNewPayrollButton.Click
@@ -919,7 +921,7 @@ Public Class TimeEntrySummaryForm
 
             End If
 
-            GenerateTimeEntries(
+            Await GenerateTimeEntries(
                 startDate:=startDate,
                 endDate:=endDate,
                 payPeriodId:=payPeriod.RowID.Value)
@@ -927,41 +929,82 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer)
-        Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
+    Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
+
+        'We are using a fresh instance of EmployeeRepository
+        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        'later, we can let the user choose the employees that they want to generate.
+        Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
+
+        Dim generator As New TimeEntryGeneration(employees, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating time entries...")
+
+        Dim payPeriod As New TimePeriod(startDate, endDate)
+
+        MDIPrimaryForm.Enabled = False
         progressDialog.Show()
 
-        Dim task1 = Task.Factory.StartNew(Sub() generator.Start(
-            organizationId:=z_OrganizationID,
-            userId:=z_User,
-            cutoffStart:=startDate,
-            cutoffEnd:=endDate))
+        generator.SetCurrentMessage("Loading resources...")
+        GetResources(
+            progressDialog,
+            payPeriod,
+            Sub(resourcesTask)
 
-        task1.ContinueWith(
-            Sub() DoneGenerating(
-                dialog:=progressDialog,
-                generator:=generator,
-                startDate:=startDate,
-                endDate:=endDate,
-                payPeriodId:=payPeriodId),
-            CancellationToken.None,
-            TaskContinuationOptions.OnlyOnRanToCompletion,
-            TaskScheduler.FromCurrentSynchronizationContext)
+                If resourcesTask Is Nothing Then
 
-        task1.ContinueWith(
-            Sub(t As Task) TimeEntryGeneratorError(t, progressDialog),
-            CancellationToken.None,
-            TaskContinuationOptions.OnlyOnFaulted,
-            TaskScheduler.FromCurrentSynchronizationContext
-        )
+                    HandleErrorLoadingResources(progressDialog)
+                    Return
+                End If
+
+                generator.IncreaseProgress("Finished loading resources.")
+
+                Dim generationTask = Task.Run(
+                    Async Function()
+                        Await generator.Start(resourcesTask.Result, payPeriod, payPeriodId)
+                    End Function
+                )
+
+                generationTask.ContinueWith(
+                    Sub() DoneGenerating(
+                        progressDialog:=progressDialog,
+                        results:=generator.Results),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext
+                )
+
+                generationTask.ContinueWith(
+                    Sub(t) TimeEntryGeneratorError(t, progressDialog),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnFaulted,
+                    TaskScheduler.FromCurrentSynchronizationContext
+                )
+            End Sub)
+
+    End Function
+
+    Private Async Sub DoneGenerating(progressDialog As ProgressDialog, results As IReadOnlyCollection(Of ProgressGenerator.IResult))
+
+        CloseProgressDialog(progressDialog)
+
+        Dim saveResults = results.Select(Function(r) CType(r, EmployeeResult)).ToList()
+
+        Dim dialog = New EmployeeResultsDialog(
+            saveResults,
+            title:="Time Entry Results",
+            generationDescription:="Time entry generation",
+            entityDescription:="time entries") With {
+            .Owner = Me
+        }
+
+        dialog.ShowDialog()
+        Await LoadTimeEntries()
 
     End Sub
 
-    Private Sub TimeEntryGeneratorError(t As Task, dialog As ProgressDialog)
+    Private Sub TimeEntryGeneratorError(t As Task, progressDialog As ProgressDialog)
 
-        dialog.Close()
-        dialog.Dispose()
+        CloseProgressDialog(progressDialog)
 
         Const MessageTitle As String = "Generate Time Entries"
 
@@ -975,67 +1018,59 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Async Sub DoneGenerating(dialog As ProgressDialog, generator As TimeEntryGenerator, startDate As Date, endDate As Date, payPeriodId As Integer)
-        dialog.Close()
-        dialog.Dispose()
+    Private Sub GetResources(progressDialog As ProgressDialog, payPeriod As TimePeriod, callBackAfterLoadResources As Action(Of Task(Of TimeEntryResources)))
+        Dim resources = MainServiceProvider.GetRequiredService(Of TimeEntryResources)
 
-        Dim msgBoxText As String = "Done"
+        Dim loadTask = Task.Run(
+            Function()
+                Dim resourcesTask = resources.Load(
+                    organizationId:=z_OrganizationID,
+                    cutoffStart:=payPeriod.Start,
+                    cutoffEnd:=payPeriod.End)
 
-        If generator.ErrorCount > 0 Then
-            Dim errorCount = generator.ErrorCount
-            msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
+                resourcesTask.Wait()
 
-        End If
+                Return resources
+            End Function)
 
-        Try
-            Me.Cursor = Cursors.WaitCursor
+        loadTask.ContinueWith(
+            callBackAfterLoadResources,
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
 
-            Await LoadTimeEntries()
-            Await RecordMultipleTimeEntriesUserActivity(
-                startDate:=startDate,
-                endDate:=endDate,
-                payPeriodId:=payPeriodId)
-        Finally
+        loadTask.ContinueWith(
+            Sub(t) LoadingResourcesOnError(t, progressDialog),
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.FromCurrentSynchronizationContext
+        )
+    End Sub
 
-            MsgBox(msgBoxText)
-            Me.Cursor = Cursors.Default
-        End Try
+    Private Sub LoadingResourcesOnError(t As Task, progressDialog As ProgressDialog)
+
+        _logger.Error("Error loading one of the time entry data.", t.Exception)
+
+        HandleErrorLoadingResources(progressDialog)
 
     End Sub
 
-    Private Async Function RecordMultipleTimeEntriesUserActivity(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
+    Private Shared Sub HandleErrorLoadingResources(progressDialog As ProgressDialog)
+        CloseProgressDialog(progressDialog)
 
-        Dim changes = New List(Of UserActivityItem)
+        MsgBox("Something went wrong while loading the time entry data needed for calculation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Time Entry Resources")
+    End Sub
 
-        Dim timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
+    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
 
-        Dim currentPayPeriod = New TimePeriod(startDate, endDate)
+        MDIPrimaryForm.Enabled = True
 
-        Dim timeEntries = timeEntryRepository.GetByDatePeriod(z_OrganizationID, currentPayPeriod).ToList()
+        If progressDialog Is Nothing Then Return
 
-        Dim employeesWithTimeEntry = timeEntries.GroupBy(Function(e) e.EmployeeID).ToList()
-
-        For Each employee In employeesWithTimeEntry
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = payPeriodId,
-                .Description = $"Generated time entries for payroll {GetPayPeriodString()}.",
-                .ChangedEmployeeId = employee.Key.Value
-            })
-        Next
-
-        If changes.Any() Then
-
-            Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await repo.CreateRecordAsync(
-                z_User,
-                FormEntityName,
-                z_OrganizationID,
-                UserActivityRepository.RecordTypeEdit,
-                changes)
-
-        End If
-    End Function
+        progressDialog.Close()
+        progressDialog.Dispose()
+    End Sub
 
     Private Async Sub RegenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles RegenerateTimeEntryButton.Click
 
@@ -1047,7 +1082,7 @@ Public Class TimeEntrySummaryForm
             Return
         End If
 
-        GenerateTimeEntries(
+        Await GenerateTimeEntries(
             startDate:=_selectedPayPeriod.PayFromDate,
             endDate:=_selectedPayPeriod.PayToDate,
             payPeriodId:=_selectedPayPeriod.RowID.Value)
@@ -1270,7 +1305,7 @@ Public Class TimeEntrySummaryForm
                 Return _holidayType
             End Get
             Set(value As String)
-                _holidayType = If(value = "Regular Day", "", value)
+                _holidayType = If(value = CalendarConstant.RegularDay, "", value)
             End Set
         End Property
 
@@ -1298,13 +1333,12 @@ Public Class TimeEntrySummaryForm
 
         Private Function HolidayAcronym(holidayName As String) As String
             If String.IsNullOrWhiteSpace(holidayName) Then Return String.Empty
-            Dim nameOfHoliday = holidayName.ToLower()
 
             Dim abbreviatn As String = String.Empty
-            If nameOfHoliday = "regular holiday" Then abbreviatn = "RHol"
-            If nameOfHoliday = "special non-working holiday" Then abbreviatn = "SHol"
-            If nameOfHoliday = "double holiday" Then abbreviatn = "DHol"
-            If nameOfHoliday = "regular + special holiday" Then abbreviatn = "RHol+SHol"
+            If holidayName = CalendarConstant.RegularHoliday Then abbreviatn = "RHol"
+            If holidayName = CalendarConstant.SpecialNonWorkingHoliday Then abbreviatn = "SHol"
+            If holidayName = CalendarConstant.DoubleHoliday Then abbreviatn = "DHol"
+            If holidayName = CalendarConstant.RegularDayAndSpecialHoliday Then abbreviatn = "RHol+SHol"
             Return abbreviatn
         End Function
 
@@ -1395,7 +1429,7 @@ Public Class TimeEntrySummaryForm
         Public Sub GetHolidayType(calendarCollection As CalendarCollection)
 
             If calendarCollection Is Nothing Then
-                Me.HolidayType = PayratesCalendar.RegularDay
+                Me.HolidayType = CalendarConstant.RegularDay
                 Return
             End If
 
@@ -1409,11 +1443,11 @@ Public Class TimeEntrySummaryForm
 
                     Dim calendarDayName = DirectCast(currentPayRate, CalendarDay)?.DayType?.Name
 
-                    If {PayratesCalendar.DoubleHoliday,
-                        PayratesCalendar.RegularHoliday,
-                        PayratesCalendar.SpecialNonWorkingHoliday,
-                        PayratesCalendar.RegularDay,
-                        PayratesCalendar.RegularDayAndSpecialHoliday}.
+                    If {CalendarConstant.DoubleHoliday,
+                        CalendarConstant.RegularHoliday,
+                        CalendarConstant.SpecialNonWorkingHoliday,
+                        CalendarConstant.RegularDay,
+                        CalendarConstant.RegularDayAndSpecialHoliday}.
                         Contains(calendarDayName) Then
 
                         Me.HolidayType = calendarDayName
@@ -1423,18 +1457,18 @@ Public Class TimeEntrySummaryForm
                 End If
 
                 If currentPayRate.IsDoubleHoliday Then
-                    Me.HolidayType = PayratesCalendar.DoubleHoliday
+                    Me.HolidayType = CalendarConstant.DoubleHoliday
 
                 ElseIf currentPayRate.IsRegularHoliday Then
-                    Me.HolidayType = PayratesCalendar.RegularHoliday
+                    Me.HolidayType = CalendarConstant.RegularHoliday
 
                 ElseIf currentPayRate.IsSpecialNonWorkingHoliday Then
-                    Me.HolidayType = PayratesCalendar.SpecialNonWorkingHoliday
+                    Me.HolidayType = CalendarConstant.SpecialNonWorkingHoliday
                 Else
-                    Me.HolidayType = PayratesCalendar.RegularDay
+                    Me.HolidayType = CalendarConstant.RegularDay
                 End If
             Else
-                Me.HolidayType = PayratesCalendar.RegularDay
+                Me.HolidayType = CalendarConstant.RegularDay
             End If
 
         End Sub

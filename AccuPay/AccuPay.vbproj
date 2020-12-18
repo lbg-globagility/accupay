@@ -449,7 +449,8 @@
     </Compile>
     <Compile Include="Reports\Reports\Providers\CostCenterReportGeneration.vb" />
     <Compile Include="Reports\Reports\Providers\CostCenterReportGenerationResult.vb" />
-    <Compile Include="Views\Payroll Forms\Paystub\ReleaseThirteenthMonthGeneration.vb" />
+    <Compile Include="Views\Payroll Forms\Paystub\Generators\PayrollGeneration.vb" />
+    <Compile Include="Views\Payroll Forms\Paystub\Generators\ReleaseThirteenthMonthGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.Designer.vb">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
     </Compile>
@@ -727,14 +728,15 @@
     <Compile Include="Views\Core Forms\SelectBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.Designer.vb">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsForm.vb">
+    <Compile Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsGeneration.vb" />
-    <Compile Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DeleteDefaultShiftAndTimeLogsGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\TimeEntry\Generators\DefaultShiftAndTimeLogsGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\TimeEntry\Generators\DeleteDefaultShiftAndTimeLogsGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\TimeEntry\Generators\TimeEntryGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\TripTicket\NewTripTicketDialog.Designer.vb">
       <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
     </Compile>
@@ -1781,7 +1783,7 @@
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\Default Shift and Time Logs\DefaultShiftAndTimeLogsForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TripTicket\Import\ImportTripTicketForm.resx">

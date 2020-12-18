@@ -1,28 +1,29 @@
-﻿using AccuPay.Data.Enums;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
     public class CalendarService
     {
-        private readonly PayrollContext _context;
         private readonly BranchRepository _branchRepository;
+        private readonly CalendarRepository _calendarRepository;
+        private readonly DayTypeRepository _dayTypeRepository;
 
-        public CalendarService(PayrollContext context, BranchRepository branchRepository)
+        public CalendarService(BranchRepository branchRepository, CalendarRepository calendarRepository, DayTypeRepository dayTypeRepository)
         {
-            _context = context;
             _branchRepository = branchRepository;
+            _calendarRepository = calendarRepository;
+            _dayTypeRepository = dayTypeRepository;
         }
 
-        public CalendarCollection GetCalendarCollection(TimePeriod timePeriod)
+        public async Task<CalendarCollection> GetCalendarCollectionAsync(TimePeriod timePeriod)
         {
-            var defaultCalendar = _context.Calendars.FirstOrDefault(t => t.IsDefault);
+            var branches = await _branchRepository.GetAllAsync();
 
-            // TODO: create if not existing the DayType with name "Regular Day"
-            var dayType = _context.DayTypes.FirstOrDefault(t => t.Name == "Regular Day");
+            var calendarDays = await _calendarRepository.GetCalendarDays(timePeriod.Start, timePeriod.End);
+
+            var dayType = await _dayTypeRepository.GetOrCreateRegularDayAsync();
 
             var defaultRates = new DefaultRates()
             {
@@ -36,13 +37,7 @@ namespace AccuPay.Data.Services
                 RestDayNDOTRate = dayType.RestDayNDOTRate,
             };
 
-            var branches = _branchRepository.GetAll();
-
-            var calendarDays = _context.CalendarDays.
-                Include(t => t.DayType).
-                Where(t => timePeriod.Start <= t.Date).
-                Where(t => t.Date <= timePeriod.End).
-                ToList();
+            var defaultCalendar = await _calendarRepository.GetOrCreateDefaultCalendar();
 
             return new CalendarCollection(branches, calendarDays, defaultRates, defaultCalendar);
         }

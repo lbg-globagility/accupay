@@ -976,7 +976,7 @@ Public Class EmployeeForm
             If succeed Then
 
                 Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-                repo.RecordAdd(
+                Await repo.RecordAddAsync(
                     z_User,
                     EmployeeEntityName,
                     entityId:=employee_RowID,

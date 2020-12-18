@@ -70,9 +70,9 @@ Namespace Benchmark
 
             Public ReadOnly Property Paystub As Paystub
             Public ReadOnly Property LoanTransanctions As List(Of LoanTransaction)
-            Public ReadOnly Property PayrollGenerator As PayrollGeneration
+            Public ReadOnly Property PayrollGenerator As PayrollGenerator
 
-            Sub New(paystub As Paystub, loanTransanctions As List(Of LoanTransaction), generator As PayrollGeneration)
+            Sub New(paystub As Paystub, loanTransanctions As List(Of LoanTransaction), generator As PayrollGenerator)
 
                 Me.Paystub = paystub
                 Me.LoanTransanctions = loanTransanctions
@@ -112,7 +112,7 @@ Namespace Benchmark
                                     overtimes:=overtimes,
                                     ecola:=ecola)
 
-            Dim payrollGeneration = MainServiceProvider.GetRequiredService(Of PayrollGeneration)
+            Dim payrollGeneration = MainServiceProvider.GetRequiredService(Of PayrollGenerator)
 
             'organizationId:=z_OrganizationID,
             '                    userId:=z_User,
@@ -126,14 +126,14 @@ Namespace Benchmark
         End Function
 
         Public Shared Sub Save(paystub As Paystub,
-                               payrollGenerator As PayrollGeneration,
+                               payrollGenerator As PayrollGenerator,
                                loanTransanctions As List(Of LoanTransaction),
                                payPeriodId As Integer)
 
             'payrollGenerator.SavePayroll(paystub, loanTransanctions)
         End Sub
 
-        Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As DoProcessOutput
+        Private Function CreatePaystub(employee As Employee, generator As PayrollGenerator) As DoProcessOutput
             Dim paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,

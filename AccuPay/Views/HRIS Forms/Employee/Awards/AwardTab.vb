@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -166,7 +166,7 @@ Public Class AwardTab
                     Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
                     Await awardRepo.DeleteAsync(_currentAward)
 
-                    _userActivityRepo.RecordDelete(
+                    Await _userActivityRepo.RecordDeleteAsync(
                         z_User,
                         FormEntityName,
                         entityId:=_currentAward.RowID.Value,

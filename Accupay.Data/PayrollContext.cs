@@ -1,10 +1,11 @@
-using AccuPay.Data.Data.EntityFrameworkCore;
 using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
+using System.Linq.Expressions;
 
 namespace AccuPay.Data
 {
@@ -19,6 +20,12 @@ namespace AccuPay.Data
             RoleClaim,
             UserToken>
     {
+        //////// Created solely for deleting their data when organization is Deleted
+        internal virtual DbSet<AuditTrail> AuditTrails { get; set; }
+
+        internal virtual DbSet<View> Views { get; set; }
+        ////////////////////////////////////////
+
         internal virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
         internal virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
         internal virtual DbSet<Address> Addresses { get; set; }
@@ -76,6 +83,7 @@ namespace AccuPay.Data
         public virtual DbSet<RoutePayRate> RoutePayRates { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
         internal virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
+        internal virtual DbSet<SystemInfo> SystemInfo { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
         internal virtual DbSet<TardinessRecord> TardinessRecords { get; set; }
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
@@ -98,6 +106,18 @@ namespace AccuPay.Data
         {
             //base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Category>()
+                .HasMany(x => x.Products)
+                .WithOne(x => x.CategoryEntity)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            SetGeneratedColumnsToReadOnly(modelBuilder);
+
+            modelBuilder.Entity<Organization>()
+                .HasMany(x => x.Categories)
+                .WithOne(x => x.Organization)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Paystub>().
             HasOne(x => x.ThirteenthMonthPay).
             WithOne(x => x.Paystub).
@@ -113,9 +133,9 @@ namespace AccuPay.Data
 
             // Leave transaction should be tied to Time Entry Generation not Payroll Generation
             // thus leave transactions should be processed when we generate time entries.
-            modelBuilder.Entity<Paystub>().
-                HasMany(x => x.LeaveTransactions).
-                WithOne(x => x.Paystub);
+            modelBuilder.Entity<Paystub>()
+                .HasMany(x => x.LeaveTransactions)
+                .WithOne(x => x.Paystub);
 
             modelBuilder.Entity<TardinessRecord>().
                 HasKey(t => new { t.EmployeeId, t.Year });
@@ -190,6 +210,100 @@ namespace AccuPay.Data
                 .HasOne(t => t.Role)
                 .WithMany(t => t.RolePermissions)
                 .HasForeignKey(t => t.RoleId);
+
+            modelBuilder.Entity<SystemInfo>(
+            b =>
+            {
+                b.HasKey(e => e.Name);
+                b.Property(e => e.Value);
+            });
+        }
+
+        private static void SetGeneratedColumnsToReadOnly(ModelBuilder modelBuilder)
+        {
+            var created = GetPropertyName<AuditableEntity>(x => x.Created);
+            var lastUpd = GetPropertyName<AuditableEntity>(x => x.LastUpd);
+            var createdBy = GetPropertyName<AuditableEntity>(x => x.CreatedBy);
+            var lastUpdBy = GetPropertyName<AuditableEntity>(x => x.LastUpdBy);
+
+            foreach (var t in modelBuilder.Model.GetEntityTypes())
+            {
+                if (CheckIfDerivableByAuditableEntity(t.ClrType.BaseType))
+                {
+                    // Even if the LastUpd and Created columns are private
+                    // they are still included in the update query.
+                    // If we strictly want them to be never be altered by
+                    // ef core and only the database can update them,
+                    // we can use the code below:
+                    var createdMetaData = modelBuilder
+                        .Entity(t.ClrType)
+                        .Property(created)
+                        .ValueGeneratedOnAddOrUpdate()
+                        .Metadata;
+
+                    createdMetaData.BeforeSaveBehavior = PropertySaveBehavior.Ignore;
+                    createdMetaData.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+
+                    var lastupdMetaData = modelBuilder
+                        .Entity(t.ClrType)
+                        .Property(lastUpd)
+                        .ValueGeneratedOnAddOrUpdate()
+                        .Metadata;
+
+                    lastupdMetaData.BeforeSaveBehavior = PropertySaveBehavior.Ignore;
+                    lastupdMetaData.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+
+                    // CreatedBy can only be modified by ef core when EntityState is EntityState.Added
+                    var createdByMetaData = modelBuilder
+                        .Entity(t.ClrType)
+                        .Property(createdBy)
+                        .ValueGeneratedOnAddOrUpdate()
+                        .Metadata;
+
+                    createdByMetaData.BeforeSaveBehavior = PropertySaveBehavior.Save;
+                    createdByMetaData.AfterSaveBehavior = PropertySaveBehavior.Ignore;
+
+                    // LastUpdBy can only be modified by ef core when EntityState is not EntityState.Added
+                    var lastUpdByMetaData = modelBuilder
+                        .Entity(t.ClrType)
+                        .Property(lastUpdBy)
+                        .ValueGeneratedOnAddOrUpdate()
+                        .Metadata;
+
+                    lastUpdByMetaData.BeforeSaveBehavior = PropertySaveBehavior.Ignore;
+                    lastUpdByMetaData.AfterSaveBehavior = PropertySaveBehavior.Save;
+                }
+            }
+        }
+
+        private static bool CheckIfDerivableByAuditableEntity(Type baseType)
+        {
+            while (baseType != null)
+            {
+                if (baseType == typeof(AuditableEntity))
+                {
+                    return true;
+                }
+                else
+                {
+                    baseType = baseType?.BaseType;
+                }
+            }
+
+            return false;
+        }
+
+        private static string GetPropertyName<T>(Expression<Func<T, object>> expression)
+        {
+            if (expression.Body is MemberExpression)
+            {
+                return ((MemberExpression)expression.Body).Member.Name;
+            }
+            else
+            {
+                var op = ((UnaryExpression)expression.Body).Operand;
+                return ((MemberExpression)op).Member.Name;
+            }
         }
     }
 }

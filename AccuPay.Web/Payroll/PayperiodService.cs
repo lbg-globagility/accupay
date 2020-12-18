@@ -1,10 +1,10 @@
 using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,46 +13,58 @@ namespace AccuPay.Web.Payroll
 {
     public class PayperiodService
     {
-        private readonly DbContextOptionsService _dbContextOptionsService;
-        private readonly PayPeriodRepository _repository;
+        private readonly EmployeeRepository _employeeRepository;
+        private readonly PayPeriodRepository _payPeriodRepository;
         private readonly PayPeriodDataService _payPeriodDataService;
         private readonly PaystubDataService _paystubDataService;
         private readonly ICurrentUser _currentUser;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public PayperiodService(
-            DbContextOptionsService dbContextOptionsService,
-            PayPeriodRepository repository,
+            EmployeeRepository employeeRepository,
+            PayPeriodRepository payPeriodrepository,
             PayPeriodDataService payPeriodDataService,
             PaystubDataService paystubDataService,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            IServiceScopeFactory serviceScopeFactory)
         {
-            _dbContextOptionsService = dbContextOptionsService;
-            _repository = repository;
+            _employeeRepository = employeeRepository;
+            _payPeriodRepository = payPeriodrepository;
             _payPeriodDataService = payPeriodDataService;
             _paystubDataService = paystubDataService;
             _currentUser = currentUser;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task<PayrollResultDto> Calculate(PayrollResources resources, int payperiodId)
         {
-            var payPeriod = await _repository.GetByIdAsync(payperiodId);
+            var payPeriod = await _payPeriodRepository.GetByIdAsync(payperiodId);
 
             if (payPeriod == null || payPeriod?.RowID == null || payPeriod?.OrganizationID == null)
-                throw new BusinessLogicException("Pay Period does not exists");
+                throw new BusinessLogicException("Pay Period does not exists.");
 
-            if (payPeriod.Status != PayPeriodStatus.Open)
+            if (!payPeriod.IsOpen)
                 throw new BusinessLogicException("Only \"Open\" pay periods can be computed.");
+
+            if (resources == null)
+                throw new BusinessLogicException("Failure loading resources.");
 
             await resources.Load(payperiodId, _currentUser.OrganizationId, _currentUser.UserId);
 
             var results = new List<PaystubEmployeeResult>();
 
-            foreach (var employee in resources.Employees)
-            {
-                var generation = new PayrollGeneration(_dbContextOptionsService);
-                var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, _currentUser.UserId);
+            var employees = await _employeeRepository.GetAllActiveAsync(_currentUser.OrganizationId);
 
-                results.Add(result);
+            foreach (var employee in employees)
+            {
+                if (employee?.RowID == null) continue;
+
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var generator = scope.ServiceProvider.GetRequiredService<PayrollGenerator>();
+                    var result = await generator.Start(employee.RowID.Value, resources, _currentUser.OrganizationId, _currentUser.UserId);
+                    results.Add(result);
+                }
             }
 
             var successes = results.Where(t => t.IsSuccess).Count();
@@ -116,28 +128,28 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PayPeriodDto> GetById(int payPeriodId)
         {
-            var payperiod = await _repository.GetByIdAsync(payPeriodId);
+            var payperiod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
             return ConvertToDto(payperiod);
         }
 
         public async Task<PayPeriodDto> GetLatest()
         {
-            var payperiod = await _repository.GetLatestAsync(_currentUser.OrganizationId);
+            var payperiod = await _payPeriodRepository.GetLatestAsync(_currentUser.OrganizationId);
 
             return ConvertToDto(payperiod);
         }
 
         public async Task<PaginatedList<PayPeriodDto>> List(PageOptions options)
         {
-            var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId);
+            var paginatedList = await _payPeriodRepository.GetPaginatedListAsync(options, _currentUser.OrganizationId);
 
             return paginatedList.Select(t => ConvertToDto(t));
         }
 
         public async Task<List<PayPeriodDto>> GetYearlyPayPeriods(int year)
         {
-            var payPeriods = await _repository.GetYearlyPayPeriodsAsync(
+            var payPeriods = await _payPeriodRepository.GetYearlyPayPeriodsAsync(
                 organizationId: _currentUser.OrganizationId,
                 year: year,
                 currentUserId: _currentUser.UserId);

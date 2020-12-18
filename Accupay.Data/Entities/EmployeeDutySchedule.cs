@@ -2,33 +2,13 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities.Extensions;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("shiftschedules")]
-    public class EmployeeDutySchedule
+    public class EmployeeDutySchedule : EmployeeDataEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RowID { get; set; }
-
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
-        [ForeignKey("Employee")]
-        public int? EmployeeID { get; set; }
-
         [Column("Date")]
         public DateTime DateSched { get; set; }
 
@@ -40,6 +20,7 @@ namespace AccuPay.Data.Entities
         public decimal ShiftHours { get; internal set; }
         public decimal WorkHours { get; internal set; }
 
+        [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
         [NotMapped]

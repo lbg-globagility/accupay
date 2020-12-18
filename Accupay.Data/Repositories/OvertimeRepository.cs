@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
@@ -105,7 +105,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Overtime>(overtimes, count);
         }
 
-        internal async Task<List<Overtime>> GetByEmployeeIdsBetweenDatesAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
+        public async Task<ICollection<Overtime>> GetByEmployeeIdsBetweenDatesAsync(int organizationId, List<int> employeeIds, TimePeriod timePeriod)
         {
             var result = await _context.Overtimes
                 .Include(ot => ot.Employee)
@@ -156,18 +156,6 @@ namespace AccuPay.Data.Repositories
                     datePeriod,
                     overtimeStatus)
                 .ToListAsync();
-        }
-
-        public ICollection<Overtime> GetByDatePeriod(
-            int organizationId,
-            TimePeriod datePeriod,
-            OvertimeStatus overtimeStatus = OvertimeStatus.All)
-        {
-            return CreateBaseQueryByTimePeriod(
-                    organizationId,
-                    datePeriod,
-                    overtimeStatus)
-                .ToList();
         }
 
         #endregion List of entities

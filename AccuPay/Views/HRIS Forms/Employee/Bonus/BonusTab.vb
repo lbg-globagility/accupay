@@ -174,7 +174,7 @@ Public Class BonusTab
                     Dim bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
                     Await bonusDataService.DeleteAsync(_currentBonus)
 
-                    _userActivityRepo.RecordDelete(
+                    Await _userActivityRepo.RecordDeleteAsync(
                         z_User,
                         FormEntityName,
                         entityId:=_currentBonus.RowID.Value,

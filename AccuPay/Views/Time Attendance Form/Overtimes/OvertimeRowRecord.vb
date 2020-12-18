@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
@@ -32,20 +32,13 @@ Public Class OvertimeRowRecord
 
         If StartDate Is Nothing Then Return Nothing
 
-        Dim newOvertime = New Overtime With {
-            .RowID = Nothing,
-            .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
-            .EmployeeID = employeeId,
-            .OTStartDate = StartDate.Value,
-            .OTStartTime = StartTime,
-            .OTEndTime = EndTime,
-            .Status = Overtime.StatusApproved
-        }
+        Return Overtime.NewOvertime(
+            organizationId:=z_OrganizationID,
+            employeeId:=employeeId,
+            startDate:=StartDate.Value,
+            startTime:=StartTime,
+            endTime:=EndTime)
 
-        newOvertime.UpdateEndDate()
-
-        Return newOvertime
     End Function
 
 End Class

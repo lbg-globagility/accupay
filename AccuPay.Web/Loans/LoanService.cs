@@ -62,13 +62,12 @@ namespace AccuPay.Web.Loans
             var loanSchedule = new LoanSchedule()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
                 TotalBalanceLeft = dto.TotalLoanAmount
             };
             ApplyChanges(dto, loanSchedule);
 
-            await _loanService.SaveAsync(loanSchedule);
+            await _loanService.SaveAsync(loanSchedule, _currentUser.UserId);
 
             return ConvertToDto(loanSchedule);
         }
@@ -78,11 +77,9 @@ namespace AccuPay.Web.Loans
             var loanSchedule = await _loanRepository.GetByIdAsync(id);
             if (loanSchedule == null) return null;
 
-            loanSchedule.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, loanSchedule);
 
-            await _loanService.SaveAsync(loanSchedule);
+            await _loanService.SaveAsync(loanSchedule, _currentUser.UserId);
 
             return ConvertToDto(loanSchedule);
         }
@@ -96,7 +93,9 @@ namespace AccuPay.Web.Loans
 
         public async Task Delete(int id)
         {
-            await _loanService.DeleteAsync(id);
+            await _loanService.DeleteAsync(
+                id: id,
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         public List<string> GetStatusList()
@@ -172,7 +171,7 @@ namespace AccuPay.Web.Loans
             int userId = _currentUser.UserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _loanService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
+            await _loanService.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, currentlyLoggedInUserId: userId);
 
             return parsedResult;
         }

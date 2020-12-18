@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
@@ -47,7 +47,6 @@ Public Class LoanRowRecord
         Dim newLoanSchedule = New LoanSchedule With {
             .RowID = Nothing,
             .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
             .EmployeeID = employeeId,
             .LoanNumber = LoanNumber,
             .Comments = Comments,

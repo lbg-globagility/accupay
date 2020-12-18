@@ -59,7 +59,7 @@ Namespace Benchmark
             Return Await productService.GetOrCreateEmployeeEcola(
                 employeeId:=employeeId,
                 organizationId:=z_OrganizationID,
-                userId:=z_User,
+                currentlyLoggedInUserId:=z_User,
                 timePeriod:=timePeriod,
                 allowanceFrequency:=Allowance.FREQUENCY_DAILY,
                 amount:=0)

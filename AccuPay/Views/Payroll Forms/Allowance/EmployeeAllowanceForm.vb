@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -210,8 +210,8 @@ Public Class EmployeeAllowanceForm
         Dim messageTitle = "Update Allowances"
 
         For Each allowance In Me._currentAllowances
+
             If CheckIfAllowanceIsChanged(allowance) Then
-                allowance.LastUpdBy = z_User
                 changedAllowances.Add(allowance)
             End If
         Next
@@ -231,7 +231,7 @@ Public Class EmployeeAllowanceForm
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                Await dataService.SaveManyAsync(changedAllowances)
+                Await dataService.SaveManyAsync(changedAllowances, z_User)
 
                 For Each item In changedAllowances
                     RecordUpdate(item)
@@ -407,17 +407,9 @@ Public Class EmployeeAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                Await dataService.DeleteAsync(Me._currentAllowance.RowID.Value)
-
-                Dim suffixIdentifier = $" with type '{Me._currentAllowance.Product?.Name}' and start date '{Me._currentAllowance.EffectiveStartDate.ToShortDateString()}'"
-
-                _userActivityRepository.RecordDelete(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._currentAllowance.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._currentAllowance.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
+                Await dataService.DeleteAsync(
+                    id:=Me._currentAllowance.RowID.Value,
+                    currentlyLoggedInUserId:=z_User)
 
                 Await LoadAllowances(currentEmployee)
 

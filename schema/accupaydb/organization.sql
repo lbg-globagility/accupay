@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS `organization` (
   `Name` varchar(100) DEFAULT NULL,
   `TradeName` varchar(100) DEFAULT NULL,
   `PrimaryAddressID` int(10) DEFAULT NULL,
-  `PrimaryContactID` int(10) DEFAULT NULL,
   `PremiseAddressID` int(10) DEFAULT NULL,
   `MainPhone` varchar(50) DEFAULT NULL,
   `FaxNumber` varchar(50) DEFAULT NULL,

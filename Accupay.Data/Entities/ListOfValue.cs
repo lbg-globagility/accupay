@@ -1,25 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("listofval")]
-    public class ListOfValue
+    public class ListOfValue : AuditableEntity
     {
         public const string ActiveYesOption = "Yes";
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
-
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
 
         public int? OrganizationID { get; set; }
 
@@ -37,7 +24,7 @@ namespace AccuPay.Data.Entities
 
         public int? OrderBy { get; set; }
 
-        public static ListOfValue NewPolicy(string value, string lic, string type, int? organizationId, int currentlyLoggedInUserId, int? orderBy = null)
+        public static ListOfValue NewPolicy(string value, string lic, string type, int? organizationId)
         {
             return new ListOfValue()
             {
@@ -46,10 +33,6 @@ namespace AccuPay.Data.Entities
                 Type = type,
                 Active = ActiveYesOption,
                 OrganizationID = organizationId,
-                CreatedBy = currentlyLoggedInUserId,
-                LastUpdBy = currentlyLoggedInUserId,
-                Created = DateTime.Now,
-                LastUpd = DateTime.Now
             };
         }
     }

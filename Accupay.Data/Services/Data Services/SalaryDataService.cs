@@ -1,19 +1,20 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.Imports.Salaries;
 using AccuPay.Data.Services.Policies;
 using AccuPay.Utilities.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class SalaryDataService : BaseSavableDataService<Salary>
+    public class SalaryDataService : BaseEmployeeDataService<Salary>
     {
+        private const string UserActivityName = "Salary";
+
         private readonly PaystubRepository _paystubRepository;
         private readonly SalaryRepository _salaryRepository;
 
@@ -21,11 +22,13 @@ namespace AccuPay.Data.Services
             SalaryRepository salaryRepository,
             PayPeriodRepository payPeriodRepository,
             PaystubRepository paystubRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(salaryRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Salary",
@@ -35,16 +38,41 @@ namespace AccuPay.Data.Services
             _salaryRepository = salaryRepository;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-        protected override async Task SanitizeEntity(Salary salary, Salary oldSalary)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
-            if (salary.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
+            List<Salary> added = new List<Salary>();
+            foreach (var validRecord in validRecords)
+            {
+                var salary = new Salary
+                {
+                    OrganizationID = organizationId,
+                    EmployeeID = validRecord.EmployeeId,
+                    BasicSalary = validRecord.BasicSalary.Value,
+                    AllowanceSalary = validRecord.AllowanceSalary.HasValue ? validRecord.AllowanceSalary.Value : 0,
+                    EffectiveFrom = validRecord.EffectiveFrom.Value
+                };
 
-            if (salary.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+                added.Add(salary);
+            }
+
+            await SaveManyAsync(added, currentlyLoggedInUserId);
+
+            return added;
+        }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(Salary salary) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Salary salary) =>
+            $" with start date '{salary.EffectiveFrom.ToShortDateString()}'";
+
+        protected override async Task SanitizeEntity(Salary salary, Salary oldSalary, int changedByUserId)
+        {
+            await base.SanitizeEntity(
+                entity: salary,
+                oldEntity: oldSalary,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (salary.EffectiveFrom < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
@@ -59,7 +87,7 @@ namespace AccuPay.Data.Services
                 salary.EmployeeID.Value,
                 salary.EffectiveFrom);
 
-            if (IsNewEntity(salary.RowID))
+            if (salary.IsNewEntity)
             {
                 if (salariesWithSameDate.Any())
                     throw new BusinessLogicException("Salary already exists!");
@@ -84,25 +112,29 @@ namespace AccuPay.Data.Services
             await ValidateSalaryIfAlreadyUsed(salary, oldSalary);
         }
 
-        protected override async Task AdditionalSaveManyValidation(List<Salary> salaries, List<Salary> oldEntities)
+        protected override async Task AdditionalSaveManyValidation(List<Salary> salaries, List<Salary> oldSalaries, SaveType saveType)
         {
             foreach (var salary in salaries)
             {
-                var oldSalary = salaries.FirstOrDefault(x => x.RowID == salary.RowID);
+                var oldSalary = oldSalaries.FirstOrDefault(x => x.RowID == salary.RowID);
                 // TODO: think of a better way to not call this query for every salary
                 await ValidateSalaryIfAlreadyUsed(salary, oldSalary);
             }
         }
 
+        #endregion Overrides
+
+        #region Private Methods
+
         private async Task ValidateSalaryIfAlreadyUsed(Salary salary, Salary oldSalary)
         {
-            if (IsNewEntity(salary.RowID) || salary.EffectiveFrom.ToMinimumHourValue() != oldSalary.EffectiveFrom.ToMinimumHourValue())
+            if (salary.IsNewEntity || salary.EffectiveFrom.ToMinimumHourValue() != oldSalary.EffectiveFrom.ToMinimumHourValue())
             {
                 if (await _payPeriodRepository.HasClosedPayPeriodAfterDateAsync(salary.OrganizationID.Value, salary.EffectiveFrom))
                     throw new BusinessLogicException("Salary cannot be saved in or before a \"Closed\" pay period.");
             }
 
-            if (IsNewEntity(salary.RowID) == false)
+            if (salary.IsNewEntity == false)
             {
                 if (await CheckIfSalaryHasBeenUsed(salary))
                     throw new BusinessLogicException("This salary has already been used and therefore cannot be modified.");
@@ -122,27 +154,6 @@ namespace AccuPay.Data.Services
             return await _paystubRepository.HasPaystubsAfterDateAsync(salaryFirstCutOffStartDate, salary.EmployeeID.Value);
         }
 
-        public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int userId)
-        {
-            List<Salary> added = new List<Salary>();
-            foreach (var validRecord in validRecords)
-            {
-                var salary = new Salary
-                {
-                    OrganizationID = organizationId,
-                    EmployeeID = validRecord.EmployeeId,
-                    CreatedBy = userId,
-                    BasicSalary = validRecord.BasicSalary.Value,
-                    AllowanceSalary = validRecord.AllowanceSalary.HasValue ? validRecord.AllowanceSalary.Value : 0,
-                    EffectiveFrom = validRecord.EffectiveFrom.Value
-                };
-
-                added.Add(salary);
-            }
-
-            await _salaryRepository.SaveManyAsync(added);
-
-            return added;
-        }
+        #endregion Private Methods
     }
 }

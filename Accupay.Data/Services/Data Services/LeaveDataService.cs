@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
@@ -15,6 +15,8 @@ namespace AccuPay.Data.Services
 {
     public class LeaveDataService : BaseDailyPayrollDataService<Leave>
     {
+        private const string UserActivityName = "Leave";
+
         private List<string> VALIDATABLE_TYPES = new List<string>()
         {
             ProductConstant.SICK_LEAVE,
@@ -32,10 +34,12 @@ namespace AccuPay.Data.Services
             EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
             LeaveRepository leaveRepository,
             LeaveLedgerRepository leaveLedgerRepository,
-            PayPeriodRepository payPeriodRepository) :
+            PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository) :
 
             base(leaveRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Leave")
@@ -45,68 +49,16 @@ namespace AccuPay.Data.Services
             _leaveLedgerRepository = leaveLedgerRepository;
         }
 
-        protected override async Task SanitizeEntity(Leave leave, Leave oldLeave)
-        {
-            if (leave.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (leave.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            if (leave.StartDate < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
-
-            if (leave.StartDate == null)
-                throw new BusinessLogicException("Start Date is required.");
-
-            if (leave.LeaveType == null)
-                throw new BusinessLogicException("Leave Type is required.");
-
-            if ((leave.StartTime.HasValue && leave.EndTime == null) || (leave.EndTime.HasValue && leave.StartTime == null))
-                throw new BusinessLogicException("Both Start Time and End Time should have value or both should be empty.");
-
-            if (new string[] { Leave.StatusPending, Leave.StatusApproved }
-                            .Contains(leave.Status) == false)
-            {
-                throw new BusinessLogicException("Status is not valid.");
-            }
-
-            var doesExistQuery = _context.Leaves
-                .Where(l => l.EmployeeID == leave.EmployeeID)
-                .Where(l => l.StartDate.Date == leave.StartDate.Date);
-
-            if (IsNewEntity(leave.RowID) == false)
-            {
-                doesExistQuery = doesExistQuery.Where(l => leave.RowID != l.RowID);
-            }
-
-            if (await doesExistQuery.AnyAsync())
-                throw new BusinessLogicException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}");
-
-            if (leave.StartTime.HasValue)
-            {
-                leave.StartTime = leave.StartTime.Value.StripSeconds();
-            }
-
-            if (leave.EndTime.HasValue)
-            {
-                leave.EndTime = leave.EndTime.Value.StripSeconds();
-            }
-
-            if (leave.IsWholeDay == false && leave.StartTime == leave.EndTime)
-                throw new BusinessLogicException("End Time cannot be equal to Start Time");
-
-            leave.UpdateEndDate();
-        }
-
         #region SaveManyAsync
 
-        public override async Task SaveAsync(Leave leave)
+        public override async Task SaveAsync(Leave leave, int changedByUserId)
         {
-            await SaveManyAsync(new List<Leave> { leave });
+            await SaveManyAsync(new List<Leave> { leave }, changedByUserId);
+
+            await RecordAdd(leave);
         }
 
-        public override async Task SaveManyAsync(List<Leave> leaves)
+        public override async Task SaveManyAsync(List<Leave> leaves, int changedByUserId)
         {
             if (leaves.Any() == false) return;
 
@@ -120,7 +72,7 @@ namespace AccuPay.Data.Services
             foreach (var leave in leaves)
             {
                 var oldLeave = oldLeaves.Where(x => x.RowID == leave.RowID).FirstOrDefault();
-                await SanitizeEntity(leave, oldLeave);
+                await SanitizeEntity(leave, oldLeave, changedByUserId);
             }
 
             await ValidateDates(leaves, oldLeaves.ToList(), organizationId);
@@ -212,11 +164,6 @@ namespace AccuPay.Data.Services
                     {
                         leave.RowID = oldRowIds[index];
 
-                        if (leave.RowID == null)
-                        {
-                            leave.Created = DateTime.MinValue;
-                        }
-
                         index++;
                     }
                     throw;
@@ -300,7 +247,7 @@ namespace AccuPay.Data.Services
                     dutyShiftSched,
                     _policy.RespectDefaultRestDay,
                     employee.DayOfRest,
-                    _policy.ShiftBasedAutomaticOvertimePolicy.Enabled);
+                    _policy.ShiftBasedAutomaticOvertimePolicy);
 
                 totalHours += DayCalculator.ComputeLeaveHoursWithoutTimelog(
                     currentShift,
@@ -553,5 +500,67 @@ namespace AccuPay.Data.Services
 
             return new PaginatedList<LeaveLedger>(query, count);
         }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(Leave leave) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Leave leave) =>
+            $" with date '{leave.StartDate.ToShortDateString()}'";
+
+        protected override async Task SanitizeEntity(Leave leave, Leave oldLeave, int changedByUserId)
+        {
+            await base.SanitizeEntity(
+                entity: leave,
+                oldEntity: oldLeave,
+                currentlyLoggedInUserId: changedByUserId);
+
+            if (leave.StartDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+
+            if (leave.StartDate == null)
+                throw new BusinessLogicException("Start Date is required.");
+
+            if (leave.LeaveType == null)
+                throw new BusinessLogicException("Leave Type is required.");
+
+            if ((leave.StartTime.HasValue && leave.EndTime == null) || (leave.EndTime.HasValue && leave.StartTime == null))
+                throw new BusinessLogicException("Both Start Time and End Time should have value or both should be empty.");
+
+            if (new string[] { Leave.StatusPending, Leave.StatusApproved }
+                            .Contains(leave.Status) == false)
+            {
+                throw new BusinessLogicException("Status is not valid.");
+            }
+
+            var doesExistQuery = _context.Leaves
+                .Where(l => l.EmployeeID == leave.EmployeeID)
+                .Where(l => l.StartDate.Date == leave.StartDate.Date);
+
+            if (leave.IsNewEntity == false)
+            {
+                doesExistQuery = doesExistQuery.Where(l => leave.RowID != l.RowID);
+            }
+
+            if (await doesExistQuery.AnyAsync())
+                throw new BusinessLogicException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}");
+
+            if (leave.StartTime.HasValue)
+            {
+                leave.StartTime = leave.StartTime.Value.StripSeconds();
+            }
+
+            if (leave.EndTime.HasValue)
+            {
+                leave.EndTime = leave.EndTime.Value.StripSeconds();
+            }
+
+            if (leave.IsWholeDay == false && leave.StartTime == leave.EndTime)
+                throw new BusinessLogicException("End Time cannot be equal to Start Time");
+
+            leave.UpdateEndDate();
+        }
+
+        #endregion Overrides
     }
 }

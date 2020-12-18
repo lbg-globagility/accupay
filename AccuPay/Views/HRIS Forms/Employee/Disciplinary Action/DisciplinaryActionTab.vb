@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -191,7 +191,7 @@ Public Class DisciplinaryActionTab
                     Await _disciplinaryActionRepo.DeleteAsync(_currentDiscAction)
 
                     Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
-                    _userActivityRepo.RecordDelete(
+                    Await _userActivityRepo.RecordDeleteAsync(
                         z_User,
                         FormEntityName,
                         entityId:=_currentDiscAction.RowID.Value,
@@ -374,7 +374,7 @@ Public Class DisciplinaryActionTab
 
     Private Async Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
 
-        Dim form As New NewListOfValDisciplinaryPenaltyForm(_listOfValRepo)
+        Dim form As New NewListOfValDisciplinaryPenaltyForm()
 
         With form
             .ShowDialog()

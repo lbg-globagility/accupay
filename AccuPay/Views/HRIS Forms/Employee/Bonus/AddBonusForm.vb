@@ -125,7 +125,7 @@ Public Class AddBonusForm
             Dim bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
             Await bonusDataService.CreateAsync(_newBonus)
 
-            _userActivityRepo.RecordAdd(
+            Await _userActivityRepo.RecordAddAsync(
                 z_User,
                 FormEntityName,
                 entityId:=_newBonus.RowID.Value,

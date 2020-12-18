@@ -324,10 +324,8 @@ Public Class MassOvertimePresenter
         Async Function()
             If changedOvertimes.Any Then
 
-                changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
                 Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-
-                Await service.SaveManyAsync(changedOvertimes)
+                Await service.SaveManyAsync(changedOvertimes, z_User)
 
             End If
 
@@ -340,33 +338,23 @@ Public Class MassOvertimePresenter
             If deletableOvertimeIDs.Any Then
 
                 Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
-                Await service.DeleteManyAsync(deletableOvertimeIDs, z_OrganizationID, z_User)
+                Await service.DeleteManyAsync(deletableOvertimeIDs, z_User)
 
             End If
         End Function)
     End Function
 
     Private Shared Function ConverToOvertime(model As OvertimeModel) As Overtime
-        Dim convertedOvertime = New Overtime() With {
-            .EmployeeID = model.EmployeeID,
-            .OrganizationID = z_OrganizationID,
-            .LastUpd = Date.Now,
-            .LastUpdBy = z_User,
-            .OTStartDate = model.Date,
-            .OTEndDate = model.Date,
-            .Status = Overtime.StatusApproved,
-            .OTStartTime = model.StartTime,
-            .OTEndTime = model.EndTime
-        }
+
+        Dim convertedOvertime = Overtime.NewOvertime(
+            organizationId:=z_OrganizationID,
+            employeeId:=model.EmployeeID.Value,
+            startDate:=model.Date,
+            startTime:=model.StartTime,
+            endTime:=model.EndTime)
 
         If model.IsUpdate Then
             convertedOvertime.RowID = model.Overtime.RowID
-            convertedOvertime.Created = model.Overtime.Created
-            convertedOvertime.CreatedBy = model.Overtime.CreatedBy
-        End If
-        If model.IsNew Then
-            convertedOvertime.Created = Date.Now
-            convertedOvertime.CreatedBy = z_User
         End If
 
         Return convertedOvertime

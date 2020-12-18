@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class PositionDataService : BaseSavableDataService<Position>
+    public class PositionDataService : BaseOrganizationDataService<Position>
     {
+        private const string UserActivityName = "Position";
+
         private readonly PositionRepository _positionRepository;
         private readonly EmployeeRepository _employeeRepository;
         private readonly DivisionDataService _divisionService;
@@ -17,12 +19,14 @@ namespace AccuPay.Data.Services
             PositionRepository positionRepository,
             EmployeeRepository employeeRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
             DivisionDataService divisionService,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(positionRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Position")
@@ -34,7 +38,11 @@ namespace AccuPay.Data.Services
             _divisionService = divisionService;
         }
 
-        public async override Task DeleteAsync(int positionId)
+        protected override string GetUserActivityName(Position position) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Position position) => string.Empty;
+
+        public override async Task DeleteAsync(int positionId, int currentlyLoggedInUserId)
         {
             var position = await _positionRepository.GetByIdAsync(positionId);
 
@@ -44,23 +52,27 @@ namespace AccuPay.Data.Services
             if ((await _employeeRepository.GetByPositionAsync(positionId)).Any())
                 throw new BusinessLogicException("Position already has at least one assigned employee therefore cannot be deleted.");
 
-            await _positionRepository.DeleteAsync(position);
+            await base.DeleteAsync(
+                id: positionId,
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
         }
 
-        protected override async Task SanitizeEntity(Position position, Position oldPosition)
+        protected override async Task SanitizeEntity(Position position, Position oldPosition, int changedByUserId)
         {
+            await base.SanitizeEntity(
+                entity: position,
+                oldEntity: oldPosition,
+                currentlyLoggedInUserId: changedByUserId);
+
             if (position.DivisionID == null)
                 throw new BusinessLogicException("Division is required.");
-
-            if (position.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
 
             var existingPosition = await _positionRepository.GetByNameAsync(position.OrganizationID.Value, position.Name);
 
             if (existingPosition != null)
             {
                 // insert
-                if (IsNewEntity(position.RowID))
+                if (position.IsNewEntity)
                 {
                     throw new BusinessLogicException("Position name already exists!");
                 }
@@ -72,7 +84,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)
+        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int currentlyLoggedInUserId)
         {
             var existingPosition = await _positionRepository.GetByNameAsync(organizationId, positionName);
 
@@ -81,20 +93,19 @@ namespace AccuPay.Data.Services
             var defaultDivision = await _divisionService
                 .GetOrCreateDefaultDivisionAsync(
                     organizationId: organizationId,
-                    userId: userId);
+                    changedByUserId: currentlyLoggedInUserId);
 
             if (defaultDivision?.RowID == null)
                 throw new BusinessLogicException("Cannot create default division.");
 
             var position = new Position()
             {
-                CreatedBy = userId,
                 OrganizationID = organizationId,
                 Name = positionName,
                 DivisionID = defaultDivision.RowID.Value
             };
 
-            await SaveAsync(position);
+            await SaveAsync(position, currentlyLoggedInUserId);
 
             return position;
         }

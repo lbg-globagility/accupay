@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LoanDataService : BaseSavableDataService<LoanSchedule>
+    public class LoanDataService : BaseEmployeeDataService<LoanSchedule>
     {
+        private const string UserActivityName = "Loan";
+
         private readonly ListOfValueRepository _listOfValueRepository;
         private readonly LoanRepository _loanRepository;
         private readonly ProductRepository _productRepository;
@@ -24,12 +26,14 @@ namespace AccuPay.Data.Services
             ListOfValueRepository listOfValueRepository,
             PayPeriodRepository payPeriodRepository,
             ProductRepository productRepository,
+            UserActivityRepository userActivityRepository,
             SystemOwnerService systemOwnerService,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(loanRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Loan")
@@ -60,28 +64,91 @@ namespace AccuPay.Data.Services
                 ssLoanId: ssLoanId);
         }
 
-        protected override async Task SanitizeEntity(LoanSchedule loan, LoanSchedule oldLoan)
+        public async Task BatchApply(IReadOnlyCollection<Imports.Loans.LoanImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
+            var loanWithLoanTypeNotYetExists = validRecords
+                .Where(v => v.LoanTypeNotExists)
+                .GroupBy(v => v.LoanName)
+                .Select(v => v.FirstOrDefault().LoanName)
+                .ToList();
+
+            if (loanWithLoanTypeNotYetExists.Any())
+            {
+                var newlyAddedLoanTypes = await _productRepository
+                    .AddManyLoanTypeAsync(loanWithLoanTypeNotYetExists, organizationId: organizationId, userId: currentlyLoggedInUserId);
+
+                var validRecordsWithLoanTypeNotYetExists = validRecords.Where(v => v.LoanTypeNotExists).ToList();
+                foreach (var validRecord in validRecordsWithLoanTypeNotYetExists)
+                {
+                    var newlyAddedLoanType = newlyAddedLoanTypes.Where(v => v.PartNo == validRecord.LoanName).FirstOrDefault();
+                    validRecord.LoanTypeId = newlyAddedLoanType.RowID.Value;
+                }
+            }
+
+            List<LoanSchedule> loanSchedules = new List<LoanSchedule>();
+            foreach (var validRecord in validRecords)
+            {
+                var loanSchedule = new LoanSchedule()
+                {
+                    Comments = validRecord.Comments,
+                    DedEffectiveDateFrom = validRecord.StartDate,
+                    DeductionAmount = validRecord.DeductionAmount,
+                    DeductionSchedule = validRecord.DeductionSchedule,
+                    EmployeeID = validRecord.EmployeeId,
+                    LoanName = validRecord.LoanName,
+                    LoanNumber = validRecord.LoanNumber,
+                    LoanTypeID = validRecord.LoanTypeId,
+                    OrganizationID = organizationId,
+                    TotalBalanceLeft = validRecord.TotalLoanBalance,
+                    TotalLoanAmount = validRecord.TotalLoanAmount,
+                    Status = LoanSchedule.STATUS_IN_PROGRESS
+                };
+
+                loanSchedules.Add(loanSchedule);
+            }
+
+            await SaveManyAsync(loanSchedules, currentlyLoggedInUserId);
+        }
+
+        #endregion Save
+
+        #region Overrides
+
+        protected override string GetUserActivityName(LoanSchedule loan) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(LoanSchedule loan) =>
+            $" with type '{loan.LoanName}' and start date '{loan.DedEffectiveDateFrom.ToShortDateString()}'";
+
+        protected override async Task SanitizeEntity(LoanSchedule loan, LoanSchedule oldLoan, int currentlyLoggedInUserId)
+        {
+            await base.SanitizeEntity(
+                entity: loan,
+                oldEntity: oldLoan,
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
             Validate(loan, oldLoan);
 
             await SanitizeProperties(loan);
 
-            if (IsNewEntity(loan.RowID))
+            if (loan.IsNewEntity)
+            {
                 SanitizeInsert(loan);
+            }
             else
+            {
                 SanitizeUpdate(loan, oldLoan);
+            }
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
         protected override async Task AdditionalDeleteValidation(LoanSchedule loan)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (loan.Status == LoanSchedule.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
 
             if ((await _loanRepository.GetLoanTransactionsWithPayPeriodAsync(loan.RowID.Value)).Count > 0)
                 throw new BusinessLogicException("This loan has already started and therefore cannot be deleted. Try changing its Status to \"On Hold\" or \"Cancelled\" instead.");
+
+            await Task.CompletedTask;
         }
 
         protected override async Task AdditionalSaveValidation(LoanSchedule loan, LoanSchedule oldLoan)
@@ -109,7 +176,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected async override Task AdditionalSaveManyValidation(List<LoanSchedule> loans, List<LoanSchedule> oldLoans)
+        protected async override Task AdditionalSaveManyValidation(List<LoanSchedule> loans, List<LoanSchedule> oldLoans, SaveType saveType)
         {
             // validate start date should not be in a Closed Payroll
             int? organizationId = null;
@@ -154,6 +221,10 @@ namespace AccuPay.Data.Services
             }
         }
 
+        #endregion Overrides
+
+        #region Private Methods
+
         private static void SanitizeInsert(LoanSchedule loan)
         {
             if (loan.LoanPayPeriodLeft == 0)
@@ -165,55 +236,6 @@ namespace AccuPay.Data.Services
             {
                 loan.LoanNumber = "";
             }
-
-            loan.Created = DateTime.Now;
-        }
-
-        public async Task BatchApply(IReadOnlyCollection<Imports.Loans.LoanImportModel> validRecords, int organizationId, int userId)
-        {
-            var loanWithLoanTypeNotYetExists = validRecords
-                .Where(v => v.LoanTypeNotExists)
-                .GroupBy(v => v.LoanName)
-                .Select(v => v.FirstOrDefault().LoanName)
-                .ToList();
-
-            if (loanWithLoanTypeNotYetExists.Any())
-            {
-                var newlyAddedLoanTypes = await _productRepository
-                    .AddManyLoanTypeAsync(loanWithLoanTypeNotYetExists, organizationId: organizationId, userId: userId);
-
-                var validRecordsWithLoanTypeNotYetExists = validRecords.Where(v => v.LoanTypeNotExists).ToList();
-                foreach (var validRecord in validRecordsWithLoanTypeNotYetExists)
-                {
-                    var newlyAddedLoanType = newlyAddedLoanTypes.Where(v => v.PartNo == validRecord.LoanName).FirstOrDefault();
-                    validRecord.LoanTypeId = newlyAddedLoanType.RowID.Value;
-                }
-            }
-
-            List<LoanSchedule> loanSchedules = new List<LoanSchedule>();
-            foreach (var validRecord in validRecords)
-            {
-                var loanSchedule = new LoanSchedule()
-                {
-                    Comments = validRecord.Comments,
-                    CreatedBy = userId,
-                    DedEffectiveDateFrom = validRecord.StartDate,
-                    DeductionAmount = validRecord.DeductionAmount,
-                    DeductionSchedule = validRecord.DeductionSchedule,
-                    EmployeeID = validRecord.EmployeeId,
-                    LoanName = validRecord.LoanName,
-                    LoanNumber = validRecord.LoanNumber,
-                    LoanTypeID = validRecord.LoanTypeId,
-                    OrganizationID = organizationId,
-                    TotalBalanceLeft = validRecord.TotalLoanBalance,
-                    TotalLoanAmount = validRecord.TotalLoanAmount,
-                    Status = LoanSchedule.STATUS_IN_PROGRESS
-                };
-
-                loanSchedules.Add(loanSchedule);
-            }
-
-            await _loanRepository.SaveManyAsync(loanSchedules);
         }
 
         private void SanitizeUpdate(LoanSchedule newLoan, LoanSchedule oldLoan)
@@ -281,12 +303,6 @@ namespace AccuPay.Data.Services
             if ((oldLoan?.Status ?? loan.Status) == LoanSchedule.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
 
-            if (loan.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (loan.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
             if (loan.LoanTypeID == null)
                 throw new BusinessLogicException("Loan type is required.");
 
@@ -342,7 +358,7 @@ namespace AccuPay.Data.Services
         private bool CheckIfStartDateNeedsToBeValidated(List<LoanSchedule> oldLoans, LoanSchedule loan)
         {
             // either a new loan
-            if (IsNewEntity(loan.RowID)) return true;
+            if (loan.IsNewEntity) return true;
 
             // or an existing loan where its Start Date is to be updated
             var oldLoan = oldLoans.Where(o => o.RowID == loan.RowID).FirstOrDefault();
@@ -353,7 +369,7 @@ namespace AccuPay.Data.Services
             return false;
         }
 
-        #endregion Save
+        #endregion Private Methods
 
         #region List of entities
 

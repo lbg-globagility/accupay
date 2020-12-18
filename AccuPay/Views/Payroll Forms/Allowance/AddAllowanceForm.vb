@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -9,8 +9,6 @@ Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddAllowanceForm
-
-    Private Const FormEntityName As String = "Allowance"
 
     Private _currentEmployee As Employee
 
@@ -24,11 +22,9 @@ Public Class AddAllowanceForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Private _productRepository As ProductRepository
+    Private ReadOnly _productRepository As ProductRepository
 
-    Private _allowanceRepository As AllowanceRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _allowanceRepository As AllowanceRepository
 
     Sub New(employee As Employee)
 
@@ -39,8 +35,6 @@ Public Class AddAllowanceForm
         _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -71,12 +65,12 @@ Public Class AddAllowanceForm
     End Sub
 
     Private Sub ResetForm()
-        Me._newAllowance = New Allowance
-        Me._newAllowance.EmployeeID = _currentEmployee.RowID
-        Me._newAllowance.EffectiveStartDate = Date.Now
-        Me._newAllowance.EffectiveEndDate = Date.Now
-        Me._newAllowance.CreatedBy = z_User
-        Me._newAllowance.OrganizationID = z_OrganizationID
+        Me._newAllowance = New Allowance With {
+            .EmployeeID = _currentEmployee.RowID,
+            .EffectiveStartDate = Date.Now,
+            .EffectiveEndDate = Date.Now,
+            .OrganizationID = z_OrganizationID
+        }
 
         Dim firstAllowanceType = Me._allowanceTypeList.FirstOrDefault()
 
@@ -156,17 +150,7 @@ Public Class AddAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
-                Await dataService.SaveAsync(Me._newAllowance)
-
-                Dim suffixIdentifier = $" with type '{Me._newAllowance.Product?.Name}' and start date '{Me._newAllowance.EffectiveStartDate.ToShortDateString()}'"
-
-                _userActivityRepository.RecordAdd(
-                    z_User,
-                    FormEntityName,
-                    entityId:=Me._newAllowance.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=Me._newAllowance.EmployeeID.Value,
-                    suffixIdentifier:=suffixIdentifier)
+                Await dataService.SaveAsync(Me._newAllowance, z_User)
 
                 Me.IsSaved = True
 

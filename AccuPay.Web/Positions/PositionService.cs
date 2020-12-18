@@ -9,13 +9,13 @@ namespace AccuPay.Web.Positions
 {
     public class PositionService
     {
-        private readonly PositionDataService _service;
+        private readonly PositionDataService _dataService;
         private readonly PositionRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public PositionService(PositionDataService service, PositionRepository repository, ICurrentUser currentUser)
+        public PositionService(PositionDataService dataService, PositionRepository repository, ICurrentUser currentUser)
         {
-            _service = service;
+            _dataService = dataService;
             _repository = repository;
             _currentUser = currentUser;
         }
@@ -40,12 +40,11 @@ namespace AccuPay.Web.Positions
         {
             var overtime = new Position()
             {
-                CreatedBy = _currentUser.UserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
 
-            await _service.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
 
             return ConvertToDto(overtime);
         }
@@ -55,18 +54,18 @@ namespace AccuPay.Web.Positions
             var overtime = await _repository.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            overtime.LastUpdBy = _currentUser.UserId;
-
             ApplyChanges(dto, overtime);
 
-            await _service.SaveAsync(overtime);
+            await _dataService.SaveAsync(overtime, _currentUser.UserId);
 
             return ConvertToDto(overtime);
         }
 
         public async Task Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _dataService.DeleteAsync(
+                positionId: id,
+                currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         private static void ApplyChanges(CrudPositionDto dto, Position position)

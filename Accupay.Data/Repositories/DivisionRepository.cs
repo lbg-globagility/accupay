@@ -34,12 +34,14 @@ namespace AccuPay.Data.Repositories
         public async Task<Division> GetByIdWithParentAsync(int id)
         {
             return await _context.Divisions
+                .AsNoTracking()
                 .Include(x => x.ParentDivision)
                 .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
         {
+            // TODO: refactor this to use data service
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
@@ -52,15 +54,13 @@ namespace AccuPay.Data.Repositories
 
                     if (defaultParentDivision == null)
                     {
-                        defaultParentDivision = Division.NewDivision(
-                            organizationId: organizationId,
-                            userId: userId);
+                        defaultParentDivision = Division.NewDivision(organizationId);
 
                         defaultParentDivision.Name = Division.DefaultLocationName;
                         defaultParentDivision.ParentDivisionID = null;
-                        defaultParentDivision.LastUpdBy = userId;
+                        defaultParentDivision.CreatedBy = userId;
 
-                        //await SanitizeEntity(defaultParentDivision, null);
+                        // await SanitizeEntity(defaultParentDivision, null);
                         await SaveAsync(defaultParentDivision);
                         // querying the new default parent division from here can already
                         // get the new row data. This can replace the context.local in leaverepository
@@ -76,13 +76,11 @@ namespace AccuPay.Data.Repositories
 
                     if (defaultDivision == null)
                     {
-                        defaultDivision = Division.NewDivision(
-                            organizationId: organizationId,
-                            userId: userId);
+                        defaultDivision = Division.NewDivision(organizationId);
 
                         defaultDivision.Name = Division.DefaultDivisionName;
                         defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
-                        defaultDivision.LastUpdBy = userId;
+                        defaultDivision.CreatedBy = userId;
 
                         //await SanitizeEntity(defaultDivision, null);
                         await SaveAsync(defaultDivision);

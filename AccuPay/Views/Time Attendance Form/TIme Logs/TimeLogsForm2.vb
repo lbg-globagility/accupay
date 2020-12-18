@@ -27,8 +27,6 @@ Public Class TimeLogsForm2
 
     Private Const SUNDAY_SHORT_NAME As String = "Sun"
 
-    Private Const FormEntityName As String = "Time Log"
-
     Private currRowIndex As Integer = -1
     Private currColIndex As Integer = -1
 
@@ -45,8 +43,6 @@ Public Class TimeLogsForm2
     Private ReadOnly _overtimeRepository As OvertimeRepository
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
-
-    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Private _currentRolePermission As RolePermission
 
@@ -70,8 +66,6 @@ Public Class TimeLogsForm2
         _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
 #Region "Methods"
@@ -141,6 +135,7 @@ Public Class TimeLogsForm2
             Dim hasShiftSched = seekShiftSched.Any()
 
             If seek.Any Then
+                'TODO: employeetimeentrydetails date should be unique so no query like this should be needed.
                 Dim timeLog = seek.
                     OrderByDescending(Function(t) t.LastUpd).
                     FirstOrDefault
@@ -342,19 +337,7 @@ Public Class TimeLogsForm2
         Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-        Await timeLogService.SaveImportAsync(z_OrganizationID, timeLogs, timeAttendanceLogs)
-
-        Dim importList = New List(Of UserActivityItem)
-        For Each log In timeLogs
-            importList.Add(New UserActivityItem() With
-            {
-                .Description = $"Created a new time log with date {log.LogDate.ToShortDateString()}.",
-                .EntityId = log.RowID.Value,
-                .ChangedEmployeeId = log.EmployeeID
-            })
-        Next
-
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+        Await timeLogService.SaveImportAsync(timeLogs, z_User)
     End Function
 
     Private Sub ResetGridRowsDefaultCellStyle()
@@ -368,78 +351,6 @@ Public Class TimeLogsForm2
                     And currColIndex > 0 Then
             grid.CurrentCell = grid.Item(currColIndex, currRowIndex)
         End If
-    End Sub
-
-    Private Sub RecordUpdate(updatedTimeLogs As List(Of TimeLog), oldRecords As IEnumerable(Of TimeLog))
-        For Each item In updatedTimeLogs
-            Dim changes As New List(Of UserActivityItem)
-            Dim entityName = FormEntityName.ToLower()
-            Dim oldValue = oldRecords.
-                Where(Function(tl) tl.EmployeeID.Value = item.EmployeeID.Value).
-                Where(Function(tl) tl.LogDate = item.LogDate).
-                FirstOrDefault()
-
-            Dim suffixIdentifier = $"of time log with date '{item.LogDate.ToShortDateString()}'."
-
-            If Not Nullable.Equals(item.TimeIn, oldValue.TimeIn) Then
-                changes.Add(New UserActivityItem() With
-                {
-                    .EntityId = item.RowID.Value,
-                    .Description = $"Updated time in from '{oldValue.TimeIn.ToStringFormat("hh:mm tt")}' to '{item.TimeIn.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                    .ChangedEmployeeId = item.EmployeeID.Value
-                })
-            End If
-            If Not Nullable.Equals(item.TimeOut, oldValue.TimeOut) Then
-                changes.Add(New UserActivityItem() With
-                {
-                    .EntityId = item.RowID.Value,
-                    .Description = $"Updated time out from '{oldValue.TimeOut.ToStringFormat("hh:mm tt")}' to '{item.TimeOut.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                    .ChangedEmployeeId = item.EmployeeID.Value
-                })
-            End If
-
-            Dim currentDateOut = If(item.TimeStampOut Is Nothing, item.TimeStampOut, item.TimeStampOut.Value.Date)
-            Dim oldDateOut = If(oldValue.TimeStampOut Is Nothing, oldValue.TimeStampOut, oldValue.TimeStampOut.Value.Date)
-            If currentDateOut.NullableEquals(oldDateOut) = False Then
-                'TimeStampOut is null by default. It means TimeStampOut is equals to LogDate
-                Dim dontSave =
-                    oldValue.TimeStampOut Is Nothing AndAlso
-                    item.TimeStampOut IsNot Nothing AndAlso
-                    item.TimeStampOut.Value.Date = item.LogDate.Date
-
-                If dontSave = False Then
-
-                    changes.Add(New UserActivityItem() With
-                    {
-                        .EntityId = item.RowID.Value,
-                        .Description = $"Updated date out from '{oldValue.TimeStampOut.ToShortDateString()}' to '{item.TimeStampOut.ToShortDateString()}' {suffixIdentifier}",
-                        .ChangedEmployeeId = item.EmployeeID.Value
-                    })
-
-                End If
-            End If
-            If Not Nullable.Equals(item.BranchID, oldValue.BranchID) Then
-                Dim branches As List(Of LookUpItem) = CType(colBranchID.DataSource, List(Of LookUpItem))
-                Dim oldBranch = ""
-                Dim newBranch = ""
-
-                If oldValue.BranchID.HasValue Then
-                    oldBranch = branches.Where(Function(x) Nullable.Equals(x.Id, oldValue.BranchID)).FirstOrDefault()?.DisplayMember
-                End If
-                If item.BranchID.HasValue Then
-                    newBranch = branches.Where(Function(x) Nullable.Equals(x.Id, item.BranchID)).FirstOrDefault()?.DisplayMember
-                End If
-
-                changes.Add(New UserActivityItem() With
-                {
-                    .EntityId = item.RowID.Value,
-                    .Description = $"Updated branch from '{oldBranch}' to '{newBranch}' {suffixIdentifier}",
-                    .ChangedEmployeeId = item.EmployeeID.Value
-                })
-            End If
-
-            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        Next
     End Sub
 
 #End Region
@@ -567,25 +478,25 @@ Public Class TimeLogsForm2
 
         Public ReadOnly Property EmployeeID As Integer
             Get
-                Return If(_timeLog?.Employee?.RowID.Value, _employee.RowID.Value)
+                Return If(_timeLog?.Employee?.RowID, If(_timeLog?.EmployeeID, _employee.RowID.Value))
             End Get
         End Property
 
         Public ReadOnly Property EmployeeNo As String
             Get
-                Return If(_timeLog?.Employee?.EmployeeNo, _employee.EmployeeNo)
+                Return If(_timeLog?.Employee?.EmployeeNo, _employee?.EmployeeNo)
             End Get
         End Property
 
         Public ReadOnly Property FullName As String
             Get
-                Return If(_timeLog?.Employee?.FullNameWithMiddleInitialLastNameFirst, _employee.FullNameWithMiddleInitialLastNameFirst)
+                Return If(_timeLog?.Employee?.FullNameWithMiddleInitialLastNameFirst, _employee?.FullNameWithMiddleInitialLastNameFirst)
             End Get
         End Property
 
         Public ReadOnly Property EmployeeBranchID As Integer?
             Get
-                Return If(_timeLog?.Employee?.BranchID, _employee.BranchID)
+                Return If(_timeLog?.Employee?.BranchID, _employee?.BranchID)
             End Get
         End Property
 
@@ -695,16 +606,11 @@ Public Class TimeLogsForm2
                         .RowID = RowID,
                         .EmployeeID = EmployeeID,
                         .OrganizationID = z_OrganizationID,
-                        .LogDate = DateIn,
-                        .CreatedBy = z_User,
-                        .Created = Now
+                        .LogDate = DateIn
                     }
                 End If
 
                 With _timeLog
-                    .LastUpd = Now
-                    .LastUpdBy = z_User
-
                     .TimeIn = Calendar.ToTimespan(TimeIn)
                     .TimeOut = Calendar.ToTimespan(TimeOut)
                     .BranchID = _branchId
@@ -866,20 +772,23 @@ Public Class TimeLogsForm2
         End If
 
         Dim toSaveListEmployeeIDs = toSaveList.Select(Function(tlm) tlm.EmployeeID).ToArray()
+        Dim earliestDate = toSaveList.Min(Function(tlm) tlm.DateIn)
+        Dim latestDate = toSaveList.Max(Function(tlm) tlm.DateIn)
 
-        Dim datePeriod = New TimePeriod(dtpDateFrom.Value.Date, dtpDateTo.Value.Date)
+        Dim datePeriod = New TimePeriod(earliestDate, latestDate)
 
         Dim timeLogRepositoryQuery = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
         Dim existingRecords = Await timeLogRepositoryQuery.
             GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(toSaveListEmployeeIDs, datePeriod)
+
         addDefaultBranchIDs(existingRecords)
-        Dim oldRecords = existingRecords.CloneJson()
 
         Dim addedTimeLogs As New List(Of TimeLog)
         Dim updatedTimeLogs As New List(Of TimeLog)
         Dim deletedTimeLogs As New List(Of TimeLog)
 
         For Each model In toSaveList
+            'TODO: employeetimeentrydetails date should be unique so no query like this should be needed.
             Dim seek = existingRecords.
                 Where(Function(tl) tl.EmployeeID.Value = model.EmployeeID).
                 Where(Function(tl) tl.LogDate = model.DateIn).
@@ -890,12 +799,7 @@ Public Class TimeLogsForm2
 
             If model.ConsideredDelete Then
 
-                deletedTimeLogs.Add(timeLog)
-
-                Dim duplicateTimeLogs = Await timeLogRepositoryQuery.
-                                        GetByEmployeeAndDateAsync(timeLog.EmployeeID.Value, timeLog.LogDate)
-
-                deletedTimeLogs.AddRange(duplicateTimeLogs)
+                deletedTimeLogs.AddRange(seek.ToList())
 
             ElseIf model.IsExisting Then
                 Dim timeOut = Calendar.ToTimespan(model.TimeOut)
@@ -908,9 +812,6 @@ Public Class TimeLogsForm2
                 End If
 
                 timeLog.BranchID = model.BranchID
-
-                timeLog.LastUpdBy = z_User
-                timeLog.LastUpd = Now
 
                 updatedTimeLogs.Add(timeLog)
             ElseIf Not exists And model.IsValidToSave Then
@@ -966,13 +867,11 @@ Public Class TimeLogsForm2
         Await FunctionUtils.TryCatchFunctionAsync("Save Time Logs",
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-                Await dataService.ChangeManyAsync(
-                    z_OrganizationID,
+                Await dataService.SaveManyAsync(
+                    currentlyLoggedInUserId:=z_User,
                     added:=addedTimeLogs,
                     updated:=updatedTimeLogs,
                     deleted:=deletedTimeLogs)
-
-                CreateUserActivityRecords(oldRecords, addedTimeLogs, updatedTimeLogs, deletedTimeLogs)
 
                 If addedTimeLogs.Any() Then
                     Dim addedTimeLogEmployeeIDs = addedTimeLogs.Select(Function(tl) tl.EmployeeID.Value).ToArray()
@@ -982,8 +881,9 @@ Public Class TimeLogsForm2
                     Dim addedTimeLogsDatePeriod = New TimePeriod(addedTimeLogMinDate, addedTimeLogMaxDate)
 
                     Dim newlyAdded = Await timeLogRepositoryQuery.
-                        GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(addedTimeLogEmployeeIDs,
-                                                                            addedTimeLogsDatePeriod)
+                        GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
+                            addedTimeLogEmployeeIDs,
+                            addedTimeLogsDatePeriod)
 
                     For Each model In toSaveList
                         Dim seek = newlyAdded.
@@ -1030,35 +930,6 @@ Public Class TimeLogsForm2
                 record.BranchID = record.Employee?.BranchID
             End If
 
-        Next
-    End Sub
-
-    Private Sub CreateUserActivityRecords(oldRecords As IEnumerable(Of TimeLog), addedTimeLogs As List(Of TimeLog), updatedTimeLogs As List(Of TimeLog), deletedTimeLogs As List(Of TimeLog))
-        For Each item In addedTimeLogs      'for new
-            _userActivityRepo.RecordAdd(
-                z_User,
-                FormEntityName,
-                entityId:=item.RowID.Value,
-                organizationId:=z_OrganizationID,
-                suffixIdentifier:=$" with date '{item.LogDate.ToShortDateString()}'",
-                changedEmployeeId:=item.EmployeeID.Value)
-        Next
-
-        RecordUpdate(updatedTimeLogs, oldRecords)
-
-        Dim groupedDeletedTimeLogs = deletedTimeLogs.
-            GroupBy(Function(x) New With {Key x.EmployeeID, Key x.LogDate}).
-            Select(Function(x) x.First).
-            ToArray()
-
-        For Each item In groupedDeletedTimeLogs
-            _userActivityRepo.RecordDelete(
-                z_User,
-                FormEntityName,
-                entityId:=item.RowID.Value,
-                organizationId:=z_OrganizationID,
-                suffixIdentifier:=$" with date '{item.LogDate.ToShortDateString()}'",
-                changedEmployeeId:=item.EmployeeID.Value)
         Next
     End Sub
 
@@ -1290,8 +1161,6 @@ Public Class TimeLogsForm2
         Dim employeeNos = parsedTimeLogsGroupedByEmployee.Select(Function(emp) emp.Key).ToArray()
         Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
-        Dim dateCreated = Date.Now
-
         Dim timeLogs As New List(Of TimeLog)
         For Each timeLogList In parsedTimeLogsGroupedByEmployee
             Dim employee = employees.
@@ -1307,8 +1176,6 @@ Public Class TimeLogsForm2
                 Dim t = New TimeLog() With {
                     .OrganizationID = z_OrganizationID,
                     .EmployeeID = employee.RowID,
-                    .Created = dateCreated,
-                    .CreatedBy = z_User,
                     .LogDate = timeLog.DateOccurred,
                     .BranchID = employee.BranchID
                 }
@@ -1325,21 +1192,8 @@ Public Class TimeLogsForm2
             Next
         Next
 
-        'TODO: this should also create TimeAttendanceLogs per log
         Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
-        Await timeLogService.SaveImportAsync(z_OrganizationID, timeLogs)
-
-        Dim importList = New List(Of UserActivityItem)
-        For Each log In timeLogs
-            importList.Add(New UserActivityItem() With
-            {
-                .Description = $"Created a new time log with date {log.LogDate.ToShortDateString()}.",
-                .EntityId = log.RowID.Value,
-                .ChangedEmployeeId = log.EmployeeID
-            })
-        Next
-
-        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+        Await timeLogService.SaveImportAsync(timeLogs, z_User)
 
     End Sub
 
@@ -1436,6 +1290,10 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+
+        'TODO: create a string constant class for this
+        Dim FormEntityName As String = "Time Log"
+
         Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub

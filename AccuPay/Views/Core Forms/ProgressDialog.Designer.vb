@@ -39,7 +39,7 @@ Partial Class ProgressDialog
         'ProgressTimer
         '
         Me.ProgressTimer.Enabled = True
-        Me.ProgressTimer.Interval = 50
+        Me.ProgressTimer.Interval = 10
         '
         'CurrentMessageLabel
         '

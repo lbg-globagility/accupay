@@ -1,16 +1,17 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 
 Public Class DayTypeControl
 
     Private _dayType As DayType
 
     Private ReadOnly _dayConsideredAsOptions As Collection(Of String) = New Collection(Of String) From {
-        "Regular Day",
-        "Special Non-Working Holiday",
-        "Regular Holiday"
+        CalendarConstant.RegularDay,
+        CalendarConstant.SpecialNonWorkingHoliday,
+        CalendarConstant.RegularHoliday
     }
 
     Public Property DayType As DayType

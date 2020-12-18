@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -9,62 +9,15 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class EmployeeDutyScheduleRepository
+    public class EmployeeDutyScheduleRepository : SavableRepository<EmployeeDutySchedule>
     {
-        private readonly PayrollContext _context;
-
-        public EmployeeDutyScheduleRepository(PayrollContext context)
+        public EmployeeDutyScheduleRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
-
-        #region Save
-
-        public async Task ChangeManyAsync(
-            List<EmployeeDutySchedule> added = null,
-            List<EmployeeDutySchedule> updated = null,
-            List<EmployeeDutySchedule> deleted = null)
-        {
-            if (added != null)
-            {
-                added.ForEach(shift =>
-                {
-                    _context.Entry(shift).State = EntityState.Added;
-                });
-            }
-
-            if (updated != null)
-            {
-                updated.ForEach(shift =>
-                {
-                    _context.Entry(shift).State = EntityState.Modified;
-                });
-            }
-
-            if (deleted != null)
-            {
-                deleted = deleted
-                    .GroupBy(x => x.RowID)
-                    .Select(x => x.FirstOrDefault())
-                    .ToList();
-                _context.EmployeeDutySchedules.RemoveRange(deleted);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        #endregion Save
 
         #region Queries
 
         #region List of entities
-
-        public ICollection<EmployeeDutySchedule> GetByDatePeriod(
-            int organizationId,
-            TimePeriod datePeriod)
-        {
-            return CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToList();
-        }
 
         public async Task<ICollection<EmployeeDutySchedule>> GetByDatePeriodAsync(
             int organizationId,
@@ -161,33 +114,6 @@ namespace AccuPay.Data.Repositories
                     datePeriod)
                 .Include(x => x.Employee)
                 .ToListAsync();
-        }
-
-        public async Task<PaginatedList<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
-        {
-            var query = _context.EmployeeDutySchedules
-                .Include(x => x.Employee)
-                .Where(x => x.OrganizationID == organizationId)
-                .OrderBy(x => x.Employee.LastName)
-                .ThenBy(x => x.Employee.FirstName)
-                .ThenByDescending(x => x.DateSched)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                searchTerm = $"%{searchTerm}%";
-
-                query = query.Where(x =>
-                    EF.Functions.Like(x.DateSched.ToString(), searchTerm) ||
-                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
-                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
-                    EF.Functions.Like(x.Employee.LastName, searchTerm));
-            }
-
-            var shifts = await query.Page(options).ToListAsync();
-            var count = await query.CountAsync();
-
-            return new PaginatedList<EmployeeDutySchedule>(shifts, count);
         }
 
         #endregion List of entities

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
 using System.Collections.Generic;
@@ -48,8 +48,8 @@ namespace AccuPay.Data.Services.Imports.Employees
             string[] employeeNumberList = parsedRecords.Select(s => s.EmployeeNo).ToArray();
 
             var employees = (await _employeeRepository
-                            .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
-                            ).ToList();
+                .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
+                ).ToList();
 
             var jobs = await _positionRepository.GetAllAsync(organizationId);
 
@@ -60,12 +60,12 @@ namespace AccuPay.Data.Services.Imports.Employees
             foreach (var parsedEmployee in parsedRecords)
             {
                 var employee = employees
-                            .Where(ee => ee.EmployeeNo == parsedEmployee.EmployeeNo)
-                            .FirstOrDefault();
+                    .Where(ee => ee.EmployeeNo == parsedEmployee.EmployeeNo)
+                    .FirstOrDefault();
 
                 var job = jobs.FirstOrDefault(j => isEqualToLowerCase(j.Name, parsedEmployee.JobPosition));
 
-                list.Add(CreateEmployeeImportModel(employee, parsedEmployee, job));
+                list.Add(CreateEmployeeImportModel(employee, parsedEmployee, job, organizationId));
             }
 
             bool isInvalid(EmployeeImportModel x) => x.InvalidToSave;
@@ -78,13 +78,14 @@ namespace AccuPay.Data.Services.Imports.Employees
                 rejectedRecord.DescribeErrors();
             }
 
-            return new EmployeeImportParserOutput(validRecords: validRecords,
-                                                  invalidRecords: invalidRecords);
+            return new EmployeeImportParserOutput(
+                validRecords: validRecords,
+                invalidRecords: invalidRecords);
         }
 
-        private EmployeeImportModel CreateEmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee, Position job)
+        private EmployeeImportModel CreateEmployeeImportModel(Employee employee, EmployeeRowRecord parsedEmployee, Position job, int organizationId)
         {
-            return new EmployeeImportModel(employee, parsedEmployee, job);
+            return new EmployeeImportModel(employee, parsedEmployee, job, organizationId);
         }
 
         public class EmployeeImportParserOutput
@@ -93,8 +94,9 @@ namespace AccuPay.Data.Services.Imports.Employees
 
             public IReadOnlyCollection<EmployeeImportModel> InvalidRecords { get; }
 
-            public EmployeeImportParserOutput(IReadOnlyCollection<EmployeeImportModel> validRecords,
-                                              IReadOnlyCollection<EmployeeImportModel> invalidRecords)
+            public EmployeeImportParserOutput(
+                IReadOnlyCollection<EmployeeImportModel> validRecords,
+                IReadOnlyCollection<EmployeeImportModel> invalidRecords)
             {
                 ValidRecords = validRecords;
                 InvalidRecords = invalidRecords;

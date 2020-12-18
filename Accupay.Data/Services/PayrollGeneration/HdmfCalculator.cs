@@ -51,9 +51,9 @@ namespace AccuPay.Data.Services
                 else if (IsHdmfPaidPerPayPeriod(deductionSchedule))
                 {
                     paystub.HdmfEmployeeShare = employeeShare /
-                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                     paystub.HdmfEmployerShare = employerShare /
-                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
 

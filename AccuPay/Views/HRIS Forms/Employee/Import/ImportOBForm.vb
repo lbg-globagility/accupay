@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -111,7 +111,7 @@ Public Class ImportOBForm
 
         UpdateStatusLabel(rejectedRecords.Count)
 
-        ParsedTabControl.Text = $"Ok ({Me._officialBusinesses.Count})"
+        ParsedTabControl.Text = $"Ok ({_officialBusinesses.Count})"
         ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
 
         SaveButton.Enabled = _officialBusinesses.Count > 0
@@ -187,11 +187,11 @@ Public Class ImportOBForm
             Async Function()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
-                Await dataService.SaveManyAsync(Me._officialBusinesses)
+                Await dataService.SaveManyAsync(_officialBusinesses, z_User)
 
                 Dim importlist = New List(Of UserActivityItem)
 
-                For Each officialBusiness In Me._officialBusinesses
+                For Each officialBusiness In _officialBusinesses
 
                     Dim suffixIdentifier = $"with date '{officialBusiness.StartDate.Value.ToShortDateString()}'."
 

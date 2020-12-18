@@ -1,19 +1,20 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.Imports.Allowances;
 using AccuPay.Utilities.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class AllowanceDataService : BaseSavableDataService<Allowance>
+    public class AllowanceDataService : BaseEmployeeDataService<Allowance>
     {
+        private const string UserActivityName = "Allowance";
+
         private readonly AllowanceRepository _allowanceRepository;
         private readonly ProductRepository _productRepository;
         private readonly AllowanceTypeRepository _allowanceTypeRepository;
@@ -23,11 +24,13 @@ namespace AccuPay.Data.Services
             AllowanceTypeRepository allowanceTypeRepository,
             PayPeriodRepository payPeriodRepository,
             ProductRepository productRepository,
+            UserActivityRepository userActivityRepository,
             PayrollContext context,
             PolicyHelper policy) :
 
             base(allowanceRepository,
                 payPeriodRepository,
+                userActivityRepository,
                 context,
                 policy,
                 entityName: "Allowance")
@@ -37,104 +40,10 @@ namespace AccuPay.Data.Services
             _allowanceTypeRepository = allowanceTypeRepository;
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance)
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        public async Task BatchApply(IReadOnlyCollection<AllowanceImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
-            if (allowance.IsOneTime)
-                allowance.EffectiveEndDate = allowance.EffectiveStartDate;
-
-            if (allowance.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (allowance.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
-
-            if (_allowanceRepository.GetFrequencyList().Contains(allowance.AllowanceFrequency) == false)
-                throw new BusinessLogicException("Invalid frequency.");
-
-            if (allowance.ProductID == null)
-                throw new BusinessLogicException("Allowance type is required.");
-
-            if (allowance.EffectiveStartDate < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
-
-            if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
-                throw new BusinessLogicException("Start date cannot be greater than end date.");
-        }
-
-        protected override async Task AdditionalDeleteValidation(Allowance allowance)
-        {
-            if (await CheckIfAlreadyUsedInClosedPayPeriodAsync(allowance.RowID.Value))
-                throw new BusinessLogicException("This allowance has already been used and therefore cannot be deleted. Try changing its End Date instead.");
-        }
-
-        protected async override Task AdditionalSaveValidation(Allowance allowance, Allowance oldAllowance)
-        {
-            var product = await _productRepository.GetByIdAsync(allowance.ProductID.Value);
-
-            if (product == null)
-                throw new BusinessLogicException("The selected allowance type no longer exists.");
-
-            if (allowance.IsMonthly && !product.Fixed)
-                throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
-
-            // cannot create a new allowance or change the Start Date of an
-            // existing allowance into a date on a "Closed" pay period.
-            if (CheckIfStartDateNeedsToBeValidated(new List<Allowance>() { oldAllowance }, allowance))
-            {
-                await CheckIfDataIsWithinClosedPayPeriod(allowance.EffectiveStartDate, allowance.OrganizationID.Value);
-            }
-
-            if (!IsNewEntity(allowance.RowID))
-            {
-                // validate entities that are for update
-                var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(allowance.RowID.Value);
-                var alreadyUsedInClosedPayroll = CheckIfDataIsWithinClosedPayPeriod(payPeriods, throwException: false);
-
-                if (alreadyUsedInClosedPayroll)
-                {
-                    // only end date can be updated if allowance is already used in a closed pay period
-                    ValidateAllowableEdit(
-                        allowance: allowance,
-                        oldAllowance: oldAllowance);
-
-                    // end date cannot be in a closed pay period
-                    if (allowance.EffectiveEndDate.HasValue)
-                    {
-                        if (await CheckIfDataIsWithinClosedPayPeriod(allowance.EffectiveEndDate.Value, allowance.OrganizationID.Value, throwException: false))
-                            throw new BusinessLogicException("Cannot update End Date into a date in a Closed Payroll.");
-                    }
-                }
-            }
-        }
-
-        protected async override Task AdditionalSaveManyValidation(List<Allowance> allowances, List<Allowance> oldAllowances)
-        {
-            var allowanceTypeIds = allowances
-                .Where(x => x.ProductID.HasValue)
-                .Select(x => x.ProductID.Value).Distinct()
-                .ToArray();
-            var allowanceTypes = await _productRepository.GetManyByIdsAsync(allowanceTypeIds);
-
-            foreach (var allowance in allowances)
-            {
-                var product = allowanceTypes.FirstOrDefault(x => x.RowID == allowance.ProductID);
-
-                if (product == null)
-                    throw new BusinessLogicException("The selected allowance type no longer exists.");
-
-                if (allowance.IsMonthly && !product.Fixed)
-                    throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
-            }
-
-            await CheckForClosedPayPeriod(allowances, oldAllowances);
-        }
-
-        public async Task BatchApply(IReadOnlyCollection<AllowanceImportModel> validRecords, int organizationId, int userId)
-        {
-            AllowanceType setAllowanceType(IGrouping<string, AllowanceImportModel> a) => new AllowanceType() { DisplayString = a.FirstOrDefault().AllowanceName, Frequency = a.FirstOrDefault().AllowanceFrequency, Name = a.FirstOrDefault().AllowanceName };
+            AllowanceType setAllowanceType(IGrouping<string, AllowanceImportModel> a) =>
+                new AllowanceType() { DisplayString = a.FirstOrDefault().AllowanceName, Frequency = a.FirstOrDefault().AllowanceFrequency, Name = a.FirstOrDefault().AllowanceName };
 
             var notYetExistsAllowanceTypes = validRecords
                 .Where(a => a.IsAllowanceTypeNotYetExists)
@@ -168,14 +77,131 @@ namespace AccuPay.Data.Services
                     EffectiveEndDate = record.EffectiveEndDate,
                     EffectiveStartDate = record.EffectiveStartDate.Value,
                     OrganizationID = organizationId,
-                    CreatedBy = userId
                 };
 
                 allowances.Add(allowance);
             }
 
-            await _allowanceRepository.SaveManyAsync(allowances);
+            await SaveManyAsync(allowances, currentlyLoggedInUserId);
         }
+
+        #region Overrides
+
+        protected override string GetUserActivityName(Allowance allowance) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(Allowance allowance) =>
+            CreateUserActivitySuffixIdentifier(allowance, allowance.Product?.Name);
+
+        private string CreateUserActivitySuffixIdentifier(Allowance allowance, string allowanceType) =>
+            $" with type '{allowanceType}' and start date '{allowance.EffectiveStartDate.ToShortDateString()}'";
+
+        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance, int changedByUserId)
+        {
+            await base.SanitizeEntity(
+                entity: allowance,
+                oldEntity: oldAllowance,
+                currentlyLoggedInUserId: changedByUserId);
+
+            if (allowance.IsOneTime)
+                allowance.EffectiveEndDate = allowance.EffectiveStartDate;
+
+            if (_allowanceRepository.GetFrequencyList().Contains(allowance.AllowanceFrequency) == false)
+                throw new BusinessLogicException("Invalid frequency.");
+
+            if (allowance.ProductID == null)
+                throw new BusinessLogicException("Allowance type is required.");
+
+            if (allowance.EffectiveStartDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+
+            if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
+                throw new BusinessLogicException("Start date cannot be greater than end date.");
+        }
+
+        protected override async Task AdditionalDeleteValidation(Allowance allowance)
+        {
+            if (await CheckIfAlreadyUsedInClosedPayPeriodAsync(allowance.RowID.Value))
+                throw new BusinessLogicException("This allowance has already been used and therefore cannot be deleted. Try changing its End Date instead.");
+        }
+
+        protected override async Task AdditionalSaveValidation(Allowance allowance, Allowance oldAllowance)
+        {
+            var product = await _productRepository.GetByIdAsync(allowance.ProductID.Value);
+
+            if (product == null)
+                throw new BusinessLogicException("The selected allowance type no longer exists.");
+
+            if (allowance.IsMonthly && !product.Fixed)
+                throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
+
+            // cannot create a new allowance or change the Start Date of an
+            // existing allowance into a date on a "Closed" pay period.
+            if (CheckIfStartDateNeedsToBeValidated(new List<Allowance>() { oldAllowance }, allowance))
+            {
+                await CheckIfDataIsWithinClosedPayPeriod(allowance.EffectiveStartDate, allowance.OrganizationID.Value);
+            }
+
+            if (!allowance.IsNewEntity)
+            {
+                // validate entities that are for update
+                var payPeriods = await _allowanceRepository.GetPayPeriodsAsync(allowance.RowID.Value);
+                var alreadyUsedInClosedPayroll = CheckIfDataIsWithinClosedPayPeriod(payPeriods, throwException: false);
+
+                if (alreadyUsedInClosedPayroll)
+                {
+                    // only end date can be updated if allowance is already used in a closed pay period
+                    ValidateAllowableEdit(
+                        allowance: allowance,
+                        oldAllowance: oldAllowance);
+
+                    // end date cannot be in a closed pay period
+                    if (allowance.EffectiveEndDate.HasValue)
+                    {
+                        if (await CheckIfDataIsWithinClosedPayPeriod(allowance.EffectiveEndDate.Value, allowance.OrganizationID.Value, throwException: false))
+                            throw new BusinessLogicException("Cannot update End Date into a date in a Closed Payroll.");
+                    }
+                }
+            }
+        }
+
+        protected override async Task AdditionalSaveManyValidation(List<Allowance> allowances, List<Allowance> oldAllowances, SaveType saveType)
+        {
+            var allowanceTypeIds = allowances
+                .Where(x => x.ProductID.HasValue)
+                .Select(x => x.ProductID.Value).Distinct()
+                .ToArray();
+            var allowanceTypes = await _productRepository.GetManyByIdsAsync(allowanceTypeIds);
+
+            foreach (var allowance in allowances)
+            {
+                var product = allowanceTypes.FirstOrDefault(x => x.RowID == allowance.ProductID);
+
+                if (product == null)
+                    throw new BusinessLogicException("The selected allowance type no longer exists.");
+
+                if (allowance.IsMonthly && !product.Fixed)
+                    throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
+            }
+
+            await CheckForClosedPayPeriod(allowances, oldAllowances);
+        }
+
+        protected override async Task PostDeleteAction(Allowance allowance, int changedByUserId)
+        {
+            var allowanceType = await _productRepository.GetByIdAsync(allowance.ProductID.Value);
+
+            await _userActivityRepository.RecordDeleteAsync(
+                currentlyLoggedInUserId: changedByUserId,
+                entityId: allowance.RowID.Value,
+                entityName: GetUserActivityName(allowance),
+                suffixIdentifier: CreateUserActivitySuffixIdentifier(allowance, allowanceType?.PartNo),
+                organizationId: allowance.OrganizationID.Value,
+                changedEmployeeId: allowance.EmployeeID);
+        }
+
+        #endregion Overrides
+
+        #region Private Methods
 
         private async Task CheckForClosedPayPeriod(List<Allowance> allowances, List<Allowance> oldAllowances)
         {
@@ -183,7 +209,7 @@ namespace AccuPay.Data.Services
             int? organizationId = await ValidateStartDates(allowances, oldAllowances);
 
             var forUpdateAllowances = allowances
-                .Where(x => !IsNewEntity(x.RowID))
+                .Where(x => !x.IsNewEntity)
                 .ToArray();
 
             var ids = forUpdateAllowances.Select(x => x.RowID.Value).Distinct().ToArray();
@@ -213,7 +239,7 @@ namespace AccuPay.Data.Services
 
             // end date cannot be in a closed pay period
             var endDates = allowances
-                 .Where(x => !IsNewEntity(x.RowID))
+                 .Where(x => !x.IsNewEntity)
                  .Where(x => x.EffectiveEndDate.HasValue)
                  .Select(x => x.EffectiveEndDate.Value)
                  .ToArray();
@@ -247,7 +273,7 @@ namespace AccuPay.Data.Services
         private bool CheckIfStartDateNeedsToBeValidated(List<Allowance> oldAllowances, Allowance allowance)
         {
             // either a new allowance
-            if (IsNewEntity(allowance.RowID)) return true;
+            if (allowance.IsNewEntity) return true;
 
             // or an existing allowance where its Start Date is to be updated
             var oldAllowance = oldAllowances.Where(o => o.RowID == allowance.RowID).FirstOrDefault();
@@ -270,6 +296,8 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("The allowance is already used in a Closed Payroll. Only End Date can be edited.");
             }
         }
+
+        #endregion Private Methods
 
         #region Queries
 

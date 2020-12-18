@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeeallowance")]
-    public class Allowance : BaseEntity
+    public class Allowance : EmployeeDataEntity
     {
         public const string FREQUENCY_ONE_TIME = "One time";
 
@@ -13,20 +13,6 @@ namespace AccuPay.Data.Entities
         public const string FREQUENCY_SEMI_MONTHLY = "Semi-monthly";
 
         public const string FREQUENCY_MONTHLY = "Monthly";
-
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
-        public int? EmployeeID { get; set; }
 
         public int? ProductID { get; set; }
 

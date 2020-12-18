@@ -10,8 +10,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDivisionForm
 
-    Private Const FormEntityName As String = "Division"
-
     Private _parentDivisions As List(Of Division)
 
     Private _newDivision As Division
@@ -35,8 +33,6 @@ Public Class AddDivisionForm
 
     Private ReadOnly _positionRepository As PositionRepository
 
-    Private ReadOnly _userActivityRepository As UserActivityRepository
-
     Sub New()
 
         InitializeComponent()
@@ -46,8 +42,6 @@ Public Class AddDivisionForm
         _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
 
         _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -112,9 +106,7 @@ Public Class AddDivisionForm
 
     Private Sub ResetForm()
 
-        Me._newDivision = Division.NewDivision(
-            organizationId:=z_OrganizationID,
-            userId:=z_User)
+        Me._newDivision = Division.NewDivision(z_OrganizationID)
 
         DivisionUserControl1.SetDivision(
             Me._newDivision,
@@ -153,11 +145,9 @@ Public Class AddDivisionForm
     Private Async Function SaveDivision(sender As Object) As Task
 
         Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-        Await service.SaveAsync(Me._newDivision)
+        Await service.SaveAsync(Me._newDivision, z_User)
 
         Me.LastDivisionAdded = Me._newDivision
-
-        _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newDivision.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

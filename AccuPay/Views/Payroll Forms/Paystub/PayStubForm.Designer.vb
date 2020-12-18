@@ -22,7 +22,6 @@ Partial Class PayStubForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -297,11 +296,8 @@ Partial Class PayStubForm
         Me.tsbtnSearch = New System.Windows.Forms.ToolStripButton()
         Me.PrintPayrollSummaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -3215,12 +3211,6 @@ Partial Class PayStubForm
         Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
         Me.UserActivityToolStripButton.Text = "&User Activity"
         '
-        'ImageList1
-        '
-        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
-        Me.ImageList1.Images.SetKeyName(0, "Icon_169.ico")
-        '
         'Panel4
         '
         Me.Panel4.Controls.Add(Me.Panel5)
@@ -3242,13 +3232,6 @@ Partial Class PayStubForm
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(235, 20)
         Me.Panel5.TabIndex = 179
-        '
-        'Timer1
-        '
-        Me.Timer1.Interval = 2500
-        '
-        'ProgressTimer
-        '
         '
         'DataGridViewTextBoxColumn1
         '
@@ -3589,7 +3572,6 @@ Partial Class PayStubForm
     Friend WithEvents Label59 As System.Windows.Forms.Label
     Friend WithEvents tsSearch As System.Windows.Forms.ToolStripTextBox
     Friend WithEvents tsbtnSearch As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ImageList1 As System.Windows.Forms.ImageList
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkLabel3 As System.Windows.Forms.LinkLabel
@@ -3652,7 +3634,6 @@ Partial Class PayStubForm
     Friend WithEvents Panel4 As System.Windows.Forms.Panel
     Friend WithEvents Panel5 As System.Windows.Forms.Panel
     Friend WithEvents txtLeavePay As System.Windows.Forms.TextBox
-    Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents lblAgencyFee As System.Windows.Forms.Label
     Friend WithEvents txtAgencyFee As System.Windows.Forms.TextBox
     Friend WithEvents lblAgencyFeePesoSign As System.Windows.Forms.Label
@@ -3707,7 +3688,6 @@ Partial Class PayStubForm
     Friend WithEvents ManagePrintPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManageEmailPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CostCenterReportToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ProgressTimer As Timer
     Friend WithEvents lblPaidLeavePesoSign As Label
     Friend WithEvents txtLeaveHours As TextBox
     Friend WithEvents CancelPayrollToolStripMenuItem As ToolStripMenuItem

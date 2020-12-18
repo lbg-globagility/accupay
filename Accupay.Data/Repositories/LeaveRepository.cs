@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -94,19 +94,19 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<Leave>(leaves, count);
         }
 
-        public ICollection<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
+        public async Task<ICollection<Leave>> GetAllApprovedByDatePeriodAsync(int organizationId, TimePeriod datePeriod)
         {
-            return CreateBaseQueryByDatePeriod(organizationId, datePeriod)
-                    .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
-                    .ToList();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
+                .ToListAsync();
         }
 
         public async Task<ICollection<Leave>> GetAllApprovedByEmployeeAndDatePeriod(int organizationId, int employeeId, TimePeriod datePeriod)
         {
             return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
-                    .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
-                    .Where(x => x.EmployeeID == employeeId)
-                    .ToListAsync();
+                .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
+                .Where(x => x.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
         public async Task<ICollection<Leave>> GetByDatePeriodAsync(int organizationId, TimePeriod datePeriod)

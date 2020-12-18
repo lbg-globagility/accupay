@@ -1,88 +1,68 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class TimeLogDataService : BaseDataService
+    public class TimeLogDataService : BaseEmployeeDataService<TimeLog>
     {
-        private readonly TimeLogRepository _timeLogRepository;
+        private const string UserActivityName = "Time Log";
+
+        private readonly BranchRepository _branchRepository;
 
         public TimeLogDataService(
             TimeLogRepository timeLogRepository,
             PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
+            BranchRepository branchRepository,
+            PayrollContext context,
             PolicyHelper policy) :
 
-            base(payPeriodRepository,
-                policy)
+            base(timeLogRepository,
+                payPeriodRepository,
+                userActivityRepository,
+                context,
+                policy,
+                entityName: "Time log")
         {
-            _timeLogRepository = timeLogRepository;
+            _branchRepository = branchRepository;
         }
 
         #region Save
 
-        public async Task SaveImportAsync(
-            int organizationId,
-            List<TimeLog> timeLogs,
-            List<TimeAttendanceLog> timeAttendanceLogs = null)
+        public async Task SaveImportAsync(List<TimeLog> timeLogs, int changedByUserId)
         {
-            if (timeLogs != null)
+            string importId = Guid.NewGuid().ToString();
+
+            foreach (var timeLog in timeLogs)
             {
-                timeLogs.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayPeriod(timeLogs.Select(x => x.LogDate).Distinct(), organizationId);
+                timeLog.TimeentrylogsImportID = importId;
             }
 
-            await _timeLogRepository.SaveImportAsync(timeLogs, timeAttendanceLogs);
+            await SaveManyAsync(timeLogs, changedByUserId);
         }
 
-        public async Task ChangeManyAsync(
-            int organizationId,
-            List<TimeLog> added = null,
-            List<TimeLog> updated = null,
-            List<TimeLog> deleted = null)
+        #endregion Save
+
+        #region Overrides
+
+        protected override string GetUserActivityName(TimeLog leave) => UserActivityName;
+
+        protected override string CreateUserActivitySuffixIdentifier(TimeLog log) =>
+            $" with date '{log.LogDate.ToShortDateString()}'";
+
+        protected override async Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog, int changedByUserId)
         {
-            // TODO: add and update time attendance log for every time log
-
-            if (added == null && updated == null && deleted == null)
-                throw new BusinessLogicException("No logs to be saved.");
-
-            if (added != null)
-            {
-                added.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayPeriod(added.Select(x => x.LogDate).Distinct(), organizationId);
-            }
-
-            if (updated != null)
-            {
-                updated.ForEach(x => SanitizeEntity(x));
-                await CheckIfDataIsWithinClosedPayPeriod(updated.Select(x => x.LogDate).Distinct(), organizationId);
-            }
-
-            if (deleted != null)
-            {
-                await CheckIfDataIsWithinClosedPayPeriod(deleted.Select(x => x.LogDate).Distinct(), organizationId);
-            }
-
-            await _timeLogRepository.ChangeManyAsync(
-                added: added,
-                updated: updated,
-                deleted: deleted);
-        }
-
-        private void SanitizeEntity(TimeLog timeLog)
-        {
-            if (timeLog == null)
-                throw new BusinessLogicException("Invalid data.");
-
-            if (timeLog.OrganizationID == null)
-                throw new BusinessLogicException("Organization is required.");
-
-            if (timeLog.EmployeeID == null)
-                throw new BusinessLogicException("Employee is required.");
+            await base.SanitizeEntity(
+                entity: timeLog,
+                oldEntity: oldTimeLog,
+                currentlyLoggedInUserId: changedByUserId);
 
             if (timeLog.LogDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
@@ -101,6 +81,123 @@ namespace AccuPay.Data.Services
             }
         }
 
-        #endregion Save
+        protected override async Task AdditionalSaveManyValidation(List<TimeLog> entities, List<TimeLog> oldEntities, SaveType saveType)
+        {
+            var organizationEntities = entities.GroupBy(x => x.OrganizationID);
+
+            foreach (var organization in organizationEntities)
+            {
+                if (organization.Key != null)
+                    await CheckIfDataIsWithinClosedPayPeriod(organization.ToList().Select(x => x.LogDate).Distinct(), organization.Key.Value);
+            }
+        }
+
+        protected override async Task PostDeleteManyAction(IReadOnlyCollection<TimeLog> entities, int changedByUserId)
+        {
+            // user can add multiple time logs in a day specially when they import multiple times.
+            var groupedDeletedTimeLogs = entities.GroupBy(x => new { x.EmployeeID, x.LogDate });
+
+            foreach (var group in groupedDeletedTimeLogs)
+            {
+                foreach (var item in group.ToList())
+                {
+                    await RecordDelete(item, changedByUserId);
+                }
+            }
+        }
+
+        protected override async Task PostUpdateManyAction(IReadOnlyCollection<TimeLog> entities, IReadOnlyCollection<TimeLog> oldEntities)
+        {
+            var branches = await _branchRepository.GetAllAsync();
+            await RecordUpdate(entities, oldEntities, branches.ToList());
+        }
+
+        #endregion Overrides
+
+        private async Task RecordUpdate(IReadOnlyCollection<TimeLog> updatedTimeLogs, IReadOnlyCollection<TimeLog> oldRecords, IReadOnlyCollection<Branch> branches)
+        {
+            foreach (var newValue in updatedTimeLogs)
+            {
+                var oldValue = oldRecords
+                    .Where(tl => tl.EmployeeID.Value == newValue.EmployeeID.Value)
+                    .Where(tl => tl.LogDate == newValue.LogDate)
+                    .FirstOrDefault();
+                if (oldValue == null) continue;
+
+                await RecordUpdate(branches, newValue, oldValue);
+            }
+        }
+
+        private async Task RecordUpdate(IReadOnlyCollection<Branch> branches, TimeLog newValue, TimeLog oldValue)
+        {
+            List<UserActivityItem> changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
+
+            if (newValue.TimeIn != oldValue.TimeIn)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated time in from '{oldValue.TimeIn.ToStringFormat("hh:mm tt")}' to '{newValue.TimeIn.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = newValue.EmployeeID.Value
+                });
+            }
+            if (newValue.TimeOut != oldValue.TimeOut)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated time out from '{oldValue.TimeOut.ToStringFormat("hh:mm tt")}' to '{newValue.TimeOut.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = newValue.EmployeeID.Value
+                });
+            }
+
+            var currentDateOut = newValue.TimeStampOut == null ? newValue.TimeStampOut : newValue.TimeStampOut.Value.Date;
+            var oldDateOut = oldValue.TimeStampOut == null ? oldValue.TimeStampOut : oldValue.TimeStampOut.Value.Date;
+            if (currentDateOut.NullableEquals(oldDateOut) == false)
+            {
+                // TimeStampOut is null by default. It means TimeStampOut is equals to LogDate
+                var dontSave = oldValue.TimeStampOut == null && newValue.TimeStampOut != null && newValue.TimeStampOut.Value.Date == newValue.LogDate.Date;
+
+                if (dontSave == false)
+                {
+                    changes.Add(new UserActivityItem()
+                    {
+                        EntityId = newValue.RowID.Value,
+                        Description = $"Updated date out from '{oldValue.TimeStampOut.ToShortDateString()}' to '{newValue.TimeStampOut.ToShortDateString()}' {suffixIdentifier}",
+                        ChangedEmployeeId = newValue.EmployeeID.Value
+                    });
+                }
+            }
+            if (newValue.BranchID != oldValue.BranchID)
+            {
+                var oldBranch = "";
+                var newBranch = "";
+
+                if (oldValue.BranchID.HasValue)
+                    oldBranch = branches.Where(x => x.RowID == oldValue.BranchID).FirstOrDefault()?.Name;
+                if (newValue.BranchID.HasValue)
+                    newBranch = branches.Where(x => x.RowID == newValue.BranchID).FirstOrDefault()?.Name;
+
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = newValue.RowID.Value,
+                    Description = $"Updated branch from '{oldBranch}' to '{newBranch}' {suffixIdentifier}",
+                    ChangedEmployeeId = newValue.EmployeeID.Value
+                });
+            }
+
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
+        }
     }
 }

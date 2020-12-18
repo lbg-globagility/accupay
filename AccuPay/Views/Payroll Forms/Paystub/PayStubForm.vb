@@ -1,6 +1,5 @@
 Option Strict On
 
-Imports System.Collections.Concurrent
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
@@ -35,9 +34,9 @@ Public Class PayStubForm
 
     Private _pageNo As Integer = 0
 
-    Private _lastPageNo As Integer = 0
+    Private _lastPaystubPageNo As Integer = 0
 
-    Private _totalItems As Integer = 0
+    Private _totalPaystubs As Integer = 0
 
     Dim employeepicture As New DataTable
 
@@ -45,16 +44,11 @@ Public Class PayStubForm
     Private _currentPayToDate As Date? = Nothing
     Private _currentPayperiodId As Integer? = Nothing
 
-    Private _totalPaystubs As Integer = 0
-    Private _finishedPaystubs As Integer = 0
-
     Dim currentEmployeeNumber As String = Nothing
 
     Dim selectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
     Dim unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
-
-    Private _results As BlockingCollection(Of PaystubEmployeeResult)
 
     Private _originalActualAdjustments As List(Of ActualAdjustment)
 
@@ -79,8 +73,6 @@ Public Class PayStubForm
     Sub New()
 
         InitializeComponent()
-
-        _results = New BlockingCollection(Of PaystubEmployeeResult)()
 
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
@@ -174,9 +166,6 @@ Public Class PayStubForm
         ToolStrip1.Enabled = _bool
 
         Panel5.Enabled = _bool
-
-        MDIPrimaryForm.systemprogressbar.Value = 0
-        MDIPrimaryForm.systemprogressbar.Visible = CBool(Not _bool)
 
     End Sub
 
@@ -310,12 +299,12 @@ Public Class PayStubForm
             Dim limit = ItemsPerPage
 
             Dim parameters = New Object() {
-            orgztnID,
-            tsSearch.Text,
-            _currentPayperiodId,
-            offset,
-            limit
-        }
+                orgztnID,
+                tsSearch.Text,
+                _currentPayperiodId,
+                offset,
+                limit
+            }
 
             Dim n_ReadSQLProcedureToDatatable =
             New SQL("CALL SEARCH_employee_paystub(?1, ?2, ?3, ?4, ?5);",
@@ -328,8 +317,8 @@ Public Class PayStubForm
                 dgvemployees.Rows.Add(row_array)
             Next
 
-            _totalItems = CInt(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {_currentPayperiodId};"))
-            _lastPageNo = CInt({Math.Ceiling(_totalItems / ItemsPerPage) - 1, 0}.Max())
+            _totalPaystubs = CInt(EXECQUER($"SELECT COUNT(RowID) FROM paystub WHERE OrganizationID={orgztnID} AND PayPeriodID = {_currentPayperiodId};"))
+            _lastPaystubPageNo = CInt({Math.Ceiling(_totalPaystubs / ItemsPerPage) - 1, 0}.Max())
 
             With dgvemployees
                 .Columns("RowID").Visible = False
@@ -481,9 +470,9 @@ Public Class PayStubForm
             Case PaginationAction.Previous
                 _pageNo = If(1 < _pageNo, _pageNo - 1, 0)
             Case PaginationAction.Next
-                _pageNo = If(_pageNo < _lastPageNo, _pageNo + 1, _lastPageNo)
+                _pageNo = If(_pageNo < _lastPaystubPageNo, _pageNo + 1, _lastPaystubPageNo)
             Case PaginationAction.Last
-                _pageNo = _lastPageNo
+                _pageNo = _lastPaystubPageNo
         End Select
 
         Await LoadEmployeesAsync()
@@ -660,30 +649,104 @@ Public Class PayStubForm
         End If
     End Function
 
-    Sub GeneratePayroll()
+    Async Function GeneratePayroll() As Task
 
         If _currentPayperiodId Is Nothing Then
-            GeneratePayrollToolStripButton.Enabled = True
             Return
         End If
 
         Dim payPeriod = _payPeriodRepository.GetById(_currentPayperiodId.Value)
         If payPeriod Is Nothing OrElse payPeriod?.RowID Is Nothing OrElse payPeriod?.OrganizationID Is Nothing Then
-            GeneratePayrollToolStripButton.Enabled = True
             Return
         End If
 
         If payPeriod.Status <> PayPeriodStatus.Open Then
             MessageBoxHelper.Warning("Only ""Open"" pay periods can be computed.")
-            GeneratePayrollToolStripButton.Enabled = True
             Return
         End If
 
+        'We are using a fresh instance of EmployeeRepository
+        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        'later, we can let the user choose the employees that they want to generate.
+        Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
+
+        Dim generator As New PayrollGeneration(employees, additionalProgressCount:=1)
+        Dim progressDialog = New ProgressDialog(generator, "Generating payroll...")
+
+        MDIPrimaryForm.Enabled = False
+        progressDialog.Show()
+
+        generator.SetCurrentMessage("Loading resources...")
+        GetResources(
+            progressDialog,
+            Sub(resourcesTask)
+
+                If resourcesTask Is Nothing Then
+
+                    HandleErrorLoadingResources(progressDialog)
+                    Return
+                End If
+
+                generator.IncreaseProgress("Finished loading resources.")
+
+                Dim generationTask = Task.Run(
+                    Async Function()
+                        Await generator.Start(resourcesTask.Result, New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
+                    End Function
+                )
+
+                generationTask.ContinueWith(
+                    Sub() GeneratePayrollOnSuccess(generator.Results, progressDialog),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext
+                )
+
+                generationTask.ContinueWith(
+                    Sub(t) GeneratePayrollOnError(t, progressDialog),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnFaulted,
+                    TaskScheduler.FromCurrentSynchronizationContext
+                )
+            End Sub)
+
+    End Function
+
+    Private Async Sub GeneratePayrollOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
+
+        CloseProgressDialog(progressDialog)
+
+        Dim saveResults = results.Select(Function(r) CType(r, PaystubEmployeeResult)).ToList()
+
+        Dim dialog = New EmployeeResultsDialog(
+            saveResults,
+            title:="Payroll Results",
+            generationDescription:="Payroll generation",
+            entityDescription:="paystubs") With {
+            .Owner = Me
+        }
+
+        dialog.ShowDialog()
+        Await RefreshForm()
+
+        Await TimeEntrySummaryForm.LoadPayPeriods()
+
+    End Sub
+
+    Private Sub GeneratePayrollOnError(t As Task, progressDialog As ProgressDialog)
+
+        CloseProgressDialog(progressDialog)
+
+        _logger.Error("Error on generating payroll.", t.Exception)
+        MsgBox("Something went wrong while generating the payroll . Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Generation")
+
+    End Sub
+
+    Private Sub GetResources(progressDialog As ProgressDialog, callBackAfterLoadResources As Action(Of Task(Of PayrollResources)))
         Dim resources = MainServiceProvider.GetRequiredService(Of PayrollResources)
 
-        Dim loadTask = Task.Factory.StartNew(
+        Dim loadTask = Task.Run(
             Function()
-
                 Dim resourcesTask = resources.Load(
                     payPeriodId:=_currentPayperiodId.Value,
                     organizationId:=z_OrganizationID,
@@ -692,156 +755,45 @@ Public Class PayStubForm
                 resourcesTask.Wait()
 
                 Return resources
-            End Function,
-            0
-        )
+            End Function)
 
         loadTask.ContinueWith(
-            AddressOf LoadingPayrollDataOnSuccess,
+            callBackAfterLoadResources,
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnRanToCompletion,
             TaskScheduler.FromCurrentSynchronizationContext
         )
 
         loadTask.ContinueWith(
-            AddressOf LoadingPayrollDataOnError,
+            Sub(t) LoadingResourcesOnError(t, progressDialog),
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
     End Sub
 
-    Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
-        GeneratePayrollToolStripButton.Enabled = True
-        ThreadingPayrollGeneration(t.Result)
-    End Sub
+    Private Sub LoadingResourcesOnError(t As Task, progressDialog As ProgressDialog)
 
-    Private Sub LoadingPayrollDataOnError(t As Task)
-        GeneratePayrollToolStripButton.Enabled = True
         _logger.Error("Error loading one of the payroll data.", t.Exception)
+
+        HandleErrorLoadingResources(progressDialog)
+
+    End Sub
+
+    Private Shared Sub HandleErrorLoadingResources(progressDialog As ProgressDialog)
+        CloseProgressDialog(progressDialog)
+
         MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
-        Me.Enabled = True
     End Sub
 
-    Private Sub ThreadingPayrollGeneration(resources As PayrollResources)
-        Me.Enabled = False
+    Private Shared Sub CloseProgressDialog(progressDialog As ProgressDialog)
 
-        Try
-            ProgressTimer.Start()
+        MDIPrimaryForm.Enabled = True
 
-            _finishedPaystubs = 0
-            _totalPaystubs = resources.Employees.Count
+        If progressDialog Is Nothing Then Return
 
-            _results = New BlockingCollection(Of PaystubEmployeeResult)()
-
-            Dim generator = MainServiceProvider.GetRequiredService(Of PayrollGeneration)
-
-            Dim generationTask = Task.Run(
-                Sub()
-                    'TEMPORARY set to synchronous since there is a race condition issue
-                    'that is hard to debug
-                    'Parallel.ForEach(
-                    '        resources.Employees,
-                    '        Sub(employee)
-
-                    '            _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,
-                    '                                            userId:=z_User,
-                    '                                            employee:=employee,
-                    '                                            resources:=resources))
-
-                    '            Interlocked.Increment(_finishedPaystubs)
-                    '        End Sub)
-                    resources.Employees.ToList().ForEach(
-                        Sub(employee)
-
-                            Dim result = generator.DoProcess(
-                                organizationId:=z_OrganizationID,
-                                userId:=z_User,
-                                employee:=employee,
-                                resources:=resources)
-
-                            _results.Add(result)
-
-                            If result.IsSuccess Then
-
-                                RecordPaytubGenerated(result)
-                            End If
-
-                            Interlocked.Increment(_finishedPaystubs)
-                        End Sub)
-                End Sub
-            )
-
-            generationTask.ContinueWith(
-                AddressOf GeneratingPayrollOnSuccess,
-                CancellationToken.None,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
-                TaskScheduler.FromCurrentSynchronizationContext
-            )
-
-            generationTask.ContinueWith(
-                AddressOf GeneratingPayrollOnError,
-                CancellationToken.None,
-                TaskContinuationOptions.OnlyOnFaulted,
-                TaskScheduler.FromCurrentSynchronizationContext
-            )
-        Catch ex As Exception
-            _logger.Error("Error loading the employees", ex)
-        End Try
-    End Sub
-
-    Private Sub RecordPaytubGenerated(result As PaystubEmployeeResult)
-
-        Dim payPeriodString = GetPayPeriodString()
-
-        Dim activityItem = New List(Of UserActivityItem) From {
-            New UserActivityItem() With
-            {
-                .EntityId = result.PaystubId.Value,
-                .Description = $"Generated paystub for payroll {payPeriodString}.",
-                .ChangedEmployeeId = result.EmployeeId
-            }
-        }
-
-        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        userActivityService.CreateRecord(
-          z_User,
-          FormEntityName,
-          z_OrganizationID,
-          UserActivityRepository.RecordTypeDelete,
-          activityItem)
-    End Sub
-
-    Private Sub ProgressTimer_Tick(sender As Object, e As EventArgs) Handles ProgressTimer.Tick
-
-        Dim percentComplete As Integer = CInt((_finishedPaystubs / _totalPaystubs) * 100)
-        MDIPrimaryForm.systemprogressbar.Value = percentComplete
-
-    End Sub
-
-    Private Async Sub GeneratingPayrollOnSuccess(t As Task)
-
-        Dim dialog = New EmployeeResultsDialog(
-            _results.ToList(),
-            title:="Payroll Results",
-            generationDescription:="Payroll generation",
-            entityDescription:="paystubs") With {
-            .Owner = Me
-        }
-
-        dialog.ShowDialog()
-        ProgressTimer.Stop()
-        Await RefreshForm()
-
-        Await TimeEntrySummaryForm.LoadPayPeriods()
-
-        Me.Enabled = True
-    End Sub
-
-    Private Sub GeneratingPayrollOnError(t As Task)
-        _logger.Error("Error on generating payroll.", t.Exception)
-        MsgBox("Something went wrong while generating the payroll . Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Generation")
-        Me.Enabled = True
+        progressDialog.Close()
+        progressDialog.Dispose()
     End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
@@ -1750,7 +1702,7 @@ Public Class PayStubForm
           z_User,
           FormEntityName,
           z_OrganizationID,
-          UserActivityRepository.RecordTypeEdit,
+          UserActivityRepository.RecordTypeDelete,
           activityItem)
     End Function
 
@@ -1878,7 +1830,7 @@ Public Class PayStubForm
         Await VIEW_payperiodofyear()
     End Function
 
-    Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
+    Private Async Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
 
         If _currentPayperiodId Is Nothing Then
 
@@ -1895,9 +1847,7 @@ Public Class PayStubForm
 
         If Not confirm Then Return
 
-        GeneratePayrollToolStripButton.Enabled = False
-
-        GeneratePayroll()
+        Await GeneratePayroll()
 
     End Sub
 
@@ -2123,6 +2073,8 @@ Public Class PayStubForm
             sender Is CostCenterReportByBranchActualToolStripMenuItem,
             CostCenterReportProvider.ReportType.Branch,
             CostCenterReportProvider.ReportType.All)
+
+        provider.Owner = Me
 
         provider.Run()
 

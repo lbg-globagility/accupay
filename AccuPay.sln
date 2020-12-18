@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
@@ -33,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccuPay.Infrastructure", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPay.CrystalReports", "AccuPay.CrystalReports\AccuPay.CrystalReports.csproj", "{1AF57D61-BC13-40E1-A0BC-BBDFDD223B7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPay.CrystalReportsWeb", "AccuPay.CrystalReportsWeb\AccuPay.CrystalReportsWeb.csproj", "{81F1C726-5406-4D5D-83C1-593F92E4E5EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPay.CrystalReportsAPI", "AccuPay.CrystalReportsAPI\AccuPay.CrystalReportsAPI.csproj", "{81F1C726-5406-4D5D-83C1-593F92E4E5EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

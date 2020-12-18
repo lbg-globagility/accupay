@@ -96,23 +96,24 @@ namespace AccuPay.Data.Services
 
         private readonly WithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
-        public PayrollResources(CalendarService calendarService,
-                                ListOfValueService listOfValueService,
-                                SystemOwnerService systemOwnerService,
-                                ActualTimeEntryRepository actualTimeEntryRepository,
-                                AllowanceRepository allowanceRepository,
-                                EmployeeRepository employeeRepository,
-                                LeaveRepository leaveRepository,
-                                LoanRepository loanScheduleRepository,
-                                PayPeriodRepository payPeriodRepository,
-                                PaystubRepository paystubRepository,
-                                PhilHealthBracketRepository philHealthBracketRepository,
-                                ProductRepository productRepository,
-                                SalaryRepository salaryRepository,
-                                SocialSecurityBracketRepository socialSecurityBracketRepository,
-                                TimeEntryRepository timeEntryRepository,
-                                WithholdingTaxBracketRepository withholdingTaxBracketRepository,
-                                BonusRepository bonusRepository)
+        public PayrollResources(
+            CalendarService calendarService,
+            ListOfValueService listOfValueService,
+            SystemOwnerService systemOwnerService,
+            ActualTimeEntryRepository actualTimeEntryRepository,
+            AllowanceRepository allowanceRepository,
+            EmployeeRepository employeeRepository,
+            LeaveRepository leaveRepository,
+            LoanRepository loanScheduleRepository,
+            PayPeriodRepository payPeriodRepository,
+            PaystubRepository paystubRepository,
+            PhilHealthBracketRepository philHealthBracketRepository,
+            ProductRepository productRepository,
+            SalaryRepository salaryRepository,
+            SocialSecurityBracketRepository socialSecurityBracketRepository,
+            TimeEntryRepository timeEntryRepository,
+            WithholdingTaxBracketRepository withholdingTaxBracketRepository,
+            BonusRepository bonusRepository)
         {
             _calendarService = calendarService;
             _listOfValueService = listOfValueService;
@@ -133,9 +134,7 @@ namespace AccuPay.Data.Services
             _withholdingTaxBracketRepository = withholdingTaxBracketRepository;
         }
 
-        public async Task Load(int payPeriodId,
-                               int organizationId,
-                               int userId)
+        public async Task Load(int payPeriodId, int organizationId, int userId)
         {
             _payPeriodId = payPeriodId;
             _organizationId = organizationId;
@@ -156,7 +155,6 @@ namespace AccuPay.Data.Services
             await LoadEmployees();
             await LoadLeaves();
             await LoadListOfValueCollection();
-            // LoadCalendarCollection() should be executed following list of values
             await LoadCalendarCollection();
             await LoadPaystubs();
             // LoadSchedules() should be executed following paystubs
@@ -219,23 +217,18 @@ namespace AccuPay.Data.Services
 
         private async Task LoadCalendarCollection()
         {
-            // LoadListOfValueCollection() should be executed before LoadCalendarCollection()
-
             var previousCutoffDateForCheckingLastWorkingDay =
-                    PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom);
+                PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom);
 
             try
             {
-                await Task.Run(() =>
-                {
-                    var payPeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo);
+                var payPeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo);
 
-                    CalendarCollection = _calendarService.GetCalendarCollection(payPeriod);
-                });
+                CalendarCollection = await _calendarService.GetCalendarCollectionAsync(payPeriod);
             }
             catch (Exception ex)
             {
-                throw new ResourceLoadingException("EmployeeDutySchedules", ex);
+                throw new ResourceLoadingException("CalendarCollection", ex);
             }
         }
 

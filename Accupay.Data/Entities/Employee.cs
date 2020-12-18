@@ -1,28 +1,14 @@
-﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employee")]
-    public class Employee
+    public class Employee : OrganizationalEntity
     {
-        [Key]
-        public int? RowID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-        public int? OrganizationID { get; set; }
         public int? PositionID { get; set; }
         public int? PayFrequencyID { get; set; }
         public string Salutation { get; set; }
@@ -180,14 +166,12 @@ namespace AccuPay.Data.Entities
             payPeriod.PayFromDate.Date <= StartDate.Date &&
             StartDate.Date <= payPeriod.PayToDate.Date;
 
-        public static Employee NewEmployee(int organizationId, int userId)
+        public static Employee NewEmployee(int organizationId)
         {
             return new Employee
             {
                 RowID = null,
                 OrganizationID = organizationId,
-                Created = DateTime.Now,
-                CreatedBy = userId,
                 PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId,
                 CalcHoliday = true,
                 CalcNightDiff = true,

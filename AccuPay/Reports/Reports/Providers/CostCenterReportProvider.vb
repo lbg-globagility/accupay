@@ -35,6 +35,10 @@ Public Class CostCenterReportProvider
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    'Passing the Owner Form is kind of hackish. Maybe replace this with
+    'a better approach of disabling the parent form in the future.
+    Public Property Owner As Form
+
     Public Property IsActual As Boolean
     Public Property SelectedReportType As ReportType
 
@@ -105,6 +109,7 @@ Public Class CostCenterReportProvider
     Private Sub GenerateSingleBranchReport(selectedMonth As Date, selectedBranch As Branch, saveFilePath As String)
         GetResources(
             selectedMonth,
+            Nothing,
             Sub(t)
                 Dim dataService As New CostCenterReportDataService()
                 Dim payPeriodModels = dataService.GetData(
@@ -123,26 +128,34 @@ Public Class CostCenterReportProvider
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
         Dim branches = branchRepository.GetAll()
 
-        Dim generator As New CostCenterReportGeneration(branches, IsActual)
+        Dim generator As New CostCenterReportGeneration(branches, IsActual, additionalProgressCount:=1)
+        Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
 
-        Dim resources = MainServiceProvider.GetRequiredService(Of CostCenterReportResources)
-        resources.Load(selectedMonth)
+        If Owner IsNot Nothing Then
+            Owner.Enabled = False
+        End If
+        progressDialog.Show()
 
-        GetResources(selectedMonth,
-            Sub()
+        generator.SetCurrentMessage("Loading resources...")
+        GetResources(
+            selectedMonth,
+            progressDialog,
+            Sub(resourcesTask)
+
+                generator.IncreaseProgress("Finished loading resources.")
+
                 Dim generationTask = Task.Run(
                     Sub()
-                        generator.Start(resources)
+                        generator.Start(resourcesTask.Result)
                     End Sub
                 )
 
-                RunGenerateExportTask(saveFilePath, generator, generationTask)
+                RunGenerateExportTask(generationTask, saveFilePath, generator, progressDialog)
             End Sub)
+
     End Sub
 
-    Private Sub RunGenerateExportTask(saveFilePath As String, generator As CostCenterReportGeneration, generationTask As Task)
-        Dim progressDialog = New ProgressDialog(generator, "Generating cost center report...")
-        progressDialog.Show()
+    Private Sub RunGenerateExportTask(generationTask As Task, saveFilePath As String, generator As CostCenterReportGeneration, progressDialog As ProgressDialog)
 
         generationTask.ContinueWith(
             Sub() GenerationOnSuccess(generator.Results, progressDialog, saveFilePath),
@@ -161,8 +174,7 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerationOnSuccess(results As IReadOnlyCollection(Of IResult), progressDialog As ProgressDialog, saveFilePath As String)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        CloseProgressDialog(progressDialog)
 
         Dim saveResults = results.
             Select(Function(r) CType(r, CostCenterReportGenerationResult)).
@@ -179,8 +191,7 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerationOnError(t As Task, progressDialog As ProgressDialog)
 
-        progressDialog.Close()
-        progressDialog.Dispose()
+        CloseProgressDialog(progressDialog)
 
         Const MessageTitle As String = "Generate Cost Center Report"
 
@@ -194,7 +205,7 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Sub GetResources(selectedMonth As Date, callBackAfterLoadResources As Action(Of Task(Of CostCenterReportResources)))
+    Private Sub GetResources(selectedMonth As Date, progressDialog As ProgressDialog, callBackAfterLoadResources As Action(Of Task(Of CostCenterReportResources)))
         Dim resources = MainServiceProvider.GetRequiredService(Of CostCenterReportResources)
 
         Dim generationTask = Task.Run(
@@ -213,15 +224,33 @@ Public Class CostCenterReportProvider
         )
 
         generationTask.ContinueWith(
-            AddressOf LoadingResourceOnError,
+            Sub(resourcesTask) LoadingResourcesOnError(resourcesTask, progressDialog),
             CancellationToken.None,
             TaskContinuationOptions.OnlyOnFaulted,
             TaskScheduler.FromCurrentSynchronizationContext
         )
     End Sub
 
-    Private Sub LoadingResourceOnError(obj As Task(Of CostCenterReportResources))
+    Private Sub LoadingResourcesOnError(resourcesTask As Task(Of CostCenterReportResources), progressDialog As ProgressDialog)
+
+        CloseProgressDialog(progressDialog)
+
         MsgBox("Something went wrong while loading the cost center report resources. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
+
+    End Sub
+
+    Private Sub CloseProgressDialog(progressDialog As ProgressDialog)
+
+        If Owner IsNot Nothing Then
+            Owner.Enabled = True
+        End If
+
+        If progressDialog IsNot Nothing Then
+
+            progressDialog.Close()
+            progressDialog.Dispose()
+
+        End If
     End Sub
 
     Private Shared Function GetSelectedBranch() As Branch

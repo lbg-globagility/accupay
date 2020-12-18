@@ -1,27 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeesalary")]
-    public class Salary : BaseEntity
+    public class Salary : EmployeeDataEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
-        public int? EmployeeID { get; set; }
-
-        public int? OrganizationID { get; set; }
-
         public int? PositionID { get; set; }
 
         public decimal PhilHealthDeduction { get; set; }

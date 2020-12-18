@@ -15,24 +15,7 @@ namespace AccuPay.Web
                 ConfigureDbContextOptions(configuration, options);
             });
 
-            // passing DbContextOptions for services that needs to directly access PayrollContext.
-            // It is prohibited to access PayrollContext unless there is no other choice
-            // like in the case of services accessed in multiple threads.
-            services.AddSingleton(serviceProvider =>
-            {
-                var options = GetDbContextOptions(configuration);
-                return new DbContextOptionsService(options);
-            });
-
             return services;
-        }
-
-        private static DbContextOptions GetDbContextOptions(IConfiguration configuration)
-        {
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-            ConfigureDbContextOptions(configuration, builder);
-
-            return builder.Options;
         }
 
         private static void ConfigureDbContextOptions(IConfiguration configuration, DbContextOptionsBuilder dbContextOptionsBuilder)

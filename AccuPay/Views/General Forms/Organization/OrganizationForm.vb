@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -9,6 +9,7 @@ Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
+Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class OrganizationForm
@@ -41,8 +42,6 @@ Public Class OrganizationForm
 
         OrganizationGridView.AutoGenerateColumns = False
         Await FillOrganizationList()
-
-        Await FillOrganizationData()
 
         FirstPayPeriodGroupBox.Visible = _policy.HasDifferentPayPeriodDates
         SetMaxAndMinDateOfFirstPayPeriod()
@@ -120,6 +119,9 @@ Public Class OrganizationForm
     End Function
 
     Private Async Function FillOrganizationList() As Task
+
+        RemoveHandler OrganizationGridView.SelectionChanged, AddressOf OrganizationGridView_SelectionChanged
+
         Dim list = Await _organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)
 
         Dim organizations = list.organizations.
@@ -139,6 +141,11 @@ Public Class OrganizationForm
         ToList()
 
         OrganizationGridView.DataSource = _organizations
+
+        Await FillOrganizationData()
+
+        AddHandler OrganizationGridView.SelectionChanged, AddressOf OrganizationGridView_SelectionChanged
+
     End Function
 
     Private Async Function FillOrganizationData() As Task
@@ -228,7 +235,7 @@ Public Class OrganizationForm
         OrganizationGridView.Enabled = False
         NewButton.Enabled = False
 
-        _currentOrganization = Organization.NewOrganization(z_User, Z_Client)
+        _currentOrganization = Organization.NewOrganization(Z_Client)
 
         txtcompanyName.Focus()
 
@@ -318,11 +325,62 @@ Public Class OrganizationForm
 
     End Sub
 
+    Private Async Sub DeleteButton_Click(sender As Object, e As EventArgs) Handles DeleteButton.Click
+
+        If _currentOrganization?.RowID Is Nothing Then
+            MessageBoxHelper.Warning("No organization selected!")
+            Return
+        End If
+
+        Const messageTitle As String = "Delete Organization"
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete organization: {_currentOrganization.Name}?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
+        DeleteButton.Enabled = False
+        Me.Cursor = Cursors.WaitCursor
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Dim dataService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
+                Await dataService.DeleteAsync(
+                    id:=_currentOrganization.RowID.Value,
+                    currentlyLoggedInUserId:=z_User)
+
+                myBalloon("Successfully Deleted", "Deleted", lblSaveMsg, , -100)
+
+                Await FillOrganizationList()
+
+            End Function,
+            dbUpdateCallBack:=
+            Sub(dbu As DbUpdateException)
+
+                For Each result In dbu.Entries
+                    Console.WriteLine($"Type: {result.Entity.GetType().Name} was part of the problem. | Error Message: {dbu.Message} | Inner Exception: {dbu.InnerException?.Message}")
+                Next
+
+                MessageBoxHelper.ErrorMessage(
+                    $"Organization: {_currentOrganization.Name} cannot be deleted because it already has transactions in the system. You can try renaming the organization instead.",
+                    messageTitle)
+
+            End Sub)
+
+        DeleteButton.Enabled = True
+        Me.Cursor = Cursors.Default
+
+    End Sub
+
     Private Async Function SaveOrganzation(isNew As Boolean, userRoles As List(Of UserRoleIdData), messageTitle As String) As Task
 
         If userRoles.Any(Function(r) r.RoleId.HasValue AndAlso r.RoleId.Value > 0) Then
 
         End If
+
+        SaveButton.Enabled = False
+        Me.Cursor = Cursors.WaitCursor
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
@@ -333,12 +391,13 @@ Public Class OrganizationForm
 
                 If isNew AndAlso _policy.HasDifferentPayPeriodDates Then
                     dataService.ValidateDefaultPayPeriodData(firstHalf, endOfTheMonth)
+
                 End If
 
                 Dim organizationService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
                 Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
 
-                Await organizationService.SaveAsync(_currentOrganization)
+                Await organizationService.SaveAsync(_currentOrganization, z_User)
 
                 If isNew Then
 
@@ -378,6 +437,10 @@ Public Class OrganizationForm
                 End If
 
             End Function)
+
+        SaveButton.Enabled = True
+        Me.Cursor = Cursors.Default
+
     End Function
 
     Private Sub txtcompFaxNumTxt_TextChanged(sender As Object, e As EventArgs) Handles txtcompFaxNumTxt.TextChanged
@@ -445,77 +508,30 @@ Public Class OrganizationForm
         Return CType(OrganizationGridView.CurrentRow.DataBoundItem, Organization).CloneJson()
     End Function
 
-    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         Me.Close()
     End Sub
 
-    Private Sub addAddressLink1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles addAddressLink1.LinkClicked
+    Private Async Sub addAddressLink1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles addAddressLink1.LinkClicked
         Dim n_AddressClass As New AddressClass
 
         n_AddressClass.IsAddNew = True
 
         If n_AddressClass.ShowDialog("") = Windows.Forms.DialogResult.OK Then
 
-            Dim full_address = String.Empty
+            Dim originalAddressId = _currentOrganization.PrimaryAddressId
 
-            With n_AddressClass
+            Await FillAddress()
 
-                If .StreetAddress1 = Nothing Then
-                    full_address = Nothing
-                Else
-                    full_address = .StreetAddress1 & ","
-                End If
+            Dim address = CType(AddressComboBox.DataSource, List(Of Address))
 
-                If .StreetAddress2 <> Nothing Then
-                    full_address &= .StreetAddress2 & ","
-                End If
+            If originalAddressId.HasValue AndAlso address.Any(Function(a) a.RowID.Value = originalAddressId.Value) Then
 
-                If .Barangay <> Nothing Then
-                    full_address &= .Barangay & ","
-                End If
+                AddressComboBox.SelectedValue = originalAddressId
+            Else
 
-                If .City <> Nothing Then
-                    full_address &= .City & ","
-                End If
-
-                If .State <> Nothing Then
-                    full_address &= "," & .State & ","
-                End If
-
-                If .Country <> Nothing Then
-                    full_address &= .Country & ","
-                End If
-
-                If .ZipCode <> Nothing Then
-                    full_address &= .ZipCode
-                End If
-
-            End With
-
-            Dim addressstringlength = full_address.Length
-
-            Dim LastCharIsComma = String.Empty
-
-            Try
-                LastCharIsComma =
-                full_address.Substring((addressstringlength - 1), 1)
-            Catch ex As Exception
-                LastCharIsComma = String.Empty
-            End Try
-
-            If LastCharIsComma.Trim = "," Then
-                full_address = full_address.Substring(0, (addressstringlength - 1))
-
+                AddressComboBox.SelectedIndex = EmptyIndex
             End If
-
-            full_address = full_address.Replace(",,", ",")
-
-            If AddressComboBox.Items.Contains(full_address) = False Then
-                AddressComboBox.Items.Add(full_address)
-
-            End If
-
-            AddressComboBox.Text = full_address
 
         End If
 

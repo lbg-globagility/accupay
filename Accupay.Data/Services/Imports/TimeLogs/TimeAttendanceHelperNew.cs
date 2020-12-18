@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Data.ValueObjects;
@@ -31,12 +31,13 @@ namespace AccuPay.Data.Services
         private readonly int _organizationId;
         private readonly int _userId;
 
-        public TimeAttendanceHelperNew(List<TimeLogImportModel> importedTimeLogs,
-                                        List<Employee> employees,
-                                        List<EmployeeDutySchedule> employeeShifts,
-                                        List<Overtime> employeeOvertimes,
-                                        int organizationId,
-                                        int userId)
+        public TimeAttendanceHelperNew(
+            List<TimeLogImportModel> importedTimeLogs,
+            List<Employee> employees,
+            List<EmployeeDutySchedule> employeeShifts,
+            List<Overtime> employeeOvertimes,
+            int organizationId,
+            int userId)
         {
             _importedTimeAttendanceLogs = importedTimeLogs;
             _employees = employees;
@@ -45,8 +46,8 @@ namespace AccuPay.Data.Services
             _organizationId = organizationId;
             _userId = userId;
 
-            _logsGroupedByEmployee = TimeLogImportModel.
-                                        GroupByEmployee(_importedTimeAttendanceLogs);
+            _logsGroupedByEmployee = TimeLogImportModel
+                .GroupByEmployee(_importedTimeAttendanceLogs);
 
             GetEmployeeObjectOfLogs();
         }
@@ -57,10 +58,10 @@ namespace AccuPay.Data.Services
 
             foreach (var dayLogRecord in dayLogRecords)
             {
-                var timeAttendanceLogs = dayLogRecord.LogRecords.
-                                                        Where(d => d.IsTimeIn == null).
-                                                        OrderBy(d => d.DateTime).
-                                                        ToList();
+                var timeAttendanceLogs = dayLogRecord.LogRecords
+                    .Where(d => d.IsTimeIn == null)
+                    .OrderBy(d => d.DateTime)
+                    .ToList();
 
                 var index = 0;
                 var lastIndex = timeAttendanceLogs.Count - 1;
@@ -123,10 +124,10 @@ namespace AccuPay.Data.Services
 
                 foreach (var currentDate in CalendarHelper.EachDay(earliestDate.Value, lastDate.Value))
                 {
-                    var currentEmployeeLogs = employeeLogs.
-                                                Where(l => Nullable.Equals(l.LogDate, currentDate)).
-                                                Where(l => l.HasError == false).
-                                                ToList();
+                    var currentEmployeeLogs = employeeLogs
+                        .Where(l => l.LogDate == currentDate)
+                        .Where(l => l.HasError == false)
+                        .ToList();
 
                     if (currentEmployeeLogs.Any() == false)
                         continue;
@@ -170,19 +171,22 @@ namespace AccuPay.Data.Services
 
                 foreach (var logsByDay in logsByDayGroup)
                 {
-                    var logsByDayList = logsByDay.OrderBy(l => l.DateTime).ToList();
+                    var logsByDayList = logsByDay
+                        .Where(l => l.IsTimeIn.HasValue)
+                        .OrderBy(x => x.DateTime)
+                        .ToList();
 
                     if (logsByDay.Key == null)
                         continue;
 
                     var logDate = Convert.ToDateTime(logsByDay.Key);
 
-                    var firstTimeStampIn = logsByDayList.
-                                                FirstOrDefault(l => Nullable.Equals(l.IsTimeIn, true))?.
-                                                DateTime;
-                    var finalTimeStampOut = logsByDayList.
-                                                LastOrDefault(l => Nullable.Equals(l.IsTimeIn, false))?.
-                                                DateTime;
+                    var firstTimeStampIn = logsByDayList
+                        .FirstOrDefault(l => l.IsTimeIn.Value == true)?
+                        .DateTime;
+                    var finalTimeStampOut = logsByDayList
+                        .LastOrDefault(l => l.IsTimeIn.Value == false)?
+                        .DateTime;
 
                     TimeSpan? firstTimeIn, finalTimeOut;
 
@@ -199,7 +203,6 @@ namespace AccuPay.Data.Services
                     timeLogs.Add(new TimeLog()
                     {
                         LogDate = logDate,
-                        CreatedBy = _userId,
                         OrganizationID = _organizationId,
                         Employee = currentEmployee,
                         EmployeeID = currentEmployee.RowID,
@@ -258,13 +261,13 @@ namespace AccuPay.Data.Services
                 if (employeeId == null)
                     continue;
 
-                var currentEmployeeShifts = _employeeShifts.
-                                                Where(s => s.EmployeeID == employeeId).
-                                                ToList();
+                var currentEmployeeShifts = _employeeShifts
+                    .Where(s => s.EmployeeID == employeeId)
+                    .ToList();
 
-                var currentEmployeeOvertimes = _employeeOvertimes.
-                                                Where(o => o.EmployeeID == employeeId).
-                                                ToList();
+                var currentEmployeeOvertimes = _employeeOvertimes
+                    .Where(o => o.EmployeeID == employeeId)
+                    .ToList();
 
                 var employeeLogs = logGroup.ToList();
 
@@ -413,7 +416,13 @@ namespace AccuPay.Data.Services
         ///     ''' <returns></returns>
         private bool IsTodaysOvertime(Overtime overtime, DateTime currentDate, EmployeeDutySchedule currentShift)
         {
-            if (overtime == null || currentShift == null || overtime.OTStartDate != currentDate || overtime.OTStartTime == null || overtime.OTEndTime == null || currentShift.StartTime == null || currentShift.EndTime == null)
+            if (overtime == null ||
+                currentShift == null ||
+                overtime.OTStartDate != currentDate ||
+                overtime.OTStartTime == null ||
+                overtime.OTEndTime == null ||
+                currentShift.StartTime == null ||
+                currentShift.EndTime == null)
                 return false;
             else
                 return true;
@@ -422,10 +431,10 @@ namespace AccuPay.Data.Services
         private List<TimeLogImportModel> GetTimeLogsFromBounds(TimePeriod shiftBounds, List<TimeLogImportModel> timeAttendanceLogs, DayLogRecord lastDayLogRecord
     )
         {
-            var logRecords = timeAttendanceLogs.
-                                Where(t => t.DateTime >= shiftBounds.Start).
-                                Where(t => t.DateTime <= shiftBounds.End).
-                                ToList();
+            var logRecords = timeAttendanceLogs
+                .Where(t => t.DateTime >= shiftBounds.Start)
+                .Where(t => t.DateTime <= shiftBounds.End)
+                .ToList();
 
             if (lastDayLogRecord?.ShiftTimeOutBounds != null && lastDayLogRecord?.ShiftTimeOutBounds == shiftBounds.Start && lastDayLogRecord?.LogRecords != null)
             {
@@ -439,9 +448,9 @@ namespace AccuPay.Data.Services
                 // logging out for previous OT then logging in again for current shift
                 // we need to get at least one same log from previous day log record
                 // And transfer it to current logs
-                var shiftBoundsStartLogs = lastDayLogRecord.LogRecords.
-                                                        Where(l => l.DateTime == shiftBounds.Start).
-                                                        ToList();
+                var shiftBoundsStartLogs = lastDayLogRecord.LogRecords
+                    .Where(l => l.DateTime == shiftBounds.Start)
+                    .ToList();
 
                 if (shiftBoundsStartLogs.Count > 1)
                 {
@@ -464,12 +473,13 @@ namespace AccuPay.Data.Services
             if (previousTimeOutBounds != null)
             {
                 if (currentDayStartDateTime != null && currentDayStartDateTime == previousTimeOutBounds)
-
+                {
                     // if this happens, this maybe caused by an employee that after previous overtime, [A1]
                     // he continued his current shift right after
                     // ex: previous day OT end = 9:00 AM | current day shift start = 9:00 AM
 
                     return previousTimeOutBounds.Value;
+                }
 
                 return previousTimeOutBounds.Value.AddSeconds(1);
             }
@@ -477,14 +487,16 @@ namespace AccuPay.Data.Services
             DateTime shiftMinBound;
 
             if (currentDayStartDateTime != null)
-
+            {
                 // If merong shift or OT, minimum bound should be earliest shift or OT - HOURS_BUFFER (4 hours)
                 // (ex. 9:00 AM - 5:00 PM shift -> 5:00 AM minimum bound)
                 shiftMinBound = currentDayStartDateTime.Value.Add(TimeSpan.FromHours(-HOURS_BUFFER));
+            }
             else
-
+            {
                 // If walang shift and OT, minimum bound should be 12:00 AM
                 shiftMinBound = currentDate.ToMinimumHourValue();
+            }
 
             return shiftMinBound;
         }
@@ -498,38 +510,43 @@ namespace AccuPay.Data.Services
             DateTime? currentDayEndTime = GetEndDateTime(currentShift, lastOvertime);
 
             if (nextShift == null)
-
+            {
                 // if there is no next shift, disregard the next day overtime
                 // scenario: should be next shift is (6am-3pm), OT is (3pm-4pm)
                 // if no shift, the nextDayStartDateTime would be 3pm which would be wrong
                 earliestOvertimeNextDay = null;
+            }
 
             DateTime? nextDayStartDateTime = GetStartDateTime(nextShift, earliestOvertimeNextDay);
 
             if (currentDayEndTime == null && nextDayStartDateTime == null)
+            {
                 // no current day shift or overtime
                 // and no next day shift or overtime
                 // = maximum bound should be 11:59 PM
                 shiftMaxBound = currentDate.ToMaximumHourValue();
+            }
             else if (currentDayEndTime != null && nextDayStartDateTime != null)
             {
                 // has current day shift or overtime
                 // and has next day shift or overtime
 
                 if (currentDayEndTime > nextDayStartDateTime)
-
+                {
                     // this may happen when there is input error
                     // if current shift or late overtime end time is greater than
                     // next day shift or early overtime start time
 
                     shiftMaxBound = nextDayStartDateTime.Value.Add(TimeSpan.FromHours(-hoursBuffer)).Add(TimeSpan.FromSeconds(-1));
+                }
                 else if (currentDayEndTime == nextDayStartDateTime)
-
+                {
                     // if this happens, this maybe caused by an employee that after overtime, [A1]
                     // he continued his next shift right after
                     // ex: current OT end = 9:00 AM | next day shift start = 9:00 AM
 
                     shiftMaxBound = nextDayStartDateTime.Value;
+                }
                 else
                 {
                     // maximum bound should be halfway of the
@@ -549,10 +566,13 @@ namespace AccuPay.Data.Services
                 }
             }
             else if (currentDayEndTime != null)
+            {
                 // currentDayEndTime IsNot Nothing AndAlso nextDayStartDateTime Is Nothing
 
                 shiftMaxBound = currentDayEndTime.ToMaximumHourValue().Value;
+            }
             else
+            {
                 // nextDayStartDateTime IsNot Nothing AndAlso currentDayEndTime Is Nothing
 
                 // if no next day shift or over time but has
@@ -560,6 +580,7 @@ namespace AccuPay.Data.Services
                 // ex: next day start time is 9:00 AM - max bound time = 4:59 AM
                 // ex: next day start end time is 5:00 AM - max bound time = 12:59 AM
                 shiftMaxBound = nextDayStartDateTime.Value.Add(TimeSpan.FromHours(-HOURS_BUFFER)).Add(TimeSpan.FromSeconds(-1));
+            }
 
             return shiftMaxBound;
         }
@@ -654,10 +675,10 @@ namespace AccuPay.Data.Services
             foreach (var dayLogRecord in dayLogRecords)
             {
                 // check if logs for the day was ok
-                var logsWithTimeStatus = dayLogRecord.LogRecords.
-                                                        Where(l => l.IsTimeIn != null).
-                                                        OrderBy(l => l.DateTime).
-                                                        ToList();
+                var logsWithTimeStatus = dayLogRecord.LogRecords
+                    .Where(l => l.IsTimeIn != null)
+                    .OrderBy(l => l.DateTime)
+                    .ToList();
 
                 string warningMessage = null;
 
@@ -665,7 +686,9 @@ namespace AccuPay.Data.Services
                 // because it means its logs are alternating IN then OUT
                 // if it is odd then there are succeeding logs that are either both IN or OUT
                 if ((logsWithTimeStatus.Count % 2 != 0))
+                {
                     warningMessage = succeedingInOrOutLogsWarningMessage;
+                }
                 else
                 {
                     // Check if there are succeeding logs that are either both IN or OUT
@@ -674,7 +697,7 @@ namespace AccuPay.Data.Services
 
                     foreach (var log in logsWithTimeStatus)
                     {
-                        if (Nullable.Equals(log.IsTimeIn, isTimeIn) == false)
+                        if (log.IsTimeIn != isTimeIn)
                         {
                             warningMessage = succeedingInOrOutLogsWarningMessage;
 
@@ -688,18 +711,22 @@ namespace AccuPay.Data.Services
                 if (warningMessage != null)
                 {
                     foreach (var log in logsWithTimeStatus)
+                    {
                         log.WarningMessage = warningMessage;
+                    }
                 }
             }
 
             // add warning message for logs that were not including in a "day".
-            var logsWithNoDateOrTimeStatus = _importedTimeAttendanceLogs.
-                                                Where(l => l.LogDate == null).
-                                                Where(l => l.IsTimeIn == null).
-                                                ToList();
+            var logsWithNoDateOrTimeStatus = _importedTimeAttendanceLogs
+                .Where(l => l.LogDate == null)
+                .Where(l => l.IsTimeIn == null)
+                .ToList();
 
             foreach (var log in logsWithNoDateOrTimeStatus)
+            {
                 log.WarningMessage = "The analyzer were not able to figure out this log's date.";
+            }
         }
 
         private class DayLogRecord

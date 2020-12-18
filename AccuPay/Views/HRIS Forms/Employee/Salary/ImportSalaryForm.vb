@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -101,7 +101,6 @@ Public Class ImportSalaryForm
 
             Dim salary = New Salary With {
                 .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
                 .PositionID = employee.PositionID,
                 .EffectiveFrom = record.EffectiveFrom.Value,
@@ -180,8 +179,8 @@ Public Class ImportSalaryForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Import Salary",
             Async Function()
-                Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
-                Await salaryRepository.SaveManyAsync(_salaries.ToList())
+                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Await dataService.SaveManyAsync(_salaries.ToList(), z_User)
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In _salaries

@@ -22,10 +22,14 @@ Partial Class EmployeeResultsDialog
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvSuccess = New System.Windows.Forms.DataGridView()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SuccessResultColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -39,10 +43,6 @@ Partial Class EmployeeResultsDialog
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FailedResultColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SuccessResultColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgvSuccess, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.tbpSuccess.SuspendLayout()
@@ -54,22 +54,55 @@ Partial Class EmployeeResultsDialog
         '
         Me.dgvSuccess.AllowUserToAddRows = False
         Me.dgvSuccess.AllowUserToDeleteRows = False
-        Me.dgvSuccess.AllowUserToResizeColumns = False
-        Me.dgvSuccess.AllowUserToResizeRows = False
+        Me.dgvSuccess.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvSuccess.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvSuccess.BackgroundColor = System.Drawing.Color.White
         Me.dgvSuccess.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvSuccess.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvSuccess.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column4, Me.Column1, Me.SuccessResultColumn, Me.Column3})
-        Me.dgvSuccess.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvSuccess.Location = New System.Drawing.Point(3, 3)
         Me.dgvSuccess.MultiSelect = False
         Me.dgvSuccess.Name = "dgvSuccess"
         Me.dgvSuccess.ReadOnly = True
         Me.dgvSuccess.RowHeadersVisible = False
         Me.dgvSuccess.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvSuccess.Size = New System.Drawing.Size(770, 304)
+        Me.dgvSuccess.Size = New System.Drawing.Size(872, 304)
         Me.dgvSuccess.TabIndex = 0
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EmployeeNumber"
+        Me.Column4.FillWeight = 15.0!
+        Me.Column4.HeaderText = "Employee No"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeFullName"
+        Me.Column1.FillWeight = 25.0!
+        Me.Column1.HeaderText = "Full Name"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'SuccessResultColumn
+        '
+        Me.SuccessResultColumn.FillWeight = 15.0!
+        Me.SuccessResultColumn.HeaderText = "Result"
+        Me.SuccessResultColumn.Name = "SuccessResultColumn"
+        Me.SuccessResultColumn.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "Description"
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column3.FillWeight = 60.0!
+        Me.Column3.HeaderText = "Description"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -96,7 +129,8 @@ Partial Class EmployeeResultsDialog
         '
         'btnOk
         '
-        Me.btnOk.Location = New System.Drawing.Point(712, 392)
+        Me.btnOk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnOk.Location = New System.Drawing.Point(807, 390)
         Me.btnOk.Name = "btnOk"
         Me.btnOk.Size = New System.Drawing.Size(83, 32)
         Me.btnOk.TabIndex = 5
@@ -105,21 +139,26 @@ Partial Class EmployeeResultsDialog
         '
         'lblMessage
         '
+        Me.lblMessage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblMessage.BackColor = System.Drawing.Color.White
         Me.lblMessage.Location = New System.Drawing.Point(8, 8)
         Me.lblMessage.Name = "lblMessage"
-        Me.lblMessage.Size = New System.Drawing.Size(784, 40)
+        Me.lblMessage.Size = New System.Drawing.Size(879, 40)
         Me.lblMessage.TabIndex = 6
         Me.lblMessage.Text = "<Message>"
         '
         'TabControl1
         '
+        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.tbpSuccess)
         Me.TabControl1.Controls.Add(Me.tbpFailed)
         Me.TabControl1.Location = New System.Drawing.Point(8, 48)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(784, 336)
+        Me.TabControl1.Size = New System.Drawing.Size(886, 336)
         Me.TabControl1.TabIndex = 7
         '
         'tbpSuccess
@@ -128,7 +167,7 @@ Partial Class EmployeeResultsDialog
         Me.tbpSuccess.Location = New System.Drawing.Point(4, 22)
         Me.tbpSuccess.Name = "tbpSuccess"
         Me.tbpSuccess.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpSuccess.Size = New System.Drawing.Size(776, 310)
+        Me.tbpSuccess.Size = New System.Drawing.Size(878, 310)
         Me.tbpSuccess.TabIndex = 0
         Me.tbpSuccess.Text = "Success"
         Me.tbpSuccess.UseVisualStyleBackColor = True
@@ -139,7 +178,7 @@ Partial Class EmployeeResultsDialog
         Me.tbpFailed.Location = New System.Drawing.Point(4, 22)
         Me.tbpFailed.Name = "tbpFailed"
         Me.tbpFailed.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpFailed.Size = New System.Drawing.Size(776, 310)
+        Me.tbpFailed.Size = New System.Drawing.Size(878, 310)
         Me.tbpFailed.TabIndex = 1
         Me.tbpFailed.Text = "Failed"
         Me.tbpFailed.UseVisualStyleBackColor = True
@@ -148,8 +187,6 @@ Partial Class EmployeeResultsDialog
         '
         Me.dgvFailed.AllowUserToAddRows = False
         Me.dgvFailed.AllowUserToDeleteRows = False
-        Me.dgvFailed.AllowUserToResizeColumns = False
-        Me.dgvFailed.AllowUserToResizeRows = False
         Me.dgvFailed.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvFailed.BackgroundColor = System.Drawing.Color.White
         Me.dgvFailed.BorderStyle = System.Windows.Forms.BorderStyle.None
@@ -162,7 +199,7 @@ Partial Class EmployeeResultsDialog
         Me.dgvFailed.ReadOnly = True
         Me.dgvFailed.RowHeadersVisible = False
         Me.dgvFailed.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvFailed.Size = New System.Drawing.Size(770, 304)
+        Me.dgvFailed.Size = New System.Drawing.Size(872, 304)
         Me.dgvFailed.TabIndex = 1
         '
         'DataGridViewTextBoxColumn4
@@ -198,45 +235,12 @@ Partial Class EmployeeResultsDialog
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
         '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EmployeeNumber"
-        Me.Column4.FillWeight = 15.0!
-        Me.Column4.HeaderText = "Employee No"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeFullName"
-        Me.Column1.FillWeight = 25.0!
-        Me.Column1.HeaderText = "Full Name"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'SuccessResultColumn
-        '
-        Me.SuccessResultColumn.FillWeight = 15.0!
-        Me.SuccessResultColumn.HeaderText = "Result"
-        Me.SuccessResultColumn.Name = "SuccessResultColumn"
-        Me.SuccessResultColumn.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "Description"
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
-        Me.Column3.FillWeight = 60.0!
-        Me.Column3.HeaderText = "Description"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
         'EmployeeResultsDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(800, 432)
+        Me.ClientSize = New System.Drawing.Size(902, 432)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.lblMessage)
         Me.Controls.Add(Me.btnOk)
@@ -245,8 +249,8 @@ Partial Class EmployeeResultsDialog
         Me.Name = "EmployeeResultsDialog"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "Payroll Results"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "<Title>"
         CType(Me.dgvSuccess, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl1.ResumeLayout(False)
         Me.tbpSuccess.ResumeLayout(False)

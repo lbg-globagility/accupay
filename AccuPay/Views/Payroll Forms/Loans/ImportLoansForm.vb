@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -273,7 +273,7 @@ Public Class ImportLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _loanService.SaveManyAsync(_loans)
+                Await _loanService.SaveManyAsync(_loans, z_User)
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In _loans

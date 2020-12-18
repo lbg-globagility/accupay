@@ -32,16 +32,8 @@ Public Class DependencyInjectionHelper
         services.AddDbContext(Of PayrollContext)(
             Sub(options As DbContextOptionsBuilder)
                 ConfigureDbContextOptions(options)
-            End Sub, ServiceLifetime.Transient)
-
-        ' passing DbContextOptions for services that needs to directly access PayrollContext.
-        ' It Is prohibited to access PayrollContext unless there Is no other choice
-        ' Like in the case of services accessed in multiple threads.
-        services.AddSingleton(Of DbContextOptionsService)(
-            Function(service As IServiceProvider)
-                Dim options = GetDbContextOptions()
-                Return New DbContextOptionsService(options)
-            End Function)
+            End Sub,
+            ServiceLifetime.Transient)
 
         services.AddTransient(Of BenchmarkPayrollHelper)
         services.AddTransient(Of OvertimeRateService)
@@ -96,6 +88,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of RouteRateRepository)
         services.AddTransient(Of SalaryRepository)
         services.AddTransient(Of SocialSecurityBracketRepository)
+        services.AddTransient(Of SystemInfoRepository)
         services.AddTransient(Of TimeAttendanceLogRepository)
         services.AddTransient(Of TimeEntryRepository)
         services.AddTransient(Of TimeLogRepository)
@@ -108,7 +101,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ListOfValueService)
 
         services.AddTransient(Of CostCenterReportResources)
-        services.AddTransient(Of PayrollGeneration)
+        services.AddTransient(Of PayrollGenerator)
         services.AddTransient(Of PayrollResources)
 
         services.AddTransient(Of PolicyHelper)
@@ -125,6 +118,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PaystubPayslipModelDataService)
 
         services.AddTransient(Of TimeEntryGenerator)
+        services.AddTransient(Of TimeEntryResources)
 
         services.AddTransient(Of OvertimeRateService)
         services.AddTransient(Of LeaveAccrualService)
