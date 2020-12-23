@@ -1,7 +1,7 @@
 SET @UserId = (SELECT Id FROM `aspnetusers` WHERE Id <> 0 LIMIT 1 );
 
 SET @datefrom=MAKEDATE(2021, 1);
-SET @dateto=LAST_DAY('2021-12-01');
+SET @dateto=LAST_DAY('2022-12-01');
 
 INSERT INTO `paysocialsecurity` (`CreatedBy`, `LastUpdBy`, `RangeFromAmount`, `RangeToAmount`, `MonthlySalaryCredit`, `EmployeeContributionAmount`, `EmployerContributionAmount`, `EmployeeECAmount`, `EffectiveDateFrom`, `EffectiveDateTo`) VALUES 
 (@UserId, @UserId, 1000, 3249.99, 3000, 135, 255, 10, @datefrom, @dateto),
