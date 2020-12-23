@@ -1,0 +1,10 @@
+SET @_type='PhilHealth';
+
+SET @id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='Rate' LIMIT 1);
+UPDATE `listofval` SET `DisplayValue`='3.5' WHERE  `RowID`=@id;
+
+SET @id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='MinimumContribution' LIMIT 1);
+UPDATE `listofval` SET `DisplayValue`='350' WHERE  `RowID`=@id;
+
+SET @id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='MaximumContribution' LIMIT 1);
+UPDATE `listofval` SET `DisplayValue`='2450' WHERE  `RowID`=@id;
