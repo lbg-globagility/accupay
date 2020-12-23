@@ -25,7 +25,7 @@ Public Class MultiplePayPeriodSelectionDialog
 
     Private ReadOnly _productRepository As ProductRepository
 
-    Private ReadOnly _policy As PolicyHelper
+    Private ReadOnly _policy As IPolicyHelper
 
     Private _selectedPayPeriods As List(Of PayPeriod)
 
@@ -37,7 +37,7 @@ Public Class MultiplePayPeriodSelectionDialog
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _selectedPayPeriods = New List(Of PayPeriod)
 

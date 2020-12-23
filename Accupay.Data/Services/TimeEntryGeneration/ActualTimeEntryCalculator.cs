@@ -8,9 +8,9 @@ namespace AccuPay.Data.Services
     {
         private readonly Salary _salary;
         private readonly ICollection<ActualTimeEntry> _actualTimeEntries;
-        private readonly PolicyHelper _policy;
+        private readonly IPolicyHelper _policy;
 
-        public ActualTimeEntryCalculator(Salary salary, ICollection<ActualTimeEntry> actualTimeEntries, PolicyHelper policy)
+        public ActualTimeEntryCalculator(Salary salary, ICollection<ActualTimeEntry> actualTimeEntries, IPolicyHelper policy)
         {
             _salary = salary;
             _actualTimeEntries = actualTimeEntries;

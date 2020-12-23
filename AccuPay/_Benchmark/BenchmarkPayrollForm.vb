@@ -541,7 +541,7 @@ Public Class BenchmarkPayrollForm
 
                 If pagIbigLoan Is Nothing Then
 
-                    pagIbigLoan = loan.Amount
+                    pagIbigLoan = loan.DeductionAmount
                     loans.Remove(loan)
                     Continue While
                 Else
@@ -554,7 +554,7 @@ Public Class BenchmarkPayrollForm
 
                 If sssLoan Is Nothing Then
 
-                    sssLoan = loan.Amount
+                    sssLoan = loan.DeductionAmount
                     loans.Remove(loan)
                     Continue While
                 Else

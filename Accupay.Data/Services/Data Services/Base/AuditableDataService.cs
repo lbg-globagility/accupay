@@ -15,7 +15,7 @@ namespace AccuPay.Data.Services
                PayPeriodRepository payPeriodRepository,
                UserActivityRepository userActivityRepository,
                PayrollContext context,
-               PolicyHelper policy,
+               IPolicyHelper policy,
                string entityName,
                string entityNamePlural = null) :
 

@@ -105,12 +105,12 @@ namespace AccuPay.Data
         {
             //base.OnModelCreating(modelBuilder);
 
+            SetGeneratedColumnsToReadOnly(modelBuilder);
+
             modelBuilder.Entity<Category>()
                 .HasMany(x => x.Products)
                 .WithOne(x => x.CategoryEntity)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            SetGeneratedColumnsToReadOnly(modelBuilder);
 
             modelBuilder.Entity<Organization>()
                 .HasMany(x => x.Categories)
@@ -215,6 +215,16 @@ namespace AccuPay.Data
             {
                 b.HasKey(e => e.Name);
                 b.Property(e => e.Value);
+            });
+
+            modelBuilder.Entity<YearlyLoanInterest>(
+            b =>
+            {
+                b.HasKey(x => new { x.LoanScheduleId, x.Year });
+
+                b.HasOne(x => x.LoanSchedule)
+                    .WithMany(l => l.YearlyLoanInterests)
+                    .HasForeignKey(x => x.LoanScheduleId);
             });
         }
 

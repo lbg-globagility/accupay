@@ -6,6 +6,8 @@ namespace AccuPay.Data.Helpers
 
         public const int SemiMonthlyPayPeriodsPerMonth = 2;
 
+        public const int SemiMonthlyPayPeriodsPerYear = MonthsInAYear * SemiMonthlyPayPeriodsPerMonth;
+
         public const string RegularDay = "Regular Day";
 
         public const string SpecialNonWorkingHoliday = "Special Non-Working Holiday";

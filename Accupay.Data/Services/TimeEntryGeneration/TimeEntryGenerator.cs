@@ -211,7 +211,7 @@ namespace AccuPay.Data.Services
         private void PostLegalHolidayCheck(
             Employee employee,
             List<TimeEntry> timeEntries,
-            PolicyHelper policy,
+            IPolicyHelper policy,
             List<DateTime> regularHolidaysList,
             CalendarCollection calendarCollection,
             DateTime cutOffEnd)

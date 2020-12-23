@@ -67,7 +67,7 @@ namespace AccuPay.Data.Entities
         public bool IsClosed => Status == PayPeriodStatus.Closed;
         public bool IsPending => Status == PayPeriodStatus.Pending;
 
-        public static PayPeriod NewPayPeriod(int organizationId, int payrollMonth, int payrollYear, bool isFirstHalf, PolicyHelper policy, int? currentUserId)
+        public static PayPeriod NewPayPeriod(int organizationId, int payrollMonth, int payrollYear, bool isFirstHalf, IPolicyHelper policy, int? currentUserId)
         {
             var ordinalValue = payrollMonth * 2;
 

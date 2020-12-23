@@ -16,7 +16,7 @@ Public Class MetroLogin
 
     Private Const UnauthorizedOrganizationMessage As String = "You are not authorized to access this organization."
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private ReadOnly _organizationRepository As OrganizationRepository
 
@@ -36,7 +36,7 @@ Public Class MetroLogin
 
         DependencyInjectionHelper.ConfigureDependencyInjection()
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
 

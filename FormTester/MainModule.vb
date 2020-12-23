@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.CrystalReports
 Imports AccuPay.Data
@@ -46,7 +46,7 @@ Module MainModule
         services.AddScoped(Of PayslipDataService)
         services.AddScoped(Of SystemOwnerService)
         services.AddScoped(Of PayslipBuilder)
-        services.AddScoped(Of PolicyHelper)
+        services.AddScoped(Of IPolicyHelper, PolicyHelper)
         services.AddScoped(Of ListOfValueService)
 
         services.AddScoped(Of PaystubEmailRepository)

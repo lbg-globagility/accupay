@@ -34,7 +34,7 @@ Public Class TimeLogsForm2
 
     Private _originalDates As TimePeriod
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private ReadOnly _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
@@ -57,7 +57,7 @@ Public Class TimeLogsForm2
 
         InitializeComponent()
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
 

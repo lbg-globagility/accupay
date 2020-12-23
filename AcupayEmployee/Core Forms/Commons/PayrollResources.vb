@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Data.Entity
 Imports System.Threading.Tasks
@@ -215,7 +215,7 @@ Public Class PayrollResources
                 SUM(COALESCE(ete.UndertimeHours, 0)) 'UndertimeHours',
                 SUM(COALESCE(ete.UndertimeHoursAmount, 0)) 'UndertimeHoursAmount',
                 SUM(COALESCE(ete.Absent, 0)) AS 'Absent',
-                SUM(COALESCE(ete.VacationLeaveHours, 0)) AS 'VacationLeaveHours', 
+                SUM(COALESCE(ete.VacationLeaveHours, 0)) AS 'VacationLeaveHours',
                 SUM(COALESCE(ete.SickLeaveHours, 0)) As 'SickLeaveHours',
                 SUM(COALESCE(ete.OtherLeaveHours, 0)) AS 'OtherLeaveHours'
             FROM employeetimeentry ete
@@ -241,15 +241,15 @@ Public Class PayrollResources
         Dim backDate = _payDateFrom.AddDays(-3)
 
         Try
-            Using context = New PayrollContext()
-                Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
-                            Where t.OrganizationID = z_OrganizationID And
-                                backDate <= t.EntryDate And
-                                t.EntryDate <= _payDateTo
-                            Select t
+            'Using context = New PayrollContext()
+            '    Dim query = From t In context.TimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
+            '                Where t.OrganizationID = z_OrganizationID And
+            '                    backDate <= t.EntryDate And
+            '                    t.EntryDate <= _payDateTo
+            '                Select t
 
-                _timeEntries2 = Await query.ToListAsync()
-            End Using
+            '    _timeEntries2 = Await query.ToListAsync()
+            'End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("TimeEntries", ex)
         End Try

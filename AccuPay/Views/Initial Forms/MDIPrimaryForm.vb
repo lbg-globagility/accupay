@@ -40,7 +40,7 @@ Public Class MDIPrimaryForm
     Private if_sysowner_is_cinema2k As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
@@ -52,7 +52,7 @@ Public Class MDIPrimaryForm
 
         InitializeComponent()
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 

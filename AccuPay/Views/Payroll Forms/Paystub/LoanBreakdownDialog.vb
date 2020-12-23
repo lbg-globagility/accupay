@@ -46,7 +46,7 @@ Public Class LoanBreakdownDialog
             _LoanNumber = loanTransaction.LoanSchedule.LoanNumber
             _LoanType = loanTransaction.LoanSchedule.LoanType.DisplayName
             _TotalAmount = loanTransaction.LoanSchedule.TotalLoanAmount
-            _DeductionAmount = $"({FormatNumber(loanTransaction.Amount, 2)})"
+            _DeductionAmount = $"({FormatNumber(loanTransaction.DeductionAmount, 2)})"
             _Balance = loanTransaction.TotalBalance
             _DeductionSchedule = loanTransaction.LoanSchedule.DeductionSchedule
             _PayPeriodsLeft = loanTransaction.LoanSchedule.LoanPayPeriodLeft

@@ -45,7 +45,7 @@ namespace AccuPay.CrystalReportsAPI
 
             services.AddScoped<OrganizationRepository>();
             services.AddScoped<ListOfValueService>();
-            services.AddScoped<PolicyHelper>();
+            services.AddScoped<IPolicyHelper, PolicyHelper>();
             services.AddScoped<PayPeriodRepository>();
             services.AddScoped<PayslipDataService>();
             services.AddScoped<SystemOwnerService>();

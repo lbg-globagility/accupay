@@ -24,7 +24,7 @@ namespace AccuPay.Data.Services
             PayPeriodRepository payPeriodRepository,
             UserActivityRepository userActivityRepository,
             PayrollContext context,
-            PolicyHelper policy) :
+            IPolicyHelper policy) :
 
             base(overtimeRepository,
                 payPeriodRepository,
@@ -93,12 +93,12 @@ namespace AccuPay.Data.Services
         protected override string CreateUserActivitySuffixIdentifier(Overtime overtime) =>
             $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
 
-        protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime, int changedByUserId)
+        protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime, int currentlyLoggedInUserId)
         {
             await base.SanitizeEntity(
                 entity: overtime,
                 oldEntity: oldOvertime,
-                currentlyLoggedInUserId: changedByUserId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             if (overtime.OTStartDate < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");

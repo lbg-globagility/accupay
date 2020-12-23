@@ -50,8 +50,6 @@ namespace AccuPay.Data.Services
 
         public IReadOnlyCollection<Paystub> Paystubs { get; private set; }
 
-        public IReadOnlyCollection<PhilHealthBracket> PhilHealthBrackets { get; private set; }
-
         public IReadOnlyCollection<Paystub> PreviousPaystubs { get; private set; }
 
         public IReadOnlyCollection<Salary> Salaries { get; private set; }
@@ -61,6 +59,8 @@ namespace AccuPay.Data.Services
         public IReadOnlyCollection<TimeEntry> TimeEntries { get; private set; }
 
         public IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; private set; }
+
+        public readonly IPolicyHelper Policy;
 
         private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
 
@@ -99,6 +99,7 @@ namespace AccuPay.Data.Services
         public FeatureListChecker FeatureListChecker { get; private set; }
 
         public PayrollResources(
+            IPolicyHelper policy,
             CalendarService calendarService,
             ListOfValueService listOfValueService,
             SystemOwnerService systemOwnerService,
@@ -117,6 +118,7 @@ namespace AccuPay.Data.Services
             WithholdingTaxBracketRepository withholdingTaxBracketRepository,
             BonusRepository bonusRepository)
         {
+            Policy = policy;
             _calendarService = calendarService;
             _listOfValueService = listOfValueService;
             _systemOwnerService = systemOwnerService;
@@ -154,14 +156,13 @@ namespace AccuPay.Data.Services
             await LoadAllowances();
             await LoadBonuses();
             await LoadBpiInsuranceProduct();
+            await LoadCalendarCollection();
             await LoadEmployees();
             await LoadLeaves();
             await LoadListOfValueCollection();
-            await LoadCalendarCollection();
             await LoadPaystubs();
             // LoadSchedules() should be executed following paystubs
             await LoadLoanSchedules();
-            await LoadPhilHealthBrackets();
             await LoadPreviousPaystubs();
             await LoadSalaries();
             await LoadSickLeaveProduct();
@@ -178,10 +179,11 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                Allowances = (await _allowanceRepository.
-                                GetByPayPeriodWithProductAsync(organizationId: _organizationId,
-                                                                timePeriod: _payPeriodSpan)).
-                            ToList();
+                Allowances = (await _allowanceRepository
+                    .GetByPayPeriodWithProductAsync(
+                        organizationId: _organizationId,
+                        timePeriod: _payPeriodSpan))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -282,9 +284,9 @@ namespace AccuPay.Data.Services
             try
             {
                 // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-                LoanSchedules = (await _loanScheduleRepository.
-                                    GetCurrentPayrollLoansAsync(_organizationId, PayPeriod, Paystubs)).
-                                    ToList();
+                LoanSchedules = (await _loanScheduleRepository
+                    .GetCurrentPayrollLoansAsync(_organizationId, PayPeriod, Paystubs))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -313,9 +315,9 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                Paystubs = (await _paystubRepository.
-                                GetByPayPeriodFullPaystubAsync(_payPeriodId)).
-                                ToList();
+                Paystubs = (await _paystubRepository
+                    .GetByPayPeriodFullPaystubAsync(_payPeriodId))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -323,25 +325,13 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task LoadPhilHealthBrackets()
-        {
-            try
-            {
-                PhilHealthBrackets = (await _philHealthBracketRepository.GetAllAsync()).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("PhilHealthBrackets", ex);
-            }
-        }
-
         private async Task LoadPreviousPaystubs()
         {
             try
             {
-                PreviousPaystubs = (await _paystubRepository.
-                                        GetPreviousCutOffPaystubsAsync(_payDateFrom, _organizationId)).
-                                        ToList();
+                PreviousPaystubs = (await _paystubRepository
+                    .GetPreviousCutOffPaystubsAsync(_payDateFrom, _organizationId))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -353,9 +343,9 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                Salaries = (await _salaryRepository.
-                    GetByCutOffAsync(_organizationId, _payDateTo)).
-                    ToList();
+                Salaries = (await _salaryRepository
+                    .GetByCutOffAsync(_organizationId, _payDateTo))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -368,9 +358,10 @@ namespace AccuPay.Data.Services
             try
             {
                 SickLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(ProductConstant.SICK_LEAVE,
-                                                organizationId: _organizationId,
-                                                userId: _userId);
+                    GetOrCreateLeaveTypeAsync(
+                        ProductConstant.SICK_LEAVE,
+                        organizationId: _organizationId,
+                        userId: _userId);
             }
             catch (Exception ex)
             {
@@ -385,9 +376,9 @@ namespace AccuPay.Data.Services
                 // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
                 var taxEffectivityDate = new DateTime(PayPeriod.Year, PayPeriod.Month, 1);
 
-                SocialSecurityBrackets = (await _socialSecurityBracketRepository.
-                                            GetByTimePeriodAsync(taxEffectivityDate)).
-                                            ToList();
+                SocialSecurityBrackets = (await _socialSecurityBracketRepository
+                    .GetByTimePeriodAsync(taxEffectivityDate))
+                    .ToList();
             }
             catch (Exception ex)
             {

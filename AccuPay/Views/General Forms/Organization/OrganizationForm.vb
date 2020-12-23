@@ -22,7 +22,7 @@ Public Class OrganizationForm
     Private _organizations As List(Of Organization)
     Private ReadOnly _addressRepository As AddressRepository
     Private ReadOnly _organizationRepository As OrganizationRepository
-    Private ReadOnly _policy As PolicyHelper
+    Private ReadOnly _policy As IPolicyHelper
 
     Sub New()
 
@@ -30,7 +30,7 @@ Public Class OrganizationForm
 
         _addressRepository = MainServiceProvider.GetRequiredService(Of AddressRepository)
         _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
-        _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
     End Sub
 

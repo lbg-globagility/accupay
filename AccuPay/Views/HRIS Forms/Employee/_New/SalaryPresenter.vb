@@ -17,8 +17,6 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _employee As Employee
 
-        Private _philHealthPolicy As PhilHealthPolicy
-
         Private _socialSecurityPolicy As SocialSecurityPolicy
 
         Private _philHealthBracketRepository As PhilHealthBracketRepository
@@ -47,7 +45,6 @@ Namespace Global.AccuPay.Views.Employees
         End Sub
 
         Private Sub OnLoad() Handles _view.Init
-            LoadPhilHealthBrackets()
             LoadSocialSecurityBrackets()
             _view.ChangeMode(SalaryTab2.Mode.Disabled)
         End Sub
@@ -136,7 +133,6 @@ Namespace Global.AccuPay.Views.Employees
 
             _view.BasicPay = basicPay
             UpdateSss(monthlyRate)
-            UpdatePhilHealth(monthlyRate)
         End Sub
 
         Private Sub OnSalarySelected(salary As Salary) Handles _view.SelectSalary
@@ -148,18 +144,6 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Sub OnSssDelete() Handles _view.DeleteSss
             _view.Sss = Nothing
-        End Sub
-
-        Private Sub LoadPhilHealthBrackets()
-
-            Dim values = _listOfValueService.Create("PhilHealth")
-
-            _philHealthPolicy = New PhilHealthPolicy(
-                    values.GetStringOrDefault("DeductionType", "Bracket"),
-                    values.GetDecimal("Rate"),
-                    values.GetDecimal("MinimumContribution"),
-                    values.GetDecimal("MaximumContribution"),
-                    _philHealthBracketRepository.GetAll().ToList())
         End Sub
 
         Private Async Function LoadSalaries() As Task
@@ -196,12 +180,6 @@ Namespace Global.AccuPay.Views.Employees
             Dim bracket = _socialSecurityPolicy.GetBracket(monthlyRate)
 
             _view.Sss = bracket?.EmployeeContributionAmount
-        End Sub
-
-        Private Sub UpdatePhilHealth(monthlyRate As Decimal)
-            Dim philHealthContribution = _philHealthPolicy.GetContribution(monthlyRate)
-
-            _view.PhilHealth = philHealthContribution
         End Sub
 
         Private Class PhilHealthPolicy

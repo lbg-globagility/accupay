@@ -17,7 +17,7 @@ namespace AccuPay.Data.Services
 
         public CalendarCollection CalendarCollection { get; private set; }
         public Organization Organization { get; private set; }
-        public PolicyHelper Policy { get; private set; }
+        public IPolicyHelper Policy { get; private set; }
         public IReadOnlyCollection<ActualTimeEntry> ActualTimeEntries { get; private set; }
         public IReadOnlyCollection<Agency> Agencies { get; private set; }
         public IReadOnlyCollection<AgencyFee> AgencyFees { get; private set; }
@@ -57,7 +57,7 @@ namespace AccuPay.Data.Services
 
         public TimeEntryResources(
             CalendarService calendarService,
-            PolicyHelper policy,
+            IPolicyHelper policy,
             ActualTimeEntryRepository actualTimeEntryRepository,
             AgencyRepository agencyRepository,
             AgencyFeeRepository agencyFeeRepository,

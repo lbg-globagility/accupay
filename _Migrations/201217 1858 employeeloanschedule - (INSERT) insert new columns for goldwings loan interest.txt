@@ -1,0 +1,10 @@
+ALTER TABLE `employeeloanschedule`
+	ADD COLUMN IF NOT EXISTS `OriginalDeductionAmount` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `BonusPotentialPaymentForLoan`,
+	ADD COLUMN IF NOT EXISTS `BasicMonthlySalary` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `OriginalDeductionAmount`;
+
+ALTER TABLE `scheduledloansperpayperiod`
+	ADD COLUMN IF NOT EXISTS `InterestAmount` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `DeductionAmount`;
+
+UPDATE employeeloanschedule
+SET BasicMonthlySalary = TotalLoanAmount #So that old loans will not trigger the yearly interest accidentally. Don't run this if the client is already using the yearloaninterest table.
+;

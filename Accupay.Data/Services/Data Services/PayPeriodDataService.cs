@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
@@ -9,7 +9,7 @@ namespace AccuPay.Data.Services
 {
     public class PayPeriodDataService
     {
-        private readonly PolicyHelper _policy;
+        private readonly IPolicyHelper _policy;
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly PaystubRepository _paystubRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
@@ -20,7 +20,7 @@ namespace AccuPay.Data.Services
             PaystubRepository paystubRepository,
             TimeEntryRepository timeEntryRepository,
             SystemOwnerService systemOwnerService,
-            PolicyHelper policy)
+            IPolicyHelper policy)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;

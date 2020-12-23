@@ -16,7 +16,7 @@ Public Class PayrollForm
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private ReadOnly _roleRepository As RoleRepository
 
@@ -24,7 +24,7 @@ Public Class PayrollForm
 
         InitializeComponent()
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 

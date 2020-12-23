@@ -27,7 +27,7 @@ namespace AccuPay.Data.Services
             SavableRepository<T> repository,
             PayPeriodRepository payPeriodRepository,
             PayrollContext context,
-            PolicyHelper policy,
+            IPolicyHelper policy,
             string entityName,
             string entityNamePlural = null) :
 

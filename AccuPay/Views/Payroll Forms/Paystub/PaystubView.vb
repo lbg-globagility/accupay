@@ -156,7 +156,7 @@ Public Class PaystubView
         Dim loanTransactionModels = loanTransactions.
             Select(Function(l) New LoanTransactionModel() With {
                 .Name = l.LoanSchedule.LoanType.PartNo,
-                .Amount = l.Amount,
+                .Amount = l.DeductionAmount,
                 .Balance = l.TotalBalance
             }).ToList()
 

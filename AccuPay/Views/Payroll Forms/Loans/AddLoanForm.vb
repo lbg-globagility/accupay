@@ -8,11 +8,11 @@ Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class AddLoanScheduleForm
+Public Class AddLoanForm
 
     Private _currentEmployee As Employee
 
-    Private _newLoanSchedule As New LoanSchedule()
+    Private _newLoanSchedule As LoanModel
 
     Public Property IsSaved As Boolean
 
@@ -37,14 +37,16 @@ Public Class AddLoanScheduleForm
     End Sub
 
     Private Sub ResetForm()
-        Me._newLoanSchedule = New LoanSchedule
-        Me._newLoanSchedule.EmployeeID = _currentEmployee.RowID
-        Me._newLoanSchedule.OrganizationID = z_OrganizationID
+        Dim newLoanSchedule As New LoanSchedule With {
+            .EmployeeID = _currentEmployee.RowID,
+            .OrganizationID = z_OrganizationID,
+            .DedEffectiveDateFrom = Date.Now,
+            .Status = LoanSchedule.STATUS_IN_PROGRESS
+        }
 
-        Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
-        Me._newLoanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS
+        _newLoanSchedule = LoanModel.Create(newLoanSchedule)
 
-        LoanUserControl1.SetLoan(Me._newLoanSchedule, isNew:=True)
+        LoanUserControl1.SetLoan(_newLoanSchedule, isNew:=True)
     End Sub
 
     Private Sub PopulateEmployeeData()
@@ -64,26 +66,7 @@ Public Class AddLoanScheduleForm
     Private Async Sub AddLoanScheduleButtonClicked(sender As Object, e As EventArgs) _
         Handles btnAddAndNew.Click, btnAddAndClose.Click
 
-        Dim confirmMessage = ""
         Dim messageTitle = "New Loan"
-
-        If Me._newLoanSchedule.TotalLoanAmount = 0 AndAlso Me._newLoanSchedule.DeductionAmount = 0 Then
-            confirmMessage = "You did not enter a value for Total Loan Amount and Deduction Amount. Do you want to save the new loan?"
-
-        ElseIf Me._newLoanSchedule.TotalLoanAmount = 0 Then
-            confirmMessage = "You did not enter a value for Total Loan Amount. Do you want to save the new loan?"
-
-        ElseIf Me._newLoanSchedule.DeductionAmount = 0 Then
-            confirmMessage = "You did not enter a value for Deduction Amount. Do you want to save the new loan?"
-
-        End If
-
-        If String.IsNullOrWhiteSpace(confirmMessage) = False Then
-
-            If MessageBoxHelper.Confirm(Of Boolean) _
-                (confirmMessage, messageTitle, messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
-
-        End If
 
         Dim loan = LoanUserControl1.GetLoan()
 
@@ -92,7 +75,7 @@ Public Class AddLoanScheduleForm
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-                Me._newLoanSchedule = Await dataService.SaveAsync(loan, z_User)
+                Me._newLoanSchedule = LoanModel.Create(Await dataService.SaveAsync(loan, z_User))
 
                 Me.IsSaved = True
 

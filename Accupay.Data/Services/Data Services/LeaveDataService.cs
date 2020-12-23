@@ -29,7 +29,7 @@ namespace AccuPay.Data.Services
 
         public LeaveDataService(
             PayrollContext context,
-            PolicyHelper policy,
+            IPolicyHelper policy,
             EmployeeRepository employeeRepository,
             EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
             LeaveRepository leaveRepository,

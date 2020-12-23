@@ -6,12 +6,11 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LoanUserControl
 
-    Private _currentLoan As LoanSchedule
+    Private _currentLoan As LoanModel
 
     Private _statusList As List(Of String)
 
@@ -19,16 +18,14 @@ Public Class LoanUserControl
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Private loanAmountBeforeTextChange As Decimal
-
-    Private loanInterestPercentageBeforeTextChange As Decimal
-
     Private Async Sub LoanUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        Dim policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
         if_sysowner_is_benchmark = systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
-        _currentLoan = New LoanSchedule()
+        txtLoanInterestPercentage.Visible = policy.UseGoldwingsLoanInterest
+        lblLoanInterestPercentage.Visible = policy.UseGoldwingsLoanInterest
 
         LoadLoanStatus()
 
@@ -37,68 +34,30 @@ Public Class LoanUserControl
         Await LoadDeductionSchedules()
     End Sub
 
-    Public Sub SetLoan(loan As LoanSchedule, isNew As Boolean)
+    Public Sub SetLoan(loan As LoanModel, isNew As Boolean)
 
         _currentLoan = loan
+
         _isNew = isNew
+
+        If _isNew Then
+            txtLoanBalance.Visible = False
+            lblLoanBalance.Visible = False
+            lblLoanBalancePesoSign.Visible = False
+        End If
 
         PopulateStatustComboBox()
 
-        ToggleLoanStatusComboboxVisibility(loan Is Nothing OrElse Not loan.IsUnEditable)
+        ToggleLoanStatusComboboxVisibility(_currentLoan Is Nothing OrElse Not _currentLoan.IsUnEditable)
 
         CreateDataBindings()
     End Sub
 
     Public Function GetLoan() As LoanSchedule
 
-        Return _currentLoan
+        Return _currentLoan?.CreateLoan()
 
     End Function
-
-    Private Sub txtLoanInterestPercentage_Enter(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Enter
-
-        If Me._currentLoan Is Nothing Then Return
-
-        loanInterestPercentageBeforeTextChange = Me._currentLoan.DeductionPercentage
-
-    End Sub
-
-    Private Sub txtLoanInterestPercentage_Leave(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Leave
-
-        If Me._currentLoan Is Nothing Then Return
-
-        If loanInterestPercentageBeforeTextChange = Me._currentLoan.DeductionPercentage Then Return
-
-        Dim totalPlusInterestRate As Decimal = 1 + (Me._currentLoan.DeductionPercentage * 0.01D)
-
-        Me._currentLoan.TotalLoanAmount = Me._currentLoan.TotalLoanAmount * totalPlusInterestRate
-
-        UpdateBalanceAndNumberOfPayPeriod()
-
-    End Sub
-
-    Private Sub txtTotalLoanAmount_Enter(sender As Object, e As EventArgs) Handles txtTotalLoanAmount.Enter
-
-        If Me._currentLoan Is Nothing Then Return
-
-        loanAmountBeforeTextChange = Me._currentLoan.TotalLoanAmount
-
-    End Sub
-
-    Private Sub txtTotalLoanAmount_Leave(sender As Object, e As EventArgs) _
-        Handles txtTotalLoanAmount.Leave, txtDeductionAmount.Leave
-
-        If Me._currentLoan Is Nothing Then Return
-
-        If sender Is txtTotalLoanAmount Then
-            If loanAmountBeforeTextChange <> Me._currentLoan.TotalLoanAmount Then
-                Me._currentLoan.DeductionPercentage = 0
-            End If
-        End If
-
-        UpdateBalanceAndNumberOfPayPeriod()
-
-    End Sub
 
     Private Async Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
         Dim form As New AddLoanTypeForm()
@@ -157,19 +116,20 @@ Public Class LoanUserControl
         txtLoanBalance.DataBindings.Add("Text", Me._currentLoan, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         dtpDateFrom.DataBindings.Clear()
-        dtpDateFrom.DataBindings.Add("Value", Me._currentLoan, "DedEffectiveDateFrom")
-
-        txtNumberOfPayPeriodLeft.DataBindings.Clear()
-        txtNumberOfPayPeriodLeft.DataBindings.Add("Text", Me._currentLoan, "LoanPayPeriodLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
+        dtpDateFrom.DataBindings.Add("Value", Me._currentLoan, "EffectiveFrom")
 
         txtDeductionAmount.DataBindings.Clear()
         txtDeductionAmount.DataBindings.Add("Text", Me._currentLoan, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         txtLoanInterestPercentage.DataBindings.Clear()
-        txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoan, "DeductionPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
+        txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoan, "InterestPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         cboLoanType.DataBindings.Clear()
-        cboLoanType.DataBindings.Add("SelectedValue", Me._currentLoan, "LoanTypeID", True, DataSourceUpdateMode.OnPropertyChanged)
+        cboLoanType.DataBindings.Add("SelectedValue", Me._currentLoan, "LoanType", True, DataSourceUpdateMode.OnPropertyChanged)
+
+        If Not String.IsNullOrWhiteSpace(Me._currentLoan.LoanTypeName) Then
+            cboLoanType.Text = Me._currentLoan.LoanTypeName
+        End If
 
         txtLoanStatus.DataBindings.Clear()
         cmbLoanStatus.DataBindings.Clear()
@@ -177,7 +137,7 @@ Public Class LoanUserControl
 
             txtLoanStatus.DataBindings.Add("Text", Me._currentLoan, "Status")
         Else
-            cmbLoanStatus.DataBindings.Add("Text", Me._currentLoan, "Status", True, DataSourceUpdateMode.OnPropertyChanged)
+            cmbLoanStatus.DataBindings.Add("SelectedValue", Me._currentLoan, "Status", True, DataSourceUpdateMode.OnPropertyChanged)
 
         End If
 
@@ -185,21 +145,6 @@ Public Class LoanUserControl
         cmbDeductionSchedule.DataBindings.Add("SelectedValue", Me._currentLoan, "DeductionSchedule", True, DataSourceUpdateMode.OnPropertyChanged)
 
         ToggleLoanStatusComboboxVisibility(Not Me._currentLoan.IsUnEditable)
-    End Sub
-
-    Private Sub UpdateBalanceAndNumberOfPayPeriod()
-        Me._currentLoan.TotalLoanAmount = AccuMath.CommercialRound(Me._currentLoan.TotalLoanAmount)
-        Me._currentLoan.DeductionAmount = AccuMath.CommercialRound(Me._currentLoan.DeductionAmount)
-
-        If Me._currentLoan.HasTransactions = False AndAlso Me._currentLoan.IsUnEditable = False Then
-
-            Me._currentLoan.RecomputeTotalPayPeriod()
-
-            Me._currentLoan.TotalBalanceLeft = Me._currentLoan.TotalLoanAmount
-
-        End If
-
-        Me._currentLoan.RecomputePayPeriodLeft()
     End Sub
 
     Private Sub LoadLoanStatus()
@@ -220,7 +165,15 @@ Public Class LoanUserControl
 
         statusList.Remove(LoanSchedule.STATUS_COMPLETE)
 
-        cmbLoanStatus.DataSource = statusList
+        Dim statusLookUpList = LookUpStringItem.Convert(statusList, hasDefaultItem:=True)
+
+        cmbLoanStatus.ValueMember = "Item"
+        cmbLoanStatus.DisplayMember = "Item"
+
+        txtLoanStatus.DataBindings.Clear()
+        cmbLoanStatus.DataBindings.Clear()
+
+        cmbLoanStatus.DataSource = statusLookUpList
     End Sub
 
     Private Async Function LoadLoanTypes() As Task
@@ -237,11 +190,8 @@ Public Class LoanUserControl
 
         End If
 
-        Dim lookUpItems = LookUpItem.Convert(loanTypeList, "RowID", "PartNo", hasDefaultItem:=True)
-
-        cboLoanType.ValueMember = "Id"
-        cboLoanType.DisplayMember = "DisplayMember"
-        cboLoanType.DataSource = lookUpItems.OrderBy(Function(i) i.DisplayMember).ToList()
+        cboLoanType.DisplayMember = "PartNo"
+        cboLoanType.DataSource = loanTypeList.OrderBy(Function(i) i.PartNo).ToList()
 
     End Function
 

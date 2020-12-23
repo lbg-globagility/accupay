@@ -27,7 +27,7 @@ Public Class EmployeeOvertimeForm
 
     Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private _currentRolePermission As RolePermission
 
@@ -47,7 +47,7 @@ Public Class EmployeeOvertimeForm
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
     End Sub
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load

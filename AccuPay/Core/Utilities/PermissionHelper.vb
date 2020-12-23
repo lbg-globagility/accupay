@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -14,7 +14,7 @@ Namespace Desktop.Helpers
         Public Shared Async Function DoesAllowReadAsync(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As Task(Of Boolean)
 
             Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper)
@@ -30,7 +30,7 @@ Namespace Desktop.Helpers
         Public Shared Async Function DoesAllowCreateAsync(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As Task(Of Boolean)
 
             Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper)
@@ -46,7 +46,7 @@ Namespace Desktop.Helpers
         Public Shared Async Function DoesAllowUpdateAsync(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As Task(Of Boolean)
 
             Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper)
@@ -62,7 +62,7 @@ Namespace Desktop.Helpers
         Public Shared Function DoesAllowRead(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As Boolean
 
             Dim roleData = GetRole(permissionName, userRole, policyHelper)
@@ -78,7 +78,7 @@ Namespace Desktop.Helpers
         Public Shared Function DoesAllowCreate(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As Boolean
 
             Dim roleData = GetRole(permissionName, userRole, policyHelper)
@@ -94,7 +94,7 @@ Namespace Desktop.Helpers
         Public Shared Function DoesAllowUpdate(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As Boolean
 
             Dim roleData = GetRole(permissionName, userRole, policyHelper)
@@ -110,7 +110,7 @@ Namespace Desktop.Helpers
         Public Shared Async Function GetRoleAsync(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As Task(Of (Success As Boolean, RolePermission As RolePermission))
 
             If String.IsNullOrWhiteSpace(permissionName) Then Return (False, Nothing)
@@ -123,7 +123,7 @@ Namespace Desktop.Helpers
         Public Shared Function GetRole(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As PolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing) _
             As (Success As Boolean, RolePermission As RolePermission)
 
             If String.IsNullOrWhiteSpace(permissionName) Then Return (False, Nothing)
@@ -133,9 +133,9 @@ Namespace Desktop.Helpers
             Return GetRoleBase(permissionName, policyHelper, role)
         End Function
 
-        Private Shared Function GetRoleBase(permissionName As String, ByRef policyHelper As PolicyHelper, role As RolePermission) As (Success As Boolean, RolePermission As RolePermission)
+        Private Shared Function GetRoleBase(permissionName As String, ByRef policyHelper As IPolicyHelper, role As RolePermission) As (Success As Boolean, RolePermission As RolePermission)
             If policyHelper Is Nothing Then
-                policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+                policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
             End If
 
             If policyHelper.UseUserLevel Then
