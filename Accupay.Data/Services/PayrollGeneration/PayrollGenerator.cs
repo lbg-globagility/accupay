@@ -884,7 +884,7 @@ namespace AccuPay.Data.Services
                         yearlyLoanInterest: yearlyLoanInterest,
                         previousLoanTransactions: previousLoanTransactions,
                         bonusLoanPayments: bonusLoanPayments,
-                        thirteenthMonthPayLoanPayments: paystub.LoanPaymentFromThirteenthMonthPays.ToList());
+                        thirteenthMonthPayLoanPayments: paystub.LoanPaymentFromThirteenthMonthPays?.ToList());
 
                 loan.TotalBalanceLeft -= deductionAmount;
                 loan.RecomputePayPeriodLeft();
