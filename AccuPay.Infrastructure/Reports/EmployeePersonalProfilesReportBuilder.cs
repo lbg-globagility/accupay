@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Interfaces;
+using AccuPay.Data.Interfaces;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Reports;
@@ -18,14 +18,14 @@ namespace AccuPay.Infrastructure.Reports
         private const string REPORT_NAME = "EmployeePersonalInfo";
         private readonly OrganizationRepository _organizationRepository;
         private readonly EmployeePersonalProfilesExcelFormatReportDataService _reportDataService;
-        private readonly PolicyHelper _policy;
+        private readonly IPolicyHelper _policy;
         private readonly IReadOnlyCollection<ExcelReportColumn> _reportColumns;
         protected new const float FontSize = 11;
 
         public EmployeePersonalProfilesReportBuilder(
             OrganizationRepository organizationRepository,
             EmployeePersonalProfilesExcelFormatReportDataService reportDataService,
-            PolicyHelper policy)
+            IPolicyHelper policy)
         {
             _organizationRepository = organizationRepository;
             _reportDataService = reportDataService;

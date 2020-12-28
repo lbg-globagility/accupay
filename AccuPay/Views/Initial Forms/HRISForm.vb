@@ -15,7 +15,7 @@ Public Class HRISForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
@@ -29,7 +29,7 @@ Public Class HRISForm
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
 

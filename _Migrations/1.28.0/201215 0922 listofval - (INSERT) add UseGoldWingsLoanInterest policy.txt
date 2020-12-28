@@ -1,0 +1,7 @@
+SET @type = 'Loan Policy';
+SET @lic = 'UseGoldWingsLoanInterest';
+SET @description = '';
+SET @id=(SELECT RowID FROM listofval WHERE `Type`=@type AND LIC=@lic LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES (@id, NULL, '0', @lic, @type, NULL, 'Yes', @description, NOW(), 1, NOW(), 1, 1)
+ON DUPLICATE KEY UPDATE LastUpd=NOW();

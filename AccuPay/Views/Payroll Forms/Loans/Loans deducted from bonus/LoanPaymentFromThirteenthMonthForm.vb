@@ -2,10 +2,8 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.SelectReleaseThirteenthMonthEmployeesForm
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LoanPaymentFromThirteenthMonthForm
@@ -14,13 +12,9 @@ Public Class LoanPaymentFromThirteenthMonthForm
     Private ReadOnly _loanDataService As LoanDataService
     Private _loans As ICollection(Of LoanSchedule)
 
-    Public Sub New(
-            currentPayPeriod As PayPeriod)
+    Public Sub New(currentPayPeriod As PayPeriod)
 
-        ' This call is required by the designer.
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
 
         _currentPayPeriod = currentPayPeriod
 
@@ -40,10 +34,10 @@ Public Class LoanPaymentFromThirteenthMonthForm
     End Function
 
     Private Sub PopulateEmployees(paystubs As List(Of Paystub))
-        Dim employeeModels As New List(Of EmployeeModel)
+        Dim employeeModels As New List(Of ThirteenthMonthEmployeeModel)
 
         For Each paystub In paystubs
-            Dim model = New EmployeeModel(paystub)
+            Dim model = New ThirteenthMonthEmployeeModel(paystub)
             Dim thirteenthMonthAdjustment = paystub.Adjustments.
                 Where(Function(i) i.Is13thMonthPay).
                 FirstOrDefault()
@@ -99,7 +93,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
     Private Sub DataGridViewX1_SelectionChanged(sender As Object, e As EventArgs)
         If _loans Is Nothing AndAlso DataGridViewX1.CurrentRow Is Nothing Then Return
 
-        Dim model = GetModel(Of EmployeeModel)(DataGridViewX1.CurrentRow)
+        Dim model = GetModel(Of ThirteenthMonthEmployeeModel)(DataGridViewX1.CurrentRow)
 
         Dim loans = _loans.
             Where(Function(l) CBool(l.EmployeeID = model.EmployeeId)).
@@ -124,7 +118,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
         UpdateSaveButton()
     End Sub
 
-    Private Sub Update13thMonthPayBalance(model As EmployeeModel, loanModels As List(Of LoanModel))
+    Private Sub Update13thMonthPayBalance(model As ThirteenthMonthEmployeeModel, loanModels As List(Of LoanModel))
         Dim totalLoanPayment = loanModels.Sum(Function(l) l.AmountPayment)
 
         Dim currentThirteenthMonthBalance =
@@ -142,7 +136,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
     End Sub
 
     Private Sub DataGridViewX2_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridViewX2.CellEndEdit
-        Dim eModel = GetModel(Of EmployeeModel)(DataGridViewX1.CurrentRow)
+        Dim eModel = GetModel(Of ThirteenthMonthEmployeeModel)(DataGridViewX1.CurrentRow)
 
         Dim loanModels = GetGridRows(DataGridViewX2).
             Select(Function(r) GetModel(Of LoanModel)(r)).
@@ -216,13 +210,13 @@ Public Class LoanPaymentFromThirteenthMonthForm
     End Function
 
     Private Class LoanModel
-        Private ReadOnly _employeeModel As EmployeeModel
+        Private ReadOnly _employeeModel As ThirteenthMonthEmployeeModel
         Private ReadOnly _paystub As Paystub
         Private ReadOnly _loan As LoanSchedule
         Private ReadOnly _originalAmountPayment As Decimal
 
         Public Sub New(
-            employeeModel As EmployeeModel,
+            employeeModel As ThirteenthMonthEmployeeModel,
             loan As LoanSchedule,
             payperiodId As Integer)
 
@@ -249,7 +243,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
                 Where(Function(lt) lt.LoanScheduleID = _loan.RowID.Value).
                 FirstOrDefault()
 
-            Dim loanTransactionDeductionAmount = If(loanTransaction?.Amount, _loan.DeductionAmount)
+            Dim loanTransactionDeductionAmount = If(loanTransaction?.DeductionAmount, _loan.DeductionAmount)
             DeductionAmount = loanTransactionDeductionAmount
 
             LoanDeductionAmount = _loan.DeductionAmount

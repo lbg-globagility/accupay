@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
@@ -11,21 +11,20 @@ namespace AccuPay.Data.Services
     public class PhilHealthCalculator
     {
         private readonly PhilHealthPolicy _policy;
-        private readonly IReadOnlyCollection<PhilHealthBracket> _philHealthBrackets;
 
-        public PhilHealthCalculator(PhilHealthPolicy policy, IReadOnlyCollection<PhilHealthBracket> philHealthBrackets)
+        public PhilHealthCalculator(PhilHealthPolicy policy)
         {
             _policy = policy;
-            _philHealthBrackets = philHealthBrackets;
         }
 
-        public void Calculate(Salary salary,
-                            Paystub paystub,
-                            Paystub previousPaystub,
-                            Employee employee,
-                            PayPeriod payperiod,
-                            IReadOnlyCollection<Allowance> allowances,
-                            string currentSystemOwner)
+        public void Calculate(
+            Salary salary,
+            Paystub paystub,
+            Paystub previousPaystub,
+            Employee employee,
+            PayPeriod payperiod,
+            IReadOnlyCollection<Allowance> allowances,
+            string currentSystemOwner)
         {
             // Reset the PhilHealth to zero
             paystub.PhilHealthEmployeeShare = 0;
@@ -36,12 +35,13 @@ namespace AccuPay.Data.Services
             // If auto compute the PhilHealth is true, then we use the available formulas to compute the total contribution.
             // Otherwise, we use whatever amount is set in the salary.
             if (salary.AutoComputePhilHealthContribution)
-                totalContribution = GetTotalContribution(salary,
-                                                        paystub,
-                                                        previousPaystub,
-                                                        employee,
-                                                        allowances,
-                                                        currentSystemOwner);
+                totalContribution = GetTotalContribution(
+                    salary,
+                    paystub,
+                    previousPaystub,
+                    employee,
+                    allowances,
+                    currentSystemOwner);
             else
                 totalContribution = salary.PhilHealthDeduction;
 
@@ -68,7 +68,10 @@ namespace AccuPay.Data.Services
 
             if (employee.IsWeeklyPaid)
             {
-                var is_deduct_sched_to_thisperiod = employee.IsUnderAgency ? payperiod.PhHWeeklyAgentContribSched : payperiod.PhHWeeklyContribSched;
+                var is_deduct_sched_to_thisperiod =
+                        employee.IsUnderAgency ?
+                        payperiod.PhHWeeklyAgentContribSched :
+                        payperiod.PhHWeeklyContribSched;
 
                 if (is_deduct_sched_to_thisperiod)
                 {
@@ -88,20 +91,21 @@ namespace AccuPay.Data.Services
                 }
                 else if (IsPhilHealthPaidPerPayPeriod(deductionSchedule))
                 {
-                    paystub.PhilHealthEmployeeShare = employeeShare /
-                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
-                    paystub.PhilHealthEmployerShare = employerShare /
-                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.PhilHealthEmployeeShare =
+                        employeeShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.PhilHealthEmployerShare =
+                        employerShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
         }
 
-        private decimal GetTotalContribution(Salary salary,
-                                            Paystub paystub,
-                                            Paystub previousPaystub,
-                                            Employee employee,
-                                            IReadOnlyCollection<Allowance> allowances,
-                                            string currentSystemOwner)
+        private decimal GetTotalContribution(
+            Salary salary,
+            Paystub paystub,
+            Paystub previousPaystub,
+            Employee employee,
+            IReadOnlyCollection<Allowance> allowances,
+            string currentSystemOwner)
         {
             var calculationBasis = _policy.CalculationBasis;
 
@@ -135,12 +139,12 @@ namespace AccuPay.Data.Services
                     else
                     {
                         var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
-                                    paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
                         if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
                         {
                             totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
-                                            paystub.RegularHoursAndTotalRestDay;
+                                paystub.RegularHoursAndTotalRestDay;
                         }
 
                         var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
@@ -193,32 +197,25 @@ namespace AccuPay.Data.Services
 
             // Contribution should be bounded by the minimum and maximum
             var contribution = new decimal[] {
-                                new decimal[] { basis * rate, minimum }.Max(),
-                                maximum
-                            }.Min();
+                new decimal[] { basis * rate, minimum }.Max(),
+                maximum
+            }.Min();
             // Round to the nearest cent
             contribution = AccuMath.CommercialRound(contribution);
 
             return contribution;
         }
 
-        [Obsolete]
-        private PhilHealthBracket FindMatchingBracket(decimal amount)
-        {
-            return _philHealthBrackets.FirstOrDefault(p => p.SalaryRangeFrom <= amount &&
-                                                            p.SalaryRangeTo >= amount);
-        }
-
         private bool IsPhilHealthPaidOnFirstHalf(string deductionSchedule, PayPeriod payperiod)
         {
             return payperiod.IsFirstHalf &&
-                    deductionSchedule == ContributionSchedule.FIRST_HALF;
+                deductionSchedule == ContributionSchedule.FIRST_HALF;
         }
 
         private bool IsPhilHealthPaidOnEndOfTheMonth(string deductionSchedule, PayPeriod payperiod)
         {
             return payperiod.IsEndOfTheMonth &&
-                    deductionSchedule == ContributionSchedule.END_OF_THE_MONTH;
+                deductionSchedule == ContributionSchedule.END_OF_THE_MONTH;
         }
 
         private bool IsPhilHealthPaidPerPayPeriod(string deductionSchedule)

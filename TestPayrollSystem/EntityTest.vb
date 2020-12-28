@@ -1,9 +1,11 @@
-﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports Microsoft.Extensions.DependencyInjection
 
 <TestFixture>
 Public Class EntityTest
+    Inherits ServiceProvider
 
     ''' <summary>
     ''' Mostly used as a sandbox in testing queries of entities.
@@ -35,7 +37,13 @@ Public Class EntityTest
     End Sub
 
     <Test>
-    Public Sub TestEntity()
+    Public Async Function TestEntity() As Task
+
+        Dim loanRepository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+
+        Dim loans = Await loanRepository.GetLoanTransactionsWithPayPeriodAsync(648)
+
+        Assert.IsTrue(True)
 
         'Dim adjustment = New AdjustmentService().
         '                GetByMultipleEmployeeAndDatePeriodAsync(2, {1}, New TimePeriod(New Date(2020, 2, 1), New Date(2020, 2, 1))).
@@ -62,7 +70,7 @@ Public Class EntityTest
         'Dim count2 = branchRepo.GetAll().Count
 
         'Assert.IsTrue(count2 > 0)
-    End Sub
+    End Function
 
     <Test>
     Public Sub CheckVBNullableId()

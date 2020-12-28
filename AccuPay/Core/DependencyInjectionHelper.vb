@@ -104,7 +104,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PayrollGenerator)
         services.AddTransient(Of PayrollResources)
 
-        services.AddTransient(Of PolicyHelper)
+        services.AddTransient(Of IPolicyHelper, PolicyHelper)
         'services.AddTransient(Of ActualTimeEntryPolicy)
         'services.AddTransient(Of AllowancePolicy)
         'services.AddTransient(Of PhilHealthPolicy)

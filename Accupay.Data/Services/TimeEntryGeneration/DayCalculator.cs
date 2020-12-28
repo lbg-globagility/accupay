@@ -15,13 +15,13 @@ namespace AccuPay.Data.Services
         private readonly Employee _employee;
         private readonly IEmploymentPolicy _employmentPolicy;
 
-        private static PolicyHelper _policy;
+        private static IPolicyHelper _policy;
 
         public DayCalculator(
             Employee employee,
             IEmploymentPolicy employmentPolicy,
             Organization organization,
-            PolicyHelper policy)
+            IPolicyHelper policy)
         {
             _organization = organization;
             _employee = employee;

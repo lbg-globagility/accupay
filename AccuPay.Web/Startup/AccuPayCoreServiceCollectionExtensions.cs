@@ -82,7 +82,7 @@ namespace AccuPay.Web
             services.AddScoped<PayrollGenerator>();
             services.AddScoped<PayrollResources>();
 
-            services.AddScoped<PolicyHelper>();
+            services.AddScoped<IPolicyHelper, PolicyHelper>();
 
             services.AddScoped<BpiInsuranceAmountReportDataService>();
             services.AddScoped<CinemaTardinessReportDataService>();

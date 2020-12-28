@@ -64,7 +64,7 @@ Public Class TimeEntrySummaryForm
 
     Private _tsBtnDeleteTimeEntryHidden As Boolean
 
-    Private ReadOnly _policy As PolicyHelper
+    Private ReadOnly _policy As IPolicyHelper
 
     Private ReadOnly _payPeriodService As PayPeriodDataService
 
@@ -86,7 +86,7 @@ Public Class TimeEntrySummaryForm
 
         InitializeComponent()
 
-        _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
 

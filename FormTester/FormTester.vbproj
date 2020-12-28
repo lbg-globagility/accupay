@@ -121,8 +121,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PayPeriod.vb" />
     <Compile Include="MainModule.vb" />
+    <Compile Include="PayPeriod.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CrystalReportsFormViewer.resx">

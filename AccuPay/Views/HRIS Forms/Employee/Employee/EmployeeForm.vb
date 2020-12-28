@@ -33,7 +33,7 @@ Public Class EmployeeForm
 
     Private _payFrequencies As New List(Of PayFrequency)
 
-    Private ReadOnly _policy As PolicyHelper
+    Private ReadOnly _policy As IPolicyHelper
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
@@ -45,7 +45,7 @@ Public Class EmployeeForm
 
         InitializeComponent()
 
-        _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 

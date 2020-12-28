@@ -17,7 +17,7 @@ namespace AccuPay.Data.Services
             OrganizationRepository organizationRepository,
             PayPeriodRepository payPeriodRepository,
             PayrollContext context,
-            PolicyHelper policy) :
+            IPolicyHelper policy) :
 
             base(organizationRepository,
                 payPeriodRepository,

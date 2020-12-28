@@ -50,6 +50,11 @@ namespace AccuPay.Data.Repositories
                 if (loan.LoanType.CategoryEntity != null)
                 {
                     _context.Entry(loan.LoanType.CategoryEntity).State = EntityState.Detached;
+
+                    foreach (var categoryProduct in loan.LoanType.CategoryEntity.Products)
+                    {
+                        _context.Entry(categoryProduct).State = EntityState.Detached;
+                    }
                 }
             }
         }
@@ -73,7 +78,9 @@ namespace AccuPay.Data.Repositories
         public async Task<ICollection<LoanSchedule>> GetByEmployeeAsync(int employeeId)
         {
             return await _context.LoanSchedules
-                .Where(l => l.EmployeeID == employeeId)
+                .AsNoTracking()
+                .Include(x => x.LoanType)
+                .Where(x => x.EmployeeID == employeeId)
                 .ToListAsync();
         }
 
@@ -119,9 +126,25 @@ namespace AccuPay.Data.Repositories
         public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int id)
         {
             var query = _context.LoanTransactions
+                .Where(x => x.LoanScheduleID == id);
+
+            return await GetPaginatedLoanTransactionsList(options, query);
+        }
+
+        public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int[] id)
+        {
+            var query = _context.LoanTransactions
+                .Where(x => id.Contains(x.LoanScheduleID));
+
+            return await GetPaginatedLoanTransactionsList(options, query);
+        }
+
+        private static async Task<PaginatedList<LoanTransaction>> GetPaginatedLoanTransactionsList(PageOptions options, IQueryable<LoanTransaction> query)
+        {
+            query = query
+                .AsNoTracking()
                 .Include(x => x.PayPeriod)
                 .Include(x => x.LoanSchedule.Employee)
-                .Where(x => x.LoanScheduleID == id)
                 .OrderByDescending(x => x.PayPeriod.PayToDate)
                 .AsQueryable();
 
@@ -185,6 +208,9 @@ namespace AccuPay.Data.Repositories
                 .Include(l => l.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.Items)
                 .Include(l => l.LoanType)
+                .Include(l => l.YearlyLoanInterests)
+                .Include(l => l.LoanTransactions)
+                    .ThenInclude(t => t.PayPeriod)
                 .Where(l => l.OrganizationID == organizationId)
                 .Where(l => l.DedEffectiveDateFrom <= payPeriod.PayToDate)
                 .Where(l => acceptedLoans.Contains(l.DeductionSchedule.Trim().ToUpper()))

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class PolicyHelper
+    public class PolicyHelper : IPolicyHelper
     {
         public const string PayPeriodPolicyType = "Pay Period Policy";
         public const string DefaultFirstHalfDaysSpanPolicyLIC = "DefaultFirstHalfDaysSpan";
@@ -37,28 +37,31 @@ namespace AccuPay.Data.Services
             _timeEntryPolicy = new TimeEntryPolicy(_settings);
         }
 
+        public decimal DefaultBPIInsurance => _settings.GetDecimal("Default.BPIInsurance");
+
+        public bool HasDifferentPayPeriodDates => _settings.GetBoolean("Payroll Policy.HasDifferentPayPeriodDates", false);
+
+        public string HolidayCalculationType => _settings.GetStringOrDefault("Payroll Policy.HolidayPay", "Daily");
+
         public bool ShowActual => _settings.GetBoolean("Policy.ShowActual", true);
 
         public bool UseUserLevel => _settings.GetBoolean("User Policy.UseUserLevel", false);
 
         public bool UseEmailPayslip => _settings.GetBoolean("Payroll Policy.EmailPayslip", false);
 
-        public decimal DefaultBPIInsurance => _settings.GetDecimal("Default.BPIInsurance");
-
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
 
         public bool UseDefaultShiftAndTimeLogs => _settings.GetBoolean("Data Policy.UseDefaultShiftAndTimeLogs", false);
 
-        public bool HasDifferentPayPeriodDates => _settings.GetBoolean("Payroll Policy.HasDifferentPayPeriodDates", false);
-
         public bool UseCostCenter => _settings.GetBoolean("Policy.UseCostCenter", false);
+
+        public bool UseGoldwingsLoanInterest => _settings.GetBoolean("Loan Policy.UseGoldWingsLoanInterest", false);
 
         public bool UseLoanDeductFromBonus => _settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
 
         public bool UseLoanDeductFromThirteenthMonthPay => _settings.GetBoolean("Policy.UseLoanDeductFromThirteenthMonthPay", false);
-        public bool UseMassOvertime => _settings.GetBoolean("Policy.UseMassOvertime", false);
 
-        public string HolidayCalculationType => _settings.GetStringOrDefault("Payroll Policy.HolidayPay", "Daily");
+        public bool UseMassOvertime => _settings.GetBoolean("Policy.UseMassOvertime", false);
 
         public bool UseAgency => CurrentSystemOwner == SystemOwnerService.Hyundai || CurrentSystemOwner == SystemOwnerService.Goldwings;
 

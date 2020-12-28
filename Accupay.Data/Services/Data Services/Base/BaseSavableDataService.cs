@@ -27,7 +27,7 @@ namespace AccuPay.Data.Services
             SavableRepository<T> repository,
             PayPeriodRepository payPeriodRepository,
             PayrollContext context,
-            PolicyHelper policy,
+            IPolicyHelper policy,
             string entityName,
             string entityNamePlural = null) :
 
@@ -98,7 +98,7 @@ namespace AccuPay.Data.Services
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual async Task SaveAsync(T entity, int currentlyLoggedInUserId)
+        public virtual async Task<T> SaveAsync(T entity, int currentlyLoggedInUserId)
         {
             bool isNew = entity.IsNewEntity;
 
@@ -119,6 +119,8 @@ namespace AccuPay.Data.Services
 
             SaveType saveType = isNew ? SaveType.Insert : SaveType.Update;
             await PostSaveAction(entity, oldEntity, saveType);
+
+            return entity;
         }
 
         public virtual async Task SaveManyAsync(List<T> entities, int currentlyLoggedInUserId)

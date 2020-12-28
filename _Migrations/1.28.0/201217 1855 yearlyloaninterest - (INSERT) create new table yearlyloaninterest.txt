@@ -1,0 +1,16 @@
+CREATE TABLE `yearlyloaninterest` (
+	`LoanScheduleId` INT(11) NOT NULL,
+	`Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`CreatedBy` INT(11) NOT NULL,
+	`LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+	`LastUpdBy` INT(11) NULL DEFAULT NULL,
+	`Date` DATE NOT NULL,
+	`Year` YEAR NOT NULL,
+	`LoanAmountWithInterest` DECIMAL(15,2) NOT NULL,
+	`LoanInterestAmount` DECIMAL(15,2) NOT NULL,
+	`LoanInterestPerCutOff` DECIMAL(10,2) NOT NULL,
+	PRIMARY KEY (`LoanScheduleId`, `Year`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;

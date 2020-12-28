@@ -137,7 +137,7 @@ namespace AccuPay.Data.Services
         {
             paystubModel.HMOAmount = MonthlyDeductionAmount
                 .ComputeBranchPercentage(
-                    amount: hmoLoan?.Amount ?? 0,
+                    amount: hmoLoan?.DeductionAmount ?? 0,
                     branchPercentage: workedPercentage);
 
             paystubModel.SSSAmount = monthlyDeduction.SSSAmount.GetBranchPercentage(workedPercentage);

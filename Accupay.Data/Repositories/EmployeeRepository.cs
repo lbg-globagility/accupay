@@ -285,7 +285,7 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Employee> GetByIdAsync(int employeeId)
+        public override async Task<Employee> GetByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
             return await builder.IncludePosition().IncludeEmploymentPolicy().GetByIdAsync(employeeId, null);

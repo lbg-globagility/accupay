@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,44 +9,50 @@ namespace AccuPay.Data.Entities
     public class LoanTransaction
     {
         [Key]
-        public virtual int? RowID { get; set; }
+        public int? RowID { get; set; }
 
-        public virtual DateTime Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public virtual int? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
 
-        public virtual DateTime LastUpd { get; set; }
+        public DateTime LastUpd { get; set; }
 
-        public virtual int? LastUpdBy { get; set; }
+        public int? LastUpdBy { get; set; }
 
-        public virtual int? OrganizationID { get; set; }
+        public int? OrganizationID { get; set; }
 
-        public virtual int? PayPeriodID { get; set; }
+        public int? PayPeriodID { get; set; }
 
-        public virtual int? EmployeeID { get; set; }
+        public int? EmployeeID { get; set; }
 
-        public virtual int? PaystubID { get; set; }
+        public int? PaystubID { get; set; }
 
-        public virtual int LoanPayPeriodLeft { get; set; }
+        public int LoanPayPeriodLeft { get; set; }
 
         [Column("EmployeeLoanRecordID")]
-        public virtual int LoanScheduleID { get; set; }
+        public int LoanScheduleID { get; set; }
 
         [Column("TotalBalanceLeft")]
-        public virtual decimal TotalBalance { get; set; }
+        public decimal TotalBalance { get; set; }
 
-        [Column("DeductionAmount")]
-        public virtual decimal Amount { get; set; }
+        /// <summary>
+        /// Total deduction amount. This includes the InterestAmount.
+        /// </summary>
+        public decimal DeductionAmount { get; set; }
+
+        public decimal InterestAmount { get; set; }
 
         [ForeignKey("LoanScheduleID")]
-        public virtual LoanSchedule LoanSchedule { get; set; }
+        public LoanSchedule LoanSchedule { get; set; }
 
         [ForeignKey("PayPeriodID")]
-        public virtual PayPeriod PayPeriod { get; set; }
+        public PayPeriod PayPeriod { get; set; }
 
         [ForeignKey("PaystubID")]
-        public virtual Paystub Paystub { get; set; }
+        public Paystub Paystub { get; set; }
 
         public DateTime? PayPeriodPayToDate => PayPeriod?.PayToDate;
+
+        public decimal PrincipalAmount => DeductionAmount - InterestAmount;
     }
 }

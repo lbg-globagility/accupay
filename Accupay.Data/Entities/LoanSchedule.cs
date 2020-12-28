@@ -45,6 +45,13 @@ namespace AccuPay.Data.Entities
 
         public string LoanName { get; set; }
 
+        public decimal OriginalDeductionAmount { get; set; }
+
+        /// <summary>
+        /// Employee's basic monthly salary when this loan was created
+        /// </summary>
+        public decimal BasicMonthlySalary { get; set; }
+
         [ForeignKey("LoanTypeID")]
         public Product LoanType { get; set; }
 
@@ -55,7 +62,11 @@ namespace AccuPay.Data.Entities
 
         public ICollection<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
 
-        public bool HasStarted => TotalBalanceLeft != TotalLoanAmount;
+        public ICollection<YearlyLoanInterest> YearlyLoanInterests { get; set; }
+
+        public bool IsUnEditable => Status == STATUS_CANCELLED || Status == STATUS_COMPLETE;
+
+        public bool HasTransactions => LoanTransactions != null && LoanTransactions.Any();
 
         /// <summary>
         /// Recomputes TotalPayPeriod. Call this everytime TotalLoanAmount has changed.
@@ -88,8 +99,14 @@ namespace AccuPay.Data.Entities
 
         public void RetractLoanTransactions(IEnumerable<LoanTransaction> loanTransactions)
         {
-            TotalBalanceLeft += loanTransactions.Sum(x => x.Amount);
+            TotalBalanceLeft += loanTransactions.Sum(x => x.DeductionAmount);
             RecomputePayPeriodLeft();
+        }
+
+        public bool IsEligibleForGoldwingsInterest()
+        {
+            return TotalLoanAmount > BasicMonthlySalary &&
+                DeductionPercentage > 0;
         }
 
         private int ComputePayPeriod(decimal baseAmount)

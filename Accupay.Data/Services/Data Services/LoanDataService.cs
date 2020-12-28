@@ -16,12 +16,13 @@ namespace AccuPay.Data.Services
         private const string UserActivityName = "Loan";
 
         private readonly ListOfValueRepository _listOfValueRepository;
+        private readonly EmployeeRepository _employeeRepository;
         private readonly LoanRepository _loanRepository;
         private readonly ProductRepository _productRepository;
-
         private readonly SystemOwnerService _systemOwnerService;
 
         public LoanDataService(
+            EmployeeRepository employeeRepository,
             LoanRepository loanRepository,
             ListOfValueRepository listOfValueRepository,
             PayPeriodRepository payPeriodRepository,
@@ -29,7 +30,7 @@ namespace AccuPay.Data.Services
             UserActivityRepository userActivityRepository,
             SystemOwnerService systemOwnerService,
             PayrollContext context,
-            PolicyHelper policy) :
+            IPolicyHelper policy) :
 
             base(loanRepository,
                 payPeriodRepository,
@@ -38,6 +39,7 @@ namespace AccuPay.Data.Services
                 policy,
                 entityName: "Loan")
         {
+            _employeeRepository = employeeRepository;
             _loanRepository = loanRepository;
             _listOfValueRepository = listOfValueRepository;
             _productRepository = productRepository;
@@ -67,9 +69,9 @@ namespace AccuPay.Data.Services
         public async Task BatchApply(IReadOnlyCollection<Imports.Loans.LoanImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
         {
             var loanWithLoanTypeNotYetExists = validRecords
-                .Where(v => v.LoanTypeNotExists)
-                .GroupBy(v => v.LoanName)
-                .Select(v => v.FirstOrDefault().LoanName)
+                .Where(x => x.LoanTypeNotExists)
+                .GroupBy(x => x.LoanName)
+                .Select(x => x.FirstOrDefault().LoanName)
                 .ToList();
 
             if (loanWithLoanTypeNotYetExists.Any())
@@ -128,7 +130,7 @@ namespace AccuPay.Data.Services
 
             Validate(loan, oldLoan);
 
-            await SanitizeProperties(loan);
+            SanitizeProperties(loan);
 
             if (loan.IsNewEntity)
             {
@@ -153,6 +155,15 @@ namespace AccuPay.Data.Services
 
         protected override async Task AdditionalSaveValidation(LoanSchedule loan, LoanSchedule oldLoan)
         {
+            await ValidationForBenchmark(loan);
+
+            if (!loan.IsNewEntity)
+            {
+                var loanTransactionList = await _loanRepository.GetLoanTransactionsAsync(PageOptions.AllData, loan.RowID.Value);
+
+                ValidateTotalAmountAndBalance(loan, oldLoan, loanTransactionList.Items);
+            }
+
             // validate start date should not be in a Closed Payroll
             if (CheckIfStartDateNeedsToBeValidated(new List<LoanSchedule>() { oldLoan }, loan))
             {
@@ -174,10 +185,37 @@ namespace AccuPay.Data.Services
                     .GetByIdAsync(loan.LoanTypeID.Value))
                     ?.PartNo;
             }
+
+            // sanitize Basic Monthly Salary
+            if (loan.IsNewEntity)
+            {
+                await AddBasicMonthlySalaryData(loan);
+            }
         }
 
         protected async override Task AdditionalSaveManyValidation(List<LoanSchedule> loans, List<LoanSchedule> oldLoans, SaveType saveType)
         {
+            var updatedLoanIds = loans
+                .Where(x => !x.IsNewEntity)
+                .Select(x => x.RowID.Value)
+                .ToArray();
+
+            var allLoanTransactionList = await _loanRepository.GetLoanTransactionsAsync(PageOptions.AllData, updatedLoanIds);
+
+            foreach (var loan in loans)
+            {
+                await ValidationForBenchmark(loan);
+
+                if (!loan.IsNewEntity)
+                {
+                    var oldLoan = oldLoans.Where(x => x.RowID == loan.RowID).FirstOrDefault();
+
+                    var loanTransactions = allLoanTransactionList.Items.Where(x => x.LoanScheduleID == loan.RowID);
+
+                    ValidateTotalAmountAndBalance(loan, oldLoan, loanTransactions);
+                }
+            }
+
             // validate start date should not be in a Closed Payroll
             int? organizationId = null;
             loans.ForEach(x =>
@@ -195,7 +233,7 @@ namespace AccuPay.Data.Services
 
             await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, organizationId.Value);
 
-            // validate deduction schedules and sanitize Loan Name
+            // validate deduction schedules then sanitize Loan Name and Basic Monthly Salary
             var deductionSchedules = _listOfValueRepository
                 .ConvertToStringList(await _listOfValueRepository.GetDeductionSchedulesAsync())
                 .Select(x => x.ToTrimmedLowerCase());
@@ -218,6 +256,113 @@ namespace AccuPay.Data.Services
                         .FirstOrDefault()?
                         .PartNo;
                 }
+
+                if (loan.IsNewEntity)
+                {
+                    await AddBasicMonthlySalaryData(loan);
+                }
+            }
+        }
+
+        protected async override Task RecordUpdate(LoanSchedule newLoanSchedule, LoanSchedule oldLoanSchedule)
+        {
+            if (oldLoanSchedule == null) return;
+
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldLoanSchedule)}.";
+
+            if (newLoanSchedule.LoanName != oldLoanSchedule.LoanName)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.LoanNumber != oldLoanSchedule.LoanNumber)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated loan number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.TotalLoanAmount != oldLoanSchedule.TotalLoanAmount)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated total amount from '{oldLoanSchedule.TotalLoanAmount}' to '{newLoanSchedule.TotalLoanAmount}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.DedEffectiveDateFrom != oldLoanSchedule.DedEffectiveDateFrom)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated start date '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.DeductionAmount != oldLoanSchedule.DeductionAmount)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated deduction amount from '{oldLoanSchedule.DeductionAmount}' to '{newLoanSchedule.DeductionAmount}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.Status != oldLoanSchedule.Status)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.DeductionPercentage != oldLoanSchedule.DeductionPercentage)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated interest percentage from '{oldLoanSchedule.DeductionPercentage}' to '{newLoanSchedule.DeductionPercentage}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.DeductionSchedule != oldLoanSchedule.DeductionSchedule)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+            if (newLoanSchedule.Comments != oldLoanSchedule.Comments)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldLoanSchedule.RowID.Value,
+                    Description = $"Updated comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                });
+            }
+
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    newLoanSchedule.LastUpdBy.Value,
+                    UserActivityName,
+                    newLoanSchedule.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
             }
         }
 
@@ -236,6 +381,9 @@ namespace AccuPay.Data.Services
             {
                 loan.LoanNumber = "";
             }
+
+            loan.TotalBalanceLeft = loan.TotalLoanAmount;
+            loan.OriginalDeductionAmount = loan.DeductionAmount;
         }
 
         private void SanitizeUpdate(LoanSchedule newLoan, LoanSchedule oldLoan)
@@ -250,18 +398,6 @@ namespace AccuPay.Data.Services
                 newLoan.Status = LoanSchedule.STATUS_COMPLETE;
             }
 
-            // if nag start ng magbawas ng loan, dapat hindi na pwede ma edit ang TotalLoanAmount and Loan Type
-            if (oldLoan.HasStarted)// || loanTransactionsCount > 0)
-            {
-                newLoan.TotalLoanAmount = oldLoan.TotalLoanAmount;
-                newLoan.TotalBalanceLeft = oldLoan.TotalBalanceLeft;
-
-                newLoan.LoanTypeID = oldLoan.LoanTypeID;
-
-                // recompute NoOfPayPeriod if TotalLoanAmount changed
-                newLoan.RecomputeTotalPayPeriod();
-            }
-
             if (newLoan.TotalBalanceLeft > newLoan.TotalLoanAmount)
             {
                 newLoan.TotalBalanceLeft = oldLoan.TotalLoanAmount;
@@ -271,34 +407,49 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task SanitizeProperties(LoanSchedule loan)
+        private void ValidateTotalAmountAndBalance(LoanSchedule newLoan, LoanSchedule oldLoan, IEnumerable<LoanTransaction> loanTransactions)
         {
-            // move this to overriden save validation methods
-            await ValidationForBenchmark(loan);
+            if (newLoan.IsNewEntity || oldLoan == null) return;
 
+            // BasicMonthlySalary should never changed even if the current salary changed.
+            // Maybe recompute this if the loan has not started yet.
+            newLoan.BasicMonthlySalary = oldLoan.BasicMonthlySalary;
+
+            // if nag start ng magbawas ng loan, dapat hindi na pwede ma edit ang TotalLoanAmount, OriginalDeductionAmount and Loan Type
+            if (loanTransactions.Any())
+            {
+                newLoan.TotalLoanAmount = oldLoan.TotalLoanAmount;
+                newLoan.TotalBalanceLeft = oldLoan.TotalBalanceLeft;
+
+                newLoan.LoanTypeID = oldLoan.LoanTypeID;
+
+                newLoan.OriginalDeductionAmount = oldLoan.OriginalDeductionAmount;
+
+                newLoan.RecomputeTotalPayPeriod();
+                newLoan.RecomputePayPeriodLeft();
+            }
+            else
+            {
+                newLoan.OriginalDeductionAmount = newLoan.DeductionAmount;
+
+                // else Balance should always be equals to Loan Amount
+                newLoan.TotalBalanceLeft = newLoan.TotalLoanAmount;
+                newLoan.RecomputePayPeriodLeft();
+            }
+        }
+
+        private void SanitizeProperties(LoanSchedule loan)
+        {
             loan.TotalLoanAmount = AccuMath.CommercialRound(loan.TotalLoanAmount);
             loan.DeductionAmount = AccuMath.CommercialRound(loan.DeductionAmount);
             loan.DeductionPercentage = AccuMath.CommercialRound(loan.DeductionPercentage);
-            loan.TotalPayPeriod = AccuMath.CommercialRound(loan.TotalPayPeriod);
             loan.TotalBalanceLeft = AccuMath.CommercialRound(loan.TotalBalanceLeft);
-
-            if (!_loanRepository.GetStatusList().Any(x => x.ToTrimmedLowerCase() == loan.Status.ToTrimmedLowerCase()))
-            {
-                if (loan.TotalBalanceLeft >= loan.TotalLoanAmount)
-                {
-                    loan.Status = LoanSchedule.STATUS_COMPLETE;
-                }
-                else
-                {
-                    loan.Status = LoanSchedule.STATUS_IN_PROGRESS;
-                }
-            }
 
             loan.RecomputeTotalPayPeriod();
             loan.RecomputePayPeriodLeft();
         }
 
-        private static void Validate(LoanSchedule loan, LoanSchedule oldLoan)
+        private void Validate(LoanSchedule loan, LoanSchedule oldLoan)
         {
             if ((oldLoan?.Status ?? loan.Status) == LoanSchedule.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
@@ -309,14 +460,17 @@ namespace AccuPay.Data.Services
             if (loan.DedEffectiveDateFrom < PayrollTools.SqlServerMinimumDate)
                 throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
 
-            if (loan.TotalLoanAmount < 0)
-                throw new BusinessLogicException("Total loan amount cannot be less than 0.");
+            if (loan.TotalLoanAmount <= 0)
+                throw new BusinessLogicException("Total loan amount cannot be less than or equal to 0.");
 
-            if (loan.DeductionAmount < 0)
-                throw new BusinessLogicException("Deduction amount cannot be less than 0.");
+            if (loan.DeductionAmount <= 0)
+                throw new BusinessLogicException("Deduction amount cannot be less than or equal to 0.");
 
             if (string.IsNullOrWhiteSpace(loan.DeductionSchedule))
                 throw new BusinessLogicException("Deduction schedule is required.");
+
+            if (!_loanRepository.GetStatusList().Any(x => x.ToTrimmedLowerCase() == loan.Status.ToTrimmedLowerCase()))
+                throw new BusinessLogicException("Status is required.");
         }
 
         private async Task ValidationForBenchmark(LoanSchedule loan)
@@ -367,6 +521,20 @@ namespace AccuPay.Data.Services
                 return true;
 
             return false;
+        }
+
+        private async Task AddBasicMonthlySalaryData(LoanSchedule loan)
+        {
+            if (loan.IsNewEntity)
+            {
+                var currentEmployee = await _employeeRepository
+                    .GetByIdAsync(loan.EmployeeID.Value);
+
+                var currentSalary = await _employeeRepository
+                    .GetCurrentSalaryAsync(loan.EmployeeID.Value, loan.DedEffectiveDateFrom);
+
+                loan.BasicMonthlySalary = PayrollTools.GetEmployeeMonthlyRate(currentEmployee, currentSalary);
+            }
         }
 
         #endregion Private Methods

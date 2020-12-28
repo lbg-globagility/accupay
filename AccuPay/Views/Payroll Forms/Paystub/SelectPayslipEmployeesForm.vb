@@ -25,7 +25,7 @@ Public Class SelectPayslipEmployeesForm
 
     Private ReadOnly _payslipCreator As PayslipBuilder
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
@@ -47,7 +47,7 @@ Public Class SelectPayslipEmployeesForm
 
         _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 

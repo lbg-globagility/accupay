@@ -16,9 +16,9 @@ namespace AccuPay.Data.Repositories
     // TODO: use a query builder to prevent using IsSemiMonthly and other entity functions directly since it does not directly translate to sql query.
     public class PayPeriodRepository : SavableRepository<PayPeriod>
     {
-        private readonly PolicyHelper _policy;
+        private readonly IPolicyHelper _policy;
 
-        public PayPeriodRepository(PayrollContext context, PolicyHelper policy) : base(context)
+        public PayPeriodRepository(PayrollContext context, IPolicyHelper policy) : base(context)
         {
             _policy = policy;
         }

@@ -46,7 +46,12 @@ Namespace Global.AccuPay.Desktop.Utilities
 
         End Function
 
-        Private Shared Sub HandleDefaultError(messageTitle As String, baseExceptionErrorMessage As String, errorCallBack As Action, ex As Exception)
+        Private Shared Sub HandleDefaultError(
+            messageTitle As String,
+            baseExceptionErrorMessage As String,
+            errorCallBack As Action,
+            ex As Exception)
+
             Debugger.Break()
 
             If baseExceptionErrorMessage Is Nothing Then

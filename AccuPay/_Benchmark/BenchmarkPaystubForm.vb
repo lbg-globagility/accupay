@@ -667,9 +667,9 @@ Public Class BenchmarkPaystubForm
         Dim loanRecords = payStub.LoanTransactions
 
         Dim pagIbigLoan = loanRecords.
-            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID.Value = _pagibigLoanId.Value)?.Amount
+            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID.Value = _pagibigLoanId.Value)?.DeductionAmount
         Dim sssLoan = loanRecords.
-            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID.Value = _sssLoanId.Value)?.Amount
+            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID.Value = _sssLoanId.Value)?.DeductionAmount
 
         Return (pagIbigLoan, sssLoan)
 

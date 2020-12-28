@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
 Imports AccuPay.CrystalReports
@@ -76,7 +76,7 @@ Public Class Form1
     End Sub
 
     Private Async Function GetPayslipReport() As Task(Of CrystalDecisions.CrystalReports.Engine.ReportClass)
-        Dim currentPayPeriod As New PayPeriod With {
+        Dim currentPayPeriod As New PayPeriod(isFirstHalf:=False) With {
             .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
             .PayToDate = New Date(2019, 10, 15)
@@ -140,7 +140,7 @@ Public Class Form1
     End Sub
 
     Private Async Function GetPDF() As Task(Of String)
-        Dim currentPayPeriod As New PayPeriod With {
+        Dim currentPayPeriod As New PayPeriod(isFirstHalf:=False) With {
             .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
             .PayToDate = New Date(2019, 10, 15)
@@ -166,13 +166,13 @@ Public Class Form1
     End Function
 
     Private Async Sub OfficialPayslipButton_Click(sender As Object, e As EventArgs) Handles OfficialPayslipButton.Click
-        Dim currentPayPeriod As New PayPeriod With {
+        Dim currentPayPeriod As New PayPeriod(isFirstHalf:=False) With {
             .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
             .PayToDate = New Date(2019, 10, 15)
         }
 
-        Dim nextPayPeriod As New PayPeriod With {
+        Dim nextPayPeriod As New PayPeriod(isFirstHalf:=False) With {
             .RowID = 621,
             .PayFromDate = New Date(2019, 10, 16),
             .PayToDate = New Date(2019, 10, 31)

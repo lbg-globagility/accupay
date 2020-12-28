@@ -88,10 +88,6 @@ namespace AccuPay.Data.Services
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
-            var useLoanDeductFromBonus = settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
-
-            var useLoanDeductFromThirteenthMonthPay = settings.GetBoolean("Policy.UseLoanDeductFromThirteenthMonthPay", false);
-
             try
             {
                 var result = await GeneratePayStub(
@@ -116,8 +112,7 @@ namespace AccuPay.Data.Services
                     allowances: allowances,
                     leaves: leaves,
                     bonuses: bonuses,
-                    useLoanDeductFromBonus: useLoanDeductFromBonus,
-                    useLoanDeductFromThirteenthMonthPay: useLoanDeductFromThirteenthMonthPay);
+                    policy: resources.Policy);
 
                 return result;
             }
@@ -154,8 +149,7 @@ namespace AccuPay.Data.Services
             IReadOnlyCollection<Allowance> allowances,
             IReadOnlyCollection<Leave> leaves,
             IReadOnlyCollection<Bonus> bonuses,
-            bool useLoanDeductFromBonus,
-            bool useLoanDeductFromThirteenthMonthPay)
+            IPolicyHelper policy)
         {
             if (salary == null)
                 return PaystubEmployeeResult.Error(employee, "Employee has no salary for this cutoff.");
@@ -211,8 +205,8 @@ namespace AccuPay.Data.Services
                 payPeriod,
                 loanSchedules,
                 bonuses: bonuses,
-                useLoanDeductFromBonus: useLoanDeductFromBonus,
-                useLoanDeductFromThirteenthMonthPay: useLoanDeductFromThirteenthMonthPay);
+                policy: policy,
+                userId: userId);
 
             ComputePayroll(
                 resources,
@@ -236,6 +230,7 @@ namespace AccuPay.Data.Services
                 userId: userId,
                 currentSystemOwner,
                 settings,
+                policy,
                 payPeriod,
                 paystub,
                 employee,
@@ -247,8 +242,7 @@ namespace AccuPay.Data.Services
                 loanTransactions: loanTransactions,
                 timeEntries: timeEntries,
                 leaves: leaves,
-                bonuses: bonuses,
-                useLoanDeductFromBonus: useLoanDeductFromBonus);
+                bonuses: bonuses);
 
             return PaystubEmployeeResult.Success(employee, paystub);
         }
@@ -273,6 +267,7 @@ namespace AccuPay.Data.Services
             int userId,
             string currentSystemOwner,
             ListOfValueCollection settings,
+            IPolicyHelper policy,
             PayPeriod payPeriod,
             Paystub paystub,
             Employee employee,
@@ -284,8 +279,7 @@ namespace AccuPay.Data.Services
             ICollection<LoanTransaction> loanTransactions,
             IReadOnlyCollection<TimeEntry> timeEntries,
             IReadOnlyCollection<Leave> leaves,
-            IReadOnlyCollection<Bonus> bonuses,
-            bool useLoanDeductFromBonus)
+            IReadOnlyCollection<Bonus> bonuses)
         {
             foreach (var loan in loanSchedules)
             {
@@ -293,12 +287,13 @@ namespace AccuPay.Data.Services
                 _context.Entry(loan).State = EntityState.Modified;
 
                 SaveLoanPaymentFromBonusItems(
-                    context: _context,
                     payPeriod: payPeriod,
                     paystub: paystub,
                     loan: loan,
                     bonuses: bonuses,
-                    useLoanDeductFromBonus: useLoanDeductFromBonus);
+                    useLoanDeductFromBonus: policy.UseLoanDeductFromBonus);
+
+                SaveYearlyLoanInterest(policy, loan);
             }
 
             if (paystub.RowID.HasValue)
@@ -362,8 +357,23 @@ namespace AccuPay.Data.Services
             await _context.SaveChangesAsync();
         }
 
+        private void SaveYearlyLoanInterest(IPolicyHelper policy, LoanSchedule loan)
+        {
+            if (policy.UseGoldwingsLoanInterest && loan.YearlyLoanInterests != null && loan.YearlyLoanInterests.Any())
+            {
+                loan.YearlyLoanInterests.ToList().ForEach(yearlyLoanInterest =>
+                {
+                    // Save new yearly loan interest.
+                    // Don't save updated yearlyLoanInterests since they should not be edited after it was created.
+                    if (yearlyLoanInterest.IsNewEntity)
+                    {
+                        _context.Entry(yearlyLoanInterest).State = EntityState.Added;
+                    }
+                });
+            }
+        }
+
         private void SaveLoanPaymentFromBonusItems(
-            PayrollContext context,
             PayPeriod payPeriod,
             Paystub paystub,
             LoanSchedule loan,
@@ -387,13 +397,18 @@ namespace AccuPay.Data.Services
 
                     lb.Items.Add(lbItem);
 
-                    context.Entry(lbItem).State = EntityState.Added;
+                    _context.Entry(lbItem).State = EntityState.Added;
                 }
             }
         }
 
         private static IEnumerable<LoanPaymentFromBonus> GetLoanPaymentFromBonuses(IReadOnlyCollection<Bonus> bonuses, LoanSchedule loan, PayPeriod payPeriod)
         {
+            if (loan.LoanPaymentFromBonuses == null || !loan.LoanPaymentFromBonuses.Any())
+            {
+                return new List<LoanPaymentFromBonus>();
+            }
+
             var bonusIds = bonuses
                 .Select(b => b.RowID.Value)
                 .ToArray();
@@ -409,6 +424,7 @@ namespace AccuPay.Data.Services
                 .LoanPaymentFromBonuses
                 .Where(l => l.LoanId == loan.RowID.Value)
                 .Where(l => bonusIds.Contains(l.BonusId));
+
             return loanPaymentFromBonuses;
         }
 
@@ -446,7 +462,7 @@ namespace AccuPay.Data.Services
             paystub.TotalBonus = AccuMath.CommercialRound(bonuses.Sum(b => b.BonusAmount));
 
             // Loans
-            paystub.TotalLoans = loanTransactions.Sum(t => t.Amount);
+            paystub.TotalLoans = loanTransactions.Sum(t => t.DeductionAmount);
 
             // gross pay and total earnings should be higher than the goverment deduction calculators
             // since it is sometimes used in computing the basis pay for the deductions
@@ -466,7 +482,7 @@ namespace AccuPay.Data.Services
             var socialSecurityCalculator = new SssCalculator(settings, resources.SocialSecurityBrackets);
             socialSecurityCalculator.Calculate(paystub, previousPaystub, salary, employee, payPeriod, currentSystemOwner);
 
-            var philHealthCalculator = new PhilHealthCalculator(new PhilHealthPolicy(settings), resources.PhilHealthBrackets);
+            var philHealthCalculator = new PhilHealthCalculator(new PhilHealthPolicy(settings));
             philHealthCalculator.Calculate(salary, paystub, previousPaystub, employee, payPeriod, allowances, currentSystemOwner);
 
             var hdmfCalculator = new HdmfCalculator();
@@ -644,43 +660,45 @@ namespace AccuPay.Data.Services
             paystub.Actual.AbsenceDeduction = paystubRate.ActualAbsenceDeduction;
         }
 
-        private ICollection<AllowanceItem> CreateAllowanceItems(int userId,
-                                            ListOfValueCollection settings,
-                                            CalendarCollection calendarCollection,
-                                            PayPeriod payPeriod,
-                                            Paystub paystub,
-                                            Employee employee,
-                                            IReadOnlyCollection<TimeEntry> previousTimeEntries,
-                                            IReadOnlyCollection<TimeEntry> timeEntries,
-                                            IReadOnlyCollection<Allowance> allowances)
+        private ICollection<AllowanceItem> CreateAllowanceItems(
+            int userId,
+            ListOfValueCollection settings,
+            CalendarCollection calendarCollection,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Employee employee,
+            IReadOnlyCollection<TimeEntry> previousTimeEntries,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Allowance> allowances)
         {
             var dailyCalculator = new DailyAllowanceCalculator(
-                                                            settings,
-                                                            calendarCollection,
-                                                            previousTimeEntries,
-                                                            organizationId: paystub.OrganizationID.Value,
-                                                            userId: userId);
+                settings,
+                calendarCollection,
+                previousTimeEntries,
+                organizationId: paystub.OrganizationID.Value,
+                userId: userId);
 
             var semiMonthlyCalculator = new SemiMonthlyAllowanceCalculator(
-                                                            new AllowancePolicy(settings),
-                                                            employee,
-                                                            paystub,
-                                                            payPeriod,
-                                                            calendarCollection,
-                                                            timeEntries,
-                                                            organizationId: paystub.OrganizationID.Value,
-                                                            userId: userId);
+                new AllowancePolicy(settings),
+                employee,
+                paystub,
+                payPeriod,
+                calendarCollection,
+                timeEntries,
+                organizationId: paystub.OrganizationID.Value,
+                userId: userId);
 
             var allowanceItems = new List<AllowanceItem>();
 
             foreach (var allowance in allowances)
             {
-                var item = AllowanceItem.Create(paystub: paystub,
-                                                product: allowance.Product,
-                                                payperiodId: payPeriod.RowID.Value,
-                                                allowanceId: allowance.RowID.Value,
-                                                organizationId: paystub.OrganizationID.Value,
-                                                userId: userId);
+                var item = AllowanceItem.Create(
+                    paystub: paystub,
+                    product: allowance.Product,
+                    payperiodId: payPeriod.RowID.Value,
+                    allowanceId: allowance.RowID.Value,
+                    organizationId: paystub.OrganizationID.Value,
+                    userId: userId);
 
                 if (allowance.IsOneTime)
                 {
@@ -773,7 +791,9 @@ namespace AccuPay.Data.Services
             {
                 // If a transaction has already been made for the current leave, skip the current leave.
                 if (transactions.Any(t => t.ReferenceID == leave.RowID))
+                {
                     continue;
+                }
                 else
                 {
                     var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo == leave.LeaveType);
@@ -803,12 +823,13 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void UpdateLedgerTransaction(Paystub paystub,
-                                            PayPeriod payPeriod,
-                                            int? leaveId,
-                                            LeaveLedger ledger,
-                                            decimal totalLeaveHours,
-                                            DateTime transactionDate)
+        private void UpdateLedgerTransaction(
+            Paystub paystub,
+            PayPeriod payPeriod,
+            int? leaveId,
+            LeaveLedger ledger,
+            decimal totalLeaveHours,
+            DateTime transactionDate)
         {
             var newTransaction = new LeaveTransaction()
             {
@@ -828,24 +849,54 @@ namespace AccuPay.Data.Services
             ledger.LastTransaction = newTransaction;
         }
 
-        private List<LoanTransaction> CreateLoanTransactions(Paystub paystub,
-                                                            PayPeriod payPeriod,
-                                                            IReadOnlyCollection<LoanSchedule> loanSchedules,
-                                                            IReadOnlyCollection<Bonus> bonuses,
-                                                            bool useLoanDeductFromBonus,
-                                                            bool useLoanDeductFromThirteenthMonthPay)
+        private List<LoanTransaction> CreateLoanTransactions(
+            Paystub paystub,
+            PayPeriod payPeriod,
+            IReadOnlyCollection<LoanSchedule> loanSchedules,
+            IReadOnlyCollection<Bonus> bonuses,
+            IPolicyHelper policy,
+            int userId)
         {
             var loanTransactions = new List<LoanTransaction>();
             var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
 
-            foreach (var loanSchedule in currentLoanSchedules)
+            var calculator = new LoanDeductionAmountCalculator(policy);
+
+            foreach (var loan in currentLoanSchedules)
             {
-                if (loanSchedule.LoanPayPeriodLeft == 0) continue;
+                if (loan.LoanPayPeriodLeft == 0) continue;
 
-                decimal deductionAmount = GetLoanDeductionAmount(paystub: paystub, loanSchedule, payPeriod, bonuses, useLoanDeductFromBonus, useLoanDeductFromThirteenthMonthPay: useLoanDeductFromThirteenthMonthPay);
+                var previousLoanTransactions = loan
+                    .LoanTransactions?
+                    .Where(x => x.PayPeriod.PayFromDate < payPeriod.PayFromDate)
+                    .ToList();
 
-                loanSchedule.TotalBalanceLeft -= deductionAmount;
-                loanSchedule.RecomputePayPeriodLeft();
+                var yearlyLoanInterest = loan.YearlyLoanInterests?
+                    .Where(x => x.IsWithInPayPeriod(payPeriod))
+                    .OrderBy(x => x.Year)
+                    .LastOrDefault();
+
+                var bonusLoanPayments = GetLoanPaymentFromBonuses(bonuses, loan, payPeriod).ToList();
+
+                (decimal deductionAmount, decimal interestAmount, YearlyLoanInterest newYearlyLoanInterest) =
+                    calculator.Calculate(
+                        loan, payPeriod,
+                        yearlyLoanInterest: yearlyLoanInterest,
+                        previousLoanTransactions: previousLoanTransactions,
+                        bonusLoanPayments: bonusLoanPayments,
+                        thirteenthMonthPayLoanPayments: paystub.LoanPaymentFromThirteenthMonthPays.ToList());
+
+                loan.TotalBalanceLeft -= deductionAmount;
+                loan.RecomputePayPeriodLeft();
+
+                if (policy.UseGoldwingsLoanInterest)
+                {
+                    if (newYearlyLoanInterest != null)
+                    {
+                        newYearlyLoanInterest.CreatedBy = userId;
+                        loan.YearlyLoanInterests.Add(newYearlyLoanInterest);
+                    }
+                }
 
                 var loanTransaction = new LoanTransaction()
                 {
@@ -855,61 +906,17 @@ namespace AccuPay.Data.Services
                     OrganizationID = paystub.OrganizationID,
                     EmployeeID = paystub.EmployeeID,
                     PayPeriodID = payPeriod.RowID,
-                    LoanScheduleID = loanSchedule.RowID.Value,
-                    LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft,
-                    TotalBalance = loanSchedule.TotalBalanceLeft,
-                    Amount = deductionAmount
+                    LoanScheduleID = loan.RowID.Value,
+                    LoanPayPeriodLeft = loan.LoanPayPeriodLeft,
+                    TotalBalance = loan.TotalBalanceLeft,
+                    DeductionAmount = deductionAmount,
+                    InterestAmount = interestAmount
                 };
 
                 loanTransactions.Add(loanTransaction);
             }
 
             return loanTransactions;
-        }
-
-        private decimal GetLoanDeductionAmount(Paystub paystub, LoanSchedule loanSchedule, PayPeriod payPeriod, IReadOnlyCollection<Bonus> bonuses, bool useLoanDeductFromBonus, bool useLoanDeductFromThirteenthMonthPay)
-        {
-            decimal loanDeductionAmount = 0;
-
-            if (loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft)
-            {
-                return loanSchedule.TotalBalanceLeft;
-            }
-            else if (useLoanDeductFromBonus && GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod).Any())
-            {
-                var newDeductionAmount =
-                    GetLoanPaymentFromBonuses(bonuses, loanSchedule, payPeriod)
-                    .Sum(l => l.AmountPayment);
-                if (newDeductionAmount > loanSchedule.TotalBalanceLeft)
-                {
-                    loanDeductionAmount = loanSchedule.TotalBalanceLeft;
-                }
-                else
-                {
-                    loanDeductionAmount = newDeductionAmount;
-                }
-            }
-            else
-            {
-                loanDeductionAmount = loanSchedule.DeductionAmount;
-            }
-
-            if (useLoanDeductFromThirteenthMonthPay &&
-                (paystub.LoanPaymentFromThirteenthMonthPays != null && paystub.LoanPaymentFromThirteenthMonthPays.Any()))
-            {
-                var addedLoanDeduction = paystub.LoanPaymentFromThirteenthMonthPays
-                    .Where(l => l.LoanId == loanSchedule.RowID.Value)
-                    .Sum(l => l.AmountPayment);
-
-                if ((addedLoanDeduction + loanDeductionAmount) > loanSchedule.TotalBalanceLeft)
-                {
-                    loanDeductionAmount = loanSchedule.TotalBalanceLeft;
-                }
-
-                loanDeductionAmount += addedLoanDeduction;
-            }
-
-            return loanDeductionAmount;
         }
 
         private async Task UpdatePaystubItems(

@@ -16,7 +16,7 @@ Public Class RoleUserControl
 
     Private _formMode As FormMode
 
-    Private ReadOnly _policy As PolicyHelper
+    Private ReadOnly _policy As IPolicyHelper
 
     Private ReadOnly _permissionRepository As PermissionRepository
 
@@ -29,7 +29,7 @@ Public Class RoleUserControl
         'For issues in designer And also defensive programming
         If MainServiceProvider IsNot Nothing Then
 
-            _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+            _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
             _permissionRepository = MainServiceProvider.GetRequiredService(Of PermissionRepository)
         End If

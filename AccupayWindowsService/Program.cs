@@ -1,4 +1,4 @@
-﻿using AccuPay.CrystalReports;
+using AccuPay.CrystalReports;
 using AccuPay.Data;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -39,7 +39,7 @@ namespace AccupayWindowsService
 
             services.AddScoped<EmailService>();
 
-            services.AddScoped<PolicyHelper>();
+            services.AddScoped<IPolicyHelper, PolicyHelper>();
             services.AddScoped<ListOfValueService>();
 
             services.AddScoped<OrganizationRepository>();

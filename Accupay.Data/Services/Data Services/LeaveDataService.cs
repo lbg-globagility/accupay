@@ -29,7 +29,7 @@ namespace AccuPay.Data.Services
 
         public LeaveDataService(
             PayrollContext context,
-            PolicyHelper policy,
+            IPolicyHelper policy,
             EmployeeRepository employeeRepository,
             EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
             LeaveRepository leaveRepository,
@@ -51,11 +51,13 @@ namespace AccuPay.Data.Services
 
         #region SaveManyAsync
 
-        public override async Task SaveAsync(Leave leave, int changedByUserId)
+        public override async Task<Leave> SaveAsync(Leave leave, int changedByUserId)
         {
             await SaveManyAsync(new List<Leave> { leave }, changedByUserId);
 
             await RecordAdd(leave);
+
+            return leave;
         }
 
         public override async Task SaveManyAsync(List<Leave> leaves, int changedByUserId)

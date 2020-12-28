@@ -36,6 +36,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPay.CrystalReports", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPay.CrystalReportsAPI", "AccuPay.CrystalReportsAPI\AccuPay.CrystalReportsAPI.csproj", "{81F1C726-5406-4D5D-83C1-593F92E4E5EE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccuPay.Core.UnitTests", "AccuPay.Core.UnitTests\AccuPay.Core.UnitTests.csproj", "{0BB01AA7-45A8-476F-BD6D-E907F422E495}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPay.Core.IntegrationTests", "AccuPay.Core.IntegrationTests\AccuPay.Core.IntegrationTests.csproj", "{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +144,22 @@ Global
 		{81F1C726-5406-4D5D-83C1-593F92E4E5EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81F1C726-5406-4D5D-83C1-593F92E4E5EE}.Release|x86.ActiveCfg = Release|Any CPU
 		{81F1C726-5406-4D5D-83C1-593F92E4E5EE}.Release|x86.Build.0 = Release|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Debug|x86.Build.0 = Debug|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Release|x86.ActiveCfg = Release|Any CPU
+		{0BB01AA7-45A8-476F-BD6D-E907F422E495}.Release|x86.Build.0 = Release|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Debug|x86.Build.0 = Debug|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Release|x86.ActiveCfg = Release|Any CPU
+		{3DA72BB7-6CFC-4CC9-8273-BE631C45ECC7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

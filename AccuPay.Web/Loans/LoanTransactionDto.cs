@@ -22,7 +22,7 @@ namespace AccuPay.Web.Loans
                 LoanNumber = loanTransaction.LoanSchedule.LoanNumber,
                 LoanType = loanTransaction.LoanSchedule.LoanType.DisplayName,
                 TotalAmount = loanTransaction.LoanSchedule.TotalLoanAmount,
-                DeductionAmount = loanTransaction.Amount,
+                DeductionAmount = loanTransaction.DeductionAmount,
                 Balance = loanTransaction.TotalBalance
             };
         }

@@ -33,7 +33,7 @@ namespace AccuPay.Web.Loans
                 EmployeeNo = loanTransaction.LoanSchedule?.Employee?.EmployeeNo,
                 EmployeeType = loanTransaction.LoanSchedule?.Employee?.EmployeeType,
                 DeductionDate = loanTransaction.PayPeriodPayToDate.Value,
-                Amount = loanTransaction.Amount,
+                Amount = loanTransaction.DeductionAmount,
                 Balance = loanTransaction.TotalBalance
             };
         }

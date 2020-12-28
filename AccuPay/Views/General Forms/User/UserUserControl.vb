@@ -17,7 +17,7 @@ Public Class UserUserControl
 
     Private ReadOnly _encryptor As IEncryption
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Private _organizations As ICollection(Of Organization)
 
@@ -33,7 +33,7 @@ Public Class UserUserControl
 
             _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
 
-            _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+            _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
         End If
 
     End Sub
