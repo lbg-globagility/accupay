@@ -394,7 +394,7 @@ Partial Class EmployeeLoansForm
         '
         'c_Amount
         '
-        Me.c_Amount.DataPropertyName = "Amount"
+        Me.c_Amount.DataPropertyName = "DeductionAmount"
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle8.Format = "(#,###.00)"
         DataGridViewCellStyle8.NullValue = Nothing
