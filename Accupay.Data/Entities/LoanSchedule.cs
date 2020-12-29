@@ -99,7 +99,7 @@ namespace AccuPay.Data.Entities
 
         public void RetractLoanTransactions(IEnumerable<LoanTransaction> loanTransactions)
         {
-            TotalBalanceLeft += loanTransactions.Sum(x => x.DeductionAmount);
+            TotalBalanceLeft += loanTransactions.Sum(x => x.PrincipalAmount);
             RecomputePayPeriodLeft();
         }
 

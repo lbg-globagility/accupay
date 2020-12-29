@@ -428,22 +428,23 @@ namespace AccuPay.Data.Services
             return loanPaymentFromBonuses;
         }
 
-        private void ComputePayroll(PayrollResources resources,
-                                    int userId,
-                                    string currentSystemOwner,
-                                    ListOfValueCollection settings,
-                                    CalendarCollection calendarCollection,
-                                    PayPeriod payPeriod,
-                                    Paystub paystub,
-                                    Employee employee,
-                                    Salary salary,
-                                    Paystub previousPaystub,
-                                    ICollection<LoanTransaction> loanTransactions,
-                                    IReadOnlyCollection<TimeEntry> timeEntries,
-                                    IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
-                                    IReadOnlyCollection<Allowance> allowances,
-                                    IReadOnlyCollection<AllowanceItem> allowanceItems,
-                                    IReadOnlyCollection<Bonus> bonuses)
+        private void ComputePayroll(
+            PayrollResources resources,
+            int userId,
+            string currentSystemOwner,
+            ListOfValueCollection settings,
+            CalendarCollection calendarCollection,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Employee employee,
+            Salary salary,
+            Paystub previousPaystub,
+            ICollection<LoanTransaction> loanTransactions,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
+            IReadOnlyCollection<Allowance> allowances,
+            IReadOnlyCollection<AllowanceItem> allowanceItems,
+            IReadOnlyCollection<Bonus> bonuses)
         {
             if (currentSystemOwner != SystemOwnerService.Benchmark)
             {
@@ -886,8 +887,20 @@ namespace AccuPay.Data.Services
                         bonusLoanPayments: bonusLoanPayments,
                         thirteenthMonthPayLoanPayments: paystub.LoanPaymentFromThirteenthMonthPays?.ToList());
 
-                loan.TotalBalanceLeft -= deductionAmount;
-                loan.RecomputePayPeriodLeft();
+                var loanTransaction = new LoanTransaction()
+                {
+                    Created = DateTime.Now,
+                    LastUpd = DateTime.Now,
+                    Paystub = paystub,
+                    OrganizationID = paystub.OrganizationID,
+                    EmployeeID = paystub.EmployeeID,
+                    PayPeriodID = payPeriod.RowID,
+                    LoanScheduleID = loan.RowID.Value,
+                    DeductionAmount = deductionAmount,
+                    InterestAmount = interestAmount
+                };
+
+                loanTransactions.Add(loanTransaction);
 
                 if (policy.UseGoldwingsLoanInterest)
                 {
@@ -898,22 +911,11 @@ namespace AccuPay.Data.Services
                     }
                 }
 
-                var loanTransaction = new LoanTransaction()
-                {
-                    Created = DateTime.Now,
-                    LastUpd = DateTime.Now,
-                    Paystub = paystub,
-                    OrganizationID = paystub.OrganizationID,
-                    EmployeeID = paystub.EmployeeID,
-                    PayPeriodID = payPeriod.RowID,
-                    LoanScheduleID = loan.RowID.Value,
-                    LoanPayPeriodLeft = loan.LoanPayPeriodLeft,
-                    TotalBalance = loan.TotalBalanceLeft,
-                    DeductionAmount = deductionAmount,
-                    InterestAmount = interestAmount
-                };
+                loan.TotalBalanceLeft -= loanTransaction.PrincipalAmount;
+                loan.RecomputePayPeriodLeft();
 
-                loanTransactions.Add(loanTransaction);
+                loanTransaction.LoanPayPeriodLeft = loan.LoanPayPeriodLeft;
+                loanTransaction.TotalBalance = loan.TotalBalanceLeft;
             }
 
             return loanTransactions;
