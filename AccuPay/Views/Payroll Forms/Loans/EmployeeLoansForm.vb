@@ -31,7 +31,7 @@ Public Class EmployeeLoansForm
 
     Private _currentRolePermission As RolePermission
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Sub New()
 
@@ -50,6 +50,8 @@ Public Class EmployeeLoansForm
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
     End Sub
 
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load

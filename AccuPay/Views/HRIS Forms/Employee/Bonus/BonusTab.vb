@@ -29,7 +29,7 @@ Public Class BonusTab
 
     Private ReadOnly _userActivityRepo As UserActivityRepository
 
-    Private ReadOnly _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As IPolicyHelper
 
     Public Sub New()
 
@@ -44,7 +44,7 @@ Public Class BonusTab
             _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         End If
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
     End Sub
 
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
