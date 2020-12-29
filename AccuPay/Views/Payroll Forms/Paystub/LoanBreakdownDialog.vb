@@ -49,7 +49,7 @@ Public Class LoanBreakdownDialog
             _DeductionAmount = $"({FormatNumber(loanTransaction.DeductionAmount, 2)})"
             _Balance = loanTransaction.TotalBalance
             _DeductionSchedule = loanTransaction.LoanSchedule.DeductionSchedule
-            _PayPeriodsLeft = loanTransaction.LoanSchedule.LoanPayPeriodLeft
+            _PayPeriodsLeft = loanTransaction.LoanPayPeriodLeft
         End Sub
 
         Public ReadOnly Property LoanNumber As String

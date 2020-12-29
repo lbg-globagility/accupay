@@ -111,7 +111,7 @@ namespace AccuPay.Data.Entities
 
         private int ComputePayPeriod(decimal baseAmount)
         {
-            if (DeductionAmount == 0)
+            if (DeductionAmount == 0 || baseAmount == 0)
                 return 0;
 
             if (DeductionAmount > baseAmount)
