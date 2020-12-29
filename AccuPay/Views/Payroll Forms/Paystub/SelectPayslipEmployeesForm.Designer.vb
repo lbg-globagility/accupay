@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class SelectPayslipEmployeesForm
     Inherits System.Windows.Forms.Form
 
@@ -34,6 +34,19 @@ Partial Class SelectPayslipEmployeesForm
         Me.UncheckAllButton = New System.Windows.Forms.Button()
         Me.CloseDialogButton = New System.Windows.Forms.Button()
         Me.EmployeeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmailAddressColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmailStatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PayslipTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ResetEmailButtonColumn = New System.Windows.Forms.DataGridViewLinkColumn()
+        Me.ErrorLogMessageColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.StatusLabel = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.PreviewToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
@@ -48,19 +61,6 @@ Partial Class SelectPayslipEmployeesForm
         Me.ResetEmailsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailStatusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RefreshEmailServiceToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmailAddressColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmailStatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PayslipTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ResetEmailButtonColumn = New System.Windows.Forms.DataGridViewLinkColumn()
-        Me.ErrorLogMessageColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.ActionPanel.SuspendLayout()
         CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -129,114 +129,6 @@ Partial Class SelectPayslipEmployeesForm
         Me.EmployeeGridView.Name = "EmployeeGridView"
         Me.EmployeeGridView.Size = New System.Drawing.Size(1234, 367)
         Me.EmployeeGridView.TabIndex = 1
-        '
-        'StatusLabel
-        '
-        Me.StatusLabel.BackColor = System.Drawing.Color.Black
-        Me.StatusLabel.Dock = System.Windows.Forms.DockStyle.Top
-        Me.StatusLabel.ForeColor = System.Drawing.Color.White
-        Me.StatusLabel.Location = New System.Drawing.Point(0, 25)
-        Me.StatusLabel.Name = "StatusLabel"
-        Me.StatusLabel.Padding = New System.Windows.Forms.Padding(4)
-        Me.StatusLabel.Size = New System.Drawing.Size(1234, 21)
-        Me.StatusLabel.TabIndex = 14
-        Me.StatusLabel.Text = "Tick the checkbox of the employee that you want to include."
-        '
-        'ToolStrip1
-        '
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
-        Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(1234, 25)
-        Me.ToolStrip1.TabIndex = 15
-        Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'PreviewToolStripDropDownButton
-        '
-        Me.PreviewToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewDeclaredToolStripMenuItem, Me.PreviewActualToolStripMenuItem})
-        Me.PreviewToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.documents7
-        Me.PreviewToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PreviewToolStripDropDownButton.Name = "PreviewToolStripDropDownButton"
-        Me.PreviewToolStripDropDownButton.Size = New System.Drawing.Size(77, 22)
-        Me.PreviewToolStripDropDownButton.Text = "&Preview"
-        '
-        'PreviewDeclaredToolStripMenuItem
-        '
-        Me.PreviewDeclaredToolStripMenuItem.Name = "PreviewDeclaredToolStripMenuItem"
-        Me.PreviewDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.PreviewDeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'PreviewActualToolStripMenuItem
-        '
-        Me.PreviewActualToolStripMenuItem.Name = "PreviewActualToolStripMenuItem"
-        Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.PreviewActualToolStripMenuItem.Text = "Actual"
-        '
-        'SendEmailToolStripDropDownButton
-        '
-        Me.SendEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SendEmailDeclaredToolStripMenuItem, Me.SendEmailActualToolStripMenuItem})
-        Me.SendEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
-        Me.SendEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.SendEmailToolStripDropDownButton.Name = "SendEmailToolStripDropDownButton"
-        Me.SendEmailToolStripDropDownButton.Size = New System.Drawing.Size(99, 22)
-        Me.SendEmailToolStripDropDownButton.Text = "Send &Emails"
-        '
-        'SendEmailDeclaredToolStripMenuItem
-        '
-        Me.SendEmailDeclaredToolStripMenuItem.Name = "SendEmailDeclaredToolStripMenuItem"
-        Me.SendEmailDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.SendEmailDeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'SendEmailActualToolStripMenuItem
-        '
-        Me.SendEmailActualToolStripMenuItem.Name = "SendEmailActualToolStripMenuItem"
-        Me.SendEmailActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.SendEmailActualToolStripMenuItem.Text = "Actual"
-        '
-        'PreviewToolStripButton
-        '
-        Me.PreviewToolStripButton.Image = Global.AccuPay.My.Resources.Resources.documents7
-        Me.PreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.PreviewToolStripButton.Name = "PreviewToolStripButton"
-        Me.PreviewToolStripButton.Size = New System.Drawing.Size(68, 22)
-        Me.PreviewToolStripButton.Text = "Preview"
-        '
-        'SendEmailToolStripButton
-        '
-        Me.SendEmailToolStripButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
-        Me.SendEmailToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.SendEmailToolStripButton.Name = "SendEmailToolStripButton"
-        Me.SendEmailToolStripButton.Size = New System.Drawing.Size(90, 22)
-        Me.SendEmailToolStripButton.Text = "Send &Emails"
-        '
-        'ManageEmailToolStripDropDownButton
-        '
-        Me.ManageEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ResetEmailsToolStripMenuItem, Me.RefreshEmailStatusToolStripMenuItem})
-        Me.ManageEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
-        Me.ManageEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ManageEmailToolStripDropDownButton.Name = "ManageEmailToolStripDropDownButton"
-        Me.ManageEmailToolStripDropDownButton.Size = New System.Drawing.Size(116, 22)
-        Me.ManageEmailToolStripDropDownButton.Text = "&Manage Emails"
-        '
-        'ResetEmailsToolStripMenuItem
-        '
-        Me.ResetEmailsToolStripMenuItem.Name = "ResetEmailsToolStripMenuItem"
-        Me.ResetEmailsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
-        Me.ResetEmailsToolStripMenuItem.Text = "Reset All"
-        '
-        'RefreshEmailStatusToolStripMenuItem
-        '
-        Me.RefreshEmailStatusToolStripMenuItem.Name = "RefreshEmailStatusToolStripMenuItem"
-        Me.RefreshEmailStatusToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
-        Me.RefreshEmailStatusToolStripMenuItem.Text = "Refresh Status"
-        '
-        'RefreshEmailServiceToolStripButton
-        '
-        Me.RefreshEmailServiceToolStripButton.Image = Global.AccuPay.My.Resources.Resources._1431339112_Settings
-        Me.RefreshEmailServiceToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.RefreshEmailServiceToolStripButton.Name = "RefreshEmailServiceToolStripButton"
-        Me.RefreshEmailServiceToolStripButton.Size = New System.Drawing.Size(135, 22)
-        Me.RefreshEmailServiceToolStripButton.Text = "&Restart Email Service"
         '
         'SelectedCheckBoxColumn
         '
@@ -352,6 +244,114 @@ Partial Class SelectPayslipEmployeesForm
         Me.ErrorLogMessageColumn.HeaderText = "Last Error Log Message"
         Me.ErrorLogMessageColumn.Name = "ErrorLogMessageColumn"
         Me.ErrorLogMessageColumn.ReadOnly = True
+        '
+        'StatusLabel
+        '
+        Me.StatusLabel.BackColor = System.Drawing.Color.Black
+        Me.StatusLabel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.StatusLabel.ForeColor = System.Drawing.Color.White
+        Me.StatusLabel.Location = New System.Drawing.Point(0, 25)
+        Me.StatusLabel.Name = "StatusLabel"
+        Me.StatusLabel.Padding = New System.Windows.Forms.Padding(4)
+        Me.StatusLabel.Size = New System.Drawing.Size(1234, 21)
+        Me.StatusLabel.TabIndex = 14
+        Me.StatusLabel.Text = "Tick the checkbox of the employee that you want to include."
+        '
+        'ToolStrip1
+        '
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewToolStripDropDownButton, Me.SendEmailToolStripDropDownButton, Me.PreviewToolStripButton, Me.SendEmailToolStripButton, Me.ManageEmailToolStripDropDownButton, Me.RefreshEmailServiceToolStripButton})
+        Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip1.Name = "ToolStrip1"
+        Me.ToolStrip1.Size = New System.Drawing.Size(1234, 25)
+        Me.ToolStrip1.TabIndex = 15
+        Me.ToolStrip1.Text = "ToolStrip1"
+        '
+        'PreviewToolStripDropDownButton
+        '
+        Me.PreviewToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PreviewDeclaredToolStripMenuItem, Me.PreviewActualToolStripMenuItem})
+        Me.PreviewToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.documents7
+        Me.PreviewToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PreviewToolStripDropDownButton.Name = "PreviewToolStripDropDownButton"
+        Me.PreviewToolStripDropDownButton.Size = New System.Drawing.Size(77, 22)
+        Me.PreviewToolStripDropDownButton.Text = "&Preview"
+        '
+        'PreviewDeclaredToolStripMenuItem
+        '
+        Me.PreviewDeclaredToolStripMenuItem.Name = "PreviewDeclaredToolStripMenuItem"
+        Me.PreviewDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PreviewDeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'PreviewActualToolStripMenuItem
+        '
+        Me.PreviewActualToolStripMenuItem.Name = "PreviewActualToolStripMenuItem"
+        Me.PreviewActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PreviewActualToolStripMenuItem.Text = "Actual"
+        '
+        'SendEmailToolStripDropDownButton
+        '
+        Me.SendEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SendEmailDeclaredToolStripMenuItem, Me.SendEmailActualToolStripMenuItem})
+        Me.SendEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
+        Me.SendEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SendEmailToolStripDropDownButton.Name = "SendEmailToolStripDropDownButton"
+        Me.SendEmailToolStripDropDownButton.Size = New System.Drawing.Size(99, 22)
+        Me.SendEmailToolStripDropDownButton.Text = "Send &Emails"
+        '
+        'SendEmailDeclaredToolStripMenuItem
+        '
+        Me.SendEmailDeclaredToolStripMenuItem.Name = "SendEmailDeclaredToolStripMenuItem"
+        Me.SendEmailDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SendEmailDeclaredToolStripMenuItem.Text = "Declared"
+        '
+        'SendEmailActualToolStripMenuItem
+        '
+        Me.SendEmailActualToolStripMenuItem.Name = "SendEmailActualToolStripMenuItem"
+        Me.SendEmailActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SendEmailActualToolStripMenuItem.Text = "Actual"
+        '
+        'PreviewToolStripButton
+        '
+        Me.PreviewToolStripButton.Image = Global.AccuPay.My.Resources.Resources.documents7
+        Me.PreviewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.PreviewToolStripButton.Name = "PreviewToolStripButton"
+        Me.PreviewToolStripButton.Size = New System.Drawing.Size(68, 22)
+        Me.PreviewToolStripButton.Text = "Preview"
+        '
+        'SendEmailToolStripButton
+        '
+        Me.SendEmailToolStripButton.Image = Global.AccuPay.My.Resources.Resources.wi0111_481
+        Me.SendEmailToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SendEmailToolStripButton.Name = "SendEmailToolStripButton"
+        Me.SendEmailToolStripButton.Size = New System.Drawing.Size(90, 22)
+        Me.SendEmailToolStripButton.Text = "Send &Emails"
+        '
+        'ManageEmailToolStripDropDownButton
+        '
+        Me.ManageEmailToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ResetEmailsToolStripMenuItem, Me.RefreshEmailStatusToolStripMenuItem})
+        Me.ManageEmailToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
+        Me.ManageEmailToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ManageEmailToolStripDropDownButton.Name = "ManageEmailToolStripDropDownButton"
+        Me.ManageEmailToolStripDropDownButton.Size = New System.Drawing.Size(116, 22)
+        Me.ManageEmailToolStripDropDownButton.Text = "&Manage Emails"
+        '
+        'ResetEmailsToolStripMenuItem
+        '
+        Me.ResetEmailsToolStripMenuItem.Name = "ResetEmailsToolStripMenuItem"
+        Me.ResetEmailsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ResetEmailsToolStripMenuItem.Text = "Reset All"
+        '
+        'RefreshEmailStatusToolStripMenuItem
+        '
+        Me.RefreshEmailStatusToolStripMenuItem.Name = "RefreshEmailStatusToolStripMenuItem"
+        Me.RefreshEmailStatusToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RefreshEmailStatusToolStripMenuItem.Text = "Refresh Status"
+        '
+        'RefreshEmailServiceToolStripButton
+        '
+        Me.RefreshEmailServiceToolStripButton.Image = Global.AccuPay.My.Resources.Resources._1431339112_Settings
+        Me.RefreshEmailServiceToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.RefreshEmailServiceToolStripButton.Name = "RefreshEmailServiceToolStripButton"
+        Me.RefreshEmailServiceToolStripButton.Size = New System.Drawing.Size(135, 22)
+        Me.RefreshEmailServiceToolStripButton.Text = "&Restart Email Service"
         '
         'SelectPayslipEmployeesForm
         '

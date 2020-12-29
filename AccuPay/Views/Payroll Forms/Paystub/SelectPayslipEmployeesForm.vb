@@ -63,25 +63,9 @@ Public Class SelectPayslipEmployeesForm
 
         EmployeeGridView.AutoGenerateColumns = False
 
-        SendEmailToolStripDropDownButton.Visible = _isEmail
-        SendEmailToolStripButton.Visible = _isEmail
+        ShowOrHideToolStripButtonsBasedOnFormAction()
 
-        ManageEmailToolStripDropDownButton.Visible = _isEmail
-        RefreshEmailServiceToolStripButton.Visible = _isEmail
-
-        EmailAddressColumn.Visible = _isEmail
-        PayslipTypeColumn.Visible = _isEmail
-        EmailStatusColumn.Visible = _isEmail
-        ResetEmailButtonColumn.Visible = _isEmail
-        ErrorLogMessageColumn.Visible = _isEmail
-
-        _currentPayPeriod = Await _payPeriodRepository.GetByIdAsync(_currentPayPeriodId)
-
-        If _currentPayPeriod?.RowID Is Nothing OrElse _currentPayPeriod.Status <> Data.Enums.PayPeriodStatus.Open Then
-
-            ToolStrip1.Enabled = False
-
-        End If
+        Await ShowOrHideToolStripButtonsBasedOnPayPeriod()
 
         Await ShowEmployees()
 
@@ -97,6 +81,44 @@ Public Class SelectPayslipEmployeesForm
             PayslipTypeColumn.Visible = False
         End If
 
+    End Sub
+
+    Private Sub ShowOrHideToolStripButtonsBasedOnFormAction()
+        SendEmailToolStripDropDownButton.Visible = _isEmail
+        SendEmailToolStripButton.Visible = _isEmail
+
+        ManageEmailToolStripDropDownButton.Visible = _isEmail
+        RefreshEmailServiceToolStripButton.Visible = _isEmail
+
+        EmailAddressColumn.Visible = _isEmail
+        PayslipTypeColumn.Visible = _isEmail
+        EmailStatusColumn.Visible = _isEmail
+        ResetEmailButtonColumn.Visible = _isEmail
+        ErrorLogMessageColumn.Visible = _isEmail
+    End Sub
+
+    Private Async Function ShowOrHideToolStripButtonsBasedOnPayPeriod() As Task
+        _currentPayPeriod = Await _payPeriodRepository.GetByIdAsync(_currentPayPeriodId)
+
+        If _currentPayPeriod.RowID Is Nothing Then
+
+            PreviewToolStripDropDownButton.Visible = False
+            PreviewToolStripButton.Visible = False
+
+            HideEmailButtons()
+
+        ElseIf _currentPayPeriod.Status <> Data.Enums.PayPeriodStatus.Open Then
+
+            HideEmailButtons()
+        End If
+
+    End Function
+
+    Private Sub HideEmailButtons()
+        SendEmailToolStripDropDownButton.Visible = False
+        SendEmailToolStripButton.Visible = False
+        ManageEmailToolStripDropDownButton.Visible = False
+        ResetEmailButtonColumn.Visible = False
     End Sub
 
     Private Async Function ShowEmployees() As Task

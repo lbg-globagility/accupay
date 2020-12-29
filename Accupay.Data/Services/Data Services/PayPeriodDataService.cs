@@ -138,7 +138,18 @@ namespace AccuPay.Data.Services
             {
                 var currentOpenPayPeriod = await _payPeriodRepository.GetCurrentOpenAsync(payPeriod.OrganizationID.Value);
                 if (currentOpenPayPeriod != null)
+                {
                     throw new BusinessLogicException(HasCurrentlyOpenErrorMessage(currentOpenPayPeriod));
+                }
+
+                var hasClosedPayPeriodsAfterDate = await _payPeriodRepository.HasClosedPayPeriodAfterDateAsync(
+                    payPeriod.OrganizationID.Value,
+                    payPeriod.PayToDate.AddDays(1));
+
+                if (hasClosedPayPeriodsAfterDate)
+                {
+                    throw new BusinessLogicException("Cannot open a pay period if there are closed pay periods ahead of the selected period.");
+                }
             }
 
             payPeriod.Status = status;
