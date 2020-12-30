@@ -29,7 +29,7 @@ namespace AccuPay.Data.Services
 
         protected override string CreateUserActivitySuffixIdentifier(DisciplinaryAction entity)
         {
-            return $" finding name '{entity.FindingName}'";
+            return $" with finding name '{entity.FindingName}'";
         }
 
         protected override string GetUserActivityName(DisciplinaryAction entity)

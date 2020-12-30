@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -156,21 +157,20 @@ Public Class EducationalBackgroundTab
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        If _currentEducBg?.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected education background!")
+            Return
+        End If
+
         Dim result = MsgBox("Are you sure you want to delete this Educational Background?", MsgBoxStyle.YesNo, "Delete Educational Background")
 
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Educational Background",
                 Async Function()
-                    Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
-                    Await educbgRepo.DeleteAsync(_currentEducBg)
-
-                    Await _userActivityRepo.RecordDeleteAsync(
-                        z_User,
-                        FormEntityName,
-                        entityId:=_currentEducBg.RowID.Value,
-                        organizationId:=z_OrganizationID,
-                        changedEmployeeId:=_currentEducBg.EmployeeID,
-                        suffixIdentifier:=$" with type '{_currentEducBg.Type}' and school '{_currentEducBg.School}'")
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IEducationalBackgroundDataService)
+                    Await dataService.DeleteAsync(_currentEducBg.RowID.Value, z_User)
 
                     Await LoadEducationalBackgrounds()
                 End Function)

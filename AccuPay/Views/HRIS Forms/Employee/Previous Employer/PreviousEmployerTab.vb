@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -188,21 +189,20 @@ Public Class PreviousEmployerTab
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        If _currentPrevEmployer?.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected previous employer!")
+            Return
+        End If
+
         Dim result = MsgBox("Are you sure you want to delete this Company?", MsgBoxStyle.YesNo, "Delete Previous Employer")
 
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Previous Employer",
                 Async Function()
-                    Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
-                    Await previousEmployerRepo.DeleteAsync(_currentPrevEmployer)
-
-                    Await _userActivityRepo.RecordDeleteAsync(
-                        z_User,
-                        FormEntityName,
-                        entityId:=_currentPrevEmployer.RowID.Value,
-                        organizationId:=z_OrganizationID,
-                        changedEmployeeId:=_currentPrevEmployer.EmployeeID,
-                        suffixIdentifier:=$" with name '{_currentPrevEmployer.Name}'")
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IPreviousEmployerDataService)
+                    Await dataService.DeleteAsync(_currentPrevEmployer.RowID.Value, z_User)
 
                     Await LoadPrevEmployers()
                 End Function)

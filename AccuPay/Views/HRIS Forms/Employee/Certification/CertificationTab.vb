@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -145,21 +146,21 @@ Public Class CertificationTab
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        If _currentCertification?.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected certification!")
+            Return
+        End If
+
         Dim result = MsgBox("Are you sure you want to delete this Certification?", MsgBoxStyle.YesNo, "Delete Certification")
 
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Certification",
                 Async Function()
-                    Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
-                    Await certificationRepo.DeleteAsync(_currentCertification)
 
-                    Await _userActivityRepo.RecordDeleteAsync(
-                        z_User,
-                        FormEntityName,
-                        entityId:=_currentCertification.RowID.Value,
-                        organizationId:=z_OrganizationID,
-                        changedEmployeeId:=_currentCertification.EmployeeID,
-                        suffixIdentifier:=$" with type '{_currentCertification.CertificationType}'")
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of ICertificationDataService)
+                    Await dataService.DeleteAsync(_currentCertification.RowID.Value, z_User)
 
                     Await LoadCertifications()
                 End Function)

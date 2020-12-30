@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -182,22 +183,21 @@ Public Class DisciplinaryActionTab
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        If _currentDiscAction?.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected disciplinary action!")
+            Return
+        End If
+
         Dim result = MsgBox("Are you sure you want to delete this Action?", MsgBoxStyle.YesNo, "Delete Disciplinary Action")
 
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Disciplinary Action",
                 Async Function()
 
-                    Await _disciplinaryActionRepo.DeleteAsync(_currentDiscAction)
-
-                    Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
-                    Await _userActivityRepo.RecordDeleteAsync(
-                        z_User,
-                        FormEntityName,
-                        entityId:=_currentDiscAction.RowID.Value,
-                        organizationId:=z_OrganizationID,
-                        changedEmployeeId:=_currentDiscAction.EmployeeID,
-                        suffixIdentifier:=$" with finding name '{currentFinding.PartNo}'")
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IDisciplinaryActionDataService)
+                    Await dataService.DeleteAsync(_currentDiscAction.RowID.Value, z_User)
 
                     Await LoadDisciplinaryActions()
                 End Function)

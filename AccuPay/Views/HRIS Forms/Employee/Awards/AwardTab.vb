@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -158,21 +159,21 @@ Public Class AwardTab
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        If _currentAward?.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected award!")
+            Return
+        End If
+
         Dim result = MsgBox("Are you sure you want to delete this Award?", MsgBoxStyle.YesNo, "Delete Award")
 
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Award",
                 Async Function()
-                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
-                    Await awardRepo.DeleteAsync(_currentAward)
 
-                    Await _userActivityRepo.RecordDeleteAsync(
-                        z_User,
-                        FormEntityName,
-                        entityId:=_currentAward.RowID.Value,
-                        organizationId:=z_OrganizationID,
-                        changedEmployeeId:=_currentAward.EmployeeID,
-                        suffixIdentifier:=$" with type '{ _currentAward.AwardType}'")
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IAwardDataService)
+                    Await dataService.DeleteAsync(_currentAward.RowID.Value, z_User)
 
                     Await LoadAwards()
                 End Function)

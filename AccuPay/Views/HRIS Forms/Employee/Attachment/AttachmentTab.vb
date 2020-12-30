@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -125,21 +126,21 @@ Public Class AttachmentTab
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+
+        If _currentAttachment?.RowID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected attachment!")
+            Return
+        End If
+
         Dim result = MsgBox("Are you sure you want to delete this Attachment?", MsgBoxStyle.YesNo, "Delete Attachment")
 
         If result = MsgBoxResult.Yes Then
-            Await FunctionUtils.TryCatchFunctionAsync("Delete Atachment",
+            Await FunctionUtils.TryCatchFunctionAsync("Delete Attachment",
                 Async Function()
 
-                    Await _attachmentRepo.DeleteAsync(_currentAttachment)
-
-                    Await _userActivityRepo.RecordDeleteAsync(
-                        z_User,
-                        FormEntityName,
-                        entityId:=_currentAttachment.RowID.Value,
-                        organizationId:=z_OrganizationID,
-                        changedEmployeeId:=_currentAttachment.EmployeeID,
-                        suffixIdentifier:=$" with type '{ _currentAttachment.Type}'")
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IAttachmentDataService)
+                    Await dataService.DeleteAsync(_currentAttachment.RowID.Value, z_User)
 
                     Await LoadAttachments()
                 End Function)
