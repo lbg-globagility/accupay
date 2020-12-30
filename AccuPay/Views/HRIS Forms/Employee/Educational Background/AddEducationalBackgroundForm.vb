@@ -1,29 +1,24 @@
 Option Strict On
 
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddEducationalBackgroundForm
 
-    Private Const FormEntityName As String = "Educational Background"
-    Public Property isSaved As Boolean
-    Public Property showBalloon As Boolean
+    Public Property IsSaved As Boolean
+    Public Property ShowBalloon As Boolean
 
     Private _employee As Employee
 
     Private _newEducBg As EducationalBackground
-
-    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
         InitializeComponent()
 
         _employee = employee
-
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
     Private Sub AddEducationalBackgroundForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -76,32 +71,23 @@ Public Class AddEducationalBackgroundForm
                     .DateTo = dtpDateTo.Value
                     .Remarks = txtRemarks.Text
                     .OrganizationID = z_OrganizationID
-                    .CreatedBy = z_User
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim educBGRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
-                Await educBGRepo.CreateAsync(_newEducBg)
-
-                Await _userActivityRepo.RecordAddAsync(
-                    z_User,
-                    FormEntityName,
-                    entityId:=_newEducBg.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=_newEducBg.EmployeeID,
-                    suffixIdentifier:=$" with type '{_newEducBg.Type}' and school '{_newEducBg.School}'")
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IEducationalBackgroundDataService)
+                Await dataService.SaveAsync(_newEducBg, z_User)
 
                 succeed = True
             End Function)
 
         If succeed Then
-            isSaved = True
+            IsSaved = True
 
             If sender Is AddAndNewButton Then
                 ShowBalloonInfo("Educational Background successfully added.", "Saved")
                 ClearForm()
             Else
-                showBalloon = True
+                ShowBalloon = True
                 Me.Close()
             End If
         End If

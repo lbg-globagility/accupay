@@ -2,38 +2,58 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.DTOs;
-using AccuPay.Data.ValueObjects;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class BonusDataService
+    public class BonusDataService : BaseEmployeeDataService<Bonus>, IBonusDataService
     {
-        private readonly BonusRepository _bonusRepository;
-        private readonly LoanPaymentFromBonusRepository _loanPaymentFromBonusRepository;
+        private const string UserActivityName = "Bonus";
+
         private readonly LoanRepository _loanRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly LoanPaymentFromBonusRepository _loanPaymentFromBonusRepository;
+        private readonly ProductRepository _productRepository;
 
         public BonusDataService(
-            BonusRepository bonusRepository,
-            LoanPaymentFromBonusRepository loanPaymentFromBonusRepository,
+            BonusRepository repository,
+            PayPeriodRepository payPeriodRepository,
+            UserActivityRepository userActivityRepository,
+            PayrollContext context,
+            IPolicyHelper policy,
             LoanRepository loanRepository,
-            PayPeriodRepository payPeriodRepository)
+            LoanPaymentFromBonusRepository loanPaymentFromBonusRepository,
+            ProductRepository productRepository) :
+
+            base(repository,
+                payPeriodRepository,
+                userActivityRepository,
+                context,
+                policy,
+                entityName: "Bonus",
+                entityNamePlural: "Bonuses")
         {
-            _bonusRepository = bonusRepository;
-            _loanPaymentFromBonusRepository = loanPaymentFromBonusRepository;
             _loanRepository = loanRepository;
-            _payPeriodRepository = payPeriodRepository;
+            _loanPaymentFromBonusRepository = loanPaymentFromBonusRepository;
+            _productRepository = productRepository;
         }
 
-        public async Task DeleteAsync(Bonus bonus)
+        protected override string CreateUserActivitySuffixIdentifier(Bonus entity)
         {
-            var thisBonus = await GetByIdAsync(bonus.RowID.Value);
+            return $" with type '{entity.BonusType}' and start date '{entity.EffectiveStartDate.ToShortDateString()}'";
+        }
 
-            var loanPaymentFromBonuses = thisBonus.LoanPaymentFromBonuses.ToList();
+        protected override string GetUserActivityName(Bonus entity)
+        {
+            return UserActivityName;
+        }
+
+        public override async Task DeleteAsync(int id, int currentlyLoggedInUserId)
+        {
+            var bonus = await _repository.GetByIdAsync(id);
+
+            var loanPaymentFromBonuses = bonus.LoanPaymentFromBonuses.ToList();
 
             var usedAsLoanPaymentInPaystub = loanPaymentFromBonuses
                 .Where(lb => lb.Items.Any()).Any();
@@ -52,40 +72,24 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException($"This Bonus has already been used as payment on {loanText}. You may unset this Bonus as Loan Payment to proceed deleting.");
             }
 
-            await _bonusRepository.DeleteAsync(bonus);
+            await base.DeleteAsync(bonus.RowID.Value, currentlyLoggedInUserId);
         }
 
-        public async Task CreateAsync(Bonus bonus)
+        protected override async Task AdditionalSaveValidation(Bonus bonus, Bonus oldBonus)
         {
-            await _bonusRepository.CreateAsync(bonus);
-        }
+            if (bonus.IsNewEntity || !_policy.UseLoanDeductFromBonus) return;
 
-        public async Task UpdateAsync(Bonus updatedBonus, Bonus oldBonus, bool usesLoanDeductFromBonus)
-        {
-            await ValidateUsedBonusForLoanPayment(updatedBonus: updatedBonus, oldBonus: oldBonus, usesLoanDeductFromBonus);
-
-            await UpdateAsync(updatedBonus);
-        }
-
-        public async Task UpdateAsync(Bonus bonus)
-        {
-            await _bonusRepository.UpdateAsync(bonus);
-        }
-
-        private async Task ValidateUsedBonusForLoanPayment(Bonus updatedBonus, Bonus oldBonus, bool useLoanDeductFromBonus)
-        {
-            if (!useLoanDeductFromBonus) return;
-
-            var loanPaymentFromBonuses = await _loanPaymentFromBonusRepository.GetByBonusIdAsync(updatedBonus.RowID.Value);
+            var loanPaymentFromBonuses = await _loanPaymentFromBonusRepository
+                .GetByBonusIdAsync(bonus.RowID.Value);
 
             var loansPaidByThisBonus = loanPaymentFromBonuses.Where(b => b.Items.Any());
             if (loansPaidByThisBonus.Any())
             {
-                updatedBonus.ProductID = oldBonus.ProductID;
-                updatedBonus.AllowanceFrequency = oldBonus.AllowanceFrequency;
-                updatedBonus.EffectiveStartDate = oldBonus.EffectiveStartDate;
-                updatedBonus.EffectiveEndDate = oldBonus.EffectiveEndDate;
-                updatedBonus.BonusAmount = oldBonus.BonusAmount;
+                bonus.ProductID = oldBonus.ProductID;
+                bonus.AllowanceFrequency = oldBonus.AllowanceFrequency;
+                bonus.EffectiveStartDate = oldBonus.EffectiveStartDate;
+                bonus.EffectiveEndDate = oldBonus.EffectiveEndDate;
+                bonus.BonusAmount = oldBonus.BonusAmount;
 
                 var loanText = loansPaidByThisBonus.Count() > 1 ? "one or more Loans" : "a Loan";
                 throw new BusinessLogicException($"This Bonus has already been used as payment on {loanText}, therefore this can't be changed.");
@@ -96,7 +100,7 @@ namespace AccuPay.Data.Services
                     .Select(b => b.LoanId)
                     .ToArray();
 
-                var loans = (await _loanRepository.GetByEmployeeAsync(updatedBonus.EmployeeID.Value))
+                var loans = (await _loanRepository.GetByEmployeeAsync(bonus.EmployeeID.Value))
                     .Where(l => loanIds.Contains(l.RowID.Value))
                     .ToList();
 
@@ -108,8 +112,8 @@ namespace AccuPay.Data.Services
                 }
 
                 var loansUncoveredByThisBonus = models
-                    .Where(m => !((m.DedEffectiveDateFrom <= updatedBonus.EffectiveStartDate && updatedBonus.EffectiveStartDate <= m.DedEffectiveDateTo) ||
-                        (m.DedEffectiveDateFrom <= updatedBonus.EffectiveEndDate && updatedBonus.EffectiveEndDate <= m.DedEffectiveDateTo)))
+                    .Where(m => !((m.DedEffectiveDateFrom <= bonus.EffectiveStartDate && bonus.EffectiveStartDate <= m.DedEffectiveDateTo) ||
+                        (m.DedEffectiveDateFrom <= bonus.EffectiveEndDate && bonus.EffectiveEndDate <= m.DedEffectiveDateTo)))
                     .ToList();
                 if (loansUncoveredByThisBonus.Any())// bonus effective dates became out of period of loans
                 {
@@ -128,43 +132,88 @@ namespace AccuPay.Data.Services
                 {
                     var totalPayment = loanPaymentFromBonuses.Sum(lb => lb.AmountPayment);
 
-                    if ((updatedBonus.BonusAmount - totalPayment) < 0)
+                    if ((bonus.BonusAmount - totalPayment) < 0)
                     {
-                        updatedBonus.BonusAmount = oldBonus.BonusAmount;
+                        bonus.BonusAmount = oldBonus.BonusAmount;
                         throw new BusinessLogicException("Bonus Amount shrunk resulting to Loan Payment(s) became insufficient. Try correcting the Loan Payment(s) first then edit this Bonus.");
                     }
                 }
             }
         }
 
-        public List<string> GetFrequencyList()
+        protected override async Task PostDeleteAction(Bonus entity, int currentlyLoggedInUserId)
         {
-            return _bonusRepository.GetFrequencyList();
+            // supplying Product data for saving useractivity
+            entity.Product = await _productRepository.GetByIdAsync(entity.ProductID.Value);
+
+            await base.PostDeleteAction(entity, currentlyLoggedInUserId);
         }
 
-        public async Task<IEnumerable<Bonus>> GetByEmployeeAsync(int employeeId)
+        protected override async Task PostSaveAction(Bonus entity, Bonus oldEntity, SaveType saveType)
         {
-            return await _bonusRepository.GetByEmployeeAsync(employeeId);
+            // supplying Product data for saving useractivity
+            entity.Product = await _productRepository.GetByIdAsync(entity.ProductID.Value);
+
+            if (oldEntity != null)
+            {
+                oldEntity.Product = await _productRepository.GetByIdAsync(oldEntity.ProductID.Value);
+            }
+
+            await base.PostSaveAction(entity, oldEntity, saveType);
         }
 
-        public async Task<ICollection<Bonus>> GetByPayPeriodAsync(int organizationId, TimePeriod timePeriod)
+        protected override async Task RecordUpdate(Bonus bonus, Bonus oldBonus)
         {
-            return await _bonusRepository.GetByPayPeriodAsync(organizationId, timePeriod);
-        }
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
 
-        public async Task<ICollection<Bonus>> GetByEmployeeAndPayPeriodAsync(int organizationId, int employeeId, TimePeriod timePeriod)
-        {
-            return await _bonusRepository.GetByEmployeeAndPayPeriodAsync(organizationId: organizationId, employeeId: employeeId, timePeriod);
-        }
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldBonus)}.";
 
-        public async Task<ICollection<Bonus>> GetByEmployeeAndPayPeriodForLoanPaymentAsync(int organizationId, int employeeId, TimePeriod timePeriod)
-        {
-            return await _bonusRepository.GetByEmployeeAndPayPeriodForLoanPaymentAsync(organizationId: organizationId, employeeId: employeeId, timePeriod);
-        }
+            if (bonus.ProductID != oldBonus.ProductID)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldBonus.RowID.Value,
+                    Description = $"Updated type from '{oldBonus.BonusType}' to '{bonus.BonusType}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldBonus.EmployeeID
+                });
+            if (bonus.AllowanceFrequency != oldBonus.AllowanceFrequency)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldBonus.RowID.Value,
+                    Description = $"Updated frequency from '{oldBonus.AllowanceFrequency}' to '{bonus.AllowanceFrequency}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldBonus.EmployeeID
+                });
+            if (bonus.EffectiveStartDate != oldBonus.EffectiveStartDate)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldBonus.RowID.Value,
+                    Description = $"Updated start date from '{oldBonus.EffectiveStartDate.ToShortDateString()}' to '{bonus.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldBonus.EmployeeID
+                });
+            if (bonus.EffectiveEndDate != oldBonus.EffectiveEndDate)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldBonus.RowID.Value,
+                    Description = $"Updated end date from '{oldBonus.EffectiveEndDate.ToShortDateString()}' to '{bonus.EffectiveEndDate.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldBonus.EmployeeID
+                });
+            if (bonus.BonusAmount != oldBonus.BonusAmount)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldBonus.RowID.Value,
+                    Description = $"Updated amount from '{oldBonus.BonusAmount}' to '{bonus.BonusAmount}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldBonus.EmployeeID
+                });
 
-        public async Task<Bonus> GetByIdAsync(int id)
-        {
-            return await _bonusRepository.GetByIdAsync(id);
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    bonus.LastUpdBy.Value,
+                    UserActivityName,
+                    bonus.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
         }
     }
 }

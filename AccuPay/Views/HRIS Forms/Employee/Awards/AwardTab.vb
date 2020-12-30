@@ -189,10 +189,10 @@ Public Class AwardTab
         Dim form As New AddAwardForm(_employee)
         form.ShowDialog()
 
-        If form.isSaved Then
+        If form.IsSaved Then
             Await LoadAwards()
 
-            If form.showBalloon Then
+            If form.ShowBalloon Then
                 ShowBalloonInfo("Award successfuly added.", "Saved")
             End If
 
@@ -229,7 +229,6 @@ Public Class AwardTab
                         .AwardType = txtAwardType.Text
                         .AwardDescription = txtDescription.Text
                         .AwardDate = dtpAwardDate.Value
-                        .LastUpdBy = z_User
                     End With
 
                     Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)

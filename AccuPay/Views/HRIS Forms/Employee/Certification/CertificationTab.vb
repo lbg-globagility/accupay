@@ -176,10 +176,10 @@ Public Class CertificationTab
         Dim form As New AddCertificationForm(_employee)
         form.ShowDialog()
 
-        If form.isSaved Then
+        If form.IsSaved Then
             Await LoadCertifications()
 
-            If form.showBalloon Then
+            If form.ShowBalloon Then
                 ShowBalloonInfo("Certification successfuly added.", "Saved")
             End If
 
@@ -233,7 +233,6 @@ Public Class CertificationTab
                             .ExpirationDate = Nothing
                         End If
                         .Comments = txtComments.Text
-                        .LastUpdBy = z_User
                     End With
 
                     Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)

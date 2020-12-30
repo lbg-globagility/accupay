@@ -1,29 +1,23 @@
 Option Strict On
 
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddAwardForm
-    Public Property isSaved As Boolean
-    Public Property showBalloon As Boolean
-
-    Private Const FormEntityName As String = "Award"
+    Public Property IsSaved As Boolean
+    Public Property ShowBalloon As Boolean
 
     Private _newAward As Award
 
     Private _employee As Employee
-
-    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
         InitializeComponent()
 
         _employee = employee
-
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -53,32 +47,23 @@ Public Class AddAwardForm
                     .AwardDescription = txtDescription.Text
                     .AwardDate = dtpAwardDate.Value
                     .OrganizationID = z_OrganizationID
-                    .CreatedBy = z_User
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
-                Await awardRepo.CreateAsync(_newAward)
-
-                Await _userActivityRepo.RecordAddAsync(
-                    z_User,
-                    FormEntityName,
-                    entityId:=_newAward.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=_newAward.EmployeeID,
-                    suffixIdentifier:=$" with type '{ _newAward.AwardType}'")
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IAwardDataService)
+                Await dataService.SaveAsync(_newAward, z_User)
 
                 succeed = True
             End Function)
 
         If succeed Then
-            isSaved = True
+            IsSaved = True
 
             If sender Is AddAndNewButton Then
                 ShowBalloonInfo("Bonus successfully added.", "Saved")
                 ClearForm()
             Else
-                showBalloon = True
+                ShowBalloon = True
                 Me.Close()
             End If
         End If

@@ -219,10 +219,10 @@ Public Class PreviousEmployerTab
         Dim form As New AddPreviousEmployerForm(_employee)
         form.ShowDialog()
 
-        If form.isSaved Then
+        If form.IsSaved Then
             Await LoadPrevEmployers()
 
-            If form.showBalloon Then
+            If form.ShowBalloon Then
                 ShowBalloonInfo("Previous Employer successfuly added.", "Saved")
             End If
 
@@ -290,7 +290,6 @@ Public Class PreviousEmployerTab
                         .ExperienceFrom = dtpExFrom.Value
                         .ExperienceTo = dtpExTo.Value
                         .BusinessAddress = txtCompAddr.Text
-                        .LastUpdBy = z_User
                     End With
 
                     Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)

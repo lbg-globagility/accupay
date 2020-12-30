@@ -16,8 +16,6 @@ namespace AccuPay.Data.Services
     {
         private const string UserActivityName = "Official Business";
 
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
-
         public OfficialBusinessDataService(
             OfficialBusinessRepository officialBusinessRepository,
             PayPeriodRepository payPeriodRepository,
@@ -33,7 +31,6 @@ namespace AccuPay.Data.Services
                 entityName: "Official Business",
                 entityNamePlural: "Official Businesses")
         {
-            _officialBusinessRepository = officialBusinessRepository;
         }
 
         public async Task<List<OfficialBusiness>> BatchApply(IReadOnlyCollection<OfficialBusinessImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)

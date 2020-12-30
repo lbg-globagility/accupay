@@ -3,14 +3,13 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDisciplinaryAction
-
-    Private Const FormEntityName As String = "Disciplinary Action"
-    Public Property isSaved As Boolean
-    Public Property showBalloon As Boolean
+    Public Property IsSaved As Boolean
+    Public Property ShowBalloon As Boolean
 
     Private _employee As Employee
 
@@ -20,13 +19,9 @@ Public Class AddDisciplinaryAction
 
     Private _actions As IEnumerable(Of ListOfValue)
 
-    Private _disciplinaryActionRepo As DisciplinaryActionRepository
-
     Private ReadOnly _listOfValRepo As ListOfValueRepository
 
     Private ReadOnly _productRepo As ProductRepository
-
-    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
@@ -34,13 +29,9 @@ Public Class AddDisciplinaryAction
 
         _employee = employee
 
-        _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)
-
         _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
         _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
     Private Async Sub AddDisciplinaryAction_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -90,31 +81,23 @@ Public Class AddDisciplinaryAction
                     .FindingDescription = txtDescription.Text
                     .Comments = txtComments.Text
                     .OrganizationID = z_OrganizationID
-                    .CreatedBy = z_User
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Await _disciplinaryActionRepo.CreateAsync(_newDisciplinaryAction)
-
-                Await _userActivityRepo.RecordAddAsync(
-                    z_User,
-                    FormEntityName,
-                    entityId:=_newDisciplinaryAction.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=_newDisciplinaryAction.EmployeeID,
-                    suffixIdentifier:=$" with finding name '{currentFinding.PartNo}'")
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IDisciplinaryActionDataService)
+                Await dataService.SaveAsync(_newDisciplinaryAction, z_User)
 
                 succeed = True
             End Function)
 
         If succeed Then
-            isSaved = True
+            IsSaved = True
 
             If sender Is AddAndNewButton Then
                 ShowBalloonInfo("Disciplinary Action successfully added.", "Saved")
                 ClearForm()
             Else
-                showBalloon = True
+                ShowBalloon = True
                 Me.Close()
             End If
         End If

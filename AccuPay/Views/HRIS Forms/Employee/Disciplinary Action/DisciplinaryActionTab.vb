@@ -66,7 +66,7 @@ Public Class DisciplinaryActionTab
     Private Async Function LoadDisciplinaryActions() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _disciplinaryActions = Await _disciplinaryActionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _disciplinaryActions = Await _disciplinaryActionRepo.GetByEmployeeAsync(_employee.RowID.Value)
         _disciplinaryActions = _disciplinaryActions.OrderByDescending(Function(x) x.DateFrom).ToList()
 
         _findingNames = Await _productRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
@@ -237,8 +237,6 @@ Public Class DisciplinaryActionTab
                         .DateTo = dtpEffectiveTo.Value
                         .FindingDescription = txtDescription.Text
                         .Comments = txtComments.Text
-                        .LastUpdBy = z_User
-
                     End With
 
                     Await _disciplinaryActionRepo.UpdateAsync(_currentDiscAction)
@@ -347,10 +345,10 @@ Public Class DisciplinaryActionTab
         Dim form As New AddDisciplinaryAction(_employee)
         form.ShowDialog()
 
-        If form.isSaved Then
+        If form.IsSaved Then
             Await LoadDisciplinaryActions()
 
-            If form.showBalloon Then
+            If form.ShowBalloon Then
                 ShowBalloonInfo("Disciplinary Action successfuly added.", "Saved")
             End If
 

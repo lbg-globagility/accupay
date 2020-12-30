@@ -39,11 +39,11 @@ Public Class EntityTest
     <Test>
     Public Async Function TestEntity() As Task
 
-        Dim loanRepository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        'Dim loanRepository = MainServiceProvider.GetRequiredService(Of LoanRepository)
 
-        Dim loans = Await loanRepository.GetLoanTransactionsWithPayPeriodAsync(648)
+        'Dim loans = Await loanRepository.GetLoanTransactionsWithPayPeriodAsync(648)
 
-        Assert.IsTrue(True)
+        'Assert.IsTrue(True)
 
         'Dim adjustment = New AdjustmentService().
         '                GetByMultipleEmployeeAndDatePeriodAsync(2, {1}, New TimePeriod(New Date(2020, 2, 1), New Date(2020, 2, 1))).

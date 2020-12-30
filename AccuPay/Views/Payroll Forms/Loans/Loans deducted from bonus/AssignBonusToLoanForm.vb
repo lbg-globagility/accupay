@@ -11,7 +11,7 @@ Public Class AssignBonusToLoanForm
 
     Private ReadOnly _loanSchedule As LoanSchedule
     Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
-    Private ReadOnly _bonusDataService As BonusDataService
+    Private ReadOnly _bonusRepository As BonusRepository
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
     Private _bonuses As IEnumerable(Of Bonus)
     Private _lastSelectedCellIndex1 As Integer
@@ -28,7 +28,7 @@ Public Class AssignBonusToLoanForm
 
         _loanTransactions = loanTransactions
 
-        _bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
+        _bonusRepository = MainServiceProvider.GetRequiredService(Of BonusRepository)
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
@@ -54,7 +54,7 @@ Public Class AssignBonusToLoanForm
             _loanSchedule.DedEffectiveDateFrom,
             loanCoveredPeriods.Max(Function(pp) pp.PayToDate))
 
-        _bonuses = Await _bonusDataService.GetByEmployeeAndPayPeriodForLoanPaymentAsync(
+        _bonuses = Await _bonusRepository.GetByEmployeeAndPayPeriodForLoanPaymentAsync(
             organizationId:=z_OrganizationID,
             employeeId:=_loanSchedule.EmployeeID.Value,
             timePeriod:=loanTimerPeriod)

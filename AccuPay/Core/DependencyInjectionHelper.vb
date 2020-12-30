@@ -178,22 +178,14 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of IEmployeePersonalProfilesReportBuilder, EmployeePersonalProfilesReportBuilder)
         services.AddTransient(Of ICostCenterReportBuilder, CostCenterReportBuilder)
 
-        'services.AddTransient(Of MetroLogin)
-        'services.AddTransient(Of MDIPrimaryForm)
-        'services.AddTransient(Of GeneralForm)
-        'services.AddTransient(Of HRISForm)
-        'services.AddTransient(Of PayrollForm)
-        'services.AddTransient(Of BenchmarkPayrollForm)
-        'services.AddTransient(Of TimeAttendForm)
-
-        'services.AddTransient(Of AddBranchForm)
+        services.AddTransient(Of IAttachmentDataService, AttachmentDataService)
+        services.AddTransient(Of IAwardDataService, AwardDataService)
+        services.AddTransient(Of IBonusDataService, BonusDataService)
+        services.AddTransient(Of ICertificationDataService, CertificationDataService)
+        services.AddTransient(Of IDisciplinaryActionDataService, DisciplinaryActionDataService)
+        services.AddTransient(Of IEducationalBackgroundDataService, EducationalBackgroundDataService)
+        services.AddTransient(Of IPreviousEmployerDataService, PreviousEmployerDataService)
     End Sub
-
-    Private Shared Function GetDbContextOptions() As DbContextOptions
-        Dim builder As DbContextOptionsBuilder = New DbContextOptionsBuilder()
-        ConfigureDbContextOptions(builder)
-        Return builder.Options
-    End Function
 
     Private Shared Sub ConfigureDbContextOptions(dbContextOptionsBuilder As DbContextOptionsBuilder)
 

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,38 +6,17 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class PreviousEmployerRepository
+    public class PreviousEmployerRepository : SavableRepository<PreviousEmployer>
     {
-        private readonly PayrollContext _context;
-
-        public PreviousEmployerRepository(PayrollContext context)
+        public PreviousEmployerRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<IEnumerable<PreviousEmployer>> GetListByEmployeeAsync(int employeeId)
+        public async Task<ICollection<PreviousEmployer>> GetListByEmployeeAsync(int employeeId)
         {
-            return await _context.PreviousEmployers.
-                                Where(l => l.EmployeeID == employeeId).
-                                ToListAsync();
-        }
-
-        public async Task DeleteAsync(PreviousEmployer previousEmployer)
-        {
-            _context.PreviousEmployers.Remove(previousEmployer);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CreateAsync(PreviousEmployer previousEmployer)
-        {
-            _context.PreviousEmployers.Add(previousEmployer);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(PreviousEmployer previousEmployer)
-        {
-            _context.Entry(previousEmployer).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return await _context.PreviousEmployers
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
         }
     }
 }

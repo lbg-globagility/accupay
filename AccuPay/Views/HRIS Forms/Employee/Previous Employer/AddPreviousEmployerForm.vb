@@ -1,29 +1,24 @@
 Option Strict On
 
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddPreviousEmployerForm
 
-    Private Const FormEntityName As String = "Previous Employer"
-    Public Property isSaved As Boolean
-    Public Property showBalloon As Boolean
+    Public Property IsSaved As Boolean
+    Public Property ShowBalloon As Boolean
 
     Private _employee As Employee
 
     Private _newPreviousEmployer As PreviousEmployer
-
-    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
 
         InitializeComponent()
 
         _employee = employee
-
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -79,30 +74,22 @@ Public Class AddPreviousEmployerForm
                     .BusinessAddress = txtCompAddr.Text
                     .OrganizationID = z_OrganizationID
                     .EmployeeID = _employee.RowID.Value
-                    .CreatedBy = z_User
                 End With
 
-                Dim prevEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
-                Await prevEmployerRepo.CreateAsync(_newPreviousEmployer)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPreviousEmployerDataService)
+                Await dataService.SaveAsync(_newPreviousEmployer, z_User)
 
-                Await _userActivityRepo.RecordAddAsync(
-                    z_User,
-                    FormEntityName,
-                    entityId:=_newPreviousEmployer.RowID.Value,
-                    organizationId:=z_OrganizationID,
-                    changedEmployeeId:=_newPreviousEmployer.EmployeeID,
-                    suffixIdentifier:=$" with name '{_newPreviousEmployer.Name}'")
                 succeed = True
             End Function)
 
         If succeed Then
-            isSaved = True
+            IsSaved = True
 
             If sender Is AddAndNewButton Then
                 ShowBalloonInfo("Previous Employer successfully added.", "Saved")
                 ClearForm()
             Else
-                showBalloon = True
+                ShowBalloon = True
                 Me.Close()
             End If
         End If

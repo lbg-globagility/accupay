@@ -7,45 +7,23 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class BonusRepository
+    public class BonusRepository : SavableRepository<Bonus>
     {
-        private readonly PayrollContext _context;
-
-        public BonusRepository(PayrollContext context)
+        public BonusRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task DeleteAsync(Bonus currentBonus)
+        public override async Task<Bonus> GetByIdAsync(int id)
         {
-            _context.Bonuses.Remove(currentBonus);
-            await _context.SaveChangesAsync();
+            return await _context.Bonuses
+                .AsNoTracking()
+                .Include(b => b.LoanPaymentFromBonuses)
+                    .ThenInclude(lb => lb.Items)
+                .Where(b => b.RowID == id)
+                .FirstOrDefaultAsync();
         }
 
-        public async Task CreateAsync(Bonus bonus)
-        {
-            _context.Bonuses.Add(bonus);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Bonus bonus)
-        {
-            _context.Entry(bonus).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public List<string> GetFrequencyList()
-        {
-            return new List<string>()
-            {
-                Bonus.FREQUENCY_ONE_TIME,
-                Bonus.FREQUENCY_DAILY,
-                Bonus.FREQUENCY_SEMI_MONTHLY,
-                Bonus.FREQUENCY_MONTHLY
-            };
-        }
-
-        public async Task<IEnumerable<Bonus>> GetByEmployeeAsync(int employeeId)
+        public async Task<ICollection<Bonus>> GetByEmployeeAsync(int employeeId)
         {
             return await _context.Bonuses
                 .Include(x => x.Product)
@@ -55,8 +33,8 @@ namespace AccuPay.Data.Repositories
 
         public async Task<ICollection<Bonus>> GetByPayPeriodAsync(int organizationId, TimePeriod timePeriod)
         {
-            return await CreateBaseQueryByTimePeriod(organizationId, timePeriod).
-                ToListAsync();
+            return await CreateBaseQueryByTimePeriod(organizationId, timePeriod)
+                .ToListAsync();
         }
 
         public async Task<ICollection<Bonus>> GetByEmployeeAndPayPeriodAsync(int organizationId, int employeeId, TimePeriod timePeriod)
@@ -84,16 +62,6 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Bonus> GetByIdAsync(int id)
-        {
-            return await _context.Bonuses
-                .AsNoTracking()
-                .Include(b => b.LoanPaymentFromBonuses)
-                    .ThenInclude(lb => lb.Items)
-                .Where(b => b.RowID == id)
-                .FirstOrDefaultAsync();
-        }
-
         private IQueryable<Bonus> CreateBaseQueryByTimePeriod(int organizationId, TimePeriod timePeriod)
         {
             return _context.Bonuses
@@ -101,6 +69,17 @@ namespace AccuPay.Data.Repositories
                 .Where(a => a.OrganizationID == organizationId)
                 .Where(a => a.EffectiveStartDate <= timePeriod.End)
                 .Where(a => a.EffectiveEndDate == null ? true : timePeriod.Start <= a.EffectiveEndDate);
+        }
+
+        public List<string> GetFrequencyList()
+        {
+            return new List<string>()
+            {
+                Bonus.FREQUENCY_ONE_TIME,
+                Bonus.FREQUENCY_DAILY,
+                Bonus.FREQUENCY_SEMI_MONTHLY,
+                Bonus.FREQUENCY_MONTHLY
+            };
         }
     }
 }

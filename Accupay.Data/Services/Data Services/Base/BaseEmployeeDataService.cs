@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public abstract class BaseEmployeeDataService<T> : BaseOrganizationDataService<T> where T : EmployeeDataEntity
+    public abstract class BaseEmployeeDataService<T> : BaseOrganizationDataService<T>, IBaseEmployeeDataService<T> where T : EmployeeDataEntity
     {
         public BaseEmployeeDataService(
             SavableRepository<T> repository,

@@ -8,11 +8,9 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddBonusForm
 
-    Public Property isSaved As Boolean
+    Public Property IsSaved As Boolean
 
-    Public Property showBalloon As Boolean
-
-    Private Const FormEntityName As String = "Bonus"
+    Public Property ShowBalloon As Boolean
 
     Private _products As IEnumerable(Of Product)
 
@@ -24,8 +22,6 @@ Public Class AddBonusForm
 
     Private ReadOnly _productRepo As ProductRepository
 
-    Private ReadOnly _userActivityRepo As UserActivityRepository
-
     Public Sub New(employee As Employee)
 
         InitializeComponent()
@@ -33,8 +29,6 @@ Public Class AddBonusForm
         _employee = employee
 
         _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -105,10 +99,12 @@ Public Class AddBonusForm
             Return
         End If
 
-        Dim product = _products.Where(Function(x) x.Name = cbobontype.Text).
-                                 FirstOrDefault
+        Dim product = _products.
+            Where(Function(x) x.Name = cbobontype.Text).
+            FirstOrDefault()
+
         _newBonus = New Bonus
-        Await FunctionUtils.TryCatchFunctionAsync("New Award",
+        Await FunctionUtils.TryCatchFunctionAsync("New Bonus",
         Async Function()
             With _newBonus
                 .ProductID = product.RowID
@@ -118,32 +114,23 @@ Public Class AddBonusForm
                 .EffectiveEndDate = dtpbonenddate.Value
                 .OrganizationID = z_OrganizationID
                 .EmployeeID = _employee.RowID
-                .CreatedBy = z_User
                 .TaxableFlag = product.Status
             End With
 
-            Dim bonusDataService = MainServiceProvider.GetRequiredService(Of BonusDataService)
-            Await bonusDataService.CreateAsync(_newBonus)
-
-            Await _userActivityRepo.RecordAddAsync(
-                z_User,
-                FormEntityName,
-                entityId:=_newBonus.RowID.Value,
-                organizationId:=z_OrganizationID,
-                changedEmployeeId:=_newBonus.EmployeeID,
-                suffixIdentifier:=$" with type '{cbobontype.Text}' and start date '{_newBonus.EffectiveStartDate.ToShortDateString()}'")
+            Dim dataService = MainServiceProvider.GetRequiredService(Of IBonusDataService)
+            Await dataService.SaveAsync(_newBonus, z_User)
 
             succeed = True
         End Function)
 
         If succeed Then
-            isSaved = True
+            IsSaved = True
 
             If sender Is AddAndNewButton Then
                 ShowBalloonInfo("Bonus successfully added.", "Saved")
                 ClearForm()
             Else
-                showBalloon = True
+                ShowBalloon = True
                 Me.Close()
             End If
         End If

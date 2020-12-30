@@ -50,7 +50,7 @@ Public Class EducationalBackgroundTab
         If _employee?.RowID Is Nothing Then Return
 
         Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
-        _educationalBackgrounds = Await educbgRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _educationalBackgrounds = Await educbgRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvEducBgs.SelectionChanged, AddressOf dgvEducBgs_SelectionChanged
         dgvEducBgs.DataSource = _educationalBackgrounds
@@ -201,10 +201,10 @@ Public Class EducationalBackgroundTab
         Dim form As New AddEducationalBackgroundForm(_employee)
         form.ShowDialog()
 
-        If form.isSaved Then
+        If form.IsSaved Then
             Await LoadEducationalBackgrounds()
 
-            If form.showBalloon Then
+            If form.ShowBalloon Then
                 ShowBalloonInfo("Educational Background successfuly added.", "Saved")
             End If
 
@@ -253,7 +253,6 @@ Public Class EducationalBackgroundTab
                         .DateFrom = dtpDateFrom.Value
                         .DateTo = dtpDateTo.Value
                         .Remarks = txtRemarks.Text
-                        .LastUpdBy = z_User
                     End With
 
                     Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)

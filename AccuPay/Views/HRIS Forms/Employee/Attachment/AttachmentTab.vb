@@ -55,7 +55,7 @@ Public Class AttachmentTab
     Private Async Function LoadAttachments() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _attachments = Await _attachmentRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _attachments = Await _attachmentRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvAttachments.SelectionChanged, AddressOf dgvAttachments_SelectionChanged
 
@@ -156,10 +156,10 @@ Public Class AttachmentTab
         Dim form As New AddAttachmentForm(_employee)
         form.ShowDialog()
 
-        If form.isSaved Then
+        If form.IsSaved Then
             Await LoadAttachments()
 
-            If form.showBalloon Then
+            If form.ShowBalloon Then
                 ShowBalloonInfo("Attachment successfuly added.", "Saved")
             End If
 

@@ -1,38 +1,22 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class AttachmentRepository
+    public class AttachmentRepository : SavableRepository<Attachment>
     {
-        private readonly PayrollContext _context;
-
-        public AttachmentRepository(PayrollContext context)
+        public AttachmentRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<IEnumerable<Attachment>> GetListByEmployeeAsync(int employeeId)
+        public async Task<ICollection<Attachment>> GetByEmployeeAsync(int employeeId)
         {
-            return await _context.Attachments.
-                                Where(l => l.EmployeeID == employeeId).
-                                ToListAsync();
-        }
-
-        public async Task DeleteAsync(Attachment attachment)
-        {
-            _context.Attachments.Remove(attachment);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CreateAsync(Attachment attachment)
-        {
-            _context.Attachments.Add(attachment);
-            await _context.SaveChangesAsync();
+            return await _context.Attachments
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
         }
     }
 }

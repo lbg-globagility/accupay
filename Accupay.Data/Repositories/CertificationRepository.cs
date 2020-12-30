@@ -1,45 +1,22 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class CertificationRepository
+    public class CertificationRepository : SavableRepository<Certification>
     {
-        private readonly PayrollContext _context;
-
-        public CertificationRepository(PayrollContext context)
+        public CertificationRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task DeleteAsync(Certification certification)
+        public async Task<ICollection<Certification>> GetByEmployeeAsync(int employeeId)
         {
-            _context.Certifications.Remove(certification);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CreateAsync(Certification certification)
-        {
-            _context.Certifications.Add(certification);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Certification certification)
-        {
-            _context.Entry(certification).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<Certification>> GetByEmployeeAsync(int employeeId)
-        {
-            return await _context.Certifications.
-                                Where(l => l.EmployeeID == employeeId).
-                                ToListAsync();
+            return await _context.Certifications
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
         }
     }
 }
