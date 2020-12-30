@@ -6,12 +6,9 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CertificationTab
-
-    Private Const FormEntityName As String = "Certification"
 
     Private _employee As Employee
 
@@ -21,18 +18,11 @@ Public Class CertificationTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private ReadOnly _userActivityRepo As UserActivityRepository
-
     Public Sub New()
 
         InitializeComponent()
 
         dgvCertifications.AutoGenerateColumns = False
-
-        If MainServiceProvider IsNot Nothing Then
-
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        End If
 
     End Sub
 
@@ -221,7 +211,6 @@ Public Class CertificationTab
         Await FunctionUtils.TryCatchFunctionAsync("Save Certification",
             Async Function()
                 If IsChanged() Then
-                    Dim oldCertification = _currentCertification.CloneJson()
 
                     With _currentCertification
                         .CertificationType = txtCertificationType.Text
@@ -236,10 +225,8 @@ Public Class CertificationTab
                         .Comments = txtComments.Text
                     End With
 
-                    Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
-                    Await certificationRepo.UpdateAsync(_currentCertification)
-
-                    RecordUpdateCertification(oldCertification)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of ICertificationDataService)
+                    Await dataService.SaveAsync(_currentCertification, z_User)
 
                     messageTitle = "Update Certification"
                     succeed = True
@@ -254,69 +241,6 @@ Public Class CertificationTab
         End If
         Return False
     End Function
-
-    Private Sub RecordUpdateCertification(oldCertification As Certification)
-        Dim changes = New List(Of UserActivityItem)
-
-        If oldCertification Is Nothing Then Return
-
-        Dim suffixIdentifier = $"of certification with type '{_currentCertification.CertificationType}'."
-
-        If _currentCertification.CertificationType <> oldCertification.CertificationType Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldCertification.RowID.Value,
-                .Description = $"Updated type from '{oldCertification.CertificationType}' to '{_currentCertification.CertificationType}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldCertification.EmployeeID
-            })
-        End If
-        If _currentCertification.IssuingAuthority <> oldCertification.IssuingAuthority Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldCertification.RowID.Value,
-                .Description = $"Updated issuing authority from '{oldCertification.IssuingAuthority}' to '{_currentCertification.IssuingAuthority}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldCertification.EmployeeID
-            })
-        End If
-        If _currentCertification.CertificationNo <> oldCertification.CertificationNo Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldCertification.RowID.Value,
-                .Description = $"Updated number from '{oldCertification.CertificationNo}' to '{_currentCertification.CertificationNo}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldCertification.EmployeeID
-            })
-        End If
-        If _currentCertification.IssueDate <> oldCertification.IssueDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldCertification.RowID.Value,
-                .Description = $"Updated issued date from '{oldCertification.IssueDate.ToShortDateString()}' to '{_currentCertification.IssueDate.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldCertification.EmployeeID
-            })
-        End If
-        If _currentCertification.ExpirationDate?.ToShortDateString <> oldCertification.ExpirationDate?.ToShortDateString Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldCertification.RowID.Value,
-                .Description = $"Updated expiration date from '{oldCertification.ExpirationDate?.ToShortDateString()}' to '{_currentCertification.ExpirationDate?.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldCertification.EmployeeID
-            })
-        End If
-        If _currentCertification.Comments <> oldCertification.Comments Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldCertification.RowID.Value,
-                .Description = $"Updated comments from '{oldCertification.Comments}' to '{_currentCertification.Comments}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldCertification.EmployeeID
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
-    End Sub
 
     Private Function IsChanged() As Boolean
         If _currentCertification.CertificationType <> txtCertificationType.Text OrElse
@@ -352,7 +276,10 @@ Public Class CertificationTab
     End Sub
 
     Private Sub UserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Certification"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 

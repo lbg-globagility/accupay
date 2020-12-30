@@ -6,12 +6,9 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EducationalBackgroundTab
-
-    Private Const FormEntityName As String = "Educational Background"
 
     Private _employee As Employee
 
@@ -21,18 +18,11 @@ Public Class EducationalBackgroundTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private ReadOnly _userActivityRepo As UserActivityRepository
-
     Public Sub New()
 
         InitializeComponent()
 
         dgvEducBgs.AutoGenerateColumns = False
-
-        If MainServiceProvider IsNot Nothing Then
-
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        End If
 
     End Sub
 
@@ -216,7 +206,10 @@ Public Class EducationalBackgroundTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Educational Background"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 
@@ -242,7 +235,6 @@ Public Class EducationalBackgroundTab
         Await FunctionUtils.TryCatchFunctionAsync("Save Educational Background",
             Async Function()
                 If IsChanged() Then
-                    Dim oldEducBg = _currentEducBg.CloneJson()
 
                     With _currentEducBg
                         .Type = cboType.SelectedItem.ToString
@@ -255,10 +247,8 @@ Public Class EducationalBackgroundTab
                         .Remarks = txtRemarks.Text
                     End With
 
-                    Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
-                    Await educbgRepo.UpdateAsync(_currentEducBg)
-
-                    RecordUpdateEducBg(oldEducBg)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IEducationalBackgroundDataService)
+                    Await dataService.SaveAsync(_currentEducBg, z_User)
 
                     messageTitle = "Update Award"
                     succeed = True
@@ -272,85 +262,6 @@ Public Class EducationalBackgroundTab
         End If
         Return False
     End Function
-
-    Private Sub RecordUpdateEducBg(oldEducBg As EducationalBackground)
-        Dim changes = New List(Of UserActivityItem)
-
-        If oldEducBg Is Nothing Then Return
-
-        Dim suffixIdentifier = $"of educational background with type '{oldEducBg.Type}' and school '{oldEducBg.School}'."
-
-        If _currentEducBg.Type <> oldEducBg.Type Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated type from '{oldEducBg.Type}' to '{_currentEducBg.Type}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-        If _currentEducBg.School <> oldEducBg.School Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated school from '{oldEducBg.School}' to '{_currentEducBg.School}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-        If _currentEducBg.Degree <> oldEducBg.Degree Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated degree from '{oldEducBg.Degree}' to '{_currentEducBg.Degree}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-        If _currentEducBg.Course <> oldEducBg.Course Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated course from '{oldEducBg.Course}' to '{_currentEducBg.Course}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-        If _currentEducBg.Major <> oldEducBg.Major Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated major from '{oldEducBg.Major}' to '{_currentEducBg.Major}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-        If _currentEducBg.DateFrom <> oldEducBg.DateFrom Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated start date from '{oldEducBg.DateFrom.ToShortDateString}' to '{_currentEducBg.DateFrom.ToShortDateString}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-        If _currentEducBg.DateTo <> oldEducBg.DateTo Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated end date from '{oldEducBg.DateTo.ToShortDateString}' to '{_currentEducBg.DateTo.ToShortDateString}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-        If _currentEducBg.Remarks <> oldEducBg.Remarks Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldEducBg.RowID.Value,
-                .Description = $"Updated remarks from '{oldEducBg.Remarks}' to '{_currentEducBg.Remarks}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldEducBg.EmployeeID
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
-    End Sub
 
     Private Function IsChanged() As Boolean
         With _currentEducBg

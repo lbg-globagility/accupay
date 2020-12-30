@@ -6,7 +6,6 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BonusTab
@@ -236,7 +235,6 @@ Public Class BonusTab
         Await FunctionUtils.TryCatchFunctionAsync("Save Bonus",
             Async Function()
                 If IsChanged(product) Then
-                    Dim oldBonus = _currentBonus.CloneJson()
 
                     With _currentBonus
                         .ProductID = product.RowID

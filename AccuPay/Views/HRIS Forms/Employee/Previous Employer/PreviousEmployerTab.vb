@@ -6,12 +6,9 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PreviousEmployerTab
-
-    Private Const FormEntityName As String = "Previous Employer"
 
     Private _employee As Employee
 
@@ -21,18 +18,11 @@ Public Class PreviousEmployerTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private ReadOnly _userActivityRepo As UserActivityRepository
-
     Public Sub New()
 
         InitializeComponent()
 
         dgvPrevEmployers.AutoGenerateColumns = False
-
-        If MainServiceProvider IsNot Nothing Then
-
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        End If
 
     End Sub
 
@@ -271,7 +261,6 @@ Public Class PreviousEmployerTab
         Await FunctionUtils.TryCatchFunctionAsync("Save Previous Employer",
             Async Function()
                 If IsChanged() Then
-                    Dim oldPrevEmployer = _currentPrevEmployer.CloneJson()
 
                     With _currentPrevEmployer
                         .Name = txtName.Text
@@ -292,10 +281,8 @@ Public Class PreviousEmployerTab
                         .BusinessAddress = txtCompAddr.Text
                     End With
 
-                    Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
-                    Await previousEmployerRepo.UpdateAsync(_currentPrevEmployer)
-
-                    RecordUpdatePrevEmployer(oldPrevEmployer)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IPreviousEmployerDataService)
+                    Await dataService.SaveAsync(_currentPrevEmployer, z_User)
 
                     messageTitle = "Update Previous Employer"
                     succeed = True
@@ -311,151 +298,11 @@ Public Class PreviousEmployerTab
         Return False
     End Function
 
-    Private Sub RecordUpdatePrevEmployer(oldPrevEmployer As PreviousEmployer)
-        Dim changes = New List(Of UserActivityItem)
-
-        If oldPrevEmployer Is Nothing Then Return
-
-        Dim suffixIdentifier = $"of previous employer with name '{oldPrevEmployer.Name}'."
-
-        If _currentPrevEmployer.Name <> oldPrevEmployer.Name Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated name from '{oldPrevEmployer.Name}' to '{_currentPrevEmployer.Name}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.TradeName <> oldPrevEmployer.TradeName Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated trade name from '{oldPrevEmployer.TradeName}' to '{_currentPrevEmployer.TradeName}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.ContactName <> oldPrevEmployer.ContactName Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated contact name from '{oldPrevEmployer.ContactName}' to '{_currentPrevEmployer.ContactName}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.MainPhone <> oldPrevEmployer.MainPhone Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated main phone from '{oldPrevEmployer.MainPhone}' to '{_currentPrevEmployer.MainPhone}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.AltPhone <> oldPrevEmployer.AltPhone Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated alt phone from '{oldPrevEmployer.AltPhone}' to '{_currentPrevEmployer.AltPhone}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.FaxNumber <> oldPrevEmployer.FaxNumber Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated fax number from '{oldPrevEmployer.FaxNumber}' to '{_currentPrevEmployer.FaxNumber}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.EmailAddress <> oldPrevEmployer.EmailAddress Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated email address from '{oldPrevEmployer.EmailAddress}' to '{_currentPrevEmployer.EmailAddress}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.AltEmailAddress <> oldPrevEmployer.AltEmailAddress Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated alt email address from '{oldPrevEmployer.AltEmailAddress}' to '{_currentPrevEmployer.AltEmailAddress}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.URL <> oldPrevEmployer.URL Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated URL from '{oldPrevEmployer.URL}' to '{_currentPrevEmployer.URL}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.TINNo <> oldPrevEmployer.TINNo Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated TIN number from '{oldPrevEmployer.TINNo}' to '{_currentPrevEmployer.TINNo}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.JobTitle <> oldPrevEmployer.JobTitle Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated job title from '{oldPrevEmployer.JobTitle}' to '{_currentPrevEmployer.JobTitle}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.JobFunction <> oldPrevEmployer.JobFunction Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated job function from '{oldPrevEmployer.JobFunction}' to '{_currentPrevEmployer.JobFunction}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.OrganizationType <> oldPrevEmployer.OrganizationType Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated organization type from '{oldPrevEmployer.OrganizationType}' to '{_currentPrevEmployer.OrganizationType}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.ExperienceFrom.ToShortDateString <> oldPrevEmployer.ExperienceFrom.ToShortDateString Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated experience start date from '{oldPrevEmployer.ExperienceFrom.ToShortDateString}' to '{_currentPrevEmployer.ExperienceFrom.ToShortDateString}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.ExperienceTo.ToShortDateString <> oldPrevEmployer.ExperienceTo.ToShortDateString Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated experience end date from '{oldPrevEmployer.ExperienceTo.ToShortDateString}' to '{_currentPrevEmployer.ExperienceTo.ToShortDateString}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-        If _currentPrevEmployer.BusinessAddress <> oldPrevEmployer.BusinessAddress Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldPrevEmployer.RowID.Value,
-                .Description = $"Updated company address from '{oldPrevEmployer.BusinessAddress}' to '{_currentPrevEmployer.BusinessAddress}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldPrevEmployer.EmployeeID
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
-    End Sub
-
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Previous Employer"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 

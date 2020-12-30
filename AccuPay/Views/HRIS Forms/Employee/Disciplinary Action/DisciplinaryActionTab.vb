@@ -6,12 +6,9 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DisciplinaryActionTab
-
-    Private Const FormEntityName As String = "Disciplinary Action"
 
     Private _employee As Employee
 
@@ -33,8 +30,6 @@ Public Class DisciplinaryActionTab
 
     Private ReadOnly _productRepo As ProductRepository
 
-    Private ReadOnly _userActivityRepo As UserActivityRepository
-
     Public Sub New()
 
         InitializeComponent()
@@ -46,7 +41,6 @@ Public Class DisciplinaryActionTab
             _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)
             _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
             _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         End If
 
     End Sub
@@ -227,7 +221,6 @@ Public Class DisciplinaryActionTab
         Await FunctionUtils.TryCatchFunctionAsync("Save Disciplinary Action",
             Async Function()
                 If IsChanged() Then
-                    Dim oldDisciplinaryAction = _currentDiscAction.CloneJson()
                     Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
 
                     With _currentDiscAction
@@ -239,9 +232,8 @@ Public Class DisciplinaryActionTab
                         .Comments = txtComments.Text
                     End With
 
-                    Await _disciplinaryActionRepo.UpdateAsync(_currentDiscAction)
-
-                    RecordUpdateDiscAction(oldDisciplinaryAction)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IDisciplinaryActionDataService)
+                    Await dataService.SaveAsync(_currentDiscAction, z_User)
 
                     messageTitle = "Update Disciplinary Action"
                     succeed = True
@@ -256,71 +248,6 @@ Public Class DisciplinaryActionTab
         End If
         Return False
     End Function
-
-    Private Sub RecordUpdateDiscAction(oldDisciplinaryAction As DisciplinaryAction)
-        Dim changes = New List(Of UserActivityItem)
-
-        If oldDisciplinaryAction Is Nothing Then Return
-
-        Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
-
-        Dim suffixIdentifier = $"of disciplinary action with finding name '{oldDisciplinaryAction.FindingName}'."
-
-        If _currentDiscAction.FindingID <> oldDisciplinaryAction.FindingID Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldDisciplinaryAction.RowID.Value,
-                .Description = $"Updated finding name from '{oldDisciplinaryAction.FindingName}' to '{currentFinding.PartNo}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
-            })
-        End If
-        If _currentDiscAction.Action <> oldDisciplinaryAction.Action Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldDisciplinaryAction.RowID.Value,
-                .Description = $"Updated penaty from '{oldDisciplinaryAction.Action}' to '{_currentDiscAction.Action}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
-            })
-        End If
-        If _currentDiscAction.DateFrom <> oldDisciplinaryAction.DateFrom Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldDisciplinaryAction.RowID.Value,
-                .Description = $"Updated start date from '{oldDisciplinaryAction.DateFrom.ToShortDateString}' to '{_currentDiscAction.DateFrom.ToShortDateString}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
-            })
-        End If
-        If _currentDiscAction.DateTo <> oldDisciplinaryAction.DateTo Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldDisciplinaryAction.RowID.Value,
-                .Description = $"Updated end date from '{oldDisciplinaryAction.DateTo.ToShortDateString}' to '{_currentDiscAction.DateTo.ToShortDateString}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
-            })
-        End If
-        If _currentDiscAction.FindingDescription <> oldDisciplinaryAction.FindingDescription Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldDisciplinaryAction.RowID.Value,
-                .Description = $"Updated finding description from '{oldDisciplinaryAction.FindingDescription}' to '{_currentDiscAction.FindingDescription}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
-            })
-        End If
-        If _currentDiscAction.Comments <> oldDisciplinaryAction.Comments Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldDisciplinaryAction.RowID.Value,
-                .Description = $"Updated comments from '{oldDisciplinaryAction.Comments}' to '{_currentDiscAction.Comments}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldDisciplinaryAction.EmployeeID
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
-    End Sub
 
     Private Function IsChanged() As Boolean
         With _currentDiscAction
@@ -360,7 +287,10 @@ Public Class DisciplinaryActionTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Disciplinary Action"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 

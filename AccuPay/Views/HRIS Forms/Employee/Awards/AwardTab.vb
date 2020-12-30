@@ -6,12 +6,9 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AwardTab
-
-    Private Const FormEntityName As String = "Award"
 
     Private _employee As Employee
 
@@ -21,19 +18,11 @@ Public Class AwardTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private ReadOnly _userActivityRepo As UserActivityRepository
-
     Public Sub New()
 
         InitializeComponent()
 
         dgvAwards.AutoGenerateColumns = False
-
-        'for issues in designer and also defensive programming
-        If MainServiceProvider IsNot Nothing Then
-
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        End If
 
     End Sub
 
@@ -224,7 +213,6 @@ Public Class AwardTab
         Await FunctionUtils.TryCatchFunctionAsync("Save Award",
             Async Function()
                 If IsChanged() Then
-                    Dim oldAward = _currentAward.CloneJson()
 
                     With _currentAward
                         .AwardType = txtAwardType.Text
@@ -232,10 +220,8 @@ Public Class AwardTab
                         .AwardDate = dtpAwardDate.Value
                     End With
 
-                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
-                    Await awardRepo.UpdateAsync(_currentAward)
-
-                    RecordUpdateAward(oldAward)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IAwardDataService)
+                    Await dataService.SaveAsync(_currentAward, z_User)
 
                     messageTitle = "Update Award"
                     succeed = True
@@ -261,47 +247,11 @@ Public Class AwardTab
     End Function
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Award"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
-    End Sub
-
-    Private Sub RecordUpdateAward(oldAward As Award)
-        Dim changes = New List(Of UserActivityItem)
-
-        If oldAward Is Nothing Then Return
-
-        Dim suffixIdentifier = $"of award with type '{oldAward.AwardType}'."
-
-        If _currentAward.AwardType <> oldAward.AwardType Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAward.RowID.Value,
-                .Description = $"Updated type from '{oldAward.AwardType}' to '{_currentAward.AwardType}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAward.EmployeeID
-            })
-        End If
-        If _currentAward.AwardDescription <> oldAward.AwardDescription Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAward.RowID.Value,
-                .Description = $"Updated description from '{oldAward.AwardDescription}' to '{_currentAward.AwardDescription}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAward.EmployeeID
-            })
-        End If
-        If _currentAward.AwardDate <> oldAward.AwardDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAward.RowID.Value,
-                .Description = $"Updated date from '{oldAward.AwardDate.ToShortDateString()}' to '{_currentAward.AwardDate.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAward.EmployeeID
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
     End Sub
 
 End Class
