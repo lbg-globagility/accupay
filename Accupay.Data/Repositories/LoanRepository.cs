@@ -51,9 +51,12 @@ namespace AccuPay.Data.Repositories
                 {
                     _context.Entry(loan.LoanType.CategoryEntity).State = EntityState.Detached;
 
-                    foreach (var categoryProduct in loan.LoanType.CategoryEntity.Products)
+                    if (loan.LoanType.CategoryEntity.Products != null)
                     {
-                        _context.Entry(categoryProduct).State = EntityState.Detached;
+                        foreach (var categoryProduct in loan.LoanType.CategoryEntity.Products)
+                        {
+                            _context.Entry(categoryProduct).State = EntityState.Detached;
+                        }
                     }
                 }
             }

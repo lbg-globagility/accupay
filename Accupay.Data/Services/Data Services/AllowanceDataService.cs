@@ -40,10 +40,18 @@ namespace AccuPay.Data.Services
             _allowanceTypeRepository = allowanceTypeRepository;
         }
 
-        public async Task BatchApply(IReadOnlyCollection<AllowanceImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
+        public async Task BatchApply(
+            IReadOnlyCollection<AllowanceImportModel> validRecords,
+            int organizationId,
+            int currentlyLoggedInUserId)
         {
             AllowanceType setAllowanceType(IGrouping<string, AllowanceImportModel> a) =>
-                new AllowanceType() { DisplayString = a.FirstOrDefault().AllowanceName, Frequency = a.FirstOrDefault().AllowanceFrequency, Name = a.FirstOrDefault().AllowanceName };
+                new AllowanceType()
+                {
+                    DisplayString = a.FirstOrDefault().AllowanceName,
+                    Frequency = a.FirstOrDefault().AllowanceFrequency,
+                    Name = a.FirstOrDefault().AllowanceName
+                };
 
             var notYetExistsAllowanceTypes = validRecords
                 .Where(a => a.IsAllowanceTypeNotYetExists)
@@ -87,13 +95,15 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(Allowance allowance) => UserActivityName;
+        protected override string GetUserActivityName(Allowance allowance)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(Allowance allowance) =>
-            CreateUserActivitySuffixIdentifier(allowance, allowance.Product?.Name);
-
-        private string CreateUserActivitySuffixIdentifier(Allowance allowance, string allowanceType) =>
-            $" with type '{allowanceType}' and start date '{allowance.EffectiveStartDate.ToShortDateString()}'";
+        protected override string CreateUserActivitySuffixIdentifier(Allowance allowance)
+        {
+            return $" with type '{allowance.Type}' and start date '{allowance.EffectiveStartDate.ToShortDateString()}'";
+        }
 
         protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance, int changedByUserId)
         {
@@ -186,17 +196,107 @@ namespace AccuPay.Data.Services
             await CheckForClosedPayPeriod(allowances, oldAllowances);
         }
 
-        protected override async Task PostDeleteAction(Allowance allowance, int changedByUserId)
+        protected override async Task PostDeleteAction(Allowance entity, int currentlyLoggedInUserId)
         {
-            var allowanceType = await _productRepository.GetByIdAsync(allowance.ProductID.Value);
+            // supplying Product data for saving useractivity
+            entity.Product = await _productRepository.GetByIdAsync(entity.ProductID.Value);
 
-            await _userActivityRepository.RecordDeleteAsync(
-                currentlyLoggedInUserId: changedByUserId,
-                entityId: allowance.RowID.Value,
-                entityName: GetUserActivityName(allowance),
-                suffixIdentifier: CreateUserActivitySuffixIdentifier(allowance, allowanceType?.PartNo),
-                organizationId: allowance.OrganizationID.Value,
-                changedEmployeeId: allowance.EmployeeID);
+            await base.PostDeleteAction(entity, currentlyLoggedInUserId);
+        }
+
+        protected override async Task PostSaveAction(Allowance entity, Allowance oldEntity, SaveType saveType)
+        {
+            // supplying Product data for saving useractivity
+            entity.Product = await _productRepository.GetByIdAsync(entity.ProductID.Value);
+
+            if (oldEntity != null)
+            {
+                oldEntity.Product = await _productRepository.GetByIdAsync(oldEntity.ProductID.Value);
+            }
+
+            await base.PostSaveAction(entity, oldEntity, saveType);
+        }
+
+        protected override async Task PostSaveManyAction(
+            IReadOnlyCollection<Allowance> entities,
+            IReadOnlyCollection<Allowance> oldEntities,
+            SaveType saveType,
+            int currentlyLoggedInUserId)
+        {
+            if (!entities.Any()) return;
+
+            var allowanceTypeIds = entities.Select(x => x.ProductID.Value).ToList();
+            allowanceTypeIds.AddRange(oldEntities.Select(x => x.ProductID.Value).ToList());
+
+            allowanceTypeIds = allowanceTypeIds.Distinct().ToList();
+
+            var allowanceTypes = await _productRepository.GetManyByIdsAsync(allowanceTypeIds.ToArray());
+
+            foreach (var entity in entities)
+            {
+                entity.Product = allowanceTypes.Where(x => x.RowID.Value == entity.ProductID).FirstOrDefault();
+            }
+
+            foreach (var entity in oldEntities)
+            {
+                entity.Product = allowanceTypes.Where(x => x.RowID.Value == entity.ProductID).FirstOrDefault();
+            }
+
+            await base.PostSaveManyAction(entities, oldEntities, saveType, currentlyLoggedInUserId);
+        }
+
+        protected override async Task RecordUpdate(Allowance newValue, Allowance oldValue)
+        {
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
+
+            if (newValue.Type != oldValue.Type)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated type from '{oldValue.Type}' to '{newValue.Type}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.AllowanceFrequency != oldValue.AllowanceFrequency)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated frequency from '{oldValue.AllowanceFrequency}' to '{newValue.AllowanceFrequency}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.EffectiveStartDate != oldValue.EffectiveStartDate)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start date from '{oldValue.EffectiveStartDate.ToShortDateString()}' to '{newValue.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.EffectiveEndDate.ToString() != oldValue.EffectiveEndDate.ToString())
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated end date from '{oldValue.EffectiveEndDate?.ToShortDateString()}' to '{newValue.EffectiveEndDate?.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Amount != oldValue.Amount)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated amount from '{oldValue.Amount}' to '{newValue.Amount}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
         }
 
         #endregion Overrides

@@ -122,6 +122,81 @@ namespace AccuPay.Data.Services
             }
         }
 
+        protected override async Task RecordUpdate(Salary newValue, Salary oldValue)
+        {
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
+
+            if (newValue.EffectiveFrom != oldValue.EffectiveFrom)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start date from '{oldValue.EffectiveFrom.ToShortDateString()}' to '{newValue.EffectiveFrom.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.BasicSalary != oldValue.BasicSalary)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated basic salary from '{oldValue.BasicSalary}' to '{newValue.BasicSalary}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.AllowanceSalary != oldValue.AllowanceSalary)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated allowance salary from '{oldValue.AllowanceSalary}' to '{newValue.AllowanceSalary}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.PhilHealthDeduction != oldValue.PhilHealthDeduction)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated PhilHealth deduction from '{oldValue.PhilHealthDeduction}' to '{newValue.PhilHealthDeduction}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.AutoComputePhilHealthContribution != oldValue.AutoComputePhilHealthContribution)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated PhilHealth autocompute option from '{oldValue.AutoComputePhilHealthContribution}' to '{newValue.AutoComputePhilHealthContribution}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.DoPaySSSContribution != oldValue.DoPaySSSContribution)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated SSS pay option from '{oldValue.DoPaySSSContribution}' to '{newValue.DoPaySSSContribution}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.HDMFAmount != oldValue.HDMFAmount)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated PAGIBIG deduction from '{oldValue.HDMFAmount}' to '{newValue.HDMFAmount}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.AutoComputeHDMFContribution != oldValue.AutoComputeHDMFContribution)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated PAGIBIG autocompute option from '{oldValue.AutoComputeHDMFContribution}' to '{newValue.AutoComputeHDMFContribution}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
+        }
+
         #endregion Overrides
 
         #region Private Methods

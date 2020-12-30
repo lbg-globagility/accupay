@@ -20,7 +20,7 @@ namespace AccuPay.Web.Branches
 
         public async Task<BranchDto> GetById(int branchId)
         {
-            var branch = await _branchRepository.GetById(branchId);
+            var branch = await _branchRepository.GetByIdAsync(branchId);
 
             return ConvertToDto(branch);
         }
@@ -39,7 +39,7 @@ namespace AccuPay.Web.Branches
 
         public async Task<BranchDto> Update(int id, UpdateBranchDto dto)
         {
-            var branch = await _branchRepository.GetById(id);
+            var branch = await _branchRepository.GetByIdAsync(id);
             branch.Name = dto.Name;
             branch.Code = dto.Code;
             branch.LastUpdBy = _currentUser.UserId;

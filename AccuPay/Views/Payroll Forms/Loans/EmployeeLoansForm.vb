@@ -469,6 +469,7 @@ Public Class EmployeeLoansForm
         Dim loanModels = loans.
             Select(Function(l) LoanModel.Create(l)).
             OrderByDescending(Function(l) l.EffectiveFrom).
+            ThenByDescending(Function(l) l.LoanTypeName).
             ToList()
 
         Dim statusFilter = CreateStatusFilter()

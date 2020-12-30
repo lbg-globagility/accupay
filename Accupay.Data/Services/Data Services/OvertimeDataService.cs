@@ -88,10 +88,15 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(Overtime overtime) => UserActivityName;
+        protected override string GetUserActivityName(Overtime overtime)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(Overtime overtime) =>
-            $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
+        protected override string CreateUserActivitySuffixIdentifier(Overtime overtime)
+        {
+            return $" with date '{overtime.OTStartDate.ToShortDateString()}' and time period '{overtime.OTStartTime.ToStringFormat("hh:mm tt")} to {overtime.OTEndTime.ToStringFormat("hh:mm tt")}'";
+        }
 
         protected override async Task SanitizeEntity(Overtime overtime, Overtime oldOvertime, int currentlyLoggedInUserId)
         {

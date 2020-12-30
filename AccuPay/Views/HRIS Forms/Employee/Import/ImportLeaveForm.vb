@@ -6,23 +6,21 @@ Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Attributes
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportLeaveForm
 
-    Private Const FormEntityName As String = "Leave"
     Private _filePath As String
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
-    Private _categoryRepository As CategoryRepository
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _categoryRepository As CategoryRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _productRepository As ProductRepository
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _productRepository As ProductRepository
 
     Sub New()
 
@@ -31,7 +29,6 @@ Public Class ImportLeaveForm
         _categoryRepository = MainServiceProvider.GetRequiredService(Of CategoryRepository)
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -136,6 +133,7 @@ Public Class ImportLeaveForm
 
     Private Async Function SaveImport() As Task(Of Boolean)
 
+        'TODO: import should be create only
         Dim messageTitle = "Import Employee Leave"
 
         Dim leaves As List(Of Leave) = Await GetOkLeaves()
@@ -153,34 +151,6 @@ Public Class ImportLeaveForm
 
                 Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Await leaveService.SaveManyAsync(leaves, z_User)
-
-                Dim importList = New List(Of UserActivityItem)
-                Dim entityName = FormEntityName.ToLower()
-
-                'TODO: import should be create only
-                For Each item In leaves
-
-                    Dim suffixIdentifier = $"with date '{item.StartDate.ToShortDateString()}'."
-
-                    If item.IsNew Then
-                        importList.Add(New UserActivityItem() With
-                        {
-                            .Description = $"Imported a new leave {suffixIdentifier}",
-                            .EntityId = item.RowID.Value,
-                            .ChangedEmployeeId = item.EmployeeID.Value
-                        })
-                    Else
-                        importList.Add(New UserActivityItem() With
-                        {
-                            .Description = $"Updated a {entityName} on import {suffixIdentifier}",
-                            .EntityId = item.RowID.Value,
-                            .ChangedEmployeeId = item.EmployeeID.Value
-                        })
-                    End If
-
-                Next
-
-                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Return True
             End Function)

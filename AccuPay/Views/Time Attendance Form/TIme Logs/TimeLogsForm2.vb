@@ -4,7 +4,6 @@ Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Exceptions
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories

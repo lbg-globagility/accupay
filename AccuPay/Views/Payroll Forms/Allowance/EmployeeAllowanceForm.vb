@@ -12,8 +12,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeAllowanceForm
 
-    Private Const FormEntityName As String = "Allowance"
-
     Private _currentAllowance As Allowance
 
     Private _employees As List(Of Employee)
@@ -29,8 +27,6 @@ Public Class EmployeeAllowanceForm
     Private ReadOnly _employeeRepository As EmployeeRepository
 
     Private ReadOnly _productRepository As ProductRepository
-
-    Private ReadOnly _userActivityRepository As UserActivityRepository
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
@@ -52,8 +48,6 @@ Public Class EmployeeAllowanceForm
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
     End Sub
@@ -65,6 +59,8 @@ Public Class EmployeeAllowanceForm
         Await CheckRolePermissions()
 
         LoadFrequencyList()
+
+        cboallowtype.DisplayMember = "PartNo"
         Await LoadAllowanceTypes()
 
         Await LoadEmployees()
@@ -154,15 +150,20 @@ Public Class EmployeeAllowanceForm
 
     Private Sub ShowAllowanceDetails()
 
-        If AllowanceGridView.CurrentRow Is Nothing Then Return
+        If AllowanceGridView.CurrentRow Is Nothing Then
+            cboallowtype.SelectedIndex = -1
+            Return
+        End If
 
         Dim currentAllowance As Allowance = GetSelectedAllowance()
 
         Dim currentEmployee = GetSelectedEmployee()
+
         If currentAllowance IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
            Nullable.Equals(currentAllowance.EmployeeID, currentEmployee.RowID) Then
 
             PopulateAllowanceForm(currentAllowance)
+
         End If
     End Sub
 
@@ -211,6 +212,8 @@ Public Class EmployeeAllowanceForm
 
         For Each allowance In Me._currentAllowances
 
+            allowance.ProductID = allowance.Product?.RowID
+
             If CheckIfAllowanceIsChanged(allowance) Then
                 changedAllowances.Add(allowance)
             End If
@@ -233,10 +236,6 @@ Public Class EmployeeAllowanceForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
                 Await dataService.SaveManyAsync(changedAllowances, z_User)
 
-                For Each item In changedAllowances
-                    RecordUpdate(item)
-                Next
-
                 ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
 
                 Dim currentEmployee = GetSelectedEmployee()
@@ -248,24 +247,6 @@ Public Class EmployeeAllowanceForm
                 End If
 
             End Function)
-    End Sub
-
-    Private Sub cboallowtype_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowtype.SelectedValueChanged
-        If Me._currentAllowance IsNot Nothing Then
-            Dim selectedAllowanceType = Me._allowanceTypeList.FirstOrDefault(Function(l) (l.PartNo = cboallowtype.Text))
-
-            If selectedAllowanceType Is Nothing Then
-                Me._currentAllowance.ProductID = Nothing
-            Else
-                Me._currentAllowance.ProductID = selectedAllowanceType.RowID
-                Me._currentAllowance.Product = selectedAllowanceType.CloneJson()
-
-                'force commit to gridview
-                'ForceAllowanceGridViewCommit()
-                'cboallowtype.Focus()
-            End If
-        End If
-
     End Sub
 
     Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
@@ -531,9 +512,8 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub PopulateAllowanceTypeCombobox()
-        Dim allowanceTypes = _productRepository.ConvertToStringList(Me._allowanceTypeList)
 
-        cboallowtype.DataSource = allowanceTypes
+        cboallowtype.DataSource = Me._allowanceTypeList
     End Sub
 
     Private Function GetSelectedEmployee() As Employee
@@ -555,7 +535,11 @@ Public Class EmployeeAllowanceForm
         dtpallowenddate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         cboallowtype.DataBindings.Clear()
-        cboallowtype.DataBindings.Add("Text", Me._currentAllowance, "Type")
+        cboallowtype.DataBindings.Add("SelectedValue", Me._currentAllowance, "Product", True, DataSourceUpdateMode.OnPropertyChanged)
+
+        If Not String.IsNullOrWhiteSpace(Me._currentAllowance.Type) Then
+            cboallowtype.Text = Me._currentAllowance.Type
+        End If
 
         cboallowfreq.DataBindings.Clear()
         cboallowfreq.DataBindings.Add("Text", Me._currentAllowance, "AllowanceFrequency")
@@ -587,9 +571,6 @@ Public Class EmployeeAllowanceForm
         Me._currentAllowance = Nothing
 
         DetailsTabLayout.Enabled = False
-
-        cboallowtype.SelectedIndex = -1
-        cboallowtype.DataBindings.Clear()
 
         cboallowfreq.SelectedIndex = -1
         cboallowfreq.DataBindings.Clear()
@@ -642,66 +623,6 @@ Public Class EmployeeAllowanceForm
 
     End Function
 
-    Private Function RecordUpdate(newAllowance As Allowance) As Boolean
-        Dim oldAllowance =
-            Me._changedAllowances.
-                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newAllowance.RowID))
-
-        If oldAllowance Is Nothing Then Return False
-
-        Dim changes = New List(Of UserActivityItem)
-
-        Dim suffixIdentifier = $"of allowance with type '{oldAllowance.Product?.Name}' and start date '{oldAllowance.EffectiveStartDate.ToShortDateString()}'."
-
-        If newAllowance.Type <> oldAllowance.Type Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated type from '{oldAllowance.Type}' to '{newAllowance.Type}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated start date from '{oldAllowance.EffectiveStartDate.ToShortDateString()}' to '{newAllowance.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.EffectiveEndDate.ToString() <> oldAllowance.EffectiveEndDate.ToString() Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString()}' to '{newAllowance.EffectiveEndDate?.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.Amount <> oldAllowance.Amount Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated amount from '{oldAllowance.Amount}' to '{newAllowance.Amount}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
-        Return True
-    End Function
-
     Private Async Function LoadEmployees() As Task
 
         Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
@@ -725,7 +646,10 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Allowance"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 

@@ -4,7 +4,6 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -86,10 +85,15 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(EmployeeDutySchedule shift) => UserActivityName;
+        protected override string GetUserActivityName(EmployeeDutySchedule shift)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(EmployeeDutySchedule shift) =>
-            $" with date '{shift.DateSched.ToShortDateString()}'";
+        protected override string CreateUserActivitySuffixIdentifier(EmployeeDutySchedule shift)
+        {
+            return $" with date '{shift.DateSched.ToShortDateString()}'";
+        }
 
         protected override async Task SanitizeEntity(EmployeeDutySchedule shift, EmployeeDutySchedule oldShift, int changedByUserId)
         {

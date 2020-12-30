@@ -3,29 +3,23 @@ Option Strict On
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportOBForm
-
-    Private Const FormEntityName As String = "Official Business"
 
     Private _officialBusinesses As List(Of OfficialBusiness)
 
     Public IsSaved As Boolean
 
-    Private _employeeRepository As EmployeeRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
     Sub New()
 
         InitializeComponent()
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -57,8 +51,8 @@ Public Class ImportOBForm
         Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
                 records = ExcelService(Of OBRowRecord).
-                                Read(fileName).
-                                ToList()
+                    Read(fileName).
+                    ToList()
             End Sub)
 
         If parsedSuccessfully = False Then Return
@@ -188,22 +182,6 @@ Public Class ImportOBForm
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
                 Await dataService.SaveManyAsync(_officialBusinesses, z_User)
-
-                Dim importlist = New List(Of UserActivityItem)
-
-                For Each officialBusiness In _officialBusinesses
-
-                    Dim suffixIdentifier = $"with date '{officialBusiness.StartDate.Value.ToShortDateString()}'."
-
-                    importlist.Add(New UserActivityItem() With
-                    {
-                        .Description = $"Created a new official business {suffixIdentifier}",
-                        .EntityId = officialBusiness.RowID.Value,
-                        .ChangedEmployeeId = officialBusiness.EmployeeID.Value
-                    })
-                Next
-
-                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
                 Me.IsSaved = True
 

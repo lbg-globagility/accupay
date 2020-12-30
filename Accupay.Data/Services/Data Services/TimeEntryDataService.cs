@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -93,7 +93,11 @@ namespace AccuPay.Data.Services
                 employeeId: employeeId,
                 datePeriod: datePeriod);
 
-            var branches = await _branchRepository.GetByMultipleIds(timeEntryIds);
+            var branchIds = timeEntries
+                .Where(x => x.BranchID != null)
+                .Select(x => x.BranchID.Value)
+                .ToArray();
+            var branches = await _branchRepository.GetManyByIdsAsync(branchIds);
 
             // consolidating data
             var timeEntryList = new List<TimeEntryData>();

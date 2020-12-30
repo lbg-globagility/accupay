@@ -1,8 +1,3 @@
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
-Imports Microsoft.Extensions.DependencyInjection
-
 <TestFixture>
 Public Class EntityTest
     Inherits ServiceProvider
@@ -37,7 +32,7 @@ Public Class EntityTest
     End Sub
 
     <Test>
-    Public Async Function TestEntity() As Task
+    Public Sub TestEntity()
 
         'Dim loanRepository = MainServiceProvider.GetRequiredService(Of LoanRepository)
 
@@ -70,7 +65,7 @@ Public Class EntityTest
         'Dim count2 = branchRepo.GetAll().Count
 
         'Assert.IsTrue(count2 > 0)
-    End Function
+    End Sub
 
     <Test>
     Public Sub CheckVBNullableId()

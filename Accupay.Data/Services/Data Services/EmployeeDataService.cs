@@ -3,7 +3,6 @@ using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.Imports.Employees;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,17 +41,17 @@ namespace AccuPay.Data.Services
 
         public async Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId)
         {
-            var vacationLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(
-                        ProductConstant.VACATION_LEAVE,
-                        organizationId: organizationId,
-                        userId: userId);
+            var vacationLeaveProduct = await _productRepository
+                .GetOrCreateLeaveTypeAsync(
+                    ProductConstant.VACATION_LEAVE,
+                    organizationId: organizationId,
+                    userId: userId);
 
-            var sickLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(
-                        ProductConstant.SICK_LEAVE,
-                        organizationId: organizationId,
-                        userId: userId);
+            var sickLeaveProduct = await _productRepository
+                .GetOrCreateLeaveTypeAsync(
+                    ProductConstant.SICK_LEAVE,
+                    organizationId: organizationId,
+                    userId: userId);
 
             if (vacationLeaveProduct?.RowID == null || sickLeaveProduct?.RowID == null)
                 throw new BusinessLogicException("Error accessing leave type data.");

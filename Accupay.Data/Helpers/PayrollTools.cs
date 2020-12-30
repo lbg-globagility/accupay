@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Services;
 using System;
 using System.Collections.Generic;
@@ -31,6 +31,9 @@ namespace AccuPay.Data.Helpers
                                                     Salary salary,
                                                     bool isActual = false)
         {
+            if (employee == null || salary == null)
+                return 0;
+
             var basicSalary = isActual ? salary.BasicSalary + salary.AllowanceSalary : salary.BasicSalary;
 
             if (employee.IsMonthly || employee.IsFixed)

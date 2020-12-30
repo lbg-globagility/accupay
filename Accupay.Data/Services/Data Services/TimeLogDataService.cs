@@ -52,10 +52,15 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(TimeLog leave) => UserActivityName;
+        protected override string GetUserActivityName(TimeLog leave)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(TimeLog log) =>
-            $" with date '{log.LogDate.ToShortDateString()}'";
+        protected override string CreateUserActivitySuffixIdentifier(TimeLog log)
+        {
+            return $" with date '{log.LogDate.ToShortDateString()}'";
+        }
 
         protected override async Task SanitizeEntity(TimeLog timeLog, TimeLog oldTimeLog, int changedByUserId)
         {
@@ -92,8 +97,18 @@ namespace AccuPay.Data.Services
             }
         }
 
+        protected override async Task PostDeleteAction(TimeLog entity, int currentlyLoggedInUserId)
+        {
+            // supplying Product data for saving useractivity
+            entity.Branch = await _branchRepository.GetByIdAsync(entity.BranchID.Value);
+
+            await base.PostDeleteAction(entity, currentlyLoggedInUserId);
+        }
+
         protected override async Task PostDeleteManyAction(IReadOnlyCollection<TimeLog> entities, int changedByUserId)
         {
+            await GetBranchProperty(entities);
+
             // user can add multiple time logs in a day specially when they import multiple times.
             var groupedDeletedTimeLogs = entities.GroupBy(x => new { x.EmployeeID, x.LogDate });
 
@@ -106,34 +121,39 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task PostUpdateManyAction(IReadOnlyCollection<TimeLog> entities, IReadOnlyCollection<TimeLog> oldEntities)
+        protected override async Task PostSaveAction(TimeLog entity, TimeLog oldEntity, SaveType saveType)
         {
-            var branches = await _branchRepository.GetAllAsync();
-            await RecordUpdate(entities, oldEntities, branches.ToList());
-        }
+            // supplying Branch data for saving useractivity
+            entity.Branch = await _branchRepository.GetByIdAsync(entity.BranchID.Value);
 
-        #endregion Overrides
-
-        private async Task RecordUpdate(IReadOnlyCollection<TimeLog> updatedTimeLogs, IReadOnlyCollection<TimeLog> oldRecords, IReadOnlyCollection<Branch> branches)
-        {
-            foreach (var newValue in updatedTimeLogs)
+            if (oldEntity != null)
             {
-                var oldValue = oldRecords
-                    .Where(tl => tl.EmployeeID.Value == newValue.EmployeeID.Value)
-                    .Where(tl => tl.LogDate == newValue.LogDate)
-                    .FirstOrDefault();
-                if (oldValue == null) continue;
-
-                await RecordUpdate(branches, newValue, oldValue);
+                oldEntity.Branch = await _branchRepository.GetByIdAsync(oldEntity.BranchID.Value);
             }
+
+            await base.PostSaveAction(entity, oldEntity, saveType);
         }
 
-        private async Task RecordUpdate(IReadOnlyCollection<Branch> branches, TimeLog newValue, TimeLog oldValue)
+        protected override async Task PostSaveManyAction(
+            IReadOnlyCollection<TimeLog> entities,
+            IReadOnlyCollection<TimeLog> oldEntities,
+            SaveType saveType,
+            int currentlyLoggedInUserId)
         {
-            List<UserActivityItem> changes = new List<UserActivityItem>();
+            if (!entities.Any()) return;
+
+            var branches = await GetBranchProperty(entities);
+            await GetBranchProperty(oldEntities, branches);
+
+            await base.PostSaveManyAction(entities, oldEntities, saveType, currentlyLoggedInUserId);
+        }
+
+        protected override async Task RecordUpdate(TimeLog newValue, TimeLog oldValue)
+        {
+            var changes = new List<UserActivityItem>();
             var entityName = UserActivityName.ToLower();
 
-            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(newValue)}.";
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
 
             if (newValue.TimeIn != oldValue.TimeIn)
             {
@@ -173,18 +193,10 @@ namespace AccuPay.Data.Services
             }
             if (newValue.BranchID != oldValue.BranchID)
             {
-                var oldBranch = "";
-                var newBranch = "";
-
-                if (oldValue.BranchID.HasValue)
-                    oldBranch = branches.Where(x => x.RowID == oldValue.BranchID).FirstOrDefault()?.Name;
-                if (newValue.BranchID.HasValue)
-                    newBranch = branches.Where(x => x.RowID == newValue.BranchID).FirstOrDefault()?.Name;
-
                 changes.Add(new UserActivityItem()
                 {
                     EntityId = newValue.RowID.Value,
-                    Description = $"Updated branch from '{oldBranch}' to '{newBranch}' {suffixIdentifier}",
+                    Description = $"Updated branch from '{oldValue.Branch?.Name}' to '{newValue.Branch?.Name}' {suffixIdentifier}",
                     ChangedEmployeeId = newValue.EmployeeID.Value
                 });
             }
@@ -198,6 +210,33 @@ namespace AccuPay.Data.Services
                     UserActivityRepository.RecordTypeEdit,
                     changes);
             }
+        }
+
+        #endregion Overrides
+
+        private async Task<ICollection<Branch>> GetBranchProperty(IReadOnlyCollection<TimeLog> entities, ICollection<Branch> branches = null)
+        {
+            if (entities == null || !entities.Any())
+                return new List<Branch>();
+
+            if (branches == null)
+            {
+                var branchIds = entities
+                    .Where(x => x.BranchID != null)
+                    .Select(x => x.BranchID.Value)
+                    .ToList();
+
+                branchIds = branchIds.Distinct().ToList();
+
+                branches = await _branchRepository.GetManyByIdsAsync(branchIds.ToArray());
+            }
+
+            foreach (var entity in entities)
+            {
+                entity.Branch = branches.Where(x => x.RowID.Value == entity.BranchID).FirstOrDefault();
+            }
+
+            return branches;
         }
     }
 }

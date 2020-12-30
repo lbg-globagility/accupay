@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -16,12 +16,12 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public async Task<Branch> GetById(int id)
+        public async Task<Branch> GetByIdAsync(int id)
         {
             return await _context.Branches.FindAsync(id);
         }
 
-        public async Task<ICollection<Branch>> GetByMultipleIds(int[] ids)
+        public async Task<ICollection<Branch>> GetManyByIdsAsync(int[] ids)
         {
             return await _context.Branches
                 .Where(x => ids.Contains(x.RowID.Value))

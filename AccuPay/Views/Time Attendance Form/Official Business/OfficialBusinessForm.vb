@@ -12,8 +12,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class OfficialBusinessForm
 
-    Private Const FormEntityName As String = "Official Business"
-
     Private _currentOfficialBusiness As OfficialBusiness
 
     Private _employees As List(Of Employee)
@@ -25,8 +23,6 @@ Public Class OfficialBusinessForm
     Private _changedOfficialBusinesses As List(Of OfficialBusiness)
 
     Private ReadOnly _employeeRepository As EmployeeRepository
-
-    Private ReadOnly _userActivityRepository As UserActivityRepository
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
@@ -45,8 +41,6 @@ Public Class OfficialBusinessForm
         _changedOfficialBusinesses = New List(Of OfficialBusiness)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
     End Sub
@@ -313,74 +307,6 @@ Public Class OfficialBusinessForm
 
     End Function
 
-    Private Function RecordUpdate(newOfficialBusiness As OfficialBusiness) As Boolean
-        Dim oldOfficialBusiness =
-            Me._changedOfficialBusinesses.
-                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newOfficialBusiness.RowID))
-
-        If oldOfficialBusiness Is Nothing Then Return False
-
-        Dim changes = New List(Of UserActivityItem)
-
-        Dim suffixIdentifier = $"of official business with date '{oldOfficialBusiness.StartDate.ToShortDateString()}'."
-
-        If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated start date from '{oldOfficialBusiness.StartDate?.ToShortDateString()}' to '{newOfficialBusiness.StartDate?.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
-            })
-        End If
-        If newOfficialBusiness.StartTime <> oldOfficialBusiness.StartTime Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated start time from '{oldOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.StartTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
-            })
-        End If
-        If newOfficialBusiness.EndTime <> oldOfficialBusiness.EndTime Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated end time from '{oldOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' to '{newOfficialBusiness.EndTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
-            })
-        End If
-        If newOfficialBusiness.Reason <> oldOfficialBusiness.Reason Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
-            })
-        End If
-        If newOfficialBusiness.Comments <> oldOfficialBusiness.Comments Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
-            })
-        End If
-        If newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldOfficialBusiness.RowID.Value,
-                .Description = $"Updated status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldOfficialBusiness.EmployeeID.Value
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
-        Return True
-    End Function
-
     Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
 
         Await ShowEmployeeOfficialBusinesses()
@@ -642,10 +568,6 @@ Public Class OfficialBusinessForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
                 Await dataService.SaveManyAsync(changedOfficialBusinesses, z_User)
 
-                For Each item In changedOfficialBusinesses
-                    RecordUpdate(item)
-                Next
-
                 ShowBalloonInfo($"{changedOfficialBusinesses.Count} OfficialBusiness(es) Successfully Updated.", messageTitle)
 
                 Dim currentEmployee = GetSelectedEmployee()
@@ -667,7 +589,10 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Official Business"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 

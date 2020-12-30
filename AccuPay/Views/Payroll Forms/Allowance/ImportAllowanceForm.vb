@@ -5,14 +5,12 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportAllowanceForm
-
-    Private Const FormEntityName As String = "Allowance"
 
     Private _allowances As List(Of Allowance)
 
@@ -22,13 +20,11 @@ Public Class ImportAllowanceForm
 
     Public IsSaved As Boolean
 
-    Private _allowanceRepository As AllowanceRepository
+    Private ReadOnly _allowanceRepository As AllowanceRepository
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _productRepository As ProductRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _productRepository As ProductRepository
 
     Sub New()
 
@@ -39,8 +35,6 @@ Public Class ImportAllowanceForm
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -259,8 +253,6 @@ Public Class ImportAllowanceForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
                 Await dataService.SaveManyAsync(_allowances, z_User)
 
-                Await RecordUserActivity()
-
                 Me.IsSaved = True
                 Me.Cursor = Cursors.Default
                 Me.Close()
@@ -270,27 +262,6 @@ Public Class ImportAllowanceForm
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Async Function RecordUserActivity() As Task
-        Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID)).ToList()
-
-        Dim importList = New List(Of UserActivityItem)
-        For Each item In _allowances
-
-            Dim allowanceType = Me._allowanceTypeList.Where(Function(t) t.RowID.Value = item.ProductID.Value).FirstOrDefault()
-
-            Dim suffixIdentifier = $" with type '{allowanceType?.PartNo}' and start date '{item.EffectiveStartDate.ToShortDateString()}'."
-
-            importList.Add(New UserActivityItem() With
-            {
-                .Description = $"Imported a new allowance {suffixIdentifier}",
-                .EntityId = item.RowID.Value,
-                .ChangedEmployeeId = item.EmployeeID.Value
-            })
-        Next
-
-        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
-    End Function
-
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
         Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance)
 
@@ -299,9 +270,9 @@ Public Class ImportAllowanceForm
                 Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
                 Dim allowanceTypes = _allowanceTypeList.
-                                        Select(Function(p) p.PartNo).
-                                        OrderBy(Function(p) p).
-                                        ToList()
+                    Select(Function(p) p.PartNo).
+                    OrderBy(Function(p) p).
+                    ToList()
 
                 For index = 0 To allowanceTypes.Count - 1
                     worksheet.Cells(index + 2, 2).Value = allowanceTypes(index)

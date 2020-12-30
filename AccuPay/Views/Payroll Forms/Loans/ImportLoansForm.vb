@@ -5,14 +5,12 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportLoansForm
-
-    Private Const FormEntityName As String = "Loan"
 
     Private _loans As List(Of LoanSchedule)
 
@@ -22,15 +20,13 @@ Public Class ImportLoansForm
 
     Public IsSaved As Boolean
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
 
-    Private _loanService As LoanDataService
+    Private ReadOnly _loanService As LoanDataService
 
-    Private _productRepository As ProductRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _productRepository As ProductRepository
 
     Sub New()
 
@@ -43,8 +39,6 @@ Public Class ImportLoansForm
         _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -274,21 +268,6 @@ Public Class ImportLoansForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Await _loanService.SaveManyAsync(_loans, z_User)
-
-                Dim importList = New List(Of UserActivityItem)
-                For Each item In _loans
-
-                    Dim suffixIdentifier = $"with type '{item.LoanName}' and start date '{item.DedEffectiveDateFrom.ToShortDateString()}'."
-
-                    importList.Add(New UserActivityItem() With
-                    {
-                        .Description = $"Created a new loan {suffixIdentifier}",
-                        .EntityId = item.RowID.Value,
-                        .ChangedEmployeeId = item.EmployeeID.Value
-                    })
-                Next
-
-                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

@@ -20,10 +20,10 @@ Public Class ImportEmployeeForm
     Private _okModels As List(Of EmployeeModel)
     Private _failModels As List(Of EmployeeModel)
 
-    Private _divisionService As DivisionDataService
-    Private _branchRepository As BranchRepository
-    Private _employeeRepository As EmployeeRepository
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _divisionService As DivisionDataService
+    Private ReadOnly _branchRepository As BranchRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _userActivityRepository As UserActivityRepository
 
 #End Region
 

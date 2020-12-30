@@ -3,30 +3,24 @@ Option Strict On
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports Globagility.AccuPay.Salaries
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportSalaryForm
 
-    Private Const FormEntityName As String = "Salary"
-
     Private _salaries As IList(Of Salary)
 
     Public Property IsSaved As Boolean
 
-    Private _employeeRepository As EmployeeRepository
-
-    Private _userActivityRepository As UserActivityRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
     Sub New()
 
         InitializeComponent()
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
     End Sub
@@ -181,21 +175,6 @@ Public Class ImportSalaryForm
             Async Function()
                 Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
                 Await dataService.SaveManyAsync(_salaries.ToList(), z_User)
-
-                Dim importList = New List(Of UserActivityItem)
-                For Each item In _salaries
-
-                    Dim suffixIdentifier = $"with start date '{item.EffectiveFrom.ToShortDateString()}'."
-
-                    importList.Add(New UserActivityItem() With
-                    {
-                        .Description = $"Created a new salary {suffixIdentifier}",
-                        .EntityId = item.RowID.Value,
-                        .ChangedEmployeeId = item.EmployeeID.Value
-                    })
-                Next
-
-                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
             End Function)

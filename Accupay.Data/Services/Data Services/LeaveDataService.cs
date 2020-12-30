@@ -55,8 +55,6 @@ namespace AccuPay.Data.Services
         {
             await SaveManyAsync(new List<Leave> { leave }, changedByUserId);
 
-            await RecordAdd(leave);
-
             return leave;
         }
 
@@ -79,7 +77,13 @@ namespace AccuPay.Data.Services
 
             await ValidateDates(leaves, oldLeaves.ToList(), organizationId);
 
+            var newLeaves = leaves.Where(x => x.IsNewEntity).ToList();
+            var updatedLeaves = leaves.Where(x => !x.IsNewEntity).ToList();
+
             await SaveLeavesAsync(leaves, organizationId);
+
+            await PostSaveManyAction(newLeaves, new List<Leave>(), SaveType.Insert, changedByUserId);
+            await PostSaveManyAction(updatedLeaves, oldLeaves.ToList(), SaveType.Update, changedByUserId);
         }
 
         private async Task SaveLeavesAsync(List<Leave> leaves, int organizationId)
@@ -505,10 +509,15 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(Leave leave) => UserActivityName;
+        protected override string GetUserActivityName(Leave leave)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(Leave leave) =>
-            $" with date '{leave.StartDate.ToShortDateString()}'";
+        protected override string CreateUserActivitySuffixIdentifier(Leave leave)
+        {
+            return $" with date '{leave.StartDate.ToShortDateString()}'";
+        }
 
         protected override async Task SanitizeEntity(Leave leave, Leave oldLeave, int changedByUserId)
         {
@@ -561,6 +570,74 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
 
             leave.UpdateEndDate();
+        }
+
+        protected override async Task RecordUpdate(Leave newValue, Leave oldValue)
+        {
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
+
+            if (newValue.StartDate != oldValue.StartDate)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start date from '{oldValue.StartDate.ToShortDateString()}' to '{newValue.StartDate.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.StartTime.ToString() != oldValue.StartTime.ToString())
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start time from '{oldValue.StartTime.ToStringFormat("hh:mm tt")}' to '{newValue.StartTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.EndTime.ToString() != oldValue.EndTime.ToString())
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated end time from '{oldValue.EndTime.ToStringFormat("hh:mm tt")}' to '{newValue.EndTime.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Reason != oldValue.Reason)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated reason from '{oldValue.Reason}' to '{newValue.Reason}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Comments != oldValue.Comments)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated comments from '{oldValue.Comments}' to '{newValue.Comments}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.LeaveType != oldValue.LeaveType)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated type from '{oldValue.LeaveType}' to '{newValue.LeaveType}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Status != oldValue.Status)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated status from '{oldValue.Status}' to '{newValue.Status}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
         }
 
         #endregion Overrides

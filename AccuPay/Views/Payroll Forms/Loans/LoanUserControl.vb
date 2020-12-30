@@ -85,22 +85,45 @@ Public Class LoanUserControl
 
     Private Sub ToggleLoanStatusComboboxVisibility(showCombobox As Boolean)
 
-        cmbLoanStatus.Visible = showCombobox
+        cboLoanStatus.Visible = showCombobox
         txtLoanStatus.Visible = Not showCombobox
 
     End Sub
 
     Private Sub CreateDataBindings()
 
-        If Me._currentLoan Is Nothing Then Return
-
         txtLoanNumber.DataBindings.Clear()
+        txtRemarks.DataBindings.Clear()
+        txtTotalLoanAmount.DataBindings.Clear()
+        txtLoanBalance.DataBindings.Clear()
+        dtpDateFrom.DataBindings.Clear()
+        txtDeductionAmount.DataBindings.Clear()
+        txtLoanInterestPercentage.DataBindings.Clear()
+        cboLoanType.DataBindings.Clear()
+        txtLoanStatus.DataBindings.Clear()
+        cboLoanStatus.DataBindings.Clear()
+        cboDeductionSchedule.DataBindings.Clear()
+
+        If Me._currentLoan Is Nothing Then
+
+            txtLoanNumber.Clear()
+            txtRemarks.Clear()
+            txtTotalLoanAmount.Clear()
+            txtLoanBalance.Clear()
+            dtpDateFrom.ResetText()
+            txtDeductionAmount.Clear()
+            txtLoanInterestPercentage.Clear()
+            cboLoanType.SelectedIndex = -1
+            txtLoanStatus.Clear()
+            cboLoanStatus.SelectedIndex = -1
+            cboDeductionSchedule.SelectedIndex = -1
+            Return
+        End If
+
         txtLoanNumber.DataBindings.Add("Text", Me._currentLoan, "LoanNumber", True, DataSourceUpdateMode.OnPropertyChanged)
 
-        txtRemarks.DataBindings.Clear()
         txtRemarks.DataBindings.Add("Text", Me._currentLoan, "Comments", True, DataSourceUpdateMode.OnPropertyChanged)
 
-        txtTotalLoanAmount.DataBindings.Clear()
         txtTotalLoanAmount.DataBindings.Add("Text", Me._currentLoan, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
         If Me._currentLoan.HasTransactions OrElse Me._currentLoan.TotalBalanceLeft < Me._currentLoan.TotalLoanAmount Then
             txtTotalLoanAmount.Enabled = False
@@ -112,37 +135,29 @@ Public Class LoanUserControl
             cboLoanType.Enabled = True
         End If
 
-        txtLoanBalance.DataBindings.Clear()
         txtLoanBalance.DataBindings.Add("Text", Me._currentLoan, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
-        dtpDateFrom.DataBindings.Clear()
         dtpDateFrom.DataBindings.Add("Value", Me._currentLoan, "EffectiveFrom")
 
-        txtDeductionAmount.DataBindings.Clear()
         txtDeductionAmount.DataBindings.Add("Text", Me._currentLoan, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
-        txtLoanInterestPercentage.DataBindings.Clear()
         txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoan, "InterestPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
-        cboLoanType.DataBindings.Clear()
         cboLoanType.DataBindings.Add("SelectedValue", Me._currentLoan, "LoanType", True, DataSourceUpdateMode.OnPropertyChanged)
 
         If Not String.IsNullOrWhiteSpace(Me._currentLoan.LoanTypeName) Then
             cboLoanType.Text = Me._currentLoan.LoanTypeName
         End If
 
-        txtLoanStatus.DataBindings.Clear()
-        cmbLoanStatus.DataBindings.Clear()
         If Me._currentLoan.IsUnEditable Then
 
             txtLoanStatus.DataBindings.Add("Text", Me._currentLoan, "Status")
         Else
-            cmbLoanStatus.DataBindings.Add("SelectedValue", Me._currentLoan, "Status", True, DataSourceUpdateMode.OnPropertyChanged)
+            cboLoanStatus.DataBindings.Add("SelectedValue", Me._currentLoan, "Status", True, DataSourceUpdateMode.OnPropertyChanged)
 
         End If
 
-        cmbDeductionSchedule.DataBindings.Clear()
-        cmbDeductionSchedule.DataBindings.Add("SelectedValue", Me._currentLoan, "DeductionSchedule", True, DataSourceUpdateMode.OnPropertyChanged)
+        cboDeductionSchedule.DataBindings.Add("SelectedValue", Me._currentLoan, "DeductionSchedule", True, DataSourceUpdateMode.OnPropertyChanged)
 
         ToggleLoanStatusComboboxVisibility(Not Me._currentLoan.IsUnEditable)
     End Sub
@@ -167,13 +182,13 @@ Public Class LoanUserControl
 
         Dim statusLookUpList = LookUpStringItem.Convert(statusList, hasDefaultItem:=True)
 
-        cmbLoanStatus.ValueMember = "Item"
-        cmbLoanStatus.DisplayMember = "Item"
+        cboLoanStatus.ValueMember = "Item"
+        cboLoanStatus.DisplayMember = "Item"
 
         txtLoanStatus.DataBindings.Clear()
-        cmbLoanStatus.DataBindings.Clear()
+        cboLoanStatus.DataBindings.Clear()
 
-        cmbLoanStatus.DataSource = statusLookUpList
+        cboLoanStatus.DataSource = statusLookUpList
     End Sub
 
     Private Async Function LoadLoanTypes() As Task
@@ -204,9 +219,9 @@ Public Class LoanUserControl
 
         Dim deductionSchedulesList = LookUpStringItem.Convert(deductionSchedules, hasDefaultItem:=True)
 
-        cmbDeductionSchedule.ValueMember = "Item"
-        cmbDeductionSchedule.DisplayMember = "Item"
-        cmbDeductionSchedule.DataSource = deductionSchedulesList
+        cboDeductionSchedule.ValueMember = "Item"
+        cboDeductionSchedule.DisplayMember = "Item"
+        cboDeductionSchedule.DataSource = deductionSchedulesList
 
     End Function
 

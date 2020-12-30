@@ -57,10 +57,15 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(OfficialBusiness officialBusiness) => UserActivityName;
+        protected override string GetUserActivityName(OfficialBusiness officialBusiness)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(OfficialBusiness officialBusiness) =>
-            $" with date '{officialBusiness.StartDate.ToShortDateString()}'";
+        protected override string CreateUserActivitySuffixIdentifier(OfficialBusiness officialBusiness)
+        {
+            return $" with date '{officialBusiness.StartDate.ToShortDateString()}'";
+        }
 
         protected override async Task SanitizeEntity(OfficialBusiness officialBusiness, OfficialBusiness oldOfficialBusiness, int changedByUserId)
         {
@@ -82,7 +87,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time is required.");
 
             if (new string[] { OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved }
-                            .Contains(officialBusiness.Status) == false)
+                .Contains(officialBusiness.Status) == false)
             {
                 throw new BusinessLogicException("Status is not valid.");
             }
@@ -106,6 +111,67 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("End Time cannot be equal to Start Time");
 
             officialBusiness.UpdateEndDate();
+        }
+
+        protected override async Task RecordUpdate(OfficialBusiness newValue, OfficialBusiness oldValue)
+        {
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
+
+            if (newValue.StartDate != oldValue.StartDate)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start date from '{oldValue.StartDate?.ToShortDateString()}' to '{newValue.StartDate?.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.StartTime != oldValue.StartTime)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start time from '{oldValue.StartTime?.ToStringFormat("hh:mm tt")}' to '{newValue.StartTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.EndTime != oldValue.EndTime)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated end time from '{oldValue.EndTime?.ToStringFormat("hh:mm tt")}' to '{newValue.EndTime?.ToStringFormat("hh:mm tt")}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Reason != oldValue.Reason)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated reason from '{oldValue.Reason}' to '{newValue.Reason}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Comments != oldValue.Comments)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated comments from '{oldValue.Comments}' to '{newValue.Comments}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+            if (newValue.Status != oldValue.Status)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated status from '{oldValue.Status}' to '{newValue.Status}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
+
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
         }
 
         #endregion Overrides

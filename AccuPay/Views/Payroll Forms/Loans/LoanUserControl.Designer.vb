@@ -25,7 +25,7 @@ Partial Class LoanUserControl
         Me.LoanDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.txtLoanStatus = New System.Windows.Forms.TextBox()
-        Me.cmbLoanStatus = New System.Windows.Forms.ComboBox()
+        Me.cboLoanStatus = New System.Windows.Forms.ComboBox()
         Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
         Me.lblLoanBalancePesoSign = New System.Windows.Forms.Label()
         Me.txtLoanBalance = New System.Windows.Forms.TextBox()
@@ -54,7 +54,7 @@ Partial Class LoanUserControl
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.txtLoanInterestPercentage = New System.Windows.Forms.TextBox()
         Me.lblDeductionSchedule = New System.Windows.Forms.Label()
-        Me.cmbDeductionSchedule = New System.Windows.Forms.ComboBox()
+        Me.cboDeductionSchedule = New System.Windows.Forms.ComboBox()
         Me.LoanDetailsTabLayout.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.pnlTxtLoanBalance.SuspendLayout()
@@ -89,7 +89,7 @@ Partial Class LoanUserControl
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanInterestPercentage, 1, 8)
         Me.LoanDetailsTabLayout.Controls.Add(Me.Panel3, 1, 9)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblDeductionSchedule, 1, 6)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.cmbDeductionSchedule, 1, 7)
+        Me.LoanDetailsTabLayout.Controls.Add(Me.cboDeductionSchedule, 1, 7)
         Me.LoanDetailsTabLayout.Dock = System.Windows.Forms.DockStyle.Top
         Me.LoanDetailsTabLayout.Location = New System.Drawing.Point(0, 0)
         Me.LoanDetailsTabLayout.Name = "LoanDetailsTabLayout"
@@ -111,7 +111,7 @@ Partial Class LoanUserControl
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.txtLoanStatus)
-        Me.Panel1.Controls.Add(Me.cmbLoanStatus)
+        Me.Panel1.Controls.Add(Me.cboLoanStatus)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(270, 115)
         Me.Panel1.Name = "Panel1"
@@ -128,14 +128,14 @@ Partial Class LoanUserControl
         '
         'cmbLoanStatus
         '
-        Me.cmbLoanStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbLoanStatus.FormattingEnabled = True
-        Me.cmbLoanStatus.Location = New System.Drawing.Point(20, 2)
-        Me.cmbLoanStatus.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
-        Me.cmbLoanStatus.MaxLength = 50
-        Me.cmbLoanStatus.Name = "cmbLoanStatus"
-        Me.cmbLoanStatus.Size = New System.Drawing.Size(195, 21)
-        Me.cmbLoanStatus.TabIndex = 361
+        Me.cboLoanStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboLoanStatus.FormattingEnabled = True
+        Me.cboLoanStatus.Location = New System.Drawing.Point(20, 2)
+        Me.cboLoanStatus.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
+        Me.cboLoanStatus.MaxLength = 50
+        Me.cboLoanStatus.Name = "cmbLoanStatus"
+        Me.cboLoanStatus.Size = New System.Drawing.Size(195, 21)
+        Me.cboLoanStatus.TabIndex = 361
         '
         'pnlTxtLoanBalance
         '
@@ -430,13 +430,13 @@ Partial Class LoanUserControl
         '
         'cmbDeductionSchedule
         '
-        Me.cmbDeductionSchedule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cmbDeductionSchedule.FormattingEnabled = True
-        Me.cmbDeductionSchedule.Location = New System.Drawing.Point(287, 163)
-        Me.cmbDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
-        Me.cmbDeductionSchedule.Name = "cmbDeductionSchedule"
-        Me.cmbDeductionSchedule.Size = New System.Drawing.Size(195, 21)
-        Me.cmbDeductionSchedule.TabIndex = 363
+        Me.cboDeductionSchedule.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboDeductionSchedule.FormattingEnabled = True
+        Me.cboDeductionSchedule.Location = New System.Drawing.Point(287, 163)
+        Me.cboDeductionSchedule.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
+        Me.cboDeductionSchedule.Name = "cmbDeductionSchedule"
+        Me.cboDeductionSchedule.Size = New System.Drawing.Size(195, 21)
+        Me.cboDeductionSchedule.TabIndex = 363
         '
         'LoanUserControl
         '
@@ -492,8 +492,8 @@ Partial Class LoanUserControl
     Friend WithEvents Panel3 As Panel
     Friend WithEvents txtLoanInterestPercentage As TextBox
     Friend WithEvents lblDeductionSchedule As Label
-    Friend WithEvents cmbDeductionSchedule As ComboBox
+    Friend WithEvents cboDeductionSchedule As ComboBox
     Friend WithEvents Panel1 As Panel
     Friend WithEvents txtLoanStatus As TextBox
-    Friend WithEvents cmbLoanStatus As ComboBox
+    Friend WithEvents cboLoanStatus As ComboBox
 End Class

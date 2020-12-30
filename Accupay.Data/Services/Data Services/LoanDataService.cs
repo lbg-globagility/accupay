@@ -116,10 +116,15 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(LoanSchedule loan) => UserActivityName;
+        protected override string GetUserActivityName(LoanSchedule loan)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(LoanSchedule loan) =>
-            $" with type '{loan.LoanName}' and start date '{loan.DedEffectiveDateFrom.ToShortDateString()}'";
+        protected override string CreateUserActivitySuffixIdentifier(LoanSchedule loan)
+        {
+            return $" with type '{loan.LoanType?.PartNo}' and start date '{loan.DedEffectiveDateFrom.ToShortDateString()}'";
+        }
 
         protected override async Task SanitizeEntity(LoanSchedule loan, LoanSchedule oldLoan, int currentlyLoggedInUserId)
         {
@@ -264,6 +269,56 @@ namespace AccuPay.Data.Services
             }
         }
 
+        protected override async Task PostDeleteAction(LoanSchedule entity, int currentlyLoggedInUserId)
+        {
+            // supplying LoanType data for saving useractivity
+            entity.LoanType = await _productRepository.GetByIdAsync(entity.LoanTypeID.Value);
+
+            await base.PostDeleteAction(entity, currentlyLoggedInUserId);
+        }
+
+        protected override async Task PostSaveAction(LoanSchedule entity, LoanSchedule oldEntity, SaveType saveType)
+        {
+            // supplying LoanType data for saving useractivity
+            entity.LoanType = await _productRepository.GetByIdAsync(entity.LoanTypeID.Value);
+
+            if (oldEntity != null)
+            {
+                oldEntity.LoanType = await _productRepository.GetByIdAsync(oldEntity.LoanTypeID.Value);
+            }
+
+            await base.PostSaveAction(entity, oldEntity, saveType);
+        }
+
+        protected override async Task PostSaveManyAction(
+            IReadOnlyCollection<LoanSchedule> entities,
+            IReadOnlyCollection<LoanSchedule> oldEntities,
+            SaveType saveType,
+            int currentlyLoggedInUserId)
+        {
+            if (!entities.Any()) return;
+
+            // supplying LoanType data for saving useractivity
+            var allowanceTypeIds = entities.Select(x => x.LoanTypeID.Value).ToList();
+            allowanceTypeIds.AddRange(oldEntities.Select(x => x.LoanTypeID.Value).ToList());
+
+            allowanceTypeIds = allowanceTypeIds.Distinct().ToList();
+
+            var allowanceTypes = await _productRepository.GetManyByIdsAsync(allowanceTypeIds.ToArray());
+
+            foreach (var entity in entities)
+            {
+                entity.LoanType = allowanceTypes.Where(x => x.RowID.Value == entity.LoanTypeID).FirstOrDefault();
+            }
+
+            foreach (var entity in oldEntities)
+            {
+                entity.LoanType = allowanceTypes.Where(x => x.RowID.Value == entity.LoanTypeID).FirstOrDefault();
+            }
+
+            await base.PostSaveManyAction(entities, oldEntities, saveType, currentlyLoggedInUserId);
+        }
+
         protected async override Task RecordUpdate(LoanSchedule newLoanSchedule, LoanSchedule oldLoanSchedule)
         {
             if (oldLoanSchedule == null) return;
@@ -273,12 +328,12 @@ namespace AccuPay.Data.Services
 
             var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldLoanSchedule)}.";
 
-            if (newLoanSchedule.LoanName != oldLoanSchedule.LoanName)
+            if (newLoanSchedule.LoanType?.PartNo != oldLoanSchedule.LoanType?.PartNo)
             {
                 changes.Add(new UserActivityItem()
                 {
                     EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}' {suffixIdentifier}",
+                    Description = $"Updated type from '{oldLoanSchedule.LoanType?.PartNo}' to '{newLoanSchedule.LoanType?.PartNo}' {suffixIdentifier}",
                     ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
                 });
             }
