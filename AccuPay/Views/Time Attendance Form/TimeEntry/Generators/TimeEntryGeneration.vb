@@ -51,7 +51,7 @@ Public Class TimeEntryGeneration
 
                     SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
-                    RecordTimeEntryGenerated(result, payPeriod, payPeriodId)
+                    Await RecordTimeEntryGenerated(result, payPeriod, payPeriodId)
                 Else
 
                     SetCurrentMessage($"Failure generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
@@ -71,7 +71,7 @@ Public Class TimeEntryGeneration
 
     End Function
 
-    Private Sub RecordTimeEntryGenerated(result As EmployeeResult, payPeriod As TimePeriod, payPeriodId As Integer)
+    Private Async Function RecordTimeEntryGenerated(result As EmployeeResult, payPeriod As TimePeriod, payPeriodId As Integer) As Task
 
         Dim payPeriodString = $"'{payPeriod.Start.ToShortDateString()}' to '{payPeriod.End.ToShortDateString()}'"
 
@@ -85,12 +85,12 @@ Public Class TimeEntryGeneration
         }
 
         Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        userActivityService.CreateRecord(
+        Await userActivityService.CreateRecordAsync(
           z_User,
           FormEntityName,
           z_OrganizationID,
           UserActivityRepository.RecordTypeAdd,
           activityItem)
-    End Sub
+    End Function
 
 End Class

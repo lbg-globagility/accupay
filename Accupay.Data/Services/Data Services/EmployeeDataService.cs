@@ -98,15 +98,43 @@ namespace AccuPay.Data.Services
 
         #region Overrides
 
-        protected override string GetUserActivityName(Employee employee) => UserActivityName;
+        protected override string GetUserActivityName(Employee employee)
+        {
+            return UserActivityName;
+        }
 
-        protected override string CreateUserActivitySuffixIdentifier(Employee employee) => string.Empty;
+        protected override string CreateUserActivitySuffixIdentifier(Employee employee)
+        {
+            return string.Empty;
+        }
 
         protected override async Task SanitizeEntity(Employee entity, Employee oldEntity, int changedByUserId)
         {
             await base.SanitizeEntity(entity, oldEntity, changedByUserId);
 
             // 1. Set TerminationDate to null if IsActive = true
+        }
+
+        protected override async Task RecordDelete(Employee entity, int currentlyLoggedInUserId)
+        {
+            await _userActivityRepository.RecordDeleteAsync(
+                currentlyLoggedInUserId,
+                entityId: entity.RowID.Value,
+                entityName: GetUserActivityName(entity),
+                suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
+                organizationId: entity.OrganizationID.Value,
+                changedEmployeeId: entity.RowID.Value);
+        }
+
+        protected override async Task RecordAdd(Employee entity)
+        {
+            await _userActivityRepository.RecordAddAsync(
+                entity.CreatedBy.Value,
+                entityId: entity.RowID.Value,
+                entityName: GetUserActivityName(entity),
+                suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
+                organizationId: entity.OrganizationID.Value,
+                changedEmployeeId: entity.RowID.Value);
         }
 
         #endregion Overrides

@@ -769,7 +769,7 @@ Public Class NewDivisionPositionForm
         Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
         Await positionService.SaveAsync(Me._currentPosition, z_User)
 
-        RecordUpdatePosition()
+        Await RecordUpdatePosition()
 
         Await RefreshTreeView()
 
@@ -781,7 +781,7 @@ Public Class NewDivisionPositionForm
 
     End Function
 
-    Private Function RecordUpdatePosition() As Boolean
+    Private Async Function RecordUpdatePosition() As Task(Of Boolean)
 
         Dim oldPosition =
             Me._positions.
@@ -811,7 +811,8 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            _userActivityRepository.CreateRecord(z_User, PositionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Await _userActivityRepository.
+                CreateRecordAsync(z_User, PositionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -896,7 +897,7 @@ Public Class NewDivisionPositionForm
 
     End Function
 
-    Private Function RecordUpdateDivisionLocation() As Boolean
+    Private Async Function RecordUpdateDivisionLocation() As Task(Of Boolean)
 
         Dim oldDivisionLocation =
             Me._divisions.
@@ -917,7 +918,8 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            _userActivityRepository.CreateRecord(z_User, DivisionLocationEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Await _userActivityRepository.
+                CreateRecordAsync(z_User, DivisionLocationEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -925,7 +927,7 @@ Public Class NewDivisionPositionForm
         Return False
     End Function
 
-    Private Function RecordUpdateDivision() As Boolean
+    Private Async Function RecordUpdateDivision() As Task(Of Boolean)
 
         Dim oldDivision =
             Me._divisions.
@@ -1164,7 +1166,8 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            _userActivityRepository.CreateRecord(z_User, DivisionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Await _userActivityRepository.
+                CreateRecordAsync(z_User, DivisionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -1181,9 +1184,9 @@ Public Class NewDivisionPositionForm
         Await divisionRepository.SaveAsync(division, z_User)
 
         If isRoot Then
-            RecordUpdateDivisionLocation()
+            Await RecordUpdateDivisionLocation()
         Else
-            RecordUpdateDivision()
+            Await RecordUpdateDivision()
         End If
 
         RemoveHandler DivisionPositionTreeView.AfterSelect, AddressOf DivisionPositionTreeView_AfterSelect

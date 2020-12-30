@@ -52,7 +52,7 @@ Public Class PayrollGeneration
 
                     SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
 
-                    RecordPaystubGenerated(result, payPeriod)
+                    Await RecordPaystubGenerated(result, payPeriod)
                 Else
 
                     SetCurrentMessage($"Failure generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
@@ -72,7 +72,7 @@ Public Class PayrollGeneration
 
     End Function
 
-    Private Sub RecordPaystubGenerated(result As PaystubEmployeeResult, payPeriod As TimePeriod)
+    Private Async Function RecordPaystubGenerated(result As PaystubEmployeeResult, payPeriod As TimePeriod) As Task
 
         Dim payPeriodString = $"'{payPeriod.Start.ToShortDateString()}' to '{payPeriod.End.ToShortDateString()}'"
 
@@ -86,12 +86,12 @@ Public Class PayrollGeneration
         }
 
         Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        userActivityService.CreateRecord(
+        Await userActivityService.CreateRecordAsync(
           z_User,
           FormEntityName,
           z_OrganizationID,
           UserActivityRepository.RecordTypeAdd,
           activityItem)
-    End Sub
+    End Function
 
 End Class

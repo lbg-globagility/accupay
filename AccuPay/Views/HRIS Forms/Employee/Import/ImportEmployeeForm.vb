@@ -5,8 +5,8 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Attributes
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -260,21 +260,6 @@ Public Class ImportEmployeeForm
                 employees,
                 organizationId:=z_OrganizationID,
                 userId:=z_User)
-
-            Dim importList = New List(Of UserActivityItem)
-
-            For Each item In employees
-
-                importList.Add(New UserActivityItem() With
-                {
-                    .Description = $"Created a new employee.",
-                    .EntityId = item.Employee.RowID.Value,
-                    .ChangedEmployeeId = item.Employee.RowID.Value
-                })
-            Next
-
-            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
-
         End If
     End Function
 

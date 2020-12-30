@@ -1,11 +1,13 @@
+Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Attributes
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -167,11 +169,12 @@ Public Class ImportTripTicketForm
                             Select vvv.FirstOrDefault.Vehicle).
                             ToList()
 
-            Await service.ImportAsync(tripTickets,
-                                      routes,
-                                      vehicles,
-                                      organizationId:=z_OrganizationID,
-                                      userId:=z_User)
+            Await service.ImportAsync(
+                tripTickets,
+                routes,
+                vehicles,
+                organizationId:=z_OrganizationID,
+                userId:=z_User)
 
             Dim userActivityItems = New List(Of UserActivityItem)
             Dim entityName = FORM_ENTITY_NAME.ToLower()
@@ -179,13 +182,14 @@ Public Class ImportTripTicketForm
             For Each item In tripTickets
 
                 userActivityItems.Add(New UserActivityItem() With
-                                      {
-                                      .Description = $"Imported a new {entityName}.",
-                                      .EntityId = item.RowID.Value
-                                      })
+                {
+                    .Description = $"Imported a new {entityName}.",
+                    .EntityId = item.RowID.Value
+                })
             Next
 
-            _userActivityRepository.CreateRecord(z_User, FORM_ENTITY_NAME, z_OrganizationID, UserActivityRepository.RecordTypeImport, userActivityItems)
+            Await _userActivityRepository.
+                CreateRecordAsync(z_User, FORM_ENTITY_NAME, z_OrganizationID, UserActivityRepository.RecordTypeImport, userActivityItems)
 
         End If
     End Function
@@ -255,8 +259,8 @@ Public Class ImportTripTicketForm
             Dim tripTicket = tripiTickets.
                 Where(Function(t) t.RouteDescription = model.TripLocation).
                 Where(Function(t) t.VehiclePlateNo = model.Truck).
-                Where(Function(t) t.Date = model.TripDate).
-                FirstOrDefault
+                Where(Function(t) Nullable.Equals(t.Date, model.TripDate)).
+                FirstOrDefault()
 
             model.Validate(employee, route, vehicle, tripTicket)
         Next
@@ -364,8 +368,8 @@ Public Class ImportTripTicketForm
                 If tripTicket.Employees IsNot Nothing Then
                     Dim query = tripTicket.
                         Employees.
-                        Where(Function(tte) tte.EmployeeID = EmployeeID).
-                        Where(Function(tte) tte.NoOfTrips = NumberOfTrips).
+                        Where(Function(tte) Nullable.Equals(tte.EmployeeID, EmployeeID)).
+                        Where(Function(tte) Nullable.Equals(tte.NoOfTrips, NumberOfTrips)).
                         ToList()
 
                     _tripTicketAlreadyExists = query.Any()
@@ -431,7 +435,7 @@ Public Class ImportTripTicketForm
 
             EmployeeNo = _t.EmployeeNo
             EmployeeID = _t.EmployeeID
-            NoOfTrips = _t.NumberOfTrips
+            NoOfTrips = _t.NumberOfTrips.Value
         End Sub
 
         Public Property EmployeeNo As String

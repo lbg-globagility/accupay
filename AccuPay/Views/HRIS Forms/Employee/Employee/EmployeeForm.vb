@@ -1001,7 +1001,7 @@ Public Class EmployeeForm
             dgvEmp_RowIndex = dgvEmp.CurrentRow.Index
 
             If succeed Then
-                RecordUpdateEmployee(oldEmployee)
+                Await RecordUpdateEmployee(oldEmployee)
                 InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
             End If
 
@@ -1109,7 +1109,7 @@ Public Class EmployeeForm
 
     End Function
 
-    Private Function RecordUpdateEmployee(oldEmployee As Employee) As Boolean
+    Private Async Function RecordUpdateEmployee(oldEmployee As Employee) As Task(Of Boolean)
 
         If oldEmployee Is Nothing Then Return False
 
@@ -1549,7 +1549,7 @@ Public Class EmployeeForm
 
         If changes.Any() Then
             Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            repo.CreateRecord(z_User, EmployeeEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Await repo.CreateRecordAsync(z_User, EmployeeEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
         End If
 

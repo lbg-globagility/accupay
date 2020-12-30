@@ -145,17 +145,6 @@ namespace AccuPay.Data.Repositories
                 changedByUserId: changedUserId);
         }
 
-        public void CreateRecord(
-            int currentlyLoggedInUserId,
-            string entityName,
-            int organizationId,
-            string recordType,
-            List<UserActivityItem> activityItems = null)
-        {
-            CreateUserActivityEntity(currentlyLoggedInUserId, entityName, organizationId, recordType, activityItems);
-            _context.SaveChanges();
-        }
-
         public async Task CreateRecordAsync(
             int currentlyLoggedInUserId,
             string entityName,
