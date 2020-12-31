@@ -2,6 +2,7 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace AccuPay.Data.Services
         private readonly PositionRepository _positionRepository;
         private readonly EmployeeRepository _employeeRepository;
         private readonly DivisionDataService _divisionService;
+        private readonly DivisionRepository _divisionRepository;
 
         public PositionDataService(
             PositionRepository positionRepository,
@@ -22,7 +24,8 @@ namespace AccuPay.Data.Services
             UserActivityRepository userActivityRepository,
             DivisionDataService divisionService,
             PayrollContext context,
-            IPolicyHelper policy) :
+            IPolicyHelper policy,
+            DivisionRepository divisionRepository) :
 
             base(positionRepository,
                 payPeriodRepository,
@@ -36,11 +39,44 @@ namespace AccuPay.Data.Services
             _employeeRepository = employeeRepository;
 
             _divisionService = divisionService;
+            _divisionRepository = divisionRepository;
         }
 
-        protected override string GetUserActivityName(Position position) => UserActivityName;
+        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int currentlyLoggedInUserId)
+        {
+            var existingPosition = await _positionRepository.GetByNameAsync(organizationId, positionName);
 
-        protected override string CreateUserActivitySuffixIdentifier(Position position) => string.Empty;
+            if (existingPosition != null) return existingPosition;
+
+            var defaultDivision = await _divisionService
+                .GetOrCreateDefaultDivisionAsync(
+                    organizationId: organizationId,
+                    changedByUserId: currentlyLoggedInUserId);
+
+            if (defaultDivision?.RowID == null)
+                throw new BusinessLogicException("Cannot create default division.");
+
+            var position = new Position()
+            {
+                OrganizationID = organizationId,
+                Name = positionName,
+                DivisionID = defaultDivision.RowID.Value
+            };
+
+            await SaveAsync(position, currentlyLoggedInUserId);
+
+            return position;
+        }
+
+        protected override string GetUserActivityName(Position position)
+        {
+            return UserActivityName;
+        }
+
+        protected override string CreateUserActivitySuffixIdentifier(Position position)
+        {
+            return $" with name '{position.Name}'";
+        }
 
         public override async Task DeleteAsync(int positionId, int currentlyLoggedInUserId)
         {
@@ -84,30 +120,58 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int currentlyLoggedInUserId)
+        protected override async Task PostDeleteAction(Position entity, int currentlyLoggedInUserId)
         {
-            var existingPosition = await _positionRepository.GetByNameAsync(organizationId, positionName);
+            // supplying Division data for saving useractivity
+            entity.Division = await _divisionRepository.GetByIdAsync(entity.DivisionID.Value);
 
-            if (existingPosition != null) return existingPosition;
+            await base.PostDeleteAction(entity, currentlyLoggedInUserId);
+        }
 
-            var defaultDivision = await _divisionService
-                .GetOrCreateDefaultDivisionAsync(
-                    organizationId: organizationId,
-                    changedByUserId: currentlyLoggedInUserId);
+        protected override async Task PostSaveAction(Position entity, Position oldEntity, SaveType saveType)
+        {
+            // supplying Division data for saving useractivity
+            entity.Division = await _divisionRepository.GetByIdAsync(entity.DivisionID.Value);
 
-            if (defaultDivision?.RowID == null)
-                throw new BusinessLogicException("Cannot create default division.");
-
-            var position = new Position()
+            if (oldEntity != null)
             {
-                OrganizationID = organizationId,
-                Name = positionName,
-                DivisionID = defaultDivision.RowID.Value
-            };
+                oldEntity.Division = await _divisionRepository.GetByIdAsync(oldEntity.DivisionID.Value);
+            }
 
-            await SaveAsync(position, currentlyLoggedInUserId);
+            await base.PostSaveAction(entity, oldEntity, saveType);
+        }
 
-            return position;
+        protected override async Task RecordUpdate(Position newValue, Position oldValue)
+        {
+            var changes = new List<UserActivityItem>();
+            var entityName = UserActivityName.ToLower();
+
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
+
+            if (newValue.DivisionID != oldValue.DivisionID)
+            {
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated division from '{oldValue.Division?.Name}' to '{newValue.Division?.Name}' {suffixIdentifier}",
+                });
+            }
+            if (newValue.Name != oldValue.Name)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated name from '{oldValue.Name}' to '{newValue.Name}' {suffixIdentifier}",
+                });
+
+            if (changes.Any())
+            {
+                await _userActivityRepository.CreateRecordAsync(
+                    newValue.LastUpdBy.Value,
+                    UserActivityName,
+                    newValue.OrganizationID.Value,
+                    UserActivityRepository.RecordTypeEdit,
+                    changes);
+            }
         }
     }
 }

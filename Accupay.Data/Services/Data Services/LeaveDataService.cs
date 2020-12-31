@@ -527,7 +527,7 @@ namespace AccuPay.Data.Services
                 currentlyLoggedInUserId: changedByUserId);
 
             if (leave.StartDate < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (leave.StartDate == null)
                 throw new BusinessLogicException("Start Date is required.");

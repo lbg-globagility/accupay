@@ -105,12 +105,12 @@ namespace AccuPay.Data.Services
             return $" with type '{allowance.Type}' and start date '{allowance.EffectiveStartDate.ToShortDateString()}'";
         }
 
-        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance, int changedByUserId)
+        protected override async Task SanitizeEntity(Allowance allowance, Allowance oldAllowance, int currentlyLoggedInUserId)
         {
             await base.SanitizeEntity(
                 entity: allowance,
                 oldEntity: oldAllowance,
-                currentlyLoggedInUserId: changedByUserId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             if (allowance.IsOneTime)
                 allowance.EffectiveEndDate = allowance.EffectiveStartDate;
@@ -122,7 +122,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Allowance type is required.");
 
             if (allowance.EffectiveStartDate < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
                 throw new BusinessLogicException("Start date cannot be greater than end date.");

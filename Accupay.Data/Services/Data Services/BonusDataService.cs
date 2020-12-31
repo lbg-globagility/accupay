@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services.DTOs;
 using System.Collections.Generic;
@@ -39,14 +40,34 @@ namespace AccuPay.Data.Services
             _productRepository = productRepository;
         }
 
+        protected override string GetUserActivityName(Bonus entity)
+        {
+            return UserActivityName;
+        }
+
         protected override string CreateUserActivitySuffixIdentifier(Bonus entity)
         {
             return $" with type '{entity.BonusType}' and start date '{entity.EffectiveStartDate.ToShortDateString()}'";
         }
 
-        protected override string GetUserActivityName(Bonus entity)
+        protected override async Task SanitizeEntity(Bonus entity, Bonus oldEntity, int currentlyLoggedInUserId)
         {
-            return UserActivityName;
+            await base.SanitizeEntity(
+                entity: entity,
+                oldEntity: oldEntity,
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
+            if (entity.ProductID == null)
+                throw new BusinessLogicException("Bonus type is required.");
+
+            if (entity.EffectiveStartDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
+
+            if (entity.EffectiveEndDate < PayrollTools.SqlServerMinimumDate)
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
+
+            if (entity.EffectiveEndDate.Date < entity.EffectiveStartDate)
+                throw new BusinessLogicException("End date cannot be greater than start date.");
         }
 
         public override async Task DeleteAsync(int id, int currentlyLoggedInUserId)

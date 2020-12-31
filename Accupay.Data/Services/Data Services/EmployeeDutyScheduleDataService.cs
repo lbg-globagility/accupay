@@ -103,7 +103,7 @@ namespace AccuPay.Data.Services
                 currentlyLoggedInUserId: changedByUserId);
 
             if (shift.DateSched < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (shift.StartTime == null)
                 throw new BusinessLogicException("Start Time is required.");

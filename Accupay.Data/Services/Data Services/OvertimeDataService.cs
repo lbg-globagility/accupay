@@ -106,7 +106,7 @@ namespace AccuPay.Data.Services
                 currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             if (overtime.OTStartDate < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (!_policy.UseMassOvertime)
                 if (overtime.OTStartTime == null)

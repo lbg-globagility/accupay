@@ -78,7 +78,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Start Date is required.");
 
             if (officialBusiness.StartDate < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (officialBusiness.StartTime == null)
                 throw new BusinessLogicException("Start Time is required.");

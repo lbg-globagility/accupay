@@ -70,7 +70,7 @@ namespace AccuPay.Data.Services
                 currentlyLoggedInUserId: changedByUserId);
 
             if (timeLog.LogDate < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (timeLog.TimeIn == null && timeLog.TimeOut == null)
                 throw new BusinessLogicException("Time-in and Time-out cannot be both empty.");
@@ -124,12 +124,8 @@ namespace AccuPay.Data.Services
         protected override async Task PostSaveAction(TimeLog entity, TimeLog oldEntity, SaveType saveType)
         {
             // supplying Branch data for saving useractivity
-            entity.Branch = await _branchRepository.GetByIdAsync(entity.BranchID.Value);
-
-            if (oldEntity != null)
-            {
-                oldEntity.Branch = await _branchRepository.GetByIdAsync(oldEntity.BranchID.Value);
-            }
+            await GetBranchProperty(entity);
+            await GetBranchProperty(oldEntity);
 
             await base.PostSaveAction(entity, oldEntity, saveType);
         }
@@ -213,6 +209,20 @@ namespace AccuPay.Data.Services
         }
 
         #endregion Overrides
+
+        private async Task GetBranchProperty(TimeLog entity)
+        {
+            if (entity == null) return;
+
+            if (entity.BranchID == null)
+            {
+                entity.Branch = null;
+            }
+            else
+            {
+                entity.Branch = await _branchRepository.GetByIdAsync(entity.BranchID.Value);
+            }
+        }
 
         private async Task<ICollection<Branch>> GetBranchProperty(IReadOnlyCollection<TimeLog> entities, ICollection<Branch> branches = null)
         {

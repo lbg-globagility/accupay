@@ -513,7 +513,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Loan type is required.");
 
             if (loan.DedEffectiveDateFrom < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (loan.TotalLoanAmount <= 0)
                 throw new BusinessLogicException("Total loan amount cannot be less than or equal to 0.");

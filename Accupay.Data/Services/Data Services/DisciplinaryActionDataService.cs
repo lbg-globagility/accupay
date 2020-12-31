@@ -78,7 +78,7 @@ namespace AccuPay.Data.Services
                 changes.Add(new UserActivityItem()
                 {
                     EntityId = oldValue.RowID.Value,
-                    Description = $"Updated penaty from '{oldValue.Action}' to '{newValue.Action}' {suffixIdentifier}",
+                    Description = $"Updated penalty from '{oldValue.Action}' to '{newValue.Action}' {suffixIdentifier}",
                     ChangedEmployeeId = oldValue.EmployeeID
                 });
             if (newValue.DateFrom != oldValue.DateFrom)

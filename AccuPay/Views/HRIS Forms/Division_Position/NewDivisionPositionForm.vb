@@ -13,12 +13,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewDivisionPositionForm
 
-    Private Const PositionEntityName As String = "Position"
-
-    Private Const DivisionEntityName As String = "Division"
-
-    Private Const DivisionLocationEntityName As String = "Division Location"
-
     Private _divisions As New List(Of Division)
 
     Private _positions As New List(Of Position)
@@ -45,8 +39,6 @@ Public Class NewDivisionPositionForm
 
     Private ReadOnly _payFrequencyRepository As PayFrequencyRepository
 
-    Private ReadOnly _userActivityRepository As UserActivityRepository
-
     Sub New()
 
         InitializeComponent()
@@ -58,8 +50,6 @@ Public Class NewDivisionPositionForm
         _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
         _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -769,8 +759,6 @@ Public Class NewDivisionPositionForm
         Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
         Await positionService.SaveAsync(Me._currentPosition, z_User)
 
-        Await RecordUpdatePosition()
-
         Await RefreshTreeView()
 
         Dim currentTreeNode As TreeNode = GetTreeNode(Me._currentPosition.RowID, ObjectType.Position)
@@ -779,45 +767,6 @@ Public Class NewDivisionPositionForm
 
         ShowBalloonInfo($"Position: {Me._currentPosition.Name} was successfully updated.", messageTitle)
 
-    End Function
-
-    Private Async Function RecordUpdatePosition() As Task(Of Boolean)
-
-        Dim oldPosition =
-            Me._positions.
-                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentPosition.RowID))
-
-        If oldPosition Is Nothing Then Return False
-
-        Dim changes = New List(Of UserActivityItem)
-
-        Dim entityName = PositionEntityName.ToLower()
-
-        If _currentPosition.DivisionID <> oldPosition.DivisionID Then
-            Dim oldDivision = Me._divisions.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, oldPosition.DivisionID)).Name
-            Dim newDivision = Me._divisions.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentPosition.DivisionID)).Name
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldPosition.RowID),
-                .Description = $"Updated {entityName} division from '{oldDivision}' to '{newDivision}'."
-            })
-        End If
-        If _currentPosition.Name <> oldPosition.Name Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldPosition.RowID),
-                .Description = $"Updated {entityName} name from '{oldPosition.Name}' to '{_currentPosition.Name}'."
-            })
-        End If
-
-        If changes.Count > 0 Then
-            Await _userActivityRepository.
-                CreateRecordAsync(z_User, PositionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-
-            Return True
-        End If
-
-        Return False
     End Function
 
     Private Async Function DeletePosition(messageTitle As String) As Task
@@ -897,284 +846,6 @@ Public Class NewDivisionPositionForm
 
     End Function
 
-    Private Async Function RecordUpdateDivisionLocation() As Task(Of Boolean)
-
-        Dim oldDivisionLocation =
-            Me._divisions.
-                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentDivision.RowID))
-
-        If oldDivisionLocation Is Nothing Then Return False
-
-        Dim changes = New List(Of UserActivityItem)
-
-        Dim entityName = DivisionLocationEntityName.ToLower()
-
-        If _currentDivision.Name <> oldDivisionLocation.Name Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivisionLocation.RowID),
-                .Description = $"Updated {entityName} name from '{oldDivisionLocation.Name}' to '{_currentDivision.Name}'."
-            })
-        End If
-
-        If changes.Count > 0 Then
-            Await _userActivityRepository.
-                CreateRecordAsync(z_User, DivisionLocationEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-
-            Return True
-        End If
-
-        Return False
-    End Function
-
-    Private Async Function RecordUpdateDivision() As Task(Of Boolean)
-
-        Dim oldDivision =
-            Me._divisions.
-                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentDivision.RowID))
-
-        If oldDivision Is Nothing Then Return False
-
-        Dim changes = New List(Of UserActivityItem)
-
-        Dim entityName = DivisionEntityName.ToLower()
-
-        If _currentDivision.DivisionType <> oldDivision.DivisionType Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} type from '{oldDivision.DivisionType}' to '{_currentDivision.DivisionType}'."
-            })
-        End If
-        If _currentDivision.ParentDivisionID <> oldDivision.ParentDivisionID Then
-
-            Dim oldParentDivision = Me._divisions.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, oldDivision.ParentDivisionID)).Name
-            Dim newParentDivision = Me._divisions.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentDivision.ParentDivisionID)).Name
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} parent from '{oldParentDivision}' to '{newParentDivision}'."
-            })
-        End If
-        If _currentDivision.Name <> oldDivision.Name Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} name from '{oldDivision.Name}' to '{_currentDivision.Name}'."
-            })
-        End If
-        If _currentDivision.TradeName <> oldDivision.TradeName Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} trade name from '{oldDivision.TradeName}' to '{_currentDivision.TradeName}'."
-            })
-        End If
-        If _currentDivision.TINNo <> oldDivision.TINNo Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} tin from '{oldDivision.TINNo}' to '{_currentDivision.TINNo}'."
-            })
-        End If
-        If _currentDivision.BusinessAddress <> oldDivision.BusinessAddress Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} business address from '{oldDivision.BusinessAddress}' to '{_currentDivision.BusinessAddress}'."
-            })
-        End If
-        If oldDivision.DivisionHeadID Is Nothing And _currentDivision.DivisionHeadID IsNot Nothing Then
-            Dim newDivisionHead = Me._positions.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentDivision.DivisionHeadID)).Name
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated division head from '' to '{newDivisionHead}'."
-            })
-
-        ElseIf _currentDivision.DivisionHeadID <> oldDivision.DivisionHeadID Then
-            Dim oldDivisionHead = Me._positions.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, oldDivision.DivisionHeadID)).Name
-            Dim newDivisionHead = Me._positions.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentDivision.DivisionHeadID)).Name
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated division head from '{oldDivisionHead}' to '{newDivisionHead}'."
-            })
-        End If
-        If oldDivision.PayFrequencyID Is Nothing And _currentDivision.PayFrequencyID IsNot Nothing Then
-            Dim newPayFrequency = Me._payFrequencies.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentDivision.PayFrequencyID)).Type
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} pay frequency from '' to '{newPayFrequency}'."
-            })
-        ElseIf _currentDivision.PayFrequencyID <> oldDivision.PayFrequencyID Then
-            Dim oldPayFrequency = Me._payFrequencies.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, oldDivision.PayFrequencyID)).Type
-            Dim newPayFrequency = Me._payFrequencies.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, _currentDivision.PayFrequencyID)).Type
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} pay frequency from '{oldPayFrequency}' to '{newPayFrequency}'."
-            })
-        End If
-        If _currentDivision.GracePeriod <> oldDivision.GracePeriod Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} grace period from '{oldDivision.GracePeriod.ToString}' to '{_currentDivision.GracePeriod.ToString}'."
-            })
-        End If
-        If _currentDivision.WorkDaysPerYear <> oldDivision.WorkDaysPerYear Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} work days per year from '{oldDivision.WorkDaysPerYear.ToString}' to '{_currentDivision.WorkDaysPerYear.ToString}'."
-            })
-        End If
-        If _currentDivision.AutomaticOvertimeFiling <> oldDivision.AutomaticOvertimeFiling Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} automatic overtime filing from '{oldDivision.AutomaticOvertimeFiling.ToString}' to '{_currentDivision.AutomaticOvertimeFiling.ToString}'."
-            })
-        End If
-        If _currentDivision.MainPhone <> oldDivision.MainPhone Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} main phone from '{oldDivision.MainPhone}' to '{_currentDivision.MainPhone}'."
-            })
-        End If
-        If _currentDivision.AltPhone <> oldDivision.AltPhone Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} alternate phone from '{oldDivision.AltPhone}' to '{_currentDivision.AltPhone}'."
-            })
-        End If
-        If _currentDivision.EmailAddress <> oldDivision.EmailAddress Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} email address from '{oldDivision.EmailAddress}' to '{_currentDivision.EmailAddress}'."
-            })
-        End If
-        If _currentDivision.AltEmailAddress <> oldDivision.AltEmailAddress Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} alternate email address from '{oldDivision.AltEmailAddress}' to '{_currentDivision.AltEmailAddress}'."
-            })
-        End If
-        If _currentDivision.ContactName <> oldDivision.ContactName Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} contact name from '{oldDivision.ContactName}' to '{_currentDivision.ContactName}'."
-            })
-        End If
-        If _currentDivision.FaxNumber <> oldDivision.FaxNumber Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} fax number from '{oldDivision.FaxNumber}' to '{_currentDivision.FaxNumber}'."
-            })
-        End If
-        If _currentDivision.URL <> oldDivision.URL Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} URL from '{oldDivision.URL}' to '{_currentDivision.URL}'."
-            })
-        End If
-        If _currentDivision.PhilHealthDeductionSchedule <> oldDivision.PhilHealthDeductionSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} PhilHealth deduction schedule from '{oldDivision.PhilHealthDeductionSchedule}' to '{_currentDivision.PhilHealthDeductionSchedule}'."
-            })
-        End If
-        If _currentDivision.SssDeductionSchedule <> oldDivision.SssDeductionSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} SSS deduction schedule from '{oldDivision.SssDeductionSchedule}' to '{_currentDivision.SssDeductionSchedule}'."
-            })
-        End If
-        If _currentDivision.PagIBIGDeductionSchedule <> oldDivision.PagIBIGDeductionSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} PagIbig deduction schedule from '{oldDivision.PagIBIGDeductionSchedule}' to '{_currentDivision.PagIBIGDeductionSchedule}'."
-            })
-        End If
-        If _currentDivision.WithholdingTaxSchedule <> oldDivision.WithholdingTaxSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} withholding tax deduction schedule from '{oldDivision.WithholdingTaxSchedule}' to '{_currentDivision.WithholdingTaxSchedule}'."
-            })
-        End If
-        If _currentDivision.AgencyPhilHealthDeductionSchedule <> oldDivision.AgencyPhilHealthDeductionSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} PhilHealth deduction schedule w/ agency from '{oldDivision.AgencyPhilHealthDeductionSchedule}' to '{_currentDivision.AgencyPhilHealthDeductionSchedule}'."
-            })
-        End If
-        If _currentDivision.AgencySssDeductionSchedule <> oldDivision.AgencySssDeductionSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} SSS deduction schedule w/ agency from '{oldDivision.AgencySssDeductionSchedule}' to '{_currentDivision.AgencySssDeductionSchedule}'."
-            })
-        End If
-        If _currentDivision.AgencyPagIBIGDeductionSchedule <> oldDivision.AgencyPagIBIGDeductionSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} PagIbig deduction schedule w/ agency from '{oldDivision.AgencyPagIBIGDeductionSchedule}' to '{_currentDivision.AgencyPagIBIGDeductionSchedule}'."
-            })
-        End If
-        If _currentDivision.AgencyWithholdingTaxSchedule <> oldDivision.AgencyWithholdingTaxSchedule Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} withholding tax deduction schedule w/ agency from '{oldDivision.AgencyWithholdingTaxSchedule}' to '{_currentDivision.AgencyWithholdingTaxSchedule}'."
-            })
-        End If
-        If _currentDivision.DefaultVacationLeave <> oldDivision.DefaultVacationLeave Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} vacation leave from '{oldDivision.DefaultVacationLeave}' to '{_currentDivision.DefaultVacationLeave}'."
-            })
-        End If
-        If _currentDivision.DefaultSickLeave <> oldDivision.DefaultSickLeave Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} sick leave from '{oldDivision.DefaultSickLeave}' to '{_currentDivision.DefaultSickLeave}'."
-            })
-        End If
-        If _currentDivision.DefaultOtherLeave <> oldDivision.DefaultOtherLeave Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = CInt(oldDivision.RowID),
-                .Description = $"Updated {entityName} other leave from '{oldDivision.DefaultOtherLeave}' to '{_currentDivision.DefaultOtherLeave}'."
-            })
-        End If
-
-        If changes.Count > 0 Then
-            Await _userActivityRepository.
-                CreateRecordAsync(z_User, DivisionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-
-            Return True
-        End If
-
-        Return False
-    End Function
-
     Private Async Function SaveDivision(messageTitle As String, isRoot As Boolean) As Task
 
         Dim division = Me._currentDivision.CloneJson()
@@ -1182,12 +853,6 @@ Public Class NewDivisionPositionForm
 
         Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionDataService)
         Await divisionRepository.SaveAsync(division, z_User)
-
-        If isRoot Then
-            Await RecordUpdateDivisionLocation()
-        Else
-            Await RecordUpdateDivision()
-        End If
 
         RemoveHandler DivisionPositionTreeView.AfterSelect, AddressOf DivisionPositionTreeView_AfterSelect
 
@@ -1243,18 +908,25 @@ Public Class NewDivisionPositionForm
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
 
+        Dim divisionEntityName As String = "Division"
+
+        Dim divisionLocationEntityName As String = "Division Location"
+
         If Me._currentDivision.IsRoot Then
-            Dim userActivity As New UserActivityForm(DivisionLocationEntityName, ChangedType.Division)
+            Dim userActivity As New UserActivityForm(divisionLocationEntityName, ChangedType.Division)
             userActivity.ShowDialog()
         Else
-            Dim userActivity As New UserActivityForm(DivisionEntityName, ChangedType.Division)
+            Dim userActivity As New UserActivityForm(divisionEntityName, ChangedType.Division)
             userActivity.ShowDialog()
         End If
 
     End Sub
 
     Private Sub UserActivityPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPositionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PositionEntityName, ChangedType.Position)
+
+        Dim positionEntityName As String = "Position"
+
+        Dim userActivity As New UserActivityForm(positionEntityName, ChangedType.Position)
         userActivity.ShowDialog()
     End Sub
 

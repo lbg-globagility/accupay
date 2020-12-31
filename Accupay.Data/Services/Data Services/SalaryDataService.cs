@@ -75,7 +75,7 @@ namespace AccuPay.Data.Services
                 currentlyLoggedInUserId: changedByUserId);
 
             if (salary.EffectiveFrom < PayrollTools.SqlServerMinimumDate)
-                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753");
+                throw new BusinessLogicException("Date cannot be earlier than January 1, 1753.");
 
             if (salary.BasicSalary < 0)
                 throw new BusinessLogicException("Basic Salary cannot be less than 0.");
