@@ -13,19 +13,21 @@ namespace AccuPay.Data.Services
     public class PayrollGenerator
     {
         private readonly PayrollContext _context;
+        private readonly PaystubDataService _paystubDataService;
 
         //private static ILog logger = LogManager.GetLogger("PayrollLogger");
 
-        public PayrollGenerator(PayrollContext context)
+        public PayrollGenerator(PayrollContext context, PaystubDataService paystubDataService)
         {
             _context = context;
+            _paystubDataService = paystubDataService;
         }
 
         public async Task<PaystubEmployeeResult> Start(
             int employeeId,
             PayrollResources resources,
             int organizationId,
-            int userId)
+            int currentlyLoggedInUserId)
         {
             // we use the employee data from resources.Employees instead of just passing the employee
             // entity in the Start method because we can be sure that the data in resources.Employees
@@ -93,7 +95,7 @@ namespace AccuPay.Data.Services
                 var result = await GeneratePayStub(
                     resources,
                     organizationId: organizationId,
-                    userId: userId,
+                    currentlyLoggedInUserId: currentlyLoggedInUserId,
                     currentSystemOwner,
                     settings,
                     calendarCollection,
@@ -130,7 +132,7 @@ namespace AccuPay.Data.Services
         private async Task<PaystubEmployeeResult> GeneratePayStub(
             PayrollResources resources,
             int organizationId,
-            int userId,
+            int currentlyLoggedInUserId,
             string currentSystemOwner,
             ListOfValueCollection settings,
             CalendarCollection calendarCollection,
@@ -166,8 +168,8 @@ namespace AccuPay.Data.Services
                 {
                     OrganizationID = organizationId,
                     Created = DateTime.Now,
-                    CreatedBy = userId,
-                    LastUpdBy = userId,
+                    CreatedBy = currentlyLoggedInUserId,
+                    LastUpdBy = currentlyLoggedInUserId,
                     EmployeeID = employee.RowID,
                     PayPeriodID = payPeriod.RowID,
                     PayFromDate = payPeriod.PayFromDate,
@@ -187,10 +189,10 @@ namespace AccuPay.Data.Services
                 };
             }
 
-            ResetLoanSchedules(loanSchedules, paystub, userId);
+            ResetLoanSchedules(loanSchedules, paystub, currentlyLoggedInUserId);
 
             var allowanceItems = CreateAllowanceItems(
-                userId,
+                currentlyLoggedInUserId,
                 settings,
                 calendarCollection,
                 payPeriod,
@@ -206,11 +208,11 @@ namespace AccuPay.Data.Services
                 loanSchedules,
                 bonuses: bonuses,
                 policy: policy,
-                userId: userId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             ComputePayroll(
                 resources,
-                userId: userId,
+                currentlyLoggedInUserId: currentlyLoggedInUserId,
                 currentSystemOwner,
                 settings,
                 calendarCollection,
@@ -227,7 +229,7 @@ namespace AccuPay.Data.Services
                 bonuses: bonuses);
 
             await SavePayroll(
-                userId: userId,
+                currentlyLoggedInUserId: currentlyLoggedInUserId,
                 currentSystemOwner,
                 settings,
                 policy,
@@ -247,7 +249,7 @@ namespace AccuPay.Data.Services
             return PaystubEmployeeResult.Success(employee, paystub);
         }
 
-        private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int userId)
+        private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int currentlyLoggedInUserId)
         {
             if (paystub?.LoanTransactions == null || paystub.LoanTransactions.Count == 0) return;
 
@@ -258,13 +260,13 @@ namespace AccuPay.Data.Services
                 if (loanTransactions.Any())
                 {
                     loan.RetractLoanTransactions(loanTransactions);
-                    loan.LastUpdBy = userId;
+                    loan.LastUpdBy = currentlyLoggedInUserId;
                 }
             }
         }
 
         public async Task SavePayroll(
-            int userId,
+            int currentlyLoggedInUserId,
             string currentSystemOwner,
             ListOfValueCollection settings,
             IPolicyHelper policy,
@@ -283,7 +285,7 @@ namespace AccuPay.Data.Services
         {
             foreach (var loan in loanSchedules)
             {
-                loan.LastUpdBy = userId;
+                loan.LastUpdBy = currentlyLoggedInUserId;
                 _context.Entry(loan).State = EntityState.Modified;
 
                 SaveLoanPaymentFromBonusItems(
@@ -296,9 +298,12 @@ namespace AccuPay.Data.Services
                 SaveYearlyLoanInterest(policy, loan);
             }
 
+            bool isNew = true;
             if (paystub.RowID.HasValue)
             {
-                paystub.LastUpdBy = userId;
+                isNew = false;
+
+                paystub.LastUpdBy = currentlyLoggedInUserId;
                 _context.Entry(paystub).State = EntityState.Modified;
                 _context.Entry(paystub.Actual).State = EntityState.Modified;
 
@@ -317,7 +322,7 @@ namespace AccuPay.Data.Services
                 _context.Adjustments.Add(new Adjustment()
                 {
                     OrganizationID = paystub.OrganizationID,
-                    CreatedBy = userId,
+                    CreatedBy = currentlyLoggedInUserId,
                     Created = DateTime.Now,
                     Paystub = paystub,
                     ProductID = bpiInsuranceProduct.RowID,
@@ -342,7 +347,7 @@ namespace AccuPay.Data.Services
                 await UpdateLeaveLedger(paystub, employee, payPeriod, timeEntries, leaves);
 
                 await UpdatePaystubItems(
-                    userId,
+                    currentlyLoggedInUserId,
                     paystub,
                     employee,
                     sickLeaveProduct: sickLeaveProduct,
@@ -354,7 +359,17 @@ namespace AccuPay.Data.Services
                 await UpdateBenchmarkLeaveLedger(paystub, employee, payPeriod);
             }
 
+            // TODO: move this to a repository and data service, then move the useractivity to that data service
             await _context.SaveChangesAsync();
+
+            if (isNew)
+            {
+                await _paystubDataService.RecordCreate(currentlyLoggedInUserId, paystub, payPeriod);
+            }
+            else
+            {
+                await _paystubDataService.RecordEdit(currentlyLoggedInUserId, paystub, payPeriod);
+            }
         }
 
         private void SaveYearlyLoanInterest(IPolicyHelper policy, LoanSchedule loan)
@@ -430,7 +445,7 @@ namespace AccuPay.Data.Services
 
         private void ComputePayroll(
             PayrollResources resources,
-            int userId,
+            int currentlyLoggedInUserId,
             string currentSystemOwner,
             ListOfValueCollection settings,
             CalendarCollection calendarCollection,
@@ -498,8 +513,9 @@ namespace AccuPay.Data.Services
             actualCalculator.Compute(employee, salary, settings, payPeriod, paystub, currentSystemOwner, actualTimeEntries);
 
             var thirteenthMonthPayCalculator = new ThirteenthMonthPayCalculator(
-                                                        organizationId: paystub.OrganizationID.Value,
-                                                        userId: userId);
+                organizationId: paystub.OrganizationID.Value,
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
             thirteenthMonthPayCalculator.Calculate(employee, paystub, timeEntries, actualTimeEntries, salary, settings, allowanceItems.ToList(), currentSystemOwner);
         }
 
@@ -662,7 +678,7 @@ namespace AccuPay.Data.Services
         }
 
         private ICollection<AllowanceItem> CreateAllowanceItems(
-            int userId,
+            int currentlyLoggedInUserId,
             ListOfValueCollection settings,
             CalendarCollection calendarCollection,
             PayPeriod payPeriod,
@@ -677,7 +693,7 @@ namespace AccuPay.Data.Services
                 calendarCollection,
                 previousTimeEntries,
                 organizationId: paystub.OrganizationID.Value,
-                userId: userId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             var semiMonthlyCalculator = new SemiMonthlyAllowanceCalculator(
                 new AllowancePolicy(settings),
@@ -687,7 +703,7 @@ namespace AccuPay.Data.Services
                 calendarCollection,
                 timeEntries,
                 organizationId: paystub.OrganizationID.Value,
-                userId: userId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             var allowanceItems = new List<AllowanceItem>();
 
@@ -699,7 +715,7 @@ namespace AccuPay.Data.Services
                     payperiodId: payPeriod.RowID.Value,
                     allowanceId: allowance.RowID.Value,
                     organizationId: paystub.OrganizationID.Value,
-                    userId: userId);
+                    currentlyLoggedInUserId: currentlyLoggedInUserId);
 
                 if (allowance.IsOneTime)
                 {
@@ -856,7 +872,7 @@ namespace AccuPay.Data.Services
             IReadOnlyCollection<LoanSchedule> loanSchedules,
             IReadOnlyCollection<Bonus> bonuses,
             IPolicyHelper policy,
-            int userId)
+            int currentlyLoggedInUserId)
         {
             var loanTransactions = new List<LoanTransaction>();
             var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
@@ -906,7 +922,7 @@ namespace AccuPay.Data.Services
                 {
                     if (newYearlyLoanInterest != null)
                     {
-                        newYearlyLoanInterest.CreatedBy = userId;
+                        newYearlyLoanInterest.CreatedBy = currentlyLoggedInUserId;
                         loan.YearlyLoanInterests.Add(newYearlyLoanInterest);
                     }
                 }
@@ -922,7 +938,7 @@ namespace AccuPay.Data.Services
         }
 
         private async Task UpdatePaystubItems(
-            int userId,
+            int currentlyLoggedInUserId,
             Paystub paystub,
             Employee employee,
             Product sickLeaveProduct,
@@ -944,7 +960,7 @@ namespace AccuPay.Data.Services
             {
                 OrganizationID = paystub.OrganizationID,
                 Created = DateTime.Now,
-                CreatedBy = userId,
+                CreatedBy = currentlyLoggedInUserId,
                 ProductID = vacationLeaveProduct.RowID,
                 PayAmount = newBalance,
                 Paystub = paystub
@@ -964,7 +980,7 @@ namespace AccuPay.Data.Services
             {
                 OrganizationID = paystub.OrganizationID,
                 Created = DateTime.Now,
-                CreatedBy = userId,
+                CreatedBy = currentlyLoggedInUserId,
                 ProductID = sickLeaveProduct.RowID,
                 PayAmount = newBalance2,
                 Paystub = paystub

@@ -744,7 +744,7 @@ Public Class BenchmarkPaystubForm
                     New PaystubRepository.EmployeeCompositeKey(
                             employeeId:=employeeId.Value,
                             payPeriodId:=_currentPayPeriod.RowID.Value),
-                    userId:=z_User,
+                    currentlyLoggedInUserId:=z_User,
                     organizationId:=z_OrganizationID)
 
                 Await RefreshForm(refreshPayPeriod:=False)

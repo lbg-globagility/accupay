@@ -36,13 +36,13 @@ namespace AccuPay.Data.Services
             _overtimeRepository = overtimeRepository;
         }
 
-        public async Task DeleteManyAsync(IEnumerable<int> overtimeIds, int changedByUserId)
+        public async Task DeleteManyAsync(IEnumerable<int> overtimeIds, int currentlyLoggedInUserId)
         {
             var overtimes = await _overtimeRepository.GetManyByIdsAsync(overtimeIds.ToArray());
 
             await _overtimeRepository.DeleteManyAsync(overtimeIds);
 
-            await PostDeleteManyAction(overtimes.ToList(), changedByUserId);
+            await PostDeleteManyAction(overtimes.ToList(), currentlyLoggedInUserId);
         }
 
         public async Task<List<Overtime>> BatchApply(IReadOnlyCollection<OvertimeImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
@@ -67,7 +67,7 @@ namespace AccuPay.Data.Services
             return overtimes;
         }
 
-        public async Task GenerateOvertimeByShift(IEnumerable<IShift> modifiedShifts, List<int> employeeIds, int organizationId, int changedByUserId)
+        public async Task GenerateOvertimeByShift(IEnumerable<IShift> modifiedShifts, List<int> employeeIds, int organizationId, int currentlyLoggedInUserId)
         {
             if (!modifiedShifts.Any())
                 return;
@@ -79,11 +79,13 @@ namespace AccuPay.Data.Services
 
             if (saveOvertimes.Any())
             {
-                await SaveManyAsync(saveOvertimes, changedByUserId);
+                await SaveManyAsync(saveOvertimes, currentlyLoggedInUserId);
             }
 
             if (deleteOvertimes.Any())
-                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), changedByUserId);
+            {
+                await DeleteManyAsync(deleteOvertimes.Select(ot => ot.RowID.Value), currentlyLoggedInUserId);
+            }
         }
 
         #region Overrides

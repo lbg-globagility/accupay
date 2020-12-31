@@ -29,7 +29,7 @@ namespace AccuPay.Data.Services
                                                 CalendarCollection calendarCollection,
                                                 IReadOnlyCollection<TimeEntry> timeEntries,
                                                 int organizationId,
-                                                int userId)
+                                                int currentlyLoggedInUserId)
         {
             _employee = employee;
             _paystub = paystub;
@@ -37,7 +37,7 @@ namespace AccuPay.Data.Services
             _calendarCollection = calendarCollection;
             _timeEntries = timeEntries;
             _organizationId = organizationId;
-            _userId = userId;
+            _userId = currentlyLoggedInUserId;
             _allowancePolicy = allowancePolicy;
         }
 
@@ -48,7 +48,7 @@ namespace AccuPay.Data.Services
                                                     payperiodId: _payperiod.RowID.Value,
                                                     allowanceId: allowance.RowID.Value,
                                                     organizationId: _organizationId,
-                                                    userId: _userId);
+                                                    currentlyLoggedInUserId: _userId);
 
             allowanceItem.Amount = allowance.Amount;
 

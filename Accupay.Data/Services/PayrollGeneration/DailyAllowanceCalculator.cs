@@ -20,13 +20,13 @@ namespace AccuPay.Data.Services
                                         CalendarCollection calendarCollection,
                                         IReadOnlyCollection<TimeEntry> previousTimeEntries,
                                         int organizationId,
-                                        int userId)
+                                        int currentlyLoggedInUserId)
         {
             _settings = settings;
             _calendarCollection = calendarCollection;
             _previousTimeEntries = previousTimeEntries;
             _organizationId = organizationId;
-            _userId = userId;
+            _userId = currentlyLoggedInUserId;
         }
 
         public AllowanceItem Compute(PayPeriod payperiod,
@@ -44,7 +44,7 @@ namespace AccuPay.Data.Services
                                                     payperiodId: payperiod.RowID.Value,
                                                     allowanceId: allowance.RowID.Value,
                                                     organizationId: _organizationId,
-                                                    userId: _userId);
+                                                    currentlyLoggedInUserId: _userId);
 
             foreach (var timeEntry in timeEntries)
             {

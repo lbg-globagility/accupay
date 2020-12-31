@@ -408,7 +408,7 @@ Namespace Benchmark
                                                     payperiodId:=_currentPayPeriod.RowID.Value,
                                                     allowanceId:=_ecola.RowID.Value,
                                                     organizationId:=z_OrganizationID,
-                                                    userId:=z_User
+                                                    currentlyLoggedInUserId:=z_User
                                                 )
 
             newAllowanceItem.Amount = paystub.Ecola

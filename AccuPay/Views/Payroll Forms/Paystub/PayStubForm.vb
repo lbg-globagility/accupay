@@ -1669,10 +1669,8 @@ Public Class PayStubForm
                     Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
                     Await paystubDataService.DeleteAsync(
                         paystub,
-                        userId:=z_User,
+                        currentlyLoggedInUserId:=z_User,
                         organizationId:=z_OrganizationID)
-
-                    Await RecordDeletePaystubUserActivity(payPeriodString, paystub)
 
                     Await RefreshForm()
 
@@ -1684,26 +1682,6 @@ Public Class PayStubForm
             Me.Cursor = Cursors.Default
         End If
 
-    End Function
-
-    Private Async Function RecordDeletePaystubUserActivity(payPeriodString As String, paystub As Paystub) As Task
-
-        Dim activityItem = New List(Of UserActivityItem) From {
-            New UserActivityItem() With
-            {
-                .EntityId = paystub.RowID.Value,
-                .Description = $"Deleted a paystub for payroll {payPeriodString}.",
-                .ChangedEmployeeId = paystub.EmployeeID.Value
-            }
-        }
-
-        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        Await userActivityService.CreateRecordAsync(
-          z_User,
-          FormEntityName,
-          z_OrganizationID,
-          UserActivityRepository.RecordTypeDelete,
-          activityItem)
     End Function
 
     Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
@@ -1902,11 +1880,8 @@ Public Class PayStubForm
                     Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
                     Await paystubDataService.DeleteByPeriodAsync(
                     payPeriodId:=_currentPayperiodId.Value,
-                    userId:=z_User,
+                    currentlyLoggedInUserId:=z_User,
                     organizationId:=z_OrganizationID)
-
-                    Dim recordMessage = $"Deleted a paystub for payroll {payPeriodString}."
-                    Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
 
                     Await RefreshForm()
 
@@ -1922,34 +1897,6 @@ Public Class PayStubForm
 
     Private Function GetPayPeriodString() As String
         Return $"'{CDate(_currentPayFromDate).ToShortDateString()}' to '{CDate(_currentPayToDate).ToShortDateString()}'"
-    End Function
-
-    Private Shared Async Function RecordMultiplePaystubUserActivity(
-        description As String,
-        paystubs As ICollection(Of Paystub)) As Task
-
-        Dim changes = New List(Of UserActivityItem)
-
-        For Each paystub In paystubs
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = paystub.RowID.Value,
-                .Description = description,
-                .ChangedEmployeeId = paystub.EmployeeID.Value
-            })
-        Next
-
-        If changes.Any() Then
-
-            Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await repo.CreateRecordAsync(
-              z_User,
-              FormEntityName,
-              z_OrganizationID,
-              UserActivityRepository.RecordTypeDelete,
-              changes)
-
-        End If
     End Function
 
     Private Async Sub CancelPayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CancelPayrollToolStripMenuItem.Click
@@ -1983,9 +1930,6 @@ Public Class PayStubForm
                     Dim payperiodDataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
                     Await payperiodDataService.CancelAsync(_currentPayperiodId.Value, z_User)
 
-                    Dim recordMessage = $"Deleted paystub and time entries for payroll {payPeriodString}."
-
-                    Await RecordMultiplePaystubUserActivity(recordMessage, paystubs)
                     Await RecordPayrollStatusUpdateAsync(_currentPayperiodId.Value, $"Cancelled the payroll {GetPayPeriodString()}.")
 
                     Await RefreshForm()
@@ -2244,7 +2188,10 @@ Public Class PayStubForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(
+            New String() {FormEntityName, "Paystub", "Time Entry"},
+            FormEntityName)
+
         userActivity.ShowDialog()
     End Sub
 

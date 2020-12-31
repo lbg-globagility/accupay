@@ -169,6 +169,10 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ThirteenthMonthSummaryReportDataService)
         services.AddTransient(Of ThirteenthMonthSummaryReportBuilder)
         services.AddTransient(Of TripTicketDataService)
+
+        services.AddTransient(Of PaystubDataHelper)
+        services.AddTransient(Of TimeEntryDataHelper)
+
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
         services.AddTransient(Of IEncryption, AccuPayDesktopEncryption)
 

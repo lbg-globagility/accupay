@@ -28,7 +28,7 @@ namespace AccuPay.Data.Repositories
         public async Task<PaginatedList<UserActivityItem>> GetPaginatedListAsync(
             PageOptions options,
             int? organizationId = null,
-            string entityName = null,
+            string[] entityNames = null,
             int? changedByUserId = null,
             ChangedType? changedType = null,
             int? changedEntityId = null,
@@ -48,9 +48,9 @@ namespace AccuPay.Data.Repositories
                 query = query.Where(x => x.Activity.OrganizationID == organizationId);
             }
 
-            if (!string.IsNullOrWhiteSpace(entityName))
+            if (entityNames != null && entityNames.Length > 0)
             {
-                query = query.Where(x => x.Activity.EntityName == entityName);
+                query = query.Where(x => entityNames.Contains(x.Activity.EntityName));
             }
 
             if (!string.IsNullOrWhiteSpace(options.Sort))

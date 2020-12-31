@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -13,30 +13,37 @@ namespace AccuPay.Data.Services
     {
         private readonly PaystubRepository _paystubRepository;
         private readonly SalaryRepository _salaryRepository;
+        private readonly PaystubDataHelper _paystubDataHelper;
 
         public PaystubDataService(
             PaystubRepository paystubRepository,
             SalaryRepository salaryRepository,
-            PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
+            PayPeriodRepository payPeriodRepository,
+            PaystubDataHelper paystubDataHelper) : base(payPeriodRepository)
         {
             _paystubRepository = paystubRepository;
             _salaryRepository = salaryRepository;
+            _paystubDataHelper = paystubDataHelper;
         }
 
         #region Save
 
-        public async Task DeleteAsync(EmployeeCompositeKey key, int userId, int organizationId)
+        public async Task DeleteAsync(EmployeeCompositeKey key, int currentlyLoggedInUserId, int organizationId)
         {
             var paystub = await _paystubRepository.GetByCompositeKeyAsync(key);
-            await DeleteAsync(paystub, userId: userId, organizationId: organizationId);
+            await DeleteAsync(
+                paystub,
+                currentlyLoggedInUserId: currentlyLoggedInUserId,
+                organizationId: organizationId);
         }
 
-        public async Task DeleteAsync(Paystub paystub, int userId, int organizationId)
+        public async Task DeleteAsync(Paystub paystub, int currentlyLoggedInUserId, int organizationId)
         {
             if (paystub == null)
                 throw new BusinessLogicException("Paystub does not exists.");
 
-            var payPeriodId = (await _paystubRepository.GetWithPayPeriod(paystub.RowID.Value))?.PayPeriod?.RowID;
+            var payPeriod = (await _paystubRepository.GetWithPayPeriod(paystub.RowID.Value))?.PayPeriod;
+            var payPeriodId = payPeriod?.RowID;
 
             await ValidateIfPayPeriodIsOpenAsync(
                 organizationId: organizationId,
@@ -44,18 +51,37 @@ namespace AccuPay.Data.Services
 
             await _paystubRepository.DeleteAsync(
                 id: paystub.RowID.Value,
-                userId: userId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
+            await RecordDelete(paystub, currentlyLoggedInUserId, payPeriod);
         }
 
-        public async Task DeleteByPeriodAsync(int payPeriodId, int userId, int organizationId)
+        public async Task DeleteByPeriodAsync(int payPeriodId, int currentlyLoggedInUserId, int organizationId)
         {
-            await ValidateIfPayPeriodIsOpenAsync(
-                organizationId: organizationId,
-                payPeriodId: payPeriodId);
+            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
-            await _paystubRepository.DeleteByPeriodAsync(
+            ValidateIfPayPeriodIsOpenAsync(payPeriod);
+
+            var paystubs = await _paystubRepository.DeleteByPeriodAsync(
                 payPeriodId: payPeriodId,
-                userId: userId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
+            await _paystubDataHelper.RecordDelete(currentlyLoggedInUserId, paystubs, payPeriod);
+        }
+
+        public async Task RecordDelete(Paystub paystub, int currentlyLoggedInUserId, PayPeriod payPeriod)
+        {
+            await _paystubDataHelper.RecordDelete(currentlyLoggedInUserId, paystub, payPeriod);
+        }
+
+        public async Task RecordCreate(int currentlyLoggedInUserId, Paystub paystub, PayPeriod payPeriod)
+        {
+            await _paystubDataHelper.RecordCreate(currentlyLoggedInUserId, paystub, payPeriod);
+        }
+
+        public async Task RecordEdit(int currentlyLoggedInUserId, Paystub paystub, PayPeriod payPeriod)
+        {
+            await _paystubDataHelper.RecordEdit(currentlyLoggedInUserId, paystub, payPeriod);
         }
 
         public async Task UpdateManyThirteenthMonthPaysAsync(ICollection<ThirteenthMonthPay> thirteenthMonthPays)
@@ -75,17 +101,20 @@ namespace AccuPay.Data.Services
             await _paystubRepository.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays);
         }
 
-        public async Task UpdateAdjustmentsAsync<T>(int paystubId, ICollection<T> allAdjustments, int modifiedByUserId) where T : IAdjustment
+        public async Task UpdateAdjustmentsAsync<T>(
+            int paystubId,
+            ICollection<T> allAdjustments,
+            int currentlyLoggedInUserId) where T : IAdjustment
         {
             foreach (var adjustment in allAdjustments)
             {
                 if (adjustment.RowID == null || adjustment.RowID <= 0)
                 {
-                    adjustment.CreatedBy = modifiedByUserId;
+                    adjustment.CreatedBy = currentlyLoggedInUserId;
                 }
                 else
                 {
-                    adjustment.LastUpdBy = modifiedByUserId;
+                    adjustment.LastUpdBy = currentlyLoggedInUserId;
                 }
             }
 

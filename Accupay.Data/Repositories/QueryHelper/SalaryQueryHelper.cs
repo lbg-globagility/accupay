@@ -1,12 +1,12 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using System;
 using System.Linq;
 
 namespace AccuPay.Data.Repositories
 {
-    public static class SalaryQueryHelper
+    internal static class SalaryQueryHelper
     {
-        public static IOrderedQueryable<Salary> GetLatestSalaryQuery(IQueryable<Salary> query, DateTime? cutOffEnd)
+        internal static IOrderedQueryable<Salary> GetLatestSalaryQuery(IQueryable<Salary> query, DateTime? cutOffEnd)
         {
             cutOffEnd = cutOffEnd ?? DateTime.Now;
 

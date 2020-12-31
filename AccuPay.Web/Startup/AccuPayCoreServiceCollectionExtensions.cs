@@ -130,6 +130,9 @@ namespace AccuPay.Web
             services.AddScoped<TimeLogsReader>();
             services.AddScoped<TripTicketDataService>();
 
+            services.AddScoped<PaystubDataHelper>();
+            services.AddScoped<TimeEntryDataHelper>();
+
             services.AddScoped(typeof(IExcelParser<>), typeof(ExcelParser<>));
             services.AddScoped<IEncryption, AccuPayDesktopEncryption>();
 

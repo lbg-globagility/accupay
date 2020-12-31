@@ -20,8 +20,6 @@ Imports MySql.Data.MySqlClient
 
 Public Class TimeEntrySummaryForm
 
-    Private Const FormEntityName As String = "TimeEntry"
-
     Private Const Clock24HourFormat As String = "HH:mm"
     Private Const Clock12HourFormat As String = "hh:mm tt"
 
@@ -1705,35 +1703,15 @@ Public Class TimeEntrySummaryForm
             Async Function()
                 Await _timeEntryDataService.DeleteByEmployeeAsync(
                     employeeId:=_selectedEmployee.RowID.Value,
-                    payPeriodId:=_selectedPayPeriod.RowID.Value
+                    payPeriodId:=_selectedPayPeriod.RowID.Value,
+                    currentlyLoggedInUserId:=z_User
                 )
-
-                Await RecordDeleteTimeEntriesUserActivity()
 
                 MessageBoxHelper.Information("Time entries successfully deleted.")
 
                 Await LoadTimeEntries()
             End Function)
     End Sub
-
-    Private Async Function RecordDeleteTimeEntriesUserActivity() As Task
-        Dim activityItem = New List(Of UserActivityItem) From {
-            New UserActivityItem() With
-            {
-                .EntityId = _selectedPayPeriod.RowID.Value,
-                .Description = $"Deleted time entries for payroll {GetPayPeriodString()}.",
-                .ChangedEmployeeId = _selectedEmployee.RowID.Value
-            }
-        }
-
-        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        Await userActivityService.CreateRecordAsync(
-          z_User,
-          FormEntityName,
-          z_OrganizationID,
-          UserActivityRepository.RecordTypeDelete,
-          activityItem)
-    End Function
 
     Private Function GetPayPeriodString() As String
         Return $"'{_selectedPayPeriod.PayFromDate.ToShortDateString()}' to '{_selectedPayPeriod.PayToDate.ToShortDateString()}'"
@@ -1772,7 +1750,10 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Time Entry"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 

@@ -47,25 +47,28 @@ namespace AccuPay.Data.Repositories
 
         #region Save
 
-        public async Task DeleteAsync(int id, int userId)
+        public async Task DeleteAsync(int id, int currentlyLoggedInUserId)
         {
-            await DeleteAsyncWithContext(id: id, userId: userId);
+            await DeleteAsyncWithContext(id: id, userId: currentlyLoggedInUserId);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteByPeriodAsync(int payPeriodId, int userId)
+        public async Task<IReadOnlyCollection<Paystub>> DeleteByPeriodAsync(int payPeriodId, int currentlyLoggedInUserId)
         {
-            var payStubIds = await _context.Paystubs
+            var payStubs = await _context.Paystubs
                 .Where(x => x.PayPeriodID == payPeriodId)
-                .Select(x => x.RowID.Value)
                 .ToListAsync();
+
+            var payStubIds = payStubs.Select(x => x.RowID.Value);
 
             foreach (int id in payStubIds)
             {
-                await DeleteAsyncWithContext(id: id, userId: userId);
+                await DeleteAsyncWithContext(id: id, userId: currentlyLoggedInUserId);
             }
 
             await _context.SaveChangesAsync();
+
+            return payStubs;
         }
 
         public async Task UpdateManyThirteenthMonthPaysAsync(ICollection<ThirteenthMonthPay> thirteenthMonthPays)

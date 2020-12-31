@@ -16,12 +16,14 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public async Task DeleteByEmployeeAsync(int employeeId, int payPeriodId)
+        public async Task<(IReadOnlyCollection<TimeEntry> timeEntries, IReadOnlyCollection<ActualTimeEntry> actualTimeEntries)> DeleteByEmployeeAsync(
+            int employeeId,
+            int payPeriodId)
         {
             var payPeriod = await _context.PayPeriods
                 .FirstOrDefaultAsync(x => x.RowID == payPeriodId);
 
-            if (payPeriod == null) return;
+            if (payPeriod == null) return (null, null);
 
             var timeEntries = await _context.TimeEntries
                 .Where(x => x.EmployeeID == employeeId)
@@ -39,14 +41,19 @@ namespace AccuPay.Data.Repositories
             _context.RemoveRange(actualTimeEntries);
 
             await _context.SaveChangesAsync();
+
+            return (
+                timeEntries: timeEntries,
+                actualTimeEntries: actualTimeEntries);
         }
 
-        public async Task DeleteByPayPeriodAsync(int payPeriodId)
+        public async Task<(IReadOnlyCollection<TimeEntry> timeEntries, IReadOnlyCollection<ActualTimeEntry> actualTimeEntries)> DeleteByPayPeriodAsync(
+            int payPeriodId)
         {
             var payPeriod = await _context.PayPeriods
                 .FirstOrDefaultAsync(x => x.RowID == payPeriodId);
 
-            if (payPeriod == null) return;
+            if (payPeriod == null) return (null, null);
 
             var timeEntries = await _context.TimeEntries
                 .Where(x => x.OrganizationID == payPeriod.OrganizationID)
@@ -64,6 +71,10 @@ namespace AccuPay.Data.Repositories
             _context.RemoveRange(actualTimeEntries);
 
             await _context.SaveChangesAsync();
+
+            return (
+                timeEntries: timeEntries,
+                actualTimeEntries: actualTimeEntries);
         }
 
         public async Task<ICollection<TimeEntry>> GetByDatePeriodAsync(

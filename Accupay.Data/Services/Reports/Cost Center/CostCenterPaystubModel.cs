@@ -107,7 +107,7 @@ namespace AccuPay.Data.Services
                 calendarCollection,
                 allTimeEntries,
                 organizationId: employee.OrganizationID.Value,
-                userId: userId);
+                currentlyLoggedInUserId: userId);
 
             decimal totalAllowance = 0;
 

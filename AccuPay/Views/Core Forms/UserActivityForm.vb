@@ -2,7 +2,6 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
-Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Entities.UserActivity
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -12,8 +11,8 @@ Public Class UserActivityForm
 
     Private ReadOnly _changedType As ChangedType
 
-    Private ReadOnly _entityName As String
-
+    Private ReadOnly _entityNames As String()
+    Private ReadOnly _formName As String
     Private ReadOnly _employeeRepository As EmployeeRepository
     Private ReadOnly _userActivityRepository As UserActivityRepository
     Private ReadOnly _userRepository As AspNetUserRepository
@@ -24,9 +23,16 @@ Public Class UserActivityForm
 
     Public Sub New(entityName As String, Optional changedType As ChangedType = ChangedType.Employee)
 
+        Me.New(New String() {entityName}, entityName, changedType)
+
+    End Sub
+
+    Public Sub New(entityNames As String(), formName As String, Optional changedType As ChangedType = ChangedType.Employee)
+
         InitializeComponent()
 
-        _entityName = entityName
+        _entityNames = entityNames
+        _formName = formName
         _changedType = changedType
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
@@ -39,7 +45,7 @@ Public Class UserActivityForm
     Private Async Sub UserActivityForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         UserActivityGrid.AutoGenerateColumns = False
-        Me.Text = _entityName + " " + Me.Text
+        Me.Text = _formName + " " + Me.Text
 
         Select Case _changedType
             Case ChangedType.Employee
@@ -146,7 +152,7 @@ Public Class UserActivityForm
         Dim list = Await _userActivityRepository.GetPaginatedListAsync(
             options,
             z_OrganizationID,
-            entityName:=_entityName,
+            entityNames:=_entityNames,
             changedByUserId:=CType(ChangedByComboBox.SelectedValue, Integer?),
             changedType:=_changedType,
             changedEntityId:=CType(ChangedEntityComboBox.SelectedValue, Integer?),

@@ -69,13 +69,13 @@ namespace AccuPay.Data.Entities
                                 int payperiodId,
                                 int allowanceId,
                                 int organizationId,
-                                int userId)
+                                int currentlyLoggedInUserId)
         {
             return new AllowanceItem()
             {
                 OrganizationID = organizationId,
-                CreatedBy = userId,
-                LastUpdBy = userId,
+                CreatedBy = currentlyLoggedInUserId,
+                LastUpdBy = currentlyLoggedInUserId,
                 Paystub = paystub,
                 PayPeriodID = payperiodId,
                 AllowanceID = allowanceId,

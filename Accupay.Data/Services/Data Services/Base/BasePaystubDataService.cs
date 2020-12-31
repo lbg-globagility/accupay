@@ -1,4 +1,5 @@
-﻿using AccuPay.Data.Exceptions;
+using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using System.Threading.Tasks;
 
@@ -18,6 +19,12 @@ namespace AccuPay.Data.Services
             var currentOpenPayPeriod = await _payPeriodRepository.GetCurrentOpenAsync(organizationId);
 
             if (currentOpenPayPeriod == null || currentOpenPayPeriod?.RowID != payPeriodId)
+                throw new BusinessLogicException("Only open pay periods can be modified.");
+        }
+
+        protected void ValidateIfPayPeriodIsOpenAsync(PayPeriod payPeriod)
+        {
+            if (payPeriod == null || payPeriod.IsOpen == false)
                 throw new BusinessLogicException("Only open pay periods can be modified.");
         }
     }

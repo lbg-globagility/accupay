@@ -10,6 +10,8 @@ namespace AccuPay.Data.Services
     public class PayPeriodDataService
     {
         private readonly IPolicyHelper _policy;
+        private readonly PaystubDataHelper _paystubDataHelper;
+        private readonly TimeEntryDataHelper _timeEntryDataHelper;
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly PaystubRepository _paystubRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
@@ -20,13 +22,17 @@ namespace AccuPay.Data.Services
             PaystubRepository paystubRepository,
             TimeEntryRepository timeEntryRepository,
             SystemOwnerService systemOwnerService,
-            IPolicyHelper policy)
+            IPolicyHelper policy,
+            PaystubDataHelper paystubDataHelper,
+            TimeEntryDataHelper timeEntryDataHelper)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
             _timeEntryRepository = timeEntryRepository;
             _systemOwnerService = systemOwnerService;
             _policy = policy;
+            _paystubDataHelper = paystubDataHelper;
+            _timeEntryDataHelper = timeEntryDataHelper;
         }
 
         public static string HasCurrentlyOpenErrorMessage(PayPeriod payPeriod)
@@ -110,20 +116,27 @@ namespace AccuPay.Data.Services
             await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Open);
         }
 
-        public async Task CancelAsync(int payPeriodId, int userId)
+        public async Task CancelAsync(int payPeriodId, int currentlyLoggedInUserId)
         {
-            await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Pending);
+            var payPeriod = await UpdateStatusAsync(payPeriodId, currentlyLoggedInUserId, PayPeriodStatus.Pending);
 
-            await _paystubRepository.DeleteByPeriodAsync(payPeriodId, userId);
+            var deletedPaystubs = await _paystubRepository.DeleteByPeriodAsync(payPeriodId, currentlyLoggedInUserId);
 
-            await _timeEntryRepository.DeleteByPayPeriodAsync(payPeriodId);
+            var deletedTimeEntries = await _timeEntryRepository.DeleteByPayPeriodAsync(payPeriodId);
+
+            // save user activities for time entries and paystubs
+            await _paystubDataHelper.RecordDelete(currentlyLoggedInUserId, deletedPaystubs, payPeriod);
+
+            await _timeEntryDataHelper.RecordDelete(currentlyLoggedInUserId, deletedTimeEntries.timeEntries);
         }
 
-        public async Task UpdateStatusAsync(int payPeriodId, int userId, PayPeriodStatus status)
+        public async Task<PayPeriod> UpdateStatusAsync(int payPeriodId, int userId, PayPeriodStatus status)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
             await UpdateStatusAsync(payPeriod, userId, status);
+
+            return payPeriod;
         }
 
         public async Task UpdateStatusAsync(PayPeriod payPeriod, int userId, PayPeriodStatus status)

@@ -117,13 +117,13 @@ namespace AccuPay.Web.Payroll
         {
             await _paystubDataService.DeleteByPeriodAsync(
                 payPeriodId: payPeriodId,
-                userId: _currentUser.UserId,
+                currentlyLoggedInUserId: _currentUser.UserId,
                 organizationId: _currentUser.OrganizationId);
         }
 
         public async Task Cancel(int payPeriodId)
         {
-            await _payPeriodDataService.CancelAsync(payPeriodId: payPeriodId, userId: _currentUser.UserId);
+            await _payPeriodDataService.CancelAsync(payPeriodId: payPeriodId, currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         public async Task<PayPeriodDto> GetById(int payPeriodId)

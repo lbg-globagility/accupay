@@ -14,16 +14,18 @@ namespace AccuPay.Data.Services
         //private static ILog logger = LogManager.GetLogger("TimeEntryLogger", "TimeEntryLogger");
 
         private readonly PayrollContext _context;
+        private readonly TimeEntryDataService _timeEntryDataService;
 
-        public TimeEntryGenerator(PayrollContext context)
+        public TimeEntryGenerator(PayrollContext context, TimeEntryDataService timeEntryDataService)
         {
             _context = context;
+            _timeEntryDataService = timeEntryDataService;
         }
 
         public async Task<EmployeeResult> Start(
             int employeeId,
             TimeEntryResources resources,
-            int userId,
+            int currentlyLoggedInUserId,
             TimePeriod payPeriod)
         {
             // we use the employee data from resources.Employees instead of just passing the employee
@@ -200,10 +202,17 @@ namespace AccuPay.Data.Services
             var actualTimeEntryCalculator = new ActualTimeEntryCalculator(salary, actualTimeEntries, resources.Policy);
             actualTimeEntries = actualTimeEntryCalculator.Compute(timeEntries);
 
-            AddTimeEntriesToContext(userId, timeEntries);
+            // TODO: move this to a repository and data service, then move the useractivity to that data service
+            var newTimeEntries = timeEntries.Where(x => x.IsNewEntity).ToList();
+            var updatedTimeEntries = timeEntries.Where(x => !x.IsNewEntity).ToList();
+
+            AddTimeEntriesToContext(currentlyLoggedInUserId, timeEntries);
             AddActualTimeEntriesToContext(actualTimeEntries);
-            AddAgencyFeesToContext(userId, agencyFees);
+            AddAgencyFeesToContext(currentlyLoggedInUserId, agencyFees);
             await _context.SaveChangesAsync();
+
+            await _timeEntryDataService.RecordCreateByEmployee(currentlyLoggedInUserId, newTimeEntries);
+            await _timeEntryDataService.RecordEditByEmployee(currentlyLoggedInUserId, updatedTimeEntries);
 
             return EmployeeResult.Success(employee);
         }
@@ -244,18 +253,18 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void AddTimeEntriesToContext(int userId, IList<TimeEntry> timeEntries)
+        private void AddTimeEntriesToContext(int currentlyLoggedInUserId, IList<TimeEntry> timeEntries)
         {
             foreach (var timeEntry in timeEntries)
             {
                 if (timeEntry.RowID.HasValue)
                 {
-                    timeEntry.LastUpdBy = userId;
+                    timeEntry.LastUpdBy = currentlyLoggedInUserId;
                     _context.Entry(timeEntry).State = EntityState.Modified;
                 }
                 else
                 {
-                    timeEntry.CreatedBy = userId;
+                    timeEntry.CreatedBy = currentlyLoggedInUserId;
                     _context.TimeEntries.Add(timeEntry);
                 }
             }
@@ -272,18 +281,18 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void AddAgencyFeesToContext(int userId, ICollection<AgencyFee> agencyFees)
+        private void AddAgencyFeesToContext(int currentlyLoggedInUserId, ICollection<AgencyFee> agencyFees)
         {
             foreach (var agencyFee in agencyFees)
             {
                 if (agencyFee.RowID.HasValue)
                 {
-                    agencyFee.LastUpdBy = userId;
+                    agencyFee.LastUpdBy = currentlyLoggedInUserId;
                     _context.Entry(agencyFee).State = EntityState.Modified;
                 }
                 else
                 {
-                    agencyFee.CreatedBy = userId;
+                    agencyFee.CreatedBy = currentlyLoggedInUserId;
                     _context.AgencyFees.Add(agencyFee);
                 }
             }

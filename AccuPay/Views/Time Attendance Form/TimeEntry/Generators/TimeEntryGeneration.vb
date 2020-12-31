@@ -4,15 +4,12 @@ Imports System.Collections.Concurrent
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TimeEntryGeneration
     Inherits ProgressGenerator
-
-    Private Const FormEntityName As String = "TimeEntry"
 
     Private ReadOnly _employees As IEnumerable(Of Employee)
 
@@ -40,7 +37,7 @@ Public Class TimeEntryGeneration
             Try
                 Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
                 Dim result = Await generator.Start(
-                    userId:=z_User,
+                    currentlyLoggedInUserId:=z_User,
                     employeeId:=employee.RowID.Value,
                     resources:=resources,
                     payPeriod:=payPeriod)
@@ -50,8 +47,6 @@ Public Class TimeEntryGeneration
                 If result.IsSuccess Then
 
                     SetCurrentMessage($"Finished generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
-
-                    Await RecordTimeEntryGenerated(result, payPeriod, payPeriodId)
                 Else
 
                     SetCurrentMessage($"Failure generating [{employee.EmployeeNo}] {employee.FullNameWithMiddleInitialLastNameFirst}.")
@@ -69,28 +64,6 @@ Public Class TimeEntryGeneration
 
         SetResults(_results.ToList())
 
-    End Function
-
-    Private Async Function RecordTimeEntryGenerated(result As EmployeeResult, payPeriod As TimePeriod, payPeriodId As Integer) As Task
-
-        Dim payPeriodString = $"'{payPeriod.Start.ToShortDateString()}' to '{payPeriod.End.ToShortDateString()}'"
-
-        Dim activityItem = New List(Of UserActivityItem) From {
-            New UserActivityItem() With
-            {
-                .EntityId = payPeriodId,
-                .Description = $"Generated time entries for payroll {payPeriodString}.",
-                .ChangedEmployeeId = result.EmployeeId
-            }
-        }
-
-        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        Await userActivityService.CreateRecordAsync(
-          z_User,
-          FormEntityName,
-          z_OrganizationID,
-          UserActivityRepository.RecordTypeAdd,
-          activityItem)
     End Function
 
 End Class

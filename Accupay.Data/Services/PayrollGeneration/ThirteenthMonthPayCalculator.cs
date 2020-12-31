@@ -13,10 +13,10 @@ namespace AccuPay.Data.Services
         private readonly int _organizationId;
         private readonly int _userId;
 
-        public ThirteenthMonthPayCalculator(int organizationId, int userId)
+        public ThirteenthMonthPayCalculator(int organizationId, int currentlyLoggedInUserId)
         {
             _organizationId = organizationId;
-            _userId = userId;
+            _userId = currentlyLoggedInUserId;
         }
 
         public ThirteenthMonthPay Calculate(Employee employee,

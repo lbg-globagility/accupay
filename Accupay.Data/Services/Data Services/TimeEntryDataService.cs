@@ -1,3 +1,4 @@
+using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
@@ -19,6 +20,7 @@ namespace AccuPay.Data.Services
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
         private readonly TimeLogRepository _timeLogRepository;
+        private readonly TimeEntryDataHelper _timeEntryDataHelper;
 
         public TimeEntryDataService(
             BranchRepository branchRepository,
@@ -29,7 +31,8 @@ namespace AccuPay.Data.Services
             OvertimeRepository overtimeRepository,
             PayPeriodRepository payPeriodRepository,
             TimeEntryRepository timeEntryRepository,
-            TimeLogRepository timeLogRepository)
+            TimeLogRepository timeLogRepository,
+            TimeEntryDataHelper timeEntryDataHelper)
         {
             _branchRepository = branchRepository;
             _employeeRepository = employeeRepository;
@@ -40,9 +43,10 @@ namespace AccuPay.Data.Services
             _payPeriodRepository = payPeriodRepository;
             _timeEntryRepository = timeEntryRepository;
             _timeLogRepository = timeLogRepository;
+            _timeEntryDataHelper = timeEntryDataHelper;
         }
 
-        public async Task DeleteByEmployeeAsync(int employeeId, int payPeriodId)
+        public async Task DeleteByEmployeeAsync(int employeeId, int payPeriodId, int currentlyLoggedInUserId)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
             if (payPeriod == null)
@@ -57,9 +61,11 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Cannot delete time entries that is not on an 'Open' pay period.");
             }
 
-            await _timeEntryRepository.DeleteByEmployeeAsync(
+            var deletedTimeEntries = await _timeEntryRepository.DeleteByEmployeeAsync(
                 employeeId: employeeId,
                 payPeriodId: payPeriodId);
+
+            await RecordDeleteByEmployee(currentlyLoggedInUserId, deletedTimeEntries.timeEntries);
         }
 
         public async Task<ICollection<TimeEntryData>> GetEmployeeTimeEntries(int organizationId, int employeeId, TimePeriod datePeriod)
@@ -120,6 +126,21 @@ namespace AccuPay.Data.Services
             }
 
             return timeEntryList;
+        }
+
+        public async Task RecordCreateByEmployee(int currentlyLoggedInUserId, IReadOnlyCollection<TimeEntry> timeEntries)
+        {
+            await _timeEntryDataHelper.RecordCreate(currentlyLoggedInUserId, timeEntries);
+        }
+
+        public async Task RecordEditByEmployee(int currentlyLoggedInUserId, IReadOnlyCollection<TimeEntry> timeEntries)
+        {
+            await _timeEntryDataHelper.RecordEdit(currentlyLoggedInUserId, timeEntries);
+        }
+
+        public async Task RecordDeleteByEmployee(int currentlyLoggedInUserId, IReadOnlyCollection<TimeEntry> timeEntries)
+        {
+            await _timeEntryDataHelper.RecordDelete(currentlyLoggedInUserId, timeEntries);
         }
     }
 }
