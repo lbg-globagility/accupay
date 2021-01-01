@@ -44,7 +44,7 @@ Partial Class UserActivityForm
         Me.FirstLinkLabel = New System.Windows.Forms.LinkLabel()
         Me.ChangedByLabel = New System.Windows.Forms.Label()
         Me.ChangedByComboBox = New System.Windows.Forms.ComboBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.FilterPanel = New System.Windows.Forms.Panel()
         Me.FilterButton = New System.Windows.Forms.Button()
         Me.ToDatePicker = New NullableDatePicker()
         Me.ToLabel = New System.Windows.Forms.Label()
@@ -54,10 +54,15 @@ Partial Class UserActivityForm
         Me.DescriptionLabel = New System.Windows.Forms.Label()
         Me.ChangedEntityComboBox = New System.Windows.Forms.ComboBox()
         Me.ChangedEntityLabel = New System.Windows.Forms.Label()
-        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.LoadingPictureBox = New System.Windows.Forms.PictureBox()
+        Me.LoadingLabel = New System.Windows.Forms.Label()
+        Me.FooterPanel = New System.Windows.Forms.Panel()
+        Me.LoadingPanel = New System.Windows.Forms.Panel()
         CType(Me.UserActivityGrid, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
+        Me.FilterPanel.SuspendLayout()
+        CType(Me.LoadingPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.FooterPanel.SuspendLayout()
+        Me.LoadingPanel.SuspendLayout()
         Me.SuspendLayout()
         '
         'UserActivityGrid
@@ -77,10 +82,10 @@ Partial Class UserActivityForm
         Me.UserActivityGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.UserActivityGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.NameColumn, Me.ChangedEntityColumn, Me.DescriptionColumn, Me.DateandTimeColumn})
         Me.UserActivityGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.UserActivityGrid.Location = New System.Drawing.Point(0, 64)
+        Me.UserActivityGrid.Location = New System.Drawing.Point(0, 101)
         Me.UserActivityGrid.Name = "UserActivityGrid"
         Me.UserActivityGrid.ReadOnly = True
-        Me.UserActivityGrid.Size = New System.Drawing.Size(1184, 422)
+        Me.UserActivityGrid.Size = New System.Drawing.Size(1184, 385)
         Me.UserActivityGrid.TabIndex = 0
         '
         'NameColumn
@@ -220,7 +225,7 @@ Partial Class UserActivityForm
         Me.ChangedByLabel.AutoSize = True
         Me.ChangedByLabel.Location = New System.Drawing.Point(24, 23)
         Me.ChangedByLabel.Name = "ChangedByLabel"
-        Me.ChangedByLabel.Size = New System.Drawing.Size(71, 13)
+        Me.ChangedByLabel.Size = New System.Drawing.Size(72, 13)
         Me.ChangedByLabel.TabIndex = 155
         Me.ChangedByLabel.Text = "Changed By:"
         '
@@ -233,25 +238,25 @@ Partial Class UserActivityForm
         Me.ChangedByComboBox.Size = New System.Drawing.Size(121, 21)
         Me.ChangedByComboBox.TabIndex = 156
         '
-        'Panel1
+        'FilterPanel
         '
-        Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel1.Controls.Add(Me.FilterButton)
-        Me.Panel1.Controls.Add(Me.ToDatePicker)
-        Me.Panel1.Controls.Add(Me.ToLabel)
-        Me.Panel1.Controls.Add(Me.FromDatePicker)
-        Me.Panel1.Controls.Add(Me.FromLabel)
-        Me.Panel1.Controls.Add(Me.DescriptionTextBox)
-        Me.Panel1.Controls.Add(Me.DescriptionLabel)
-        Me.Panel1.Controls.Add(Me.ChangedEntityComboBox)
-        Me.Panel1.Controls.Add(Me.ChangedEntityLabel)
-        Me.Panel1.Controls.Add(Me.ChangedByComboBox)
-        Me.Panel1.Controls.Add(Me.ChangedByLabel)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1184, 64)
-        Me.Panel1.TabIndex = 157
+        Me.FilterPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.FilterPanel.Controls.Add(Me.FilterButton)
+        Me.FilterPanel.Controls.Add(Me.ToDatePicker)
+        Me.FilterPanel.Controls.Add(Me.ToLabel)
+        Me.FilterPanel.Controls.Add(Me.FromDatePicker)
+        Me.FilterPanel.Controls.Add(Me.FromLabel)
+        Me.FilterPanel.Controls.Add(Me.DescriptionTextBox)
+        Me.FilterPanel.Controls.Add(Me.DescriptionLabel)
+        Me.FilterPanel.Controls.Add(Me.ChangedEntityComboBox)
+        Me.FilterPanel.Controls.Add(Me.ChangedEntityLabel)
+        Me.FilterPanel.Controls.Add(Me.ChangedByComboBox)
+        Me.FilterPanel.Controls.Add(Me.ChangedByLabel)
+        Me.FilterPanel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.FilterPanel.Location = New System.Drawing.Point(0, 0)
+        Me.FilterPanel.Name = "FilterPanel"
+        Me.FilterPanel.Size = New System.Drawing.Size(1184, 64)
+        Me.FilterPanel.TabIndex = 157
         '
         'FilterButton
         '
@@ -277,7 +282,7 @@ Partial Class UserActivityForm
         Me.ToLabel.AutoSize = True
         Me.ToLabel.Location = New System.Drawing.Point(890, 23)
         Me.ToLabel.Name = "ToLabel"
-        Me.ToLabel.Size = New System.Drawing.Size(22, 13)
+        Me.ToLabel.Size = New System.Drawing.Size(21, 13)
         Me.ToLabel.TabIndex = 163
         Me.ToLabel.Text = "To:"
         '
@@ -333,19 +338,49 @@ Partial Class UserActivityForm
         Me.ChangedEntityLabel.TabIndex = 157
         Me.ChangedEntityLabel.Text = "Employee:"
         '
-        'Panel2
+        'LoadingPictureBox
         '
-        Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel2.Controls.Add(Me.FirstLinkLabel)
-        Me.Panel2.Controls.Add(Me.PreviousLinkLabel)
-        Me.Panel2.Controls.Add(Me.CloseButton)
-        Me.Panel2.Controls.Add(Me.LastLinkLabel)
-        Me.Panel2.Controls.Add(Me.NextLinkLabel)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 486)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1184, 75)
-        Me.Panel2.TabIndex = 158
+        Me.LoadingPictureBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.LoadingPictureBox.Image = Global.AccuPay.My.Resources.Resources.ajax_loader
+        Me.LoadingPictureBox.Location = New System.Drawing.Point(82, 11)
+        Me.LoadingPictureBox.Name = "LoadingPictureBox"
+        Me.LoadingPictureBox.Size = New System.Drawing.Size(19, 22)
+        Me.LoadingPictureBox.TabIndex = 166
+        Me.LoadingPictureBox.TabStop = False
+        '
+        'LoadingLabel
+        '
+        Me.LoadingLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.LoadingLabel.AutoSize = True
+        Me.LoadingLabel.Location = New System.Drawing.Point(25, 12)
+        Me.LoadingLabel.Name = "LoadingLabel"
+        Me.LoadingLabel.Size = New System.Drawing.Size(58, 13)
+        Me.LoadingLabel.TabIndex = 165
+        Me.LoadingLabel.Text = "Loading..."
+        '
+        'FooterPanel
+        '
+        Me.FooterPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.FooterPanel.Controls.Add(Me.FirstLinkLabel)
+        Me.FooterPanel.Controls.Add(Me.PreviousLinkLabel)
+        Me.FooterPanel.Controls.Add(Me.CloseButton)
+        Me.FooterPanel.Controls.Add(Me.LastLinkLabel)
+        Me.FooterPanel.Controls.Add(Me.NextLinkLabel)
+        Me.FooterPanel.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.FooterPanel.Location = New System.Drawing.Point(0, 486)
+        Me.FooterPanel.Name = "FooterPanel"
+        Me.FooterPanel.Size = New System.Drawing.Size(1184, 75)
+        Me.FooterPanel.TabIndex = 158
+        '
+        'LoadingPanel
+        '
+        Me.LoadingPanel.Controls.Add(Me.LoadingPictureBox)
+        Me.LoadingPanel.Controls.Add(Me.LoadingLabel)
+        Me.LoadingPanel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.LoadingPanel.Location = New System.Drawing.Point(0, 64)
+        Me.LoadingPanel.Name = "LoadingPanel"
+        Me.LoadingPanel.Size = New System.Drawing.Size(1184, 37)
+        Me.LoadingPanel.TabIndex = 155
         '
         'UserActivityForm
         '
@@ -353,8 +388,9 @@ Partial Class UserActivityForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1184, 561)
         Me.Controls.Add(Me.UserActivityGrid)
-        Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.Panel1)
+        Me.Controls.Add(Me.LoadingPanel)
+        Me.Controls.Add(Me.FooterPanel)
+        Me.Controls.Add(Me.FilterPanel)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -362,10 +398,13 @@ Partial Class UserActivityForm
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "User Activity"
         CType(Me.UserActivityGrid, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
+        Me.FilterPanel.ResumeLayout(False)
+        Me.FilterPanel.PerformLayout()
+        CType(Me.LoadingPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.FooterPanel.ResumeLayout(False)
+        Me.FooterPanel.PerformLayout()
+        Me.LoadingPanel.ResumeLayout(False)
+        Me.LoadingPanel.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -386,8 +425,8 @@ Partial Class UserActivityForm
     Friend WithEvents FirstLinkLabel As LinkLabel
     Friend WithEvents ChangedByLabel As Label
     Friend WithEvents ChangedByComboBox As ComboBox
-    Friend WithEvents Panel1 As Panel
-    Friend WithEvents Panel2 As Panel
+    Friend WithEvents FilterPanel As Panel
+    Friend WithEvents FooterPanel As Panel
     Friend WithEvents DescriptionTextBox As TextBox
     Friend WithEvents DescriptionLabel As Label
     Friend WithEvents ChangedEntityComboBox As ComboBox
@@ -397,4 +436,7 @@ Partial Class UserActivityForm
     Friend WithEvents ToLabel As Label
     Friend WithEvents FromDatePicker As NullableDatePicker
     Friend WithEvents FromLabel As Label
+    Friend WithEvents LoadingPictureBox As PictureBox
+    Friend WithEvents LoadingLabel As Label
+    Friend WithEvents LoadingPanel As Panel
 End Class

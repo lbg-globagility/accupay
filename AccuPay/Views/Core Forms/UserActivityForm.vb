@@ -146,6 +146,8 @@ Public Class UserActivityForm
     End Function
 
     Private Async Function PaginateList(pageIndex As Integer) As Task
+        DisableButtonsForLoading(isLoading:=True)
+
         Dim pageSize = 100
         Dim options As New PageOptions(pageIndex, pageSize, "Created", "DESC")
 
@@ -188,9 +190,23 @@ Public Class UserActivityForm
         _currentPageIndex = pageIndex
         _totalPages = list.TotalPages
 
+        DisableButtonsForLoading(isLoading:=False)
+
         DisablePaginateButtons()
 
     End Function
+
+    Private Sub DisableButtonsForLoading(isLoading As Boolean)
+        FilterPanel.Enabled = Not isLoading
+
+        LoadingPanel.Visible = isLoading
+
+        UserActivityGrid.Enabled = Not isLoading
+        FirstLinkLabel.Enabled = Not isLoading
+        PreviousLinkLabel.Enabled = Not isLoading
+        NextLinkLabel.Enabled = Not isLoading
+        LastLinkLabel.Enabled = Not isLoading
+    End Sub
 
     Private Sub DisablePaginateButtons()
         FirstLinkLabel.Enabled = True
