@@ -16,7 +16,7 @@ namespace AccuPay.Web.Shifts.Models
         public decimal ShiftHours { get; internal set; }
         public decimal WorkHours { get; internal set; }
 
-        internal static EmployeeDutyScheduleDto Convert(EmployeeDutySchedule dutySchedule)
+        internal static EmployeeDutyScheduleDto Convert(Shift dutySchedule)
         {
             return new EmployeeDutyScheduleDto()
             {

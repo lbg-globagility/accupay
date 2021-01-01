@@ -24,7 +24,7 @@ namespace AccuPay.Web.TimeEntries
         private readonly OfficialBusinessRepository _officialBusinessRepository;
         private readonly TimeLogRepository _timeLogRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
-        private readonly EmployeeDutyScheduleRepository _shiftRepository;
+        private readonly ShiftRepository _shiftRepository;
         private readonly TimeEntryDataService _dataService;
 
         public TimeEntryService(
@@ -38,7 +38,7 @@ namespace AccuPay.Web.TimeEntries
             OfficialBusinessRepository officialBusinessRepository,
             TimeLogRepository timeLogRepository,
             TimeEntryRepository timeEntryRepository,
-            EmployeeDutyScheduleRepository shiftRepository,
+            ShiftRepository shiftRepository,
             TimeEntryDataService dataService)
         {
             _timeEntryResources = timeEntryResources;

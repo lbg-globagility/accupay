@@ -18,14 +18,14 @@ namespace AccuPay.Web.Shifts.Services
 {
     public class ShiftService
     {
-        private readonly EmployeeDutyScheduleRepository _repository;
-        private readonly EmployeeDutyScheduleDataService _service;
+        private readonly ShiftRepository _repository;
+        private readonly ShiftDataService _service;
         private readonly ShiftImportParser _importParser;
         private readonly ICurrentUser _currentUser;
 
         public ShiftService(
-            EmployeeDutyScheduleRepository repository,
-            EmployeeDutyScheduleDataService service,
+            ShiftRepository repository,
+            ShiftDataService service,
             ShiftImportParser importParser,
             ICurrentUser currentUser)
         {
@@ -52,9 +52,9 @@ namespace AccuPay.Web.Shifts.Services
             var shifts = await _repository
                 .GetByMultipleEmployeeAndBetweenDatePeriodAsync(_currentUser.OrganizationId, employeeIds, new TimePeriod(dateFrom, dateTo));
 
-            var added = new List<EmployeeDutySchedule>();
-            var updated = new List<EmployeeDutySchedule>();
-            var deleted = new List<EmployeeDutySchedule>();
+            var added = new List<Shift>();
+            var updated = new List<Shift>();
+            var deleted = new List<Shift>();
 
             foreach (var dto in dtos)
             {
@@ -69,7 +69,7 @@ namespace AccuPay.Web.Shifts.Services
                 {
                     if (hasData)
                     {
-                        var newShift = new EmployeeDutySchedule()
+                        var newShift = new Shift()
                         {
                             OrganizationID = _currentUser.OrganizationId,
                             EmployeeID = dto.EmployeeId,
@@ -129,7 +129,7 @@ namespace AccuPay.Web.Shifts.Services
             return parsedResult;
         }
 
-        private static EmployeeShiftsDto ConvertToDto(Employee employee, ICollection<EmployeeDutySchedule> shifts)
+        private static EmployeeShiftsDto ConvertToDto(Employee employee, ICollection<Shift> shifts)
         {
             var dto = new EmployeeShiftsDto()
             {
@@ -146,7 +146,7 @@ namespace AccuPay.Web.Shifts.Services
             return dto;
         }
 
-        private static EmployeeDutyScheduleDto ConvertToEmployeeSfhitDto(EmployeeDutySchedule dutySchedule)
+        private static EmployeeDutyScheduleDto ConvertToEmployeeSfhitDto(Shift dutySchedule)
         {
             return EmployeeDutyScheduleDto.Convert(dutySchedule);
         }

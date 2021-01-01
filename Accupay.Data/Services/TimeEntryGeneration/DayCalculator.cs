@@ -33,7 +33,7 @@ namespace AccuPay.Data.Services
             DateTime currentDate,
             Salary salary,
             IList<TimeEntry> oldTimeEntries,
-            EmployeeDutySchedule shift,
+            Shift shift,
             TimeLog timeLog,
             IList<Overtime> overtimes,
             OfficialBusiness officialBusiness,
@@ -837,7 +837,7 @@ namespace AccuPay.Data.Services
         #region Public static methods
 
         public static CurrentShift GetCurrentShift(DateTime currentDate,
-            EmployeeDutySchedule shift,
+            Shift shift,
             bool respectDefaultRestDay,
             int? employeeDayOfRest,
             ShiftBasedAutomaticOvertimePolicy shiftBasedAutomaticOvertimePolicy)

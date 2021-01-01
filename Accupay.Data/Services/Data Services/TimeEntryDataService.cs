@@ -13,7 +13,7 @@ namespace AccuPay.Data.Services
     {
         private readonly BranchRepository _branchRepository;
         private readonly EmployeeRepository _employeeRepository;
-        private readonly EmployeeDutyScheduleRepository _shiftRepository;
+        private readonly ShiftRepository _shiftRepository;
         private readonly LeaveRepository _leaveRepository;
         private readonly OfficialBusinessRepository _officialBusinessRepository;
         private readonly OvertimeRepository _overtimeRepository;
@@ -25,7 +25,7 @@ namespace AccuPay.Data.Services
         public TimeEntryDataService(
             BranchRepository branchRepository,
             EmployeeRepository employeeRepository,
-            EmployeeDutyScheduleRepository shiftRepository,
+            ShiftRepository shiftRepository,
             LeaveRepository leaveRepository,
             OfficialBusinessRepository officialBusinessRepository,
             OvertimeRepository overtimeRepository,

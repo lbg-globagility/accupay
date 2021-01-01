@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
 Imports AccuPay.Data.Entities
@@ -45,101 +45,101 @@ Public Class TimeAnalyzer
         Return employees
     End Function
 
-    Protected Function GetSampleEmployeeDutySchedules() As List(Of EmployeeDutySchedule)
-        Dim shiftSchedules = New List(Of EmployeeDutySchedule)
+    Protected Function GetSampleShifts() As List(Of Shift)
+        Dim shifts = New List(Of Shift)
 
-        Dim shiftSchedule As EmployeeDutySchedule
+        Dim shift As Shift
 
         Dim employeeId As Integer? = 1
         Dim employeeId_2 As Integer? = 2
 
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-01"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
 
-        shiftSchedules.Add(shiftSchedule)
+        shifts.Add(shift)
 
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-02"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
 
-        shiftSchedules.Add(shiftSchedule)
+        shifts.Add(shift)
 
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shift = New Shift() With {
             .EmployeeID = employeeId_2,
             .DateSched = Date.Parse("2018-06-01"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
 
-        shiftSchedules.Add(shiftSchedule)
+        shifts.Add(shift)
 
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shift = New Shift() With {
             .EmployeeID = employeeId_2,
             .DateSched = Date.Parse("2018-06-02"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
 
-        shiftSchedules.Add(shiftSchedule)
+        shifts.Add(shift)
 
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-03"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
 
-        shiftSchedules.Add(shiftSchedule)
+        shifts.Add(shift)
 
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-04"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
-        shiftSchedules.Add(shiftSchedule)
+        shifts.Add(shift)
 
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-05"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
-        shiftSchedules.Add(shiftSchedule)
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shifts.Add(shift)
+        shift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-06"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
-        shiftSchedules.Add(shiftSchedule)
-        shiftSchedule = New EmployeeDutySchedule() With {
+        shifts.Add(shift)
+        shift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-07"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
-        shiftSchedules.Add(shiftSchedule)
+        shifts.Add(shift)
 
-        Return shiftSchedules
+        Return shifts
     End Function
 
-    Protected Function GetSampleEmployeeDutySchedules_WithNextShiftScheduleWithoutShift() As List(Of EmployeeDutySchedule)
-        Dim employeeShifts = New List(Of EmployeeDutySchedule)
+    Protected Function GetSampleShifts_WithNextShiftWithoutShift() As List(Of Shift)
+        Dim employeeShifts = New List(Of Shift)
 
-        Dim employeeShift As EmployeeDutySchedule
+        Dim employeeShift As Shift
 
         Dim employeeId As Integer? = 1
         Dim employeeId_2 As Integer? = 2
 
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-01"),
             .StartTime = TimeSpan.Parse("08:00:00"),
@@ -148,7 +148,7 @@ Public Class TimeAnalyzer
 
         employeeShifts.Add(employeeShift)
 
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-02"),
             .StartTime = TimeSpan.Parse("08:00:00"),
@@ -157,7 +157,7 @@ Public Class TimeAnalyzer
 
         employeeShifts.Add(employeeShift)
 
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId_2,
             .DateSched = Date.Parse("2018-06-01"),
             .StartTime = TimeSpan.Parse("08:00:00"),
@@ -166,7 +166,7 @@ Public Class TimeAnalyzer
 
         employeeShifts.Add(employeeShift)
 
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId_2,
             .DateSched = Date.Parse("2018-06-02"),
             .StartTime = TimeSpan.Parse("08:00:00"),
@@ -175,7 +175,7 @@ Public Class TimeAnalyzer
 
         employeeShifts.Add(employeeShift)
 
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-03"),
             .StartTime = TimeSpan.Parse("08:00:00"),
@@ -184,7 +184,7 @@ Public Class TimeAnalyzer
 
         employeeShifts.Add(employeeShift)
 
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-04"),
             .StartTime = TimeSpan.Parse("08:00:00"),
@@ -192,21 +192,21 @@ Public Class TimeAnalyzer
         }
         employeeShifts.Add(employeeShift)
 
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-05"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
         employeeShifts.Add(employeeShift)
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-06"),
             .StartTime = TimeSpan.Parse("08:00:00"),
             .EndTime = TimeSpan.Parse("17:00:00")
         }
         employeeShifts.Add(employeeShift)
-        employeeShift = New EmployeeDutySchedule() With {
+        employeeShift = New Shift() With {
             .EmployeeID = employeeId,
             .DateSched = Date.Parse("2018-06-07"),
             .StartTime = Nothing,

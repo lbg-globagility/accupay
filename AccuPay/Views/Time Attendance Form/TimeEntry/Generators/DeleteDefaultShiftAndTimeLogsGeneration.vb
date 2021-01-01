@@ -36,7 +36,7 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
         Dim result = Await GetEmployeeShiftAndTimeLogs()
         IncreaseProgress("Finished loading resources.")
 
-        Dim shifts As List(Of EmployeeDutySchedule) = result.shifts
+        Dim shifts As List(Of Shift) = result.shifts
         Dim timeLogs As List(Of TimeLog) = result.timeLogs
 
         For Each employee In _employees
@@ -48,12 +48,12 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
         SetResults(_results.ToList())
     End Function
 
-    Private Async Function GetEmployeeShiftAndTimeLogs() As Task(Of (shifts As List(Of EmployeeDutySchedule), timeLogs As List(Of TimeLog)))
+    Private Async Function GetEmployeeShiftAndTimeLogs() As Task(Of (shifts As List(Of Shift), timeLogs As List(Of TimeLog)))
 
-        Dim shifts As New List(Of EmployeeDutySchedule)
+        Dim shifts As New List(Of Shift)
         Dim timeLogs As New List(Of TimeLog)
 
-        Dim shiftRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        Dim shiftRepository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
         Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
 
         Dim employeeIds = _employees.Select(Function(x) x.RowID.Value).ToList()
@@ -74,11 +74,11 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
         Return (shifts, timeLogs)
     End Function
 
-    Private Async Function DeleteDefaultShiftAndTimeLogs(shifts As List(Of EmployeeDutySchedule), timeLogs As List(Of TimeLog), employee As Employee) As Task(Of EmployeeResult)
+    Private Async Function DeleteDefaultShiftAndTimeLogs(shifts As List(Of Shift), timeLogs As List(Of TimeLog), employee As Employee) As Task(Of EmployeeResult)
 
         Try
 
-            Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+            Dim shiftService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
             Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
 
             Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value).ToList()

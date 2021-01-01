@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class EmployeeDutyScheduleRepository : SavableRepository<EmployeeDutySchedule>
+    public class ShiftRepository : SavableRepository<Shift>
     {
-        public EmployeeDutyScheduleRepository(PayrollContext context) : base(context)
+        public ShiftRepository(PayrollContext context) : base(context)
         {
         }
 
@@ -19,14 +19,14 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<ICollection<EmployeeDutySchedule>> GetByDatePeriodAsync(
+        public async Task<ICollection<Shift>> GetByDatePeriodAsync(
             int organizationId,
             TimePeriod datePeriod)
         {
             return await CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToListAsync();
         }
 
-        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodAsync(
+        public async Task<ICollection<Shift>> GetByEmployeeAndDatePeriodAsync(
             int organizationId,
             int employeeId,
             TimePeriod datePeriod)
@@ -36,7 +36,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<EmployeeDutySchedule>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(
+        public async Task<ICollection<Shift>> GetByMultipleEmployeeAndBetweenDatePeriodAsync(
             int organizationId,
             IEnumerable<int> employeeIds,
             TimePeriod timePeriod)
@@ -47,7 +47,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<(ICollection<Employee> employees, int total, ICollection<EmployeeDutySchedule>)> ListByEmployeeAsync(
+        public async Task<(ICollection<Employee> employees, int total, ICollection<Shift>)> ListByEmployeeAsync(
             int organizationId,
             ShiftsByEmployeePageOptions options)
         {
@@ -82,7 +82,7 @@ namespace AccuPay.Data.Repositories
 
             var employeeIds = employees.Select(x => x.RowID);
 
-            var dutySchedules = await _context.EmployeeDutySchedules
+            var dutySchedules = await _context.Shifts
                 .Where(x => employeeIds.Contains(x.EmployeeID))
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(x => options.DateFrom.Date <= x.DateSched && x.DateSched <= options.DateTo.Date)
@@ -91,7 +91,7 @@ namespace AccuPay.Data.Repositories
             return (employees, total, dutySchedules);
         }
 
-        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodAsync(
+        public async Task<ICollection<Shift>> GetByEmployeeAndDatePeriodAsync(
             int organizationId,
             int[] employeeIds,
             TimePeriod datePeriod)
@@ -103,7 +103,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodWithEmployeeAsync(
+        public async Task<ICollection<Shift>> GetByEmployeeAndDatePeriodWithEmployeeAsync(
             int organizationId,
             int[] employeeIds,
             TimePeriod datePeriod)
@@ -120,7 +120,7 @@ namespace AccuPay.Data.Repositories
 
         #endregion Queries
 
-        private IQueryable<EmployeeDutySchedule> CreateBaseQueryByMultipleEmployeeDatePeriod(
+        private IQueryable<Shift> CreateBaseQueryByMultipleEmployeeDatePeriod(
             int organizationId,
             int[] employeeIds,
             TimePeriod datePeriod)
@@ -129,9 +129,9 @@ namespace AccuPay.Data.Repositories
                 .Where(x => employeeIds.Contains(x.EmployeeID.Value));
         }
 
-        private IQueryable<EmployeeDutySchedule> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
+        private IQueryable<Shift> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return _context.EmployeeDutySchedules
+            return _context.Shifts
                 .Where(l => l.OrganizationID == organizationId)
                 .Where(l => datePeriod.Start <= l.DateSched)
                 .Where(l => l.DateSched <= datePeriod.End);

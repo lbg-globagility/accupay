@@ -23,7 +23,7 @@ namespace AccuPay.Data.Services
         public IReadOnlyCollection<AgencyFee> AgencyFees { get; private set; }
         public IReadOnlyCollection<BreakTimeBracket> BreakTimeBrackets { get; private set; }
         public IReadOnlyCollection<Employee> Employees { get; private set; }
-        public IReadOnlyCollection<EmployeeDutySchedule> Shifts { get; private set; }
+        public IReadOnlyCollection<Shift> Shifts { get; private set; }
         public IReadOnlyCollection<EmploymentPolicy> EmploymentPolicies { get; private set; }
         public IReadOnlyCollection<Leave> Leaves { get; private set; }
         public IReadOnlyCollection<OfficialBusiness> OfficialBusinesses { get; private set; }
@@ -43,7 +43,7 @@ namespace AccuPay.Data.Services
         private readonly BreakTimeBracketRepository _breakTimeBracketRepository;
         private readonly EmployeeRepository _employeeRepository;
         private readonly EmploymentPolicyRepository _employmentPolicyRepository;
-        private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
+        private readonly ShiftRepository _shiftRepository;
         private readonly LeaveRepository _leaveRepository;
         private readonly OfficialBusinessRepository _officialBusinessRepository;
         private readonly OrganizationRepository _organizationRepository;
@@ -64,7 +64,7 @@ namespace AccuPay.Data.Services
             BreakTimeBracketRepository breakTimeBracketRepository,
             EmployeeRepository employeeRepository,
             EmploymentPolicyRepository employmentPolicyRepository,
-            EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
+            ShiftRepository shiftRepository,
             LeaveRepository leaveRepository,
             OfficialBusinessRepository officialBusinessRepository,
             OrganizationRepository organizationRepository,
@@ -85,7 +85,7 @@ namespace AccuPay.Data.Services
             _breakTimeBracketRepository = breakTimeBracketRepository;
             _employeeRepository = employeeRepository;
             _employmentPolicyRepository = employmentPolicyRepository;
-            _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
+            _shiftRepository = shiftRepository;
             _leaveRepository = leaveRepository;
             _officialBusinessRepository = officialBusinessRepository;
             _organizationRepository = organizationRepository;
@@ -221,7 +221,7 @@ namespace AccuPay.Data.Services
 
         private async Task LoadShifts(int organizationId, TimePeriod cuttOffPeriod)
         {
-            Shifts = (await _employeeDutyScheduleRepository
+            Shifts = (await _shiftRepository
                 .GetByDatePeriodAsync(organizationId, cuttOffPeriod))
                 .ToList();
         }

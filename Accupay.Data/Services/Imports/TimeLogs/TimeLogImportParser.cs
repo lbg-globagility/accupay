@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
@@ -13,17 +13,18 @@ namespace AccuPay.Data.Services.Imports
     {
         private readonly TimeLogsReader _reader;
         private readonly EmployeeRepository _employeeRepository;
-        private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
+        private readonly ShiftRepository _shiftRepository;
         private readonly OvertimeRepository _overtimeRepository;
 
-        public TimeLogImportParser(TimeLogsReader reader,
-                                    EmployeeRepository employeeRepository,
-                                    EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
-                                    OvertimeRepository overtimeRepository)
+        public TimeLogImportParser(
+            TimeLogsReader reader,
+            EmployeeRepository employeeRepository,
+            ShiftRepository shiftRepository,
+            OvertimeRepository overtimeRepository)
         {
             _reader = reader;
             _employeeRepository = employeeRepository;
-            _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
+            _shiftRepository = shiftRepository;
             _overtimeRepository = overtimeRepository;
         }
 
@@ -87,7 +88,7 @@ namespace AccuPay.Data.Services.Imports
 
             TimePeriod datePeriod = new TimePeriod(firstDate, lastDate);
 
-            List<EmployeeDutySchedule> employeeShifts = await GetEmployeeDutyShifts(datePeriod, organizationId);
+            List<Shift> employeeShifts = await GetEmployeeShifts(datePeriod, organizationId);
 
             List<Overtime> employeeOvertimes = await GetEmployeeOvertime(datePeriod, organizationId);
 
@@ -108,9 +109,9 @@ namespace AccuPay.Data.Services.Imports
             return employees.ToList();
         }
 
-        private async Task<List<EmployeeDutySchedule>> GetEmployeeDutyShifts(TimePeriod timePeriod, int organizationId)
+        private async Task<List<Shift>> GetEmployeeShifts(TimePeriod timePeriod, int organizationId)
         {
-            return (await _employeeDutyScheduleRepository.GetByDatePeriodAsync(organizationId, timePeriod)).ToList();
+            return (await _shiftRepository.GetByDatePeriodAsync(organizationId, timePeriod)).ToList();
         }
 
         private async Task<List<Overtime>> GetEmployeeOvertime(TimePeriod timePeriod, int organizationId)

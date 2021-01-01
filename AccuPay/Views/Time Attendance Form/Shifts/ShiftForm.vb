@@ -15,7 +15,7 @@ Imports AccuPay.Utilities.Extensions
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class ShiftScheduleForm
+Public Class ShiftForm
 
 #Region "VariableDeclarations"
 
@@ -30,7 +30,7 @@ Public Class ShiftScheduleForm
 
     Private _dutyShiftPolicy As DutyShiftPolicy
 
-    Private _originDataSource As List(Of ShiftScheduleModel)
+    Private _originDataSource As List(Of ShiftModel)
 
     Private _currCell As DataGridViewCell
 
@@ -65,7 +65,7 @@ Public Class ShiftScheduleForm
 
 #Region "Methods"
 
-    Public Async Function LoadShiftScheduleConfigurablePolicy() As Task
+    Public Async Function LoadShiftConfigurablePolicy() As Task
         _dutyShiftPolicy = Await DutyShiftPolicy.Load1
 
         _shiftBasedAutoOvertimePolicy = _dutyShiftPolicy.ShiftBasedAutomaticOvertimePolicy
@@ -80,17 +80,17 @@ Public Class ShiftScheduleForm
 
         Dim sevenDays = Calendar.EachDay(sundayDate, weekBoundaryDate)
 
-        Dim _models = New List(Of ShiftScheduleModel)
+        Dim _models = New List(Of ShiftModel)
         For Each d In sevenDays
-            _models.Add(New ShiftScheduleModel() With {.DateValue = d})
+            _models.Add(New ShiftModel() With {.DateValue = d})
         Next
 
         RefreshDataSource(gridWeek, _models)
     End Sub
 
-    Private Sub CollectShiftSchedModel(ee As Employee, dateVal As Date, modelList As ICollection(Of ShiftScheduleModel), isRaw As Boolean)
+    Private Sub CollectShiftSchedModel(ee As Employee, dateVal As Date, modelList As ICollection(Of ShiftModel), isRaw As Boolean)
         Dim shiftModelSchedModel =
-            New ShiftScheduleModel(ee) With {
+            New ShiftModel(ee) With {
             .DateValue = dateVal}
 
         If Not isRaw Then ApplyChangesToModel(shiftModelSchedModel)
@@ -98,7 +98,7 @@ Public Class ShiftScheduleForm
         modelList.Add(shiftModelSchedModel)
     End Sub
 
-    Private Sub ApplyChangesToModel(ssm As ShiftScheduleModel)
+    Private Sub ApplyChangesToModel(ssm As ShiftModel)
         With ssm
             .TimeFrom = ShortTimeSpan(txtTimeFrom.Value)
             .TimeTo = ShortTimeSpan(txtTimeTo.Value)
@@ -112,7 +112,7 @@ Public Class ShiftScheduleForm
         End With
     End Sub
 
-    Private Sub ApplyChangesToModel(ssm As ShiftScheduleModel, update As ShiftScheduleModel)
+    Private Sub ApplyChangesToModel(ssm As ShiftModel, update As ShiftModel)
         With ssm
             .TimeFrom = update.TimeFrom
             .TimeTo = update.TimeTo
@@ -126,7 +126,7 @@ Public Class ShiftScheduleForm
         Dim ebonyStyle = Color.LightGray
         Dim ivoryStyle = Color.White
 
-        Dim groupEmployeeIDs = ConvertGridRowsToShiftScheduleModels(grid).
+        Dim groupEmployeeIDs = ConvertGridRowsToShiftModels(grid).
             GroupBy(Function(ssm) ssm.EmployeeId).
             ToList()
 
@@ -193,7 +193,7 @@ Public Class ShiftScheduleForm
             Return
         End If
 
-        Dim model = DirectCast(_currRow.DataBoundItem, ShiftScheduleModel)
+        Dim model = DirectCast(_currRow.DataBoundItem, ShiftModel)
 
         AutomaticShiftCompute(model)
 
@@ -202,7 +202,7 @@ Public Class ShiftScheduleForm
 
     Private Sub TransformTouchedRow(dataGridCurrentRow As DataGridViewRow)
         Dim currRow = dataGridCurrentRow
-        Dim ssm = DirectCast(currRow.DataBoundItem, ShiftScheduleModel)
+        Dim ssm = DirectCast(currRow.DataBoundItem, ShiftModel)
 
         If ssm.HasChanged Then
             currRow.DefaultCellStyle.Font = New Font("Segoe UI", 8.25!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
@@ -211,13 +211,13 @@ Public Class ShiftScheduleForm
         End If
     End Sub
 
-    Private Sub AutomaticShiftCompute(shiftSched As ShiftScheduleModel)
+    Private Sub AutomaticShiftCompute(shiftSched As ShiftModel)
         Dim shiftHours = _dutyShiftPolicy.DefaultWorkHour
         Dim breakHours = shiftSched.BreakLength
 
         Dim _empty = String.Empty
 
-        Dim ClearBreakTimes = Sub(ss As ShiftScheduleModel)
+        Dim ClearBreakTimes = Sub(ss As ShiftModel)
                                   ss.BreakFrom = Nothing
                                   ss.BreakLength = Nothing
                               End Sub
@@ -277,7 +277,7 @@ Public Class ShiftScheduleForm
         Next
     End Sub
 
-    Private Sub RefreshDataSource(dataGrid As DataGridView, source As IList(Of ShiftScheduleModel))
+    Private Sub RefreshDataSource(dataGrid As DataGridView, source As IList(Of ShiftModel))
         dataGrid.DataSource = source
         dataGrid.Refresh()
     End Sub
@@ -291,7 +291,7 @@ Public Class ShiftScheduleForm
         SendKeys.Send("{TAB}")
     End Sub
 
-    Private Sub AffectedRows(_newSource As List(Of ShiftScheduleModel))
+    Private Sub AffectedRows(_newSource As List(Of ShiftModel))
         ChangesCount = _newSource.Where(Function(data) data.HasChanged).Count
     End Sub
 
@@ -374,7 +374,7 @@ Public Class ShiftScheduleForm
         Return TimeUtility.ToDateTime(timeSpanValue, [date])
     End Function
 
-    Private Function CreatedResult(isRawData As Boolean) As List(Of ShiftScheduleModel)
+    Private Function CreatedResult(isRawData As Boolean) As List(Of ShiftModel)
         CommitTimeValues()
 
         Dim beginDate = dtpDateFrom.Value.Date
@@ -388,9 +388,9 @@ Public Class ShiftScheduleForm
         Dim employeeList = From emp In employees
                            Order By String.Concat(emp.LastName, emp.FirstName)
                            Let ee = emp
-                           Select New ShiftScheduleModel(ee)
+                           Select New ShiftModel(ee)
 
-        Dim _models = New List(Of ShiftScheduleModel)
+        Dim _models = New List(Of ShiftModel)
 
         For Each ee In employeeList.ToList
             Dim emloyee = employees.Where(Function(e) CBool(e.RowID = ee.EmployeeId)).FirstOrDefault()
@@ -405,20 +405,20 @@ Public Class ShiftScheduleForm
         Return _models
     End Function
 
-    Private Async Function RangeApply(datePeriod As TimePeriod, models As List(Of ShiftScheduleModel)) As Task(Of List(Of ShiftScheduleModel))
+    Private Async Function RangeApply(datePeriod As TimePeriod, models As List(Of ShiftModel)) As Task(Of List(Of ShiftModel))
 
         Dim employees = EmployeeTreeView1.GetTickedEmployees
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToArray()
 
         Dim isShiftBasedAutoOvertimeEnabled = _isShiftBasedAutoOvertimeEnabled
-        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
         Dim empShiftScheds = Await repository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
             z_OrganizationID,
             employeeIds,
             datePeriod)
 
         If empShiftScheds.Any Then
-            Dim notExists = Function(shSched As ShiftScheduleModel)
+            Dim notExists = Function(shSched As ShiftModel)
                                 Dim seekResult = empShiftScheds.
                                 Where(Function(ess) Nullable.Equals(ess.EmployeeID, shSched.EmployeeId)).
                                 Where(Function(ess) Nullable.Equals(ess.DateSched.Date, shSched.DateValue.Date))
@@ -429,7 +429,7 @@ Public Class ShiftScheduleForm
 
             models.Clear()
             For Each ess In empShiftScheds
-                models.Add(New ShiftScheduleModel(ess))
+                models.Add(New ShiftModel(ess))
             Next
 
             For Each ssm In notInDb
@@ -446,7 +446,7 @@ Public Class ShiftScheduleForm
         Return models
     End Function
 
-    Private Function ConvertGridRowsToShiftScheduleModels(dataGrid As DataGridView) As List(Of ShiftScheduleModel)
+    Private Function ConvertGridRowsToShiftModels(dataGrid As DataGridView) As List(Of ShiftModel)
         Dim _weekCycleRows = dataGrid.Rows.OfType(Of DataGridViewRow)
         If gridWeek.Name = dataGrid.Name Then
             Dim satisfied = Function(dgvRow As DataGridViewRow) As Boolean
@@ -460,7 +460,7 @@ Public Class ShiftScheduleForm
 
             _weekCycleRows = _weekCycleRows.Where(Function(r) satisfied(r))
         End If
-        Return _weekCycleRows.Select(Function(r) DirectCast(r.DataBoundItem, ShiftScheduleModel)).ToList
+        Return _weekCycleRows.Select(Function(r) DirectCast(r.DataBoundItem, ShiftModel)).ToList
     End Function
 
     Private Function TimeSpanToString(text As String) As String
@@ -482,7 +482,7 @@ Public Class ShiftScheduleForm
 
 #Region "Classes"
 
-    Private Class ShiftScheduleModel
+    Private Class ShiftModel
         Implements IShift
         Private Const ONE_DAY_HOURS As Integer = 24
         Private Const MINUTES_PER_HOUR As Integer = 60
@@ -490,7 +490,7 @@ Public Class ShiftScheduleForm
         Private origOffset As Boolean
         Private origBreakLength As Decimal
         Private _isNew, _madeChanges, _isValid As Boolean
-        Private _eds As EmployeeDutySchedule
+        Private _eds As Shift
 
         Public Sub New()
         End Sub
@@ -499,11 +499,11 @@ Public Class ShiftScheduleForm
             AssignEmployee(employee)
         End Sub
 
-        Public Sub New(ess As EmployeeDutySchedule)
+        Public Sub New(ess As Shift)
             InitModel(ess)
         End Sub
 
-        Private Sub InitModel(ess As EmployeeDutySchedule)
+        Private Sub InitModel(ess As Shift)
             _eds = ess
 
             _RowID = ess.RowID
@@ -514,8 +514,8 @@ Public Class ShiftScheduleForm
             Dim timeFrom = ess.StartTime
             Dim timeTo = ess.EndTime
 
-            Me.TimeFrom = If(timeFrom Is Nothing, "", ShiftScheduleForm.MilitarDateTime(timeFrom.GetValueOrDefault))
-            Me.TimeTo = If(timeTo Is Nothing, "", ShiftScheduleForm.MilitarDateTime(timeTo.GetValueOrDefault))
+            Me.TimeFrom = If(timeFrom Is Nothing, "", ShiftForm.MilitarDateTime(timeFrom.GetValueOrDefault))
+            Me.TimeTo = If(timeTo Is Nothing, "", ShiftForm.MilitarDateTime(timeTo.GetValueOrDefault))
 
             _BreakLength = ess.BreakLength
 
@@ -523,7 +523,7 @@ Public Class ShiftScheduleForm
             If _hasBreakStart Then
 
                 Dim breakFrom = ess.BreakStartTime
-                Me.BreakFrom = If(breakFrom Is Nothing, "", ShiftScheduleForm.MilitarDateTime(breakFrom.GetValueOrDefault))
+                Me.BreakFrom = If(breakFrom Is Nothing, "", ShiftForm.MilitarDateTime(breakFrom.GetValueOrDefault))
 
             End If
 
@@ -637,10 +637,10 @@ Public Class ShiftScheduleForm
             _eds = Nothing
         End Sub
 
-        Public ReadOnly Property ToEmployeeDutySchedule As EmployeeDutySchedule
+        Public ReadOnly Property ToShift As Shift
             Get
                 If _eds Is Nothing Then
-                    _eds = New EmployeeDutySchedule With {
+                    _eds = New Shift With {
                         .EmployeeID = _EmployeeId,
                         .OrganizationID = z_OrganizationID,
                         .DateSched = _DateValue
@@ -826,7 +826,7 @@ Public Class ShiftScheduleForm
         Dim start As Date = dtpDateFrom.Value.Date
         Dim finish As Date = dtpDateTo.Value.Date
 
-        Dim _newSource = ConvertGridRowsToShiftScheduleModels(grid)
+        Dim _newSource = ConvertGridRowsToShiftModels(grid)
 
         If tcSchedule.SelectedTab Is tabRange Then
             For Each ssm In _newSource
@@ -835,7 +835,7 @@ Public Class ShiftScheduleForm
 
         ElseIf tcSchedule.SelectedTab Is tabWeekCycle Then
 
-            Dim _weekCycles = ConvertGridRowsToShiftScheduleModels(gridWeek)
+            Dim _weekCycles = ConvertGridRowsToShiftModels(gridWeek)
 
             Dim isSatisfy = _weekCycles.Any
 
@@ -870,7 +870,7 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
-        Dim saveList = ConvertGridRowsToShiftScheduleModels(grid)
+        Dim saveList = ConvertGridRowsToShiftModels(grid)
 
         Dim toSaveList = saveList.Where(Function(ssm) ssm.HasChanged)
         If Not toSaveList.Any() Then
@@ -883,18 +883,18 @@ Public Class ShiftScheduleForm
 
         Dim datePeriod = New TimePeriod(dtpDateFrom.Value.Date, dtpDateTo.Value.Date)
 
-        Dim addedShifts As New List(Of EmployeeDutySchedule)
-        Dim updatedShifts As New List(Of EmployeeDutySchedule)
-        Dim deletedShifts As New List(Of EmployeeDutySchedule)
+        Dim addedShifts As New List(Of Shift)
+        Dim updatedShifts As New List(Of Shift)
+        Dim deletedShifts As New List(Of Shift)
 
         For Each ssm In toSaveList
 
             If ssm.IsNew Then
-                addedShifts.Add(ssm.ToEmployeeDutySchedule())
+                addedShifts.Add(ssm.ToShift())
             ElseIf ssm.IsUpdate Then
-                updatedShifts.Add(ssm.ToEmployeeDutySchedule())
+                updatedShifts.Add(ssm.ToShift())
             ElseIf ssm.ConsideredDelete Then
-                deletedShifts.Add(ssm.ToEmployeeDutySchedule())
+                deletedShifts.Add(ssm.ToShift())
             End If
 
         Next
@@ -940,7 +940,7 @@ Public Class ShiftScheduleForm
             Async Function()
                 If _isShiftBasedAutoOvertimeEnabled Then Await SaveOvertimeOfShiftBasedAutoOvertimePolicy(toSaveList)
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
                 Await dataService.SaveManyAsync(
                     currentlyLoggedInUserId:=z_User,
                     added:=addedShifts,
@@ -968,7 +968,7 @@ Public Class ShiftScheduleForm
             End Function)
     End Sub
 
-    Private Async Function SaveOvertimeOfShiftBasedAutoOvertimePolicy(toSaveList As IEnumerable(Of ShiftScheduleModel)) As Task
+    Private Async Function SaveOvertimeOfShiftBasedAutoOvertimePolicy(toSaveList As IEnumerable(Of ShiftModel)) As Task
         Dim employees = EmployeeTreeView1.GetTickedEmployees
         Dim employeeIds = employees.Select(Function(ee) ee.RowID.Value).ToList()
 
@@ -994,13 +994,13 @@ Public Class ShiftScheduleForm
         Await RefreshGridByDateFilter()
     End Sub
 
-    Private Sub ShiftScheduleForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+    Private Sub ShiftForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
 
-    Private Async Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Async Sub ShiftForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        Await LoadShiftScheduleConfigurablePolicy()
+        Await LoadShiftConfigurablePolicy()
 
         Await CheckRolePermissions()
 
@@ -1208,7 +1208,7 @@ Public Class ShiftScheduleForm
         _dataGrid.Refresh()
 
         If _dataGrid.Name = grid.Name Then
-            Dim shiftSchedModels = ConvertGridRowsToShiftScheduleModels(grid)
+            Dim shiftSchedModels = ConvertGridRowsToShiftModels(grid)
             AffectedRows(shiftSchedModels)
         End If
     End Sub
@@ -1408,7 +1408,7 @@ Public Class ShiftScheduleForm
 
     Private Async Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
 
-        Using form = New ImportedShiftSchedulesForm(_shiftBasedAutoOvertimePolicy)
+        Using form = New ImportShiftForm(_shiftBasedAutoOvertimePolicy)
             form.ShowDialog()
 
             If form.IsSaved Then

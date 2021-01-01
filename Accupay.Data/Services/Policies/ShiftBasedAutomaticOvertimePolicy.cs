@@ -65,7 +65,7 @@ namespace AccuPay.Data.Services.Policies
             return expectedEndTimeSpan;
         }
 
-        public DateTime? GetExpectedEndTime(EmployeeDutySchedule shift)
+        public DateTime? GetExpectedEndTime(Shift shift)
         {
             if (shift.WorkHours < DefaultWorkHours)
             {

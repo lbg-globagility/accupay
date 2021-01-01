@@ -8,7 +8,7 @@ Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class ImportedShiftSchedulesForm
+Public Class ImportShiftForm
 
 #Region "VariableDeclarations"
 
@@ -59,7 +59,7 @@ Public Class ImportedShiftSchedulesForm
 
 #Region "EventHandlers"
 
-    Private Sub ImportedShiftSchedulesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub ImportShiftForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.IsSaved = False
 
@@ -111,8 +111,8 @@ Public Class ImportedShiftSchedulesForm
 
                 If _shiftBasedAutoOvertimePolicy.Enabled Then Await SaveShiftBasedOvertimes()
 
-                Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
-                Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
+                Dim result = Await dataService.BatchApply(
                     _dataSourceOk,
                     organizationId:=z_OrganizationID,
                     currentlyLoggedInUserId:=z_User)

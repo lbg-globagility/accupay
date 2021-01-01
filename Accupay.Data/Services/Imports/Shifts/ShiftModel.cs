@@ -16,9 +16,9 @@ namespace AccuPay.Data.Services
         public decimal BreakLength { get; set; }
         public bool IsRestDay { get; set; }
 
-        public EmployeeDutySchedule ToEmployeeDutySchedule(int organizationId)
+        public Shift ToShift(int organizationId)
         {
-            var shift = new EmployeeDutySchedule()
+            var shift = new Shift()
             {
                 EmployeeID = EmployeeId,
                 OrganizationID = organizationId,

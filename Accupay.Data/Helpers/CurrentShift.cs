@@ -10,9 +10,9 @@ namespace AccuPay.Data.Helpers
         public const decimal StandardWorkingHours = 8;
 
         private int? _defaultRestDay;
-        private readonly EmployeeDutySchedule _shift;
+        private readonly Shift _shift;
 
-        public CurrentShift(EmployeeDutySchedule shift, DateTime date)
+        public CurrentShift(Shift shift, DateTime date)
         {
             this.Date = date;
 

@@ -35,7 +35,7 @@ Public Class TimeLogsForm2
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
-    Private ReadOnly _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+    Private ReadOnly _shiftRepository As ShiftRepository
 
     Private ReadOnly _employeeRepository As EmployeeRepository
 
@@ -58,7 +58,7 @@ Public Class TimeLogsForm2
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        _shiftRepository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
@@ -105,10 +105,10 @@ Public Class TimeLogsForm2
 
         Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIDs)).ToList()
 
-        Dim shiftSchedules = Await _employeeDutyScheduleRepository.
+        Dim shifts = Await _shiftRepository.
                 GetByEmployeeAndDatePeriodAsync(z_OrganizationID, employeeIDs, datePeriod)
 
-        shiftSchedules = shiftSchedules.
+        shifts = shifts.
             Where(Function(s) s.StartTime.HasValue).
             Where(Function(s) s.EndTime.HasValue).
             ToList()
@@ -127,7 +127,7 @@ Public Class TimeLogsForm2
                 Where(Function(etd) etd.EmployeeID.Value = model.EmployeeID).
                 Where(Function(etd) etd.LogDate = model.DateIn)
 
-            Dim seekShiftSched = shiftSchedules.
+            Dim seekShiftSched = shifts.
                 Where(Function(ss) ss.EmployeeID.Value = model.EmployeeID).
                 Where(Function(ss) ss.DateSched = model.DateIn)
 
@@ -140,12 +140,12 @@ Public Class TimeLogsForm2
                     FirstOrDefault
 
                 If hasShiftSched Then
-                    dataSource.Add(New TimeLogModel(timeLog) With {.ShiftSchedule = seekShiftSched.FirstOrDefault})
+                    dataSource.Add(New TimeLogModel(timeLog) With {.Shift = seekShiftSched.FirstOrDefault})
                     Continue For
                 End If
                 dataSource.Add(New TimeLogModel(timeLog))
             Else
-                If hasShiftSched Then model.ShiftSchedule = seekShiftSched.FirstOrDefault
+                If hasShiftSched Then model.Shift = seekShiftSched.FirstOrDefault
                 dataSource.Add(model)
             End If
         Next
@@ -417,7 +417,7 @@ Public Class TimeLogsForm2
 
         Private Const CUSTOM_SHORT_TIME_FORMAT As String = "HH:mm"
         Public Property RowID As Integer
-        Public Property ShiftSchedule As EmployeeDutySchedule
+        Public Property Shift As Shift
         Public Property DateIn As Date
 
         Private _timeLog As TimeLog
@@ -499,13 +499,13 @@ Public Class TimeLogsForm2
             End Get
         End Property
 
-        Public ReadOnly Property ShiftScheduleText As String
+        Public ReadOnly Property ShiftText As String
             Get
-                Dim hasShift = ShiftSchedule IsNot Nothing
+                Dim hasShift = Shift IsNot Nothing
 
                 If Not hasShift Then Return Nothing
 
-                Return $"{TimeSpanToString(ShiftSchedule.StartTime, DateIn)} - {TimeSpanToString(ShiftSchedule.EndTime, DateOut)}"
+                Return $"{TimeSpanToString(Shift.StartTime, DateIn)} - {TimeSpanToString(Shift.EndTime, DateOut)}"
             End Get
         End Property
 
@@ -1262,7 +1262,7 @@ Public Class TimeLogsForm2
                         If row.Cells(colTimeIn.Index).Value IsNot Nothing Or row.Cells(colTimeOut.Index).Value IsNot Nothing Then
                             worksheet.Cells($"A{i}").Value = row.Cells(colEmployeeNo.Index).Value
                             worksheet.Cells($"B{i}").Value = row.Cells(colFullName.Index).Value
-                            worksheet.Cells($"C{i}").Value = row.Cells(colShiftSchedule.Index).Value
+                            worksheet.Cells($"C{i}").Value = row.Cells(colShift.Index).Value
                             worksheet.Cells($"D{i}").Value = row.Cells(colTimeIn.Index).Value
                             worksheet.Cells($"E{i}").Value = row.Cells(colDateIn.Index).Value
                             worksheet.Cells($"F{i}").Value = row.Cells(colTimeOut.Index).Value

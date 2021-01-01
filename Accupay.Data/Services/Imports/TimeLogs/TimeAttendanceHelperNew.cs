@@ -26,7 +26,7 @@ namespace AccuPay.Data.Services
 
         private readonly List<Employee> _employees;
         private readonly List<Overtime> _employeeOvertimes;
-        private readonly List<EmployeeDutySchedule> _employeeShifts;
+        private readonly List<Shift> _employeeShifts;
 
         private readonly int _organizationId;
         private readonly int _userId;
@@ -34,7 +34,7 @@ namespace AccuPay.Data.Services
         public TimeAttendanceHelperNew(
             List<TimeLogImportModel> importedTimeLogs,
             List<Employee> employees,
-            List<EmployeeDutySchedule> employeeShifts,
+            List<Shift> employeeShifts,
             List<Overtime> employeeOvertimes,
             int organizationId,
             int userId)
@@ -87,7 +87,7 @@ namespace AccuPay.Data.Services
 
                     timeAttendanceLog.ShiftTimeOutBounds = dayLogRecord.ShiftTimeOutBounds;
 
-                    timeAttendanceLog.EmployeeDutySchedule = dayLogRecord.ShiftSchedule;
+                    timeAttendanceLog.Shift = dayLogRecord.Shift;
 
                     index += 1;
                 }
@@ -293,7 +293,7 @@ namespace AccuPay.Data.Services
             return dayLogRecords;
         }
 
-        private DayLogRecord GenerateDayLogRecord(int employeeId, List<TimeLogImportModel> employeeLogs, List<EmployeeDutySchedule> currentEmployeeShifts, List<Overtime> currentEmployeeOvertimes, DateTime currentDate, DayLogRecord lastDayLogRecord)
+        private DayLogRecord GenerateDayLogRecord(int employeeId, List<TimeLogImportModel> employeeLogs, List<Shift> currentEmployeeShifts, List<Overtime> currentEmployeeOvertimes, DateTime currentDate, DayLogRecord lastDayLogRecord)
         {
             var currentShift = GetShift(currentEmployeeShifts, currentDate);
 
@@ -319,7 +319,7 @@ namespace AccuPay.Data.Services
                 LogRecords = GetTimeLogsFromBounds(dayBounds, employeeLogs, lastDayLogRecord),
                 ShiftTimeInBounds = dayBounds.Start,
                 ShiftTimeOutBounds = dayBounds.End,
-                ShiftSchedule = currentShift
+                Shift = currentShift
             };
         }
 
@@ -329,7 +329,7 @@ namespace AccuPay.Data.Services
         ///     ''' <param name="overtime"></param>
         ///     ''' <param name="shift"></param>
         ///     ''' <returns></returns>
-        private OvertimeType CheckOvertimeType(Overtime overtime, EmployeeDutySchedule shift)
+        private OvertimeType CheckOvertimeType(Overtime overtime, Shift shift)
         {
             // Sometimes the OT StartTime is less than the shift StartTime
             // but it can be a post OT.
@@ -380,12 +380,12 @@ namespace AccuPay.Data.Services
             return TimePeriod.FromTime(start, end, DateTime.Now.ToMinimumHourValue()).TotalHours;
         }
 
-        private EmployeeDutySchedule GetShift(List<EmployeeDutySchedule> currentEmployeeShifts, DateTime currentDate)
+        private Shift GetShift(List<Shift> currentEmployeeShifts, DateTime currentDate)
         {
             return currentEmployeeShifts.Where(s => s.DateSched == currentDate).FirstOrDefault();
         }
 
-        private Overtime GetEarliestOvertime(List<Overtime> currentEmployeeOvertimes, DateTime currentDate, EmployeeDutySchedule currentShift)
+        private Overtime GetEarliestOvertime(List<Overtime> currentEmployeeOvertimes, DateTime currentDate, Shift currentShift)
         {
             return currentEmployeeOvertimes.Where(o =>
             {
@@ -396,7 +396,7 @@ namespace AccuPay.Data.Services
             }).OrderBy(o => o.OTStartTime).FirstOrDefault();
         }
 
-        private Overtime GetLastOvertime(List<Overtime> currentEmployeeOvertimes, DateTime currentDate, EmployeeDutySchedule currentShift)
+        private Overtime GetLastOvertime(List<Overtime> currentEmployeeOvertimes, DateTime currentDate, Shift currentShift)
         {
             return currentEmployeeOvertimes.Where(o =>
             {
@@ -414,7 +414,7 @@ namespace AccuPay.Data.Services
         ///     ''' <param name="currentDate"></param>
         ///     ''' <param name="currentShift"></param>
         ///     ''' <returns></returns>
-        private bool IsTodaysOvertime(Overtime overtime, DateTime currentDate, EmployeeDutySchedule currentShift)
+        private bool IsTodaysOvertime(Overtime overtime, DateTime currentDate, Shift currentShift)
         {
             if (overtime == null ||
                 currentShift == null ||
@@ -466,7 +466,7 @@ namespace AccuPay.Data.Services
             return logRecords;
         }
 
-        private DateTime GetShiftBoundsForTimeIn(DateTime? previousTimeOutBounds, DateTime currentDate, EmployeeDutySchedule currentShift, Overtime earliestOvertime)
+        private DateTime GetShiftBoundsForTimeIn(DateTime? previousTimeOutBounds, DateTime currentDate, Shift currentShift, Overtime earliestOvertime)
         {
             var currentDayStartDateTime = GetStartDateTime(currentShift, earliestOvertime);
 
@@ -501,7 +501,7 @@ namespace AccuPay.Data.Services
             return shiftMinBound;
         }
 
-        private DateTime GetShiftBoundsForTimeOut(DateTime currentDate, EmployeeDutySchedule currentShift, Overtime lastOvertime, EmployeeDutySchedule nextShift, Overtime earliestOvertimeNextDay)
+        private DateTime GetShiftBoundsForTimeOut(DateTime currentDate, Shift currentShift, Overtime lastOvertime, Shift nextShift, Overtime earliestOvertimeNextDay)
         {
             DateTime shiftMaxBound;
 
@@ -585,7 +585,7 @@ namespace AccuPay.Data.Services
             return shiftMaxBound;
         }
 
-        private DateTime? GetStartDateTime(EmployeeDutySchedule currentShift, Overtime earliestOvertime)
+        private DateTime? GetStartDateTime(Shift currentShift, Overtime earliestOvertime)
         {
             var currentShiftStartTime = CreateDateTime(currentShift?.DateSched, currentShift?.StartTime);
 
@@ -595,7 +595,7 @@ namespace AccuPay.Data.Services
             return startDateTime;
         }
 
-        private DateTime? GetEndDateTime(EmployeeDutySchedule currentShift, Overtime lastOvertime)
+        private DateTime? GetEndDateTime(Shift currentShift, Overtime lastOvertime)
         {
             var currentShiftEndTime = CreateDateTime(currentShift?.DateSched, currentShift?.EndTime, currentShift?.StartTime);
             DateTime? lastOvertimeEndTime = GetLastOvertime(currentShift, lastOvertime);
@@ -604,7 +604,7 @@ namespace AccuPay.Data.Services
             return endTime;
         }
 
-        private DateTime? GetLastOvertime(EmployeeDutySchedule currentShift, Overtime lastOvertime)
+        private DateTime? GetLastOvertime(Shift currentShift, Overtime lastOvertime)
         {
             var lastOvertimeEndTime = CreateDateTime(lastOvertime?.OTStartDate, lastOvertime?.OTEndTime, lastOvertime?.OTStartTime);
 
@@ -736,7 +736,7 @@ namespace AccuPay.Data.Services
             public List<TimeLogImportModel> LogRecords { get; set; }
             public DateTime ShiftTimeInBounds { get; set; }
             public DateTime ShiftTimeOutBounds { get; set; }
-            public EmployeeDutySchedule ShiftSchedule { get; set; }
+            public Shift Shift { get; set; }
 
             public override string ToString()
             {

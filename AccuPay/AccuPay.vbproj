@@ -1587,23 +1587,22 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\EmployeeTreeView.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\Shift Schedule\ImportedShiftSchedulesForm.Designer.vb">
-      <DependentUpon>ImportedShiftSchedulesForm.vb</DependentUpon>
+    <Compile Include="Views\Time Attendance Form\Shifts\ImportShiftForm.Designer.vb">
+      <DependentUpon>ImportShiftForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\Shift Schedule\ImportedShiftSchedulesForm.vb">
+    <Compile Include="Views\Time Attendance Form\Shifts\ImportShiftForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\Shift Schedule\ShiftScheduleRowRecord.vb" />
     <Compile Include="Views\Time Attendance Form\Mass Overtime\MassOvertimeForm.Designer.vb">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Time Attendance Form\Mass Overtime\MassOvertimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\Shift Schedule\ShiftScheduleForm.Designer.vb">
-      <DependentUpon>ShiftScheduleForm.vb</DependentUpon>
+    <Compile Include="Views\Time Attendance Form\Shifts\ShiftForm.Designer.vb">
+      <DependentUpon>ShiftForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\Shift Schedule\ShiftScheduleForm.vb">
+    <Compile Include="Views\Time Attendance Form\Shifts\ShiftForm.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
@@ -1921,11 +1920,11 @@
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\EmployeeTreeView.resx">
       <DependentUpon>EmployeeTreeView.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\Shift Schedule\ImportedShiftSchedulesForm.resx">
-      <DependentUpon>ImportedShiftSchedulesForm.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Time Attendance Form\Shifts\ImportShiftForm.resx">
+      <DependentUpon>ImportShiftForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\Shift Schedule\ShiftScheduleForm.resx">
-      <DependentUpon>ShiftScheduleForm.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Time Attendance Form\Shifts\ShiftForm.resx">
+      <DependentUpon>ShiftForm.vb</DependentUpon>
     </EmbeddedResource>
     <None Include="Resources\AccuPay.ico" />
     <None Include="Resources\AccuPayLogo.ico" />

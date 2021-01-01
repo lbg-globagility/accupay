@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
@@ -11,7 +11,7 @@ Public Class CurrentShiftTest
 
         Dim currentDay = New DateTime(2017, 1, 1)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = currentDay,
             .StartTime = TimeSpan.Parse("8:00"),
             .EndTime = TimeSpan.Parse("18:00"),
@@ -33,7 +33,7 @@ Public Class CurrentShiftTest
 
         Dim currentDay = New DateTime(2017, 1, 1)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = currentDay,
             .StartTime = TimeSpan.Parse("18:00"),
             .EndTime = TimeSpan.Parse("3:00"),
@@ -54,7 +54,7 @@ Public Class CurrentShiftTest
     Public Sub ShouldShiftTest3()
         Dim currentDay = New DateTime(2017, 1, 1)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = currentDay,
             .StartTime = TimeSpan.Parse("18:00"),
             .EndTime = TimeSpan.Parse("3:00"),

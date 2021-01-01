@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ namespace AccuPay.Data.Services.Imports
 
         public DateTime? LogDate { get; set; }
         public Employee Employee { get; set; }
-        public EmployeeDutySchedule EmployeeDutySchedule { get; set; }
+        public Shift Shift { get; set; }
         public DateTime ShiftTimeInBounds { get; set; }
         public DateTime ShiftTimeOutBounds { get; set; }
         public string WarningMessage { get; set; }
@@ -51,8 +51,8 @@ namespace AccuPay.Data.Services.Imports
         {
             get
             {
-                if (EmployeeDutySchedule != null)
-                    return $"{EmployeeDutySchedule.StartTime.ToStringFormat("hh:mm tt")} - {EmployeeDutySchedule.EndTime.ToStringFormat("hh:mm tt")}";
+                if (Shift != null)
+                    return $"{Shift.StartTime.ToStringFormat("hh:mm tt")} - {Shift.EndTime.ToStringFormat("hh:mm tt")}";
 
                 return "-";
             }

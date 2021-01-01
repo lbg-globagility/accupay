@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
@@ -16,7 +16,7 @@ Public Class TimeEntryCalculatorTest
         Dim workEnd = Date.Parse("2017-01-01 17:30:00")
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = Date.Parse("2017-01-01"),
             .StartTime = TimeSpan.Parse("08:30"),
             .EndTime = TimeSpan.Parse("17:30")
@@ -36,7 +36,7 @@ Public Class TimeEntryCalculatorTest
         Dim workEnd = Date.Parse("2017-01-01 17:30:00")
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = Date.Parse("2017-01-01"),
             .StartTime = TimeSpan.Parse("08:30"),
             .EndTime = TimeSpan.Parse("17:30")
@@ -56,7 +56,7 @@ Public Class TimeEntryCalculatorTest
         Dim workEnd = Date.Parse("2017-01-01 16:30:00")
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = Date.Parse("2017-01-01"),
             .StartTime = TimeSpan.Parse("08:30"),
             .EndTime = TimeSpan.Parse("17:30"),
@@ -78,7 +78,7 @@ Public Class TimeEntryCalculatorTest
         Dim workEnd = Date.Parse("2017-01-01 17:30:00")
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = Date.Parse("2017-01-01"),
             .StartTime = TimeSpan.Parse("08:30"),
             .EndTime = TimeSpan.Parse("17:30"),

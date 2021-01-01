@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class EmployeeDutyScheduleDataService : BaseEmployeeDataService<EmployeeDutySchedule>
+    public class ShiftDataService : BaseEmployeeDataService<Shift>
     {
         private const string UserActivityName = "Shift Schedule";
 
-        private readonly EmployeeDutyScheduleRepository _shiftRepository;
+        private readonly ShiftRepository _shiftRepository;
 
-        public EmployeeDutyScheduleDataService(
-            EmployeeDutyScheduleRepository shiftRepository,
+        public ShiftDataService(
+            ShiftRepository shiftRepository,
             PayPeriodRepository payPeriodRepository,
             UserActivityRepository userActivityRepository,
             PayrollContext context,
@@ -33,7 +33,7 @@ namespace AccuPay.Data.Services
             _shiftRepository = shiftRepository;
         }
 
-        public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
+        public async Task<BatchApplyResult<Shift>> BatchApply(
             IEnumerable<ShiftModel> shiftModels,
             int organizationId,
             int currentlyLoggedInUserId)
@@ -48,8 +48,8 @@ namespace AccuPay.Data.Services
             var existingShifts = await _shiftRepository
                 .GetByEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
 
-            List<EmployeeDutySchedule> addedShifts = new List<EmployeeDutySchedule>();
-            List<EmployeeDutySchedule> updatedShifts = new List<EmployeeDutySchedule>();
+            List<Shift> addedShifts = new List<Shift>();
+            List<Shift> updatedShifts = new List<Shift>();
 
             foreach (var shifModel in shiftModels)
             {
@@ -71,7 +71,7 @@ namespace AccuPay.Data.Services
                 }
                 else
                 {
-                    addedShifts.Add(shifModel.ToEmployeeDutySchedule(organizationId));
+                    addedShifts.Add(shifModel.ToShift(organizationId));
                 }
             }
 
@@ -80,22 +80,22 @@ namespace AccuPay.Data.Services
                 added: addedShifts,
                 updated: updatedShifts);
 
-            return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
+            return new BatchApplyResult<Shift>(addedList: addedShifts, updatedList: updatedShifts);
         }
 
         #region Overrides
 
-        protected override string GetUserActivityName(EmployeeDutySchedule shift)
+        protected override string GetUserActivityName(Shift shift)
         {
             return UserActivityName;
         }
 
-        protected override string CreateUserActivitySuffixIdentifier(EmployeeDutySchedule shift)
+        protected override string CreateUserActivitySuffixIdentifier(Shift shift)
         {
             return $" with date '{shift.DateSched.ToShortDateString()}'";
         }
 
-        protected override async Task SanitizeEntity(EmployeeDutySchedule shift, EmployeeDutySchedule oldShift, int changedByUserId)
+        protected override async Task SanitizeEntity(Shift shift, Shift oldShift, int changedByUserId)
         {
             await base.SanitizeEntity(
                 entity: shift,
@@ -114,7 +114,7 @@ namespace AccuPay.Data.Services
             shift.ComputeShiftHours(_policy.ShiftBasedAutomaticOvertimePolicy);
         }
 
-        protected override async Task AdditionalSaveManyValidation(List<EmployeeDutySchedule> entities, List<EmployeeDutySchedule> oldEntities, SaveType saveType)
+        protected override async Task AdditionalSaveManyValidation(List<Shift> entities, List<Shift> oldEntities, SaveType saveType)
         {
             var organizationEntities = entities.GroupBy(x => x.OrganizationID);
 
@@ -125,7 +125,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task RecordUpdate(EmployeeDutySchedule newValue, EmployeeDutySchedule oldValue)
+        protected override async Task RecordUpdate(Shift newValue, Shift oldValue)
         {
             List<UserActivityItem> changes = new List<UserActivityItem>();
             var entityName = UserActivityName.ToLower();

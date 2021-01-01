@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
@@ -23,7 +23,7 @@ Public Class UndertimeHoursTest
     <TestCase("8:00", "18:00", 1)>
     Public Sub Should_Compute_Correct_Undertime_Hours(timeIn As String, timeOut As String, answer As Decimal)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = Date.Parse("2018-01-01"),
             .StartTime = TimeSpan.Parse("8:00"),
             .EndTime = TimeSpan.Parse("19:00"),

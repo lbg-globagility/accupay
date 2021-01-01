@@ -76,7 +76,7 @@ Public Class DefaultShiftAndTimeLogsGeneration
 
         Try
 
-            Dim shiftService = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+            Dim shiftService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
             Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
 
             Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)

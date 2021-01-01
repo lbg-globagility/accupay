@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
@@ -15,7 +15,7 @@ Public Class TimeAttendanceHelperNewTest
 
         Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
-        Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules()
+        Dim employeeShifts As List(Of Shift) = GetSampleShifts()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
@@ -47,7 +47,7 @@ Public Class TimeAttendanceHelperNewTest
 
         Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
-        Dim employeeShifts As New List(Of EmployeeDutySchedule)
+        Dim employeeShifts As New List(Of Shift)
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
@@ -71,12 +71,12 @@ Public Class TimeAttendanceHelperNewTest
     End Sub
 
     <Test>
-    Public Sub ShouldImport_WithNextShiftScheduleWithoutShift() _
-        Implements ITimeAnalyzer.ShouldImport_WithNextShiftScheduleWithoutShift
+    Public Sub ShouldImport_WithNextShiftWithoutShift() _
+        Implements ITimeAnalyzer.ShouldImport_WithNextShiftWithoutShift
 
         Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
-        Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules_WithNextShiftScheduleWithoutShift()
+        Dim employeeShifts As List(Of Shift) = GetSampleShifts_WithNextShiftWithoutShift()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()

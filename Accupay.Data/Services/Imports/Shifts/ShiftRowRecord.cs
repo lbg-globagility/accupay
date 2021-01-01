@@ -1,10 +1,10 @@
-﻿using AccuPay.Data.Interfaces.Excel;
+using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Utilities.Attributes;
 using System;
 
 namespace AccuPay.Data.Services.Imports
 {
-    public class ShiftScheduleRowRecord : IExcelRowRecord
+    public class ShiftRowRecord : IExcelRowRecord
     {
         [ColumnName("Employee No")]
         public string EmployeeNo { get; set; }

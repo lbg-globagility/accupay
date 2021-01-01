@@ -146,7 +146,7 @@ Public Class OvertimeHoursTest
 
         Dim currentDay = New DateTime(2020, 1, 1)
 
-        Dim shift = New EmployeeDutySchedule() With {
+        Dim shift = New Shift() With {
             .DateSched = currentDay,
             .StartTime = TimeSpan.Parse(timeIn),
             .EndTime = TimeSpan.Parse(timeOut)

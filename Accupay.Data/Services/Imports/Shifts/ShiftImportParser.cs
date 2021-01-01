@@ -14,12 +14,12 @@ namespace AccuPay.Data.Services.Imports
     public class ShiftImportParser
     {
         private readonly EmployeeRepository _employeeRepository;
-        private readonly IExcelParser<ShiftScheduleRowRecord> _parser;
+        private readonly IExcelParser<ShiftRowRecord> _parser;
         private ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
         private bool _isShiftBasedAutoOvertimePolicyEnabled;
         private const string WorkSheetName = "ShiftSchedule";
 
-        public ShiftImportParser(EmployeeRepository employeeRepository, IExcelParser<ShiftScheduleRowRecord> parser)
+        public ShiftImportParser(EmployeeRepository employeeRepository, IExcelParser<ShiftRowRecord> parser)
         {
             _employeeRepository = employeeRepository;
 
@@ -54,7 +54,7 @@ namespace AccuPay.Data.Services.Imports
             return Validate(parsedRecords, organizationId);
         }
 
-        private async Task<ShiftImportParserOutput> Validate(IList<ShiftScheduleRowRecord> parsedRecords, int organizationId)
+        private async Task<ShiftImportParserOutput> Validate(IList<ShiftRowRecord> parsedRecords, int organizationId)
         {
             string[] employeeNumberList = parsedRecords.Select(s => s.EmployeeNo).ToArray();
 
@@ -87,7 +87,7 @@ namespace AccuPay.Data.Services.Imports
                                                 invalidRecords: invalidRecords);
         }
 
-        private List<ShiftImportModel> CreateShiftImportModel(ShiftScheduleRowRecord shiftSched,
+        private List<ShiftImportModel> CreateShiftImportModel(ShiftRowRecord shiftSched,
                                                         IEnumerable<DateTime> dates,
                                                         Employee employee)
         {

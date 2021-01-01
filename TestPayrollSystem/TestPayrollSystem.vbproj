@@ -366,7 +366,7 @@
       <Name>AccuPay.CrystalReports</Name>
     </ProjectReference>
     <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
-      <Project>{9CAD162B-FA9F-4B09-950C-B2E9D7C766FC}</Project>
+      <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
       <Name>AccuPay.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj">

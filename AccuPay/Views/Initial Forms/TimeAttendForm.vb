@@ -64,7 +64,7 @@ Public Class TimeAttendForm
         'since they are already checked by other policies above
         If shiftPermission Is Nothing OrElse shiftPermission.Read = False Then
 
-            ShiftScheduleToolStripMenuItem.Visible = False
+            ShiftToolStripMenuItem.Visible = False
         End If
 
         If overtimePermission Is Nothing OrElse overtimePermission.Read = False Then
@@ -180,9 +180,9 @@ Public Class TimeAttendForm
         previousForm = MassOvertimeForm
     End Sub
 
-    Private Async Sub ShiftScheduleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShiftScheduleToolStripMenuItem.Click
-        Await ChangeForm(ShiftScheduleForm, PermissionConstant.SHIFT)
-        previousForm = ShiftScheduleForm
+    Private Async Sub ShiftToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShiftToolStripMenuItem.Click
+        Await ChangeForm(ShiftForm, PermissionConstant.SHIFT)
+        previousForm = ShiftForm
     End Sub
 
     Private Async Sub TimeLogsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeLogsToolStripMenuItem.Click

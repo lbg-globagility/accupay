@@ -65,7 +65,7 @@ namespace AccuPay.Core.IntegrationTests
             services.AddScoped<DisciplinaryActionRepository>();
             services.AddScoped<DivisionRepository>();
             services.AddScoped<EducationalBackgroundRepository>();
-            services.AddScoped<EmployeeDutyScheduleRepository>();
+            services.AddScoped<ShiftRepository>();
             services.AddScoped<EmployeeQueryBuilder>();
             services.AddScoped<EmployeeRepository>();
             services.AddScoped<EmploymentPolicyRepository>();
@@ -127,7 +127,7 @@ namespace AccuPay.Core.IntegrationTests
             services.AddScoped<CalendarDataService>();
             services.AddScoped<DivisionDataService>();
             services.AddScoped<EmployeeDataService>();
-            services.AddScoped<EmployeeDutyScheduleDataService>();
+            services.AddScoped<ShiftDataService>();
             services.AddScoped<LeaveDataService>();
             services.AddScoped<LoanDataService>();
             services.AddScoped<OfficialBusinessDataService>();
