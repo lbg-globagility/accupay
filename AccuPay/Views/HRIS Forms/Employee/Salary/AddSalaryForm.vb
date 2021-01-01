@@ -3,9 +3,9 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Benchmark
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection

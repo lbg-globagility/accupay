@@ -1,6 +1,6 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
 using AccuPay.Web.EmploymentPolicies.Models;
 using System.Linq;
 using System.Threading.Tasks;

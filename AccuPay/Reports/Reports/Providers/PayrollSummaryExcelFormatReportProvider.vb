@@ -1,8 +1,8 @@
 Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Interfaces
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Desktop.Helpers

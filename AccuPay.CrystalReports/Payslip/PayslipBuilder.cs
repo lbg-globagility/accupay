@@ -1,7 +1,7 @@
 ﻿using AccuPay.CrystalReports.Payslip;
-using AccuPay.Data.Entities;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
 using CrystalDecisions.CrystalReports.Engine;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;

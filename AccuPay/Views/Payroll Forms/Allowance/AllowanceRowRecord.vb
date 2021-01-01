@@ -1,7 +1,7 @@
 Option Strict On
 
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Interfaces.Excel
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
 
 Public Class AllowanceRowRecord

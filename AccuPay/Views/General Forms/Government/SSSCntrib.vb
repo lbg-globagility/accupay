@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Data.Repositories
+﻿Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SSSCntrib

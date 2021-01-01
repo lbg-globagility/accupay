@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Others", "_Others", "{E245
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccuPayWindowsService", "AccupayWindowsService\AccuPayWindowsService.csproj", "{7408C0D3-9837-4D80-8075-58C4730F8238}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccuPay.Data", "Accupay.Data\AccuPay.Data.csproj", "{9CAD162B-FA9F-4B09-950C-B2E9D7C766FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccuPay.Core", "AccuPay.Core\AccuPay.Core.csproj", "{9CAD162B-FA9F-4B09-950C-B2E9D7C766FC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccuPay.Utilities", "AccuPay.Utilities\AccuPay.Utilities.csproj", "{A729D2F1-8A99-434E-8E7E-145716306579}"
 EndProject

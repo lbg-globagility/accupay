@@ -1,8 +1,8 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using AccuPay.Data.Services.Imports.Loans;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
+using AccuPay.Core.Services.Imports.Loans;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shared;

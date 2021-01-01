@@ -1,9 +1,10 @@
 Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Benchmark
@@ -179,10 +180,10 @@ Namespace Benchmark
 
             If employee.IsPremiumInclusive Then
 
-                Dim workDaysThisCutOff = Data.Helpers.PayrollTools.
-                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / Data.Helpers.PayrollTools.SemiMonthlyPayPeriodsPerMonth
+                Dim workDaysThisCutOff = PayrollTools.
+                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / PayrollTools.SemiMonthlyPayPeriodsPerMonth
 
-                paystub.BasicHours = workDaysThisCutOff * Data.Helpers.PayrollTools.WorkHoursPerDay
+                paystub.BasicHours = workDaysThisCutOff * PayrollTools.WorkHoursPerDay
             Else
 
                 paystub.BasicHours = paystub.RegularHours + paystub.UndertimeHours + paystub.LateHours + paystub.AbsentHours

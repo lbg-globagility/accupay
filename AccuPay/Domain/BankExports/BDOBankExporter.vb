@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data.Entities
+Imports AccuPay.Core.Entities
 
 Public Class BDOBankExporter
     Implements IBankExporter

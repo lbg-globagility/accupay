@@ -1,7 +1,7 @@
 Option Strict On
 
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
 
 <TestFixture>
 Public Class CurrentShiftTest

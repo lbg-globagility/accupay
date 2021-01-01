@@ -1,6 +1,6 @@
 using AccuPay.CrystalReports;
-using AccuPay.Data.Services;
-using AccuPay.Data.ValueObjects;
+using AccuPay.Core.Services;
+using AccuPay.Core.ValueObjects;
 using System;
 using System.Data;
 using System.IO;

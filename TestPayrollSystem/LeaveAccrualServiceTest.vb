@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Services
 
 <TestFixture>
 Public Class LeaveAccrualServiceTest

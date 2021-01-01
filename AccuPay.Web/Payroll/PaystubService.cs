@@ -1,5 +1,5 @@
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
 using AccuPay.Web.Loans;
 using System.Collections.Generic;
 using System.Linq;

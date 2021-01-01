@@ -1,10 +1,10 @@
 Option Strict On
 
 Imports AccuPay.CrystalReports
-Imports AccuPay.Data
-Imports AccuPay.Data.Interfaces
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection

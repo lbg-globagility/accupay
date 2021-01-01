@@ -1,9 +1,9 @@
 Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Imports
 
 Public Class TimeAnalyzer
 

@@ -1,10 +1,10 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 

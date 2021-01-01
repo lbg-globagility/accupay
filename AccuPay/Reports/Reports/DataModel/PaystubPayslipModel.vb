@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
+Imports AccuPay.Core
 
 ''' <summary>
 ''' Anemic implementation of IPaystubPayslipModel just for Crystal Report data source

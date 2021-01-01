@@ -1,4 +1,4 @@
-using AccuPay.Data.Services;
+using AccuPay.Core.Services;
 using System.ComponentModel.DataAnnotations;
 
 namespace AccuPay.Web.Users

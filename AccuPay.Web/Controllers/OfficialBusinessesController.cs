@@ -1,4 +1,5 @@
-using AccuPay.Data.Helpers;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Services.Imports.OfficialBusiness;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.OfficialBusinesses;
 using Microsoft.AspNetCore.Authorization;
@@ -91,7 +92,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.OfficialBusinessCreate)]
-        public async Task<Data.Services.Imports.OfficialBusiness.OfficialBusinessImportParserOutput> Import([FromForm] IFormFile file)
+        public async Task<OfficialBusinessImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _service.Import(file);
         }

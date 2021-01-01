@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Data.Entities
+﻿Imports AccuPay.Core.Entities
 Imports AccuPay.Utilities.Extensions
 
 Public Class DivisionUserControl

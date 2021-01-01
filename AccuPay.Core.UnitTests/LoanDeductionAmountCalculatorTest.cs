@@ -1,6 +1,6 @@
+using AccuPay.Core.Entities;
+using AccuPay.Core.Services;
 using AccuPay.Core.UnitTests.Mothers;
-using AccuPay.Data.Entities;
-using AccuPay.Data.Services;
 using Moq;
 using NUnit.Framework;
 using System;

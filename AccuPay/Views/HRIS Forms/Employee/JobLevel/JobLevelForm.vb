@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.ComponentModel
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 'Refactor this form to not be tightly coupled to payroll context

@@ -1,11 +1,8 @@
 Option Strict On
 
-Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLoanForm

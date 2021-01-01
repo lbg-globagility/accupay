@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient

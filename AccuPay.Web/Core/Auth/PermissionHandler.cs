@@ -1,4 +1,4 @@
-using AccuPay.Data.Repositories;
+using AccuPay.Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 

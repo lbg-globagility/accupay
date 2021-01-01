@@ -3,7 +3,7 @@
 Imports System.IO
 Imports System.IO.Compression
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ExportBankFile

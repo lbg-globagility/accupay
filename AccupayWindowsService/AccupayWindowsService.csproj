@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -84,9 +85,9 @@
       <Project>{1AF57D61-BC13-40E1-A0BC-BBDFDD223B7E}</Project>
       <Name>AccuPay.CrystalReports</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
+    <ProjectReference Include="..\AccuPay.Core\AccuPay.Core.csproj">
       <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
-      <Name>AccuPay.Data</Name>
+      <Name>AccuPay.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
       <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>

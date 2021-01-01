@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Web.Core.Auth;
 using System;
 using System.Collections.Generic;

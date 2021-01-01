@@ -1,5 +1,5 @@
-﻿Imports AccuPay.Data
-Imports AccuPay.Data.Entities
+﻿Imports AccuPay.Core
+Imports AccuPay.Core.Entities
 Imports MySql.Data.MySqlClient
 
 Namespace Routes

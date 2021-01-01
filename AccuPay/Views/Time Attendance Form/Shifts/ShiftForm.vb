@@ -1,13 +1,13 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Interfaces
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.Policies
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Policies
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities

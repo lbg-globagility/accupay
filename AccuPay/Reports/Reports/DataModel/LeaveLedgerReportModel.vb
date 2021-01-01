@@ -1,7 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Data.Enums
+Imports AccuPay.Core
+Imports AccuPay.Core.Enums
+Imports AccuPay.Core.Helpers
 
 ''' <summary>
 ''' Anemic implementation of ILeaveLedgerReportModel just for Crystal Report data source
@@ -48,13 +49,13 @@ Public Class LeaveLedgerReportModel
 
     Public ReadOnly Property BeginningBalanceInDays As Decimal Implements ILeaveLedgerReportModel.BeginningBalanceInDays
         Get
-            Return BeginningBalance / Data.Helpers.PayrollTools.WorkHoursPerDay
+            Return BeginningBalance / Helpers.PayrollTools.WorkHoursPerDay
         End Get
     End Property
 
     Public ReadOnly Property AvailedLeaveInDays As Decimal Implements ILeaveLedgerReportModel.AvailedLeaveInDays
         Get
-            Return AvailedLeave / Data.Helpers.PayrollTools.WorkHoursPerDay
+            Return AvailedLeave / PayrollTools.WorkHoursPerDay
         End Get
     End Property
 

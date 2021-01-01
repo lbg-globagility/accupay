@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Interfaces;
+﻿using AccuPay.Core.Interfaces;
 using System;
 
 namespace AccuPay.Infrastructure.Services.Encryption

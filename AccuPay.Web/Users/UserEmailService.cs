@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Web.Core.Emails;
 using AccuPay.Web.Core.Views;
 using AccuPay.Web.Views.Emails;

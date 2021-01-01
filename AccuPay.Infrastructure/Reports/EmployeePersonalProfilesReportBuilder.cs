@@ -1,8 +1,8 @@
-using AccuPay.Data.Interfaces;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using AccuPay.Data.Services.Reports;
-using AccuPay.Data.Services.Reports.Employees_Personal_Information;
+using AccuPay.Core.Interfaces;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
+using AccuPay.Core.Services.Reports;
+using AccuPay.Core.Services.Reports.Employees_Personal_Information;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;

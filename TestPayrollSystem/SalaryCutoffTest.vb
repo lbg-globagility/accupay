@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.ValueObjects
 
 <TestFixture>
 Public Class SalaryCutoffTest

@@ -1,64 +1,64 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DocumentationFile>.\AccuPay.Web.xml</DocumentationFile>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\AccuPay.Web.xml</DocumentationFile>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <Compile Remove="Core\Files\S3Filesystem.cs" />
-      <Compile Remove="Files\Exceptions\AttachmentClaimException.cs" />
-      <Compile Remove="Files\Services\ZippedFile.cs" />
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Core\Files\S3Filesystem.cs" />
+    <Compile Remove="Files\Exceptions\AttachmentClaimException.cs" />
+    <Compile Remove="Files\Services\ZippedFile.cs" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.4" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.4" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-        <PackageReference Include="PreMailer.Net" Version="2.2.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.4.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="PreMailer.Net" Version="2.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.4.1" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj" />
-        <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Account\Exceptions\" />
+    <Folder Include="Core\Configurations\" />
+    <Folder Include="Files\Exceptions\" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Account\Exceptions\" />
-        <Folder Include="Core\Configurations\" />
-        <Folder Include="Files\Exceptions\" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccuPay.Core\AccuPay.Core.csproj" />
+    <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Update="ImportTemplates\accupay-allowance-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ImportTemplates\accupay-employeelist-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ImportTemplates\accupay-leave-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ImportTemplates\accupay-loan-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ImportTemplates\accupay-officialbus-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ImportTemplates\accupay-overtime-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ImportTemplates\accupay-salary-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-      <None Update="ImportTemplates\accupay-shiftschedule-template.xlsx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
+  <ItemGroup>
+    <None Update="ImportTemplates\accupay-allowance-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ImportTemplates\accupay-employeelist-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ImportTemplates\accupay-leave-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ImportTemplates\accupay-loan-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ImportTemplates\accupay-officialbus-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ImportTemplates\accupay-overtime-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ImportTemplates\accupay-salary-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ImportTemplates\accupay-shiftschedule-template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

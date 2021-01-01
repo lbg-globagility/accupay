@@ -1,4 +1,4 @@
-using AccuPay.Data.Helpers;
+using AccuPay.Core.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static AccuPay.Core.Services.Imports.Employees.EmployeeImportParser;
 
 namespace AccuPay.Web.Controllers
 {
@@ -113,7 +114,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.EmployeeCreate)]
-        public async Task<Data.Services.Imports.Employees.EmployeeImportParser.EmployeeImportParserOutput> Import([FromForm] IFormFile file)
+        public async Task<EmployeeImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _employeeService.Import(file);
         }

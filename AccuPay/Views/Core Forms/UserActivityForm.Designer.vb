@@ -1,4 +1,4 @@
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Repositories
 
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UserActivityForm

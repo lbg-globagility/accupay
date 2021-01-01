@@ -1,5 +1,5 @@
 using AccuPay.CrystalReports.ThirteenthMonthSummaryReport;
-using AccuPay.Data.ValueObjects;
+using AccuPay.Core.ValueObjects;
 using CrystalDecisions.CrystalReports.Engine;
 using System.Data;
 

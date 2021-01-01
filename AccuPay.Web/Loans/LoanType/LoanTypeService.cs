@@ -1,5 +1,6 @@
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
 using AccuPay.Web.Core.Auth;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace AccuPay.Web.Loans.LoanType
             return dto;
         }
 
-        internal async Task<Data.Entities.Product> GetByIdAsync(int id)
+        internal async Task<Product> GetByIdAsync(int id)
         {
             return await _productRepository.GetByIdAsync(id);
         }

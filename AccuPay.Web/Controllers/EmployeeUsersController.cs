@@ -1,6 +1,6 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;

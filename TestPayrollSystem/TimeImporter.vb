@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Services
 
 <TestFixture>
 Public Class TimeImporter

@@ -11,7 +11,7 @@ namespace AccuPay.Web.AllowanceType
         public bool Is13thMonthPay { get; set; }
         public bool IsFixed { get; set; }
 
-        public static AllowanceTypeDto Convert(Data.Entities.AllowanceType allowanceType)
+        public static AllowanceTypeDto Convert(AccuPay.Core.Entities.AllowanceType allowanceType)
         {
             return new AllowanceTypeDto()
             {

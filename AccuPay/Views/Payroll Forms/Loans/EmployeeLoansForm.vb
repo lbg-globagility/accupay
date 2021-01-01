@@ -1,10 +1,10 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -511,10 +511,10 @@ Public Class EmployeeLoansForm
         Dim whereFunction =
             Function(loan As LoanModel) As Boolean
 
-                Return (inProgressChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_IN_PROGRESS) OrElse
-                    (onHoldChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_ON_HOLD) OrElse
-                    (cancelledChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_CANCELLED) OrElse
-                    (completeChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_COMPLETE)
+                Return (inProgressChecked AndAlso loan.Status = Core.Entities.Loan.STATUS_IN_PROGRESS) OrElse
+                    (onHoldChecked AndAlso loan.Status = Core.Entities.Loan.STATUS_ON_HOLD) OrElse
+                    (cancelledChecked AndAlso loan.Status = Core.Entities.Loan.STATUS_CANCELLED) OrElse
+                    (completeChecked AndAlso loan.Status = Core.Entities.Loan.STATUS_COMPLETE)
 
             End Function
 

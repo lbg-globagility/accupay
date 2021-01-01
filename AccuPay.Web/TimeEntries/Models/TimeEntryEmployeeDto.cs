@@ -1,5 +1,5 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Services;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Services;
 using AccuPay.Web.Employees.Models;
 
 namespace AccuPay.Web.TimeEntries

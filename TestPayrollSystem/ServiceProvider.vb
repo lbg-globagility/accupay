@@ -1,12 +1,12 @@
 Option Strict On
 
 Imports AccuPay.CrystalReports
-Imports AccuPay.Data
-Imports AccuPay.Data.Interfaces
-Imports AccuPay.Data.Interfaces.Excel
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Core
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Imports
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore

@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Entities
+Imports AccuPay.Core.Entities
 
 Public Class NewEmployeeForm
 

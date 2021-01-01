@@ -1,5 +1,5 @@
-﻿Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Data.Entities
+﻿Imports AccuPay.Core.ValueObjects
+Imports AccuPay.Core.Entities
 
 Public Class TimeAttendanceLogListForm
 

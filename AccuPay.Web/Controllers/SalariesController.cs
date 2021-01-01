@@ -1,4 +1,4 @@
-using AccuPay.Data.Helpers;
+using AccuPay.Core.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
 using AccuPay.Web.Salaries.Services;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using static AccuPay.Core.Services.Imports.Salaries.SalaryImportParser;
 
 namespace AccuPay.Web.Controllers
 {
@@ -96,7 +97,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.SalaryCreate)]
-        public async Task<Data.Services.Imports.Salaries.SalaryImportParser.SalaryImportParserOutput> Import([FromForm] IFormFile file)
+        public async Task<SalaryImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _service.Import(file);
         }

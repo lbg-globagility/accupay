@@ -2,13 +2,13 @@ Option Strict On
 
 Imports AccuPay.Benchmark
 Imports AccuPay.CrystalReports
-Imports AccuPay.Data
-Imports AccuPay.Data.Interfaces
-Imports AccuPay.Data.Interfaces.Excel
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.Imports
-Imports AccuPay.Data.Services.Reports
+Imports AccuPay.Core
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Imports
+Imports AccuPay.Core.Services.Reports
 Imports AccuPay.Infrastructure.Reports
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel

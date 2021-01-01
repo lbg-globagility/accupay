@@ -1,5 +1,5 @@
-﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Repositories;
+﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Repositories;
 using AccuPay.CrystalReports;
 using GlobagilityShared.EmailSender;
 using System;
@@ -7,7 +7,7 @@ using System.IO;
 using System.ServiceProcess;
 using System.Timers;
 using System.Configuration;
-using AccuPay.Data.Services;
+using AccuPay.Core.Services;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 

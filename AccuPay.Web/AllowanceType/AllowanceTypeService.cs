@@ -1,10 +1,5 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using AccuPay.Web.Core.Auth;
-using System.Collections.Generic;
-using System.Linq;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.AllowanceType
@@ -20,7 +15,7 @@ namespace AccuPay.Web.AllowanceType
 
         public async Task<AllowanceTypeDto> CreateAsync(AllowanceTypeDto dto)
         {
-            var newAllowanceType = new Data.Entities.AllowanceType();
+            var newAllowanceType = new AccuPay.Core.Entities.AllowanceType();
 
             ApplyChanges(dto, newAllowanceType);
 
@@ -45,7 +40,7 @@ namespace AccuPay.Web.AllowanceType
             await _repository.DeleteAsync(id);
         }
 
-        public async Task<Data.Entities.AllowanceType> GetByIdAsync(int id)
+        public async Task<AccuPay.Core.Entities.AllowanceType> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
         }
@@ -59,7 +54,7 @@ namespace AccuPay.Web.AllowanceType
             return paginatedList.Select(x => ConvertToDto(x));
         }
 
-        private static void ApplyChanges(AllowanceTypeDto dto, Data.Entities.AllowanceType allowanceType)
+        private static void ApplyChanges(AllowanceTypeDto dto, AccuPay.Core.Entities.AllowanceType allowanceType)
         {
             allowanceType.DisplayString = dto.DisplayString;
             allowanceType.Frequency = dto.Frequency;
@@ -69,7 +64,7 @@ namespace AccuPay.Web.AllowanceType
             allowanceType.Name = dto.Name;
         }
 
-        private static AllowanceTypeDto ConvertToDto(Data.Entities.AllowanceType allowanceType)
+        private static AllowanceTypeDto ConvertToDto(AccuPay.Core.Entities.AllowanceType allowanceType)
         {
             return AllowanceTypeDto.Convert(allowanceType);
         }

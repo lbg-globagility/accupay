@@ -1,5 +1,5 @@
 ﻿using AccuPay.CrystalReports.LoanSummaryByEmployeeReport;
-using AccuPay.Data.Services;
+using AccuPay.Core.Services;
 using CrystalDecisions.CrystalReports.Engine;
 using System;
 using System.Collections.Generic;

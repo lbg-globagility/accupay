@@ -1,4 +1,4 @@
-using AccuPay.Data.Repositories;
+using AccuPay.Core.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.OfficialBusinesses;

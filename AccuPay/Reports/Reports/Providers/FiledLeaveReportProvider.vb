@@ -1,9 +1,10 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities.Extensions
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
@@ -84,7 +85,7 @@ Public Class FiledLeaveReportProvider
             newRow("DatCol12") = transaction.TransactionDate.ToString("MM/dd/yyyy")
             newRow("DatCol13") = transaction.LeaveLedger.Product.PartNo
             newRow("DatCol14") = transaction.Amount
-            newRow("DatCol15") = transaction.Amount / Data.Helpers.PayrollTools.WorkHoursPerDay
+            newRow("DatCol15") = transaction.Amount / PayrollTools.WorkHoursPerDay
             newRow("DatCol16") = transaction.Leave?.Reason
 
             datatable.Rows.Add(newRow)

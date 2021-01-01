@@ -1,4 +1,5 @@
-using AccuPay.Data.Helpers;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Services.Imports.Allowances;
 using AccuPay.Web.Allowances.Models;
 using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Core.Auth;
@@ -100,7 +101,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.AllowanceCreate)]
-        public async Task<Data.Services.Imports.Allowances.AllowanceImportParserOutput> Import([FromForm] IFormFile file)
+        public async Task<AllowanceImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _service.Import(file);
         }

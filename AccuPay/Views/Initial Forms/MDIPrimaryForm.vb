@@ -2,10 +2,11 @@ Imports System.ComponentModel
 Imports System.Configuration
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Enums
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -767,7 +768,7 @@ Public Class MDIPrimaryForm
         If if_sysowner_is_hyundai Then
 
             Dim pend_leave As New SQL(str_pending_leave,
-                                  New Object() {orgztnID, Data.Entities.Leave.StatusPending})
+                New Object() {orgztnID, Core.Entities.Leave.StatusPending})
 
             dt_pend_leave = pend_leave.GetFoundRows.Tables(0)
 
@@ -957,14 +958,28 @@ Public Class MDIPrimaryForm
             PayrollToolStripButton.Visible = False
         End If
 
-        ShowOrHideDashboardWidgets(loanPermission, timeLogPermission, payPeriodPermission, employeePermission, officialBusinessPermission, overtimePermission, leavePermission)
+        ShowOrHideDashboardWidgets(
+            loanPermission:=loanPermission,
+            timeLogPermission:=timeLogPermission,
+            payPeriodPermission:=payPeriodPermission,
+            employeePermission:=employeePermission,
+            officialBusinessPermission:=officialBusinessPermission,
+            overtimePermission:=overtimePermission,
+            leavePermission:=leavePermission)
     End Sub
 
-    Private Shared Function CheckReadPermission(userPermission As Data.Entities.RolePermission) As Boolean
+    Private Shared Function CheckReadPermission(userPermission As RolePermission) As Boolean
         Return userPermission IsNot Nothing AndAlso userPermission.Read
     End Function
 
-    Private Sub ShowOrHideDashboardWidgets(loanPermission As Data.Entities.RolePermission, timeLogPermission As Data.Entities.RolePermission, payPeriodPermission As Data.Entities.RolePermission, employeePermission As Data.Entities.RolePermission, officialBusinessPermission As Data.Entities.RolePermission, overtimePermission As Data.Entities.RolePermission, leavePermission As Data.Entities.RolePermission)
+    Private Sub ShowOrHideDashboardWidgets(
+        loanPermission As RolePermission,
+        timeLogPermission As RolePermission,
+        payPeriodPermission As RolePermission,
+        employeePermission As RolePermission,
+        officialBusinessPermission As RolePermission,
+        overtimePermission As RolePermission,
+        leavePermission As RolePermission)
 
         'TODO: stop querying for dashboard data if user has no read permission for that
 

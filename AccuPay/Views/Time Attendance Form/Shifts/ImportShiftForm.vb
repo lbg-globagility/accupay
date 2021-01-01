@@ -1,9 +1,9 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.[Imports]
-Imports AccuPay.Data.Services.Policies
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.[Imports]
+Imports AccuPay.Core.Services.Policies
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection

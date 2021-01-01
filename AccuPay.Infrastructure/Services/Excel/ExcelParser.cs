@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Interfaces.Excel;
+﻿using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Attributes;
 using AccuPay.Utilities.Extensions;

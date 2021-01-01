@@ -1,5 +1,5 @@
 using AccuPay.CrystalReports.SSSMonthlyReport;
-using AccuPay.Data.Services;
+using AccuPay.Core.Services;
 using CrystalDecisions.CrystalReports.Engine;
 using System;
 

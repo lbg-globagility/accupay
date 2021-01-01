@@ -1,5 +1,5 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Repositories;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Identity;
@@ -112,7 +112,7 @@ namespace AccuPay.Web.Account
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Type = user.EmployeeId.HasValue ? "Employee": "Admin"
+                Type = user.EmployeeId.HasValue ? "Employee" : "Admin"
             };
 
             return userDto;

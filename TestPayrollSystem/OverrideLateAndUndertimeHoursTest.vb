@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 
 <TestFixture>
 Public Class OverrideLateAndUndertimeHoursTest

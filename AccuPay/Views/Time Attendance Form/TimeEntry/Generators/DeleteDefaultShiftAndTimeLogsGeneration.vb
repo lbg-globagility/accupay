@@ -2,12 +2,12 @@ Option Strict On
 
 Imports System.Collections.Concurrent
 Imports System.Threading.Tasks
-Imports AccuPay.Data
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DeleteDefaultShiftAndTimeLogsGeneration

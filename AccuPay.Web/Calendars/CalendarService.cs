@@ -1,6 +1,6 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

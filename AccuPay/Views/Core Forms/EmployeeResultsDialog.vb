@@ -1,6 +1,6 @@
 Option Strict On
 
-Imports AccuPay.Data.Interfaces
+Imports AccuPay.Core.Interfaces
 
 Public Class EmployeeResultsDialog
 

@@ -1,8 +1,8 @@
-﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Interfaces;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using AccuPay.Data.ValueObjects;
+﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
+using AccuPay.Core.ValueObjects;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using static AccuPay.Data.Services.CostCenterReportDataService;
+using static AccuPay.Core.Services.CostCenterReportDataService;
 
 namespace AccuPay.Infrastructure.Reports
 {

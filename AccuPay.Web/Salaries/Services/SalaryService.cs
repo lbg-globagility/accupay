@@ -1,8 +1,8 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using AccuPay.Data.Services.Imports.Salaries;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
+using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using static AccuPay.Data.Services.Imports.Salaries.SalaryImportParser;
+using static AccuPay.Core.Services.Imports.Salaries.SalaryImportParser;
 
 namespace AccuPay.Web.Salaries.Services
 {

@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Data.Entities
+﻿Imports AccuPay.Core.Entities
 
 Public Interface ILaGlobalEmployeeReport
 

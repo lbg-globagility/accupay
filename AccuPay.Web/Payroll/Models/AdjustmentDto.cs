@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 
 namespace AccuPay.Web.Payroll
 {

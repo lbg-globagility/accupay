@@ -1,8 +1,8 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using AccuPay.Data.Services.Imports.Employees;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
+using AccuPay.Core.Services.Imports.Employees;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
@@ -117,14 +117,14 @@ namespace AccuPay.Web.Employees.Services
             employee.PositionID = dto.PositionId;
         }
 
-        private async Task<Data.Entities.File> CreateOriginalImage(Employee employee)
+        private async Task<AccuPay.Core.Entities.File> CreateOriginalImage(Employee employee)
         {
             using var virtualFile = _generateDefaultImageService.Create(employee);
             var path = $"Employee/{employee.RowID.Value}/{virtualFile.Filename}";
 
             await _filesystem.Move(virtualFile.Stream, path);
 
-            var file = new Data.Entities.File(
+            var file = new AccuPay.Core.Entities.File(
                 key: virtualFile.Filename,
                 path: path,
                 filename: virtualFile.Filename,

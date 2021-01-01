@@ -1,5 +1,5 @@
 using AccuPay.Core.UnitTests.Mothers;
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

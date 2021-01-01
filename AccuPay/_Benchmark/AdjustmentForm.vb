@@ -1,9 +1,9 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Enums
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
+Imports AccuPay.Core.Repositories
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection

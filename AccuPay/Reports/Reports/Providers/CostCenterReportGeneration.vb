@@ -1,10 +1,10 @@
 Option Strict On
 
 Imports System.Collections.Concurrent
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.CostCenterReportDataService
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.CostCenterReportDataService
 
 Public Class CostCenterReportGeneration
     Inherits ProgressGenerator

@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data.Interfaces
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml

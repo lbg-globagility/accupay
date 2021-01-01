@@ -1,4 +1,5 @@
-using AccuPay.Data.Helpers;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Services.Imports.Loans;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Loans;
 using AccuPay.Web.Shared;
@@ -112,7 +113,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.LoanCreate)]
-        public async Task<Data.Services.Imports.Loans.LoanImportParserOutput> Import([FromForm] IFormFile file)
+        public async Task<LoanImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _service.Import(file);
         }

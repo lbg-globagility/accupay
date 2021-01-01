@@ -55,7 +55,7 @@ Public Class EntityTest
         'Dim count1 = repo1.GetAll(2, "EMPLOYEE")
         'Dim count1u = count1.Where(Function(c) c.User Is Nothing).ToList
 
-        ''for checking if we can access the accupay.data repository without error
+        ''for checking if we can access the AccuPay.Core repository without error
         'Dim repo4 As New EmployeeRepository()
 
         'Dim count4 = repo4.GetAllAsync(2)

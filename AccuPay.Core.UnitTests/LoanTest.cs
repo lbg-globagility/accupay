@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using NUnit.Framework;
 
 namespace AccuPay.Core.UnitTests

@@ -1,9 +1,5 @@
-using AccuPay.Data;
-using AccuPay.Data.Repositories;
-using Microsoft.EntityFrameworkCore;
+using AccuPay.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 

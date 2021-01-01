@@ -1,4 +1,4 @@
-using AccuPay.Data.Helpers;
+using AccuPay.Core.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Loans.LoanType;
 using Microsoft.AspNetCore.Authorization;

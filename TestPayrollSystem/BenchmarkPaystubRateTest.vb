@@ -2,8 +2,8 @@
 
 Imports AccuPay
 Imports AccuPay.Benchmark
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
 
 <TestFixture>

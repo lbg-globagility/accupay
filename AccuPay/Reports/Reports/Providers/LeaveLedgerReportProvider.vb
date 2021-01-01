@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection

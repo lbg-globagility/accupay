@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using System.Collections.Generic;
 
 namespace AccuPay.Core.UnitTests.Mothers

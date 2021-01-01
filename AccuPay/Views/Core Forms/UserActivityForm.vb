@@ -2,9 +2,9 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
-Imports AccuPay.Data.Entities.UserActivity
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Entities.UserActivity
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UserActivityForm

@@ -1,9 +1,10 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -116,7 +117,7 @@ Namespace Global.AccuPay.Views.Employees
             Dim basicPay = 0D
 
             If _employee.IsDaily Then
-                monthlyRate = amount * Data.Helpers.PayrollTools.GetWorkDaysPerMonth(_employee.WorkDaysPerYear)
+                monthlyRate = amount * PayrollTools.GetWorkDaysPerMonth(_employee.WorkDaysPerYear)
 
                 basicPay = amount
             ElseIf _employee.IsMonthly Or _employee.IsFixed Then

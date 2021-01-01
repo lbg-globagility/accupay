@@ -1,8 +1,9 @@
 Option Strict On
 
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -123,7 +124,7 @@ Public Class ImportOBForm
             Return Nothing
         End If
 
-        If record.StartDate < Data.Helpers.PayrollTools.SqlServerMinimumDate Then
+        If record.StartDate < PayrollTools.SqlServerMinimumDate Then
 
             record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
             Return Nothing

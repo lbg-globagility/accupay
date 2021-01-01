@@ -2,10 +2,10 @@ Option Strict On
 
 Imports System.Collections.Concurrent
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Exceptions
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Exceptions
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ReleaseThirteenthMonthGeneration

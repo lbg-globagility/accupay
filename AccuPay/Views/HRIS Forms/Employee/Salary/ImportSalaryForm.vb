@@ -1,8 +1,9 @@
 Option Strict On
 
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Globagility.AccuPay.Salaries
@@ -73,7 +74,7 @@ Public Class ImportSalaryForm
             End If
 
             If record.EffectiveFrom IsNot Nothing AndAlso
-                record.EffectiveFrom.Value < Data.Helpers.PayrollTools.SqlServerMinimumDate Then
+                record.EffectiveFrom.Value < PayrollTools.SqlServerMinimumDate Then
                 record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
                 rejectedRecords.Add(record)
                 Continue For

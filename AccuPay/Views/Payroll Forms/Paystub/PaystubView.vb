@@ -1,10 +1,7 @@
 Option Strict On
 
 Imports System.ComponentModel
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports Microsoft.Extensions.DependencyInjection
+Imports AccuPay.Core.Entities
 
 Public Class PaystubView
 

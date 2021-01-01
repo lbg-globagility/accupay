@@ -1,8 +1,8 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Exceptions;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Exceptions;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
 using AccuPay.Web.Core.Auth;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;

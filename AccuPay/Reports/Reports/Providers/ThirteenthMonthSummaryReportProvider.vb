@@ -1,8 +1,8 @@
 Option Strict On
 
 Imports AccuPay.CrystalReports
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ThirteenthMonthSummaryReportProvider

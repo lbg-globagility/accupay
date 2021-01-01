@@ -1,11 +1,12 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Interfaces.Excel
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Attributes
@@ -212,11 +213,11 @@ Public Class ImportLeaveForm
 
     Private Class LeaveModel
         Implements IExcelRowRecord
-        Private Const PENDING_STATUS As String = Data.Entities.Leave.StatusPending
+        Private Const PENDING_STATUS As String = Core.Entities.Leave.StatusPending
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
         Private Const REASON_LENGTH As Integer = 500
         Private Const COMMENT_LENGTH As Integer = 2000
-        Private VALID_STATUS As String() = {Data.Entities.Leave.StatusApproved.ToLower, Data.Entities.Leave.StatusPending.ToLower} '{"approved", "pending"}
+        Private VALID_STATUS As String() = {Core.Entities.Leave.StatusApproved.ToLower, Core.Entities.Leave.StatusPending.ToLower} '{"approved", "pending"}
         Private _employee As Employee
         Private _noEmployeeNo As Boolean
         Private _noLeaveType As Boolean
@@ -326,7 +327,7 @@ Public Class ImportLeaveForm
                 _noEmployeeNo = String.IsNullOrWhiteSpace(EmployeeNo)
                 _noLeaveType = String.IsNullOrWhiteSpace(LeaveType)
                 _noStartDate = Not StartDate.HasValue
-                _invalidStartDate = _noStartDate = False AndAlso StartDate.Value < Data.Helpers.PayrollTools.SqlServerMinimumDate
+                _invalidStartDate = _noStartDate = False AndAlso StartDate.Value < PayrollTools.SqlServerMinimumDate
                 _employeeNotExists = Not If(_employee?.RowID.HasValue, False)
 
                 _noStatus = String.IsNullOrWhiteSpace(Status) _

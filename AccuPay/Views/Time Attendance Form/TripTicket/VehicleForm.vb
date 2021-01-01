@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Data.Entities
+Imports AccuPay.Core
+Imports AccuPay.Core.Entities
 Imports Microsoft.EntityFrameworkCore
 
 Public Class VehicleForm

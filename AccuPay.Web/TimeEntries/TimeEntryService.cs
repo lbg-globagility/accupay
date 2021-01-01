@@ -1,8 +1,9 @@
-using AccuPay.Data.Exceptions;
-using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using AccuPay.Data.ValueObjects;
+using AccuPay.Core.Enums;
+using AccuPay.Core.Exceptions;
+using AccuPay.Core.Helpers;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
+using AccuPay.Core.ValueObjects;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.TimeEntries.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -161,7 +162,7 @@ namespace AccuPay.Web.TimeEntries
                 .Count();
 
             var overtimeCount = (await _overtimeRepository
-                .GetByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod, Data.Enums.OvertimeStatus.Approved))
+                .GetByDatePeriodAsync(_currentUser.OrganizationId, datePayPeriod, OvertimeStatus.Approved))
                 .GroupBy(x => x.EmployeeID)
                 .Count();
 

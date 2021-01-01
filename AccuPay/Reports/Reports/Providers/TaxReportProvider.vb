@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.CrystalReports
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Repositories
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 

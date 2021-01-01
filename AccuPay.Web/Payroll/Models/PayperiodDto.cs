@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Web.Core.Json;
 using System;
 using System.ComponentModel.DataAnnotations;

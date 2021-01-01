@@ -1,15 +1,15 @@
 Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports AccuPay.CrystalReports
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
-Imports Microsoft.Win32
 
 Public Class SelectPayslipEmployeesForm
 
@@ -107,7 +107,7 @@ Public Class SelectPayslipEmployeesForm
 
             HideEmailButtons()
 
-        ElseIf _currentPayPeriod.Status <> Data.Enums.PayPeriodStatus.Open Then
+        ElseIf _currentPayPeriod.Status <> PayPeriodStatus.Open Then
 
             HideEmailButtons()
         End If

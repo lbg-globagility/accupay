@@ -1,8 +1,8 @@
 using AccuPay.CrystalReports;
 using AccuPay.CrystalReportsAPI.Services;
-using AccuPay.Data;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
+using AccuPay.Core;
+using AccuPay.Core.Repositories;
+using AccuPay.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;

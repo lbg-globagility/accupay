@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Interfaces.Excel
+Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
 
 Namespace Global.Globagility.AccuPay.Salaries

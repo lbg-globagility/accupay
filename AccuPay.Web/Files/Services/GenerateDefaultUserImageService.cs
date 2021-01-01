@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Web.Files.Models;
 using System;
 using System.Drawing;

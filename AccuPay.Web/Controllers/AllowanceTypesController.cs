@@ -1,4 +1,4 @@
-using AccuPay.Data.Helpers;
+using AccuPay.Core.Helpers;
 using AccuPay.Web.AllowanceType;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Authorization;

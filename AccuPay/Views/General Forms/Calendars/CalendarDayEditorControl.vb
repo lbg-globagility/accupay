@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Globalization
-Imports AccuPay.Data.Entities
+Imports AccuPay.Core.Entities
 
 Public Class CalendarDayEditorControl
 

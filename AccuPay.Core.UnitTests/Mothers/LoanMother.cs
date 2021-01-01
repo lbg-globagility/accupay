@@ -1,4 +1,4 @@
-using AccuPay.Data.Entities;
+using AccuPay.Core.Entities;
 using Moq;
 using System;
 using System.Collections.Generic;

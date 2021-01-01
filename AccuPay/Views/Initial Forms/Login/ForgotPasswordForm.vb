@@ -2,8 +2,8 @@
 
 Imports System.Net
 Imports System.Net.Mail
-Imports AccuPay.Data.Interfaces
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ForgotPasswordForm

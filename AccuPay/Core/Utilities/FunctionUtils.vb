@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Exceptions
+Imports AccuPay.Core.Exceptions
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
 

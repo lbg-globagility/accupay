@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PaystubPresenter

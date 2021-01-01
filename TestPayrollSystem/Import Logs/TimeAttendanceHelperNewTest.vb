@@ -1,8 +1,8 @@
 Option Strict On
 
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Services
-Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Imports
 
 <TestFixture>
 Public Class TimeAttendanceHelperNewTest

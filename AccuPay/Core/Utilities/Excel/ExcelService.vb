@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data.Interfaces.Excel
+Imports AccuPay.Core.Interfaces.Excel
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ExcelService(Of T As {IExcelRowRecord, New})

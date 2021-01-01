@@ -1,6 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectPayPeriodSimple
@@ -43,10 +44,10 @@ Public Class SelectPayPeriodSimple
     Private Async Sub LoadPeriods()
 
         Dim periods = (Await _payPeriodRepository.GetByYearAndPayPrequencyAsync(
-                                organizationId:=z_OrganizationID,
-                                year:=_currentYear,
-                                payFrequencyId:=Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId)).
-                        ToList()
+            organizationId:=z_OrganizationID,
+            year:=_currentYear,
+            payFrequencyId:=PayrollTools.PayFrequencySemiMonthlyId)).
+        ToList()
 
         Dim ascOrder = periods.OrderBy(Function(p) p.OrdinalValue).ToList()
 

@@ -1,8 +1,8 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
+Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ReportsList

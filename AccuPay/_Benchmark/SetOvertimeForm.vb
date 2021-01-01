@@ -2,8 +2,8 @@ Option Strict On
 
 Imports System.ComponentModel
 Imports AccuPay.Benchmark
-Imports AccuPay.Data
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 

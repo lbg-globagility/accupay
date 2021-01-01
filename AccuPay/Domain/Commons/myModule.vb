@@ -1,6 +1,6 @@
 ﻿Imports System.Data.OleDb
 Imports System.IO
-Imports AccuPay.Data.Entities
+Imports AccuPay.Core.Entities
 Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient

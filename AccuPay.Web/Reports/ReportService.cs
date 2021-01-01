@@ -1,4 +1,4 @@
-using AccuPay.Data.Interfaces;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using System.IO;
 using System.Threading.Tasks;

@@ -1,5 +1,5 @@
-﻿Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
+﻿Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Femiani.Forms.UI.Input

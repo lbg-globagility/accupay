@@ -1,8 +1,9 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
 
 Namespace Benchmark
@@ -27,13 +28,13 @@ Namespace Benchmark
 
             Me.Salary = salary
 
-            Me.MonthlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary), 4)
-            Me.DailyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetDailyRate(Me.MonthlyRate, employee.WorkDaysPerYear), 4)
-            Me.HourlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(Me.DailyRate), 4)
+            Me.MonthlyRate = AccuMath.CommercialRound(PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary), 4)
+            Me.DailyRate = AccuMath.CommercialRound(PayrollTools.GetDailyRate(Me.MonthlyRate, employee.WorkDaysPerYear), 4)
+            Me.HourlyRate = AccuMath.CommercialRound(PayrollTools.GetHourlyRateByDailyRate(Me.DailyRate), 4)
 
-            Me.ActualMonthlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary, isActual:=True), 4)
-            Me.ActualDailyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetDailyRate(Me.ActualMonthlyRate, employee.WorkDaysPerYear), 4)
-            Me.ActualHourlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(Me.ActualDailyRate), 4)
+            Me.ActualMonthlyRate = AccuMath.CommercialRound(PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary, isActual:=True), 4)
+            Me.ActualDailyRate = AccuMath.CommercialRound(PayrollTools.GetDailyRate(Me.ActualMonthlyRate, employee.WorkDaysPerYear), 4)
+            Me.ActualHourlyRate = AccuMath.CommercialRound(PayrollTools.GetHourlyRateByDailyRate(Me.ActualDailyRate), 4)
 
         End Sub
 

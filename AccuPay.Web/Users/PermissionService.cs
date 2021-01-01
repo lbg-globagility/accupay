@@ -1,5 +1,5 @@
-using AccuPay.Data.Entities;
-using AccuPay.Data.Repositories;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

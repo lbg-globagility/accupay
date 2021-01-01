@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
 
 Namespace Benchmark

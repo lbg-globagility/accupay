@@ -2,8 +2,8 @@ Option Strict On
 
 Imports System.IO
 Imports AccuPay.CrystalReports
-Imports AccuPay.Data.Interfaces
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Repositories
 Imports CrystalDecisions.Shared
 Imports GlobagilityShared.EmailSender
 Imports PdfSharp.Pdf

@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports AccuPay.Data.Entities
+Imports AccuPay.Core.Entities
 
 Public Class CalendarMonthControl
 

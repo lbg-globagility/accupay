@@ -1,7 +1,7 @@
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Enums
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Services.CostCenterReportDataService
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services.CostCenterReportDataService
 
 Public Class CostCenterReportGenerationResult
     Implements ProgressGenerator.IResult
