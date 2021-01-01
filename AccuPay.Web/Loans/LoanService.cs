@@ -59,29 +59,29 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> Create(CreateLoanDto dto)
         {
-            var loanSchedule = new LoanSchedule()
+            var loan = new Loan()
             {
                 EmployeeID = dto.EmployeeId,
                 OrganizationID = _currentUser.OrganizationId,
                 TotalBalanceLeft = dto.TotalLoanAmount
             };
-            ApplyChanges(dto, loanSchedule);
+            ApplyChanges(dto, loan);
 
-            await _loanService.SaveAsync(loanSchedule, _currentUser.UserId);
+            await _loanService.SaveAsync(loan, _currentUser.UserId);
 
-            return ConvertToDto(loanSchedule);
+            return ConvertToDto(loan);
         }
 
         public async Task<LoanDto> Update(int id, UpdateLoanDto dto)
         {
-            var loanSchedule = await _loanRepository.GetByIdAsync(id);
-            if (loanSchedule == null) return null;
+            var loan = await _loanRepository.GetByIdAsync(id);
+            if (loan == null) return null;
 
-            ApplyChanges(dto, loanSchedule);
+            ApplyChanges(dto, loan);
 
-            await _loanService.SaveAsync(loanSchedule, _currentUser.UserId);
+            await _loanService.SaveAsync(loan, _currentUser.UserId);
 
-            return ConvertToDto(loanSchedule);
+            return ConvertToDto(loan);
         }
 
         public async Task<ActionResult<PaginatedList<LoanHistoryDto>>> GetLoanHistory(PageOptions options, int loanId)
@@ -116,22 +116,22 @@ namespace AccuPay.Web.Loans
         public async Task<List<string>> GetDeductionSchedules()
         {
             return _listOfValueRepository.ConvertToStringList(
-                            await _listOfValueRepository.GetDeductionSchedulesAsync());
+                await _listOfValueRepository.GetDeductionSchedulesAsync());
         }
 
-        private static void ApplyChanges(CrudLoanDto dto, LoanSchedule loanSchedule)
+        private static void ApplyChanges(CrudLoanDto dto, Loan loan)
         {
-            loanSchedule.LoanTypeID = dto.LoanTypeId;
-            loanSchedule.LoanNumber = dto.LoanNumber;
-            loanSchedule.TotalLoanAmount = dto.TotalLoanAmount;
-            loanSchedule.DedEffectiveDateFrom = dto.StartDate;
-            loanSchedule.DeductionAmount = dto.DeductionAmount;
-            loanSchedule.Status = dto.Status;
-            loanSchedule.DeductionSchedule = dto.DeductionSchedule;
-            loanSchedule.Comments = dto.Comments;
+            loan.LoanTypeID = dto.LoanTypeId;
+            loan.LoanNumber = dto.LoanNumber;
+            loan.TotalLoanAmount = dto.TotalLoanAmount;
+            loan.DedEffectiveDateFrom = dto.StartDate;
+            loan.DeductionAmount = dto.DeductionAmount;
+            loan.Status = dto.Status;
+            loan.DeductionSchedule = dto.DeductionSchedule;
+            loan.Comments = dto.Comments;
         }
 
-        private static LoanDto ConvertToDto(LoanSchedule loan)
+        private static LoanDto ConvertToDto(Loan loan)
         {
             if (loan == null) return null;
 

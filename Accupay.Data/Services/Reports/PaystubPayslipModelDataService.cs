@@ -35,8 +35,8 @@ namespace AccuPay.Data.Services
             paystubs = paystubs.OrderBy(p => p.Employee.FullNameWithMiddleInitialLastNameFirst).ToList();
 
             var loans = await _context.LoanTransactions.
-                                    Include(l => l.LoanSchedule).
-                                    Include(l => l.LoanSchedule.LoanType).
+                                    Include(l => l.Loan).
+                                    Include(l => l.Loan.LoanType).
                                     Include(l => l.Paystub).
                                     Where(l => l.Paystub.PayPeriodID == payPeriod.RowID).
                                     ToListAsync();

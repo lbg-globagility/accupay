@@ -6,13 +6,13 @@ namespace AccuPay.Core.UnitTests.Mothers
     public class LoanTransactionMother
     {
         public static LoanTransaction Simple(
-            int loanScheduleId = 0,
+            int loanId = 0,
             int employeeId = 0,
             PayPeriod payPeriod = null)
         {
             LoanTransaction transaction = new LoanTransaction()
             {
-                LoanScheduleID = loanScheduleId,
+                LoanID = loanId,
                 EmployeeID = employeeId
             };
 
@@ -29,10 +29,10 @@ namespace AccuPay.Core.UnitTests.Mothers
             decimal interestAmount,
             decimal deductionAmount,
             PayPeriod payPeriod,
-            int loanScheduleId = 0,
+            int loanId = 0,
             int employeeId = 0)
         {
-            var loanTransaction = Simple(loanScheduleId, employeeId, payPeriod);
+            var loanTransaction = Simple(loanId, employeeId, payPeriod);
 
             loanTransaction.InterestAmount = interestAmount;
             loanTransaction.DeductionAmount = deductionAmount;
@@ -45,14 +45,14 @@ namespace AccuPay.Core.UnitTests.Mothers
             decimal interestAmount,
             decimal deductionAmount,
             PayPeriod payPeriod,
-            int loanScheduleId = 0,
+            int loanId = 0,
             int employeeId = 0)
         {
             List<LoanTransaction> list = new List<LoanTransaction>();
 
             for (var index = 1; index <= listCount; index++)
             {
-                var loanTransaction = Simple(loanScheduleId, employeeId, payPeriod);
+                var loanTransaction = Simple(loanId, employeeId, payPeriod);
 
                 loanTransaction.InterestAmount = interestAmount;
                 loanTransaction.DeductionAmount = deductionAmount;

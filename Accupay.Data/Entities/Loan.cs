@@ -6,7 +6,7 @@ using System.Linq;
 namespace AccuPay.Data.Entities
 {
     [Table("employeeloanschedule")]
-    public class LoanSchedule : EmployeeDataEntity
+    public class Loan : EmployeeDataEntity
     {
         public const string STATUS_IN_PROGRESS = "In Progress";
         public const string STATUS_ON_HOLD = "On hold";

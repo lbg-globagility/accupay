@@ -59,7 +59,7 @@ namespace AccuPay.Data.Services
 
             var previousPaystub = resources.PreviousPaystubs.FirstOrDefault(p => p.EmployeeID == employee.RowID);
 
-            var loanSchedules = resources.LoanSchedules
+            var loans = resources.Loans
                 .Where(l => l.EmployeeID == employee.RowID)
                 .ToList();
 
@@ -107,7 +107,7 @@ namespace AccuPay.Data.Services
                     bpiInsuranceProduct: bpiInsuranceProduct,
                     sickLeaveProduct: sickLeaveProduct,
                     vacationLeaveProduct: vacationLeaveProduct,
-                    loanSchedules: loanSchedules,
+                    loans: loans,
                     previousTimeEntries: previousTimeEntries,
                     timeEntries: timeEntries,
                     actualTimeEntries: actualTimeEntries,
@@ -144,7 +144,7 @@ namespace AccuPay.Data.Services
             Product bpiInsuranceProduct,
             Product sickLeaveProduct,
             Product vacationLeaveProduct,
-            IReadOnlyCollection<LoanSchedule> loanSchedules,
+            IReadOnlyCollection<Loan> loans,
             IReadOnlyCollection<TimeEntry> previousTimeEntries,
             IReadOnlyCollection<TimeEntry> timeEntries,
             IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
@@ -189,7 +189,7 @@ namespace AccuPay.Data.Services
                 };
             }
 
-            ResetLoanSchedules(loanSchedules, paystub, currentlyLoggedInUserId);
+            ResetLoans(loans, paystub, currentlyLoggedInUserId);
 
             var allowanceItems = CreateAllowanceItems(
                 currentlyLoggedInUserId,
@@ -205,7 +205,7 @@ namespace AccuPay.Data.Services
             var loanTransactions = CreateLoanTransactions(
                 paystub,
                 payPeriod,
-                loanSchedules,
+                loans,
                 bonuses: bonuses,
                 policy: policy,
                 currentlyLoggedInUserId: currentlyLoggedInUserId);
@@ -239,7 +239,7 @@ namespace AccuPay.Data.Services
                 bpiInsuranceProduct: bpiInsuranceProduct,
                 sickLeaveProduct: sickLeaveProduct,
                 vacationLeaveProduct: vacationLeaveProduct,
-                loanSchedules: loanSchedules,
+                loans: loans,
                 allowanceItems: allowanceItems,
                 loanTransactions: loanTransactions,
                 timeEntries: timeEntries,
@@ -249,13 +249,13 @@ namespace AccuPay.Data.Services
             return PaystubEmployeeResult.Success(employee, paystub);
         }
 
-        private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int currentlyLoggedInUserId)
+        private void ResetLoans(IReadOnlyCollection<Loan> loans, Paystub paystub, int currentlyLoggedInUserId)
         {
             if (paystub?.LoanTransactions == null || paystub.LoanTransactions.Count == 0) return;
 
-            foreach (var loan in loanSchedules)
+            foreach (var loan in loans)
             {
-                var loanTransactions = paystub.LoanTransactions.Where(x => x.LoanScheduleID == loan.RowID);
+                var loanTransactions = paystub.LoanTransactions.Where(x => x.LoanID == loan.RowID);
 
                 if (loanTransactions.Any())
                 {
@@ -276,14 +276,14 @@ namespace AccuPay.Data.Services
             Product bpiInsuranceProduct,
             Product sickLeaveProduct,
             Product vacationLeaveProduct,
-            IReadOnlyCollection<LoanSchedule> loanSchedules,
+            IReadOnlyCollection<Loan> loans,
             ICollection<AllowanceItem> allowanceItems,
             ICollection<LoanTransaction> loanTransactions,
             IReadOnlyCollection<TimeEntry> timeEntries,
             IReadOnlyCollection<Leave> leaves,
             IReadOnlyCollection<Bonus> bonuses)
         {
-            foreach (var loan in loanSchedules)
+            foreach (var loan in loans)
             {
                 loan.LastUpdBy = currentlyLoggedInUserId;
                 _context.Entry(loan).State = EntityState.Modified;
@@ -371,7 +371,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void SaveYearlyLoanInterest(IPolicyHelper policy, LoanSchedule loan)
+        private void SaveYearlyLoanInterest(IPolicyHelper policy, Loan loan)
         {
             if (policy.UseGoldwingsLoanInterest && loan.YearlyLoanInterests != null && loan.YearlyLoanInterests.Any())
             {
@@ -390,7 +390,7 @@ namespace AccuPay.Data.Services
         private void SaveLoanPaymentFromBonusItems(
             PayPeriod payPeriod,
             Paystub paystub,
-            LoanSchedule loan,
+            Loan loan,
             IReadOnlyCollection<Bonus> bonuses,
             bool useLoanDeductFromBonus)
         {
@@ -416,7 +416,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private static IEnumerable<LoanPaymentFromBonus> GetLoanPaymentFromBonuses(IReadOnlyCollection<Bonus> bonuses, LoanSchedule loan, PayPeriod payPeriod)
+        private static IEnumerable<LoanPaymentFromBonus> GetLoanPaymentFromBonuses(IReadOnlyCollection<Bonus> bonuses, Loan loan, PayPeriod payPeriod)
         {
             if (loan.LoanPaymentFromBonuses == null || !loan.LoanPaymentFromBonuses.Any())
             {
@@ -868,17 +868,17 @@ namespace AccuPay.Data.Services
         private List<LoanTransaction> CreateLoanTransactions(
             Paystub paystub,
             PayPeriod payPeriod,
-            IReadOnlyCollection<LoanSchedule> loanSchedules,
+            IReadOnlyCollection<Loan> loans,
             IReadOnlyCollection<Bonus> bonuses,
             IPolicyHelper policy,
             int currentlyLoggedInUserId)
         {
             var loanTransactions = new List<LoanTransaction>();
-            var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
+            var currentLoans = loans.Where(x => x.Status == Loan.STATUS_IN_PROGRESS);
 
             var calculator = new LoanDeductionAmountCalculator(policy);
 
-            foreach (var loan in currentLoanSchedules)
+            foreach (var loan in currentLoans)
             {
                 if (loan.LoanPayPeriodLeft == 0) continue;
 
@@ -910,7 +910,7 @@ namespace AccuPay.Data.Services
                     OrganizationID = paystub.OrganizationID,
                     EmployeeID = paystub.EmployeeID,
                     PayPeriodID = payPeriod.RowID,
-                    LoanScheduleID = loan.RowID.Value,
+                    LoanID = loan.RowID.Value,
                     DeductionAmount = deductionAmount,
                     InterestAmount = interestAmount
                 };

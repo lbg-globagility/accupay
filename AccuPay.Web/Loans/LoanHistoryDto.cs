@@ -29,9 +29,9 @@ namespace AccuPay.Web.Loans
             {
                 Id = loanTransaction.RowID.Value,
                 EmployeeId = loanTransaction.EmployeeID,
-                EmployeeName = loanTransaction.LoanSchedule?.Employee?.FullNameWithMiddleInitialLastNameFirst,
-                EmployeeNo = loanTransaction.LoanSchedule?.Employee?.EmployeeNo,
-                EmployeeType = loanTransaction.LoanSchedule?.Employee?.EmployeeType,
+                EmployeeName = loanTransaction.Loan?.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeNo = loanTransaction.Loan?.Employee?.EmployeeNo,
+                EmployeeType = loanTransaction.Loan?.Employee?.EmployeeType,
                 DeductionDate = loanTransaction.PayPeriodPayToDate.Value,
                 Amount = loanTransaction.DeductionAmount,
                 Balance = loanTransaction.TotalBalance

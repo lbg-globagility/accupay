@@ -46,7 +46,7 @@ namespace AccuPay.Data.Services
 
         public IReadOnlyCollection<Leave> Leaves { get; private set; }
 
-        public IReadOnlyCollection<LoanSchedule> LoanSchedules { get; private set; }
+        public IReadOnlyCollection<Loan> Loans { get; private set; }
 
         public IReadOnlyCollection<Paystub> Paystubs { get; private set; }
 
@@ -76,7 +76,7 @@ namespace AccuPay.Data.Services
 
         private readonly ListOfValueService _listOfValueService;
 
-        private readonly LoanRepository _loanScheduleRepository;
+        private readonly LoanRepository _loanRepository;
 
         private readonly PayPeriodRepository _payPeriodRepository;
 
@@ -105,7 +105,7 @@ namespace AccuPay.Data.Services
             AllowanceRepository allowanceRepository,
             EmployeeRepository employeeRepository,
             LeaveRepository leaveRepository,
-            LoanRepository loanScheduleRepository,
+            LoanRepository loanRepository,
             PayPeriodRepository payPeriodRepository,
             PaystubRepository paystubRepository,
             PhilHealthBracketRepository philHealthBracketRepository,
@@ -125,7 +125,7 @@ namespace AccuPay.Data.Services
             _bonusRepository = bonusRepository;
             _employeeRepository = employeeRepository;
             _leaveRepository = leaveRepository;
-            _loanScheduleRepository = loanScheduleRepository;
+            _loanRepository = loanRepository;
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
             _philHealthBracketRepository = philHealthBracketRepository;
@@ -142,7 +142,7 @@ namespace AccuPay.Data.Services
             _organizationId = organizationId;
             _userId = userId;
 
-            // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets() and LoadLoanSchedules()
+            // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets() and LoadLoans()
             await LoadPayPeriod();
 
             _payDateFrom = PayPeriod.PayFromDate;
@@ -160,7 +160,7 @@ namespace AccuPay.Data.Services
             await LoadListOfValueCollection();
             await LoadPaystubs();
             // LoadSchedules() should be executed following paystubs
-            await LoadLoanSchedules();
+            await LoadLoans();
             await LoadPreviousPaystubs();
             await LoadSalaries();
             await LoadSickLeaveProduct();
@@ -275,18 +275,18 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task LoadLoanSchedules()
+        private async Task LoadLoans()
         {
             try
             {
                 // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-                LoanSchedules = (await _loanScheduleRepository
+                Loans = (await _loanRepository
                     .GetCurrentPayrollLoansAsync(_organizationId, PayPeriod, Paystubs))
                     .ToList();
             }
             catch (Exception ex)
             {
-                throw new ResourceLoadingException("LoanSchedules", ex);
+                throw new ResourceLoadingException("Loans", ex);
             }
         }
 

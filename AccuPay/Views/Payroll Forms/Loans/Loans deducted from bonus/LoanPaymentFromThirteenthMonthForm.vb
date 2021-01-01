@@ -10,7 +10,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
     Private ReadOnly _currentPayPeriod As PayPeriod
     Private ReadOnly _paystubDataService As PaystubDataService
     Private ReadOnly _loanDataService As LoanDataService
-    Private _loans As ICollection(Of LoanSchedule)
+    Private _loans As ICollection(Of Loan)
 
     Public Sub New(currentPayPeriod As PayPeriod)
 
@@ -25,7 +25,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
 
     Public ReadOnly Property HasChanges As Boolean
 
-    Private Async Function LoadLoans(paystubs As List(Of Paystub)) As Task(Of ICollection(Of LoanSchedule))
+    Private Async Function LoadLoans(paystubs As List(Of Paystub)) As Task(Of ICollection(Of Loan))
         Return Await _loanDataService.GetCurrentPayrollLoansAsync(z_OrganizationID, _currentPayPeriod, paystubs)
     End Function
 
@@ -212,12 +212,12 @@ Public Class LoanPaymentFromThirteenthMonthForm
     Private Class LoanModel
         Private ReadOnly _employeeModel As ThirteenthMonthEmployeeModel
         Private ReadOnly _paystub As Paystub
-        Private ReadOnly _loan As LoanSchedule
+        Private ReadOnly _loan As Loan
         Private ReadOnly _originalAmountPayment As Decimal
 
         Public Sub New(
             employeeModel As ThirteenthMonthEmployeeModel,
-            loan As LoanSchedule,
+            loan As Loan,
             payperiodId As Integer)
 
             _employeeModel = employeeModel
@@ -240,7 +240,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
             Dim loanTransaction = _employeeModel.PaystubObject.
                 LoanTransactions.
                 Where(Function(lt) CBool(lt.PayPeriodID = payperiodId)).
-                Where(Function(lt) lt.LoanScheduleID = _loan.RowID.Value).
+                Where(Function(lt) lt.LoanID = _loan.RowID.Value).
                 FirstOrDefault()
 
             Dim loanTransactionDeductionAmount = If(loanTransaction?.DeductionAmount, _loan.DeductionAmount)

@@ -471,7 +471,7 @@ namespace AccuPay.Data.ReportModels
 
             public decimal Balance { get; set; }
 
-            public Loan(LoanTransaction loan) : this(loan.LoanSchedule?.LoanType?.PartNo, loan.DeductionAmount, loan.TotalBalance)
+            public Loan(LoanTransaction loan) : this(loan.Loan?.LoanType?.PartNo, loan.DeductionAmount, loan.TotalBalance)
             {
             }
 

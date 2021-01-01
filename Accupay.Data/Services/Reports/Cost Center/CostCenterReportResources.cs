@@ -94,10 +94,10 @@ namespace AccuPay.Data.Services
             HmoLoans = await _context.LoanTransactions
                 .Include(l => l.Paystub)
                 .Include(p => p.PayPeriod)
-                .Include(p => p.LoanSchedule.LoanType)
+                .Include(p => p.Loan.LoanType)
                 .Where(p => p.PayPeriod.PayFromDate >= ReportPeriod.Start)
                 .Where(p => p.PayPeriod.PayToDate <= ReportPeriod.End)
-                .Where(p => p.LoanSchedule.LoanType.Name == ProductConstant.HMO_LOAN)
+                .Where(p => p.Loan.LoanType.Name == ProductConstant.HMO_LOAN)
                 .ToListAsync();
 
             Employees = await _context.Employees

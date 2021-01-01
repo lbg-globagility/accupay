@@ -194,7 +194,7 @@ namespace AccuPay.Web.Payroll
             Loans = paystub.LoanTransactions
                 ?.Select(t => new LoanDto()
                 {
-                    Description = t?.LoanSchedule.LoanType.Name,
+                    Description = t?.Loan.LoanType.Name,
                     Amount = t.DeductionAmount,
                 })
                 .ToList();

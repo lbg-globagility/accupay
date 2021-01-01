@@ -42,9 +42,9 @@ Public Class LoanRowRecord
     <Ignore>
     Public Property LoanType As Product
 
-    Public Function ToLoan(employeeId As Integer) As LoanSchedule
+    Public Function ToLoan(employeeId As Integer) As Loan
 
-        Dim newLoanSchedule = New LoanSchedule With {
+        Dim newLoan = New Loan With {
             .RowID = Nothing,
             .OrganizationID = z_OrganizationID,
             .EmployeeID = employeeId,
@@ -57,14 +57,14 @@ Public Class LoanRowRecord
             .DeductionPercentage = 0,
             .LoanName = LoanName,
             .LoanTypeID = LoanType.RowID,
-            .Status = LoanSchedule.STATUS_IN_PROGRESS,
+            .Status = Loan.STATUS_IN_PROGRESS,
             .DeductionSchedule = DeductionSchedule
         }
 
-        newLoanSchedule.RecomputeTotalPayPeriod()
-        newLoanSchedule.RecomputePayPeriodLeft()
+        newLoan.RecomputeTotalPayPeriod()
+        newLoan.RecomputePayPeriodLeft()
 
-        Return newLoanSchedule
+        Return newLoan
 
     End Function
 

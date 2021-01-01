@@ -24,7 +24,7 @@ namespace AccuPay.Data.Services
         /// <param name="thirteenthMonthPayLoanPayments"></param>
         /// <returns></returns>
         public (decimal deductionAmount, decimal interestAmount, YearlyLoanInterest newYearlyLoanInterest) Calculate(
-            LoanSchedule loan,
+            Loan loan,
             PayPeriod payPeriod,
             YearlyLoanInterest yearlyLoanInterest,
             IReadOnlyCollection<LoanTransaction> previousLoanTransactions = null,

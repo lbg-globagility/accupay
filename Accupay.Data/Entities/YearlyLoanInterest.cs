@@ -11,13 +11,13 @@ namespace AccuPay.Data.Entities
     [Table("yearlyloaninterest")]
     public class YearlyLoanInterest : IAuditableEntity
     {
-        public int LoanScheduleId { get; private set; }
+        public int LoanId { get; private set; }
 
         public int Year { get; private set; }
 
         public DateTime Date { get; private set; }
 
-        public LoanSchedule LoanSchedule { get; set; }
+        public Loan Loan { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; private set; }
@@ -47,7 +47,7 @@ namespace AccuPay.Data.Entities
         // default constructor for EF Core.
         private YearlyLoanInterest() { }
 
-        public YearlyLoanInterest(LoanSchedule loan, PayPeriod payPeriod, IReadOnlyCollection<LoanTransaction> loanTransactions)
+        public YearlyLoanInterest(Loan loan, PayPeriod payPeriod, IReadOnlyCollection<LoanTransaction> loanTransactions)
         {
             if (loan == null)
                 throw new ArgumentNullException($"{nameof(loan)} cannot be null.");
@@ -58,7 +58,7 @@ namespace AccuPay.Data.Entities
             if (!loan.IsEligibleForGoldwingsInterest())
                 return;
 
-            LoanScheduleId = loan.RowID.Value;
+            LoanId = loan.RowID.Value;
             Year = payPeriod.PayFromDate.Year;
             Date = payPeriod.PayFromDate;
 
@@ -100,7 +100,7 @@ namespace AccuPay.Data.Entities
 
         public (decimal deductionAmount, decimal interestAmount) CalculateCutOffDeduction(
             decimal deductionAmount,
-            LoanSchedule loan,
+            Loan loan,
             IReadOnlyCollection<LoanTransaction> allLoanTransactions)
         {
             if (IsZero)

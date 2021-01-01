@@ -50,7 +50,7 @@ namespace AccuPay.Data.Repositories
                 .AsNoTracking()
                 .Include(b => b.Product)
                 .Include(b => b.LoanPaymentFromBonuses)
-                    .ThenInclude(l => l.LoanSchedule)
+                    .ThenInclude(l => l.Loan)
                 .Include(b => b.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.Items)
                 .Where(b => b.OrganizationID == organizationId)

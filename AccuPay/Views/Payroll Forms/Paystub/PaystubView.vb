@@ -155,7 +155,7 @@ Public Class PaystubView
     Public Sub ShowLoanTransactions(loanTransactions As ICollection(Of LoanTransaction))
         Dim loanTransactionModels = loanTransactions.
             Select(Function(l) New LoanTransactionModel() With {
-                .Name = l.LoanSchedule.LoanType.PartNo,
+                .Name = l.Loan.LoanType.PartNo,
                 .Amount = l.DeductionAmount,
                 .Balance = l.TotalBalance
             }).ToList()

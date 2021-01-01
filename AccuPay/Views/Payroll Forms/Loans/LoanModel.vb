@@ -26,7 +26,7 @@ Public Class LoanModel
         End Get
     End Property
 
-    Private Sub New(loan As LoanSchedule)
+    Private Sub New(loan As Loan)
         Me.Id = loan?.RowID
         Me.EmployeeId = If(loan?.EmployeeID, 0)
         Me.LoanTypeId = loan?.LoanTypeID
@@ -45,17 +45,17 @@ Public Class LoanModel
         Me.IsUnEditable = If(loan?.IsUnEditable, False)
     End Sub
 
-    Public Shared Function Create(loan As LoanSchedule) As LoanModel
+    Public Shared Function Create(loan As Loan) As LoanModel
 
         Return New LoanModel(loan)
 
     End Function
 
-    Public Function CreateLoan() As LoanSchedule
+    Public Function CreateLoan() As Loan
 
         Dim totalBalance = If(Me.Id Is Nothing, Me.TotalLoanAmount, Me.TotalBalanceLeft)
 
-        Return New LoanSchedule() With {
+        Return New Loan() With {
             .RowID = Me.Id,
             .EmployeeID = Me.EmployeeId,
             .OrganizationID = z_OrganizationID,

@@ -62,7 +62,7 @@ namespace AccuPay.Data
         internal virtual DbSet<ListOfValue> ListOfValues { get; set; }
         internal virtual DbSet<LoanPaymentFromBonus> LoanPaymentFromBonuses { get; set; }
         internal virtual DbSet<LoanPaymentFromThirteenthMonthPay> LoanPaymentFromThirteenthMonthPays { get; set; }
-        internal virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
+        internal virtual DbSet<Loan> Loans { get; set; }
         internal virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
         internal virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }
         internal virtual DbSet<Organization> Organizations { get; set; }
@@ -221,11 +221,11 @@ namespace AccuPay.Data
             modelBuilder.Entity<YearlyLoanInterest>(
             b =>
             {
-                b.HasKey(x => new { x.LoanScheduleId, x.Year });
+                b.HasKey(x => new { x.LoanId, x.Year });
 
-                b.HasOne(x => x.LoanSchedule)
+                b.HasOne(x => x.Loan)
                     .WithMany(l => l.YearlyLoanInterests)
-                    .HasForeignKey(x => x.LoanScheduleId);
+                    .HasForeignKey(x => x.LoanId);
             });
         }
 

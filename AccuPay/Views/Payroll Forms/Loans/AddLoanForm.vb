@@ -12,7 +12,7 @@ Public Class AddLoanForm
 
     Private _currentEmployee As Employee
 
-    Private _newLoanSchedule As LoanModel
+    Private _newLoan As LoanModel
 
     Public Property IsSaved As Boolean
 
@@ -28,7 +28,7 @@ Public Class AddLoanForm
 
     End Sub
 
-    Private Sub AddLoanScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub AddLoanForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         PopulateEmployeeData()
 
@@ -37,16 +37,16 @@ Public Class AddLoanForm
     End Sub
 
     Private Sub ResetForm()
-        Dim newLoanSchedule As New LoanSchedule With {
+        Dim newLoan As New Loan With {
             .EmployeeID = _currentEmployee.RowID,
             .OrganizationID = z_OrganizationID,
             .DedEffectiveDateFrom = Date.Now,
-            .Status = LoanSchedule.STATUS_IN_PROGRESS
+            .Status = Loan.STATUS_IN_PROGRESS
         }
 
-        _newLoanSchedule = LoanModel.Create(newLoanSchedule)
+        _newLoan = LoanModel.Create(newLoan)
 
-        LoanUserControl1.SetLoan(_newLoanSchedule, isNew:=True)
+        LoanUserControl1.SetLoan(_newLoan, isNew:=True)
     End Sub
 
     Private Sub PopulateEmployeeData()
@@ -63,7 +63,7 @@ Public Class AddLoanForm
         Me.Close()
     End Sub
 
-    Private Async Sub AddLoanScheduleButtonClicked(sender As Object, e As EventArgs) _
+    Private Async Sub AddLoanButtonClicked(sender As Object, e As EventArgs) _
         Handles btnAddAndNew.Click, btnAddAndClose.Click
 
         Dim messageTitle = "New Loan"
@@ -75,7 +75,7 @@ Public Class AddLoanForm
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-                Me._newLoanSchedule = LoanModel.Create(Await dataService.SaveAsync(loan, z_User))
+                Me._newLoan = LoanModel.Create(Await dataService.SaveAsync(loan, z_User))
 
                 Me.IsSaved = True
 

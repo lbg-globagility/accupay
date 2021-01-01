@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class LoanRepository : SavableRepository<LoanSchedule>
+    public class LoanRepository : SavableRepository<Loan>
     {
         public LoanRepository(PayrollContext context) : base(context)
         {
@@ -27,8 +27,8 @@ namespace AccuPay.Data.Repositories
             int pagibigLoanId,
             int ssLoanId)
         {
-            _context.LoanSchedules
-                .RemoveRange(_context.LoanSchedules
+            _context.Loans
+                .RemoveRange(_context.Loans
                     .Where(x => x.EmployeeID == employeeId)
                     .Where(x => x.LoanTypeID != pagibigLoanId)
                     .Where(x => x.LoanTypeID != ssLoanId));
@@ -36,7 +36,7 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        protected override void DetachNavigationProperties(LoanSchedule loan)
+        protected override void DetachNavigationProperties(Loan loan)
         {
             if (loan.Employee != null)
             {
@@ -66,9 +66,9 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<LoanSchedule> GetByIdWithEmployeeAndProductAsync(int id)
+        public async Task<Loan> GetByIdWithEmployeeAndProductAsync(int id)
         {
-            return await _context.LoanSchedules
+            return await _context.Loans
                 .Include(x => x.Employee)
                 .Include(x => x.LoanType)
                 .FirstOrDefaultAsync(l => l.RowID == id);
@@ -78,18 +78,18 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<ICollection<LoanSchedule>> GetByEmployeeAsync(int employeeId)
+        public async Task<ICollection<Loan>> GetByEmployeeAsync(int employeeId)
         {
-            return await _context.LoanSchedules
+            return await _context.Loans
                 .AsNoTracking()
                 .Include(x => x.LoanType)
                 .Where(x => x.EmployeeID == employeeId)
                 .ToListAsync();
         }
 
-        public async Task<PaginatedList<LoanSchedule>> GetPaginatedListAsync(LoanPageOptions options, int organizationId)
+        public async Task<PaginatedList<Loan>> GetPaginatedListAsync(LoanPageOptions options, int organizationId)
         {
-            var query = _context.LoanSchedules
+            var query = _context.Loans
                 .Include(x => x.Employee)
                 .Include(x => x.LoanType)
                 .Where(x => x.OrganizationID == organizationId)
@@ -120,16 +120,16 @@ namespace AccuPay.Data.Repositories
                 query = query.Where(t => t.Status == options.Status);
             }
 
-            var loanSchedules = await query.Page(options).ToListAsync();
+            var loans = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedList<LoanSchedule>(loanSchedules, count);
+            return new PaginatedList<Loan>(loans, count);
         }
 
         public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int id)
         {
             var query = _context.LoanTransactions
-                .Where(x => x.LoanScheduleID == id);
+                .Where(x => x.LoanID == id);
 
             return await GetPaginatedLoanTransactionsList(options, query);
         }
@@ -137,7 +137,7 @@ namespace AccuPay.Data.Repositories
         public async Task<PaginatedList<LoanTransaction>> GetLoanTransactionsAsync(PageOptions options, int[] id)
         {
             var query = _context.LoanTransactions
-                .Where(x => id.Contains(x.LoanScheduleID));
+                .Where(x => id.Contains(x.LoanID));
 
             return await GetPaginatedLoanTransactionsList(options, query);
         }
@@ -147,7 +147,7 @@ namespace AccuPay.Data.Repositories
             query = query
                 .AsNoTracking()
                 .Include(x => x.PayPeriod)
-                .Include(x => x.LoanSchedule.Employee)
+                .Include(x => x.Loan.Employee)
                 .OrderByDescending(x => x.PayPeriod.PayToDate)
                 .AsQueryable();
 
@@ -157,14 +157,14 @@ namespace AccuPay.Data.Repositories
             return new PaginatedList<LoanTransaction>(transactions, count);
         }
 
-        public async Task<ICollection<LoanSchedule>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId)
+        public async Task<ICollection<Loan>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId)
         {
-            return await _context.LoanSchedules
+            return await _context.Loans
                 .Include(l => l.LoanType)
                 .Include(l => l.LoanType.CategoryEntity)
                 .Where(l => l.LoanType.CategoryEntity.CategoryName.Trim().ToUpper() == ProductConstant.LOAN_TYPE_CATEGORY.Trim().ToUpper())
                 .Where(l => l.LoanType.PartNo.Trim().ToLower() == loanName.ToTrimmedLowerCase())
-                .Where(l => l.Status.Trim().ToLower() == LoanSchedule.STATUS_IN_PROGRESS.ToTrimmedLowerCase())
+                .Where(l => l.Status.Trim().ToLower() == Loan.STATUS_IN_PROGRESS.ToTrimmedLowerCase())
                 .Where(l => l.EmployeeID == employeeId)
                 .ToListAsync();
         }
@@ -173,7 +173,7 @@ namespace AccuPay.Data.Repositories
         {
             return await _context.LoanTransactions
                 .Include(l => l.PayPeriod)
-                .Where(l => l.LoanScheduleID == id)
+                .Where(l => l.LoanID == id)
                 .ToListAsync();
         }
 
@@ -186,7 +186,7 @@ namespace AccuPay.Data.Repositories
         /// <param name="payPeriod">Current PayPeriod object.</param>
         /// <param name="paystubs">Used to check if the loans were used in the current payroll even if it is not IN PROGRESS.</param>
         /// <returns></returns>
-        internal async Task<ICollection<LoanSchedule>> GetCurrentPayrollLoansAsync(
+        internal async Task<ICollection<Loan>> GetCurrentPayrollLoansAsync(
             int organizationId,
             PayPeriod payPeriod,
             IReadOnlyCollection<Paystub> paystubs)
@@ -207,7 +207,7 @@ namespace AccuPay.Data.Repositories
             // That is still needed in regenerating the payroll as that may be Cancelled or put on Hold
             // before the regeneration if the user chose to exclude it this pay period. On payroll regeneration,
             // this loan's balance should be reset and this will not apply to the current payroll.
-            var loans = await _context.LoanSchedules
+            var loans = await _context.Loans
                 .Include(l => l.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.Items)
                 .Include(l => l.LoanType)
@@ -220,21 +220,21 @@ namespace AccuPay.Data.Repositories
                 .Where(l => l.BonusID == null)
                 .ToListAsync();
 
-            var currentLoans = new List<LoanSchedule>();
+            var currentLoans = new List<Loan>();
 
             // get IN PROGRESS loans
-            var inProgressLoans = loans.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
+            var inProgressLoans = loans.Where(x => x.Status == Loan.STATUS_IN_PROGRESS);
             currentLoans.AddRange(inProgressLoans);
 
             // get not IN PROGRESS loans but has loantransactions for this payperiod
             // (probably was completed this pay period or the loan was edited as
             // ON HOLD or CANCELLED to exclude that loan this pay period)
-            var notInProgressLoans = loans.Where(x => x.Status != LoanSchedule.STATUS_IN_PROGRESS);
+            var notInProgressLoans = loans.Where(x => x.Status != Loan.STATUS_IN_PROGRESS);
             var currentLoanTransactions = paystubs.SelectMany(x => x.LoanTransactions);
 
             var notInProgressLoansWithTransaction = notInProgressLoans
                 .Where(x => currentLoanTransactions
-                    .Any(t => t.LoanScheduleID == x.RowID));
+                    .Any(t => t.LoanID == x.RowID));
 
             currentLoans.AddRange(notInProgressLoansWithTransaction);
 
@@ -249,10 +249,10 @@ namespace AccuPay.Data.Repositories
         {
             return new List<string>()
             {
-                LoanSchedule.STATUS_IN_PROGRESS,
-                LoanSchedule.STATUS_ON_HOLD,
-                LoanSchedule.STATUS_CANCELLED,
-                LoanSchedule.STATUS_COMPLETE
+                Loan.STATUS_IN_PROGRESS,
+                Loan.STATUS_ON_HOLD,
+                Loan.STATUS_CANCELLED,
+                Loan.STATUS_COMPLETE
             };
         }
 

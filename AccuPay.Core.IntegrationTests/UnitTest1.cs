@@ -31,7 +31,7 @@ namespace AccuPay.Core.IntegrationTests
             //var loan = loans.Where(x => x.RowID == 1865).ToList();
 
             //var interests = await payrollContext
-            //    .LoanSchedules
+            //    .Loans
             //    .Include(x => x.YearlyLoanInterests)
             //    .Where(x => x.RowID == 1865)
             //    .FirstOrDefaultAsync();

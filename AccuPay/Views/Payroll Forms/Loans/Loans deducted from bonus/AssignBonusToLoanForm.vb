@@ -9,7 +9,7 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AssignBonusToLoanForm
 
-    Private ReadOnly _loanSchedule As LoanSchedule
+    Private ReadOnly _loan As Loan
     Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
     Private ReadOnly _bonusRepository As BonusRepository
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
@@ -20,11 +20,11 @@ Public Class AssignBonusToLoanForm
     Private _lastSelectedRowIndex2 As Integer
     Public Property ChangedBonus As Bonus
 
-    Public Sub New(loanSchedule As LoanSchedule, loanTransactions As ICollection(Of LoanTransaction))
+    Public Sub New(loan As Loan, loanTransactions As ICollection(Of LoanTransaction))
 
         InitializeComponent()
 
-        _loanSchedule = loanSchedule
+        _loan = loan
 
         _loanTransactions = loanTransactions
 
@@ -32,7 +32,7 @@ Public Class AssignBonusToLoanForm
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-        DisplayLoanScheduleDetails(loanSchedule)
+        DisplayLoanDetails(loan)
     End Sub
 
     Private Async Sub AssignBonusToLoan_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -40,7 +40,7 @@ Public Class AssignBonusToLoanForm
         DataGridView1.AutoGenerateColumns = False
         DataGridViewX1.AutoGenerateColumns = False
 
-        btnSave.Visible = _loanSchedule.Status <> LoanSchedule.STATUS_COMPLETE
+        btnSave.Visible = _loan.Status <> Loan.STATUS_COMPLETE
 
         Await LoadLoanPaymentFromBonus()
     End Sub
@@ -48,15 +48,15 @@ Public Class AssignBonusToLoanForm
     Private Async Function LoadLoanPaymentFromBonus() As Task
         Dim loanPaymentFromBonusModels = New List(Of LoanPaymentFromBonusData)
 
-        Dim loanCoveredPeriods = Await GetLoanCoveredPeriods(_loanSchedule)
+        Dim loanCoveredPeriods = Await GetLoanCoveredPeriods(_loan)
 
         Dim loanTimerPeriod = New TimePeriod(
-            _loanSchedule.DedEffectiveDateFrom,
+            _loan.DedEffectiveDateFrom,
             loanCoveredPeriods.Max(Function(pp) pp.PayToDate))
 
         _bonuses = Await _bonusRepository.GetByEmployeeAndPayPeriodForLoanPaymentAsync(
             organizationId:=z_OrganizationID,
-            employeeId:=_loanSchedule.EmployeeID.Value,
+            employeeId:=_loan.EmployeeID.Value,
             timePeriod:=loanTimerPeriod)
 
         Dim hasChangedBonus = ChangedBonus IsNot Nothing
@@ -66,7 +66,7 @@ Public Class AssignBonusToLoanForm
             If hasChangedBonus AndAlso bonus.RowID = ChangedBonus.RowID Then
                 paramBonus = ChangedBonus
             End If
-            loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusData(bonus:=paramBonus, loanSchedule:=_loanSchedule))
+            loanPaymentFromBonusModels.Add(New LoanPaymentFromBonusData(bonus:=paramBonus, loan:=_loan))
         Next
 
         dgvBonuses.DataSource = loanPaymentFromBonusModels.
@@ -75,53 +75,53 @@ Public Class AssignBonusToLoanForm
             ToList()
     End Function
 
-    Private Async Function GetLoanCoveredPeriods(loanSchedule As LoanSchedule) As Task(Of ICollection(Of PayPeriod))
+    Private Async Function GetLoanCoveredPeriods(loan As Loan) As Task(Of ICollection(Of PayPeriod))
         Return Await _payPeriodRepository.
-            GetLoanScheduleRemainingPayPeriodsAsync(loanSchedule)
+            GetLoanRemainingPayPeriodsAsync(loan)
     End Function
 
-    Private Sub DisplayLoanScheduleDetails(loanSchedule As LoanSchedule)
+    Private Sub DisplayLoanDetails(loan As Loan)
         txtLoanNumber.DataBindings.Clear()
-        txtLoanNumber.DataBindings.Add("Text", loanSchedule, "LoanNumber")
+        txtLoanNumber.DataBindings.Add("Text", loan, "LoanNumber")
 
         txtRemarks.DataBindings.Clear()
-        txtRemarks.DataBindings.Add("Text", loanSchedule, "Comments")
+        txtRemarks.DataBindings.Add("Text", loan, "Comments")
 
         txtTotalLoanAmount.DataBindings.Clear()
-        txtTotalLoanAmount.DataBindings.Add("Text", loanSchedule, "TotalLoanAmount", True, DataSourceUpdateMode.Never, Nothing, "N2")
+        txtTotalLoanAmount.DataBindings.Add("Text", loan, "TotalLoanAmount", True, DataSourceUpdateMode.Never, Nothing, "N2")
 
         txtLoanBalance.DataBindings.Clear()
-        txtLoanBalance.DataBindings.Add("Text", loanSchedule, "TotalBalanceLeft", True, DataSourceUpdateMode.Never, Nothing, "N2")
-        lblTotalBalanceLeft.Text = loanSchedule.TotalBalanceLeft.ToString("N")
+        txtLoanBalance.DataBindings.Add("Text", loan, "TotalBalanceLeft", True, DataSourceUpdateMode.Never, Nothing, "N2")
+        lblTotalBalanceLeft.Text = loan.TotalBalanceLeft.ToString("N")
 
         dtpDateFrom.DataBindings.Clear()
-        dtpDateFrom.DataBindings.Add("Text", loanSchedule, "DedEffectiveDateFrom", True, DataSourceUpdateMode.Never)
+        dtpDateFrom.DataBindings.Add("Text", loan, "DedEffectiveDateFrom", True, DataSourceUpdateMode.Never)
 
         txtNumberOfPayPeriod.DataBindings.Clear()
-        txtNumberOfPayPeriod.DataBindings.Add("Text", loanSchedule, "TotalPayPeriod", True, DataSourceUpdateMode.Never, Nothing, "N0")
+        txtNumberOfPayPeriod.DataBindings.Add("Text", loan, "TotalPayPeriod", True, DataSourceUpdateMode.Never, Nothing, "N0")
 
         txtNumberOfPayPeriodLeft.DataBindings.Clear()
-        txtNumberOfPayPeriodLeft.DataBindings.Add("Text", loanSchedule, "LoanPayPeriodLeft", True, DataSourceUpdateMode.Never, Nothing, "N0")
-        lblLoanPayPeriodLeft.Text = loanSchedule.LoanPayPeriodLeft.ToString()
+        txtNumberOfPayPeriodLeft.DataBindings.Add("Text", loan, "LoanPayPeriodLeft", True, DataSourceUpdateMode.Never, Nothing, "N0")
+        lblLoanPayPeriodLeft.Text = loan.LoanPayPeriodLeft.ToString()
 
         txtDeductionAmount.DataBindings.Clear()
-        txtDeductionAmount.DataBindings.Add("Text", loanSchedule, "DeductionAmount", True, DataSourceUpdateMode.Never, Nothing, "N2")
+        txtDeductionAmount.DataBindings.Add("Text", loan, "DeductionAmount", True, DataSourceUpdateMode.Never, Nothing, "N2")
 
         txtLoanInterestPercentage.DataBindings.Clear()
-        txtLoanInterestPercentage.DataBindings.Add("Text", loanSchedule, "DeductionPercentage", True, DataSourceUpdateMode.Never, Nothing, "N2")
+        txtLoanInterestPercentage.DataBindings.Add("Text", loan, "DeductionPercentage", True, DataSourceUpdateMode.Never, Nothing, "N2")
 
         cboLoanType.DataBindings.Clear()
-        cboLoanType.DataBindings.Add("Text", loanSchedule, "LoanName")
+        cboLoanType.DataBindings.Add("Text", loan, "LoanName")
 
         txtLoanStatus.DataBindings.Clear()
         cmbLoanStatus.DataBindings.Clear()
 
-        txtLoanStatus.DataBindings.Add("Text", loanSchedule, "Status")
+        txtLoanStatus.DataBindings.Add("Text", loan, "Status")
 
-        cmbLoanStatus.DataBindings.Add("Text", loanSchedule, "Status")
+        cmbLoanStatus.DataBindings.Add("Text", loan, "Status")
 
         cmbDeductionSchedule.DataBindings.Clear()
-        cmbDeductionSchedule.DataBindings.Add("Text", loanSchedule, "DeductionSchedule")
+        cmbDeductionSchedule.DataBindings.Add("Text", loan, "DeductionSchedule")
     End Sub
 
     Private Sub dgvBonuses_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvBonuses.CellBeginEdit
@@ -190,13 +190,13 @@ Public Class AssignBonusToLoanForm
     End Sub
 
     Private Function GetChangesCount() As Integer
-        If _loanSchedule.Status = LoanSchedule.STATUS_COMPLETE Then Return 0
+        If _loan.Status = Loan.STATUS_COMPLETE Then Return 0
 
         Dim totalPayment = GetTotalPayment()
-        Dim overPays = totalPayment > _loanSchedule.TotalBalanceLeft
+        Dim overPays = totalPayment > _loan.TotalBalanceLeft
         If overPays Then
             MessageBox.Show(
-                $"Total Payment Amount exceeds Loan Balance({_loanSchedule.TotalBalanceLeft.ToString("N")}).{Environment.NewLine}Please correct the Payment.",
+                $"Total Payment Amount exceeds Loan Balance({_loan.TotalBalanceLeft.ToString("N")}).{Environment.NewLine}Please correct the Payment.",
                 "Payment exceed",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Stop)
@@ -205,7 +205,7 @@ Public Class AssignBonusToLoanForm
             Dim hasChangedList = GetModels().Where(Function(t) t.HasChanged)
             Dim hasChanges = hasChangedList.Any()
 
-            Dim payAtLeastDeductionAmount = totalPayment = 0 OrElse totalPayment >= _loanSchedule.DeductionAmount
+            Dim payAtLeastDeductionAmount = totalPayment = 0 OrElse totalPayment >= _loan.DeductionAmount
 
             If hasChanges AndAlso payAtLeastDeductionAmount Then
                 Return hasChangedList.Count()
@@ -225,18 +225,18 @@ Public Class AssignBonusToLoanForm
         If Not models.Any() Then Return
         Dim totalAmountPayment As Decimal = GetTotalPayment()
 
-        Dim newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft
-        Dim newLoanPayPeriodLeft = _loanSchedule.LoanPayPeriodLeft
+        Dim newTotalBalanceLeft = _loan.TotalBalanceLeft
+        Dim newLoanPayPeriodLeft = _loan.LoanPayPeriodLeft
 
-        If totalAmountPayment >= _loanSchedule.TotalBalanceLeft Then
+        If totalAmountPayment >= _loan.TotalBalanceLeft Then
             newTotalBalanceLeft = 0
             newLoanPayPeriodLeft = 0
 
-        ElseIf totalAmountPayment >= _loanSchedule.DeductionAmount _
-            And totalAmountPayment < _loanSchedule.TotalBalanceLeft Then
-            newTotalBalanceLeft = _loanSchedule.TotalBalanceLeft - totalAmountPayment
+        ElseIf totalAmountPayment >= _loan.DeductionAmount _
+            And totalAmountPayment < _loan.TotalBalanceLeft Then
+            newTotalBalanceLeft = _loan.TotalBalanceLeft - totalAmountPayment
 
-            Dim payPeriodLeft = newTotalBalanceLeft / _loanSchedule.DeductionAmount
+            Dim payPeriodLeft = newTotalBalanceLeft / _loan.DeductionAmount
             If payPeriodLeft > 0 And payPeriodLeft < 1 Then
                 newLoanPayPeriodLeft = 1
             ElseIf payPeriodLeft > -1 Then
@@ -303,9 +303,9 @@ Public Class AssignBonusToLoanForm
 
         Dim leastEffectiveDate = {models.Min(Function(m) m.EffectiveEndDate)}.Min()
 
-        Dim coveredPeriod = Await GetLoanCoveredPeriods(_loanSchedule)
+        Dim coveredPeriod = Await GetLoanCoveredPeriods(_loan)
 
-        Dim loanBalance = _loanSchedule.TotalLoanAmount
+        Dim loanBalance = _loan.TotalLoanAmount
 
         Dim dataSource As List(Of PreviewLoanPayment) = Await LoadPreviewLoanPayments(models, coveredPeriod, loanBalance)
 
@@ -326,12 +326,12 @@ Public Class AssignBonusToLoanForm
 
         Dim models = GetModels()
 
-        ', _loanSchedule.DedEffectiveDateFrom
+        ', _loan.DedEffectiveDateFrom
         Dim leastEffectiveDate = {models.Min(Function(m) m.EffectiveEndDate)}.Min()
 
-        Dim coveredPeriod = Await GetLoanCoveredPeriods(_loanSchedule)
+        Dim coveredPeriod = Await GetLoanCoveredPeriods(_loan)
 
-        Dim loanBalance = _loanSchedule.TotalLoanAmount
+        Dim loanBalance = _loan.TotalLoanAmount
 
         Dim dataSource As List(Of PreviewLoanPayment) = Await LoadPreviewLoanPayments(models, coveredPeriod, loanBalance)
 
@@ -395,8 +395,8 @@ Public Class AssignBonusToLoanForm
                     totalPayment += loanTransaction.DeductionAmount
                     periodicTotalPayment = loanTransaction.DeductionAmount
                 Else
-                    totalPayment += _loanSchedule.DeductionAmount
-                    periodicTotalPayment = _loanSchedule.DeductionAmount
+                    totalPayment += _loan.DeductionAmount
+                    periodicTotalPayment = _loan.DeductionAmount
                 End If
             End If
 
@@ -425,11 +425,11 @@ Public Class AssignBonusToLoanForm
         Next
 
         If currentLoanBalance > 0 Then
-            Dim extendedCoveredPeriods = Await _payPeriodRepository.GetLoanScheduleRemainingPayPeriodsAsync(
+            Dim extendedCoveredPeriods = Await _payPeriodRepository.GetLoanRemainingPayPeriodsAsync(
                 organizationId:=z_OrganizationID,
                 startDate:=dataSource.Max(Function(d) d.PeriodTimePeriod.End).AddDays(1),
-                frequencySchedule:=_loanSchedule.DeductionSchedule,
-                count:=CInt(Math.Round(currentLoanBalance / _loanSchedule.DeductionAmount, 0)))
+                frequencySchedule:=_loan.DeductionSchedule,
+                count:=CInt(Math.Round(currentLoanBalance / _loan.DeductionAmount, 0)))
 
             Dim extendedDataSource = Await LoadPreviewLoanPayments(
                 models,

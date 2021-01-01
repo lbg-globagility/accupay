@@ -125,11 +125,11 @@ namespace AccuPay.Data.Services
                     .Where(l => loanIds.Contains(l.RowID.Value))
                     .ToList();
 
-                var models = new List<LoanScheduleWithEndDateData>();
+                var models = new List<LoanWithEndDateData>();
                 foreach (var loan in loans)
                 {
-                    var coveredPeriods = await _payPeriodRepository.GetLoanScheduleRemainingPayPeriodsAsync(loan);
-                    models.Add(new LoanScheduleWithEndDateData(loan, coveredPeriods));
+                    var coveredPeriods = await _payPeriodRepository.GetLoanRemainingPayPeriodsAsync(loan);
+                    models.Add(new LoanWithEndDateData(loan, coveredPeriods));
                 }
 
                 var loansUncoveredByThisBonus = models

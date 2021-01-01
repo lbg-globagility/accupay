@@ -1,0 +1,5 @@
+ALTER TABLE `yearlyloaninterest`
+	ALTER `LoanScheduleId` DROP DEFAULT;
+ALTER TABLE `yearlyloaninterest`
+	CHANGE COLUMN `LoanScheduleId` `LoanId` INT(11) NOT NULL FIRST,
+	ADD CONSTRAINT `FK_yearlyloaninterest_employeeloanschedule_LoanId` FOREIGN KEY (`LoanId`) REFERENCES `employeeloanschedule` (`RowID`);

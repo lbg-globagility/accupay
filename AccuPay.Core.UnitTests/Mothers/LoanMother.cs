@@ -8,9 +8,9 @@ namespace AccuPay.Core.UnitTests.Mothers
 {
     public class LoanMother
     {
-        public static LoanSchedule Simple()
+        public static Loan Simple()
         {
-            return new LoanSchedule()
+            return new Loan()
             {
                 RowID = It.IsAny<int>(),
                 EmployeeID = It.IsAny<int>(),
@@ -28,7 +28,7 @@ namespace AccuPay.Core.UnitTests.Mothers
             };
         }
 
-        public static LoanSchedule WithLoanAmountAndDeductionAmount(
+        public static Loan WithLoanAmountAndDeductionAmount(
             decimal totalLoanAmount,
             decimal originalDeductionAmount,
             List<LoanTransaction> loanTransactions = null)
@@ -46,7 +46,7 @@ namespace AccuPay.Core.UnitTests.Mothers
             return loan;
         }
 
-        public static LoanSchedule ForYearlyLoanInterest(
+        public static Loan ForYearlyLoanInterest(
             decimal totalLoanAmount,
             decimal deductionPercentage,
             decimal basicMonthlySalary,

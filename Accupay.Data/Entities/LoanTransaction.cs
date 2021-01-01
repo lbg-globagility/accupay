@@ -30,7 +30,7 @@ namespace AccuPay.Data.Entities
         public int LoanPayPeriodLeft { get; set; }
 
         [Column("EmployeeLoanRecordID")]
-        public int LoanScheduleID { get; set; }
+        public int LoanID { get; set; }
 
         [Column("TotalBalanceLeft")]
         public decimal TotalBalance { get; set; }
@@ -42,8 +42,8 @@ namespace AccuPay.Data.Entities
 
         public decimal InterestAmount { get; set; }
 
-        [ForeignKey("LoanScheduleID")]
-        public LoanSchedule LoanSchedule { get; set; }
+        [ForeignKey("LoanID")]
+        public Loan Loan { get; set; }
 
         [ForeignKey("PayPeriodID")]
         public PayPeriod PayPeriod { get; set; }

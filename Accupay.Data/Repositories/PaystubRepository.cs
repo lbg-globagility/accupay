@@ -279,7 +279,7 @@ namespace AccuPay.Data.Repositories
         {
             var paystub = await _context.Paystubs
                 .Include(x => x.LoanTransactions)
-                    .ThenInclude(x => x.LoanSchedule)
+                    .ThenInclude(x => x.Loan)
                 .Include(x => x.LeaveTransactions)
                     .ThenInclude(x => x.LeaveLedger)
 
@@ -374,7 +374,7 @@ namespace AccuPay.Data.Repositories
         {
             var paystub = await _context.Paystubs
                 .Include(x => x.LoanTransactions)
-                    .ThenInclude(x => x.LoanSchedule)
+                    .ThenInclude(x => x.Loan)
                         .ThenInclude(x => x.LoanType)
                 .Where(x => x.RowID == paystubId)
                 .FirstOrDefaultAsync();
@@ -681,11 +681,11 @@ namespace AccuPay.Data.Repositories
         /// <summary>
         /// Returns the deducted amount on the loans based on the passed paystub.
         /// </summary>
-        /// <param name="loanTransactions">The loan transactions to be deleted with its LoanSchedule.</param>
+        /// <param name="loanTransactions">The loan transactions to be deleted with its Loan.</param>
         private void ResetLoanBalances(ICollection<LoanTransaction> loanTransactions, int userId)
         {
             // update the employeeloanschedules' balance
-            var groupedLoans = loanTransactions.GroupBy(x => x.LoanSchedule);
+            var groupedLoans = loanTransactions.GroupBy(x => x.Loan);
 
             foreach (var loanGroup in groupedLoans)
             {
@@ -713,7 +713,7 @@ namespace AccuPay.Data.Repositories
                 .Include(p => p.ActualAdjustments)
                     .ThenInclude(a => a.Product)
                 .Include(p => p.LoanTransactions)
-                    .ThenInclude(a => a.LoanSchedule)
+                    .ThenInclude(a => a.Loan)
                         .ThenInclude(a => a.LoanType)
                 // Allowance not included yet since it is not needed currently
                 .Include(p => p.AllowanceItems)

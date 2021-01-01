@@ -167,7 +167,7 @@ Public Class EmployeeLoansForm
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         ForceLoanGridViewCommit()
 
-        Dim changedLoans As New List(Of LoanSchedule)
+        Dim changedLoans As New List(Of Loan)
 
         Dim messageTitle = "Update Loans"
 
@@ -323,7 +323,7 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        If currentLoan.Status = LoanSchedule.STATUS_COMPLETE Then
+        If currentLoan.Status = Loan.STATUS_COMPLETE Then
 
             MessageBoxHelper.Warning("Cannot delete a completed loan.")
 
@@ -437,10 +437,10 @@ Public Class EmployeeLoansForm
 
         RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
 
-        chkInProgressFilter.Text = LoanSchedule.STATUS_IN_PROGRESS
-        chkOnHoldFilter.Text = LoanSchedule.STATUS_ON_HOLD
-        chkCancelledFilter.Text = LoanSchedule.STATUS_CANCELLED
-        chkCompleteFilter.Text = LoanSchedule.STATUS_COMPLETE
+        chkInProgressFilter.Text = Loan.STATUS_IN_PROGRESS
+        chkOnHoldFilter.Text = Loan.STATUS_ON_HOLD
+        chkCancelledFilter.Text = Loan.STATUS_CANCELLED
+        chkCompleteFilter.Text = Loan.STATUS_COMPLETE
 
         If String.IsNullOrEmpty(searchValue) Then
             EmployeesDataGridView.DataSource = Me._employees
@@ -485,10 +485,10 @@ Public Class EmployeeLoansForm
             Select(Function(l) l.Clone()).
             ToList()
 
-        chkInProgressFilter.Text = $"{LoanSchedule.STATUS_IN_PROGRESS} ({loans.Where(Function(l) l.Status = LoanSchedule.STATUS_IN_PROGRESS).Count()})"
-        chkOnHoldFilter.Text = $"{LoanSchedule.STATUS_ON_HOLD} ({loans.Where(Function(l) l.Status = LoanSchedule.STATUS_ON_HOLD).Count()})"
-        chkCancelledFilter.Text = $"{LoanSchedule.STATUS_CANCELLED} ({loans.Where(Function(l) l.Status = LoanSchedule.STATUS_CANCELLED).Count()})"
-        chkCompleteFilter.Text = $"{LoanSchedule.STATUS_COMPLETE} ({loans.Where(Function(l) l.Status = LoanSchedule.STATUS_COMPLETE).Count()})"
+        chkInProgressFilter.Text = $"{Loan.STATUS_IN_PROGRESS} ({loans.Where(Function(l) l.Status = Loan.STATUS_IN_PROGRESS).Count()})"
+        chkOnHoldFilter.Text = $"{Loan.STATUS_ON_HOLD} ({loans.Where(Function(l) l.Status = Loan.STATUS_ON_HOLD).Count()})"
+        chkCancelledFilter.Text = $"{Loan.STATUS_CANCELLED} ({loans.Where(Function(l) l.Status = Loan.STATUS_CANCELLED).Count()})"
+        chkCompleteFilter.Text = $"{Loan.STATUS_COMPLETE} ({loans.Where(Function(l) l.Status = Loan.STATUS_COMPLETE).Count()})"
 
         Await PopulateLoanGridView()
 
@@ -511,10 +511,10 @@ Public Class EmployeeLoansForm
         Dim whereFunction =
             Function(loan As LoanModel) As Boolean
 
-                Return (inProgressChecked AndAlso loan.Status = LoanSchedule.STATUS_IN_PROGRESS) OrElse
-                    (onHoldChecked AndAlso loan.Status = LoanSchedule.STATUS_ON_HOLD) OrElse
-                    (cancelledChecked AndAlso loan.Status = LoanSchedule.STATUS_CANCELLED) OrElse
-                    (completeChecked AndAlso loan.Status = LoanSchedule.STATUS_COMPLETE)
+                Return (inProgressChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_IN_PROGRESS) OrElse
+                    (onHoldChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_ON_HOLD) OrElse
+                    (cancelledChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_CANCELLED) OrElse
+                    (completeChecked AndAlso loan.Status = Data.Entities.Loan.STATUS_COMPLETE)
 
             End Function
 

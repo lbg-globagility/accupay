@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LoanDataService : BaseEmployeeDataService<LoanSchedule>
+    public class LoanDataService : BaseEmployeeDataService<Loan>
     {
         private const string UserActivityName = "Loan";
 
@@ -87,10 +87,10 @@ namespace AccuPay.Data.Services
                 }
             }
 
-            List<LoanSchedule> loanSchedules = new List<LoanSchedule>();
+            List<Loan> loans = new List<Loan>();
             foreach (var validRecord in validRecords)
             {
-                var loanSchedule = new LoanSchedule()
+                var loan = new Loan()
                 {
                     Comments = validRecord.Comments,
                     DedEffectiveDateFrom = validRecord.StartDate,
@@ -103,30 +103,30 @@ namespace AccuPay.Data.Services
                     OrganizationID = organizationId,
                     TotalBalanceLeft = validRecord.TotalLoanBalance,
                     TotalLoanAmount = validRecord.TotalLoanAmount,
-                    Status = LoanSchedule.STATUS_IN_PROGRESS
+                    Status = Loan.STATUS_IN_PROGRESS
                 };
 
-                loanSchedules.Add(loanSchedule);
+                loans.Add(loan);
             }
 
-            await SaveManyAsync(loanSchedules, currentlyLoggedInUserId);
+            await SaveManyAsync(loans, currentlyLoggedInUserId);
         }
 
         #endregion Save
 
         #region Overrides
 
-        protected override string GetUserActivityName(LoanSchedule loan)
+        protected override string GetUserActivityName(Loan loan)
         {
             return UserActivityName;
         }
 
-        protected override string CreateUserActivitySuffixIdentifier(LoanSchedule loan)
+        protected override string CreateUserActivitySuffixIdentifier(Loan loan)
         {
             return $" with type '{loan.LoanType?.PartNo}' and start date '{loan.DedEffectiveDateFrom.ToShortDateString()}'";
         }
 
-        protected override async Task SanitizeEntity(LoanSchedule loan, LoanSchedule oldLoan, int currentlyLoggedInUserId)
+        protected override async Task SanitizeEntity(Loan loan, Loan oldLoan, int currentlyLoggedInUserId)
         {
             await base.SanitizeEntity(
                 entity: loan,
@@ -147,9 +147,9 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task AdditionalDeleteValidation(LoanSchedule loan)
+        protected override async Task AdditionalDeleteValidation(Loan loan)
         {
-            if (loan.Status == LoanSchedule.STATUS_COMPLETE)
+            if (loan.Status == Loan.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
 
             if ((await _loanRepository.GetLoanTransactionsWithPayPeriodAsync(loan.RowID.Value)).Count > 0)
@@ -158,7 +158,7 @@ namespace AccuPay.Data.Services
             await Task.CompletedTask;
         }
 
-        protected override async Task AdditionalSaveValidation(LoanSchedule loan, LoanSchedule oldLoan)
+        protected override async Task AdditionalSaveValidation(Loan loan, Loan oldLoan)
         {
             await ValidationForBenchmark(loan);
 
@@ -170,7 +170,7 @@ namespace AccuPay.Data.Services
             }
 
             // validate start date should not be in a Closed Payroll
-            if (CheckIfStartDateNeedsToBeValidated(new List<LoanSchedule>() { oldLoan }, loan))
+            if (CheckIfStartDateNeedsToBeValidated(new List<Loan>() { oldLoan }, loan))
             {
                 await CheckIfDataIsWithinClosedPayPeriod(loan.DedEffectiveDateFrom, loan.OrganizationID.Value);
             }
@@ -198,7 +198,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected async override Task AdditionalSaveManyValidation(List<LoanSchedule> loans, List<LoanSchedule> oldLoans, SaveType saveType)
+        protected async override Task AdditionalSaveManyValidation(List<Loan> loans, List<Loan> oldLoans, SaveType saveType)
         {
             var updatedLoanIds = loans
                 .Where(x => !x.IsNewEntity)
@@ -215,7 +215,7 @@ namespace AccuPay.Data.Services
                 {
                     var oldLoan = oldLoans.Where(x => x.RowID == loan.RowID).FirstOrDefault();
 
-                    var loanTransactions = allLoanTransactionList.Items.Where(x => x.LoanScheduleID == loan.RowID);
+                    var loanTransactions = allLoanTransactionList.Items.Where(x => x.LoanID == loan.RowID);
 
                     ValidateTotalAmountAndBalance(loan, oldLoan, loanTransactions);
                 }
@@ -269,7 +269,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        protected override async Task PostDeleteAction(LoanSchedule entity, int currentlyLoggedInUserId)
+        protected override async Task PostDeleteAction(Loan entity, int currentlyLoggedInUserId)
         {
             // supplying LoanType data for saving useractivity
             entity.LoanType = await _productRepository.GetByIdAsync(entity.LoanTypeID.Value);
@@ -277,7 +277,7 @@ namespace AccuPay.Data.Services
             await base.PostDeleteAction(entity, currentlyLoggedInUserId);
         }
 
-        protected override async Task PostSaveAction(LoanSchedule entity, LoanSchedule oldEntity, SaveType saveType)
+        protected override async Task PostSaveAction(Loan entity, Loan oldEntity, SaveType saveType)
         {
             // supplying LoanType data for saving useractivity
             entity.LoanType = await _productRepository.GetByIdAsync(entity.LoanTypeID.Value);
@@ -291,8 +291,8 @@ namespace AccuPay.Data.Services
         }
 
         protected override async Task PostSaveManyAction(
-            IReadOnlyCollection<LoanSchedule> entities,
-            IReadOnlyCollection<LoanSchedule> oldEntities,
+            IReadOnlyCollection<Loan> entities,
+            IReadOnlyCollection<Loan> oldEntities,
             SaveType saveType,
             int currentlyLoggedInUserId)
         {
@@ -319,103 +319,103 @@ namespace AccuPay.Data.Services
             await base.PostSaveManyAction(entities, oldEntities, saveType, currentlyLoggedInUserId);
         }
 
-        protected async override Task RecordUpdate(LoanSchedule newLoanSchedule, LoanSchedule oldLoanSchedule)
+        protected async override Task RecordUpdate(Loan newValue, Loan oldValue)
         {
-            if (oldLoanSchedule == null) return;
+            if (oldValue == null) return;
 
             var changes = new List<UserActivityItem>();
             var entityName = UserActivityName.ToLower();
 
-            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldLoanSchedule)}.";
+            var suffixIdentifier = $"of {entityName}{CreateUserActivitySuffixIdentifier(oldValue)}.";
 
-            if (newLoanSchedule.LoanType?.PartNo != oldLoanSchedule.LoanType?.PartNo)
+            if (newValue.LoanType?.PartNo != oldValue.LoanType?.PartNo)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated type from '{oldLoanSchedule.LoanType?.PartNo}' to '{newLoanSchedule.LoanType?.PartNo}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated type from '{oldValue.LoanType?.PartNo}' to '{newValue.LoanType?.PartNo}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.LoanNumber != oldLoanSchedule.LoanNumber)
+            if (newValue.LoanNumber != oldValue.LoanNumber)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated loan number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated loan number from '{oldValue.LoanNumber}' to '{newValue.LoanNumber}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.TotalLoanAmount != oldLoanSchedule.TotalLoanAmount)
+            if (newValue.TotalLoanAmount != oldValue.TotalLoanAmount)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated total amount from '{oldLoanSchedule.TotalLoanAmount}' to '{newLoanSchedule.TotalLoanAmount}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated total amount from '{oldValue.TotalLoanAmount}' to '{newValue.TotalLoanAmount}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.DedEffectiveDateFrom != oldLoanSchedule.DedEffectiveDateFrom)
+            if (newValue.DedEffectiveDateFrom != oldValue.DedEffectiveDateFrom)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated start date '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString()}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated start date '{oldValue.DedEffectiveDateFrom.ToShortDateString()}' to '{newValue.DedEffectiveDateFrom.ToShortDateString()}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.DeductionAmount != oldLoanSchedule.DeductionAmount)
+            if (newValue.DeductionAmount != oldValue.DeductionAmount)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated deduction amount from '{oldLoanSchedule.DeductionAmount}' to '{newLoanSchedule.DeductionAmount}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated deduction amount from '{oldValue.DeductionAmount}' to '{newValue.DeductionAmount}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.Status != oldLoanSchedule.Status)
+            if (newValue.Status != oldValue.Status)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated status from '{oldValue.Status}' to '{newValue.Status}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.DeductionPercentage != oldLoanSchedule.DeductionPercentage)
+            if (newValue.DeductionPercentage != oldValue.DeductionPercentage)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated interest percentage from '{oldLoanSchedule.DeductionPercentage}' to '{newLoanSchedule.DeductionPercentage}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated interest percentage from '{oldValue.DeductionPercentage}' to '{newValue.DeductionPercentage}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.DeductionSchedule != oldLoanSchedule.DeductionSchedule)
+            if (newValue.DeductionSchedule != oldValue.DeductionSchedule)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated deduction schedule from '{oldValue.DeductionSchedule}' to '{newValue.DeductionSchedule}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
-            if (newLoanSchedule.Comments != oldLoanSchedule.Comments)
+            if (newValue.Comments != oldValue.Comments)
             {
                 changes.Add(new UserActivityItem()
                 {
-                    EntityId = oldLoanSchedule.RowID.Value,
-                    Description = $"Updated comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}' {suffixIdentifier}",
-                    ChangedEmployeeId = oldLoanSchedule.EmployeeID.Value
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated comments from '{oldValue.Comments}' to '{newValue.Comments}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
             }
 
             if (changes.Any())
             {
                 await _userActivityRepository.CreateRecordAsync(
-                    newLoanSchedule.LastUpdBy.Value,
+                    newValue.LastUpdBy.Value,
                     UserActivityName,
-                    newLoanSchedule.OrganizationID.Value,
+                    newValue.OrganizationID.Value,
                     UserActivityRepository.RecordTypeEdit,
                     changes);
             }
@@ -425,11 +425,11 @@ namespace AccuPay.Data.Services
 
         #region Private Methods
 
-        private static void SanitizeInsert(LoanSchedule loan)
+        private static void SanitizeInsert(Loan loan)
         {
             if (loan.LoanPayPeriodLeft == 0)
             {
-                loan.Status = LoanSchedule.STATUS_COMPLETE;
+                loan.Status = Loan.STATUS_COMPLETE;
             }
 
             if (loan.LoanNumber == null)
@@ -441,16 +441,16 @@ namespace AccuPay.Data.Services
             loan.OriginalDeductionAmount = loan.DeductionAmount;
         }
 
-        private void SanitizeUpdate(LoanSchedule newLoan, LoanSchedule oldLoan)
+        private void SanitizeUpdate(Loan newLoan, Loan oldLoan)
         {
             // if cancelled na yung loan, hindi pwede ma update
-            if ((oldLoan.Status == LoanSchedule.STATUS_CANCELLED))
+            if ((oldLoan.Status == Loan.STATUS_CANCELLED))
                 throw new BusinessLogicException("Loan is already cancelled!");
 
             if (newLoan.TotalBalanceLeft == 0)
             {
                 newLoan.LoanPayPeriodLeft = 0;
-                newLoan.Status = LoanSchedule.STATUS_COMPLETE;
+                newLoan.Status = Loan.STATUS_COMPLETE;
             }
 
             if (newLoan.TotalBalanceLeft > newLoan.TotalLoanAmount)
@@ -462,7 +462,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void ValidateTotalAmountAndBalance(LoanSchedule newLoan, LoanSchedule oldLoan, IEnumerable<LoanTransaction> loanTransactions)
+        private void ValidateTotalAmountAndBalance(Loan newLoan, Loan oldLoan, IEnumerable<LoanTransaction> loanTransactions)
         {
             if (newLoan.IsNewEntity || oldLoan == null) return;
 
@@ -493,7 +493,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void SanitizeProperties(LoanSchedule loan)
+        private void SanitizeProperties(Loan loan)
         {
             loan.TotalLoanAmount = AccuMath.CommercialRound(loan.TotalLoanAmount);
             loan.DeductionAmount = AccuMath.CommercialRound(loan.DeductionAmount);
@@ -504,9 +504,9 @@ namespace AccuPay.Data.Services
             loan.RecomputePayPeriodLeft();
         }
 
-        private void Validate(LoanSchedule loan, LoanSchedule oldLoan)
+        private void Validate(Loan loan, Loan oldLoan)
         {
-            if ((oldLoan?.Status ?? loan.Status) == LoanSchedule.STATUS_COMPLETE)
+            if ((oldLoan?.Status ?? loan.Status) == Loan.STATUS_COMPLETE)
                 throw new BusinessLogicException("Loan is already completed!");
 
             if (loan.LoanTypeID == null)
@@ -528,7 +528,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Status is required.");
         }
 
-        private async Task ValidationForBenchmark(LoanSchedule loan)
+        private async Task ValidationForBenchmark(Loan loan)
         {
             if (loan == null)
                 throw new BusinessLogicException("Invalid loan.");
@@ -548,7 +548,7 @@ namespace AccuPay.Data.Services
                     throw new BusinessLogicException("Only PAGIBIG and SSS loan are allowed!");
 
                 // #2
-                if (loan.Status == LoanSchedule.STATUS_IN_PROGRESS)
+                if (loan.Status == Loan.STATUS_IN_PROGRESS)
                 {
                     var sameActiveLoans = await _loanRepository.GetActiveLoansByLoanNameAsync(
                         loan.LoanName,
@@ -564,7 +564,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private bool CheckIfStartDateNeedsToBeValidated(List<LoanSchedule> oldLoans, LoanSchedule loan)
+        private bool CheckIfStartDateNeedsToBeValidated(List<Loan> oldLoans, Loan loan)
         {
             // either a new loan
             if (loan.IsNewEntity) return true;
@@ -578,7 +578,7 @@ namespace AccuPay.Data.Services
             return false;
         }
 
-        private async Task AddBasicMonthlySalaryData(LoanSchedule loan)
+        private async Task AddBasicMonthlySalaryData(Loan loan)
         {
             if (loan.IsNewEntity)
             {
@@ -596,7 +596,7 @@ namespace AccuPay.Data.Services
 
         #region List of entities
 
-        public async Task<ICollection<LoanSchedule>> GetCurrentPayrollLoansAsync(int organizationId,
+        public async Task<ICollection<Loan>> GetCurrentPayrollLoansAsync(int organizationId,
             PayPeriod payPeriod,
             IReadOnlyCollection<Paystub> paystubs)
         {

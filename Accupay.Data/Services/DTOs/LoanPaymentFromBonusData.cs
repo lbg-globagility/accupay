@@ -9,7 +9,7 @@ namespace AccuPay.Data.Services
         private readonly decimal _originalAmountPayment;
         //private bool _isFullPayment;
 
-        public LoanPaymentFromBonusData(Bonus bonus, LoanSchedule loanSchedule)
+        public LoanPaymentFromBonusData(Bonus bonus, Loan loan)
         {
             BonusAmount = bonus.BonusAmount.Value;
             EffectiveStartDate = bonus.EffectiveStartDate;
@@ -18,10 +18,10 @@ namespace AccuPay.Data.Services
             BonusId = bonus.RowID.Value;
             BonusType = bonus.BonusType;
 
-            LoanSchedule = loanSchedule;
-            DeductionAmount = loanSchedule.DeductionAmount;
+            Loan = loan;
+            DeductionAmount = loan.DeductionAmount;
 
-            LoanId = loanSchedule.RowID.Value;
+            LoanId = loan.RowID.Value;
             var loanPaymentFromBonus = bonus.LoanPaymentFromBonuses.FirstOrDefault(l => l.LoanId == LoanId);
 
             bool hasItems = false;
@@ -40,7 +40,7 @@ namespace AccuPay.Data.Services
 
             IsFullPayment = AmountPayment == 0 ? false : AmountPayment == MaxAvailablePayment;
 
-            if (loanSchedule.Status != LoanSchedule.STATUS_COMPLETE)
+            if (loan.Status != Loan.STATUS_COMPLETE)
                 IsEditable = !hasItems;
 
             IsNew = Id == 0;
@@ -61,14 +61,14 @@ namespace AccuPay.Data.Services
         public decimal DeductionAmount { get; }
         public decimal AmountPayment { get; set; }
         public decimal TotalPayment { get; }
-        public LoanSchedule LoanSchedule { get; }
+        public Loan Loan { get; }
         public LoanPaymentFromBonus LoanPaymentFromBonus { get; }
 
         public bool IsFulfilled
         {
             get
             {
-                return LoanSchedule.TotalBalanceLeft <= TotalPayment + AmountPayment;
+                return Loan.TotalBalanceLeft <= TotalPayment + AmountPayment;
             }
         }
 
@@ -138,7 +138,7 @@ namespace AccuPay.Data.Services
         {
             get
             {
-                var totalBalanceLeft = LoanSchedule.TotalBalanceLeft;
+                var totalBalanceLeft = Loan.TotalBalanceLeft;
 
                 var insufficientToPayMinimumDeductionAmount = ExclusiveCurrentBonusAmount < DeductionAmount;
                 if (insufficientToPayMinimumDeductionAmount)

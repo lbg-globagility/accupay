@@ -47,9 +47,9 @@ Public Class BenchmarkPayrollForm
 
     Private _ecola As Allowance
 
-    Private _pagibigLoan As LoanSchedule
+    Private _pagibigLoan As Loan
 
-    Private _sssLoan As LoanSchedule
+    Private _sssLoan As Loan
 
     Private _leaveBalance As Decimal
 
@@ -537,7 +537,7 @@ Public Class BenchmarkPayrollForm
 
             Dim loan = loans(loanIndex)
 
-            If _pagibigLoan?.RowID IsNot Nothing AndAlso loan.LoanScheduleID = _pagibigLoan.RowID.Value Then
+            If _pagibigLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _pagibigLoan.RowID.Value Then
 
                 If pagIbigLoan Is Nothing Then
 
@@ -550,7 +550,7 @@ Public Class BenchmarkPayrollForm
                     Return
                 End If
 
-            ElseIf _sssLoan?.RowID IsNot Nothing AndAlso loan.LoanScheduleID = _sssLoan.RowID.Value Then
+            ElseIf _sssLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _sssLoan.RowID.Value Then
 
                 If sssLoan Is Nothing Then
 

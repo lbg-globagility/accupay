@@ -10,7 +10,7 @@ namespace AccuPay.Core.UnitTests
 {
     public class LoanDeductionAmountCalculatorTest
     {
-        private LoanSchedule _loan;
+        private Loan _loan;
         private PayPeriod _payPeriod;
         private List<LoanTransaction> _loanTransactions;
         private YearlyLoanInterest _yearlyLoanInterest;
@@ -3673,7 +3673,7 @@ namespace AccuPay.Core.UnitTests
                 DateTime.DaysInMonth(_payPeriod.PayFromDate.Year, _payPeriod.PayFromDate.Month)));
         }
 
-        private LoanSchedule CreateShortTermLoan(decimal principalAmount)
+        private Loan CreateShortTermLoan(decimal principalAmount)
         {
             return LoanMother.ForYearlyLoanInterest(
                 totalLoanAmount: 25_000,
@@ -3683,7 +3683,7 @@ namespace AccuPay.Core.UnitTests
                 loanTransactions: _loanTransactions);
         }
 
-        private LoanSchedule CreateLongTermLoan(decimal principalAmount)
+        private Loan CreateLongTermLoan(decimal principalAmount)
         {
             return LoanMother.ForYearlyLoanInterest(
                 totalLoanAmount: 180_000,

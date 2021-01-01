@@ -28,7 +28,7 @@ namespace AccuPay.Data.Entities
         public decimal AmountPayment { get; set; }
 
         [ForeignKey("LoanId")]
-        public virtual LoanSchedule LoanSchedule { get; set; }
+        public virtual Loan Loan { get; set; }
 
         [ForeignKey("BonusId")]
         public virtual Bonus Bonus { get; set; }

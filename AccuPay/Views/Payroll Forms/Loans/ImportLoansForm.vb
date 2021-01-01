@@ -12,7 +12,7 @@ Imports OfficeOpenXml
 
 Public Class ImportLoansForm
 
-    Private _loans As List(Of LoanSchedule)
+    Private _loans As List(Of Loan)
 
     Private _deductionSchedulesList As List(Of String)
 
@@ -82,7 +82,7 @@ Public Class ImportLoansForm
 
         If parsedSuccessfully = False Then Return
 
-        _loans = New List(Of LoanSchedule)
+        _loans = New List(Of Loan)
 
         Dim acceptedRecords As New List(Of LoanRowRecord)
         Dim rejectedRecords As New List(Of LoanRowRecord)
@@ -142,9 +142,9 @@ Public Class ImportLoansForm
 
     End Sub
 
-    Private Function ValidateLoan(loan As LoanSchedule) As String
+    Private Function ValidateLoan(loan As Loan) As String
 
-        If loan.Status = LoanSchedule.STATUS_COMPLETE Then Return "Loan schedule is already completed."
+        If loan.Status = Loan.STATUS_COMPLETE Then Return "Loan schedule is already completed."
 
         If loan.OrganizationID Is Nothing Then Return "Organization is required."
 
@@ -161,7 +161,7 @@ Public Class ImportLoansForm
         Return Nothing
     End Function
 
-    Private Async Function ConvertToLoan(record As LoanRowRecord, employeeId As Integer) As Task(Of LoanSchedule)
+    Private Async Function ConvertToLoan(record As LoanRowRecord, employeeId As Integer) As Task(Of Loan)
 
         If record.StartDate Is Nothing Then
 

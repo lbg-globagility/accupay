@@ -414,21 +414,21 @@ namespace AccuPay.Data.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<ICollection<PayPeriod>> GetLoanScheduleRemainingPayPeriodsAsync(LoanSchedule loanSchedule)
+        public async Task<ICollection<PayPeriod>> GetLoanRemainingPayPeriodsAsync(Loan loans)
         {
-            int organizationId = loanSchedule.OrganizationID.Value;
-            DateTime startDate = loanSchedule.DedEffectiveDateFrom;
-            string frequencySchedule = loanSchedule.DeductionSchedule;
-            int count = (int)loanSchedule.TotalPayPeriod;
+            int organizationId = loans.OrganizationID.Value;
+            DateTime startDate = loans.DedEffectiveDateFrom;
+            string frequencySchedule = loans.DeductionSchedule;
+            int count = (int)loans.TotalPayPeriod;
 
-            return await GetLoanScheduleRemainingPayPeriodsAsync(
+            return await GetLoanRemainingPayPeriodsAsync(
                 organizationId: organizationId,
                 startDate: startDate,
                 frequencySchedule: frequencySchedule,
                 count: count);
         }
 
-        public async Task<ICollection<PayPeriod>> GetLoanScheduleRemainingPayPeriodsAsync(
+        public async Task<ICollection<PayPeriod>> GetLoanRemainingPayPeriodsAsync(
             int organizationId,
             DateTime startDate,
             string frequencySchedule,

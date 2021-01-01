@@ -53,7 +53,7 @@ Public Class LoanUserControl
         CreateDataBindings()
     End Sub
 
-    Public Function GetLoan() As LoanSchedule
+    Public Function GetLoan() As Loan
 
         Return _currentLoan?.CreateLoan()
 
@@ -175,10 +175,10 @@ Public Class LoanUserControl
         Dim statusList = _statusList.ToList()
 
         If _isNew Then
-            statusList.Remove(LoanSchedule.STATUS_CANCELLED)
+            statusList.Remove(Loan.STATUS_CANCELLED)
         End If
 
-        statusList.Remove(LoanSchedule.STATUS_COMPLETE)
+        statusList.Remove(Loan.STATUS_COMPLETE)
 
         Dim statusLookUpList = LookUpStringItem.Convert(statusList, hasDefaultItem:=True)
 

@@ -14,7 +14,7 @@ namespace AccuPay.Core.UnitTests
             int deductionAmount,
             int loanPayPeriodLeft)
         {
-            var loan = new LoanSchedule()
+            var loan = new Loan()
             {
                 TotalLoanAmount = 20_000,
                 TotalBalanceLeft = totalBalanceLeft,
@@ -33,7 +33,7 @@ namespace AccuPay.Core.UnitTests
             int totalBalanceLeft,
             int deductionAmount)
         {
-            var loan = new LoanSchedule()
+            var loan = new Loan()
             {
                 TotalLoanAmount = 20_000,
                 TotalBalanceLeft = totalBalanceLeft,

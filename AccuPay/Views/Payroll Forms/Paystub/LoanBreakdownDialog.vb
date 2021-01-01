@@ -43,12 +43,12 @@ Public Class LoanBreakdownDialog
     Private Class LoanTransactionDto
 
         Public Sub New(loanTransaction As LoanTransaction)
-            _LoanNumber = loanTransaction.LoanSchedule.LoanNumber
-            _LoanType = loanTransaction.LoanSchedule.LoanType.DisplayName
-            _TotalAmount = loanTransaction.LoanSchedule.TotalLoanAmount
+            _LoanNumber = loanTransaction.Loan.LoanNumber
+            _LoanType = loanTransaction.Loan.LoanType.DisplayName
+            _TotalAmount = loanTransaction.Loan.TotalLoanAmount
             _DeductionAmount = $"({FormatNumber(loanTransaction.DeductionAmount, 2)})"
             _Balance = loanTransaction.TotalBalance
-            _DeductionSchedule = loanTransaction.LoanSchedule.DeductionSchedule
+            _DeductionSchedule = loanTransaction.Loan.DeductionSchedule
             _PayPeriodsLeft = loanTransaction.LoanPayPeriodLeft
         End Sub
 

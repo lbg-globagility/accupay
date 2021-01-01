@@ -19,9 +19,9 @@ namespace AccuPay.Web.Loans
             return new LoanTransactionDto
             {
                 Id = loanTransaction.RowID.Value,
-                LoanNumber = loanTransaction.LoanSchedule.LoanNumber,
-                LoanType = loanTransaction.LoanSchedule.LoanType.DisplayName,
-                TotalAmount = loanTransaction.LoanSchedule.TotalLoanAmount,
+                LoanNumber = loanTransaction.Loan.LoanNumber,
+                LoanType = loanTransaction.Loan.LoanType.DisplayName,
+                TotalAmount = loanTransaction.Loan.TotalLoanAmount,
                 DeductionAmount = loanTransaction.DeductionAmount,
                 Balance = loanTransaction.TotalBalance
             };
