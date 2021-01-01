@@ -131,6 +131,8 @@ namespace AccuPay.Data.Services
             var deletedTimeEntries = await _timeEntryRepository.DeleteByPayPeriodAsync(payPeriodId);
 
             // save user activities for time entries and paystubs
+
+            // TODO: maybe record delete for adjustments
             await _paystubDataHelper.RecordDelete(currentlyLoggedInUserId, deletedPaystubs, payPeriod);
 
             await _timeEntryDataHelper.RecordDelete(currentlyLoggedInUserId, deletedTimeEntries.timeEntries);

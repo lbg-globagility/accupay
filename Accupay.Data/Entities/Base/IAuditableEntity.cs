@@ -8,5 +8,7 @@ namespace AccuPay.Data.Entities
         int? CreatedBy { get; }
         DateTime? LastUpd { get; }
         int? LastUpdBy { get; }
+
+        void AuditUser(int currentlyLoggedInUserId);
     }
 }

@@ -86,19 +86,13 @@ Public Class ReleaseThirteenthMonthGeneration
 
         If thirteenthMonthAdjustment IsNot Nothing Then
 
-            thirteenthMonthAdjustment.LastUpd = Date.Now
-            thirteenthMonthAdjustment.LastUpdBy = z_User
             thirteenthMonthAdjustment.Amount = amount
             thirteenthMonthAdjustment.Is13thMonthPay = True
         Else
             Dim adjustment As New Adjustment() With
             {
-                .Created = Date.Now,
                 .Comment = "13th Month Pay",
-                .CreatedBy = z_User,
                 .IsActual = False,
-                .LastUpd = Date.Now,
-                .LastUpdBy = z_User,
                 .OrganizationID = z_OrganizationID,
                 .Amount = amount,
                 .PaystubID = employee.PaystubObject.RowID.Value,

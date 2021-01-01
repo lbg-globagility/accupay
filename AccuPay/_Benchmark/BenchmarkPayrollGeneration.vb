@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
@@ -425,7 +425,6 @@ Namespace Benchmark
 
                 paystub.Adjustments.Add(New Adjustment With {
                 .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
                 .ProductID = deduction.Adjustment?.RowID,
                 .Amount = deduction.Amount * -1 'to make it negative
             })
@@ -436,7 +435,6 @@ Namespace Benchmark
 
                 paystub.Adjustments.Add(New Adjustment With {
                 .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
                 .ProductID = deduction.Adjustment?.RowID,
                 .Amount = deduction.Amount
             })

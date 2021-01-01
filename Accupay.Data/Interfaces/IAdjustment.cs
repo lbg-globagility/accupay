@@ -1,21 +1,12 @@
-﻿using AccuPay.Data.Entities;
-using System;
+using AccuPay.Data.Entities;
 
 namespace AccuPay.Data
 {
-    public interface IAdjustment
+    public interface IAdjustment : IAuditableEntity
     {
         int? RowID { get; set; }
 
         int? OrganizationID { get; set; }
-
-        DateTime Created { get; set; }
-
-        int? CreatedBy { get; set; }
-
-        DateTime? LastUpd { get; set; }
-
-        int? LastUpdBy { get; set; }
 
         int? PaystubID { get; set; }
 
@@ -32,5 +23,7 @@ namespace AccuPay.Data
         Product Product { get; set; }
 
         bool Is13thMonthPay { get; set; }
+
+        IAdjustment Clone();
     }
 }

@@ -226,6 +226,18 @@ namespace AccuPay.Data.Entities
             return Math.Ceiling(amountWithInterest / principalDeductionAmount);
         }
 
+        public void AuditUser(int currentlyLoggedInUserId)
+        {
+            if (IsNewEntity)
+            {
+                CreatedBy = currentlyLoggedInUserId;
+            }
+            else
+            {
+                LastUpdBy = currentlyLoggedInUserId;
+            }
+        }
+
         #endregion Private Methods
     }
 }

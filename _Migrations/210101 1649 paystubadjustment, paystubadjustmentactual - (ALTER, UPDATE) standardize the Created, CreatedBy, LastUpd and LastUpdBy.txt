@@ -1,0 +1,37 @@
+SET @defaultUserId = (SELECT Id FROM aspnetusers LIMIT 1);
+
+#=============================================================================================================================
+ALTER TABLE `paystubadjustment`
+	DROP FOREIGN KEY IF EXISTS `FK_paystubadjustment_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_paystubadjustment_aspnetusers_LastUpdBy`;
+ALTER TABLE `paystubadjustment`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `paystubadjustment` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `paystubadjustment`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `paystubadjustment`
+	ADD CONSTRAINT `FK_paystubadjustment_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_paystubadjustment_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+#=============================================================================================================================
+ALTER TABLE `paystubadjustmentactual`
+	DROP FOREIGN KEY IF EXISTS `FK_paystubadjustmentactual_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_paystubadjustmentactual_aspnetusers_LastUpdBy`;
+ALTER TABLE `paystubadjustmentactual`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `paystubadjustmentactual` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `paystubadjustmentactual`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `paystubadjustmentactual`
+	ADD CONSTRAINT `FK_paystubadjustmentactual_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_paystubadjustmentactual_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);

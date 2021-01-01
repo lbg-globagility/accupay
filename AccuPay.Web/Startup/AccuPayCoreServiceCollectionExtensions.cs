@@ -51,6 +51,8 @@ namespace AccuPay.Web
             services.AddScoped<LeaveLedgerRepository>();
             services.AddScoped<ListOfValueRepository>();
             services.AddScoped<LoanRepository>();
+            services.AddScoped<LoanPaymentFromBonusRepository>();
+            services.AddScoped<LoanPaymentFromThirteenthMonthPayRepository>();
             services.AddScoped<OfficialBusinessRepository>();
             services.AddScoped<OrganizationRepository>();
             services.AddScoped<OvertimeRepository>();

@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -236,17 +236,15 @@ namespace AccuPay.Data.Services
 
                         ActualAdjustment aa = new ActualAdjustment()
                         {
-                            Created = DateTime.Now,
                             Comment = string.Concat(leaveDayBalance, leaveDayBalance > 1 ? " days" : " day"),
-                            CreatedBy = _userId,
                             IsActual = true,
-                            LastUpd = DateTime.Now,
-                            LastUpdBy = _userId,
                             OrganizationID = _organizationId,
                             Amount = unusedLeaveAmount,
                             PaystubID = paystub.RowID,
                             ProductID = _adjUnusedVacationLeaveId
                         };
+
+                        aa.AuditUser(_userId);
 
                         paystub.ActualAdjustments.Add(aa);
 

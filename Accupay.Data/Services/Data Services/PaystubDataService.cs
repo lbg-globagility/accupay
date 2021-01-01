@@ -2,6 +2,7 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
+using AccuPay.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,6 +54,7 @@ namespace AccuPay.Data.Services
                 id: paystub.RowID.Value,
                 currentlyLoggedInUserId: currentlyLoggedInUserId);
 
+            // TODO: maybe record delete for adjustments
             await RecordDelete(paystub, currentlyLoggedInUserId, payPeriod);
         }
 
@@ -66,6 +68,7 @@ namespace AccuPay.Data.Services
                 payPeriodId: payPeriodId,
                 currentlyLoggedInUserId: currentlyLoggedInUserId);
 
+            // TODO: maybe record delete for adjustments
             await _paystubDataHelper.RecordDelete(currentlyLoggedInUserId, paystubs, payPeriod);
         }
 
@@ -108,17 +111,37 @@ namespace AccuPay.Data.Services
         {
             foreach (var adjustment in allAdjustments)
             {
-                if (adjustment.RowID == null || adjustment.RowID <= 0)
-                {
-                    adjustment.CreatedBy = currentlyLoggedInUserId;
-                }
-                else
-                {
-                    adjustment.LastUpdBy = currentlyLoggedInUserId;
-                }
+                SanitizeAdjustment(currentlyLoggedInUserId, adjustment);
             }
 
-            await _paystubRepository.UpdateAdjustmentsAsync(paystubId, allAdjustments);
+            (IReadOnlyCollection<T> added,
+                IReadOnlyCollection<T> updated,
+                IReadOnlyCollection<T> deleted,
+                IReadOnlyCollection<T> originalAdjustments) =
+                await _paystubRepository.UpdateAdjustmentsAsync(paystubId, allAdjustments);
+
+            await _paystubDataHelper.RecordCreateAdjustments(currentlyLoggedInUserId, added);
+            await _paystubDataHelper.RecordUpdateAdjustments(currentlyLoggedInUserId, updated, originalAdjustments);
+            await _paystubDataHelper.RecordDeleteAdjustments(currentlyLoggedInUserId, deleted);
+        }
+
+        private static void SanitizeAdjustment<T>(int currentlyLoggedInUserId, T adjustment) where T : IAdjustment
+        {
+            if (adjustment.PaystubID == null)
+                throw new BusinessLogicException("Paystub is required.");
+
+            if (adjustment.OrganizationID == null)
+                throw new BusinessLogicException("Organization is required.");
+
+            if (adjustment.ProductID == null)
+                throw new BusinessLogicException("Adjustment Type is required.");
+
+            if (adjustment.Amount == 0)
+                throw new BusinessLogicException("Amount cannot be equal to 0.");
+
+            adjustment.Amount = AccuMath.CommercialRound(adjustment.Amount);
+
+            adjustment.AuditUser(currentlyLoggedInUserId);
         }
 
         #endregion Save

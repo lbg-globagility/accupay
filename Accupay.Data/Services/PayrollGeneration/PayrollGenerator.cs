@@ -323,7 +323,6 @@ namespace AccuPay.Data.Services
                 {
                     OrganizationID = paystub.OrganizationID,
                     CreatedBy = currentlyLoggedInUserId,
-                    Created = DateTime.Now,
                     Paystub = paystub,
                     ProductID = bpiInsuranceProduct.RowID,
                     Amount = -employee.BPIInsurance

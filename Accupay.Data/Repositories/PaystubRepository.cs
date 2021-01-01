@@ -83,19 +83,34 @@ namespace AccuPay.Data.Repositories
 
         #region UpdateAdjustments
 
-        public async Task UpdateAdjustmentsAsync<T>(int paystubId, ICollection<T> allAdjustments) where T : IAdjustment
+        public async Task<(IReadOnlyCollection<T> added, IReadOnlyCollection<T> updated, IReadOnlyCollection<T> deleted, IReadOnlyCollection<T> originalAdjustments)> UpdateAdjustmentsAsync<T>(
+            int paystubId,
+            ICollection<T> allAdjustments) where T : IAdjustment
         {
             Paystub paystub = await GetPaystubWithAdjustments(paystubId);
 
-            decimal originalDeclaredAdjustments = paystub.Adjustments.Sum(x => x.Amount);
-            decimal originalActualAdjustments = paystub.ActualAdjustments.Sum(x => x.Amount);
-            decimal originalTotalAdjustments = originalDeclaredAdjustments + originalActualAdjustments;
+            decimal originalDeclaredAdjustmentAmount = paystub.Adjustments.Sum(x => x.Amount);
+            decimal originalActualAdjustmentAmount = paystub.ActualAdjustments.Sum(x => x.Amount);
+            decimal originalTotalAdjustmentAmount = originalDeclaredAdjustmentAmount + originalActualAdjustmentAmount;
 
-            List<T> originalAdjustments = GetOriginalAdjustments<T>(paystub);
+            // for saving
+            List<T> currentAdjustments = GetCurrentAdjustments<T>(paystub);
+
+            // for user activity
+            List<T> originalAdjustments = new List<T>();
+            currentAdjustments.ForEach(x =>
+            {
+                originalAdjustments.Add((T)x.Clone());
+            });
 
             List<T> modifiedAdjustments = GetModifiedAdjustments(allAdjustments);
 
-            AddContextState(paystub, originalAdjustments, modifiedAdjustments);
+            (IReadOnlyCollection<T> added, IReadOnlyCollection<T> updated, IReadOnlyCollection<T> deleted) =
+                GetAdjustmentModifications(paystub, currentAdjustments, modifiedAdjustments);
+
+            AddContextState(added, EntityState.Added);
+            AddContextState(updated, EntityState.Modified);
+            AddContextState(deleted, EntityState.Deleted);
 
             // Save changes
             decimal updatedTotalAdjustments = paystub.Adjustments.Sum(x => x.Amount) + paystub.ActualAdjustments.Sum(x => x.Amount);
@@ -103,19 +118,35 @@ namespace AccuPay.Data.Repositories
             if (typeof(Adjustment).IsAssignableFrom(typeof(T)))
             {
                 paystub.TotalAdjustments = paystub.Adjustments.Sum(x => x.Amount);
-                paystub.NetPay = (paystub.NetPay - originalDeclaredAdjustments) + paystub.TotalAdjustments;
+                paystub.NetPay = (paystub.NetPay - originalDeclaredAdjustmentAmount) + paystub.TotalAdjustments;
             }
 
             paystub.Actual.TotalAdjustments = updatedTotalAdjustments;
-            paystub.Actual.NetPay = (paystub.Actual.NetPay - originalTotalAdjustments) + paystub.Actual.TotalAdjustments;
+            paystub.Actual.NetPay = (paystub.Actual.NetPay - originalTotalAdjustmentAmount) + paystub.Actual.TotalAdjustments;
 
             _context.Entry(paystub).State = EntityState.Modified;
             _context.Entry(paystub.Actual).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
+
+            return (
+                added: added,
+                updated: updated,
+                deleted: deleted,
+                originalAdjustments: originalAdjustments);
         }
 
-        private static List<T> GetOriginalAdjustments<T>(Paystub paystub) where T : IAdjustment
+        private void AddContextState<T>(IReadOnlyCollection<T> adjustments, EntityState entityState) where T : IAdjustment
+        {
+            if (adjustments == null || !adjustments.Any()) return;
+
+            foreach (var adjustment in adjustments)
+            {
+                _context.Entry(adjustment).State = entityState;
+            }
+        }
+
+        private static List<T> GetCurrentAdjustments<T>(Paystub paystub) where T : IAdjustment
         {
             var originalAdjustments = new List<T>();
             if (typeof(ActualAdjustment).IsAssignableFrom(typeof(T)))
@@ -176,8 +207,15 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        private void AddContextState<T>(Paystub paystub, List<T> originalAdjustments, List<T> modifiedAdjustments) where T : IAdjustment
+        private (IReadOnlyCollection<T> added, IReadOnlyCollection<T> updated, IReadOnlyCollection<T> deleted) GetAdjustmentModifications<T>(
+            Paystub paystub,
+            List<T> originalAdjustments,
+            List<T> modifiedAdjustments) where T : IAdjustment
         {
+            List<T> added = new List<T>();
+            List<T> updated = new List<T>();
+            List<T> deleted = new List<T>();
+
             List<T> newAdjustments = modifiedAdjustments.Where(x => IsNewEntity(x.RowID)).ToList();
             List<T> updatedAdjustments = modifiedAdjustments.Where(x => !IsNewEntity(x.RowID)).ToList();
 
@@ -199,7 +237,8 @@ namespace AccuPay.Data.Repositories
                     {
                         paystub.ActualAdjustments.Remove((ActualAdjustment)(object)adjustment);
                     }
-                    _context.Entry(adjustment).State = EntityState.Deleted;
+
+                    deleted.Add(adjustment);
                 }
                 else
                 {
@@ -208,7 +247,7 @@ namespace AccuPay.Data.Repositories
                     adjustment.Comment = updatedAdjustment.Comment;
                     adjustment.Is13thMonthPay = updatedAdjustment.Is13thMonthPay;
 
-                    _context.Entry(adjustment).State = EntityState.Modified;
+                    updated.Add(adjustment);
                 }
             }
 
@@ -225,8 +264,13 @@ namespace AccuPay.Data.Repositories
                     paystub.ActualAdjustments.Add((ActualAdjustment)(object)newAdjustment);
                 }
 
-                _context.Entry(newAdjustment).State = EntityState.Added;
+                added.Add(newAdjustment);
             }
+
+            return (
+                added: added,
+                updated: updated,
+                deleted: deleted);
         }
 
         #endregion UpdateAdjustments

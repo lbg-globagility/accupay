@@ -1,28 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("paystubadjustment")]
-    public class Adjustment : IAdjustment
+    public class Adjustment : OrganizationalEntity, IAdjustment
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
-
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
         public int? ProductID { get; set; }
 
         public int? PaystubID { get; set; }
@@ -41,5 +23,24 @@ namespace AccuPay.Data.Entities
         public virtual Product Product { get; set; }
 
         public bool Is13thMonthPay { get; set; }
+
+        public IAdjustment Clone()
+        {
+            return new Adjustment()
+            {
+                RowID = RowID,
+                OrganizationID = OrganizationID,
+                CreatedBy = CreatedBy,
+                LastUpdBy = LastUpdBy,
+                ProductID = ProductID,
+                PaystubID = PaystubID,
+                Amount = Amount,
+                Comment = Comment,
+                IsActual = IsActual,
+                Paystub = Paystub,
+                Product = Product,
+                Is13thMonthPay = Is13thMonthPay,
+            };
+        }
     }
 }

@@ -15,7 +15,6 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports Castle.Components.DictionaryAdapter
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
@@ -47,10 +46,6 @@ Public Class PayStubForm
     Dim selectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
     Dim unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
-
-    Private _originalActualAdjustments As List(Of ActualAdjustment)
-
-    Private _originalAdjustments As List(Of Adjustment)
 
     Private _currentSystemOwner As String
 
@@ -991,9 +986,9 @@ Public Class PayStubForm
         End If
 
         Dim paystub = Await _paystubRepository.GetByCompositeKeyAsync(
-                        New EmployeeCompositeKey(
-                            employeeId:=employeeId.Value,
-                            payPeriodId:=_currentPayperiodId.Value))
+            New EmployeeCompositeKey(
+                employeeId:=employeeId.Value,
+                payPeriodId:=_currentPayperiodId.Value))
 
         If paystub Is Nothing OrElse paystub.RowID Is Nothing Then
 
@@ -1011,200 +1006,14 @@ Public Class PayStubForm
              If isActual Then
 
                  Await UpdateAdjustments(Of ActualAdjustment)(paystub, allAjustments)
-                 Await RecordAdjustmentUserActivity(Of ActualAdjustment)(allAjustments, paystub, isActual)
              Else
 
                  Await UpdateAdjustments(Of Adjustment)(paystub, allAjustments)
-                 Await RecordAdjustmentUserActivity(Of Adjustment)(allAjustments, paystub, isActual)
              End If
 
              Await UpdateEmployeeDetails()
 
          End Function)
-    End Function
-
-    Private Async Function RecordAdjustmentUserActivity(Of T As IAdjustment)(
-        allAjustments As BindingSource,
-        paystub As Paystub,
-        isActual As Boolean) As Task
-
-        Dim result = CreateAdjustmentUserActivityItems(Of T)(allAjustments, paystub, isActual)
-
-        Await SaveUserAdjustmentUserActivity(result)
-
-    End Function
-
-    Private Shared Async Function SaveUserAdjustmentUserActivity(result As (added As List(Of UserActivityItem), updated As List(Of UserActivityItem), deleted As List(Of UserActivityItem))) As Task
-        Dim added As List(Of UserActivityItem) = result.added
-        Dim updated As List(Of UserActivityItem) = result.updated
-        Dim deleted As List(Of UserActivityItem) = result.deleted
-
-        Dim formEntityName As String = "Payroll"
-
-        If added?.Any() Then
-
-            Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await userActivityService.CreateRecordAsync(
-              z_User,
-              formEntityName,
-              z_OrganizationID,
-              UserActivityRepository.RecordTypeAdd,
-              added)
-
-        End If
-
-        If updated?.Any() Then
-
-            Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await userActivityService.CreateRecordAsync(
-              z_User,
-              formEntityName,
-              z_OrganizationID,
-              UserActivityRepository.RecordTypeAdd,
-              updated)
-
-        End If
-
-        If deleted?.Any() Then
-
-            Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await userActivityService.CreateRecordAsync(
-              z_User,
-              formEntityName,
-              z_OrganizationID,
-              UserActivityRepository.RecordTypeDelete,
-              deleted)
-
-        End If
-    End Function
-
-    Private Function CreateAdjustmentUserActivityItems(Of T As IAdjustment)(
-        allAjustments As BindingSource,
-        paystub As Paystub,
-        isActual As Boolean) As _
-        (added As List(Of UserActivityItem), updated As List(Of UserActivityItem), deleted As List(Of UserActivityItem))
-
-        Dim suffixIdentifier = $"for payroll { GetPayPeriodString()}."
-        Dim entityName = If(isActual, "actual adjustment", "adjustment")
-
-        Dim added As New List(Of UserActivityItem)
-        Dim updated As New List(Of UserActivityItem)
-        Dim deleted As New List(Of UserActivityItem)
-
-        Dim adjustmentTypes = CType(cboProducts.DataSource, List(Of Product))
-
-        Dim modifiedAdjustments As New List(Of T)
-        For Each adjustment In allAjustments
-            modifiedAdjustments.Add(CType(adjustment, T))
-        Next
-
-        Dim originalAdjustments = GetOriginalAdjustments(Of T)(isActual)
-
-        For Each adjustment In originalAdjustments
-
-            Dim updatedAdjustment = modifiedAdjustments.
-                Where(Function(a) a.RowID.HasValue).
-                Where(Function(a) a.RowID.Value = adjustment.RowID.Value).
-                FirstOrDefault()
-
-            If updatedAdjustment IsNot Nothing Then
-
-                Dim oldType = GetAdjustmentTypeName(adjustmentTypes, adjustment.ProductID)
-
-                If Not adjustment.ProductID.NullableEquals(updatedAdjustment.ProductID) Then
-
-                    Dim newType = GetAdjustmentTypeName(adjustmentTypes, updatedAdjustment.ProductID)
-
-                    updated.Add(New UserActivityItem() With {
-                        .EntityId = adjustment.RowID.Value,
-                        .Description = $"Updated type from '{ oldType }' to '{ newType }' of {entityName} with type {oldType} {suffixIdentifier}",
-                        .ChangedEmployeeId = paystub.EmployeeID.Value
-                    })
-
-                ElseIf adjustment.Amount <> updatedAdjustment.Amount Then
-
-                    updated.Add(New UserActivityItem() With {
-                        .EntityId = adjustment.RowID.Value,
-                        .Description = $"Updated amount from '{ adjustment.Amount }' to '{ updatedAdjustment.Amount }' of {entityName} with type {oldType} {suffixIdentifier}",
-                        .ChangedEmployeeId = paystub.EmployeeID.Value
-                    })
-
-                ElseIf adjustment.Comment <> updatedAdjustment.Comment Then
-
-                    updated.Add(New UserActivityItem() With {
-                        .EntityId = adjustment.RowID.Value,
-                        .Description = $"Updated comment from '{ adjustment.Comment }' to '{ updatedAdjustment.Comment }' of {entityName} with type {oldType} {suffixIdentifier}",
-                        .ChangedEmployeeId = paystub.EmployeeID.Value
-                    })
-
-                End If
-            Else
-                Dim adjustmentType = GetAdjustmentTypeName(adjustmentTypes, adjustment.ProductID)
-
-                deleted.Add(New UserActivityItem() With {
-                    .EntityId = adjustment.RowID.Value,
-                    .Description = $"Deleted an {entityName} with type {adjustmentType} {suffixIdentifier}",
-                    .ChangedEmployeeId = paystub.EmployeeID.Value
-                })
-            End If
-
-        Next
-
-        For Each adjustment In modifiedAdjustments
-
-            Dim originalAdjustment = originalAdjustments.
-                Where(Function(a) a.RowID.HasValue).
-                Where(Function(a) a.RowID.Value = adjustment.RowID.Value).
-                FirstOrDefault()
-
-            If originalAdjustment Is Nothing Then
-                Dim adjustmentType = GetAdjustmentTypeName(adjustmentTypes, adjustment.ProductID)
-
-                added.Add(New UserActivityItem() With {
-                    .EntityId = adjustment.RowID.Value,
-                    .Description = $"Created a new {entityName} with type {adjustmentType} {suffixIdentifier}",
-                    .ChangedEmployeeId = paystub.EmployeeID.Value
-                 })
-
-            End If
-        Next
-
-        Return (added, updated, deleted)
-    End Function
-
-    Private Shared Function GetAdjustmentTypeName(adjustmentTypes As List(Of Product), productId As Integer?) As String
-
-        Dim oldType = String.Empty
-
-        If productId IsNot Nothing Then
-
-            oldType = adjustmentTypes.Where(Function(a) a.RowID.Value = productId.Value).FirstOrDefault()?.PartNo
-
-        End If
-
-        Return oldType
-    End Function
-
-    Private Function GetOriginalAdjustments(Of T As IAdjustment)(isActual As Boolean) As List(Of T)
-
-        Dim list As New List(Of T)
-
-        If isActual Then
-
-            _originalActualAdjustments.ForEach(
-                Sub(a)
-                    list.Add(CType(CType(a, Object), T))
-                End Sub)
-        Else
-
-            _originalAdjustments.ForEach(
-                Sub(a)
-                    list.Add(CType(CType(a, Object), T))
-                End Sub)
-
-        End If
-
-        Return list
     End Function
 
     Private Async Function UpdateAdjustments(Of T As IAdjustment)(paystub As Paystub, allAjustments As BindingSource) As Task
@@ -1222,7 +1031,7 @@ Public Class PayStubForm
 
             If item.Amount = 0 Then
 
-                Throw New BusinessLogicException("Adjustment amount must be not be equal to zero.")
+                Throw New BusinessLogicException("Adjustment amount must not be equal to zero.")
 
             End If
 
@@ -1258,7 +1067,6 @@ Public Class PayStubForm
         If isActual Then
 
             Dim adjustments = (Await _paystubRepository.GetActualAdjustmentsAsync(paystub.RowID.Value)).ToList()
-            CreateOriginalActualAdjustments(adjustments)
 
             Dim bindingList As New BindingList(Of ActualAdjustment)(adjustments)
             AdjustmentGridView.DataSource = New BindingSource(bindingList, Nothing)
@@ -1266,61 +1074,12 @@ Public Class PayStubForm
         Else
 
             Dim adjustments = (Await _paystubRepository.GetAdjustmentsAsync(paystub.RowID.Value)).ToList()
-            CreateOriginalAdjustments(adjustments)
 
             Dim bindingList As New BindingList(Of Adjustment)(adjustments)
             AdjustmentGridView.DataSource = New BindingSource(bindingList, Nothing)
             AdjustmentTitleLabel.Text = If(_policy.ShowActual, "Declared Adjustments", "Adjustments")
         End If
     End Function
-
-    Private Sub CreateOriginalAdjustments(adjustments As List(Of Adjustment))
-
-        If adjustments Is Nothing Then Return
-
-        _originalAdjustments = New List(Of Adjustment)
-
-        adjustments.ForEach(
-            Sub(adjustment)
-                _originalAdjustments.Add(New Adjustment() With {
-                    .RowID = adjustment.RowID,
-                    .OrganizationID = adjustment.OrganizationID,
-                    .Created = adjustment.Created,
-                    .CreatedBy = adjustment.CreatedBy,
-                    .LastUpd = adjustment.LastUpd,
-                    .LastUpdBy = adjustment.LastUpdBy,
-                    .ProductID = adjustment.ProductID,
-                    .PaystubID = adjustment.PaystubID,
-                    .Amount = adjustment.Amount,
-                    .Comment = adjustment.Comment,
-                    .IsActual = adjustment.IsActual
-                })
-            End Sub)
-    End Sub
-
-    Private Sub CreateOriginalActualAdjustments(adjustments As List(Of ActualAdjustment))
-
-        If adjustments Is Nothing Then Return
-
-        _originalActualAdjustments = New List(Of ActualAdjustment)
-
-        adjustments.ForEach(
-            Sub(adjustment)
-                _originalActualAdjustments.Add(New ActualAdjustment() With {
-                    .RowID = adjustment.RowID,
-                    .OrganizationID = adjustment.OrganizationID,
-                    .Created = adjustment.Created,
-                    .CreatedBy = adjustment.CreatedBy,
-                    .LastUpd = adjustment.LastUpd,
-                    .LastUpdBy = adjustment.LastUpdBy,
-                    .ProductID = adjustment.ProductID,
-                    .PaystubID = adjustment.PaystubID,
-                    .Amount = adjustment.Amount,
-                    .Comment = adjustment.Comment,
-                    .IsActual = adjustment.IsActual
-                })
-            End Sub)
-    End Sub
 
     Private Function IsActualSelected() As Boolean
         Return tabEarned.SelectedTab Is ActualTabPage
@@ -2163,7 +1922,7 @@ Public Class PayStubForm
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
         Dim userActivity As New UserActivityForm(
-            New String() {"Pay Period", "Paystub", "Time Entry"},
+            New String() {"Pay Period", "Paystub", "Paystub Adjustment", "Time Entry"},
             "Payroll")
 
         userActivity.ShowDialog()
