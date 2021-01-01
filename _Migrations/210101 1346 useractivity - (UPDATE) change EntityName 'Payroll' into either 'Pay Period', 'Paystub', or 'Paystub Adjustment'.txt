@@ -1,0 +1,43 @@
+
+UPDATE useractivity a
+INNER JOIN useractivityitem b
+ON a.RowID = b.UserActivityId
+SET a.EntityName = 'PAYSTUB'
+WHERE a.Entityname = 'PAYROLL'
+AND b.Description LIKE '%Generated paystub for payroll%'
+;
+
+UPDATE useractivity a
+INNER JOIN useractivityitem b
+ON a.RowID = b.UserActivityId
+SET a.EntityName = 'PAYSTUB'
+WHERE a.Entityname = 'PAYROLL'
+AND b.Description LIKE '%Deleted a paystub for payroll%'
+;
+
+UPDATE useractivity a
+INNER JOIN useractivityitem b
+ON a.RowID = b.UserActivityId
+SET a.EntityName = 'PAYSTUB'
+WHERE a.Entityname = 'PAYROLL'
+AND b.Description LIKE '%Deleted paystub and time entries for payroll%'
+;
+
+
+UPDATE useractivity a
+INNER JOIN useractivityitem b
+ON a.RowID = b.UserActivityId
+SET a.EntityName = 'PAYSTUB ADJUSTMENT'
+WHERE a.Entityname = 'PAYROLL'
+AND Description LIKE '%adjustment%'
+;
+
+UPDATE useractivity a
+INNER JOIN useractivityitem b
+ON a.RowID = b.UserActivityId
+SET a.EntityName = 'PAY PERIOD'
+WHERE a.Entityname = 'PAYROLL'
+AND (Description LIKE '%Closed%'
+OR Description LIKE '%Opened%'
+OR Description LIKE '%Cancelled%')
+;

@@ -3,15 +3,19 @@ using AccuPay.Data.Enums;
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
     public class PayPeriodDataService
     {
+        private const string UserActivityName = "Pay Period";
+
         private readonly IPolicyHelper _policy;
         private readonly PaystubDataHelper _paystubDataHelper;
         private readonly TimeEntryDataHelper _timeEntryDataHelper;
+        private readonly UserActivityRepository _userActivityRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly PaystubRepository _paystubRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
@@ -24,7 +28,8 @@ namespace AccuPay.Data.Services
             SystemOwnerService systemOwnerService,
             IPolicyHelper policy,
             PaystubDataHelper paystubDataHelper,
-            TimeEntryDataHelper timeEntryDataHelper)
+            TimeEntryDataHelper timeEntryDataHelper,
+            UserActivityRepository userActivityRepository)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
@@ -33,6 +38,7 @@ namespace AccuPay.Data.Services
             _policy = policy;
             _paystubDataHelper = paystubDataHelper;
             _timeEntryDataHelper = timeEntryDataHelper;
+            _userActivityRepository = userActivityRepository;
         }
 
         public static string HasCurrentlyOpenErrorMessage(PayPeriod payPeriod)
@@ -139,13 +145,15 @@ namespace AccuPay.Data.Services
             return payPeriod;
         }
 
-        public async Task UpdateStatusAsync(PayPeriod payPeriod, int userId, PayPeriodStatus status)
+        public async Task UpdateStatusAsync(PayPeriod payPeriod, int currentlyLoggedInUserId, PayPeriodStatus status)
         {
             if (payPeriod?.RowID == null || payPeriod?.OrganizationID == null)
                 throw new BusinessLogicException("Pay Period does not exists.");
 
             if ((await _payPeriodRepository.GetByIdAsync(payPeriod.RowID.Value)) == null)
                 throw new BusinessLogicException("Pay Period does not exists.");
+
+            if (payPeriod.Status == status) return;
 
             if (status == PayPeriodStatus.Open)
             {
@@ -166,9 +174,54 @@ namespace AccuPay.Data.Services
             }
 
             payPeriod.Status = status;
-            payPeriod.LastUpdBy = userId;
+            payPeriod.LastUpdBy = currentlyLoggedInUserId;
 
             await _payPeriodRepository.UpdateAsync(payPeriod);
+
+            await RecordUserActivity(payPeriod, currentlyLoggedInUserId, status);
         }
+
+        #region Private Methods
+
+        private async Task RecordUserActivity(PayPeriod payPeriod, int currentlyLoggedInUserId, PayPeriodStatus status)
+        {
+            var userActivityAction = string.Empty;
+            switch (status)
+            {
+                case PayPeriodStatus.Pending:
+                    userActivityAction = "Cancelled";
+                    break;
+
+                case PayPeriodStatus.Open:
+                    userActivityAction = "Opened";
+                    break;
+
+                case PayPeriodStatus.Closed:
+                    userActivityAction = "Closed";
+                    break;
+
+                default:
+                    break;
+            }
+
+            var activityItem = new List<UserActivityItem>()
+            {
+                new UserActivityItem()
+                {
+                    EntityId = payPeriod.RowID.Value,
+                    Description = $"{userActivityAction} the payroll '{payPeriod.PayFromDate.ToShortDateString()}' to '{payPeriod.PayToDate.ToShortDateString()}'.",
+                    ChangedEmployeeId = null
+                }
+            };
+
+            await _userActivityRepository.CreateRecordAsync(
+                currentlyLoggedInUserId,
+                UserActivityName,
+                payPeriod.OrganizationID.Value,
+                UserActivityRepository.RecordTypeEdit,
+                activityItem);
+        }
+
+        #endregion Private Methods
     }
 }

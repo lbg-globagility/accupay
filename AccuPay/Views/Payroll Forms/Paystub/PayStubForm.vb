@@ -24,8 +24,6 @@ Imports OfficeOpenXml.Style
 
 Public Class PayStubForm
 
-    Private Const FormEntityName As String = "Payroll"
-
     Private _logger As ILog = LogManager.GetLogger("PayrollLogger")
 
     Public Property CurrentYear As Integer = CDate(dbnow).Year
@@ -1041,12 +1039,14 @@ Public Class PayStubForm
         Dim updated As List(Of UserActivityItem) = result.updated
         Dim deleted As List(Of UserActivityItem) = result.deleted
 
+        Dim formEntityName As String = "Payroll"
+
         If added?.Any() Then
 
             Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
             Await userActivityService.CreateRecordAsync(
               z_User,
-              FormEntityName,
+              formEntityName,
               z_OrganizationID,
               UserActivityRepository.RecordTypeAdd,
               added)
@@ -1058,7 +1058,7 @@ Public Class PayStubForm
             Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
             Await userActivityService.CreateRecordAsync(
               z_User,
-              FormEntityName,
+              formEntityName,
               z_OrganizationID,
               UserActivityRepository.RecordTypeAdd,
               updated)
@@ -1070,7 +1070,7 @@ Public Class PayStubForm
             Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
             Await userActivityService.CreateRecordAsync(
               z_User,
-              FormEntityName,
+              formEntityName,
               z_OrganizationID,
               UserActivityRepository.RecordTypeDelete,
               deleted)
@@ -1759,11 +1759,9 @@ Public Class PayStubForm
         If close Then
 
             Await dataService.CloseAsync(payPeriod.RowID.Value, z_User)
-            Await RecordPayrollStatusUpdateAsync(payPeriod.RowID.Value, $"Closed the payroll {GetPayPeriodString()}.")
         Else
 
             Await dataService.ReopenAsync(payPeriod.RowID.Value, z_User)
-            Await RecordPayrollStatusUpdateAsync(payPeriod.RowID.Value, $"Reopened the payroll {GetPayPeriodString()}.")
         End If
 
         Await RefreshForm()
@@ -1780,28 +1778,6 @@ Public Class PayStubForm
 
         Return True
 
-    End Function
-
-    Private Async Function RecordPayrollStatusUpdateAsync(payPeriodId As Integer, description As String) As Task
-
-        Dim payPeriodString = GetPayPeriodString()
-
-        Dim activityItem = New List(Of UserActivityItem) From {
-            New UserActivityItem() With
-            {
-                .EntityId = payPeriodId,
-                .Description = description,
-                .ChangedEmployeeId = Nothing
-            }
-        }
-
-        Dim userActivityService = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-        Await userActivityService.CreateRecordAsync(
-          z_User,
-          FormEntityName,
-          z_OrganizationID,
-          UserActivityRepository.RecordTypeEdit,
-          activityItem)
     End Function
 
     Private Async Function RefreshForm() As Task
@@ -1929,8 +1905,6 @@ Public Class PayStubForm
 
                     Dim payperiodDataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
                     Await payperiodDataService.CancelAsync(_currentPayperiodId.Value, z_User)
-
-                    Await RecordPayrollStatusUpdateAsync(_currentPayperiodId.Value, $"Cancelled the payroll {GetPayPeriodString()}.")
 
                     Await RefreshForm()
                     Await TimeEntrySummaryForm.LoadPayPeriods()
@@ -2189,8 +2163,8 @@ Public Class PayStubForm
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
         Dim userActivity As New UserActivityForm(
-            New String() {FormEntityName, "Paystub", "Time Entry"},
-            FormEntityName)
+            New String() {"Pay Period", "Paystub", "Time Entry"},
+            "Payroll")
 
         userActivity.ShowDialog()
     End Sub
