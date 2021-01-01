@@ -16,7 +16,6 @@ namespace AccuPay.Data.Repositories
         public const string RecordTypeAdd = "ADD";
         public const string RecordTypeEdit = "EDIT";
         public const string RecordTypeDelete = "DELETE";
-        public const string RecordTypeImport = "IMPORT";
 
         private readonly PayrollContext _context;
 

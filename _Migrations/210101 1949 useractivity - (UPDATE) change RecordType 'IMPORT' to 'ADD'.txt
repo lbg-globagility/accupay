@@ -1,0 +1,4 @@
+UPDATE useractivity
+SET RecordType = 'ADD'
+WHERE RecordType = 'IMPORT'
+;

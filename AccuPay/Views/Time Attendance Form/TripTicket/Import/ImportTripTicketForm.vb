@@ -15,16 +15,14 @@ Public Class ImportTripTicketForm
 
 #Region "VariableDeclarations"
 
-    Private Const FORM_ENTITY_NAME As String = "TripTicket"
     Private _filePath As String
     Private _okModels As List(Of TripTicketModel)
     Private _failModels As List(Of TripTicketModel)
 
-    Private _employeeRepository As EmployeeRepository
-    Private _userActivityRepository As UserActivityRepository
-    Private _tripTicketRepository As TripTicketRepository
-    Private _routeRepository As RouteRepository
-    Private _vehicleRepository As VehicleRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _tripTicketRepository As TripTicketRepository
+    Private ReadOnly _routeRepository As RouteRepository
+    Private ReadOnly _vehicleRepository As VehicleRepository
 
 #End Region
 
@@ -33,8 +31,6 @@ Public Class ImportTripTicketForm
         InitializeComponent()
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
 
@@ -58,9 +54,9 @@ Public Class ImportTripTicketForm
         If Not browseFile.ShowDialog() = DialogResult.OK Then Return
 
         Await FunctionUtils.TryCatchFunctionAsync("Load Trip Ticket Data",
-                                                Async Function()
-                                                    Await SetFileDirectory(browseFile.FileName)
-                                                End Function)
+            Async Function()
+                Await SetFileDirectory(browseFile.FileName)
+            End Function)
     End Sub
 
     Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
@@ -174,22 +170,7 @@ Public Class ImportTripTicketForm
                 routes,
                 vehicles,
                 organizationId:=z_OrganizationID,
-                userId:=z_User)
-
-            Dim userActivityItems = New List(Of UserActivityItem)
-            Dim entityName = FORM_ENTITY_NAME.ToLower()
-
-            For Each item In tripTickets
-
-                userActivityItems.Add(New UserActivityItem() With
-                {
-                    .Description = $"Imported a new {entityName}.",
-                    .EntityId = item.RowID.Value
-                })
-            Next
-
-            Await _userActivityRepository.
-                CreateRecordAsync(z_User, FORM_ENTITY_NAME, z_OrganizationID, UserActivityRepository.RecordTypeImport, userActivityItems)
+                currentlyLoggedInUserId:=z_User)
 
         End If
     End Function

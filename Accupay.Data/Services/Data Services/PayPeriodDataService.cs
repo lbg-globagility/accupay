@@ -206,7 +206,7 @@ namespace AccuPay.Data.Services
                     break;
             }
 
-            var activityItem = new List<UserActivityItem>()
+            var activityItems = new List<UserActivityItem>()
             {
                 new UserActivityItem()
                 {
@@ -221,7 +221,7 @@ namespace AccuPay.Data.Services
                 UserActivityName,
                 payPeriod.OrganizationID.Value,
                 UserActivityRepository.RecordTypeEdit,
-                activityItem);
+                activityItems);
         }
 
         #endregion Private Methods
