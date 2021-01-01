@@ -996,10 +996,10 @@
     <Compile Include="Views\HRIS Forms\Division_Position\PositionUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm2.Designer.vb">
-      <DependentUpon>TimeLogsForm2.vb</DependentUpon>
+    <Compile Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm.Designer.vb">
+      <DependentUpon>TimeLogsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm2.vb">
+    <Compile Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Payroll Forms\Allowance\AddAllowanceForm.Designer.vb">
@@ -1902,8 +1902,8 @@
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectPayslipEmployeesForm.resx">
       <DependentUpon>SelectPayslipEmployeesForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm2.resx">
-      <DependentUpon>TimeLogsForm2.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm.resx">
+      <DependentUpon>TimeLogsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableDatePicker.resx">
       <DependentUpon>NullableDatePicker.vb</DependentUpon>

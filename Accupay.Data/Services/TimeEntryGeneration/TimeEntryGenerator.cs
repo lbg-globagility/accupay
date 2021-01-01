@@ -74,7 +74,7 @@ namespace AccuPay.Data.Services
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
-            var dutyShifts = resources.Shifts
+            var shifts = resources.Shifts
                 .Where(es => es.EmployeeID == employee.RowID)
                 .ToList();
 
@@ -138,7 +138,7 @@ namespace AccuPay.Data.Services
                     var overtimes = overtimesInCutoff.Where(o => o.OTStartDate <= currentDate && currentDate <= o.OTEndDate).ToList();
                     var leaves = leavesInCutoff.Where(l => l.StartDate == currentDate).ToList();
                     var officialBusiness = officialBusinesses.FirstOrDefault(o => o.StartDate.Value == currentDate);
-                    var shift = dutyShifts.FirstOrDefault(es => es.DateSched == currentDate);
+                    var shift = shifts.FirstOrDefault(es => es.DateSched == currentDate);
                     var currentTimeAttendanceLogs = timeAttendanceLogs.Where(l => l.WorkDay == currentDate).ToList();
                     var tripTicketsForDate = tripTickets.Where(t => t.Date == currentDate).ToList();
 

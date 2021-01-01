@@ -308,10 +308,10 @@ namespace AccuPay.Data.Services
                 await AdditionalSaveManyValidation(entities, GetOldEntitiesOfPassedEntities(entities, oldEntities), saveType);
         }
 
-        private async Task CallPostSaveManyAction(List<T> updated, ICollection<T> oldEntities, SaveType saveType, int currentlyLoggedInUserId)
+        private async Task CallPostSaveManyAction(List<T> savedEntities, ICollection<T> oldEntities, SaveType saveType, int currentlyLoggedInUserId)
         {
-            if (updated != null && updated.Any())
-                await PostSaveManyAction(updated, GetOldEntitiesOfPassedEntities(updated, oldEntities), saveType, currentlyLoggedInUserId);
+            if (savedEntities != null && savedEntities.Any())
+                await PostSaveManyAction(savedEntities, GetOldEntitiesOfPassedEntities(savedEntities, oldEntities), saveType, currentlyLoggedInUserId);
         }
 
         #endregion Private Methods

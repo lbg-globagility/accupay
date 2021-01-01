@@ -186,8 +186,8 @@ Public Class TimeAttendForm
     End Sub
 
     Private Async Sub TimeLogsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeLogsToolStripMenuItem.Click
-        Await ChangeForm(TimeLogsForm2, PermissionConstant.TIMELOG)
-        previousForm = TimeLogsForm2
+        Await ChangeForm(TimeLogsForm, PermissionConstant.TIMELOG)
+        previousForm = TimeLogsForm
     End Sub
 
     Private Async Sub LeaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LeaveToolStripMenuItem.Click

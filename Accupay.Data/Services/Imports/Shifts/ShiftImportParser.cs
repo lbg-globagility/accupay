@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
@@ -64,18 +64,18 @@ namespace AccuPay.Data.Services.Imports
 
             var list = new List<ShiftImportModel>();
 
-            foreach (var shiftSched in parsedRecords)
+            foreach (var shift in parsedRecords)
             {
-                if (shiftSched.StartDate == DateTime.MinValue) continue;
+                if (shift.StartDate == DateTime.MinValue) continue;
 
                 var employee = employees
-                            .Where(ee => ee.EmployeeNo == shiftSched.EmployeeNo)
+                            .Where(ee => ee.EmployeeNo == shift.EmployeeNo)
                             .FirstOrDefault();
 
-                var endDate = shiftSched.EndDate.HasValue ? shiftSched.EndDate.Value : shiftSched.StartDate;
-                var dates = CalendarHelper.EachDay(shiftSched.StartDate, endDate);
+                var endDate = shift.EndDate.HasValue ? shift.EndDate.Value : shift.StartDate;
+                var dates = CalendarHelper.EachDay(shift.StartDate, endDate);
 
-                list.AddRange(CreateShiftImportModel(shiftSched, dates, employee));
+                list.AddRange(CreateShiftImportModel(shift, dates, employee));
             }
 
             bool isValid(ShiftImportModel x) => x.IsValidToSave;
@@ -87,9 +87,10 @@ namespace AccuPay.Data.Services.Imports
                                                 invalidRecords: invalidRecords);
         }
 
-        private List<ShiftImportModel> CreateShiftImportModel(ShiftRowRecord shiftSched,
-                                                        IEnumerable<DateTime> dates,
-                                                        Employee employee)
+        private List<ShiftImportModel> CreateShiftImportModel(
+            ShiftRowRecord shift,
+            IEnumerable<DateTime> dates,
+            Employee employee)
         {
             var list = new List<ShiftImportModel>();
 
@@ -98,11 +99,11 @@ namespace AccuPay.Data.Services.Imports
                 list.Add(new ShiftImportModel(employee, _shiftBasedAutoOvertimePolicy)
                 {
                     Date = date,
-                    BreakTime = shiftSched.BreakStartTime,
-                    BreakLength = shiftSched.BreakLength,
-                    IsRestDay = shiftSched.IsRestDay,
-                    StartTime = shiftSched.StartTime,
-                    EndTime = shiftSched.EndTime
+                    BreakTime = shift.BreakStartTime,
+                    BreakLength = shift.BreakLength,
+                    IsRestDay = shift.IsRestDay,
+                    StartTime = shift.StartTime,
+                    EndTime = shift.EndTime
                 });
             }
 

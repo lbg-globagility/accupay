@@ -246,11 +246,11 @@ namespace AccuPay.Data.Services
             {
                 var currentDate = leave.StartDate;
 
-                var dutyShiftSched = shifts.FirstOrDefault(es => es.DateSched == currentDate);
+                var shift = shifts.FirstOrDefault(es => es.DateSched == currentDate);
 
                 var currentShift = DayCalculator.GetCurrentShift(
                     currentDate,
-                    dutyShiftSched,
+                    shift,
                     _policy.RespectDefaultRestDay,
                     employee.DayOfRest,
                     _policy.ShiftBasedAutomaticOvertimePolicy);

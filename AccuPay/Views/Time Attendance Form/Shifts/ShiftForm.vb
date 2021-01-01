@@ -22,7 +22,7 @@ Public Class ShiftForm
     Private Const ENABLED_TEXT As String = "Enabled"
     Private Const DISABLED_TEXT As String = "Disabled"
 
-    Private Shared logger As ILog = LogManager.GetLogger("ShiftScheduleAppender")
+    Private Shared logger As ILog = LogManager.GetLogger("ShiftAppender")
 
     Private organizationId As Integer
 
@@ -88,7 +88,7 @@ Public Class ShiftForm
         RefreshDataSource(gridWeek, _models)
     End Sub
 
-    Private Sub CollectShiftSchedModel(ee As Employee, dateVal As Date, modelList As ICollection(Of ShiftModel), isRaw As Boolean)
+    Private Sub CollectShiftModel(ee As Employee, dateVal As Date, modelList As ICollection(Of ShiftModel), isRaw As Boolean)
         Dim shiftModelSchedModel =
             New ShiftModel(ee) With {
             .DateValue = dateVal}
@@ -211,9 +211,9 @@ Public Class ShiftForm
         End If
     End Sub
 
-    Private Sub AutomaticShiftCompute(shiftSched As ShiftModel)
+    Private Sub AutomaticShiftCompute(shift As ShiftModel)
         Dim shiftHours = _dutyShiftPolicy.DefaultWorkHour
-        Dim breakHours = shiftSched.BreakLength
+        Dim breakHours = shift.BreakLength
 
         Dim _empty = String.Empty
 
@@ -222,7 +222,7 @@ Public Class ShiftForm
                                   ss.BreakLength = Nothing
                               End Sub
 
-        With shiftSched
+        With shift
             Dim startTime As TimeSpan? = Calendar.ToTimespan(.TimeFrom)
             Dim breakStartTime As TimeSpan? = Calendar.ToTimespan(.BreakFrom)
 
@@ -245,7 +245,7 @@ Public Class ShiftForm
                     If breakStartTime.HasValue Then
                         .BreakFrom = MilitarDateTime(breakStartTime.Value)
                     Else
-                        ClearBreakTimes(shiftSched)
+                        ClearBreakTimes(shift)
                     End If
 
                     'ElseIf Not String.IsNullOrWhiteSpace(.BreakFrom) Then
@@ -256,7 +256,7 @@ Public Class ShiftForm
 
                 End If
             Else
-                ClearBreakTimes(shiftSched)
+                ClearBreakTimes(shift)
 
                 .TimeTo = Nothing
             End If
@@ -393,12 +393,13 @@ Public Class ShiftForm
         Dim _models = New List(Of ShiftModel)
 
         For Each ee In employeeList.ToList
-            Dim emloyee = employees.Where(Function(e) CBool(e.RowID = ee.EmployeeId)).FirstOrDefault()
+            Dim employee = employees.Where(Function(e) CBool(e.RowID = ee.EmployeeId)).FirstOrDefault()
             For Each dateVal In dates
-                CollectShiftSchedModel(emloyee,
-                                       dateVal,
-                                       _models,
-                                       isRawData)
+                CollectShiftModel(
+                    employee,
+                    dateVal,
+                    _models,
+                    isRawData)
             Next
         Next
 
@@ -412,14 +413,14 @@ Public Class ShiftForm
 
         Dim isShiftBasedAutoOvertimeEnabled = _isShiftBasedAutoOvertimeEnabled
         Dim repository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
-        Dim empShiftScheds = Await repository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
+        Dim shifts = Await repository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
             z_OrganizationID,
             employeeIds,
             datePeriod)
 
-        If empShiftScheds.Any Then
+        If shifts.Any Then
             Dim notExists = Function(shSched As ShiftModel)
-                                Dim seekResult = empShiftScheds.
+                                Dim seekResult = shifts.
                                 Where(Function(ess) Nullable.Equals(ess.EmployeeID, shSched.EmployeeId)).
                                 Where(Function(ess) Nullable.Equals(ess.DateSched.Date, shSched.DateValue.Date))
 
@@ -428,7 +429,7 @@ Public Class ShiftForm
             Dim notInDb = models.Where(Function(ssm) notExists(ssm)).ToList
 
             models.Clear()
-            For Each ess In empShiftScheds
+            For Each ess In shifts
                 models.Add(New ShiftModel(ess))
             Next
 
@@ -1208,8 +1209,8 @@ Public Class ShiftForm
         _dataGrid.Refresh()
 
         If _dataGrid.Name = grid.Name Then
-            Dim shiftSchedModels = ConvertGridRowsToShiftModels(grid)
-            AffectedRows(shiftSchedModels)
+            Dim shiftModels = ConvertGridRowsToShiftModels(grid)
+            AffectedRows(shiftModels)
         End If
     End Sub
 

@@ -18,7 +18,7 @@ Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
-Public Class TimeLogsForm2
+Public Class TimeLogsForm
 
 #Region "VariableDeclarations"
 
@@ -127,11 +127,11 @@ Public Class TimeLogsForm2
                 Where(Function(etd) etd.EmployeeID.Value = model.EmployeeID).
                 Where(Function(etd) etd.LogDate = model.DateIn)
 
-            Dim seekShiftSched = shifts.
+            Dim seekShift = shifts.
                 Where(Function(ss) ss.EmployeeID.Value = model.EmployeeID).
                 Where(Function(ss) ss.DateSched = model.DateIn)
 
-            Dim hasShiftSched = seekShiftSched.Any()
+            Dim hasShift = seekShift.Any()
 
             If seek.Any Then
                 'TODO: employeetimeentrydetails date should be unique so no query like this should be needed.
@@ -139,13 +139,13 @@ Public Class TimeLogsForm2
                     OrderByDescending(Function(t) t.LastUpd).
                     FirstOrDefault
 
-                If hasShiftSched Then
-                    dataSource.Add(New TimeLogModel(timeLog) With {.Shift = seekShiftSched.FirstOrDefault})
+                If hasShift Then
+                    dataSource.Add(New TimeLogModel(timeLog) With {.Shift = seekShift.FirstOrDefault})
                     Continue For
                 End If
                 dataSource.Add(New TimeLogModel(timeLog))
             Else
-                If hasShiftSched Then model.Shift = seekShiftSched.FirstOrDefault
+                If hasShift Then model.Shift = seekShift.FirstOrDefault
                 dataSource.Add(model)
             End If
         Next
@@ -749,7 +749,7 @@ Public Class TimeLogsForm2
 
     End Function
 
-    Private Sub TimeLogsForm2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+    Private Sub TimeLogsForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
         InfoBalloon(, , lblFormTitle, , , 1)
     End Sub

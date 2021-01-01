@@ -202,7 +202,7 @@ namespace AccuPay.Data.Services
         #region Private Methods
 
         private (List<Overtime> saveOvertimes, List<Overtime> deleteOvertimes) CreateOvertimesByShift(
-            IEnumerable<IShift> shiftSchedSaveList,
+            IEnumerable<IShift> shiftSaveList,
             int organizationId,
             List<int> employeeIds,
             TimePeriod timePeriod)
@@ -212,7 +212,7 @@ namespace AccuPay.Data.Services
 
             var existingOvertimes = _overtimeRepository.GetByEmployeeIDsAndDatePeriod(organizationId, employeeIds, timePeriod);
 
-            shiftSchedSaveList.ToList().ForEach(shiftModel =>
+            shiftSaveList.ToList().ForEach(shiftModel =>
             {
                 var employeeID = shiftModel.EmployeeId;
                 var dateValue = shiftModel.Date;
