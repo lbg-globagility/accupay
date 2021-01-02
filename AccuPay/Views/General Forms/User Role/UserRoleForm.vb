@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -123,7 +122,7 @@ Public Class UserRoleForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Role",
             Async Function()
-                Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleDataService)
+                Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleDataService)
                 Await roleRepository.UpdateAsync(currentRole)
 
                 Await RefreshRoleGrid(currentRole)
@@ -157,7 +156,7 @@ Public Class UserRoleForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Delete Role",
             Async Function()
-                Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleDataService)
+                Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleDataService)
                 Await roleRepository.DeleteAsync(currentRole.Id)
 
                 Await RefreshRoleGrid(currentRole)

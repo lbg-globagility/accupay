@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
@@ -21,9 +20,9 @@ Public Class ImportTripTicketForm
     Private _failModels As List(Of TripTicketModel)
 
     Private ReadOnly _employeeRepository As IEmployeeRepository
-    Private ReadOnly _tripTicketRepository As TripTicketRepository
+    Private ReadOnly _tripTicketRepository As ITripTicketRepository
     Private ReadOnly _routeRepository As IRouteRepository
-    Private ReadOnly _vehicleRepository As VehicleRepository
+    Private ReadOnly _vehicleRepository As IVehicleRepository
 
 #End Region
 
@@ -33,11 +32,11 @@ Public Class ImportTripTicketForm
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
+        _tripTicketRepository = MainServiceProvider.GetRequiredService(Of ITripTicketRepository)
 
         _routeRepository = MainServiceProvider.GetRequiredService(Of IRouteRepository)
 
-        _vehicleRepository = MainServiceProvider.GetRequiredService(Of VehicleRepository)
+        _vehicleRepository = MainServiceProvider.GetRequiredService(Of IVehicleRepository)
 
         DataGridView1.AutoGenerateColumns = False
         DataGridView2.AutoGenerateColumns = False
@@ -154,7 +153,7 @@ Public Class ImportTripTicketForm
     Private Async Function SaveToDatabase(tripTickets As List(Of TripTicket)) As Task
         If tripTickets.Any Then
 
-            Dim service = MainServiceProvider.GetRequiredService(Of TripTicketDataService)
+            Dim service = MainServiceProvider.GetRequiredService(Of ITripTicketDataService)
 
             Dim routes = (From r In tripTickets
                           Group By rr = New With {Key r.RouteDescription} Into rrr = Group

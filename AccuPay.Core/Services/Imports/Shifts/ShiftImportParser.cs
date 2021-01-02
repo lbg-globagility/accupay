@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Core.Services.Policies;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports
 {
-    public class ShiftImportParser
+    public class ShiftImportParser : IShiftImportParser
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<ShiftRowRecord> _parser;

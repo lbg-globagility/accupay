@@ -2,11 +2,9 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Entities.Paystub
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -38,7 +36,7 @@ Public Class BenchmarkPaystubForm
 
     Private ReadOnly _salaryRepository As ISalaryRepository
 
-    Private ReadOnly _overtimeRateService As OvertimeRateService
+    Private ReadOnly _overtimeRateService As IOvertimeRateService
 
     Sub New()
 
@@ -54,7 +52,7 @@ Public Class BenchmarkPaystubForm
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
-        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of IOvertimeRateService)
 
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
@@ -740,7 +738,7 @@ Public Class BenchmarkPaystubForm
 
         Await FunctionUtils.TryCatchFunctionAsync("",
             Async Function()
-                Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                Dim paystubDataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
                 Await paystubDataService.DeleteAsync(
                     New EmployeeCompositeKey(
                             employeeId:=employeeId.Value,

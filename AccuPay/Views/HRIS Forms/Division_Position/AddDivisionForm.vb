@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -144,7 +143,7 @@ Public Class AddDivisionForm
 
     Private Async Function SaveDivision(sender As Object) As Task
 
-        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Dim service = MainServiceProvider.GetRequiredService(Of IDivisionDataService)
         Await service.SaveAsync(Me._newDivision, z_User)
 
         Me.LastDivisionAdded = Me._newDivision

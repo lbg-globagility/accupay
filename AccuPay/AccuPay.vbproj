@@ -772,7 +772,6 @@
     <Compile Include="Views\Time Attendance Form\TripTicket\TripTicketForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TripTicket\TripTicketRepository.vb" />
     <Compile Include="Views\Time Attendance Form\TripTicket\VehicleForm.Designer.vb">
       <DependentUpon>VehicleForm.vb</DependentUpon>
     </Compile>

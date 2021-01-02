@@ -1,6 +1,5 @@
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Core.Services.Imports.Allowances;
@@ -9,10 +8,8 @@ using AccuPay.Core.Services.Imports.Loans;
 using AccuPay.Core.Services.Imports.OfficialBusiness;
 using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Core.Services.Imports.Salaries;
-using AccuPay.Core.Services.Reports;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Reports;
-using AccuPay.Infrastructure.Repositories;
 using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
 using Microsoft.EntityFrameworkCore;

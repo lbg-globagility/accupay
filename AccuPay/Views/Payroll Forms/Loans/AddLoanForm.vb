@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -70,7 +70,7 @@ Public Class AddLoanForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ILoanDataService)
 
                 Me._newLoan = LoanModel.Create(Await dataService.SaveAsync(loan, z_User))
 

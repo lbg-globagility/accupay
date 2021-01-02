@@ -1,8 +1,7 @@
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.TimeEntries.Models;
@@ -15,32 +14,32 @@ namespace AccuPay.Web.TimeEntries
 {
     public class TimeEntryService
     {
-        private readonly PayPeriodRepository _payPeriodRepository;
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly TimeEntryResources _timeEntryResources;
+        private readonly IPayPeriodRepository _payPeriodRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ITimeEntryResources _timeEntryResources;
         private readonly ICurrentUser _currentUser;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        private readonly LeaveRepository _leaveRepository;
-        private readonly OvertimeRepository _overtimeRepository;
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
-        private readonly TimeLogRepository _timeLogRepository;
-        private readonly TimeEntryRepository _timeEntryRepository;
-        private readonly ShiftRepository _shiftRepository;
-        private readonly TimeEntryDataService _dataService;
+        private readonly ILeaveRepository _leaveRepository;
+        private readonly IOvertimeRepository _overtimeRepository;
+        private readonly IOfficialBusinessRepository _officialBusinessRepository;
+        private readonly ITimeLogRepository _timeLogRepository;
+        private readonly ITimeEntryRepository _timeEntryRepository;
+        private readonly IShiftRepository _shiftRepository;
+        private readonly ITimeEntryDataService _dataService;
 
         public TimeEntryService(
-            TimeEntryResources timeEntryResources,
+            ITimeEntryResources timeEntryResources,
             ICurrentUser currentUser,
             IServiceScopeFactory serviceScopeFactory,
-            EmployeeRepository employeeRepository,
-            PayPeriodRepository payPeriodRepository,
-            LeaveRepository leaveRepository,
-            OvertimeRepository overtimeRepository,
-            OfficialBusinessRepository officialBusinessRepository,
-            TimeLogRepository timeLogRepository,
-            TimeEntryRepository timeEntryRepository,
-            ShiftRepository shiftRepository,
-            TimeEntryDataService dataService)
+            IEmployeeRepository employeeRepository,
+            IPayPeriodRepository payPeriodRepository,
+            ILeaveRepository leaveRepository,
+            IOvertimeRepository overtimeRepository,
+            IOfficialBusinessRepository officialBusinessRepository,
+            ITimeLogRepository timeLogRepository,
+            ITimeEntryRepository timeEntryRepository,
+            IShiftRepository shiftRepository,
+            ITimeEntryDataService dataService)
         {
             _timeEntryResources = timeEntryResources;
             _employeeRepository = employeeRepository;
@@ -79,7 +78,7 @@ namespace AccuPay.Web.TimeEntries
 
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    var generator = scope.ServiceProvider.GetRequiredService<TimeEntryGenerator>();
+                    var generator = scope.ServiceProvider.GetRequiredService<ITimeEntryGenerator>();
                     var result = await generator.Start(
                         employee.RowID.Value,
                         _timeEntryResources,

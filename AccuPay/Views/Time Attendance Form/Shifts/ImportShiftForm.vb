@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services.[Imports]
 Imports AccuPay.Core.Services.Policies
 Imports AccuPay.Desktop.Helpers
@@ -18,7 +18,7 @@ Public Class ImportShiftForm
 
     Public IsSaved As Boolean
 
-    Private ReadOnly _importParser As ShiftImportParser
+    Private ReadOnly _importParser As IShiftImportParser
     Private ReadOnly _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
 
     Sub New(shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
@@ -27,7 +27,7 @@ Public Class ImportShiftForm
 
         _dataSourceFailed = New List(Of ShiftImportModel)
 
-        _importParser = MainServiceProvider.GetRequiredService(Of ShiftImportParser)
+        _importParser = MainServiceProvider.GetRequiredService(Of IShiftImportParser)
 
         _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy
         _importParser.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy)
@@ -111,7 +111,7 @@ Public Class ImportShiftForm
 
                 If _shiftBasedAutoOvertimePolicy.Enabled Then Await SaveShiftBasedOvertimes()
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IShiftDataService)
                 Dim result = Await dataService.BatchApply(
                     _dataSourceOk,
                     organizationId:=z_OrganizationID,
@@ -127,7 +127,7 @@ Public Class ImportShiftForm
     Private Async Function SaveShiftBasedOvertimes() As Task
         Dim employeeIds = _dataSourceOk.Select(Function(sh) sh.EmployeeId.Value).Distinct().ToList()
 
-        Dim overtimeDataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+        Dim overtimeDataService = MainServiceProvider.GetRequiredService(Of IOvertimeDataService)
 
         Await overtimeDataService.GenerateOvertimeByShift(_dataSourceOk, employeeIds, z_OrganizationID, z_User)
     End Function

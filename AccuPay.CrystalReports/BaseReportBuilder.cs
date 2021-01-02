@@ -1,9 +1,9 @@
-﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 
 namespace AccuPay.CrystalReports
 {
-    public class BaseReportBuilder
+    public abstract class BaseReportBuilder : IBaseReportBuilder
     {
         protected ReportClass _reportDocument;
 

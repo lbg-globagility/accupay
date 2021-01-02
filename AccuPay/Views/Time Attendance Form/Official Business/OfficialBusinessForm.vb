@@ -4,8 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -370,7 +368,7 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IOfficialBusinessDataService)
                 Await dataService.DeleteAsync(
                     Me._currentOfficialBusiness.RowID.Value,
                     currentlyLoggedInUserId:=z_User)
@@ -566,7 +564,7 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IOfficialBusinessDataService)
                 Await dataService.SaveManyAsync(changedOfficialBusinesses, z_User)
 
                 ShowBalloonInfo($"{changedOfficialBusinesses.Count} OfficialBusiness(es) Successfully Updated.", messageTitle)

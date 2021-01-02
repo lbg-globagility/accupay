@@ -3,11 +3,9 @@ Option Strict On
 Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
@@ -32,15 +30,13 @@ Public Class BenchmarkPayrollForm
 
     Private _currentPaystub As Paystub
 
-    Private _payrollGenerator As PayrollGenerator
-
     Public _loanTransanctions As List(Of LoanTransaction)
 
     Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
-    Private _payrollResources As PayrollResources
+    Private _payrollResources As IPayrollResources
 
     Private _employeeRate As BenchmarkPaystubRate
 
@@ -64,9 +60,11 @@ Public Class BenchmarkPayrollForm
 
     Private ReadOnly _salaryRepository As ISalaryRepository
 
-    Private ReadOnly _listOfValueService As ListOfValueService
+    Private ReadOnly _listOfValueService As IListOfValueService
 
-    Private ReadOnly _overtimeRateService As OvertimeRateService
+    Private ReadOnly _overtimeRateService As IOvertimeRateService
+
+    Private _payrollGenerator As IPayrollGenerator
 
     Sub New()
 
@@ -80,9 +78,9 @@ Public Class BenchmarkPayrollForm
 
         _salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
 
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
 
-        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of IOvertimeRateService)
 
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
@@ -171,7 +169,7 @@ Public Class BenchmarkPayrollForm
         Dim paypFrom = _currentPayPeriod.PayFromDate
         Dim paypTo = _currentPayPeriod.PayToDate
 
-        Dim resources = MainServiceProvider.GetRequiredService(Of PayrollResources)
+        Dim resources = MainServiceProvider.GetRequiredService(Of IPayrollResources)
 
         Dim loadTask = Task.Factory.StartNew(
             Function()

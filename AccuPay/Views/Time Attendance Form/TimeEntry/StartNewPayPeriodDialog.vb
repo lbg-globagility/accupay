@@ -1,11 +1,9 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -158,7 +156,7 @@ Public Class StartNewPayPeriodDialog
 
         Await FunctionUtils.TryCatchFunctionAsync("Start New Payroll",
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
 
                 Me.Cursor = Cursors.WaitCursor
 

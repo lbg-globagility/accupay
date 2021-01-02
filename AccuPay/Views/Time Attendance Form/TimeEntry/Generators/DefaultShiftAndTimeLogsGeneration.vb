@@ -2,9 +2,9 @@ Option Strict On
 
 Imports System.Collections.Concurrent
 Imports System.Threading.Tasks
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.DefaultShiftAndTimeLogsForm
 Imports AccuPay.Utilities
@@ -76,8 +76,8 @@ Public Class DefaultShiftAndTimeLogsGeneration
 
         Try
 
-            Dim shiftService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
-            Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+            Dim shiftService = MainServiceProvider.GetRequiredService(Of IShiftDataService)
+            Dim timeLogService = MainServiceProvider.GetRequiredService(Of ITimeLogDataService)
 
             Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value)
             Await timeLogService.SaveManyAsync(

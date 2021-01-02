@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection

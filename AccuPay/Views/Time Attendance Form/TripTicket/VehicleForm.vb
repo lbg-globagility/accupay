@@ -1,22 +1,25 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Core.Interfaces
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class VehicleForm
 
     Public Property VehiclesSource As BindingSource = New BindingSource()
 
-    Private database As PayrollContext
-
     Private vehicles As IList(Of Vehicle)
 
-    Private Sub Startup()
-        Dim builder As DbContextOptionsBuilder = New DbContextOptionsBuilder()
-        builder.UseMySql(mysql_conn_text)
+    Private ReadOnly _vehicleRepository As IVehicleRepository
 
-        Me.database = New PayrollContext(builder.Options)
+    Sub New()
+
+        InitializeComponent()
+
+        _vehicleRepository = MainServiceProvider.GetRequiredService(Of IVehicleRepository)
+    End Sub
+
+    Private Sub Startup()
 
         dgvVehicles.AutoGenerateColumns = False
         dgvVehicles.DataSource = VehiclesSource
@@ -24,10 +27,8 @@ Public Class VehicleForm
     End Sub
 
     Private Sub LoadVehicles()
-        Dim query = From v In Me.database.Vehicles
-                    Select v
 
-        Me.vehicles = query.ToList()
+        Me.vehicles = _vehicleRepository.GetAll().ToList()
         VehiclesSource.DataSource = Me.vehicles
     End Sub
 
@@ -41,7 +42,7 @@ Public Class VehicleForm
         Me.VehiclesSource.Remove(vehicle)
     End Sub
 
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+    Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         dgvVehicles.EndEdit()
 
         Dim newVehicles = Me.vehicles.Where(Function(vehicle) vehicle.RowID Is Nothing)
@@ -57,8 +58,8 @@ Public Class VehicleForm
             vehicle.LastUpdBy = z_User
         Next
 
-        Me.database.Vehicles.AddRange(newVehicles)
-        Me.database.SaveChanges()
+        Dim vehicleRepository = MainServiceProvider.GetRequiredService(Of IVehicleRepository)
+        Await vehicleRepository.CreateMany(newVehicles)
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

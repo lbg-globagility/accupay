@@ -6,7 +6,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Entities.UserActivity
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -756,7 +755,7 @@ Public Class NewDivisionPositionForm
 
     Private Async Function SavePosition(messageTitle As String) As Task
 
-        Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Dim positionService = MainServiceProvider.GetRequiredService(Of IPositionDataService)
         Await positionService.SaveAsync(Me._currentPosition, z_User)
 
         Await RefreshTreeView()
@@ -787,9 +786,9 @@ Public Class NewDivisionPositionForm
             Return
         End If
 
-        Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Dim positionService = MainServiceProvider.GetRequiredService(Of IPositionDataService)
         Await positionService.DeleteAsync(
-            positionId:=Me._currentPosition.RowID.Value,
+            id:=Me._currentPosition.RowID.Value,
             currentlyLoggedInUserId:=z_User)
 
         Await RefreshTreeView()
@@ -802,7 +801,7 @@ Public Class NewDivisionPositionForm
 
         Dim divisionName = Me._currentDivision.Name
 
-        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Dim service = MainServiceProvider.GetRequiredService(Of IDivisionDataService)
         Await service.DeleteAsync(
             divisionId:=Me._currentDivision.RowID.Value,
             currentlyLoggedInUserId:=z_User)
@@ -851,7 +850,7 @@ Public Class NewDivisionPositionForm
         Dim division = Me._currentDivision.CloneJson()
         division.ParentDivision = Nothing
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of IDivisionDataService)
         Await divisionRepository.SaveAsync(division, z_User)
 
         RemoveHandler DivisionPositionTreeView.AfterSelect, AddressOf DivisionPositionTreeView_AfterSelect

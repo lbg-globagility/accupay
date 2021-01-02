@@ -3,8 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -117,7 +115,7 @@ Public Class NewListOfValDisciplinaryPenaltyForm
             Await FunctionUtils.TryCatchFunctionAsync("Delete Disciplinary Action Penalty",
                 Async Function()
 
-                    Dim dataService = MainServiceProvider.GetRequiredService(Of ListOfValueDataService)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IListOfValueDataService)
                     Await dataService.DeleteAsync(_currentAction.RowID.Value, z_User)
 
                     Await LoadActions()
@@ -163,7 +161,7 @@ Public Class NewListOfValDisciplinaryPenaltyForm
                         End If
                     End With
 
-                    Dim dataService = MainServiceProvider.GetRequiredService(Of ListOfValueDataService)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IListOfValueDataService)
                     Await dataService.SaveAsync(_currentAction, z_User)
 
                     succeed = True

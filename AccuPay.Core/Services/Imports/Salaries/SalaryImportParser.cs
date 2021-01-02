@@ -1,12 +1,10 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Salaries

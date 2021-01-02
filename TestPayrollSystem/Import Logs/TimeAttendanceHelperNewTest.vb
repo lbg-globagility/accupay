@@ -23,7 +23,7 @@ Public Class TimeAttendanceHelperNewTest
         Dim organizationId = 1
         Dim userId = 1
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -55,7 +55,7 @@ Public Class TimeAttendanceHelperNewTest
         Dim organizationId = 1
         Dim userId = 1
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -84,7 +84,7 @@ Public Class TimeAttendanceHelperNewTest
         Dim organizationId = 1
         Dim userId = 1
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 

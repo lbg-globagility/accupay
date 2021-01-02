@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace AccuPay.Core
+namespace AccuPay.Core.Interfaces
 {
     public interface IPayPeriod
     {

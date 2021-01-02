@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -42,7 +43,7 @@ Public Class ReleaseThirteenthMonthGeneration
 
     Private Async Function SaveAdjustments(employee As ThirteenthMonthEmployeeModel) As Task(Of PaystubEmployeeResult)
         Try
-            Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
 
             Await dataService.UpdateAdjustmentsAsync(
                 employee.PaystubObject.RowID.Value,

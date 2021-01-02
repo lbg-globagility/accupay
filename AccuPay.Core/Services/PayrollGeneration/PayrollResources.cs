@@ -12,7 +12,7 @@ namespace AccuPay.Core.Services
     /// <summary>
     /// Takes care of loading all the information needed to produce the payroll for a given pay period.
     /// </summary>
-    public class PayrollResources
+    public class PayrollResources : IPayrollResources
     {
         private int _payPeriodId;
         private int _organizationId;
@@ -60,7 +60,7 @@ namespace AccuPay.Core.Services
 
         public IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; private set; }
 
-        public readonly IPolicyHelper Policy;
+        public IPolicyHelper Policy { get; }
 
         private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
 
@@ -68,13 +68,13 @@ namespace AccuPay.Core.Services
 
         private readonly IBonusRepository _bonusRepository;
 
-        private readonly CalendarService _calendarService;
+        private readonly ICalendarService _calendarService;
 
         private readonly IEmployeeRepository _employeeRepository;
 
         private readonly ILeaveRepository _leaveRepository;
 
-        private readonly ListOfValueService _listOfValueService;
+        private readonly IListOfValueService _listOfValueService;
 
         private readonly ILoanRepository _loanRepository;
 
@@ -90,7 +90,7 @@ namespace AccuPay.Core.Services
 
         private readonly ISocialSecurityBracketRepository _socialSecurityBracketRepository;
 
-        private readonly SystemOwnerService _systemOwnerService;
+        private readonly ISystemOwnerService _systemOwnerService;
 
         private readonly ITimeEntryRepository _timeEntryRepository;
 
@@ -98,9 +98,9 @@ namespace AccuPay.Core.Services
 
         public PayrollResources(
             IPolicyHelper policy,
-            CalendarService calendarService,
-            ListOfValueService listOfValueService,
-            SystemOwnerService systemOwnerService,
+            ICalendarService calendarService,
+            IListOfValueService listOfValueService,
+            ISystemOwnerService systemOwnerService,
             IActualTimeEntryRepository actualTimeEntryRepository,
             IAllowanceRepository allowanceRepository,
             IBonusRepository bonusRepository,
@@ -234,7 +234,7 @@ namespace AccuPay.Core.Services
             }
         }
 
-        public async Task LoadEmployees()
+        private async Task LoadEmployees()
         {
             try
             {
@@ -252,10 +252,11 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                Leaves = (await _leaveRepository.
-                        GetByDatePeriodAsync(organizationId: _organizationId,
-                                            datePeriod: _payPeriodSpan)).
-                        ToList();
+                Leaves = (await _leaveRepository
+                    .GetByDatePeriodAsync(
+                        organizationId: _organizationId,
+                        datePeriod: _payPeriodSpan))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -263,7 +264,7 @@ namespace AccuPay.Core.Services
             }
         }
 
-        public async Task LoadListOfValueCollection()
+        private async Task LoadListOfValueCollection()
         {
             try
             {

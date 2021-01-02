@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -126,7 +125,7 @@ Public Class PaystubPresenter
 
         Private _productRepository As IProductRepository
 
-        Private _timeEntryRepository As TimeEntryRepository
+        Private _timeEntryRepository As ITimeEntryRepository
 
         Sub New()
 
@@ -140,7 +139,7 @@ Public Class PaystubPresenter
 
             _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
-            _timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
+            _timeEntryRepository = MainServiceProvider.GetRequiredService(Of ITimeEntryRepository)
 
         End Sub
 

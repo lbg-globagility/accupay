@@ -1,19 +1,15 @@
-﻿using AccuPay.CrystalReports.LoanSummaryByEmployeeReport;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
+using AccuPay.CrystalReports.LoanSummaryByEmployeeReport;
 using CrystalDecisions.CrystalReports.Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccuPay.CrystalReports
 {
-    public class LoanSummaryByEmployeeReportBuilder : BaseReportBuilder, IPdfGenerator
+    public class LoanSummaryByEmployeeReportBuilder : BaseReportBuilder, IPdfGenerator, ILoanSummaryByEmployeeReportBuilder
     {
-        private readonly LoanSummaryByEmployeeReportDataService _dataService;
+        private readonly ILoanSummaryByEmployeeReportDataService _dataService;
 
-        public LoanSummaryByEmployeeReportBuilder(LoanSummaryByEmployeeReportDataService dataService)
+        public LoanSummaryByEmployeeReportBuilder(ILoanSummaryByEmployeeReportDataService dataService)
         {
             _dataService = dataService;
         }

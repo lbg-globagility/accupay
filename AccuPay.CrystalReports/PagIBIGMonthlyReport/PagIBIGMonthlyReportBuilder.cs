@@ -1,26 +1,21 @@
-﻿using AccuPay.CrystalReports.PagIBIGMonthlyReport;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
+using AccuPay.CrystalReports.PagIBIGMonthlyReport;
 using CrystalDecisions.CrystalReports.Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccuPay.CrystalReports
 {
-    public class PagIBIGMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator
+    public class PagIBIGMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator, IPagIBIGMonthlyReportBuilder
     {
-        private readonly PagIBIGMonthlyReportDataService _dataService;
+        private readonly IPagIBIGMonthlyReportDataService _dataService;
 
-        public PagIBIGMonthlyReportBuilder(PagIBIGMonthlyReportDataService dataService)
+        public PagIBIGMonthlyReportBuilder(IPagIBIGMonthlyReportDataService dataService)
         {
             _dataService = dataService;
         }
 
         public PagIBIGMonthlyReportBuilder CreateReportDocument(int organizationId, DateTime date)
         {
-
             _reportDocument = new Pagibig_Monthly_Report();
 
             _reportDocument.SetDataSource(_dataService.GetData(organizationId, date));

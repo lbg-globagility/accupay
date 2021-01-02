@@ -1,6 +1,6 @@
-using AccuPay.CrystalReports;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
+using AccuPay.CrystalReports;
 using System;
 using System.Data;
 using System.IO;
@@ -10,26 +10,26 @@ namespace AccuPay.CrystalReportsAPI.Services
 {
     public class ReportingService : IControllerService
     {
-        private readonly PayslipBuilder _payslipCreator;
-        private readonly SSSMonthyReportBuilder _sSSMonthyReportBuilder;
-        private readonly PhilHealthMonthlyReportBuilder _philHealthMonthlyReportBuilder;
-        private readonly PagIBIGMonthlyReportBuilder _pagIBIGMonthlyReportBuilder;
-        private readonly LoanSummaryByTypeReportBuilder _loanSummaryByTypeReportBuilder;
-        private readonly LoanSummaryByEmployeeReportBuilder _loanSummaryByEmployeeReportBuilder;
-        private readonly TaxMonthlyReportBuilder _taxMonthlyReportBuilder;
-        private readonly ThirteenthMonthSummaryReportBuilder _thirteenthMonthSummaryReportBuilder;
-        private readonly ThirteenthMonthSummaryReportDataService _thirteenthMonthSummaryReportDataService;
+        private readonly IPayslipBuilder _payslipCreator;
+        private readonly ISSSMonthyReportBuilder _sSSMonthyReportBuilder;
+        private readonly IPhilHealthMonthlyReportBuilder _philHealthMonthlyReportBuilder;
+        private readonly IPagIBIGMonthlyReportBuilder _pagIBIGMonthlyReportBuilder;
+        private readonly ILoanSummaryByTypeReportBuilder _loanSummaryByTypeReportBuilder;
+        private readonly ILoanSummaryByEmployeeReportBuilder _loanSummaryByEmployeeReportBuilder;
+        private readonly ITaxMonthlyReportBuilder _taxMonthlyReportBuilder;
+        private readonly IThirteenthMonthSummaryReportBuilder _thirteenthMonthSummaryReportBuilder;
+        private readonly IThirteenthMonthSummaryReportDataService _thirteenthMonthSummaryReportDataService;
 
         public ReportingService(
-            PayslipBuilder payslipCreator,
-            SSSMonthyReportBuilder sSSMonthyReportCreator,
-            PhilHealthMonthlyReportBuilder philHealthMonthlyReportBuilder,
-            PagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder,
-            LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder,
-            LoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder,
-            TaxMonthlyReportBuilder taxMonthlyReportBuilder,
-            ThirteenthMonthSummaryReportBuilder thirteenthMonthSummaryReportBuilder,
-            ThirteenthMonthSummaryReportDataService thirteenthMonthSummaryReportDataService)
+            IPayslipBuilder payslipCreator,
+            ISSSMonthyReportBuilder sSSMonthyReportCreator,
+            IPhilHealthMonthlyReportBuilder philHealthMonthlyReportBuilder,
+            IPagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder,
+            ILoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder,
+            ILoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder,
+            ITaxMonthlyReportBuilder taxMonthlyReportBuilder,
+            IThirteenthMonthSummaryReportBuilder thirteenthMonthSummaryReportBuilder,
+            IThirteenthMonthSummaryReportDataService thirteenthMonthSummaryReportDataService)
         {
             _payslipCreator = payslipCreator;
             _sSSMonthyReportBuilder = sSSMonthyReportCreator;

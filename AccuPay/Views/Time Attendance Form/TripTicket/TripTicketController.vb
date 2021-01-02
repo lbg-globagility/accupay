@@ -5,7 +5,6 @@ Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TripTicketController
@@ -33,8 +32,8 @@ Public Class TripTicketController
 
     Private WithEvents View As TripTicketForm
 
-    Private ReadOnly _tripTicketRepository As TripTicketRepository
-    Private ReadOnly _vehicleRepository As VehicleRepository
+    Private ReadOnly _tripTicketRepository As ITripTicketRepository
+    Private ReadOnly _vehicleRepository As IVehicleRepository
     Private ReadOnly _routeRepository As IRouteRepository
     Private ReadOnly _employeeRepository As IEmployeeRepository
     Private ReadOnly _routeRateRepository As IRouteRateRepository
@@ -156,10 +155,10 @@ Public Class TripTicketController
         Me.View = view
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
-        _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
+        _tripTicketRepository = MainServiceProvider.GetRequiredService(Of ITripTicketRepository)
         _routeRepository = MainServiceProvider.GetRequiredService(Of IRouteRepository)
         _routeRateRepository = MainServiceProvider.GetRequiredService(Of IRouteRateRepository)
-        _vehicleRepository = MainServiceProvider.GetRequiredService(Of VehicleRepository)
+        _vehicleRepository = MainServiceProvider.GetRequiredService(Of IVehicleRepository)
         _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
         Start()
@@ -200,7 +199,7 @@ Public Class TripTicketController
     End Function
 
     Private Async Function LoadVehicles() As Task
-        _vehicles = Await _vehicleRepository.GetAll()
+        _vehicles = Await _vehicleRepository.GetAllAsync()
 
         View.cboVehicles.DataSource = _vehicles
         View.cboVehicles.SelectedIndex = -1

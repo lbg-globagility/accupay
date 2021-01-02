@@ -2,14 +2,14 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LoanPaymentFromThirteenthMonthForm
     Private ReadOnly _currentPayPeriod As PayPeriod
-    Private ReadOnly _paystubDataService As PaystubDataService
-    Private ReadOnly _loanDataService As LoanDataService
+    Private ReadOnly _paystubDataService As IPaystubDataService
+    Private ReadOnly _loanDataService As ILoanDataService
     Private _loans As ICollection(Of Loan)
 
     Public Sub New(currentPayPeriod As PayPeriod)
@@ -18,9 +18,9 @@ Public Class LoanPaymentFromThirteenthMonthForm
 
         _currentPayPeriod = currentPayPeriod
 
-        _paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+        _paystubDataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
 
-        _loanDataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+        _loanDataService = MainServiceProvider.GetRequiredService(Of ILoanDataService)
     End Sub
 
     Public ReadOnly Property HasChanges As Boolean
@@ -187,7 +187,7 @@ Public Class LoanPaymentFromThirteenthMonthForm
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         Await FunctionUtils.TryCatchFunctionAsync("",
             Async Function()
-                Dim repository = MainServiceProvider.GetRequiredService(Of LoanPaymentFromThirteenthMonthPayDataService)
+                Dim repository = MainServiceProvider.GetRequiredService(Of ILoanPaymentFromThirteenthMonthPayDataService)
 
                 Dim results = GetGridRows(DataGridViewX2).
                     Select(Function(r) GetModel(Of LoanModel)(r).Export()).

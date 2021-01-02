@@ -3,8 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -174,7 +172,7 @@ Public Class AddLeaveForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ILeaveDataService)
                 Await dataService.SaveAsync(Me._newLeave, z_User)
 
                 Me.IsSaved = True

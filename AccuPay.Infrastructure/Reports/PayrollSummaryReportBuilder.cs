@@ -1,10 +1,8 @@
-using AccuPay.Core;
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
-using AccuPay.Core.Repositories;
 using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities;
@@ -38,17 +36,17 @@ namespace AccuPay.Infrastructure.Reports
         private readonly ListOfValueCollection _settings;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IPayPeriodRepository _payPeriodRepository;
-        private readonly PaystubDataService _paystubDataService;
-        private readonly SystemOwnerService _systemOwnerService;
-        private readonly PayrollSummaryExcelFormatReportDataService _reportDataService;
+        private readonly IPaystubDataService _paystubDataService;
+        private readonly ISystemOwnerService _systemOwnerService;
+        private readonly IPayrollSummaryExcelFormatReportDataService _reportDataService;
 
         public PayrollSummaryReportBuilder(
             IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
-            PaystubDataService paystubDataService,
-            SystemOwnerService systemOwnerService,
-            ListOfValueService listOfValueService,
-            PayrollSummaryExcelFormatReportDataService reportDataService)
+            IPaystubDataService paystubDataService,
+            ISystemOwnerService systemOwnerService,
+            IListOfValueService listOfValueService,
+            IPayrollSummaryExcelFormatReportDataService reportDataService)
         {
             _organizationRepository = organizationRepository;
             _payPeriodRepository = payPeriodRepository;
@@ -143,7 +141,7 @@ namespace AccuPay.Infrastructure.Reports
                 new ExcelReportColumn("Total", "Total")
             };
 
-            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
+            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.Benchmark)
             {
                 var allowanceColumn = reportColumns
                     .Where(r => r.Name == allowanceColumnName)
@@ -271,7 +269,7 @@ namespace AccuPay.Infrastructure.Reports
 
             worksheet.Cells.Style.Font.Size = FontSize;
 
-            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
+            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.Benchmark)
                 worksheet.Cells.Style.Font.Name = "Book Antiqua";
 
             var organizationCell = worksheet.Cells[1, 1];

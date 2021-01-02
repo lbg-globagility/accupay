@@ -3,7 +3,6 @@ Option Strict On
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -181,7 +180,7 @@ Public Class ImportOBForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IOfficialBusinessDataService)
                 Await dataService.SaveManyAsync(_officialBusinesses, z_User)
 
                 Me.IsSaved = True

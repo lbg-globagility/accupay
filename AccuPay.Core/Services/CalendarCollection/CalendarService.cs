@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services
 {
-    public class CalendarService
+    public class CalendarService : ICalendarService
     {
         private readonly IBranchRepository _branchRepository;
         private readonly ICalendarRepository _calendarRepository;

@@ -2,7 +2,6 @@ Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -137,7 +136,7 @@ Public Class AddOfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync("New Official Business",
             Async Function()
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IOfficialBusinessDataService)
                 Await dataService.SaveAsync(Me._newOfficialBusiness, z_User)
 
                 Me.IsSaved = True

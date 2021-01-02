@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -20,7 +19,7 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _socialSecurityPolicy As SocialSecurityPolicy
 
-        Private _listOfValueService As ListOfValueService
+        Private _listOfValueService As IListOfValueService
 
         Private _salaries As IList(Of Salary)
 
@@ -41,7 +40,7 @@ Namespace Global.AccuPay.Views.Employees
 
             _socialSecurityBracketRepository = MainServiceProvider.GetRequiredService(Of ISocialSecurityBracketRepository)
 
-            _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+            _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
 
         End Sub
 
@@ -85,7 +84,7 @@ Namespace Global.AccuPay.Views.Employees
 
             If _currentSalary?.RowID Is Nothing Then Return
 
-            Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
             Await dataService.DeleteAsync(
                 id:=_currentSalary.RowID.Value,
                 currentlyLoggedInUserId:=z_User)
@@ -103,7 +102,7 @@ Namespace Global.AccuPay.Views.Employees
                     .HDMFAmount = _view.PagIBIG
                 End With
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
                 Await dataService.SaveAsync(_currentSalary, z_User)
             Catch ex As Exception
                 MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation) ' Remove this

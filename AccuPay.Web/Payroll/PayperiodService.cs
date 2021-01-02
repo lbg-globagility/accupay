@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Web.Core.Auth;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,18 +13,18 @@ namespace AccuPay.Web.Payroll
 {
     public class PayperiodService
     {
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
-        private readonly PayPeriodDataService _payPeriodDataService;
-        private readonly PaystubDataService _paystubDataService;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
+        private readonly IPayPeriodDataService _payPeriodDataService;
+        private readonly IPaystubDataService _paystubDataService;
         private readonly ICurrentUser _currentUser;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
         public PayperiodService(
-            EmployeeRepository employeeRepository,
-            PayPeriodRepository payPeriodrepository,
-            PayPeriodDataService payPeriodDataService,
-            PaystubDataService paystubDataService,
+            IEmployeeRepository employeeRepository,
+            IPayPeriodRepository payPeriodrepository,
+            IPayPeriodDataService payPeriodDataService,
+            IPaystubDataService paystubDataService,
             ICurrentUser currentUser,
             IServiceScopeFactory serviceScopeFactory)
         {
@@ -36,7 +36,7 @@ namespace AccuPay.Web.Payroll
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public async Task<PayrollResultDto> Calculate(PayrollResources resources, int payperiodId)
+        public async Task<PayrollResultDto> Calculate(IPayrollResources resources, int payperiodId)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payperiodId);
 
@@ -61,7 +61,7 @@ namespace AccuPay.Web.Payroll
 
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    var generator = scope.ServiceProvider.GetRequiredService<PayrollGenerator>();
+                    var generator = scope.ServiceProvider.GetRequiredService<IPayrollGenerator>();
                     var result = await generator.Start(employee.RowID.Value, resources, _currentUser.OrganizationId, _currentUser.UserId);
                     results.Add(result);
                 }

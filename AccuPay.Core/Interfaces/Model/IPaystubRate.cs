@@ -1,4 +1,4 @@
-﻿namespace AccuPay.Core
+namespace AccuPay.Core.Interfaces
 {
     public interface IPaystubRate
     {

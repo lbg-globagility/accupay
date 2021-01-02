@@ -726,9 +726,9 @@ Public Class ShiftForm
 
         Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
 
-        Private _listOfValueRepository As IListOfValueRepository
+        Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
-        Private _listOfValueService As ListOfValueService
+        Private ReadOnly _listOfValueService As IListOfValueService
 
         Private settings As ListOfValueCollection = Nothing
 
@@ -739,7 +739,7 @@ Public Class ShiftForm
 
             _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
-            _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+            _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
         End Sub
 
         Public Shared Async Function Load1() As Task(Of DutyShiftPolicy)
@@ -940,7 +940,7 @@ Public Class ShiftForm
             Async Function()
                 If _isShiftBasedAutoOvertimeEnabled Then Await SaveOvertimeOfShiftBasedAutoOvertimePolicy(toSaveList)
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IShiftDataService)
                 Await dataService.SaveManyAsync(
                     currentlyLoggedInUserId:=z_User,
                     added:=addedShifts,
@@ -976,7 +976,7 @@ Public Class ShiftForm
             Where(Function(sh) sh.IsNew OrElse sh.IsUpdate OrElse sh.ConsideredDelete).
             ToList()
 
-        Dim overtimeDataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+        Dim overtimeDataService = MainServiceProvider.GetRequiredService(Of IOvertimeDataService)
 
         Await overtimeDataService.GenerateOvertimeByShift(modifiedShifts, employeeIds, z_OrganizationID, z_User)
     End Function

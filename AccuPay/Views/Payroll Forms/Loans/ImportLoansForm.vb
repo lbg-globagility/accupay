@@ -5,7 +5,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -25,9 +24,9 @@ Public Class ImportLoansForm
 
     Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
-    Private ReadOnly _loanService As LoanDataService
-
     Private ReadOnly _productRepository As IProductRepository
+
+    Private ReadOnly _loanService As ILoanDataService
 
     Sub New()
 
@@ -37,7 +36,7 @@ Public Class ImportLoansForm
 
         _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
-        _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+        _loanService = MainServiceProvider.GetRequiredService(Of ILoanDataService)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 

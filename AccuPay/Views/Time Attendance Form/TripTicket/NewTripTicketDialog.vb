@@ -3,20 +3,19 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewTripTicketDialog
 
-    Private ReadOnly _tripTicketRepository As TripTicketRepository
-    Private ReadOnly _vehicleRepository As VehicleRepository
+    Private ReadOnly _tripTicketRepository As ITripTicketRepository
+    Private ReadOnly _vehicleRepository As IVehicleRepository
     Private ReadOnly _routeRepository As IRouteRepository
 
     Public Sub New()
         InitializeComponent()
 
-        _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
-        _vehicleRepository = MainServiceProvider.GetRequiredService(Of VehicleRepository)
+        _tripTicketRepository = MainServiceProvider.GetRequiredService(Of ITripTicketRepository)
+        _vehicleRepository = MainServiceProvider.GetRequiredService(Of IVehicleRepository)
         _routeRepository = MainServiceProvider.GetRequiredService(Of IRouteRepository)
     End Sub
 
@@ -62,7 +61,7 @@ Public Class NewTripTicketDialog
     End Sub
 
     Private Async Function LoadVehicles() As Task
-        Dim vehicles = Await _vehicleRepository.GetAll()
+        Dim vehicles = Await _vehicleRepository.GetAllAsync()
         VehicleComboBox.DataSource = vehicles
         VehicleComboBox.SelectedIndex = -1
     End Function

@@ -6,8 +6,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -44,7 +42,7 @@ Public Class MDIPrimaryForm
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Private ReadOnly _userRepository As IAspNetUserRepository
 
@@ -56,16 +54,16 @@ Public Class MDIPrimaryForm
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
         _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailRepository)
 
         Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
-        if_sysowner_is_benchmark = currentSystemOwner = SystemOwnerService.Benchmark
-        if_sysowner_is_cinema2k = currentSystemOwner = SystemOwnerService.Cinema2000
-        if_sysowner_is_hyundai = currentSystemOwner = SystemOwnerService.Hyundai
+        if_sysowner_is_benchmark = currentSystemOwner = SystemOwner.Benchmark
+        if_sysowner_is_cinema2k = currentSystemOwner = SystemOwner.Cinema2000
+        if_sysowner_is_hyundai = currentSystemOwner = SystemOwner.Hyundai
 
         PrepareFormForBenchmark()
     End Sub
@@ -148,14 +146,14 @@ Public Class MDIPrimaryForm
 
     Private Async Function RunLeaveAccrual() As Task
 
-        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
         Dim collection = Await listOfValueService.CreateAsync("LeavePolicy")
 
         If collection.GetBoolean("LeavePolicy.AutomaticAccrual") Then
             Dim unused = Task.Run(
                 Async Function()
 
-                    Dim service = MainServiceProvider.GetRequiredService(Of LeaveAccrualService)
+                    Dim service = MainServiceProvider.GetRequiredService(Of ILeaveAccrualService)
                     Await service.CheckAccruals(z_OrganizationID, z_User)
                 End Function)
         End If
@@ -1080,7 +1078,7 @@ Public Class MDIPrimaryForm
 
         For Each collapgpbox In _list
             Dim _bool As Boolean =
-                (collapgpbox.AccessibleDescription = SystemOwnerService.Cinema2000)
+                (collapgpbox.AccessibleDescription = SystemOwner.Cinema2000)
 
             collapgpbox.Visible = _bool
 

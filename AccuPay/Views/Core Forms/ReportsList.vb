@@ -1,16 +1,15 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ReportsList
 
     Private ReadOnly curr_sys_owner_name As String
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
@@ -18,7 +17,7 @@ Public Class ReportsList
 
         InitializeComponent()
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
@@ -52,7 +51,7 @@ Public Class ReportsList
         }
         'New PayrollLedgerReportProvider(),
 
-        If curr_sys_owner_name = SystemOwnerService.Benchmark Then
+        If curr_sys_owner_name = SystemOwner.Benchmark Then
             providers = GetBenchmarkReports()
         End If
 
@@ -73,7 +72,7 @@ Public Class ReportsList
             End If
         Next
 
-        If curr_sys_owner_name = SystemOwnerService.Benchmark Then
+        If curr_sys_owner_name = SystemOwner.Benchmark Then
 
             'Payroll Summary
             Dim reportProvider As New PayrollSummaryExcelFormatReportProvider()

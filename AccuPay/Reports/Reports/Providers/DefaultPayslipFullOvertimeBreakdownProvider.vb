@@ -1,6 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -19,7 +19,7 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
 
         Dim payPeriod = form.PayPeriod
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubPayslipModelDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubPayslipModelDataService)
         Dim paystubModels = Await dataService.GetData(z_OrganizationID, payPeriod)
 
         Dim report As New DefaulltPayslipFullOvertimeBreakdown

@@ -1,23 +1,25 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Services;
+using AccuPay.Core.Services.Imports;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AccuPay.Core.Services.Imports
+namespace AccuPay.Infrastructure.Data
 {
-    public class TimeLogImportParser
+    public class TimeLogImportParser : ITimeLogImportParser
     {
-        private readonly TimeLogsReader _reader;
+        private readonly ITimeLogsReader _reader;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IOvertimeRepository _overtimeRepository;
         private readonly IShiftRepository _shiftRepository;
 
         public TimeLogImportParser(
-            TimeLogsReader reader,
+            ITimeLogsReader reader,
             IEmployeeRepository employeeRepository,
             IOvertimeRepository overtimeRepository,
             IShiftRepository shiftRepository)
@@ -60,16 +62,16 @@ namespace AccuPay.Core.Services.Imports
             invalidLogs.AddRange(parsedErrors);
 
             validLogs = validLogs
-                            .OrderBy(x => x.Employee?.LastName)
-                            .ThenBy(x => x.Employee?.FirstName)
-                            .ThenBy(x => x.Employee?.MiddleName)
-                            .ThenBy(x => x.LogDate)
-                            .ThenBy(x => x.DateTime)
-                            .ToList();
+                .OrderBy(x => x.Employee?.LastName)
+                .ThenBy(x => x.Employee?.FirstName)
+                .ThenBy(x => x.Employee?.MiddleName)
+                .ThenBy(x => x.LogDate)
+                .ThenBy(x => x.DateTime)
+                .ToList();
 
             invalidLogs = invalidLogs
-                            .OrderBy(l => l.LineNumber)
-                            .ToList();
+                .OrderBy(l => l.LineNumber)
+                .ToList();
 
             return new AllParsedLogOutput(validRecords: validLogs, invalidRecords: invalidLogs);
         }
@@ -92,7 +94,7 @@ namespace AccuPay.Core.Services.Imports
 
             List<Overtime> employeeOvertimes = await GetEmployeeOvertime(datePeriod, organizationId);
 
-            timeAttendanceHelper = new TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId: organizationId, userId: userId);
+            timeAttendanceHelper = new TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId: organizationId, userId: userId);
 
             return timeAttendanceHelper;
         }
@@ -125,8 +127,9 @@ namespace AccuPay.Core.Services.Imports
 
             public IList<TimeLogImportModel> InvalidRecords { get; }
 
-            public AllParsedLogOutput(IList<TimeLogImportModel> validRecords,
-                                    IList<TimeLogImportModel> invalidRecords)
+            public AllParsedLogOutput(
+                IList<TimeLogImportModel> validRecords,
+                IList<TimeLogImportModel> invalidRecords)
             {
                 ValidRecords = validRecords;
                 InvalidRecords = invalidRecords;
@@ -143,9 +146,10 @@ namespace AccuPay.Core.Services.Imports
 
             public IReadOnlyCollection<TimeAttendanceLog> GeneratedTimeAttendanceLogs { get; }
 
-            public TimeLogImportParserOutput(AllParsedLogOutput parsedLogs,
-                                                IReadOnlyCollection<TimeLog> timeLogs,
-                                                IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs)
+            public TimeLogImportParserOutput(
+                AllParsedLogOutput parsedLogs,
+                IReadOnlyCollection<TimeLog> timeLogs,
+                IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs)
             {
                 ValidRecords = parsedLogs.ValidRecords.ToList();
                 InvalidRecords = parsedLogs.InvalidRecords.ToList();

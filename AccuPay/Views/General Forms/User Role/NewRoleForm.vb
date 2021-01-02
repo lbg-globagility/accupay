@@ -2,7 +2,6 @@ Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -37,7 +36,7 @@ Public Class NewRoleForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Create Role",
             Async Function()
-                Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleDataService)
+                Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleDataService)
                 Await roleRepository.CreateAsync(currentRole)
 
                 USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)

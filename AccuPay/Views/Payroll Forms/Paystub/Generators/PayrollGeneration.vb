@@ -4,6 +4,7 @@ Imports System.Collections.Concurrent
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
@@ -27,7 +28,7 @@ Public Class PayrollGeneration
 
     End Sub
 
-    Public Async Function Start(resources As PayrollResources, payPeriod As TimePeriod) As Task
+    Public Async Function Start(resources As IPayrollResources, payPeriod As TimePeriod) As Task
 
         If resources Is Nothing Then
             Throw New ArgumentNullException("Resources cannot be null.")
@@ -36,7 +37,7 @@ Public Class PayrollGeneration
         For Each employee In _employees
 
             Try
-                Dim generator = MainServiceProvider.GetRequiredService(Of PayrollGenerator)
+                Dim generator = MainServiceProvider.GetRequiredService(Of IPayrollGenerator)
                 Dim result = Await generator.Start(
                     organizationId:=z_OrganizationID,
                     currentlyLoggedInUserId:=z_User,

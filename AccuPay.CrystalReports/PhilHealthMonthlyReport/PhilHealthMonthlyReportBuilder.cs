@@ -1,15 +1,15 @@
-﻿using AccuPay.CrystalReports.PhilHealthMonthlyReport;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
+using AccuPay.CrystalReports.PhilHealthMonthlyReport;
 using CrystalDecisions.CrystalReports.Engine;
 using System;
 
 namespace AccuPay.CrystalReports
 {
-    public class PhilHealthMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator
+    public class PhilHealthMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator, IPhilHealthMonthlyReportBuilder
     {
-        private readonly PhilHealthMonthlyReportDataService _dataService;
+        private readonly IPhilHealthMonthlyReportDataService _dataService;
 
-        public PhilHealthMonthlyReportBuilder(PhilHealthMonthlyReportDataService dataService)
+        public PhilHealthMonthlyReportBuilder(IPhilHealthMonthlyReportDataService dataService)
         {
             _dataService = dataService;
         }

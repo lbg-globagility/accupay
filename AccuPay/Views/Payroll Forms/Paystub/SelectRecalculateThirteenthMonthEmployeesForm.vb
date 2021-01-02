@@ -3,11 +3,9 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
-Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -19,19 +17,19 @@ Public Class SelectRecalculateThirteenthMonthEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
-    Private _listOfValueService As ListOfValueService
+    Private ReadOnly _listOfValueService As IListOfValueService
 
-    Private _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
-    Private _payPeriodRepository As IPayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private _paystubRepository As IPaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
 
-    Private _timeEntryRepository As TimeEntryRepository
+    Private ReadOnly _timeEntryRepository As ITimeEntryRepository
 
-    Private _actualTimeEntryRepository As IActualTimeEntryRepository
+    Private ReadOnly _actualTimeEntryRepository As IActualTimeEntryRepository
 
-    Private _salaryRepository As ISalaryRepository
+    Private ReadOnly _salaryRepository As ISalaryRepository
 
     Sub New(currentPayPeriodId As Integer)
 
@@ -41,15 +39,15 @@ Public Class SelectRecalculateThirteenthMonthEmployeesForm
 
         _employeeModels = New List(Of EmployeeModel)
 
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
         _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
-        _timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
+        _timeEntryRepository = MainServiceProvider.GetRequiredService(Of ITimeEntryRepository)
 
         _actualTimeEntryRepository = MainServiceProvider.GetRequiredService(Of IActualTimeEntryRepository)
 
@@ -193,7 +191,7 @@ Public Class SelectRecalculateThirteenthMonthEmployeesForm
                             Return thirteenthMonthPay
                         End Function)
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
                 Await dataService.UpdateManyThirteenthMonthPaysAsync(thirteenthMonthPays.ToList())
 
                 _employeeModels.

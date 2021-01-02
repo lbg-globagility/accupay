@@ -1,7 +1,5 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -17,7 +15,7 @@ namespace AccuPay.Infrastructure.Reports
     public class CostCenterReportBuilder : ExcelFormatReport, ICostCenterReportBuilder
     {
         private readonly IReadOnlyCollection<ExcelReportColumn> _reportColumns = GetReportColumns();
-        private readonly SystemOwnerService _systemOwnerService;
+        private readonly ISystemOwnerService _systemOwnerService;
         private readonly IOrganizationRepository _organizationRepository;
         private const string EmployeeIdKey = "EmployeeId";
         private const string EmployeeNameKey = "EmployeeName";
@@ -56,7 +54,7 @@ namespace AccuPay.Infrastructure.Reports
         private const string NetPayKey = "NetPay";
 
         public CostCenterReportBuilder(
-            SystemOwnerService systemOwnerService,
+            ISystemOwnerService systemOwnerService,
             IOrganizationRepository organizationRepository)
         {
             _systemOwnerService = systemOwnerService;
@@ -142,7 +140,7 @@ namespace AccuPay.Infrastructure.Reports
 
             worksheet.Cells.Style.Font.Size = FontSize;
 
-            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
+            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.Benchmark)
                 worksheet.Cells.Style.Font.Name = "Book Antiqua";
 
             var organizationCell = worksheet.Cells[rowIndex, 1];

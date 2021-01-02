@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -233,7 +232,7 @@ Public Class EmployeeAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IAllowanceDataService)
                 Await dataService.SaveManyAsync(changedAllowances, z_User)
 
                 ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
@@ -353,7 +352,7 @@ Public Class EmployeeAllowanceForm
         End If
 
         Dim repository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
-        Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of IAllowanceDataService)
 
         Dim currentAllowance = Await repository.GetByIdAsync(Me._currentAllowance.RowID.Value)
 
@@ -387,7 +386,7 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IAllowanceDataService)
                 Await dataService.DeleteAsync(
                     id:=Me._currentAllowance.RowID.Value,
                     currentlyLoggedInUserId:=z_User)

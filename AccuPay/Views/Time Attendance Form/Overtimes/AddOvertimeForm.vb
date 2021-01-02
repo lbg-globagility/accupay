@@ -2,7 +2,6 @@ Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -131,7 +130,7 @@ Public Class AddOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IOvertimeDataService)
                 Await dataService.SaveAsync(Me._newOvertime, z_User)
 
                 Me.IsSaved = True

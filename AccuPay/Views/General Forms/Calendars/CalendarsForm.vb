@@ -5,8 +5,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -242,7 +240,7 @@ Public Class CalendarsForm
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         Await FunctionUtils.TryCatchFunctionAsync("Save Changes",
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ICalendarDataService)
 
                 Dim added = _changeTracker.Where(Function(t) Not t.RowID.HasValue)
                 Dim updated = _changeTracker.Where(Function(t) t.RowID.HasValue)
@@ -325,7 +323,7 @@ Public Class CalendarsForm
             Return
         End If
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of ICalendarDataService)
 
         Await FunctionUtils.TryCatchFunctionAsync("Delete Calendar",
         Async Function()

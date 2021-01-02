@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -108,7 +107,7 @@ Public Class AddPositionForm
 
     Private Async Function SavePosition(sender As Object) As Task
 
-        Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Dim positionService = MainServiceProvider.GetRequiredService(Of IPositionDataService)
         Await positionService.SaveAsync(Me._newPosition, z_User)
 
         Me.LastPositionAdded = Me._newPosition

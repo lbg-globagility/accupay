@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Collections.Concurrent
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.Services.CostCenterReportDataService
 
@@ -27,7 +28,7 @@ Public Class CostCenterReportGeneration
         _results = New BlockingCollection(Of CostCenterReportGenerationResult)()
     End Sub
 
-    Public Sub Start(resources As CostCenterReportResources)
+    Public Sub Start(resources As ICostCenterReportResources)
 
         If resources Is Nothing Then Return
 
@@ -48,7 +49,7 @@ Public Class CostCenterReportGeneration
 
     End Sub
 
-    Private Function GetCostCenterPayPeriodModels(branch As Branch, resources As CostCenterReportResources) As List(Of PayPeriodModel)
+    Private Function GetCostCenterPayPeriodModels(branch As Branch, resources As ICostCenterReportResources) As List(Of PayPeriodModel)
 
         If branch Is Nothing Then Return Nothing
 

@@ -1,8 +1,6 @@
 Option Strict On
 
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports CrystalDecisions.CrystalReports.Engine
@@ -56,7 +54,7 @@ Public Class Cinema2000TardinessReportProvider
             'this throws an error if we assign Nothing to txtAddress.Text
             txtAddress.Text = If(organization?.Address?.FullAddress, "")
 
-            Dim dataService = MainServiceProvider.GetRequiredService(Of CinemaTardinessReportDataService)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of ICinemaTardinessReportDataService)
             Dim tardinessReportModels = Await dataService.GetData(
                 z_OrganizationID,
                 firstDate,

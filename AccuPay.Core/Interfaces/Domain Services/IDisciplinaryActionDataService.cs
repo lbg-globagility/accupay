@@ -1,8 +1,8 @@
 using AccuPay.Core.Entities;
 
-namespace AccuPay.Core.Services
+namespace AccuPay.Core.Interfaces
 {
-    public interface IDisciplinaryActionDataService : IBaseEmployeeDataService<DisciplinaryAction>
+    public interface IDisciplinaryActionDataService : IBaseSavableDataService<DisciplinaryAction>
     {
     }
 }

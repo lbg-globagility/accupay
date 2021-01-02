@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -44,7 +44,7 @@ Public Class AddDivisionLocationForm
     Private Async Function SaveDivisionLocation() As Task
         Me.NewDivision.Name = txtDivisionName.Text.Trim
 
-        Dim divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Dim divisionService = MainServiceProvider.GetRequiredService(Of IDivisionDataService)
 
         Await divisionService.SaveAsync(Me.NewDivision, z_User)
 

@@ -2,7 +2,6 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
-using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services
 {
-    public class TimeEntryResources
+    public class TimeEntryResources : ITimeEntryResources
     {
         private const int ThreeDays = 3;
 
@@ -36,7 +35,7 @@ namespace AccuPay.Core.Services
         public IReadOnlyCollection<TimeLog> TimeLogs { get; private set; }
         public IReadOnlyCollection<TripTicket> TripTickets { get; private set; }
 
-        private readonly CalendarService _calendarService;
+        private readonly ICalendarService _calendarService;
 
         private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
         private readonly IAgencyRepository _agencyRepository;
@@ -52,12 +51,12 @@ namespace AccuPay.Core.Services
         private readonly IRouteRateRepository _routeRateRepository;
         private readonly IShiftRepository _shiftRepository;
         private readonly ITimeAttendanceLogRepository _timeAttendanceLogRepository;
-        private readonly TimeEntryRepository _timeEntryRepository;
-        private readonly TimeLogRepository _timeLogRepository;
-        private readonly TripTicketRepository _tripTicketRepository;
+        private readonly ITimeEntryRepository _timeEntryRepository;
+        private readonly ITimeLogRepository _timeLogRepository;
+        private readonly ITripTicketRepository _tripTicketRepository;
 
         public TimeEntryResources(
-            CalendarService calendarService,
+            ICalendarService calendarService,
             IPolicyHelper policy,
             IActualTimeEntryRepository actualTimeEntryRepository,
             IAgencyRepository agencyRepository,
@@ -73,9 +72,9 @@ namespace AccuPay.Core.Services
             ISalaryRepository salaryRepository,
             IShiftRepository shiftRepository,
             ITimeAttendanceLogRepository timeAttendanceLogRepository,
-            TimeEntryRepository timeEntryRepository,
-            TimeLogRepository timeLogRepository,
-            TripTicketRepository tripTicketRepository)
+            ITimeEntryRepository timeEntryRepository,
+            ITimeLogRepository timeLogRepository,
+            ITripTicketRepository tripTicketRepository)
         {
             _calendarService = calendarService;
             Policy = policy;

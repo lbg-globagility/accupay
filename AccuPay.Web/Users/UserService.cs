@@ -1,8 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Files.Services;
@@ -24,20 +23,19 @@ namespace AccuPay.Web.Users
         private readonly UserManager<AspNetUser> _users;
         private readonly UserEmailService _emailService;
         private readonly ICurrentUser _currentUser;
-        private readonly AspNetUserRepository _repository;
+        private readonly IAspNetUserRepository _repository;
         private readonly GenerateDefaultUserImageService _generateDefaultUserImageService;
         private readonly IFilesystem _filesystem;
-        private readonly FileRepository _fileRepository;
-        private readonly UserDataService _userDataService;
+        private readonly IFileRepository _fileRepository;
 
-        public UserService(UserManager<AspNetUser> users,
-                           UserEmailService emailService,
-                           ICurrentUser currentUser,
-                           AspNetUserRepository repository,
-                           GenerateDefaultUserImageService generateDefaultUserImageService,
-                           IFilesystem filesystem,
-                           FileRepository fileRepository,
-                           UserDataService userDataService)
+        public UserService(
+            UserManager<AspNetUser> users,
+            UserEmailService emailService,
+            ICurrentUser currentUser,
+            IAspNetUserRepository repository,
+            GenerateDefaultUserImageService generateDefaultUserImageService,
+            IFilesystem filesystem,
+            IFileRepository fileRepository)
         {
             _users = users;
             _emailService = emailService;

@@ -5,7 +5,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
-Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -18,9 +17,9 @@ Public Class ImportLeaveForm
     Private _filePath As String
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
+
     Private ReadOnly _categoryRepository As ICategoryRepository
     Private ReadOnly _employeeRepository As IEmployeeRepository
-
     Private ReadOnly _productRepository As IProductRepository
 
     Sub New()
@@ -150,7 +149,7 @@ Public Class ImportLeaveForm
         Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task(Of Boolean)
 
-                Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Dim leaveService = MainServiceProvider.GetRequiredService(Of ILeaveDataService)
                 Await leaveService.SaveManyAsync(leaves, z_User)
 
                 Return True

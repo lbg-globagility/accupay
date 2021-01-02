@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -31,8 +31,8 @@ Public Class NewUserForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Create User",
             Async Function()
-                Dim userService = MainServiceProvider.GetRequiredService(Of UserDataService)
-                Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
+                Dim userService = MainServiceProvider.GetRequiredService(Of IUserDataService)
+                Dim roleService = MainServiceProvider.GetRequiredService(Of IRoleDataService)
 
                 Await userService.CreateAsync(currentUser, isEncrypted:=True)
 

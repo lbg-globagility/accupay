@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Core.ValueObjects;
@@ -17,16 +17,16 @@ namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogService
     {
-        private TimeLogDataService _dataService;
-        private readonly TimeLogImportParser _importParser;
+        private readonly ITimeLogDataService _dataService;
+        private readonly ITimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
-        private readonly TimeLogRepository _repository;
+        private readonly ITimeLogRepository _repository;
 
         public TimeLogService(
-            TimeLogDataService service,
-            TimeLogImportParser importParser,
+            ITimeLogDataService service,
+            ITimeLogImportParser importParser,
             ICurrentUser currentUser,
-            TimeLogRepository repository)
+            ITimeLogRepository repository)
         {
             _dataService = service;
             _importParser = importParser;

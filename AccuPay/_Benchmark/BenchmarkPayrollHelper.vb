@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
@@ -12,7 +11,7 @@ Namespace Benchmark
 
     Public Class BenchmarkPayrollHelper
 
-        Private _loanService As LoanDataService
+        Private _loanService As ILoanDataService
         Private _productRepository As IProductRepository
 
         Private _pagibigLoanId As Integer
@@ -40,7 +39,7 @@ Namespace Benchmark
 
         Private Sub New()
 
-            _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+            _loanService = MainServiceProvider.GetRequiredService(Of ILoanDataService)
 
             _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
@@ -55,7 +54,7 @@ Namespace Benchmark
             'better if there is a change in ECOLA value, a new allowance should be created.
             Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
 
-            Dim productService = MainServiceProvider.GetRequiredService(Of ProductDataService)
+            Dim productService = MainServiceProvider.GetRequiredService(Of IProductDataService)
             Return Await productService.GetOrCreateEmployeeEcola(
                 employeeId:=employeeId,
                 organizationId:=z_OrganizationID,

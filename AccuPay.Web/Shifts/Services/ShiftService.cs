@@ -1,8 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
-using AccuPay.Core.Services.Imports;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
@@ -13,20 +11,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static AccuPay.Core.Services.Imports.ShiftImportParser;
 
 namespace AccuPay.Web.Shifts.Services
 {
     public class ShiftService
     {
-        private readonly ShiftRepository _repository;
-        private readonly ShiftDataService _service;
-        private readonly ShiftImportParser _importParser;
+        private readonly IShiftRepository _repository;
+        private readonly IShiftDataService _service;
+        private readonly IShiftImportParser _importParser;
         private readonly ICurrentUser _currentUser;
 
         public ShiftService(
-            ShiftRepository repository,
-            ShiftDataService service,
-            ShiftImportParser importParser,
+            IShiftRepository repository,
+            IShiftDataService service,
+            IShiftImportParser importParser,
             ICurrentUser currentUser)
         {
             _repository = repository;
@@ -110,7 +109,7 @@ namespace AccuPay.Web.Shifts.Services
                 deleted: deleted);
         }
 
-        internal async Task<ShiftImportParser.ShiftImportParserOutput> Import(IFormFile file)
+        internal async Task<ShiftImportParserOutput> Import(IFormFile file)
         {
             if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
                 throw new InvalidFormatException();

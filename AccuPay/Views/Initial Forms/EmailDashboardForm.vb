@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -114,7 +113,7 @@ Public Class EmailDashboardForm
                     Return Nothing
                 End If
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubEmailDataService)
                 Await dataService.ResetAllProcessingAsync()
 
                 result = Await _wsmService.StartOrRestart()

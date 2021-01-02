@@ -25,7 +25,7 @@ Public Class TaxReportProvider
 
         Dim month = CDate(n_selectMonth.MonthFirstDate)
 
-        Dim service = MainServiceProvider.GetRequiredService(Of TaxMonthlyReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of ITaxMonthlyReportBuilder)
 
         Dim taxMonthlyReport = service.CreateReportDocument(z_OrganizationID, month:=month.Month, year:=month.Year)
 

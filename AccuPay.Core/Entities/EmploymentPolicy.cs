@@ -1,4 +1,5 @@
-﻿using AccuPay.Utilities;
+using AccuPay.Core.Interfaces;
+using AccuPay.Utilities;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;

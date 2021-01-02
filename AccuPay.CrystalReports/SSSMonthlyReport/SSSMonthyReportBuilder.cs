@@ -1,15 +1,15 @@
+using AccuPay.Core.Interfaces;
 using AccuPay.CrystalReports.SSSMonthlyReport;
-using AccuPay.Core.Services;
 using CrystalDecisions.CrystalReports.Engine;
 using System;
 
 namespace AccuPay.CrystalReports
 {
-    public class SSSMonthyReportBuilder : BaseReportBuilder, IPdfGenerator
+    public class SSSMonthyReportBuilder : BaseReportBuilder, IPdfGenerator, ISSSMonthyReportBuilder
     {
-        private readonly SSSMonthlyReportDataService _dataService;
+        private readonly ISSSMonthlyReportDataService _dataService;
 
-        public SSSMonthyReportBuilder(SSSMonthlyReportDataService dataService)
+        public SSSMonthyReportBuilder(ISSSMonthlyReportDataService dataService)
         {
             _dataService = dataService;
         }

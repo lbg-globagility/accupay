@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 
-namespace AccuPay.Core
+namespace AccuPay.Core.Interfaces
 {
     public interface IAdjustment : IAuditableEntity
     {

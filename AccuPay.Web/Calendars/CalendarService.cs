@@ -1,6 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,18 +10,18 @@ namespace AccuPay.Web.Calendars
 {
     public class CalendarService
     {
-        private readonly CalendarRepository _repository;
+        private readonly ICalendarRepository _repository;
 
-        private readonly DayTypeRepository _dayTypeRepository;
+        private readonly IDayTypeRepository _dayTypeRepository;
 
-        private readonly CalendarDataService _dataService;
+        private readonly ICalendarDataService _dataService;
 
         private readonly ICurrentUser _currentUser;
 
         public CalendarService(
-            CalendarRepository repository,
-            DayTypeRepository dayTypeRepository,
-            CalendarDataService dataService,
+            ICalendarRepository repository,
+            IDayTypeRepository dayTypeRepository,
+            ICalendarDataService dataService,
             ICurrentUser currentUser)
         {
             _repository = repository;

@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -149,7 +148,7 @@ Public Class AddAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IAllowanceDataService)
                 Await dataService.SaveAsync(Me._newAllowance, z_User)
 
                 Me.IsSaved = True

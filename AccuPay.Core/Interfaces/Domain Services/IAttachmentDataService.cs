@@ -1,8 +1,8 @@
 using AccuPay.Core.Entities;
 
-namespace AccuPay.Core.Services
+namespace AccuPay.Core.Interfaces
 {
-    public interface IAttachmentDataService : IBaseEmployeeDataService<Attachment>
+    public interface IAttachmentDataService : IBaseSavableDataService<Attachment>
     {
     }
 }

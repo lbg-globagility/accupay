@@ -1,8 +1,8 @@
 Option Strict On
 
-Imports AccuPay.CrystalReports
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.ValueObjects
+Imports AccuPay.CrystalReports
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ThirteenthMonthSummaryReportProvider
@@ -21,8 +21,8 @@ Public Class ThirteenthMonthSummaryReportProvider
         Dim dateFrom = payperiodSelector.DateFrom
         Dim dateTo = payperiodSelector.DateTo
 
-        Dim builder = MainServiceProvider.GetRequiredService(Of ThirteenthMonthSummaryReportBuilder)
-        Dim service = MainServiceProvider.GetRequiredService(Of ThirteenthMonthSummaryReportDataService)
+        Dim builder = MainServiceProvider.GetRequiredService(Of IThirteenthMonthSummaryReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of IThirteenthMonthSummaryReportDataService)
 
         Dim timePeriod As New TimePeriod(CDate(dateFrom), CDate(dateTo))
         Dim data = Await service.GetData(z_OrganizationID, timePeriod)

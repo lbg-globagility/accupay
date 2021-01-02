@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.CrystalReports
 Imports Microsoft.Extensions.DependencyInjection
@@ -21,7 +21,7 @@ Public Class LoanSummaryByEmployeeReportProvider
                 date_from = n_PayrollSummaDateSelection.DateFrom
                 date_to = n_PayrollSummaDateSelection.DateTo
 
-                Dim service = MainServiceProvider.GetRequiredService(Of LoanSummaryByEmployeeReportBuilder)
+                Dim service = MainServiceProvider.GetRequiredService(Of ILoanSummaryByEmployeeReportBuilder)
 
                 Dim loanSummaryByEmployeeReport = service.CreateReportDocument(z_OrganizationID, CDate(date_from), CDate(date_to))
 

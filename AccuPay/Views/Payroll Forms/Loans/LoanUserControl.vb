@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -20,9 +19,9 @@ Public Class LoanUserControl
 
     Private Async Sub LoanUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
         Dim policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
-        if_sysowner_is_benchmark = systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_benchmark = systemOwnerService.GetCurrentSystemOwner() = SystemOwner.Benchmark
 
         txtLoanInterestPercentage.Visible = policy.UseGoldwingsLoanInterest
         lblLoanInterestPercentage.Visible = policy.UseGoldwingsLoanInterest

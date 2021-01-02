@@ -1,7 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.CrystalReports
-Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PhilHealthReportProvider
@@ -17,10 +16,9 @@ Public Class PhilHealthReportProvider
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of PhilHealthMonthlyReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of IPhilHealthMonthlyReportBuilder)
 
         Dim philHealthReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
-
 
         Dim crvwr As New CrysRepForm
         crvwr.crysrepvwr.ReportSource = philHealthReport.GetReportDocument

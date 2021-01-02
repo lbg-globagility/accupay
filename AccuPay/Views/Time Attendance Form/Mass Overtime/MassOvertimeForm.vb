@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -324,7 +323,7 @@ Public Class MassOvertimePresenter
         Async Function()
             If changedOvertimes.Any Then
 
-                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Dim service = MainServiceProvider.GetRequiredService(Of IOvertimeDataService)
                 Await service.SaveManyAsync(changedOvertimes, z_User)
 
             End If
@@ -337,7 +336,7 @@ Public Class MassOvertimePresenter
 
             If deletableOvertimeIDs.Any Then
 
-                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Dim service = MainServiceProvider.GetRequiredService(Of IOvertimeDataService)
                 Await service.DeleteManyAsync(deletableOvertimeIDs, z_User)
 
             End If

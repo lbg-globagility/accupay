@@ -174,7 +174,7 @@ Public Class ImportSalaryForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Import Salary",
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
                 Await dataService.SaveManyAsync(_salaries.ToList(), z_User)
 
                 Me.IsSaved = True

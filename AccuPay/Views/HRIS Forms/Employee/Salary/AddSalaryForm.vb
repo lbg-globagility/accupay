@@ -5,7 +5,6 @@ Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Benchmark
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -23,7 +22,7 @@ Public Class AddSalaryForm
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Public Sub New(employee As Employee)
         InitializeComponent()
@@ -32,7 +31,7 @@ Public Class AddSalaryForm
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
     End Sub
 
     Private Async Sub AddSalaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -43,7 +42,7 @@ Public Class AddSalaryForm
         txtPayFrequency.Text = _employee.PayFrequency?.Type
         txtSalaryType.Text = _employee.EmployeeType
 
-        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwner.Benchmark
 
         ToggleBenchmarkEcola()
 
@@ -145,7 +144,7 @@ Public Class AddSalaryForm
                     .OrganizationID = z_OrganizationID
                 End With
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
                 Await dataService.SaveAsync(newSalary, z_User)
 
                 If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then

@@ -1,12 +1,10 @@
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Payroll;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,12 +18,12 @@ namespace AccuPay.Web.Controllers
     {
         private readonly PayperiodService _payperiodService;
         private readonly PaystubService _paystubService;
-        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
 
         public PayperiodsController(
             PayperiodService payperiodService,
             PaystubService paystubService,
-            PayPeriodRepository payPeriodRepository,
+            IPayPeriodRepository payPeriodRepository,
             ICurrentUser currentUser,
             IConfiguration configuration) : base(currentUser, configuration)
         {
@@ -58,7 +56,7 @@ namespace AccuPay.Web.Controllers
         [HttpPost("{id}/calculate")]
         [Permission(PermissionTypes.PayPeriodUpdate)]
         public async Task<ActionResult<PayrollResultDto>> Calculate(
-            [FromServices] PayrollResources resources,
+            [FromServices] IPayrollResources resources,
             int id)
         {
             if ((await _payPeriodRepository.GetByIdAsync(id)) == null)

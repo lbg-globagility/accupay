@@ -1,14 +1,11 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Allowances

@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -406,7 +405,7 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ILeaveDataService)
                 Await dataService.DeleteAsync(
                     id:=Me._currentLeave.RowID.Value,
                     currentlyLoggedInUserId:=z_User)
@@ -604,7 +603,7 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ILeaveDataService)
                 Await dataService.SaveManyAsync(changedLeaves, z_User)
 
                 ShowBalloonInfo($"{changedLeaves.Count} Leave(s) Successfully Updated.", messageTitle)

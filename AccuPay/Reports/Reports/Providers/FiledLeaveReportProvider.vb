@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities.Extensions
 Imports CrystalDecisions.CrystalReports.Engine
@@ -71,7 +70,7 @@ Public Class FiledLeaveReportProvider
         datatable.Columns.Add("DatCol15")
         datatable.Columns.Add("DatCol16")
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of FiledLeaveReportDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of IFiledLeaveReportDataService)
         Dim leaveTransactions = Await dataService.GetData(z_OrganizationID, timePeriod)
 
         For Each transaction In leaveTransactions

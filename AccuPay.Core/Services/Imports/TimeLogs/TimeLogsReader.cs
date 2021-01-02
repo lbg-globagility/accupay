@@ -1,3 +1,4 @@
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Utilities;
 using System;
@@ -8,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AccuPay.Core.Services
 {
-    public class TimeLogsReader
+    public class TimeLogsReader : ITimeLogsReader
     {
         public const string FileNotFoundError = "Import file not found. It may have been deleted or moved.";
 

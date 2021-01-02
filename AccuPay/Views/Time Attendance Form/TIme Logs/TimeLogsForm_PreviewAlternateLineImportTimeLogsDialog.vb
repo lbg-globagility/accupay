@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services.Imports
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -30,7 +30,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         _timeAttendanceHelper = timeAttendanceHelper
 
-        Dim timeLogsImportParser = MainServiceProvider.GetRequiredService(Of TimeLogImportParser)
+        Dim timeLogsImportParser = MainServiceProvider.GetRequiredService(Of ITimeLogImportParser)
         Dim allLogs = timeLogsImportParser.GetAllLogs(_timeAttendanceHelper, otherErrorLogs)
 
         Me._logs = allLogs.ValidRecords

@@ -5,7 +5,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -22,10 +21,10 @@ Public Class ImportEmployeeForm
     Private _okModels As List(Of EmployeeModel)
     Private _failModels As List(Of EmployeeModel)
 
-    Private ReadOnly _divisionService As DivisionDataService
+    Private ReadOnly _divisionService As IDivisionDataService
     Private ReadOnly _branchRepository As IBranchRepository
     Private ReadOnly _employeeRepository As IEmployeeRepository
-    Private ReadOnly _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As IUserActivityRepository
 
 #End Region
 
@@ -33,13 +32,13 @@ Public Class ImportEmployeeForm
 
         InitializeComponent()
 
-        _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        _divisionService = MainServiceProvider.GetRequiredService(Of IDivisionDataService)
 
         _branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of IUserActivityRepository)
 
     End Sub
 
@@ -256,7 +255,7 @@ Public Class ImportEmployeeForm
 
         If employees.Any Then
 
-            Dim service = MainServiceProvider.GetRequiredService(Of EmployeeDataService)
+            Dim service = MainServiceProvider.GetRequiredService(Of IEmployeeDataService)
 
             Await service.ImportAsync(
                 employees,
@@ -417,7 +416,7 @@ Public Class ImportEmployeeForm
                 model.PositionId = currentPosition.RowID
             Else
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPositionDataService)
                 currentPosition = Await dataService.GetByNameOrCreateAsync(
                     model.Position,
                     organizationId:=z_OrganizationID,

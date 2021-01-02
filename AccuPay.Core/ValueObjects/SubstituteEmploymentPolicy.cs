@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 
 namespace AccuPay.Core.ValueObjects
 {

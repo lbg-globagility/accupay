@@ -1,9 +1,7 @@
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -24,7 +22,7 @@ Public Class selectPayPeriod
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _payPeriodService As PayPeriodDataService
+    Private ReadOnly _payPeriodService As IPayPeriodDataService
 
     Sub New()
 
@@ -32,7 +30,7 @@ Public Class selectPayPeriod
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
     End Sub
 
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load

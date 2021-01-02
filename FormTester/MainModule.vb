@@ -1,10 +1,8 @@
 Option Strict On
 
-Imports AccuPay.CrystalReports
-Imports AccuPay.Core
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
+Imports AccuPay.CrystalReports
+Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
@@ -41,15 +39,15 @@ Module MainModule
                 options.EnableSensitiveDataLogging()
             End Sub)
 
-        services.AddScoped(Of OrganizationRepository)
-        services.AddScoped(Of PayPeriodRepository)
-        services.AddScoped(Of PayslipDataService)
-        services.AddScoped(Of SystemOwnerService)
-        services.AddScoped(Of PayslipBuilder)
+        services.AddScoped(Of IOrganizationRepository, OrganizationRepository)
+        services.AddScoped(Of IPayPeriodRepository, PayPeriodRepository)
+        services.AddScoped(Of IPayslipDataService, PayslipDataService)
+        services.AddScoped(Of ISystemOwnerService, SystemOwnerService)
+        services.AddScoped(Of IPayslipBuilder, PayslipBuilder)
         services.AddScoped(Of IPolicyHelper, PolicyHelper)
-        services.AddScoped(Of ListOfValueService)
+        services.AddScoped(Of IListOfValueService, ListOfValueService)
 
-        services.AddScoped(Of PaystubEmailRepository)
+        services.AddScoped(Of IPaystubEmailRepository, PaystubEmailRepository)
         services.AddScoped(Of Form1)
 
         services.AddTransient(Of IEncryption, AccuPayDesktopEncryption)

@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -14,16 +13,16 @@ namespace AccuPay.Web.Users
     public class RoleService
     {
         private readonly RoleManager<AspNetRole> _roles;
-        private readonly RoleRepository _roleRepository;
-        private readonly PermissionRepository _permissionRepository;
-        private readonly RoleDataService _roleDataService;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IPermissionRepository _permissionRepository;
+        private readonly IRoleDataService _roleDataService;
         private readonly ICurrentUser _currentUser;
 
         public RoleService(
             RoleManager<AspNetRole> roles,
-            RoleRepository roleRepository,
-            PermissionRepository permissionRepository,
-            RoleDataService roleDataService,
+            IRoleRepository roleRepository,
+            IPermissionRepository permissionRepository,
+            IRoleDataService roleDataService,
             ICurrentUser currentUser)
         {
             _roles = roles;

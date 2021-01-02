@@ -201,7 +201,7 @@ namespace AccuPay.Core.Services.Imports.Employees
             }
         }
 
-        internal void SetPositionId(int? rowID)
+        public void SetPositionId(int? rowID)
         {
             _jobPositionId = rowID;
         }

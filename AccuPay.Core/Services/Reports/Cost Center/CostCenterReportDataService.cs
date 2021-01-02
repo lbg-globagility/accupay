@@ -1,5 +1,6 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,10 @@ namespace AccuPay.Core.Services
     {
         private Branch _selectedBranch;
         private int _userId;
-        private CostCenterReportResources _resources;
+        private ICostCenterReportResources _resources;
 
         public List<PayPeriodModel> GetData(
-            CostCenterReportResources resources,
+            ICostCenterReportResources resources,
             Branch selectedBranch,
             int userId,
             bool isActual)

@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.CrystalReports
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -23,7 +22,7 @@ Public Class SelectPayslipEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
-    Private ReadOnly _payslipCreator As PayslipBuilder
+    Private ReadOnly _payslipCreator As IPayslipBuilder
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
@@ -45,7 +44,7 @@ Public Class SelectPayslipEmployeesForm
 
         _employeeModels = New List(Of EmployeeModel)
 
-        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
+        _payslipCreator = MainServiceProvider.GetRequiredService(Of IPayslipBuilder)
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
@@ -361,7 +360,7 @@ Public Class SelectPayslipEmployeesForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubEmailDataService)
                 Await dataService.CreateManyAsync(paystubEmails)
 
                 Await RefreshEmailStatus()
@@ -411,7 +410,7 @@ Public Class SelectPayslipEmployeesForm
                 Return
             End If
 
-            Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubEmailDataService)
             Await dataService.ResetAllProcessingAsync()
 
             result = Await service.StartOrRestart()
@@ -469,7 +468,7 @@ Public Class SelectPayslipEmployeesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubEmailDataService)
 
                 Await dataService.DeleteByPayPeriodAsync(
                     payPeriodId:=_currentPayPeriod.RowID.Value,
@@ -506,7 +505,7 @@ Public Class SelectPayslipEmployeesForm
 
             Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                 Async Function()
-                    Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubEmailDataService)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubEmailDataService)
 
                     Await dataService.DeleteByEmployeeAndPayPeriodAsync(
                         employeeId:=employee.EmployeeId,

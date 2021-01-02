@@ -64,9 +64,9 @@ Public Class TimeEntrySummaryForm
 
     Private ReadOnly _policy As IPolicyHelper
 
-    Private ReadOnly _payPeriodService As PayPeriodDataService
+    Private ReadOnly _payPeriodService As IPayPeriodDataService
 
-    Private ReadOnly _timeEntryDataService As TimeEntryDataService
+    Private ReadOnly _timeEntryDataService As ITimeEntryDataService
 
     Private ReadOnly _breakTimeBracketRepository As IBreakTimeBracketRepository
 
@@ -86,9 +86,9 @@ Public Class TimeEntrySummaryForm
 
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
 
-        _timeEntryDataService = MainServiceProvider.GetRequiredService(Of TimeEntryDataService)
+        _timeEntryDataService = MainServiceProvider.GetRequiredService(Of ITimeEntryDataService)
 
         _breakTimeBracketRepository = MainServiceProvider.GetRequiredService(Of IBreakTimeBracketRepository)
 
@@ -883,7 +883,7 @@ Public Class TimeEntrySummaryForm
 
         If payPeriod Is Nothing Then Return Nothing
 
-        Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
+        Dim calendarService = MainServiceProvider.GetRequiredService(Of ICalendarService)
 
         Return Await calendarService.GetCalendarCollectionAsync(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate))
     End Function
@@ -1016,8 +1016,8 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub GetResources(progressDialog As ProgressDialog, payPeriod As TimePeriod, callBackAfterLoadResources As Action(Of Task(Of TimeEntryResources)))
-        Dim resources = MainServiceProvider.GetRequiredService(Of TimeEntryResources)
+    Private Sub GetResources(progressDialog As ProgressDialog, payPeriod As TimePeriod, callBackAfterLoadResources As Action(Of Task(Of ITimeEntryResources)))
+        Dim resources = MainServiceProvider.GetRequiredService(Of ITimeEntryResources)
 
         Dim loadTask = Task.Run(
             Function()

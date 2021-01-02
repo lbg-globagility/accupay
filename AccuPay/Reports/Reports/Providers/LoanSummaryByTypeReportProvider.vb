@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.CrystalReports
 Imports Microsoft.Extensions.DependencyInjection
@@ -24,9 +24,9 @@ Public Class LoanSummaryByTypeReportProvider
         Dim dateFrom = CDate(dateSelector.DateFrom)
         Dim dateTo = CDate(dateSelector.DateTo)
 
-        Dim service = MainServiceProvider.GetRequiredService(Of LoanSummaryByTypeReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of ILoanSummaryByTypeReportBuilder)
 
-        Dim loanReport As LoanSummaryByTypeReportBuilder
+        Dim loanReport As ILoanSummaryByTypeReportBuilder
 
         If pagingStylePrompt = MsgBoxResult.Yes Then
             'per page

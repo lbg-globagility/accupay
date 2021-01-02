@@ -1,9 +1,9 @@
 Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -14,7 +14,7 @@ Public Class PayrollForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
@@ -26,7 +26,7 @@ Public Class PayrollForm
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
     End Sub
@@ -68,7 +68,7 @@ Public Class PayrollForm
 
     Private Sub SetProperInterfaceBaseOnCurrentSystemOwner()
 
-        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwner.Benchmark
 
         If if_sysowner_is_benchmark Then
 

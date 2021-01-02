@@ -1,7 +1,6 @@
-using AccuPay.CrystalReports.Payslip;
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
+using AccuPay.CrystalReports.Payslip;
 using CrystalDecisions.CrystalReports.Engine;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
@@ -11,11 +10,10 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AccuPay.Core.Interfaces;
 
 namespace AccuPay.CrystalReports
 {
-    public class PayslipBuilder : BaseReportBuilder, IPdfGenerator
+    public class PayslipBuilder : BaseReportBuilder, IPdfGenerator, IPayslipBuilder
     {
         private const string customDateFormat = "M/d/yyyy";
 
@@ -29,9 +27,9 @@ namespace AccuPay.CrystalReports
 
         private readonly IPayPeriodRepository _payPeriodRepository;
 
-        private readonly SystemOwnerService _systemOwnerService;
+        private readonly ISystemOwnerService _systemOwnerService;
 
-        private readonly PayslipDataService _dataService;
+        private readonly IPayslipDataService _dataService;
 
         private DataTable _payslipDatatable;
 
@@ -40,8 +38,8 @@ namespace AccuPay.CrystalReports
         public PayslipBuilder(
             IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
-            PayslipDataService dataService,
-            SystemOwnerService systemOwnerService)
+            IPayslipDataService dataService,
+            ISystemOwnerService systemOwnerService)
         {
             _organizationRepository = organizationRepository;
 
@@ -58,11 +56,11 @@ namespace AccuPay.CrystalReports
         {
             var payslipList = _payslipDatatable.AsEnumerable();
 
-            if (_currentSystemOwner == SystemOwnerService.Goldwings)
+            if (_currentSystemOwner == SystemOwner.Goldwings)
             {
                 return payslipList.Where(x => x.Field<int>(GoldwingsEmployeeIdColumn) == employeeId).Any();
             }
-            else if (_currentSystemOwner == SystemOwnerService.Cinema2000)
+            else if (_currentSystemOwner == SystemOwner.Cinema2000)
             {
                 return payslipList.Where(x => x.Field<int>(CinemaEmployeeIdColumn) == employeeId).Any();
             }
@@ -87,7 +85,7 @@ namespace AccuPay.CrystalReports
 
             var organization = await _organizationRepository.GetByIdWithAddressAsync(payPeriod.OrganizationID.Value);
 
-            if (_currentSystemOwner == SystemOwnerService.Goldwings)
+            if (_currentSystemOwner == SystemOwner.Goldwings)
             {
                 _payslipDatatable = CreateGoldWingsDataSource(
                     organizationId: organization.RowID.Value,
@@ -96,7 +94,7 @@ namespace AccuPay.CrystalReports
                     employeeIds);
                 _reportDocument = CreateGoldWingsReport(organization, payPeriod);
             }
-            else if (_currentSystemOwner == SystemOwnerService.Cinema2000)
+            else if (_currentSystemOwner == SystemOwner.Cinema2000)
             {
                 _payslipDatatable = CreateCinemaDataSource(
                     organizationId: organization.RowID.Value,

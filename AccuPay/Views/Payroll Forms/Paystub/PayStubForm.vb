@@ -3,7 +3,6 @@ Option Strict On
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Entities.Paystub
 Imports AccuPay.Core.Enums
@@ -51,7 +50,7 @@ Public Class PayStubForm
 
     Private ReadOnly _policy As IPolicyHelper
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Private ReadOnly _agencyFeeRepository As IAgencyFeeRepository
 
@@ -69,7 +68,7 @@ Public Class PayStubForm
 
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _agencyFeeRepository = MainServiceProvider.GetRequiredService(Of IAgencyFeeRepository)
 
@@ -735,8 +734,8 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub GetResources(progressDialog As ProgressDialog, callBackAfterLoadResources As Action(Of Task(Of PayrollResources)))
-        Dim resources = MainServiceProvider.GetRequiredService(Of PayrollResources)
+    Private Sub GetResources(progressDialog As ProgressDialog, callBackAfterLoadResources As Action(Of Task(Of IPayrollResources)))
+        Dim resources = MainServiceProvider.GetRequiredService(Of IPayrollResources)
 
         Dim loadTask = Task.Run(
             Function()
@@ -1046,7 +1045,7 @@ Public Class PayStubForm
             Throw New BusinessLogicException("Multiple adjustment with the same adjustment type is not allowed.")
         End If
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
         Await dataService.UpdateAdjustmentsAsync(paystub.RowID.Value, adjustments.ToList(), z_User)
     End Function
 
@@ -1425,7 +1424,7 @@ Public Class PayStubForm
                             employeeId:=employeeId.Value,
                             payPeriodId:=_currentPayperiodId.Value))
 
-                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
                     Await paystubDataService.DeleteAsync(
                         paystub,
                         currentlyLoggedInUserId:=z_User,
@@ -1514,7 +1513,7 @@ Public Class PayStubForm
             Return False
         End If
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
         If close Then
 
             Await dataService.CloseAsync(payPeriod.RowID.Value, z_User)
@@ -1612,7 +1611,7 @@ Public Class PayStubForm
 
                     Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(_currentPayperiodId.Value)
 
-                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
+                    Dim paystubDataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
                     Await paystubDataService.DeleteByPeriodAsync(
                     payPeriodId:=_currentPayperiodId.Value,
                     currentlyLoggedInUserId:=z_User,
@@ -1662,7 +1661,7 @@ Public Class PayStubForm
 
                     Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeDivisionAsync(_currentPayperiodId.Value)
 
-                    Dim payperiodDataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+                    Dim payperiodDataService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
                     Await payperiodDataService.CancelAsync(_currentPayperiodId.Value, z_User)
 
                     Await RefreshForm()
@@ -1696,7 +1695,7 @@ Public Class PayStubForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
             Async Function()
-                Dim payslipBuilder = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
+                Dim payslipBuilder = MainServiceProvider.GetRequiredService(Of IPayslipBuilder)
 
                 Dim reportDocument = Await payslipBuilder.CreateReportDocumentAsync(
                     payPeriodId:=_currentPayperiodId.Value,

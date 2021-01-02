@@ -6,8 +6,6 @@ Imports AccuPay.Benchmark
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -32,7 +30,7 @@ Public Class SalaryTab
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Public Sub New()
         InitializeComponent()
@@ -42,7 +40,7 @@ Public Class SalaryTab
 
             _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+            _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
         End If
 
     End Sub
@@ -159,7 +157,7 @@ Public Class SalaryTab
 
         Await CheckRolePermissions()
 
-        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwner.Benchmark
 
         ToggleBenchmarkEcola()
 
@@ -364,7 +362,7 @@ Public Class SalaryTab
                     .HDMFAmount = txtPagIbig.Text.ToDecimal
                 End With
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
                 Await dataService.SaveAsync(salary, z_User)
 
                 If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then
@@ -398,7 +396,7 @@ Public Class SalaryTab
 
         Await FunctionUtils.TryCatchFunctionAsync("Delete Salary",
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of SalaryDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
                 Await dataService.DeleteAsync(
                     id:=_currentSalary.RowID.Value,
                     currentlyLoggedInUserId:=z_User)

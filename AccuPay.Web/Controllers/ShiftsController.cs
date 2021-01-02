@@ -1,5 +1,4 @@
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Services.Imports;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shifts.Models;
 using AccuPay.Web.Shifts.Services;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static AccuPay.Core.Services.Imports.ShiftImportParser;
 
 namespace AccuPay.Web.Controllers
 {
@@ -37,7 +37,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.ShiftCreate)]
-        public async Task<ShiftImportParser.ShiftImportParserOutput> Import([FromForm] IFormFile file)
+        public async Task<ShiftImportParserOutput> Import([FromForm] IFormFile file)
         {
             return await _service.Import(file);
 

@@ -6,8 +6,12 @@ namespace AccuPay.Core.Interfaces
 {
     public interface IVehicleRepository
     {
-        Task<ICollection<Vehicle>> GetAll();
+        ICollection<Vehicle> GetAll();
+
+        Task<ICollection<Vehicle>> GetAllAsync();
 
         Task<IEnumerable<Vehicle>> GetAllAsync(int organizationId);
+
+        Task CreateMany(IEnumerable<Vehicle> vehicles);
     }
 }

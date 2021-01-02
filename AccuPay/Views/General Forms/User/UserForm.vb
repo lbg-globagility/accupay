@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -134,8 +133,8 @@ Public Class UserForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Save User",
             Async Function()
-                Dim userService = MainServiceProvider.GetRequiredService(Of UserDataService)
-                Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
+                Dim userService = MainServiceProvider.GetRequiredService(Of IUserDataService)
+                Dim roleService = MainServiceProvider.GetRequiredService(Of IRoleDataService)
 
                 Await userService.UpdateAsync(user, isEncrypted:=True)
 
@@ -170,7 +169,7 @@ Public Class UserForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Delete User",
             Async Function()
-                Dim userService = MainServiceProvider.GetRequiredService(Of UserDataService)
+                Dim userService = MainServiceProvider.GetRequiredService(Of IUserDataService)
 
                 Await userService.SoftDeleteAsync(
                     id:=currentUser.Id,

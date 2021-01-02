@@ -1,8 +1,8 @@
 Option Strict On
 
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services
 {
-    public class OvertimeRateService
+    public class OvertimeRateService : IOvertimeRateService
     {
         private readonly IListOfValueRepository _listOfValueRepository;
 

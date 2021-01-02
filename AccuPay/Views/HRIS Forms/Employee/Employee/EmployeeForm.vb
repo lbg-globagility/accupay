@@ -6,8 +6,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -36,7 +34,7 @@ Public Class EmployeeForm
 
     Private ReadOnly _policy As IPolicyHelper
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Private _laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
 
@@ -48,7 +46,7 @@ Public Class EmployeeForm
 
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
     End Sub
 
@@ -63,7 +61,7 @@ Public Class EmployeeForm
 
         _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
 
-        if_sysowner_is_benchmark = _currentSystemOwner = SystemOwnerService.Benchmark
+        if_sysowner_is_benchmark = _currentSystemOwner = SystemOwner.Benchmark
 
         Dim userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         Dim user = Await userRepository.GetByIdAsync(z_User)
@@ -200,7 +198,7 @@ Public Class EmployeeForm
 
     Private Sub PreperateFormForLaGlobal()
 
-        If _currentSystemOwner <> SystemOwnerService.LAGlobal Then
+        If _currentSystemOwner <> SystemOwner.LAGlobal Then
             ActiveEmployeeChecklistReportToolStripMenuItem.Visible = False
             BPIInsuranceAmountReportToolStripMenuItem.Visible = False
             EmploymentContractToolStripMenuItem.Visible = False
@@ -939,7 +937,7 @@ Public Class EmployeeForm
             'this is during edit
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
-                Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Dim leaveService = MainServiceProvider.GetRequiredService(Of ILeaveDataService)
                 Dim newleaveBalance = Await leaveService.
                     ForceUpdateLeaveAllowanceAsync(
                         employeeId:=employeeId,
@@ -976,7 +974,7 @@ Public Class EmployeeForm
             dgvEmp_RowIndex = 0
             If succeed Then
 
-                Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+                Dim repo = MainServiceProvider.GetRequiredService(Of IUserActivityRepository)
                 Await repo.RecordAddAsync(
                     z_User,
                     EmployeeEntityName,
@@ -1549,8 +1547,13 @@ Public Class EmployeeForm
         End If
 
         If changes.Any() Then
-            Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await repo.CreateRecordAsync(z_User, EmployeeEntityName, z_OrganizationID, UserActivity.RecordTypeEdit, changes)
+            Dim repo = MainServiceProvider.GetRequiredService(Of IUserActivityRepository)
+            Await repo.CreateRecordAsync(
+                z_User,
+                EmployeeEntityName,
+                z_OrganizationID,
+                UserActivity.RecordTypeEdit,
+                changes)
             Return True
         End If
 

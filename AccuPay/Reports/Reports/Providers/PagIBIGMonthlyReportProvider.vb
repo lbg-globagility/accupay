@@ -1,7 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.CrystalReports
-Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PagIBIGMonthlyReportProvider
@@ -17,7 +16,7 @@ Public Class PagIBIGMonthlyReportProvider
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of PagIBIGMonthlyReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of IPagIBIGMonthlyReportBuilder)
 
         Dim pagIBIGReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 

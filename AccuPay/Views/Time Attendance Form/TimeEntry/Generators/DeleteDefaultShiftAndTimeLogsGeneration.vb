@@ -2,12 +2,9 @@ Option Strict On
 
 Imports System.Collections.Concurrent
 Imports System.Threading.Tasks
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -55,7 +52,7 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
         Dim timeLogs As New List(Of TimeLog)
 
         Dim shiftRepository = MainServiceProvider.GetRequiredService(Of IShiftRepository)
-        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of ITimeLogRepository)
 
         Dim employeeIds = _employees.Select(Function(x) x.RowID.Value).ToList()
 
@@ -79,8 +76,8 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
 
         Try
 
-            Dim shiftService = MainServiceProvider.GetRequiredService(Of ShiftDataService)
-            Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+            Dim shiftService = MainServiceProvider.GetRequiredService(Of IShiftDataService)
+            Dim timeLogService = MainServiceProvider.GetRequiredService(Of ITimeLogDataService)
 
             Dim employeeTimeLogs = timeLogs.Where(Function(t) t.EmployeeID.Value = employee.RowID.Value).ToList()
 

@@ -1,3 +1,4 @@
+using AccuPay.Core.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Core.Entities

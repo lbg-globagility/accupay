@@ -4,8 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -193,7 +191,7 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ILoanDataService)
                 Await dataService.SaveManyAsync(changedLoans, z_User)
 
                 ShowBalloonInfo($"{changedLoans.Count} Loan(s) Successfully Updated.", messageTitle)
@@ -361,7 +359,7 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ILoanDataService)
                 Await dataService.DeleteAsync(
                     id:=Me._currentLoan.Id.Value,
                     currentlyLoggedInUserId:=z_User)

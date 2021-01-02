@@ -1,4 +1,6 @@
-﻿namespace AccuPay.Core.ReportModels
+using AccuPay.Core.Interfaces;
+
+namespace AccuPay.Core.ReportModels
 {
     public class CinemaTardinessReportModel : ICinemaTardinessReportModel
     {

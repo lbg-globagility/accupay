@@ -1,15 +1,14 @@
-﻿using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.CrystalReports;
 using GlobagilityShared.EmailSender;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Configuration;
 using System.IO;
 using System.ServiceProcess;
-using System.Timers;
-using System.Configuration;
-using AccuPay.Core.Services;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using System.Timers;
 
 namespace AccupayWindowsService
 {
@@ -70,20 +69,20 @@ namespace AccupayWindowsService
         {
             using (var serviceScope = _serviceScopeFactory.CreateScope())
             {
-                var repository = serviceScope.ServiceProvider.GetRequiredService<PaystubEmailRepository>();
-                var dataservice = serviceScope.ServiceProvider.GetRequiredService<PaystubEmailDataService>();
-                var payslipBuilder = serviceScope.ServiceProvider.GetRequiredService<PayslipBuilder>();
-                var systemOwnerService = serviceScope.ServiceProvider.GetRequiredService<SystemOwnerService>();
+                var repository = serviceScope.ServiceProvider.GetRequiredService<IPaystubEmailRepository>();
+                var dataservice = serviceScope.ServiceProvider.GetRequiredService<IPaystubEmailDataService>();
+                var payslipBuilder = serviceScope.ServiceProvider.GetRequiredService<IPayslipBuilder>();
+                var systemOwnerService = serviceScope.ServiceProvider.GetRequiredService<ISystemOwnerService>();
 
                 await ExecuteSendEmail(repository, dataservice, payslipBuilder, systemOwnerService);
             }
         }
 
         private async Task ExecuteSendEmail(
-            PaystubEmailRepository repository,
-            PaystubEmailDataService dataService,
-            PayslipBuilder payslipBuilder,
-            SystemOwnerService systemOwnerService)
+            IPaystubEmailRepository repository,
+            IPaystubEmailDataService dataService,
+            IPayslipBuilder payslipBuilder,
+            ISystemOwnerService systemOwnerService)
         {
             PaystubEmail paystubEmail = null;
 
@@ -158,7 +157,7 @@ namespace AccupayWindowsService
             int? employeeId,
             Employee employee,
             int? organizationId,
-            PaystubEmailDataService dataService)
+            IPaystubEmailDataService dataService)
         {
             string validationErrorMessage = GetErrorMessage(
                 errorTitle,
@@ -194,7 +193,7 @@ namespace AccupayWindowsService
         }
 
         private string CreatePDF(
-            PayslipBuilder payslipBuilder,
+            IPayslipBuilder payslipBuilder,
             DateTime birthDate,
             string fileName)
         {
@@ -202,7 +201,7 @@ namespace AccupayWindowsService
 
             string password = birthDate.ToString("MMddyyyy");
 
-            PayslipBuilder builder = (PayslipBuilder)payslipBuilder.GeneratePDF(saveFolderPath, fileName);
+            IPayslipBuilder builder = (IPayslipBuilder)payslipBuilder.GeneratePDF(saveFolderPath, fileName);
             builder.AddPdfPassword(password);
 
             return builder.GetPDF();
@@ -215,8 +214,8 @@ namespace AccupayWindowsService
             string emailAddress,
             string pdfFile,
             string fileName,
-            SystemOwnerService systemOwnerService,
-            PaystubEmailDataService dataService)
+            ISystemOwnerService systemOwnerService,
+            IPaystubEmailDataService dataService)
         {
             var cutoffDate = payDate.ToString("MMMM d, yyyy");
 
@@ -226,7 +225,7 @@ namespace AccupayWindowsService
                 $"\n\n" +
                 $"Your payslip is password-protected to ensure the security of your account. The default password is your date of birth with the following format mmddyyyy. For example, if your birthday is February 2, 1988, your password is \"02021988\"";
 
-            if (systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Cinema2000)
+            if (systemOwnerService.GetCurrentSystemOwner() == SystemOwner.Cinema2000)
             {
                 body += $"\n\n" +
                 $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at hrd@cinema2000.com.ph for any inquiries or corrections regarding your salary.";

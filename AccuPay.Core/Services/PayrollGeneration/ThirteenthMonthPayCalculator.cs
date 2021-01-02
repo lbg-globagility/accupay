@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
@@ -82,7 +82,7 @@ namespace AccuPay.Core.Services
                 case ThirteenthMonthCalculationBasis.DailyRate:
                     var hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                    if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                    if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                     {
                         hoursWorked = paystub.RegularHoursAndTotalRestDay;
                     }

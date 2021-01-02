@@ -2,9 +2,7 @@ Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
-Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PreviewLeaveBalanceForm
@@ -19,7 +17,7 @@ Public Class PreviewLeaveBalanceForm
 
     Private policy As New RenewLeaveBalancePolicy
 
-    Private _listOfValueService As ListOfValueService
+    Private _listOfValueService As IListOfValueService
 
     Private _employeeRepository As IEmployeeRepository
 
@@ -27,7 +25,7 @@ Public Class PreviewLeaveBalanceForm
 
         InitializeComponent()
 
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
     End Sub

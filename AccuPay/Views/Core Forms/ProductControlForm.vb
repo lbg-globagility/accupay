@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -12,13 +12,13 @@ Public Class ProductControlForm
 
     Public Property IsSaved As Boolean
 
-    Private ReadOnly _productDataService As ProductDataService
+    Private ReadOnly _productDataService As IProductDataService
 
     Sub New()
 
         InitializeComponent()
 
-        _productDataService = MainServiceProvider.GetRequiredService(Of ProductDataService)
+        _productDataService = MainServiceProvider.GetRequiredService(Of IProductDataService)
 
     End Sub
 

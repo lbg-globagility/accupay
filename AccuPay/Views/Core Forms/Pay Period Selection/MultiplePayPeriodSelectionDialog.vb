@@ -1,11 +1,9 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -287,7 +285,7 @@ Public Class MultiplePayPeriodSelectionDialog
     End Function
 
     Private Shared Async Function CreateNewPayPeriod(startPayPeriod As PayPeriod) As Task(Of Integer?)
-        Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
         Dim newPayPeriod = Await dataService.CreateAsync(
             organizationId:=z_OrganizationID,
             month:=startPayPeriod.Month,

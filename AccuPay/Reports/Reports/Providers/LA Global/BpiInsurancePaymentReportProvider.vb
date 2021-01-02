@@ -1,6 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -38,16 +39,16 @@ Public Class BpiInsurancePaymentReportProvider
 
     Private Async Sub SetDataSource()
 
-        ' Any thrown exceptions from this function will not be handled by the calling
-        ' function above because of the way these report providers were poorly structured.
-        ' The one who coded these report providers could have just use the pattern on how the
-        ' main report providers were created but chose not to for some reason. (*scratches head)
-        Dim dataService = MainServiceProvider.GetRequiredService(Of BpiInsuranceAmountReportDataService)
+        ' Any thrown exceptions from this function will not be
+        ' handled by the calling function above.
+        Dim dataService = MainServiceProvider.GetRequiredService(Of IBpiInsuranceAmountReportDataService)
 
-        Dim source As New List(Of BpiInsuranceAmountReportDataService.BpiInsuranceDataSource)
-        source = (Await dataService.GetData(organizationId:=z_OrganizationID,
-                                            userId:=z_User,
-                                            _selectedDate)).ToList()
+        Dim source As New List(Of BpiInsuranceDataSource)
+        source = (Await dataService.GetData(
+                organizationId:=z_OrganizationID,
+                userId:=z_User,
+                _selectedDate)).
+            ToList()
 
         If source.Any() = False Then
 

@@ -2,7 +2,6 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -141,7 +140,7 @@ namespace AccuPay.Core.Services
                         var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
                             paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                        if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                        if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {
                             totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
                                 paystub.RegularHoursAndTotalRestDay;

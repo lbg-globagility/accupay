@@ -1,15 +1,15 @@
-﻿using AccuPay.CrystalReports.TaxMonthlyReport;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
+using AccuPay.CrystalReports.TaxMonthlyReport;
 using CrystalDecisions.CrystalReports.Engine;
 using System;
 
 namespace AccuPay.CrystalReports
 {
-    public class TaxMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator
+    public class TaxMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator, ITaxMonthlyReportBuilder
     {
-        private readonly TaxMonthlyReportDataService _dataService;
+        private readonly ITaxMonthlyReportDataService _dataService;
 
-        public TaxMonthlyReportBuilder(TaxMonthlyReportDataService dataService)
+        public TaxMonthlyReportBuilder(ITaxMonthlyReportDataService dataService)
         {
             _dataService = dataService;
         }

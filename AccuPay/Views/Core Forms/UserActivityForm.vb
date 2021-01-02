@@ -5,7 +5,6 @@ Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Core.Entities.UserActivity
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UserActivityForm
@@ -16,7 +15,7 @@ Public Class UserActivityForm
     Private ReadOnly _formName As String
 
     Private ReadOnly _employeeRepository As IEmployeeRepository
-    Private ReadOnly _userActivityRepository As UserActivityRepository
+    Private ReadOnly _userActivityRepository As IUserActivityRepository
     Private ReadOnly _userRepository As IAspNetUserRepository
 
     Private _currentPageIndex As Integer
@@ -38,7 +37,7 @@ Public Class UserActivityForm
         _changedType = changedType
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
-        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of IUserActivityRepository)
         _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
         _currentPageIndex = 0

@@ -7,9 +7,7 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
-Imports AccuPay.Core.Services.Imports
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -118,7 +116,7 @@ Public Class TimeLogsForm
 
         Dim models = CreatedResults(employees, startDate, endDate)
 
-        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of ITimeLogRepository)
 
         Dim timeLogs = Await timeLogRepository.
             GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIDs, datePeriod)
@@ -248,7 +246,7 @@ Public Class TimeLogsForm
     End Sub
 
     Private Async Function NewTimeEntryAlternateLineImport() As Task
-        Dim importer = MainServiceProvider.GetRequiredService(Of TimeLogsReader)
+        Dim importer = MainServiceProvider.GetRequiredService(Of ITimeLogsReader)
         Dim importOutput = importer.Read(thefilepath)
 
         If importOutput.IsImportSuccess = False Then
@@ -263,7 +261,7 @@ Public Class TimeLogsForm
             Return
         End If
 
-        Dim timeLogsImportParser = MainServiceProvider.GetRequiredService(Of TimeLogImportParser)
+        Dim timeLogsImportParser = MainServiceProvider.GetRequiredService(Of ITimeLogImportParser)
         Dim timeAttendanceHelper As ITimeAttendanceHelper = Await timeLogsImportParser.
             GetHelper(logs, organizationId:=z_OrganizationID, userId:=z_User)
 
@@ -336,7 +334,7 @@ Public Class TimeLogsForm
         Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
         Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
-        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+        Dim timeLogService = MainServiceProvider.GetRequiredService(Of ITimeLogDataService)
         Await timeLogService.SaveImportAsync(timeLogs, z_User)
     End Function
 
@@ -777,7 +775,7 @@ Public Class TimeLogsForm
 
         Dim datePeriod = New TimePeriod(earliestDate, latestDate)
 
-        Dim timeLogRepositoryQuery = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+        Dim timeLogRepositoryQuery = MainServiceProvider.GetRequiredService(Of ITimeLogRepository)
         Dim existingRecords = Await timeLogRepositoryQuery.
             GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(toSaveListEmployeeIDs, datePeriod)
 
@@ -866,7 +864,7 @@ Public Class TimeLogsForm
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Time Logs",
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ITimeLogDataService)
                 Await dataService.SaveManyAsync(
                     currentlyLoggedInUserId:=z_User,
                     added:=addedTimeLogs,
@@ -1192,7 +1190,7 @@ Public Class TimeLogsForm
             Next
         Next
 
-        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+        Dim timeLogService = MainServiceProvider.GetRequiredService(Of ITimeLogDataService)
         Await timeLogService.SaveImportAsync(timeLogs, z_User)
 
     End Sub

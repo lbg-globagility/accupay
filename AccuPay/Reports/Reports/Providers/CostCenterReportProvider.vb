@@ -204,8 +204,8 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Sub GetResources(selectedMonth As Date, progressDialog As ProgressDialog, callBackAfterLoadResources As Action(Of Task(Of CostCenterReportResources)))
-        Dim resources = MainServiceProvider.GetRequiredService(Of CostCenterReportResources)
+    Private Sub GetResources(selectedMonth As Date, progressDialog As ProgressDialog, callBackAfterLoadResources As Action(Of Task(Of ICostCenterReportResources)))
+        Dim resources = MainServiceProvider.GetRequiredService(Of ICostCenterReportResources)
 
         Dim generationTask = Task.Run(
             Function()
@@ -230,7 +230,7 @@ Public Class CostCenterReportProvider
         )
     End Sub
 
-    Private Sub LoadingResourcesOnError(resourcesTask As Task(Of CostCenterReportResources), progressDialog As ProgressDialog)
+    Private Sub LoadingResourcesOnError(resourcesTask As Task(Of ICostCenterReportResources), progressDialog As ProgressDialog)
 
         CloseProgressDialog(progressDialog)
 

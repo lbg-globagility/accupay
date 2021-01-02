@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 

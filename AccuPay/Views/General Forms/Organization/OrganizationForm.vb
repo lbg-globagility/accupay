@@ -345,7 +345,7 @@ Public Class OrganizationForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim dataService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IOrganizationDataService)
                 Await dataService.DeleteAsync(
                     id:=_currentOrganization.RowID.Value,
                     currentlyLoggedInUserId:=z_User)
@@ -385,7 +385,7 @@ Public Class OrganizationForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of ListOfValueDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IListOfValueDataService)
                 Dim firstHalf = New TimePeriod(FirstHalfStartDate.Value.Date, FirstHalfEndDate.Value.Date)
                 Dim endOfTheMonth = New TimePeriod(EndOfTheMonthStartDate.Value.Date, EndOfTheMonthEndDate.Value.Date)
 
@@ -394,8 +394,8 @@ Public Class OrganizationForm
 
                 End If
 
-                Dim organizationService = MainServiceProvider.GetRequiredService(Of OrganizationDataService)
-                Dim roleService = MainServiceProvider.GetRequiredService(Of RoleDataService)
+                Dim organizationService = MainServiceProvider.GetRequiredService(Of IOrganizationDataService)
+                Dim roleService = MainServiceProvider.GetRequiredService(Of IRoleDataService)
 
                 Await organizationService.SaveAsync(_currentOrganization, z_User)
 

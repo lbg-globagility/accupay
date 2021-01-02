@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
@@ -36,7 +36,7 @@ Public Class LeaveLedgerReportProvider
 
         If dateFrom Is Nothing Or dateTo Is Nothing Then Throw New ArgumentException("Date From or Date To cannot be null")
 
-        Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveLedgerReportDataService)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of ILeaveLedgerReportDataService)
 
         ' Note: There is actually no need to create and interface.
         ' As long as the models have the same name, crystal report can still map the data.

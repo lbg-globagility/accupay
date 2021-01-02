@@ -1,8 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
-Imports CrystalDecisions.CrystalReports.Engine
-Imports Microsoft.Extensions.DependencyInjection
 Imports AccuPay.CrystalReports
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SSSMonthlyReportProvider
     Implements IReportProvider
@@ -18,7 +17,7 @@ Public Class SSSMonthlyReportProvider
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of SSSMonthyReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of ISSSMonthyReportBuilder)
 
         Dim sssMonthlyReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 

@@ -1,11 +1,11 @@
-using AccuPay.CrystalReports.ThirteenthMonthSummaryReport;
 using AccuPay.Core.ValueObjects;
+using AccuPay.CrystalReports.ThirteenthMonthSummaryReport;
 using CrystalDecisions.CrystalReports.Engine;
 using System.Data;
 
 namespace AccuPay.CrystalReports
 {
-    public class ThirteenthMonthSummaryReportBuilder : BaseReportBuilder, IPdfGenerator
+    public class ThirteenthMonthSummaryReportBuilder : BaseReportBuilder, IPdfGenerator, IThirteenthMonthSummaryReportBuilder
     {
         public ThirteenthMonthSummaryReportBuilder CreateReportDocument(DataTable data, TimePeriod timePeriod)
         {

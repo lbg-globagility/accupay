@@ -1,9 +1,8 @@
 Option Strict On
 
 Imports System.IO
-Imports AccuPay.CrystalReports
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
+Imports AccuPay.CrystalReports
 Imports CrystalDecisions.Shared
 Imports GlobagilityShared.EmailSender
 Imports PdfSharp.Pdf
@@ -12,11 +11,11 @@ Imports PdfSharp.Pdf.Security
 
 Public Class Form1
 
-    Private ReadOnly _payslipBuilder As PayslipBuilder
-    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+    Private ReadOnly _payslipBuilder As IPayslipBuilder
+    Private ReadOnly _paystubEmailRepository As IPaystubEmailRepository
     Private ReadOnly _encryptor As IEncryption
 
-    Sub New(payslipBuilder As PayslipBuilder, paystubEmailRepositoryrepo As PaystubEmailRepository, encryptor As IEncryption)
+    Sub New(payslipBuilder As IPayslipBuilder, paystubEmailRepositoryrepo As IPaystubEmailRepository, encryptor As IEncryption)
 
         InitializeComponent()
 
@@ -195,7 +194,7 @@ Public Class Form1
         Dim fileName = $"Payslip-{currentPayPeriod.PayToDate:yyyy-MM-dd}-11.pdf"
         Dim password = CDate(employee("Birthdate")).ToString("MMddyyyy")
 
-        Dim builder = CType(_payslipBuilder.GeneratePDF(saveFolderPath, fileName), PayslipBuilder)
+        Dim builder = CType(_payslipBuilder.GeneratePDF(saveFolderPath, fileName), IPayslipBuilder)
         builder.AddPdfPassword(password)
 
         Dim pdfFile = _payslipBuilder.GetPDF()

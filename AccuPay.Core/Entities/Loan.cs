@@ -39,7 +39,7 @@ namespace AccuPay.Core.Entities
         public decimal TotalPayPeriod { get; internal set; }
 
         // there are domain methods to alter this
-        public int LoanPayPeriodLeft { get; internal set; }
+        public int LoanPayPeriodLeft { get; set; }
 
         public string Comments { get; set; }
 

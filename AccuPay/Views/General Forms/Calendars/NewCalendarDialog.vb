@@ -2,7 +2,6 @@ Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -48,7 +47,7 @@ Public Class NewCalendarDialog
 
                 Dim copiedCalendar = DirectCast(CopyCalendarComboBox.SelectedItem, PayCalendar)
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of CalendarDataService)
+                Dim dataService = MainServiceProvider.GetRequiredService(Of ICalendarDataService)
                 Await dataService.CreateAsync(calendar, copiedCalendar)
 
                 DialogResult = DialogResult.OK

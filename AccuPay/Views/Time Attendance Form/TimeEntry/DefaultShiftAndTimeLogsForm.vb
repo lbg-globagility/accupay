@@ -7,7 +7,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
@@ -51,7 +50,7 @@ Public Class DefaultShiftAndTimeLogsForm
 
         If _currentPayPeriod?.RowID Is Nothing Then
 
-            Dim dataService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
 
             NewPayPeriod = Await dataService.CreateAsync(
                 organizationId:=z_OrganizationID,

@@ -1,6 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Core
+Imports AccuPay.Core.Interfaces
 
 ''' <summary>
 ''' Anemic implementation of ICinemaTardinessReportModel just for Crystal Report data source

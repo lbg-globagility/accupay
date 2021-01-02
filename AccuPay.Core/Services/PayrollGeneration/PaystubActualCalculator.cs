@@ -21,7 +21,7 @@ namespace AccuPay.Core.Services
 
             // TODO: move this code to BasePaystub class so paystub and paystubactual
             // can both use this formula
-            if (employee.IsDaily || currentSystemOwner == SystemOwnerService.Benchmark)
+            if (employee.IsDaily || currentSystemOwner == SystemOwner.Benchmark)
             {
                 totalEarnings =
                     paystub.Actual.RegularPay +
