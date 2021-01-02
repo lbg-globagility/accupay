@@ -1,4 +1,3 @@
-﻿Imports System.Data.OleDb
 Imports System.IO
 Imports AccuPay.Core.Entities
 Imports Microsoft.Extensions.DependencyInjection
@@ -584,51 +583,6 @@ Module myModule
     'zoomImg                    90-36
 
     '==============================================================
-
-    Function INSUPD_category(Optional cat_RowID As Object = Nothing,
-                        Optional cat_CategoryName As Object = Nothing,
-                        Optional cat_CatalogID As Object = Nothing) As Object
-        Dim return_value = Nothing
-        Try
-            If conn.State = ConnectionState.Open Then : conn.Close() : End If
-
-            Dim cmdquer As MySqlCommand
-
-            cmdquer = New MySqlCommand("INSUPD_category", conn)
-
-            conn.Open()
-
-            With cmdquer
-
-                .Parameters.Clear()
-
-                .CommandType = CommandType.StoredProcedure
-
-                .Parameters.Add("cat_ID", MySqlDbType.Int32)
-
-                .Parameters.AddWithValue("cat_RowID", If(cat_RowID = Nothing, DBNull.Value, cat_RowID))
-                .Parameters.AddWithValue("cat_CategoryName", If(cat_CategoryName = Nothing, DBNull.Value, cat_CategoryName))
-                .Parameters.AddWithValue("cat_OrganizationID", orgztnID) 'orgztnID
-                .Parameters.AddWithValue("cat_CatalogID", If(cat_CatalogID = Nothing, DBNull.Value, cat_CatalogID)) 'orgztnID
-
-                .Parameters("cat_ID").Direction = ParameterDirection.ReturnValue
-                Dim datRead As MySqlDataReader
-                datRead = .ExecuteReader
-                If datRead.Read Then
-                    return_value = datRead(0)
-                End If
-            End With
-
-            hasERR = 0
-        Catch ex As Exception
-            hasERR = 1
-            MsgBox(ex.Message & " INSUPD_category")
-        Finally
-            conn.Close()
-            cmd.Dispose()
-        End Try
-        Return return_value
-    End Function
 
     Sub EXEC_VIEW_PROCEDURE(Optional ParamsCollection As Array = Nothing,
                       Optional ProcedureName As String = Nothing,
