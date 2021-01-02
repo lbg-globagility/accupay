@@ -47,11 +47,11 @@ namespace AccuPay.Infrastructure.Data
             var periodIDs = periods.Select(p => p.RowID.Value).ToArray();
 
             // TODO: move this to repository
-            var adjustments = _context.Adjustments.
-                                        Include(a => a.Paystub.Employee).
-                                        Where(a => periodIDs.Contains(a.Paystub.PayPeriodID.Value)).
-                                        Where(a => bpiInsuranceProductID == a.ProductID).
-                                        ToList();
+            var adjustments = _context.Adjustments
+                .Include(a => a.Paystub.Employee)
+                .Where(a => periodIDs.Contains(a.Paystub.PayPeriodID.Value))
+                .Where(a => bpiInsuranceProductID == a.ProductID)
+                .ToList();
 
             if (!adjustments.Any())
             {

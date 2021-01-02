@@ -14,19 +14,19 @@ namespace AccuPay.Infrastructure.Data
     {
         private readonly LeaveAccrualCalculator _calculator;
 
-        private readonly PayrollContext context;
+        private readonly PayrollContext _context;
 
         public LeaveAccrualService(PayrollContext context)
         {
             _calculator = new LeaveAccrualCalculator();
-            this.context = context;
+            _context = context;
         }
 
         public async Task CheckAccruals(int organizationId, int userId)
         {
             ICollection<Employee> employees;
 
-            employees = await context.Employees
+            employees = await _context.Employees
                 .Where(e => e.OrganizationID == organizationId)
                 .ToListAsync();
 
@@ -40,22 +40,22 @@ namespace AccuPay.Infrastructure.Data
         {
             var startOfFirstYear = employee.StartDate;
 
-            var firstPayperiodOfYear = await context.PayPeriods
+            var firstPayperiodOfYear = await _context.PayPeriods
                 .Where(p => p.PayFromDate <= startOfFirstYear && startOfFirstYear <= p.PayToDate)
                 .Where(p => p.OrganizationID == z_OrganizationID)
                 .FirstOrDefaultAsync();
 
             var endOfFirstYear = employee.StartDate.AddYears(1);
 
-            var lastPayperiodOfYear = await context.PayPeriods
+            var lastPayperiodOfYear = await _context.PayPeriods
                 .Where(p => p.PayFromDate <= endOfFirstYear && endOfFirstYear <= p.PayToDate)
                 .Where(p => p.OrganizationID == z_OrganizationID)
                 .FirstOrDefaultAsync();
 
-            await UpdateVacationLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
-            await UpdateSickLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
+            await UpdateVacationLeaveLedger(_context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
+            await UpdateSickLeaveLedger(_context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         private async Task UpdateVacationLeaveLedger(PayrollContext context,
@@ -160,10 +160,10 @@ namespace AccuPay.Infrastructure.Data
         {
             try
             {
-                await UpdateLeaveLedger(context, employee, employee.VacationLeaveAllowance, ProductConstant.VACATION_LEAVE, z_OrganizationID, z_User);
-                await UpdateLeaveLedger(context, employee, employee.SickLeaveAllowance, ProductConstant.SICK_LEAVE, z_OrganizationID, z_User);
+                await UpdateLeaveLedger(_context, employee, employee.VacationLeaveAllowance, ProductConstant.VACATION_LEAVE, z_OrganizationID, z_User);
+                await UpdateLeaveLedger(_context, employee, employee.SickLeaveAllowance, ProductConstant.SICK_LEAVE, z_OrganizationID, z_User);
 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (Exception)
             {

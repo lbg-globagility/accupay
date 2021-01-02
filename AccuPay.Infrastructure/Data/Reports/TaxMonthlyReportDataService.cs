@@ -1,3 +1,4 @@
+using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using System.Data;
 using System.Linq;
@@ -16,10 +17,10 @@ namespace AccuPay.Infrastructure.Data
         public DataTable GetData(int organizationId, int month, int year)
         {
             var payPeriods = _repository.GetByMonthYearAndPayPrequency(
-                                organizationId,
-                                month: month,
-                                year: year,
-                                payFrequencyId: AccuPay.Core.Helpers.PayrollTools.PayFrequencySemiMonthlyId);
+                organizationId,
+                month: month,
+                year: year,
+                payFrequencyId: PayrollTools.PayFrequencySemiMonthlyId);
 
             var dateFrom = payPeriods.First().PayFromDate;
             var dateTo = payPeriods.Last().PayToDate;

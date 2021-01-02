@@ -26,20 +26,20 @@ namespace AccuPay.Infrastructure.Data
 
             // TODO Create PaystubPayslipModel from database THEN check if equal to new payslip
             // use paystub repository GetFullPaystub
-            var paystubs = await _context.Paystubs.
-                                    Include(p => p.Employee).Include(p => p.Actual).
-                                    Where(p => p.PayPeriodID == payPeriod.RowID).
-                                    Where(p => p.OrganizationID == organizationId).
-                                    ToListAsync();
+            var paystubs = await _context.Paystubs
+                .Include(p => p.Employee).Include(p => p.Actual)
+                .Where(p => p.PayPeriodID == payPeriod.RowID)
+                .Where(p => p.OrganizationID == organizationId)
+                .ToListAsync();
 
             paystubs = paystubs.OrderBy(p => p.Employee.FullNameWithMiddleInitialLastNameFirst).ToList();
 
-            var loans = await _context.LoanTransactions.
-                                    Include(l => l.Loan).
-                                    Include(l => l.Loan.LoanType).
-                                    Include(l => l.Paystub).
-                                    Where(l => l.Paystub.PayPeriodID == payPeriod.RowID).
-                                    ToListAsync();
+            var loans = await _context.LoanTransactions
+                .Include(l => l.Loan)
+                .Include(l => l.Loan.LoanType)
+                .Include(l => l.Paystub)
+                .Where(l => l.Paystub.PayPeriodID == payPeriod.RowID)
+                .ToListAsync();
 
             var adjustments = await _context.Adjustments.
                                     Include(a => a.Product).

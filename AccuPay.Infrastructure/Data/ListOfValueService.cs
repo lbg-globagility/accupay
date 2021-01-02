@@ -10,11 +10,11 @@ namespace AccuPay.Infrastructure.Data
 {
     public class ListOfValueService : IListOfValueService
     {
-        private readonly PayrollContext context;
+        private readonly PayrollContext _context;
 
         public ListOfValueService(PayrollContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public ListOfValueCollection Create(string type = null)
@@ -23,13 +23,13 @@ namespace AccuPay.Infrastructure.Data
 
             if (type == null)
             {
-                listOfValues = context.ListOfValues.ToList();
+                listOfValues = _context.ListOfValues.ToList();
             }
             else
             {
-                listOfValues = context.ListOfValues.
-                                        Where(x => x.Type.ToLower() == type.ToLower()).
-                                        ToList();
+                listOfValues = _context.ListOfValues
+                    .Where(x => x.Type.ToLower() == type.ToLower())
+                    .ToList();
             }
 
             return new ListOfValueCollection(listOfValues);
@@ -41,13 +41,13 @@ namespace AccuPay.Infrastructure.Data
 
             if (type == null)
             {
-                listOfValues = await context.ListOfValues.ToListAsync();
+                listOfValues = await _context.ListOfValues.ToListAsync();
             }
             else
             {
-                listOfValues = await context.ListOfValues.
-                                        Where(x => x.Type.ToLower() == type.ToLower()).
-                                        ToListAsync();
+                listOfValues = await _context.ListOfValues
+                    .Where(x => x.Type.ToLower() == type.ToLower())
+                    .ToListAsync();
             }
             return new ListOfValueCollection(listOfValues);
         }

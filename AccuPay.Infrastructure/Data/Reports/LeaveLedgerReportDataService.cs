@@ -14,19 +14,20 @@ namespace AccuPay.Infrastructure.Data
     public class LeaveLedgerReportDataService : ILeaveLedgerReportDataService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly PayrollContext context;
+        private readonly PayrollContext _context;
 
         public LeaveLedgerReportDataService(
             PayrollContext context,
             IEmployeeRepository employeeRepository)
         {
-            this.context = context;
+            _context = context;
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<List<LeaveLedgerReportModel>> GetData(int organizationId,
-                                                                DateTime startDate,
-                                                                DateTime endDate)
+        public async Task<List<LeaveLedgerReportModel>> GetData(
+            int organizationId,
+            DateTime startDate,
+            DateTime endDate)
         {
             startDate = startDate.ToMinimumHourValue();
             endDate = endDate.ToMinimumHourValue();
@@ -38,30 +39,31 @@ namespace AccuPay.Infrastructure.Data
             var employees = await _employeeRepository.GetAllActiveAsync(organizationId);
             var employeeIds = employees.Select(e => e.RowID).ToArray();
 
-            var oldLeaveTransactions = await context.LeaveTransactions.
-                                                Include(l => l.LeaveLedger).
-                                                Include(l => l.LeaveLedger.Product).
-                                                Where(l => l.TransactionDate <= dayBeforeReport).
-                                                Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave).
-                                                Where(l => employeeIds.Contains(l.EmployeeID)).
-                                                OrderBy(l => l.TransactionDate).
-                                                ToListAsync();
+            var oldLeaveTransactions = await _context.LeaveTransactions
+                .Include(l => l.LeaveLedger)
+                .Include(l => l.LeaveLedger.Product)
+                .Where(l => l.TransactionDate <= dayBeforeReport)
+                .Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave)
+                .Where(l => employeeIds.Contains(l.EmployeeID))
+                .OrderBy(l => l.TransactionDate)
+                .ToListAsync();
 
-            var currentLeaveTransactions = await context.LeaveTransactions.
-                                                Include(l => l.LeaveLedger).
-                                                Include(l => l.LeaveLedger.Product).
-                                                Where(l => l.TransactionDate >= startDate).
-                                                Where(l => l.TransactionDate <= endDate).
-                                                Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave).
-                                                Where(l => employeeIds.Contains(l.EmployeeID)).
-                                                OrderBy(l => l.TransactionDate).
-                                                ToListAsync();
+            var currentLeaveTransactions = await _context.LeaveTransactions
+                .Include(l => l.LeaveLedger)
+                .Include(l => l.LeaveLedger.Product)
+                .Where(l => l.TransactionDate >= startDate)
+                .Where(l => l.TransactionDate <= endDate)
+                .Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave)
+                .Where(l => employeeIds.Contains(l.EmployeeID))
+                .OrderBy(l => l.TransactionDate)
+                .ToListAsync();
 
-            var timeEntries = await context.TimeEntries.
-                                        Where(t => t.Date >= startDate).
-                                        Where(t => t.Date <= endDate).
-                                        Where(t => employeeIds.Contains(t.EmployeeID)).
-                                        OrderBy(l => l.Date).ToListAsync();
+            var timeEntries = await _context.TimeEntries
+                .Where(t => t.Date >= startDate)
+                .Where(t => t.Date <= endDate)
+                .Where(t => employeeIds.Contains(t.EmployeeID))
+                .OrderBy(l => l.Date)
+                .ToListAsync();
 
             foreach (var employee in employees)
             {

@@ -16,8 +16,8 @@ namespace AccuPay.Infrastructure.Data
 
         public string GetCurrentSystemOwner()
         {
-            return GetCurrentSystemOwnerBaseQuery().
-                    FirstOrDefault();
+            return GetCurrentSystemOwnerBaseQuery()
+                .FirstOrDefault();
         }
 
         public async Task<string> GetCurrentSystemOwnerAsync()
@@ -28,9 +28,9 @@ namespace AccuPay.Infrastructure.Data
 
         private IQueryable<string> GetCurrentSystemOwnerBaseQuery()
         {
-            return _context.SystemOwners.
-                    Where(x => x.IsCurrentOwner == "1").
-                    Select(x => x.Name);
+            return _context.SystemOwners
+                    .Where(x => x.IsCurrentOwner == "1")
+                    .Select(x => x.Name);
         }
     }
 }
