@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.Services;
@@ -18,7 +18,7 @@ namespace AccuPay.Infrastructure.Reports
     {
         private readonly IReadOnlyCollection<ExcelReportColumn> _reportColumns = GetReportColumns();
         private readonly SystemOwnerService _systemOwnerService;
-        private readonly OrganizationRepository _organizationRepository;
+        private readonly IOrganizationRepository _organizationRepository;
         private const string EmployeeIdKey = "EmployeeId";
         private const string EmployeeNameKey = "EmployeeName";
         private const string TotalDaysKey = "TotalDays";
@@ -55,7 +55,9 @@ namespace AccuPay.Infrastructure.Reports
         private const string FiveDaySilpAmountKey = "FiveDaySilpAmount"; // 5 Day SILP (leave)
         private const string NetPayKey = "NetPay";
 
-        public CostCenterReportBuilder(SystemOwnerService systemOwnerService, OrganizationRepository organizationRepository)
+        public CostCenterReportBuilder(
+            SystemOwnerService systemOwnerService,
+            IOrganizationRepository organizationRepository)
         {
             _systemOwnerService = systemOwnerService;
             _organizationRepository = organizationRepository;

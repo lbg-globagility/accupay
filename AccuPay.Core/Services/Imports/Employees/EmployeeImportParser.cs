@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,12 +10,15 @@ namespace AccuPay.Core.Services.Imports.Employees
 {
     public class EmployeeImportParser
     {
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly PositionRepository _positionRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IPositionRepository _positionRepository;
         private readonly IExcelParser<EmployeeRowRecord> _parser;
         private const string WORKSHEETNAME = "Employees";
 
-        public EmployeeImportParser(EmployeeRepository employeeRepository, PositionRepository positionRepository, IExcelParser<EmployeeRowRecord> excelParser)
+        public EmployeeImportParser(
+            IEmployeeRepository employeeRepository,
+            IPositionRepository positionRepository,
+            IExcelParser<EmployeeRowRecord> excelParser)
         {
             _employeeRepository = employeeRepository;
             _positionRepository = positionRepository;

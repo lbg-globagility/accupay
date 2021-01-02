@@ -4,7 +4,6 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.Services.Policies
 Imports AccuPay.Core.ValueObjects
@@ -52,7 +51,7 @@ Public Class ShiftForm
         End Set
     End Property
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
 #End Region
 
@@ -60,7 +59,7 @@ Public Class ShiftForm
 
         InitializeComponent()
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
     End Sub
 
 #Region "Methods"
@@ -412,7 +411,7 @@ Public Class ShiftForm
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToArray()
 
         Dim isShiftBasedAutoOvertimeEnabled = _isShiftBasedAutoOvertimeEnabled
-        Dim repository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IShiftRepository)
         Dim shifts = Await repository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
             z_OrganizationID,
             employeeIds,
@@ -727,7 +726,7 @@ Public Class ShiftForm
 
         Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
 
-        Private _listOfValueRepository As ListOfValueRepository
+        Private _listOfValueRepository As IListOfValueRepository
 
         Private _listOfValueService As ListOfValueService
 
@@ -738,7 +737,7 @@ Public Class ShiftForm
 
         Private Sub New()
 
-            _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+            _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
             _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
         End Sub

@@ -1,6 +1,6 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,12 +12,13 @@ namespace AccuPay.Core.Services
     public class BpiInsuranceAmountReportDataService
     {
         private readonly PayrollContext _context;
-        private readonly PayPeriodRepository _payPeriodRepository;
-        private readonly ProductRepository _productRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
+        private readonly IProductRepository _productRepository;
 
-        public BpiInsuranceAmountReportDataService(PayrollContext context,
-                                                    PayPeriodRepository payPeriodRepository,
-                                                    ProductRepository productRepository)
+        public BpiInsuranceAmountReportDataService(
+            PayrollContext context,
+            IPayPeriodRepository payPeriodRepository,
+            IProductRepository productRepository)
         {
             _context = context;
             _payPeriodRepository = payPeriodRepository;

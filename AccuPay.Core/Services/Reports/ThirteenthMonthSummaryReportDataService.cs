@@ -1,4 +1,4 @@
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System.Data;
@@ -9,9 +9,11 @@ namespace AccuPay.Core.Services
 {
     public class ThirteenthMonthSummaryReportDataService : StoredProcedureDataService
     {
-        private readonly PaystubRepository _paystubRepository;
+        private readonly IPaystubRepository _paystubRepository;
 
-        public ThirteenthMonthSummaryReportDataService(PayrollContext context, PaystubRepository paystubRepository) : base(context)
+        public ThirteenthMonthSummaryReportDataService(
+            PayrollContext context,
+            IPaystubRepository paystubRepository) : base(context)
         {
             _paystubRepository = paystubRepository;
         }

@@ -11,6 +11,7 @@ using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.Core.Services.Reports;
 using AccuPay.Infrastructure.Reports;
+using AccuPay.Infrastructure.Repositories;
 using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace AccuPay.Web
     {
         public static IServiceCollection AddAccuPayCoreServices(this IServiceCollection services)
         {
-            services.AddScoped<ActualTimeEntryRepository>();
+            services.AddScoped<IActualTimeEntryRepository, ActualTimeEntryRepository>();
             services.AddScoped<AgencyFeeRepository>();
             services.AddScoped<AgencyRepository>();
             services.AddScoped<AllowanceRepository>();

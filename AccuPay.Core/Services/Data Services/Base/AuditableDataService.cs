@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,12 +8,12 @@ namespace AccuPay.Core.Services
 {
     public abstract class AuditableDataService<T> : BaseSavableDataService<T> where T : AuditableEntity
     {
-        protected readonly UserActivityRepository _userActivityRepository;
+        protected readonly IUserActivityRepository _userActivityRepository;
 
         public AuditableDataService(
-               SavableRepository<T> repository,
-               PayPeriodRepository payPeriodRepository,
-               UserActivityRepository userActivityRepository,
+               ISavableRepository<T> repository,
+               IPayPeriodRepository payPeriodRepository,
+               IUserActivityRepository userActivityRepository,
                PayrollContext context,
                IPolicyHelper policy,
                string entityName,

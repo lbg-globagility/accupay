@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System.Collections.Generic;
@@ -12,15 +12,15 @@ namespace AccuPay.Core.Services.Imports
     public class TimeLogImportParser
     {
         private readonly TimeLogsReader _reader;
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly ShiftRepository _shiftRepository;
-        private readonly OvertimeRepository _overtimeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IOvertimeRepository _overtimeRepository;
+        private readonly IShiftRepository _shiftRepository;
 
         public TimeLogImportParser(
             TimeLogsReader reader,
-            EmployeeRepository employeeRepository,
-            ShiftRepository shiftRepository,
-            OvertimeRepository overtimeRepository)
+            IEmployeeRepository employeeRepository,
+            IOvertimeRepository overtimeRepository,
+            IShiftRepository shiftRepository)
         {
             _reader = reader;
             _employeeRepository = employeeRepository;

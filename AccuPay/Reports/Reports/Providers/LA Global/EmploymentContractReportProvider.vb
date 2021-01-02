@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmploymentContractReportProvider
@@ -39,7 +39,7 @@ Public Class EmploymentContractReportProvider
             .SetParameter("employeeType", e.EmployeeType)
             .SetParameter("startDate", e.StartDate)
 
-            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
             Dim latestSalary = Await employeeRepository.GetCurrentSalaryAsync(e.RowID.Value)
 
             .SetParameter("salary", If(latestSalary?.BasicSalary, 0))

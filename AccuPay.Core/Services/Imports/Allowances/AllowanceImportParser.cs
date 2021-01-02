@@ -1,4 +1,5 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
@@ -14,18 +15,19 @@ namespace AccuPay.Core.Services.Imports.Allowances
 {
     public class AllowanceImportParser
     {
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly AllowanceRepository _allowanceRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IAllowanceRepository _allowanceRepository;
         private readonly IExcelParser<AllowanceRowRecord> _parser;
-        private readonly AllowanceTypeRepository _allowanceTypeRepository;
+        private readonly IAllowanceTypeRepository _allowanceTypeRepository;
         private const string WORKSHEETNAME = "Default";
 
         public string XlsxExtension => _parser.XlsxExtension;
 
-        public AllowanceImportParser(EmployeeRepository employeeRepository,
-                                     AllowanceRepository allowanceRepository,
-                                     IExcelParser<AllowanceRowRecord> parser,
-                                     AllowanceTypeRepository allowanceTypeRepository)
+        public AllowanceImportParser(
+            IEmployeeRepository employeeRepository,
+            IAllowanceRepository allowanceRepository,
+            IExcelParser<AllowanceRowRecord> parser,
+            IAllowanceTypeRepository allowanceTypeRepository)
         {
             _employeeRepository = employeeRepository;
             _allowanceRepository = allowanceRepository;

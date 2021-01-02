@@ -1,9 +1,10 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
@@ -126,7 +127,7 @@ Public Class CalendarsForm
     Private Async Sub LoadCalendars()
         RemoveHandler CalendarsDataGridView.SelectionChanged, AddressOf CalendarsDataGridView_SelectionChanged
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ICalendarRepository)
         _calendars = Await repository.GetAllAsync()
 
         CalendarsDataGridView.DataSource = _calendars
@@ -153,7 +154,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Function LoadCalendarDays() As Task
-        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ICalendarRepository)
         Dim calendarDays = Await repository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
         _calendarDays = FillMissingDays(calendarDays)
 
@@ -161,7 +162,7 @@ Public Class CalendarsForm
     End Function
 
     Private Async Sub LoadCalendarDayTypes()
-        Dim repository = MainServiceProvider.GetRequiredService(Of DayTypeRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IDayTypeRepository)
         Dim dayTypes = Await repository.GetAllAsync()
 
         Editor.DayTypes = dayTypes

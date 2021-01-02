@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Policies;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities;

@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,7 +14,7 @@ namespace AccuPay.Core.Services
     {
         private readonly PayrollContext _context;
         private readonly ListOfValueService _listOfValueService;
-        private readonly AllowanceRepository _allowanceRepository;
+        private readonly IAllowanceRepository _allowanceRepository;
         private readonly CalendarService _calendarService;
         private DateTime _selectedMonth;
 
@@ -35,7 +35,7 @@ namespace AccuPay.Core.Services
         public CostCenterReportResources(
             PayrollContext context,
             ListOfValueService listOfValueService,
-            AllowanceRepository allowanceRepository,
+            IAllowanceRepository allowanceRepository,
             CalendarService calendarService)
         {
             _context = context;
@@ -60,7 +60,7 @@ namespace AccuPay.Core.Services
 
             TimeEntries = new List<TimeEntry>();
 
-            // TODO: move the codes below in individual method just like in PayrollResources and TimeEntryResources
+            // TODO: Urgent - move the codes below in individual method just like in PayrollResources and TimeEntryResources
 
             TimeEntries = await _context.TimeEntries
                 .Include(t => t.Employee)

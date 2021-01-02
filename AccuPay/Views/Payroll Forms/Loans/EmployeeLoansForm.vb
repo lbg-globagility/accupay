@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
@@ -23,7 +24,7 @@ Public Class EmployeeLoansForm
 
     Private _currentLoanTransactions As List(Of LoanTransaction)
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
@@ -47,7 +48,7 @@ Public Class EmployeeLoansForm
 
         _currentLoanTransactions = New List(Of LoanTransaction)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
@@ -303,7 +304,7 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
         Dim currentLoan = Await repository.GetByIdAsync(Me._currentLoan.Id.Value)
 
         If currentLoan Is Nothing Then
@@ -463,7 +464,7 @@ Public Class EmployeeLoansForm
         Dim cancelledChecked = chkCancelledFilter.Checked
         Dim completeChecked = chkCompleteFilter.Checked
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
         Dim loans = Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)
 
         Dim loanModels = loans.
@@ -526,7 +527,7 @@ Public Class EmployeeLoansForm
         Dim currentLoan As LoanModel = GetSelectedLoan()
         If currentLoan Is Nothing Then Return
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
         Me._currentLoanTransactions = New List(Of LoanTransaction) _
             (Await repository.GetLoanTransactionsWithPayPeriodAsync(currentLoan.Id.Value))
 
@@ -662,7 +663,7 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Async Sub lnkBonusPayment_Click(sender As Object, e As EventArgs) Handles lnkBonusPayment.Click
-        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
 
         Dim currentLoan = GetSelectedLoan().CreateLoan()
 

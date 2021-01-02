@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Global.AccuPay.JobLevels
@@ -24,20 +24,20 @@ Namespace Global.AccuPay.JobLevels
 
         Private _jobLevels As ICollection(Of JobLevel)
 
-        Private _employeeRepo As EmployeeRepository
+        Private _employeeRepo As IEmployeeRepository
 
-        Private _salaryRepo As SalaryRepository
+        Private _salaryRepo As ISalaryRepository
 
-        Private _jobLevelRepo As JobLevelRepository
+        Private _jobLevelRepo As IJobLevelRepository
 
         Public Sub New(view As IJobPointsView)
             _view = view
 
-            _employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+            _employeeRepo = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            _salaryRepo = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
 
-            _jobLevelRepo = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
+            _jobLevelRepo = MainServiceProvider.GetRequiredService(Of IJobLevelRepository)
 
         End Sub
 

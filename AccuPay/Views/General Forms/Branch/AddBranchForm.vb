@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -23,17 +23,17 @@ Public Class AddBranchForm
 
     Public Property LastAddedBranchId As Integer?
 
-    Private ReadOnly _calendarRepository As CalendarRepository
+    Private ReadOnly _calendarRepository As ICalendarRepository
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _calendarRepository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        _calendarRepository = MainServiceProvider.GetRequiredService(Of ICalendarRepository)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
     End Sub
 
     Private Async Sub AddBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -76,7 +76,7 @@ Public Class AddBranchForm
 
     Private Async Function RefreshForm() As Task
 
-        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
 
         _branches = (Await branchRepository.GetAllAsync()).
             OrderBy(Function(b) b.Name).
@@ -215,7 +215,7 @@ Public Class AddBranchForm
         Await FunctionUtils.TryCatchFunctionAsync("Delete Branch",
             Async Function()
 
-                Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+                Dim branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
                 Await branchRepository.DeleteAsync(branch)
 
                 Await RefreshForm()
@@ -282,7 +282,7 @@ Public Class AddBranchForm
 
     Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
 
-        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
 
         Dim branch As New Branch
         If _currentFormType = FormMode.Creating Then

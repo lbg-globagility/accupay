@@ -1,8 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewEmployeePresenter
@@ -52,11 +52,12 @@ Public Class NewEmployeePresenter
 
         End If
 
-        Dim builder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim builder = MainServiceProvider.GetRequiredService(Of IEmployeeQueryBuilder)
 
-        _currentEmployee = Await builder.IncludePosition().
-                                        IncludePayFrequency().
-                                        GetByIdAsync(employeeID.Value, z_OrganizationID)
+        _currentEmployee = Await builder.
+            IncludePosition().
+            IncludePayFrequency().
+            GetByIdAsync(employeeID.Value, z_OrganizationID)
 
         If _currentEmployee IsNot Nothing Then
             _view.SetEmployee(_currentEmployee)
@@ -94,7 +95,7 @@ Public Class NewEmployeePresenter
 
     Public Async Function GetEmployees() As Task(Of IList(Of Employee))
 
-        Dim builder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim builder = MainServiceProvider.GetRequiredService(Of IEmployeeQueryBuilder)
 
         Dim employees As IEnumerable(Of Employee)
 

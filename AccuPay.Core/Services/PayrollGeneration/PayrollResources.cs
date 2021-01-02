@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -62,59 +62,59 @@ namespace AccuPay.Core.Services
 
         public readonly IPolicyHelper Policy;
 
-        private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
+        private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
 
-        private readonly AllowanceRepository _allowanceRepository;
+        private readonly IAllowanceRepository _allowanceRepository;
 
-        private readonly BonusRepository _bonusRepository;
+        private readonly IBonusRepository _bonusRepository;
 
         private readonly CalendarService _calendarService;
 
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        private readonly LeaveRepository _leaveRepository;
+        private readonly ILeaveRepository _leaveRepository;
 
         private readonly ListOfValueService _listOfValueService;
 
-        private readonly LoanRepository _loanRepository;
+        private readonly ILoanRepository _loanRepository;
 
-        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
 
-        private readonly PaystubRepository _paystubRepository;
+        private readonly IPaystubRepository _paystubRepository;
 
-        private readonly PhilHealthBracketRepository _philHealthBracketRepository;
+        private readonly IPhilHealthBracketRepository _philHealthBracketRepository;
 
-        private readonly ProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        private readonly SalaryRepository _salaryRepository;
+        private readonly ISalaryRepository _salaryRepository;
 
-        private readonly SocialSecurityBracketRepository _socialSecurityBracketRepository;
+        private readonly ISocialSecurityBracketRepository _socialSecurityBracketRepository;
 
         private readonly SystemOwnerService _systemOwnerService;
 
-        private readonly TimeEntryRepository _timeEntryRepository;
+        private readonly ITimeEntryRepository _timeEntryRepository;
 
-        private readonly WithholdingTaxBracketRepository _withholdingTaxBracketRepository;
+        private readonly IWithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
         public PayrollResources(
             IPolicyHelper policy,
             CalendarService calendarService,
             ListOfValueService listOfValueService,
             SystemOwnerService systemOwnerService,
-            ActualTimeEntryRepository actualTimeEntryRepository,
-            AllowanceRepository allowanceRepository,
-            EmployeeRepository employeeRepository,
-            LeaveRepository leaveRepository,
-            LoanRepository loanRepository,
-            PayPeriodRepository payPeriodRepository,
-            PaystubRepository paystubRepository,
-            PhilHealthBracketRepository philHealthBracketRepository,
-            ProductRepository productRepository,
-            SalaryRepository salaryRepository,
-            SocialSecurityBracketRepository socialSecurityBracketRepository,
-            TimeEntryRepository timeEntryRepository,
-            WithholdingTaxBracketRepository withholdingTaxBracketRepository,
-            BonusRepository bonusRepository)
+            IActualTimeEntryRepository actualTimeEntryRepository,
+            IAllowanceRepository allowanceRepository,
+            IBonusRepository bonusRepository,
+            IEmployeeRepository employeeRepository,
+            ILeaveRepository leaveRepository,
+            ILoanRepository loanRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IPaystubRepository paystubRepository,
+            IPhilHealthBracketRepository philHealthBracketRepository,
+            IProductRepository productRepository,
+            ISalaryRepository salaryRepository,
+            ISocialSecurityBracketRepository socialSecurityBracketRepository,
+            ITimeEntryRepository timeEntryRepository,
+            IWithholdingTaxBracketRepository withholdingTaxBracketRepository)
         {
             Policy = policy;
             _calendarService = calendarService;

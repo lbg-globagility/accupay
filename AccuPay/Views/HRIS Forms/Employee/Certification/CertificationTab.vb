@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -40,7 +40,7 @@ Public Class CertificationTab
     Private Async Function LoadCertifications() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+        Dim certificationRepo = MainServiceProvider.GetRequiredService(Of ICertificationRepository)
         _certifications = Await certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvCertifications.SelectionChanged, AddressOf dgvCertifications_SelectionChanged

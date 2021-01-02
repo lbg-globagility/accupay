@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -189,5 +189,35 @@ namespace AccuPay.Core.Entities
         }
 
         public virtual ICollection<LoanPaymentFromThirteenthMonthPay> LoanPaymentFromThirteenthMonthPays { get; set; }
+
+        #region Composite Keys
+
+        public class EmployeeCompositeKey
+        {
+            public int EmployeeId { get; set; }
+            public int PayPeriodId { get; set; }
+
+            public EmployeeCompositeKey(int employeeId, int payPeriodId)
+            {
+                EmployeeId = employeeId;
+                PayPeriodId = payPeriodId;
+            }
+        }
+
+        public class DateCompositeKey
+        {
+            public int OrganizationId { get; set; }
+            public DateTime PayFromDate { get; set; }
+            public DateTime PayToDate { get; set; }
+
+            public DateCompositeKey(int organizationId, DateTime payFromDate, DateTime payToDate)
+            {
+                OrganizationId = organizationId;
+                PayFromDate = payFromDate;
+                PayToDate = payToDate;
+            }
+        }
+
+        #endregion Composite Keys
     }
 }

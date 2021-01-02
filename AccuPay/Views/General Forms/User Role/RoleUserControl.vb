@@ -3,8 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Utilities.Extensions
@@ -18,7 +17,7 @@ Public Class RoleUserControl
 
     Private ReadOnly _policy As IPolicyHelper
 
-    Private ReadOnly _permissionRepository As PermissionRepository
+    Private ReadOnly _permissionRepository As IPermissionRepository
 
     Private _permissions As List(Of Permission)
 
@@ -31,7 +30,7 @@ Public Class RoleUserControl
 
             _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-            _permissionRepository = MainServiceProvider.GetRequiredService(Of PermissionRepository)
+            _permissionRepository = MainServiceProvider.GetRequiredService(Of IPermissionRepository)
         End If
 
         _permissions = New List(Of Permission)
@@ -142,7 +141,7 @@ Public Class RoleUserControl
             RoleNameTextBox.Text = _currentRole.Name
 
             'This does not update when roleRepository is used as instance field
-            Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+            Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
             Dim role = Await roleRepository.GetByIdAsync(_currentRole.Id)
 
             If role IsNot Nothing Then

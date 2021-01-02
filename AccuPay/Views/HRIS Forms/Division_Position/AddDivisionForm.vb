@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -27,21 +27,21 @@ Public Class AddDivisionForm
 
     Public Property LastDivisionAdded As Division
 
-    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
-    Private ReadOnly _payFrequencyRepository As PayFrequencyRepository
+    Private ReadOnly _payFrequencyRepository As IPayFrequencyRepository
 
-    Private ReadOnly _positionRepository As PositionRepository
+    Private ReadOnly _positionRepository As IPositionRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
-        _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
+        _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of IPayFrequencyRepository)
 
-        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        _positionRepository = MainServiceProvider.GetRequiredService(Of IPositionRepository)
 
         Me.IsSaved = False
 
@@ -67,7 +67,7 @@ Public Class AddDivisionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
         Dim divisions = Await repository.GetAllParentsAsync(z_OrganizationID)
 
         _parentDivisions = divisions.OrderBy(Function(d) d.Name).ToList()
@@ -92,7 +92,7 @@ Public Class AddDivisionForm
 
     Private Sub GetDivisionTypes()
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
         _divisionTypes = repository.GetDivisionTypeList().ToList()
 
     End Sub

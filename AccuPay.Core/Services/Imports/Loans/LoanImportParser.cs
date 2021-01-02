@@ -1,6 +1,6 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,18 +10,19 @@ namespace AccuPay.Core.Services.Imports.Loans
 {
     public class LoanImportParser
     {
-        private readonly LoanRepository _loanRepository;
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly ILoanRepository _loanRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<LoanRowRecord> _parser;
-        private readonly ProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
         private const string WORKSHEETNAME = "Default";
 
         public string XlsxExtension => _parser.XlsxExtension;
 
-        public LoanImportParser(LoanRepository loanRepository,
-                                EmployeeRepository employeeRepository,
-                                ProductRepository productRepository,
-                                IExcelParser<LoanRowRecord> excelParser)
+        public LoanImportParser(
+            ILoanRepository loanRepository,
+            IEmployeeRepository employeeRepository,
+            IProductRepository productRepository,
+            IExcelParser<LoanRowRecord> excelParser)
         {
             _loanRepository = loanRepository;
             _employeeRepository = employeeRepository;

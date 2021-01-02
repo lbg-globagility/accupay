@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Repositories;
 using System.Threading.Tasks;
 
@@ -10,11 +11,11 @@ namespace AccuPay.Core.Services
     {
         //private const string UserActivityName = "Organization";
 
-        private readonly OrganizationRepository _organizationRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public OrganizationDataService(
-            OrganizationRepository organizationRepository,
-            PayPeriodRepository payPeriodRepository,
+            IOrganizationRepository organizationRepository,
+            IPayPeriodRepository payPeriodRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 

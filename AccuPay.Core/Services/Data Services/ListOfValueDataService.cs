@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.Services.Policies;
 using AccuPay.Core.ValueObjects;
@@ -11,11 +12,11 @@ namespace AccuPay.Core.Services
 {
     public class ListOfValueDataService : BaseSavableDataService<ListOfValue>
     {
-        private readonly ListOfValueRepository _listOfValueRepository;
+        private readonly IListOfValueRepository _listOfValueRepository;
 
         public ListOfValueDataService(
-            ListOfValueRepository listOfValueRepository,
-            PayPeriodRepository payPeriodRepository,
+            IListOfValueRepository listOfValueRepository,
+            IPayPeriodRepository payPeriodRepository,
             PayrollContext payrollContext,
             IPolicyHelper policy) :
 

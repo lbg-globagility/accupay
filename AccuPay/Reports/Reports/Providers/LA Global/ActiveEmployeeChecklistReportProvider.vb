@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ActiveEmployeeChecklistReportProvider
@@ -41,12 +41,12 @@ Public Class ActiveEmployeeChecklistReportProvider
 
         Dim employees As New List(Of Employee)
 
-        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of IEmployeeQueryBuilder)
 
         employees = employeeBuilder.
-                            IsActive().
-                            IncludeBranch().
-                            ToList(z_OrganizationID)
+            IsActive().
+            IncludeBranch().
+            ToList(z_OrganizationID)
 
         If Not employees.Any Then
             MessageBox.Show($"No record found.", "Active Employee Checklist Report", MessageBoxButtons.OK, MessageBoxIcon.Information)

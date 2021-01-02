@@ -2,7 +2,7 @@ Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -14,13 +14,13 @@ Public Class ImportOBForm
 
     Public IsSaved As Boolean
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
     End Sub
 

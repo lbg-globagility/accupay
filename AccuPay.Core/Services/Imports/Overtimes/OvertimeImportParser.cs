@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -12,16 +12,16 @@ namespace AccuPay.Core.Services.Imports.Overtimes
 {
     public class OvertimeImportParser
     {
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<OvertimeRowRecord> _parser;
-        private readonly OvertimeRepository _overtimeRepository;
+        private readonly IOvertimeRepository _overtimeRepository;
         private const string WORKSHEETNAME = "Sheet1";
 
         public string XlsxExtension => _parser.XlsxExtension;
 
         public OvertimeImportParser(
-            EmployeeRepository employeeRepository,
-            OvertimeRepository overtimeRepository,
+            IEmployeeRepository employeeRepository,
+            IOvertimeRepository overtimeRepository,
             IExcelParser<OvertimeRowRecord> parser)
         {
             _employeeRepository = employeeRepository;

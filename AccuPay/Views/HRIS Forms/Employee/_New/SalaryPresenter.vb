@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -20,26 +20,26 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _socialSecurityPolicy As SocialSecurityPolicy
 
-        Private _philHealthBracketRepository As PhilHealthBracketRepository
-
-        Private _salaryRepository As SalaryRepository
-
-        Private _socialSecurityBracketRepository As SocialSecurityBracketRepository
-
         Private _listOfValueService As ListOfValueService
 
         Private _salaries As IList(Of Salary)
 
         Private _currentSalary As Salary
 
+        Private ReadOnly _philHealthBracketRepository As IPhilHealthBracketRepository
+
+        Private ReadOnly _salaryRepository As ISalaryRepository
+
+        Private ReadOnly _socialSecurityBracketRepository As ISocialSecurityBracketRepository
+
         Public Sub New(view As SalaryTab2)
             _view = view
 
-            _philHealthBracketRepository = MainServiceProvider.GetRequiredService(Of PhilHealthBracketRepository)
+            _philHealthBracketRepository = MainServiceProvider.GetRequiredService(Of IPhilHealthBracketRepository)
 
-            _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            _salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
 
-            _socialSecurityBracketRepository = MainServiceProvider.GetRequiredService(Of SocialSecurityBracketRepository)
+            _socialSecurityBracketRepository = MainServiceProvider.GetRequiredService(Of ISocialSecurityBracketRepository)
 
             _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 

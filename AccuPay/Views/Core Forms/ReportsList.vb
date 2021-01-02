@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports Microsoft.Extensions.DependencyInjection
@@ -11,7 +12,7 @@ Public Class ReportsList
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
     Sub New()
 
@@ -19,7 +20,7 @@ Public Class ReportsList
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
         curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
     End Sub

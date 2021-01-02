@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +10,9 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Time Entry";
 
-        private readonly UserActivityRepository _userActivityRepository;
+        private readonly IUserActivityRepository _userActivityRepository;
 
-        public TimeEntryDataHelper(UserActivityRepository userActivityRepository)
+        public TimeEntryDataHelper(IUserActivityRepository userActivityRepository)
         {
             _userActivityRepository = userActivityRepository;
         }
@@ -23,7 +23,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 timeEntries,
                 "Created a time entry",
-                UserActivityRepository.RecordTypeAdd);
+                UserActivity.RecordTypeAdd);
         }
 
         internal async Task RecordEdit(int currentlyLoggedInUserId, IReadOnlyCollection<TimeEntry> timeEntries)
@@ -32,7 +32,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 timeEntries,
                 "Updated a time entry",
-                UserActivityRepository.RecordTypeEdit);
+                UserActivity.RecordTypeEdit);
         }
 
         internal async Task RecordDelete(int currentlyLoggedInUserId, IReadOnlyCollection<TimeEntry> timeEntries)
@@ -41,7 +41,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 timeEntries,
                 "Deleted a time entry",
-                UserActivityRepository.RecordTypeDelete);
+                UserActivity.RecordTypeDelete);
         }
 
         private async Task Record(

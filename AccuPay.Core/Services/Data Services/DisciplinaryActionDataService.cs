@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,15 +9,15 @@ namespace AccuPay.Core.Services
     public class DisciplinaryActionDataService : BaseEmployeeDataService<DisciplinaryAction>, IDisciplinaryActionDataService
     {
         private const string UserActivityName = "Disciplinary Action";
-        private readonly ProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
         public DisciplinaryActionDataService(
-            DisciplinaryActionRepository repository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            IDisciplinaryActionRepository repository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy,
-            ProductRepository productRepository) :
+            IProductRepository productRepository) :
 
             base(repository,
                 payPeriodRepository,
@@ -116,7 +116,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

@@ -1,5 +1,5 @@
-﻿using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,13 +7,13 @@ namespace AccuPay.Core.Services
 {
     public class PaystubEmailDataService : BasePaystubDataService
     {
-        private readonly PaystubEmailRepository _paystubEmailRepository;
-        private readonly PaystubEmailHistoryRepository _paystubEmailHistoryRepository;
+        private readonly IPaystubEmailRepository _paystubEmailRepository;
+        private readonly IPaystubEmailHistoryRepository _paystubEmailHistoryRepository;
 
         public PaystubEmailDataService(
-            PaystubEmailRepository paystubEmailRepository,
-            PaystubEmailHistoryRepository paystubEmailHistoryRepository,
-            PayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
+            IPaystubEmailRepository paystubEmailRepository,
+            IPaystubEmailHistoryRepository paystubEmailHistoryRepository,
+            IPayPeriodRepository payPeriodRepository) : base(payPeriodRepository)
         {
             _paystubEmailRepository = paystubEmailRepository;
             _paystubEmailHistoryRepository = paystubEmailHistoryRepository;

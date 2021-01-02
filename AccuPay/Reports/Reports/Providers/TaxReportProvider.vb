@@ -1,8 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.CrystalReports
-Imports AccuPay.Core.Repositories
-Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TaxReportProvider
@@ -11,10 +10,10 @@ Public Class TaxReportProvider
     Public Property Name As String = "Tax Monthly Report" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Sub New()
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
     End Sub
 
     Public Sub Run() Implements IReportProvider.Run

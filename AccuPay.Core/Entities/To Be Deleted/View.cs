@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Core.Entities
 {
     [Table("view")]
-    internal class View : BaseEntity
+    public class View : BaseEntity
     {
         public int? OrganizationID { get; set; }
     }

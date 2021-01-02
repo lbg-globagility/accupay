@@ -2,7 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Allowances;
 using AccuPay.Utilities.Extensions;
 using System.Collections.Generic;
@@ -15,16 +15,16 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Allowance";
 
-        private readonly AllowanceRepository _allowanceRepository;
-        private readonly ProductRepository _productRepository;
-        private readonly AllowanceTypeRepository _allowanceTypeRepository;
+        private readonly IAllowanceRepository _allowanceRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IAllowanceTypeRepository _allowanceTypeRepository;
 
         public AllowanceDataService(
-            AllowanceRepository allowanceRepository,
-            AllowanceTypeRepository allowanceTypeRepository,
-            PayPeriodRepository payPeriodRepository,
-            ProductRepository productRepository,
-            UserActivityRepository userActivityRepository,
+            IAllowanceRepository allowanceRepository,
+            IAllowanceTypeRepository allowanceTypeRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IProductRepository productRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 
@@ -294,7 +294,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

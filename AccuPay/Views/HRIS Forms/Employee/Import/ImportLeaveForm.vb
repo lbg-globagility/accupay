@@ -3,8 +3,8 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
@@ -18,18 +18,18 @@ Public Class ImportLeaveForm
     Private _filePath As String
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
-    Private ReadOnly _categoryRepository As CategoryRepository
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _categoryRepository As ICategoryRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _categoryRepository = MainServiceProvider.GetRequiredService(Of CategoryRepository)
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _categoryRepository = MainServiceProvider.GetRequiredService(Of ICategoryRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
     End Sub
 
@@ -168,7 +168,7 @@ Public Class ImportLeaveForm
         Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
         Dim maxDate = _okModels.Max(Function(lm) lm.StartDate.Value.Date)
 
-        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of ILeaveRepository)
         Dim currentLeaves = Await leaveRepository.GetByEmployeeAndDatePeriodAsync(
             z_OrganizationID,
             employeeIDs,

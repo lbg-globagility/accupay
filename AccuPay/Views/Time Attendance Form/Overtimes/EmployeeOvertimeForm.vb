@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -25,7 +25,7 @@ Public Class EmployeeOvertimeForm
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
@@ -43,11 +43,12 @@ Public Class EmployeeOvertimeForm
 
         _changedOvertimes = New List(Of Overtime)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
     End Sub
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -160,7 +161,7 @@ Public Class EmployeeOvertimeForm
 
     Private Sub LoadStatusList()
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
         StatusComboBox.DataSource = repository.GetStatusList()
 
     End Sub
@@ -273,7 +274,7 @@ Public Class EmployeeOvertimeForm
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
         Me._currentOvertimes = (Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
             OrderByDescending(Function(a) a.OTStartDate).
             ToList
@@ -537,7 +538,7 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
         Dim currentOvertime = Await repository.GetByIdAsync(Me._currentOvertime.RowID.Value)
 
         If currentOvertime Is Nothing Then

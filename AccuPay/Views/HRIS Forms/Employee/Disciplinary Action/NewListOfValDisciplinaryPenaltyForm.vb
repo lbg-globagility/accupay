@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
@@ -16,7 +17,7 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private ReadOnly _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As IListOfValueRepository
 
     Public Sub New()
 
@@ -24,7 +25,7 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
         dgvActions.AutoGenerateColumns = False
 
-        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
     End Sub
 

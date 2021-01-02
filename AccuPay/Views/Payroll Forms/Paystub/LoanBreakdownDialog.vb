@@ -2,18 +2,18 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LoanBreakdownDialog
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
     Private ReadOnly _paystubId As Integer
 
     Public Sub New(paystubId As Integer)
         InitializeComponent()
 
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
         _paystubId = paystubId
     End Sub

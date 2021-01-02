@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -40,7 +40,7 @@ Public Class EducationalBackgroundTab
     Private Async Function LoadEducationalBackgrounds() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
+        Dim educbgRepo = MainServiceProvider.GetRequiredService(Of IEducationalBackgroundRepository)
         _educationalBackgrounds = Await educbgRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvEducBgs.SelectionChanged, AddressOf dgvEducBgs_SelectionChanged

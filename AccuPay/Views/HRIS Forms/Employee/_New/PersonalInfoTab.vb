@@ -2,8 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PersonalInfoTab
@@ -68,7 +67,7 @@ Public Class PersonalInfoTab
         Dim positionDtos = New List(Of PositionDto) From {
             New PositionDto(Nothing)}
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IPositionRepository)
         Dim positions = Await repository.GetAllAsync(z_OrganizationID)
 
         positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))

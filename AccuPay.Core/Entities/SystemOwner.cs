@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Core.Entities
 {
     [Table("systemowner")]
-    internal class SystemOwner
+    public class SystemOwner
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

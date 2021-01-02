@@ -1,5 +1,6 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ReportModels;
 using AccuPay.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,9 @@ namespace AccuPay.Core.Services
     public class PaystubPayslipModelDataService
     {
         private readonly PayrollContext _context;
-        private readonly SalaryRepository _salaryRepository;
+        private readonly ISalaryRepository _salaryRepository;
 
-        public PaystubPayslipModelDataService(PayrollContext context, SalaryRepository salaryRepository)
+        public PaystubPayslipModelDataService(PayrollContext context, ISalaryRepository salaryRepository)
         {
             _context = context;
             _salaryRepository = salaryRepository;

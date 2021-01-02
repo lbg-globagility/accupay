@@ -1,17 +1,17 @@
 Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewCalendarDialog
 
-    Private ReadOnly _repository As CalendarRepository
+    Private ReadOnly _repository As ICalendarRepository
 
     Public Sub New()
-        _repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        _repository = MainServiceProvider.GetRequiredService(Of ICalendarRepository)
 
         InitializeComponent()
     End Sub

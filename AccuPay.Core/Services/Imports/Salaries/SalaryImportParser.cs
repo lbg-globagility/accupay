@@ -1,4 +1,5 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Core.Repositories;
 using System;
@@ -12,14 +13,14 @@ namespace AccuPay.Core.Services.Imports.Salaries
 {
     public class SalaryImportParser
     {
-        private readonly SalaryRepository _salaryRepository;
+        private readonly ISalaryRepository _salaryRepository;
         private readonly IExcelParser<SalaryRowRecord> _parser;
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private const string WORKSHEETNAME = "Employee Salary";
 
         public string XlsxExtension => _parser.XlsxExtension;
 
-        public SalaryImportParser(SalaryRepository salaryRepository, EmployeeRepository employeeRepository, IExcelParser<SalaryRowRecord> excelParser)
+        public SalaryImportParser(ISalaryRepository salaryRepository, IEmployeeRepository employeeRepository, IExcelParser<SalaryRowRecord> excelParser)
         {
             _salaryRepository = salaryRepository;
             _parser = excelParser;

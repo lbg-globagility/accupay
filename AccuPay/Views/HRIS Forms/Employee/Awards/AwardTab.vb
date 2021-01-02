@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -40,7 +40,7 @@ Public Class AwardTab
     Private Async Function LoadAwards() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+        Dim awardRepo = MainServiceProvider.GetRequiredService(Of IAwardRepository)
         _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged

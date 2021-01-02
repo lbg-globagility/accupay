@@ -1,4 +1,4 @@
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using System.Threading.Tasks;
 
@@ -6,11 +6,14 @@ namespace AccuPay.Core.Services
 {
     public class CalendarService
     {
-        private readonly BranchRepository _branchRepository;
-        private readonly CalendarRepository _calendarRepository;
-        private readonly DayTypeRepository _dayTypeRepository;
+        private readonly IBranchRepository _branchRepository;
+        private readonly ICalendarRepository _calendarRepository;
+        private readonly IDayTypeRepository _dayTypeRepository;
 
-        public CalendarService(BranchRepository branchRepository, CalendarRepository calendarRepository, DayTypeRepository dayTypeRepository)
+        public CalendarService(
+            IBranchRepository branchRepository,
+            ICalendarRepository calendarRepository,
+            IDayTypeRepository dayTypeRepository)
         {
             _branchRepository = branchRepository;
             _calendarRepository = calendarRepository;

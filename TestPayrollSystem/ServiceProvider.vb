@@ -1,12 +1,12 @@
 Option Strict On
 
-Imports AccuPay.CrystalReports
 Imports AccuPay.Core
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.Services.Imports
+Imports AccuPay.CrystalReports
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
@@ -40,7 +40,7 @@ Public Class ServiceProvider
 
         services.AddTransient(Of OvertimeRateService)
 
-        services.AddTransient(Of ActualTimeEntryRepository)
+        services.AddTransient(Of IActualTimeEntryRepository, ActualTimeEntryRepository)
         services.AddTransient(Of AgencyFeeRepository)
         services.AddTransient(Of AgencyRepository)
         services.AddTransient(Of AllowanceRepository)

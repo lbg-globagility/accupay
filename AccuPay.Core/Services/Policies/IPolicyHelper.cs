@@ -1,7 +1,7 @@
 using AccuPay.Core.Services.Policies;
 using System.Threading.Tasks;
 
-namespace AccuPay.Core.Services
+namespace AccuPay.Core.Interfaces
 {
     public interface IPolicyHelper
     {

@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -22,7 +22,7 @@ Public Class BonusTab
 
     Private _frequencies As List(Of String)
 
-    Private ReadOnly _productRepo As ProductRepository
+    Private ReadOnly _productRepo As IProductRepository
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
@@ -34,10 +34,12 @@ Public Class BonusTab
 
         If MainServiceProvider IsNot Nothing Then
 
-            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+            _productRepo = MainServiceProvider.GetRequiredService(Of IProductRepository)
+
+            _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
         End If
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
     End Sub
 
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -62,7 +64,7 @@ Public Class BonusTab
             Return
         End If
 
-        Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        Dim bonusRepo = MainServiceProvider.GetRequiredService(Of IBonusRepository)
         _bonuses = Await bonusRepo.GetByEmployeeAsync(_employee.RowID.Value)
         _frequencies = bonusRepo.GetFrequencyList
 

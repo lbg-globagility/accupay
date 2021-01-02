@@ -1,7 +1,7 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,14 +11,14 @@ namespace AccuPay.Core.Services
 {
     public class RoleDataService
     {
-        private readonly AspNetUserRepository _userRepository;
-        private readonly RoleRepository _roleRepository;
-        private readonly OrganizationRepository _organizationRepository;
+        private readonly IAspNetUserRepository _userRepository;
+        private readonly IOrganizationRepository _organizationRepository;
+        private readonly IRoleRepository _roleRepository;
 
         public RoleDataService(
-            AspNetUserRepository userRepository,
-            RoleRepository roleRepository,
-            OrganizationRepository organizationRepository)
+            IAspNetUserRepository userRepository,
+            IOrganizationRepository organizationRepository,
+            IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;

@@ -4,7 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -27,7 +27,7 @@ Public Class StartNewPayPeriodDialog
 
     Private _passedPayPeriod As IPayPeriod
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Sub New(Optional passedPayPeriod As IPayPeriod = Nothing)
 
@@ -35,7 +35,7 @@ Public Class StartNewPayPeriodDialog
 
         _passedPayPeriod = passedPayPeriod
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
     End Sub
 

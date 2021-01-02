@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,14 +18,14 @@ namespace AccuPay.Core.Services
             Delete
         }
 
-        protected readonly SavableRepository<T> _repository;
+        protected readonly ISavableRepository<T> _repository;
         protected readonly PayrollContext _context;
         protected readonly string EntityName;
         protected readonly string EntityNamePlural;
 
         public BaseSavableDataService(
-            SavableRepository<T> repository,
-            PayPeriodRepository payPeriodRepository,
+            ISavableRepository<T> repository,
+            IPayPeriodRepository payPeriodRepository,
             PayrollContext context,
             IPolicyHelper policy,
             string entityName,

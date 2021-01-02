@@ -1,20 +1,20 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DayTypesDialog
 
-    Private ReadOnly _repository As DayTypeRepository
+    Private ReadOnly _repository As IDayTypeRepository
 
     Private _dayTypes As ICollection(Of DayType)
 
     Public Sub New()
-        _repository = MainServiceProvider.GetRequiredService(Of DayTypeRepository)
+        _repository = MainServiceProvider.GetRequiredService(Of IDayTypeRepository)
 
         InitializeComponent()
         InitializeView()

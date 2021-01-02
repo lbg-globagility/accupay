@@ -3,7 +3,7 @@ Option Strict On
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -21,11 +21,9 @@ Public Class AttachmentTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private ReadOnly _attachmentRepo As AttachmentRepository
+    Private ReadOnly _attachmentRepo As IAttachmentRepository
 
-    Private ReadOnly _listOfValRepo As ListOfValueRepository
-
-    Private ReadOnly _userActivityRepo As UserActivityRepository
+    Private ReadOnly _listOfValRepo As IListOfValueRepository
 
     Public Sub New()
 
@@ -35,9 +33,8 @@ Public Class AttachmentTab
 
         If MainServiceProvider IsNot Nothing Then
 
-            _attachmentRepo = MainServiceProvider.GetRequiredService(Of AttachmentRepository)
-            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            _attachmentRepo = MainServiceProvider.GetRequiredService(Of IAttachmentRepository)
+            _listOfValRepo = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
         End If
 
     End Sub

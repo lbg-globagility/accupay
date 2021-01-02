@@ -3,16 +3,16 @@ Option Strict On
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.CrystalReports
 Imports AccuPay.Core
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Entities.Paystub
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Repositories.PaystubRepository
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
+Imports AccuPay.CrystalReports
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports Castle.Components.DictionaryAdapter
@@ -53,15 +53,15 @@ Public Class PayStubForm
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private ReadOnly _agencyFeeRepository As AgencyFeeRepository
+    Private ReadOnly _agencyFeeRepository As IAgencyFeeRepository
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Sub New()
 
@@ -71,15 +71,15 @@ Public Class PayStubForm
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _agencyFeeRepository = MainServiceProvider.GetRequiredService(Of AgencyFeeRepository)
+        _agencyFeeRepository = MainServiceProvider.GetRequiredService(Of IAgencyFeeRepository)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -659,7 +659,7 @@ Public Class PayStubForm
         End If
 
         'We are using a fresh instance of EmployeeRepository
-        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
         'later, we can let the user choose the employees that they want to generate.
         Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
 
@@ -1781,7 +1781,7 @@ Public Class PayStubForm
 
             If Not adjustmentTypes.Any(Function(a) a.PartNo = ProductConstant.THIRTEENTH_MONTH_PAY_ADJUSTMENT) Then
 
-                Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+                Dim productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
                 Dim thirteenthMonthPayAdjustment = Await productRepository.GetOrCreateAdjustmentTypeAsync(
                 ProductConstant.THIRTEENTH_MONTH_PAY_ADJUSTMENT,

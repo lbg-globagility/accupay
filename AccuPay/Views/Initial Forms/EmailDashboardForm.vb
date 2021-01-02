@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -11,14 +11,14 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmailDashboardForm
 
-    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+    Private ReadOnly _paystubEmailRepository As IPaystubEmailRepository
     Private ReadOnly _wsmService As WSMService
 
     Sub New()
 
         InitializeComponent()
 
-        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailRepository)
 
         Dim connectionString = ConnectionStringRegistry.GetCurrent()
         _wsmService = New WSMService(connectionString.ServerName, StringConfig.AccupayEmailServiceName)

@@ -8,7 +8,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers.ProgressGenerator
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.Services.CostCenterReportDataService
 Imports AccuPay.Desktop.Helpers
@@ -125,7 +124,7 @@ Public Class CostCenterReportProvider
     End Sub
 
     Private Sub GenerateMultipleBranchReport(selectedMonth As Date, saveFilePath As String)
-        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
         Dim branches = branchRepository.GetAll()
 
         Dim generator As New CostCenterReportGeneration(branches, IsActual, additionalProgressCount:=1)

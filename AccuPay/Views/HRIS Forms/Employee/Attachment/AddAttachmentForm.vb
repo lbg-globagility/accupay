@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.IO
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -19,7 +19,7 @@ Public Class AddAttachmentForm
 
     Private _employee As Employee
 
-    Private ReadOnly _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As IListOfValueRepository
 
     Public Sub New(employee As Employee)
 
@@ -27,7 +27,7 @@ Public Class AddAttachmentForm
 
         _employee = employee
 
-        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
     End Sub
 
     Private Async Sub AddAttachmentForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

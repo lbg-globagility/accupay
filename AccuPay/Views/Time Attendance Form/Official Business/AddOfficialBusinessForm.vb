@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -14,7 +14,7 @@ Public Class AddOfficialBusinessForm
 
     Private _newOfficialBusiness As New OfficialBusiness()
 
-    Private ReadOnly _officialBusinessRepository As OfficialBusinessRepository
+    Private ReadOnly _officialBusinessRepository As IOfficialBusinessRepository
 
     Sub New(employee As Employee)
 
@@ -22,7 +22,7 @@ Public Class AddOfficialBusinessForm
 
         _currentEmployee = employee
 
-        _officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        _officialBusinessRepository = MainServiceProvider.GetRequiredService(Of IOfficialBusinessRepository)
 
         Me.IsSaved = False
 

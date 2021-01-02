@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
@@ -14,13 +14,13 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Time Log";
 
-        private readonly BranchRepository _branchRepository;
+        private readonly IBranchRepository _branchRepository;
 
         public TimeLogDataService(
-            TimeLogRepository timeLogRepository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
-            BranchRepository branchRepository,
+            ITimeLogRepository timeLogRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
+            IBranchRepository branchRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 
@@ -203,7 +203,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

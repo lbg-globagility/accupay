@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
-using System;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,12 +9,12 @@ namespace AccuPay.Core.Services
 {
     public class LoanPaymentFromThirteenthMonthPayDataService
     {
-        private readonly LoanPaymentFromThirteenthMonthPayRepository _loanPaymentFromThirteenthMonthPayRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly ILoanPaymentFromThirteenthMonthPayRepository _loanPaymentFromThirteenthMonthPayRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
 
         public LoanPaymentFromThirteenthMonthPayDataService(
-            LoanPaymentFromThirteenthMonthPayRepository loanPaymentFromThirteenthMonthPayRepository,
-            PayPeriodRepository payPeriodRepository)
+            ILoanPaymentFromThirteenthMonthPayRepository loanPaymentFromThirteenthMonthPayRepository,
+            IPayPeriodRepository payPeriodRepository)
         {
             _loanPaymentFromThirteenthMonthPayRepository = loanPaymentFromThirteenthMonthPayRepository;
             _payPeriodRepository = payPeriodRepository;

@@ -1,6 +1,6 @@
 Option Strict On
 
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddBonusTypeForm
@@ -23,7 +23,7 @@ Public Class AddBonusTypeForm
             If Trim(TextBox1.Text) <> "" Then
                 TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
 
-                Dim repository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+                Dim repository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
                 Await repository.AddBonusTypeAsync(
                     TextBox1.Text,

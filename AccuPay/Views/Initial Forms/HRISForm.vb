@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -19,9 +19,9 @@ Public Class HRISForm
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private ReadOnly _roleRepository As RoleRepository
+    Private ReadOnly _roleRepository As IRoleRepository
 
-    Private ReadOnly _userRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
     Sub New()
 
@@ -31,9 +31,9 @@ Public Class HRISForm
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
     End Sub

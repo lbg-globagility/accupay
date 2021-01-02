@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -22,9 +22,9 @@ Public Class EmployeeLeavesForm
 
     Private _changedLeaves As List(Of Leave)
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
@@ -42,9 +42,9 @@ Public Class EmployeeLeavesForm
 
         _changedLeaves = New List(Of Leave)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
@@ -148,7 +148,7 @@ Public Class EmployeeLeavesForm
 
     Private Sub LoadStatusList()
 
-        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of ILeaveRepository)
         StatusComboBox.DataSource = leaveRepository.GetStatusList()
 
     End Sub
@@ -264,7 +264,7 @@ Public Class EmployeeLeavesForm
     Private Async Function LoadLeaves(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of ILeaveRepository)
         Me._currentLeaves = (Await leaveRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
             OrderByDescending(Function(a) a.StartDate).
             ToList
@@ -557,7 +557,7 @@ Public Class EmployeeLeavesForm
             Return
         End If
 
-        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of ILeaveRepository)
         Dim currentLeave = Await leaveRepository.GetByIdAsync(Me._currentLeave.RowID.Value)
 
         If currentLeave Is Nothing Then

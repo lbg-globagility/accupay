@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -37,20 +38,20 @@ namespace AccuPay.Core.Services
 
         private readonly CalendarService _calendarService;
 
-        private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
-        private readonly AgencyRepository _agencyRepository;
-        private readonly AgencyFeeRepository _agencyFeeRepository;
-        private readonly BreakTimeBracketRepository _breakTimeBracketRepository;
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly EmploymentPolicyRepository _employmentPolicyRepository;
-        private readonly ShiftRepository _shiftRepository;
-        private readonly LeaveRepository _leaveRepository;
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
-        private readonly OrganizationRepository _organizationRepository;
-        private readonly OvertimeRepository _overtimeRepository;
-        private readonly SalaryRepository _salaryRepository;
-        private readonly RouteRateRepository _routeRateRepository;
-        private readonly TimeAttendanceLogRepository _timeAttendanceLogRepository;
+        private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
+        private readonly IAgencyRepository _agencyRepository;
+        private readonly IAgencyFeeRepository _agencyFeeRepository;
+        private readonly IBreakTimeBracketRepository _breakTimeBracketRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEmploymentPolicyRepository _employmentPolicyRepository;
+        private readonly ILeaveRepository _leaveRepository;
+        private readonly IOfficialBusinessRepository _officialBusinessRepository;
+        private readonly IOrganizationRepository _organizationRepository;
+        private readonly IOvertimeRepository _overtimeRepository;
+        private readonly ISalaryRepository _salaryRepository;
+        private readonly IRouteRateRepository _routeRateRepository;
+        private readonly IShiftRepository _shiftRepository;
+        private readonly ITimeAttendanceLogRepository _timeAttendanceLogRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
         private readonly TimeLogRepository _timeLogRepository;
         private readonly TripTicketRepository _tripTicketRepository;
@@ -58,20 +59,20 @@ namespace AccuPay.Core.Services
         public TimeEntryResources(
             CalendarService calendarService,
             IPolicyHelper policy,
-            ActualTimeEntryRepository actualTimeEntryRepository,
-            AgencyRepository agencyRepository,
-            AgencyFeeRepository agencyFeeRepository,
-            BreakTimeBracketRepository breakTimeBracketRepository,
-            EmployeeRepository employeeRepository,
-            EmploymentPolicyRepository employmentPolicyRepository,
-            ShiftRepository shiftRepository,
-            LeaveRepository leaveRepository,
-            OfficialBusinessRepository officialBusinessRepository,
-            OrganizationRepository organizationRepository,
-            OvertimeRepository overtimeRepository,
-            RouteRateRepository routeRateRepository,
-            SalaryRepository salaryRepository,
-            TimeAttendanceLogRepository timeAttendanceLogRepository,
+            IActualTimeEntryRepository actualTimeEntryRepository,
+            IAgencyRepository agencyRepository,
+            IAgencyFeeRepository agencyFeeRepository,
+            IBreakTimeBracketRepository breakTimeBracketRepository,
+            IEmployeeRepository employeeRepository,
+            IEmploymentPolicyRepository employmentPolicyRepository,
+            ILeaveRepository leaveRepository,
+            IOfficialBusinessRepository officialBusinessRepository,
+            IOrganizationRepository organizationRepository,
+            IOvertimeRepository overtimeRepository,
+            IRouteRateRepository routeRateRepository,
+            ISalaryRepository salaryRepository,
+            IShiftRepository shiftRepository,
+            ITimeAttendanceLogRepository timeAttendanceLogRepository,
             TimeEntryRepository timeEntryRepository,
             TimeLogRepository timeLogRepository,
             TripTicketRepository tripTicketRepository)

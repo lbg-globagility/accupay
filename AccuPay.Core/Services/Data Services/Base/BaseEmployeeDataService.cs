@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services
@@ -8,9 +8,9 @@ namespace AccuPay.Core.Services
     public abstract class BaseEmployeeDataService<T> : BaseOrganizationDataService<T>, IBaseEmployeeDataService<T> where T : EmployeeDataEntity
     {
         public BaseEmployeeDataService(
-            SavableRepository<T> repository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            ISavableRepository<T> repository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy,
             string entityName,

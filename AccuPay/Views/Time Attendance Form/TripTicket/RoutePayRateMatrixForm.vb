@@ -1,10 +1,10 @@
-﻿Option Explicit On
+Option Explicit On
 Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class RoutePayRateMatrixForm
@@ -13,18 +13,18 @@ Public Class RoutePayRateMatrixForm
     Private _routeRates As ICollection(Of RoutePayRate)
     Private _positions As ICollection(Of Position)
 
-    Private ReadOnly _routeRepository As RouteRepository
-    Private ReadOnly _routeRateRepository As RouteRateRepository
-    Private ReadOnly _positionRepository As PositionRepository
+    Private ReadOnly _routeRepository As IRouteRepository
+    Private ReadOnly _routeRateRepository As IRouteRateRepository
+    Private ReadOnly _positionRepository As IPositionRepository
 
     Private _selectedRoute As Route
 
     Public Sub New()
         InitializeComponent()
 
-        _routeRepository = MainServiceProvider.GetRequiredService(Of RouteRepository)
-        _routeRateRepository = MainServiceProvider.GetRequiredService(Of RouteRateRepository)
-        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        _routeRepository = MainServiceProvider.GetRequiredService(Of IRouteRepository)
+        _routeRateRepository = MainServiceProvider.GetRequiredService(Of IRouteRateRepository)
+        _positionRepository = MainServiceProvider.GetRequiredService(Of IPositionRepository)
     End Sub
 
     Private Sub RoutePayRateMatrixForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

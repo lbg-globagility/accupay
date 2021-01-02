@@ -1,8 +1,9 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports Microsoft.Extensions.DependencyInjection
@@ -31,7 +32,7 @@ Public Class OrganizationUserRolesControl
     Private Async Function GetUsers() As Task
         If _users IsNot Nothing AndAlso _users.Count > 0 Then Return
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         _users = (Await repository.List(PageOptions.AllData, Z_Client)).users.
             OrderBy(Function(o) o.FullNameLastNameFirst).
             ToList()
@@ -44,7 +45,7 @@ Public Class OrganizationUserRolesControl
 
     Private Async Function PopulateRoleComboBox() As Task
 
-        Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
         Dim roles = (Await roleRepository.List(PageOptions.AllData, Z_Client)).
             roles.
             OrderBy(Function(r) r.Name).
@@ -63,7 +64,7 @@ Public Class OrganizationUserRolesControl
 
     Private Async Function PopulateUserRoleGrid(organizationId As Integer?) As Task
 
-        Dim reepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        Dim reepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
 
         Dim userRoles As New List(Of UserRoleData)
 

@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using System;
@@ -14,10 +15,10 @@ namespace AccuPay.Core.Services
     {
         private const string ClosedPayPeriodErrorMessage = "Data cannot be modified since it is within a \"Closed\" pay period.";
 
-        protected readonly PayPeriodRepository _payPeriodRepository;
+        protected readonly IPayPeriodRepository _payPeriodRepository;
         protected readonly IPolicyHelper _policy;
 
-        public BaseDataService(PayPeriodRepository payPeriodRepository, IPolicyHelper policy)
+        public BaseDataService(IPayPeriodRepository payPeriodRepository, IPolicyHelper policy)
         {
             _payPeriodRepository = payPeriodRepository;
             _policy = policy;

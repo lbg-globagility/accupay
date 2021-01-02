@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
@@ -53,7 +54,7 @@ Public Class DeleteDefaultShiftAndTimeLogsGeneration
         Dim shifts As New List(Of Shift)
         Dim timeLogs As New List(Of TimeLog)
 
-        Dim shiftRepository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
+        Dim shiftRepository = MainServiceProvider.GetRequiredService(Of IShiftRepository)
         Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
 
         Dim employeeIds = _employees.Select(Function(x) x.RowID.Value).ToList()

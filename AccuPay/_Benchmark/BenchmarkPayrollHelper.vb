@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports log4net
@@ -13,7 +13,7 @@ Namespace Benchmark
     Public Class BenchmarkPayrollHelper
 
         Private _loanService As LoanDataService
-        Private _productRepository As ProductRepository
+        Private _productRepository As IProductRepository
 
         Private _pagibigLoanId As Integer
         Private _sssLoanId As Integer
@@ -42,7 +42,7 @@ Namespace Benchmark
 
             _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-            _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+            _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         End Sub
 

@@ -2,7 +2,7 @@ Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
@@ -22,7 +22,7 @@ Public Class selectPayPeriod
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Private ReadOnly _payPeriodService As PayPeriodDataService
 
@@ -30,7 +30,7 @@ Public Class selectPayPeriod
 
         InitializeComponent()
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
         _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodDataService)
     End Sub

@@ -8,6 +8,10 @@ namespace AccuPay.Core.Entities
     [Table("useractivity")]
     public class UserActivity
     {
+        public const string RecordTypeAdd = "ADD";
+        public const string RecordTypeEdit = "EDIT";
+        public const string RecordTypeDelete = "DELETE";
+
         public enum ChangedType
         {
             Employee,

@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -15,19 +15,19 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Loan";
 
-        private readonly ListOfValueRepository _listOfValueRepository;
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly LoanRepository _loanRepository;
-        private readonly ProductRepository _productRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IListOfValueRepository _listOfValueRepository;
+        private readonly ILoanRepository _loanRepository;
+        private readonly IProductRepository _productRepository;
         private readonly SystemOwnerService _systemOwnerService;
 
         public LoanDataService(
-            EmployeeRepository employeeRepository,
-            LoanRepository loanRepository,
-            ListOfValueRepository listOfValueRepository,
-            PayPeriodRepository payPeriodRepository,
-            ProductRepository productRepository,
-            UserActivityRepository userActivityRepository,
+            IEmployeeRepository employeeRepository,
+            ILoanRepository loanRepository,
+            IListOfValueRepository listOfValueRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IProductRepository productRepository,
+            IUserActivityRepository userActivityRepository,
             SystemOwnerService systemOwnerService,
             PayrollContext context,
             IPolicyHelper policy) :
@@ -416,7 +416,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

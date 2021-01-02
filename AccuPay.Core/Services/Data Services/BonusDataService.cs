@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.DTOs;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,19 +13,19 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Bonus";
 
-        private readonly LoanRepository _loanRepository;
-        private readonly LoanPaymentFromBonusRepository _loanPaymentFromBonusRepository;
-        private readonly ProductRepository _productRepository;
+        private readonly ILoanRepository _loanRepository;
+        private readonly ILoanPaymentFromBonusRepository _loanPaymentFromBonusRepository;
+        private readonly IProductRepository _productRepository;
 
         public BonusDataService(
-            BonusRepository repository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            IBonusRepository repository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy,
-            LoanRepository loanRepository,
-            LoanPaymentFromBonusRepository loanPaymentFromBonusRepository,
-            ProductRepository productRepository) :
+            ILoanRepository loanRepository,
+            ILoanPaymentFromBonusRepository loanPaymentFromBonusRepository,
+            IProductRepository productRepository) :
 
             base(repository,
                 payPeriodRepository,
@@ -232,7 +232,7 @@ namespace AccuPay.Core.Services
                     bonus.LastUpdBy.Value,
                     UserActivityName,
                     bonus.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

@@ -1,5 +1,6 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ReportModels;
 using AccuPay.Core.Repositories;
 using AccuPay.Utilities.Extensions;
@@ -13,11 +14,12 @@ namespace AccuPay.Core.Services
 {
     public class LeaveLedgerReportDataService
     {
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly PayrollContext context;
 
-        public LeaveLedgerReportDataService(PayrollContext context,
-                                            EmployeeRepository employeeRepository)
+        public LeaveLedgerReportDataService(
+            PayrollContext context,
+            IEmployeeRepository employeeRepository)
         {
             this.context = context;
             _employeeRepository = employeeRepository;

@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -11,17 +11,17 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UserRoleForm
 
-    Private ReadOnly _userRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
-    Private ReadOnly _roleRepository As RoleRepository
+    Private ReadOnly _roleRepository As IRoleRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
-        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
 
     End Sub
 

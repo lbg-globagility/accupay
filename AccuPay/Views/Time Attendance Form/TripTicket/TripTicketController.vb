@@ -1,9 +1,10 @@
-﻿Option Explicit On
+Option Explicit On
 Option Strict On
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -34,10 +35,10 @@ Public Class TripTicketController
 
     Private ReadOnly _tripTicketRepository As TripTicketRepository
     Private ReadOnly _vehicleRepository As VehicleRepository
-    Private ReadOnly _routeRepository As RouteRepository
-    Private ReadOnly _employeeRepository As EmployeeRepository
-    Private ReadOnly _routeRateRepository As RouteRateRepository
-    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _routeRepository As IRouteRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
+    Private ReadOnly _routeRateRepository As IRouteRateRepository
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
     Private _tripTicket As TripTicket
     Private _tripTickets As ICollection(Of TripTicket)
@@ -154,12 +155,12 @@ Public Class TripTicketController
     Public Sub New(view As TripTicketForm)
         Me.View = view
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
         _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
-        _routeRepository = MainServiceProvider.GetRequiredService(Of RouteRepository)
-        _routeRateRepository = MainServiceProvider.GetRequiredService(Of RouteRateRepository)
+        _routeRepository = MainServiceProvider.GetRequiredService(Of IRouteRepository)
+        _routeRateRepository = MainServiceProvider.GetRequiredService(Of IRouteRateRepository)
         _vehicleRepository = MainServiceProvider.GetRequiredService(Of VehicleRepository)
-        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
         Start()
     End Sub

@@ -5,6 +5,7 @@ Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Benchmark
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
@@ -29,7 +30,7 @@ Public Class SalaryTab
 
     Private _currentRolePermission As RolePermission
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
@@ -39,7 +40,7 @@ Public Class SalaryTab
 
         If MainServiceProvider IsNot Nothing Then
 
-            _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+            _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
             _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
         End If
@@ -227,7 +228,7 @@ Public Class SalaryTab
             Return
         End If
 
-        Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+        Dim salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
 
         _salaries = (Await salaryRepository.GetByEmployeeAsync(_employee.RowID.Value)).
             OrderByDescending(Function(s) s.EffectiveFrom).

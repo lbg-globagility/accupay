@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +11,9 @@ namespace AccuPay.Core.Services
         private const string UserActivityName = "Award";
 
         public AwardDataService(
-            AwardRepository repository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            IAwardRepository repository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 
@@ -71,7 +71,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

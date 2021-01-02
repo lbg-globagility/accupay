@@ -4,7 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Benchmark
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -21,7 +21,7 @@ Public Class AddSalaryForm
 
     Private _ecolaAllowance As Allowance
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
@@ -30,7 +30,7 @@ Public Class AddSalaryForm
 
         _employee = employee
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
     End Sub

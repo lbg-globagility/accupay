@@ -4,7 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -21,9 +21,9 @@ Public Class MultiplePayPeriodSelectionDialog
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Private ReadOnly _policy As IPolicyHelper
 
@@ -33,9 +33,9 @@ Public Class MultiplePayPeriodSelectionDialog
 
         InitializeComponent()
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 

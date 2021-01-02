@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -40,7 +40,7 @@ Public Class PreviousEmployerTab
     Private Async Function LoadPrevEmployers() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
+        Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of IPreviousEmployerRepository)
         _previousEmployers = Await previousEmployerRepo.GetListByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvPrevEmployers.SelectionChanged, AddressOf dgvPrevEmployers_SelectionChanged

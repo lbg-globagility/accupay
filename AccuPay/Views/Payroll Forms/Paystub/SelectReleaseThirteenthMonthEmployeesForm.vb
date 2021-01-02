@@ -5,7 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
@@ -15,11 +15,11 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
     Private _employeeModels As List(Of ThirteenthMonthEmployeeModel)
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Private ReadOnly _currentPayPeriodId As Integer
 
@@ -36,11 +36,11 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
         Me.HasChanges = False
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
     End Sub
 
@@ -134,7 +134,7 @@ Public Class SelectReleaseThirteenthMonthEmployeesForm
 
     Private Async Function PrepareAdjustmentTypeComboBox() As Task
 
-        Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        Dim productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         Dim thirteenthMonthPayAdjustment = Await productRepository.GetOrCreateAdjustmentTypeAsync(
             ProductConstant.THIRTEENTH_MONTH_PAY_ADJUSTMENT,

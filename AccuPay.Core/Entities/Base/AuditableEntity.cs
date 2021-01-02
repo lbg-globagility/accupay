@@ -11,9 +11,9 @@ namespace AccuPay.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpd { get; private set; }
 
-        public int? CreatedBy { get; internal set; }
+        public int? CreatedBy { get; set; }
 
-        public int? LastUpdBy { get; internal set; }
+        public int? LastUpdBy { get; set; }
 
         public void AuditUser(int currentlyLoggedInUserId)
         {

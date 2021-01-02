@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -14,7 +14,7 @@ Public Class AddOvertimeForm
 
     Private _newOvertime As Overtime
 
-    Private ReadOnly _overtimeRepository As OvertimeRepository
+    Private ReadOnly _overtimeRepository As IOvertimeRepository
 
     Sub New(employee As Employee)
 
@@ -22,7 +22,7 @@ Public Class AddOvertimeForm
 
         _currentEmployee = employee
 
-        _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        _overtimeRepository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
 
         Me.IsSaved = False
 

@@ -1,4 +1,4 @@
-﻿using AccuPay.Core;
+using AccuPay.Core;
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
@@ -36,15 +36,15 @@ namespace AccuPay.Infrastructure.Reports
         private readonly IReadOnlyCollection<ExcelReportColumn> _reportColumns;
 
         private readonly ListOfValueCollection _settings;
-        private readonly OrganizationRepository _organizationRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly IOrganizationRepository _organizationRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
         private readonly PaystubDataService _paystubDataService;
         private readonly SystemOwnerService _systemOwnerService;
         private readonly PayrollSummaryExcelFormatReportDataService _reportDataService;
 
         public PayrollSummaryReportBuilder(
-            OrganizationRepository organizationRepository,
-            PayPeriodRepository payPeriodRepository,
+            IOrganizationRepository organizationRepository,
+            IPayPeriodRepository payPeriodRepository,
             PaystubDataService paystubDataService,
             SystemOwnerService systemOwnerService,
             ListOfValueService listOfValueService,

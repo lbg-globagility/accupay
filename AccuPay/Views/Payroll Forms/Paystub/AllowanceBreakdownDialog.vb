@@ -1,14 +1,14 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AllowanceBreakdownDialog
 
     Private ReadOnly _paystubId As Integer
     Private ReadOnly _isTaxable As Boolean
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
 
     Private _allAllowanceTransactions As List(Of AllowanceItemViewModel)
 
@@ -20,7 +20,7 @@ Public Class AllowanceBreakdownDialog
 
         InitializeComponent()
 
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
         _paystubId = paystubId
         _isTaxable = isTaxable

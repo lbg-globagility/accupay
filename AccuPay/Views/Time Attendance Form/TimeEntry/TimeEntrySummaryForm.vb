@@ -8,7 +8,7 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
@@ -68,17 +68,17 @@ Public Class TimeEntrySummaryForm
 
     Private ReadOnly _timeEntryDataService As TimeEntryDataService
 
-    Private ReadOnly _breakTimeBracketRepository As BreakTimeBracketRepository
+    Private ReadOnly _breakTimeBracketRepository As IBreakTimeBracketRepository
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _roleRepository As RoleRepository
+    Private ReadOnly _roleRepository As IRoleRepository
 
-    Private ReadOnly _timeAttendanceLogRepository As TimeAttendanceLogRepository
+    Private ReadOnly _timeAttendanceLogRepository As ITimeAttendanceLogRepository
 
-    Private ReadOnly _userRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
     Sub New()
 
@@ -90,17 +90,17 @@ Public Class TimeEntrySummaryForm
 
         _timeEntryDataService = MainServiceProvider.GetRequiredService(Of TimeEntryDataService)
 
-        _breakTimeBracketRepository = MainServiceProvider.GetRequiredService(Of BreakTimeBracketRepository)
+        _breakTimeBracketRepository = MainServiceProvider.GetRequiredService(Of IBreakTimeBracketRepository)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
 
-        _timeAttendanceLogRepository = MainServiceProvider.GetRequiredService(Of TimeAttendanceLogRepository)
+        _timeAttendanceLogRepository = MainServiceProvider.GetRequiredService(Of ITimeAttendanceLogRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
     End Sub
 
@@ -930,7 +930,7 @@ Public Class TimeEntrySummaryForm
     Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
 
         'We are using a fresh instance of EmployeeRepository
-        Dim repository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
         'later, we can let the user choose the employees that they want to generate.
         Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
 

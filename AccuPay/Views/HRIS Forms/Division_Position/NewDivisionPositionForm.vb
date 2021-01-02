@@ -5,7 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Entities.UserActivity
 Imports AccuPay.Core.Enums
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -31,25 +31,25 @@ Public Class NewDivisionPositionForm
 
     Public Property _currentTreeNodes As TreeNode()
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _jobLevelRepository As JobLevelRepository
+    Private ReadOnly _jobLevelRepository As IJobLevelRepository
 
-    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
-    Private ReadOnly _payFrequencyRepository As PayFrequencyRepository
+    Private ReadOnly _payFrequencyRepository As IPayFrequencyRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
+        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of IJobLevelRepository)
 
-        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
-        _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
+        _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of IPayFrequencyRepository)
 
     End Sub
 
@@ -529,7 +529,7 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadDivisions() As Task
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
         Dim divisions = Await repository.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
@@ -538,7 +538,7 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IPositionRepository)
         Dim positions = Await repository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
@@ -555,7 +555,7 @@ Public Class NewDivisionPositionForm
 
     Private Sub GetDivisionTypes()
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
         _divisionTypes = repository.GetDivisionTypeList().ToList()
 
     End Sub

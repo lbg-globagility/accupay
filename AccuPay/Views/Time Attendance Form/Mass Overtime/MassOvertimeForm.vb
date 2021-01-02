@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
@@ -201,16 +201,16 @@ Public Class MassOvertimePresenter
 
     Private _models As List(Of OvertimeModel)
 
-    Private ReadOnly _divisionRepository As DivisionRepository
+    Private ReadOnly _divisionRepository As IDivisionRepository
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Public Sub New(view As MassOvertimeForm)
         _view = view
 
-        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
     End Sub
 
@@ -238,7 +238,7 @@ Public Class MassOvertimePresenter
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
         Dim overtimes = repository.GetByEmployeeIDsAndDatePeriod(
             z_OrganizationID,
             employeeIds,

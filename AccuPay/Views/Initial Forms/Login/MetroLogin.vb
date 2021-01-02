@@ -6,8 +6,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
@@ -18,13 +16,13 @@ Public Class MetroLogin
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
-    Private ReadOnly _organizationRepository As OrganizationRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
 
-    Private ReadOnly _roleRepository As RoleRepository
+    Private ReadOnly _roleRepository As IRoleRepository
 
-    Private ReadOnly _systemInfoRepository As SystemInfoRepository
+    Private ReadOnly _systemInfoRepository As ISystemInfoRepository
 
-    Private ReadOnly _userRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
     Private ReadOnly _encryptor As IEncryption
 
@@ -38,13 +36,13 @@ Public Class MetroLogin
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
 
-        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
 
-        _systemInfoRepository = MainServiceProvider.GetRequiredService(Of SystemInfoRepository)
+        _systemInfoRepository = MainServiceProvider.GetRequiredService(Of ISystemInfoRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
         _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
     End Sub

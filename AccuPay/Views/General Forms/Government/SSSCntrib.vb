@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SSSCntrib
@@ -39,7 +39,7 @@ Public Class SSSCntrib
 
         loadSSSCntrib()
 
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         Dim user = Await userRepository.GetByIdAsync(z_User)
 
     End Sub

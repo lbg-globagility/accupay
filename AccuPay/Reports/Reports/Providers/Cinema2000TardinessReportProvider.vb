@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
@@ -12,10 +13,10 @@ Public Class Cinema2000TardinessReportProvider
     Public Property Name As String = "Tardiness Report" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Private ReadOnly _organizationRepository As OrganizationRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
 
     Sub New()
-        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run

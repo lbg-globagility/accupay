@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using System.Collections.Generic;
@@ -11,25 +12,25 @@ namespace AccuPay.Core.Services
 {
     public class TimeEntryDataService
     {
-        private readonly BranchRepository _branchRepository;
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly ShiftRepository _shiftRepository;
-        private readonly LeaveRepository _leaveRepository;
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
-        private readonly OvertimeRepository _overtimeRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly IBranchRepository _branchRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ILeaveRepository _leaveRepository;
+        private readonly IOfficialBusinessRepository _officialBusinessRepository;
+        private readonly IOvertimeRepository _overtimeRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
+        private readonly IShiftRepository _shiftRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
         private readonly TimeLogRepository _timeLogRepository;
         private readonly TimeEntryDataHelper _timeEntryDataHelper;
 
         public TimeEntryDataService(
-            BranchRepository branchRepository,
-            EmployeeRepository employeeRepository,
-            ShiftRepository shiftRepository,
-            LeaveRepository leaveRepository,
-            OfficialBusinessRepository officialBusinessRepository,
-            OvertimeRepository overtimeRepository,
-            PayPeriodRepository payPeriodRepository,
+            IBranchRepository branchRepository,
+            IEmployeeRepository employeeRepository,
+            ILeaveRepository leaveRepository,
+            IOfficialBusinessRepository officialBusinessRepository,
+            IOvertimeRepository overtimeRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IShiftRepository shiftRepository,
             TimeEntryRepository timeEntryRepository,
             TimeLogRepository timeLogRepository,
             TimeEntryDataHelper timeEntryDataHelper)

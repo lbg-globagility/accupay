@@ -1,8 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectBranchForm
@@ -11,13 +11,13 @@ Public Class SelectBranchForm
 
     Public Property SelectedBranch As Branch
 
-    Private _branchRepository As BranchRepository
+    Private _branchRepository As IBranchRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        _branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
 
     End Sub
 

@@ -1,9 +1,9 @@
-﻿using AccuPay.Core.Services.Policies;
+using AccuPay.Core.Services.Policies;
 using System;
 
 namespace AccuPay.Core.Helpers
 {
-    internal class PayPeriodHelper
+    public class PayPeriodHelper
     {
         public static (DayValueSpan currentDaySpan, int month, int year) GetCutOffDayValueSpan(
             DateTime date,

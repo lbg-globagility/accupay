@@ -1,7 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
@@ -115,29 +116,29 @@ Public Class PaystubPresenter
     Private Class Repository
         Inherits DbRepository
 
-        Private _employeeRepository As EmployeeRepository
+        Private _employeeRepository As IEmployeeRepository
 
-        Private _payPeriodRepository As PayPeriodRepository
+        Private _payPeriodRepository As IPayPeriodRepository
 
-        Private _paystubRepository As PaystubRepository
+        Private _paystubRepository As IPaystubRepository
 
-        Private _paystubActualRepository As PaystubActualRepository
+        Private _paystubActualRepository As IPaystubActualRepository
 
-        Private _productRepository As ProductRepository
+        Private _productRepository As IProductRepository
 
         Private _timeEntryRepository As TimeEntryRepository
 
         Sub New()
 
-            _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+            _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-            _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+            _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-            _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+            _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
-            _paystubActualRepository = MainServiceProvider.GetRequiredService(Of PaystubActualRepository)
+            _paystubActualRepository = MainServiceProvider.GetRequiredService(Of IPaystubActualRepository)
 
-            _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+            _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
             _timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
 

@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
@@ -45,9 +46,9 @@ Public Class MDIPrimaryForm
 
     Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private ReadOnly _userRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
-    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+    Private ReadOnly _paystubEmailRepository As IPaystubEmailRepository
 
     Sub New()
 
@@ -57,9 +58,9 @@ Public Class MDIPrimaryForm
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
-        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailRepository)
 
         Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
         if_sysowner_is_benchmark = currentSystemOwner = SystemOwnerService.Benchmark

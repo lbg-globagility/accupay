@@ -1,15 +1,14 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Net
 Imports System.Net.Mail
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ForgotPasswordForm
 
     Private ReadOnly _encryptor As IEncryption
-    Private ReadOnly _userRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
     Sub New()
 
@@ -17,7 +16,7 @@ Public Class ForgotPasswordForm
 
         _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
     End Sub
 
     Private Async Sub btnSend_Click(sender As Object, e As EventArgs) Handles btnSend.Click

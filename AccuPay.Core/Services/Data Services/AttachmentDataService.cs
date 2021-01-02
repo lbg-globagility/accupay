@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 
 namespace AccuPay.Core.Services
 {
@@ -8,9 +8,9 @@ namespace AccuPay.Core.Services
         private const string UserActivityName = "Attachment";
 
         public AttachmentDataService(
-            AttachmentRepository repository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            IAttachmentRepository repository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 

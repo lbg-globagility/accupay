@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -24,9 +24,9 @@ Public Class EmployeeAllowanceForm
 
     Private _changedAllowances As List(Of Allowance)
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
@@ -44,9 +44,9 @@ Public Class EmployeeAllowanceForm
 
         _changedAllowances = New List(Of Allowance)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
@@ -352,7 +352,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
         Dim dataService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
 
         Dim currentAllowance = Await repository.GetByIdAsync(Me._currentAllowance.RowID.Value)
@@ -449,7 +449,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
         cboallowfreq.DataSource = repository.GetFrequencyList()
 
     End Sub
@@ -474,7 +474,7 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
         Dim allowances = (Await repository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
             OrderByDescending(Function(a) a.EffectiveStartDate).
             ThenBy(Function(a) a.Type).

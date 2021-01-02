@@ -2,7 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,21 +15,21 @@ namespace AccuPay.Core.Services
         private readonly IPolicyHelper _policy;
         private readonly PaystubDataHelper _paystubDataHelper;
         private readonly TimeEntryDataHelper _timeEntryDataHelper;
-        private readonly UserActivityRepository _userActivityRepository;
-        private readonly PayPeriodRepository _payPeriodRepository;
-        private readonly PaystubRepository _paystubRepository;
-        private readonly TimeEntryRepository _timeEntryRepository;
+        private readonly IUserActivityRepository _userActivityRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
+        private readonly IPaystubRepository _paystubRepository;
+        private readonly ITimeEntryRepository _timeEntryRepository;
         private readonly SystemOwnerService _systemOwnerService;
 
         public PayPeriodDataService(
-            PayPeriodRepository payPeriodRepository,
-            PaystubRepository paystubRepository,
-            TimeEntryRepository timeEntryRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IPaystubRepository paystubRepository,
+            ITimeEntryRepository timeEntryRepository,
             SystemOwnerService systemOwnerService,
             IPolicyHelper policy,
             PaystubDataHelper paystubDataHelper,
             TimeEntryDataHelper timeEntryDataHelper,
-            UserActivityRepository userActivityRepository)
+            IUserActivityRepository userActivityRepository)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
@@ -220,7 +220,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 UserActivityName,
                 payPeriod.OrganizationID.Value,
-                UserActivityRepository.RecordTypeEdit,
+                UserActivity.RecordTypeEdit,
                 activityItems);
         }
 

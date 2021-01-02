@@ -1,5 +1,5 @@
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System.Linq;
@@ -9,9 +9,9 @@ namespace AccuPay.Core.Services
 {
     public class OvertimeRateService
     {
-        private readonly ListOfValueRepository _listOfValueRepository;
+        private readonly IListOfValueRepository _listOfValueRepository;
 
-        public OvertimeRateService(ListOfValueRepository listOfValueRepository)
+        public OvertimeRateService(IListOfValueRepository listOfValueRepository)
         {
             _listOfValueRepository = listOfValueRepository;
         }

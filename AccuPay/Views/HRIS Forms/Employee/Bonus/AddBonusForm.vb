@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -20,7 +20,7 @@ Public Class AddBonusForm
 
     Private _newBonus As New Bonus()
 
-    Private ReadOnly _productRepo As ProductRepository
+    Private ReadOnly _productRepo As IProductRepository
 
     Public Sub New(employee As Employee)
 
@@ -28,7 +28,7 @@ Public Class AddBonusForm
 
         _employee = employee
 
-        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepo = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
     End Sub
 
@@ -39,7 +39,7 @@ Public Class AddBonusForm
 
         _products = Await _productRepo.GetBonusTypesAsync(z_OrganizationID)
 
-        Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        Dim bonusRepo = MainServiceProvider.GetRequiredService(Of IBonusRepository)
         _frequencies = bonusRepo.GetFrequencyList()
 
         BindDataSource()

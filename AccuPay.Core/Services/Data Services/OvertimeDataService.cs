@@ -2,7 +2,6 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
-using AccuPay.Core.Repositories;
 using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -17,12 +16,12 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Overtime";
 
-        private readonly OvertimeRepository _overtimeRepository;
+        private readonly IOvertimeRepository _overtimeRepository;
 
         public OvertimeDataService(
-            OvertimeRepository overtimeRepository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            IOvertimeRepository overtimeRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 
@@ -192,7 +191,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

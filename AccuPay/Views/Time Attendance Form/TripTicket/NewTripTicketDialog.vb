@@ -1,7 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -9,14 +10,14 @@ Public Class NewTripTicketDialog
 
     Private ReadOnly _tripTicketRepository As TripTicketRepository
     Private ReadOnly _vehicleRepository As VehicleRepository
-    Private ReadOnly _routeRepository As RouteRepository
+    Private ReadOnly _routeRepository As IRouteRepository
 
     Public Sub New()
         InitializeComponent()
 
         _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
         _vehicleRepository = MainServiceProvider.GetRequiredService(Of VehicleRepository)
-        _routeRepository = MainServiceProvider.GetRequiredService(Of RouteRepository)
+        _routeRepository = MainServiceProvider.GetRequiredService(Of IRouteRepository)
     End Sub
 
     Private Async Sub NewTripTicketDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load

@@ -1,23 +1,20 @@
-﻿using AccuPay.Core.Repositories;
-using System;
-using System.Collections.Generic;
+using AccuPay.Core.Interfaces;
 using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace AccuPay.Core.Services
 {
     public class TaxMonthlyReportDataService : StoredProcedureDataService
     {
-        private readonly PayPeriodRepository _repository;
-        public TaxMonthlyReportDataService(PayrollContext context, PayPeriodRepository repository) : base(context)
+        private readonly IPayPeriodRepository _repository;
+
+        public TaxMonthlyReportDataService(PayrollContext context, IPayPeriodRepository repository) : base(context)
         {
             _repository = repository;
         }
 
         public DataTable GetData(int organizationId, int month, int year)
         {
-
             var payPeriods = _repository.GetByMonthYearAndPayPrequency(
                                 organizationId,
                                 month: month,

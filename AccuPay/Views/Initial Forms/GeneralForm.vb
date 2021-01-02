@@ -4,8 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -16,9 +15,9 @@ Public Class GeneralForm
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
-    Private ReadOnly _roleRepository As RoleRepository
+    Private ReadOnly _roleRepository As IRoleRepository
 
-    Private ReadOnly _userRepository As AspNetUserRepository
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
     Sub New()
 
@@ -26,9 +25,9 @@ Public Class GeneralForm
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
 
-        _userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
     End Sub
 

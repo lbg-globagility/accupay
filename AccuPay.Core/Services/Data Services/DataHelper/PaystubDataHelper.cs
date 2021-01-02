@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +11,14 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Paystub";
 
-        private readonly PaystubRepository _paystubRepository;
-        private readonly ProductRepository _productRepository;
-        private readonly UserActivityRepository _userActivityRepository;
+        private readonly IPaystubRepository _paystubRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IUserActivityRepository _userActivityRepository;
 
         public PaystubDataHelper(
-            PaystubRepository paystubRepository,
-            ProductRepository productRepository,
-            UserActivityRepository useractivityRepository)
+            IPaystubRepository paystubRepository,
+            IProductRepository productRepository,
+            IUserActivityRepository useractivityRepository)
         {
             _paystubRepository = paystubRepository;
             _productRepository = productRepository;
@@ -33,7 +33,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 new List<Paystub>() { paystub },
                 "Created a paystub",
-                UserActivityRepository.RecordTypeDelete,
+                UserActivity.RecordTypeAdd,
                 payPeriod);
         }
 
@@ -43,7 +43,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 new List<Paystub>() { paystub },
                 "Updated a paystub",
-                UserActivityRepository.RecordTypeDelete,
+                UserActivity.RecordTypeEdit,
                 payPeriod);
         }
 
@@ -63,7 +63,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 paystubs,
                 "Deleted a paystub",
-                UserActivityRepository.RecordTypeDelete,
+                UserActivity.RecordTypeDelete,
                 payPeriod);
         }
 
@@ -155,7 +155,7 @@ namespace AccuPay.Core.Services
                     currentlyLoggedInUserId,
                     adjustments,
                     activityItems,
-                    UserActivityRepository.RecordTypeEdit);
+                    UserActivity.RecordTypeEdit);
             }
         }
 
@@ -209,7 +209,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 adjustments,
                 "Created a new",
-                UserActivityRepository.RecordTypeAdd);
+                UserActivity.RecordTypeAdd);
         }
 
         internal async Task RecordDeleteAdjustments<T>(int currentlyLoggedInUserId, IReadOnlyCollection<T> adjustments) where T : IAdjustment
@@ -220,7 +220,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 adjustments,
                 "Deleted an",
-                UserActivityRepository.RecordTypeDelete);
+                UserActivity.RecordTypeDelete);
         }
 
         private async Task GetAdjustmentProductProperty<T>(

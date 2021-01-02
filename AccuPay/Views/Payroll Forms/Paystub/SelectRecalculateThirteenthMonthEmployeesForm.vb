@@ -2,10 +2,12 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -21,15 +23,15 @@ Public Class SelectRecalculateThirteenthMonthEmployeesForm
 
     Private _systemOwnerService As SystemOwnerService
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private _payPeriodRepository As IPayPeriodRepository
 
-    Private _paystubRepository As PaystubRepository
+    Private _paystubRepository As IPaystubRepository
 
     Private _timeEntryRepository As TimeEntryRepository
 
-    Private _actualTimeEntryRepository As ActualTimeEntryRepository
+    Private _actualTimeEntryRepository As IActualTimeEntryRepository
 
-    Private _salaryRepository As SalaryRepository
+    Private _salaryRepository As ISalaryRepository
 
     Sub New(currentPayPeriodId As Integer)
 
@@ -43,15 +45,15 @@ Public Class SelectRecalculateThirteenthMonthEmployeesForm
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
         _timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
 
-        _actualTimeEntryRepository = MainServiceProvider.GetRequiredService(Of ActualTimeEntryRepository)
+        _actualTimeEntryRepository = MainServiceProvider.GetRequiredService(Of IActualTimeEntryRepository)
 
-        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
 
     End Sub
 

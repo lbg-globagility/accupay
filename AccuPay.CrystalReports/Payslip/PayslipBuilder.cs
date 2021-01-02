@@ -1,4 +1,4 @@
-﻿using AccuPay.CrystalReports.Payslip;
+using AccuPay.CrystalReports.Payslip;
 using AccuPay.Core.Entities;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.Services;
@@ -11,6 +11,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AccuPay.Core.Interfaces;
 
 namespace AccuPay.CrystalReports
 {
@@ -24,9 +25,9 @@ namespace AccuPay.CrystalReports
 
         private const string DefaultEmployeeIdColumn = "RowID";
 
-        private readonly OrganizationRepository _organizationRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
-        private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly IPayPeriodRepository _payPeriodRepository;
 
         private readonly SystemOwnerService _systemOwnerService;
 
@@ -37,8 +38,8 @@ namespace AccuPay.CrystalReports
         private readonly string _currentSystemOwner;
 
         public PayslipBuilder(
-            OrganizationRepository organizationRepository,
-            PayPeriodRepository payPeriodRepository,
+            IOrganizationRepository organizationRepository,
+            IPayPeriodRepository payPeriodRepository,
             PayslipDataService dataService,
             SystemOwnerService systemOwnerService)
         {

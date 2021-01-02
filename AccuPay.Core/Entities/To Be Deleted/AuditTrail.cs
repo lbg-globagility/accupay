@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Core.Entities
 {
     [Table("audittrail")]
-    internal class AuditTrail : BaseEntity
+    public class AuditTrail : BaseEntity
     {
         public int? OrganizationID { get; set; }
     }

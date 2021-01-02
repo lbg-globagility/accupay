@@ -1,25 +1,25 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static AccuPay.Core.Repositories.PaystubRepository;
+using static AccuPay.Core.Entities.Paystub;
 
 namespace AccuPay.Core.Services
 {
     public class PaystubDataService : BasePaystubDataService
     {
-        private readonly PaystubRepository _paystubRepository;
-        private readonly SalaryRepository _salaryRepository;
+        private readonly IPaystubRepository _paystubRepository;
+        private readonly ISalaryRepository _salaryRepository;
         private readonly PaystubDataHelper _paystubDataHelper;
 
         public PaystubDataService(
-            PaystubRepository paystubRepository,
-            SalaryRepository salaryRepository,
-            PayPeriodRepository payPeriodRepository,
+            IPaystubRepository paystubRepository,
+            ISalaryRepository salaryRepository,
+            IPayPeriodRepository payPeriodRepository,
             PaystubDataHelper paystubDataHelper) : base(payPeriodRepository)
         {
             _paystubRepository = paystubRepository;
@@ -189,7 +189,8 @@ namespace AccuPay.Core.Services
 
         public async Task<ICollection<Paystub>> GetByPaystubsForLoanPaymentFrom13thMonthAsync(int payPeriodId)
         {
-            var result = await _paystubRepository.GetByPaystubsForLoanPaymentFrom13thMonthAsync(payPeriodId);
+            var result = await _paystubRepository
+                .GetByPaystubsForLoanPaymentFrom13thMonthAsync(payPeriodId);
 
             if (!result.Any())
             {

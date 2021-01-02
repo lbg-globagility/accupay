@@ -1,8 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 
@@ -14,9 +14,9 @@ Public Class NewProductDisciplinaryForm
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _productRepo As ProductRepository
+    Private ReadOnly _productRepo As IProductRepository
 
-    Public Sub New(productRepo As ProductRepository)
+    Public Sub New(productRepo As IProductRepository)
 
         InitializeComponent()
         dgvFindings.AutoGenerateColumns = False

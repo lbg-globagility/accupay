@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -19,9 +19,9 @@ Public Class AddDisciplinaryAction
 
     Private _actions As IEnumerable(Of ListOfValue)
 
-    Private ReadOnly _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As IListOfValueRepository
 
-    Private ReadOnly _productRepo As ProductRepository
+    Private ReadOnly _productRepo As IProductRepository
 
     Public Sub New(employee As Employee)
 
@@ -29,9 +29,9 @@ Public Class AddDisciplinaryAction
 
         _employee = employee
 
-        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
-        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepo = MainServiceProvider.GetRequiredService(Of IProductRepository)
     End Sub
 
     Private Async Sub AddDisciplinaryAction_Load(sender As Object, e As EventArgs) Handles MyBase.Load

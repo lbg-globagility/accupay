@@ -1,9 +1,10 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
 Imports System.IO.Compression
 Imports System.Threading.Tasks
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Entities.Paystub
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ExportBankFile
@@ -12,17 +13,17 @@ Public Class ExportBankFile
 
     Private ReadOnly _cutoffEnd As Date
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
 
     Public Sub New(cutoffStart As Date, cutoffEnd As Date)
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
     End Sub
 
     Public Async Function Extract() As Task
 
-        Dim paystubDateKey = New PaystubRepository.DateCompositeKey(
+        Dim paystubDateKey = New DateCompositeKey(
             z_OrganizationID,
             payFromDate:=_cutoffStart,
             payToDate:=_cutoffEnd)

@@ -5,6 +5,7 @@ Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
@@ -64,7 +65,7 @@ Public Class EmployeeForm
 
         if_sysowner_is_benchmark = _currentSystemOwner = SystemOwnerService.Benchmark
 
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         Dim user = Await userRepository.GetByIdAsync(z_User)
         u_nem = user?.FullName
 
@@ -1098,7 +1099,7 @@ Public Class EmployeeForm
 
         If employee_RowID.HasValue = False Then Return Nothing
 
-        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of IEmployeeQueryBuilder)
 
         Return Await employeeBuilder.
             IncludePayFrequency().
@@ -1549,7 +1550,7 @@ Public Class EmployeeForm
 
         If changes.Any() Then
             Dim repo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-            Await repo.CreateRecordAsync(z_User, EmployeeEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Await repo.CreateRecordAsync(z_User, EmployeeEntityName, z_OrganizationID, UserActivity.RecordTypeEdit, changes)
             Return True
         End If
 
@@ -1705,7 +1706,7 @@ Public Class EmployeeForm
     Private Shared Async Function GetDivisionName(positionName As String) As Task(Of String)
         Dim divisionName = String.Empty
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IPositionRepository)
 
         Dim position = Await repository.GetByNameWithDivisionAsync(z_OrganizationID, positionName)
         If position?.Division IsNot Nothing Then
@@ -2095,7 +2096,7 @@ Public Class EmployeeForm
 
     Private Shared Async Function GetCurrentEmployeeEntity(employeeID As Integer?) As Task(Of Employee)
 
-        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of IEmployeeQueryBuilder)
 
         Return Await employeeBuilder.
             IncludePayFrequency().
@@ -3168,7 +3169,7 @@ Public Class EmployeeForm
             enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee Relationship' ORDER BY OrderBy;",
                            emp_ralation)
 
-            Dim payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
+            Dim payFrequencyRepository = MainServiceProvider.GetRequiredService(Of IPayFrequencyRepository)
             Dim payFrequencies = payFrequencyRepository.GetAll()
             _payFrequencies = payFrequencies.Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly).ToList()
 
@@ -3231,7 +3232,7 @@ Public Class EmployeeForm
     End Function
 
     Private Async Function PopulateBranchComboBox() As Task
-        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
         _branches = (Await branchRepository.GetAllAsync()).
             OrderBy(Function(b) b.Name).
             ToList()
@@ -3856,7 +3857,7 @@ Public Class EmployeeForm
     Private Async Function LoadSalutation(gender As Gender) As Task
         Dim genderList = {"Neutral", indentifyGender(gender)}
 
-        Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
         Dim salutationList = Await listOfValueRepository.
             GetFilteredListOfValuesAsync(Function(l) l.Type = "Salutation" AndAlso genderList.Contains(l.ParentLIC))
@@ -3919,12 +3920,14 @@ Public Class EmployeeForm
 
         Dim employee As Employee
 
-        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of IEmployeeQueryBuilder)
 
-        employee = Await employeeBuilder.IncludePosition().
-                                        IncludeBranch().
-                                        ByEmployeeNumber(employeeNumber).
-                                        FirstOrDefaultAsync(z_OrganizationID)
+        employee = Await employeeBuilder.
+            IncludePosition().
+            IncludeBranch().
+            ByEmployeeNumber(employeeNumber).
+            FirstOrDefaultAsync(z_OrganizationID)
+
         If employee Is Nothing Then
 
             MessageBoxHelper.Warning("No selected employee.")

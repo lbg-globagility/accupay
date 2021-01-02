@@ -6,6 +6,7 @@ Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.Services.Imports
@@ -35,13 +36,13 @@ Public Class TimeLogsForm
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
-    Private ReadOnly _shiftRepository As ShiftRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _overtimeRepository As IOvertimeRepository
 
-    Private ReadOnly _overtimeRepository As OvertimeRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _shiftRepository As IShiftRepository
 
     Private _currentRolePermission As RolePermission
 
@@ -58,13 +59,13 @@ Public Class TimeLogsForm
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _shiftRepository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _overtimeRepository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
 
-        _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _shiftRepository = MainServiceProvider.GetRequiredService(Of IShiftRepository)
     End Sub
 
 #Region "Methods"
@@ -734,7 +735,7 @@ Public Class TimeLogsForm
         colBranchID.ValueMember = "Id"
         colBranchID.DisplayMember = "DisplayMember"
 
-        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
         Dim branches = (Await branchRepository.GetAllAsync).
             OrderBy(Function(b) b.Name).
             ToList()

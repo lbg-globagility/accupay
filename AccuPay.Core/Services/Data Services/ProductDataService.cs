@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using System;
@@ -10,12 +11,13 @@ namespace AccuPay.Core.Services
     public class ProductDataService
     {
         private readonly AllowanceDataService _allowanceService;
-        private readonly ProductRepository _productRepository;
-        private readonly AllowanceRepository _allowanceRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IAllowanceRepository _allowanceRepository;
 
         public ProductDataService(
-            ProductRepository productRepository,
-            AllowanceRepository allowanceRepository,
+            IProductRepository productRepository,
+            IAllowanceRepository allowanceRepository,
+            // TODO: Urgent - Data Service cannot have a dependency to another data service.
             AllowanceDataService allowanceService)
         {
             _productRepository = productRepository;

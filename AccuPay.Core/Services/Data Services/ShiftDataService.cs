@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System.Collections.Generic;
@@ -14,12 +14,12 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Shift Schedule";
 
-        private readonly ShiftRepository _shiftRepository;
+        private readonly IShiftRepository _shiftRepository;
 
         public ShiftDataService(
-            ShiftRepository shiftRepository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IShiftRepository shiftRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 
@@ -184,7 +184,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

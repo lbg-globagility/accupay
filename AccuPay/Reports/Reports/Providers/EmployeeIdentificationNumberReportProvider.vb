@@ -1,6 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Utilities.Extensions
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
@@ -11,10 +11,10 @@ Public Class EmployeeIdentificationNumberReportProvider
     Public Property Name As String = "Employee's Identification Number" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Private ReadOnly _organizationRepository As OrganizationRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
 
     Sub New()
-        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run

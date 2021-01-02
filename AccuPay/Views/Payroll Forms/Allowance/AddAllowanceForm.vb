@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -22,9 +22,9 @@ Public Class AddAllowanceForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
-    Private ReadOnly _allowanceRepository As AllowanceRepository
+    Private ReadOnly _allowanceRepository As IAllowanceRepository
 
     Sub New(employee As Employee)
 
@@ -32,9 +32,9 @@ Public Class AddAllowanceForm
 
         _currentEmployee = employee
 
-        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         Me.IsSaved = False
 

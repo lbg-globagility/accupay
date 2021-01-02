@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Policies;
 using System;
 using System.Collections.Generic;
@@ -13,13 +13,13 @@ namespace AccuPay.Core.Services.Imports
 {
     public class ShiftImportParser
     {
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<ShiftRowRecord> _parser;
         private ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
         private bool _isShiftBasedAutoOvertimePolicyEnabled;
         private const string WorkSheetName = "ShiftSchedule";
 
-        public ShiftImportParser(EmployeeRepository employeeRepository, IExcelParser<ShiftRowRecord> parser)
+        public ShiftImportParser(IEmployeeRepository employeeRepository, IExcelParser<ShiftRowRecord> parser)
         {
             _employeeRepository = employeeRepository;
 

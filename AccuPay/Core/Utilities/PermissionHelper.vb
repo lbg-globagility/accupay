@@ -3,8 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
-Imports AccuPay.Core.Services
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Desktop.Helpers
@@ -152,7 +151,7 @@ Namespace Desktop.Helpers
 
         Private Shared Async Function GetRolePermissionAsync(permissionName As String, userRole As AspNetRole) As Task(Of RolePermission)
             If userRole Is Nothing Then
-                Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+                Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
                 USER_ROLE = Await roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
                 userRole = USER_ROLE
             End If
@@ -163,7 +162,7 @@ Namespace Desktop.Helpers
         Private Shared Function GetRolePermission(permissionName As String, userRole As AspNetRole) As RolePermission
 
             If userRole Is Nothing Then
-                Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+                Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
                 USER_ROLE = roleRepository.GetByUserAndOrganization(userId:=z_User, organizationId:=z_OrganizationID)
                 userRole = USER_ROLE
             End If

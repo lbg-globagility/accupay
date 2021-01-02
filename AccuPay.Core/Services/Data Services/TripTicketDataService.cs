@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,10 +9,12 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Trip Ticket";
 
-        private readonly TripTicketRepository _tripTicketRepository;
-        private readonly UserActivityRepository _userActivityRepository;
+        private readonly ITripTicketRepository _tripTicketRepository;
+        private readonly IUserActivityRepository _userActivityRepository;
 
-        public TripTicketDataService(TripTicketRepository tripTicketRepository, UserActivityRepository userActivityRepository)
+        public TripTicketDataService(
+            ITripTicketRepository tripTicketRepository,
+            IUserActivityRepository userActivityRepository)
         {
             _tripTicketRepository = tripTicketRepository;
             _userActivityRepository = userActivityRepository;
@@ -52,7 +54,7 @@ namespace AccuPay.Core.Services
                 currentlyLoggedInUserId,
                 UserActivityName,
                 organizationId,
-                UserActivityRepository.RecordTypeAdd,
+                UserActivity.RecordTypeAdd,
                 activityItems);
         }
     }

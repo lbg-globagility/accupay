@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
@@ -22,7 +23,7 @@ Public Class OfficialBusinessForm
 
     Private _changedOfficialBusinesses As List(Of OfficialBusiness)
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
 
@@ -40,7 +41,7 @@ Public Class OfficialBusinessForm
 
         _changedOfficialBusinesses = New List(Of OfficialBusiness)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
     End Sub
@@ -141,7 +142,7 @@ Public Class OfficialBusinessForm
 
     Private Sub LoadStatusList()
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IOfficialBusinessRepository)
         StatusComboBox.DataSource = repository.GetStatusList()
 
     End Sub
@@ -254,7 +255,7 @@ Public Class OfficialBusinessForm
     Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IOfficialBusinessRepository)
         Me._currentOfficialBusinesses = (Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
             OrderByDescending(Function(a) a.StartDate).
             ToList
@@ -518,7 +519,7 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IOfficialBusinessRepository)
         Dim currentOfficialBusiness = Await repository.GetByIdAsync(Me._currentOfficialBusiness.RowID.Value)
 
         If currentOfficialBusiness Is Nothing Then

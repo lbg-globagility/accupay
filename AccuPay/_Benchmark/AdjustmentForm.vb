@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -12,7 +12,7 @@ Public Class AdjustmentForm
 
     Private ReadOnly _adjustmentType As AdjustmentType
 
-    Private _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Private _adjustments As IEnumerable(Of Product)
 
@@ -26,7 +26,7 @@ Public Class AdjustmentForm
 
         _adjustmentType = adjustmentType
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
     End Sub
 

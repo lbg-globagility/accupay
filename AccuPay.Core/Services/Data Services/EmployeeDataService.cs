@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Employees;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +13,17 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Employee";
 
-        private readonly LeaveLedgerRepository _leaveLedgerRepository;
-        private readonly ProductRepository _productRepository;
-        private readonly PositionRepository _positionRepository;
+        private readonly ILeaveLedgerRepository _leaveLedgerRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IPositionRepository _positionRepository;
 
         public EmployeeDataService(
-            EmployeeRepository employeeRepository,
-            LeaveLedgerRepository leaveLedgerRepository,
-            PayPeriodRepository payPeriodRepository,
-            ProductRepository productRepository,
-            PositionRepository positionRepository,
-            UserActivityRepository userActivityRepository,
+            IEmployeeRepository employeeRepository,
+            ILeaveLedgerRepository leaveLedgerRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IProductRepository productRepository,
+            IPositionRepository positionRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 

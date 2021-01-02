@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities.Extensions
@@ -15,10 +15,10 @@ Public Class FiledLeaveReportProvider
     Public Property Name As String = "Filed Leave" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Private ReadOnly _organizationRepository As OrganizationRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
 
     Sub New()
-        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run

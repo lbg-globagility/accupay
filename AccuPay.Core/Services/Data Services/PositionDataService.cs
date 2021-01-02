@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,20 +12,20 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Position";
 
-        private readonly PositionRepository _positionRepository;
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IPositionRepository _positionRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly DivisionDataService _divisionService;
-        private readonly DivisionRepository _divisionRepository;
+        private readonly IDivisionRepository _divisionRepository;
 
         public PositionDataService(
-            PositionRepository positionRepository,
-            EmployeeRepository employeeRepository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            IPositionRepository positionRepository,
+            IEmployeeRepository employeeRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             DivisionDataService divisionService,
             PayrollContext context,
             IPolicyHelper policy,
-            DivisionRepository divisionRepository) :
+            IDivisionRepository divisionRepository) :
 
             base(positionRepository,
                 payPeriodRepository,
@@ -169,7 +169,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

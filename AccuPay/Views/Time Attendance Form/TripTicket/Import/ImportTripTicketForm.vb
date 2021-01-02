@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
@@ -19,9 +20,9 @@ Public Class ImportTripTicketForm
     Private _okModels As List(Of TripTicketModel)
     Private _failModels As List(Of TripTicketModel)
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
     Private ReadOnly _tripTicketRepository As TripTicketRepository
-    Private ReadOnly _routeRepository As RouteRepository
+    Private ReadOnly _routeRepository As IRouteRepository
     Private ReadOnly _vehicleRepository As VehicleRepository
 
 #End Region
@@ -30,11 +31,11 @@ Public Class ImportTripTicketForm
 
         InitializeComponent()
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
         _tripTicketRepository = MainServiceProvider.GetRequiredService(Of TripTicketRepository)
 
-        _routeRepository = MainServiceProvider.GetRequiredService(Of RouteRepository)
+        _routeRepository = MainServiceProvider.GetRequiredService(Of IRouteRepository)
 
         _vehicleRepository = MainServiceProvider.GetRequiredService(Of VehicleRepository)
 

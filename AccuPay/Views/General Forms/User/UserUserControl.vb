@@ -5,7 +5,6 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Helpers
@@ -80,7 +79,7 @@ Public Class UserUserControl
     Private Async Function GetOrganizations() As Task
         If _organizations IsNot Nothing AndAlso _organizations.Count > 0 Then Return
 
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         Dim userRoles = Await userRepository.GetUserRolesAsync(z_User)
 
         Dim allowedOrganizations = userRoles.
@@ -90,7 +89,7 @@ Public Class UserUserControl
 
         ' TODO: check also if in that organization, the user has a role with permission to create and update Role
 
-        Dim organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        Dim organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
         Dim organizations = (Await organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)).organizations.
             OrderBy(Function(o) o.Name).
             ToList()
@@ -111,7 +110,7 @@ Public Class UserUserControl
 
     Private Async Function PopulateRoleComboBox() As Task
 
-        Dim roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
         Dim roles = (Await roleRepository.List(PageOptions.AllData, Z_Client)).
             roles.
             OrderBy(Function(r) r.Name).
@@ -147,7 +146,7 @@ Public Class UserUserControl
 
     Private Async Function PopulateUserRoleGrid(user As AspNetUser) As Task
 
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         Dim userRoles = Await userRepository.GetUserRolesAsync(user.Id)
 
         Dim models As New List(Of UserRoleViewModel)

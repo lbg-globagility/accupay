@@ -4,7 +4,8 @@ Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Core
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Entities.Paystub
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
@@ -27,15 +28,15 @@ Public Class BenchmarkPaystubForm
 
     Private _overtimeRate As OvertimeRate
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
-    Private ReadOnly _salaryRepository As SalaryRepository
+    Private ReadOnly _salaryRepository As ISalaryRepository
 
     Private ReadOnly _overtimeRateService As OvertimeRateService
 
@@ -43,15 +44,15 @@ Public Class BenchmarkPaystubForm
 
         InitializeComponent()
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
 
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
 
@@ -681,7 +682,7 @@ Public Class BenchmarkPaystubForm
 
         Return Await _paystubRepository.
             GetByCompositeKeyFullPaystubAsync(
-                New PaystubRepository.EmployeeCompositeKey(
+                New EmployeeCompositeKey(
                         employeeId:=employeeId,
                         payPeriodId:=_currentPayPeriod.RowID.Value
                 ))
@@ -741,7 +742,7 @@ Public Class BenchmarkPaystubForm
             Async Function()
                 Dim paystubDataService = MainServiceProvider.GetRequiredService(Of PaystubDataService)
                 Await paystubDataService.DeleteAsync(
-                    New PaystubRepository.EmployeeCompositeKey(
+                    New EmployeeCompositeKey(
                             employeeId:=employeeId.Value,
                             payPeriodId:=_currentPayPeriod.RowID.Value),
                     currentlyLoggedInUserId:=z_User,

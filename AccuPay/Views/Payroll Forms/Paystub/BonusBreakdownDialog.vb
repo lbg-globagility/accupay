@@ -2,19 +2,19 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.ValueObjects
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BonusBreakdownDialog
-    Private ReadOnly _bonusRepository As BonusRepository
+    Private ReadOnly _bonusRepository As IBonusRepository
     Private ReadOnly _employeeId As Integer
     Private ReadOnly _datePeriod As TimePeriod
 
     Public Sub New(employeeId As Integer, datePeriod As TimePeriod)
         InitializeComponent()
 
-        _bonusRepository = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        _bonusRepository = MainServiceProvider.GetRequiredService(Of IBonusRepository)
 
         _employeeId = employeeId
         _datePeriod = datePeriod

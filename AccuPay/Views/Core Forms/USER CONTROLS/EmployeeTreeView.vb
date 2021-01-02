@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeTreeView
@@ -226,9 +226,9 @@ Public Class EmployeeTreeView
 
         Private _organizationId As Integer
 
-        Private ReadOnly _divisionRepository As DivisionRepository
+        Private ReadOnly _divisionRepository As IDivisionRepository
 
-        Private ReadOnly _employeeRepository As EmployeeRepository
+        Private ReadOnly _employeeRepository As IEmployeeRepository
 
         Public Sub New(view As EmployeeTreeView)
             _view = view
@@ -236,9 +236,9 @@ Public Class EmployeeTreeView
 
             If MainServiceProvider IsNot Nothing Then
 
-                _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+                _divisionRepository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
 
-                _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+                _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
             End If
 
         End Sub

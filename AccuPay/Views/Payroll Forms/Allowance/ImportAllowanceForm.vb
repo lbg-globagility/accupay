@@ -3,8 +3,8 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
-Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -21,21 +21,21 @@ Public Class ImportAllowanceForm
 
     Public IsSaved As Boolean
 
-    Private ReadOnly _allowanceRepository As AllowanceRepository
+    Private ReadOnly _allowanceRepository As IAllowanceRepository
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
     End Sub
 

@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.Core.Services.Policies;
 using AccuPay.Utilities.Extensions;
@@ -15,14 +15,14 @@ namespace AccuPay.Core.Services
     {
         private const string UserActivityName = "Salary";
 
-        private readonly PaystubRepository _paystubRepository;
-        private readonly SalaryRepository _salaryRepository;
+        private readonly IPaystubRepository _paystubRepository;
+        private readonly ISalaryRepository _salaryRepository;
 
         public SalaryDataService(
-            SalaryRepository salaryRepository,
-            PayPeriodRepository payPeriodRepository,
-            PaystubRepository paystubRepository,
-            UserActivityRepository userActivityRepository,
+            ISalaryRepository salaryRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IPaystubRepository paystubRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
 
@@ -192,7 +192,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

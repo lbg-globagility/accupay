@@ -1,7 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MonthlyEndofContractReportProvider
@@ -42,12 +42,12 @@ Public Class MonthlyEndofContractReportProvider
 
         Dim fetchAll As New List(Of Employee)
 
-        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
+        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of IEmployeeQueryBuilder)
 
         fetchAll = Await employeeBuilder.
-                        IsActive().
-                        IncludeBranch().
-                        ToListAsync(z_OrganizationID)
+            IsActive().
+            IncludeBranch().
+            ToListAsync(z_OrganizationID)
 
         Dim employees = fetchAll.
             Where(Function(e) e.DateRegularized.HasValue).

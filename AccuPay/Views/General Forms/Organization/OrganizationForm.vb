@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
@@ -20,16 +20,16 @@ Public Class OrganizationForm
     Private _currentRolePermission As RolePermission
     Private _currentOrganization As Organization
     Private _organizations As List(Of Organization)
-    Private ReadOnly _addressRepository As AddressRepository
-    Private ReadOnly _organizationRepository As OrganizationRepository
+    Private ReadOnly _addressRepository As ISavableRepository(Of Address)
+    Private ReadOnly _organizationRepository As IOrganizationRepository
     Private ReadOnly _policy As IPolicyHelper
 
     Sub New()
 
         InitializeComponent()
 
-        _addressRepository = MainServiceProvider.GetRequiredService(Of AddressRepository)
-        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+        _addressRepository = MainServiceProvider.GetRequiredService(Of ISavableRepository(Of Address))
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
     End Sub
@@ -128,7 +128,7 @@ Public Class OrganizationForm
             OrderBy(Function(o) o.Name).
             ToList()
 
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of AspNetUserRepository)
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         Dim userRoles = Await userRepository.GetUserRolesAsync(z_User)
 
         Dim allowedOrganizations = userRoles.

@@ -6,6 +6,7 @@ Imports AccuPay.Benchmark
 Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
@@ -55,13 +56,13 @@ Public Class BenchmarkPayrollForm
 
     Private Const MoneyFormat As String = "#,##0.0000"
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
-    Private ReadOnly _loanRepository As LoanRepository
+    Private ReadOnly _loanRepository As ILoanRepository
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _salaryRepository As SalaryRepository
+    Private ReadOnly _salaryRepository As ISalaryRepository
 
     Private ReadOnly _listOfValueService As ListOfValueService
 
@@ -71,15 +72,15 @@ Public Class BenchmarkPayrollForm
 
         InitializeComponent()
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _loanRepository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
 
-        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
+
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
 
         _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
-
-        _loanRepository = MainServiceProvider.GetRequiredService(Of LoanRepository)
 
         _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
 

@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Enums
 Imports AccuPay.Desktop.Utilities
@@ -24,11 +24,11 @@ Public Class DisciplinaryActionTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private ReadOnly _disciplinaryActionRepo As DisciplinaryActionRepository
+    Private ReadOnly _disciplinaryActionRepo As IDisciplinaryActionRepository
 
-    Private ReadOnly _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As IListOfValueRepository
 
-    Private ReadOnly _productRepo As ProductRepository
+    Private ReadOnly _productRepo As IProductRepository
 
     Public Sub New()
 
@@ -38,9 +38,9 @@ Public Class DisciplinaryActionTab
 
         If MainServiceProvider IsNot Nothing Then
 
-            _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)
-            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
-            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+            _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of IDisciplinaryActionRepository)
+            _listOfValRepo = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
+            _productRepo = MainServiceProvider.GetRequiredService(Of IProductRepository)
         End If
 
     End Sub

@@ -1,8 +1,7 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Utilities.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,10 +9,12 @@ namespace AccuPay.Core.Services
 {
     public class CalendarDataService
     {
-        private readonly CalendarRepository _calendarRepository;
-        private readonly BranchRepository _branchRepository;
+        private readonly ICalendarRepository _calendarRepository;
+        private readonly IBranchRepository _branchRepository;
 
-        public CalendarDataService(CalendarRepository calendarRepository, BranchRepository branchRepository)
+        public CalendarDataService(
+            ICalendarRepository calendarRepository,
+            IBranchRepository branchRepository)
         {
             _calendarRepository = calendarRepository;
             _branchRepository = branchRepository;

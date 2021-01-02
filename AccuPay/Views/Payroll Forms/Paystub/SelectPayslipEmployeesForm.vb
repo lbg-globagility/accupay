@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.CrystalReports
 Imports AccuPay.Desktop.Helpers
@@ -27,13 +27,13 @@ Public Class SelectPayslipEmployeesForm
 
     Private ReadOnly _policyHelper As IPolicyHelper
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private ReadOnly _paystubRepository As IPaystubRepository
 
-    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+    Private ReadOnly _paystubEmailRepository As IPaystubEmailRepository
 
-    Private ReadOnly _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
+    Private ReadOnly _paystubEmailHistoryRepository As IPaystubEmailHistoryRepository
 
     Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
 
@@ -49,13 +49,13 @@ Public Class SelectPayslipEmployeesForm
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
-        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailRepository)
 
-        _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailHistoryRepository)
+        _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of IPaystubEmailHistoryRepository)
 
     End Sub
 

@@ -1,8 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Global.AccuPay
@@ -17,16 +17,16 @@ Namespace Global.AccuPay
 
         Private _currentLeaveType As Product
 
-        Private _leaveLedgerRepository As LeaveLedgerRepository
+        Private _leaveLedgerRepository As ILeaveLedgerRepository
 
-        Private _productRepository As ProductRepository
+        Private _productRepository As IProductRepository
 
         Public Sub New(employee As Employee)
             InitializeComponent()
             _employee = employee
 
-            _leaveLedgerRepository = MainServiceProvider.GetRequiredService(Of LeaveLedgerRepository)
-            _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+            _leaveLedgerRepository = MainServiceProvider.GetRequiredService(Of ILeaveLedgerRepository)
+            _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
         End Sub
 
         Private Async Sub ViewLeaveLedgerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load

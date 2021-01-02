@@ -1,6 +1,6 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
-using AccuPay.Core.Repositories;
 using AccuPay.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -12,16 +12,17 @@ namespace AccuPay.Core.Services.Imports.OfficialBusiness
 {
     public class OfficialBusinessImportParser
     {
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<OfficialBusinessRowRecord> _parser;
-        private readonly OfficialBusinessRepository _officialBusinessRepository;
+        private readonly IOfficialBusinessRepository _officialBusinessRepository;
         private const string WORKSHEETNAME = "Sheet1";
 
         public string XlsxExtension => _parser.XlsxExtension;
 
-        public OfficialBusinessImportParser(EmployeeRepository employeeRepository,
-                                    OfficialBusinessRepository officialBusinessRepository,
-                                    IExcelParser<OfficialBusinessRowRecord> parser)
+        public OfficialBusinessImportParser(
+            IEmployeeRepository employeeRepository,
+            IOfficialBusinessRepository officialBusinessRepository,
+            IExcelParser<OfficialBusinessRowRecord> parser)
         {
             _employeeRepository = employeeRepository;
             _officialBusinessRepository = officialBusinessRepository;

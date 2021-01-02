@@ -2,7 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -23,19 +23,19 @@ namespace AccuPay.Core.Services
             ProductConstant.VACATION_LEAVE
         };
 
-        private readonly EmployeeRepository _employeeRepository;
-        private readonly ShiftRepository _shiftRepository;
-        private readonly LeaveLedgerRepository _leaveLedgerRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ILeaveLedgerRepository _leaveLedgerRepository;
+        private readonly IShiftRepository _shiftRepository;
 
         public LeaveDataService(
             PayrollContext context,
             IPolicyHelper policy,
-            EmployeeRepository employeeRepository,
-            ShiftRepository shiftRepository,
-            LeaveRepository leaveRepository,
-            LeaveLedgerRepository leaveLedgerRepository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository) :
+            IEmployeeRepository employeeRepository,
+            ILeaveRepository leaveRepository,
+            ILeaveLedgerRepository leaveLedgerRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IShiftRepository shiftRepository,
+            IUserActivityRepository userActivityRepository) :
 
             base(leaveRepository,
                 payPeriodRepository,
@@ -45,8 +45,8 @@ namespace AccuPay.Core.Services
                 entityName: "Leave")
         {
             _employeeRepository = employeeRepository;
-            _shiftRepository = shiftRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
+            _shiftRepository = shiftRepository;
         }
 
         #region SaveManyAsync
@@ -88,93 +88,94 @@ namespace AccuPay.Core.Services
 
         private async Task SaveLeavesAsync(List<Leave> leaves, int organizationId)
         {
-            var leaveRepository = new LeaveRepository(_context);
+            // TODO: Urgent!!! - should not access repository directly like this!
+            //var leaveRepository = new LeaveRepository(_context);
 
-            var shifts = new List<Shift>();
-            var employees = new List<Employee>();
+            //var shifts = new List<Shift>();
+            //var employees = new List<Employee>();
 
-            var orderedLeaves = leaves.OrderBy(l => l.StartDate).ToList();
+            //var orderedLeaves = leaves.OrderBy(l => l.StartDate).ToList();
 
-            var firstLeave = leaves.FirstOrDefault().StartDate;
-            var lastLeave = leaves.LastOrDefault().StartDate;
+            //var firstLeave = leaves.FirstOrDefault().StartDate;
+            //var lastLeave = leaves.LastOrDefault().StartDate;
 
-            if (_policy.ValidateLeaveBalance)
-            {
-                var employeeIds = leaves
-                    .Where(x => x.EmployeeID.HasValue)
-                    .Select(l => l.EmployeeID.Value)
-                    .Distinct()
-                    .ToArray();
+            //if (_policy.ValidateLeaveBalance)
+            //{
+            //    var employeeIds = leaves
+            //        .Where(x => x.EmployeeID.HasValue)
+            //        .Select(l => l.EmployeeID.Value)
+            //        .Distinct()
+            //        .ToArray();
 
-                shifts = await GetShifts(employeeIds, organizationId, firstLeave, lastLeave);
-                employees = await GetEmployees(employeeIds);
-            }
+            //    shifts = await GetShifts(employeeIds, organizationId, firstLeave, lastLeave);
+            //    employees = await GetEmployees(employeeIds);
+            //}
 
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                int?[] oldRowIds = leaves.Select(x => x.RowID).ToArray();
-                try
-                {
-                    foreach (var leave in leaves)
-                    {
-                        await leaveRepository.SaveAsync(leave);
+            //using (var transaction = await _context.Database.BeginTransactionAsync())
+            //{
+            //    int?[] oldRowIds = leaves.Select(x => x.RowID).ToArray();
+            //    try
+            //    {
+            //        foreach (var leave in leaves)
+            //        {
+            //            await leaveRepository.SaveAsync(leave);
 
-                        if (Validatable(leave))
-                        {
-                            var employee = employees.FirstOrDefault(e => e.RowID == leave.EmployeeID);
+            //            if (Validatable(leave))
+            //            {
+            //                var employee = employees.FirstOrDefault(e => e.RowID == leave.EmployeeID);
 
-                            var unusedApprovedLeaves = await GetUnusedApprovedLeavesByType(
-                                leaveRepository,
-                                employee.RowID,
-                                leave,
-                                organizationId);
+            //                var unusedApprovedLeaves = await GetUnusedApprovedLeavesByType(
+            //                    leaveRepository,
+            //                    employee.RowID,
+            //                    leave,
+            //                    organizationId);
 
-                            var earliestUnusedApprovedLeave = unusedApprovedLeaves
-                                .OrderBy(l => l.StartDate)
-                                .FirstOrDefault();
+            //                var earliestUnusedApprovedLeave = unusedApprovedLeaves
+            //                    .OrderBy(l => l.StartDate)
+            //                    .FirstOrDefault();
 
-                            // if the earliest unused approved leave is earlier than the first leave, get its shifts
-                            if (earliestUnusedApprovedLeave != null &&
-                                earliestUnusedApprovedLeave.StartDate.ToMinimumHourValue() < firstLeave.ToMinimumHourValue())
-                            {
-                                var firstShiftDate = earliestUnusedApprovedLeave.StartDate.ToMinimumHourValue();
-                                var lastShiftDate = firstLeave.ToMinimumHourValue().AddSeconds(-1);
+            //                // if the earliest unused approved leave is earlier than the first leave, get its shifts
+            //                if (earliestUnusedApprovedLeave != null &&
+            //                    earliestUnusedApprovedLeave.StartDate.ToMinimumHourValue() < firstLeave.ToMinimumHourValue())
+            //                {
+            //                    var firstShiftDate = earliestUnusedApprovedLeave.StartDate.ToMinimumHourValue();
+            //                    var lastShiftDate = firstLeave.ToMinimumHourValue().AddSeconds(-1);
 
-                                if (leave.EmployeeID.HasValue)
-                                {
-                                    var earlierShifts = await GetShifts(
-                                        new int[] { leave.EmployeeID.Value },
-                                        organizationId,
-                                        firstShiftDate,
-                                        lastShiftDate);
+            //                    if (leave.EmployeeID.HasValue)
+            //                    {
+            //                        var earlierShifts = await GetShifts(
+            //                            new int[] { leave.EmployeeID.Value },
+            //                            organizationId,
+            //                            firstShiftDate,
+            //                            lastShiftDate);
 
-                                    shifts.InsertRange(0, earlierShifts);
-                                }
+            //                        shifts.InsertRange(0, earlierShifts);
+            //                    }
 
-                                shifts = shifts.OrderBy(s => s.DateSched).ToList();
-                            }
+            //                    shifts = shifts.OrderBy(s => s.DateSched).ToList();
+            //                }
 
-                            await ValidateLeaveBalance(shifts, unusedApprovedLeaves, employee, leave);
-                        }
-                    }
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    // If the exception happens after the repository SaveAsync, leaves that are to be created will have RowIDs already
-                    // by the point it reaches this catch block because of SQL Transaction. Those leaves' RowIDs should be reverted back
-                    // to null
-                    int index = 0;
-                    foreach (var leave in leaves)
-                    {
-                        leave.RowID = oldRowIds[index];
+            //                await ValidateLeaveBalance(shifts, unusedApprovedLeaves, employee, leave);
+            //            }
+            //        }
+            //        transaction.Commit();
+            //    }
+            //    catch (Exception)
+            //    {
+            //        transaction.Rollback();
+            //        // If the exception happens after the repository SaveAsync, leaves that are to be created will have RowIDs already
+            //        // by the point it reaches this catch block because of SQL Transaction. Those leaves' RowIDs should be reverted back
+            //        // to null
+            //        int index = 0;
+            //        foreach (var leave in leaves)
+            //        {
+            //            leave.RowID = oldRowIds[index];
 
-                        index++;
-                    }
-                    throw;
-                }
-            }
+            //            index++;
+            //        }
+            //        throw;
+            //    }
+            //}
         }
 
         private async Task<List<Shift>> GetShifts(
@@ -265,7 +266,7 @@ namespace AccuPay.Core.Services
         }
 
         private async Task<List<Leave>> GetUnusedApprovedLeavesByType(
-            LeaveRepository leaveRepository,
+            ILeaveRepository leaveRepository,
             int? employeeId,
             Leave leave,
             int organizationId)
@@ -635,7 +636,7 @@ namespace AccuPay.Core.Services
                     newValue.LastUpdBy.Value,
                     UserActivityName,
                     newValue.OrganizationID.Value,
-                    UserActivityRepository.RecordTypeEdit,
+                    UserActivity.RecordTypeEdit,
                     changes);
             }
         }

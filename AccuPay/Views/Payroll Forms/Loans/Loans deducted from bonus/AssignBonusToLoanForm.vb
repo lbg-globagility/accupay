@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.ValueObjects
@@ -11,8 +12,8 @@ Public Class AssignBonusToLoanForm
 
     Private ReadOnly _loan As Loan
     Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
-    Private ReadOnly _bonusRepository As BonusRepository
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _bonusRepository As IBonusRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
     Private _bonuses As IEnumerable(Of Bonus)
     Private _lastSelectedCellIndex1 As Integer
     Private _lastSelectedRowIndex1 As Integer
@@ -28,9 +29,9 @@ Public Class AssignBonusToLoanForm
 
         _loanTransactions = loanTransactions
 
-        _bonusRepository = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        _bonusRepository = MainServiceProvider.GetRequiredService(Of IBonusRepository)
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
         DisplayLoanDetails(loan)
     End Sub
@@ -286,7 +287,7 @@ Public Class AssignBonusToLoanForm
 
         btnSave.Enabled = False
 
-        Dim loanPaymentFromBonusRepo = MainServiceProvider.GetRequiredService(Of LoanPaymentFromBonusRepository)
+        Dim loanPaymentFromBonusRepo = MainServiceProvider.GetRequiredService(Of ILoanPaymentFromBonusRepository)
 
         Await loanPaymentFromBonusRepo.SaveManyAsync(saveList)
 

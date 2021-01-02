@@ -1,15 +1,15 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services
 {
     public abstract class BasePaystubDataService
     {
-        protected readonly PayPeriodRepository _payPeriodRepository;
+        protected readonly IPayPeriodRepository _payPeriodRepository;
 
-        public BasePaystubDataService(PayPeriodRepository payPeriodRepository)
+        public BasePaystubDataService(IPayPeriodRepository payPeriodRepository)
         {
             _payPeriodRepository = payPeriodRepository;
         }

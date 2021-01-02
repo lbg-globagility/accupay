@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
@@ -22,8 +23,8 @@ Public Class ImportEmployeeForm
     Private _failModels As List(Of EmployeeModel)
 
     Private ReadOnly _divisionService As DivisionDataService
-    Private ReadOnly _branchRepository As BranchRepository
-    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _branchRepository As IBranchRepository
+    Private ReadOnly _employeeRepository As IEmployeeRepository
     Private ReadOnly _userActivityRepository As UserActivityRepository
 
 #End Region
@@ -34,9 +35,9 @@ Public Class ImportEmployeeForm
 
         _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
-        _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+        _branchRepository = MainServiceProvider.GetRequiredService(Of IBranchRepository)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -401,7 +402,7 @@ Public Class ImportEmployeeForm
     Private Async Function AddPositionIdToModels(models As List(Of EmployeeModel)) As Task
 
         'fresh instance of repository
-        Dim repository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of IPositionRepository)
         Dim existingPositions = (Await repository.GetAllAsync(z_OrganizationID)).ToList()
 
         For Each model In models

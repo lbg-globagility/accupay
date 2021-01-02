@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +14,9 @@ namespace AccuPay.Core.Services
     public abstract class BaseDailyPayrollDataService<T> : BaseEmployeeDataService<T> where T : EmployeeDataEntity, IPayrollEntity
     {
         public BaseDailyPayrollDataService(
-            SavableRepository<T> savableRepository,
-            PayPeriodRepository payPeriodRepository,
-            UserActivityRepository userActivityRepository,
+            ISavableRepository<T> savableRepository,
+            IPayPeriodRepository payPeriodRepository,
+            IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy,
             string entityName,

@@ -6,7 +6,7 @@ Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Exceptions
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -24,7 +24,7 @@ Public Class DefaultShiftAndTimeLogsForm
 
     Private ReadOnly DefaultShiftBreakLength As Integer = 1
 
-    Private ReadOnly _roleRepository As RoleRepository
+    Private ReadOnly _roleRepository As IRoleRepository
 
     Public Property NewPayPeriod As PayPeriod
 
@@ -34,7 +34,7 @@ Public Class DefaultShiftAndTimeLogsForm
 
         _currentPayPeriod = currentPayPeriod
 
-        _roleRepository = MainServiceProvider.GetRequiredService(Of RoleRepository)
+        _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
 
         NewPayPeriod = Nothing
 
@@ -148,7 +148,7 @@ Public Class DefaultShiftAndTimeLogsForm
             Confirm(Of Boolean)($"This will override the shift and time logs of { employeeCount } employee(s). Are you sure you want to create default data from {GetPayPeriodDescription()}?",
             messageTitle) Then
 
-            Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+            Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
             Dim currentPayPeriod = Await payPeriodRepository.GetByIdAsync(_currentPayPeriod.RowID.Value)
 
             If currentPayPeriod.Status = Enums.PayPeriodStatus.Closed Then
@@ -225,7 +225,7 @@ Public Class DefaultShiftAndTimeLogsForm
             Confirm(Of Boolean)($"This will delete the shift and time logs of { employeeCount } employee(s). Are you sure you want to delete shift and time logs from {GetPayPeriodDescription()}?",
             messageTitle) Then
 
-            Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+            Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
             Dim currentPayPeriod = Await payPeriodRepository.GetByIdAsync(_currentPayPeriod.RowID.Value)
 
             If currentPayPeriod.Status = Enums.PayPeriodStatus.Closed Then

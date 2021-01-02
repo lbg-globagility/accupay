@@ -3,7 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -164,7 +164,7 @@ Public Class LoanUserControl
 
     Private Sub LoadLoanStatus()
 
-        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        Dim repository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
         _statusList = repository.GetStatusList()
 
         PopulateStatustComboBox()
@@ -193,7 +193,7 @@ Public Class LoanUserControl
 
     Private Async Function LoadLoanTypes() As Task
 
-        Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        Dim productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         Dim loanTypeList As List(Of Product)
 
@@ -212,7 +212,7 @@ Public Class LoanUserControl
 
     Private Async Function LoadDeductionSchedules() As Task
 
-        Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+        Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
         Dim deductionSchedules = listOfValueRepository.
             ConvertToStringList(Await listOfValueRepository.GetDeductionSchedulesAsync())

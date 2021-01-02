@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -20,13 +20,13 @@ Public Class AddPositionForm
 
     Public Property LastPositionAdded As Position
 
-    Private ReadOnly _divisionRepository As DivisionRepository
+    Private ReadOnly _divisionRepository As IDivisionRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
 
         Me.IsSaved = False
 

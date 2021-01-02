@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
@@ -15,9 +16,9 @@ Public Class AddLeaveForm
 
     Private _newLeave As New Leave
 
-    Private ReadOnly _leaveRepository As LeaveRepository
+    Private ReadOnly _leaveRepository As ILeaveRepository
 
-    Private ReadOnly _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Sub New(employee As Employee)
 
@@ -25,9 +26,9 @@ Public Class AddLeaveForm
 
         _currentEmployee = employee
 
-        _leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        _leaveRepository = MainServiceProvider.GetRequiredService(Of ILeaveRepository)
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         Me.IsSaved = False
 

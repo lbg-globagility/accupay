@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 

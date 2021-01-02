@@ -1,6 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
@@ -20,7 +21,7 @@ Public Class PreviewLeaveBalanceForm
 
     Private _listOfValueService As ListOfValueService
 
-    Private _employeeRepository As EmployeeRepository
+    Private _employeeRepository As IEmployeeRepository
 
     Sub New()
 
@@ -28,7 +29,7 @@ Public Class PreviewLeaveBalanceForm
 
         _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
     End Sub
 
     Private Async Sub PreviewLeaveBalanceForm_LoadAsync(sender As Object, e As EventArgs) Handles MyBase.Load

@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
@@ -9,11 +9,11 @@ namespace AccuPay.Core.Services
 {
     public class UserDataService
     {
-        private readonly AspNetUserRepository _userRepository;
+        private readonly IAspNetUserRepository _userRepository;
         private readonly IEncryption _encryption;
 
         public UserDataService(
-            AspNetUserRepository userRepository,
+            IAspNetUserRepository userRepository,
             IEncryption encryption)
         {
             _userRepository = userRepository;

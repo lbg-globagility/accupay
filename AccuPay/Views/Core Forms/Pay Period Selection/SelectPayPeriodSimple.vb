@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Core.Helpers
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectPayPeriodSimple
@@ -14,13 +14,13 @@ Public Class SelectPayPeriodSimple
 
     Public Property PayToDate As Date
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Sub New()
 
         InitializeComponent()
 
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
     End Sub
 

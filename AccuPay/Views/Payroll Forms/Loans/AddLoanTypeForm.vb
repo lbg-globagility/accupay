@@ -1,13 +1,13 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
-Imports AccuPay.Core.Repositories
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLoanTypeForm
 
-    Private _productRepository As ProductRepository
+    Private ReadOnly _productRepository As IProductRepository
 
     Public Property NewLoanType As Product
 
@@ -17,7 +17,7 @@ Public Class AddLoanTypeForm
 
         InitializeComponent()
 
-        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
     End Sub
 
     Private Sub AddLoanTypeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
