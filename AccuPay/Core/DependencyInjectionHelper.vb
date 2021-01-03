@@ -35,8 +35,6 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of BenchmarkPayrollHelper)
 
-        'services.AddTransient(GetType(ISavableRepository(Of)), GetType(SavableRepository(Of)))
-
         services.AddTransient(Of IActualTimeEntryRepository, ActualTimeEntryRepository)
         services.AddTransient(Of IAgencyFeeRepository, AgencyFeeRepository)
         services.AddTransient(Of IAgencyRepository, AgencyRepository)
@@ -140,6 +138,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ISalaryDataService, SalaryDataService)
         services.AddTransient(Of ITimeEntryDataService, TimeEntryDataService)
         services.AddTransient(Of ITimeLogDataService, TimeLogDataService)
+        services.AddTransient(Of ITripTicketDataService, TripTicketDataService)
         services.AddTransient(Of IUserDataService, UserDataService)
 
         services.AddTransient(Of IShiftImportParser, ShiftImportParser)
@@ -161,7 +160,6 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ITaxMonthlyReportBuilder, TaxMonthlyReportBuilder)
         services.AddTransient(Of IThirteenthMonthSummaryReportDataService, ThirteenthMonthSummaryReportDataService)
         services.AddTransient(Of IThirteenthMonthSummaryReportBuilder, ThirteenthMonthSummaryReportBuilder)
-        services.AddTransient(Of ITripTicketDataService, TripTicketDataService)
 
         services.AddTransient(Of PaystubDataHelper)
         services.AddTransient(Of TimeEntryDataHelper)

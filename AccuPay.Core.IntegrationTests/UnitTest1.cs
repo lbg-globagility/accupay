@@ -1,4 +1,4 @@
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,12 +11,10 @@ namespace AccuPay.Core.IntegrationTests
         public async Task Test1()
         {
             Assert.True(true);
-            return;
 
-            var loanRepository = MainServiceProvider.GetRequiredService<LoanRepository>();
-            var payPeriodRepository = MainServiceProvider.GetRequiredService<PayPeriodRepository>();
-            var paystubRepository = MainServiceProvider.GetRequiredService<PaystubRepository>();
-            var payrollContext = MainServiceProvider.GetRequiredService<PayrollContext>();
+            var loanRepository = MainServiceProvider.GetRequiredService<ILoanRepository>();
+            var payPeriodRepository = MainServiceProvider.GetRequiredService<IPayPeriodRepository>();
+            var paystubRepository = MainServiceProvider.GetRequiredService<IPaystubRepository>();
 
             var payPeriod = await payPeriodRepository.GetByIdAsync(648);
 

@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AccuPay.Core\AccuPay.Core.csproj" />
+    <ProjectReference Include="..\AccuPay.CrystalReports\AccuPay.CrystalReports.csproj" />
     <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj" />
   </ItemGroup>
 
