@@ -803,7 +803,7 @@ Public Class NewDivisionPositionForm
 
         Dim service = MainServiceProvider.GetRequiredService(Of IDivisionDataService)
         Await service.DeleteAsync(
-            divisionId:=Me._currentDivision.RowID.Value,
+            id:=Me._currentDivision.RowID.Value,
             currentlyLoggedInUserId:=z_User)
 
         Await RefreshTreeView()

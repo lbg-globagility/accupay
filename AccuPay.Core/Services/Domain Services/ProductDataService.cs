@@ -24,49 +24,6 @@ namespace AccuPay.Core.Services
             _allowanceRepository = allowanceRepository;
         }
 
-        public async Task<Allowance> GetOrCreateEmployeeEcola(
-            int employeeId,
-            int organizationId,
-            int currentlyLoggedInUserId,
-            TimePeriod timePeriod,
-            string allowanceFrequency = Allowance.FREQUENCY_SEMI_MONTHLY,
-            decimal amount = 0)
-        {
-            var ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(
-                employeeId: employeeId,
-                organizationId: organizationId,
-                timePeriod: timePeriod);
-
-            if (ecolaAllowance == null)
-            {
-                var ecolaProductId = (await _productRepository.GetOrCreateAllowanceTypeAsync(
-                    ProductConstant.ECOLA,
-                    organizationId,
-                    currentlyLoggedInUserId))?.RowID;
-
-                DateTime? effectiveEndDate = null;
-
-                ecolaAllowance = new Allowance();
-                ecolaAllowance.EmployeeID = employeeId;
-                ecolaAllowance.ProductID = ecolaProductId;
-                ecolaAllowance.AllowanceFrequency = allowanceFrequency;
-                ecolaAllowance.EffectiveStartDate = timePeriod.Start;
-                ecolaAllowance.EffectiveEndDate = effectiveEndDate;
-                ecolaAllowance.Amount = amount;
-                ecolaAllowance.OrganizationID = organizationId;
-
-                // TODO: refactor this out. A data service should not be a dependency of another data service
-                await _allowanceService.SaveAsync(ecolaAllowance, currentlyLoggedInUserId);
-
-                ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(
-                    employeeId: employeeId,
-                    organizationId: organizationId,
-                    timePeriod: timePeriod);
-            }
-
-            return ecolaAllowance;
-        }
-
         public async Task<bool> CheckIfAlreadyUsedInAllowancesAsync(string allowanceType)
         {
             return await _productRepository.CheckIfAlreadyUsedInAllowancesAsync(allowanceType);

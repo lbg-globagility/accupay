@@ -54,7 +54,7 @@ Namespace Benchmark
             'better if there is a change in ECOLA value, a new allowance should be created.
             Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
 
-            Dim productService = MainServiceProvider.GetRequiredService(Of IProductDataService)
+            Dim productService = MainServiceProvider.GetRequiredService(Of IAllowanceDataService)
             Return Await productService.GetOrCreateEmployeeEcola(
                 employeeId:=employeeId,
                 organizationId:=z_OrganizationID,

@@ -4,7 +4,9 @@ using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Allowances;
+using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -400,6 +402,48 @@ namespace AccuPay.Infrastructure.Data
         #endregion Private Methods
 
         #region Queries
+
+        public async Task<Allowance> GetOrCreateEmployeeEcola(
+            int employeeId,
+            int organizationId,
+            int currentlyLoggedInUserId,
+            TimePeriod timePeriod,
+            string allowanceFrequency = Allowance.FREQUENCY_SEMI_MONTHLY,
+            decimal amount = 0)
+        {
+            var ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(
+                employeeId: employeeId,
+                organizationId: organizationId,
+                timePeriod: timePeriod);
+
+            if (ecolaAllowance == null)
+            {
+                var ecolaProductId = (await _productRepository.GetOrCreateAllowanceTypeAsync(
+                    ProductConstant.ECOLA,
+                    organizationId,
+                    currentlyLoggedInUserId))?.RowID;
+
+                DateTime? effectiveEndDate = null;
+
+                ecolaAllowance = new Allowance();
+                ecolaAllowance.EmployeeID = employeeId;
+                ecolaAllowance.ProductID = ecolaProductId;
+                ecolaAllowance.AllowanceFrequency = allowanceFrequency;
+                ecolaAllowance.EffectiveStartDate = timePeriod.Start;
+                ecolaAllowance.EffectiveEndDate = effectiveEndDate;
+                ecolaAllowance.Amount = amount;
+                ecolaAllowance.OrganizationID = organizationId;
+
+                await SaveAsync(ecolaAllowance, currentlyLoggedInUserId);
+
+                ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(
+                    employeeId: employeeId,
+                    organizationId: organizationId,
+                    timePeriod: timePeriod);
+            }
+
+            return ecolaAllowance;
+        }
 
         public async Task<bool> CheckIfAlreadyUsedInClosedPayPeriodAsync(int allowanceId)
         {
