@@ -1,4 +1,4 @@
-Imports AccuPay.Core
+Imports AccuPay.Core.Interfaces
 
 Public Class PayPeriod
     Implements IPayPeriod
