@@ -1,8 +1,7 @@
+using AccuPay.Core.Interfaces;
 using AccuPay.CrystalReports;
 using AccuPay.CrystalReportsAPI.Services;
-using AccuPay.Core;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -43,29 +42,29 @@ namespace AccuPay.CrystalReportsAPI
                         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
 
-            services.AddScoped<OrganizationRepository>();
-            services.AddScoped<ListOfValueService>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IListOfValueService, ListOfValueService>();
             services.AddScoped<IPolicyHelper, PolicyHelper>();
-            services.AddScoped<PayPeriodRepository>();
-            services.AddScoped<PayslipDataService>();
-            services.AddScoped<SystemOwnerService>();
-            services.AddScoped<PayslipBuilder>();
+            services.AddScoped<IPayPeriodRepository, PayPeriodRepository>();
+            services.AddScoped<IPayslipDataService, PayslipDataService>();
+            services.AddScoped<ISystemOwnerService, SystemOwnerService>();
+            services.AddScoped<IPayslipBuilder, PayslipBuilder>();
 
-            services.AddScoped<SSSMonthlyReportDataService>();
-            services.AddScoped<SSSMonthyReportBuilder>();
-            services.AddScoped<PhilHealthMonthlyReportDataService>();
-            services.AddScoped<PhilHealthMonthlyReportBuilder>();
-            services.AddScoped<PagIBIGMonthlyReportDataService>();
-            services.AddScoped<PagIBIGMonthlyReportBuilder>();
-            services.AddScoped<LoanSummaryByTypeReportDataService>();
-            services.AddScoped<LoanSummaryByTypeReportBuilder>();
-            services.AddScoped<LoanSummaryByEmployeeReportDataService>();
-            services.AddScoped<LoanSummaryByEmployeeReportBuilder>();
-            services.AddScoped<TaxMonthlyReportDataService>();
-            services.AddScoped<TaxMonthlyReportBuilder>();
-            services.AddScoped<ThirteenthMonthSummaryReportDataService>();
-            services.AddScoped<ThirteenthMonthSummaryReportBuilder>();
-            services.AddScoped<PaystubRepository>();
+            services.AddScoped<ISSSMonthlyReportDataService, SSSMonthlyReportDataService>();
+            services.AddScoped<ISSSMonthyReportBuilder, SSSMonthyReportBuilder>();
+            services.AddScoped<IPhilHealthMonthlyReportDataService, PhilHealthMonthlyReportDataService>();
+            services.AddScoped<IPhilHealthMonthlyReportBuilder, PhilHealthMonthlyReportBuilder>();
+            services.AddScoped<IPagIBIGMonthlyReportDataService, PagIBIGMonthlyReportDataService>();
+            services.AddScoped<IPagIBIGMonthlyReportBuilder, PagIBIGMonthlyReportBuilder>();
+            services.AddScoped<ILoanSummaryByTypeReportDataService, LoanSummaryByTypeReportDataService>();
+            services.AddScoped<ILoanSummaryByTypeReportBuilder, LoanSummaryByTypeReportBuilder>();
+            services.AddScoped<ILoanSummaryByEmployeeReportDataService, LoanSummaryByEmployeeReportDataService>();
+            services.AddScoped<ILoanSummaryByEmployeeReportBuilder, LoanSummaryByEmployeeReportBuilder>();
+            services.AddScoped<ITaxMonthlyReportDataService, TaxMonthlyReportDataService>();
+            services.AddScoped<ITaxMonthlyReportBuilder, TaxMonthlyReportBuilder>();
+            services.AddScoped<IThirteenthMonthSummaryReportDataService, ThirteenthMonthSummaryReportDataService>();
+            services.AddScoped<IThirteenthMonthSummaryReportBuilder, ThirteenthMonthSummaryReportBuilder>();
+            services.AddScoped<IPaystubRepository, PaystubRepository>();
 
             var serviceProvider = services.BuildServiceProvider();
 
