@@ -132,7 +132,6 @@ namespace AccuPay.Core.Services.Imports.Employees
             if (!_noBirthDate) Birthdate = _parsedEmployee.Birthdate;
             StartDate = _parsedEmployee.DateEmployed;
             //TerminationDate = _parsedEmployee.;
-            //NoOfDependents = _parsedEmployee.;
             //NewEmployeeFlag = _parsedEmployee.;
             //AlphalistExempted = _parsedEmployee.;
             //DayOfRest = _parsedEmployee.;

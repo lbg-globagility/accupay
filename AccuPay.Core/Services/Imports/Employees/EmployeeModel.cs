@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using System;
 
 namespace AccuPay.Core.Services.Imports.Employees
@@ -28,7 +28,6 @@ namespace AccuPay.Core.Services.Imports.Employees
         public DateTime? Birthdate { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? TerminationDate { get; set; }
-        public int? NoOfDependents { get; set; }
         public bool NewEmployeeFlag { get; set; }
         public bool AlphalistExempted { get; set; }
         public int? DayOfRest { get; set; }
@@ -82,7 +81,6 @@ namespace AccuPay.Core.Services.Imports.Employees
             Birthdate = employee.BirthDate;
             StartDate = employee.StartDate;
             TerminationDate = employee.TerminationDate;
-            NoOfDependents = employee.NoOfDependents;
             AlphalistExempted = employee.AlphalistExempted;
             DayOfRest = employee.DayOfRest;
             AtmNo = employee.AtmNo;

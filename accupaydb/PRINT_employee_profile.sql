@@ -67,31 +67,30 @@ e.RowID AS Col1
 ,e.CalcRestDayOT AS Col55
 ,IF(e.DateRegularized IS NULL,'',DATE_FORMAT(e.DateRegularized,'%c/%e/%Y')) AS Col56
 ,IF(e.DateEvaluated IS NULL,'',DATE_FORMAT(e.DateEvaluated,'%c/%e/%Y')) AS Col57
-,CONCAT(IFNULL(edp.LastName,''),IFNULL(CONCAT(',',edp.FirstName),''),IFNULL(CONCAT(',',edp.MiddleName),'')) AS Col58
-,IFNULL(edp.MiddleName,'') AS Col59
-,IFNULL(edp.LastName,'') AS Col60
-,IFNULL(edp.Surname,'') AS Col61
-,IFNULL(edp.TINNo,'') AS Col62
-,IFNULL(edp.SSSNo,'') AS Col63
-,IFNULL(edp.HDMFNo,'') AS Col64
-,IFNULL(edp.PhilHealthNo,'') AS Col65
-,IFNULL(edp.EmailAddress,'') AS Col66
-,IFNULL(edp.WorkPhone,'') AS Col67
-,IFNULL(edp.HomePhone,'') AS Col68
-,IFNULL(edp.MobilePhone,'') AS Col69
-,IFNULL(edp.HomeAddress,'') AS Col70
-,IFNULL(edp.Nickname,'') AS Col71
-,IFNULL(edp.JobTitle,'') AS Col72
-,edp.Gender AS Col73
-,IFNULL(edp.RelationToEmployee,'') AS Col74
-,IF(edp.ActiveFlag = 'Y','Yes','No') AS Col75
-,IF(edp.Birthdate IS NULL,'',DATE_FORMAT(edp.Birthdate,'%c/%e/%Y')) AS Col76
+,'' AS Col58
+,'' AS Col59
+,'' AS Col60
+,'' AS Col61
+,'' AS Col62
+,'' AS Col63
+,'' AS Col64
+,'' AS Col65
+,'' AS Col66
+,'' AS Col67
+,'' AS Col68
+,'' AS Col69
+,'' AS Col70
+,'' AS Col71
+,'' AS Col72
+,'' AS Col73
+,'' AS Col74
+,'' AS Col75
+,'' AS Col76
 ,IFNULL(e.ATMNo,'') AS COL119
 FROM employee e
 INNER JOIN organization og ON og.RowID=e.OrganizationID
 INNER JOIN payfrequency pf ON pf.RowID=e.PayFrequencyID
 LEFT JOIN `position` pos ON pos.RowID=e.PositionID
-LEFT JOIN (SELECT * FROM employeedependents WHERE ParentEmployeeID=EmpRowID AND OrganizationID=OrganizID) edp ON edp.RowID > 0
 WHERE e.RowID=EmpRowID
 AND e.OrganizationID=OrganizID;
 

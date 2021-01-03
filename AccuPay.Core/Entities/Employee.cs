@@ -36,7 +36,6 @@ namespace AccuPay.Core.Entities
         public DateTime BirthDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? TerminationDate { get; set; }
-        public int? NoOfDependents { get; set; }
 
         //TODO: delete this
         public decimal LeaveBalance { get; set; }

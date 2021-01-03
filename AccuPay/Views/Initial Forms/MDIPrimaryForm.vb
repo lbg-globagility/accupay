@@ -92,8 +92,6 @@ Public Class MDIPrimaryForm
 
         Panel11.Font = DefaultFontStyle
 
-        Panel13.Font = DefaultFontStyle
-
         Panel14.Font = DefaultFontStyle
 
         Panel6.Font = DefaultFontStyle
@@ -490,28 +488,7 @@ Public Class MDIPrimaryForm
 
         If previousForm IsNot Nothing Then
 
-            If groupindex = 1 Then 'HRIS
-
-                If previousForm.Name = "Employee" Then
-
-                    With EmployeeForm
-
-                        Select Case .tabIndx
-
-                            Case .GetEmployeeProfileTabPageIndex
-                                If .listofEditDepen.Count = 0 Then
-                                    Await EmployeeForm.SearchEmployee()
-                                Else
-
-                                End If
-
-                        End Select
-
-                    End With
-
-                End If
-
-            ElseIf groupindex = 3 Then 'Payroll
+            If groupindex = 3 Then 'Payroll
                 If previousForm.Name = "Paystub" Then
                     Await PayStubForm.VIEW_payperiodofyear()
                 End If
@@ -699,8 +676,6 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Dim n_bgwAge21Dependents = Nothing
-
     Dim n_bgwBDayCelebrant = Nothing
 
     Dim n_bgwOBPending = Nothing
@@ -729,10 +704,6 @@ Public Class MDIPrimaryForm
         params(0, 0) = "OrganizID"
 
         params(0, 1) = orgztnID
-
-        n_bgwAge21Dependents = New DashBoardDataExtractor(params, "DBoard_Age21Dependents")
-
-        n_bgwAge21Dependents = n_bgwAge21Dependents.getDataTable
 
         n_bgwBDayCelebrant = New DashBoardDataExtractor(params, "DBoard_BirthdayCelebrantThisMonth")
 
@@ -795,12 +766,7 @@ Public Class MDIPrimaryForm
 
         Static once As SByte = 0
 
-        Dim dattbl = InstantiateDatatable(n_bgwAge21Dependents)
-
-        PopulateDGVwithDatTbl(dgvAge21Depen,
-                              dattbl)
-
-        dattbl = InstantiateDatatable(n_bgwBDayCelebrant)
+        Dim dattbl = InstantiateDatatable(n_bgwBDayCelebrant)
 
         PopulateDGVwithDatTbl(dgvBDayCeleb,
                               dattbl)
@@ -849,7 +815,6 @@ Public Class MDIPrimaryForm
             dgvpendingleave.Enabled = True
         End If
 
-        dgvAge21Depen.Enabled = True
         dgvBDayCeleb.Enabled = True
         dgvLoanBalance.Enabled = True
         dgvOBPending.Enabled = True
@@ -861,7 +826,6 @@ Public Class MDIPrimaryForm
 
         If once = 0 Then
             once = 1
-            dgvAge21Depen.Enabled = True
             dgvBDayCeleb.Enabled = True
 
         End If
@@ -996,7 +960,6 @@ Public Class MDIPrimaryForm
 
         If Not CheckReadPermission(employeePermission) Then
             BirthdayCollapsibleGroupBox.Visible = False
-            UnqualifiedCollapsibleGroupBox.Visible = False
             CollapsibleGroupBox5.Visible = False
         End If
 

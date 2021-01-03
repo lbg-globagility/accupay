@@ -35,15 +35,7 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employee`(
 	`emplo_Startdate` DATE,
 	`emplo_TerminationDate` DATE,
 	`emplo_PositionID` INT,
-	`emplo_PayFrequencyID` INT,
-	`emplo_NoOfDependents` INT,
 	`emplo_Image` LONGBLOB,
-	`emplo_LeavePerPayPeriod` DECIMAL(10,2),
-	`emplo_SickLeavePerPayPeriod` DECIMAL(10,2),
-	`emplo_MaternityLeavePerPayPeriod` DECIMAL(10,2),
-	`emplo_OtherLeavePerPayPeriod` DECIMAL(10,2),
-	`emplo_UndertimeOverride` VARCHAR(1),
-	`emplo_OvertimeOverride` VARCHAR(1),
 	`emplo_LeaveBalance` DECIMAL(10,2),
 	`emplo_SickLeaveBalance` DECIMAL(10,2),
 	`emplo_MaternityLeaveBalance` DECIMAL(10,2),
@@ -80,10 +72,6 @@ COMMENT ''
 BEGIN
 
 DECLARE emploRowID INT(11);
-
-DECLARE anakbilang INT(11);
-
-SELECT COUNT(RowID) FROM employeedependents edp WHERE edp.ParentEmployeeID=emplo_RowID INTO anakbilang;
 
 INSERT INTO employee
 (
@@ -184,10 +172,10 @@ INSERT INTO employee
     ,emplo_Startdate
     ,emplo_TerminationDate
     ,emplo_PositionID
-    ,emplo_PayFrequencyID
-    ,anakbilang
-    ,emplo_UndertimeOverride
-    ,emplo_OvertimeOverride
+    ,1 #PayFrequencySemiMonthlyId
+    ,0
+    ,FALSE
+    ,FALSE
     ,'1'
     ,emplo_LeaveBalance
     ,emplo_SickLeaveBalance
@@ -198,10 +186,10 @@ INSERT INTO employee
     ,emplo_MaternityLeaveAllowance
     ,emplo_OtherLeaveAllowance
     ,emplo_Image
-    ,emplo_LeavePerPayPeriod
-    ,emplo_SickLeavePerPayPeriod
-    ,emplo_MaternityLeavePerPayPeriod
-    ,emplo_OtherLeavePerPayPeriod
+    ,0
+    ,0
+    ,0
+    ,0
     ,emplo_AlphaListExempted
     ,emplo_WorkDaysPerYear
     ,emplo_DayOfRest
@@ -250,19 +238,11 @@ UPDATE
     ,Birthdate=emplo_Birthdate
     ,StartDate=emplo_Startdate
     ,PositionID=emplo_PositionID
-    ,PayFrequencyID=emplo_PayFrequencyID
-    ,NoOfDependents=anakbilang
-    ,UndertimeOverride=emplo_UndertimeOverride
-    ,OvertimeOverride=emplo_OvertimeOverride
     ,LeaveAllowance=emplo_LeaveAllowance
     ,SickLeaveAllowance=emplo_SickLeaveAllowance
     ,MaternityLeaveAllowance=emplo_MaternityLeaveAllowance
     ,OtherLeaveAllowance=emplo_OtherLeaveAllowance
     ,Image=emplo_Image
-    ,LeavePerPayPeriod=emplo_LeavePerPayPeriod
-    ,SickLeavePerPayPeriod=emplo_SickLeavePerPayPeriod
-    ,MaternityLeavePerPayPeriod=emplo_MaternityLeavePerPayPeriod
-    ,OtherLeavePerPayPeriod=emplo_OtherLeavePerPayPeriod
     ,AlphaListExempted=emplo_AlphaListExempted
     ,WorkDaysPerYear=emplo_WorkDaysPerYear
     ,DayOfRest=emplo_DayOfRest

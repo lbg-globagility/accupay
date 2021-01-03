@@ -28,7 +28,6 @@ Public Class PersonalInfoTab
         DtpBirthDate.Value = employee.BirthDate
         ' TODO: Marital Status
         ' Gender
-        TxtNoOfDependents.Text = If(employee.NoOfDependents.HasValue, CStr(employee.NoOfDependents), String.Empty)
         ' Pay Frequency
 
         TxtEmailAddress.Text = employee.EmailAddress

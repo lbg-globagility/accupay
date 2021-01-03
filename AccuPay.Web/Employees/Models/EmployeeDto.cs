@@ -26,7 +26,6 @@ namespace AccuPay.Web.Employees.Models
         public DateTime Birthdate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? TerminationDate { get; set; }
-        public int? NoOfDependents { get; set; }
         public bool NewEmployeeFlag { get; set; }
         public bool AlphalistExempted { get; set; }
         public int? DayOfRest { get; set; }
@@ -78,7 +77,6 @@ namespace AccuPay.Web.Employees.Models
             Birthdate = employee.BirthDate;
             StartDate = employee.StartDate;
             TerminationDate = employee.TerminationDate;
-            NoOfDependents = employee.NoOfDependents;
             AlphalistExempted = employee.AlphalistExempted;
             DayOfRest = employee.DayOfRest;
             AtmNo = employee.AtmNo;

@@ -35,7 +35,6 @@ Partial Class PersonalInfoTab
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
@@ -57,7 +56,6 @@ Partial Class PersonalInfoTab
         Me.TxtFirstName = New System.Windows.Forms.TextBox()
         Me.TxtMiddleName = New System.Windows.Forms.TextBox()
         Me.TxtNickname = New System.Windows.Forms.TextBox()
-        Me.TxtNoOfDependents = New System.Windows.Forms.TextBox()
         Me.DtpEvaluationDate = New System.Windows.Forms.DateTimePicker()
         Me.DtpRegularizationDate = New System.Windows.Forms.DateTimePicker()
         Me.CboRestDay = New System.Windows.Forms.ComboBox()
@@ -218,15 +216,6 @@ Partial Class PersonalInfoTab
         Me.Label10.TabIndex = 1
         Me.Label10.Text = "Marital Status"
         Me.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'Label11
-        '
-        Me.Label11.Location = New System.Drawing.Point(8, 264)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(128, 24)
-        Me.Label11.TabIndex = 1
-        Me.Label11.Text = "No. of Dependents"
-        Me.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label12
         '
@@ -416,15 +405,6 @@ Partial Class PersonalInfoTab
         Me.TxtNickname.Name = "TxtNickname"
         Me.TxtNickname.Size = New System.Drawing.Size(168, 22)
         Me.TxtNickname.TabIndex = 0
-        '
-        'TxtNoOfDependents
-        '
-        Me.TxtNoOfDependents.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TxtNoOfDependents.Location = New System.Drawing.Point(136, 264)
-        Me.TxtNoOfDependents.Name = "TxtNoOfDependents"
-        Me.TxtNoOfDependents.Size = New System.Drawing.Size(168, 22)
-        Me.TxtNoOfDependents.TabIndex = 0
         '
         'DtpEvaluationDate
         '
@@ -651,7 +631,6 @@ Partial Class PersonalInfoTab
         Me.GroupBox1.Controls.Add(Me.TxtFirstName)
         Me.GroupBox1.Controls.Add(Me.TxtMiddleName)
         Me.GroupBox1.Controls.Add(Me.TxtNickname)
-        Me.GroupBox1.Controls.Add(Me.TxtNoOfDependents)
         Me.GroupBox1.Controls.Add(Me.CboMaritalStatus)
         Me.GroupBox1.Controls.Add(Me.Label1)
         Me.GroupBox1.Controls.Add(Me.Label5)
@@ -660,7 +639,6 @@ Partial Class PersonalInfoTab
         Me.GroupBox1.Controls.Add(Me.Label9)
         Me.GroupBox1.Controls.Add(Me.Label10)
         Me.GroupBox1.Controls.Add(Me.DtpBirthDate)
-        Me.GroupBox1.Controls.Add(Me.Label11)
         Me.GroupBox1.Controls.Add(Me.Label29)
         Me.GroupBox1.Controls.Add(Me.Label30)
         Me.GroupBox1.Controls.Add(Me.Label19)
@@ -822,7 +800,6 @@ Partial Class PersonalInfoTab
     Friend WithEvents Label7 As Label
     Friend WithEvents Label9 As Label
     Friend WithEvents Label10 As Label
-    Friend WithEvents Label11 As Label
     Friend WithEvents Label12 As Label
     Friend WithEvents Label13 As Label
     Friend WithEvents Label14 As Label
@@ -844,7 +821,6 @@ Partial Class PersonalInfoTab
     Friend WithEvents TxtFirstName As TextBox
     Friend WithEvents TxtMiddleName As TextBox
     Friend WithEvents TxtNickname As TextBox
-    Friend WithEvents TxtNoOfDependents As TextBox
     Friend WithEvents DtpEvaluationDate As DateTimePicker
     Friend WithEvents DtpRegularizationDate As DateTimePicker
     Friend WithEvents CboRestDay As ComboBox

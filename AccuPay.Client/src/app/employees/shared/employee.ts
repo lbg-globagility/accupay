@@ -21,7 +21,6 @@ export interface Employee {
   birthdate: Date;
   startDate: string;
   terminationDate: string;
-  noOfDependents: string;
   newEmployeeFlag: string;
   alphalistExempted: string;
   dayOfRest: string;
