@@ -94,7 +94,6 @@ Public Class ReportsList
         Return New Collection(Of IReportProvider) From {
             New SalaryIncreaseHistoryReportProvider(),
             New EmployeeProfilesReportProvider(),
-            New EmployeeIdentificationNumberReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
             New LoanSummaryByTypeReportProvider(),
             New SSSMonthlyReportProvider(),

@@ -25,8 +25,6 @@ DECLARE empOTRowID INT(11);
 
 DECLARE anycomment VARCHAR(200);
 
-DECLARE au_ViewID INT(11);
-
 SELECT d.AutomaticOvertimeFiling
 FROM employee e
 INNER JOIN position p ON p.RowID=e.PositionID
@@ -133,17 +131,6 @@ IF emp_group_name = 1 THEN
     UPDATE employeeovertime SET OTStartTime = sh_timeto, OTEndTime = NEW.TimeOut, LastUpd=IFNULL(ADDTIME(LastUpd, '00:00:01'),CURRENT_TIMESTAMP()), LastUpdBy=NEW.CreatedBy WHERE EmployeeID=NEW.EmployeeID AND OrganizationID=NEW.OrganizationID AND NEW.`Date` BETWEEN OTStartDate AND OTEndDate AND sh_timeto IS NOT NULL;
 
 END IF;
-
-    SELECT RowID
-    FROM `view`
-    WHERE ViewName='Employee Time Entry Logs'
-    AND OrganizationID=NEW.OrganizationID
-    LIMIT 1
-    INTO au_ViewID;
-
-    SELECT INS_audittrail_RETRowID(NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,au_ViewID,'TimeIn',NEW.RowID,OLD.TimeIn,NEW.TimeIn,'Update') INTO anyint;
-
-    SELECT INS_audittrail_RETRowID(NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,au_ViewID,'TimeOut',NEW.RowID,OLD.TimeOut,NEW.TimeOut,'Update') INTO anyint;
 
 END//
 DELIMITER ;

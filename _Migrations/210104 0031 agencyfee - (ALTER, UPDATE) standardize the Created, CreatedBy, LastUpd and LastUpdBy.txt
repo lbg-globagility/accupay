@@ -1,0 +1,20 @@
+SET @defaultUserId = (SELECT Id FROM aspnetusers LIMIT 1);
+
+#=============================================================================================================================
+ALTER TABLE `agencyfee`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_agencyfee_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_agencyfee_aspnetusers_LastUpdBy`;
+ALTER TABLE `agencyfee`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `agencyfee` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `agencyfee`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `agencyfee`
+	ADD CONSTRAINT `FK_agencyfee_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_agencyfee_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);

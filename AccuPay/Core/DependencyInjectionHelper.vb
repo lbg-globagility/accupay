@@ -35,6 +35,7 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of BenchmarkPayrollHelper)
 
+        services.AddTransient(Of IAddressRepository, AddressRepository)
         services.AddTransient(Of IActualTimeEntryRepository, ActualTimeEntryRepository)
         services.AddTransient(Of IAgencyFeeRepository, AgencyFeeRepository)
         services.AddTransient(Of IAgencyRepository, AgencyRepository)

@@ -49,10 +49,7 @@ namespace AccuPay.Infrastructure.Data
             var listOfValues = _context.ListOfValues
                 .Where(x => x.OrganizationID == organization.RowID);
 
-            var views = _context.Views
-                .Where(x => x.OrganizationID == organization.RowID);
-
-            var auditTrails = _context.AuditTrails
+            var userActivities = _context.UserActivities
                 .Where(x => x.OrganizationID == organization.RowID);
 
             var userRoles = _context.UserRoles
@@ -79,8 +76,7 @@ namespace AccuPay.Infrastructure.Data
             _context.UserTokens.RemoveRange(userTokens);
 
             _context.ListOfValues.RemoveRange(listOfValues);
-            _context.Views.RemoveRange(views);
-            _context.AuditTrails.RemoveRange(auditTrails);
+            _context.UserActivities.RemoveRange(userActivities);
 
             _context.Organizations.Remove(organization);
 

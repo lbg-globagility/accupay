@@ -9,12 +9,6 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTUPD_division` AFTER UPDATE ON `division` FOR EACH ROW BEGIN
 
-DECLARE anyint INT(11);
-
-IF NEW.AutomaticOvertimeFiling = 1 THEN
-     SET anyint = 0;
-END IF;
-
 IF OLD.SSSDeductionWeekSchedule != NEW.SSSDeductionWeekSchedule THEN
 	CALL UPD_WeeklyDeductionSched(NEW.OrganizationID, FALSE, 'sss', NEW.SSSDeductionWeekSchedule);
 END IF;

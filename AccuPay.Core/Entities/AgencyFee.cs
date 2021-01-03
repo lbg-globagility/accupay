@@ -1,31 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Core.Entities
 {
     [Table("agencyfee")]
-    public class AgencyFee
+    public class AgencyFee : EmployeeDataEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
-
-        public int? OrganizationID { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        public int? CreatedBy { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime? LastUpd { get; set; }
-
-        public int? LastUpdBy { get; set; }
-
         public int? AgencyID { get; set; }
-
-        public int? EmployeeID { get; set; }
 
         public int? DivisionID { get; set; }
 

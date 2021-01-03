@@ -20,7 +20,7 @@ Public Class OrganizationForm
     Private _currentRolePermission As RolePermission
     Private _currentOrganization As Organization
     Private _organizations As List(Of Organization)
-    Private ReadOnly _addressRepository As ISavableRepository(Of Address)
+    Private ReadOnly _addressRepository As IAddressRepository
     Private ReadOnly _organizationRepository As IOrganizationRepository
     Private ReadOnly _policy As IPolicyHelper
 
@@ -28,7 +28,7 @@ Public Class OrganizationForm
 
         InitializeComponent()
 
-        _addressRepository = MainServiceProvider.GetRequiredService(Of ISavableRepository(Of Address))
+        _addressRepository = MainServiceProvider.GetRequiredService(Of IAddressRepository)
         _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
@@ -329,6 +329,11 @@ Public Class OrganizationForm
 
         If _currentOrganization?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No organization selected!")
+            Return
+        End If
+
+        If _currentOrganization.RowID = z_OrganizationID Then
+            MessageBoxHelper.Warning("Cannot delete the organization you are logged in!")
             Return
         End If
 

@@ -20,12 +20,6 @@ namespace AccuPay.Infrastructure.Data
             RoleClaim,
             UserToken>
     {
-        //////// Created solely for deleting their data when organization is Deleted
-        internal virtual DbSet<AuditTrail> AuditTrails { get; set; }
-
-        internal virtual DbSet<View> Views { get; set; }
-        ////////////////////////////////////////
-
         internal virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
         internal virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
         internal virtual DbSet<Address> Addresses { get; set; }

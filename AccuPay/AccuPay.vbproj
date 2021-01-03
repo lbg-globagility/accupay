@@ -1086,7 +1086,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\Providers\AttendanceSheetReportProvider.vb" />
-    <Compile Include="Reports\Reports\Providers\EmployeeIdentificationNumberReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\EmployeeOffenseReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\EmployeeProfilesReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\EmploymentRecordReportProvider.vb" />

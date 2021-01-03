@@ -32,6 +32,9 @@ namespace AccuPay.Infrastructure.Data
             DateTime? dateFrom = null,
             DateTime? dateTo = null)
         {
+            // TODO: maybe use _context.UserActivities
+            // and access UserActivityItems from its navigation property?
+            // Better not expose UserActivityItems.
             var query = _context.UserActivityItems
                 .Include(x => x.ChangedEmployee)
                 .Include(x => x.ChangedUser)
