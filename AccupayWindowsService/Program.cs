@@ -1,7 +1,6 @@
+using AccuPay.Core.Interfaces;
 using AccuPay.CrystalReports;
-using AccuPay.Core;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
@@ -40,18 +39,18 @@ namespace AccupayWindowsService
             services.AddScoped<EmailService>();
 
             services.AddScoped<IPolicyHelper, PolicyHelper>();
-            services.AddScoped<ListOfValueService>();
+            services.AddScoped<IListOfValueService, ListOfValueService>();
 
-            services.AddScoped<OrganizationRepository>();
-            services.AddScoped<PaystubEmailRepository>();
-            services.AddScoped<PayPeriodRepository>();
-            services.AddScoped<PaystubEmailRepository>();
-            services.AddScoped<PaystubEmailHistoryRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IPaystubEmailRepository, PaystubEmailRepository>();
+            services.AddScoped<IPayPeriodRepository, PayPeriodRepository>();
+            services.AddScoped<IPaystubEmailRepository, PaystubEmailRepository>();
+            services.AddScoped<IPaystubEmailHistoryRepository, PaystubEmailHistoryRepository>();
 
-            services.AddScoped<PaystubEmailDataService>();
-            services.AddScoped<PayslipDataService>();
-            services.AddScoped<SystemOwnerService>();
-            services.AddScoped<PayslipBuilder>();
+            services.AddScoped<IPaystubEmailDataService, PaystubEmailDataService>();
+            services.AddScoped<IPayslipDataService, PayslipDataService>();
+            services.AddScoped<ISystemOwnerService, SystemOwnerService>();
+            services.AddScoped<IPayslipBuilder, PayslipBuilder>();
 
             var serviceProvider = services.BuildServiceProvider();
             return serviceProvider;
