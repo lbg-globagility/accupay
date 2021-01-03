@@ -927,7 +927,6 @@ Public Class EmployeeForm
                            False,
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
-                           0,
                            BranchComboBox.SelectedValue,
                            ValNoComma(BPIinsuranceText.Text))
             succeed = new_eRowID IsNot Nothing

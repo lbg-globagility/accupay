@@ -78,7 +78,6 @@ namespace AccuPay.Core.Entities
         [Obsolete("Moved to employment policy")]
         public decimal LateGracePeriod { get; set; }
 
-        public decimal OffsetBalance { get; set; }
         public int? AgencyID { get; set; }
         public Byte[] Image { get; set; }
         public int AdvancementPoints { get; set; }

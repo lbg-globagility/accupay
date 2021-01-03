@@ -70,7 +70,6 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `RevealInPayroll` tinyint(1) DEFAULT 1,
   `LateGracePeriod` decimal(11,2) DEFAULT 0.00,
   `AgencyID` int(11) DEFAULT NULL,
-  `OffsetBalance` decimal(11,2) DEFAULT 0.00,
   `BranchID` int(11) DEFAULT NULL COMMENT 'this required field for employee - Store Manager || Crew',
   `MinimumOvertime` time DEFAULT '00:00:00',
   `AdvancementPoints` int(11) NOT NULL DEFAULT 0,

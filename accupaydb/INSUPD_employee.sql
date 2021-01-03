@@ -68,7 +68,6 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employee`(
 	`emplo_RevealInPayroll` CHAR(1),
 	`emplo_LateGracePeriod` DECIMAL(10,2),
 	`emplo_AgencyID` INT,
-	`emplo_OffsetBalance` DECIMAL(10,2),
 	`emplo_BranchID` INT,
 	`emplo_BPIInsurance` DECIMAL(10,2)
 )
@@ -152,7 +151,6 @@ INSERT INTO employee
     ,RevealInPayroll
     ,LateGracePeriod
     ,AgencyID
-    ,OffsetBalance
     ,BranchID
     ,BPIInsurance
 ) VALUES (
@@ -220,7 +218,6 @@ INSERT INTO employee
     ,emplo_RevealInPayroll
     ,emplo_LateGracePeriod
     ,emplo_AgencyID
-    ,emplo_OffsetBalance
     ,emplo_BranchID
     ,emplo_BPIInsurance
 ) ON
@@ -282,7 +279,6 @@ UPDATE
     ,RevealInPayroll=emplo_RevealInPayroll
     ,LateGracePeriod=emplo_LateGracePeriod
     ,AgencyID=emplo_AgencyID
-    ,OffsetBalance=emplo_OffsetBalance
     ,MaternityLeaveBalance=emplo_MaternityLeaveBalance
     ,OtherLeaveBalance=emplo_OtherLeaveBalance
 	,BranchID=emplo_BranchID

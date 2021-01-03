@@ -87,7 +87,6 @@ SELECT e.RowID
         ,e.CalcRestDayOT
         ,IFNULL(e.LateGracePeriod,0)                `LateGracePeriod`
         ,IFNULL(e.RevealInPayroll,1)                `RevealInPayroll`
-        ,IFNULL(e.OffsetBalance,0)                  `OffsetBalance`
         ,IFNULL(ag.AgencyName,'')                   `AgencyName`
         ,IFNULL(ag.RowID,'')                            `ag_RowID`
         ,e.BranchID

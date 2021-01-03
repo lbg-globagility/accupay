@@ -40,8 +40,6 @@ Public Class HRISForm
 
     Private Async Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        OffSetToolStripMenuItem.Visible = _policyHelper.UseOffset
-
         BonusToolStripMenuItem.Visible = _policyHelper.UseBonus
 
         If Not _policyHelper.UseJobLevel Then
@@ -87,11 +85,8 @@ Public Class HRISForm
         DisciplinaryActionToolStripMenuItem.Visible = employeeUpdatable
         AttachmentToolStripMenuItem.Visible = employeeUpdatable
 
-        'Bonus, Job, Points, Offset only overrides the visibility if Read is False
+        'Bonus, Job and Points only overrides the visibility if Read is False
         'since they are already checked by other policies above
-        If Not employeeUpdatable Then
-            OffSetToolStripMenuItem.Visible = False
-        End If
 
         If Not employeeUpdatable Then
             BonusToolStripMenuItem.Visible = False
@@ -132,7 +127,6 @@ Public Class HRISForm
             EmpSalToolStripMenuItem.Visible = False
             BonusToolStripMenuItem.Visible = False
             AttachmentToolStripMenuItem.Visible = False
-            OffSetToolStripMenuItem.Visible = False
 
         End If
 
@@ -149,7 +143,6 @@ Public Class HRISForm
             DisciplinaryActionToolStripMenuItem.Visible = False
             BonusToolStripMenuItem.Visible = False
             AttachmentToolStripMenuItem.Visible = False
-            OffSetToolStripMenuItem.Visible = False
             JobLevelToolStripMenuItem.Visible = False
             EmployeeExperimentalToolStripMenuItem.Visible = False
 
@@ -318,13 +311,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         Await ChangeForm(EmployeeForm, {PermissionConstant.EMPLOYEE})
         EmployeeForm.tbpAttachment.Focus()
-    End Sub
-
-    Private Async Sub OffSetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OffSetToolStripMenuItem.Click
-
-        Await ChangeForm(OffSetting, {PermissionConstant.EMPLOYEE})
-        previousForm = OffSetting
-
     End Sub
 
     Private Async Sub JobCategoryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobCategoryToolStripMenuItem.Click

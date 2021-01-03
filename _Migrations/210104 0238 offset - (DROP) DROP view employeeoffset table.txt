@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS `employeeoffset`;
+
+ALTER TABLE `employee`
+	DROP COLUMN IF EXISTS `OffsetBalance`;
