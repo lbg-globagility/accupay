@@ -44,7 +44,6 @@ namespace AccuPay.Web.Users
             _generateDefaultUserImageService = generateDefaultUserImageService;
             _filesystem = filesystem;
             _fileRepository = fileRepository;
-            _userDataService = userDataService;
         }
 
         public async Task<ActionResult<PaginatedList<UserDto>>> List(PageOptions options, string term)

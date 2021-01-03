@@ -1,11 +1,8 @@
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -16,12 +13,10 @@ namespace AccuPay.Web.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserService _service;
-        private readonly AspNetUserRepository _repository;
 
-        public UsersController(UserService service, AspNetUserRepository repository)
+        public UsersController(UserService service)
         {
             _service = service;
-            _repository = repository;
         }
 
         [HttpPost]

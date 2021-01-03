@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Employees;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
@@ -19,21 +18,22 @@ namespace AccuPay.Web.Employees.Services
 {
     public class EmployeeService
     {
-        private readonly EmployeeRepository _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly ICurrentUser _currentUser;
         private readonly GenerateDefaultImageService _generateDefaultImageService;
         private readonly IFilesystem _filesystem;
-        private readonly FileRepository _fileRepository;
-        private readonly EmployeeDataService _dataService;
-        private readonly EmployeeImportParser _importParser;
+        private readonly IFileRepository _fileRepository;
+        private readonly IEmployeeDataService _dataService;
+        private readonly IEmployeeImportParser _importParser;
 
-        public EmployeeService(EmployeeRepository employeeRepository,
+        public EmployeeService(
+            IEmployeeRepository employeeRepository,
             ICurrentUser currentUser,
             GenerateDefaultImageService generateDefaultImageService,
             IFilesystem filesystem,
-            FileRepository fileRepository,
-            EmployeeDataService dataService,
-            EmployeeImportParser importParser)
+            IFileRepository fileRepository,
+            IEmployeeDataService dataService,
+            IEmployeeImportParser importParser)
         {
             _employeeRepository = employeeRepository;
             _currentUser = currentUser;

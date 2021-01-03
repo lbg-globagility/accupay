@@ -1,5 +1,5 @@
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +13,13 @@ namespace AccuPay.Web.Controllers.SelfService
     public class LeavesController : ControllerBase
     {
         private readonly LeaveService _leaveService;
-        private readonly LeaveRepository _leaveRepository;
+        private readonly ILeaveRepository _leaveRepository;
         private readonly ICurrentUser _currentUser;
 
-        public LeavesController(LeaveService leaveService, LeaveRepository leaveRepository, ICurrentUser currentUser)
+        public LeavesController(
+            LeaveService leaveService,
+            ILeaveRepository leaveRepository,
+            ICurrentUser currentUser)
         {
             _leaveService = leaveService;
             _leaveRepository = leaveRepository;

@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.OfficialBusiness;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
@@ -15,12 +14,16 @@ namespace AccuPay.Web.OfficialBusinesses
 {
     public class OfficialBusinessService
     {
-        private readonly OfficialBusinessDataService _dataService;
-        private readonly OfficialBusinessRepository _repository;
+        private readonly IOfficialBusinessDataService _dataService;
+        private readonly IOfficialBusinessRepository _repository;
         private readonly ICurrentUser _currentUser;
-        private readonly OfficialBusinessImportParser _importParser;
+        private readonly IOfficialBusinessImportParser _importParser;
 
-        public OfficialBusinessService(OfficialBusinessDataService dataService, OfficialBusinessRepository repository, ICurrentUser currentUser, OfficialBusinessImportParser importParser)
+        public OfficialBusinessService(
+            IOfficialBusinessDataService dataService,
+            IOfficialBusinessRepository repository,
+            ICurrentUser currentUser,
+            IOfficialBusinessImportParser importParser)
         {
             _dataService = dataService;
             _currentUser = currentUser;

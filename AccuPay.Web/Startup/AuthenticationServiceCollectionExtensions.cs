@@ -1,5 +1,5 @@
-using AccuPay.Core;
 using AccuPay.Core.Entities;
+using AccuPay.Infrastructure.Data;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

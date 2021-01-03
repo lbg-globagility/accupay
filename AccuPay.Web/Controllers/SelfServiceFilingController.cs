@@ -1,4 +1,4 @@
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.OfficialBusinesses;
@@ -18,20 +18,21 @@ namespace AccuPay.Web.Controllers
     public class SelfServiceFilingController : ControllerBase
     {
         private readonly LeaveService _leaveService;
-        private readonly LeaveRepository _leaveRepository;
+        private readonly ILeaveRepository _leaveRepository;
         private readonly OvertimeService _overtimeService;
         private readonly OfficialBusinessService _officialBusinessService;
         private readonly TimeEntryService _timeEntryService;
         private readonly ICurrentUser _currentUser;
         private readonly PayperiodService _payperiodService;
 
-        public SelfServiceFilingController(LeaveService leaveService,
-                                           LeaveRepository leaveRepository,
-                                           OvertimeService overtimeService,
-                                           OfficialBusinessService officialBusinessService,
-                                           TimeEntryService timeEntryService,
-                                           ICurrentUser currentUser,
-                                           PayperiodService payperiodService)
+        public SelfServiceFilingController(
+            LeaveService leaveService,
+            ILeaveRepository leaveRepository,
+            OvertimeService overtimeService,
+            OfficialBusinessService officialBusinessService,
+            TimeEntryService timeEntryService,
+            ICurrentUser currentUser,
+            PayperiodService payperiodService)
         {
             _leaveService = leaveService;
             _leaveRepository = leaveRepository;
@@ -134,6 +135,6 @@ namespace AccuPay.Web.Controllers
             return await _payperiodService.GetLatest();
         }
 
-        #endregion
+        #endregion PAY PERIOD
     }
 }

@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Identity;
@@ -14,24 +14,22 @@ namespace AccuPay.Web.Account
         private readonly SignInManager<AspNetUser> _signIn;
         private readonly AccountTokenService _accountTokenService;
         private readonly UserTokenService _userTokenService;
-        private readonly OrganizationRepository _organizationRepository;
-        private readonly RoleRepository _roleRepository;
+        private readonly IOrganizationRepository _organizationRepository;
         private readonly ICurrentUser _currentUser;
 
-        public AccountService(UserManager<AspNetUser> users,
-                              SignInManager<AspNetUser> signIn,
-                              AccountTokenService accountTokenService,
-                              UserTokenService userTokenService,
-                              OrganizationRepository organizationRepository,
-                              RoleRepository roleRepository,
-                              ICurrentUser currentUser)
+        public AccountService(
+            UserManager<AspNetUser> users,
+            SignInManager<AspNetUser> signIn,
+            AccountTokenService accountTokenService,
+            UserTokenService userTokenService,
+            IOrganizationRepository organizationRepository,
+            ICurrentUser currentUser)
         {
             _users = users;
             _signIn = signIn;
             _accountTokenService = accountTokenService;
             _userTokenService = userTokenService;
             _organizationRepository = organizationRepository;
-            _roleRepository = roleRepository;
             _currentUser = currentUser;
         }
 

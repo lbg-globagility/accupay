@@ -1,5 +1,5 @@
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
 using Microsoft.AspNetCore.Authorization;
@@ -16,10 +16,13 @@ namespace AccuPay.Web.Controllers
     public class LeavesController : ApiControllerBase
     {
         private readonly LeaveService _service;
-        private readonly LeaveRepository _repository;
+        private readonly ILeaveRepository _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public LeavesController(LeaveService leaveService, LeaveRepository repository, IHostingEnvironment hostingEnvironment)
+        public LeavesController(
+            LeaveService leaveService,
+            ILeaveRepository repository,
+            IHostingEnvironment hostingEnvironment)
         {
             _service = leaveService;
             _repository = repository;

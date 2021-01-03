@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Divisions.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +12,14 @@ namespace AccuPay.Web.Divisions
 {
     public class DivisionService
     {
-        private readonly DivisionDataService _dataService;
-        private readonly DivisionRepository _repository;
+        private readonly IDivisionDataService _dataService;
+        private readonly IDivisionRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public DivisionService(DivisionDataService service, DivisionRepository repository, ICurrentUser currentuser)
+        public DivisionService(
+            IDivisionDataService service,
+            IDivisionRepository repository,
+            ICurrentUser currentuser)
         {
             _dataService = service;
             _repository = repository;
@@ -65,7 +67,7 @@ namespace AccuPay.Web.Divisions
         public async Task Delete(int id)
         {
             await _dataService.DeleteAsync(
-                divisionId: id,
+                id: id,
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 

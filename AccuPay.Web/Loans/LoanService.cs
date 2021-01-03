@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Loans;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
@@ -18,20 +17,20 @@ namespace AccuPay.Web.Loans
 {
     public class LoanService
     {
-        private readonly LoanDataService _loanService;
-        private readonly ProductRepository _productRepository;
-        private readonly ListOfValueRepository _listOfValueRepository;
-        private readonly LoanRepository _loanRepository;
+        private readonly ILoanDataService _loanService;
+        private readonly IProductRepository _productRepository;
+        private readonly IListOfValueRepository _listOfValueRepository;
+        private readonly ILoanRepository _loanRepository;
         private readonly ICurrentUser _currentUser;
-        private readonly LoanImportParser _importParser;
+        private readonly ILoanImportParser _importParser;
 
         public LoanService(
-            LoanDataService loanService,
-            ProductRepository productRepository,
-            ListOfValueRepository listOfValueRepository,
-            LoanRepository loanRepository,
+            ILoanDataService loanService,
+            IProductRepository productRepository,
+            IListOfValueRepository listOfValueRepository,
+            ILoanRepository loanRepository,
             ICurrentUser currentUser,
-            LoanImportParser importParser)
+            ILoanImportParser importParser)
         {
             _loanService = loanService;
             _productRepository = productRepository;

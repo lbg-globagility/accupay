@@ -1,5 +1,4 @@
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Loans;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +8,12 @@ namespace AccuPay.Web.Payroll
 {
     public class PaystubService
     {
-        private readonly PaystubDataService _service;
-        private readonly PaystubRepository repository;
+        private readonly IPaystubDataService _service;
+        private readonly IPaystubRepository repository;
 
-        public PaystubService(PaystubDataService service, PaystubRepository repository)
+        public PaystubService(
+            IPaystubDataService service,
+            IPaystubRepository repository)
         {
             _service = service;
             this.repository = repository;

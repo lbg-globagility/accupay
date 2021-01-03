@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
@@ -15,16 +14,16 @@ namespace AccuPay.Web.Overtimes
 {
     public class OvertimeService
     {
-        private readonly OvertimeRepository _repository;
+        private readonly IOvertimeRepository _repository;
         private readonly ICurrentUser _currentUser;
-        private readonly OvertimeImportParser _importParser;
-        private readonly OvertimeDataService _dataService;
+        private readonly IOvertimeDataService _dataService;
+        private readonly IOvertimeImportParser _importParser;
 
         public OvertimeService(
-            OvertimeRepository repository,
-            OvertimeDataService dataService,
+            IOvertimeRepository repository,
+            IOvertimeDataService dataService,
             ICurrentUser currentUser,
-            OvertimeImportParser importParser)
+            IOvertimeImportParser importParser)
         {
             _repository = repository;
             _currentUser = currentUser;

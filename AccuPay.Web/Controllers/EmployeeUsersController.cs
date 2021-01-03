@@ -1,13 +1,10 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
-using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers

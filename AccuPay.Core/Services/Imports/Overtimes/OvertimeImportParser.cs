@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Overtimes
 {
-    public class OvertimeImportParser
+    public class OvertimeImportParser : IOvertimeImportParser
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<OvertimeRowRecord> _parser;

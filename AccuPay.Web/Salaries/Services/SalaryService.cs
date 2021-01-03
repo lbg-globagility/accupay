@@ -1,8 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
-using AccuPay.Core.Services.Imports.Salaries;
+using AccuPay.Core.Interfaces;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
@@ -16,16 +14,16 @@ namespace AccuPay.Web.Salaries.Services
 {
     public class SalaryService
     {
-        private readonly SalaryRepository _repository;
-        private readonly SalaryDataService _dataService;
-        private readonly SalaryImportParser _importParser;
+        private readonly ISalaryRepository _repository;
+        private readonly ISalaryDataService _dataService;
+        private readonly ISalaryImportParser _importParser;
         private readonly ICurrentUser _currentUser;
 
         public SalaryService(
-            SalaryRepository repository,
-            SalaryDataService dataService,
+            ISalaryRepository repository,
+            ISalaryDataService dataService,
             ICurrentUser currentUser,
-            SalaryImportParser salaryImportParser)
+            ISalaryImportParser salaryImportParser)
         {
             _repository = repository;
             _dataService = dataService;

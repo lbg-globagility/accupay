@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using System.Threading.Tasks;
 
@@ -9,11 +8,14 @@ namespace AccuPay.Web.Positions
 {
     public class PositionService
     {
-        private readonly PositionDataService _dataService;
-        private readonly PositionRepository _repository;
+        private readonly IPositionDataService _dataService;
+        private readonly IPositionRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public PositionService(PositionDataService dataService, PositionRepository repository, ICurrentUser currentUser)
+        public PositionService(
+            IPositionDataService dataService,
+            IPositionRepository repository,
+            ICurrentUser currentUser)
         {
             _dataService = dataService;
             _repository = repository;
@@ -64,7 +66,7 @@ namespace AccuPay.Web.Positions
         public async Task Delete(int id)
         {
             await _dataService.DeleteAsync(
-                positionId: id,
+                id: id,
                 currentlyLoggedInUserId: _currentUser.UserId);
         }
 

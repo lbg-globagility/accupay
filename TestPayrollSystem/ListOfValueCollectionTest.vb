@@ -1,6 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -8,11 +9,11 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class ListOfValueCollectionTest
     Inherits ServiceProvider
 
-    Private ReadOnly _listOfValueService As ListOfValueService
+    Private ReadOnly _listOfValueService As IListOfValueService
 
     Sub New()
 
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
 
     End Sub
 

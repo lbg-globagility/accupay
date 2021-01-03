@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,10 @@ namespace AccuPay.Web.Branches
 {
     public class BranchService
     {
-        private readonly BranchRepository _branchRepository;
+        private readonly IBranchRepository _branchRepository;
         private readonly ICurrentUser _currentUser;
 
-        public BranchService(BranchRepository branchRepository, ICurrentUser currentUser)
+        public BranchService(IBranchRepository branchRepository, ICurrentUser currentUser)
         {
             _branchRepository = branchRepository;
             _currentUser = currentUser;

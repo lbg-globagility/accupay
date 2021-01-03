@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Allowances;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Allowances.Models;
@@ -18,18 +17,18 @@ namespace AccuPay.Web.Allowances.Services
 {
     public class AllowanceService
     {
-        private readonly ProductRepository _productRepository;
-        private readonly AllowanceRepository _allowanceRepository;
-        private readonly AllowanceDataService _dataService;
+        private readonly IProductRepository _productRepository;
+        private readonly IAllowanceRepository _allowanceRepository;
+        private readonly IAllowanceDataService _dataService;
         private readonly ICurrentUser _currentUser;
-        private readonly AllowanceImportParser _importParser;
+        private readonly IAllowanceImportParser _importParser;
 
         public AllowanceService(
-            AllowanceDataService dataService,
-            ProductRepository productRepository,
-            AllowanceRepository allowanceRepository,
+            IAllowanceDataService dataService,
+            IProductRepository productRepository,
+            IAllowanceRepository allowanceRepository,
             ICurrentUser currentUser,
-            AllowanceImportParser importParser)
+            IAllowanceImportParser importParser)
         {
             _productRepository = productRepository;
             _allowanceRepository = allowanceRepository;

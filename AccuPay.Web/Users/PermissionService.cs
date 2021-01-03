@@ -1,5 +1,5 @@
 using AccuPay.Core.Entities;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +8,9 @@ namespace AccuPay.Web.Users
 {
     public class PermissionService
     {
-        private readonly PermissionRepository _repository;
+        private readonly IPermissionRepository _repository;
 
-        public PermissionService(PermissionRepository repository)
+        public PermissionService(IPermissionRepository repository)
         {
             _repository = repository;
         }

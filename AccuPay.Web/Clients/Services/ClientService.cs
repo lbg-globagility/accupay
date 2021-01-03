@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users.Services;
 using Microsoft.AspNetCore.Identity;
@@ -12,19 +11,19 @@ namespace AccuPay.Web.Clients
 {
     public class ClientService
     {
-        private readonly ClientRepository _clientRepository;
+        private readonly IClientRepository _clientRepository;
         private readonly UserManager<AspNetUser> _users;
         private readonly RoleManager<AspNetRole> _roles;
         private readonly UserEmailService _emailService;
-        private OrganizationDataService _organizationDataService;
+        private readonly IOrganizationDataService _organizationDataService;
         private readonly ICurrentUser _currentUser;
 
         public ClientService(
-            ClientRepository clientRepository,
+            IClientRepository clientRepository,
             UserManager<AspNetUser> users,
             RoleManager<AspNetRole> roles,
             UserEmailService emailService,
-            OrganizationDataService organizationDataService,
+            IOrganizationDataService organizationDataService,
             ICurrentUser currentUser)
         {
             _clientRepository = clientRepository;

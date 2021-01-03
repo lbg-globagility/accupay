@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Loans
 {
-    public class LoanImportParser
+    public class LoanImportParser : ILoanImportParser
     {
-        private readonly ILoanRepository _loanRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<LoanRowRecord> _parser;
         private readonly IProductRepository _productRepository;
@@ -24,7 +23,6 @@ namespace AccuPay.Core.Services.Imports.Loans
             IProductRepository productRepository,
             IExcelParser<LoanRowRecord> excelParser)
         {
-            _loanRepository = loanRepository;
             _employeeRepository = employeeRepository;
             _parser = excelParser;
             _productRepository = productRepository;

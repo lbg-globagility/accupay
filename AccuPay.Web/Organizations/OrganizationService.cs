@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -11,11 +10,14 @@ namespace AccuPay.Web.Organizations
 {
     public class OrganizationService
     {
-        private readonly OrganizationRepository _repository;
-        private readonly OrganizationDataService _dataService;
+        private readonly IOrganizationRepository _repository;
+        private readonly IOrganizationDataService _dataService;
         private readonly ICurrentUser _currentUser;
 
-        public OrganizationService(OrganizationRepository repository, OrganizationDataService dataService, ICurrentUser currentUser)
+        public OrganizationService(
+            IOrganizationRepository repository,
+            IOrganizationDataService dataService,
+            ICurrentUser currentUser)
         {
             _repository = repository;
             _dataService = dataService;

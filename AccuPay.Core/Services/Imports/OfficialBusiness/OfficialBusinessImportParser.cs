@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.OfficialBusiness
 {
-    public class OfficialBusinessImportParser
+    public class OfficialBusinessImportParser : IOfficialBusinessImportParser
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IExcelParser<OfficialBusinessRowRecord> _parser;

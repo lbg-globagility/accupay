@@ -1,4 +1,4 @@
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
@@ -6,10 +6,10 @@ namespace AccuPay.Web.Core.Auth
 {
     public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
     {
-        private readonly RoleRepository _roleRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly ICurrentUser _currentUser;
 
-        public PermissionHandler(RoleRepository roleRepository, ICurrentUser currentUser)
+        public PermissionHandler(IRoleRepository roleRepository, ICurrentUser currentUser)
         {
             _roleRepository = roleRepository;
             _currentUser = currentUser;

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Allowances
 {
-    public class AllowanceImportParser
+    public class AllowanceImportParser : IAllowanceImportParser
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IAllowanceRepository _allowanceRepository;

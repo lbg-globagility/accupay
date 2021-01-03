@@ -2,6 +2,12 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
+using AccuPay.Core.Services.Imports.Allowances;
+using AccuPay.Core.Services.Imports.Employees;
+using AccuPay.Core.Services.Imports.Loans;
+using AccuPay.Core.Services.Imports.OfficialBusiness;
+using AccuPay.Core.Services.Imports.Overtimes;
+using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
@@ -28,6 +34,7 @@ namespace AccuPay.Web
             services.AddScoped<ICalendarRepository, CalendarRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICertificationRepository, CertificationRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IDayTypeRepository, DayTypeRepository>();
             services.AddScoped<IDisciplinaryActionRepository, DisciplinaryActionRepository>();
             services.AddScoped<IDivisionRepository, DivisionRepository>();
@@ -35,6 +42,7 @@ namespace AccuPay.Web
             services.AddScoped<IEmploymentPolicyRepository, EmploymentPolicyRepository>();
             services.AddScoped<IEmployeeQueryBuilder, EmployeeQueryBuilder>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IJobCategoryRepository, JobCategoryRepository>();
             services.AddScoped<IJobLevelRepository, JobLevelRepository>();
             services.AddScoped<ILeaveRepository, LeaveRepository>();
@@ -120,10 +128,15 @@ namespace AccuPay.Web
             services.AddScoped<ITripTicketDataService, TripTicketDataService>();
             services.AddScoped<IUserDataService, UserDataService>();
 
+            services.AddScoped<IAllowanceImportParser, AllowanceImportParser>();
+            services.AddScoped<IEmployeeImportParser, EmployeeImportParser>();
+            services.AddScoped<ILoanImportParser, LoanImportParser>();
+            services.AddScoped<IOfficialBusinessImportParser, OfficialBusinessImportParser>();
+            services.AddScoped<IOvertimeImportParser, OvertimeImportParser>();
+            services.AddScoped<ISalaryImportParser, SalaryImportParser>();
             services.AddScoped<IShiftImportParser, ShiftImportParser>();
             services.AddScoped<ITimeLogImportParser, TimeLogImportParser>();
             services.AddScoped<ITimeLogsReader, TimeLogsReader>();
-            services.AddScoped<IPayslipDataService, PayslipDataService>();
 
             services.AddScoped<PaystubDataHelper>();
             services.AddScoped<TimeEntryDataHelper>();
@@ -131,6 +144,7 @@ namespace AccuPay.Web
             services.AddScoped(typeof(IExcelParser<>), typeof(ExcelParser<>));
             services.AddScoped<IEncryption, AccuPayDesktopEncryption>();
 
+            services.AddScoped<IPayslipDataService, PayslipDataService>();
             services.AddScoped<IPayrollSummaryExcelFormatReportDataService, PayrollSummaryExcelFormatReportDataService>();
             services.AddScoped<IPayrollSummaryReportBuilder, PayrollSummaryReportBuilder>();
             services.AddScoped<IEmployeePersonalProfilesExcelFormatReportDataService, EmployeePersonalProfilesExcelFormatReportDataService>();

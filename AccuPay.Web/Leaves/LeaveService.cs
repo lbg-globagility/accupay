@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
-using AccuPay.Core.Services;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +10,17 @@ namespace AccuPay.Web.Leaves
 {
     public class LeaveService
     {
-        private readonly LeaveRepository _leaveRepository;
-        private readonly ProductRepository _productRepository;
-        private readonly LeaveLedgerRepository _leaveLedgerRepository;
-        private readonly LeaveDataService _dataService;
+        private readonly ILeaveRepository _leaveRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly ILeaveLedgerRepository _leaveLedgerRepository;
+        private readonly ILeaveDataService _dataService;
         private readonly ICurrentUser _currentUser;
 
         public LeaveService(
-            LeaveRepository leaveRepository,
-            ProductRepository productRepository,
-            LeaveLedgerRepository leaveLedgerRepository,
-            LeaveDataService dataService,
+            ILeaveRepository leaveRepository,
+            IProductRepository productRepository,
+            ILeaveLedgerRepository leaveLedgerRepository,
+            ILeaveDataService dataService,
             ICurrentUser currentUser)
         {
             _leaveRepository = leaveRepository;

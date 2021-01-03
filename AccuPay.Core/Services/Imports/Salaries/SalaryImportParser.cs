@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Salaries
 {
-    public class SalaryImportParser
+    public class SalaryImportParser : ISalaryImportParser
     {
         private readonly ISalaryRepository _salaryRepository;
         private readonly IExcelParser<SalaryRowRecord> _parser;

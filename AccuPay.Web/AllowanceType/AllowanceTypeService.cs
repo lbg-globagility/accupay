@@ -1,14 +1,14 @@
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.AllowanceType
 {
     public class AllowanceTypeService
     {
-        private readonly AllowanceTypeRepository _repository;
+        private readonly IAllowanceTypeRepository _repository;
 
-        public AllowanceTypeService(AllowanceTypeRepository repository)
+        public AllowanceTypeService(IAllowanceTypeRepository repository)
         {
             _repository = repository;
         }

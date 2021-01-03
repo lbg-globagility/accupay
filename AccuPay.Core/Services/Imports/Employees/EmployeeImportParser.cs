@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Employees
 {
-    public class EmployeeImportParser
+    public class EmployeeImportParser : IEmployeeImportParser
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IPositionRepository _positionRepository;

@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.Core.Auth;
 using System.Threading.Tasks;
 
@@ -8,10 +8,12 @@ namespace AccuPay.Web.Loans.LoanType
 {
     public class LoanTypeService
     {
-        private readonly ProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ICurrentUser _currentUser;
 
-        public LoanTypeService(ProductRepository productRepository, ICurrentUser currentUser)
+        public LoanTypeService(
+            IProductRepository productRepository,
+            ICurrentUser currentUser)
         {
             _productRepository = productRepository;
             _currentUser = currentUser;

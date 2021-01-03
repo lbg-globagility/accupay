@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
-using AccuPay.Core.Repositories;
+using AccuPay.Core.Interfaces;
 using AccuPay.Web.EmploymentPolicies.Models;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,9 +9,9 @@ namespace AccuPay.Web.EmploymentPolicies.Services
 {
     public class EmploymentPolicyService
     {
-        private readonly EmploymentPolicyRepository _repository;
+        private readonly IEmploymentPolicyRepository _repository;
 
-        public EmploymentPolicyService(EmploymentPolicyRepository repository)
+        public EmploymentPolicyService(IEmploymentPolicyRepository repository)
         {
             _repository = repository;
         }
