@@ -1,5 +1,3 @@
-Imports AccuPay.Core.Repositories
-
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class UserActivityForm
     Inherits System.Windows.Forms.Form

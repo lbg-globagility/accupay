@@ -137,21 +137,21 @@ namespace AccuPay.Core.Entities
         public string EmployeeIdWithPositionAndEmployeeType
             => $"ID# {EmployeeNo}, {Position?.Name}, {EmployeeType} Salary";
 
-        public string SssSchedule =>
-            IsUnderAgency ? Position?.Division?.AgencySssDeductionSchedule :
-                            Position?.Division?.SssDeductionSchedule;
+        public string SssSchedule => IsUnderAgency ?
+            Position?.Division?.AgencySssDeductionSchedule :
+            Position?.Division?.SssDeductionSchedule;
 
         public string PhilHealthSchedule => IsUnderAgency ?
-                        Position?.Division?.AgencyPhilHealthDeductionSchedule :
-                        Position?.Division?.PhilHealthDeductionSchedule;
+            Position?.Division?.AgencyPhilHealthDeductionSchedule :
+            Position?.Division?.PhilHealthDeductionSchedule;
 
         public string PagIBIGSchedule => IsUnderAgency ?
-                        Position?.Division?.AgencyPagIBIGDeductionSchedule :
-                        Position?.Division?.PagIBIGDeductionSchedule;
+            Position?.Division?.AgencyPagIBIGDeductionSchedule :
+            Position?.Division?.PagIBIGDeductionSchedule;
 
         public string WithholdingTaxSchedule => IsUnderAgency ?
-                        Position?.Division?.AgencyWithholdingTaxSchedule :
-                        Position?.Division?.WithholdingTaxSchedule;
+            Position?.Division?.AgencyWithholdingTaxSchedule :
+            Position?.Division?.WithholdingTaxSchedule;
 
         public bool IsActive => IsResigned == false && IsTerminated == false && IsRetired == false;
 

@@ -10,8 +10,6 @@ namespace AccuPay.Core.Interfaces
     {
         Task<bool> CheckIfNameExistsAsync(string name, int? id);
 
-        Task DeleteAsync(Organization organization);
-
         Task<Organization> GetByIdWithAddressAsync(int id);
 
         Task<Organization> GetFirst(int clientId);

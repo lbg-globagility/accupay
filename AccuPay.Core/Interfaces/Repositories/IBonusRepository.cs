@@ -13,8 +13,6 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Bonus>> GetByEmployeeAsync(int employeeId);
 
-        Task<Bonus> GetByIdAsync(int id);
-
         Task<ICollection<Bonus>> GetByPayPeriodAsync(int organizationId, TimePeriod timePeriod);
 
         List<string> GetFrequencyList();
