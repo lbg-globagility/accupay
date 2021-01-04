@@ -496,7 +496,7 @@ namespace AccuPay.Infrastructure.Data
                 paystub.TotalAdjustments -= employee.BPIInsurance;
             }
 
-            var socialSecurityCalculator = new SssCalculator(settings, resources.SocialSecurityBrackets);
+            var socialSecurityCalculator = new SssCalculator(resources.Policy, resources.SocialSecurityBrackets);
             socialSecurityCalculator.Calculate(paystub, previousPaystub, salary, employee, payPeriod, currentSystemOwner);
 
             var philHealthCalculator = new PhilHealthCalculator(new PhilHealthPolicy(settings));

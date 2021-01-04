@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,22 +9,23 @@ namespace AccuPay.Core.Services
 {
     public class SssCalculator
     {
-        private readonly ListOfValueCollection _settings;
+        private readonly IPolicyHelper _policy;
 
         private readonly IReadOnlyCollection<SocialSecurityBracket> _socialSecurityBrackets;
 
-        public SssCalculator(ListOfValueCollection settings, IReadOnlyCollection<SocialSecurityBracket> socialSecurityBrackets)
+        public SssCalculator(IPolicyHelper policy, IReadOnlyCollection<SocialSecurityBracket> socialSecurityBrackets)
         {
-            _settings = settings;
+            _policy = policy;
             _socialSecurityBrackets = socialSecurityBrackets;
         }
 
-        public void Calculate(Paystub paystub,
-                            Paystub previousPaystub,
-                            Salary salary,
-                            Employee employee,
-                            PayPeriod payperiod,
-                            string currentSystemOwner)
+        public void Calculate(
+            Paystub paystub,
+            Paystub previousPaystub,
+            Salary salary,
+            Employee employee,
+            PayPeriod payperiod,
+            string currentSystemOwner)
         {
             // Reset SSS values to zero
             paystub.SssEmployeeShare = 0;
@@ -34,11 +36,12 @@ namespace AccuPay.Core.Services
                 return;
 
             // Get the social security bracket based on the amount earned.
-            var amount = GetSocialSecurityAmount(paystub,
-                                                previousPaystub,
-                                                salary,
-                                                employee,
-                                                currentSystemOwner);
+            var amount = GetSocialSecurityAmount(
+                paystub,
+                previousPaystub,
+                salary,
+                employee,
+                currentSystemOwner);
             var socialSecurityBracket = FindMatchingBracket(amount);
 
             // If no bracket was matched/found, then there's nothing to compute.
@@ -70,31 +73,28 @@ namespace AccuPay.Core.Services
                 }
                 else if (IsSssPaidPerPayPeriod(deductionSchedule))
                 {
-                    paystub.SssEmployeeShare = employeeShare /
-                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
-                    paystub.SssEmployerShare = employerShare /
-                                                CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.SssEmployeeShare =
+                        employeeShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.SssEmployerShare =
+                        employerShare / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
         }
 
         private SocialSecurityBracket FindMatchingBracket(decimal amount)
         {
-            return _socialSecurityBrackets.FirstOrDefault(s => s.RangeFromAmount <= amount &&
-                                                                s.RangeToAmount >= amount);
+            return _socialSecurityBrackets
+                .FirstOrDefault(s => s.RangeFromAmount <= amount && s.RangeToAmount >= amount);
         }
 
-        private decimal GetSocialSecurityAmount(Paystub paystub,
-                                                Paystub previousPaystub,
-                                                Salary salary,
-                                                Employee employee,
-                                                string currentSystemOwner)
+        private decimal GetSocialSecurityAmount(
+            Paystub paystub,
+            Paystub previousPaystub,
+            Salary salary,
+            Employee employee,
+            string currentSystemOwner)
         {
-            var policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", false);
-
-            var calculationBasis = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary, policyByOrganization);
-
-            switch (calculationBasis)
+            switch (_policy.SssCalculationBasis)
             {
                 case SssCalculationBasis.BasicSalary:
                     return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
@@ -120,12 +120,12 @@ namespace AccuPay.Core.Services
                     else
                     {
                         var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
-                                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
                         if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {
                             totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
-                                            paystub.RegularHoursAndTotalRestDay;
+                                paystub.RegularHoursAndTotalRestDay;
                         }
 
                         var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);

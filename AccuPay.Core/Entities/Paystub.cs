@@ -161,7 +161,7 @@ namespace AccuPay.Core.Entities
 
         public decimal TotalWorkedHoursWithoutLeave => TotalWorkedHoursWithoutOvertimeAndLeave + TotalOvertimeHours;
 
-        public decimal TotalDaysPayWithOutOvertimeAndLeave =>
+        public virtual decimal TotalDaysPayWithOutOvertimeAndLeave =>
             RegularPay +
             RestDayPay +
             SpecialHolidayPay +

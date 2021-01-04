@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Enums;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Policies;
@@ -49,6 +50,11 @@ namespace AccuPay.Infrastructure.Data
         public string HolidayCalculationType => _settings.GetStringOrDefault("Payroll Policy.HolidayPay", "Daily");
 
         public bool ShowActual => _settings.GetBoolean("Policy.ShowActual", true);
+
+        public bool IsPolicyByOrganization => _settings.GetBoolean("Policy.ByOrganization", false);
+
+        public SssCalculationBasis SssCalculationBasis =>
+            _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary, IsPolicyByOrganization);
 
         public bool UseUserLevel => _settings.GetBoolean("User Policy.UseUserLevel", false);
 

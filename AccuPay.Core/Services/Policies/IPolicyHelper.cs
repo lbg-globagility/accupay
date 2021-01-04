@@ -1,3 +1,4 @@
+using AccuPay.Core.Enums;
 using AccuPay.Core.Services.Policies;
 using System.Threading.Tasks;
 
@@ -18,6 +19,7 @@ namespace AccuPay.Core.Interfaces
         bool HasNightBreaktime { get; }
         string HolidayCalculationType { get; }
         bool IgnoreShiftOnRestDay { get; }
+        bool IsPolicyByOrganization { get; }
         bool LateHoursRoundingUp { get; }
         bool PaidAsLongAsHasTimeLog { get; }
         bool PostLegalHolidayCheck { get; }
@@ -26,6 +28,7 @@ namespace AccuPay.Core.Interfaces
         bool RestDayInclusive { get; }
         ShiftBasedAutomaticOvertimePolicy ShiftBasedAutomaticOvertimePolicy { get; }
         bool ShowActual { get; }
+        SssCalculationBasis SssCalculationBasis { get; }
         bool UseAgency { get; }
         bool UseBonus { get; }
         bool UseBPIInsurance { get; }

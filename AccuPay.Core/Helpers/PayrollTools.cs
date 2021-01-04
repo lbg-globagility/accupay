@@ -27,9 +27,10 @@ namespace AccuPay.Core.Helpers
 
         private const int PotentialLastWorkDay = 7;
 
-        public static decimal GetEmployeeMonthlyRate(Employee employee,
-                                                    Salary salary,
-                                                    bool isActual = false)
+        public static decimal GetEmployeeMonthlyRate(
+            Employee employee,
+            Salary salary,
+            bool isActual = false)
         {
             if (employee == null || salary == null)
                 return 0;

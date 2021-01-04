@@ -9,6 +9,10 @@ namespace AccuPay.Core.Entities
     [Table("employee")]
     public class Employee : OrganizationalEntity
     {
+        public const string EmployeeTypeDaily = "Daily";
+        public const string EmployeeTypeMonthly = "Monthly";
+        public const string EmployeeTypeFixed = "Fixed";
+
         public int? PositionID { get; set; }
         public int? PayFrequencyID { get; set; }
         public string Salutation { get; set; }
@@ -110,11 +114,11 @@ namespace AccuPay.Core.Entities
         public string MiddleInitial
             => string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
 
-        public bool IsDaily => EmployeeType?.ToLower() == "daily";
+        public bool IsDaily => EmployeeType?.ToLower() == EmployeeTypeDaily.ToLower();
 
-        public bool IsMonthly => EmployeeType?.ToLower() == "monthly";
+        public bool IsMonthly => EmployeeType?.ToLower() == EmployeeTypeMonthly.ToLower();
 
-        public bool IsFixed => EmployeeType?.ToLower() == "fixed";
+        public bool IsFixed => EmployeeType?.ToLower() == EmployeeTypeFixed.ToLower();
 
         public bool IsWeeklyPaid => PayFrequencyID == (int)PayFrequencyType.Weekly;
 
