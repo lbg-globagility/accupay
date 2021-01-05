@@ -3,14 +3,16 @@ using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace AccuPay.Core.UnitTests.SSS
+namespace AccuPay.Core.IntegrationTests.SSS
 {
-    public class SssCalculatorTest_2021
+    public class SssCalculatorTest_2021 : DatabaseTest
     {
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
         public void ShouldCalculate_WithBasicPayCalculationBasis(
@@ -201,7 +203,7 @@ namespace AccuPay.Core.UnitTests.SSS
             //    Employee.EmployeeTypeDaily);
         }
 
-        private static void BaseShouldCalculate(
+        private void BaseShouldCalculate(
             decimal basicSalary,
             Paystub paystub,
             Paystub previousPaystub,
@@ -210,7 +212,8 @@ namespace AccuPay.Core.UnitTests.SSS
             IPolicyHelper policy,
             string employeeType)
         {
-            List<SocialSecurityBracket> socialSecurityBrackets = MockSocialSecurityBrackets.Get();
+            var sssRepository = MainServiceProvider.GetRequiredService<ISocialSecurityBracketRepository>();
+            IEnumerable<SocialSecurityBracket> socialSecurityBrackets = sssRepository.GetAll();
 
             var payPeriod = new PayPeriod()
             {
@@ -218,7 +221,7 @@ namespace AccuPay.Core.UnitTests.SSS
                 PayToDate = new DateTime(2021, 1, 15),
                 Half = PayPeriod.FirstHalfValue
             };
-            var calculator = new SssCalculator(policy, socialSecurityBrackets, payPeriod);
+            var calculator = new SssCalculator(policy, socialSecurityBrackets.ToList(), payPeriod);
 
             var salary = new Salary()
             {

@@ -2,12 +2,6 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
-using AccuPay.Core.Services.Imports.Allowances;
-using AccuPay.Core.Services.Imports.Employees;
-using AccuPay.Core.Services.Imports.Loans;
-using AccuPay.Core.Services.Imports.OfficialBusiness;
-using AccuPay.Core.Services.Imports.Overtimes;
-using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.CrystalReports;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Reports;
@@ -40,7 +34,7 @@ namespace AccuPay.Core.IntegrationTests
         {
             services.AddDbContext<PayrollContext>(options =>
             {
-                options.UseMySql("server=localhost;userid=root;password=globagility;database=accupaydb_cinema2k;")
+                options.UseMySql("server=localhost;userid=root;password=globagility;database=goldwingspayrolldb;")
                 .EnableSensitiveDataLogging()
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });

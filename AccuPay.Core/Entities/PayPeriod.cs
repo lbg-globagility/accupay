@@ -67,6 +67,11 @@ namespace AccuPay.Core.Entities
         public bool IsClosed => Status == PayPeriodStatus.Closed;
         public bool IsPending => Status == PayPeriodStatus.Pending;
 
+        /// <summary>
+        /// The actual first day of the month of the pay period when the salary will be given. Not the attendance that the salary will be based from.
+        /// </summary>
+        public DateTime DateMonth => new DateTime(Year, Month, 1);
+
         public static PayPeriod NewPayPeriod(int organizationId, int payrollMonth, int payrollYear, bool isFirstHalf, IPolicyHelper policy, int? currentUserId)
         {
             var ordinalValue = payrollMonth * 2;

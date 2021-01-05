@@ -371,10 +371,8 @@ namespace AccuPay.Core.Services
             try
             {
                 // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-                var taxEffectivityDate = new DateTime(PayPeriod.Year, PayPeriod.Month, 1);
-
                 SocialSecurityBrackets = (await _socialSecurityBracketRepository
-                    .GetByTimePeriodAsync(taxEffectivityDate))
+                    .GetByTimePeriodAsync(PayPeriod.DateMonth))
                     .ToList();
             }
             catch (Exception ex)
@@ -434,9 +432,9 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                WithholdingTaxBrackets = (await _withholdingTaxBracketRepository.
-                                            GetAllAsync()).
-                                            ToList();
+                WithholdingTaxBrackets = (await _withholdingTaxBracketRepository
+                    .GetAllAsync())
+                    .ToList();
             }
             catch (Exception ex)
             {

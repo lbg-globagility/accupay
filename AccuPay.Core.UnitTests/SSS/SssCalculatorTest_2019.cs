@@ -12,7 +12,7 @@ namespace AccuPay.Core.UnitTests.SSS
 {
     public class SssCalculatorTest_2019
     {
-        [TestCaseSource(typeof(SSSData_2019), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_SalaryBased")]
         public void ShouldCalculate_WithBasicPayCalculationBasis(
             decimal basicSalary,
             decimal expectedSssEmployeeShare,
@@ -43,7 +43,7 @@ namespace AccuPay.Core.UnitTests.SSS
                 Employee.EmployeeTypeFixed);
         }
 
-        [TestCaseSource(typeof(SSSData_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithBasicMinusDeductionsCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -97,7 +97,7 @@ namespace AccuPay.Core.UnitTests.SSS
                 Employee.EmployeeTypeFixed);
         }
 
-        [TestCaseSource(typeof(SSSData_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithEarningsCalculationBasis(
             decimal previousTotalDaysPayWithOutOvertimeAndLeave,
             decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -120,7 +120,7 @@ namespace AccuPay.Core.UnitTests.SSS
                 expectedSssEmployerShare: expectedSssEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSData_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithGrossPayCalculationBasis(
             decimal previousTotalDaysPayWithOutOvertimeAndLeave,
             decimal totalDaysPayWithOutOvertimeAndLeave,

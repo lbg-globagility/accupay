@@ -1,13 +1,13 @@
 using AccuPay.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace AccuPay.Core.IntegrationTests
 {
     public class UnitTest1 : DatabaseTest
     {
-        [Fact]
+        [Test]
         public async Task Test1()
         {
             Assert.True(true);

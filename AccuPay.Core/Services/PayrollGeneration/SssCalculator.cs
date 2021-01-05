@@ -19,11 +19,11 @@ namespace AccuPay.Core.Services
             _payPeriod = payPeriod;
 
             // brackets are already filtered in PayrollResources
-            // but still better so SSSCalculator can be sure that
-            // it has the right data
+            // but still better to filter here so SSSCalculator
+            // can be sure that it has the right data
             _socialSecurityBrackets = socialSecurityBrackets
-                .Where(x => payPeriod.PayFromDate >= x.EffectiveDateFrom)
-                .Where(x => payPeriod.PayFromDate <= x.EffectiveDateTo)
+                .Where(x => payPeriod.DateMonth >= x.EffectiveDateFrom)
+                .Where(x => payPeriod.DateMonth <= x.EffectiveDateTo)
                 .ToList();
         }
 

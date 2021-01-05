@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
 using System;
@@ -102,17 +102,17 @@ namespace AccuPay.Core.Services
             return AccuMath.CommercialRound(taxWithheld);
         }
 
-        private WithholdingTaxBracket GetTaxBracket(int? payFrequencyID, Paystub _paystub, PayPeriod _payperiod)
+        private WithholdingTaxBracket GetTaxBracket(int? payFrequencyID, Paystub _paystub, PayPeriod _payPeriod)
         {
-            var taxEffectivityDate = new DateTime(_payperiod.Year, _payperiod.Month, 1);
+            var taxEffectivityDate = _payPeriod.DateMonth;
 
-            var possibleBrackets = _withholdingTaxBrackets.
-                                        Where(w => w.PayFrequencyID == payFrequencyID).
-                                        Where(w => w.EffectiveDateFrom <= taxEffectivityDate).
-                                        Where(w => taxEffectivityDate <= w.EffectiveDateTo).
-                                        Where(w => w.TaxableIncomeFromAmount < _paystub.TaxableIncome).
-                                        Where(w => _paystub.TaxableIncome <= w.TaxableIncomeToAmount).
-                                        ToList();
+            var possibleBrackets = _withholdingTaxBrackets
+                .Where(w => w.PayFrequencyID == payFrequencyID)
+                .Where(w => w.EffectiveDateFrom <= taxEffectivityDate)
+                .Where(w => taxEffectivityDate <= w.EffectiveDateTo)
+                .Where(w => w.TaxableIncomeFromAmount < _paystub.TaxableIncome)
+                .Where(w => _paystub.TaxableIncome <= w.TaxableIncomeToAmount)
+                .ToList();
 
             return possibleBrackets.FirstOrDefault();
         }
