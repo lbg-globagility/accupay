@@ -216,7 +216,9 @@ namespace AccuPay.Core.UnitTests.SSS
             {
                 PayFromDate = new DateTime(2019, 4, 1),
                 PayToDate = new DateTime(2019, 4, 15),
-                Half = PayPeriod.FirstHalfValue
+                Half = PayPeriod.FirstHalfValue,
+                Year = 2019,
+                Month = 4
             };
 
             var calculator = new SssCalculator(policy, socialSecurityBrackets, payPeriod);
