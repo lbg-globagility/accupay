@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace AccuPay.Core.UnitTests
+namespace AccuPay.Core.UnitTests.Loans
 {
     public class YearlyLoanInterestTest
     {

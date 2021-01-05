@@ -1,11 +1,11 @@
 using NUnit.Framework;
 using System.Collections;
 
-namespace AccuPay.Core.UnitTests
+namespace AccuPay.Core.UnitTests.SSS
 {
-    public class SSSData
+    public class SSSData_2019
     {
-        public static IEnumerable Brackets_2019_SalaryBased
+        public static IEnumerable Brackets_SalaryBased
         {
             get
             {
@@ -159,7 +159,7 @@ namespace AccuPay.Core.UnitTests
             }
         }
 
-        public static IEnumerable Brackets_2019_PaystubBased
+        public static IEnumerable Brackets_PaystubBased
         {
             get
             {

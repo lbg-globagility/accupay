@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using NUnit.Framework;
 
-namespace AccuPay.Core.UnitTests
+namespace AccuPay.Core.UnitTests.Loans
 {
     public class LoanTest
     {

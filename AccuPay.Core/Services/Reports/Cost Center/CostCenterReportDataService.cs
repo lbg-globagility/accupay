@@ -236,7 +236,7 @@ namespace AccuPay.Core.Services
                 .FirstOrDefault();
 
             var sssAmount = sssBracket?.EmployerContributionAmount ?? 0;
-            var ecAmount = sssBracket?.EmployeeECAmount ?? 0;
+            var ecAmount = sssBracket?.EmployerECAmount ?? 0;
 
             return new SSSEmployerShare(employerShare: sssAmount, ECamount: ecAmount);
         }

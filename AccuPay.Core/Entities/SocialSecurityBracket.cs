@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -28,9 +28,11 @@ namespace AccuPay.Core.Entities
 
         public decimal EmployerContributionAmount { get; set; }
 
-        public decimal EmployeeECAmount { get; set; }
+        public decimal EmployerECAmount { get; set; }
 
-        public bool HiddenData { get; set; }
+        public decimal EmployeeMPFAmount { get; set; }
+
+        public decimal EmployerMPFAmount { get; set; }
 
         public DateTime EffectiveDateFrom { get; set; }
 

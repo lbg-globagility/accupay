@@ -10,13 +10,21 @@ namespace AccuPay.Core.Services
     public class SssCalculator
     {
         private readonly IPolicyHelper _policy;
-
+        private readonly PayPeriod _payPeriod;
         private readonly IReadOnlyCollection<SocialSecurityBracket> _socialSecurityBrackets;
 
-        public SssCalculator(IPolicyHelper policy, IReadOnlyCollection<SocialSecurityBracket> socialSecurityBrackets)
+        public SssCalculator(IPolicyHelper policy, IReadOnlyCollection<SocialSecurityBracket> socialSecurityBrackets, PayPeriod payPeriod)
         {
             _policy = policy;
-            _socialSecurityBrackets = socialSecurityBrackets;
+            _payPeriod = payPeriod;
+
+            // brackets are already filtered in PayrollResources
+            // but still better so SSSCalculator can be sure that
+            // it has the right data
+            _socialSecurityBrackets = socialSecurityBrackets
+                .Where(x => payPeriod.PayFromDate >= x.EffectiveDateFrom)
+                .Where(x => payPeriod.PayFromDate <= x.EffectiveDateTo)
+                .ToList();
         }
 
         public void Calculate(
@@ -24,7 +32,6 @@ namespace AccuPay.Core.Services
             Paystub previousPaystub,
             Salary salary,
             Employee employee,
-            PayPeriod payperiod,
             string currentSystemOwner)
         {
             // Reset SSS values to zero
@@ -48,12 +55,12 @@ namespace AccuPay.Core.Services
             if (socialSecurityBracket == null)
                 return;
 
-            var employeeShare = socialSecurityBracket.EmployeeContributionAmount;
-            var employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployeeECAmount;
+            var employeeShare = socialSecurityBracket.EmployeeContributionAmount + socialSecurityBracket.EmployeeMPFAmount;
+            var employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployerECAmount + socialSecurityBracket.EmployerMPFAmount;
 
             if (employee.IsWeeklyPaid)
             {
-                var shouldDeduct = employee.IsUnderAgency ? payperiod.SSSWeeklyAgentContribSched : payperiod.SSSWeeklyContribSched;
+                var shouldDeduct = employee.IsUnderAgency ? _payPeriod.SSSWeeklyAgentContribSched : _payPeriod.SSSWeeklyContribSched;
 
                 if (shouldDeduct)
                 {
@@ -65,8 +72,8 @@ namespace AccuPay.Core.Services
             {
                 var deductionSchedule = employee.SssSchedule;
 
-                if (IsSssPaidOnFirstHalf(payperiod, deductionSchedule) ||
-                    IsSssPaidOnEndOfTheMonth(payperiod, deductionSchedule))
+                if (IsSssPaidOnFirstHalf(_payPeriod, deductionSchedule) ||
+                    IsSssPaidOnEndOfTheMonth(_payPeriod, deductionSchedule))
                 {
                     paystub.SssEmployeeShare = employeeShare;
                     paystub.SssEmployerShare = employerShare;
