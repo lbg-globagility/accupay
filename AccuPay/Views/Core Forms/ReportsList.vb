@@ -84,8 +84,8 @@ Public Class ReportsList
     End Function
 
     Private Shared Function CreateNewListViewItem(
-                                reportProvider As IReportProvider,
-                                reportName As String) As ListViewItem
+        reportProvider As IReportProvider,
+        reportName As String) As ListViewItem
 
         Dim listItem = New ListViewItem(reportName)
         listItem.Tag = reportProvider
@@ -94,20 +94,21 @@ Public Class ReportsList
 
     Private Shared Function GetBenchmarkReports() As Collection(Of IReportProvider)
         Return New Collection(Of IReportProvider) From {
-                    New SalaryIncreaseHistoryReportProvider(),
-                    New EmployeeProfilesReportProvider(),
-                    New EmployeeIdentificationNumberReportProvider(),
-                    New LoanSummaryByEmployeeReportProvider(),
-                    New LoanSummaryByTypeReportProvider(),
-                    New SSSMonthlyReportProvider(),
-                    New PhilHealthReportProvider(),
-                    New PagIBIGMonthlyReportProvider(),
-                    New TaxReportProvider(),
-                    New ThirteenthMonthDetailedReportProvider(),
-                    New ThirteenthMonthSummaryReportProvider(),
-                    New LoanLedgerReportProvider(),
-                    New PayrollSummaryExcelFormatReportProvider()
-                }
+            New SalaryIncreaseHistoryReportProvider(),
+            New EmployeeProfilesReportProvider(),
+            New EmployeeIdentificationNumberReportProvider(),
+            New LoanSummaryByEmployeeReportProvider(),
+            New LoanSummaryByTypeReportProvider(),
+            New SSSMonthlyReportProvider(),
+            New PhilHealthReportProvider(),
+            New PagIBIGMonthlyReportProvider(),
+            New TaxReportProvider(),
+            New ThirteenthMonthDetailedReportProvider(),
+            New ThirteenthMonthSummaryReportProvider(),
+            New LoanLedgerReportProvider(),
+            New PayrollSummaryExcelFormatReportProvider(),
+            New BenchmarkAlphalistReportProvider()
+    }
     End Function
 
     Private Sub lvMainMenu_KeyDown(sender As Object, e As KeyEventArgs) Handles lvMainMenu.KeyDown
