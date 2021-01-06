@@ -8,7 +8,7 @@ namespace AccuPay.Infrastructure.Data
     /// <summary>
     /// This should be replaced by using repositories and ef core calls instead of stored procedures
     /// </summary>
-    public class StoredProcedureDataService
+    public abstract class StoredProcedureDataService
     {
         protected readonly PayrollContext _context;
 
