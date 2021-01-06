@@ -1,4 +1,4 @@
-CREATE TABLE `yearlyloaninterest` (
+CREATE TABLE IF NOT EXISTS `yearlyloaninterest` (
 	`LoanScheduleId` INT(11) NOT NULL,
 	`Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`CreatedBy` INT(11) NOT NULL,
