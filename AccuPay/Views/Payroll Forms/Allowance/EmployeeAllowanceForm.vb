@@ -156,15 +156,20 @@ Public Class EmployeeAllowanceForm
 
     Private Sub ShowAllowanceDetails()
 
-        If AllowanceGridView.CurrentRow Is Nothing Then Return
+        If AllowanceGridView.CurrentRow Is Nothing Then
+            cboallowtype.SelectedIndex = -1
+            Return
+        End If
 
         Dim currentAllowance As Allowance = GetSelectedAllowance()
 
         Dim currentEmployee = GetSelectedEmployee()
+
         If currentAllowance IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
            Nullable.Equals(currentAllowance.EmployeeID, currentEmployee.RowID) Then
 
             PopulateAllowanceForm(currentAllowance)
+
         End If
     End Sub
 
@@ -600,7 +605,11 @@ Public Class EmployeeAllowanceForm
         dtpallowenddate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         cboallowtype.DataBindings.Clear()
-        cboallowtype.DataBindings.Add("Text", Me._currentAllowance, "Type")
+        cboallowtype.DataBindings.Add("SelectedValue", Me._currentAllowance, "Product", True, DataSourceUpdateMode.OnPropertyChanged)
+
+        If Not String.IsNullOrWhiteSpace(Me._currentAllowance.Type) Then
+            cboallowtype.Text = Me._currentAllowance.Type
+        End If
 
         cboallowfreq.DataBindings.Clear()
         cboallowfreq.DataBindings.Add("Text", Me._currentAllowance, "AllowanceFrequency")
@@ -632,9 +641,6 @@ Public Class EmployeeAllowanceForm
         Me._currentAllowance = Nothing
 
         DetailsTabLayout.Enabled = False
-
-        cboallowtype.SelectedIndex = -1
-        cboallowtype.DataBindings.Clear()
 
         cboallowfreq.SelectedIndex = -1
         cboallowfreq.DataBindings.Clear()
