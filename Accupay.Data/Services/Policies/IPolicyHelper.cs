@@ -33,6 +33,7 @@ namespace AccuPay.Data.Services
         bool UseDefaultShiftAndTimeLogs { get; }
         bool UseEmailPayslip { get; }
         bool UseGoldwingsLoanInterest { get; }
+        decimal GoldWingsLoanInterestDefault { get; }
         bool UseJobLevel { get; }
         bool UseLoanDeductFromBonus { get; }
         bool UseLoanDeductFromThirteenthMonthPay { get; }

@@ -57,6 +57,8 @@ namespace AccuPay.Data.Services
 
         public bool UseGoldwingsLoanInterest => _settings.GetBoolean("Loan Policy.UseGoldWingsLoanInterest", false);
 
+        public decimal GoldWingsLoanInterestDefault => _settings.GetDecimal("Loan Policy.GoldWingsLoanInterestDefault", 0);
+
         public bool UseLoanDeductFromBonus => _settings.GetBoolean("Policy.UseLoanDeductFromBonus", false);
 
         public bool UseLoanDeductFromThirteenthMonthPay => _settings.GetBoolean("Policy.UseLoanDeductFromThirteenthMonthPay", false);
