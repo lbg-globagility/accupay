@@ -46,6 +46,10 @@ Public Class AddLoanForm
             .Status = LoanSchedule.STATUS_IN_PROGRESS
         }
 
+        If _policy.UseGoldwingsLoanInterest Then
+            newLoanSchedule.DeductionPercentage = _policy.GoldWingsLoanInterestDefault
+        End If
+
         _newLoanSchedule = LoanModel.Create(newLoanSchedule)
 
         LoanUserControl1.SetLoan(_newLoanSchedule, isNew:=True)
