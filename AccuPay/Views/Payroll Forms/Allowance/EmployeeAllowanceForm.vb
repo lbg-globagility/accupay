@@ -577,9 +577,8 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub PopulateAllowanceTypeCombobox()
-        Dim allowanceTypes = _productRepository.ConvertToStringList(Me._allowanceTypeList)
 
-        cboallowtype.DataSource = allowanceTypes
+        cboallowtype.DataSource = Me._allowanceTypeList
     End Sub
 
     Private Function GetSelectedEmployee() As Employee
