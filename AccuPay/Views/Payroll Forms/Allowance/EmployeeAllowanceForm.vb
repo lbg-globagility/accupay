@@ -65,6 +65,8 @@ Public Class EmployeeAllowanceForm
         Await CheckRolePermissions()
 
         LoadFrequencyList()
+
+        cboallowtype.DisplayMember = "PartNo"
         Await LoadAllowanceTypes()
 
         Await LoadEmployees()
