@@ -1,8 +1,10 @@
 ﻿Option Strict On
+Option Explicit On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Utilities.Extensions
+Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.EntityFrameworkCore
 
 Public Class BenchmarkAlphalistReportProvider
@@ -15,7 +17,12 @@ Public Class BenchmarkAlphalistReportProvider
 
         Dim report = New BenchmarkAlphalist
 
-        Dim data = Await GetData()
+        Dim year = 2020
+
+        Dim data = Await GetData(year)
+
+        Dim objText As TextObject = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("YearHeader"), TextObject)
+        objText.Text = year.ToString()
 
         report.SetDataSource(data)
 
@@ -25,7 +32,7 @@ Public Class BenchmarkAlphalistReportProvider
 
     End Sub
 
-    Private Async Function GetData() As Task(Of DataTable)
+    Private Async Function GetData(year As Integer) As Task(Of DataTable)
 
         Dim data As New DataTable
         data.Columns.Add("DatCol1") ' TIN
@@ -42,7 +49,7 @@ Public Class BenchmarkAlphalistReportProvider
         data.Columns.Add("DatCol12") ' Total Deduction
         data.Columns.Add("DatCol13") ' Net Pay
 
-        Dim allPaystubs = Await GetPaystubs()
+        Dim allPaystubs = Await GetPaystubs(year)
 
         Dim employeePaystubs = allPaystubs.GroupBy(Function(p) p.Employee)
 
@@ -69,14 +76,14 @@ Public Class BenchmarkAlphalistReportProvider
         Return data
     End Function
 
-    Private Shared Async Function GetPaystubs() As Task(Of List(Of Paystub))
+    Private Shared Async Function GetPaystubs(year As Integer) As Task(Of List(Of Paystub))
         Using context As New PayrollContext
 
             Return Await context.Paystubs.
                 Include(Function(p) p.PayPeriod).
                 Include(Function(p) p.Employee).
                 Include(Function(p) p.ThirteenthMonthPay).
-                Where(Function(p) p.PayPeriod.Year = 2020).
+                Where(Function(p) p.PayPeriod.Year = year).
                 ToListAsync()
 
         End Using
@@ -129,25 +136,35 @@ Public Class BenchmarkAlphalistReportProvider
 
         Public Property Netpay As Decimal
 
-        Friend Function ToDataRow(data As DataTable) As DataRow
+        Public Function ToDataRow(data As DataTable) As DataRow
 
             Dim newRow = data.NewRow()
 
             newRow("DatCol1") = Me.TinNumber ' TIN
             newRow("DatCol2") = Me.EmployeeName ' Employee Name
-            newRow("DatCol3") = Me.BasicPay.RoundToString() ' Basic
-            newRow("DatCol4") = Me.ThirteenthMonthAmount.RoundToString() ' 13th month
-            newRow("DatCol5") = Me.Overtime.RoundToString() ' Overtime
-            newRow("DatCol6") = Me.Allowance.RoundToString() ' Allowance
-            newRow("DatCol7") = Me.Bonus.RoundToString() ' Bonus
-            newRow("DatCol8") = Me.GrossPay.RoundToString() ' Gross Pay
-            newRow("DatCol9") = Me.SSSAmount.RoundToString() ' SSS
-            newRow("DatCol10") = Me.PhilhealthAmount.RoundToString() ' PhilHealth
-            newRow("DatCol11") = Me.HDMFAmount.RoundToString() ' HDMF
-            newRow("DatCol12") = Me.TotalDeduction.RoundToString() ' Total Deduction
-            newRow("DatCol13") = Me.Netpay.RoundToString() ' Net Pay
+            newRow("DatCol3") = FormatNumber(Me.BasicPay) ' Basic
+            newRow("DatCol4") = FormatNumber(Me.ThirteenthMonthAmount) ' 13th month
+            newRow("DatCol5") = FormatNumber(Me.Overtime) ' Overtime
+            newRow("DatCol6") = FormatNumber(Me.Allowance) ' Allowance
+            newRow("DatCol7") = FormatNumber(Me.Bonus) ' Bonus
+            newRow("DatCol8") = FormatNumber(Me.GrossPay) ' Gross Pay
+            newRow("DatCol9") = FormatNumber(Me.SSSAmount) ' SSS
+            newRow("DatCol10") = FormatNumber(Me.PhilhealthAmount) ' PhilHealth
+            newRow("DatCol11") = FormatNumber(Me.HDMFAmount) ' HDMF
+            newRow("DatCol12") = FormatNumber(Me.TotalDeduction) ' Total Deduction
+            newRow("DatCol13") = FormatNumber(Me.Netpay) ' Net Pay
 
             Return newRow
+
+        End Function
+
+        Public Function FormatNumber(number As Decimal) As String
+
+            If number = 0 Then
+                Return String.Empty
+            End If
+
+            Return number.RoundToString(3)
 
         End Function
 
