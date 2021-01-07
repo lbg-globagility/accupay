@@ -15,7 +15,7 @@ Public Class AddLoanForm
     Private _newLoanSchedule As LoanModel
 
     Public Property IsSaved As Boolean
-
+    Private ReadOnly _policy As IPolicyHelper
     Public Property ShowBalloonSuccess As Boolean
 
     Sub New(employee As Employee)
@@ -25,6 +25,8 @@ Public Class AddLoanForm
         _currentEmployee = employee
 
         Me.IsSaved = False
+
+        _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
     End Sub
 
