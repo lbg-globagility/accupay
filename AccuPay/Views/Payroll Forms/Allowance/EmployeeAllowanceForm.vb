@@ -250,23 +250,65 @@ Public Class EmployeeAllowanceForm
             End Function)
     End Sub
 
-    Private Sub cboallowtype_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowtype.SelectedValueChanged
-        If Me._currentAllowance IsNot Nothing Then
-            Dim selectedAllowanceType = Me._allowanceTypeList.FirstOrDefault(Function(l) (l.PartNo = cboallowtype.Text))
+    Private Function RecordUpdate(newAllowance As Allowance) As Boolean
+        Dim oldAllowance =
+            Me._changedAllowances.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newAllowance.RowID))
 
-            If selectedAllowanceType Is Nothing Then
-                Me._currentAllowance.ProductID = Nothing
-            Else
-                Me._currentAllowance.ProductID = selectedAllowanceType.RowID
-                Me._currentAllowance.Product = selectedAllowanceType.CloneJson()
+        If oldAllowance Is Nothing Then Return False
 
-                'force commit to gridview
-                'ForceAllowanceGridViewCommit()
-                'cboallowtype.Focus()
-            End If
+        Dim changes = New List(Of UserActivityItem)
+
+        Dim suffixIdentifier = $"of allowance with type '{oldAllowance.Product?.Name}' and start date '{oldAllowance.EffectiveStartDate.ToShortDateString()}'."
+
+        If newAllowance.Type <> oldAllowance.Type Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated type from '{oldAllowance.Type}' to '{newAllowance.Type}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
+            })
+        End If
+        If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
+            })
+        End If
+        If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated start date from '{oldAllowance.EffectiveStartDate.ToShortDateString()}' to '{newAllowance.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
+            })
+        End If
+        If newAllowance.EffectiveEndDate.ToString() <> oldAllowance.EffectiveEndDate.ToString() Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString()}' to '{newAllowance.EffectiveEndDate?.ToShortDateString()}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
+            })
+        End If
+        If newAllowance.Amount <> oldAllowance.Amount Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldAllowance.RowID.Value,
+                .Description = $"Updated amount from '{oldAllowance.Amount}' to '{newAllowance.Amount}' {suffixIdentifier}",
+                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
+            })
         End If
 
-    End Sub
+        If changes.Any() Then
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        End If
+
+        Return True
+    End Function
 
     Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
@@ -640,66 +682,6 @@ Public Class EmployeeAllowanceForm
 
         Return hasChanged
 
-    End Function
-
-    Private Function RecordUpdate(newAllowance As Allowance) As Boolean
-        Dim oldAllowance =
-            Me._changedAllowances.
-                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newAllowance.RowID))
-
-        If oldAllowance Is Nothing Then Return False
-
-        Dim changes = New List(Of UserActivityItem)
-
-        Dim suffixIdentifier = $"of allowance with type '{oldAllowance.Product?.Name}' and start date '{oldAllowance.EffectiveStartDate.ToShortDateString()}'."
-
-        If newAllowance.Type <> oldAllowance.Type Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated type from '{oldAllowance.Type}' to '{newAllowance.Type}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated start date from '{oldAllowance.EffectiveStartDate.ToShortDateString()}' to '{newAllowance.EffectiveStartDate.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.EffectiveEndDate.ToString() <> oldAllowance.EffectiveEndDate.ToString() Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString()}' to '{newAllowance.EffectiveEndDate?.ToShortDateString()}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-        If newAllowance.Amount <> oldAllowance.Amount Then
-            changes.Add(New UserActivityItem() With
-            {
-                .EntityId = oldAllowance.RowID.Value,
-                .Description = $"Updated amount from '{oldAllowance.Amount}' to '{newAllowance.Amount}' {suffixIdentifier}",
-                .ChangedEmployeeId = oldAllowance.EmployeeID.Value
-            })
-        End If
-
-        If changes.Any() Then
-
-            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
-        End If
-
-        Return True
     End Function
 
     Private Async Function LoadEmployees() As Task
