@@ -1,7 +1,6 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports AccuPay.Views.Payroll
 
 Public Class ReportsList
 
@@ -107,7 +106,8 @@ Public Class ReportsList
             New ThirteenthMonthSummaryReportProvider(),
             New LoanLedgerReportProvider(),
             New PayrollSummaryExcelFormatReportProvider(),
-            New BenchmarkAlphalistReportProvider()
+            New BenchmarkAlphalistReportProvider(),
+            New PayrollLedgerExcelFormatReportProvider()
     }
     End Function
 
