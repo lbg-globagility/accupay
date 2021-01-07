@@ -213,6 +213,8 @@ Public Class EmployeeAllowanceForm
 
         For Each allowance In Me._currentAllowances
 
+            allowance.ProductID = allowance.Product?.RowID
+
             If CheckIfAllowanceIsChanged(allowance) Then
                 changedAllowances.Add(allowance)
             End If
