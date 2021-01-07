@@ -1,4 +1,4 @@
-﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +29,14 @@ namespace AccuPay.Data.Repositories
                 if (allowance.Product.CategoryEntity != null)
                 {
                     _context.Entry(allowance.Product.CategoryEntity).State = EntityState.Detached;
+
+                    if (allowance.Product.CategoryEntity.Products != null)
+                    {
+                        foreach (var categoryProduct in allowance.Product.CategoryEntity.Products)
+                        {
+                            _context.Entry(categoryProduct).State = EntityState.Detached;
+                        }
+                    }
                 }
             }
         }
