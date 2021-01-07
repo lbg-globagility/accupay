@@ -711,7 +711,10 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+
+        Dim formEntityName As String = "Allowance"
+
+        Dim userActivity As New UserActivityForm(formEntityName)
         userActivity.ShowDialog()
     End Sub
 
