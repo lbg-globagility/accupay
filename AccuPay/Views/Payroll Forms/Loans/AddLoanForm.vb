@@ -15,6 +15,8 @@ Public Class AddLoanForm
 
     Public Property ShowBalloonSuccess As Boolean
 
+    Private ReadOnly _policy As IPolicyHelper
+
     Sub New(employee As Employee)
 
         InitializeComponent()
@@ -22,6 +24,8 @@ Public Class AddLoanForm
         _currentEmployee = employee
 
         Me.IsSaved = False
+
+        _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
     End Sub
 
@@ -40,6 +44,10 @@ Public Class AddLoanForm
             .DedEffectiveDateFrom = Date.Now,
             .Status = Loan.STATUS_IN_PROGRESS
         }
+
+        If _policy.UseGoldwingsLoanInterest Then
+            newLoan.DeductionPercentage = _policy.GoldWingsLoanInterestDefault
+        End If
 
         _newLoan = LoanModel.Create(newLoan)
 
