@@ -22,7 +22,7 @@ SELECT
     (es.Salary + es.UndeclaredSalary) AS `DatCol9`
 FROM employeesalary es
 INNER JOIN employee ee
-ON ee.RowID = es.EmployeeID AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+ON ee.RowID = es.EmployeeID
 WHERE es.OrganizationID = OrganizID
 ORDER BY ee.LastName,
     ee.FirstName,

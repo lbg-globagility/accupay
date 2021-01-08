@@ -25,7 +25,6 @@ INNER JOIN product p
 ON p.RowID = act.FindingID
 INNER JOIN employee ee
 ON ee.RowID = act.EmployeeID
-AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 WHERE act.OrganizationID = organizationID AND
     act.Created BETWEEN dateFrom AND dateTo;
 

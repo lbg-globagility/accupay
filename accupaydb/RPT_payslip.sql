@@ -166,7 +166,6 @@ FROM paystub ps
 INNER JOIN employee e
         ON e.RowID=ps.EmployeeID
 		     AND e.OrganizationID=ps.OrganizationID
-		     AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 INNER JOIN `position` pos
         ON pos.RowID=e.PositionID
 		     AND pos.OrganizationID=e.OrganizationID
@@ -312,7 +311,7 @@ LEFT JOIN (
            
 		     , p.PartNo
 		     FROM paystubitem_sum_semimon_allowance_group_prodid ea
-		     INNER JOIN employee e ON e.RowID=ea.EmployeeID AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+		     INNER JOIN employee e ON e.RowID=ea.EmployeeID
 		     INNER JOIN product p ON p.RowID=ea.ProductID
 			  WHERE ea.OrganizationID=og_rowid
 			  AND ea.`Date` BETWEEN date_from AND date_to

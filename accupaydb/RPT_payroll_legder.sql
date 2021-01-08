@@ -38,7 +38,7 @@ SELECT
     ps.TotalNetSalary AS `DatCol12`
 FROM paystub ps
 INNER JOIN employee ee
-ON ee.RowID = ps.EmployeeID AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+ON ee.RowID = ps.EmployeeID
 WHERE ps.OrganizationID = OrganizID AND
     ps.PayPeriodID BETWEEN PayPerID1 AND PayPerID2
 ORDER BY ee.LastName, ps.PayToDate;
