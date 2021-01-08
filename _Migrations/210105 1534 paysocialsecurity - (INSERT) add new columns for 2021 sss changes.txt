@@ -1,4 +1,0 @@
-ALTER TABLE `paysocialsecurity`
-	ADD COLUMN IF NOT EXISTS `EmployeeMPFAmount` DECIMAL(10,2) NOT NULL AFTER `EmployeeECAmount`,
-	ADD COLUMN IF NOT EXISTS `EmployerMPFAmount` DECIMAL(10,2) NOT NULL AFTER `EmployeeMPFAmount`,
-	DROP COLUMN IF EXISTS `HiddenData`;
