@@ -13,47 +13,43 @@ Namespace Benchmark
 
         Private ReadOnly _currentPayPeriod As IPayPeriod
 
-        Private ReadOnly _employee As New Employee
-
+        Private ReadOnly _employee As Employee
+        Private ReadOnly _payPeriod As PayPeriod
         Private ReadOnly _ecola As Allowance
 
         Private ReadOnly _regularDays As Decimal
-
         Private ReadOnly _lateDays As Decimal
-
         Private ReadOnly _leaveDays As Decimal
 
         Private ReadOnly _overtimeRate As OvertimeRate
-
         Private ReadOnly _actualSalaryPolicy As ActualTimeEntryPolicy
 
         Private ReadOnly _selectedDeductions As List(Of AdjustmentInput)
-
         Private ReadOnly _selectedIncomes As List(Of AdjustmentInput)
-
         Private ReadOnly _overtimes As List(Of OvertimeInput)
 
         Private ReadOnly _payrollResources As IPayrollResources
-
         Private ReadOnly _employeeRate As BenchmarkPaystubRate
 
         Private Sub New(
-                employee As Employee,
-                payrollResources As IPayrollResources,
-                currentPayPeriod As IPayPeriod,
-                employeeRate As BenchmarkPaystubRate,
-                regularDays As Decimal,
-                lateDays As Decimal,
-                leaveDays As Decimal,
-                overtimeRate As OvertimeRate,
-                actualSalaryPolicy As ActualTimeEntryPolicy,
-                selectedDeductions As List(Of AdjustmentInput),
-                selectedIncomes As List(Of AdjustmentInput),
-                overtimes As List(Of OvertimeInput),
-                ecola As Allowance)
+            employee As Employee,
+            payPeriod As PayPeriod,
+            PayrollResources As IPayrollResources,
+            currentPayPeriod As IPayPeriod,
+            employeeRate As BenchmarkPaystubRate,
+            regularDays As Decimal,
+            lateDays As Decimal,
+            leaveDays As Decimal,
+            overtimeRate As OvertimeRate,
+            actualSalaryPolicy As ActualTimeEntryPolicy,
+            selectedDeductions As List(Of AdjustmentInput),
+            selectedIncomes As List(Of AdjustmentInput),
+            overtimes As List(Of OvertimeInput),
+            ecola As Allowance)
 
             _employee = employee
-            _payrollResources = payrollResources
+            _payPeriod = payPeriod
+            _payrollResources = PayrollResources
             _currentPayPeriod = currentPayPeriod
             _employeeRate = employeeRate
             _regularDays = regularDays
@@ -72,19 +68,46 @@ Namespace Benchmark
             Public ReadOnly Property Paystub As Paystub
             Public ReadOnly Property LoanTransanctions As List(Of LoanTransaction)
             Public ReadOnly Property PayrollGenerator As IPayrollGenerator
+            Public ReadOnly Property Loans As IReadOnlyCollection(Of Loan)
+            Public ReadOnly Property AllowanceItems As ICollection(Of AllowanceItem)
+            Public ReadOnly Property LoanTransactions As ICollection(Of LoanTransaction)
+            Public ReadOnly Property Leaves As IReadOnlyCollection(Of Leave)
+            Public ReadOnly Property Bonuses As IReadOnlyCollection(Of Bonus)
+            Public ReadOnly Property Resources As IPayrollResources
+            Public ReadOnly Property Employee As Employee
+            Public ReadOnly Property PayPeriod As PayPeriod
 
-            Sub New(paystub As Paystub, loanTransanctions As List(Of LoanTransaction), generator As IPayrollGenerator)
+            Sub New(
+                paystub As Paystub,
+                loanTransanctions As List(Of LoanTransaction),
+                generator As IPayrollGenerator,
+                loans As IReadOnlyCollection(Of Loan),
+                allowanceItems As ICollection(Of AllowanceItem),
+                loanTransactions As ICollection(Of LoanTransaction),
+                leaves As IReadOnlyCollection(Of Leave),
+                bonuses As IReadOnlyCollection(Of Bonus),
+                resources As IPayrollResources,
+                employee As Employee,
+                payPeriod As PayPeriod)
 
                 Me.Paystub = paystub
                 Me.LoanTransanctions = loanTransanctions
                 Me.PayrollGenerator = generator
-
+                Me.Loans = loans
+                Me.AllowanceItems = allowanceItems
+                Me.LoanTransactions = loanTransactions
+                Me.Leaves = leaves
+                Me.Bonuses = bonuses
+                Me.Resources = resources
+                Me.Employee = employee
+                Me.PayPeriod = payPeriod
             End Sub
 
         End Class
 
         Public Shared Function DoProcess(
             employee As Employee,
+            payPeriod As PayPeriod,
             payrollResources As IPayrollResources,
             currentPayPeriod As IPayPeriod,
             employeeRate As BenchmarkPaystubRate,
@@ -100,6 +123,7 @@ Namespace Benchmark
 
             Dim generator As New BenchmarkPayrollGeneration(
                 employee,
+                payPeriod,
                 payrollResources,
                 currentPayPeriod,
                 employeeRate,
@@ -115,23 +139,31 @@ Namespace Benchmark
 
             Dim payrollGeneration = MainServiceProvider.GetRequiredService(Of IPayrollGenerator)
 
-            'organizationId:=z_OrganizationID,
-            '                    userId:=z_User,
-            '                    employee:=generator._employee,
-            '                    resources:=generator._payrollResources
-
             Dim output As DoProcessOutput = generator.CreatePaystub(employee, payrollGeneration)
 
             Return output
 
         End Function
 
-        Public Shared Sub Save(paystub As Paystub,
-                               payrollGenerator As IPayrollGenerator,
-                               loanTransanctions As List(Of LoanTransaction),
-                               payPeriodId As Integer)
+        Public Shared Sub Save(output As DoProcessOutput)
 
-            'payrollGenerator.SavePayroll(paystub, loanTransanctions)
+            output.PayrollGenerator.SavePayroll(
+                currentlyLoggedInUserId:=z_User,
+                currentSystemOwner:=SystemOwner.Benchmark,
+                settings:=output.Resources.ListOfValueCollection,
+                policy:=output.Resources.Policy,
+                payPeriod:=output.PayPeriod,
+                paystub:=output.Paystub,
+                employee:=output.Employee,
+                bpiInsuranceProduct:=output.Resources.BpiInsuranceProduct,
+                sickLeaveProduct:=output.Resources.SickLeaveProduct,
+                vacationLeaveProduct:=output.Resources.VacationLeaveProduct,
+                loans:=output.Loans,
+                allowanceItems:=output.AllowanceItems,
+                loanTransactions:=output.LoanTransactions,
+                timeEntries:=Nothing,
+                leaves:=output.Leaves,
+                bonuses:=output.Bonuses)
         End Sub
 
         Private Function CreatePaystub(employee As Employee, generator As IPayrollGenerator) As DoProcessOutput
@@ -145,20 +177,87 @@ Namespace Benchmark
                     .PayToDate = _currentPayPeriod.PayToDate
                 }
 
-            paystub.Actual = New PaystubActual With {
-            .OrganizationID = z_OrganizationID,
-            .EmployeeID = employee.RowID,
-            .PayPeriodID = _currentPayPeriod.RowID,
-            .PayFromDate = _currentPayPeriod.PayFromDate,
-            .PayToDate = _currentPayPeriod.PayToDate
-        }
+            If paystub.Actual Is Nothing Then
 
-            paystub.EmployeeID = employee.RowID
+                paystub.Actual = New PaystubActual With {
+                    .OrganizationID = z_OrganizationID,
+                    .EmployeeID = employee.RowID,
+                    .PayPeriodID = _currentPayPeriod.RowID,
+                    .PayFromDate = _currentPayPeriod.PayFromDate,
+                    .PayToDate = _currentPayPeriod.PayToDate
+                }
+
+            End If
+
+            Dim allowanceItems As List(Of AllowanceItem) = CreateAllowanceItems(paystub)
+
+            Dim loans = _payrollResources.Loans.
+                Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
+                ToList()
+
+            Dim bonuses = _payrollResources.Bonuses.
+                Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
+                ToList()
+
+            Dim salary = _payrollResources.Salaries.
+                FirstOrDefault(Function(s) s.EmployeeID.Value = employee.RowID.Value)
+
+            Dim previousPaystub = _payrollResources.PreviousPaystubs.
+                FirstOrDefault(Function(p) p.EmployeeID.Value = employee.RowID.Value)
+
+            Dim leaves = _payrollResources.Leaves.
+                Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
+                ToList()
+
+            Dim loanTransactions = paystub.CreateLoanTransactions(
+                _payPeriod,
+                loans:=loans,
+                bonuses:=bonuses,
+                policy:=_payrollResources.Policy,
+                currentlyLoggedInUserId:=z_User)
 
             ComputeHoursAndPay(paystub)
             ComputeBasicHoursAndBasicPay(paystub, employee) 'this should be on the top of ComputeHoursAndPay(). This needs the regular hours, late, UT and absent hours before it computes
 
-            'Compute AccuPay allowance
+            paystub.ComputeTotalEarnings(
+                employee,
+                isFirstPayAsDailyRule:=False,
+                _payPeriod,
+            SystemOwner.Benchmark)
+
+            CreateAdjustments(paystub)
+
+            paystub.ComputePayroll(
+                resources:=_payrollResources,
+                currentlyLoggedInUserId:=z_User,
+                currentSystemOwner:=SystemOwner.Benchmark,
+                settings:=_payrollResources.ListOfValueCollection,
+                calendarCollection:=_payrollResources.CalendarCollection,
+                payPeriod:=_payPeriod,
+                employee:=_employee,
+                salary:=salary,
+                previousPaystub:=previousPaystub,
+                loanTransactions:=loanTransactions,
+                timeEntries:=Nothing,
+                actualTimeEntries:=Nothing,
+                allowanceItems:=allowanceItems,
+                bonuses:=bonuses)
+
+            Return New DoProcessOutput(
+                paystub,
+                loanTransactions,
+                generator,
+                loans,
+                allowanceItems,
+                loanTransactions,
+                leaves,
+                bonuses,
+                _payrollResources,
+                _employee,
+                _payPeriod)
+        End Function
+
+        Private Function CreateAllowanceItems(paystub As Paystub) As List(Of AllowanceItem)
             Dim ecolaAllowance = ComputeEcola(paystub)
             Dim allowanceItems As New List(Of AllowanceItem)
             If ecolaAllowance?.Amount IsNot Nothing OrElse ecolaAllowance?.Amount <> 0 Then
@@ -168,12 +267,7 @@ Namespace Benchmark
                 allowanceItems = Nothing
             End If
 
-            CreateAdjustments(paystub)
-            ComputeTotalEarnings(paystub, employee)
-
-            'Dim loans = generator.ComputePayroll(paystub, allowanceItems)
-
-            'Return New DoProcessOutput(paystub, loans, generator)
+            Return allowanceItems
         End Function
 
         Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
@@ -190,8 +284,13 @@ Namespace Benchmark
 
             End If
 
-            paystub.ComputeBasicPay(basicHours:=paystub.BasicHours,
-                                    hourlyRate:=_employeeRate.HourlyRate)
+            paystub.ComputeBasicPay(
+                basicHours:=paystub.BasicHours,
+                hourlyRate:=_employeeRate.HourlyRate)
+
+            paystub.Actual.ComputeBasicPay(
+                basicHours:=paystub.BasicHours,
+                hourlyRate:=_employeeRate.ActualHourlyRate)
 
         End Sub
 
@@ -404,13 +503,13 @@ Namespace Benchmark
             paystub.Ecola = totalDaysWorked * If(_ecola?.Amount, 0)
 
             Dim newAllowanceItem = AllowanceItem.Create(
-                                                    paystub:=paystub,
-                                                    product:=_ecola.Product,
-                                                    payperiodId:=_currentPayPeriod.RowID.Value,
-                                                    allowanceId:=_ecola.RowID.Value,
-                                                    organizationId:=z_OrganizationID,
-                                                    currentlyLoggedInUserId:=z_User
-                                                )
+                paystub:=paystub,
+                product:=_ecola.Product,
+                payperiodId:=_currentPayPeriod.RowID.Value,
+                allowanceId:=_ecola.RowID.Value,
+                organizationId:=z_OrganizationID,
+                currentlyLoggedInUserId:=z_User
+            )
 
             newAllowanceItem.Amount = paystub.Ecola
 
@@ -441,20 +540,6 @@ Namespace Benchmark
             })
 
             Next
-        End Sub
-
-        Private Sub ComputeTotalEarnings(paystub As Paystub, employee As Employee)
-
-            If employee.IsFixed Then
-
-                paystub.TotalEarnings = paystub.BasicPay + paystub.AdditionalPay
-            Else
-                paystub.TotalEarnings =
-                    paystub.RegularPay +
-                    paystub.LeavePay +
-                    paystub.AdditionalPay
-            End If
-
         End Sub
 
         Private Function ConvertDaysToHours(days As Decimal) As Decimal

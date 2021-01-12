@@ -22,7 +22,6 @@ namespace AccuPay.Core.Services
             Paystub previousPaystub,
             Employee employee,
             PayPeriod payperiod,
-            IReadOnlyCollection<Allowance> allowances,
             string currentSystemOwner)
         {
             // Reset the PhilHealth to zero
@@ -34,15 +33,18 @@ namespace AccuPay.Core.Services
             // If auto compute the PhilHealth is true, then we use the available formulas to compute the total contribution.
             // Otherwise, we use whatever amount is set in the salary.
             if (salary.AutoComputePhilHealthContribution)
+            {
                 totalContribution = GetTotalContribution(
                     salary,
                     paystub,
                     previousPaystub,
                     employee,
-                    allowances,
                     currentSystemOwner);
+            }
             else
+            {
                 totalContribution = salary.PhilHealthDeduction;
+            }
 
             // If totalContribution is zero, then the employee has no PhilHealth to pay
             if (totalContribution <= 0)
@@ -103,7 +105,6 @@ namespace AccuPay.Core.Services
             Paystub paystub,
             Paystub previousPaystub,
             Employee employee,
-            IReadOnlyCollection<Allowance> allowances,
             string currentSystemOwner)
         {
             var calculationBasis = _policy.CalculationBasis;
@@ -152,23 +153,6 @@ namespace AccuPay.Core.Services
 
                         basisPay = totalHours * hourlyRate;
                     }
-                    break;
-
-                case PhilHealthCalculationBasis.BasicAndEcola:
-
-                    var monthlyRate2 = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
-
-                    var ecolas = allowances.Where(ea => ea.Product.PartNo.ToLower() == ProductConstant.ECOLA);
-
-                    var ecolaPerMonth = 0M;
-                    if (ecolas.Any())
-                    {
-                        var ecola = ecolas.FirstOrDefault();
-
-                        ecolaPerMonth = ecola.Amount * (employee.WorkDaysPerYear / CalendarConstant.MonthsInAYear);
-                    }
-
-                    basisPay = monthlyRate2 + ecolaPerMonth;
                     break;
 
                 case PhilHealthCalculationBasis.Earnings:
