@@ -183,6 +183,8 @@ namespace AccuPay.Core.Entities
             Adjustments.Where(a => a.Amount > 0).Sum(a => a.Amount) +
             ActualAdjustments.Where(a => a.Amount > 0).Sum(a => a.Amount);
 
+        public bool IsNewEntity => BaseEntity.CheckIfNewEntity(RowID);
+
         public Paystub()
         {
             Adjustments = new List<Adjustment>();
@@ -192,6 +194,79 @@ namespace AccuPay.Core.Entities
             AllowanceItems = new List<AllowanceItem>();
             LeaveTransactions = new List<LeaveTransaction>();
             LoanTransactions = new List<LoanTransaction>();
+        }
+
+        #region Payroll
+
+        public ICollection<AllowanceItem> CreateAllowanceItems(
+            int currentlyLoggedInUserId,
+            ListOfValueCollection settings,
+            CalendarCollection calendarCollection,
+            PayPeriod payPeriod,
+            Employee employee,
+            IReadOnlyCollection<TimeEntry> previousTimeEntries,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Allowance> allowances)
+        {
+            var dailyCalculator = new DailyAllowanceCalculator(
+                new AllowancePolicy(settings),
+                employee,
+                this,
+                payPeriod,
+                calendarCollection,
+                timeEntries: timeEntries,
+                previousTimeEntries: previousTimeEntries,
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
+            var semiMonthlyCalculator = new SemiMonthlyAllowanceCalculator(
+                new AllowancePolicy(settings),
+                employee,
+                this,
+                payPeriod,
+                calendarCollection,
+                timeEntries,
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
+            var allowanceItems = new List<AllowanceItem>();
+
+            foreach (var allowance in allowances)
+            {
+                var item = AllowanceItem.Create(
+                    paystub: this,
+                    product: allowance.Product,
+                    payperiodId: payPeriod.RowID.Value,
+                    allowanceId: allowance.RowID.Value,
+                    currentlyLoggedInUserId: currentlyLoggedInUserId);
+
+                if (allowance.IsOneTime)
+                {
+                    item.Amount = allowance.Amount;
+                }
+                else if (allowance.IsDaily)
+                {
+                    item = dailyCalculator.Compute(allowance);
+                }
+                else if (allowance.IsSemiMonthly)
+                {
+                    item = semiMonthlyCalculator.Calculate(allowance);
+                }
+                else if (allowance.IsMonthly)
+                {
+                    // TODO: monthly payrolls are only for Fixed allowances only.
+                    if (allowance.Product.Fixed && payPeriod.IsEndOfTheMonth)
+                    {
+                        item.Amount = allowance.Amount;
+                    }
+                }
+                else
+                {
+                    item = null;
+                }
+
+                allowanceItems.Add(item);
+            }
+
+            return allowanceItems;
         }
 
         public List<LoanTransaction> CreateLoanTransactions(
@@ -515,6 +590,8 @@ namespace AccuPay.Core.Entities
 
             return basicHours;
         }
+
+        #endregion Payroll
 
         #region Composite Keys
 

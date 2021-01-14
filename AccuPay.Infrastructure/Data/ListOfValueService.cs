@@ -41,11 +41,14 @@ namespace AccuPay.Infrastructure.Data
 
             if (type == null)
             {
-                listOfValues = await _context.ListOfValues.ToListAsync();
+                listOfValues = await _context.ListOfValues
+                    .AsNoTracking()
+                    .ToListAsync();
             }
             else
             {
                 listOfValues = await _context.ListOfValues
+                    .AsNoTracking()
                     .Where(x => x.Type.ToLower() == type.ToLower())
                     .ToListAsync();
             }

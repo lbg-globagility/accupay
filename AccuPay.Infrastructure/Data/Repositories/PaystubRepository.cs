@@ -57,6 +57,376 @@ namespace AccuPay.Infrastructure.Data
             await _context.SaveChangesAsync();
         }
 
+        #region Create or Update Paystub
+
+        public async Task SaveAsync(
+            int currentlyLoggedInUserId,
+            string currentSystemOwner,
+            IPolicyHelper policy,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Employee employee,
+            Product bpiInsuranceProduct,
+            Product sickLeaveProduct,
+            Product vacationLeaveProduct,
+            IReadOnlyCollection<Loan> loans,
+            ICollection<AllowanceItem> allowanceItems,
+            ICollection<LoanTransaction> loanTransactions,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Leave> leaves,
+            IReadOnlyCollection<Bonus> bonuses)
+        {
+            foreach (var loan in loans)
+            {
+                SaveLoanPaymentFromBonusItems(
+                    payPeriod: payPeriod,
+                    paystub: paystub,
+                    loan: loan,
+                    bonuses: bonuses,
+                    useLoanDeductFromBonus: policy.UseLoanDeductFromBonus);
+
+                SaveYearlyLoanInterest(policy, loan);
+
+                SaveLoan(currentlyLoggedInUserId, loan);
+            }
+
+            if (paystub.IsNewEntity)
+            {
+                paystub.LastUpdBy = currentlyLoggedInUserId;
+                _context.Entry(paystub).State = EntityState.Modified;
+                _context.Entry(paystub.Actual).State = EntityState.Modified;
+
+                if (paystub.ThirteenthMonthPay != null)
+                {
+                    _context.Entry(paystub.ThirteenthMonthPay).State = EntityState.Modified;
+                }
+            }
+            else
+            {
+                _context.Paystubs.Add(paystub);
+            }
+
+            bool isEligibleForBPIInsurance = employee.IsEligibleForNewBPIInsurance(
+                useBPIInsurancePolicy: policy.UseBPIInsurance,
+                paystub.Adjustments,
+                payPeriod);
+
+            if (isEligibleForBPIInsurance)
+            {
+                _context.Adjustments.Add(new Adjustment()
+                {
+                    OrganizationID = paystub.OrganizationID,
+                    CreatedBy = currentlyLoggedInUserId,
+                    Paystub = paystub,
+                    ProductID = bpiInsuranceProduct.RowID,
+                    Amount = -employee.BPIInsurance
+                });
+            }
+
+            if (paystub.AllowanceItems != null)
+            {
+                _context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
+            }
+            paystub.AllowanceItems = allowanceItems;
+
+            if (paystub.LoanTransactions != null)
+            {
+                _context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
+            }
+            paystub.LoanTransactions = loanTransactions;
+
+            if (currentSystemOwner != SystemOwner.Benchmark)
+            {
+                await UpdateLeaveLedger(paystub, employee, payPeriod, timeEntries, leaves);
+
+                await UpdatePaystubItems(
+                    currentlyLoggedInUserId,
+                    paystub,
+                    employee,
+                    sickLeaveProduct: sickLeaveProduct,
+                    vacationLeaveProduct: vacationLeaveProduct,
+                    timeEntries);
+            }
+            else
+            {
+                await UpdateBenchmarkLeaveLedger(paystub, employee, payPeriod);
+            }
+
+            foreach (var e in _context.ChangeTracker.Entries())
+            {
+                Console.WriteLine("Name and Status: {0} is {1}", e.Entity.GetType().FullName, e.State);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private void SaveLoan(int currentlyLoggedInUserId, Loan loan)
+        {
+            loan.LastUpdBy = currentlyLoggedInUserId;
+            _context.Entry(loan).State = EntityState.Modified;
+
+            if (loan.LoanType != null)
+            {
+                _context.Entry(loan.LoanType).State = EntityState.Detached;
+
+                if (loan.LoanType.CategoryEntity != null)
+                {
+                    _context.Entry(loan.LoanType.CategoryEntity).State = EntityState.Detached;
+
+                    if (loan.LoanType.CategoryEntity.Products != null)
+                    {
+                        foreach (var categoryProduct in loan.LoanType.CategoryEntity.Products)
+                        {
+                            _context.Entry(categoryProduct).State = EntityState.Detached;
+                        }
+                    }
+                }
+            }
+
+            if (loan.Employee != null)
+            {
+                _context.Entry(loan.Employee).State = EntityState.Detached;
+
+                if (loan.Employee.Position != null)
+                {
+                    _context.Entry(loan.Employee.Position).State = EntityState.Detached;
+
+                    if (loan.Employee.Position.Division != null)
+                    {
+                        _context.Entry(loan.Employee.Position.Division).State = EntityState.Detached;
+
+                        if (loan.Employee.Position.Division.ParentDivision != null)
+                        {
+                            _context.Entry(loan.Employee.Position.Division.ParentDivision).State = EntityState.Detached;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SaveYearlyLoanInterest(IPolicyHelper policy, Loan loan)
+        {
+            if (policy.UseGoldwingsLoanInterest && loan.YearlyLoanInterests != null && loan.YearlyLoanInterests.Any())
+            {
+                loan.YearlyLoanInterests.ToList().ForEach(yearlyLoanInterest =>
+                {
+                    // Save new yearly loan interest.
+                    // Don't save updated yearlyLoanInterests since they should not be edited after it was created.
+                    if (yearlyLoanInterest.IsNewEntity)
+                    {
+                        _context.Entry(yearlyLoanInterest).State = EntityState.Added;
+                    }
+                });
+            }
+        }
+
+        private void SaveLoanPaymentFromBonusItems(
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Loan loan,
+            IReadOnlyCollection<Bonus> bonuses,
+            bool useLoanDeductFromBonus)
+        {
+            if (useLoanDeductFromBonus)
+            {
+                var loanPaymentFromBonuses = paystub.GetLoanPaymentFromBonuses(bonuses, loan, payPeriod: payPeriod);
+
+                foreach (var lb in loanPaymentFromBonuses)
+                {
+                    var existingItem = lb.Items
+                        .Where(i => i.LoanPaidBonusId == lb.Id)
+                        .Where(i => i.PaystubId == paystub.RowID)
+                        .FirstOrDefault();
+
+                    if (existingItem != null) continue;
+
+                    var lbItem = LoanPaymentFromBonusItem.CreateNew(lb.Id, paystub);
+
+                    lb.Items.Add(lbItem);
+
+                    _context.Entry(lbItem).State = EntityState.Added;
+                }
+            }
+        }
+
+        private async Task UpdateBenchmarkLeaveLedger(Paystub paystub, Employee employee, PayPeriod payPeriod)
+        {
+            var vacationLedger = await _context.LeaveLedgers
+                .AsNoTracking()
+                .Include(l => l.Product)
+                .Include(l => l.LastTransaction)
+                .Where(l => l.EmployeeID == employee.RowID)
+                .Where(l => l.Product.IsVacationLeave)
+                .FirstOrDefaultAsync();
+
+            vacationLedger.LeaveTransactions = new List<LeaveTransaction>();
+
+            if (vacationLedger == null)
+                throw new Exception($"Vacation ledger for Employee No.: {employee.EmployeeNo}");
+
+            UpdateLedgerTransaction(
+                paystub: paystub,
+                payPeriod: payPeriod,
+                leaveId: null, ledger:
+                vacationLedger, totalLeaveHours:
+                paystub.LeaveHours,
+                transactionDate: payPeriod.PayToDate);
+        }
+
+        private async Task UpdateLeaveLedger(
+            Paystub paystub,
+            Employee employee,
+            PayPeriod payPeriod,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Leave> leaves)
+        {
+            // use LeaveLedgerRepository
+            var employeeLeaves = leaves
+                .Where(l => l.EmployeeID == employee.RowID)
+                .OrderBy(l => l.StartDate)
+                .ToList();
+
+            var leaveIds = employeeLeaves.Select(l => l.RowID).ToArray();
+
+            List<LeaveTransaction> transactions = new List<LeaveTransaction>() { };
+            if (leaveIds.Any())
+            {
+                transactions =
+                    await (from t in _context.LeaveTransactions
+                           where leaveIds.Contains(t.ReferenceID)
+                           select t)
+                           .AsNoTracking()
+                           .ToListAsync();
+            }
+
+            var employeeId = employee.RowID;
+            var ledgers = await _context.LeaveLedgers
+                .AsNoTracking()
+                .Include(x => x.Product)
+                .Include(x => x.LeaveTransactions)
+                .Include(x => x.LastTransaction)
+                .Where(x => x.EmployeeID == employeeId)
+                .ToListAsync();
+
+            var newLeaveTransactions = new List<LeaveTransaction>();
+            foreach (var leave in employeeLeaves)
+            {
+                // If a transaction has already been made for the current leave, skip the current leave.
+                if (transactions.Any(t => t.ReferenceID == leave.RowID))
+                {
+                    continue;
+                }
+                else
+                {
+                    var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo == leave.LeaveType);
+
+                    // retrieves the time entries within leave date range
+                    var timeEntry = timeEntries?.Where(t => leave.StartDate == t.Date);
+
+                    if (timeEntry == null)
+                        continue;
+
+                    // summate the leave hours
+                    var totalLeaveHours = timeEntry.Sum(t => t.TotalLeaveHours);
+
+                    if (totalLeaveHours == 0)
+                        continue;
+
+                    var transactionDate = leave.EndDate ?? leave.StartDate;
+
+                    UpdateLedgerTransaction(
+                        paystub: paystub,
+                        payPeriod: payPeriod,
+                        leaveId: leave.RowID,
+                        ledger: ledger,
+                        totalLeaveHours: totalLeaveHours,
+                        transactionDate: transactionDate);
+                }
+            }
+        }
+
+        private void UpdateLedgerTransaction(
+            Paystub paystub,
+            PayPeriod payPeriod,
+            int? leaveId,
+            LeaveLedger ledger,
+            decimal totalLeaveHours,
+            DateTime transactionDate)
+        {
+            var newTransaction = new LeaveTransaction()
+            {
+                OrganizationID = paystub.OrganizationID,
+                Created = DateTime.Now,
+                EmployeeID = paystub.EmployeeID,
+                PayPeriodID = payPeriod.RowID,
+                ReferenceID = leaveId,
+                TransactionDate = transactionDate,
+                Type = LeaveTransactionType.Debit,
+                Amount = totalLeaveHours,
+                Paystub = paystub,
+                Balance = (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours
+            };
+
+            ledger.LeaveTransactions.Add(newTransaction);
+            ledger.LastTransaction = newTransaction;
+        }
+
+        private async Task UpdatePaystubItems(
+            int currentlyLoggedInUserId,
+            Paystub paystub,
+            Employee employee,
+            Product sickLeaveProduct,
+            Product vacationLeaveProduct,
+            IReadOnlyCollection<TimeEntry> timeEntries)
+        {
+            _context.Entry(paystub).Collection(p => p.PaystubItems).Load();
+            _context.Set<PaystubItem>().RemoveRange(paystub.PaystubItems);
+
+            var vacationLeaveBalance = await _context.PaystubItems
+                .AsNoTracking()
+                .Where(p => p.Product.PartNo == ProductConstant.VACATION_LEAVE)
+                .Where(p => p.Paystub.RowID == paystub.RowID)
+                .FirstOrDefaultAsync();
+
+            decimal vacationLeaveUsed = timeEntries?.Sum(t => t.VacationLeaveHours) ?? 0;
+            decimal newBalance = employee.LeaveBalance - vacationLeaveUsed;
+
+            vacationLeaveBalance = new PaystubItem()
+            {
+                OrganizationID = paystub.OrganizationID,
+                Created = DateTime.Now,
+                CreatedBy = currentlyLoggedInUserId,
+                ProductID = vacationLeaveProduct.RowID,
+                PayAmount = newBalance,
+                Paystub = paystub
+            };
+
+            paystub.PaystubItems.Add(vacationLeaveBalance);
+
+            var sickLeaveBalance = await _context.PaystubItems
+                .AsNoTracking()
+                .Where(p => p.Product.PartNo == ProductConstant.SICK_LEAVE)
+                .Where(p => p.Paystub.RowID == paystub.RowID)
+                .FirstOrDefaultAsync();
+
+            var sickLeaveUsed = timeEntries?.Sum(t => t.SickLeaveHours) ?? 0;
+            var newBalance2 = employee.SickLeaveBalance - sickLeaveUsed;
+
+            sickLeaveBalance = new PaystubItem()
+            {
+                OrganizationID = paystub.OrganizationID,
+                Created = DateTime.Now,
+                CreatedBy = currentlyLoggedInUserId,
+                ProductID = sickLeaveProduct.RowID,
+                PayAmount = newBalance2,
+                Paystub = paystub
+            };
+
+            paystub.PaystubItems.Add(sickLeaveBalance);
+        }
+
+        #endregion Create or Update Paystub
+
         #region UpdateAdjustments
 
         public async Task<(IReadOnlyCollection<T> added, IReadOnlyCollection<T> updated, IReadOnlyCollection<T> deleted, IReadOnlyCollection<T> originalAdjustments)> UpdateAdjustmentsAsync<T>(
@@ -465,6 +835,7 @@ namespace AccuPay.Infrastructure.Data
             var previousCutoffEnd = currentCuttOffStart.AddDays(-1);
 
             return await _context.Paystubs
+                .AsNoTracking()
                 .Where(x => x.PayToDate == previousCutoffEnd)
                 .Where(x => x.OrganizationID == organizationId)
                 .ToListAsync();
@@ -683,6 +1054,7 @@ namespace AccuPay.Infrastructure.Data
         private IQueryable<Paystub> CreateBaseQueryWithFullPaystub()
         {
             return _context.Paystubs
+                .AsNoTracking()
                 .Include(p => p.Employee.Position.Division)
                 .Include(p => p.Adjustments)
                     .ThenInclude(a => a.Product)

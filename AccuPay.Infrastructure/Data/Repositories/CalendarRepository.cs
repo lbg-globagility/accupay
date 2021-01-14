@@ -104,7 +104,9 @@ namespace AccuPay.Infrastructure.Data
 
         public async Task<PayCalendar> GetOrCreateDefaultCalendar()
         {
-            var defaultCalendar = await _context.Calendars.FirstOrDefaultAsync(t => t.IsDefault);
+            var defaultCalendar = await _context.Calendars
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.IsDefault);
 
             if (defaultCalendar == null)
             {
@@ -207,6 +209,7 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId)
         {
             return await _context.CalendarDays
+                .AsNoTracking()
                 .Include(t => t.DayType)
                 .Where(t => t.CalendarID == calendarId)
                 .ToListAsync();

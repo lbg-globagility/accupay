@@ -66,6 +66,7 @@ namespace AccuPay.Infrastructure.Data
         private IQueryable<Bonus> CreateBaseQueryByTimePeriod(int organizationId, TimePeriod timePeriod)
         {
             return _context.Bonuses
+                .AsNoTracking()
                 .Include(a => a.Product)
                 .Where(a => a.OrganizationID == organizationId)
                 .Where(a => a.EffectiveStartDate <= timePeriod.End)

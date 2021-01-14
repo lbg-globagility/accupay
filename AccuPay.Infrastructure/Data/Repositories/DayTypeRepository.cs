@@ -33,7 +33,9 @@ namespace AccuPay.Infrastructure.Data
 
         public async Task<DayType> GetOrCreateRegularDayAsync()
         {
-            var regularDayType = await _context.DayTypes.FirstOrDefaultAsync(t => t.Name == CalendarConstant.RegularDay);
+            var regularDayType = await _context.DayTypes
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Name == CalendarConstant.RegularDay);
 
             if (regularDayType == null)
             {

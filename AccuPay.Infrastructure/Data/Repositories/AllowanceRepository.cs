@@ -196,10 +196,11 @@ namespace AccuPay.Infrastructure.Data
         private IQueryable<Allowance> CreateBaseQueryByTimePeriod(int organizationId, TimePeriod timePeriod)
         {
             return _context.Allowances
-                    .Include(a => a.Product)
-                    .Where(a => a.OrganizationID == organizationId)
-                    .Where(a => a.EffectiveStartDate <= timePeriod.End)
-                    .Where(a => a.EffectiveEndDate == null ? true : timePeriod.Start <= a.EffectiveEndDate);
+                .AsNoTracking()
+                .Include(a => a.Product)
+                .Where(a => a.OrganizationID == organizationId)
+                .Where(a => a.EffectiveStartDate <= timePeriod.End)
+                .Where(a => a.EffectiveEndDate == null ? true : timePeriod.Start <= a.EffectiveEndDate);
         }
 
         #endregion Private helper methods

@@ -134,6 +134,7 @@ namespace AccuPay.Infrastructure.Data
             query = SalaryQueryHelper.GetLatestSalaryQuery(query, cutoffEnd);
 
             return query
+                .AsNoTracking()
                 .GroupBy(x => x.EmployeeID)
                 .Select(g => g.FirstOrDefault());
         }

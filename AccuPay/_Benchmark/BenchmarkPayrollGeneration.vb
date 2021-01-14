@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
@@ -34,7 +35,7 @@ Namespace Benchmark
         Private Sub New(
             employee As Employee,
             payPeriod As PayPeriod,
-            PayrollResources As IPayrollResources,
+            payrollResources As IPayrollResources,
             currentPayPeriod As IPayPeriod,
             employeeRate As BenchmarkPaystubRate,
             regularDays As Decimal,
@@ -49,7 +50,7 @@ Namespace Benchmark
 
             _employee = employee
             _payPeriod = payPeriod
-            _payrollResources = PayrollResources
+            _payrollResources = payrollResources
             _currentPayPeriod = currentPayPeriod
             _employeeRate = employeeRate
             _regularDays = regularDays
@@ -67,7 +68,6 @@ Namespace Benchmark
 
             Public ReadOnly Property Paystub As Paystub
             Public ReadOnly Property LoanTransanctions As List(Of LoanTransaction)
-            Public ReadOnly Property PayrollGenerator As IPayrollGenerator
             Public ReadOnly Property Loans As IReadOnlyCollection(Of Loan)
             Public ReadOnly Property AllowanceItems As ICollection(Of AllowanceItem)
             Public ReadOnly Property LoanTransactions As ICollection(Of LoanTransaction)
@@ -80,7 +80,6 @@ Namespace Benchmark
             Sub New(
                 paystub As Paystub,
                 loanTransanctions As List(Of LoanTransaction),
-                generator As IPayrollGenerator,
                 loans As IReadOnlyCollection(Of Loan),
                 allowanceItems As ICollection(Of AllowanceItem),
                 loanTransactions As ICollection(Of LoanTransaction),
@@ -92,7 +91,6 @@ Namespace Benchmark
 
                 Me.Paystub = paystub
                 Me.LoanTransanctions = loanTransanctions
-                Me.PayrollGenerator = generator
                 Me.Loans = loans
                 Me.AllowanceItems = allowanceItems
                 Me.LoanTransactions = loanTransactions
@@ -137,20 +135,19 @@ Namespace Benchmark
                 overtimes:=overtimes,
                 ecola:=ecola)
 
-            Dim payrollGeneration = MainServiceProvider.GetRequiredService(Of IPayrollGenerator)
-
-            Dim output As DoProcessOutput = generator.CreatePaystub(employee, payrollGeneration)
+            Dim output As DoProcessOutput = generator.CreatePaystub(employee)
 
             Return output
 
         End Function
 
-        Public Shared Sub Save(output As DoProcessOutput)
+        Public Shared Async Function Save(output As DoProcessOutput) As Task
 
-            output.PayrollGenerator.SavePayroll(
+            Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
+
+            Await dataService.SaveAsync(
                 currentlyLoggedInUserId:=z_User,
                 currentSystemOwner:=SystemOwner.Benchmark,
-                settings:=output.Resources.ListOfValueCollection,
                 policy:=output.Resources.Policy,
                 payPeriod:=output.PayPeriod,
                 paystub:=output.Paystub,
@@ -164,9 +161,9 @@ Namespace Benchmark
                 timeEntries:=Nothing,
                 leaves:=output.Leaves,
                 bonuses:=output.Bonuses)
-        End Sub
+        End Function
 
-        Private Function CreatePaystub(employee As Employee, generator As IPayrollGenerator) As DoProcessOutput
+        Private Function CreatePaystub(employee As Employee) As DoProcessOutput
             Dim paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
@@ -246,7 +243,6 @@ Namespace Benchmark
             Return New DoProcessOutput(
                 paystub,
                 loanTransactions,
-                generator,
                 loans,
                 allowanceItems,
                 loanTransactions,
@@ -507,7 +503,6 @@ Namespace Benchmark
                 product:=_ecola.Product,
                 payperiodId:=_currentPayPeriod.RowID.Value,
                 allowanceId:=_ecola.RowID.Value,
-                organizationId:=z_OrganizationID,
                 currentlyLoggedInUserId:=z_User
             )
 

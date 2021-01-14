@@ -139,7 +139,9 @@ namespace AccuPay.Infrastructure.Data
 
             await _context.SaveChangesAsync();
 
-            var newProduct = await _context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
+            var newProduct = await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.RowID == product.RowID);
 
             return newProduct;
         }
@@ -442,6 +444,7 @@ namespace AccuPay.Infrastructure.Data
         private async Task<Category> GetOrCreateCategoryByName(string categoryName, int organizationId)
         {
             var categoryProduct = await _context.Categories
+                .AsNoTracking()
                 .Where(c => c.OrganizationID == organizationId)
                 .Where(c => c.CategoryName.Trim().ToLower() == categoryName.ToTrimmedLowerCase())
                 .FirstOrDefaultAsync();
@@ -452,6 +455,7 @@ namespace AccuPay.Infrastructure.Data
                 // this is due to the design of the database wanting the category to have a CategoryID
                 // to maybe group them across different organization but never used them in the application ever
                 var existingCategoryProduct = await _context.Categories
+                    .AsNoTracking()
                     .Where(c => c.CategoryName == categoryName)
                     .FirstOrDefaultAsync();
 
@@ -536,6 +540,7 @@ namespace AccuPay.Infrastructure.Data
         private IQueryable<Product> CreateBaseQueryByCategory(int categoryId, int organizationId)
         {
             return _context.Products
+                .AsNoTracking()
                 .Where(p => p.OrganizationID == organizationId)
                 .Where(p => p.CategoryID == categoryId);
         }

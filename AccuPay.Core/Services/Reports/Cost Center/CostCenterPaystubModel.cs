@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
 using System.Collections.Generic;
@@ -103,22 +103,20 @@ namespace AccuPay.Core.Services
             List<TimeEntry> branchTimeEntries)
         {
             var allowanceCalculator = new DailyAllowanceCalculator(
-                settings,
+                new AllowancePolicy(settings),
+                employee,
+                currentPaystub,
+                payPeriod,
                 calendarCollection,
-                allTimeEntries,
-                organizationId: employee.OrganizationID.Value,
+                previousTimeEntries: allTimeEntries,
+                timeEntries: branchTimeEntries,
                 currentlyLoggedInUserId: userId);
 
             decimal totalAllowance = 0;
 
             foreach (var allowance in dailyAllowances)
             {
-                var allowanceItem = allowanceCalculator.Compute(
-                    payPeriod,
-                    allowance,
-                    employee,
-                    currentPaystub,
-                    branchTimeEntries);
+                var allowanceItem = allowanceCalculator.Compute(allowance);
 
                 if (allowanceItem != null)
                 {
