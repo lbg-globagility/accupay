@@ -1,5 +1,5 @@
 
-CREATE TABLE `allowancetype` (
+CREATE TABLE IF NOT EXISTS `allowancetype` (
 	`Id` INT NOT NULL AUTO_INCREMENT,
 	`Name` VARCHAR(50) NOT NULL,
 	`DisplayString` VARCHAR(50) NOT NULL,
