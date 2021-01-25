@@ -90,51 +90,23 @@ namespace AccuPay.Infrastructure.Data
                 SaveLoan(currentlyLoggedInUserId, loan);
             }
 
-            if (paystub.IsNewEntity)
-            {
-                paystub.LastUpdBy = currentlyLoggedInUserId;
-                _context.Entry(paystub).State = EntityState.Modified;
-                _context.Entry(paystub.Actual).State = EntityState.Modified;
+            SavePaystub(currentlyLoggedInUserId, paystub);
 
-                if (paystub.ThirteenthMonthPay != null)
-                {
-                    _context.Entry(paystub.ThirteenthMonthPay).State = EntityState.Modified;
-                }
-            }
-            else
-            {
-                _context.Paystubs.Add(paystub);
-            }
+            SaveBPIInsurance(currentlyLoggedInUserId, policy, payPeriod, paystub, employee, bpiInsuranceProduct);
 
-            bool isEligibleForBPIInsurance = employee.IsEligibleForNewBPIInsurance(
-                useBPIInsurancePolicy: policy.UseBPIInsurance,
-                paystub.Adjustments,
-                payPeriod);
+            SaveAllowanceItems(paystub, allowanceItems);
 
-            if (isEligibleForBPIInsurance)
-            {
-                _context.Adjustments.Add(new Adjustment()
-                {
-                    OrganizationID = paystub.OrganizationID,
-                    CreatedBy = currentlyLoggedInUserId,
-                    Paystub = paystub,
-                    ProductID = bpiInsuranceProduct.RowID,
-                    Amount = -employee.BPIInsurance
-                });
-            }
+            SaveLoanTransactions(paystub, loanTransactions);
 
-            if (paystub.AllowanceItems != null)
-            {
-                _context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
-            }
-            paystub.AllowanceItems = allowanceItems;
+            await UpdateLeaveLedgerAndPaystubItems(currentlyLoggedInUserId, currentSystemOwner, payPeriod, paystub, employee, sickLeaveProduct, vacationLeaveProduct, timeEntries, leaves);
 
-            if (paystub.LoanTransactions != null)
-            {
-                _context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
-            }
-            paystub.LoanTransactions = loanTransactions;
+            DetachInvalidEntities();
 
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task UpdateLeaveLedgerAndPaystubItems(int currentlyLoggedInUserId, string currentSystemOwner, PayPeriod payPeriod, Paystub paystub, Employee employee, Product sickLeaveProduct, Product vacationLeaveProduct, IReadOnlyCollection<TimeEntry> timeEntries, IReadOnlyCollection<Leave> leaves)
+        {
             if (currentSystemOwner != SystemOwner.Benchmark)
             {
                 await UpdateLeaveLedger(paystub, employee, payPeriod, timeEntries, leaves);
@@ -151,57 +123,97 @@ namespace AccuPay.Infrastructure.Data
             {
                 await UpdateBenchmarkLeaveLedger(paystub, employee, payPeriod);
             }
+        }
+
+        private void SaveLoanTransactions(Paystub paystub, ICollection<LoanTransaction> loanTransactions)
+        {
+            if (paystub.LoanTransactions != null)
+            {
+                _context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
+            }
+            paystub.LoanTransactions = loanTransactions;
+        }
+
+        private void SaveAllowanceItems(Paystub paystub, ICollection<AllowanceItem> allowanceItems)
+        {
+            if (paystub.AllowanceItems != null)
+            {
+                _context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
+            }
+            paystub.AllowanceItems = allowanceItems;
+        }
+
+        private void SaveBPIInsurance(int currentlyLoggedInUserId, IPolicyHelper policy, PayPeriod payPeriod, Paystub paystub, Employee employee, Product bpiInsuranceProduct)
+        {
+            bool isEligibleForBPIInsurance = employee.IsEligibleForNewBPIInsurance(
+                            useBPIInsurancePolicy: policy.UseBPIInsurance,
+                            paystub.Adjustments,
+                            payPeriod);
+
+            if (isEligibleForBPIInsurance)
+            {
+                _context.Adjustments.Add(new Adjustment()
+                {
+                    OrganizationID = paystub.OrganizationID,
+                    CreatedBy = currentlyLoggedInUserId,
+                    Paystub = paystub,
+                    ProductID = bpiInsuranceProduct.RowID,
+                    Amount = -employee.BPIInsurance
+                });
+            }
+        }
+
+        private void SavePaystub(int currentlyLoggedInUserId, Paystub paystub)
+        {
+            if (paystub.IsNewEntity)
+            {
+                _context.Paystubs.Add(paystub);
+            }
+            else
+            {
+                paystub.LastUpdBy = currentlyLoggedInUserId;
+                _context.Entry(paystub).State = EntityState.Modified;
+                _context.Entry(paystub.Actual).State = EntityState.Modified;
+
+                if (paystub.ThirteenthMonthPay != null)
+                {
+                    _context.Entry(paystub.ThirteenthMonthPay).State = EntityState.Modified;
+                }
+            }
+        }
+
+        private void DetachInvalidEntities()
+        {
+            var invalidEntities = new List<object>();
+            foreach (var e in _context.ChangeTracker.Entries())
+            {
+                string fullEntityName = e.Entity.GetType().FullName;
+                Console.WriteLine("Name and Status: {0} is {1}", fullEntityName, e.State);
+
+                // add more entities here if they are not supposed to be saved
+                if (fullEntityName.Contains(nameof(Employee)) ||
+                    fullEntityName.Contains(nameof(Division)) ||
+                    fullEntityName.Contains(nameof(Position)))
+                {
+                    invalidEntities.Add(e.Entity);
+                }
+            }
+
+            foreach (var entity in invalidEntities)
+            {
+                _context.Entry(entity).State = EntityState.Detached;
+            }
 
             foreach (var e in _context.ChangeTracker.Entries())
             {
-                Console.WriteLine("Name and Status: {0} is {1}", e.Entity.GetType().FullName, e.State);
+                Console.WriteLine("### Name and Status: {0} is {1}", e.Entity.GetType().FullName, e.State);
             }
-
-            await _context.SaveChangesAsync();
         }
 
         private void SaveLoan(int currentlyLoggedInUserId, Loan loan)
         {
             loan.LastUpdBy = currentlyLoggedInUserId;
             _context.Entry(loan).State = EntityState.Modified;
-
-            if (loan.LoanType != null)
-            {
-                _context.Entry(loan.LoanType).State = EntityState.Detached;
-
-                if (loan.LoanType.CategoryEntity != null)
-                {
-                    _context.Entry(loan.LoanType.CategoryEntity).State = EntityState.Detached;
-
-                    if (loan.LoanType.CategoryEntity.Products != null)
-                    {
-                        foreach (var categoryProduct in loan.LoanType.CategoryEntity.Products)
-                        {
-                            _context.Entry(categoryProduct).State = EntityState.Detached;
-                        }
-                    }
-                }
-            }
-
-            if (loan.Employee != null)
-            {
-                _context.Entry(loan.Employee).State = EntityState.Detached;
-
-                if (loan.Employee.Position != null)
-                {
-                    _context.Entry(loan.Employee.Position).State = EntityState.Detached;
-
-                    if (loan.Employee.Position.Division != null)
-                    {
-                        _context.Entry(loan.Employee.Position.Division).State = EntityState.Detached;
-
-                        if (loan.Employee.Position.Division.ParentDivision != null)
-                        {
-                            _context.Entry(loan.Employee.Position.Division.ParentDivision).State = EntityState.Detached;
-                        }
-                    }
-                }
-            }
         }
 
         private void SaveYearlyLoanInterest(IPolicyHelper policy, Loan loan)
