@@ -191,9 +191,21 @@ Public Class CalendarsForm
 
     Private Async Sub DisplayCalendar()
         ClearChangeTracker()
-        CalendarLabel.Text = _currentCalendar.Name
-        MonthSelectorControl.CalendarName = _currentCalendar.Name
-        Await LoadCalendarDays()
+
+        If _currentCalendar Is Nothing Then
+
+            _currentCalendar = DirectCast(CalendarsDataGridView.CurrentRow?.DataBoundItem, PayCalendar)
+
+        End If
+
+        If _currentCalendar IsNot Nothing Then
+
+            CalendarLabel.Text = _currentCalendar.Name
+            MonthSelectorControl.CalendarName = _currentCalendar.Name
+            Await LoadCalendarDays()
+
+        End If
+
     End Sub
 
     Private Sub DisplayCalendarDays()
