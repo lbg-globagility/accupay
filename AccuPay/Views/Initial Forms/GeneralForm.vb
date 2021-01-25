@@ -49,6 +49,8 @@ Public Class GeneralForm
             Await CheckRolePermissions()
         End If
 
+        GovernmentToolStripMenuItem.Visible = False
+
     End Sub
 
     Private Sub ShowAgency()

@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 
 namespace AccuPay.Utilities.Extensions
 {
     public static class TimeSpanExtensions
     {
         public const int HoursPerDay = 24;
+        private const int MinutesPerHour = 60;
+        private const int SecondsPerMinutes = 60;
 
         public static string ToStringFormat(
             this TimeSpan timeSpanInput,
@@ -32,9 +34,10 @@ namespace AccuPay.Utilities.Extensions
             return currentDate.Value.Add(timeSpanInput.Value).ToString(format);
         }
 
-        public static TimeSpan AddHours(this TimeSpan timeSpanInput, int value)
+        public static TimeSpan AddHours(this TimeSpan timeSpanInput, decimal value)
         {
-            return timeSpanInput.Add(new TimeSpan(value, 0, 0));
+            return timeSpanInput.Add(
+                new TimeSpan(0, 0, (int)(value * MinutesPerHour * SecondsPerMinutes)));
         }
 
         public static TimeSpan AddOneDay(this TimeSpan timeSpanInput)
