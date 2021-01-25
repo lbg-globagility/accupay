@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -31,7 +31,7 @@ namespace AccuPay.Core.Helpers
                 var nextDay = this.Date.AddDays(1);
                 var breakDate = shift.BreakStartTime > shift.StartTime ? this.Date : nextDay;
 
-                var breakTimeEnd = shift.BreakStartTime.Value.AddHours(Convert.ToInt32(shift.BreakLength));
+                var breakTimeEnd = shift.BreakStartTime.Value.AddHours(shift.BreakLength);
                 this.BreakPeriod = TimePeriod.FromTime(shift.BreakStartTime.Value, breakTimeEnd, breakDate);
             }
         }
