@@ -40,7 +40,7 @@ INSERT INTO `paysocialsecurity` (`CreatedBy`, `LastUpdBy`, `RangeFromAmount`, `R
 (@UserId, @UserId, 17250, 17749.99, 17500, 787.5, 1487.5, 30, 0.0, 0.0, @datefrom, @dateto),
 (@UserId, @UserId, 17750, 18249.99, 18000, 810.0, 1530.0, 30, 0.0, 0.0, @datefrom, @dateto),
 (@UserId, @UserId, 18250, 18749.99, 18500, 832.5, 1572.5, 30, 0.0, 0.0, @datefrom, @dateto),
-(@UserId, @UserId, 18750, 19249.99, 19000, 855.5, 1615.0, 30, 0.0, 0.0, @datefrom, @dateto),
+(@UserId, @UserId, 18750, 19249.99, 19000, 855.0, 1615.0, 30, 0.0, 0.0, @datefrom, @dateto),
 (@UserId, @UserId, 19250, 19749.99, 19500, 877.5, 1657.5, 30, 0.0, 0.0, @datefrom, @dateto),
 (@UserId, @UserId, 19750, 20249.99, 20000, 900.0, 1700.0, 30, 0.0, 0.0, @datefrom, @dateto),
 (@UserId, @UserId, 20250, 20749.99, 20500, 900.0, 1700.0, 30, 42.5, 22.5, @datefrom, @dateto),
