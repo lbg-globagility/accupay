@@ -58,13 +58,20 @@ namespace AccuPay.Infrastructure.Data
         public async Task<Allowance> GetEmployeeEcolaAsync(
             int employeeId,
             int organizationId,
-            TimePeriod timePeriod)
+            DateTime startDate,
+            DateTime? endDate = null)
         {
-            return await CreateBaseQueryByTimePeriod(
-                    organizationId,
-                    timePeriod)
-                .Where(a => a.EmployeeID == employeeId)
-                .Where(a => a.Product.PartNo.ToLower() == ProductConstant.ECOLA)
+            var query = CreateBaseGetEmployeeEcolaQuery(employeeId, organizationId)
+                .Where(a => a.EffectiveStartDate <= startDate);
+
+            if (endDate != null)
+            {
+                query = query
+                    .Where(a => a.EffectiveEndDate == null ? true : startDate <= a.EffectiveEndDate);
+            }
+
+            return await query
+                .OrderByDescending(x => x.EffectiveStartDate)
                 .FirstOrDefaultAsync();
         }
 
@@ -77,6 +84,14 @@ namespace AccuPay.Infrastructure.Data
             return await _context.Allowances
                 .Include(p => p.Product)
                 .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Allowance>> GetEmployeeEcolaAsync(
+            int employeeId,
+            int organizationId)
+        {
+            return await CreateBaseGetEmployeeEcolaQuery(employeeId, organizationId)
                 .ToListAsync();
         }
 
@@ -201,6 +216,16 @@ namespace AccuPay.Infrastructure.Data
                 .Where(a => a.OrganizationID == organizationId)
                 .Where(a => a.EffectiveStartDate <= timePeriod.End)
                 .Where(a => a.EffectiveEndDate == null ? true : timePeriod.Start <= a.EffectiveEndDate);
+        }
+
+        private IQueryable<Allowance> CreateBaseGetEmployeeEcolaQuery(int employeeId, int organizationId)
+        {
+            return _context.Allowances
+                .AsNoTracking()
+                .Include(a => a.Product)
+                .Where(a => a.EmployeeID == employeeId)
+                .Where(a => a.Product.PartNo.ToLower() == ProductConstant.ECOLA)
+                .Where(a => a.OrganizationID == organizationId);
         }
 
         #endregion Private helper methods

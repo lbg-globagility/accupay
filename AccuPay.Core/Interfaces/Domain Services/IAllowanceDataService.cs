@@ -1,6 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Services.Imports.Allowances;
-using AccuPay.Core.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,10 +14,19 @@ namespace AccuPay.Core.Interfaces
             int employeeId,
             int organizationId,
             int currentlyLoggedInUserId,
-            TimePeriod timePeriod,
-            string allowanceFrequency = Allowance.FREQUENCY_SEMI_MONTHLY,
+            DateTime startDate,
+            DateTime? endDate = null,
+            string allowanceFrequency = Allowance.FREQUENCY_DAILY,
             decimal amount = 0);
 
         Task<bool> CheckIfAlreadyUsedInClosedPayPeriodAsync(int allowanceId);
+
+        Task<Allowance> CreateEcola(
+            int employeeId,
+            int organizationId,
+            int currentlyLoggedInUserId,
+            DateTime startDate,
+            string allowanceFrequency,
+            decimal amount);
     }
 }

@@ -186,8 +186,6 @@ Namespace Benchmark
 
             End If
 
-            Dim allowanceItems As List(Of AllowanceItem) = CreateAllowanceItems(paystub)
-
             Dim loans = _payrollResources.Loans.
                 Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
                 ToList()
@@ -214,7 +212,11 @@ Namespace Benchmark
                 currentlyLoggedInUserId:=z_User)
 
             ComputeHoursAndPay(paystub)
-            ComputeBasicHoursAndBasicPay(paystub, employee) 'this should be on the top of ComputeHoursAndPay(). This needs the regular hours, late, UT and absent hours before it computes
+            'this should be below ComputeHoursAndPay(). This needs the regular hours, late, UT and absent hours before it computes
+            ComputeBasicHoursAndBasicPay(paystub, employee)
+
+            'this should be below ComputeHoursAndPay(). This needs the paystub hours
+            Dim allowanceItems As List(Of AllowanceItem) = CreateAllowanceItems(paystub)
 
             paystub.ComputeTotalEarnings(
                 employee,
@@ -518,21 +520,29 @@ Namespace Benchmark
 
             For Each deduction In _selectedDeductions
 
-                paystub.Adjustments.Add(New Adjustment With {
-                .OrganizationID = z_OrganizationID,
-                .ProductID = deduction.Adjustment?.RowID,
-                .Amount = deduction.Amount * -1 'to make it negative
-            })
+                Dim adjustment As Adjustment = New Adjustment With {
+                    .OrganizationID = z_OrganizationID,
+                    .ProductID = deduction.Adjustment?.RowID,
+                    .Amount = deduction.Amount * -1 'to make it negative
+                }
+
+                adjustment.AuditUser(z_User)
+
+                paystub.Adjustments.Add(adjustment)
 
             Next
 
             For Each deduction In _selectedIncomes
 
-                paystub.Adjustments.Add(New Adjustment With {
-                .OrganizationID = z_OrganizationID,
-                .ProductID = deduction.Adjustment?.RowID,
-                .Amount = deduction.Amount
-            })
+                Dim adjustment As Adjustment = New Adjustment With {
+                    .OrganizationID = z_OrganizationID,
+                    .ProductID = deduction.Adjustment?.RowID,
+                    .Amount = deduction.Amount
+                }
+
+                adjustment.AuditUser(z_User)
+
+                paystub.Adjustments.Add(adjustment)
 
             Next
         End Sub

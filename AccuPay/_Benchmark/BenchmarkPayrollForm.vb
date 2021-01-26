@@ -198,6 +198,7 @@ Public Class BenchmarkPayrollForm
             _employees = (Await _employeeRepository.GetAllActiveWithoutPayrollAsync(
                     _currentPayPeriod.RowID.Value,
                     z_OrganizationID)).
+                OrderBy(Function(e) e.FullNameLastNameFirst).
                 ToList()
         Else
             _employees = New List(Of Employee)
@@ -226,8 +227,8 @@ Public Class BenchmarkPayrollForm
             Await _benchmarkPayrollHelper.CleanEmployee(employeeId.Value)
 
             Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID.Value)).
-                            FirstOrDefault
+                Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID.Value)).
+                FirstOrDefault
 
             If salary Is Nothing Then
 
@@ -239,7 +240,8 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            _leaveBalance = Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
+            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+            _leaveBalance = Await employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
 
             If _employeeRate.IsInvalid Then Return
 
@@ -274,8 +276,7 @@ Public Class BenchmarkPayrollForm
     Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
         _ecola = Await BenchmarkPayrollHelper.GetEcola(
             employeeId.Value,
-            payDateFrom:=_currentPayPeriod.PayFromDate,
-            payDateTo:=_currentPayPeriod.PayToDate)
+            payDateFrom:=_currentPayPeriod.PayFromDate)
 
         If _ecola Is Nothing Then
 
@@ -506,29 +507,24 @@ Public Class BenchmarkPayrollForm
             ecola:=_ecola)
 
         'TODO
-        '#1. Extract the generator here and put it in a global field DONE
-        '#2. Save paystub DONE
-        '#3. Test save paystub from database DONE
-        '#4. Show payroll summary (test OT)
-        '#5. Paystub values should be correct in payroll summary
-        '#6.  Hide reports that would now work. (Do this first in master branch)
-        '#7. Resolve bugs from master branch like employee saving with 0  workdays per year.
-        'BONUS
         '#1. Resign employee
-        '#2. Payslip
 
         _benchmarkPayrollGenerationOutput = output
         Dim currentPaystub = output.Paystub
 
         'Get loans data
-        Dim loans = output.LoanTransanctions.CloneListJson()
+        Dim loans As New List(Of LoanTransaction)
+
+        For Each loan In output.LoanTransanctions
+            loans.Add(loan.Clone())
+        Next
 
         Dim pagIbigLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_pagibigLoan Is Nothing, 0, Nothing)
         Dim sssLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_sssLoan Is Nothing, 0, Nothing)
 
         Dim loanIndex As Integer = 0
 
-        While (loans.Any)
+        While (loans.Any())
 
             Dim loan = loans(loanIndex)
 

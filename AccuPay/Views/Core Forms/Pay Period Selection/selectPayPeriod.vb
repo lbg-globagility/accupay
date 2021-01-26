@@ -24,15 +24,11 @@ Public Class selectPayPeriod
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
-    Private ReadOnly _payPeriodService As IPayPeriodDataService
-
     Sub New()
 
         InitializeComponent()
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
-
-        _payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
     End Sub
 
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -268,7 +264,7 @@ Public Class selectPayPeriod
         Panel2.Enabled = True
     End Sub
 
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    Private Async Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
         dgvpaypers.EndEdit()
 
         If dgvpaypers.RowCount <> 0 Then
@@ -278,8 +274,9 @@ Public Class selectPayPeriod
             With dgvpaypers.CurrentRow
 
                 Dim payPeriodId = ObjectUtils.ToNullableInteger(.Cells("Column1").Value)
-                Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
-                    ObjectUtils.ToNullableInteger(.Cells("Column1").Value))
+
+                Dim payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
+                Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(payPeriodId)
 
                 If validate = FunctionResult.Failed Then
 
@@ -287,10 +284,7 @@ Public Class selectPayPeriod
                     Return
                 End If
 
-                PayPeriod = New PayPeriod
-                PayPeriod.RowID = payPeriodId.Value
-                PayPeriod.PayFromDate = CDate(.Cells("Column2").Value)
-                PayPeriod.PayToDate = CDate(.Cells("Column3").Value)
+                PayPeriod = Await _payPeriodRepository.GetByIdAsync(payPeriodId.Value)
             End With
 
         End If

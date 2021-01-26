@@ -53,5 +53,29 @@ namespace AccuPay.Core.Entities
         public DateTime? PayPeriodPayToDate => PayPeriod?.PayToDate;
 
         public decimal PrincipalAmount => DeductionAmount - InterestAmount;
+
+        public LoanTransaction Clone()
+        {
+            return new LoanTransaction()
+            {
+                Created = Created,
+                CreatedBy = CreatedBy,
+                DeductionAmount = DeductionAmount,
+                EmployeeID = EmployeeID,
+                InterestAmount = InterestAmount,
+                LastUpd = LastUpd,
+                LastUpdBy = LastUpdBy,
+                Loan = Loan,
+                LoanID = LoanID,
+                LoanPayPeriodLeft = LoanPayPeriodLeft,
+                OrganizationID = OrganizationID,
+                PayPeriod = PayPeriod,
+                PayPeriodID = PayPeriodID,
+                Paystub = Paystub,
+                PaystubID = PaystubID,
+                RowID = RowID,
+                TotalBalance = TotalBalance,
+            };
+        }
     }
 }

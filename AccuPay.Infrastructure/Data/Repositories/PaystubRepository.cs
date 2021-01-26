@@ -146,9 +146,9 @@ namespace AccuPay.Infrastructure.Data
         private void SaveBPIInsurance(int currentlyLoggedInUserId, IPolicyHelper policy, PayPeriod payPeriod, Paystub paystub, Employee employee, Product bpiInsuranceProduct)
         {
             bool isEligibleForBPIInsurance = employee.IsEligibleForNewBPIInsurance(
-                            useBPIInsurancePolicy: policy.UseBPIInsurance,
-                            paystub.Adjustments,
-                            payPeriod);
+                useBPIInsurancePolicy: policy.UseBPIInsurance,
+                paystub.Adjustments,
+                payPeriod);
 
             if (isEligibleForBPIInsurance)
             {
