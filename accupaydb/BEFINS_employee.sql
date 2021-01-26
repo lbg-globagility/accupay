@@ -17,10 +17,10 @@ SET NEW.MiddleName=IFNULL(NEW.MiddleName,'');
 SET NEW.LastName=IFNULL(NEW.LastName,'');
 SET NEW.Surname=IFNULL(NEW.Surname,'');
 SET NEW.EmployeeID=IFNULL(NEW.EmployeeID,'');
-SET NEW.TINNo=IFNULL(NEW.TINNo,'   -   -   -');
-SET NEW.SSSNo=IFNULL(NEW.SSSNo,'  -       -');
-SET NEW.HDMFNo=IFNULL(NEW.HDMFNo,'    -    -');
-SET NEW.PhilHealthNo=IFNULL(NEW.PhilHealthNo,'    -    -');
+SET NEW.TINNo=IFNULL(NEW.TINNo,'');
+SET NEW.SSSNo=IFNULL(NEW.SSSNo,'');
+SET NEW.HDMFNo=IFNULL(NEW.HDMFNo,'');
+SET NEW.PhilHealthNo=IFNULL(NEW.PhilHealthNo,'');
 SET NEW.EmploymentStatus=IFNULL(NEW.EmploymentStatus,'Probationary');
 SET NEW.EmailAddress=IFNULL(NEW.EmailAddress,'');
 SET NEW.WorkPhone=IFNULL(NEW.WorkPhone,'');
@@ -73,8 +73,6 @@ SET NEW.CalcRestDayOT=IFNULL(NEW.CalcRestDayOT,'1');
 
 SET NEW.RevealInPayroll=IFNULL(NEW.RevealInPayroll,'1');
 SET NEW.LateGracePeriod=IFNULL(NEW.LateGracePeriod,0);
-
-SET NEW.OffsetBalance=IFNULL(NEW.OffsetBalance,'0');
 
 SET NEW.ATMNo=IFNULL(NEW.ATMNo,'');
 SET NEW.BankName=IFNULL(NEW.BankName,'');

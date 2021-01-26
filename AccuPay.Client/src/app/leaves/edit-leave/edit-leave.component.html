@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Edit Leave</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-leave-form [leave]="leave"></app-leave-form>
+</ng-container>
+
+<div mat-dialog-actions align="end">
+  <button
+    mat-button
+    color="accent"
+    [disabled]="savingState.isLoading"
+    (click)="onSave()"
+  >
+    SAVE
+  </button>
+  <button mat-button [mat-dialog-close]="false">CANCEL</button>
+</div>

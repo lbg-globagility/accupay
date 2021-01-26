@@ -1,11 +1,12 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.IO
-Imports AccuPay.Repository
-Imports AccuPay.Utils
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Desktop.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
-Namespace Global.AccuPay.Helpers
+Namespace Global.AccuPay.Desktop.Helpers
 
     Public Class DownloadTemplateHelper
 
@@ -26,6 +27,9 @@ Namespace Global.AccuPay.Helpers
                 File.Copy(template, saveFileDialogHelperOutPut.FileInfo.FullName)
 
                 Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
+            Catch ex As IOException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
             Catch ex As Exception
 
                 MessageBoxHelper.DefaultErrorMessage()
@@ -35,7 +39,7 @@ Namespace Global.AccuPay.Helpers
         End Sub
 
         Public Shared Async Function DownloadExcelWithData(excelTemplate As ExcelTemplates) As Threading.Tasks.Task(Of FileInfo)
-            Dim _employeeRepository As New EmployeeRepository
+            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
             Dim excelName = TemplatesHelper.GetFileName(excelTemplate)
             Dim template = TemplatesHelper.GetFullPath(excelTemplate)
 
@@ -52,14 +56,14 @@ Namespace Global.AccuPay.Helpers
                 'Import employee numbers
                 Using package As New ExcelPackage(fileInfo)
                     Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
-                    Dim allEmployees = Await _employeeRepository.GetAllWithPositionAsync()
+                    Dim allEmployees = Await employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
                     Dim allEmployed = allEmployees.
                         Where(Function(emp) emp.IsActive).
                         Select(Function(emp) emp.EmployeeNo).
                         OrderBy(Function(no) no).
                         ToList()
 
-                    For index = 0 To allEmployed.Count - 1
+                    For index As Integer = 0 To allEmployed.Count - 1
                         worksheet.Cells(index + 2, 1).Value = allEmployed(index)
                     Next
 
@@ -67,6 +71,9 @@ Namespace Global.AccuPay.Helpers
                 End Using
 
                 Return fileInfo
+            Catch ex As IOException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
             Catch ex As Exception
 
                 MessageBoxHelper.DefaultErrorMessage()

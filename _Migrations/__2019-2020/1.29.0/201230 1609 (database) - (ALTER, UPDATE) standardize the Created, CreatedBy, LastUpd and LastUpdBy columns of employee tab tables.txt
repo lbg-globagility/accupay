@@ -1,0 +1,135 @@
+SET @defaultUserId = (SELECT Id FROM aspnetusers LIMIT 1);
+
+#=============================================================================================================================
+ALTER TABLE `employeeattachments`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeeattachments_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeeattachments_aspnetusers_LastUpdBy`;
+ALTER TABLE `employeeattachments`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `employeeattachments` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `employeeattachments`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `employeeattachments`
+	ADD CONSTRAINT `FK_employeeattachments_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_employeeattachments_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+#=============================================================================================================================
+ALTER TABLE `employeeawards`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeeawards_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeeawards_aspnetusers_LastUpdBy`;
+ALTER TABLE `employeeawards`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `employeeawards` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `employeeawards`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `employeeawards`
+	ADD CONSTRAINT `FK_employeeawards_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_employeeawards_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+#=============================================================================================================================
+ALTER TABLE `employeebonus`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeebonus_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeebonus_aspnetusers_LastUpdBy`;
+ALTER TABLE `employeebonus`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `employeebonus` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `employeebonus`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `employeebonus`
+	ADD CONSTRAINT `FK_employeebonus_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_employeebonus_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+#=============================================================================================================================
+ALTER TABLE `employeecertification`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeecertification_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeecertification_aspnetusers_LastUpdBy`;
+ALTER TABLE `employeecertification`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `employeecertification` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `employeecertification`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `employeecertification`
+	ADD CONSTRAINT `FK_employeecertification_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_employeecertification_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+    
+#=============================================================================================================================
+ALTER TABLE `employeedisciplinaryaction`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeedisciplinaryaction_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeedisciplinaryaction_aspnetusers_LastUpdBy`;
+ALTER TABLE `employeedisciplinaryaction`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `employeedisciplinaryaction` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `employeedisciplinaryaction`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `employeedisciplinaryaction`
+	ADD CONSTRAINT `FK_employeedisciplinaryaction_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_employeedisciplinaryaction_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+#=============================================================================================================================
+ALTER TABLE `employeeeducation`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeeeducation_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeeeducation_aspnetusers_LastUpdBy`;
+ALTER TABLE `employeeeducation`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `employeeeducation` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `employeeeducation`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `employeeeducation`
+	ADD CONSTRAINT `FK_employeeeducation_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_employeeeducation_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+    
+#=============================================================================================================================
+ALTER TABLE `employeepreviousemployer`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeepreviousemployer_aspnetusers_CreatedBy`,
+	DROP FOREIGN KEY IF EXISTS `FK_employeepreviousemployer_aspnetusers_LastUpdBy`;
+ALTER TABLE `employeepreviousemployer`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `LastUpdBy` DROP DEFAULT;
+UPDATE `employeepreviousemployer` SET CreatedBy = @defaultUserId WHERE CreatedBy IS NULL;
+ALTER TABLE `employeepreviousemployer`
+	CHANGE COLUMN `OrganizationID` `OrganizationID` INT(11) NULL DEFAULT NULL AFTER `RowID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`,
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(11) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`,
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(11) NULL DEFAULT NULL AFTER `LastUpd`;
+ALTER TABLE `employeepreviousemployer`
+	ADD CONSTRAINT `FK_employeepreviousemployer_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+	ADD CONSTRAINT `FK_employeepreviousemployer_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);

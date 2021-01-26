@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class GeneralForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,22 +20,17 @@ Partial Class GeneralForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.UserToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ListOfValueToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UserRoleToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OrganizationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UserPrivilegeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GovernmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PhilHealthTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SSSTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.WithholdingTaxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DutyShiftingToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PayRateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AgencyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BranchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GovernmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SSSTableToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AgencyToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CalendarsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelGeneral = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -43,7 +38,7 @@ Partial Class GeneralForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.ListOfValueToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.UserPrivilegeToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.DutyShiftingToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.BranchToolStripMenuItem, Me.ToolStripMenuItem1})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.UserRoleToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.BranchToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.CalendarsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -56,12 +51,11 @@ Partial Class GeneralForm
         Me.UserToolStripMenuItem.Size = New System.Drawing.Size(42, 20)
         Me.UserToolStripMenuItem.Text = "User"
         '
-        'ListOfValueToolStripMenuItem
+        'UserRoleToolStripMenuItem
         '
-        Me.ListOfValueToolStripMenuItem.Name = "ListOfValueToolStripMenuItem"
-        Me.ListOfValueToolStripMenuItem.Size = New System.Drawing.Size(82, 20)
-        Me.ListOfValueToolStripMenuItem.Text = "List of value"
-        Me.ListOfValueToolStripMenuItem.Visible = False
+        Me.UserRoleToolStripMenuItem.Name = "UserRoleToolStripMenuItem"
+        Me.UserRoleToolStripMenuItem.Size = New System.Drawing.Size(68, 20)
+        Me.UserRoleToolStripMenuItem.Text = "User Role"
         '
         'OrganizationToolStripMenuItem
         '
@@ -69,71 +63,37 @@ Partial Class GeneralForm
         Me.OrganizationToolStripMenuItem.Size = New System.Drawing.Size(87, 20)
         Me.OrganizationToolStripMenuItem.Text = "Organization"
         '
-        'UserPrivilegeToolStripMenuItem
-        '
-        Me.UserPrivilegeToolStripMenuItem.Name = "UserPrivilegeToolStripMenuItem"
-        Me.UserPrivilegeToolStripMenuItem.Size = New System.Drawing.Size(90, 20)
-        Me.UserPrivilegeToolStripMenuItem.Text = "User Privilege"
-        '
-        'GovernmentToolStripMenuItem
-        '
-        Me.GovernmentToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PhilHealthTableToolStripMenuItem, Me.SSSTableToolStripMenuItem, Me.WithholdingTaxToolStripMenuItem})
-        Me.GovernmentToolStripMenuItem.Name = "GovernmentToolStripMenuItem"
-        Me.GovernmentToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
-        Me.GovernmentToolStripMenuItem.Text = "Government"
-        '
-        'PhilHealthTableToolStripMenuItem
-        '
-        Me.PhilHealthTableToolStripMenuItem.Name = "PhilHealthTableToolStripMenuItem"
-        Me.PhilHealthTableToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.PhilHealthTableToolStripMenuItem.Text = "PhilHealth table"
-        Me.PhilHealthTableToolStripMenuItem.Visible = False
-        '
-        'SSSTableToolStripMenuItem
-        '
-        Me.SSSTableToolStripMenuItem.Name = "SSSTableToolStripMenuItem"
-        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.SSSTableToolStripMenuItem.Text = "SSS table"
-        '
-        'WithholdingTaxToolStripMenuItem
-        '
-        Me.WithholdingTaxToolStripMenuItem.Name = "WithholdingTaxToolStripMenuItem"
-        Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
-        Me.WithholdingTaxToolStripMenuItem.Text = "Withholding tax"
-        '
-        'DutyShiftingToolStripMenuItem
-        '
-        Me.DutyShiftingToolStripMenuItem.Name = "DutyShiftingToolStripMenuItem"
-        Me.DutyShiftingToolStripMenuItem.Size = New System.Drawing.Size(87, 20)
-        Me.DutyShiftingToolStripMenuItem.Text = "Duty shifting"
-        Me.DutyShiftingToolStripMenuItem.Visible = False
-        '
-        'PayRateToolStripMenuItem
-        '
-        Me.PayRateToolStripMenuItem.Name = "PayRateToolStripMenuItem"
-        Me.PayRateToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
-        Me.PayRateToolStripMenuItem.Text = "Pay rate"
-        '
-        'AgencyToolStripMenuItem
-        '
-        Me.AgencyToolStripMenuItem.AccessibleDescription = "Hyundai;Goldwings;Fourlinq"
-        Me.AgencyToolStripMenuItem.Name = "AgencyToolStripMenuItem"
-        Me.AgencyToolStripMenuItem.Size = New System.Drawing.Size(59, 20)
-        Me.AgencyToolStripMenuItem.Text = "Agency"
-        '
         'BranchToolStripMenuItem
         '
         Me.BranchToolStripMenuItem.Name = "BranchToolStripMenuItem"
         Me.BranchToolStripMenuItem.Size = New System.Drawing.Size(56, 20)
         Me.BranchToolStripMenuItem.Text = "Branch"
-        Me.BranchToolStripMenuItem.Visible = False
         '
-        'ToolStripMenuItem1
+        'GovernmentToolStripMenuItem
         '
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(43, 20)
-        Me.ToolStripMenuItem1.Text = "Area"
-        Me.ToolStripMenuItem1.Visible = False
+        Me.GovernmentToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SSSTableToolStripMenuItem})
+        Me.GovernmentToolStripMenuItem.Name = "GovernmentToolStripMenuItem"
+        Me.GovernmentToolStripMenuItem.Size = New System.Drawing.Size(85, 20)
+        Me.GovernmentToolStripMenuItem.Text = "Government"
+        '
+        'SSSTableToolStripMenuItem
+        '
+        Me.SSSTableToolStripMenuItem.Name = "SSSTableToolStripMenuItem"
+        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(121, 22)
+        Me.SSSTableToolStripMenuItem.Text = "SSS table"
+        '
+        'AgencyToolStripMenuItem
+        '
+        Me.AgencyToolStripMenuItem.AccessibleDescription = "Hyundai;Goldwings"
+        Me.AgencyToolStripMenuItem.Name = "AgencyToolStripMenuItem"
+        Me.AgencyToolStripMenuItem.Size = New System.Drawing.Size(59, 20)
+        Me.AgencyToolStripMenuItem.Text = "Agency"
+        '
+        'CalendarsToolStripMenuItem
+        '
+        Me.CalendarsToolStripMenuItem.Name = "CalendarsToolStripMenuItem"
+        Me.CalendarsToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
+        Me.CalendarsToolStripMenuItem.Text = "Calendars"
         '
         'PanelGeneral
         '
@@ -162,17 +122,12 @@ Partial Class GeneralForm
     End Sub
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents UserToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ListOfValueToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OrganizationToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents UserPrivilegeToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents UserRoleToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PanelGeneral As System.Windows.Forms.Panel
     Friend WithEvents GovernmentToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents PhilHealthTableToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SSSTableToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents WithholdingTaxToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents DutyShiftingToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents PayRateToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AgencyToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BranchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CalendarsToolStripMenuItem As ToolStripMenuItem
 End Class

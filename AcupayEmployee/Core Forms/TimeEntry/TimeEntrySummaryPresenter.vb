@@ -236,8 +236,8 @@ Namespace TimeEntrySummary
                     employeetimeentry.Date,
                     employeetimeentrydetails.TimeIn,
                     employeetimeentrydetails.TimeOut,
-                    shift.TimeFrom AS ShiftFrom,
-                    shift.TimeTo AS ShiftTo,
+                    shiftschedules.StartTime AS ShiftFrom,
+                    shiftschedules.EndTime AS ShiftTo,
                     employeetimeentry.RegularHoursWorked,
                     employeetimeentry.RegularHoursAmount,
                     employeetimeentry.NightDifferentialHours,
@@ -263,10 +263,9 @@ Namespace TimeEntrySummary
                 ON employeetimeentrydetails.Date = employeetimeentry.Date AND
                     employeetimeentrydetails.OrganizationID = employeetimeentry.OrganizationID AND
                     employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID
-                LEFT JOIN employeeshift
-                ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
-                LEFT JOIN shift
-                ON shift.RowID = employeeshift.ShiftID
+                LEFT JOIN shiftschedules
+                    ON shiftschedules.Date = employeetimeentry.Date
+                    ON shiftschedules.EmployeeID = employeetimeentry.EmployeeID
                 WHERE employeetimeentry.EmployeeID = @EmployeeID AND
                     employeetimeentry.`Date` BETWEEN @DateFrom AND @DateTo;
             ]]>.Value

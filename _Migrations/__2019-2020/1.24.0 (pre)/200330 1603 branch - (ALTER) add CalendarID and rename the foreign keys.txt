@@ -1,0 +1,14 @@
+ALTER TABLE `branch`
+	ADD COLUMN `CalendarID` INT(10) NULL DEFAULT NULL AFTER `AddressID`,
+	ADD CONSTRAINT `FK_branch_calendar_CalendarID` FOREIGN KEY (`CalendarID`) REFERENCES `calendar` (`RowID`);
+
+ALTER TABLE `branch`
+	DROP FOREIGN KEY `branch_ibfk_2`,
+	DROP FOREIGN KEY `branch_ibfk_3`,
+	DROP FOREIGN KEY `branch_ibfk_4`,
+	DROP FOREIGN KEY `branch_ibfk_5`;
+
+ALTER TABLE `branch`
+	ADD CONSTRAINT `FK_branch_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_branch_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_branch_address_AddressID` FOREIGN KEY (`AddressID`) REFERENCES `address` (`RowID`);

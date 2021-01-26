@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
@@ -9,11 +10,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>FormTester.My.MyApplication</StartupObject>
+    <StartupObject>Sub Main</StartupObject>
     <RootNamespace>FormTester</RootNamespace>
     <AssemblyName>FormTester</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -56,7 +57,7 @@
     <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="GlobagilityShared.EmailSender">
-      <HintPath>..\..\GlobagilityShared\GlobagilityShared.EmailSender\bin\Release\netstandard2.0\GlobagilityShared.EmailSender.dll</HintPath>
+      <HintPath>..\Other Libraries\GlobagilityShared.EmailSender.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
@@ -109,6 +110,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -120,6 +122,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="MainModule.vb" />
     <Compile Include="PayPeriod.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -153,13 +156,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
-      <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
-      <Name>AccuPay.Data</Name>
+    <ProjectReference Include="..\AccuPay.CrystalReports\AccuPay.CrystalReports.csproj">
+      <Project>{1af57d61-bc13-40e1-a0bc-bbdfdd223b7e}</Project>
+      <Name>AccuPay.CrystalReports</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Payslip\AccuPay.Payslip.vbproj">
-      <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
-      <Name>AccuPay.Payslip</Name>
+    <ProjectReference Include="..\AccuPay.Core\AccuPay.Core.csproj">
+      <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
+      <Name>AccuPay.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj">
+      <Project>{F5B0535D-E73B-4D47-A19C-3BB57254246D}</Project>
+      <Name>AccuPay.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
       <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>

@@ -1,7 +1,8 @@
-﻿Imports CrystalDecisions.CrystalReports.Engine
+﻿Option Strict On
+
+Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
 Imports MySql.Data.MySqlClient
-Imports MySql.Data
 
 Public Class Josh_CrysRepForm
 
@@ -23,7 +24,6 @@ Public Class Josh_CrysRepForm
         Dim paramDiscreteValue2 As New ParameterDiscreteValue
         Dim paramDiscreteValue3 As New ParameterDiscreteValue
         Dim paramDiscreteValue4 As New ParameterDiscreteValue
-
 
         paramField.Name = "EmployeeName"
         paramDiscreteValue.Value = Me.employeeName
@@ -54,9 +54,10 @@ Public Class Josh_CrysRepForm
         '\Lambert Form
         rpt.Load(Application.StartupPath + "\Core Forms\rpt\discplinaryActions.rpt")
 
+        'use Entity framework here. The view that is called below is already deleted.
         adapter.SelectCommand = New MySqlCommand("SELECT * FROM VW_DisciplinaryMemoUserDetails WHERE UserID = " & z_User)
 
-        adapter.SelectCommand.Connection = getConn()
+        adapter.SelectCommand.Connection = conn
         adapter.Fill(dt)
 
         rpt.SetDataSource(dt)

@@ -1,0 +1,42 @@
+@use "styles/colors";
+@use "styles/sizes";
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: colors.$primary;
+}
+
+.login {
+  min-width: 400px;
+  padding: sizes.$x8;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    letter-spacing: 4px;
+  }
+
+  &__field {
+    display: block;
+  }
+
+  &__actions {
+    position: relative;
+    margin-top: sizes.$x4;
+
+    button {
+      margin-right: sizes.$x2;
+    }
+  }
+}
+
+.error {
+  background: colors.$warn;
+  color: white;
+  padding: sizes.$x2;
+  margin-bottom: sizes.$x2;
+}

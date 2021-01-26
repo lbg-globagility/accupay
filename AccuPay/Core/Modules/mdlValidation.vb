@@ -1,19 +1,15 @@
 ﻿Imports MySql.Data.MySqlClient
 
 Module mdlValidation
+    Public Z_Client As Integer
     Public z_OrganizationID As Integer
     Public z_User As Integer
-    Public Z_UserName As String
     Public z_postName As String
     Public z_CompanyName As String
-    Public z_CompanyAddr As String
-    Public Z_Mouseleaver As Boolean = False
-    Public Z_ErrorProvider As New ErrorProvider
-    Public z_datetime As String = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
-    Public z_ssid As Integer
-    Public z_phID As Integer
-    Public Z_encryptdata As String
-    Public Z_encryptdata2 As String
+
+    Public connectionString As String = n_DataBaseConnection.GetStringMySQLConnectionString
+
+    Public connection As MySqlConnection = New MySqlConnection(connectionString)
 
     Public Sub TextboxTestNumeric(ByVal textboxConts As TextBox, ByVal IntLen As Integer, ByVal DeciLen As Integer)
         If textboxConts.ReadOnly Then
@@ -67,30 +63,6 @@ Module mdlValidation
 
     End Sub
 
-    Public Function SetWarningIfEmpty(ByVal co As Control,
-                                      Optional SetErrorString As String = Nothing)
-        Z_ErrorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink
-        If co.Text.Trim = Nothing Then
-            Z_ErrorProvider.SetError(co, If(SetErrorString = Nothing, "Required to fill", Nothing))
-            co.Focus()
-            Return False
-        End If
-        Return True
-    End Function
-
-    Public Function execute(ByVal query As String) As DataTable
-        Try
-            Dim con As New MySqlConnection(connectionString)
-            Dim da As New MySqlDataAdapter(query, con)
-            Dim cb As New MySqlCommandBuilder(da)
-            Dim dt As New DataTable
-            da.Fill(dt)
-            Return dt
-        Catch ex As Exception
-            Return Nothing
-        End Try
-    End Function
-
     Public Function SQL_GetDataTable(ByVal sql_Queery As String) As DataTable
         Dim DataReturn As New DataTable
         Try
@@ -126,113 +98,6 @@ Module mdlValidation
         End Try
     End Function
 
-    Public Sub fillCombobox(ByVal sqlCommand As String, ByVal LvName As ComboBox)
-        LvName.Items.Clear()
-        Dim dtFiller As New DataTable
-        dtFiller = execute(sqlCommand)
-
-        For rowCounter = 0 To dtFiller.Rows.Count - 1
-            LvName.Items.Add(dtFiller.Rows(rowCounter).Item(0))
-
-        Next
-    End Sub
-
-    Public Function SQL_ArrayList(ByVal Sqlcommand As String) As ArrayList
-        connection = New MySqlConnection(connectionString)
-
-        Dim ArString As New ArrayList
-        Try
-            connection.Open()
-            Dim command As MySqlCommand =
-                   New MySqlCommand(Sqlcommand, connection)
-            command.CommandType = CommandType.Text
-            Dim DR As MySqlDataReader = command.ExecuteReader
-            Do While DR.Read
-                ArString.Add(DR.GetValue(0))
-            Loop
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        Finally
-            connection.Close()
-        End Try
-        Return ArString
-
-    End Function
-
-    Public Function EncrypedData(ByVal a As String)
-        Dim Encryped As String = Nothing
-        If Not a Is Nothing Then
-            For Each x As Char In a
-                Dim ToCOn As Integer = Convert.ToInt64(x) + 133
-                Encryped &= Convert.ToChar(Convert.ToInt64(ToCOn))
-            Next
-        End If
-
-        Return Encryped
-    End Function
-
-    Public Function DecrypedData(ByVal a As String)
-        Dim DEcrypedio As String = Nothing
-        If Not a Is Nothing Then
-            For Each x As Char In a
-                Dim ToCOn As Integer = Convert.ToInt64(x) - 133
-                DEcrypedio &= Convert.ToChar(Convert.ToInt64(ToCOn))
-            Next
-        End If
-        Return DEcrypedio
-    End Function
-
-    Public Function DirectCommand(ByVal SqCommand As String)
-        Dim NumberitemInserted As Integer
-        Dim command As MySqlCommand = New MySqlCommand(SqCommand, New MySqlConnection(connectionString))
-        Try
-            Dim DataReturn As New DataSet
-            command.CommandType = CommandType.Text
-            command.Connection.Open()
-            NumberitemInserted = command.ExecuteNonQuery()
-            command.Connection.Close()
-        Catch ex As Exception
-            NumberitemInserted = -1
-        Finally
-            command.Connection.Close()
-        End Try
-        Return NumberitemInserted
-    End Function
-
-    Public Function ObjectToString(ByVal obj As Object) As String
-        Try
-            If IsDBNull(obj) Then
-                Return ""
-            ElseIf obj = Nothing Then
-                Return ""
-            Else
-                Return obj
-            End If
-        Catch ex As Exception
-            Return ""
-        End Try
-    End Function
-
-    Public Function getStringItem(ByVal Sqlcommand As String) As String
-        connection = New MySqlConnection(connectionString)
-        Dim itemSTR As String = Nothing
-        Try
-            connection.Open()
-            Dim command As MySqlCommand =
-                   New MySqlCommand(Sqlcommand, connection)
-            command.CommandType = CommandType.Text
-            Dim DR As MySqlDataReader = command.ExecuteReader
-            Do While DR.Read
-                itemSTR = ObjectToString(DR.GetValue(0))
-            Loop
-        Catch ex As Exception
-            itemSTR = ""
-        Finally
-            connection.Close()
-        End Try
-        Return itemSTR
-    End Function
-
     Public Function ConvertByteToImage(ByVal ImgByte As Byte()) As Image
         Dim img As Image = Nothing
         Try
@@ -265,32 +130,6 @@ Module mdlValidation
         Catch ex As Exception
             'MsgBox(ex.Message & " ERR_NO 77-10 : myBalloon")
         End Try
-    End Sub
-
-    Public hintWarn As ToolTip 'New ToolTip
-
-    Public Sub myBalloonWarn(Optional ToolTipStringContent As String = Nothing, Optional ToolTipStringTitle As String = Nothing, Optional objct As System.Windows.Forms.IWin32Window = Nothing, Optional x As Integer = 0, Optional y As Integer = 0, Optional dispo As Byte = 0, Optional duration As Integer = 2275)
-
-        'Dim hint As New ToolTip
-        Try
-            If hintWarn IsNot Nothing Then
-                If dispo = 1 Then
-                    hintWarn.Hide(objct)
-                    hintWarn.Dispose()
-                    'Exit Try
-                    'Exit Sub
-                Else
-                    hintWarn = New ToolTip
-                    hintWarn.IsBalloon = True
-                    hintWarn.ToolTipTitle = ToolTipStringTitle
-                    hintWarn.ToolTipIcon = ToolTipIcon.Warning
-                    hintWarn.Show(ToolTipStringContent, objct, x - 2, y - 2, duration)
-                End If
-            End If
-        Catch ex As Exception
-            'MsgBox(ex.Message & " ERR_NO 77-10 : myBalloonWarn")
-        End Try
-
     End Sub
 
 End Module

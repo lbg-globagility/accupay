@@ -1,26 +1,23 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
-Imports AccuPay.Data
-Imports AccuPay.Entity
-Imports AccuPay.Loans
-Imports AccuPay.ModelData
-Imports AccuPay.Repository
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports log4net
-Imports PayrollSys
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BenchmarkPayrollForm
 
     Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
 
-    Private _employeeRepository As EmployeeRepository
-    Private _salaryRepository As SalaryRepository
-    Private _loanScheduleRepository As LoanScheduleRepository
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Salary)
     Private _employees As List(Of Employee)
@@ -33,15 +30,13 @@ Public Class BenchmarkPayrollForm
 
     Private _currentPaystub As Paystub
 
-    Private _payrollGenerator As PayrollGeneration
-
     Public _loanTransanctions As List(Of LoanTransaction)
 
     Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
-    Private _payrollResources As PayrollResources
+    Private _payrollResources As IPayrollResources
 
     Private _employeeRate As BenchmarkPaystubRate
 
@@ -49,22 +44,44 @@ Public Class BenchmarkPayrollForm
 
     Private _ecola As Allowance
 
-    Private _pagibigLoan As LoanSchedule
+    Private _pagibigLoan As Loan
 
-    Private _sssLoan As LoanSchedule
+    Private _sssLoan As Loan
 
     Private _leaveBalance As Decimal
 
     Private Const MoneyFormat As String = "#,##0.0000"
 
+    Private ReadOnly _employeeRepository As IEmployeeRepository
+
+    Private ReadOnly _loanRepository As ILoanRepository
+
+    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
+
+    Private ReadOnly _salaryRepository As ISalaryRepository
+
+    Private ReadOnly _listOfValueService As IListOfValueService
+
+    Private ReadOnly _overtimeRateService As IOvertimeRateService
+
+    Private _payrollGenerator As IPayrollGenerator
+
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _employeeRepository = New EmployeeRepository
-        _salaryRepository = New SalaryRepository
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+
+        _loanRepository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
+
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
+
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of IOvertimeRateService)
+
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
 
@@ -73,7 +90,6 @@ Public Class BenchmarkPayrollForm
         _selectedDeductions = New List(Of AdjustmentInput)
         _selectedIncomes = New List(Of AdjustmentInput)
 
-        _loanScheduleRepository = New LoanScheduleRepository
     End Sub
 
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -118,8 +134,9 @@ Public Class BenchmarkPayrollForm
 
         Await LoadPayrollResourcesAsync()
 
-        _salaries = Await _salaryRepository.
-                                GetAllByCutOff(_currentPayPeriod.PayFromDate)
+        _salaries = (Await _salaryRepository.
+            GetByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayToDate)).
+            ToList()
 
         Await ShowEmployees()
 
@@ -140,21 +157,19 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function LoadPayrollResourcesAsync() As Task
 
-        _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
+        _overtimeRate = Await _overtimeRateService.GetOvertimeRates()
 
-        Using context As New PayrollContext
+        Dim settings = _listOfValueService.Create()
 
-            Dim settings As New ListOfValueCollection(context.ListOfValues.ToList())
-
-            _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
-
-        End Using
+        _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
 
         'TODO: Add loading bar
 
-        Dim paypRowID = _currentPayPeriod.RowID.Value
+        Dim payPeriodId = _currentPayPeriod.RowID.Value
         Dim paypFrom = _currentPayPeriod.PayFromDate
         Dim paypTo = _currentPayPeriod.PayToDate
+
+        Dim resources = MainServiceProvider.GetRequiredService(Of IPayrollResources)
 
         Dim loadTask = Task.Factory.StartNew(
             Function()
@@ -162,8 +177,11 @@ Public Class BenchmarkPayrollForm
                     Return Nothing
                 End If
 
-                Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
-                Dim resourcesTask = resources.Load()
+                Dim resourcesTask = resources.Load(
+                    payPeriodId:=payPeriodId,
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User)
+
                 resourcesTask.Wait()
 
                 Return resources
@@ -181,8 +199,10 @@ Public Class BenchmarkPayrollForm
 
         If payPeriodId IsNot Nothing Then
 
-            _employees = Await _employeeRepository.
-                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID)
+            _employees = (Await _employeeRepository.GetAllActiveWithoutPayrollAsync(
+                    _currentPayPeriod.RowID.Value,
+                    z_OrganizationID)).
+                ToList()
         Else
             _employees = New List(Of Employee)
         End If
@@ -203,12 +223,14 @@ Public Class BenchmarkPayrollForm
 
             If employeeId Is Nothing Then Return
 
-            Dim employee = Await _employeeRepository.GetEmployeeWithDivisionAsync(employeeId)
+            Dim employee = Await _employeeRepository.GetActiveEmployeeWithDivisionAndPositionAsync(employeeId.Value)
+
+            If employee Is Nothing Then Return
 
             Await _benchmarkPayrollHelper.CleanEmployee(employeeId.Value)
 
             Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
+                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID.Value)).
                             FirstOrDefault
 
             If salary Is Nothing Then
@@ -221,7 +243,7 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
+            _leaveBalance = Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
 
             If _employeeRate.IsInvalid Then Return
 
@@ -255,9 +277,9 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
         _ecola = Await BenchmarkPayrollHelper.GetEcola(
-                                                        employeeId.Value,
-                                                        payDateFrom:=_currentPayPeriod.PayFromDate,
-                                                        payDateTo:=_currentPayPeriod.PayToDate)
+            employeeId.Value,
+            payDateFrom:=_currentPayPeriod.PayFromDate,
+            payDateTo:=_currentPayPeriod.PayToDate)
 
         If _ecola Is Nothing Then
 
@@ -265,25 +287,25 @@ Public Class BenchmarkPayrollForm
             Return False
         End If
 
-        Dim _pagibigLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
+        Dim pagibigLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
 
-        If _pagibigLoans.Count > 1 Then
+        If pagibigLoans.Count > 1 Then
 
             MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
             Return False
         Else
-            _pagibigLoan = _pagibigLoans.FirstOrDefault
+            _pagibigLoan = pagibigLoans.FirstOrDefault
 
         End If
 
-        Dim _sssLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
+        Dim sssLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
 
-        If _sssLoans.Count > 1 Then
+        If sssLoans.Count > 1 Then
 
             MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
             Return False
         Else
-            _sssLoan = _sssLoans.FirstOrDefault
+            _sssLoan = sssLoans.FirstOrDefault
 
         End If
 
@@ -336,15 +358,16 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await PayrollTools.
-                                GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentPayPeriod = Await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
+            organizationId:=z_OrganizationID,
+            currentUserId:=z_User)
 
         UpdateCutOffLabel()
     End Function
 
     Private Sub UpdateCutOffLabel()
         PayPeriodLabel.Text = $"For the Period:
-            {_currentPayPeriod.PayFromDate.ToString("MMMM d")} - {_currentPayPeriod.PayToDate.ToString("MMMM d")}, {_currentPayPeriod.PayToDate.Year}"
+            {_currentPayPeriod.PayFromDate:MMMM d} - {_currentPayPeriod.PayToDate:MMMM d}, {_currentPayPeriod.PayToDate.Year}"
     End Sub
 
     Private Async Function FilterEmployeeGridView() As Task
@@ -409,31 +432,29 @@ Public Class BenchmarkPayrollForm
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
         Dim form As New selectPayPeriod()
-        form.GeneratePayroll = False
-        form.ShowDialog()
 
-        If form.PayPeriod IsNot Nothing Then
+        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
 
-            _currentPayPeriod = form.PayPeriod
+        _currentPayPeriod = form.PayPeriod
 
-            If _currentPayPeriod Is Nothing Then
-                MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
-                Return
-            End If
-
-            UpdateCutOffLabel()
-
-            Await LoadPayrollDetails()
+        If _currentPayPeriod Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
         End If
+
+        UpdateCutOffLabel()
+
+        Await LoadPayrollDetails()
     End Sub
 
     Private Sub SearchEmployeeTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchEmployeeTextBox.TextChanged
 
-        _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployeeGridView()
+        _textBoxDelayedAction.ProcessAsync(
+            Async Function()
+                Await FilterEmployeeGridView()
 
-                                               Return True
-                                           End Function)
+                Return True
+            End Function)
 
     End Sub
 
@@ -473,19 +494,19 @@ Public Class BenchmarkPayrollForm
         End If
 
         Dim output = BenchmarkPayrollGeneration.DoProcess(
-                                                employee,
-                                                _payrollResources,
-                                                _currentPayPeriod,
-                                                _employeeRate,
-                                                regularDays:=regularDays,
-                                                lateDays:=lateDays,
-                                                leaveDays:=leaveDays,
-                                                overtimeRate:=_overtimeRate,
-                                                actualSalaryPolicy:=_actualSalaryPolicy,
-                                                selectedDeductions:=_selectedDeductions,
-                                                selectedIncomes:=_selectedIncomes,
-                                                overtimes:=_overtimes,
-                                                ecola:=_ecola)
+            employee,
+            _payrollResources,
+            _currentPayPeriod,
+            _employeeRate,
+            regularDays:=regularDays,
+            lateDays:=lateDays,
+            leaveDays:=leaveDays,
+            overtimeRate:=_overtimeRate,
+            actualSalaryPolicy:=_actualSalaryPolicy,
+            selectedDeductions:=_selectedDeductions,
+            selectedIncomes:=_selectedIncomes,
+            overtimes:=_overtimes,
+            ecola:=_ecola)
 
         'TODO
         '#1. Extract the generator here and put it in a global field DONE
@@ -515,11 +536,11 @@ Public Class BenchmarkPayrollForm
 
             Dim loan = loans(loanIndex)
 
-            If _pagibigLoan?.RowID IsNot Nothing AndAlso loan.LoanScheduleID = _pagibigLoan.RowID.Value Then
+            If _pagibigLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _pagibigLoan.RowID.Value Then
 
                 If pagIbigLoan Is Nothing Then
 
-                    pagIbigLoan = loan.Amount
+                    pagIbigLoan = loan.DeductionAmount
                     loans.Remove(loan)
                     Continue While
                 Else
@@ -528,11 +549,11 @@ Public Class BenchmarkPayrollForm
                     Return
                 End If
 
-            ElseIf _sssLoan?.RowID IsNot Nothing AndAlso loan.LoanScheduleID = _sssLoan.RowID.Value Then
+            ElseIf _sssLoan?.RowID IsNot Nothing AndAlso loan.LoanID = _sssLoan.RowID.Value Then
 
                 If sssLoan Is Nothing Then
 
-                    sssLoan = loan.Amount
+                    sssLoan = loan.DeductionAmount
                     loans.Remove(loan)
                     Continue While
                 Else
@@ -568,8 +589,10 @@ Public Class BenchmarkPayrollForm
         GrossPayTextBox.Text = _currentPaystub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = _currentPaystub.LeavePay.RoundToString()
 
-        TotalDeductionTextBox.Text = (_currentPaystub.NetDeductions +
-                                    Math.Abs(_currentPaystub.TotalDeductionAdjustments)).RoundToString()
+        TotalDeductionTextBox.Text = (
+                _currentPaystub.NetDeductions +
+                Math.Abs(_currentPaystub.TotalDeductionAdjustments)).
+            RoundToString()
 
         TotalOtherIncomeTextBox.Text = _currentPaystub.TotalAdditionAdjustments.RoundToString()
         TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(_currentPaystub).RoundToString()
@@ -631,10 +654,12 @@ Public Class BenchmarkPayrollForm
 
     Private Sub SetOvertimeButton_Click(sender As Object, e As EventArgs) Handles SetOvertimeButton.Click
 
-        Dim form As New SetOvertimeForm(_employeeRate.HourlyRate,
-                                        _overtimeRate.OvertimeRateList,
-                                        _overtimes,
-                                        _employeeRate.Employee.IsPremiumInclusive)
+        Dim form As New SetOvertimeForm(
+            _employeeRate.HourlyRate,
+            _overtimeRate.OvertimeRateList,
+            _overtimes,
+            _employeeRate.Employee.IsPremiumInclusive)
+
         form.ShowDialog()
 
         _overtimes = form.Overtimes
@@ -648,7 +673,7 @@ Public Class BenchmarkPayrollForm
         Await FunctionUtils.TryCatchFunctionAsync($"Payroll Generation for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}]",
             Async Function()
 
-                BenchmarkPayrollGeneration.Save(_payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
+                BenchmarkPayrollGeneration.Save(_currentPaystub, _payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
 
                 Await RefreshForm(refreshPayPeriod:=False)
 
@@ -705,9 +730,9 @@ Public Class BenchmarkPayrollForm
 
     Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
         Return gridView.Rows.
-                        Cast(Of DataGridViewRow).
-                        Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
-                                                Any(Function(c) c.Value IsNot Nothing))
+            Cast(Of DataGridViewRow).
+            Any(Function(r) r.Cells.Cast(Of DataGridViewCell).
+                Any(Function(c) c.Value IsNot Nothing))
     End Function
 
     Private Sub AddIncomeButton_Click(sender As Object, e As EventArgs) Handles AddIncomeButton.Click
@@ -760,7 +785,7 @@ Public Class BenchmarkPayrollForm
 
         If e.RowIndex >= 0 Then
 
-            Dim adjustmentInput As AdjustmentInput
+            Dim adjustmentInput As AdjustmentInput = Nothing
 
             If sender Is DeductionsGridView Then
 

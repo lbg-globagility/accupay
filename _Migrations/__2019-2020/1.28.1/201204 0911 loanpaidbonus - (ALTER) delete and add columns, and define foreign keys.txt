@@ -1,0 +1,28 @@
+
+ALTER TABLE `loanpaidbonus`
+	ADD COLUMN IF NOT EXISTS `OrganizationID` INT(11) NOT NULL AFTER `Id`
+	,ADD COLUMN IF NOT EXISTS `Created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() AFTER `OrganizationID`
+	,ADD COLUMN IF NOT EXISTS `CreatedBy` INT(10) NULL DEFAULT NULL AFTER `Created`
+	,ADD COLUMN IF NOT EXISTS `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP() AFTER `CreatedBy`
+	,ADD COLUMN IF NOT EXISTS `LastUpdBy` INT(10) NULL DEFAULT NULL AFTER `LastUpd`
+;
+
+ALTER TABLE `loanpaidbonus`
+	DROP FOREIGN KEY IF EXISTS `FK_loanpaidbonus_organization`
+	,DROP FOREIGN KEY IF EXISTS `FK_loanpaidbonus_aspnetusers_CreatedBy`
+	,DROP FOREIGN KEY IF EXISTS `FK_loanpaidbonus_aspnetusers_LastUpdBy`
+	,DROP FOREIGN KEY IF EXISTS `FK_loanpaidbonus_payperiod`
+	,DROP FOREIGN KEY IF EXISTS `FK_loanpaidbonus_paystub`	
+;
+
+ALTER TABLE `loanpaidbonus`
+	DROP COLUMN IF EXISTS `PaystubId`,
+	DROP COLUMN IF EXISTS `PayperiodId`,
+	DROP COLUMN IF EXISTS `DeductionAmount`,
+	DROP INDEX IF EXISTS `FK_loanpaidbonus_paystub`,
+	DROP INDEX IF EXISTS `FK_loanpaidbonus_payperiod`;
+
+ALTER TABLE `loanpaidbonus`
+	ADD CONSTRAINT `FK_loanpaidbonus_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`)
+	,ADD CONSTRAINT `FK_loanpaidbonus_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`)
+	,ADD CONSTRAINT `FK_loanpaidbonus_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);

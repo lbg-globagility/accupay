@@ -1,0 +1,326 @@
+
+SET @rownumber = IFNULL((SELECT RowID FROM user ORDER BY RowID DESC LIMIT 1), 1);
+
+DROP TEMPORARY TABLE IF EXISTS temp_aspnetusers;
+CREATE TEMPORARY TABLE temp_aspnetusers
+SELECT
+IFNULL((SELECT RowID FROM `user` WHERE AspNetUserId = aspnetusers.Id), @rownumber := @rownumber + 1) AS 'NewId',
+(SELECT `Password` FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'DesktopPassword',
+IFNULL((SELECT `UserLevel` FROM `user` WHERE AspNetUserId = aspnetusers.Id), 0) AS 'UserLevel',
+(SELECT IF(`Status` = 'Inactive', NOW(), NULL) FROM `user` WHERE AspNetUserId = aspnetusers.Id) AS 'DeletedAt',
+aspnetusers.*
+FROM aspnetusers
+ORDER BY newId;
+
+ALTER TABLE `aspnetusers`
+	ADD COLUMN `DesktopPassword` VARCHAR(50) NULL DEFAULT NULL AFTER `OriginalImageId`,
+	ADD COLUMN `UserLevel` SMALLINT(1) NOT NULL DEFAULT 0,
+	ADD COLUMN `DeletedAt` TIMESTAMP NULL DEFAULT NULL,
+	ADD COLUMN `NewId` INT(11) NULL DEFAULT NULL AFTER `DesktopPassword`;
+
+UPDATE aspnetusers
+SET
+	NewId = (SELECT NewId FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id),
+	DesktopPassword = (SELECT DesktopPassword FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id),
+	UserLevel = (SELECT UserLevel FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id),
+	DeletedAt = (SELECT DeletedAt FROM temp_aspnetusers WHERE aspnetusers.Id = temp_aspnetusers.Id);
+
+
+
+SET @rownumberRole = 0; 
+
+DROP TEMPORARY TABLE IF EXISTS temp_aspnetroles;
+CREATE TEMPORARY TABLE temp_aspnetroles
+SELECT
+@rownumberRole := @rownumberRole + 1 AS 'NewId',
+aspnetroles.*
+FROM aspnetroles
+ORDER BY NewId;
+
+ALTER TABLE `aspnetroles`
+	ADD COLUMN `NewId` INT(11) NULL DEFAULT NULL AFTER ClientId;
+
+UPDATE aspnetroles SET NewId = (SELECT NewId FROM temp_aspnetroles WHERE aspnetroles.Id = temp_aspnetroles.Id);
+
+
+
+
+
+DROP TEMPORARY TABLE IF EXISTS temp_aspnetuserclaims;
+CREATE TEMPORARY TABLE temp_aspnetuserclaims
+SELECT * FROM aspnetuserclaims;
+
+DROP TEMPORARY TABLE IF EXISTS temp_aspnetuserlogins;
+CREATE TEMPORARY TABLE temp_aspnetuserlogins
+SELECT * FROM aspnetuserlogins;
+
+DROP TEMPORARY TABLE IF EXISTS temp_aspnetuserroles;
+CREATE TEMPORARY TABLE temp_aspnetuserroles
+SELECT * FROM aspnetuserroles;
+
+DROP TEMPORARY TABLE IF EXISTS temp_aspnetusertokens;
+CREATE TEMPORARY TABLE temp_aspnetusertokens
+SELECT * FROM aspnetusertokens;
+
+DROP TEMPORARY TABLE IF EXISTS temp_rolepermission;
+CREATE TEMPORARY TABLE temp_rolepermission
+SELECT * FROM rolepermission;
+
+DROP TEMPORARY TABLE IF EXISTS temp_aspnetroleclaims;
+CREATE TEMPORARY TABLE temp_aspnetroleclaims
+SELECT * FROM aspnetroleclaims;
+
+
+ALTER TABLE `aspnetuserclaims`
+    DROP FOREIGN KEY `FK_AspNetUserClaims_AspNetUsers`;
+ALTER TABLE `aspnetuserclaims`
+	DROP COLUMN `UserId`;
+ALTER TABLE `aspnetuserclaims`
+	ADD COLUMN `UserId` INT(11) NOT NULL AFTER `ClaimValue`;
+
+ALTER TABLE `aspnetuserlogins`
+    DROP FOREIGN KEY `FK_AspNetUserLogins_AspNetUsers`;
+ALTER TABLE `aspnetuserlogins`
+	DROP COLUMN `UserId`;
+ALTER TABLE `aspnetuserlogins`
+	ADD COLUMN `UserId` INT(11) NOT NULL AFTER `ProviderDisplayName`;
+
+ALTER TABLE aspnetuserroles
+	ADD COLUMN `Old_UserId` BINARY(16) NOT NULL,
+	ADD COLUMN `Old_RoleId` BINARY(16) NOT NULL;
+UPDATE aspnetuserroles SET Old_UserId = UserId, Old_RoleId = RoleId;
+ALTER TABLE `aspnetuserroles`
+	DROP PRIMARY KEY,
+    DROP FOREIGN KEY `FK_AspNetUserRoles_AspNetRoles`,
+	DROP INDEX `UserId_OrganizationId`,
+    DROP FOREIGN KEY `FK_AspNetUserRoles_AspNetUsers`;
+ALTER TABLE `aspnetuserroles`
+	DROP COLUMN `UserId`,
+	DROP COLUMN `RoleId`;
+ALTER TABLE `aspnetuserroles`
+	ADD COLUMN `UserId` INT(11) NOT NULL FIRST,
+	ADD COLUMN `RoleId` INT(11) NOT NULL AFTER `UserId`;
+	
+ALTER TABLE aspnetusertokens
+	ADD COLUMN `Old_UserId` BINARY(16) NOT NULL;
+UPDATE aspnetusertokens SET Old_UserId = UserId;
+ALTER TABLE `aspnetusertokens`
+	DROP PRIMARY KEY,
+    DROP FOREIGN KEY `FK_AspNetUserTokens_AspNetUsers`;
+ALTER TABLE `aspnetusertokens`
+	DROP COLUMN `UserId`;
+ALTER TABLE `aspnetusertokens`
+	ADD COLUMN `UserId` INT(11) NOT NULL FIRST;
+
+ALTER TABLE `rolepermission`
+    DROP FOREIGN KEY `FK_rolepermission_aspnetroles`,
+    DROP INDEX `RoleId_PermissionId`;
+ALTER TABLE `rolepermission`
+	DROP COLUMN `RoleId`;
+ALTER TABLE `rolepermission`
+	ADD COLUMN `RoleId` INT(11) NOT NULL AFTER `Id`;
+
+ALTER TABLE `aspnetroleclaims`
+    DROP FOREIGN KEY `FK_AspNetRoleClaims_AspNetRoles`;
+ALTER TABLE `aspnetroleclaims`
+	DROP COLUMN `RoleId`;
+ALTER TABLE `aspnetroleclaims`
+	ADD COLUMN `RoleId` INT(11) NOT NULL AFTER `ClaimValue`;
+	
+
+
+UPDATE aspnetuserclaims
+INNER JOIN temp_aspnetuserclaims
+ON aspnetuserclaims.Id = temp_aspnetuserclaims.Id
+SET aspnetuserclaims.UserId = (SELECT NewId FROM temp_aspnetusers WHERE temp_aspnetuserclaims.UserId = temp_aspnetusers.Id);
+
+
+UPDATE aspnetuserlogins
+INNER JOIN temp_aspnetuserlogins
+ON aspnetuserlogins.LoginProvider = temp_aspnetuserlogins.LoginProvider
+AND aspnetuserlogins.ProviderKey = temp_aspnetuserlogins.ProviderKey 
+SET aspnetuserlogins.UserId = (SELECT NewId FROM temp_aspnetusers WHERE temp_aspnetuserlogins.UserId = temp_aspnetusers.Id);
+
+UPDATE aspnetuserroles
+INNER JOIN temp_aspnetuserroles
+ON aspnetuserroles.Old_UserId = temp_aspnetuserroles.UserId
+AND aspnetuserroles.Old_RoleId = temp_aspnetuserroles.RoleId 
+AND aspnetuserroles.OrganizationId = temp_aspnetuserroles.OrganizationId 
+SET aspnetuserroles.UserId = (SELECT NewId FROM temp_aspnetusers WHERE temp_aspnetuserroles.UserId = temp_aspnetusers.Id),
+	aspnetuserroles.RoleId = (SELECT NewId FROM temp_aspnetroles WHERE temp_aspnetuserroles.RoleId = temp_aspnetroles.Id);
+
+UPDATE aspnetusertokens
+INNER JOIN temp_aspnetusertokens
+ON aspnetusertokens.Old_UserId = temp_aspnetusertokens.UserId
+AND aspnetusertokens.LoginProvider = temp_aspnetusertokens.LoginProvider 
+AND aspnetusertokens.Name = temp_aspnetusertokens.Name 
+SET aspnetusertokens.UserId = (SELECT NewId FROM temp_aspnetusers WHERE temp_aspnetusertokens.UserId = temp_aspnetusers.Id);
+
+UPDATE rolepermission
+INNER JOIN temp_rolepermission
+ON rolepermission.Id = temp_rolepermission.Id
+SET rolepermission.RoleId = (SELECT NewId FROM temp_aspnetroles WHERE temp_rolepermission.RoleId = temp_aspnetroles.Id);
+
+UPDATE aspnetroleclaims
+INNER JOIN temp_aspnetroleclaims
+ON aspnetroleclaims.Id = temp_aspnetroleclaims.Id
+SET aspnetroleclaims.RoleId = (SELECT NewId FROM temp_aspnetroles WHERE temp_aspnetroleclaims.RoleId = temp_aspnetroles.Id);
+
+SELECT * FROM aspnetuserclaims;
+SELECT * FROM aspnetuserlogins;
+SELECT * FROM aspnetuserroles;
+SELECT * FROM aspnetusertokens;
+SELECT * FROM rolepermission;
+SELECT * FROM aspnetroleclaims;
+
+
+ALTER TABLE `user`
+	DROP COLUMN IF EXISTS `AspNetUserId`,
+	DROP FOREIGN KEY IF EXISTS `FK_user_aspnetusers_AspNetUserId`;
+
+SET @sql = CONCAT('ALTER TABLE `aspnetusers` AUTO_INCREMENT = ', IFNULL(@rownumber, 0) + 1);
+PREPARE st FROM @sql;
+EXECUTE st;
+
+ALTER TABLE `aspnetusers`
+	DROP PRIMARY KEY,
+	DROP COLUMN `Id`;
+
+ALTER TABLE `aspnetusers`
+	ADD COLUMN `Id` INT NOT NULL FIRST;
+UPDATE aspnetusers SET Id = NewId;
+
+ALTER TABLE `aspnetusers`
+	CHANGE COLUMN `Id` `Id` INT NOT NULL AUTO_INCREMENT FIRST,
+	ADD PRIMARY KEY (  `Id` ),
+	DROP COLUMN `NewId`;
+	
+
+SET @sql = CONCAT('ALTER TABLE `aspnetroles` AUTO_INCREMENT = ', IFNULL(@rownumberRole, 0) + 1);
+PREPARE st FROM @sql;
+EXECUTE st;
+
+ALTER TABLE `aspnetroles`
+	DROP PRIMARY KEY,
+	DROP COLUMN `Id`;
+
+ALTER TABLE `aspnetroles`
+	ADD COLUMN `Id` INT NOT NULL FIRST;
+UPDATE aspnetroles SET Id = NewId;
+
+ALTER TABLE `aspnetroles`
+	CHANGE COLUMN `Id` `Id` INT NOT NULL AUTO_INCREMENT FIRST,
+	ADD PRIMARY KEY (  `Id` ),
+	DROP COLUMN `NewId`;
+
+ALTER TABLE aspnetuserroles
+	DROP COLUMN `Old_UserId`,
+	DROP COLUMN `Old_RoleId`;
+ALTER TABLE aspnetusertokens
+	DROP COLUMN `Old_UserId`;
+
+ALTER TABLE aspnetuserclaims
+	ADD CONSTRAINT `FK_AspNetUserClaims_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE aspnetuserlogins
+	ADD CONSTRAINT `FK_AspNetUserLogins_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE aspnetuserroles
+	ADD CONSTRAINT `FK_AspNetUserRoles_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`)  ON DELETE CASCADE,
+	ADD CONSTRAINT `FK_AspNetUserRoles_AspNetRoles` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`);
+ALTER TABLE `aspnetuserroles`
+	ADD PRIMARY KEY (`UserId`, `RoleId`, `OrganizationId`);
+ALTER TABLE `aspnetuserroles`
+	ADD UNIQUE INDEX `AK_AspNetUserRoles_UserId_OrganizationId` (`UserId`, `OrganizationId`);
+
+ALTER TABLE `aspnetusertokens`
+	ADD PRIMARY KEY (`UserId`, `LoginProvider`, `Name`);
+ALTER TABLE aspnetusertokens
+	ADD CONSTRAINT `FK_AspNetUserTokens_AspNetUsers` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `rolepermission`
+	ADD UNIQUE INDEX `AK_rolepermission_RoleId_PermissionId` (`RoleId`, `PermissionId`);
+ALTER TABLE rolepermission
+	ADD CONSTRAINT `FK_rolepermission_aspnetroles` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`);
+ALTER TABLE aspnetroleclaims
+	ADD CONSTRAINT `FK_AspNetRoleClaims_AspNetRoles` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`);
+	
+SELECT * FROM aspnetusers;
+SELECT * FROM `user`;
+
+ALTER TABLE `aspnetroleclaims`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetroles`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetuserclaims`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetuserlogins`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetuserroles`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetusers`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetusertokens`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetusertokens`
+	CHANGE COLUMN `CreatedById` `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	CHANGE COLUMN `UpdatedById` `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `file`
+	DROP COLUMN `CreatedById`,
+	DROP COLUMN `UpdatedById`;
+ALTER TABLE `file`
+	ADD COLUMN `CreatedById` INT NULL DEFAULT NULL AFTER `CreatedAt`,
+	ADD COLUMN `UpdatedById` INT NULL DEFAULT NULL AFTER `UpdatedAt`;
+
+ALTER TABLE `aspnetroles`
+	ADD CONSTRAINT `FK_aspnetroles_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `aspnetroles`
+	ADD CONSTRAINT `FK_aspnetroles_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `aspnetuserclaims`
+	ADD CONSTRAINT `FK_aspnetuserclaims_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `aspnetuserclaims`
+	ADD CONSTRAINT `FK_aspnetuserclaims_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `aspnetuserlogins`
+	ADD CONSTRAINT `FK_aspnetuserlogins_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `aspnetuserlogins`
+	ADD CONSTRAINT `FK_aspnetuserlogins_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `aspnetuserroles`
+	ADD CONSTRAINT `FK_aspnetuserroles_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `aspnetuserroles`
+	ADD CONSTRAINT `FK_aspnetuserroles_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `aspnetusers`
+	ADD CONSTRAINT `FK_aspnetusers_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `aspnetusers`
+	ADD CONSTRAINT `FK_aspnetusers_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `aspnetusertokens`
+	ADD CONSTRAINT `FK_aspnetusertokens_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `aspnetusertokens`
+	ADD CONSTRAINT `FK_aspnetusertokens_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+ALTER TABLE `file`
+	ADD CONSTRAINT `FK_file_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `file`
+	ADD CONSTRAINT `FK_file_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+
+
+

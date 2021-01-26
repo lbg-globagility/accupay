@@ -10,7 +10,7 @@ Public Class ThirteenthMonthDetailedReportProvider
 
     Public Sub Run() Implements IReportProvider.Run
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
+        Dim n_PayrollSummaDateSelection As New MultiplePayPeriodSelectionDialog
 
         If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
 

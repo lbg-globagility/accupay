@@ -6,8 +6,8 @@
 
 CREATE TABLE IF NOT EXISTS `filingstatus` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `Created` datetime NOT NULL DEFAULT current_timestamp(),
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
   `LastUpdBy` int(10) DEFAULT NULL,
   `FilingStatus` varchar(50) DEFAULT NULL COMMENT 'Z, S/ME, ME1, ME2, ME3, ME4',
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `filingstatus` (
   KEY `FK_FilingStatus_user_2` (`LastUpdBy`),
   CONSTRAINT `FK_FilingStatus_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_FilingStatus_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='Filing Status for Employee';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Filing Status for Employee';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

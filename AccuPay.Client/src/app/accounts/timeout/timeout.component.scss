@@ -1,0 +1,50 @@
+@use "styles/colors";
+@use "styles/sizes";
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: colors.$primary;
+}
+
+.login {
+  width: 500px;
+  padding: sizes.$x8;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    letter-spacing: 4px;
+  }
+
+  &__field {
+    display: block;
+  }
+
+  &__actions {
+    position: relative;
+    margin-top: sizes.$x4;
+  }
+
+  &__forgot {
+    position: absolute;
+    right: 0px;
+  }
+
+  &__actions {
+    button {
+      margin-right: sizes.$x2;
+    }
+  }
+}
+
+.error {
+  color: colors.$warn;
+}
+
+.message {
+  margin: sizes.$x4 0;
+}

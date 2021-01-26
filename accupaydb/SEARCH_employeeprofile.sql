@@ -6,17 +6,27 @@
 
 DROP PROCEDURE IF EXISTS `SEARCH_employeeprofile`;
 DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employeeprofile`(IN `og_id` INT, IN `emp_id` VARCHAR(50), IN `emp_fname` VARCHAR(50), IN `emp_lname` VARCHAR(50), IN `page_number` INT)
-    DETERMINISTIC
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employeeprofile`(
+	IN `og_id` INT,
+	IN `emp_id` VARCHAR(50),
+	IN `emp_fname` VARCHAR(50),
+	IN `emp_lname` VARCHAR(50),
+	IN `page_number` INT
+)
+LANGUAGE SQL
+DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
 BEGIN
 
 DECLARE max_count_per_page INT(11) DEFAULT 50;
 
 SELECT e.RowID
         ,e.EmployeeID                                   `Employee ID`
+        ,e.LastName                                     `Last Name`
         ,e.FirstName                                    `First Name`
         ,e.MiddleName                                   `Middle Name`
-        ,e.LastName                                     `Last Name`
         ,e.Surname
         ,e.Nickname
         ,e.MaritalStatus                                `Marital Status`
@@ -77,11 +87,14 @@ SELECT e.RowID
         ,e.CalcRestDayOT
         ,IFNULL(e.LateGracePeriod,0)                `LateGracePeriod`
         ,IFNULL(e.RevealInPayroll,1)                `RevealInPayroll`
-        ,IFNULL(e.OffsetBalance,0)                  `OffsetBalance`
         ,IFNULL(ag.AgencyName,'')                   `AgencyName`
         ,IFNULL(ag.RowID,'')                            `ag_RowID`
-        ,e.BranchID 
+        ,e.BranchID
+        ,e.BPIInsurance
 
+        ,e.DateEvaluated
+        ,e.DateRegularized
+        
 FROM (SELECT * FROM employee WHERE OrganizationID=og_id AND EmployeeID  =emp_id     AND LENGTH(emp_id) > 0
     UNION
         SELECT * FROM employee WHERE OrganizationID=og_id AND FirstName =emp_fname  AND LENGTH(emp_fname) > 0
@@ -91,8 +104,8 @@ FROM (SELECT * FROM employee WHERE OrganizationID=og_id AND EmployeeID  =emp_id 
         SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0
         ) e
 
-LEFT JOIN `user` u              ON e.CreatedBy=u.RowID
-LEFT JOIN `user` uu             ON e.LastUpdBy=uu.RowID
+LEFT JOIN `aspnetusers` u              ON e.CreatedBy=u.Id
+LEFT JOIN `aspnetusers` uu             ON e.LastUpdBy=uu.Id
 LEFT JOIN `position` pos        ON e.PositionID=pos.RowID
 LEFT JOIN payfrequency pf       ON e.PayFrequencyID=pf.RowID
 LEFT JOIN filingstatus fstat    ON fstat.MaritalStatus=e.MaritalStatus AND fstat.Dependent=e.NoOfDependents

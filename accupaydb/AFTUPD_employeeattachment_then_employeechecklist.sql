@@ -15,10 +15,6 @@ DECLARE lovchklstID INT(11);
 
 DECLARE prevchklstID INT(11);
 
-DECLARE OrganizID INT(11);
-
-DECLARE viewID INT(11);
-
 SELECT RowID FROM listofval WHERE DisplayValue=NEW.Type AND Type='Employee Checklist' LIMIT 1 INTO lovchklstID;
 
 SELECT RowID FROM listofval WHERE DisplayValue=OLD.Type AND Type='Employee Checklist' LIMIT 1 INTO prevchklstID;
@@ -189,43 +185,6 @@ ELSEIF prevchklstID = 385 THEN
     NBIClearance='0'
     WHERE RowID=empchklstID;
 END IF;
-
-
-
-
-
-
-
-
-
-
-SELECT OrganizationID FROM user WHERE RowID=NEW.CreatedBy INTO OrganizID;
-
-SELECT RowID FROM `view` WHERE ViewName='Employee Attachment' AND OrganizationID=OrganizID LIMIT 1 INTO viewID;
-
-IF OLD.Type!=NEW.Type THEN
-
-    INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
-) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,OrganizID,viewID,'Type',NEW.RowID,OLD.Type,NEW.Type,'Update');
-
-END IF;
-
-IF OLD.FileName!=NEW.FileName THEN
-
-    INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
-) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,OrganizID,viewID,'FileName',NEW.RowID,OLD.FileName,NEW.FileName,'Update');
-
-END IF;
-
-IF OLD.FileType!=NEW.FileType THEN
-
-    INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
-) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,OrganizID,viewID,'FileType',NEW.RowID,OLD.FileType,NEW.FileType,'Update');
-
-END IF;
-
-
-
 
 END//
 DELIMITER ;

@@ -1,0 +1,6 @@
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('0', 'UseBPIInsurance', 'Employee Policy', 'Yes', NOW(), '1', NOW(), '1', '1');
+
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('1000', 'DefaultBPIInsurance', 'Default', 'Yes', NOW(), '1', NOW(), '1', '1');
+ALTER TABLE `employee`
+	ADD COLUMN `BPIInsurance` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `AdvancementPoints`;
+

@@ -1,6 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
-Imports CrystalDecisions.CrystalReports.Engine
+Imports AccuPay.CrystalReports
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LoanSummaryByTypeReportProvider
     Implements IReportProvider
@@ -9,45 +10,33 @@ Public Class LoanSummaryByTypeReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim dateSelector As New PayrollSummaDateSelection
+        Dim dateSelector As New MultiplePayPeriodSelectionDialog
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return
         End If
-
-        Dim report As ReportClass
-        report = New LoanReportByType()
 
         Dim pagingStylePrompt =
             MsgBox("Do you want to print separate pages every Loan Type ?",
                    MsgBoxStyle.YesNo,
                    String.Concat("Print ", Name, " report"))
 
-        If pagingStylePrompt = MsgBoxResult.Yes Then
-            report = New LoanReportByTypePerPage()
-        End If
-
         Dim dateFrom = CDate(dateSelector.DateFrom)
         Dim dateTo = CDate(dateSelector.DateTo)
 
-        Dim params = New Object(,) {
-            {"OrganizID", orgztnID},
-            {"PayDateFrom", CDate(dateSelector.DateFrom)},
-            {"PayDateTo", CDate(dateSelector.DateTo)}
-        }
+        Dim service = MainServiceProvider.GetRequiredService(Of ILoanSummaryByTypeReportBuilder)
 
-        Dim data = DirectCast(callProcAsDatTab(params, "RPT_LoansByType"), DataTable)
+        Dim loanReport As ILoanSummaryByTypeReportBuilder
 
-        report.SetDataSource(data)
-
-        Dim dateFromTitle = dateFrom.ToString("MMMM d, yyyy")
-        Dim dateTotTitle = dateTo.ToString("MMMM d, yyyy")
-
-        Dim title = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("Text14"), TextObject)
-        title.Text = $"For the period of {dateFromTitle} to {dateTotTitle}"
+        If pagingStylePrompt = MsgBoxResult.Yes Then
+            'per page
+            loanReport = service.CreateReportDocumentPerPage(z_OrganizationID, dateFrom, dateTo)
+        Else
+            loanReport = service.CreateReportDocument(z_OrganizationID, dateFrom, dateTo)
+        End If
 
         Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = report
+        crvwr.crysrepvwr.ReportSource = loanReport.GetReportDocument
         crvwr.Show()
     End Sub
 

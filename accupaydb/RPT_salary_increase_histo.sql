@@ -17,13 +17,12 @@ SELECT
     ee.EmployeeID AS `DatCol3`,
     CONCAT(ee.LastName, ', ', ee.FirstName) AS `DatCol4`,
     DATE_FORMAT(es.EffectiveDateFrom, '%m/%d/%Y') AS `DatCol5`,
-    DATE_FORMAT(es.EffectiveDateTo, '%m/%d/%Y') AS `DatCol6`,
     es.Salary AS `DatCol7`,
     es.UndeclaredSalary AS `DatCol8`,
     (es.Salary + es.UndeclaredSalary) AS `DatCol9`
 FROM employeesalary es
 INNER JOIN employee ee
-ON ee.RowID = es.EmployeeID AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+ON ee.RowID = es.EmployeeID
 WHERE es.OrganizationID = OrganizID
 ORDER BY ee.LastName,
     ee.FirstName,

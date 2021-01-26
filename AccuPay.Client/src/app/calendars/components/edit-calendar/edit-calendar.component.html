@@ -1,0 +1,10 @@
+<h1 class="mat-headline">Edit Calendar</h1>
+
+<ng-container *ngIf="calendar">
+  <app-calendar-form
+    [calendar]="calendar"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  >
+  </app-calendar-form>
+</ng-container>

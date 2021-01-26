@@ -1,0 +1,6 @@
+
+ALTER TABLE `paystubadjustment`
+	ADD COLUMN IF NOT EXISTS `Is13thMonthPay` TINYINT(1) NULL DEFAULT '0' AFTER `IsActual`;
+
+ALTER TABLE `paystubadjustmentactual`
+	ADD COLUMN IF NOT EXISTS `Is13thMonthPay` TINYINT(1) NULL DEFAULT '0' AFTER `IsActual`;

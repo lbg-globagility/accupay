@@ -1,4 +1,6 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Option Strict On
+
+Imports MySql.Data.MySqlClient
 
 Public Class SQLQueryToDatatable
 
@@ -11,15 +13,10 @@ Public Class SQLQueryToDatatable
     Sub New(SQLProcedureName As String,
             Optional cmd_time_out As Integer = 0)
 
-        'Static mysql_conn_text As String = n_DataBaseConnection.GetStringMySQLConnectionString
-
-        'Dim n_DataBaseConnection As New DataBaseConnection
-
         If cmd_time_out > 0 Then
 
             priv_conn.ConnectionString = mysql_conn_text &
                 "default command timeout=" & cmd_time_out & ";"
-
         Else
 
             priv_conn.ConnectionString = mysql_conn_text
@@ -54,7 +51,6 @@ Public Class SQLQueryToDatatable
                 priv_da.Fill(n_ResultTable)
 
             End With
-
         Catch ex As Exception
             _hasError = True
             MsgBox(getErrExcptn(ex, MyBase.ToString))

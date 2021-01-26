@@ -1,0 +1,69 @@
+<h2 mat-dialog-title class="title">Import</h2>
+
+<div mat-dialog-content>
+  <mat-tab-group class="container content">
+    <mat-tab>
+      <ng-template mat-tab-label>OK ({{ validRecords?.length }})</ng-template>
+      <table
+        *ngIf="validRecords?.length >= 1"
+        mat-table
+        [dataSource]="validRecords"
+        class="w-full"
+      >
+        <ng-container
+          *ngFor="let model of models"
+          [matColumnDef]="model.columnDef"
+        >
+          <th mat-header-cell *matHeaderCellDef>
+            {{ model.columnHeader }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ getValue(element, model.columnDef) | ifEmpty }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="propertyNames; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: propertyNames"></tr>
+      </table>
+
+      <div class="app-empty-table" *ngIf="validRecords?.length <= 0">
+        Nothing were imported.
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label
+        >Errors ({{ invalidRecords?.length }})</ng-template
+      >
+      <table
+        *ngIf="invalidRecords?.length >= 1"
+        mat-table
+        [dataSource]="invalidRecords"
+        class="w-full"
+      >
+        <ng-container
+          *ngFor="let model of models"
+          [matColumnDef]="model.columnDef"
+        >
+          <th mat-header-cell *matHeaderCellDef>
+            {{ model.columnHeader }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ getValue(element, model.columnDef) | ifEmpty }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="propertyNames; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: propertyNames"></tr>
+      </table>
+
+      <div class="app-empty-table" *ngIf="invalidRecords?.length <= 0">
+        Yay! No failed imports.
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onClickOk()">OK</button>
+</div>

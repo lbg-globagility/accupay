@@ -1,0 +1,8 @@
+
+
+#aspnetusers is now used by AccuPay.Desktop. aspnetusers UserName is decrypted. When updating your database up to this part, make sure to decrypt the UserName of aspnetusers for AccuPay.Desktop.
+#you can use the FormTester project to decrypt the UserNames.
+
+#Since position_view has been replaced by aspnetuserroles, when updating the clients, you need to determine the different roles based on the
+#past position_view data. You need to create the roles and assign it to the appropriate users.
+#Only Goldwings uses User Privileges so far. Most of the other clients only uses one Admin account which will be easier.

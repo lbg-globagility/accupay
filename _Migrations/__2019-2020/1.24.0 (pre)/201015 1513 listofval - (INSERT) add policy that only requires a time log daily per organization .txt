@@ -1,0 +1,3 @@
+SET @id=(SELECT RowID FROM listofval WHERE `Type`='TimeEntry' AND LIC='TimeLogAsPaymentRequirement' LIMIT 1);
+
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '0', 'TimeLogAsPaymentRequirement', 'TimeEntry', NULL, 'Yes', 'Paid as long as has time logs', NOW(), 1, NOW(), 1, 1) ON DUPLICATE KEY UPDATE LastUpd=NOW();

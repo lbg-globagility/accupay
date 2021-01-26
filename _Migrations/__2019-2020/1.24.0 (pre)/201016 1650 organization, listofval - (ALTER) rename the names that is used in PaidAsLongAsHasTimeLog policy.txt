@@ -1,0 +1,13 @@
+ALTER TABLE `organization`
+	DROP COLUMN IF EXISTS `TimeLogsOnlyAttendanceRequirement`,
+	DROP COLUMN IF EXISTS `IsTimeLogsOnlyAttendanceRequirement`;
+	
+ALTER TABLE `organization`
+	ADD COLUMN IF NOT EXISTS `PaidAsLongAsHasTimeLog` BIT(1) NOT NULL DEFAULT 0 AFTER `ClientId`;
+
+
+DELETE FROM listofval WHERE LIC = 'TimeLogAsPaymentRequirement' AND TYPE = 'TimeEntry';
+
+SET @id=(SELECT RowID FROM listofval WHERE `Type`='TimeEntry Policy' AND LIC='PaidAsLongAsHasTimeLog' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '0', 'PaidAsLongAsHasTimeLog', 'TimeEntry Policy', NULL, 'Yes', 'Paid as long as has at least one time log or has official business', NOW(), 1, NOW(), 1, 1) ON DUPLICATE KEY UPDATE LastUpd=NOW();
+

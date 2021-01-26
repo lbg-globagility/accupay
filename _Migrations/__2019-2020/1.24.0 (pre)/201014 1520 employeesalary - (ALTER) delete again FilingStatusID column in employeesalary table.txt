@@ -1,0 +1,6 @@
+ALTER TABLE `employeesalary`
+	DROP FOREIGN KEY IF EXISTS `FK_employeesalary_filingstatus`;
+ALTER TABLE `employeesalary`
+	DROP INDEX IF EXISTS `FK_employeesalary_filingstatus`;
+ALTER TABLE `employeesalary`
+	DROP COLUMN IF EXISTS `FilingStatusID`;

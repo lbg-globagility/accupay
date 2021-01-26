@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS `paystubitem` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` datetime NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `PayStubID` int(10) DEFAULT NULL,
   `ProductID` int(10) DEFAULT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `paystubitem` (
   CONSTRAINT `FK_paystubitem_paystub` FOREIGN KEY (`PayStubID`) REFERENCES `paystub` (`RowID`),
   CONSTRAINT `FK_paystubitem_product` FOREIGN KEY (`ProductID`) REFERENCES `product` (`RowID`),
   CONSTRAINT `paystubitem_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=54147 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

@@ -28,7 +28,7 @@ FROM (SELECT esa.*
 		FROM employeesalary esa
 		INNER JOIN employee e ON e.RowID=esa.EmployeeID AND e.EmployeeType = 'Daily' AND e.RowID=EmpID AND e.OrganizationID=OrgID
       ) i
-WHERE paramDate BETWEEN i.EffectiveDateFrom AND IFNULL(i.EffectiveDateTo, paramDate)
+WHERE paramDate BETWEEN i.EffectiveDateFrom AND paramDate
 AND DATEDIFF(paramDate, i.EffectiveDateFrom) >= 0
 ORDER BY DATEDIFF(DATE_FORMAT(paramDate, @@date_format), i.EffectiveDateFrom)
 LIMIT 1

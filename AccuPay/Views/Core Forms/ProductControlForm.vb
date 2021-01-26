@@ -1,5 +1,9 @@
-﻿Imports System.Threading.Tasks
-Imports Microsoft.EntityFrameworkCore
+Option Strict On
+
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Desktop.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class ProductControlForm
@@ -7,6 +11,16 @@ Public Class ProductControlForm
     Dim isShowAsDialog As Boolean = False
 
     Public Property IsSaved As Boolean
+
+    Private ReadOnly _productDataService As IProductDataService
+
+    Sub New()
+
+        InitializeComponent()
+
+        _productDataService = MainServiceProvider.GetRequiredService(Of IProductDataService)
+
+    End Sub
 
     Public Overloads Function ShowDialog(ByVal someValue As String) As DialogResult
 
@@ -48,19 +62,10 @@ Public Class ProductControlForm
 
         If ToolStripButton2.Enabled Then
 
-            Dim haschangestoDB =
-                EXECQUER("SELECT EXISTS(SELECT" &
-                         " RowID" &
-                         " FROM product" &
-                         " WHERE OrganizationID='" & orgztnID & "'" &
-                         " AND `Category`='" & n_categname & "'" &
-                         " AND (DATE_FORMAT(Created, '%Y-%m-%d') = CURDATE() OR DATE_FORMAT(LastUpd, '%Y-%m-%d') = CURDATE())" &
-                         " LIMIT 1);")
-
-            If haschangestoDB = 1 Then
-                Me.DialogResult = Windows.Forms.DialogResult.OK
+            If Me.IsSaved Then
+                Me.DialogResult = DialogResult.OK
             Else
-                Me.DialogResult = Windows.Forms.DialogResult.Cancel
+                Me.DialogResult = DialogResult.Cancel
 
             End If
         Else
@@ -109,7 +114,7 @@ Public Class ProductControlForm
 
                 .Parameters.Add("prod_RowID", MySqlDbType.Int32)
 
-                .Parameters.AddWithValue("p_RowID", If(prod_rowID = Nothing, DBNull.Value, prod_rowID))
+                .Parameters.AddWithValue("p_RowID", If(prod_rowID Is Nothing, DBNull.Value, prod_rowID))
                 .Parameters.AddWithValue("p_Name", p_Name)
                 .Parameters.AddWithValue("p_OrganizationID", orgztnID) 'orgztnID
                 .Parameters.AddWithValue("p_PartNo", p_PartNo)
@@ -148,7 +153,7 @@ Public Class ProductControlForm
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 
-        dgvproducts.EndEdit(True)
+        dgvproducts.EndEdit()
 
         For Each dgvrow As DataGridViewRow In dgvproducts.Rows
             If dgvrow.IsNewRow Then
@@ -163,7 +168,7 @@ Public Class ProductControlForm
 
         ToolStripButton2.Enabled = False
 
-        dgvproducts.EndEdit(True)
+        dgvproducts.EndEdit()
 
         Dim validRows = dgvproducts.Rows.OfType(Of DataGridViewRow).Where(Function(r) Not r.IsNewRow)
 
@@ -175,7 +180,7 @@ Public Class ProductControlForm
 
             Dim allowanceTypeId = drow.Cells("RowID").Value
 
-            Dim has_no_rowid = CBool(allowanceTypeId = Nothing)
+            Dim has_no_rowid = allowanceTypeId Is Nothing
 
             Dim returnval =
                     INS_product(If(has_no_rowid, Nothing, drow.Cells("RowID").Value),
@@ -261,7 +266,7 @@ Public Class ProductControlForm
             ',PDCFlag,MonthlyBIllFlag,PenaltyFlag,WithholdingTaxPercent,CostPrice,UnitOfMeasure
             ',SKU,LeadTime,BarCode,BusinessUnitID,LastRcvdFromShipmentDate,LastRcvdFromShipmentCount
             ',TotalShipmentCount,BookPageNo,BrandName,LastPurchaseDate,LastSoldDate,LastSoldCount,ReOrderPoint
-            ',AllocateBelowSafetyFlag,Strength,UnitsBackordered,UnitsBackorderAsOf,DateLastInventoryCount,TaxVAT,WithholdingTax,COAId,
+            ',AllocateBelowSafetyFlag,Strength,UnitsBackordered,UnitsBackorderAsOf,DateLastInventoryCount,TaxVAT,WithholdingTax,
 
         Next
 
@@ -273,7 +278,7 @@ Public Class ProductControlForm
 
     End Sub
 
-    Dim isCellInEditMode = False
+    Dim isCellInEditMode As Boolean = False
 
     Private Sub dgvpayper_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvproducts.CellBeginEdit
         isCellInEditMode = True
@@ -287,19 +292,6 @@ Public Class ProductControlForm
     Private Sub dgvpayper_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvproducts.CellEndEdit
         isCellInEditMode = False
     End Sub
-
-    'Const WM_LBUTTONDBLCLK = &H203
-    'Const WM_RBUTTONDBLCLK = &H206
-    'Const WM_MBUTTONDBLCLK = &H209
-
-    'Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
-    '    Select Case m.Msg
-    '        Case WM_RBUTTONDBLCLK, WM_MBUTTONDBLCLK : Return
-    '            'Case WM_LBUTTONDBLCLK : Return
-    '        Case Else
-    '            Call MyBase.WndProc(m)
-    '    End Select
-    'End Sub
 
     Dim selected_rowindex As Integer = -1
 
@@ -317,7 +309,7 @@ Public Class ProductControlForm
 
                 If e.Button = Windows.Forms.MouseButtons.Right Then
 
-                    dgvproducts.EndEdit(True)
+                    dgvproducts.EndEdit()
 
                     If ToolStripButton2.Visible _
                         And dgvproducts.IsCurrentCellInEditMode = False Then
@@ -413,13 +405,15 @@ Public Class ProductControlForm
         Dim prompt As DialogResult
 
         If n_categname = ProductConstant.ALLOWANCE_TYPE_CATEGORY AndAlso
-            Await CheckIfAllowanceIsUsedInPayroll(allowanceName) Then
+            Await _productDataService.CheckIfAlreadyUsedInAllowancesAsync(allowanceName) Then
 
-            prompt = MessageBox.Show("This allowance type is already used in generated payrolls. Are you sure you want to delete this item?",
-                                    "Delete item",
-                                    MessageBoxButtons.YesNoCancel,
-                                    MessageBoxIcon.Warning,
-                                    MessageBoxDefaultButton.Button2)
+            MessageBoxHelper.Warning("Cannot delete an allowance item that is already used in a generated payroll.")
+            Return
+            'prompt = MessageBox.Show("This allowance type is already used in generated payrolls. Are you sure you want to delete this item?",
+            '                        "Delete item",
+            '                        MessageBoxButtons.YesNoCancel,
+            '                        MessageBoxIcon.Warning,
+            '                        MessageBoxDefaultButton.Button2)
         Else
 
             prompt = MessageBox.Show("Are you sure do you want to delete this item?",
@@ -437,7 +431,7 @@ Public Class ProductControlForm
                              " SET LastUpd=CURRENT_TIMESTAMP()" &
                              ",LastUpdBy='" & z_User & "'" &
                              ",ActiveData='0'" &
-                             " WHERE RowID='" & dgvproducts.Item("RowID", selected_rowindex).Value & "';")
+                             " WHERE RowID='" & dgvproducts.Item("RowID", selected_rowindex).Value.ToString() & "';")
 
             Dim removing_row = dgvproducts.Rows(selected_rowindex)
 
@@ -449,20 +443,6 @@ Public Class ProductControlForm
         dgvproducts.Enabled = True
 
     End Sub
-
-    Private Async Function CheckIfAllowanceIsUsedInPayroll(allowanceName As String) As Task(Of Boolean)
-
-        Using context As New PayrollContext
-
-            Return Await context.AllowanceItems.
-                    Include(Function(a) a.Allowance).
-                    Include(Function(a) a.Allowance.Product).
-                    Where(Function(a) a.Allowance.Product.PartNo = allowanceName).
-                    AnyAsync
-
-        End Using
-
-    End Function
 
     Private Sub ContextMenuStrip1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip1.Opening
 

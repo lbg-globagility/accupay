@@ -1,16 +1,15 @@
-﻿Imports MySql.Data.MySqlClient
-Imports Microsoft.Win32
-Imports System.Threading
+﻿Imports System.Threading
 Imports log4net
+Imports MySql.Data.MySqlClient
 
 Namespace My
 
     ' The following events are available for MyApplication:
-    ' 
+    '
     ' Startup: Raised when the application starts, before the startup form is created.
     ' Shutdown: Raised after all application forms are closed.  This event is not raised if the application terminates abnormally.
     ' UnhandledException: Raised if the application encounters an unhandled exception.
-    ' StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
+    ' StartupNextInstance: Raised when launching a single-instance application and the application is already active.
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
 
     Partial Friend Class MyApplication
@@ -36,10 +35,8 @@ Namespace My
                         Thread.Sleep(100)
 
                     Next
-
                 Catch ex As Exception
                     MsgBox(ex, MyBase.ToString)
-
                 Finally
                     MachineLocalization.Dispose()
 
@@ -50,8 +47,11 @@ Namespace My
 
         Private Sub MyApplication_Startup(sender As Object, e As ApplicationServices.StartupEventArgs) Handles Me.Startup
             Try
-                Using context = New PayrollContext()
-                End Using
+                'Using context = New PayrollContext()
+                'End Using
+
+                'Dim repository As New Data.Repositories.BranchRepository()
+                'Dim list = repository.GetAll(z_OrganizationID)
             Catch ex As Exception
                 MsgBox("A serious error occured while trying to initializing the database.", MsgBoxStyle.OkOnly, "Database Error")
                 Throw
@@ -106,4 +106,3 @@ Namespace My
     End Class
 
 End Namespace
-

@@ -25,6 +25,20 @@ namespace AccuPay.Utilities.Extensions
             return newList;
         }
 
+        public static bool NullableEquals<T>(this T source, T comparedTo)
+        {
+            // if both are null, they are equal
+            if (source == null && comparedTo == null)
+                return true;
+
+            // if one is null and the other is not, they are not equal
+            if ((source == null && comparedTo != null) || (source == null && comparedTo != null))
+                return false;
+
+            // if both have value, compare them
+            return source.Equals(comparedTo);
+        }
+
         private static T CloneObject<T>(T source)
         {
             if (Object.ReferenceEquals(source, null)) return default(T);

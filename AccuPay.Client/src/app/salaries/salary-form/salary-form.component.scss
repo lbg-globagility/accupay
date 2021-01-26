@@ -1,0 +1,13 @@
+@use "styles/colors";
+
+.readonly-field {
+  padding-left: 0.5rem;
+}
+
+.readonly-field > .field {
+  padding: 0 0.75em 0 0.75em;
+}
+
+.readonly-field > .field > .field-value {
+  margin-top: 10px;
+}

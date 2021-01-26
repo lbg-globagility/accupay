@@ -7,12 +7,13 @@
 CREATE TABLE IF NOT EXISTS `thirteenthmonthpay` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `PaystubID` int(10) DEFAULT NULL,
-  `Amount` decimal(10,2) DEFAULT NULL,
+  `Amount` decimal(15,4) DEFAULT NULL,
+  `BasicPay` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `PaystubID` (`PaystubID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `thirteenthmonthpay` (
   CONSTRAINT `thirteenthmonthpay_ibfk_2` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `thirteenthmonthpay_ibfk_3` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `thirteenthmonthpay_ibfk_4` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1811 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

@@ -1,0 +1,47 @@
+@use "styles/sizes";
+
+._table {
+  max-width: 400px;
+  width: 100%;
+}
+
+._table td,
+._table th {
+  padding: sizes.$x1 0;
+}
+
+._table > thead > tr > th:first-child,
+._table > tfoot > tr > th:first-child {
+  text-align: left;
+}
+
+._table > thead > tr > th:last-child,
+._table > tfoot > tr > th:last-child,
+._table > thead > tr > th,
+._table > tfoot > tr > th {
+  text-align: right;
+}
+
+._table > tr > td,
+._table > tbody > tr > td,
+._table > tbody > tr > th {
+  text-align: right;
+}
+
+._table > tr > td:first-child,
+._table > tbody > tr > td:first-child,
+._table > tbody > tr > th:first-child {
+  text-align: left;
+}
+
+._border {
+  border-top: thin solid rgba(0, 0, 0, 0.17);
+}
+
+._pad-top {
+  padding-top: sizes.$x2 !important;
+}
+
+._pad-bottom {
+  padding-bottom: sizes.$x2 !important;
+}

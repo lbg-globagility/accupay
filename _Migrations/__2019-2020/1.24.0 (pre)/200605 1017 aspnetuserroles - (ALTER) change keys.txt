@@ -1,0 +1,5 @@
+ALTER TABLE `AspNetUserRoles`
+  CHANGE COLUMN `OrganizationId` `OrganizationId` INT(11) NOT NULL AFTER `RoleId`,
+  ADD UNIQUE INDEX `UserId_OrganizationId` (`UserId`, `OrganizationId`),
+  ADD INDEX `FK_AspNetUserRoles_organization` (`OrganizationId`) USING BTREE,
+  ADD CONSTRAINT `FK_AspNetUserRoles_organization` FOREIGN KEY (`OrganizationId`) REFERENCES `organization` (`RowID`) ON UPDATE RESTRICT ON DELETE RESTRICT;

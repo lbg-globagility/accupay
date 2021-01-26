@@ -1,0 +1,19 @@
+<h1>Edit Official Business</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-official-business-form
+    [officialBusiness]="officialBusiness"
+  ></app-official-business-form>
+</ng-container>
+
+<div mat-dialog-actions align="end">
+  <button
+    mat-button
+    color="accent"
+    (click)="onSave()"
+    [disabled]="savingState.isLoading"
+  >
+    SAVE
+  </button>
+  <button mat-button [mat-dialog-close]="false">CANCEL</button>
+</div>

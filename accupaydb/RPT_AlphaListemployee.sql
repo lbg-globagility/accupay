@@ -39,8 +39,7 @@ ON sa.RowID = (
     LIMIT 1
 )
 WHERE e.OrganizationID=OrganizID
-AND e.AlphaListExempted='0'
-AND FIND_IN_SET(e.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0;
+AND e.AlphaListExempted='0';
 
 END//
 DELIMITER ;

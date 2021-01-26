@@ -1,7 +1,9 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Entity
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
 
 <TestFixture>
@@ -124,23 +126,32 @@ Public Class OvertimeHoursTest
         Dim today = Date.Parse("2017-01-01")
         Dim currentShift = GetShift(shiftStartTime, shiftEndTime, today)
 
-        Dim overtime = New Overtime With {
-            .OTStartDate = today,
-            .OTStartTime = TimeSpan.Parse(otStartTime),
-            .OTEndTime = TimeSpan.Parse(otEndTime)
-        }
+        Dim overtime1 = Overtime.NewOvertime(
+            organizationId:=1,
+            employeeId:=1,
+            startDate:=today,
+            startTime:=TimeSpan.Parse(otStartTime),
+            endTime:=TimeSpan.Parse(otEndTime))
 
         Dim workStart = TimeUtility.RangeStart(today, TimeSpan.Parse(timeIn))
         Dim workEnd = TimeUtility.RangeEnd(today, TimeSpan.Parse(timeIn), TimeSpan.Parse(timeOut))
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
-        Dim result = _calculator.ComputeOvertimeHours(workPeriod, overtime, currentShift, Nothing)
+        Dim result = _calculator.ComputeOvertimeHours(workPeriod, overtime1, currentShift, Nothing)
 
         Assert.That(result, [Is].EqualTo(expected))
     End Sub
 
     Private Function GetShift(timeIn As String, timeOut As String, [date] As Date) As CurrentShift
-        Dim shift = New Shift(TimeSpan.Parse(timeIn), TimeSpan.Parse(timeOut))
+
+        Dim currentDay = New DateTime(2020, 1, 1)
+
+        Dim shift = New Shift() With {
+            .DateSched = currentDay,
+            .StartTime = TimeSpan.Parse(timeIn),
+            .EndTime = TimeSpan.Parse(timeOut)
+        }
+
         Return New CurrentShift(shift, [date])
     End Function
 

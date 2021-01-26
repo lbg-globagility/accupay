@@ -1,11 +1,21 @@
-﻿Option Strict On
+Option Strict On
 
-Imports System.Data.Common
-Imports AccuPay.Entity
-Imports AccuPay
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Services
+Imports Microsoft.Extensions.DependencyInjection
 
 <TestFixture>
 Public Class ListOfValueCollectionTest
+    Inherits ServiceProvider
+
+    Private ReadOnly _listOfValueService As IListOfValueService
+
+    Sub New()
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
+
+    End Sub
 
     <TestCase("true")>
     <TestCase("1")>
@@ -45,7 +55,7 @@ Public Class ListOfValueCollectionTest
     End Sub
 
     Private Function CreateListOfValue(value As String) As ListOfValueCollection
-        Return New ListOfValueCollection(New List(Of ListOfValue) From {
+        Return _listOfValueService.Create(New List(Of ListOfValue) From {
             New ListOfValue() With {
                 .Type = "sampletype",
                 .LIC = "samplelic",

@@ -80,8 +80,6 @@ Module myModule
 
     Public FormLeftTimeAttend As New List(Of String)
 
-    Public position_view_table As New DataTable
-
     Public userFirstName As String = Nothing
 
     Public userLastName As String = Nothing

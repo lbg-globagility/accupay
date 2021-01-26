@@ -9,13 +9,9 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTINS_employeeattachment_then_employeechecklist` AFTER INSERT ON `employeeattachments` FOR EACH ROW BEGIN
 
-DECLARE OrganizID INT(11);
-
 DECLARE empchklstID INT(11);
 
 DECLARE lovchklstID INT(11);
-
-DECLARE viewID INT(11);
 
 SELECT RowID FROM listofval WHERE DisplayValue=NEW.Type AND Type='Employee Checklist' LIMIT 1 INTO lovchklstID;
 
@@ -100,20 +96,6 @@ ELSEIF lovchklstID = 385 THEN
     NBIClearance='1'
     WHERE RowID=empchklstID;
 END IF;
-
-SELECT OrganizationID FROM user WHERE RowID=NEW.CreatedBy INTO OrganizID;
-
-SELECT RowID FROM `view` WHERE ViewName='Employee Attachment' AND OrganizationID=OrganizID LIMIT 1 INTO viewID;
-
-INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed
-) VALUES (CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,OrganizID,viewID,'EmployeeID',NEW.RowID,'',NEW.EmployeeID,'Insert')
-,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,OrganizID,viewID,'Type',NEW.RowID,'',NEW.Type,'Insert')
-,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,OrganizID,viewID,'FileName',NEW.RowID,'',NEW.FileName,'Insert')
-,(CURRENT_TIMESTAMP(),NEW.CreatedBy,NEW.CreatedBy,OrganizID,viewID,'FileType',NEW.RowID,'',NEW.FileType,'Insert');
-
-
-
-
 
 END//
 DELIMITER ;

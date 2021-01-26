@@ -280,8 +280,8 @@ Public Class ViewTimeEntryEmployeeLevel
                 employeetimeentry.Date,
                 employeetimeentrydetails.TimeIn,
                 employeetimeentrydetails.TimeOut,
-                shift.TimeFrom AS ShiftFrom,
-                shift.TimeTo AS ShiftTo,
+                shiftschedules.StartTime AS ShiftFrom,
+                shiftschedules.EndTime AS ShiftTo,
                 employeetimeentry.RegularHoursWorked,
                 employeetimeentry.RegularHoursAmount,
                 employeetimeentry.NightDifferentialHours,
@@ -308,10 +308,9 @@ Public Class ViewTimeEntryEmployeeLevel
             ON employeetimeentrydetails.Date = employeetimeentry.Date AND
                 employeetimeentrydetails.OrganizationID = employeetimeentry.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = employeetimeentry.EmployeeID
-            LEFT JOIN employeeshift
-            ON employeeshift.RowID = employeetimeentry.EmployeeShiftID
-            LEFT JOIN shift
-            ON shift.RowID = employeeshift.ShiftID
+            LEFT JOIN shiftschedules
+                ON shiftschedules.Date = employeetimeentry.Date
+                ON shiftschedules.EmployeeID = employeetimeentry.EmployeeID
             LEFT JOIN payrate
             ON payrate.Date = employeetimeentry.Date AND
                 payrate.OrganizationID = employeetimeentry.OrganizationID
@@ -401,8 +400,8 @@ Public Class ViewTimeEntryEmployeeLevel
                 employeetimeentryactual.Date,
                 employeetimeentrydetails.TimeIn,
                 employeetimeentrydetails.TimeOut,
-                shift.TimeFrom AS ShiftFrom,
-                shift.TimeTo AS ShiftTo,
+                shiftschedules.StartTime AS ShiftFrom,
+                shiftschedules.EndTime AS ShiftTo,
                 employeetimeentryactual.RegularHoursWorked,
                 employeetimeentryactual.RegularHoursAmount,
                 employeetimeentryactual.NightDifferentialHours,
@@ -428,10 +427,9 @@ Public Class ViewTimeEntryEmployeeLevel
             ON employeetimeentrydetails.Date = employeetimeentryactual.Date AND
                 employeetimeentrydetails.OrganizationID = employeetimeentryactual.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = employeetimeentryactual.EmployeeID
-            LEFT JOIN employeeshift
-            ON employeeshift.RowID = employeetimeentryactual.EmployeeShiftID
-            LEFT JOIN shift
-            ON shift.RowID = employeeshift.ShiftID
+            LEFT JOIN shiftschedules
+                ON shiftschedules.Date = employeetimeentryactual.Date
+                ON shiftschedules.EmployeeID = employeetimeentryactual.EmployeeID
             WHERE employeetimeentryactual.EmployeeID = @EmployeeID AND
                 employeetimeentryactual.`Date` BETWEEN @DateFrom AND @DateTo
             ORDER BY employeetimeentryactual.`Date`;

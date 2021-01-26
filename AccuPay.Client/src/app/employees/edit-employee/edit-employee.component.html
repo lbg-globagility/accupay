@@ -1,0 +1,10 @@
+<h1 class="mat-headline">Edit Employee</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-employee-form
+    [employee]="employee"
+    (save)="save($event)"
+    (cancel)="cancel()"
+  >
+  </app-employee-form>
+</ng-container>

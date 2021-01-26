@@ -1,0 +1,21 @@
+@use "styles/sizes";
+
+.u-row ~ .u-row {
+  margin-top: sizes.$x2;
+}
+
+.app-expandable-row-trigger:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+.app-expandable-row-trigger:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.app-expandable-row-trigger td {
+  border-bottom-width: 0 !important;
+}
+
+tr.app-expandable-row-container {
+  height: 0 !important;
+}

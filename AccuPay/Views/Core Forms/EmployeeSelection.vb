@@ -245,7 +245,7 @@ Public Class EmployeeSelection
                 n_EmployeeID = .Cells("Column1").Value
                 n_EmpLastName = .Cells("Column4").Value
                 n_EmpFirstName = .Cells("Column2").Value
-                n_EmpMiddleName = .Cells("Column3").Value
+                n_EmpMiddleName = If(IsDBNull(.Cells("Column3").Value), "", .Cells("Column3").Value)
 
                 n_EmpPositionID = .Cells("Column12").Value
 

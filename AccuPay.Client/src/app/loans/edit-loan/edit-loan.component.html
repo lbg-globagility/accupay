@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Edit Loan</h1>
+
+<div mat-dialog-content>
+  <app-loan-form [loan]="loan"></app-loan-form>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-flat-button color="primary" (click)="save()">SAVE</button>
+  <button mat-button mat-dialog-close>CANCEL</button>
+</div>

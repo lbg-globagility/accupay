@@ -1,0 +1,24 @@
+@use "styles/colors";
+@use "~@angular/material/theming" as *;
+@use "styles/sizes";
+
+:host {
+  display: block;
+  background: colors.$accent;
+  color: white;
+  @include mat-elevation(4);
+}
+
+.menu-item {
+  display: flex;
+  padding: sizes.$x2 sizes.$x4;
+}
+
+.submenu-item {
+  display: flex;
+  padding: sizes.$x2 sizes.$x4 sizes.$x2 sizes.$x8;
+}
+
+.menu-icon {
+  margin-right: sizes.$x4;
+}

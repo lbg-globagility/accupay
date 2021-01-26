@@ -1,0 +1,39 @@
+@use "styles/colors";
+@use "styles/sizes";
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.app-empty-table {
+  width: 100%;
+  padding: 48px;
+  box-sizing: border-box;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+  background: white;
+  border-bottom: colors.$border;
+}
+
+.app-page-header {
+  display: flex;
+  justify-content: space-between;
+
+  &__actions {
+    button {
+      margin-left: sizes.$x2;
+    }
+  }
+}
+
+.app-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+}

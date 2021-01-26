@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AccuPay"
-#define MyAppVersion "1.18.6.4"
+#define MyAppVersion "1.29.3"
 #define MyAppPublisher "Globagility, Inc."
 #define MyAppURL "http://www.globagilityinc.com/"
 #define MyAppExeName "AccuPay.exe"
@@ -36,14 +36,12 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: ".\AccuPay\bin\Debug\AccuPay.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AccuPay.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\AccuPay.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\AccuPay.DB.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\AccuPay.Payslip.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\AccuPay.Reference.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.CrystalReports.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.Infrastructure.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AccuPay.Utilities.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AutoMapper.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\BouncyCastle.Crypto.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Castle.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\CollapsibleGroupBox.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\CrystalDecisions.CrystalReports.Engine.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -67,13 +65,28 @@ Source: ".\AccuPay\bin\Debug\EPPlus.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\EWSoftware.ListControls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Femiani.Forms.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\FlashControlV71.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\Google.Protobuf.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\log4.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\log4net.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\MessageBoxManager.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\MetroFramework.Design.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\MetroFramework.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\MetroFramework.Fonts.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Authentication.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Authentication.Cookies.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Authentication.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Authentication.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Cryptography.Internal.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.DataProtection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.DataProtection.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Hosting.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Hosting.Server.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Http.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Http.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Http.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Http.Features.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Identity.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.AspNetCore.WebUtilities.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.EntityFrameworkCore.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.EntityFrameworkCore.Design.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.EntityFrameworkCore.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -86,22 +99,29 @@ Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Configuration.Binder.dll"; Des
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Configuration.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.DependencyInjection.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.FileProviders.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Hosting.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Identity.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Identity.Stores.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Logging.Configuration.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Logging.Console.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Logging.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.ObjectPool.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Options.ConfigurationExtensions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Options.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.Primitives.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Extensions.WebEncoders.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Net.Http.Headers.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Microsoft.Win32.Primitives.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\MySql.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\Microsoft.Win32.Registry.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\MySqlConnector.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\netstandard.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\OCRTools.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\PdfSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Pomelo.EntityFrameworkCore.MySql.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Pomelo.JsonObject.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\Renci.SshNet.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Remotion.Linq.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\ShockwaveFlashObjects.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\stdole.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -182,16 +202,21 @@ Source: ".\AccuPay\bin\Debug\System.Runtime.Serialization.Formatters.dll"; DestD
 Source: ".\AccuPay\bin\Debug\System.Runtime.Serialization.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Runtime.Serialization.Primitives.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Runtime.Serialization.Xml.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\System.Security.AccessControl.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.Claims.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.Cryptography.Algorithms.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.Cryptography.Csp.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.Cryptography.Encoding.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.Cryptography.Primitives.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.Cryptography.X509Certificates.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\System.Security.Cryptography.Xml.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\System.Security.Permissions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.Principal.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\System.Security.Principal.Windows.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Security.SecureString.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Text.Encoding.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Text.Encoding.Extensions.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\System.Text.Encodings.Web.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Text.RegularExpressions.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Threading.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Threading.Overlapped.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -206,8 +231,8 @@ Source: ".\AccuPay\bin\Debug\System.Xml.ReaderWriter.dll"; DestDir: "{app}"; Fla
 Source: ".\AccuPay\bin\Debug\System.Xml.XDocument.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Xml.XmlDocument.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Xml.XmlSerializer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\log4.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\System.Xml.XPath.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\System.Xml.XPath.XDocument.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: ".\AccuPay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 Source: ".\AccuPay\ImportTemplates\*.xlsx"; DestDir: "{app}\ImportTemplates"; Flags: ignoreversion

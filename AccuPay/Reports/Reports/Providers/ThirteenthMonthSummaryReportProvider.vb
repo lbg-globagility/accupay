@@ -1,4 +1,9 @@
-﻿Option Strict On
+Option Strict On
+
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.ValueObjects
+Imports AccuPay.CrystalReports
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ThirteenthMonthSummaryReportProvider
     Implements IReportProvider
@@ -6,8 +11,8 @@ Public Class ThirteenthMonthSummaryReportProvider
     Public Property Name As String = "Thirteenth Month Pay (Summary)" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Public Sub Run() Implements IReportProvider.Run
-        Dim payperiodSelector As New PayrollSummaDateSelection()
+    Public Async Sub Run() Implements IReportProvider.Run
+        Dim payperiodSelector As New MultiplePayPeriodSelectionDialog()
 
         If Not payperiodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return
@@ -16,19 +21,18 @@ Public Class ThirteenthMonthSummaryReportProvider
         Dim dateFrom = payperiodSelector.DateFrom
         Dim dateTo = payperiodSelector.DateTo
 
-        Dim params = New Object(,) {
-            {"$organizationID", orgztnID},
-            {"$dateFrom", dateFrom},
-            {"$dateTo", dateTo}
-        }
+        Dim builder = MainServiceProvider.GetRequiredService(Of IThirteenthMonthSummaryReportBuilder)
+        Dim service = MainServiceProvider.GetRequiredService(Of IThirteenthMonthSummaryReportDataService)
 
-        Dim data = callProcAsDatTab(params, "RPT_13thmonthpay")
+        Dim timePeriod As New TimePeriod(CDate(dateFrom), CDate(dateTo))
+        Dim data = Await service.GetData(z_OrganizationID, timePeriod)
 
-        Dim report = New ThirteenthMonthSummary()
-        report.SetDataSource(data)
+        Dim thirteenthMonthReport = builder.
+            CreateReportDocument(data, timePeriod).
+            GetReportDocument()
 
         Dim crvwr As New CrysRepForm()
-        crvwr.crysrepvwr.ReportSource = report
+        crvwr.crysrepvwr.ReportSource = thirteenthMonthReport
         crvwr.Show()
     End Sub
 

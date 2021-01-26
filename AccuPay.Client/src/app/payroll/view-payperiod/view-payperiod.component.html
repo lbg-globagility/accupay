@@ -1,0 +1,162 @@
+<div class="flex items-start">
+  <div class="w-1/2">
+    <h1 class="mat-headline">
+      Payroll {{ payPeriod?.cutoffStart | date }} to
+      {{ payPeriod?.cutoffEnd | date }}
+      <app-status type="payperiod" [value]="payPeriod?.status"></app-status>
+    </h1>
+  </div>
+
+  <div class="w-1/2 flex justify-end" *ngIf="loadingState.isSuccess">
+    <ng-container *ngxPermissionsOnly="PermissionTypes.PayPeriodCreate">
+      <ng-container *ngxPermissionsOnly="PermissionTypes.PayPeriodUpdate">
+        <button
+          *ngIf="payPeriod?.status == 'Open'"
+          mat-raised-button
+          color="primary"
+          (click)="calculate()"
+          style="margin-right: 8px"
+          [disabled]="updatingState.isLoading"
+        >
+          CALCULATE
+        </button>
+      </ng-container>
+    </ng-container>
+
+    <button
+      mat-raised-button
+      color="primary"
+      [matMenuTriggerFor]="menu"
+      class="m-with-icon"
+      [disabled]="updatingState.isLoading"
+    >
+      <mat-icon>more_vert</mat-icon>MORE
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="downloadPayslips()">
+        <mat-icon>vertical_align_bottom</mat-icon>
+        <span>Download Payslips</span>
+      </button>
+      <button mat-menu-item (click)="downloadSummary()">
+        <mat-icon>vertical_align_bottom</mat-icon>
+        <span>Download Summary</span>
+      </button>
+      <ng-container *ngxPermissionsOnly="PermissionTypes.PayPeriodUpdate">
+        <button
+          *ngIf="payPeriod.status == 'Closed'"
+          mat-menu-item
+          (click)="reopenPayroll()"
+        >
+          <mat-icon>lock_open</mat-icon>
+          <span>Reopen Payroll</span>
+        </button>
+      </ng-container>
+      <ng-container *ngxPermissionsOnly="PermissionTypes.PayPeriodDelete">
+        <button
+          *ngIf="payPeriod.status == 'Open'"
+          mat-menu-item
+          (click)="deletePayroll()"
+          matTooltip="Delete all paystubs for this pay period"
+        >
+          <mat-icon>delete_outline</mat-icon>
+          <span>Delete Paystubs</span>
+        </button>
+      </ng-container>
+      <ng-container *ngxPermissionsOnly="PermissionTypes.PayPeriodCreate">
+        <ng-container *ngxPermissionsOnly="PermissionTypes.PayPeriodUpdate">
+          <button
+            *ngIf="payPeriod.status == 'Open'"
+            mat-menu-item
+            (click)="cancelPayroll()"
+            matTooltip="Delete all paystubs for this pay period and resets its status"
+          >
+            <mat-icon>cancel_presentation</mat-icon>
+            <span>Cancel Payroll</span>
+          </button>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngxPermissionsOnly="PermissionTypes.PayPeriodUpdate">
+        <button
+          *ngIf="payPeriod.status == 'Open'"
+          mat-menu-item
+          (click)="closePayroll()"
+        >
+          <mat-icon>lock</mat-icon>
+          <span>Close Payroll</span>
+        </button>
+      </ng-container>
+    </mat-menu>
+  </div>
+</div>
+
+<div *ngIf="loadingState.isLoading" class="flex justify-center">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div
+  *ngIf="loadingState.isSuccess && dataSource?.data.length <= 0"
+  class="app-empty-table"
+>
+  No paystubs yet.
+</div>
+
+<div class="flex" *ngIf="dataSource?.data.length > 0">
+  <div class="w-1/3 bg-white mat-elevation-z1">
+    <div class="px-4">
+      <mat-form-field appearance="standard">
+        <mat-label>Search</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="searchChanged()"
+        />
+      </mat-form-field>
+    </div>
+    <table mat-table [dataSource]="dataSource" class="w-full">
+      <ng-container matColumnDef="employee">
+        <th mat-header-cell *matHeaderCellDef>Employee</th>
+        <td mat-cell *matCellDef="let paystub">
+          <app-employee-avatar
+            [employeeId]="paystub.employeeId"
+            [employeeNo]="paystub.employeeNo"
+            [fullName]="paystub.fullName"
+          ></app-employee-avatar>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="netPay">
+        <th mat-header-cell *matHeaderCellDef class="m-right">Net Pay</th>
+        <td mat-cell *matCellDef="let paystub" class="m-right">
+          ₱ {{ paystub.netPay | number: "1.2-2" }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns; let paystub"
+        (click)="toggleExpansion(row)"
+        [class.is-selected]="expandedPaystub === paystub"
+        class="cursor-pointer"
+      ></tr>
+    </table>
+
+    <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+      No paystubs were found.
+    </div>
+
+    <mat-paginator
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 5, 25, 100]"
+      [showFirstLastButtons]="true"
+    ></mat-paginator>
+  </div>
+  <div class="w-2/3">
+    <app-paystub-details
+      *ngIf="expandedPaystub"
+      [paystub]="expandedPaystub"
+    ></app-paystub-details>
+  </div>
+</div>

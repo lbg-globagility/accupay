@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS `agencyfee` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `AgencyID` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `agencyfee` (
   `DivisionID` int(10) DEFAULT NULL,
   `TimeEntryID` int(11) DEFAULT NULL,
   `TimeEntryDate` date DEFAULT NULL,
-  `DailyFee` decimal(11,2) DEFAULT '0.00',
+  `DailyFee` decimal(11,2) DEFAULT 0.00,
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `UniqueColumn` (`TimeEntryID`),
   KEY `FK_BaseTables_organization` (`OrganizationID`),
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `agencyfee` (
   CONSTRAINT `agencyfee_ibfk_5` FOREIGN KEY (`AgencyID`) REFERENCES `agency` (`RowID`),
   CONSTRAINT `agencyfee_ibfk_6` FOREIGN KEY (`DivisionID`) REFERENCES `division` (`RowID`),
   CONSTRAINT `agencyfee_ibfk_7` FOREIGN KEY (`TimeEntryID`) REFERENCES `employeetimeentry` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8874 DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

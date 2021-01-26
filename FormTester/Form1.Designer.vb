@@ -43,7 +43,15 @@ Partial Class Form1
         Me.EmailPayslipButton = New System.Windows.Forms.Button()
         Me.OfficialPayslipButton = New System.Windows.Forms.Button()
         Me.QueryPaystubButton = New System.Windows.Forms.Button()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.EncryptOutputTextBox = New System.Windows.Forms.TextBox()
+        Me.EncryptInputTextBox = New System.Windows.Forms.TextBox()
+        Me.DecryptButton = New System.Windows.Forms.Button()
+        Me.EncryptButton = New System.Windows.Forms.Button()
+        Me.CapitalizeButton = New System.Windows.Forms.Button()
         Me.tableLayoutPanel1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'PrintPayslipButton
@@ -61,6 +69,7 @@ Partial Class Form1
         Me.EmployeesTextBox.Name = "EmployeesTextBox"
         Me.EmployeesTextBox.Size = New System.Drawing.Size(359, 20)
         Me.EmployeesTextBox.TabIndex = 1
+        Me.EmployeesTextBox.Text = "3,5,6,7,9,10"
         '
         'PDFPayslipButton
         '
@@ -86,6 +95,7 @@ Partial Class Form1
         Me.FileNameTextBox.Name = "FileNameTextBox"
         Me.FileNameTextBox.Size = New System.Drawing.Size(100, 20)
         Me.FileNameTextBox.TabIndex = 4
+        Me.FileNameTextBox.Text = "payslip.pdf"
         '
         'Label1
         '
@@ -102,6 +112,7 @@ Partial Class Form1
         Me.PasswordTextBox.Name = "PasswordTextBox"
         Me.PasswordTextBox.Size = New System.Drawing.Size(100, 20)
         Me.PasswordTextBox.TabIndex = 6
+        Me.PasswordTextBox.Text = "password"
         '
         'Label2
         '
@@ -231,18 +242,85 @@ Partial Class Form1
         '
         'QueryPaystubButton
         '
-        Me.QueryPaystubButton.Location = New System.Drawing.Point(61, 394)
+        Me.QueryPaystubButton.Location = New System.Drawing.Point(55, 364)
         Me.QueryPaystubButton.Name = "QueryPaystubButton"
         Me.QueryPaystubButton.Size = New System.Drawing.Size(120, 23)
         Me.QueryPaystubButton.TabIndex = 10
         Me.QueryPaystubButton.Text = "Query Paystub Email"
         Me.QueryPaystubButton.UseVisualStyleBackColor = True
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.CapitalizeButton)
+        Me.GroupBox1.Controls.Add(Me.Label7)
+        Me.GroupBox1.Controls.Add(Me.EncryptOutputTextBox)
+        Me.GroupBox1.Controls.Add(Me.EncryptInputTextBox)
+        Me.GroupBox1.Controls.Add(Me.DecryptButton)
+        Me.GroupBox1.Controls.Add(Me.EncryptButton)
+        Me.GroupBox1.Location = New System.Drawing.Point(55, 412)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(351, 144)
+        Me.GroupBox1.TabIndex = 11
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Desktop Encryption"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(6, 90)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(40, 13)
+        Me.Label7.TabIndex = 16
+        Me.Label7.Text = "Result:"
+        '
+        'EncryptOutputTextBox
+        '
+        Me.EncryptOutputTextBox.Location = New System.Drawing.Point(52, 87)
+        Me.EncryptOutputTextBox.Name = "EncryptOutputTextBox"
+        Me.EncryptOutputTextBox.ReadOnly = True
+        Me.EncryptOutputTextBox.Size = New System.Drawing.Size(272, 20)
+        Me.EncryptOutputTextBox.TabIndex = 15
+        '
+        'EncryptInputTextBox
+        '
+        Me.EncryptInputTextBox.Location = New System.Drawing.Point(6, 32)
+        Me.EncryptInputTextBox.Name = "EncryptInputTextBox"
+        Me.EncryptInputTextBox.Size = New System.Drawing.Size(318, 20)
+        Me.EncryptInputTextBox.TabIndex = 13
+        '
+        'DecryptButton
+        '
+        Me.DecryptButton.Location = New System.Drawing.Point(249, 58)
+        Me.DecryptButton.Name = "DecryptButton"
+        Me.DecryptButton.Size = New System.Drawing.Size(75, 23)
+        Me.DecryptButton.TabIndex = 14
+        Me.DecryptButton.Text = "Decrypt"
+        Me.DecryptButton.UseVisualStyleBackColor = True
+        '
+        'EncryptButton
+        '
+        Me.EncryptButton.Location = New System.Drawing.Point(168, 58)
+        Me.EncryptButton.Name = "EncryptButton"
+        Me.EncryptButton.Size = New System.Drawing.Size(75, 23)
+        Me.EncryptButton.TabIndex = 12
+        Me.EncryptButton.Text = "Encrypt"
+        Me.EncryptButton.UseVisualStyleBackColor = True
+        '
+        'CapitalizeButton
+        '
+        Me.CapitalizeButton.Location = New System.Drawing.Point(249, 113)
+        Me.CapitalizeButton.Name = "CapitalizeButton"
+        Me.CapitalizeButton.Size = New System.Drawing.Size(75, 23)
+        Me.CapitalizeButton.TabIndex = 17
+        Me.CapitalizeButton.Text = "Capitalize"
+        Me.CapitalizeButton.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(485, 450)
+        Me.ClientSize = New System.Drawing.Size(485, 568)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.QueryPaystubButton)
         Me.Controls.Add(Me.OfficialPayslipButton)
         Me.Controls.Add(Me.EmailPayslipButton)
@@ -259,6 +337,8 @@ Partial Class Form1
         Me.Text = "Form1"
         Me.tableLayoutPanel1.ResumeLayout(False)
         Me.tableLayoutPanel1.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -285,4 +365,11 @@ Partial Class Form1
     Friend WithEvents EmailPayslipButton As Button
     Friend WithEvents OfficialPayslipButton As Button
     Private WithEvents QueryPaystubButton As Button
+    Friend WithEvents GroupBox1 As GroupBox
+    Private WithEvents Label7 As Label
+    Friend WithEvents EncryptOutputTextBox As TextBox
+    Friend WithEvents EncryptInputTextBox As TextBox
+    Friend WithEvents DecryptButton As Button
+    Friend WithEvents EncryptButton As Button
+    Friend WithEvents CapitalizeButton As Button
 End Class

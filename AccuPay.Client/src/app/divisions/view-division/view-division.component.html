@@ -1,0 +1,132 @@
+<ng-container *ngIf="division">
+  <header class="flex">
+    <div class="w-1/2">
+      <h1 class="mat-headline">{{ division.name }}</h1>
+    </div>
+    <div class="w-1/2 flex justify-end items-start">
+      <button
+        *ngxPermissionsOnly="[PermsisionTypes.DivisionUpdate]"
+        mat-raised-button
+        color="accent"
+        routerLink="/divisions/{{ divisionId }}/edit"
+        class="m-with-icon"
+      >
+        <mat-icon>edit</mat-icon>EDIT
+      </button>
+      <button
+        *ngxPermissionsOnly="[PermsisionTypes.DivisionDelete]"
+        mat-raised-button
+        color="warn"
+        class="m-with-icon"
+        (click)="confirmDelete()"
+      >
+        <mat-icon>delete</mat-icon>DELETE
+      </button>
+    </div>
+  </header>
+
+  <!-- Division -->
+  <mat-card class="mb-4">
+    <mat-card-content>
+      <div class="row">
+        <!-- Division Parent Name -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Parent Name</p>
+            <p class="field-value">{{ division.parentName }}</p>
+          </div>
+        </div>
+
+        <!-- Division Name -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Name</p>
+            <p class="field-value">{{ division.name }}</p>
+          </div>
+        </div>
+
+        <!-- Division Type -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Type</p>
+            <p class="field-value">{{ division.divisionType }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Details -->
+  <mat-card>
+    <mat-card-content>
+      <h3 class="font-medium">Details</h3>
+      <br />
+
+      <div class="row">
+        <!-- Work Days Per Year -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Work Days Per Year</p>
+            <p class="field-value">
+              {{ division.workDaysPerYear | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Automatic Overtime Filing -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Automatic Overtime Filing</p>
+            <p class="field-value">
+              {{ division.automaticOvertimeFiling ? "Yes" : "No" }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- PhilHealth Deduction Schedule -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">PhilHealth Deduction Schedule</p>
+            <p class="field-value">
+              {{ division.philHealthDeductionSchedule | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- SSS  Deduction Schedule -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">SSS Deduction Schedule</p>
+            <p class="field-value">
+              {{ division.sssDeductionSchedule | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Pag IBIG Deduction Schedule -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Pag IBIG Deduction Schedule</p>
+            <p class="field-value">
+              {{ division.pagIBIGDeductionSchedule | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Withholding  Deduction Schedule< -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Withholding Deduction Schedule</p>
+            <p class="field-value">
+              {{ division.withholdingTaxSchedule | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

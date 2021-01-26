@@ -1,0 +1,24 @@
+
+CREATE TABLE IF NOT EXISTS `loanpaidthirteenthmonth` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `OrganizationID` int(11) NOT NULL,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `CreatedBy` int(10) DEFAULT NULL,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `LastUpdBy` int(10) DEFAULT NULL,
+  `LoanId` int(11) NOT NULL,
+  `PaystubId` int(11) NOT NULL,
+  `AmountPayment` decimal(11,2) NOT NULL,
+  PRIMARY KEY (`Id`) USING BTREE,
+  UNIQUE KEY `LoanId_PaystubId` (`LoanId`,`PaystubId`),
+  KEY `FK_loanpaidbonus_employeeloanschedule` (`LoanId`) USING BTREE,
+  KEY `FK_loanpaidbonus_organization` (`OrganizationID`) USING BTREE,
+  KEY `FK_loanpaidbonus_aspnetusers_CreatedBy` (`CreatedBy`) USING BTREE,
+  KEY `FK_loanpaidbonus_aspnetusers_LastUpdBy` (`LastUpdBy`) USING BTREE,
+  KEY `FK_loanpaidthirteenthmonth_paystub` (`PaystubId`),
+  CONSTRAINT `FK_loanpaidthirteenthmonth_paystub` FOREIGN KEY (`PaystubId`) REFERENCES `paystub` (`RowID`) ON DELETE CASCADE,
+  CONSTRAINT `loanpaidthirteenthmonth_ibfk_1` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`),
+  CONSTRAINT `loanpaidthirteenthmonth_ibfk_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`),
+  CONSTRAINT `loanpaidthirteenthmonth_ibfk_4` FOREIGN KEY (`LoanId`) REFERENCES `employeeloanschedule` (`RowID`),
+  CONSTRAINT `loanpaidthirteenthmonth_ibfk_5` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;

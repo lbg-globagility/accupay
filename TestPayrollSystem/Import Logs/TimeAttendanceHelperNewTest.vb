@@ -1,8 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Imports
 
 <TestFixture>
 Public Class TimeAttendanceHelperNewTest
@@ -13,14 +13,17 @@ Public Class TimeAttendanceHelperNewTest
     Public Sub ShouldImport() _
         Implements ITimeAnalyzer.ShouldImport
 
-        Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
+        Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
-        Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules()
+        Dim employeeShifts As List(Of Shift) = GetSampleShifts()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -42,14 +45,17 @@ Public Class TimeAttendanceHelperNewTest
     Public Sub ShouldImport_WithoutShifts() _
         Implements ITimeAnalyzer.ShouldImport_WithoutShifts
 
-        Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
+        Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
-        Dim employeeShifts As New List(Of EmployeeDutySchedule)
+        Dim employeeShifts As New List(Of Shift)
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -65,17 +71,20 @@ Public Class TimeAttendanceHelperNewTest
     End Sub
 
     <Test>
-    Public Sub ShouldImport_WithNextShiftScheduleWithoutShift() _
-        Implements ITimeAnalyzer.ShouldImport_WithNextShiftScheduleWithoutShift
+    Public Sub ShouldImport_WithNextShiftWithoutShift() _
+        Implements ITimeAnalyzer.ShouldImport_WithNextShiftWithoutShift
 
-        Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
+        Dim logs = New List(Of TimeLogImportModel)(GetParsedTimeLogs())
 
-        Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules_WithNextShiftScheduleWithoutShift()
+        Dim employeeShifts As List(Of Shift) = GetSampleShifts_WithNextShiftWithoutShift()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 

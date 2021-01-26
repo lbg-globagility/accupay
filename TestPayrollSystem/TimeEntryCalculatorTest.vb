@@ -1,8 +1,9 @@
-﻿Option Strict On
+Option Strict On
 
-Imports System.Text
-Imports AccuPay
-Imports AccuPay.Entity
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 
 <TestFixture>
 Public Class TimeEntryCalculatorTest
@@ -16,8 +17,9 @@ Public Class TimeEntryCalculatorTest
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
-            .TimeFrom = TimeSpan.Parse("08:30"),
-            .TimeTo = TimeSpan.Parse("17:30")
+            .DateSched = Date.Parse("2017-01-01"),
+            .StartTime = TimeSpan.Parse("08:30"),
+            .EndTime = TimeSpan.Parse("17:30")
         }
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
@@ -35,8 +37,9 @@ Public Class TimeEntryCalculatorTest
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
-            .TimeFrom = TimeSpan.Parse("08:30"),
-            .TimeTo = TimeSpan.Parse("17:30")
+            .DateSched = Date.Parse("2017-01-01"),
+            .StartTime = TimeSpan.Parse("08:30"),
+            .EndTime = TimeSpan.Parse("17:30")
         }
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
@@ -54,10 +57,11 @@ Public Class TimeEntryCalculatorTest
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
-            .TimeFrom = TimeSpan.Parse("08:30"),
-            .TimeTo = TimeSpan.Parse("17:30"),
-            .BreaktimeFrom = TimeSpan.Parse("12:00"),
-            .BreaktimeTo = TimeSpan.Parse("13:00")
+            .DateSched = Date.Parse("2017-01-01"),
+            .StartTime = TimeSpan.Parse("08:30"),
+            .EndTime = TimeSpan.Parse("17:30"),
+            .BreakStartTime = TimeSpan.Parse("12:00"),
+            .BreakLength = 1
         }
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))
@@ -75,10 +79,11 @@ Public Class TimeEntryCalculatorTest
         Dim workPeriod = New TimePeriod(workStart, workEnd)
 
         Dim shift = New Shift() With {
-            .TimeFrom = TimeSpan.Parse("08:30"),
-            .TimeTo = TimeSpan.Parse("17:30"),
-            .BreaktimeFrom = TimeSpan.Parse("12:00"),
-            .BreaktimeTo = TimeSpan.Parse("13:00")
+            .DateSched = Date.Parse("2017-01-01"),
+            .StartTime = TimeSpan.Parse("08:30"),
+            .EndTime = TimeSpan.Parse("17:30"),
+            .BreakStartTime = TimeSpan.Parse("12:00"),
+            .BreakLength = 1
         }
 
         Dim currentShift = New CurrentShift(shift, Date.Parse("2017-01-01"))

@@ -31,7 +31,6 @@ FROM paystub ps
 INNER JOIN employee ee
 ON ee.RowID = ps.EmployeeID AND
     ee.OrganizationID = ps.OrganizationID
-    AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
 INNER JOIN product pd
 ON pd.OrganizationID = OrganizID AND
     pd.PartNo = 'Gross Income'

@@ -1,0 +1,22 @@
+<form (ngSubmit)="generateReport()">
+  <mat-card>
+    <mat-card-content>
+      <h1 class="mat-headline">PhilHealth Report</h1>
+    </mat-card-content>
+    <mat-card-content>
+      <app-select-month></app-select-month>
+    </mat-card-content>
+
+    <mat-card-content style="text-align: right;">
+      <button
+        [disabled]="isDownloading"
+        mat-raised-button
+        type="submit"
+        color="accent"
+      >
+        {{ isDownloading ? "DOWNLOADING..." : "DOWNLOAD" }}
+        <app-button-spinner [active]="isDownloading"></app-button-spinner>
+      </button>
+    </mat-card-content>
+  </mat-card>
+</form>

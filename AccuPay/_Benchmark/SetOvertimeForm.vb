@@ -1,9 +1,11 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel
 Imports AccuPay.Benchmark
+Imports AccuPay.Core
+Imports AccuPay.Core.ValueObjects
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 
 Public Class SetOvertimeForm
 
@@ -89,7 +91,7 @@ Public Class SetOvertimeForm
 
     Private Sub OvertimeComboBox_DrawItem(sender As Object, e As DrawItemEventArgs) Handles OvertimeComboBox.DrawItem
 
-        Dim backgroundColor As Brush
+        Dim backgroundColor = Brushes.White
         Dim g = e.Graphics
         Dim rect = e.Bounds
         Dim displayString = ""
@@ -167,7 +169,7 @@ Public Class SetOvertimeForm
         Dim isHolidayInclusive = _isHolidayInclusive
 
         'Rest day is always exclusive for Daily or Monthly
-        If overtimeRate.Name = AccuPay.OvertimeRate.RestDayDescription Then
+        If overtimeRate.Name = ValueObjects.OvertimeRate.RestDayDescription Then
 
             isHolidayInclusive = False
 
@@ -190,7 +192,7 @@ Public Class SetOvertimeForm
             InputTextBox.Enabled = False
         Else
 
-            PercentageTextBox.Text = overtimeRate.Rate.ToString
+            PercentageTextBox.Text = overtimeRate.CurrentRate.ToString
             InputTextBox.Enabled = True
             InputTextBox.Focus()
         End If

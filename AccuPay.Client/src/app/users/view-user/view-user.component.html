@@ -1,0 +1,52 @@
+<ng-container *ngIf="user">
+  <header class="app-page-header">
+    <h1>{{ user.firstName }} {{ user.lastName }}</h1>
+  </header>
+
+  <button
+    *ngxPermissionsOnly="[PermissionTypes.UserUpdate]"
+    mat-raised-button
+    color="accent"
+    routerLink="/users/{{ userId }}/edit"
+  >
+    EDIT
+  </button>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="row" style="padding-top: 10px;">
+        <div class="col-lg-4 inline-flex"></div>
+
+        <div class="col-lg-8">
+          <h3 class="font-medium mb-4">Personal Info</h3>
+
+          <div class="row">
+            <!-- First Name -->
+            <div class="col-lg-6 mb-4">
+              <div class="field">
+                <p class="field-label">First Name</p>
+                <p class="field-value">{{ user.firstName }}</p>
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-lg-6 mb-4">
+              <div class="field">
+                <p class="field-label">Last Name</p>
+                <p class="field-value">{{ user.lastName }}</p>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-lg-6 mb-4">
+              <div class="field">
+                <p class="field-label">Email</p>
+                <p class="field-value">{{ user.email }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

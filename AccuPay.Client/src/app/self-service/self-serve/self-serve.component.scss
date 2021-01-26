@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+._container {
+  display: grid;
+  height: 100%;
+  overflow: hidden;
+
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 200px 1fr;
+  grid-template-areas:
+    "topbar topbar"
+    "content content";
+}
+
+._topbar {
+  grid-area: topbar;
+}
+
+mat-card {
+  min-width: 500px;
+}
+
+.btn {
+  text-transform: uppercase;
+}

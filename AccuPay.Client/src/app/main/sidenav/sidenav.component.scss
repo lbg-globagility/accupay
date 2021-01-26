@@ -1,0 +1,26 @@
+@use "styles/sizes";
+
+:host {
+  display: flex;
+  padding: sizes.$x4;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.image-menu {
+  width: 150px;
+  display: block;
+}
+
+.menu-edit {
+  background-color: rgb(65, 77, 73);
+}
+
+.menu-title {
+  margin-top: sizes.$x4;
+  font-size: 20px;
+}
+
+.menu-button {
+  align-self: flex-end;
+}

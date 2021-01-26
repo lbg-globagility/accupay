@@ -1,0 +1,27 @@
+.container {
+  max-height: 400px;
+  width: 550px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+th,
+td {
+  overflow: hidden;
+  width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title {
+  padding-bottom: 8px;
+}
+
+.content {
+  padding-bottom: 8px;
+}

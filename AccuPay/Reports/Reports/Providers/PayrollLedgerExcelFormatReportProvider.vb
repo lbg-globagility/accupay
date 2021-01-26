@@ -1,4 +1,6 @@
-﻿Imports System.Collections.ObjectModel
+Option Strict On
+
+Imports System.Collections.ObjectModel
 Imports System.IO
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
@@ -96,20 +98,18 @@ Public Class PayrollLedgerExcelFormatReportProvider
     Private Function ParameterAssignment() As Boolean
         Dim boolResult As Boolean = True
 
-        Dim periodSelector As New PayrollSummaDateSelection()
-
-        periodSelector.Panel3.Visible = False
-        periodSelector.panelSalarySwitch.Visible = True
-        periodSelector.Label5.Visible = False
+        Dim periodSelector As New MultiplePayPeriodSelectionDialog() With {
+            .ShowDeclaredOrActualOptionsPanel = True
+        }
 
         If periodSelector.ShowDialog = DialogResult.OK Then
-            fromPeriodId = periodSelector.PayPeriodFromID
-            toPeriodId = periodSelector.PayPeriodToID
+            fromPeriodId = periodSelector.PayPeriodFromID.Value
+            toPeriodId = periodSelector.PayPeriodToID.Value
 
             actualSwitch = periodSelector.IsActual
 
-            dateFrom = periodSelector.DateFrom
-            dateTo = periodSelector.DateTo
+            dateFrom = periodSelector.DateFrom.Value
+            dateTo = periodSelector.DateTo.Value
         Else
             boolResult = False
         End If
@@ -132,15 +132,15 @@ Public Class PayrollLedgerExcelFormatReportProvider
                               DBNull.Value,
                               True}
 
-        Dim sql_print_employee_profiles As New SQL(
+        Dim sql_paystubs As New SQL(
             "CALL PAYROLLSUMMARY2(?og_rowid, ?min_pp_rowid, ?max_pp_rowid, ?is_actual, ?salaray_distrib, ?keep_in_onesheet);",
             parameters)
 
         Try
-            Dim ds = sql_print_employee_profiles.GetFoundRows
+            Dim ds = sql_paystubs.GetFoundRows
 
-            If sql_print_employee_profiles.HasError Then
-                Throw sql_print_employee_profiles.ErrorException
+            If sql_paystubs.HasError Then
+                Throw sql_paystubs.ErrorException
             End If
 
             Static report_name As String = "PayrollLedger"
@@ -446,6 +446,11 @@ Public Class PayrollLedgerExcelFormatReportProvider
     Private Enum ColumnType
         Text
         Numeric
+    End Enum
+
+    Private Enum SalaryActualization As Short
+        Declared = 0
+        Actual = 1
     End Enum
 
 End Class

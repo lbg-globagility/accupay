@@ -1,0 +1,70 @@
+@use "styles/colors";
+@use "styles/sizes";
+
+.mat-table.m-borders {
+  border: thin solid colors.$border;
+}
+
+.mat-header-cell.m-right,
+.mat-cell.m-right,
+.mat-footer-cell.m-right {
+  .mat-sort-header-container {
+    justify-content: flex-end;
+  }
+
+  text-align: right;
+}
+
+.mat-table.m-dark-headers {
+  .mat-header-cell {
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.87);
+  }
+}
+
+.mat-table.m-padded-cells {
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type {
+    padding-left: sizes.$x4;
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type {
+    padding-right: sizes.$x4;
+  }
+
+  th.mat-header-cell {
+    padding-left: sizes.$x4;
+    padding-right: sizes.$x4;
+  }
+
+  td.mat-cell {
+    padding-left: sizes.$x4;
+    padding-right: sizes.$x4;
+  }
+
+  td.mat-footer-cell {
+    padding-left: sizes.$x4;
+    padding-right: sizes.$x4;
+  }
+}
+
+.mat-table.app-centered-columns {
+  .app-centered-column {
+    .mat-sort-header-container {
+      position: relative;
+      justify-content: center;
+    }
+    .mat-sort-header-arrow {
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
+td.mat-cell.m-no-padding {
+  &:last-of-type,
+  &:first-of-type {
+    padding: 0;
+  }
+}

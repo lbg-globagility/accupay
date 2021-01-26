@@ -1,0 +1,4 @@
+ALTER TABLE `paysocialsecurity`
+	ALTER `EmployeeECAmount` DROP DEFAULT;
+ALTER TABLE `paysocialsecurity`
+	CHANGE COLUMN IF EXISTS `EmployeeECAmount` `EmployerECAmount` DECIMAL(10,2) NOT NULL AFTER `EmployerContributionAmount`;

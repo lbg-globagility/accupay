@@ -1,0 +1,25 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+CREATE TABLE IF NOT EXISTS `loanpaidbonus` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `LoanId` int(11) NOT NULL,
+  `BonusId` int(11) NOT NULL,
+  `PaystubId` int(11) DEFAULT NULL,
+  `AmountPayment` decimal(11,2) NOT NULL,
+  `DeductionAmount` decimal(11,2) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FK_loanpaidbonus_employeeloanschedule` (`LoanId`),
+  KEY `FK_loanpaidbonus_employeebonus` (`BonusId`),
+  KEY `FK_loanpaidbonus_paystub` (`PaystubId`),
+  CONSTRAINT `FK_loanpaidbonus_employeebonus` FOREIGN KEY (`BonusId`) REFERENCES `employeebonus` (`RowID`),
+  CONSTRAINT `FK_loanpaidbonus_employeeloanschedule` FOREIGN KEY (`LoanId`) REFERENCES `employeeloanschedule` (`RowID`),
+  CONSTRAINT `FK_loanpaidbonus_paystub` FOREIGN KEY (`PaystubId`) REFERENCES `paystub` (`RowID`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

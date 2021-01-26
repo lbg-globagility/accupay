@@ -18,16 +18,15 @@ DECLARE paydate_from DATE;
 DECLARE paydat_to DATE;
 
 DECLARE v_hours_per_day INT(2) DEFAULT 8;
-DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
 SET @ppIds = (SELECT GROUP_CONCAT(pp.RowID)
-					#, SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH) #2018-01-05
+					
 					
 					FROM payperiod pp
 					INNER JOIN payperiod ppd ON ppd.RowID = PayPeriodRowID
 					WHERE pp.OrganizationID=ppd.OrganizationID
 					AND pp.TotalGrossSalary=ppd.TotalGrossSalary
-					#AND SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH) BETWEEN pp.PayFromDate AND pp.PayToDate
+					
 					AND pp.PayFromDate >= SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH)
 					AND pp.PayToDate <= ppd.PayToDate);
 
@@ -39,6 +38,30 @@ WHERE pp.RowID = PayPeriodRowID
 INTO
     paydate_from,
     paydat_to;
+
+DROP TEMPORARY TABLE if EXISTS activesalary;
+CREATE TEMPORARY TABLE if NOT EXISTS activesalary
+SELECT
+d.DateValue,
+es.*
+FROM employeesalary es
+INNER JOIN employee e ON e.RowID=es.EmployeeID
+INNER JOIN dates d ON d.DateValue BETWEEN es.EffectiveDateFrom AND paydat_to
+AND d.DateValue BETWEEN paydate_from AND paydat_to
+INNER JOIN payperiod pp ON pp.OrganizationID=es.OrganizationID AND pp.TotalGrossSalary=e.PayFrequencyID AND pp.RowID=PayPeriodRowID
+AND pp.PayToDate=d.DateValue
+WHERE es.OrganizationID=OrganizID
+;
+
+DROP TEMPORARY TABLE if EXISTS latestsalary;
+CREATE TEMPORARY TABLE if NOT EXISTS latestsalary
+SELECT
+EmployeeID
+, MIN(DATEDIFF(paydat_to, EffectiveDateFrom)) `Result`
+FROM activesalary
+WHERE DATEDIFF(paydat_to, EffectiveDateFrom) > -1
+GROUP BY EmployeeID
+;
 
 SELECT
     e.RowID,
@@ -79,7 +102,7 @@ SELECT
     ) `COL13`,
     ps.NightDiffHours `COL14`,
     IF(IsActualFlag, psa.NightDiffPay, ps.NightDiffPay) `COL15`,
-    (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
+    (ps.TotalAllowance + ps.TotalTaxableAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
     IF(IsActualFlag = TRUE, psa.TotalAdjustments, ps.TotalAdjustments) `COL19`,
     IF(
         IsActualFlag,
@@ -119,11 +142,13 @@ ON psa.EmployeeID = ps.EmployeeID AND
 INNER JOIN employee e
 ON e.RowID = ps.EmployeeID AND
     e.OrganizationID = ps.OrganizationID
-INNER JOIN employeesalary es
+INNER JOIN (SELECT
+				ii.*
+				FROM latestsalary i
+				INNER JOIN activesalary ii ON ii.EmployeeID=i.EmployeeID AND DATEDIFF(paydat_to, EffectiveDateFrom)=i.Result
+				) es
 ON es.EmployeeID = ps.EmployeeID AND
-    es.OrganizationID=ps.OrganizationID AND
-    (es.EffectiveDateFrom >= ps.PayFromDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) >= ps.PayFromDate) AND
-    (es.EffectiveDateFrom <= ps.PayToDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) <= ps.PayToDate)
+    es.OrganizationID=ps.OrganizationID
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',
@@ -183,7 +208,7 @@ LEFT JOIN (SELECT ROUND((lt.Balance / v_hours_per_day), 2) AS 'Balance'
 								GROUP BY ete.EmployeeID
 								) et ON et.EmployeeID = i.EmployeeID
 ) psiLeave
-#ON psiLeave.PayStubID = ps.RowID
+
 ON psiLeave.EmployeeID = ps.EmployeeID
 
 LEFT JOIN (
@@ -213,8 +238,7 @@ LEFT JOIN (
             FROM paystubadjustment
             INNER JOIN product
             ON product.RowID = paystubadjustment.ProductID
-            WHERE IsActualFlag = 0 AND
-                paystubadjustment.OrganizationID = OrganizID AND
+            WHERE paystubadjustment.OrganizationID = OrganizID AND
                 paystubadjustment.PayAmount != 0
         UNION
             SELECT

@@ -1,32 +1,31 @@
 ﻿Option Strict On
 
-Namespace Global.AccuPay.Helpers
+Namespace Global.AccuPay.Desktop.Helpers
 
     Public Enum ExcelTemplates
 
         Allowance
         Employee
-        OldShift
         Leave
         Loan
         OfficialBusiness
         Overtime
         Salary
-        NewShift
-
+        Shift
+        TripTicket
     End Enum
 
     Public Class TemplatesHelper
 
         Public Shared ReadOnly ALLOWANCE As String = "accupay-allowance-template.xlsx"
         Public Shared ReadOnly EMPLOYEE As String = "accupay-employeelist-template.xlsx"
-        Public Shared ReadOnly OLD_SHIFT As String = "accupay-employeeshift-template.xlsx"
         Public Shared ReadOnly LEAVE As String = "accupay-leave-template.xlsx"
         Public Shared ReadOnly LOAN As String = "accupay-loan-template.xlsx"
         Public Shared ReadOnly OFFICIAL_BUSINESS As String = "accupay-officialbus-template.xlsx"
         Public Shared ReadOnly OVERTIME As String = "accupay-overtime-template.xlsx"
         Public Shared ReadOnly SALARY As String = "accupay-salary-template.xlsx"
-        Public Shared ReadOnly NEW_SHIFT As String = "accupay-shiftschedule-template.xlsx"
+        Public Shared ReadOnly SHIFT As String = "accupay-shiftschedule-template.xlsx"
+        Public Shared ReadOnly TRIP_TICKET As String = "accupay-trip-ticket-template.xlsx"
 
         Private Const FILE_PATH As String = "ImportTemplates/"
 
@@ -39,9 +38,6 @@ Namespace Global.AccuPay.Helpers
 
                 Case ExcelTemplates.Employee
                     Return EMPLOYEE
-
-                Case ExcelTemplates.OldShift
-                    Return OLD_SHIFT
 
                 Case ExcelTemplates.Leave
                     Return LEAVE
@@ -58,8 +54,11 @@ Namespace Global.AccuPay.Helpers
                 Case ExcelTemplates.Salary
                     Return SALARY
 
-                Case ExcelTemplates.NewShift
-                    Return NEW_SHIFT
+                Case ExcelTemplates.Shift
+                    Return SHIFT
+
+                Case ExcelTemplates.TripTicket
+                    Return TRIP_TICKET
 
                 Case Else
 
@@ -81,9 +80,6 @@ Namespace Global.AccuPay.Helpers
                 Case ExcelTemplates.Employee
                     fileName = EMPLOYEE
 
-                Case ExcelTemplates.OldShift
-                    fileName = OLD_SHIFT
-
                 Case ExcelTemplates.Leave
                     fileName = LEAVE
 
@@ -99,8 +95,11 @@ Namespace Global.AccuPay.Helpers
                 Case ExcelTemplates.Salary
                     fileName = SALARY
 
-                Case ExcelTemplates.NewShift
-                    fileName = NEW_SHIFT
+                Case ExcelTemplates.Shift
+                    fileName = SHIFT
+
+                Case ExcelTemplates.TripTicket
+                    fileName = TRIP_TICKET
 
                 Case Else
 

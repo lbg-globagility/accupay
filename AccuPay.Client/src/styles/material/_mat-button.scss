@@ -1,0 +1,37 @@
+@use "styles/colors";
+
+.mat-button-base {
+  letter-spacing: 0.05em;
+}
+
+.mat-button-base.m-with-icon {
+  padding: 0 16px 0 12px;
+  .mat-icon {
+    height: 18px;
+    width: 18px;
+    font-size: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+}
+
+.mat-button-base.m-vertical .mat-button-wrapper {
+  display: inline-flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-button-toggle {
+  background-color: white !important;
+  color: colors.$accent !important;
+}
+
+.mat-button-toggle-checked {
+  background-color: colors.$accent !important;
+  color: white !important;
+}
+
+.mat-button-toggle-checked .mat-button-toggle-focus-overlay {
+  border-bottom: none !important;
+}

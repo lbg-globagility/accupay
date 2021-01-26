@@ -71,7 +71,6 @@ Partial Class ProductControlForm
         Me.DateLastInventoryCount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TaxVAT = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.WithholdingTax = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.COAId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.DeleteToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -114,7 +113,6 @@ Partial Class ProductControlForm
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.dgvproducts, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
@@ -171,7 +169,7 @@ Partial Class ProductControlForm
         Me.dgvproducts.AllowUserToResizeRows = False
         Me.dgvproducts.BackgroundColor = System.Drawing.Color.White
         Me.dgvproducts.ColumnHeadersHeight = 34
-        Me.dgvproducts.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.SupplierID, Me.ProdName, Me.Description, Me.PartNo, Me.Category, Me.CategoryID, Me.Status, Me.Fixed, Me.UnitPrice, Me.VATPercent, Me.FirstBillFlag, Me.SecondBillFlag, Me.ThirdBillFlag, Me.PDCFlag, Me.MonthlyBIllFlag, Me.PenaltyFlag, Me.WithholdingTaxPercent, Me.CostPrice, Me.UnitOfMeasure, Me.SKU, Me.LeadTime, Me.BarCode, Me.BusinessUnitID, Me.LastRcvdFromShipmentDate, Me.LastRcvdFromShipmentCount, Me.TotalShipmentCount, Me.BookPageNo, Me.BrandName, Me.LastPurchaseDate, Me.LastSoldDate, Me.LastSoldCount, Me.ReOrderPoint, Me.AllocateBelowSafetyFlag, Me.Strength, Me.UnitsBackordered, Me.UnitsBackorderAsOf, Me.DateLastInventoryCount, Me.TaxVAT, Me.WithholdingTax, Me.COAId})
+        Me.dgvproducts.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.SupplierID, Me.ProdName, Me.Description, Me.PartNo, Me.Category, Me.CategoryID, Me.Status, Me.Fixed, Me.UnitPrice, Me.VATPercent, Me.FirstBillFlag, Me.SecondBillFlag, Me.ThirdBillFlag, Me.PDCFlag, Me.MonthlyBIllFlag, Me.PenaltyFlag, Me.WithholdingTaxPercent, Me.CostPrice, Me.UnitOfMeasure, Me.SKU, Me.LeadTime, Me.BarCode, Me.BusinessUnitID, Me.LastRcvdFromShipmentDate, Me.LastRcvdFromShipmentCount, Me.TotalShipmentCount, Me.BookPageNo, Me.BrandName, Me.LastPurchaseDate, Me.LastSoldDate, Me.LastSoldCount, Me.ReOrderPoint, Me.AllocateBelowSafetyFlag, Me.Strength, Me.UnitsBackordered, Me.UnitsBackorderAsOf, Me.DateLastInventoryCount, Me.TaxVAT, Me.WithholdingTax})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -470,13 +468,6 @@ Partial Class ProductControlForm
         Me.WithholdingTax.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.WithholdingTax.Visible = False
         '
-        'COAId
-        '
-        Me.COAId.HeaderText = "COAId"
-        Me.COAId.Name = "COAId"
-        Me.COAId.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.COAId.Visible = False
-        '
         'lblforballoon
         '
         Me.lblforballoon.AutoSize = True
@@ -774,13 +765,6 @@ Partial Class ProductControlForm
         Me.DataGridViewTextBoxColumn37.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn37.Visible = False
         '
-        'DataGridViewTextBoxColumn38
-        '
-        Me.DataGridViewTextBoxColumn38.HeaderText = "COAId"
-        Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
-        Me.DataGridViewTextBoxColumn38.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn38.Visible = False
-        '
         'ProductControlForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -815,6 +799,43 @@ Partial Class ProductControlForm
     Friend WithEvents DeleteToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents cmsBlank As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn12 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn16 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn17 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn20 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn21 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn22 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn23 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn24 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn25 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn29 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn30 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn31 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn32 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn33 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn34 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn35 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn36 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn37 As DataGridViewTextBoxColumn
     Friend WithEvents RowID As DataGridViewTextBoxColumn
     Friend WithEvents SupplierID As DataGridViewTextBoxColumn
     Friend WithEvents ProdName As DataGridViewTextBoxColumn
@@ -855,43 +876,4 @@ Partial Class ProductControlForm
     Friend WithEvents DateLastInventoryCount As DataGridViewTextBoxColumn
     Friend WithEvents TaxVAT As DataGridViewTextBoxColumn
     Friend WithEvents WithholdingTax As DataGridViewTextBoxColumn
-    Friend WithEvents COAId As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn12 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn16 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn17 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn20 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn21 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn22 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn23 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn24 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn25 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn29 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn30 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn31 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn32 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn33 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn34 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn35 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn36 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn37 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn38 As DataGridViewTextBoxColumn
 End Class

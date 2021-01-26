@@ -1,0 +1,2 @@
+DELETE FROM rolepermission WHERE PermissionId =(SELECT Id FROM permission WHERE `Name` = 'Account');
+DELETE FROM permission WHERE `Name` = 'Account';

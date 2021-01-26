@@ -1,0 +1,17 @@
+<div class="row">
+  <h1 class="col-sm-9">New User</h1>
+
+  <div class="col-sm-3">
+    <button
+      *ngxPermissionsOnly="[PermissionTypes.UserCreate]"
+      style="float: right; margin-top: 28px"
+      mat-button
+      color="accent"
+      (click)="openUnregisteredEmployeesDialog()"
+    >
+      REGISTER EMPLOYEE
+    </button>
+  </div>
+</div>
+
+<app-user-form (save)="save($event)" (cancel)="cancel()"></app-user-form>

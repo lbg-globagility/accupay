@@ -1,0 +1,9 @@
+<h1>Edit User</h1>
+
+<ng-container *ngIf="user != null">
+  <app-user-form
+    [user]="user"
+    (save)="save($event)"
+    (cancel)="cancel()"
+  ></app-user-form>
+</ng-container>

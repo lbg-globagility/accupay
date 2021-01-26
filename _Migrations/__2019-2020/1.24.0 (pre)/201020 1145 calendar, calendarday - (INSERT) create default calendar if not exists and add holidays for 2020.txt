@@ -1,0 +1,22 @@
+
+DELIMITER $$
+IF NOT EXISTS(SELECT * FROM calendar WHERE IsDefault) THEN
+
+    INSERT INTO `calendar` (`Name`, `IsDefault`) VALUES ('[Default]', True);
+    SET @calendarId = LAST_INSERT_ID();
+
+
+    INSERT INTO calendarday (CalendarID, DayTypeID, `Date`, Description)
+    SELECT
+        @calendarId,
+        (SELECT RowID FROM daytype WHERE NAME = payrate.PayType),
+        `Date`,
+        Description
+    FROM payrate
+    WHERE PayType <> 'Regular Day'
+    AND YEAR(Date) = '2020'
+    AND OrganizationID = 1;
+
+END IF;
+
+$$

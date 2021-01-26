@@ -1,0 +1,27 @@
+ALTER TABLE `permission`
+	ADD COLUMN `ForDesktopOnly` BIT NOT NULL DEFAULT 0 AFTER `Name`;
+
+INSERT INTO `permission` (`Name`, `ForDesktopOnly`)
+VALUES ('Agency', True);
+
+INSERT INTO rolepermission
+(
+  `RoleID`,
+  `PermissionId`,
+  `Read`,
+  `Create`,
+  `Update`,
+  `Delete`
+)
+SELECT
+  aspnetroles.Id,
+  permission.Id,
+  TRUE,
+  TRUE,
+  TRUE,
+  TRUE
+FROM permission
+CROSS JOIN aspnetroles
+WHERE aspnetroles.IsAdmin
+AND permission.Name = 'Agency'
+;

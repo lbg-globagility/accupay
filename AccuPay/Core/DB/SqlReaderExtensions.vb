@@ -13,9 +13,11 @@ Public Class SqlReaderConversionException
         Me.Value = value
 
     End Sub
+
 End Class
 
 Module SqlReaderExtensions
+
     Public Function ConvertToType(Of T)(value As Object) As T
         Try
             If IsDBNull(value) Then
@@ -42,5 +44,5 @@ Module SqlReaderExtensions
     Public Function GetValue(Of T)(reader As IDataReader, name As String) As T
         Return ConvertToType(Of T)(reader(name))
     End Function
-End Module
 
+End Module

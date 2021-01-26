@@ -1,0 +1,61 @@
+<div class="flex h-full">
+  <div class="w-1/4 flex flex-col h-full bg-white mat-elevation-z1">
+    <div #reportsRef class="flex-1 overflow-y-auto">
+      <mat-selection-list
+        dense
+        [multiple]="false"
+        [(ngModel)]="selectedReports"
+        (selectionChange)="selectReport()"
+      >
+        <mat-list-option [value]="'payroll-summary'">
+          <div mat-line>
+            Payroll Summary
+          </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'pagibig'">
+          <div mat-line>
+            PAG IBIG Contribution Report
+          </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'philhealth'">
+          <div mat-line>
+            PhilHealth Report
+          </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'sss'">
+          <div mat-line>
+            SSS Report
+          </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'tax'">
+          <div mat-line>Tax Report</div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'13th-month'">
+          <div mat-line>
+            13th Month Report
+          </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'loans-by-type'">
+          <div mat-line>
+            Loan Report by Type
+          </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'loans-by-employee'">
+          <div mat-line>
+            Loan Report by Employee
+          </div>
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+  </div>
+  <div class="w-3/4 p-4 overflow-y-auto">
+    <router-outlet></router-outlet>
+  </div>
+</div>

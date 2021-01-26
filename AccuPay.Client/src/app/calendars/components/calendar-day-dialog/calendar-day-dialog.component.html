@@ -1,0 +1,27 @@
+<h3 mat-dialog-title>{{ calendarDay.date | date: "MMM d" }}</h3>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="mb-4">
+      <label>Day Type</label>
+      <mat-radio-group formControlName="dayType">
+        <mat-radio-button
+          *ngFor="let dayType of dayTypes"
+          [value]="dayType.name"
+        >
+          {{ dayType.name }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <mat-form-field appearance="outline" color="accent" class="w-full">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description" />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="onOk()">OK</button>
+  <button mat-button [mat-dialog-close]="null">CANCEL</button>
+</mat-dialog-actions>

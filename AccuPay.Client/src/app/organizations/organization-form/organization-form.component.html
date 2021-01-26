@@ -1,0 +1,29 @@
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Name *</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="off"
+                formControlName="name"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <button mat-button type="button" color="accent" (click)="onCancel()">
+        CANCEL
+      </button>
+      <button mat-raised-button type="submit" color="accent">FINISH</button>
+    </mat-card-content>
+  </mat-card>
+</form>

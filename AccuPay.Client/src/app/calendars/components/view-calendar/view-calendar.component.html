@@ -1,0 +1,54 @@
+<div class="flex">
+  <div class="w-1/3">
+    <h1 class="mat-headline">View Calendar / {{ calendar?.name }}</h1>
+  </div>
+  <div class="w-1/3 flex justify-center items-center">
+    <button
+      mat-icon-button
+      matTooltip="Previous year"
+      color="primary"
+      (click)="goToPreviousYear()"
+    >
+      <mat-icon>west</mat-icon>
+    </button>
+    <div class="text-xl">{{ selectedYear }}</div>
+    <button
+      mat-icon-button
+      matTooltip="Next year"
+      color="primary"
+      (click)="goToNextYear()"
+    >
+      <mat-icon>east</mat-icon>
+    </button>
+  </div>
+  <div class="w-1/3 flex justify-end items-start">
+    <button
+      *ngxPermissionsOnly="PermissionTypes.CalendarUpdate"
+      mat-raised-button
+      (click)="onSave()"
+      color="accent"
+      style="margin-right: 8px"
+    >
+      SAVE
+    </button>
+    <button
+      *ngxPermissionsOnly="PermissionTypes.CalendarUpdate"
+      mat-raised-button
+      color="accent"
+      routerLink="/calendars/{{ calendarId }}/edit"
+    >
+      EDIT
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div *ngFor="let calendarMonth of calendarMonths" class="col-lg-6">
+    <app-calendar-month
+      [month]="calendarMonth.month"
+      [calendarDays]="calendarMonth.days"
+      (dayClick)="changeDay($event)"
+      class="mb-4"
+    ></app-calendar-month>
+  </div>
+</div>

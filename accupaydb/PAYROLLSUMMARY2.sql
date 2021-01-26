@@ -137,7 +137,7 @@ SELECT
 	ROUND(IF(psi_undeclared, -paystubactual.UndertimeDeduction, -paystub.UndertimeDeduction), decimal_size) 'UndertimeDeduction',
 	-paystub.AbsentHours `AbsentHours`,
 	ROUND(IF(psi_undeclared, -paystubactual.AbsenceDeduction, -paystub.AbsenceDeduction), decimal_size) 'AbsentDeduction',
-	paystub.TotalAllowance `TotalAllowance`,
+	paystub.TotalAllowance + paystub.TotalTaxableAllowance `TotalAllowance`,
 	ROUND(paystub.TotalBonus, decimal_size) `TotalBonus`,
 	ROUND(IF(psi_undeclared, paystubactual.TotalGrossSalary, paystub.TotalGrossSalary), decimal_size) `GrossIncome`,
 	ROUND(-paystub.TotalEmpSSS, decimal_size) `SSS`,

@@ -1,0 +1,30 @@
+@use "styles/colors";
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: colors.$primary;
+  // color: white;
+}
+
+.error {
+  padding: 48px;
+  background: white;
+
+  &__title {
+    font-size: 96px;
+    line-height: normal;
+    // color: colors.$primary;
+  }
+
+  &__message {
+    font-size: 48px;
+    line-height: normal;
+  }
+}
+
+._link {
+  // text-decoration: underline;
+}

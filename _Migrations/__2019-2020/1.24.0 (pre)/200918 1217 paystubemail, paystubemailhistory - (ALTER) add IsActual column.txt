@@ -1,0 +1,5 @@
+ALTER TABLE `paystubemail`
+	ADD COLUMN `IsActual` BIT NOT NULL DEFAULT 0 AFTER `Status`;
+
+ALTER TABLE `paystubemailhistory`
+	ADD COLUMN `IsActual` BIT NOT NULL DEFAULT 0 AFTER `EmailAddress`;

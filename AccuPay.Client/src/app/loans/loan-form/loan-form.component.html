@@ -1,0 +1,176 @@
+<ng-container *ngIf="loan">
+  <!-- <mat-card-content> -->
+  <div class="row">
+    <!-- Employee Name -->
+
+    <div class="col-lg-4 mb-4">
+      <app-display-field label="Employee Name">
+        {{ loan.employeeName }}
+      </app-display-field>
+    </div>
+
+    <!-- Employee Number -->
+    <div class="col-lg-4 mb-4">
+      <app-display-field label="Employee No">
+        {{ loan.employeeNumber }}
+      </app-display-field>
+    </div>
+
+    <!-- Employee Type -->
+    <div class="col-lg-4 mb-4">
+      <app-display-field label="Employee Type">
+        {{ loan.employeeType }}
+      </app-display-field>
+    </div>
+  </div>
+  <!-- </mat-card-content> -->
+</ng-container>
+
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <div class="row" *ngIf="!loan">
+    <mat-form-field
+      *ngIf="employees"
+      appearance="fill"
+      color="accent"
+      class="col-lg-12"
+    >
+      <mat-label>Employee</mat-label>
+      <input
+        type="text"
+        matInput
+        formControlName="employeeId"
+        [matAutocomplete]="auto"
+        required
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayEmployee">
+        <mat-option
+          *ngFor="let employee of filteredEmployees | async"
+          [value]="employee.id"
+        >
+          {{ employee.employeeNo }} - {{ employee.lastName }},
+          {{ employee.firstName }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error>Please select an employee</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Loan Number</mat-label>
+      <input
+        matInput
+        type="text"
+        autocomplete="off"
+        formControlName="loanNumber"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Loan Type</mat-label>
+      <mat-select matInput formControlName="loanTypeId" required>
+        <mat-option></mat-option>
+        <mat-option *ngFor="let type of loanTypes" [value]="type.id">
+          {{ type.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Please select a type</mat-error>
+      <button
+        matSuffix
+        type="button"
+        mat-icon-button
+        color="primary"
+        matTooltip="New loan type"
+        (click)="$event.stopPropagation(); newLoanType()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Loan Amount</mat-label>
+      <span matPrefix>₱ &nbsp;</span>
+      <input
+        matInput
+        type="number"
+        autocomplete="off"
+        formControlName="totalLoanAmount"
+        required
+      />
+      <mat-error>Loan amount is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Deduction Amount</mat-label>
+      <span matPrefix>₱ &nbsp;</span>
+      <input
+        matInput
+        type="number"
+        autocomplete="off"
+        formControlName="deductionAmount"
+        required
+      />
+      <mat-error>Deduction amount is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <h3 class="font-medium mb-4">Payment Details</h3>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Start Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="startDate"
+        formControlName="startDate"
+        required
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="startDate"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #startDate></mat-datepicker>
+      <mat-hint>The date when the deduction will first occur</mat-hint>
+      <mat-error>Start date is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Deduction Schedule</mat-label>
+      <mat-select matInput formControlName="deductionSchedule" required>
+        <mat-option></mat-option>
+        <mat-option
+          *ngFor="let deductionSchedule of deductionSchedules"
+          [value]="deductionSchedule"
+        >
+          {{ deductionSchedule }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Please select a deduction schedule</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Status *</mat-label>
+      <mat-select matInput formControlName="status">
+        <mat-option></mat-option>
+        <mat-option *ngFor="let status of statusList" [value]="status">
+          {{ status }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Please select a status</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" color="accent" class="col-lg-6">
+      <mat-label>Remarks</mat-label>
+      <textarea
+        matInput
+        autocomplete="off"
+        formControlName="comments"
+        matTextareaAutosize
+      ></textarea>
+    </mat-form-field>
+  </div>
+</form>

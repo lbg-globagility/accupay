@@ -1,0 +1,34 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <!-- Logo -->
+
+    <a class="_logo flex items-center" href="/">
+      <img src="assets/logo.png" class="_logo-image" />
+      <span>AccuPay</span>
+    </a>
+
+    <span class="_spacer"></span>
+
+    <img appImgFallback class="_organization-logo" />
+
+    <button mat-button [matMenuTriggerFor]="organizationMenu">
+      {{ currentOrganization?.name }}
+    </button>
+    <mat-menu #organizationMenu="matMenu">
+      <ng-container *ngFor="let organization of organizations">
+        <button mat-menu-item (click)="changeOrganization(organization)">
+          {{ organization.name }}
+        </button>
+      </ng-container>
+    </mat-menu>
+
+    <button mat-button [matMenuTriggerFor]="accountMenu">John Doe</button>
+    <mat-menu #accountMenu="matMenu">
+      <button mat-menu-item routerLink="/myaccount">My Account</button>
+      <button mat-menu-item (click)="logout()">Log Out</button>
+    </mat-menu>
+    <button mat-icon-button color="accent" (click)="onToggleMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>

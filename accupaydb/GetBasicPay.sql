@@ -42,15 +42,9 @@ SELECT IF(
     es.Salary
 )
 FROM employeesalary es
-WHERE es.EmployeeID = employeeID AND
-    (
-        ((es.EffectiveDateTo IS NULL) AND payDateFrom >= es.EffectiveDateFrom) OR
-        (
-            payDateFrom BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo OR
-            payDateTo BETWEEN es.EffectiveDateFrom AND es.EffectiveDateTo
-        )
-    )
-ORDER BY es.EffectiveDateFrom DESC, es.EffectiveDateTo
+WHERE es.EmployeeID = employeeID
+AND es.EffectiveDateFrom  <= payDateFrom
+ORDER BY es.EffectiveDateFrom DESC
 LIMIT 1
 INTO salary;
 

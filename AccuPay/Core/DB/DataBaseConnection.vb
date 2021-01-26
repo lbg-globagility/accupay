@@ -109,19 +109,16 @@ Public Class DataBaseConnection
 
             sys_apppath = regKey.GetValue("apppath")
 
-            installerpath = sys_apppath
-
             n_NameOfServer = sys_servername
             n_IDOfUser = sys_userid
             n_PasswordOfDatabase = sys_password
             n_NameOfDatabase = sys_db
 
-            installerpath = regKey.GetValue("apppath")
-
             connstringresult = "server=" & sys_servername &
                 ";user id=" & sys_userid &
                 ";password=" & sys_password &
-                ";database=" & sys_db & ";"
+                ";database=" & sys_db &
+                ";Convert Zero Datetime=true;"
 
             db_connectinstring = connstringresult
         Catch ex As Exception

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Public Interface ITimeAnalyzer
 
@@ -6,6 +6,6 @@ Public Interface ITimeAnalyzer
 
     Sub ShouldImport_WithoutShifts()
 
-    Sub ShouldImport_WithNextShiftScheduleWithoutShift()
+    Sub ShouldImport_WithNextShiftWithoutShift()
 
 End Interface

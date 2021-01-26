@@ -32,9 +32,11 @@ BEGIN
             ),
             INITIALS(employee.MiddleName, '. ', '1')
         ) AS `DatCol2`,
-        paystubsummary.TotalEmpSSS  AS `DatCol3`,
+        (paystubsummary.TotalEmpSSS - paysocialsecurity.EmployeeMPFAmount)  AS `DatCol3`,
         paysocialsecurity.EmployerContributionAmount AS `DatCol4`,
-        paysocialsecurity.EmployeeECAmount AS `DatCol5`,
+        paysocialsecurity.EmployerECAmount AS `DatCol5`,
+        paysocialsecurity.EmployeeMPFAmount AS `DatCol7`,
+        paysocialsecurity.EmployerMPFAmount AS `DatCol8`,
         (paystubsummary.TotalEmpSSS + paystubsummary.TotalCompSSS) AS `DatCol6`
     FROM employee
     INNER JOIN (
@@ -53,7 +55,8 @@ BEGIN
     ) paystubsummary
     ON paystubsummary.EmployeeID = employee.RowID
     LEFT JOIN paysocialsecurity
-    ON paysocialsecurity.EmployeeContributionAmount = paystubsummary.TotalEmpSSS
+    ON paysocialsecurity.EmployeeContributionAmount = (paystubsummary.TotalEmpSSS - paysocialsecurity.EmployeeMPFAmount)
+    AND paramDate BETWEEN paysocialsecurity.EffectiveDateFrom AND paysocialsecurity.EffectiveDateTo
     WHERE employee.OrganizationID = OrganizID
     ORDER BY employee.LastName, employee.FirstName;
 

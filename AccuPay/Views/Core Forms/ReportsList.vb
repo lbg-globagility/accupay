@@ -1,24 +1,39 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ReportsList
 
-    Dim sys_ownr As New SystemOwner
+    Private ReadOnly curr_sys_owner_name As String
 
-    Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
-    Private Const ActualDescription As String = "(Actual)"
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
-    Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Sub New()
+
+        InitializeComponent()
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
+
+        curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
+    End Sub
+
+    Private Async Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        'This has errors
+        'New EmployeeOffenseReportProvider(),
+
         Dim providers = New Collection(Of IReportProvider) From {
             New SalaryIncreaseHistoryReportProvider(),
             New EmploymentRecordReportProvider(),
             New EmployeeProfilesReportProvider(),
-            New PostEmploymentClearanceReportProvider(),
-            New EmployeeIdentificationNumberReportProvider(),
-            New EmployeeOffenseReportProvider(),
-            New LeaveLedgerReportProvider() With {.IsNewReport = True},
+            New LeaveLedgerReportProvider(),
             New FiledLeaveReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
             New LoanSummaryByTypeReportProvider(),
@@ -30,31 +45,25 @@ Public Class ReportsList
             New ThirteenthMonthSummaryReportProvider(),
             New AttendanceSheetReportProvider(),
             New LateUTAbsentSummaryReportProvider(),
-            New AgencyFeeReportProvider(),
             New PayrollLedgerExcelFormatReportProvider(),
             New LoanLedgerReportProvider(),
             New Cinema2000TardinessReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If curr_sys_owner_name = SystemOwner.Benchmark Then
             providers = GetBenchmarkReports()
         End If
+
+        Dim allowedProviders = Await _listOfValueRepository.GetDutyReportProvidersAsync()
 
         For Each provider In providers
 
             If provider.IsHidden Then Continue For
 
-            Dim dataTable = New SqlToDataTable($"
-                SELECT l.DisplayValue
-                FROM listofval l
-                WHERE l.`Type` = 'ReportProviders'
-            ").Read()
-
             Dim type = provider.GetType().Name
-            Dim found = dataTable.Select($"DisplayValue = '{type}'").Count >= 1
 
-            If found Then
+            If allowedProviders.Any(Function(p) p.DisplayValue = type) Then
 
                 Dim newListItem = New ListViewItem(provider.Name)
                 newListItem.Tag = provider
@@ -63,10 +72,11 @@ Public Class ReportsList
             End If
         Next
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If curr_sys_owner_name = SystemOwner.Benchmark Then
 
-            lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem("(Declared)"))
-            lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem(ActualDescription))
+            'Payroll Summary
+            Dim reportProvider As New PayrollSummaryExcelFormatReportProvider()
+            lvMainMenu.Items.Add(CreateNewListViewItem(reportProvider, reportProvider.Name))
 
             'Payslip
             Dim payslipProvider As New DefaultPayslipFullOvertimeBreakdownProvider()
@@ -74,18 +84,7 @@ Public Class ReportsList
         End If
     End Sub
 
-    Private Shared Function CreatePayrollSummaryListViewItem(suffix As String) As ListViewItem
-
-        Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider()
-
-        Dim reportName = summaryProvider.Name & " " & suffix
-        Return CreateNewListViewItem(summaryProvider, reportName)
-    End Function
-
-    Private Shared Function CreateNewListViewItem(
-        reportProvider As IReportProvider,
-        reportName As String) As ListViewItem
-
+    Private Shared Function CreateNewListViewItem(reportProvider As IReportProvider, reportName As String) As ListViewItem
         Dim listItem = New ListViewItem(reportName)
         listItem.Tag = reportProvider
         Return listItem
@@ -95,7 +94,6 @@ Public Class ReportsList
         Return New Collection(Of IReportProvider) From {
             New SalaryIncreaseHistoryReportProvider(),
             New EmployeeProfilesReportProvider(),
-            New EmployeeIdentificationNumberReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
             New LoanSummaryByTypeReportProvider(),
             New SSSMonthlyReportProvider(),
@@ -108,7 +106,7 @@ Public Class ReportsList
             New PayrollSummaryExcelFormatReportProvider(),
             New BenchmarkAlphalistReportProvider(),
             New PayrollLedgerExcelFormatReportProvider()
-    }
+        }
     End Function
 
     Private Sub lvMainMenu_KeyDown(sender As Object, e As KeyEventArgs) Handles lvMainMenu.KeyDown
@@ -126,33 +124,21 @@ Public Class ReportsList
     End Sub
 
     Sub report_maker()
-        Dim n_listviewitem As New ListViewItem
+        If lvMainMenu.SelectedItems.Count = 0 Then Return
 
+        Dim listviewitem As New ListViewItem
         Try
-            n_listviewitem = lvMainMenu.SelectedItems(0)
+            listviewitem = lvMainMenu.SelectedItems(0)
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
             Exit Sub
         End Try
 
-        If TypeOf n_listviewitem.Tag Is IReportProvider Then
-            Dim provider = DirectCast(n_listviewitem.Tag, IReportProvider)
+        If TypeOf listviewitem.Tag Is IReportProvider Then
+            Dim provider = DirectCast(listviewitem.Tag, IReportProvider)
 
             Try
-                If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark AndAlso
-                    TypeOf provider Is PayrollSummaryExcelFormatReportProvider Then
-
-                    Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)
-
-                    Dim isActual = n_listviewitem.Text.EndsWith(ActualDescription)
-
-                    payrollSummary.IsActual = isActual
-
-                    payrollSummary.Run()
-                Else
-
-                    provider.Run()
-                End If
+                provider.Run()
             Catch ex As NotImplementedException
                 MsgBox($"Report Is Not Yet Done: {ex.Message}", MsgBoxStyle.OkOnly)
             End Try

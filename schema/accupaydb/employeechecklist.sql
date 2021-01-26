@@ -7,9 +7,9 @@
 CREATE TABLE IF NOT EXISTS `employeechecklist` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
   `OrganizationID` int(10) NOT NULL,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
   `CreatedBy` int(10) DEFAULT NULL,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `LastUpdBy` int(10) DEFAULT NULL,
   `EmployeeID` int(10) DEFAULT NULL,
   `PerformanceAppraisal` varchar(1) DEFAULT NULL,
@@ -38,11 +38,11 @@ CREATE TABLE IF NOT EXISTS `employeechecklist` (
   KEY `FK_BaseTables_user` (`CreatedBy`),
   KEY `FK_BaseTables_user_2` (`LastUpdBy`),
   KEY `FK_basetables_employee` (`EmployeeID`),
-  CONSTRAINT `employeechecklist_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+  CONSTRAINT `employeechecklist_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
   CONSTRAINT `employeechecklist_ibfk_2` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `employeechecklist_ibfk_3` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `employeechecklist_ibfk_4` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=777 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

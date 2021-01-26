@@ -9,7 +9,7 @@ Public Class AttendanceSheetReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
+        Dim n_PayrollSummaDateSelection As New MultiplePayPeriodSelectionDialog
 
         If Not n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

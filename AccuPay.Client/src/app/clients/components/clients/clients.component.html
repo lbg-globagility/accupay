@@ -1,0 +1,35 @@
+<div class="flex h-full">
+  <div class="w-1/4 h-full flex flex-col bg-white mat-elevation-z1">
+    <div class="flex-none p-2">
+      <a
+        mat-raised-button
+        color="primary"
+        routerLink="/clients/new"
+        class="m-with-icon"
+      >
+        <mat-icon>add</mat-icon>NEW
+      </a>
+    </div>
+    <div class="flex-1 overflow-y-scroll">
+      <mat-selection-list
+        [multiple]="false"
+        [(ngModel)]="selectedClients"
+        (selectionChange)="selectionChange()"
+      >
+        <mat-list-option *ngFor="let client of clients" [value]="client">
+          {{ client.name }}
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+    <mat-paginator
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [length]="totalCount"
+      (page)="page($event)"
+      class="flex-none"
+    ></mat-paginator>
+  </div>
+  <div class="w-3/4 overflow-y-auto">
+    <router-outlet></router-outlet>
+  </div>
+</div>

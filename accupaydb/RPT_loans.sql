@@ -33,7 +33,7 @@ FROM scheduledloansperpayperiod slp
 INNER JOIN employeeloanschedule els
 ON els.RowID = slp.EmployeeLoanRecordID
 INNER JOIN employee ee
-ON ee.RowID = slp.EmployeeID AND FIND_IN_SET(ee.EmploymentStatus, UNEMPLOYEMENT_STATUSES()) = 0
+ON ee.RowID = slp.EmployeeID
 INNER JOIN product p
 ON p.RowID = els.LoanTypeID
 INNER JOIN payperiod pp

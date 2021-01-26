@@ -1,14 +1,14 @@
-﻿Option Strict On
+Option Strict On
 
 Imports log4net
 
-Namespace Global.AccuPay.Utils
+Namespace Global.AccuPay.Desktop.Utilities
 
     Public Class MessageBoxHelper
 
         Private Const MessageTitle As String = "AccuPay"
 
-        Private Shared _logger As ILog = LogManager.GetLogger("TimeLogsLogger")
+        Private Shared ReadOnly _logger As ILog = LogManager.GetLogger("ExceptionLogger")
 
         Public Shared Sub DefaultErrorMessage(Optional title As String = MessageTitle, Optional exception As Exception = Nothing, Optional errorMessageTitle As String = "DefaultErrorMessage")
 
@@ -19,6 +19,18 @@ Namespace Global.AccuPay.Utils
             MsgBox("Something went wrong while executing the last task. Please contact Globagility Inc. for assistance.",
                    MsgBoxStyle.OkOnly,
                    title)
+        End Sub
+
+        Public Shared Sub DefaultUnauthorizedFormMessage(ByVal Optional title As String = MessageTitle, ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
+
+            MessageBox.Show("You are not authorized to access that form.", title, messageBoxButtons, MessageBoxIcon.Warning)
+
+        End Sub
+
+        Public Shared Sub DefaultUnauthorizedActionMessage(ByVal Optional title As String = MessageTitle, ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
+
+            MessageBox.Show("You are not authorized to perform that action.", title, messageBoxButtons, MessageBoxIcon.Warning)
+
         End Sub
 
         Public Shared Sub ErrorMessage(message As String, Optional title As String = MessageTitle)

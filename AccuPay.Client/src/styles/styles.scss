@@ -1,0 +1,15 @@
+@use "~@angular/material/theming" as *;
+@use "styles/theming";
+@use "~normalize-scss/sass/normalize";
+@use "styles/reset";
+
+/* You can add global styles to this file, and also import other style files */
+
+@include normalize.normalize();
+@include mat-core(theming.$typography);
+
+@include angular-material-theme(theming.$theme);
+
+@import "styles/helpers";
+@import "styles/material";
+@import "styles/utilities";

@@ -1,0 +1,12 @@
+ALTER TABLE `user`
+	DROP FOREIGN KEY `FK_user_organization`,
+	DROP FOREIGN KEY `FK_user_position`,
+	DROP FOREIGN KEY `FK_user_user`,
+	DROP FOREIGN KEY `FK_user_user_2`;
+ALTER TABLE `user`
+	ADD COLUMN `AspNetUserId` BINARY(16) NULL DEFAULT NULL AFTER `UserLevel`,
+	ADD CONSTRAINT `FK_user_organization` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+	ADD CONSTRAINT `FK_user_position_PositionID` FOREIGN KEY (`PositionID`) REFERENCES `position` (`RowID`),
+	ADD CONSTRAINT `FK_user_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_user_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_user_aspnetusers_AspNetUserId` FOREIGN KEY (`AspNetUserId`) REFERENCES `aspnetusers` (`Id`);

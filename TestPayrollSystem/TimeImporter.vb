@@ -1,10 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay
-Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeAttendanceAnalyzer
-Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Core.Services
 
 <TestFixture>
 Public Class TimeImporter
@@ -25,12 +22,12 @@ Public Class TimeImporter
         Dim importer = New TimeLogsReader()
 
         Dim filename = _projectPath & "\_timelogs_test_errors_sdfsdf.dat"
-        Dim importOutput = importer.Import(filename)
+        Dim importOutput = importer.Read(filename)
 
         Dim errors = importOutput.Errors
 
         Assert.That(importOutput.IsImportSuccess = False)
-        Assert.That(importOutput.ErrorMessage = TimeLogsReader.FILE_NOT_FOUND_ERROR)
+        Assert.That(importOutput.ErrorMessage = TimeLogsReader.FileNotFoundError)
 
     End Sub
 
@@ -39,7 +36,7 @@ Public Class TimeImporter
         Dim importer = New TimeLogsReader()
 
         Dim filename = _projectPath & "\_timelogs_test.dat"
-        Dim importOutput = importer.Import(filename)
+        Dim importOutput = importer.Read(filename)
 
         Dim logs = importOutput.Logs
 
@@ -54,7 +51,7 @@ Public Class TimeImporter
 
         Dim filename = _projectPath & "\_timelogs_test_errors.dat"
 
-        Dim importOutput = importer.Import(filename)
+        Dim importOutput = importer.Read(filename)
         Dim errors = importOutput.Errors
 
         Dim contentFormat = "    {0}" & vbTab & "{1}" & vbTab & "{2}" & vbTab & "{3}" & vbTab & "{4}" & vbTab & "{5}"
@@ -97,4 +94,3 @@ Public Class TimeImporter
     End Sub
 
 End Class
-

@@ -2,7 +2,7 @@
 
 Imports System.IO
 
-Namespace Global.AccuPay.Helpers
+Namespace Global.AccuPay.Desktop.Helpers
 
     Public Class SaveFileDialogHelper
 

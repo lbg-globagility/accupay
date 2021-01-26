@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
 
 Namespace Benchmark
@@ -50,8 +51,8 @@ Namespace Benchmark
 
         Public ReadOnly Property Amount As Decimal
             Get
-                Dim overtimeRate = If(IsHolidayInclusive AndAlso IsHolidayThatIsNotRestDay, OvertimeType.Rate - 1, OvertimeType.Rate)
-                Dim rate = If(OvertimeType.BaseRate Is Nothing, overtimeRate, overtimeRate - OvertimeType.BaseRate.Rate)
+                Dim overtimeRate = If(IsHolidayInclusive AndAlso IsHolidayThatIsNotRestDay, OvertimeType.CurrentRate - 1, OvertimeType.CurrentRate)
+                Dim rate = If(OvertimeType.BaseRate Is Nothing, overtimeRate, overtimeRate - OvertimeType.BaseRate.CurrentRate)
 
                 Return AccuMath.CommercialRound((Hours * rate * _payPerHour))
             End Get

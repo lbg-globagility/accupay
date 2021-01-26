@@ -1,0 +1,87 @@
+<h2 mat-dialog-title>Edit Shifts</h2>
+
+<div mat-dialog-content>
+  <app-display-field label="Employee">
+    {{ employee.employeeName }}
+  </app-display-field>
+
+  <form [formGroup]="form">
+    <table
+      mat-table
+      [dataSource]="shiftsArray.controls"
+      class="m-borders"
+      formArrayName="shifts"
+    >
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let control">
+          <div class="px-2 text-center">
+            <p>{{ control.get("date").value | date: "shortDate" }}</p>
+            <p class="text-xs">
+              ({{ control.get("date").value | date: "EEE" }})
+            </p>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef>Start Time</th>
+        <td mat-cell *matCellDef="let shift; let i = index" [formGroupName]="i">
+          <div class="pt-2 px-2">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
+              <input matInput type="time" formControlName="startTime" />
+            </mat-form-field>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="endTime">
+        <th mat-header-cell *matHeaderCellDef>End Time</th>
+        <td mat-cell *matCellDef="let shift; let i = index" [formGroupName]="i">
+          <div class="pt-2 px-2">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
+              <input matInput type="time" formControlName="endTime" />
+            </mat-form-field>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="breakStartTime">
+        <th mat-header-cell *matHeaderCellDef>Break Start Time</th>
+        <td mat-cell *matCellDef="let shift; let i = index" [formGroupName]="i">
+          <div class="pt-2 px-2">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
+              <input matInput type="time" formControlName="breakStartTime" />
+            </mat-form-field>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="breakLength">
+        <th mat-header-cell *matHeaderCellDef>Break Duration</th>
+        <td mat-cell *matCellDef="let shift; let i = index" [formGroupName]="i">
+          <div class="pt-2 px-2">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
+              <input matInput type="number" formControlName="breakLength" />
+            </mat-form-field>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="savingState.isLoading"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+  <button mat-button mat-dialog-close>CANCEL</button>
+</div>

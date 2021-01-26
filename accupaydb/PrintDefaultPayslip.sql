@@ -19,16 +19,15 @@ DECLARE paydate_from DATE;
 DECLARE paydat_to DATE;
 
 DECLARE v_hours_per_day INT(2) DEFAULT 8;
-DECLARE sec_per_hour INT(11) DEFAULT 3600;
 
 SET @ppIds = (SELECT GROUP_CONCAT(pp.RowID)
-					#, SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH) #2018-01-05
+					
 					
 					FROM payperiod pp
 					INNER JOIN payperiod ppd ON ppd.RowID = PayPeriodRowID
 					WHERE pp.OrganizationID=ppd.OrganizationID
 					AND pp.TotalGrossSalary=ppd.TotalGrossSalary
-					#AND SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH) BETWEEN pp.PayFromDate AND pp.PayToDate
+					
 					AND pp.PayFromDate >= SUBDATE(ppd.PayToDate, INTERVAL 12 MONTH)
 					AND pp.PayToDate <= ppd.PayToDate);
 
@@ -74,7 +73,7 @@ SELECT
     ) `COL13`,
     ps.NightDiffHours `COL14`,
     IF(IsActualFlag, psa.NightDiffPay, ps.NightDiffPay) `COL15`,
-    (ps.TotalAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
+    (ps.TotalAllowance + ps.TotalTaxableAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
     IF(IsActualFlag = TRUE, psa.TotalAdjustments, ps.TotalAdjustments) `COL19`,
     IF(
         IsActualFlag,
@@ -134,8 +133,8 @@ ON e.RowID = ps.EmployeeID AND
 INNER JOIN employeesalary es
 ON es.EmployeeID = ps.EmployeeID AND
     es.OrganizationID=ps.OrganizationID AND
-    (es.EffectiveDateFrom >= ps.PayFromDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) >= ps.PayFromDate) AND
-    (es.EffectiveDateFrom <= ps.PayToDate OR IFNULL(es.EffectiveDateTo,ps.PayToDate) <= ps.PayToDate)
+    (es.EffectiveDateFrom >= ps.PayFromDate OR ps.PayToDate >= ps.PayFromDate) AND
+    (es.EffectiveDateFrom <= ps.PayToDate OR ps.PayToDate <= ps.PayToDate)
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',
@@ -195,7 +194,7 @@ LEFT JOIN (SELECT ROUND((lt.Balance / v_hours_per_day), 2) AS 'Balance'
 								GROUP BY ete.EmployeeID
 								) et ON et.EmployeeID = i.EmployeeID
 ) psiLeave
-#ON psiLeave.PayStubID = ps.RowID
+
 ON psiLeave.EmployeeID = ps.EmployeeID
 
 LEFT JOIN (
@@ -225,8 +224,7 @@ LEFT JOIN (
             FROM paystubadjustment
             INNER JOIN product
             ON product.RowID = paystubadjustment.ProductID
-            WHERE IsActualFlag = 0 AND
-                paystubadjustment.OrganizationID = OrganizID AND
+            WHERE paystubadjustment.OrganizationID = OrganizID AND
                 paystubadjustment.PayAmount != 0
         UNION
             SELECT

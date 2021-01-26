@@ -6,10 +6,10 @@
 
 CREATE TABLE IF NOT EXISTS `payfrequency` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `CreatedBy` int(10) NOT NULL DEFAULT '0',
-  `LastUpdBy` int(10) DEFAULT '0',
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `Created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `CreatedBy` int(10) NOT NULL DEFAULT 0,
+  `LastUpdBy` int(10) DEFAULT 0,
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `Created` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `PayFrequencyType` varchar(50) NOT NULL COMMENT 'Daily, Weekly, Monthly, Semi-Monthly, Bi-Weekly',
   `PayFrequencyStartDate` date DEFAULT NULL,
   PRIMARY KEY (`RowID`),
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `payfrequency` (
   KEY `FK_PayFrequency_user_2` (`LastUpdBy`),
   CONSTRAINT `FK_PayFrequency_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_PayFrequency_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COMMENT='Payroll Frequency - Daily, Weekly, Monthly, Semi-Monthly, Bi-Weekly';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Payroll Frequency - Daily, Weekly, Monthly, Semi-Monthly, Bi-Weekly';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

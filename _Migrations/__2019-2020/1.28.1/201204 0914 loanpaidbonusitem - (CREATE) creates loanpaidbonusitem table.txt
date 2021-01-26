@@ -1,0 +1,10 @@
+
+CREATE TABLE IF NOT EXISTS `loanpaidbonusitem` (
+	`Id` INT NOT NULL AUTO_INCREMENT,
+	`LoanPaidBonusId` INT NULL,
+	`PaystubId` INT NULL,
+	PRIMARY KEY (`Id`),
+	CONSTRAINT `FK__loanpaidbonus` FOREIGN KEY (`LoanPaidBonusId`) REFERENCES `loanpaidbonus` (`Id`) ON DELETE CASCADE,
+	CONSTRAINT `FK__paystub` FOREIGN KEY (`PaystubId`) REFERENCES `paystub` (`RowID`) ON DELETE CASCADE
+)
+COLLATE='utf8_general_ci';

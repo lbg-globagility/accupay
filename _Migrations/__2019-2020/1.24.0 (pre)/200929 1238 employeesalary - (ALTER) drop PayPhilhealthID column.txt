@@ -1,0 +1,3 @@
+ALTER TABLE `employeesalary`
+	DROP COLUMN IF EXISTS `PayPhilhealthID`,
+	DROP FOREIGN KEY IF EXISTS `FK_EmployeeSalary_payphilhealth`;

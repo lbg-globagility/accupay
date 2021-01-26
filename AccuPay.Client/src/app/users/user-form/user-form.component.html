@@ -1,0 +1,69 @@
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="font-medium mb-4">Personal Information</h3>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>First Name *</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="off"
+                formControlName="firstName"
+              />
+              <mat-error>Please enter a first name</mat-error>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Last Name *</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="off"
+                formControlName="lastName"
+              />
+              <mat-error>Please enter a last name</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-8"
+            >
+              <mat-label>Email *</mat-label>
+              <input
+                matInput
+                type="email"
+                autocomplete="off"
+                formControlName="email"
+              />
+              <mat-error *ngIf="form.get('email').hasError('required')"
+                >Please enter an email address</mat-error
+              >
+              <mat-error *ngIf="form.get('email').hasError('email')"
+                >Invalid email address</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <button mat-button type="button" color="accent" (click)="onCancel()">
+        CANCEL
+      </button>
+      <button mat-raised-button type="submit" color="accent">FINISH</button>
+    </mat-card-content>
+  </mat-card>
+</form>

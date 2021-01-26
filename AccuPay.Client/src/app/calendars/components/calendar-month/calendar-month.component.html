@@ -1,0 +1,37 @@
+<h2 class="mat-title">{{ month | date: "MMMM yyyy" }}</h2>
+
+<mat-grid-list [cols]="7" rowHeight="50px">
+  <mat-grid-tile *ngFor="let dayOfWeek of daysOfWeek">
+    <div class="w-full h-full">{{ dayOfWeek }}</div>
+  </mat-grid-tile>
+  <mat-grid-tile *ngFor="let o of blankCells"></mat-grid-tile>
+  <ng-container *ngFor="let cell of cells">
+    <mat-grid-tile
+      *ngxPermissionsOnly="PermissionTypes.CalendarUpdate"
+      (click)="dayClicked(cell)"
+    >
+      <div
+        class="_cell p-2 box-border w-full h-full text-xs cursor-pointer"
+        [class.is-holiday]="
+          cell.calendarDay?.dayType === 'Regular Holiday' ||
+          cell.calendarDay?.dayType === 'Special Non-Working Holiday'
+        "
+      >
+        <p>{{ cell.date | date: "d" }}</p>
+        <p>{{ cell.calendarDay?.description }}</p>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile *ngxPermissionsExcept="PermissionTypes.CalendarUpdate">
+      <div
+        class="p-2 box-border w-full h-full text-xs"
+        [class.is-holiday]="
+          cell.calendarDay?.dayType === 'Regular Holiday' ||
+          cell.calendarDay?.dayType === 'Special Non-Working Holiday'
+        "
+      >
+        <p>{{ cell.date | date: "d" }}</p>
+        <p>{{ cell.calendarDay?.description }}</p>
+      </div>
+    </mat-grid-tile>
+  </ng-container>
+</mat-grid-list>

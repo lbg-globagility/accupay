@@ -1,0 +1,13 @@
+SET @dutyShiftType='DutyShift';
+SET @id=(SELECT RowID FROM listofval WHERE `LIC`='ShiftBasedAutomaticOvertime' AND `Type`=@dutyShiftType LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '0', 'ShiftBasedAutomaticOvertime', @dutyShiftType, '', 'Yes', '', '2017-09-29 15:26:15', 1, '2020-10-20 15:46:30', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
+
+SET @parentLIC='ShiftBasedAutomaticOvertime';
+SET @id=(SELECT RowID FROM listofval WHERE `LIC`='DivisibleBy' AND `Type`=@dutyShiftType AND `ParentLIC`=@parentLIC LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '15', 'DivisibleBy', @dutyShiftType, @parentLIC, 'Yes', 'using MINUTES', '2017-09-29 15:26:15', 1, '2020-10-20 15:46:30', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
+
+SET @id=(SELECT RowID FROM listofval WHERE `LIC`='MinimumDuration' AND `Type`=@dutyShiftType AND `ParentLIC`=@parentLIC LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '30', 'MinimumDuration', @dutyShiftType, @parentLIC, 'Yes', 'using MINUTES', '2017-09-29 15:26:15', 1, '2020-10-20 15:46:30', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
+
+SET @id=(SELECT RowID FROM listofval WHERE `LIC`='DefaultWorkHours' AND `Type`=@dutyShiftType AND `ParentLIC`=@parentLIC LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (@id, NULL, '8', 'DefaultWorkHours', @dutyShiftType, @parentLIC, 'Yes', 'using HOURS', '2017-09-29 15:26:15', 1, '2020-10-20 15:46:30', 1, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();

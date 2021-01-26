@@ -24,10 +24,12 @@ Partial Class DivisionUserControl
     Private Sub InitializeComponent()
         Me.LeaveGroupBox = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
+        Me.OthersLeaveTextBox = New System.Windows.Forms.TextBox()
         Me.VacationLeaveTextBox = New System.Windows.Forms.TextBox()
         Me.SickLeaveTextBox = New System.Windows.Forms.TextBox()
         Me.Label43 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.PayrollDetailsGroupBox = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
@@ -37,8 +39,8 @@ Partial Class DivisionUserControl
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.PayFrequencyComboBox = New System.Windows.Forms.ComboBox()
-        Me.Label27 = New System.Windows.Forms.Label()
         Me.AutomaticOvertimeCheckBox = New System.Windows.Forms.CheckBox()
+        Me.Label27 = New System.Windows.Forms.Label()
         Me.ContactDetailsGroupBox = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.UrlTextBox = New System.Windows.Forms.TextBox()
@@ -62,6 +64,7 @@ Partial Class DivisionUserControl
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.ParentDivisionComboBox = New System.Windows.Forms.ComboBox()
         Me.Label11 = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
         Me.DivisionTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -79,13 +82,13 @@ Partial Class DivisionUserControl
         Me.DefaultDeductionScheduleTabPage = New System.Windows.Forms.TabPage()
         Me.DefaultDeductionTabControl = New System.Windows.Forms.TabControl()
         Me.SemiMonthlyTabPage = New System.Windows.Forms.TabPage()
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
         Me.Label64 = New System.Windows.Forms.Label()
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox = New AccuPay.cboListOfValue()
+        Me.SemiMonthlySSSDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
         Me.Label65 = New System.Windows.Forms.Label()
-        Me.SemiMonthlySSSDeductionScheduleComboBox = New AccuPay.cboListOfValue()
         Me.lblhdmfdeductsched = New System.Windows.Forms.Label()
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox = New AccuPay.cboListOfValue()
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox = New AccuPay.cboListOfValue()
         Me.Label69 = New System.Windows.Forms.Label()
         Me.WeeklyTabPage = New System.Windows.Forms.TabPage()
         Me.WeeklyWithholdingTaxDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
@@ -99,13 +102,13 @@ Partial Class DivisionUserControl
         Me.WithAgencyDeductionScheduleTabPage = New System.Windows.Forms.TabPage()
         Me.WithAgencyDeductionScheduleTabControl = New System.Windows.Forms.TabControl()
         Me.AgencySemiMonthlyTabPage = New System.Windows.Forms.TabPage()
+        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
         Me.Label33 = New System.Windows.Forms.Label()
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox = New AccuPay.cboListOfValue()
+        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
         Me.Label34 = New System.Windows.Forms.Label()
-        Me.SemiMonthlyAgencySSSDeductionScheduleComboBox = New AccuPay.cboListOfValue()
+        Me.SemiMonthlyAgencySSSDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
         Me.Label35 = New System.Windows.Forms.Label()
-        Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox = New AccuPay.cboListOfValue()
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox = New AccuPay.cboListOfValue()
+        Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
         Me.Label36 = New System.Windows.Forms.Label()
         Me.AgencyWeeklyTabPage = New System.Windows.Forms.TabPage()
         Me.WeeklyAgencyWithholdingTaxDeductionScheduleComboBox = New System.Windows.Forms.ComboBox()
@@ -116,9 +119,6 @@ Partial Class DivisionUserControl
         Me.Label38 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.Label41 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.OthersLeaveTextBox = New System.Windows.Forms.TextBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
         Me.LeaveGroupBox.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.PayrollDetailsGroupBox.SuspendLayout()
@@ -129,6 +129,7 @@ Partial Class DivisionUserControl
         Me.DivisionDetailsGroupBox.SuspendLayout()
         Me.DivisionFormTabLayout.SuspendLayout()
         Me.Panel6.SuspendLayout()
+        Me.Panel1.SuspendLayout()
         Me.Panel5.SuspendLayout()
         Me.DeductionScheduleTypeTabControl.SuspendLayout()
         Me.DefaultDeductionScheduleTabPage.SuspendLayout()
@@ -139,7 +140,6 @@ Partial Class DivisionUserControl
         Me.WithAgencyDeductionScheduleTabControl.SuspendLayout()
         Me.AgencySemiMonthlyTabPage.SuspendLayout()
         Me.AgencyWeeklyTabPage.SuspendLayout()
-        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'LeaveGroupBox
@@ -175,6 +175,14 @@ Partial Class DivisionUserControl
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(230, 144)
         Me.TableLayoutPanel2.TabIndex = 332
+        '
+        'OthersLeaveTextBox
+        '
+        Me.OthersLeaveTextBox.Location = New System.Drawing.Point(20, 115)
+        Me.OthersLeaveTextBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
+        Me.OthersLeaveTextBox.Name = "OthersLeaveTextBox"
+        Me.OthersLeaveTextBox.Size = New System.Drawing.Size(195, 22)
+        Me.OthersLeaveTextBox.TabIndex = 2
         '
         'VacationLeaveTextBox
         '
@@ -214,6 +222,17 @@ Partial Class DivisionUserControl
         Me.Label44.TabIndex = 0
         Me.Label44.Text = "Vacation"
         '
+        'Label2
+        '
+        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(20, 99)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(42, 13)
+        Me.Label2.TabIndex = 425
+        Me.Label2.Text = "Others"
+        '
         'PayrollDetailsGroupBox
         '
         Me.PayrollDetailsGroupBox.Controls.Add(Me.TableLayoutPanel1)
@@ -229,25 +248,24 @@ Partial Class DivisionUserControl
         '
         Me.TableLayoutPanel1.ColumnCount = 1
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.Panel7, 0, 5)
-        Me.TableLayoutPanel1.Controls.Add(Me.GracePeriodTextBox, 0, 3)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label19, 0, 4)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label18, 0, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.PayFrequencyComboBox, 0, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label27, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.AutomaticOvertimeCheckBox, 0, 6)
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel7, 0, 6)
+        Me.TableLayoutPanel1.Controls.Add(Me.GracePeriodTextBox, 0, 4)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label19, 0, 5)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label18, 0, 3)
+        Me.TableLayoutPanel1.Controls.Add(Me.PayFrequencyComboBox, 0, 2)
+        Me.TableLayoutPanel1.Controls.Add(Me.AutomaticOvertimeCheckBox, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.Label27, 0, 1)
         Me.TableLayoutPanel1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(6, 21)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 7
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 48.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(230, 192)
         Me.TableLayoutPanel1.TabIndex = 332
         '
@@ -255,11 +273,12 @@ Partial Class DivisionUserControl
         '
         Me.Panel7.Controls.Add(Me.Label26)
         Me.Panel7.Controls.Add(Me.WorkDaysPerYearTextBox)
-        Me.Panel7.Location = New System.Drawing.Point(0, 112)
+        Me.Panel7.Location = New System.Drawing.Point(0, 160)
         Me.Panel7.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel7.Name = "Panel7"
         Me.Panel7.Size = New System.Drawing.Size(230, 32)
         Me.Panel7.TabIndex = 424
+        Me.Panel7.Visible = False
         '
         'Label26
         '
@@ -281,64 +300,69 @@ Partial Class DivisionUserControl
         '
         'GracePeriodTextBox
         '
-        Me.GracePeriodTextBox.Location = New System.Drawing.Point(20, 67)
+        Me.GracePeriodTextBox.Location = New System.Drawing.Point(20, 115)
         Me.GracePeriodTextBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.GracePeriodTextBox.Name = "GracePeriodTextBox"
         Me.GracePeriodTextBox.Size = New System.Drawing.Size(195, 22)
         Me.GracePeriodTextBox.TabIndex = 1
+        Me.GracePeriodTextBox.Visible = False
         '
         'Label19
         '
         Me.Label19.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(20, 99)
+        Me.Label19.Location = New System.Drawing.Point(20, 147)
         Me.Label19.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(161, 13)
         Me.Label19.TabIndex = 422
         Me.Label19.Text = "Number of days work per year"
+        Me.Label19.Visible = False
         '
         'Label18
         '
         Me.Label18.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(20, 51)
+        Me.Label18.Location = New System.Drawing.Point(20, 99)
         Me.Label18.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(108, 13)
         Me.Label18.TabIndex = 421
         Me.Label18.Text = "Grace Period (mins.)"
+        Me.Label18.Visible = False
         '
         'PayFrequencyComboBox
         '
         Me.PayFrequencyComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.PayFrequencyComboBox.FormattingEnabled = True
-        Me.PayFrequencyComboBox.Location = New System.Drawing.Point(20, 19)
+        Me.PayFrequencyComboBox.Location = New System.Drawing.Point(20, 67)
         Me.PayFrequencyComboBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.PayFrequencyComboBox.Name = "PayFrequencyComboBox"
         Me.PayFrequencyComboBox.Size = New System.Drawing.Size(195, 21)
         Me.PayFrequencyComboBox.TabIndex = 0
-        '
-        'Label27
-        '
-        Me.Label27.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(20, 3)
-        Me.Label27.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(80, 13)
-        Me.Label27.TabIndex = 419
-        Me.Label27.Text = "Pay Frequency"
+        Me.PayFrequencyComboBox.Visible = False
         '
         'AutomaticOvertimeCheckBox
         '
-        Me.AutomaticOvertimeCheckBox.Location = New System.Drawing.Point(20, 147)
+        Me.AutomaticOvertimeCheckBox.Location = New System.Drawing.Point(20, 3)
         Me.AutomaticOvertimeCheckBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
         Me.AutomaticOvertimeCheckBox.Name = "AutomaticOvertimeCheckBox"
         Me.AutomaticOvertimeCheckBox.Size = New System.Drawing.Size(191, 42)
         Me.AutomaticOvertimeCheckBox.TabIndex = 3
         Me.AutomaticOvertimeCheckBox.Text = "Automatic Employee Overtime filing"
         Me.AutomaticOvertimeCheckBox.UseVisualStyleBackColor = True
+        '
+        'Label27
+        '
+        Me.Label27.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label27.AutoSize = True
+        Me.Label27.Location = New System.Drawing.Point(20, 51)
+        Me.Label27.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(80, 13)
+        Me.Label27.TabIndex = 419
+        Me.Label27.Text = "Pay Frequency"
+        Me.Label27.Visible = False
         '
         'ContactDetailsGroupBox
         '
@@ -626,6 +650,16 @@ Partial Class DivisionUserControl
         Me.Label11.TabIndex = 507
         Me.Label11.Text = "*"
         '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.DivisionTypeComboBox)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel1.Location = New System.Drawing.Point(0, 16)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(230, 32)
+        Me.Panel1.TabIndex = 0
+        '
         'DivisionTypeComboBox
         '
         Me.DivisionTypeComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -653,7 +687,7 @@ Partial Class DivisionUserControl
         Me.Label10.Location = New System.Drawing.Point(20, 3)
         Me.Label10.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(73, 13)
+        Me.Label10.Size = New System.Drawing.Size(74, 13)
         Me.Label10.TabIndex = 0
         Me.Label10.Text = "Division Type"
         '
@@ -700,7 +734,7 @@ Partial Class DivisionUserControl
         Me.Label13.Location = New System.Drawing.Point(20, 147)
         Me.Label13.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(66, 13)
+        Me.Label13.Size = New System.Drawing.Size(67, 13)
         Me.Label13.TabIndex = 392
         Me.Label13.Text = "Trade Name"
         '
@@ -719,7 +753,7 @@ Partial Class DivisionUserControl
         Me.Label21.Location = New System.Drawing.Point(20, 195)
         Me.Label21.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(26, 13)
+        Me.Label21.Size = New System.Drawing.Size(27, 13)
         Me.Label21.TabIndex = 403
         Me.Label21.Text = "TIN "
         '
@@ -730,7 +764,7 @@ Partial Class DivisionUserControl
         Me.Label20.Location = New System.Drawing.Point(20, 243)
         Me.Label20.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(96, 13)
+        Me.Label20.Size = New System.Drawing.Size(95, 13)
         Me.Label20.TabIndex = 406
         Me.Label20.Text = "Business Address"
         '
@@ -787,13 +821,13 @@ Partial Class DivisionUserControl
         '
         'SemiMonthlyTabPage
         '
-        Me.SemiMonthlyTabPage.Controls.Add(Me.Label64)
         Me.SemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox)
-        Me.SemiMonthlyTabPage.Controls.Add(Me.Label65)
-        Me.SemiMonthlyTabPage.Controls.Add(Me.SemiMonthlySSSDeductionScheduleComboBox)
-        Me.SemiMonthlyTabPage.Controls.Add(Me.lblhdmfdeductsched)
         Me.SemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyPhilHealthDeductionScheduleComboBox)
         Me.SemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyHDMFDeductionScheduleComboBox)
+        Me.SemiMonthlyTabPage.Controls.Add(Me.Label64)
+        Me.SemiMonthlyTabPage.Controls.Add(Me.SemiMonthlySSSDeductionScheduleComboBox)
+        Me.SemiMonthlyTabPage.Controls.Add(Me.Label65)
+        Me.SemiMonthlyTabPage.Controls.Add(Me.lblhdmfdeductsched)
         Me.SemiMonthlyTabPage.Controls.Add(Me.Label69)
         Me.SemiMonthlyTabPage.Location = New System.Drawing.Point(4, 22)
         Me.SemiMonthlyTabPage.Name = "SemiMonthlyTabPage"
@@ -802,6 +836,36 @@ Partial Class DivisionUserControl
         Me.SemiMonthlyTabPage.TabIndex = 0
         Me.SemiMonthlyTabPage.Text = "SEMI-MONTHLY"
         Me.SemiMonthlyTabPage.UseVisualStyleBackColor = True
+        '
+        'SemiMonthlyWithholdingTaxDeductionScheduleComboBox
+        '
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.FormattingEnabled = True
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 148)
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.Name = "SemiMonthlyWithholdingTaxDeductionScheduleComboBox"
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
+        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.TabIndex = 402
+        '
+        'SemiMonthlyPhilHealthDeductionScheduleComboBox
+        '
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.FormattingEnabled = True
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 19)
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.Name = "SemiMonthlyPhilHealthDeductionScheduleComboBox"
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
+        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.TabIndex = 401
+        '
+        'SemiMonthlyHDMFDeductionScheduleComboBox
+        '
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox.FormattingEnabled = True
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 105)
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox.Name = "SemiMonthlyHDMFDeductionScheduleComboBox"
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
+        Me.SemiMonthlyHDMFDeductionScheduleComboBox.TabIndex = 402
         '
         'Label64
         '
@@ -812,17 +876,15 @@ Partial Class DivisionUserControl
         Me.Label64.TabIndex = 376
         Me.Label64.Text = "PhilHealth deduction schedule"
         '
-        'SemiMonthlyWithholdingTaxDeductionScheduleComboBox
+        'SemiMonthlySSSDeductionScheduleComboBox
         '
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.DropDownWidth = 121
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 148)
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.Name = "SemiMonthlyWithholdingTaxDeductionScheduleComboBox"
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlyWithholdingTaxDeductionScheduleComboBox.TabIndex = 3
+        Me.SemiMonthlySSSDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.SemiMonthlySSSDeductionScheduleComboBox.FormattingEnabled = True
+        Me.SemiMonthlySSSDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 62)
+        Me.SemiMonthlySSSDeductionScheduleComboBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
+        Me.SemiMonthlySSSDeductionScheduleComboBox.Name = "SemiMonthlySSSDeductionScheduleComboBox"
+        Me.SemiMonthlySSSDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
+        Me.SemiMonthlySSSDeductionScheduleComboBox.TabIndex = 402
         '
         'Label65
         '
@@ -833,57 +895,21 @@ Partial Class DivisionUserControl
         Me.Label65.TabIndex = 379
         Me.Label65.Text = "SSS deduction schedule"
         '
-        'SemiMonthlySSSDeductionScheduleComboBox
-        '
-        Me.SemiMonthlySSSDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlySSSDeductionScheduleComboBox.DropDownWidth = 121
-        Me.SemiMonthlySSSDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlySSSDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
-        Me.SemiMonthlySSSDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 62)
-        Me.SemiMonthlySSSDeductionScheduleComboBox.Name = "SemiMonthlySSSDeductionScheduleComboBox"
-        Me.SemiMonthlySSSDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
-        Me.SemiMonthlySSSDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlySSSDeductionScheduleComboBox.TabIndex = 1
-        '
         'lblhdmfdeductsched
         '
         Me.lblhdmfdeductsched.AutoSize = True
         Me.lblhdmfdeductsched.Location = New System.Drawing.Point(3, 89)
         Me.lblhdmfdeductsched.Name = "lblhdmfdeductsched"
-        Me.lblhdmfdeductsched.Size = New System.Drawing.Size(153, 13)
+        Me.lblhdmfdeductsched.Size = New System.Drawing.Size(152, 13)
         Me.lblhdmfdeductsched.TabIndex = 380
         Me.lblhdmfdeductsched.Text = "PAGIBIG deduction schedule"
-        '
-        'SemiMonthlyPhilHealthDeductionScheduleComboBox
-        '
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.DropDownWidth = 121
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 19)
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.Name = "SemiMonthlyPhilHealthDeductionScheduleComboBox"
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlyPhilHealthDeductionScheduleComboBox.TabIndex = 0
-        '
-        'SemiMonthlyHDMFDeductionScheduleComboBox
-        '
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.DropDownWidth = 121
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 105)
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.Name = "SemiMonthlyHDMFDeductionScheduleComboBox"
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlyHDMFDeductionScheduleComboBox.TabIndex = 2
         '
         'Label69
         '
         Me.Label69.AutoSize = True
         Me.Label69.Location = New System.Drawing.Point(3, 132)
         Me.Label69.Name = "Label69"
-        Me.Label69.Size = New System.Drawing.Size(196, 13)
+        Me.Label69.Size = New System.Drawing.Size(197, 13)
         Me.Label69.TabIndex = 383
         Me.Label69.Text = "Withholding Tax deduction schedule"
         '
@@ -964,7 +990,7 @@ Partial Class DivisionUserControl
         Me.Label31.AutoSize = True
         Me.Label31.Location = New System.Drawing.Point(3, 89)
         Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(153, 13)
+        Me.Label31.Size = New System.Drawing.Size(152, 13)
         Me.Label31.TabIndex = 406
         Me.Label31.Text = "PAGIBIG deduction schedule"
         '
@@ -973,7 +999,7 @@ Partial Class DivisionUserControl
         Me.Label32.AutoSize = True
         Me.Label32.Location = New System.Drawing.Point(3, 132)
         Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(196, 13)
+        Me.Label32.Size = New System.Drawing.Size(197, 13)
         Me.Label32.TabIndex = 407
         Me.Label32.Text = "Withholding Tax deduction schedule"
         '
@@ -1001,13 +1027,13 @@ Partial Class DivisionUserControl
         '
         'AgencySemiMonthlyTabPage
         '
-        Me.AgencySemiMonthlyTabPage.Controls.Add(Me.Label33)
         Me.AgencySemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox)
+        Me.AgencySemiMonthlyTabPage.Controls.Add(Me.Label33)
+        Me.AgencySemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox)
         Me.AgencySemiMonthlyTabPage.Controls.Add(Me.Label34)
         Me.AgencySemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyAgencySSSDeductionScheduleComboBox)
         Me.AgencySemiMonthlyTabPage.Controls.Add(Me.Label35)
         Me.AgencySemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox)
-        Me.AgencySemiMonthlyTabPage.Controls.Add(Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox)
         Me.AgencySemiMonthlyTabPage.Controls.Add(Me.Label36)
         Me.AgencySemiMonthlyTabPage.Location = New System.Drawing.Point(4, 22)
         Me.AgencySemiMonthlyTabPage.Name = "AgencySemiMonthlyTabPage"
@@ -1016,6 +1042,15 @@ Partial Class DivisionUserControl
         Me.AgencySemiMonthlyTabPage.TabIndex = 0
         Me.AgencySemiMonthlyTabPage.Text = "SEMI-MONTHLY"
         Me.AgencySemiMonthlyTabPage.UseVisualStyleBackColor = True
+        '
+        'SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox
+        '
+        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.FormattingEnabled = True
+        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 148)
+        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.Name = "SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox"
+        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
+        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.TabIndex = 404
         '
         'Label33
         '
@@ -1026,17 +1061,14 @@ Partial Class DivisionUserControl
         Me.Label33.TabIndex = 386
         Me.Label33.Text = "PhilHealth deduction schedule"
         '
-        'SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox
+        'SemiMonthlyAgencyHDMFDeductionScheduleComboBox
         '
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.DropDownWidth = 121
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 148)
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.Name = "SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox"
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox.TabIndex = 390
+        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.FormattingEnabled = True
+        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 105)
+        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.Name = "SemiMonthlyAgencyHDMFDeductionScheduleComboBox"
+        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
+        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.TabIndex = 403
         '
         'Label34
         '
@@ -1050,54 +1082,36 @@ Partial Class DivisionUserControl
         'SemiMonthlyAgencySSSDeductionScheduleComboBox
         '
         Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.DropDownWidth = 121
         Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
         Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 62)
         Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.Name = "SemiMonthlyAgencySSSDeductionScheduleComboBox"
-        Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
         Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.TabIndex = 393
+        Me.SemiMonthlyAgencySSSDeductionScheduleComboBox.TabIndex = 402
         '
         'Label35
         '
         Me.Label35.AutoSize = True
         Me.Label35.Location = New System.Drawing.Point(3, 89)
         Me.Label35.Name = "Label35"
-        Me.Label35.Size = New System.Drawing.Size(153, 13)
+        Me.Label35.Size = New System.Drawing.Size(152, 13)
         Me.Label35.TabIndex = 388
         Me.Label35.Text = "PAGIBIG deduction schedule"
         '
         'SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox
         '
         Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.DropDownWidth = 121
         Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
         Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 19)
         Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.Name = "SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox"
-        Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
         Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.TabIndex = 392
-        '
-        'SemiMonthlyAgencyHDMFDeductionScheduleComboBox
-        '
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.DropDownWidth = 121
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.FormattingEnabled = True
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.ListOfValueType = "Government deduction schedule"
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.Location = New System.Drawing.Point(9, 105)
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.Name = "SemiMonthlyAgencyHDMFDeductionScheduleComboBox"
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.OrderByColumn = CType(CSByte(0), SByte)
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.Size = New System.Drawing.Size(195, 21)
-        Me.SemiMonthlyAgencyHDMFDeductionScheduleComboBox.TabIndex = 391
+        Me.SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox.TabIndex = 401
         '
         'Label36
         '
         Me.Label36.AutoSize = True
         Me.Label36.Location = New System.Drawing.Point(3, 132)
         Me.Label36.Name = "Label36"
-        Me.Label36.Size = New System.Drawing.Size(196, 13)
+        Me.Label36.Size = New System.Drawing.Size(197, 13)
         Me.Label36.TabIndex = 389
         Me.Label36.Text = "Withholding Tax deduction schedule"
         '
@@ -1178,7 +1192,7 @@ Partial Class DivisionUserControl
         Me.Label40.AutoSize = True
         Me.Label40.Location = New System.Drawing.Point(3, 89)
         Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(153, 13)
+        Me.Label40.Size = New System.Drawing.Size(152, 13)
         Me.Label40.TabIndex = 422
         Me.Label40.Text = "PAGIBIG deduction schedule"
         '
@@ -1187,38 +1201,9 @@ Partial Class DivisionUserControl
         Me.Label41.AutoSize = True
         Me.Label41.Location = New System.Drawing.Point(3, 132)
         Me.Label41.Name = "Label41"
-        Me.Label41.Size = New System.Drawing.Size(196, 13)
+        Me.Label41.Size = New System.Drawing.Size(197, 13)
         Me.Label41.TabIndex = 423
         Me.Label41.Text = "Withholding Tax deduction schedule"
-        '
-        'Label2
-        '
-        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(20, 99)
-        Me.Label2.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(42, 13)
-        Me.Label2.TabIndex = 425
-        Me.Label2.Text = "Others"
-        '
-        'OthersLeaveTextBox
-        '
-        Me.OthersLeaveTextBox.Location = New System.Drawing.Point(20, 115)
-        Me.OthersLeaveTextBox.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
-        Me.OthersLeaveTextBox.Name = "OthersLeaveTextBox"
-        Me.OthersLeaveTextBox.Size = New System.Drawing.Size(195, 22)
-        Me.OthersLeaveTextBox.TabIndex = 2
-        '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.DivisionTypeComboBox)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(0, 16)
-        Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(230, 32)
-        Me.Panel1.TabIndex = 0
         '
         'DivisionUserControl
         '
@@ -1246,6 +1231,7 @@ Partial Class DivisionUserControl
         Me.DivisionFormTabLayout.ResumeLayout(False)
         Me.DivisionFormTabLayout.PerformLayout()
         Me.Panel6.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
         Me.DeductionScheduleTypeTabControl.ResumeLayout(False)
@@ -1261,7 +1247,6 @@ Partial Class DivisionUserControl
         Me.AgencySemiMonthlyTabPage.PerformLayout()
         Me.AgencyWeeklyTabPage.ResumeLayout(False)
         Me.AgencyWeeklyTabPage.PerformLayout()
-        Me.Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1320,12 +1305,8 @@ Partial Class DivisionUserControl
     Private WithEvents DefaultDeductionTabControl As TabControl
     Private WithEvents SemiMonthlyTabPage As TabPage
     Friend WithEvents Label64 As Label
-    Friend WithEvents SemiMonthlyWithholdingTaxDeductionScheduleComboBox As cboListOfValue
     Friend WithEvents Label65 As Label
-    Friend WithEvents SemiMonthlySSSDeductionScheduleComboBox As cboListOfValue
     Friend WithEvents lblhdmfdeductsched As Label
-    Friend WithEvents SemiMonthlyPhilHealthDeductionScheduleComboBox As cboListOfValue
-    Friend WithEvents SemiMonthlyHDMFDeductionScheduleComboBox As cboListOfValue
     Friend WithEvents Label69 As Label
     Private WithEvents WeeklyTabPage As TabPage
     Friend WithEvents WeeklyWithholdingTaxDeductionScheduleComboBox As ComboBox
@@ -1340,12 +1321,8 @@ Partial Class DivisionUserControl
     Private WithEvents WithAgencyDeductionScheduleTabControl As TabControl
     Private WithEvents AgencySemiMonthlyTabPage As TabPage
     Friend WithEvents Label33 As Label
-    Friend WithEvents SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox As cboListOfValue
     Friend WithEvents Label34 As Label
-    Friend WithEvents SemiMonthlyAgencySSSDeductionScheduleComboBox As cboListOfValue
     Friend WithEvents Label35 As Label
-    Friend WithEvents SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox As cboListOfValue
-    Friend WithEvents SemiMonthlyAgencyHDMFDeductionScheduleComboBox As cboListOfValue
     Friend WithEvents Label36 As Label
     Private WithEvents AgencyWeeklyTabPage As TabPage
     Friend WithEvents WeeklyAgencyWithholdingTaxDeductionScheduleComboBox As ComboBox
@@ -1363,4 +1340,12 @@ Partial Class DivisionUserControl
     Friend WithEvents OthersLeaveTextBox As TextBox
     Friend WithEvents Label2 As Label
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents SemiMonthlyPhilHealthDeductionScheduleComboBox As ComboBox
+    Friend WithEvents SemiMonthlyWithholdingTaxDeductionScheduleComboBox As ComboBox
+    Friend WithEvents SemiMonthlyHDMFDeductionScheduleComboBox As ComboBox
+    Friend WithEvents SemiMonthlySSSDeductionScheduleComboBox As ComboBox
+    Friend WithEvents SemiMonthlyAgencyWithholdingTaxDeductionScheduleComboBox As ComboBox
+    Friend WithEvents SemiMonthlyAgencyHDMFDeductionScheduleComboBox As ComboBox
+    Friend WithEvents SemiMonthlyAgencySSSDeductionScheduleComboBox As ComboBox
+    Friend WithEvents SemiMonthlyAgencyPhilHealthDeductionScheduleComboBox As ComboBox
 End Class

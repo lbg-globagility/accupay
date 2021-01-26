@@ -1,0 +1,17 @@
+@use "styles/colors";
+
+:host {
+  display: block;
+}
+
+.field {
+  &-label,
+  &-value {
+    display: block;
+  }
+
+  &-label {
+    font-size: 0.75rem;
+    color: colors.$text-300;
+  }
+}

@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Tools
+Imports AccuPay.Utilities
 
 <TestFixture>
 Public Class CalendarTest

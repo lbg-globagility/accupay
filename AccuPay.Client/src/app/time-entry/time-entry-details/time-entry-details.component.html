@@ -1,0 +1,152 @@
+<h1 class="mat-headline">Timesheet</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-time-entry-summary-details
+    [payPeriodId]="payPeriod?.id"
+    [canGenerate]="true"
+    (afterGenerate)="afterGenerate()"
+  ></app-time-entry-summary-details>
+
+  <div class="mat-elevation-z1 mt-4">
+    <table
+      mat-table
+      multiTemplateDataRows
+      matSort
+      [dataSource]="dataSource"
+      (matSortChange)="sortData($event)"
+      class="w-full table-fixed m-no-padded-cells"
+    >
+      <ng-container matColumnDef="employee">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef class="w-1/6">
+          Employee
+        </th>
+        <td mat-cell *matCellDef="let employee">
+          <app-employee-avatar
+            [employeeId]="employee.id"
+            [employeeNo]="employee.employeeNo"
+            [fullName]="employee.fullName"
+          ></app-employee-avatar>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="regularHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          Regular Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{ employee.totalTimeEntry.regularHours | amount: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="leaveHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          Leave Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{ employee.totalTimeEntry.leaveHours | amount: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="overtimeHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          OT Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{ employee.totalTimeEntry.overtimeHours | amount: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nightDifferentialHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          ND Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{ employee.totalTimeEntry.nightDifferentialHours | amount: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nightDifferentialOvertimeHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          ND OT Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{
+            employee.totalTimeEntry.nightDifferentialOvertimeHours | amount: "-"
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="lateHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          Late Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{ -employee.totalTimeEntry.lateHours | amount: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="undertimeHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          UT Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{ -employee.totalTimeEntry.undertimeHours | amount: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="absentHours">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          Absent Hrs
+        </th>
+        <td mat-cell *matCellDef="let employee" class="m-right">
+          {{ -employee.totalTimeEntry.absentHours | amount: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expandedDetail">
+        <td
+          mat-cell
+          *matCellDef="let employee"
+          [attr.colspan]="displayedColumns.length"
+          class="m-no-padding"
+        >
+          <div app-expandable-row [expanded]="expandedEmployee === employee">
+            <app-time-entry-table
+              *ngIf="expandedEmployee === employee"
+              [timeEntries]="timeEntries"
+            ></app-time-entry-table>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns; let employee"
+        appExpandableRowTrigger
+        (click)="toggleExpansion(row)"
+        [ngClass]="{ 'row-outline': expandedEmployee === employee }"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: ['expandedDetail']; let employee"
+        appExpandableRowContainer
+        [ngClass]="{ 'row-outline': expandedEmployee === employee }"
+      ></tr>
+    </table>
+
+    <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+      No employees were found.
+    </div>
+
+    <mat-paginator
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 5, 25, 100]"
+      [length]="totalCount"
+      [showFirstLastButtons]="true"
+      (page)="onPageChanged($event)"
+    >
+    </mat-paginator>
+  </div>
+</ng-container>

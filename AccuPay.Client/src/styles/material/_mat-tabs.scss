@@ -1,0 +1,15 @@
+@use "styles/colors";
+
+/**
+ * Increase focus on the active tab link
+ */
+.mat-tab-nav-bar {
+  .mat-tab-link.mat-tab-label-active {
+    opacity: 1;
+    color: colors.$accent;
+  }
+}
+
+.mat-tab-link {
+  letter-spacing: 0.05em;
+}

@@ -1,65 +1,113 @@
-﻿Option Strict On
-
-Imports AccuPay.Data.Repositories
-Imports AccuPay
-Imports AccuPay.Utilities
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
-
 <TestFixture>
 Public Class EntityTest
+    Inherits ServiceProvider
+
+    ''' <summary>
+    ''' Mostly used as a sandbox in testing queries of entities.
+    ''' </summary>
 
     <Test>
-    Public Sub EnumsShouldParseAsYes()
-        Dim answer = True
+    Public Sub Test1()
+        'Dim repo As New UserActivityRepository
+        ''Dim userActivities = repo.List(11, "Employee")
 
-        Assert.AreEqual(True, answer)
+        'Assert.IsTrue(UserActivityRepository.CheckIfFirstLetterIsVowel("employee"))
+
+        ''Dim repo As New UserActivityRepository()
+
+        ''repo.RecordAdd(1, "a")
+        ''repo.RecordDelete(1, "a")
+        ''repo.RecordAdd(1, "")
+        ''repo.RecordDelete(1, "")
+        ''repo.RecordAdd(1, "Employee")
+        ''repo.RecordDelete(1, "Employee")
+        ''repo.RecordAdd(1, "Paystub")
+        ''repo.RecordDelete(1, "Paystub")
+
+        ''Assert.AreEqual(4, repo.List.Count)
+
+        ''Dim answer = True
+
+        ''Assert.AreEqual(True, answer)
     End Sub
 
     <Test>
     Public Sub TestEntity()
-        Dim repo As New PaystubRepository()
 
-        Dim count = repo.List.Count
+        'Dim loanRepository = MainServiceProvider.GetRequiredService(Of LoanRepository)
 
-        Assert.IsTrue(repo.List.Count > 0)
+        'Dim loans = Await loanRepository.GetLoanTransactionsWithPayPeriodAsync(648)
+
+        'Assert.IsTrue(True)
+
+        'Dim adjustment = New AdjustmentService().
+        '                GetByMultipleEmployeeAndDatePeriodAsync(2, {1}, New TimePeriod(New Date(2020, 2, 1), New Date(2020, 2, 1))).
+        '                ToList()
+
+        'Dim date1 = New Date(2020, 5, 31)
+        'Dim date2 = New Date(2020, 5, 30)
+
+        'Dim date3 = date1.AddMonths(1)
+        'Dim date4 = date2.AddMonths(1)
+
+        'Dim repo1 As New UserActivityRepository()
+
+        'Dim count1 = repo1.GetAll(2, "EMPLOYEE")
+        'Dim count1u = count1.Where(Function(c) c.User Is Nothing).ToList
+
+        ''for checking if we can access the AccuPay.Core repository without error
+        'Dim repo4 As New EmployeeRepository()
+
+        'Dim count4 = repo4.GetAllAsync(2)
+
+        'Dim branchRepo As New BranchRepository()
+
+        'Dim count2 = branchRepo.GetAll().Count
+
+        'Assert.IsTrue(count2 > 0)
     End Sub
 
     <Test>
-    Public Async Function TestEntity2() As Task
+    Public Sub CheckVBNullableId()
 
-        'Using context = New PayrollContext()
+        'Change the PayrollContext to public to use this
+        'Using context = New Data.PayrollContext()
 
-        '    Dim paystubCount = context.Paystubs.ToList.Count
+        '    Dim organization = context.Organizations.
+        '                FirstOrDefault(Function(o) o.LastUpdBy IsNot Nothing)
 
-        '    Assert.IsTrue(context.Paystubs.ToList.Count > 0)
+        '    CompareQueries(context, organization)
+
+        '    'Dim organizationNull = context.Organizations.
+        '    '            FirstOrDefault(Function(o) o.LastUpdBy Is Nothing)
+
+        '    'CompareQueries(context, organizationNull)
+
+        '    Assert.IsTrue(True)
 
         'End Using
+    End Sub
 
-        Dim officialbusType As New ListOfValue
+    'Private Shared Sub CompareQueries(context As Data.PayrollContext, organization As Organization)
+    '    Dim organization2 = context.Organizations.
+    '                                    FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy)
 
-        Using context = New PayrollContext
+    '    Dim organization3 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy)
 
-            Dim listOfVal As New ListOfValue
-            listOfVal.DisplayValue = "FIELDWORK DUTY"
-            listOfVal.Type = "Official Business Type"
-            listOfVal.Active = "Yes"
+    '    'Has problem when LastUpdBy is null (not because of DB)
+    '    Dim organization4 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy.Value)
 
-            listOfVal.Created = Date.Now
-            listOfVal.CreatedBy = 1
-            listOfVal.LastUpd = Date.Now
-            listOfVal.LastUpdBy = 1
-            context.ListOfValues.Add(listOfVal)
+    '    'Has problem when LastUpdBy is null (not because of DB)
+    '    Dim organization5 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy.Value)
 
-            Await context.SaveChangesAsync()
+    '    Dim organization6 = context.Organizations.
+    '                    FirstOrDefault(Function(o) CBool(o.LastUpdBy = organization.LastUpdBy))
 
-            officialbusType = Await context.ListOfValues.
-                            FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, listOfVal.RowID))
-
-            Assert.IsTrue(officialbusType IsNot Nothing)
-
-        End Using
-
-    End Function
+    '    Dim organization7 = context.Organizations.
+    '                    FirstOrDefault(Function(o) Nullable.Equals(o.LastUpdBy, organization.LastUpdBy))
+    'End Sub
 
 End Class

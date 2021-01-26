@@ -6,8 +6,8 @@
 
 CREATE TABLE IF NOT EXISTS `paypagibig` (
   `RowID` int(10) NOT NULL AUTO_INCREMENT,
-  `Created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `LastUpd` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `Created` timestamp NOT NULL DEFAULT current_timestamp(),
+  `LastUpd` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `CreatedBy` int(10) NOT NULL,
   `LastUpdBy` int(10) DEFAULT NULL,
   `SalaryRangeFrom` decimal(10,2) DEFAULT NULL,
@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS `paypagibig` (
   `EmployeeShare` decimal(10,2) DEFAULT NULL,
   `EmployerShare` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`RowID`),
-  KEY `FK_PayPhilHealth_user` (`CreatedBy`),
-  KEY `FK_PayPhilHealth_user_2` (`LastUpdBy`),
+  KEY `FK_user_user` (`CreatedBy`),
+  KEY `FK_user_user_2` (`LastUpdBy`),
   CONSTRAINT `paypagibig_ibfk_1` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `paypagibig_ibfk_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT COMMENT='Philhealth table';

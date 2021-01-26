@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports CrystalDecisions.CrystalReports.Engine
 
@@ -10,7 +10,7 @@ Public Class LateUTAbsentSummaryReportProvider
 
     Public Sub Run() Implements IReportProvider.Run
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
+        Dim n_PayrollSummaDateSelection As New MultiplePayPeriodSelectionDialog
 
         If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
 
@@ -34,7 +34,7 @@ Public Class LateUTAbsentSummaryReportProvider
                     Throw sql_print_late_ut_absent_summary.ErrorException
                 Else
 
-                    Dim rptdoc As New AttendanceSheet2
+                    Dim rptdoc As New Late_Undertime_and_Absent_Summary
 
                     rptdoc.SetDataSource(dt)
 

@@ -11,22 +11,6 @@
 
     End Sub
 
-    'Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
-
-    '    If keyData = (Keys.RControlKey AndAlso keyData = Keys.W) Then
-
-    '        Me.Close()
-
-    '        Return True
-
-    '    Else
-
-    '        Return MyBase.ProcessCmdKey(msg, keyData)
-
-    '    End If
-
-    'End Function
-
     Private Sub crysrepvwr_KeyDown(sender As Object, e As KeyEventArgs) Handles crysrepvwr.KeyDown, Me.KeyDown
 
         If e.Control AndAlso e.KeyCode = Keys.W Then

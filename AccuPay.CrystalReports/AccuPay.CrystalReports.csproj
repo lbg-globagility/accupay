@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1AF57D61-BC13-40E1-A0BC-BBDFDD223B7E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccuPay.CrystalReports</RootNamespace>
+    <AssemblyName>AccuPay.CrystalReports</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp.Charting, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseReportBuilder.cs" />
+    <Compile Include="IBaseReportBuilder.cs" />
+    <Compile Include="IPdfGenerator.cs" />
+    <Compile Include="LoanSummaryByEmployeeReport\ILoanSummaryByEmployeeReportBuilder.cs" />
+    <Compile Include="LoanSummaryByEmployeeReport\LoanReports.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReports.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LoanSummaryByEmployeeReport\LoanSummaryByEmployeeReportBuilder.cs" />
+    <Compile Include="LoanSummaryByTypeReport\ILoanSummaryByTypeReportBuilder.cs" />
+    <Compile Include="LoanSummaryByTypeReport\LoanReportByType.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReportByType.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LoanSummaryByTypeReport\LoanReportByTypePerPage.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReportByTypePerPage.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LoanSummaryByTypeReport\LoanSummaryByTypeReportBuilder.cs" />
+    <Compile Include="PagIBIGMonthlyReport\IPagIBIGMonthlyReportBuilder.cs" />
+    <Compile Include="PagIBIGMonthlyReport\Pagibig Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Pagibig Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PagIBIGMonthlyReport\PagIBIGMonthlyReportBuilder.cs" />
+    <Compile Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Payslip\DefaultPayslipFormat.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaultPayslipFormat.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Payslip\IPayslipBuilder.cs" />
+    <Compile Include="Payslip\OfficialPaySlipFormat.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>OfficialPaySlipFormat.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Payslip\PayslipBuilder.cs" />
+    <Compile Include="Payslip\TwoEmpIn1PaySlip.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TwoEmpIn1PaySlip.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PhilHealthMonthlyReport\IPhilHealthMonthlyReportBuilder.cs" />
+    <Compile Include="PhilHealthMonthlyReport\Phil Health Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Phil Health Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PhilHealthMonthlyReport\PhilHealthMonthlyReportBuilder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SSSMonthlyReport\ISSSMonthyReportBuilder.cs" />
+    <Compile Include="SSSMonthlyReport\SSS Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SSS Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SSSMonthlyReport\SSSMonthyReportBuilder.cs" />
+    <Compile Include="TaxMonthlyReport\ITaxMonthlyReportBuilder.cs" />
+    <Compile Include="TaxMonthlyReport\Tax Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tax Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TaxMonthlyReport\TaxMonthlyReportBuilder.cs" />
+    <Compile Include="ThirteenthMonthSummaryReport\IThirteenthMonthSummaryReportBuilder.cs" />
+    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummaryReportBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AccuPay.Core\AccuPay.Core.csproj">
+      <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
+      <Name>AccuPay.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LoanSummaryByEmployeeReport\LoanReports.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReports.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoanSummaryByTypeReport\LoanReportByType.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReportByType.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoanSummaryByTypeReport\LoanReportByTypePerPage.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReportByTypePerPage.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PagIBIGMonthlyReport\Pagibig Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Pagibig Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Payslip\DefaultPayslipFormat.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaultPayslipFormat.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Payslip\OfficialPaySlipFormat.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>OfficialPaySlipFormat.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Payslip\TwoEmpIn1PaySlip.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>TwoEmpIn1PaySlip.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PhilHealthMonthlyReport\Phil Health Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Phil Health Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SSSMonthlyReport\SSS Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SSS Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TaxMonthlyReport\Tax Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Tax Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ThirteenthMonthSummary.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,143 @@
+<div *ngIf="loadingState.isLoading" class="flex justify-center">
+  <mat-spinner></mat-spinner>
+</div>
+
+<mat-card *ngIf="loadingState.isSuccess">
+  <h3 class="font-medium mb-4">
+    Current Time Entry Summary
+  </h3>
+  <mat-card-content>
+    <div class="row">
+      <!-- Employees with shift -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Cutoff</p>
+          <p class="field-value">
+            {{ payPeriod?.cutoffStart | date }} to
+            {{ payPeriod?.cutoffEnd | date }}
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Status</p>
+          <p class="field-value">
+            <app-status
+              type="payperiod"
+              [value]="payPeriod.status"
+            ></app-status>
+          </p>
+        </div>
+      </div>
+
+      <!-- Employees with shift -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with generated time entries</p>
+          <p class="field-value">
+            {{ payPeriod?.timeEntryCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with shift -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with shift</p>
+          <p class="field-value">
+            {{ payPeriod?.shiftCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with time logs -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with time logs</p>
+          <p class="field-value">
+            {{ payPeriod?.timeLogCount }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Employees with leaves -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with filed leaves</p>
+          <p class="field-value">
+            {{ payPeriod?.leaveCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with official business -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with filed official business</p>
+          <p class="field-value">
+            {{ payPeriod?.officialBusinessCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with overtime -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with filed overtime</p>
+          <p class="field-value">
+            {{ payPeriod?.overtimeCount }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Employees with absences -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with absences</p>
+          <p class="field-value">
+            {{ payPeriod?.absentCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with lates -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with lates</p>
+          <p class="field-value">
+            {{ payPeriod?.lateCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with undertimes -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with undertimes</p>
+          <p class="field-value">
+            {{ payPeriod?.undertimeCount }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button
+      mat-raised-button
+      color="accent"
+      class="new-btn"
+      *ngIf="canGenerate && payPeriod?.status == 'Open'"
+      style="margin-left: 10px;"
+      (click)="onGenerate()"
+    >
+      GENERATE
+    </button>
+    <button
+      mat-button
+      *ngIf="!canGenerate"
+      color="primary"
+      routerLink="/time-entry/{{ payPeriod?.id }}"
+    >
+      VIEW SUMMARY
+    </button>
+  </mat-card-actions>
+</mat-card>

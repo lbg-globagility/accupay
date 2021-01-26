@@ -1,6 +1,9 @@
-﻿Option Strict On
-Imports AccuPay
-Imports AccuPay.Entity
+Option Strict On
+
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Services
+Imports AccuPay.Core.ValueObjects
 
 <TestFixture>
 Public Class LateHoursTest
@@ -19,9 +22,15 @@ Public Class LateHoursTest
     <TestCase("15:00", "19:00", 6)>
     <TestCase("17:00", "19:00", 8)>
     Public Sub Should_Compute_Correct_Late_Hours(timeIn As String, timeOut As String, answer As Decimal)
-        Dim shift = New Shift(
-            TimeSpan.Parse("8:00"), TimeSpan.Parse("19:00"),
-            TimeSpan.Parse("12:00"), TimeSpan.Parse("13:00"))
+
+        Dim shift = New Shift() With {
+            .DateSched = Date.Parse("2018-01-01"),
+            .StartTime = TimeSpan.Parse("8:00"),
+            .EndTime = TimeSpan.Parse("19:00"),
+            .BreakStartTime = TimeSpan.Parse("12:00"),
+            .BreakLength = 1
+        }
+
         Dim currentShift = New CurrentShift(shift, Date.Parse("2018-01-01"))
 
         Dim workStart = Date.Parse($"2018-01-01 {timeIn}")

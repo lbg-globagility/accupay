@@ -1,0 +1,47 @@
+<form (ngSubmit)="generateReport()">
+  <mat-card>
+    <mat-card-content>
+      <h1 class="mat-headline">Payroll Summary</h1>
+    </mat-card-content>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <div class="row">
+          <mat-form-field appearance="outline" color="accent" class="col-lg-4">
+            <mat-label>Salary Distribution *</mat-label>
+            <mat-select matInput formControlName="salaryDistribution">
+              <mat-option></mat-option>
+              <mat-option [value]="'All'">All</mat-option>
+              <mat-option [value]="'Cash'">Cash</mat-option>
+              <mat-option [value]="'Direct Deposit'">Direct Deposit</mat-option>
+            </mat-select>
+            <mat-error>Please select a salary distribution filter</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-checkbox class="col-lg-4" formControlName="hideEmptyColumns"
+            >Hide empty columns</mat-checkbox
+          >
+        </div>
+
+        <div class="row">
+          <mat-checkbox class="col-lg-4" formControlName="keepInOneSheet"
+            >Keep all divisions in one sheet</mat-checkbox
+          >
+        </div>
+      </form>
+    </mat-card-content>
+
+    <mat-card-content style="text-align: right;">
+      <button
+        [disabled]="isDownloading"
+        mat-raised-button
+        type="submit"
+        color="accent"
+      >
+        {{ isDownloading ? "DOWNLOADING..." : "DOWNLOAD" }}
+        <app-button-spinner [active]="isDownloading"></app-button-spinner>
+      </button>
+    </mat-card-content>
+  </mat-card>
+</form>

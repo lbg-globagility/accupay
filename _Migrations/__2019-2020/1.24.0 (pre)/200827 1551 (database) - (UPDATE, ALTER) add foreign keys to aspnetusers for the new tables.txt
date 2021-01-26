@@ -1,0 +1,70 @@
+
+SET @DefaultUserId = (SELECT Id FROM aspnetusers LIMIT 1);
+	
+UPDATE employmentpolicyitem
+SET CreatedById = @DefaultUserId
+WHERE CreatedById IS NOT NULL AND CreatedById NOT IN (SELECT Id FROM aspnetusers);
+UPDATE employmentpolicyitem
+SET UpdatedById = @DefaultUserId
+WHERE UpdatedById IS NOT NULL AND UpdatedById NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `employmentpolicyitem`
+	ADD CONSTRAINT `FK_employmentpolicyitem_aspnetusers_CreatedById` FOREIGN KEY (`CreatedById`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `employmentpolicyitem`
+	ADD CONSTRAINT `FK_employmentpolicyitem_aspnetusers_UpdatedById` FOREIGN KEY (`UpdatedById`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE route
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE route
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `route`
+	ADD CONSTRAINT `FK_route_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `route`
+	ADD CONSTRAINT `FK_route_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE routepayrate
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE routepayrate
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `routepayrate`
+	ADD CONSTRAINT `FK_routepayrate_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `routepayrate`
+	ADD CONSTRAINT `FK_routepayrate_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE tripticket
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE tripticket
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `tripticket`
+	ADD CONSTRAINT `FK_tripticket_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `tripticket`
+	ADD CONSTRAINT `FK_tripticket_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+
+
+UPDATE tripticketemployee
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE tripticketemployee
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `tripticketemployee`
+	ADD CONSTRAINT `FK_tripticketemployee_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `tripticketemployee`
+	ADD CONSTRAINT `FK_tripticketemployee_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);
+
+UPDATE vehicle
+SET CreatedBy = @DefaultUserId
+WHERE CreatedBy IS NOT NULL AND CreatedBy NOT IN (SELECT Id FROM aspnetusers);
+UPDATE vehicle
+SET LastUpdBy = @DefaultUserId
+WHERE LastUpdBy IS NOT NULL AND LastUpdBy NOT IN (SELECT Id FROM aspnetusers);
+ALTER TABLE `vehicle`
+	ADD CONSTRAINT `FK_vehicle_aspnetusers_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `aspnetusers` (`Id`);
+ALTER TABLE `vehicle`
+	ADD CONSTRAINT `FK_vehicle_aspnetusers_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `aspnetusers` (`Id`);

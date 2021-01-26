@@ -1,79 +1,143 @@
-﻿Imports AccuPay.Utils
+Option Strict On
+
+Imports System.Threading.Tasks
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Desktop.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwner
+    Private ReadOnly _policyHelper As IPolicyHelper
 
-    Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
+    Private ReadOnly _roleRepository As IRoleRepository
 
-        reloadViewPrivilege()
+    Private ReadOnly _userRepository As IAspNetUserRepository
 
-        Dim view_ID = ValNoComma(VIEW_privilege(ViewName, orgztnID))
+    Sub New()
 
-        Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
+        InitializeComponent()
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-            For Each drow In formuserprivilege
-                'If drow("ReadOnly").ToString = "Y" Then
-                If drow("AllowedToAccess").ToString = "N" Then
+        _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
 
-                    'ChangeForm(Formname)
-                    'previousForm = Formname
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
-                    'Exit For
-                    Exit Sub
-                Else
-                    If drow("Creates").ToString = "Y" _
-                        Or drow("Updates").ToString = "Y" _
-                        Or drow("Deleting").ToString = "Y" _
-                        Or drow("ReadOnly").ToString = "Y" Then
-                        'And drow("Updates").ToString = "Y" Then
+    End Sub
 
-                        'ChangeForm(Formname)
-                        'previousForm = Formname
-                        Exit For
-                    Else
-                        Exit Sub
-                    End If
+    Private Async Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-                End If
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            Next
-        Else
-            Exit Sub
+        If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            Return
         End If
 
+        ShowAgency()
+
+        If _policyHelper.UseUserLevel Then
+            CheckUserLevelPermissions(user)
+        Else
+
+            Await CheckRolePermissions()
+        End If
+
+        GovernmentToolStripMenuItem.Visible = False
+
+    End Sub
+
+    Private Sub ShowAgency()
+
+        AgencyToolStripMenuItem.Visible = _policyHelper.UseAgency
+    End Sub
+
+    Private Sub CheckUserLevelPermissions(user As AspNetUser)
+        If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
+
+            UserToolStripMenuItem.Visible = False
+            OrganizationToolStripMenuItem.Visible = False
+
+        End If
+
+        UserRoleToolStripMenuItem.Visible = False
+    End Sub
+
+    Private Async Function CheckRolePermissions() As Task
+        USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+
+        Dim userPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.USER).FirstOrDefault()
+        Dim organizationPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ORGANIZATION).FirstOrDefault()
+        Dim branchPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.BRANCH).FirstOrDefault()
+        Dim rolePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ROLE).FirstOrDefault()
+        Dim calendarPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.CALENDAR).FirstOrDefault()
+        Dim agencyPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.AGENCY).FirstOrDefault()
+
+        UserToolStripMenuItem.Visible = If(userPermission?.Read, False)
+        OrganizationToolStripMenuItem.Visible = If(organizationPermission?.Read, False)
+        UserRoleToolStripMenuItem.Visible = If(rolePermission?.Read, False)
+
+        'Branch, Calendar and Agency only overrides the visibility if Read is False
+        'since they are already checked by other policies above
+        If branchPermission Is Nothing OrElse branchPermission.Read = False Then
+            BranchToolStripMenuItem.Visible = False
+        End If
+
+        If calendarPermission Is Nothing OrElse calendarPermission.Read = False Then
+            CalendarsToolStripMenuItem.Visible = False
+        End If
+
+        If agencyPermission Is Nothing OrElse agencyPermission.Read = False Then
+            AgencyToolStripMenuItem.Visible = False
+        End If
+    End Function
+
+    Async Function ChangeForm(passedForm As Form, Optional permissionName As String = Nothing) As Task
+
+        If permissionName IsNot Nothing Then
+
+            If Await PermissionHelper.DoesAllowReadAsync(permissionName, policyHelper:=_policyHelper) = False Then
+                MessageBoxHelper.DefaultUnauthorizedFormMessage()
+                Return
+            End If
+
+        End If
+
+        ShowForm(passedForm)
+
+    End Function
+
+    Private Sub ShowForm(passedForm As Form)
         Try
             Application.DoEvents()
-            Dim FName As String = Formname.Name
-            Formname.KeyPreview = True
-            Formname.TopLevel = False
-            Formname.Enabled = True
+            Dim FName As String = passedForm.Name
+            passedForm.KeyPreview = True
+            passedForm.TopLevel = False
+            passedForm.Enabled = True
             If listGeneralForm.Contains(FName) Then
-                Formname.Show()
-                Formname.BringToFront()
-                Formname.Focus()
+                passedForm.Show()
+                passedForm.BringToFront()
+                passedForm.Focus()
             Else
-                PanelGeneral.Controls.Add(Formname)
-                listGeneralForm.Add(Formname.Name)
+                PanelGeneral.Controls.Add(passedForm)
+                listGeneralForm.Add(passedForm.Name)
 
-                Formname.Show()
-                Formname.BringToFront()
-                Formname.Focus()
-                'Formname.Location = New Point((PanelGeneral.Width / 2) - (Formname.Width / 2), (PanelGeneral.Height / 2) - (Formname.Height / 2))
-                'Formname.Anchor = AnchorStyles.Top And AnchorStyles.Bottom And AnchorStyles.Right And AnchorStyles.Left
-                'Formname.WindowState = FormWindowState.Maximized
-                Formname.Dock = DockStyle.Fill
+                passedForm.Show()
+                passedForm.BringToFront()
+                passedForm.Focus()
+                passedForm.Dock = DockStyle.Fill
             End If
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         Finally
-            Dim listOfForms = PanelGeneral.Controls.Cast(Of Form).Where(Function(i) i.Name <> Formname.Name)
-            For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
-                'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
+            Dim listOfForms = PanelGeneral.Controls.Cast(Of Form).Where(Function(i) i.Name <> passedForm.Name)
+            For Each pb As Form In listOfForms
                 pb.Enabled = False
             Next
         End Try
@@ -91,357 +155,64 @@ Public Class GeneralForm
 
     End Sub
 
-    Private Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub UserToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserToolStripMenuItem.Click
 
-        Using context As New PayrollContext
-
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
-
-            If user Is Nothing Then
-
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-
-                Return
-            Else
-
-                UserPrivilegeToolStripMenuItem.Visible = False
-
-            End If
-
-            If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
-
-                UserToolStripMenuItem.Visible = False
-                OrganizationToolStripMenuItem.Visible = False
-                ListOfValueToolStripMenuItem.Visible = False
-
-            End If
-
-        End Using
+        Await ChangeForm(UserForm, PermissionConstant.USER)
+        previousForm = UserForm
 
     End Sub
 
-    Private Sub UserToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserToolStripMenuItem.Click
+    Private Async Sub OrganizationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OrganizationToolStripMenuItem.Click
 
-        ChangeForm(UsersForm, "Users")
-        previousForm = UsersForm
-
-        'If FormLeft.Contains("Users") Then
-        '    FormLeft.Remove("Users")
-
-        '    FormLeft.Add("Users")
-        'Else
-        '    FormLeft.Add("Users")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-    End Sub
-
-    Private Sub ListOfValueToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ListOfValueToolStripMenuItem.Click
-
-        ChangeForm(ListOfValueForm, "List of value")
-        previousForm = ListOfValueForm
-
-        'If FormLeft.Contains("List of value") Then
-        '    FormLeft.Remove("List of value")
-
-        '    FormLeft.Add("List of value")
-        'Else
-        '    FormLeft.Add("List of value")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-    End Sub
-
-    Private Sub OrganizationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OrganizationToolStripMenuItem.Click
-
-        ChangeForm(OrganizationForm, "Organization")
+        Await ChangeForm(OrganizationForm, PermissionConstant.ORGANIZATION)
         previousForm = OrganizationForm
 
-        'If FormLeft.Contains("Organization") Then
-        '    FormLeft.Remove("Organization")
+    End Sub
 
-        '    FormLeft.Add("Organization")
-        'Else
-        '    FormLeft.Add("Organization")
-        'End If
+    Private Async Sub UserRoleToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserRoleToolStripMenuItem.Click
 
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
+        Await ChangeForm(UserRoleForm, PermissionConstant.ROLE)
+        previousForm = UserRoleForm
 
     End Sub
 
-    Private Sub SupplierToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserPrivilegeToolStripMenuItem.Click
+    Private Async Sub SSSTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SSSTableToolStripMenuItem.Click
 
-        'ChangeForm(UserPrivilegeForm)
-        ChangeForm(userprivil, "User Privilege")
-
-        previousForm = userprivil
-
-        'If FormLeft.Contains("User Privilege") Then
-        '    FormLeft.Remove("User Privilege")
-
-        '    FormLeft.Add("User Privilege")
-        'Else
-        '    FormLeft.Add("User Privilege")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-    End Sub
-
-    Private Sub PhilHealthTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PhilHealthTableToolStripMenuItem.Click
-
-        ChangeForm(PhiHealth, "PhilHealth Contribution Table")
-        previousForm = PhiHealth
-
-        'If FormLeft.Contains("PhilHealth Contribution Table") Then
-        '    FormLeft.Remove("PhilHealth Contribution Table")
-
-        '    FormLeft.Add("PhilHealth Contribution Table")
-        'Else
-        '    FormLeft.Add("PhilHealth Contribution Table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-    End Sub
-
-    Private Sub SSSTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SSSTableToolStripMenuItem.Click
-
-        ChangeForm(SSSCntrib, "SSS Contribution Table")
+        Await ChangeForm(SSSCntrib)
         previousForm = SSSCntrib
 
-        'If FormLeft.Contains("SSS Contribution Table") Then
-        '    FormLeft.Remove("SSS Contribution Table")
-
-        '    FormLeft.Add("SSS Contribution Table")
-        'Else
-        '    FormLeft.Add("SSS Contribution Table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
     End Sub
 
-    Private Sub WithholdingTaxToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WithholdingTaxToolStripMenuItem.Click
-
-        ChangeForm(Revised_Withholding_Tax_Tables, "Withholding Tax Table")
-        previousForm = Revised_Withholding_Tax_Tables
-
-        'If FormLeft.Contains("Withholding tax table") Then
-        '    FormLeft.Remove("Withholding tax table")
-
-        '    FormLeft.Add("Withholding tax table")
-        'Else
-        '    FormLeft.Add("Withholding tax table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
+    Private Async Sub CalendarsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CalendarsToolStripMenuItem.Click
+        Await ChangeForm(CalendarsForm, PermissionConstant.CALENDAR)
+        previousForm = CalendarsForm
     End Sub
 
-    Private Sub DutyShiftingToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DutyShiftingToolStripMenuItem.Click
+    Private Async Sub AgencyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AgencyToolStripMenuItem.Click
 
-        ChangeForm(ShiftEntryForm, "Duty shifting")
-        previousForm = ShiftEntryForm
-
-        'If FormLeft.Contains("Duty shifting") Then
-        '    FormLeft.Remove("Duty shifting")
-
-        '    FormLeft.Add("Duty shifting")
-        'Else
-        '    FormLeft.Add("Duty shifting")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-    End Sub
-
-    Private Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
-
-        ChangeForm(PayRateForm, "Pay rate")
-        previousForm = PayRateForm
-
-        'If FormLeft.Contains("Pay rate") Then
-        '    FormLeft.Remove("Pay rate")
-
-        '    FormLeft.Add("Pay rate")
-        'Else
-        '    FormLeft.Add("Pay rate")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-    End Sub
-
-    Sub reloadViewPrivilege()
-
-        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
-                                             " RowID" &
-                                             " FROM position_view" &
-                                             " WHERE OrganizationID='" & orgztnID & "'" &
-                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" &
-                                             " OR DATE_FORMAT(LastUpd,@@date_format) = CURDATE()));")
-
-        If hasPositionViewUpdate = "1" Then
-
-            position_view_table = retAsDatTbl("SELECT *" &
-                                              " FROM position_view" &
-                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" &
-                                              " AND OrganizationID='" & orgztnID & "';")
-
-        End If
-
-    End Sub
-
-    Private Sub AgencyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AgencyToolStripMenuItem.Click
-
-        Dim n_UserAccessRights As New UserAccessRights(AgencyForm.ViewIdentification)
-
-        'If n_UserAccessRights.ResultValue(AccessRightName.HasReadOnly) Then
-        '    'Agency
-        ChangeForm(AgencyForm, "Agency")
+        Await ChangeForm(AgencyForm, PermissionConstant.AGENCY)
         previousForm = AgencyForm
 
-        'End If
-
     End Sub
 
-    Dim n_BranchForm As New BranchHierarchyForm 'BranchHierarchyForm, BranchForm
+    Private Async Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
 
-    Private Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
-
-        'Static once As Short = 0
-
-        'If once = 0 Then
-
-        '    once = 1
-
-        '    n_BranchForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-
-        'End If
-
-        Dim ControlExists As Boolean = False
-
-        For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
-
-            If ctrl.Name.Contains("BranchForm") Then
-
-                ControlExists = True
-
-            End If
-
-        Next
-
-        If ControlExists Then
-
-            n_BranchForm.Show()
-            n_BranchForm.BringToFront()
-        Else
-            n_BranchForm = New BranchHierarchyForm
-
-            n_BranchForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-
-            ChangeForm(n_BranchForm, "Branch")
-            previousForm = n_BranchForm
-
+        If Await PermissionHelper.DoesAllowReadAsync(PermissionConstant.BRANCH, policyHelper:=_policyHelper) = False Then
+            MessageBoxHelper.DefaultUnauthorizedFormMessage()
+            Return
         End If
 
-    End Sub
-
-    Dim n_AreaForm As New AreaForm
-
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
-
-        Dim ControlExists As Boolean = False
-
-        For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
-
-            If ctrl.Name.Contains("AreaForm") Then
-
-                ControlExists = True
-
-            End If
-
-        Next
-
-        If ControlExists Then
-
-            n_AreaForm.Show()
-            n_AreaForm.BringToFront()
-        Else
-            n_AreaForm = New AreaForm
-
-            n_AreaForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-
-            ChangeForm(n_AreaForm, "Area")
-            previousForm = n_AreaForm
-
-        End If
+        Dim form As New AddBranchForm
+        form.ShowDialog()
 
     End Sub
 
     Private Sub PanelGeneral_ControlRemoved(sender As Object, e As ControlEventArgs) Handles PanelGeneral.ControlRemoved
         Dim listOfForms = PanelGeneral.Controls.Cast(Of Form)()
-        For Each pb As Form In listOfForms 'PanelTimeAttend.Controls.OfType(Of Form)() 'KeyPreview'Enabled
-            'If Formname.Name = pb.Name Then : Continue For : Else : pb.Enabled = False : End If
+        For Each pb As Form In listOfForms
             pb.Enabled = True
             Exit For
         Next
-    End Sub
-
-    Protected Overrides Sub OnLoad(e As EventArgs)
-
-        Dim ownr() As String =
-            Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
-
-        AgencyToolStripMenuItem.Visible =
-            ownr.Contains(sys_ownr.CurrentSystemOwner)
-
-        MyBase.OnLoad(e)
-
     End Sub
 
 End Class

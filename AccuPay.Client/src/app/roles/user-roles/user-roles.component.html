@@ -1,0 +1,73 @@
+<div *ngIf="loadingState.isLoading" class="flex justify-center">
+  <mat-spinner></mat-spinner>
+</div>
+
+<form *ngIf="loadingState.isSuccess" [formGroup]="form">
+  <div class="mat-elevation-z1 w-full">
+    <mat-table [dataSource]="users" class="w-full" formArrayName="users">
+      <ng-container matColumnDef="user">
+        <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
+        <mat-cell *matCellDef="let user; let i = index">
+          <img
+            class="block rounded-full"
+            width="36"
+            appImgFallback
+            src="/api/users/{{ user.id }}/image"
+          />
+          <div class="ml-2">
+            <a routerLink="/users/{{ user.id }}" matTooltip="Go to profile">
+              <div>{{ user.firstName }} {{ user.lastName }}</div>
+            </a>
+            <p class="text-xs">{{ user.email }}</p>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="none">
+        <mat-header-cell *matHeaderCellDef class="justify-center"
+          >None</mat-header-cell
+        >
+        <mat-cell
+          *matCellDef="let user; let i = index"
+          [formGroupName]="i"
+          class="justify-center"
+        >
+          <mat-radio-group [name]="user.id" formControlName="roleId">
+            <mat-radio-button></mat-radio-button>
+          </mat-radio-group>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container *ngFor="let role of roles" [matColumnDef]="role.name">
+        <mat-header-cell *matHeaderCellDef class="justify-center">
+          {{ role.name }}
+        </mat-header-cell>
+        <mat-cell
+          *matCellDef="let user; let i = index"
+          [formGroupName]="i"
+          class="justify-center"
+        >
+          <mat-radio-group [name]="user.id" formControlName="roleId">
+            <mat-radio-button [value]="role.id"></mat-radio-button>
+          </mat-radio-group>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+
+  <div class="mt-2">
+    <button
+      mat-raised-button
+      (click)="save()"
+      [disabled]="savingState.isLoading"
+      color="primary"
+      class="mr-2"
+    >
+      SAVE CHANGES
+    </button>
+    <button mat-raised-button (click)="cancel()">CANCEL CHANGES</button>
+  </div>
+</form>

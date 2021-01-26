@@ -1,0 +1,166 @@
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-8"
+            >
+              <mat-label>Parent *</mat-label>
+              <mat-select matInput formControlName="parentId">
+                <mat-option></mat-option>
+                <mat-option
+                  *ngFor="let parent of parentDivisions"
+                  [value]="parent.id"
+                >
+                  {{ parent.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a parent</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Name *</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="off"
+                formControlName="name"
+              />
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Type</mat-label>
+              <mat-select matInput formControlName="divisionType">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let type of divisionTypes" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a parent</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Work Days Per Year *</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="workDaysPerYear"
+              />
+            </mat-form-field>
+
+            <mat-checkbox
+              class="col-lg-4"
+              formControlName="automaticOvertimeFiling"
+              >Automatic Overtime Filing</mat-checkbox
+            >
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Phil Health Deduction Schedule *</mat-label>
+              <mat-select
+                matInput
+                formControlName="philHealthDeductionSchedule"
+              >
+                <mat-option></mat-option>
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
+                  {{ schedule }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a schedule</mat-error>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>SSS Deduction Schedule *</mat-label>
+              <mat-select matInput formControlName="sssDeductionSchedule">
+                <mat-option></mat-option>
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
+                  {{ schedule }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a schedule</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Pag-IBIG Deduction Schedule *</mat-label>
+              <mat-select matInput formControlName="pagIBIGDeductionSchedule">
+                <mat-option></mat-option>
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
+                  {{ schedule }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a schedule</mat-error>
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Withholding Tax Schedule *</mat-label>
+              <mat-select matInput formControlName="withholdingTaxSchedule">
+                <mat-option></mat-option>
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
+                  {{ schedule }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a schedule</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <button mat-button type="button" color="accent" (click)="onCancel()">
+        CANCEL
+      </button>
+      <button mat-raised-button type="submit" color="accent">FINISH</button>
+    </mat-card-content>
+  </mat-card>
+</form>

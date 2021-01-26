@@ -1,0 +1,3 @@
+ALTER TABLE `rolepermission`
+  DROP INDEX `FK_rolepermission_aspnetroles`,
+  ADD UNIQUE INDEX `RoleId_PermissionId` (`RoleId`, `PermissionId`) USING BTREE;

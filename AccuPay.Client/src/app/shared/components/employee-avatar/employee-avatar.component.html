@@ -1,0 +1,12 @@
+<img
+  class="block rounded-full"
+  width="36"
+  appImgFallback
+  src="/api/employees/{{ employeeId }}/image"
+/>
+<div class="ml-2">
+  <a routerLink="/employees/{{ employeeId }}" matTooltip="Go to profile">
+    <div>{{ fullName | ifEmpty }}</div>
+  </a>
+  <div class="text-xs mt-1">#{{ employeeNo | ifEmpty }}</div>
+</div>

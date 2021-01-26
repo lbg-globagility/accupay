@@ -1,0 +1,31 @@
+using System;
+
+namespace AccuPay.Web.OfficialBusinesses
+{
+    public class OfficialBusinessDto
+    {
+        public int Id { get; set; }
+
+        public int EmployeeId { get; set; }
+
+        public string EmployeeNumber { get; set; }
+
+        public string EmployeeName { get; set; }
+
+        public string EmployeeType { get; set; }
+
+        public DateTime? StartTime { get; set; }
+
+        public DateTime? EndTime { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public string Status { get; set; }
+
+        public string Reason { get; set; }
+
+        public string Comments { get; set; }
+    }
+}

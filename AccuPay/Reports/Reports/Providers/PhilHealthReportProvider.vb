@@ -1,6 +1,7 @@
-﻿Option Strict On
+Option Strict On
 
-Imports CrystalDecisions.CrystalReports.Engine
+Imports AccuPay.CrystalReports
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PhilHealthReportProvider
     Implements IReportProvider
@@ -15,24 +16,12 @@ Public Class PhilHealthReportProvider
             Return
         End If
 
-        Dim params(2, 2) As Object
-        params(0, 0) = "OrganizID"
-        params(1, 0) = "paramDate"
-        params(0, 1) = orgztnID
-        params(1, 1) = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
+        Dim service = MainServiceProvider.GetRequiredService(Of IPhilHealthMonthlyReportBuilder)
 
-        Dim date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
-
-        Dim data = DirectCast(callProcAsDatTab(params, "RPT_PhilHealth_Monthly"), DataTable)
-
-        Dim philHealthReport = New Phil_Health_Monthly_Report
-        Dim objText As TextObject = DirectCast(philHealthReport.ReportDefinition.Sections(1).ReportObjects("Text2"), TextObject)
-        objText.Text = "For the month of " & date_from
-        philHealthReport.SetDataSource(data)
+        Dim philHealthReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 
         Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = philHealthReport
-
+        crvwr.crysrepvwr.ReportSource = philHealthReport.GetReportDocument
         crvwr.Show()
     End Sub
 

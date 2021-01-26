@@ -1,0 +1,9 @@
+<h1 class="mat-headline">Edit Position</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-position-form
+    [position]="position"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-position-form>
+</ng-container>

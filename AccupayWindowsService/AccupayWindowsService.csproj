@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GlobagilityShared.EmailSender">
-      <HintPath>..\..\GlobagilityShared\GlobagilityShared.EmailSender\bin\Release\netstandard2.0\GlobagilityShared.EmailSender.dll</HintPath>
+      <HintPath>..\Other Libraries\GlobagilityShared.EmailSender.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -62,7 +62,6 @@
     <Compile Include="EmailService.Designer.cs">
       <DependentUpon>EmailService.cs</DependentUpon>
     </Compile>
-    <Compile Include="PayPeriod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -74,9 +73,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Email.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">
@@ -84,13 +80,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
-      <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
-      <Name>AccuPay.Data</Name>
+    <ProjectReference Include="..\AccuPay.CrystalReports\AccuPay.CrystalReports.csproj">
+      <Project>{1AF57D61-BC13-40E1-A0BC-BBDFDD223B7E}</Project>
+      <Name>AccuPay.CrystalReports</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Payslip\AccuPay.Payslip.vbproj">
-      <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
-      <Name>AccuPay.Payslip</Name>
+    <ProjectReference Include="..\AccuPay.Core\AccuPay.Core.csproj">
+      <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
+      <Name>AccuPay.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj">
+      <Project>{f5b0535d-e73b-4d47-a19c-3bb57254246d}</Project>
+      <Name>AccuPay.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
       <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>

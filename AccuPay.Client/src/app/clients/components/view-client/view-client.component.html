@@ -1,0 +1,62 @@
+<ng-container *ngIf="client">
+  <div class="flex justify-between">
+    <h1 class="mat-headline">{{ client.name }}</h1>
+    <div>
+      <a
+        mat-raised-button
+        color="primary"
+        class="m-with-icon"
+        routerLink="/clients/{{ client.id }}/edit"
+      >
+        <mat-icon>edit</mat-icon>EDIT
+      </a>
+    </div>
+  </div>
+
+  <mat-card class="mb-4">
+    <h3 class="font-medium mb-4">Client Information</h3>
+    <mat-card-content>
+      <app-display-field label="Name">
+        {{ client.name }}
+      </app-display-field>
+
+      <app-display-field label="Trade Name">
+        {{ client.tradeName | ifEmpty }}
+      </app-display-field>
+
+      <app-display-field label="Address">
+        {{ client.address | ifEmpty }}
+      </app-display-field>
+
+      <app-display-field label="Phone Number">
+        {{ client.phoneNumber | ifEmpty }}
+      </app-display-field>
+
+      <app-display-field label="Contact Person">
+        {{ client.contactPerson | ifEmpty }}
+      </app-display-field>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <h3 class="font-medium mb-4">Organizations</h3>
+    <mat-card-content class="-m-4">
+      <table mat-table [dataSource]="organizations" class="w-full">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let organization">
+            <a routerLink="/organizations/{{ organization.id }}">
+              {{ organization.name }}
+            </a>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <div class="app-empty-table" *ngIf="organizations.length <= 0">
+        No organizations.
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

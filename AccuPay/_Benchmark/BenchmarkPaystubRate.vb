@@ -1,8 +1,10 @@
-﻿Option Strict On
+Option Strict On
 
-Imports AccuPay.Entity
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
+Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Utilities
-Imports PayrollSys
 
 Namespace Benchmark
 
@@ -279,9 +281,9 @@ Namespace Benchmark
             Me.ActualRegularPay = ComputeFinalRoundedRate(Me.RegularHours, isActual:=True, decimalPlace:=4)
 
             Me.OvertimeHours = overtimeHours
-            Me.OvertimePay = ComputeFinalRoundedRate(Me.OvertimeHours * payRate.Overtime.Rate)
+            Me.OvertimePay = ComputeFinalRoundedRate(Me.OvertimeHours * payRate.Overtime.CurrentRate)
             If allowanceForOvertimePolicy Then
-                Me.ActualOvertimePay = ComputeFinalRoundedRate(Me.OvertimeHours * payRate.Overtime.Rate, isActual:=True)
+                Me.ActualOvertimePay = ComputeFinalRoundedRate(Me.OvertimeHours * payRate.Overtime.CurrentRate, isActual:=True)
             Else
                 Me.ActualOvertimePay = Me.OvertimePay
 
@@ -315,71 +317,71 @@ Namespace Benchmark
 
         Private Sub ComputeNightDifferentialPays(payRate As OvertimeRate, allowanceForNightDiffPolicy As Boolean, nightDiffHours As Decimal, restDayNightDiffHours As Decimal, specialHolidayNightDiffHours As Decimal, specialHolidayRestDayNightDiffHours As Decimal, regularHolidayNightDiffHours As Decimal, regularHolidayRestDayNightDiffHours As Decimal)
             Me.NightDiffHours = nightDiffHours
-            Me.NightDiffPay = ComputeFinalRoundedRate(Me.NightDiffHours * GetNightDifferentialRate(payRate.BasePay.Rate, payRate.NightDifferential.Rate))
+            Me.NightDiffPay = ComputeFinalRoundedRate(Me.NightDiffHours * GetNightDifferentialRate(payRate.BasePay.CurrentRate, payRate.NightDifferential.CurrentRate))
             Me.ActualNightDiffPay = Me.NightDiffPay
 
             Me.RestDayNightDiffHours = restDayNightDiffHours
-            Me.RestDayNightDiffPay = ComputeFinalRoundedRate(Me.RestDayNightDiffHours * GetNightDifferentialRate(payRate.RestDay.Rate, payRate.RestDayNightDifferential.Rate))
+            Me.RestDayNightDiffPay = ComputeFinalRoundedRate(Me.RestDayNightDiffHours * GetNightDifferentialRate(payRate.RestDay.CurrentRate, payRate.RestDayNightDifferential.CurrentRate))
             Me.ActualRestDayNightDiffPay = Me.RestDayNightDiffPay
 
             Me.SpecialHolidayNightDiffHours = specialHolidayNightDiffHours
-            Me.SpecialHolidayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHoliday.Rate, payRate.SpecialHolidayNightDifferential.Rate))
+            Me.SpecialHolidayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHoliday.CurrentRate, payRate.SpecialHolidayNightDifferential.CurrentRate))
             Me.ActualSpecialHolidayNightDiffPay = Me.SpecialHolidayNightDiffPay
 
             Me.SpecialHolidayRestDayNightDiffHours = specialHolidayRestDayNightDiffHours
-            Me.SpecialHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHolidayRestDay.Rate, payRate.SpecialHolidayRestDayNightDifferential.Rate))
+            Me.SpecialHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHolidayRestDay.CurrentRate, payRate.SpecialHolidayRestDayNightDifferential.CurrentRate))
             Me.ActualSpecialHolidayRestDayNightDiffPay = Me.SpecialHolidayRestDayNightDiffPay
 
             Me.RegularHolidayNightDiffHours = regularHolidayNightDiffHours
-            Me.RegularHolidayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffHours * GetNightDifferentialRate(payRate.RegularHoliday.Rate, payRate.RegularHolidayNightDifferential.Rate))
+            Me.RegularHolidayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffHours * GetNightDifferentialRate(payRate.RegularHoliday.CurrentRate, payRate.RegularHolidayNightDifferential.CurrentRate))
             Me.ActualRegularHolidayNightDiffPay = Me.RegularHolidayNightDiffPay
 
             Me.RegularHolidayRestDayNightDiffHours = regularHolidayRestDayNightDiffHours
-            Me.RegularHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.RegularHolidayRestDay.Rate, payRate.RegularHolidayRestDayNightDifferential.Rate))
+            Me.RegularHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.RegularHolidayRestDay.CurrentRate, payRate.RegularHolidayRestDayNightDifferential.CurrentRate))
             Me.ActualRegularHolidayRestDayNightDiffPay = Me.RegularHolidayRestDayNightDiffPay
 
             If allowanceForNightDiffPolicy Then
-                Me.ActualNightDiffPay = ComputeFinalRoundedRate(Me.NightDiffHours * GetNightDifferentialRate(payRate.BasePay.Rate, payRate.NightDifferential.Rate), isActual:=True)
-                Me.ActualRestDayNightDiffPay = ComputeFinalRoundedRate(Me.RestDayNightDiffHours * GetNightDifferentialRate(payRate.RestDay.Rate, payRate.RestDayNightDifferential.Rate), isActual:=True)
-                Me.ActualSpecialHolidayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHoliday.Rate, payRate.SpecialHolidayNightDifferential.Rate), isActual:=True)
-                Me.ActualSpecialHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHolidayRestDay.Rate, payRate.SpecialHolidayRestDayNightDifferential.Rate), isActual:=True)
-                Me.ActualRegularHolidayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffHours * GetNightDifferentialRate(payRate.RegularHoliday.Rate, payRate.RegularHolidayNightDifferential.Rate), isActual:=True)
-                Me.ActualRegularHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.RegularHolidayRestDay.Rate, payRate.RegularHolidayRestDayNightDifferential.Rate), isActual:=True)
+                Me.ActualNightDiffPay = ComputeFinalRoundedRate(Me.NightDiffHours * GetNightDifferentialRate(payRate.BasePay.CurrentRate, payRate.NightDifferential.CurrentRate), isActual:=True)
+                Me.ActualRestDayNightDiffPay = ComputeFinalRoundedRate(Me.RestDayNightDiffHours * GetNightDifferentialRate(payRate.RestDay.CurrentRate, payRate.RestDayNightDifferential.CurrentRate), isActual:=True)
+                Me.ActualSpecialHolidayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHoliday.CurrentRate, payRate.SpecialHolidayNightDifferential.CurrentRate), isActual:=True)
+                Me.ActualSpecialHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.SpecialHolidayRestDay.CurrentRate, payRate.SpecialHolidayRestDayNightDifferential.CurrentRate), isActual:=True)
+                Me.ActualRegularHolidayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffHours * GetNightDifferentialRate(payRate.RegularHoliday.CurrentRate, payRate.RegularHolidayNightDifferential.CurrentRate), isActual:=True)
+                Me.ActualRegularHolidayRestDayNightDiffPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffHours * GetNightDifferentialRate(payRate.RegularHolidayRestDay.CurrentRate, payRate.RegularHolidayRestDayNightDifferential.CurrentRate), isActual:=True)
             End If
         End Sub
 
         Private Sub ComputeNightDifferentialOvertimePays(payRate As OvertimeRate, allowanceForNightDiffOTPolicy As Boolean, nightDiffOvertimeHours As Decimal, restDayNightDiffOTHours As Decimal, specialHolidayNightDiffOTHours As Decimal, specialHolidayRestDayNightDiffOTHours As Decimal, regularHolidayNightDiffOTHours As Decimal, regularHolidayRestDayNightDiffOTHours As Decimal)
             Me.NightDiffOvertimeHours = nightDiffOvertimeHours
-            Me.NightDiffOvertimePay = ComputeFinalRoundedRate(Me.NightDiffOvertimeHours * payRate.NightDifferentialOvertime.Rate)
+            Me.NightDiffOvertimePay = ComputeFinalRoundedRate(Me.NightDiffOvertimeHours * payRate.NightDifferentialOvertime.CurrentRate)
             Me.ActualNightDiffOvertimePay = Me.NightDiffOvertimePay
 
             Me.RestDayNightDiffOTHours = restDayNightDiffOTHours
-            Me.RestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RestDayNightDiffOTHours * payRate.RestDayNightDifferentialOvertime.Rate)
+            Me.RestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RestDayNightDiffOTHours * payRate.RestDayNightDifferentialOvertime.CurrentRate)
             Me.ActualRestDayNightDiffOTPay = Me.RestDayNightDiffOTPay
 
             Me.SpecialHolidayNightDiffOTHours = specialHolidayNightDiffOTHours
-            Me.SpecialHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffOTHours * payRate.SpecialHolidayNightDifferentialOvertime.Rate)
+            Me.SpecialHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffOTHours * payRate.SpecialHolidayNightDifferentialOvertime.CurrentRate)
             Me.ActualSpecialHolidayNightDiffOTPay = Me.SpecialHolidayNightDiffOTPay
 
             Me.SpecialHolidayRestDayNightDiffOTHours = specialHolidayRestDayNightDiffOTHours
-            Me.SpecialHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffOTHours * payRate.SpecialHolidayRestDayNightDifferentialOvertime.Rate)
+            Me.SpecialHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffOTHours * payRate.SpecialHolidayRestDayNightDifferentialOvertime.CurrentRate)
             Me.ActualSpecialHolidayRestDayNightDiffOTPay = Me.SpecialHolidayRestDayNightDiffOTPay
 
             Me.RegularHolidayNightDiffOTHours = regularHolidayNightDiffOTHours
-            Me.RegularHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffOTHours * payRate.RegularHolidayNightDifferentialOvertime.Rate)
+            Me.RegularHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffOTHours * payRate.RegularHolidayNightDifferentialOvertime.CurrentRate)
             Me.ActualRegularHolidayNightDiffOTPay = Me.RegularHolidayNightDiffOTPay
 
             Me.RegularHolidayRestDayNightDiffOTHours = regularHolidayRestDayNightDiffOTHours
-            Me.RegularHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffOTHours * payRate.RegularHolidayRestDayNightDifferentialOvertime.Rate)
+            Me.RegularHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffOTHours * payRate.RegularHolidayRestDayNightDifferentialOvertime.CurrentRate)
             Me.ActualRegularHolidayRestDayNightDiffOTPay = Me.RegularHolidayRestDayNightDiffOTPay
 
             If allowanceForNightDiffOTPolicy Then
-                Me.ActualNightDiffOvertimePay = ComputeFinalRoundedRate(Me.NightDiffOvertimeHours * payRate.NightDifferentialOvertime.Rate, isActual:=True)
-                Me.ActualRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RestDayNightDiffOTHours * payRate.RestDayNightDifferentialOvertime.Rate, isActual:=True)
-                Me.ActualSpecialHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffOTHours * payRate.SpecialHolidayNightDifferentialOvertime.Rate, isActual:=True)
-                Me.ActualSpecialHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffOTHours * payRate.SpecialHolidayRestDayNightDifferentialOvertime.Rate, isActual:=True)
-                Me.ActualRegularHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffOTHours * payRate.RegularHolidayNightDifferentialOvertime.Rate, isActual:=True)
-                Me.ActualRegularHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffOTHours * payRate.RegularHolidayRestDayNightDifferentialOvertime.Rate, isActual:=True)
+                Me.ActualNightDiffOvertimePay = ComputeFinalRoundedRate(Me.NightDiffOvertimeHours * payRate.NightDifferentialOvertime.CurrentRate, isActual:=True)
+                Me.ActualRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RestDayNightDiffOTHours * payRate.RestDayNightDifferentialOvertime.CurrentRate, isActual:=True)
+                Me.ActualSpecialHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayNightDiffOTHours * payRate.SpecialHolidayNightDifferentialOvertime.CurrentRate, isActual:=True)
+                Me.ActualSpecialHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.SpecialHolidayRestDayNightDiffOTHours * payRate.SpecialHolidayRestDayNightDifferentialOvertime.CurrentRate, isActual:=True)
+                Me.ActualRegularHolidayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayNightDiffOTHours * payRate.RegularHolidayNightDifferentialOvertime.CurrentRate, isActual:=True)
+                Me.ActualRegularHolidayRestDayNightDiffOTPay = ComputeFinalRoundedRate(Me.RegularHolidayRestDayNightDiffOTHours * payRate.RegularHolidayRestDayNightDifferentialOvertime.CurrentRate, isActual:=True)
             End If
         End Sub
 
@@ -456,12 +458,12 @@ Namespace Benchmark
                             Optional isActual As Boolean = False,
                             Optional isHolidayInclusive As Boolean = False) As Decimal
 
-            Dim specialHolidayRate = If(isHolidayInclusive, payRate.SpecialHoliday.Rate - 1, payRate.SpecialHoliday.Rate)
+            Dim specialHolidayRate = If(isHolidayInclusive, payRate.SpecialHoliday.CurrentRate - 1, payRate.SpecialHoliday.CurrentRate)
 
             Return ComputeFinalRoundedRate((
                     Me.SpecialHolidayHours *
                         GetRateWithCondition(
-                                payRate.BasePay.Rate,
+                                payRate.BasePay.CurrentRate,
                                 specialHolidayRate,
                                 employeeEntitledForSpecialHolidayPay)),
                    isActual)
@@ -475,8 +477,8 @@ Namespace Benchmark
             Return ComputeFinalRoundedRate((
                     Me.SpecialHolidayOTHours *
                         GetRateWithCondition(
-                                payRate.Overtime.Rate,
-                                payRate.SpecialHolidayOvertime.Rate,
+                                payRate.Overtime.CurrentRate,
+                                payRate.SpecialHolidayOvertime.CurrentRate,
                                 employeeEntitledForSpecialHolidayPay)),
                    isActual)
         End Function
@@ -489,8 +491,8 @@ Namespace Benchmark
             Return ComputeFinalRoundedRate((
                     Me.SpecialHolidayRestDayHours *
                         GetRateWithCondition(
-                                payRate.RestDay.Rate,
-                                payRate.SpecialHolidayRestDay.Rate,
+                                payRate.RestDay.CurrentRate,
+                                payRate.SpecialHolidayRestDay.CurrentRate,
                                 employeeEntitledForSpecialHolidayPay)),
                    isActual)
         End Function
@@ -503,8 +505,8 @@ Namespace Benchmark
             Return ComputeFinalRoundedRate((
                     Me.SpecialHolidayRestDayOTHours *
                         GetRateWithCondition(
-                                payRate.RestDayOvertime.Rate,
-                                payRate.SpecialHolidayRestDayOvertime.Rate,
+                                payRate.RestDayOvertime.CurrentRate,
+                                payRate.SpecialHolidayRestDayOvertime.CurrentRate,
                                 employeeEntitledForSpecialHolidayPay)),
                    isActual)
         End Function
@@ -515,12 +517,12 @@ Namespace Benchmark
                             Optional isActual As Boolean = False,
                             Optional isHolidayInclusive As Boolean = False) As Decimal
 
-            Dim regularHolidayRate = If(isHolidayInclusive, payRate.RegularHoliday.Rate - 1, payRate.RegularHoliday.Rate)
+            Dim regularHolidayRate = If(isHolidayInclusive, payRate.RegularHoliday.CurrentRate - 1, payRate.RegularHoliday.CurrentRate)
 
             Return ComputeFinalRoundedRate((
                     Me.RegularHolidayHours *
                         GetRateWithCondition(
-                                payRate.BasePay.Rate,
+                                payRate.BasePay.CurrentRate,
                                 regularHolidayRate,
                                 employeeEntitledForRegularHolidayPay)),
                    isActual)
@@ -534,8 +536,8 @@ Namespace Benchmark
             Return ComputeFinalRoundedRate((
                     Me.RegularHolidayOTHours *
                         GetRateWithCondition(
-                                payRate.Overtime.Rate,
-                                payRate.RegularHolidayOvertime.Rate,
+                                payRate.Overtime.CurrentRate,
+                                payRate.RegularHolidayOvertime.CurrentRate,
                                 employeeEntitledForRegularHolidayPay)),
                    isActual)
         End Function
@@ -548,8 +550,8 @@ Namespace Benchmark
             Return ComputeFinalRoundedRate((
                     Me.RegularHolidayRestDayHours *
                         GetRateWithCondition(
-                                payRate.RestDay.Rate,
-                                payRate.RegularHolidayRestDay.Rate,
+                                payRate.RestDay.CurrentRate,
+                                payRate.RegularHolidayRestDay.CurrentRate,
                                 employeeEntitledForRegularHolidayPay)),
                    isActual)
         End Function
@@ -562,8 +564,8 @@ Namespace Benchmark
             Return ComputeFinalRoundedRate((
                     Me.RegularHolidayRestDayOTHours *
                         GetRateWithCondition(
-                                payRate.RestDayOvertime.Rate,
-                                payRate.RegularHolidayRestDayOvertime.Rate,
+                                payRate.RestDayOvertime.CurrentRate,
+                                payRate.RegularHolidayRestDayOvertime.CurrentRate,
                                 employeeEntitledForRegularHolidayPay)),
                    isActual)
 
@@ -665,19 +667,19 @@ Namespace Benchmark
                         Optional isRestDayInclusive As Boolean = False)
 
             Me.RestDayHours = restDayHours
-            Me.RestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * payRate.RestDay.Rate)
+            Me.RestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * payRate.RestDay.CurrentRate)
 
             Me.RestDayOTHours = restDayOTHours
-            Me.RestDayOTPay = ComputeFinalRoundedRate(Me.RestDayOTHours * payRate.RestDayOvertime.Rate)
+            Me.RestDayOTPay = ComputeFinalRoundedRate(Me.RestDayOTHours * payRate.RestDayOvertime.CurrentRate)
 
             If allowanceForRestDayPolicy Then
-                Me.ActualRestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * payRate.RestDay.Rate, isActual:=True)
+                Me.ActualRestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * payRate.RestDay.CurrentRate, isActual:=True)
             Else
                 Me.ActualRestDayPay = Me.RestDayPay
             End If
 
             If allowanceForRestDayOTPolicy Then
-                Me.ActualRestDayOTPay = ComputeFinalRoundedRate(Me.RestDayOTHours * payRate.RestDayOvertime.Rate, isActual:=True)
+                Me.ActualRestDayOTPay = ComputeFinalRoundedRate(Me.RestDayOTHours * payRate.RestDayOvertime.CurrentRate, isActual:=True)
             Else
                 Me.ActualRestDayOTPay = Me.RestDayOTPay
             End If

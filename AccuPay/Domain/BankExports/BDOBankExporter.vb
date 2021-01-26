@@ -1,8 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay
-Imports AccuPay.Entity
+Imports AccuPay.Core.Entities
 
 Public Class BDOBankExporter
     Implements IBankExporter
@@ -10,7 +9,7 @@ Public Class BDOBankExporter
     Public Function Export(paystubs As IList(Of Paystub)) As Stream Implements IBankExporter.Export
         Dim stream = New MemoryStream()
 
-        Using writer = New StreamWriter(stream, System.Text.Encoding.UTF8, 1024, True)
+        Using writer = New StreamWriter(stream, Text.Encoding.UTF8, 1024, True)
             For Each paystub In paystubs
                 Dim employee = paystub.Employee
                 Dim atmNo = employee.AtmNo
