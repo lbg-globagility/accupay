@@ -3,6 +3,7 @@ using AccuPay.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace AccuPay.Core.Entities
 {
@@ -163,10 +164,30 @@ namespace AccuPay.Core.Entities
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
 
-        public bool IsFirstPay(PayPeriod payPeriod) =>
-            payPeriod != null &&
-            payPeriod.PayFromDate.Date <= StartDate.Date &&
-            StartDate.Date <= payPeriod.PayToDate.Date;
+        public bool IsFirstPay(PayPeriod payPeriod)
+        {
+            return payPeriod != null &&
+                payPeriod.PayFromDate.Date <= StartDate.Date &&
+                StartDate.Date <= payPeriod.PayToDate.Date;
+        }
+
+        /// <summary>
+        /// Checks if the employee is eligble for BPI Insurance and the employee was not given a BPI Insurance adjustment deduction yet this pay period.
+        /// </summary>
+        /// <param name="useBPIInsurancePolicy"></param>
+        /// <param name="paystubAdjustments"></param>
+        /// <param name="payPeriod"></param>
+        /// <returns></returns>
+        public bool IsEligibleForNewBPIInsurance(bool useBPIInsurancePolicy, ICollection<Adjustment> paystubAdjustments, PayPeriod payPeriod)
+        {
+            if (payPeriod == null || paystubAdjustments == null)
+                return false;
+
+            return useBPIInsurancePolicy &&
+                IsFirstPay(payPeriod) &&
+                BPIInsurance > 0 &&
+                !paystubAdjustments.Any(a => a.Product?.PartNo == ProductConstant.BPI_INSURANCE_ADJUSTMENT);
+        }
 
         public static Employee NewEmployee(int organizationId)
         {

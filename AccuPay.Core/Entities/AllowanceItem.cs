@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -64,16 +64,15 @@ namespace AccuPay.Core.Entities
         }
 
         public static AllowanceItem Create(
-                                Paystub paystub,
-                                Product product,
-                                int payperiodId,
-                                int allowanceId,
-                                int organizationId,
-                                int currentlyLoggedInUserId)
+            Paystub paystub,
+            Product product,
+            int payperiodId,
+            int allowanceId,
+            int currentlyLoggedInUserId)
         {
             return new AllowanceItem()
             {
-                OrganizationID = organizationId,
+                OrganizationID = paystub.OrganizationID,
                 CreatedBy = currentlyLoggedInUserId,
                 LastUpdBy = currentlyLoggedInUserId,
                 Paystub = paystub,

@@ -187,33 +187,33 @@ namespace AccuPay.Core.Services
             }
         }
 
-        private async Task LoadBpiInsuranceProduct()
-        {
-            try
-            {
-                BpiInsuranceProduct = await _productRepository.
-                    GetOrCreateAdjustmentTypeAsync(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
-                                                    organizationId: _organizationId,
-                                                    userId: _userId);
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("BPI Insurance Adjustment Product", ex);
-            }
-        }
-
         private async Task LoadActualTimeEntries()
         {
             try
             {
                 var datePeriod = new TimePeriod(_payDateFrom, _payDateTo);
-                ActualTimeEntries = (await _actualTimeEntryRepository.
-                                        GetByDatePeriodAsync(_organizationId, datePeriod)).
-                                        ToList();
+                ActualTimeEntries = (await _actualTimeEntryRepository
+                    .GetByDatePeriodAsync(_organizationId, datePeriod))
+                    .ToList();
             }
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("ActualTimeEntries", ex);
+            }
+        }
+
+        private async Task LoadBpiInsuranceProduct()
+        {
+            try
+            {
+                BpiInsuranceProduct = await _productRepository.GetOrCreateAdjustmentTypeAsync(
+                    ProductConstant.BPI_INSURANCE_ADJUSTMENT,
+                    organizationId: _organizationId,
+                    userId: _userId);
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("BPI Insurance Adjustment Product", ex);
             }
         }
 
@@ -238,9 +238,9 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                Employees = (await _employeeRepository.
-                                GetAllActiveWithDivisionAndPositionAsync(_organizationId)).
-                                ToList();
+                Employees = (await _employeeRepository
+                    .GetAllActiveWithDivisionAndPositionAsync(_organizationId))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -280,7 +280,7 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+                // LoadPayPeriod() should be executed before LoadLoans()
                 Loans = (await _loanRepository
                     .GetCurrentPayrollLoansAsync(_organizationId, PayPeriod, Paystubs))
                     .ToList();
@@ -354,8 +354,8 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                SickLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(
+                SickLeaveProduct = await _productRepository
+                    .GetOrCreateLeaveTypeAsync(
                         ProductConstant.SICK_LEAVE,
                         organizationId: _organizationId,
                         userId: _userId);
@@ -400,12 +400,13 @@ namespace AccuPay.Core.Services
 
             try
             {
-                var datePeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay,
-                                                _payDateTo);
+                var datePeriod = new TimePeriod(
+                    previousCutoffDateForCheckingLastWorkingDay,
+                    _payDateTo);
 
-                TimeEntries = (await _timeEntryRepository.
-                                    GetByDatePeriodAsync(_organizationId, datePeriod)).
-                                    ToList();
+                TimeEntries = (await _timeEntryRepository
+                    .GetByDatePeriodAsync(_organizationId, datePeriod))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -417,10 +418,11 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                VacationLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(ProductConstant.VACATION_LEAVE,
-                                                organizationId: _organizationId,
-                                                userId: _userId);
+                VacationLeaveProduct = await _productRepository
+                    .GetOrCreateLeaveTypeAsync(
+                        ProductConstant.VACATION_LEAVE,
+                        organizationId: _organizationId,
+                        userId: _userId);
             }
             catch (Exception ex)
             {

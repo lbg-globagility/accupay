@@ -20,13 +20,13 @@ namespace AccuPay.Core.Services
         }
 
         public ThirteenthMonthPay Calculate(Employee employee,
-                            Paystub paystub,
-                            IReadOnlyCollection<TimeEntry> timeEntries,
-                            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
-                            Salary salary,
-                            ListOfValueCollection settings,
-                            ICollection<AllowanceItem> allowanceItems,
-                            string currentSystemOwner)
+            Paystub paystub,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
+            Salary salary,
+            ListOfValueCollection settings,
+            ICollection<AllowanceItem> allowanceItems,
+            string currentSystemOwner)
         {
             if (paystub.ThirteenthMonthPay == null)
                 paystub.ThirteenthMonthPay = new ThirteenthMonthPay()
@@ -124,10 +124,10 @@ namespace AccuPay.Core.Services
             {
                 if (salary == null) return 0;
 
-                var trueSalary = salary.TotalSalary;
-                var basicPay = trueSalary / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
+                decimal trueSalary = salary.TotalSalary;
+                decimal basicPay = trueSalary / CalendarConstant.SemiMonthlyPayPeriodsPerMonth;
 
-                var totalDeductions = actualtimeentries.Sum(t => t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction);
+                decimal totalDeductions = actualtimeentries?.Sum(t => t.LateDeduction + t.UndertimeDeduction + t.AbsentDeduction) ?? 0;
 
                 decimal additionalAmount = 0;
                 if ((settings.GetBoolean("ThirteenthMonthPolicy.IsAllowancePaid")))
@@ -160,15 +160,15 @@ namespace AccuPay.Core.Services
 
             if (contractualEmployementStatuses.Contains(employee.EmploymentStatus))
             {
-                thirteenthMonthAmount = timeEntries
+                thirteenthMonthAmount = timeEntries?
                     .Where(t => !t.IsRestDay)
-                    .Sum(t => t.BasicDayPay + t.LeavePay);
+                    .Sum(t => t.BasicDayPay + t.LeavePay) ?? 0;
             }
             else
             {
                 foreach (var actualTimeEntry in actualtimeentries)
                 {
-                    var timeEntry = timeEntries
+                    var timeEntry = timeEntries?
                         .Where(t => t.Date == actualTimeEntry.Date)
                         .FirstOrDefault();
 

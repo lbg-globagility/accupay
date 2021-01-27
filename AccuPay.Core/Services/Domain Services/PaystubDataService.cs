@@ -74,6 +74,52 @@ namespace AccuPay.Infrastructure.Data
             await _paystubDataHelper.RecordDelete(currentlyLoggedInUserId, paystubs, payPeriod);
         }
 
+        public async Task SaveAsync(
+            int currentlyLoggedInUserId,
+            string currentSystemOwner,
+            IPolicyHelper policy,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Employee employee,
+            Product bpiInsuranceProduct,
+            Product sickLeaveProduct,
+            Product vacationLeaveProduct,
+            IReadOnlyCollection<Loan> loans,
+            ICollection<AllowanceItem> allowanceItems,
+            ICollection<LoanTransaction> loanTransactions,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Leave> leaves,
+            IReadOnlyCollection<Bonus> bonuses)
+        {
+            bool isNew = paystub.IsNewEntity;
+
+            await _paystubRepository.SaveAsync(
+                currentlyLoggedInUserId: currentlyLoggedInUserId,
+                currentSystemOwner,
+                policy,
+                payPeriod,
+                paystub,
+                employee,
+                bpiInsuranceProduct: bpiInsuranceProduct,
+                sickLeaveProduct: sickLeaveProduct,
+                vacationLeaveProduct: vacationLeaveProduct,
+                loans: loans,
+                allowanceItems: allowanceItems,
+                loanTransactions: loanTransactions,
+                timeEntries: timeEntries,
+                leaves: leaves,
+                bonuses: bonuses);
+
+            if (isNew)
+            {
+                await RecordCreate(currentlyLoggedInUserId, paystub, payPeriod);
+            }
+            else
+            {
+                await RecordEdit(currentlyLoggedInUserId, paystub, payPeriod);
+            }
+        }
+
         public async Task RecordDelete(Paystub paystub, int currentlyLoggedInUserId, PayPeriod payPeriod)
         {
             await _paystubDataHelper.RecordDelete(currentlyLoggedInUserId, paystub, payPeriod);

@@ -52,13 +52,13 @@ Public Class PayrollForm
         Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
         Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
 
-        AllowanceToolStripMenuItem.Visible = If(allowancePermission?.Read, False)
         LoanToolStripMenuItem.Visible = If(loanPermission?.Read, False)
 
         'Payroll only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If payPeriodPermission Is Nothing OrElse payPeriodPermission.Read = False Then
 
+            AllowanceToolStripMenuItem.Visible = False
             PayrollToolStripMenuItem.Visible = False
             BenchmarkPaystubToolStripMenuItem.Visible = False
             WithholdingTaxToolStripMenuItem.Visible = False

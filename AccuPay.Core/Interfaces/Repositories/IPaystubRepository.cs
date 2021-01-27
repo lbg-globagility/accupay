@@ -13,6 +13,23 @@ namespace AccuPay.Core.Interfaces
 
         Task<IReadOnlyCollection<Paystub>> DeleteByPeriodAsync(int payPeriodId, int currentlyLoggedInUserId);
 
+        Task SaveAsync(
+            int currentlyLoggedInUserId,
+            string currentSystemOwner,
+            IPolicyHelper policy,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Employee employee,
+            Product bpiInsuranceProduct,
+            Product sickLeaveProduct,
+            Product vacationLeaveProduct,
+            IReadOnlyCollection<Loan> loans,
+            ICollection<AllowanceItem> allowanceItems,
+            ICollection<LoanTransaction> loanTransactions,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<Leave> leaves,
+            IReadOnlyCollection<Bonus> bonuses);
+
         Task<ICollection<ActualAdjustment>> GetActualAdjustmentsAsync(int paystubId);
 
         Task<ICollection<Adjustment>> GetAdjustmentsAsync(int paystubId);

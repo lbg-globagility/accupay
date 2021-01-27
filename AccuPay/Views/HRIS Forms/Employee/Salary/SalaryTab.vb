@@ -2,7 +2,6 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
-Imports AccuPay.Benchmark
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
@@ -24,11 +23,11 @@ Public Class SalaryTab
 
     Private _isSystemOwnerBenchMark As Boolean
 
+    Private _ecolaAllowances As IReadOnlyCollection(Of Allowance)
+
     Private _ecolaAllowance As Allowance
 
     Private _currentRolePermission As RolePermission
-
-    Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Private ReadOnly _systemOwnerService As ISystemOwnerService
 
@@ -37,8 +36,6 @@ Public Class SalaryTab
         dgvSalaries.AutoGenerateColumns = False
 
         If MainServiceProvider IsNot Nothing Then
-
-            _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
             _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
         End If
@@ -79,13 +76,6 @@ Public Class SalaryTab
         pbEmployee.Focus()
         _employee = employee
 
-        If Await InitializeBenchmarkData() = False Then
-            Return
-        Else
-
-            txtEcola.Text = _ecolaAllowance?.Amount.ToString
-        End If
-
         txtPayFrequency.Text = employee.PayFrequency?.Type
         txtSalaryType.Text = employee.EmployeeType
         txtFullname.Text = employee.FullNameWithMiddleInitial
@@ -95,44 +85,6 @@ Public Class SalaryTab
 
         ChangeMode(FormMode.Empty)
         Await LoadSalaries()
-    End Function
-
-    Private Async Function InitializeBenchmarkData() As Task(Of Boolean)
-        If _isSystemOwnerBenchMark Then
-
-            Dim employeeId = _employee?.RowID
-
-            Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
-
-            Dim currentPayPeriod = Await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
-                organizationId:=z_OrganizationID,
-                currentUserId:=z_User)
-
-            If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
-                MessageBoxHelper.ErrorMessage(errorMessage)
-
-                Return False
-            End If
-
-            'If we are going to enable this as a policy, check its employee type.
-            'If Daily then its allowance frequency should also be Daily.
-            'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
-            'If _employee.IsDaily Then
-            'End If
-            _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
-                employeeId.Value,
-                payDateFrom:=currentPayPeriod.PayFromDate,
-                payDateTo:=currentPayPeriod.PayToDate)
-
-            If _ecolaAllowance Is Nothing Then
-                MessageBoxHelper.ErrorMessage(errorMessage)
-                Return False
-            End If
-
-        End If
-
-        Return True
-
     End Function
 
     Private Sub ToggleBenchmarkEcola()
@@ -227,9 +179,13 @@ Public Class SalaryTab
         End If
 
         Dim salaryRepository = MainServiceProvider.GetRequiredService(Of ISalaryRepository)
-
         _salaries = (Await salaryRepository.GetByEmployeeAsync(_employee.RowID.Value)).
             OrderByDescending(Function(s) s.EffectiveFrom).
+            ToList()
+
+        Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
+        _ecolaAllowances = (Await allowanceRepository.
+            GetEmployeeEcolaAsync(_employee.RowID.Value, z_OrganizationID)).
             ToList()
 
         RemoveHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
@@ -296,17 +252,27 @@ Public Class SalaryTab
         dtpEffectiveFrom.Value = _currentSalary.EffectiveFrom
         chkIsMinimumWage.Checked = _currentSalary.IsMinimumWage
 
-        txtAmount.Text = CStr(_currentSalary.BasicSalary)
-        txtAllowance.Text = CStr(_currentSalary.AllowanceSalary)
-        txtTotalSalary.Text = CStr(_currentSalary.TotalSalary)
+        txtAmount.Text = _currentSalary.BasicSalary.ToString()
+        txtAllowance.Text = _currentSalary.AllowanceSalary.ToString()
+        txtTotalSalary.Text = _currentSalary.TotalSalary.ToString()
 
         chkPaySSS.Checked = _currentSalary.DoPaySSSContribution
 
         chkPayPhilHealth.Checked = _currentSalary.AutoComputePhilHealthContribution
-        txtPhilHealth.Text = CStr(_currentSalary.PhilHealthDeduction)
+        txtPhilHealth.Text = _currentSalary.PhilHealthDeduction.ToString()
 
         ChkPagIbig.Checked = _currentSalary.AutoComputeHDMFContribution
-        txtPagIbig.Text = CStr(_currentSalary.HDMFAmount)
+        txtPagIbig.Text = _currentSalary.HDMFAmount.ToString()
+
+        If _isSystemOwnerBenchMark Then
+
+            _ecolaAllowance = _ecolaAllowances.
+                Where(Function(a) a.EffectiveStartDate.Date <= _currentSalary.EffectiveFrom.Date).
+                OrderByDescending(Function(a) a.EffectiveStartDate).
+                FirstOrDefault()
+
+            txtEcola.Text = If(_ecolaAllowance?.Amount.ToString(), "0.00")
+        End If
 
         AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
     End Sub
@@ -320,10 +286,10 @@ Public Class SalaryTab
         Dim form As New AddSalaryForm(_employee)
         form.ShowDialog()
 
-        If form.isSaved Then
+        If form.IsSaved Then
             Await LoadSalaries()
             FormToolsControl(True)
-            If form.showBalloon Then
+            If form.ShowBalloon Then
                 ShowBalloonInfo("Salary successfuly added.", "Saved")
             End If
 
@@ -365,9 +331,12 @@ Public Class SalaryTab
                 Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
                 Await dataService.SaveAsync(salary, z_User)
 
-                If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then
+                If _isSystemOwnerBenchMark AndAlso _ecolaAllowance IsNot Nothing Then
 
-                    Await EcolaHelper.SaveEcola(_ecolaAllowance.RowID.Value, txtEcola.Text.ToDecimal)
+                    Await EcolaHelper.UpdateEcola(
+                        _ecolaAllowance.RowID.Value,
+                        salary.EffectiveFrom.Date,
+                        txtEcola.Text.ToDecimal)
 
                 End If
 

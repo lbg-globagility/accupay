@@ -4,7 +4,6 @@ using AccuPay.Core.Exceptions;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Allowances;
-using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
@@ -407,40 +406,56 @@ namespace AccuPay.Infrastructure.Data
             int employeeId,
             int organizationId,
             int currentlyLoggedInUserId,
-            TimePeriod timePeriod,
-            string allowanceFrequency = Allowance.FREQUENCY_SEMI_MONTHLY,
+            DateTime startDate,
+            DateTime? endDate = null,
+            string allowanceFrequency = Allowance.FREQUENCY_DAILY,
             decimal amount = 0)
         {
             var ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(
                 employeeId: employeeId,
                 organizationId: organizationId,
-                timePeriod: timePeriod);
+                startDate: startDate,
+                endDate: endDate);
 
             if (ecolaAllowance == null)
             {
-                var ecolaProductId = (await _productRepository.GetOrCreateAllowanceTypeAsync(
-                    ProductConstant.ECOLA,
+                ecolaAllowance = await CreateEcola(
+                    employeeId,
                     organizationId,
-                    currentlyLoggedInUserId))?.RowID;
-
-                DateTime? effectiveEndDate = null;
-
-                ecolaAllowance = new Allowance();
-                ecolaAllowance.EmployeeID = employeeId;
-                ecolaAllowance.ProductID = ecolaProductId;
-                ecolaAllowance.AllowanceFrequency = allowanceFrequency;
-                ecolaAllowance.EffectiveStartDate = timePeriod.Start;
-                ecolaAllowance.EffectiveEndDate = effectiveEndDate;
-                ecolaAllowance.Amount = amount;
-                ecolaAllowance.OrganizationID = organizationId;
-
-                await SaveAsync(ecolaAllowance, currentlyLoggedInUserId);
-
-                ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(
-                    employeeId: employeeId,
-                    organizationId: organizationId,
-                    timePeriod: timePeriod);
+                    currentlyLoggedInUserId,
+                    startDate,
+                    allowanceFrequency,
+                    amount);
             }
+
+            return ecolaAllowance;
+        }
+
+        public async Task<Allowance> CreateEcola(
+            int employeeId,
+            int organizationId,
+            int currentlyLoggedInUserId,
+            DateTime startDate,
+            string allowanceFrequency,
+            decimal amount)
+        {
+            var ecolaProductId = (await _productRepository.GetOrCreateAllowanceTypeAsync(
+                ProductConstant.ECOLA,
+                organizationId,
+                currentlyLoggedInUserId))?.RowID;
+
+            var ecolaAllowance = new Allowance
+            {
+                EmployeeID = employeeId,
+                ProductID = ecolaProductId,
+                AllowanceFrequency = allowanceFrequency,
+                EffectiveStartDate = startDate,
+                EffectiveEndDate = null,
+                Amount = amount,
+                OrganizationID = organizationId
+            };
+
+            await SaveAsync(ecolaAllowance, currentlyLoggedInUserId);
 
             return ecolaAllowance;
         }

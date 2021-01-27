@@ -6,6 +6,6 @@ namespace AccuPay.Core.Interfaces
 {
     public interface IWithholdingTaxBracketRepository
     {
-        Task<IEnumerable<WithholdingTaxBracket>> GetAllAsync();
+        Task<ICollection<WithholdingTaxBracket>> GetAllAsync();
     }
 }

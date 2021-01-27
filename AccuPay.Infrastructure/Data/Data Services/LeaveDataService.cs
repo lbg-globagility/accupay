@@ -339,18 +339,12 @@ namespace AccuPay.Infrastructure.Data
             // #1. Update employee's leave allowance
             // #2. Update employee's leave transactions
 
-            var leaveLedgerQuery = _context.LeaveLedgers
-                .Include(l => l.Product)
-                .Where(l => l.EmployeeID == employeeId);
-
             // #1
-            UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(
+            var leaveLedger = await UpdateEmployeeLeaveAllowanceAndGetLeaveLedger(
                 selectedLeaveType,
                 newAllowance,
-                employee,
-                leaveLedgerQuery);
+                employee);
 
-            var leaveLedger = await leaveLedgerQuery.FirstOrDefaultAsync();
             var leaveLedgerId = leaveLedger?.RowID;
 
             if (leaveLedgerId == null)
@@ -425,39 +419,59 @@ namespace AccuPay.Infrastructure.Data
             return newBalance;
         }
 
-        private void UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(
+        private async Task<LeaveLedger> UpdateEmployeeLeaveAllowanceAndGetLeaveLedger(
             LeaveType selectedLeaveType,
             decimal newAllowance,
-            Employee employee,
-            IQueryable<LeaveLedger> leaveLedgerQuery)
+            Employee employee)
         {
+            var leaveLedgers = await _context.LeaveLedgers
+                .Include(l => l.Product)
+                .Where(l => l.EmployeeID == employee.RowID.Value)
+                .ToListAsync();
+
+            LeaveLedger selectedLeaveLedger = null;
+
             switch (selectedLeaveType)
             {
                 case LeaveType.Sick:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsSickLeave);
+                    selectedLeaveLedger = leaveLedgers
+                        .Where(l => l.Product.IsSickLeave)
+                        .FirstOrDefault();
                     employee.SickLeaveAllowance = newAllowance;
                     break;
 
                 case LeaveType.Vacation:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsVacationLeave);
+                    selectedLeaveLedger = leaveLedgers
+                        .Where(l => l.Product.IsVacationLeave)
+                        .FirstOrDefault(); ;
                     employee.VacationLeaveAllowance = newAllowance;
                     break;
 
                 case LeaveType.Others:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsOthersLeave);
+                    selectedLeaveLedger = leaveLedgers
+                        .Where(l => l.Product.IsOthersLeave)
+                        .FirstOrDefault(); ;
                     employee.OtherLeaveAllowance = newAllowance;
                     break;
 
                 case LeaveType.Maternity:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsMaternityLeave);
+                    selectedLeaveLedger = leaveLedgers
+                        .Where(l => l.Product.IsMaternityLeave)
+                        .FirstOrDefault(); ;
                     employee.MaternityLeaveAllowance = newAllowance;
                     break;
 
                 case LeaveType.Parental:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsParentalLeave);
+                    selectedLeaveLedger = leaveLedgers
+                        .Where(l => l.Product.IsParentalLeave)
+                        .FirstOrDefault(); ;
                     // THIS DOES NOT HAVE AN ALLOWANCE COLUMN
                     throw new Exception("No column for Parental Leave Allowance on employee table.");
             }
+
+            _context.Entry(employee).State = EntityState.Modified;
+
+            return selectedLeaveLedger;
         }
 
         private async Task ProcessIfEmployeeHasNotTakenAleaveThisYear(

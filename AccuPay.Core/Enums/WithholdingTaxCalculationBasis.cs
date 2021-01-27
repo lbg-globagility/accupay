@@ -1,4 +1,4 @@
-﻿namespace AccuPay.Core.Enums
+namespace AccuPay.Core.Enums
 {
     public enum WithholdingTaxCalculationBasis
     {

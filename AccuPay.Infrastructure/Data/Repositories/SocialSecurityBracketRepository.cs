@@ -24,10 +24,11 @@ namespace AccuPay.Infrastructure.Data
 
         public async Task<IEnumerable<SocialSecurityBracket>> GetByTimePeriodAsync(DateTime taxEffectivityDate)
         {
-            return await _context.SocialSecurityBrackets.
-                            Where(x => taxEffectivityDate >= x.EffectiveDateFrom).
-                            Where(x => taxEffectivityDate <= x.EffectiveDateTo).
-                            ToListAsync();
+            return await _context.SocialSecurityBrackets
+                .AsNoTracking()
+                .Where(x => taxEffectivityDate >= x.EffectiveDateFrom)
+                .Where(x => taxEffectivityDate <= x.EffectiveDateTo)
+                .ToListAsync();
         }
     }
 }

@@ -9,19 +9,12 @@ namespace AccuPay.Core.Services
 {
     public class ProductDataService : IProductDataService
     {
-        private readonly IAllowanceDataService _allowanceService;
         private readonly IProductRepository _productRepository;
-        private readonly IAllowanceRepository _allowanceRepository;
 
         public ProductDataService(
-            IProductRepository productRepository,
-            IAllowanceRepository allowanceRepository,
-            // TODO: Urgent - Data Service cannot have a dependency to another data service.
-            IAllowanceDataService allowanceService)
+            IProductRepository productRepository)
         {
             _productRepository = productRepository;
-            _allowanceService = allowanceService;
-            _allowanceRepository = allowanceRepository;
         }
 
         public async Task<bool> CheckIfAlreadyUsedInAllowancesAsync(string allowanceType)

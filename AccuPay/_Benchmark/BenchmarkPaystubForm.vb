@@ -151,6 +151,7 @@ Public Class BenchmarkPaystubForm
             _employees = (Await _employeeRepository.GetAllWithPayrollAsync(
                     payPeriodId:=_currentPayPeriod.RowID.Value,
                     organizationId:=z_OrganizationID)).
+                OrderBy(Function(e) e.FullNameLastNameFirst).
                 ToList()
         Else
             _employees = New List(Of Employee)

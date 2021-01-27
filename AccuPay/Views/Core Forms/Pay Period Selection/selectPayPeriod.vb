@@ -1,3 +1,5 @@
+Option Strict On
+
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
@@ -8,29 +10,25 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class selectPayPeriod
 
-    Public Property PayPeriod As IPayPeriod
+    Public Property PayPeriod As PayPeriod
 
-    Private ReadOnly selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly selectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Private ReadOnly unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim m_PayFreqType = ""
+    Dim m_PayFreqType As String = ""
 
-    Private _currentYear = Date.Now.Year
+    Private _currentYear As Integer = Date.Now.Year
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
-
-    Private ReadOnly _payPeriodService As IPayPeriodDataService
 
     Sub New()
 
         InitializeComponent()
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
-
-        _payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
     End Sub
 
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -45,7 +43,7 @@ Public Class selectPayPeriod
 
         Dim sel_query = ""
 
-        Dim hasAnEmployee = EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE OrganizationID=" & orgztnID & " LIMIT 1);")
+        Dim hasAnEmployee = CInt(EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE OrganizationID=" & orgztnID & " LIMIT 1);"))
 
         If hasAnEmployee = 1 Then
             sel_query = "SELECT pp.PayFrequencyType FROM payfrequency pp INNER JOIN employee e ON e.PayFrequencyID=pp.RowID GROUP BY pp.RowID;"
@@ -59,7 +57,7 @@ Public Class selectPayPeriod
 
         Dim indx = 0
 
-        For Each strval In payfrqncy
+        For Each strval As String In payfrqncy
 
             If strval.ToString.ToUpper = "WEEKLY" Then
                 Continue For
@@ -107,7 +105,7 @@ Public Class selectPayPeriod
         End If
     End Sub
 
-    Dim quer_empPayFreq = ""
+    Dim quer_empPayFreq As String = ""
 
     Sub PayFreq_Changed(sender As Object, e As EventArgs)
 
@@ -168,11 +166,20 @@ Public Class selectPayPeriod
 
     End Sub
 
-    Sub VIEW_payp(Optional param_Date As Object = Nothing,
+    Sub VIEW_payp(Optional year As Integer? = Nothing,
                   Optional PayFreqType As Object = Nothing)
+
+        Dim paramDate As Object
+
+        If year Is Nothing Then
+            paramDate = DBNull.Value
+        Else
+            paramDate = year.ToString() & "-01-01"
+        End If
+
         Dim params = New Object() {
             orgztnID,
-            If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01"),
+            paramDate,
             0,
             PayFreqType
         }
@@ -212,7 +219,11 @@ Public Class selectPayPeriod
     End Sub
 
     Private Sub HighlightOpenPayPeriod(index As Integer, drow As DataRow)
-        Dim status = Enums(Of PayPeriodStatus).Parse(drow("Status"))
+
+        'TODO: URGENT, this form looks like it is still using the old way to determine
+        'the closed and open pay period. Inspect this.
+
+        Dim status = Enums(Of PayPeriodStatus).Parse(drow("Status").ToString())
 
         If status = PayPeriodStatus.Closed Then
             dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Black
@@ -253,7 +264,7 @@ Public Class selectPayPeriod
         Panel2.Enabled = True
     End Sub
 
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    Private Async Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
         dgvpaypers.EndEdit()
 
         If dgvpaypers.RowCount <> 0 Then
@@ -263,8 +274,9 @@ Public Class selectPayPeriod
             With dgvpaypers.CurrentRow
 
                 Dim payPeriodId = ObjectUtils.ToNullableInteger(.Cells("Column1").Value)
-                Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
-                    ObjectUtils.ToNullableInteger(.Cells("Column1").Value))
+
+                Dim payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
+                Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(payPeriodId)
 
                 If validate = FunctionResult.Failed Then
 
@@ -272,10 +284,7 @@ Public Class selectPayPeriod
                     Return
                 End If
 
-                PayPeriod = New PayPeriod
-                PayPeriod.RowID = payPeriodId.Value
-                PayPeriod.PayFromDate = CDate(.Cells("Column2").Value)
-                PayPeriod.PayToDate = CDate(.Cells("Column3").Value)
+                PayPeriod = Await _payPeriodRepository.GetByIdAsync(payPeriodId.Value)
             End With
 
         End If
@@ -287,8 +296,8 @@ Public Class selectPayPeriod
         If dgvpaypers.RowCount <> 0 Then
             Dim currentRow = dgvpaypers.CurrentRow
 
-            Dim dateFrom = Trim(currentRow.Cells("Column2").Value)
-            Dim dateTo = Trim(currentRow.Cells("Column3").Value)
+            Dim dateFrom = Trim(currentRow.Cells("Column2").Value.ToString())
+            Dim dateTo = Trim(currentRow.Cells("Column3").Value.ToString())
 
             lblpapyperiodval.Text = ": from " & dateFrom & " to " & dateTo
 
@@ -303,7 +312,7 @@ Public Class selectPayPeriod
 
         If currentRow Is Nothing Then Return
 
-        Dim statusColumn = currentRow.Cells("StatusColumn").Value
+        Dim statusColumn = currentRow.Cells("StatusColumn").Value.ToString()
         If statusColumn Is Nothing Then Return
 
         Dim status = Enums(Of PayPeriodStatus).Parse(statusColumn)
@@ -333,7 +342,7 @@ Public Class selectPayPeriod
     Private Sub dgvpaypers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles dgvpaypers.RowsAdded
         Dim month_column_name As String = Column5.Name
 
-        Dim is_even As Boolean = ((dgvpaypers.Item(month_column_name, e.RowIndex).Value Mod 2) = 0)
+        Dim is_even As Boolean = ((CInt(dgvpaypers.Item(month_column_name, e.RowIndex).Value) Mod 2) = 0)
 
         Dim row_bg_color As Color
 

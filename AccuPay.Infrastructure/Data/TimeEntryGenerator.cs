@@ -32,7 +32,7 @@ namespace AccuPay.Infrastructure.Data
         {
             // we use the employee data from resources.Employees instead of just passing the employee
             // entity in the Start method because we can be sure that the data in resources.Employees
-            // are complete employee data (ex. with Position, Divisition) that are needed by PayrollGenerator.
+            // are complete employee data (ex. with Position, Divisition) that are needed by TimeEntryGenerator.
             var employee = resources.Employees.Where(x => x.RowID == employeeId).FirstOrDefault();
 
             if (employee == null)
