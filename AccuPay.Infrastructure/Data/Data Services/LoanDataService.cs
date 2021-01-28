@@ -544,15 +544,16 @@ namespace AccuPay.Infrastructure.Data
                 // #2. Only one active Pagibig or SSS loan is allowed.
 
                 // #1
-                if (loan.LoanName != ProductConstant.PAG_IBIG_LOAN &&
-                    loan.LoanName != ProductConstant.SSS_LOAN)
+                if (loan.LoanType == null ||
+                    (!loan.LoanType.IsPagibigLoan &&
+                    !loan.LoanType.IsSssLoan))
                     throw new BusinessLogicException("Only PAGIBIG and SSS loan are allowed!");
 
                 // #2
                 if (loan.Status == Loan.STATUS_IN_PROGRESS)
                 {
                     var sameActiveLoans = await _loanRepository.GetActiveLoansByLoanNameAsync(
-                        loan.LoanName,
+                        loan.LoanType?.PartNo,
                         loan.EmployeeID.Value);
 
                     // if insert, check if there are any sameActiveLoans
