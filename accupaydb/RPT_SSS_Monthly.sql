@@ -39,6 +39,8 @@ BEGIN
         paysocialsecurity.EmployerMPFAmount AS `DatCol8`,
         (paystubsummary.TotalEmpSSS + paystubsummary.TotalCompSSS) AS `DatCol6`
     FROM employee
+    INNER JOIN `position` pos ON pos.RowID=employee.PositionID
+    INNER JOIN division d ON d.RowID=pos.DivisionId
     INNER JOIN (
         SELECT
             SUM(paystub.TotalEmpSSS) AS TotalEmpSSS,
@@ -55,7 +57,9 @@ BEGIN
     ) paystubsummary
     ON paystubsummary.EmployeeID = employee.RowID
     LEFT JOIN paysocialsecurity
-    ON paysocialsecurity.EmployeeContributionAmount = (paystubsummary.TotalEmpSSS - paysocialsecurity.EmployeeMPFAmount)
+    ON paysocialsecurity.EmployeeContributionAmount = IF(IF(employee.AgencyID IS NULL, d.SSSDeductSched, d.SSSDeductSchedAgency)='Per pay period',
+	 																		((paystubsummary.TotalEmpSSS * 2) - paysocialsecurity.EmployeeMPFAmount),
+																			(paystubsummary.TotalEmpSSS - paysocialsecurity.EmployeeMPFAmount))
     AND paramDate BETWEEN paysocialsecurity.EffectiveDateFrom AND paysocialsecurity.EffectiveDateTo
     WHERE employee.OrganizationID = OrganizID
     ORDER BY employee.LastName, employee.FirstName;
