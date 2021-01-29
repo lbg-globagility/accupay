@@ -27,21 +27,21 @@ namespace AccuPay.Utilities
         /// <param name="value"></param>
         /// <param name="places"></param>
         /// <returns></returns>
-        public static decimal CommercialRound(decimal value, int places = 2)
+        public static decimal CommercialRound(decimal value, int places = 2, MidpointRounding midpointRounding = MidpointRounding.AwayFromZero)
         {
-            return Math.Round(value, places, MidpointRounding.AwayFromZero);
+            return Math.Round(value, places, midpointRounding);
         }
 
-        public static decimal CommercialRound(decimal? value, int places = 2)
+        public static decimal CommercialRound(decimal? value, int places = 2, MidpointRounding midpointRounding = MidpointRounding.AwayFromZero)
         {
             if (value == null) return 0M;
 
-            return CommercialRound(value.Value, places);
+            return CommercialRound(value.Value, places, midpointRounding);
         }
 
-        public static decimal CommercialRound(double value, int places = 2)
+        public static decimal CommercialRound(double value, int places = 2, MidpointRounding midpointRounding = MidpointRounding.AwayFromZero)
         {
-            return CommercialRound((decimal)value, places);
+            return CommercialRound((decimal)value, places, midpointRounding);
         }
 
         /// <summary>
