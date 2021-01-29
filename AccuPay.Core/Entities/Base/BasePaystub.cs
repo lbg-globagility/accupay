@@ -80,7 +80,7 @@ namespace AccuPay.Core.Entities
 
         public decimal TotalEarningForDaily => RegularPay + LeavePay + AdditionalPay;
 
-        public void ComputeBasicPay(bool isDaily, decimal salary, IReadOnlyCollection<BaseTimeEntry> timeEntries)
+        public void ComputeBasicPay(bool isDaily, decimal salary, IReadOnlyCollection<BaseTimeEntry> timeEntries, MidpointRounding midpointRounding = MidpointRounding.AwayFromZero)
         {
             if (isDaily)
             {
@@ -88,7 +88,7 @@ namespace AccuPay.Core.Entities
             }
             else
             {
-                BasicPay = AccuMath.CommercialRound(salary / 2);
+                BasicPay = AccuMath.CommercialRound(value: salary / 2, midpointRounding: midpointRounding);
             }
         }
 
