@@ -379,11 +379,12 @@ namespace AccuPay.Core.Entities
             IReadOnlyCollection<TimeEntry> timeEntries,
             IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
             IReadOnlyCollection<AllowanceItem> allowanceItems,
-            IReadOnlyCollection<Bonus> bonuses)
+            IReadOnlyCollection<Bonus> bonuses,
+            MidpointRounding midpointRounding = MidpointRounding.AwayFromZero)
         {
             if (currentSystemOwner != SystemOwner.Benchmark)
             {
-                ComputeBasicHoursAndPay(employee, salary, calendarCollection, timeEntries: timeEntries, actualTimeEntries: actualTimeEntries);
+                ComputeBasicHoursAndPay(employee, salary, calendarCollection, timeEntries: timeEntries, actualTimeEntries: actualTimeEntries, midpointRounding: midpointRounding);
 
                 ComputeHours(employee, salary, timeEntries: timeEntries, actualTimeEntries: actualTimeEntries);
 
@@ -437,7 +438,7 @@ namespace AccuPay.Core.Entities
             NetPay = AccuMath.CommercialRound(GrossPay - NetDeductions + TotalAdjustments);
 
             var actualCalculator = new PaystubActualCalculator();
-            actualCalculator.Compute(employee, salary, settings, payPeriod, this, currentSystemOwner);
+            actualCalculator.Compute(employee, salary, settings, payPeriod, this, currentSystemOwner, actualTimeEntries, midpointRounding);
 
             var thirteenthMonthPayCalculator = new ThirteenthMonthPayCalculator(
                 organizationId: OrganizationID.Value,
@@ -478,7 +479,8 @@ namespace AccuPay.Core.Entities
             Salary salary,
             CalendarCollection calendarCollection,
             IReadOnlyCollection<TimeEntry> timeEntries,
-            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries)
+            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
+            MidpointRounding midpointRounding = MidpointRounding.AwayFromZero)
         {
             // Basic Hours
             if (employee.IsPremiumInclusive)
@@ -499,9 +501,9 @@ namespace AccuPay.Core.Entities
             }
 
             // Basic Pay
-            ComputeBasicPay(employee.IsDaily, salary.BasicSalary, timeEntries);
+            ComputeBasicPay(employee.IsDaily, salary.BasicSalary, timeEntries, midpointRounding: midpointRounding);
 
-            Actual.ComputeBasicPay(employee.IsDaily, salary.TotalSalary, actualTimeEntries);
+            Actual.ComputeBasicPay(employee.IsDaily, salary.TotalSalary, actualTimeEntries, midpointRounding: midpointRounding);
         }
 
         private void ComputeHours(
