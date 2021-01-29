@@ -41,6 +41,7 @@ namespace AccuPay.Core.Interfaces
         bool UseLoanDeductFromBonus { get; }
         bool UseLoanDeductFromThirteenthMonthPay { get; }
         bool UseMassOvertime { get; }
+        System.MidpointRounding NumberRounding { get; }
         bool UseOffset { get; }
         bool UseUserLevel { get; }
         bool ValidateLeaveBalance { get; }
