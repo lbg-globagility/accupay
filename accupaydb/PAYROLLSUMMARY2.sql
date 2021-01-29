@@ -69,13 +69,7 @@ SELECT
 		GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 	), decimal_size) `Rate`,
 	ROUND(paystub.BasicHours, decimal_size) `BasicHours`,
-	ROUND(GetBasicPay(
-					e.RowID,
-					paystub.PayFromDate,
-					paystub.PayToDate,
-					psi_undeclared,
-					paystub.BasicHours),
-					decimal_size) `BasicPay`,
+	ROUND(IF(psi_undeclared, paystubactual.BasicPay, paystub.BasicPay), decimal_size) `BasicPay`,
 
 	ROUND(paystub.RegularHours, decimal_size) `RegularHours`,
 	ROUND(IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay), decimal_size) `RegularPay`,
