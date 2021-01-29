@@ -1151,9 +1151,7 @@ Public Class PayStubForm
         Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.End)
         If salary Is Nothing Then Return
 
-        Dim basicRate = If(employee.IsDaily, salary.BasicSalary, salary.BasicSalary / 2)
-
-        txtBasicRate.Text = FormatNumber(basicRate, 2)
+        txtBasicRate.Text = FormatNumber(paystub.BasicPay, 2)
 
         txtRegularHours.Text = FormatNumber(paystub.RegularHours, 2)
         txtOvertimeHours.Text = FormatNumber(paystub.OvertimeHours, 2)
@@ -1210,6 +1208,7 @@ Public Class PayStubForm
 
         txtTotalLoans.Text = FormatNumber(paystub.TotalLoans, 2)
         txtTotalAdjustments.Text = FormatNumber(paystub.TotalAdjustments, 2)
+        txtTotalAdjustments2.Text = txtTotalAdjustments.Text
 
         Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(
             organizationId:=z_OrganizationID,
@@ -1225,6 +1224,9 @@ Public Class PayStubForm
         Dim totalNetSalary = paystub.NetPay + totalAgencyFee
         txtNetPay.Text = FormatNumber(totalNetSalary, 2)
         txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
+
+        Dim totalDeductions = GetTotalDeductions(paystub)
+        txtTotalDeductions.Text = If(totalDeductions = 0, "0.00", $"({FormatNumber(GetTotalDeductions(paystub), 2)})")
 
         Await LoadAdjustmentsAsync()
     End Function
@@ -1260,9 +1262,7 @@ Public Class PayStubForm
         Dim salary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value, datePeriod.End)
         If salary Is Nothing Then Return
 
-        Dim basicRate = If(employee.IsDaily, salary.TotalSalary, salary.TotalSalary / 2)
-
-        txtBasicRateActual.Text = FormatNumber(basicRate, 2)
+        txtBasicRateActual.Text = FormatNumber(paystub.Actual.BasicPay, 2)
 
         txtRegularHoursActual.Text = FormatNumber(paystub.RegularHours, 2)
         txtOvertimeHoursActual.Text = FormatNumber(paystub.OvertimeHours, 2)
@@ -1319,6 +1319,7 @@ Public Class PayStubForm
 
         txtTotalLoans.Text = FormatNumber(paystub.TotalLoans, 2)
         txtTotalAdjustments.Text = FormatNumber(paystub.Actual?.TotalAdjustments, 2)
+        txtTotalAdjustments2.Text = txtTotalAdjustments.Text
 
         Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(
             organizationId:=z_OrganizationID,
@@ -1337,6 +1338,9 @@ Public Class PayStubForm
 
         Dim totalNetPay = totalNetSalary + thirteenthMonthPay
         txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
+
+        Dim totalDeductions = GetTotalDeductions(paystub)
+        txtTotalDeductions.Text = If(totalDeductions = 0, "0.00", $"({FormatNumber(GetTotalDeductions(paystub), 2)})")
 
         Await LoadAdjustmentsAsync()
     End Function
@@ -1464,6 +1468,12 @@ Public Class PayStubForm
             btntotbon.Visible = False
         End If
 
+        If _currentSystemOwner = SystemOwner.Fisherfarms Then
+            Panel7.Visible = True
+            Panel7.Location = New Point(390, 511)
+
+            Panel8.Visible = False
+        End If
     End Sub
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
@@ -1940,5 +1950,9 @@ Public Class PayStubForm
             GeneratePayrollToolStripMenuItem_Click(sender, e)
         End If
     End Sub
+
+    Private Function GetTotalDeductions(paystub As Paystub) As Decimal
+        Return paystub.SssEmployeeShare + paystub.PhilHealthEmployeeShare + paystub.HdmfEmployeeShare + paystub.WithholdingTax + paystub.TotalLoans
+    End Function
 
 End Class

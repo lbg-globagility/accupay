@@ -16,6 +16,8 @@ namespace AccuPay.Core.Entities
 
         public const string text_laglobal = "LA Global";
 
+        public const string text_fisherfarms = "Fisherfarms";
+
         public const string text_default = "Default";
 
         public static string Goldwings => text_goldwings;
@@ -27,6 +29,8 @@ namespace AccuPay.Core.Entities
         public static string Benchmark => text_benchmark;
 
         public static string LAGlobal => text_laglobal;
+
+        public static string Fisherfarms => text_fisherfarms;
 
         public static string DefaultOwner => text_default;
 
