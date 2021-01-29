@@ -4,6 +4,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Policies;
 using AccuPay.Utilities;
+using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Infrastructure.Data
@@ -75,6 +76,8 @@ namespace AccuPay.Infrastructure.Data
         public bool UseLoanDeductFromThirteenthMonthPay => _settings.GetBoolean("Policy.UseLoanDeductFromThirteenthMonthPay", false);
 
         public bool UseMassOvertime => _settings.GetBoolean("Policy.UseMassOvertime", false);
+
+        public MidpointRounding NumberRounding => _settings.GetEnum("NumberRounding.MidpointRounding", MidpointRounding.AwayFromZero);
 
         public bool UseAgency => CurrentSystemOwner == SystemOwner.Hyundai || CurrentSystemOwner == SystemOwner.Goldwings;
 
