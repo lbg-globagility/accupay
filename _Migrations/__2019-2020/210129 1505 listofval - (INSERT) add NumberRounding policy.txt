@@ -1,0 +1,8 @@
+
+SET @type = 'NumberRounding';
+SET @lic = 'MidpointRounding';
+
+SET @id=(SELECT RowID FROM listofval WHERE `Type`=@type AND LIC=@lic LIMIT 1);
+
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
+VALUES (@id, NULL, 'AwayFromZero', @lic, @type, NULL, 'Yes', 'ToEven/AwayFromZero', NOW(), 1, NOW(), 1, 1) ON DUPLICATE KEY UPDATE LastUpd=NOW();
