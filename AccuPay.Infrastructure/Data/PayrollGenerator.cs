@@ -220,7 +220,8 @@ namespace AccuPay.Infrastructure.Data
                 timeEntries: timeEntries,
                 actualTimeEntries: actualTimeEntries,
                 allowanceItems: allowanceItems.ToList(),
-                bonuses: bonuses);
+                bonuses: bonuses,
+                midpointRounding: policy.NumberRounding);
 
             await _paystubDataService.SaveAsync(
                 currentlyLoggedInUserId: currentlyLoggedInUserId,
