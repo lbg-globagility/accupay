@@ -53,8 +53,14 @@ namespace AccuPay.Infrastructure.Data
 
         public bool IsPolicyByOrganization => _settings.GetBoolean("Policy.ByOrganization", false);
 
-        public SssCalculationBasis SssCalculationBasis =>
-            _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary, IsPolicyByOrganization);
+        public SssCalculationBasis SssCalculationBasis(int organizationId)
+        {
+            return _settings.GetEnum(
+                "SocialSecuritySystem.CalculationBasis",
+                Core.Enums.SssCalculationBasis.BasicSalary,
+                IsPolicyByOrganization,
+                organizationId);
+        }
 
         public bool UseUserLevel => _settings.GetBoolean("User Policy.UseUserLevel", false);
 

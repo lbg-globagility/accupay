@@ -10,6 +10,20 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class OrganizationUserRolesControl
 
     Private _users As ICollection(Of AspNetUser)
+    Private _roles As List(Of AspNetRole)
+
+    Private ReadOnly _policy As IPolicyHelper
+
+    Sub New()
+
+        InitializeComponent()
+
+        If MainServiceProvider IsNot Nothing Then
+
+            _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+        End If
+
+    End Sub
 
     Private Async Sub OrganizationUserRolesControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -45,12 +59,12 @@ Public Class OrganizationUserRolesControl
     Private Async Function PopulateRoleComboBox() As Task
 
         Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
-        Dim roles = (Await roleRepository.List(PageOptions.AllData, Z_Client)).
+        _roles = (Await roleRepository.List(PageOptions.AllData, Z_Client)).
             roles.
             OrderBy(Function(r) r.Name).
             ToList()
 
-        roles.Insert(0, New AspNetRole() With
+        _roles.Insert(0, New AspNetRole() With
         {
             .Name = "<UNAUTHORIZED>"
         })
@@ -58,7 +72,7 @@ Public Class OrganizationUserRolesControl
         RoleColumn.DisplayMember = "Name"
         RoleColumn.ValueMember = "Id"
 
-        RoleColumn.DataSource = roles
+        RoleColumn.DataSource = _roles
     End Function
 
     Private Async Function PopulateUserRoleGrid(organizationId As Integer?) As Task
@@ -78,13 +92,24 @@ Public Class OrganizationUserRolesControl
             Await GetUsers()
         End If
 
+        Dim defaultRoleId = _roles.FirstOrDefault(Function(r) r.IsAdmin)?.Id
+
         For Each user In _users
 
             Dim userRole = userRoles.FirstOrDefault(Function(o) o.User?.Id IsNot Nothing AndAlso o.User.Id = user.Id)
 
+            'since VB cannot handle ternary operators well
+            'we have to do this sh*t
+            Dim roleId As Integer?
+            If _policy.UseUserLevel Then
+                roleId = defaultRoleId
+            Else
+                roleId = userRole?.Role?.Id
+            End If
+
             models.Add(New UserRoleViewModel(
                 organizationId:=organizationId,
-                roleId:=userRole?.Role?.Id,
+                roleId:=roleId,
                 user:=user))
 
         Next

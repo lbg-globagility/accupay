@@ -101,7 +101,7 @@ namespace AccuPay.Core.Services
             Employee employee,
             string currentSystemOwner)
         {
-            switch (_policy.SssCalculationBasis)
+            switch (_policy.SssCalculationBasis(employee.OrganizationID.Value))
             {
                 case SssCalculationBasis.BasicSalary:
                     return PayrollTools.GetEmployeeMonthlyRate(employee, salary);

@@ -106,7 +106,7 @@ namespace AccuPay.Core.Services
             IReadOnlyCollection<Allowance> allowances,
             string currentSystemOwner)
         {
-            var calculationBasis = _policy.CalculationBasis;
+            var calculationBasis = _policy.CalculationBasis(employee.OrganizationID.Value);
 
             var basisPay = 0M;
 

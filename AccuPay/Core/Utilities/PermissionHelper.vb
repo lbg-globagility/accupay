@@ -143,7 +143,6 @@ Namespace Desktop.Helpers
                 If userLevelNotAllowedList.Contains(permissionName.ToUpper()) Then
                     Return (False, Nothing)
                 End If
-            Else
             End If
 
             Return (If(role Is Nothing, False, True), role)
