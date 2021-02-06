@@ -161,6 +161,7 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<Loan>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId)
         {
             return await _context.Loans
+                .AsNoTracking()
                 .Include(l => l.LoanType)
                 .Include(l => l.LoanType.CategoryEntity)
                 .Where(l => l.LoanType.CategoryEntity.CategoryName.Trim().ToUpper() == ProductConstant.LOAN_TYPE_CATEGORY.Trim().ToUpper())
