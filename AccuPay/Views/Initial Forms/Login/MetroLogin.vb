@@ -210,7 +210,7 @@ Public Class MetroLogin
         Z_Client = user.ClientId
 
         userFirstName = user.FirstName
-        z_postName = USER_ROLE.Name
+        z_postName = USER_ROLE?.Name
 
         If dbnow Is Nothing Then dbnow = EXECQUER(CURDATE_MDY)
 

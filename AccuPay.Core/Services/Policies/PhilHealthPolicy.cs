@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Enums;
+using AccuPay.Core.Enums;
 
 namespace AccuPay.Core.Services
 {
@@ -16,15 +16,15 @@ namespace AccuPay.Core.Services
 
         public decimal Rate => _settings.GetDecimal("PhilHealth.Rate");
 
-        public PhilHealthCalculationBasis CalculationBasis
+        public PhilHealthCalculationBasis CalculationBasis(int organizationId)
         {
-            get
-            {
-                var policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", false);
+            var policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", false);
 
-                return _settings.GetEnum("PhilHealth.CalculationBasis",
-                                    PhilHealthCalculationBasis.BasicSalary, policyByOrganization);
-            }
+            return _settings.GetEnum(
+                "PhilHealth.CalculationBasis",
+                PhilHealthCalculationBasis.BasicSalary,
+                policyByOrganization,
+                organizationId);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
 using System;
@@ -92,15 +92,24 @@ namespace AccuPay.Core.Services
             return GetStringValue(names.Item1, names.Item2, findByOrganization, organizationId) ?? @default;
         }
 
-        public T GetEnum<T>(string name, T @default = default(T), bool findByOrganization = false) where T : struct
+        public T GetEnum<T>(
+            string name,
+            T @default = default(T),
+            bool findByOrganization = false,
+            int? organizationId = null) where T : struct
         {
             var names = Split(name);
-            return GetEnum<T>(names.Item1, names.Item2, @default, findByOrganization);
+            return GetEnum<T>(names.Item1, names.Item2, @default, findByOrganization, organizationId);
         }
 
-        public T GetEnum<T>(string type, string lic, T @default = default(T), bool findByOrganization = false) where T : struct
+        public T GetEnum<T>(
+            string type,
+            string lic,
+            T @default = default(T),
+            bool findByOrganization = false,
+            int? organizationId = null) where T : struct
         {
-            var value = GetValue(type, lic, findByOrganization);
+            var value = GetValue(type, lic, findByOrganization, organizationId);
 
             if (value == null)
                 return @default;
