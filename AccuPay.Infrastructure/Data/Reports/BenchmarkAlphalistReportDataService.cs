@@ -72,7 +72,7 @@ namespace AccuPay.Infrastructure.Data
                     var salary = payPeriodSalaries.Salaries
                         .FirstOrDefault(s => s.EmployeeID.Value == employee.RowID.Value);
 
-                    basicPay += ComputeBasicPay(employee, salary.BasicSalary, paystub.BasicPay);
+                    basicPay += ComputeBasicPay(employee, (salary?.BasicSalary ?? 0), paystub.BasicPay);
                 }
 
                 var alphalistData = new BenchmarkAlphalistData(
