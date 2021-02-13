@@ -7,6 +7,6 @@ namespace AccuPay.Core.Interfaces
 {
     public interface IBpiInsuranceAmountReportDataService
     {
-        Task<IEnumerable<BpiInsuranceDataSource>> GetData(int organizationId, int userId, DateTime selectedDate);
+        Task<ICollection<BpiInsuranceDataSource>> GetData(int organizationId, int userId, DateTime selectedDate);
     }
 }
