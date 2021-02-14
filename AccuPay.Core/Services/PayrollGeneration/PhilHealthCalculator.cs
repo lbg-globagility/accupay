@@ -2,7 +2,6 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AccuPay.Core.Services

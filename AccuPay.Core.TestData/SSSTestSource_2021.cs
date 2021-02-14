@@ -9,6 +9,8 @@ namespace AccuPay.Core.TestData
         {
             get
             {
+                yield return new TestCaseData(0m, 0m, 0m);
+                yield return new TestCaseData(999.99m, 0m, 0m);
                 yield return new TestCaseData(1000.00m, 135.0m, 265.0m);
                 yield return new TestCaseData(3249.99m, 135.0m, 265.0m);
                 yield return new TestCaseData(3250.00m, 157.5m, 307.5m);

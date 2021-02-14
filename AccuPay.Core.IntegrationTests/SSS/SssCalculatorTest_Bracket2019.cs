@@ -3,22 +3,24 @@ using AccuPay.Core.Enums;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.TestData;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace AccuPay.Core.UnitTests.SSS
+namespace AccuPay.Core.IntegrationTests.SSS
 {
-    public class SssCalculatorTest_2019
+    public class SssCalculatorTest_Bracket2019 : DatabaseTest
     {
         private const int OrganizationId = 1;
 
         [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_SalaryBased")]
-        public void ShouldCalculate_WithBasicPayCalculationBasis(
-            decimal basicSalary,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+        public void ShouldCalculate_WithBasicSalaryCalculationBasis(
+        decimal basicSalary,
+        decimal expectedSssEmployeeShare,
+        decimal expectedSssEmployerShare)
         {
             Mock<IPolicyHelper> policyHelper = new Mock<IPolicyHelper>();
             policyHelper
@@ -427,6 +429,7 @@ namespace AccuPay.Core.UnitTests.SSS
                 Year = 2019,
                 Month = 4
             };
+
             BaseShouldCalculate(
                 basicSalary: basicSalary,
                 paystub: paystub,
@@ -448,9 +451,13 @@ namespace AccuPay.Core.UnitTests.SSS
             string employeeType,
             PayPeriod payPeriod)
         {
-            List<SocialSecurityBracket> socialSecurityBrackets = MockSocialSecurityBrackets.Get();
+            var sssRepository = MainServiceProvider.GetRequiredService<ISocialSecurityBracketRepository>();
+            IEnumerable<SocialSecurityBracket> socialSecurityBrackets = sssRepository.GetAll();
 
-            var calculator = new SssCalculator(policy, socialSecurityBrackets, payPeriod);
+            if (socialSecurityBrackets.Max(x => x.EffectiveDateFrom) < new DateTime(2020, 4, 1))
+                throw new Exception("SSS brackets for 2019-2020 are not created in the database yet");
+
+            var calculator = new SssCalculator(policy, socialSecurityBrackets.ToList(), payPeriod);
 
             var salary = new Salary()
             {

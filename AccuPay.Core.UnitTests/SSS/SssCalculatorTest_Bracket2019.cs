@@ -3,21 +3,19 @@ using AccuPay.Core.Enums;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.TestData;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace AccuPay.Core.IntegrationTests.SSS
+namespace AccuPay.Core.UnitTests.SSS
 {
-    public class SssCalculatorTest_2021 : DatabaseTest
+    public class SssCalculatorTest_Bracket2019
     {
-        private const int OrganizationId = 2;
+        private const int OrganizationId = 1;
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
-        public void ShouldCalculate_WithBasicPayCalculationBasis(
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_SalaryBased")]
+        public void ShouldCalculate_WithBasicSalaryCalculationBasis(
             decimal basicSalary,
             decimal expectedSssEmployeeShare,
             decimal expectedSssEmployerShare)
@@ -49,7 +47,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 Employee.EmployeeTypeFixed);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithBasicMinusDeductionsCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -92,8 +90,8 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 policyHelper.Object,
                 Employee.EmployeeTypeMonthly);
 
-            decimal expectedSssEmployeeShareForFixed = 675m;
-            decimal expectedSssEmployerShareForFixed = 1_305m;
+            decimal expectedSssEmployeeShareForFixed = 600m;
+            decimal expectedSssEmployerShareForFixed = 1_230m;
 
             BaseShouldCalculate(
                 basicSalary: basicSalary,
@@ -105,7 +103,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 Employee.EmployeeTypeFixed);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithEarningsCalculationBasis(
             decimal previousTotalDaysPayWithOutOvertimeAndLeave,
             decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -128,7 +126,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 expectedSssEmployerShare: expectedSssEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithGrossPayCalculationBasis(
             decimal previousTotalDaysPayWithOutOvertimeAndLeave,
             decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -211,7 +209,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
             //    Employee.EmployeeTypeDaily);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_SalaryBased")]
         public void ShouldCalculate__WithIrregularPayPeriodAndBasicPayCalculationBasis(
             decimal basicSalary,
             decimal expectedSssEmployeeShare,
@@ -230,7 +228,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 expectedSssEmployerShare: expectedSssEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithIrregularPayPeriodAndBasicMinusDeductionsCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -264,11 +262,11 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var payPeriod = new PayPeriod()
             {
-                PayFromDate = new DateTime(2020, 12, 16),
-                PayToDate = new DateTime(2020, 12, 31),
+                PayFromDate = new DateTime(2019, 3, 16),
+                PayToDate = new DateTime(2019, 3, 31),
                 Half = PayPeriod.FirstHalfValue,
-                Year = 2021,
-                Month = 1
+                Year = 2019,
+                Month = 4
             };
 
             decimal basicSalary = 15_000m;
@@ -283,8 +281,8 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 Employee.EmployeeTypeMonthly,
                 payPeriod);
 
-            decimal expectedSssEmployeeShareForFixed = 675m;
-            decimal expectedSssEmployerShareForFixed = 1_305m;
+            decimal expectedSssEmployeeShareForFixed = 600m;
+            decimal expectedSssEmployerShareForFixed = 1_230m;
 
             BaseShouldCalculate(
                 basicSalary: basicSalary,
@@ -297,7 +295,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 payPeriod);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithIrregularPayPeriodAndGrossPayCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -321,7 +319,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 expectedSssEmployerShare: expectedSssEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithIrregularPayPeriodAndEarningsCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -384,11 +382,11 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var payPeriod = new PayPeriod()
             {
-                PayFromDate = new DateTime(2020, 12, 16),
-                PayToDate = new DateTime(2020, 12, 31),
+                PayFromDate = new DateTime(2019, 3, 16),
+                PayToDate = new DateTime(2019, 3, 31),
                 Half = PayPeriod.FirstHalfValue,
-                Year = 2021,
-                Month = 1
+                Year = 2019,
+                Month = 4
             };
 
             BaseShouldCalculate(
@@ -423,13 +421,12 @@ namespace AccuPay.Core.IntegrationTests.SSS
         {
             var payPeriod = new PayPeriod()
             {
-                PayFromDate = new DateTime(2021, 1, 1),
-                PayToDate = new DateTime(2021, 1, 15),
+                PayFromDate = new DateTime(2019, 4, 1),
+                PayToDate = new DateTime(2019, 4, 15),
                 Half = PayPeriod.FirstHalfValue,
-                Year = 2021,
-                Month = 1
+                Year = 2019,
+                Month = 4
             };
-
             BaseShouldCalculate(
                 basicSalary: basicSalary,
                 paystub: paystub,
@@ -451,10 +448,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             string employeeType,
             PayPeriod payPeriod)
         {
-            var sssRepository = MainServiceProvider.GetRequiredService<ISocialSecurityBracketRepository>();
-            IEnumerable<SocialSecurityBracket> socialSecurityBrackets = sssRepository.GetAll();
+            List<SocialSecurityBracket> socialSecurityBrackets = MockSocialSecurityBrackets.Get();
 
-            var calculator = new SssCalculator(policy, socialSecurityBrackets.ToList(), payPeriod);
+            var calculator = new SssCalculator(policy, socialSecurityBrackets, payPeriod);
 
             var salary = new Salary()
             {
