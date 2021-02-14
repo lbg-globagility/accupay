@@ -50,12 +50,6 @@ namespace AccuPay.Core.Services
 
         public async Task<FunctionResult> ValidatePayPeriodActionAsync(int? payPeriodId)
         {
-            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.Benchmark)
-            {
-                // Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
-                return FunctionResult.Success();
-            }
-
             if (payPeriodId == null)
             {
                 return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
@@ -91,7 +85,7 @@ namespace AccuPay.Core.Services
             return payPeriod;
         }
 
-        public async Task<PayPeriod> StartStatusAsync(int organizationId, int month, int year, bool isFirstHalf, int currentlyLoggedInUserId)
+        public async Task<PayPeriod> OpenAsync(int organizationId, int month, int year, bool isFirstHalf, int currentlyLoggedInUserId)
         {
             var payPeriod = await _payPeriodRepository.GetAsync(
                 organizationId,

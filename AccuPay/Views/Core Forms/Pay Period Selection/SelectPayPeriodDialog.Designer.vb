@@ -24,6 +24,8 @@ Partial Class SelectPayPeriodDialog
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.PayPeriodGridView = New System.Windows.Forms.DataGridView()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.linkNxt = New System.Windows.Forms.LinkLabel()
         Me.linkPrev = New System.Windows.Forms.LinkLabel()
         Me.OkButton = New System.Windows.Forms.Button()
@@ -32,8 +34,8 @@ Partial Class SelectPayPeriodDialog
         Me.lblpapyperiodval = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.PayPeriodStatusLabel = New System.Windows.Forms.Label()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OpenCloseButton = New System.Windows.Forms.Button()
+        Me.CancelPayrollButton = New System.Windows.Forms.Button()
         CType(Me.PayPeriodGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
@@ -65,6 +67,24 @@ Partial Class SelectPayPeriodDialog
         Me.PayPeriodGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.PayPeriodGridView.Size = New System.Drawing.Size(416, 373)
         Me.PayPeriodGridView.TabIndex = 0
+        '
+        'Column15
+        '
+        Me.Column15.DataPropertyName = "PayFromDate"
+        Me.Column15.HeaderText = "Pay period from"
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        Me.Column15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Column15.Width = 178
+        '
+        'Column16
+        '
+        Me.Column16.DataPropertyName = "PayToDate"
+        Me.Column16.HeaderText = "Pay period to"
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        Me.Column16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Column16.Width = 178
         '
         'linkNxt
         '
@@ -151,23 +171,29 @@ Partial Class SelectPayPeriodDialog
         Me.PayPeriodStatusLabel.Text = "-----"
         Me.PayPeriodStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'Column15
+        'OpenCloseButton
         '
-        Me.Column15.DataPropertyName = "PayFromDate"
-        Me.Column15.HeaderText = "Pay period from"
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        Me.Column15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column15.Width = 178
+        Me.OpenCloseButton.BackColor = System.Drawing.Color.Green
+        Me.OpenCloseButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.OpenCloseButton.ForeColor = System.Drawing.Color.White
+        Me.OpenCloseButton.Location = New System.Drawing.Point(12, 43)
+        Me.OpenCloseButton.Name = "OpenCloseButton"
+        Me.OpenCloseButton.Size = New System.Drawing.Size(91, 35)
+        Me.OpenCloseButton.TabIndex = 285
+        Me.OpenCloseButton.Text = "Open/Close"
+        Me.OpenCloseButton.UseVisualStyleBackColor = False
         '
-        'Column16
+        'CancelPayrollButton
         '
-        Me.Column16.DataPropertyName = "PayToDate"
-        Me.Column16.HeaderText = "Pay period to"
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        Me.Column16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column16.Width = 178
+        Me.CancelPayrollButton.BackColor = System.Drawing.Color.Red
+        Me.CancelPayrollButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.CancelPayrollButton.ForeColor = System.Drawing.Color.White
+        Me.CancelPayrollButton.Location = New System.Drawing.Point(12, 381)
+        Me.CancelPayrollButton.Name = "CancelPayrollButton"
+        Me.CancelPayrollButton.Size = New System.Drawing.Size(91, 35)
+        Me.CancelPayrollButton.TabIndex = 286
+        Me.CancelPayrollButton.Text = "Cancel Payroll"
+        Me.CancelPayrollButton.UseVisualStyleBackColor = False
         '
         'SelectPayPeriodDialog
         '
@@ -176,6 +202,8 @@ Partial Class SelectPayPeriodDialog
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.CloseButton
         Me.ClientSize = New System.Drawing.Size(548, 508)
+        Me.Controls.Add(Me.CancelPayrollButton)
+        Me.Controls.Add(Me.OpenCloseButton)
         Me.Controls.Add(Me.PayPeriodStatusLabel)
         Me.Controls.Add(Me.lblpapyperiodval)
         Me.Controls.Add(Me.Label2)
@@ -207,4 +235,6 @@ Partial Class SelectPayPeriodDialog
     Friend WithEvents PayPeriodStatusLabel As Label
     Friend WithEvents Column15 As DataGridViewTextBoxColumn
     Friend WithEvents Column16 As DataGridViewTextBoxColumn
+    Friend WithEvents OpenCloseButton As Button
+    Friend WithEvents CancelPayrollButton As Button
 End Class

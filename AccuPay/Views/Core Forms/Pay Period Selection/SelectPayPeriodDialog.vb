@@ -37,6 +37,9 @@ Public Class SelectPayPeriodDialog
 
     Async Function LoadPeriods(year As Integer) As Task
 
+        RemoveHandler PayPeriodGridView.SelectionChanged,
+            AddressOf PayPeriodGridView_SelectionChanged
+
         Dim payPeriods = (Await _payPeriodRepository.
             GetYearlyPayPeriodsAsync(
                 organizationId:=z_OrganizationID,
@@ -67,11 +70,16 @@ Public Class SelectPayPeriodDialog
 
         End If
 
-        If currentlyWorkedOnPayPeriodIndex > PayPeriodGridView.Rows.Count - 1 Then Return
+        If currentlyWorkedOnPayPeriodIndex <= PayPeriodGridView.Rows.Count - 1 Then
 
-        PayPeriodGridView.Rows(currentlyWorkedOnPayPeriodIndex).Selected = True
+            PayPeriodGridView.Rows(currentlyWorkedOnPayPeriodIndex).Selected = True
 
-        PayPeriodGridView.Rows(currentlyWorkedOnPayPeriodIndex).Cells(Column15.Index).Selected = True
+            PayPeriodGridView.Rows(currentlyWorkedOnPayPeriodIndex).Cells(Column15.Index).Selected = True
+
+        End If
+
+        AddHandler PayPeriodGridView.SelectionChanged,
+            AddressOf PayPeriodGridView_SelectionChanged
 
     End Function
 
@@ -118,15 +126,7 @@ Public Class SelectPayPeriodDialog
                         month:=payPeriod.Month,
                         year:=payPeriod.Year,
                         isFirstHalf:=payPeriod.IsFirstHalf,
-                        currentUserId:=z_User)
-                End If
-
-                Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(payPeriod.RowID)
-
-                If validate = FunctionResult.Failed Then
-
-                    MessageBoxHelper.Warning(validate.Message)
-                    Return
+                        currentlyLoggedInUserId:=z_User)
                 End If
 
                 SelectedPayPeriod = Await _payPeriodRepository.GetByIdAsync(payPeriod.RowID.Value)
@@ -138,8 +138,8 @@ Public Class SelectPayPeriodDialog
         DialogResult = DialogResult.OK
     End Sub
 
-    Private Sub dgvpaypers_SelectionChanged(sender As Object, e As EventArgs) Handles PayPeriodGridView.SelectionChanged
-        UpdateStatusLabel()
+    Private Sub PayPeriodGridView_SelectionChanged(sender As Object, e As EventArgs) Handles PayPeriodGridView.SelectionChanged
+        UpdatePayPeriodDetails()
     End Sub
 
     Private Async Function MoveNextYear() As Task
@@ -160,7 +160,7 @@ Public Class SelectPayPeriodDialog
         Await LoadPeriods(_currentYear)
 
         If PayPeriodGridView.RowCount <> 0 Then
-            UpdateStatusLabel()
+            UpdatePayPeriodDetails()
         Else
             lblpapyperiodval.Text = ""
             ResetPayPeriodStatusLabel()
@@ -169,12 +169,19 @@ Public Class SelectPayPeriodDialog
         Panel2.Enabled = True
     End Function
 
-    Private Sub UpdateStatusLabel()
+    Private Sub UpdatePayPeriodDetails()
+
+        OpenCloseButton.Visible = False
+        CancelPayrollButton.Visible = False
+
         If PayPeriodGridView.CurrentRow IsNot Nothing AndAlso PayPeriodGridView.CurrentRow.DataBoundItem IsNot Nothing Then
 
             Dim currentPayPeriod = DirectCast(PayPeriodGridView.CurrentRow.DataBoundItem, PayPeriod)
 
             If currentPayPeriod Is Nothing Then Return
+
+            OpenCloseButton.Visible = True
+            CancelPayrollButton.Visible = True
 
             Dim dateFrom = currentPayPeriod.PayFromDate.ToShortDateString()
             Dim dateTo = currentPayPeriod.PayToDate.ToShortDateString()
@@ -182,10 +189,31 @@ Public Class SelectPayPeriodDialog
             lblpapyperiodval.Text = ": from " & dateFrom & " to " & dateTo
 
             UpdatePayPeriodStatusLabel(currentPayPeriod)
+
+            UpdatePayPeriodButtons(currentPayPeriod)
         Else
             lblpapyperiodval.Text = ""
             ResetPayPeriodStatusLabel()
         End If
+    End Sub
+
+    Private Sub UpdatePayPeriodButtons(currentPayPeriod As PayPeriod)
+        Select Case currentPayPeriod.Status
+            Case PayPeriodStatus.Pending
+                OpenCloseButton.Text = "Open Payroll"
+                OpenCloseButton.BackColor = Color.Green
+                CancelPayrollButton.Visible = False
+
+            Case PayPeriodStatus.Open
+                OpenCloseButton.Text = "Close Payroll"
+                OpenCloseButton.BackColor = Color.Black
+                CancelPayrollButton.Visible = True
+
+            Case PayPeriodStatus.Closed
+                OpenCloseButton.Text = "Reopen Payroll"
+                OpenCloseButton.BackColor = Color.Green
+                CancelPayrollButton.Visible = False
+        End Select
     End Sub
 
     Private Sub UpdatePayPeriodStatusLabel(currentPayPeriod As PayPeriod)
@@ -249,6 +277,151 @@ Public Class SelectPayPeriodDialog
             Return MyBase.ProcessCmdKey(msg, keyData)
 
         End If
+    End Function
+
+    Private Async Sub OpenCloseButton_Click(sender As Object, e As EventArgs) Handles OpenCloseButton.Click
+
+        If PayPeriodGridView.CurrentRow IsNot Nothing AndAlso PayPeriodGridView.CurrentRow.DataBoundItem IsNot Nothing Then
+
+            Dim currentPayPeriod = DirectCast(PayPeriodGridView.CurrentRow.DataBoundItem, PayPeriod)
+
+            Dim payPeriodString = GetPayPeriodString(currentPayPeriod)
+
+            If currentPayPeriod.IsOpen Then
+
+                Await ClosePayroll(currentPayPeriod, payPeriodString)
+            Else
+
+                Await OpenPayroll(currentPayPeriod, payPeriodString)
+
+            End If
+
+        End If
+
+    End Sub
+
+    Private Async Function ClosePayroll(
+        currentPayPeriod As PayPeriod,
+        payPeriodString As String) As Task
+
+        If Not currentPayPeriod.IsOpen Then
+
+            MessageBoxHelper.Warning("Cannot close a payroll if it is not Open.")
+            Return
+
+        End If
+
+        Const messageTitle As String = "Close Payroll"
+        Dim confirmMessage = $"Are you sure you want to close the payroll {payPeriodString}?"
+
+        If Not MessageBoxHelper.Confirm(Of Boolean)(confirmMessage) Then Return
+
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
+
+        Me.Cursor = Cursors.WaitCursor
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Await payPeriodService.CloseAsync(
+                    payPeriodId:=currentPayPeriod.RowID.Value,
+                    currentlyLoggedInUserId:=z_User)
+
+                Await LoadPeriods(_currentYear)
+                UpdatePayPeriodDetails()
+
+                MessageBoxHelper.Information(
+                    $"Payroll {payPeriodString} was successfully closed.",
+                    messageTitle)
+            End Function)
+
+        Me.Cursor = Cursors.Default
+    End Function
+
+    Private Async Function OpenPayroll(
+        currentPayPeriod As PayPeriod,
+        payPeriodString As String) As Task
+
+        If currentPayPeriod.IsOpen Then
+
+            MessageBoxHelper.Warning("Cannot open a payroll if it is already opened.")
+            Return
+
+        End If
+
+        Const messageTitle As String = "Open Payroll"
+        Dim confirmMessage = $"Are you sure you want to open the payroll {payPeriodString}?"
+
+        If Not MessageBoxHelper.Confirm(Of Boolean)(confirmMessage) Then Return
+
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
+
+        Me.Cursor = Cursors.WaitCursor
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Await payPeriodService.OpenAsync(
+                    organizationId:=z_OrganizationID,
+                    month:=currentPayPeriod.Month,
+                    year:=currentPayPeriod.Year,
+                    isFirstHalf:=currentPayPeriod.IsFirstHalf,
+                    currentlyLoggedInUserId:=z_User)
+
+                Await LoadPeriods(_currentYear)
+                UpdatePayPeriodDetails()
+
+                MessageBoxHelper.Information(
+                    $"Payroll {payPeriodString} was successfully opened.",
+                    messageTitle)
+            End Function)
+
+        Me.Cursor = Cursors.Default
+    End Function
+
+    Private Async Sub CancelPayrollButton_Click(sender As Object, e As EventArgs) Handles CancelPayrollButton.Click
+
+        If PayPeriodGridView.CurrentRow IsNot Nothing AndAlso PayPeriodGridView.CurrentRow.DataBoundItem IsNot Nothing Then
+
+            Dim currentPayPeriod = DirectCast(PayPeriodGridView.CurrentRow.DataBoundItem, PayPeriod)
+
+            If Not currentPayPeriod.IsOpen Then
+
+                MessageBoxHelper.Warning("Cannot cancel a payroll if it is not Open.")
+                Return
+
+            End If
+
+            Const messageTitle As String = "Cancel Payroll"
+            Dim payPeriodString = GetPayPeriodString(currentPayPeriod)
+
+            Dim confirmMessage = $"Are you sure you want to delete all of the paystubs of payroll {payPeriodString}?"
+            If Not MessageBoxHelper.Confirm(Of Boolean)(confirmMessage) Then Return
+
+            Dim payPeriodService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
+
+            Me.Cursor = Cursors.WaitCursor
+
+            Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Await payPeriodService.CancelAsync(
+                    payPeriodId:=currentPayPeriod.RowID.Value,
+                    currentlyLoggedInUserId:=z_User)
+
+                Await LoadPeriods(_currentYear)
+                UpdatePayPeriodDetails()
+
+                MessageBoxHelper.Information(
+                    $"Payroll {payPeriodString} was successfully cancelled.",
+                    messageTitle)
+            End Function)
+
+            Me.Cursor = Cursors.Default
+
+        End If
+
+    End Sub
+
+    Private Shared Function GetPayPeriodString(currentPayPeriod As PayPeriod) As String
+        Return $"'{currentPayPeriod.PayFromDate.ToShortDateString()}' - '{currentPayPeriod.PayToDate.ToShortDateString()}'"
     End Function
 
 End Class
