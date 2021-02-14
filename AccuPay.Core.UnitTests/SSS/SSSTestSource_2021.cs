@@ -25,8 +25,8 @@ namespace AccuPay.Core.UnitTests.SSS
                 yield return new TestCaseData(6249.99m, 270.0m, 520.0m);
                 yield return new TestCaseData(6250.00m, 292.5m, 562.5m);
                 yield return new TestCaseData(6749.99m, 292.5m, 562.5m);
-                yield return new TestCaseData(6750.00m, 135.0m, 605.0m);
-                yield return new TestCaseData(7249.99m, 135.0m, 605.0m);
+                yield return new TestCaseData(6750.00m, 315.0m, 605.0m);
+                yield return new TestCaseData(7249.99m, 315.0m, 605.0m);
                 yield return new TestCaseData(7250.00m, 337.5m, 647.5m);
                 yield return new TestCaseData(7749.99m, 337.5m, 647.5m);
                 yield return new TestCaseData(7750.00m, 360.0m, 690.0m);
@@ -122,8 +122,8 @@ namespace AccuPay.Core.UnitTests.SSS
                 yield return new TestCaseData(6000.00m, 249.99m, 6000.00m, 249.99m, 6000.00m, 249.99m, 270.0m, 520.0m);
                 yield return new TestCaseData(6000.00m, 250.00m, 6000.00m, 250.00m, 6000.00m, 250.00m, 292.5m, 562.5m);
                 yield return new TestCaseData(6000.00m, 749.99m, 6000.00m, 749.99m, 6000.00m, 749.99m, 292.5m, 562.5m);
-                yield return new TestCaseData(6000.00m, 750.00m, 6000.00m, 750.00m, 6000.00m, 750.00m, 135.0m, 605.0m);
-                yield return new TestCaseData(7000.00m, 249.99m, 7000.00m, 249.99m, 7000.00m, 249.99m, 135.0m, 605.0m);
+                yield return new TestCaseData(6000.00m, 750.00m, 6000.00m, 750.00m, 6000.00m, 750.00m, 315.0m, 605.0m);
+                yield return new TestCaseData(7000.00m, 249.99m, 7000.00m, 249.99m, 7000.00m, 249.99m, 315.0m, 605.0m);
                 yield return new TestCaseData(7000.00m, 250.00m, 7000.00m, 250.00m, 7000.00m, 250.00m, 337.5m, 647.5m);
                 yield return new TestCaseData(7000.00m, 749.99m, 7000.00m, 749.99m, 7000.00m, 749.99m, 337.5m, 647.5m);
                 yield return new TestCaseData(7000.00m, 750.00m, 7000.00m, 750.00m, 7000.00m, 750.00m, 360.0m, 690.0m);

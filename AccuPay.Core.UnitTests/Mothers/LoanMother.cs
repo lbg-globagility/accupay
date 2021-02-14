@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace AccuPay.Core.UnitTests.Mothers
 {
-    public class LoanMother
+    public static class LoanMother
     {
         public static Loan Simple()
         {

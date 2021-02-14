@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AccuPay.Core.UnitTests.Mothers
 {
-    public class LoanTransactionMother
+    public static class LoanTransactionMother
     {
         public static LoanTransaction Simple(
             int loanId = 0,

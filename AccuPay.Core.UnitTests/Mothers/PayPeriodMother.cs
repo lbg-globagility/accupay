@@ -3,7 +3,7 @@ using System;
 
 namespace AccuPay.Core.UnitTests.Mothers
 {
-    public class PayPeriodMother
+    public static class PayPeriodMother
     {
         public static PayPeriod StartDateOnly(DateTime payFromDate)
         {

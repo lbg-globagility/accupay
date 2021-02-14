@@ -527,7 +527,7 @@ namespace AccuPay.Core.UnitTests.SSS
                     RangeFromAmount = 6_750m,
                     RangeToAmount = 7_249.99m,
                     MonthlySalaryCredit = 7_000,
-                    EmployeeContributionAmount = 135.0m,
+                    EmployeeContributionAmount = 315.0m,
                     EmployerContributionAmount = 595m,
                     EmployerECAmount = 10m,
                     EmployerMPFAmount = 0.0m,
