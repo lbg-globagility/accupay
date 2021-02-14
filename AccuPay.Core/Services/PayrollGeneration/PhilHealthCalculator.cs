@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Utilities;
 using System.Linq;
 
@@ -8,9 +9,9 @@ namespace AccuPay.Core.Services
 {
     public class PhilHealthCalculator
     {
-        private readonly PhilHealthPolicy _policy;
+        private readonly IPhilHealthPolicy _policy;
 
-        public PhilHealthCalculator(PhilHealthPolicy policy)
+        public PhilHealthCalculator(IPhilHealthPolicy policy)
         {
             _policy = policy;
         }

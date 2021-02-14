@@ -1,8 +1,9 @@
 using AccuPay.Core.Enums;
+using AccuPay.Core.Interfaces;
 
 namespace AccuPay.Core.Services
 {
-    public class PhilHealthPolicy
+    public class PhilHealthPolicy : IPhilHealthPolicy
     {
         private readonly ListOfValueCollection _settings;
 
