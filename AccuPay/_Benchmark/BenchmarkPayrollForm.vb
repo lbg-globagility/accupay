@@ -428,11 +428,11 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod()
+        Dim form As New SelectPayPeriodDialog()
 
-        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
+        If form.ShowDialog() <> DialogResult.OK OrElse form.SelectedPayPeriod Is Nothing Then Return
 
-        _currentPayPeriod = form.PayPeriod
+        _currentPayPeriod = form.SelectedPayPeriod
 
         If _currentPayPeriod Is Nothing Then
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")

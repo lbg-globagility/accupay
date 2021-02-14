@@ -76,7 +76,7 @@ namespace AccuPay.Core.Services
             return FunctionResult.Success();
         }
 
-        public async Task<PayPeriod> CreateAsync(int organizationId, int month, int year, bool isFirstHalf, int currentUserId)
+        public async Task<PayPeriod> CreateAsync(int organizationId, int month, int year, bool isFirstHalf, int currentlyLoggedInUserId)
         {
             var payPeriod = PayPeriod.NewPayPeriod(
                 organizationId: organizationId,
@@ -84,13 +84,14 @@ namespace AccuPay.Core.Services
                 payrollYear: year,
                 isFirstHalf: isFirstHalf,
                 policy: _policy,
-                currentUserId: currentUserId);
+                currentlyLoggedInUserId: currentlyLoggedInUserId);
+
             await _payPeriodRepository.CreateAsync(payPeriod);
 
             return payPeriod;
         }
 
-        public async Task<PayPeriod> StartStatusAsync(int organizationId, int month, int year, bool isFirstHalf, int currentUserId)
+        public async Task<PayPeriod> StartStatusAsync(int organizationId, int month, int year, bool isFirstHalf, int currentlyLoggedInUserId)
         {
             var payPeriod = await _payPeriodRepository.GetAsync(
                 organizationId,
@@ -105,22 +106,22 @@ namespace AccuPay.Core.Services
                     month: month,
                     year: year,
                     isFirstHalf: isFirstHalf,
-                    currentUserId: currentUserId);
+                    currentlyLoggedInUserId: currentlyLoggedInUserId);
             }
 
-            await UpdateStatusAsync(payPeriod, currentUserId, PayPeriodStatus.Open);
+            await UpdateStatusAsync(payPeriod, currentlyLoggedInUserId, PayPeriodStatus.Open);
 
             return payPeriod;
         }
 
-        public async Task CloseAsync(int payPeriodId, int userId)
+        public async Task CloseAsync(int payPeriodId, int currentlyLoggedInUserId)
         {
-            await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Closed);
+            await UpdateStatusAsync(payPeriodId, currentlyLoggedInUserId, PayPeriodStatus.Closed);
         }
 
-        public async Task ReopenAsync(int payPeriodId, int userId)
+        public async Task ReopenAsync(int payPeriodId, int currentlyLoggedInUserId)
         {
-            await UpdateStatusAsync(payPeriodId, userId, PayPeriodStatus.Open);
+            await UpdateStatusAsync(payPeriodId, currentlyLoggedInUserId, PayPeriodStatus.Open);
         }
 
         public async Task CancelAsync(int payPeriodId, int currentlyLoggedInUserId)
@@ -139,11 +140,11 @@ namespace AccuPay.Core.Services
             await _timeEntryDataHelper.RecordDelete(currentlyLoggedInUserId, deletedTimeEntries.timeEntries);
         }
 
-        public async Task<PayPeriod> UpdateStatusAsync(int payPeriodId, int userId, PayPeriodStatus status)
+        public async Task<PayPeriod> UpdateStatusAsync(int payPeriodId, int currentlyLoggedInUserId, PayPeriodStatus status)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
-            await UpdateStatusAsync(payPeriod, userId, status);
+            await UpdateStatusAsync(payPeriod, currentlyLoggedInUserId, status);
 
             return payPeriod;
         }

@@ -128,7 +128,7 @@ namespace AccuPay.Infrastructure.Data
                     payrollYear: currentDay.Year,
                     isFirstHalf: isFirstHalf,
                     policy: _policy,
-                    currentUserId: currentUserId);
+                    currentlyLoggedInUserId: currentUserId);
             }
 
             return payPeriod;
@@ -240,7 +240,7 @@ namespace AccuPay.Infrastructure.Data
                     payrollYear: month,
                     isFirstHalf: isFirstHalf,
                     policy: _policy,
-                    currentUserId: null);
+                    currentlyLoggedInUserId: null);
             }
 
             return nextPayPeriod;
@@ -268,7 +268,7 @@ namespace AccuPay.Infrastructure.Data
                     payrollYear: currentPayPeriodYear,
                     isFirstHalf: true,
                     policy: _policy,
-                    currentUserId: null);
+                    currentlyLoggedInUserId: null);
             }
 
             return firstPayPeriod;
@@ -348,7 +348,7 @@ namespace AccuPay.Infrastructure.Data
                         payrollYear: year,
                         isFirstHalf: true,
                         policy: _policy,
-                        currentUserId: currentUserId);
+                        currentlyLoggedInUserId: currentUserId);
                 }
 
                 if (endOfTheMonth == null)
@@ -359,7 +359,7 @@ namespace AccuPay.Infrastructure.Data
                         payrollYear: year,
                         isFirstHalf: false,
                         policy: _policy,
-                        currentUserId: currentUserId);
+                        currentlyLoggedInUserId: currentUserId);
                 }
 
                 yearlyPayPeriods.Add(firstHalf);
@@ -495,7 +495,7 @@ namespace AccuPay.Infrastructure.Data
                     payrollYear: currentPayPeriodYear,
                     isFirstHalf: false,
                     policy: _policy,
-                    currentUserId: null);
+                    currentlyLoggedInUserId: null);
 
                 lastDayOfTheYear = lastPayPeriodOfTheYear.PayToDate;
             }

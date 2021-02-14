@@ -4,7 +4,7 @@ Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
-Public Class SelectPayPeriodSimple
+Public Class SelectPayPeriodSimpleDialog
 
     Private _currentYear As Integer
 
@@ -52,13 +52,13 @@ Public Class SelectPayPeriodSimple
         Dim ascOrder = periods.OrderBy(Function(p) p.OrdinalValue).ToList()
 
         Dim source = ascOrder.
-                Select(Function(p) New PeriodDataSource With {
+            Select(Function(p) New PeriodDataSource With {
                 .Month = $"{Format(New Date(p.Year, p.Month, 1), "MMM").ToUpper()} {If(p.IsFirstHalf, "1st half", "2nd half")}",
                 .Period = $"{p.PayFromDate.Date.ToShortDateString()} to {p.PayToDate.Date.ToShortDateString()}",
                 .RowID = p.RowID.Value,
                 .PayFromDate = p.PayFromDate.Date,
                 .PayToDate = p.PayToDate.Date}).
-                ToList()
+            ToList()
 
         gridPeriods.DataSource = source
     End Sub
