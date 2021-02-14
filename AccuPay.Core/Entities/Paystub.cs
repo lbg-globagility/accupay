@@ -161,12 +161,31 @@ namespace AccuPay.Core.Entities
             RegularHolidayRestDayOTHours;
 
         // needed to be virtual to be overriden in unit test
-        public virtual decimal TotalWorkedHoursWithoutOvertimeAndLeave =>
-            RegularHoursAndTotalRestDay +
-            SpecialHolidayHours +
-            RegularHolidayHours;
+        public virtual decimal TotalWorkedHoursWithoutOvertimeAndLeave(bool isMonthly)
+        {
+            decimal totalHours = RegularHoursAndTotalRestDay +
+                SpecialHolidayHours +
+                RegularHolidayHours;
 
-        public decimal TotalWorkedHoursWithoutLeave => TotalWorkedHoursWithoutOvertimeAndLeave + TotalOvertimeHours;
+            if (isMonthly)
+            {
+                // RegularHours of monthly employees is inclusive of AbsentHours,
+                // LateHours, and UndertimeHours. To get the true total worked hours,
+                // AbsentHours, LateHours, and UndertimeHours needs to be deducted to
+                // the RegularHours if the employee is monthly.
+                // This difference between monthly and daily RegularHours can be seen
+                // in the payroll summary. RegularHours of Daily is exclusive of
+                // AbsentHours, LateHours, and UndertimeHours while Monthly is inclusive.
+                totalHours = totalHours - AbsentHours - LateHours - UndertimeHours;
+            }
+
+            return totalHours;
+        }
+
+        public decimal TotalWorkedHoursWithoutLeave(bool isMonthly)
+        {
+            return TotalWorkedHoursWithoutOvertimeAndLeave(isMonthly) + TotalOvertimeHours;
+        }
 
         // needed to be virtual to be overriden in unit test
         public virtual decimal TotalDaysPayWithOutOvertimeAndLeave =>

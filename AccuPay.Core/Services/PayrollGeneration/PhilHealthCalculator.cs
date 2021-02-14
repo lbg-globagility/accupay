@@ -138,8 +138,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
-                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                        var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
+                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly);
 
                         if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {

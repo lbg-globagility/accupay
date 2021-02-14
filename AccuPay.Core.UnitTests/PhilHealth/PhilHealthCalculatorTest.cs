@@ -383,13 +383,13 @@ namespace AccuPay.Core.UnitTests.PhilHealth
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave)
+                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave(false))
                 .Returns(workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay);
             Paystub paystub = paystubMock.Object;
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave)
+                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave(false))
                 .Returns(workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay);
             Paystub previousPaystub = previousPaystubMock.Object;
 
@@ -427,13 +427,13 @@ namespace AccuPay.Core.UnitTests.PhilHealth
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave)
+                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave(true))
                 .Returns(workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay);
             Paystub paystub = paystubMock.Object;
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave)
+                .Setup(x => x.TotalWorkedHoursWithoutOvertimeAndLeave(true))
                 .Returns(workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay);
             Paystub previousPaystub = previousPaystubMock.Object;
 
