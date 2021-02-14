@@ -1,8 +1,8 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
-using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
+using AccuPay.Core.TestData;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
@@ -14,6 +14,8 @@ namespace AccuPay.Core.IntegrationTests.SSS
 {
     public class SssCalculatorTest_2021 : DatabaseTest
     {
+        private const int OrganizationId = 2;
+
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
         public void ShouldCalculate_WithBasicPayCalculationBasis(
             decimal basicSalary,
@@ -21,7 +23,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             decimal expectedSssEmployerShare)
         {
             Mock<IPolicyHelper> policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicSalary);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicSalary);
 
             var paystub = new Paystub();
             var previousPaystub = new Paystub();
@@ -57,7 +61,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
            decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicMinusDeductions);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -157,7 +163,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(sssCalculationBasis);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(sssCalculationBasis);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -234,7 +242,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
            decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicMinusDeductions);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -352,7 +362,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(sssCalculationBasis);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(sssCalculationBasis);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -451,18 +463,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 AllowanceSalary = 0,
             };
 
-            var employee = new Employee()
-            {
-                EmployeeType = employeeType,
-                WorkDaysPerYear = 312,
-                Position = new Position()
-                {
-                    Division = new Division()
-                    {
-                        SssDeductionSchedule = ContributionSchedule.FIRST_HALF
-                    }
-                }
-            };
+            var employee = EmployeeMother.Simple(employeeType, OrganizationId);
 
             string currentSystemOwner = string.Empty;
 

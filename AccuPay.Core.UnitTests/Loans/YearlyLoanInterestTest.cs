@@ -1,4 +1,3 @@
-using AccuPay.Core.UnitTests.Mothers;
 using AccuPay.Core.Entities;
 using NUnit.Framework;
 using System;

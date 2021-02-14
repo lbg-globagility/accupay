@@ -2,7 +2,7 @@ using AccuPay.Core.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace AccuPay.Core.UnitTests.SSS
+namespace AccuPay.Core.TestData
 {
     public class MockSocialSecurityBrackets
     {
@@ -839,7 +839,7 @@ namespace AccuPay.Core.UnitTests.SSS
                     RangeFromAmount = 18_750m,
                     RangeToAmount = 19_249.99m,
                     MonthlySalaryCredit = 19_000,
-                    EmployeeContributionAmount = 855.5m,
+                    EmployeeContributionAmount = 855.0m,
                     EmployerContributionAmount = 1_615m,
                     EmployerECAmount = 30m,
                     EmployerMPFAmount = 0.0m,

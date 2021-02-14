@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using System;
 
-namespace AccuPay.Core.UnitTests.Mothers
+namespace AccuPay.Core.UnitTests
 {
     public static class PayPeriodMother
     {

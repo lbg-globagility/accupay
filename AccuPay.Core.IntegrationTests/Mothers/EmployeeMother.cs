@@ -1,7 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 
-namespace AccuPay.Core.UnitTests
+namespace AccuPay.Core.IntegrationTests
 {
     public class EmployeeMother
     {

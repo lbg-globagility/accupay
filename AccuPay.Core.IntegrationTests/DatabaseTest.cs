@@ -34,7 +34,7 @@ namespace AccuPay.Core.IntegrationTests
         {
             services.AddDbContext<PayrollContext>(options =>
             {
-                options.UseMySql("server=localhost;userid=root;password=globagility;database=goldwingspayrolldb;")
+                options.UseMySql("server=localhost;userid=root;password=globagility;database=accupaydb_cinema2k;")
                 .EnableSensitiveDataLogging()
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });

@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using System.Collections;
 
-namespace AccuPay.Core.UnitTests.SSS
+namespace AccuPay.Core.TestData
 {
     public class SSSTestSource_2021
     {
@@ -73,8 +73,8 @@ namespace AccuPay.Core.UnitTests.SSS
                 yield return new TestCaseData(18249.99m, 810.0m, 1560.0m);
                 yield return new TestCaseData(18250.00m, 832.5m, 1602.5m);
                 yield return new TestCaseData(18749.99m, 832.5m, 1602.5m);
-                yield return new TestCaseData(18750.00m, 855.5m, 1645.0m);
-                yield return new TestCaseData(19249.99m, 855.5m, 1645.0m);
+                yield return new TestCaseData(18750.00m, 855.0m, 1645.0m);
+                yield return new TestCaseData(19249.99m, 855.0m, 1645.0m);
                 yield return new TestCaseData(19250.00m, 877.5m, 1687.5m);
                 yield return new TestCaseData(19749.99m, 877.5m, 1687.5m);
                 yield return new TestCaseData(19750.00m, 900.0m, 1730.0m);
@@ -170,8 +170,8 @@ namespace AccuPay.Core.UnitTests.SSS
                 yield return new TestCaseData(18000.00m, 249.99m, 18000.00m, 249.99m, 18000.00m, 249.99m, 810.0m, 1560.0m);
                 yield return new TestCaseData(18000.00m, 250.00m, 18000.00m, 250.00m, 18000.00m, 250.00m, 832.5m, 1602.5m);
                 yield return new TestCaseData(18000.00m, 749.99m, 18000.00m, 749.99m, 18000.00m, 749.99m, 832.5m, 1602.5m);
-                yield return new TestCaseData(18000.00m, 750.00m, 18000.00m, 750.00m, 18000.00m, 750.00m, 855.5m, 1645.0m);
-                yield return new TestCaseData(19000.00m, 249.99m, 19000.00m, 249.99m, 19000.00m, 249.99m, 855.5m, 1645.0m);
+                yield return new TestCaseData(18000.00m, 750.00m, 18000.00m, 750.00m, 18000.00m, 750.00m, 855.0m, 1645.0m);
+                yield return new TestCaseData(19000.00m, 249.99m, 19000.00m, 249.99m, 19000.00m, 249.99m, 855.0m, 1645.0m);
                 yield return new TestCaseData(19000.00m, 250.00m, 19000.00m, 250.00m, 19000.00m, 250.00m, 877.5m, 1687.5m);
                 yield return new TestCaseData(19000.00m, 749.99m, 19000.00m, 749.99m, 19000.00m, 749.99m, 877.5m, 1687.5m);
                 yield return new TestCaseData(19000.00m, 750.00m, 19000.00m, 750.00m, 19000.00m, 750.00m, 900.0m, 1730.0m);
