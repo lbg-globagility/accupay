@@ -517,16 +517,16 @@ namespace AccuPay.Core.UnitTests.SSS
             var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
 
             var paystub = new Paystub();
-            SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
                 workHoursPerCutOff, paystub);
 
-            SetHourDeductionsValue(paystub);
+            PaystubHelper.SetHourDeductionsValue(paystub);
 
             var previousPaystub = new Paystub();
-            SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
                 workHoursPerCutOff, previousPaystub);
 
-            SetHourDeductionsValue(previousPaystub);
+            PaystubHelper.SetHourDeductionsValue(previousPaystub);
 
             var salary = new Salary()
             {
@@ -564,10 +564,10 @@ namespace AccuPay.Core.UnitTests.SSS
             var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
 
             var paystub = new Paystub();
-            SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
                 workHoursPerCutOff, paystub);
 
-            SetHourDeductionsValue(paystub);
+            PaystubHelper.SetHourDeductionsValue(paystub);
 
             // In monthly, RegularHours still has AbsentHours, LateHours, and UndertimeHours
             paystub.RegularHours +=
@@ -576,10 +576,10 @@ namespace AccuPay.Core.UnitTests.SSS
                 paystub.UndertimeHours;
 
             var previousPaystub = new Paystub();
-            SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
                 workHoursPerCutOff, previousPaystub);
 
-            SetHourDeductionsValue(previousPaystub);
+            PaystubHelper.SetHourDeductionsValue(previousPaystub);
 
             // In monthly, RegularHours still has AbsentHours, LateHours, and UndertimeHours
             previousPaystub.RegularHours +=
@@ -604,30 +604,6 @@ namespace AccuPay.Core.UnitTests.SSS
 
             Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
             Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-        }
-
-        private static void SetHourDeductionsValue(Paystub paystub)
-        {
-            paystub.AbsentHours = 40;
-            paystub.LateHours = 10;
-            paystub.UndertimeHours = 20;
-        }
-
-        private static void SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(decimal workHoursPerCutOff, Paystub paystub)
-        {
-            paystub.RestDayHours = 1;
-            paystub.SpecialHolidayRestDayHours = 2;
-            paystub.RegularHolidayRestDayHours = 3;
-            paystub.SpecialHolidayHours = 4;
-            paystub.RegularHolidayHours = 5;
-
-            paystub.RegularHours =
-                workHoursPerCutOff -
-                paystub.RestDayHours -
-                paystub.SpecialHolidayRestDayHours -
-                paystub.RegularHolidayRestDayHours -
-                paystub.SpecialHolidayHours -
-                paystub.RegularHolidayHours;
         }
 
         #endregion BasicMinusDeductionsWithoutPremium_WithDeduction

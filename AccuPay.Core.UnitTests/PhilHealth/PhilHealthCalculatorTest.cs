@@ -488,5 +488,111 @@ namespace AccuPay.Core.UnitTests.PhilHealth
         }
 
         #endregion BasicMinusDeductionsWithoutPremium_WithoutDeduction
+
+        #region BasicMinusDeductionsWithoutPremium_WithDeduction
+
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
+        public void ShouldCalculateForDaily_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithDeduction(
+            decimal salaryBracket,
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
+        {
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium);
+
+            decimal workDaysPerMonth = 20;
+            decimal workHoursPerCutOff = workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay;
+
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
+
+            var paystub = new Paystub();
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+                workHoursPerCutOff, paystub);
+
+            PaystubHelper.SetHourDeductionsValue(paystub);
+
+            var previousPaystub = new Paystub();
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+                workHoursPerCutOff, previousPaystub);
+
+            PaystubHelper.SetHourDeductionsValue(previousPaystub);
+
+            var salary = new Salary()
+            {
+                AutoComputePhilHealthContribution = true,
+                BasicSalary = salaryBracket / workDaysPerMonth,
+                AllowanceSalary = 0,
+            };
+
+            // Daily
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeDaily, OrganizationId);
+            employee.WorkDaysPerYear = workDaysPerMonth * PayrollTools.MonthsPerYear; // 240
+
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
+
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
+        }
+
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
+        public void ShouldCalculateForMonthly_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithDeduction(
+            decimal salaryBracket,
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
+        {
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium);
+
+            decimal workDaysPerMonth = 20;
+            decimal workHoursPerCutOff = workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay;
+
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
+
+            var paystub = new Paystub();
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+                workHoursPerCutOff, paystub);
+
+            PaystubHelper.SetHourDeductionsValue(paystub);
+
+            // In monthly, RegularHours still has AbsentHours, LateHours, and UndertimeHours
+            paystub.RegularHours +=
+                paystub.AbsentHours +
+                paystub.LateHours +
+                paystub.UndertimeHours;
+
+            var previousPaystub = new Paystub();
+            PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
+                workHoursPerCutOff, previousPaystub);
+
+            PaystubHelper.SetHourDeductionsValue(previousPaystub);
+
+            // In monthly, RegularHours still has AbsentHours, LateHours, and UndertimeHours
+            previousPaystub.RegularHours +=
+                previousPaystub.AbsentHours +
+                previousPaystub.LateHours +
+                previousPaystub.UndertimeHours;
+
+            var salary = new Salary()
+            {
+                AutoComputePhilHealthContribution = true,
+                BasicSalary = salaryBracket,
+                AllowanceSalary = 0,
+            };
+
+            // Monthly
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
+            employee.WorkDaysPerYear = workDaysPerMonth * PayrollTools.MonthsPerYear; // 240
+
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
+
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
+        }
+
+        #endregion BasicMinusDeductionsWithoutPremium_WithDeduction
     }
 }
