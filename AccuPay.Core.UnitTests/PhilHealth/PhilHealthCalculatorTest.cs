@@ -282,7 +282,7 @@ namespace AccuPay.Core.UnitTests.PhilHealth
         #region BasicMinusDeductions_WithoutDeduction
 
         [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
-        public void ShouldCalculateForDailyAndMonthly_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
+        public void ShouldCalculateForDaily_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedPhilHealthEmployeeShare,
             decimal expectedPhilHealthEmployerShare)
@@ -295,13 +295,54 @@ namespace AccuPay.Core.UnitTests.PhilHealth
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(false))
                 .Returns(salaryBracket / 2);
             Paystub paystub = paystubMock.Object;
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(false))
+                .Returns(salaryBracket / 2);
+            Paystub previousPaystub = previousPaystubMock.Object;
+
+            var salary = new Salary()
+            {
+                AutoComputePhilHealthContribution = true,
+                BasicSalary = It.IsAny<decimal>(),
+                AllowanceSalary = It.IsAny<decimal>(),
+            };
+
+            // Daily
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeDaily, OrganizationId);
+
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
+
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
+        }
+
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
+        public void ShouldCalculateForMonthly_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
+            decimal salaryBracket,
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
+        {
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
+
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
+
+            var paystubMock = new Mock<Paystub>();
+            paystubMock
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
+                .Returns(salaryBracket / 2);
+            Paystub paystub = paystubMock.Object;
+
+            var previousPaystubMock = new Mock<Paystub>();
+            previousPaystubMock
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(salaryBracket / 2);
             Paystub previousPaystub = previousPaystubMock.Object;
 
@@ -313,19 +354,10 @@ namespace AccuPay.Core.UnitTests.PhilHealth
             };
 
             // Monthly
-            var employeeMonthly = EmployeeMother
+            var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
 
-            calculator.Calculate(salary, paystub, previousPaystub, employeeMonthly, _payPeriod, _currentSystemOwner);
-
-            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
-            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
-
-            // Daily
-            var employeeDaily = EmployeeMother
-                .Simple(Employee.EmployeeTypeDaily, OrganizationId);
-
-            calculator.Calculate(salary, paystub, previousPaystub, employeeDaily, _payPeriod, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
             Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
             Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);

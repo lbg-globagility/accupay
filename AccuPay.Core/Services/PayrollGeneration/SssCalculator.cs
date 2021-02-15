@@ -114,8 +114,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        return (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
-                            paystub.TotalDaysPayWithOutOvertimeAndLeave;
+                        return (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
+                            paystub.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly);
                     }
 
                 case SssCalculationBasis.BasicMinusDeductionsWithoutPremium:

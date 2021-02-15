@@ -125,8 +125,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        basisPay = (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
-                        paystub.TotalDaysPayWithOutOvertimeAndLeave;
+                        basisPay = (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
+                        paystub.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly);
                     }
                     break;
 

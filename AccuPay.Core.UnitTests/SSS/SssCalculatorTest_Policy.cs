@@ -280,6 +280,49 @@ namespace AccuPay.Core.UnitTests.SSS
         #region BasicMinusDeductions_WithoutDeduction
 
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        public void ShouldCalculateForDaily_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
+            decimal salaryBracket,
+            decimal expectedSssEmployeeShare,
+            decimal expectedSssEmployerShare)
+        {
+            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
+            policy
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
+
+            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+
+            var paystubMock = new Mock<Paystub>();
+            paystubMock
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(false))
+                .Returns(salaryBracket / 2);
+            Paystub paystub = paystubMock.Object;
+
+            var previousPaystubMock = new Mock<Paystub>();
+            previousPaystubMock
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(false))
+                .Returns(salaryBracket / 2);
+            Paystub previousPaystub = previousPaystubMock.Object;
+
+            var salary = new Salary()
+            {
+                DoPaySSSContribution = true,
+                BasicSalary = It.IsAny<decimal>(),
+                AllowanceSalary = It.IsAny<decimal>(),
+            };
+
+            // Daily
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeDaily, OrganizationId);
+
+            calculator
+                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+
+            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+        }
+
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
         public void ShouldCalculateForDailyAndMonthly_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedSssEmployeeShare,
@@ -294,13 +337,13 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(salaryBracket / 2);
             Paystub paystub = paystubMock.Object;
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(salaryBracket / 2);
             Paystub previousPaystub = previousPaystubMock.Object;
 
@@ -312,24 +355,14 @@ namespace AccuPay.Core.UnitTests.SSS
             };
 
             // Monthly
-            var employeeMonthly = EmployeeMother
+            var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
 
             calculator
-                .Calculate(paystub, previousPaystub, salary, employeeMonthly, _currentSystemOwner);
+                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
 
             Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
             Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-
-            // Daily
-            var employeeDaily = EmployeeMother
-                .Simple(Employee.EmployeeTypeDaily, OrganizationId);
-
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employeeDaily, _currentSystemOwner);
-
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
         }
 
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
