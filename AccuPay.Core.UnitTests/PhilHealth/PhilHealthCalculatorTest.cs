@@ -3,21 +3,19 @@ using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
-using AccuPay.Core.TestData;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 
-namespace AccuPay.Core.UnitTests.SSS
+namespace AccuPay.Core.UnitTests.PhilHealth
 {
-    public class SssCalculatorTest_Policy
+    public class PhilHealthCalculatorTest
     {
         private const int OrganizationId = 1;
 
         private PayPeriod _payPeriod;
-        private List<SocialSecurityBracket> _socialSecurityBrackets;
         private string _currentSystemOwner;
+        private Mock<IPhilHealthPolicy> _policyMock;
 
         [SetUp]
         public void SetUp()
@@ -31,28 +29,44 @@ namespace AccuPay.Core.UnitTests.SSS
                 Month = 1
             };
 
-            _socialSecurityBrackets = MockSocialSecurityBrackets.Get();
             _currentSystemOwner = string.Empty;
+
+            _policyMock = new Mock<IPhilHealthPolicy>();
+
+            _policyMock
+                .Setup(x => x.OddCentDifference)
+                .Returns(true);
+
+            _policyMock
+                .Setup(x => x.MinimumContribution)
+                .Returns(300);
+
+            _policyMock
+                .Setup(x => x.MaximumContribution)
+                .Returns(1800);
+
+            _policyMock
+                .Setup(x => x.Rate)
+                .Returns(3);
         }
 
         #region BasicSalary
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForMonthlyAndFixed_WithBasicSalaryCalculationBasis(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicSalary);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicSalary);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket,
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -63,41 +77,37 @@ namespace AccuPay.Core.UnitTests.SSS
             // Monthly
             var employeeMonthly = EmployeeMother.Simple(Employee.EmployeeTypeMonthly, OrganizationId);
 
-            calculator.Calculate(paystub, previousPaystub, salary, employeeMonthly, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employeeMonthly, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
 
             // Fixed
             var employeeFixed = EmployeeMother.Simple(Employee.EmployeeTypeFixed, OrganizationId);
 
-            calculator.Calculate(paystub, previousPaystub, salary, employeeFixed, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employeeFixed, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        //[Theory]
-        //[TestCase(0, 0, 0)]
-        //[TestCase(50, 135, 265)]
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForDaily_WithBasicSalaryCalculationBasis(
-            decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+           decimal salaryBracket,
+           decimal expectedPhilHealthEmployeeShare,
+           decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicSalary);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicSalary);
 
             decimal workDaysPerMonth = 20;
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket / workDaysPerMonth,
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -109,35 +119,34 @@ namespace AccuPay.Core.UnitTests.SSS
             var employee = EmployeeMother.Simple(Employee.EmployeeTypeDaily, OrganizationId);
             employee.WorkDaysPerYear = workDaysPerMonth * PayrollTools.MonthsPerYear; //240;
 
-            calculator.Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
         #endregion BasicSalary
 
         #region Earnings
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForMonthlyAndFixed_WithEarningsCalculationBasis(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.Earnings);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.Earnings);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub() { TotalEarnings = salaryBracket / 2 };
             var previousPaystub = new Paystub() { TotalEarnings = salaryBracket / 2 };
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -146,39 +155,36 @@ namespace AccuPay.Core.UnitTests.SSS
             var employeeMonthly = EmployeeMother
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employeeMonthly, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employeeMonthly, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
 
             // Fixed
             var employeeFixed = EmployeeMother
                 .Simple(Employee.EmployeeTypeFixed, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employeeFixed, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employeeFixed, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForDaily_WithEarningsCalculationBasis(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.Earnings);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.Earnings);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -189,35 +195,34 @@ namespace AccuPay.Core.UnitTests.SSS
             // Daily
             var employee = EmployeeMother.Simple(Employee.EmployeeTypeDaily, OrganizationId);
 
-            calculator.Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
         #endregion Earnings
 
         #region GrossPay
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForMonthlyAndFixed_WithGrossPayCalculationBasis(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.GrossPay);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.GrossPay);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub() { GrossPay = salaryBracket / 2 };
             var previousPaystub = new Paystub() { GrossPay = salaryBracket / 2 };
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -226,39 +231,36 @@ namespace AccuPay.Core.UnitTests.SSS
             var employeeMonthly = EmployeeMother
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employeeMonthly, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employeeMonthly, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
 
             // Fixed
             var employeeFixed = EmployeeMother
                 .Simple(Employee.EmployeeTypeFixed, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employeeFixed, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employeeFixed, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForDaily_WithGrossPayCalculationBasis(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.GrossPay);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.GrossPay);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -269,28 +271,27 @@ namespace AccuPay.Core.UnitTests.SSS
             // Daily
             var employee = EmployeeMother.Simple(Employee.EmployeeTypeDaily, OrganizationId);
 
-            calculator.Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
         #endregion GrossPay
 
         #region BasicMinusDeductions_WithoutDeduction
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForDaily_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductions);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -306,7 +307,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -315,25 +316,23 @@ namespace AccuPay.Core.UnitTests.SSS
             var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeDaily, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
-        public void ShouldCalculateForDailyAndMonthly_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
+        public void ShouldCalculateForMonthly_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductions);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -349,7 +348,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -358,32 +357,30 @@ namespace AccuPay.Core.UnitTests.SSS
             var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForFixed_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
            decimal salaryBracket,
-           decimal expectedSssEmployeeShare,
-           decimal expectedSssEmployerShare)
+           decimal expectedPhilHealthEmployeeShare,
+           decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductions);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub();
             var previousPaystub = new Paystub();
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket,
                 AllowanceSalary = 0,
             };
@@ -392,31 +389,29 @@ namespace AccuPay.Core.UnitTests.SSS
             var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeFixed, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
         #endregion BasicMinusDeductions_WithoutDeduction
 
         #region BasicMinusDeductions_WithDeduction
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForDaily_WithBasicMinusDeductionsCalculationBasis_WithDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductions);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
 
             decimal workPayPerCutOff = salaryBracket / 2;
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub();
             PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
@@ -432,7 +427,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -441,27 +436,25 @@ namespace AccuPay.Core.UnitTests.SSS
             var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeDaily, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForMonthly_WithBasicMinusDeductionsCalculationBasis_WithDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductions);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
 
             decimal workPayPerCutOff = salaryBracket / 2;
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub();
             PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
@@ -489,7 +482,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = It.IsAny<decimal>(),
                 AllowanceSalary = It.IsAny<decimal>(),
             };
@@ -498,31 +491,29 @@ namespace AccuPay.Core.UnitTests.SSS
             var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
         #endregion BasicMinusDeductions_WithDeduction
 
         #region BasicMinusDeductionsWithoutPremium_WithoutDeduction
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForDaily_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductionsWithoutPremium);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium);
 
             decimal workDaysPerMonth = 20;
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -538,7 +529,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket / workDaysPerMonth,
                 AllowanceSalary = 0,
             };
@@ -548,27 +539,25 @@ namespace AccuPay.Core.UnitTests.SSS
                 .Simple(Employee.EmployeeTypeDaily, OrganizationId);
             employee.WorkDaysPerYear = workDaysPerMonth * PayrollTools.MonthsPerYear; // 240
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForMonthly_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductionsWithoutPremium);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium);
 
             decimal workDaysPerMonth = 20;
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -584,7 +573,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket,
                 AllowanceSalary = 0,
             };
@@ -594,32 +583,30 @@ namespace AccuPay.Core.UnitTests.SSS
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
             employee.WorkDaysPerYear = workDaysPerMonth * PayrollTools.MonthsPerYear; // 240
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForFixed_WithBasicMinusDeductionsWithoutPremiumCalculationBasis(
            decimal salaryBracket,
-           decimal expectedSssEmployeeShare,
-           decimal expectedSssEmployerShare)
+           decimal expectedPhilHealthEmployeeShare,
+           decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductions);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium);
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub();
             var previousPaystub = new Paystub();
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket,
                 AllowanceSalary = 0,
             };
@@ -628,32 +615,30 @@ namespace AccuPay.Core.UnitTests.SSS
             var employee = EmployeeMother
                 .Simple(Employee.EmployeeTypeFixed, OrganizationId);
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
         #endregion BasicMinusDeductionsWithoutPremium_WithoutDeduction
 
         #region BasicMinusDeductionsWithoutPremium_WithDeduction
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForDaily_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductionsWithoutPremium);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium);
 
             decimal workDaysPerMonth = 20;
             decimal workHoursPerCutOff = workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay;
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub();
             PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
@@ -669,7 +654,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket / workDaysPerMonth,
                 AllowanceSalary = 0,
             };
@@ -679,28 +664,26 @@ namespace AccuPay.Core.UnitTests.SSS
                 .Simple(Employee.EmployeeTypeDaily, OrganizationId);
             employee.WorkDaysPerYear = workDaysPerMonth * PayrollTools.MonthsPerYear; // 240
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
         public void ShouldCalculateForMonthly_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithDeduction(
             decimal salaryBracket,
-            decimal expectedSssEmployeeShare,
-            decimal expectedSssEmployerShare)
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
         {
-            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
-            policy
-                .Setup(x => x.SssCalculationBasis(OrganizationId))
-                .Returns(SssCalculationBasis.BasicMinusDeductionsWithoutPremium);
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium);
 
             decimal workDaysPerMonth = 20;
             decimal workHoursPerCutOff = workDaysPerMonth / 2 * PayrollTools.WorkHoursPerDay;
 
-            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
 
             var paystub = new Paystub();
             PaystubHelper.SetTotalWorkedHoursWithoutOvertimeAndLeaveValue(
@@ -728,7 +711,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var salary = new Salary()
             {
-                DoPaySSSContribution = true,
+                AutoComputePhilHealthContribution = true,
                 BasicSalary = salaryBracket,
                 AllowanceSalary = 0,
             };
@@ -738,11 +721,10 @@ namespace AccuPay.Core.UnitTests.SSS
                 .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
             employee.WorkDaysPerYear = workDaysPerMonth * PayrollTools.MonthsPerYear; // 240
 
-            calculator
-                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
 
-            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
-            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
         #endregion BasicMinusDeductionsWithoutPremium_WithDeduction

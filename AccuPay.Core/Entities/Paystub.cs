@@ -150,7 +150,11 @@ namespace AccuPay.Core.Entities
 
         public decimal TotalRestDayHours => RestDayHours + SpecialHolidayRestDayHours + RegularHolidayRestDayHours;
 
+        public decimal TotalRestDayPay => RestDayPay + SpecialHolidayRestDayPay + RegularHolidayRestDayPay;
+
         public decimal RegularHoursAndTotalRestDay => RegularHours + TotalRestDayHours;
+
+        public decimal RegularPayAndTotalRestDay => RegularPay + TotalRestDayPay;
 
         public decimal TotalOvertimeHours =>
             OvertimeHours +
@@ -161,21 +165,55 @@ namespace AccuPay.Core.Entities
             RegularHolidayRestDayOTHours;
 
         // needed to be virtual to be overriden in unit test
-        public virtual decimal TotalWorkedHoursWithoutOvertimeAndLeave =>
-            RegularHoursAndTotalRestDay +
-            SpecialHolidayHours +
-            RegularHolidayHours;
+        public virtual decimal TotalWorkedHoursWithoutOvertimeAndLeave(bool isMonthly)
+        {
+            decimal totalHours =
+                RegularHoursAndTotalRestDay +
+                SpecialHolidayHours +
+                RegularHolidayHours;
 
-        public decimal TotalWorkedHoursWithoutLeave => TotalWorkedHoursWithoutOvertimeAndLeave + TotalOvertimeHours;
+            if (isMonthly)
+            {
+                // RegularHours of monthly employees is inclusive of AbsentHours,
+                // LateHours, and UndertimeHours. To get the true total worked hours,
+                // AbsentHours, LateHours, and UndertimeHours needs to be deducted to
+                // the RegularHours if the employee is monthly.
+                // This difference between monthly and daily RegularHours can be seen
+                // in the payroll summary. RegularHours of Daily is exclusive of
+                // AbsentHours, LateHours, and UndertimeHours while Monthly is inclusive.
+                totalHours = totalHours - AbsentHours - LateHours - UndertimeHours;
+            }
+
+            return totalHours;
+        }
+
+        public decimal TotalWorkedHoursWithoutLeave(bool isMonthly)
+        {
+            return TotalWorkedHoursWithoutOvertimeAndLeave(isMonthly) + TotalOvertimeHours;
+        }
 
         // needed to be virtual to be overriden in unit test
-        public virtual decimal TotalDaysPayWithOutOvertimeAndLeave =>
-            RegularPay +
-            RestDayPay +
-            SpecialHolidayPay +
-            RegularHolidayPay +
-            SpecialHolidayRestDayPay +
-            RegularHolidayRestDayPay;
+        public virtual decimal TotalDaysPayWithOutOvertimeAndLeave(bool isMonthly)
+        {
+            decimal totalPay =
+                RegularPayAndTotalRestDay +
+                SpecialHolidayPay +
+                RegularHolidayPay;
+
+            if (isMonthly)
+            {
+                // RegularPay of monthly employees is inclusive of AbsenceDeduction,
+                // LateDeduction, and UndertimeDeduction. To get the true total worked hours,
+                // AbsenceDeduction, LateDeduction, and UndertimeDeduction needs to be deducted to
+                // the RegularPay if the employee is monthly.
+                // This difference between monthly and daily RegularPay can be seen
+                // in the payroll summary. RegularPay of Daily is exclusive of
+                // AbsenceDeduction, LateDeduction, and UndertimeDeduction while Monthly is inclusive.
+                totalPay = totalPay - AbsenceDeduction - LateDeduction - UndertimeDeduction;
+            }
+
+            return totalPay;
+        }
 
         public decimal TotalDeductionAdjustments =>
             Adjustments.Where(a => a.Amount < 0).Sum(a => a.Amount) +

@@ -65,7 +65,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -73,7 +73,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;
@@ -167,7 +167,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -175,7 +175,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;
@@ -199,6 +199,7 @@ namespace AccuPay.Core.UnitTests.SSS
                 policyHelper.Object,
                 Employee.EmployeeTypeFixed);
 
+            // TODO: add unit tests for daily
             //BaseShouldCalculate(
             //    basicSalary: 0,
             //    paystub: paystub,
@@ -246,7 +247,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -254,7 +255,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;
@@ -366,7 +367,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -374,7 +375,7 @@ namespace AccuPay.Core.UnitTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;

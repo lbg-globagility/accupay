@@ -48,7 +48,7 @@ namespace AccuPay.Core.Services
                 // If the employee worked for 200 hours in total for the whole month, and he worked 40 hours
                 // in this branch this cutoff, then he worked 40% of his total worked hours
                 // in this branch this cutoff.
-                var totalWorhkedHoursThisMonth = monthlyPaystubs.Sum(x => x.TotalWorkedHoursWithoutLeave);
+                var totalWorhkedHoursThisMonth = monthlyPaystubs.Sum(x => x.TotalWorkedHoursWithoutLeave(employee.IsMonthly));
                 var workedPercentage = AccuMath
                     .CommercialRound(paystubModel.TotalWorkedHoursWithoutLeave / totalWorhkedHoursThisMonth); // 40 / 200
 

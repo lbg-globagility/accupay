@@ -488,7 +488,12 @@ Namespace Benchmark
 
             If _ecola Is Nothing Then Return Nothing
 
-            Dim totalHoursWorkedForEcola = paystub.TotalWorkedHoursWithoutOvertimeAndLeave + paystub.LeaveHours
+            Dim totalWorkedHoursWithoutOvertimeAndLeave =
+                paystub.RegularHoursAndTotalRestDay +
+                paystub.SpecialHolidayHours +
+                paystub.RegularHolidayHours
+
+            Dim totalHoursWorkedForEcola = totalWorkedHoursWithoutOvertimeAndLeave + paystub.LeaveHours
 
             If _employeeRate.Employee.IsPremiumInclusive Then
 
