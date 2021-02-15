@@ -279,10 +279,10 @@ namespace AccuPay.Core.UnitTests.PhilHealth
 
         #endregion GrossPay
 
-        #region BasicMinusDeductions
+        #region BasicMinusDeductions_WithoutDeduction
 
         [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
-        public void ShouldCalculateForDailyAndMonthly_WithBasicMinusDeductionsCalculationBasis_TotalDaysPayWithOutOvertimeAndLeaveOverriden(
+        public void ShouldCalculateForDailyAndMonthly_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedPhilHealthEmployeeShare,
             decimal expectedPhilHealthEmployerShare)
@@ -332,7 +332,7 @@ namespace AccuPay.Core.UnitTests.PhilHealth
         }
 
         [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
-        public void ShouldCalculateForFixed_WithBasicMinusDeductionsCalculationBasis_TotalDaysPayWithOutOvertimeAndLeaveOverriden(
+        public void ShouldCalculateForFixed_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
            decimal salaryBracket,
            decimal expectedPhilHealthEmployeeShare,
            decimal expectedPhilHealthEmployerShare)
@@ -363,12 +363,114 @@ namespace AccuPay.Core.UnitTests.PhilHealth
             Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
         }
 
-        #endregion BasicMinusDeductions
+        #endregion BasicMinusDeductions_WithoutDeduction
+
+        #region BasicMinusDeductions_WithDeduction
+
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
+        public void ShouldCalculateForDaily_WithBasicMinusDeductionsCalculationBasis_WithDeduction(
+            decimal salaryBracket,
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
+        {
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
+
+            decimal workPayPerCutOff = salaryBracket / 2;
+
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
+
+            var paystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, paystub);
+
+            PaystubHelper.SetPayDeductionsValue(paystub);
+
+            var previousPaystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, previousPaystub);
+
+            PaystubHelper.SetPayDeductionsValue(previousPaystub);
+
+            var salary = new Salary()
+            {
+                AutoComputePhilHealthContribution = true,
+                BasicSalary = It.IsAny<decimal>(),
+                AllowanceSalary = It.IsAny<decimal>(),
+            };
+
+            // Daily
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeDaily, OrganizationId);
+
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
+
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
+        }
+
+        [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
+        public void ShouldCalculateForMonthly_WithBasicMinusDeductionsCalculationBasis_WithDeduction(
+            decimal salaryBracket,
+            decimal expectedPhilHealthEmployeeShare,
+            decimal expectedPhilHealthEmployerShare)
+        {
+            _policyMock
+                .Setup(x => x.CalculationBasis(OrganizationId))
+                .Returns(PhilHealthCalculationBasis.BasicMinusDeductions);
+
+            decimal workPayPerCutOff = salaryBracket / 2;
+
+            var calculator = new PhilHealthCalculator(_policyMock.Object);
+
+            var paystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, paystub);
+
+            PaystubHelper.SetPayDeductionsValue(paystub);
+
+            // In monthly, RegularPay still has AbsenceDeduction, LateDeduction, and UndertimeDeduction
+            paystub.RegularPay +=
+                paystub.AbsenceDeduction +
+                paystub.LateDeduction +
+                paystub.UndertimeDeduction;
+
+            var previousPaystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, previousPaystub);
+
+            PaystubHelper.SetPayDeductionsValue(previousPaystub);
+
+            // In monthly, RegularPay still has AbsenceDeduction, LateDeduction, and UndertimeDeduction
+            previousPaystub.RegularPay +=
+                previousPaystub.AbsenceDeduction +
+                previousPaystub.LateDeduction +
+                previousPaystub.UndertimeDeduction;
+
+            var salary = new Salary()
+            {
+                AutoComputePhilHealthContribution = true,
+                BasicSalary = It.IsAny<decimal>(),
+                AllowanceSalary = It.IsAny<decimal>(),
+            };
+
+            // Monthly
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
+
+            calculator.Calculate(salary, paystub, previousPaystub, employee, _payPeriod, _currentSystemOwner);
+
+            Assert.AreEqual(expectedPhilHealthEmployeeShare, paystub.PhilHealthEmployeeShare);
+            Assert.AreEqual(expectedPhilHealthEmployerShare, paystub.PhilHealthEmployerShare);
+        }
+
+        #endregion BasicMinusDeductions_WithDeduction
 
         #region BasicMinusDeductionsWithoutPremium_WithoutDeduction
 
         [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
-        public void ShouldCalculateForDaily_WithoutDeduction(
+        public void ShouldCalculateForDaily_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedPhilHealthEmployeeShare,
             decimal expectedPhilHealthEmployerShare)
@@ -412,7 +514,7 @@ namespace AccuPay.Core.UnitTests.PhilHealth
         }
 
         [TestCaseSource(typeof(PhilHealthTestSource), "TestData")]
-        public void ShouldCalculateForMonthly_WithoutDeduction(
+        public void ShouldCalculateForMonthly_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedPhilHealthEmployeeShare,
             decimal expectedPhilHealthEmployerShare)

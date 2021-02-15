@@ -150,7 +150,11 @@ namespace AccuPay.Core.Entities
 
         public decimal TotalRestDayHours => RestDayHours + SpecialHolidayRestDayHours + RegularHolidayRestDayHours;
 
+        public decimal TotalRestDayPay => RestDayPay + SpecialHolidayRestDayPay + RegularHolidayRestDayPay;
+
         public decimal RegularHoursAndTotalRestDay => RegularHours + TotalRestDayHours;
+
+        public decimal RegularPayAndTotalRestDay => RegularPay + TotalRestDayPay;
 
         public decimal TotalOvertimeHours =>
             OvertimeHours +
@@ -163,7 +167,8 @@ namespace AccuPay.Core.Entities
         // needed to be virtual to be overriden in unit test
         public virtual decimal TotalWorkedHoursWithoutOvertimeAndLeave(bool isMonthly)
         {
-            decimal totalHours = RegularHoursAndTotalRestDay +
+            decimal totalHours =
+                RegularHoursAndTotalRestDay +
                 SpecialHolidayHours +
                 RegularHolidayHours;
 
@@ -189,12 +194,9 @@ namespace AccuPay.Core.Entities
 
         // needed to be virtual to be overriden in unit test
         public virtual decimal TotalDaysPayWithOutOvertimeAndLeave =>
-            RegularPay +
-            RestDayPay +
+            RegularPayAndTotalRestDay +
             SpecialHolidayPay +
-            RegularHolidayPay +
-            SpecialHolidayRestDayPay +
-            RegularHolidayRestDayPay;
+            RegularHolidayPay;
 
         public decimal TotalDeductionAdjustments =>
             Adjustments.Where(a => a.Amount < 0).Sum(a => a.Amount) +
