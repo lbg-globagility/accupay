@@ -277,10 +277,10 @@ namespace AccuPay.Core.UnitTests.SSS
 
         #endregion GrossPay
 
-        #region BasicMinusDeductions
+        #region BasicMinusDeductions_WithoutDeduction
 
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
-        public void ShouldCalculateForDailyAndMonthly_WithBasicMinusDeductionsCalculationBasis_TotalDaysPayWithOutOvertimeAndLeaveOverriden(
+        public void ShouldCalculateForDailyAndMonthly_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedSssEmployeeShare,
             decimal expectedSssEmployerShare)
@@ -333,7 +333,7 @@ namespace AccuPay.Core.UnitTests.SSS
         }
 
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
-        public void ShouldCalculateForFixed_WithBasicMinusDeductionsCalculationBasis_TotalDaysPayWithOutOvertimeAndLeaveOverriden(
+        public void ShouldCalculateForFixed_WithBasicMinusDeductionsCalculationBasis_WithoutDeduction(
            decimal salaryBracket,
            decimal expectedSssEmployeeShare,
            decimal expectedSssEmployerShare)
@@ -366,12 +366,118 @@ namespace AccuPay.Core.UnitTests.SSS
             Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
         }
 
-        #endregion BasicMinusDeductions
+        #endregion BasicMinusDeductions_WithoutDeduction
+
+        #region BasicMinusDeductions_WithDeduction
+
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        public void ShouldCalculateForDaily_WithBasicMinusDeductionsCalculationBasis_WithDeduction(
+            decimal salaryBracket,
+            decimal expectedSssEmployeeShare,
+            decimal expectedSssEmployerShare)
+        {
+            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
+            policy
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
+
+            decimal workPayPerCutOff = salaryBracket / 2;
+
+            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+
+            var paystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, paystub);
+
+            PaystubHelper.SetPayDeductionsValue(paystub);
+
+            var previousPaystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, previousPaystub);
+
+            PaystubHelper.SetPayDeductionsValue(previousPaystub);
+
+            var salary = new Salary()
+            {
+                DoPaySSSContribution = true,
+                BasicSalary = It.IsAny<decimal>(),
+                AllowanceSalary = It.IsAny<decimal>(),
+            };
+
+            // Daily
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeDaily, OrganizationId);
+
+            calculator
+                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+
+            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+        }
+
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        public void ShouldCalculateForMonthly_WithBasicMinusDeductionsCalculationBasis_WithDeduction(
+            decimal salaryBracket,
+            decimal expectedSssEmployeeShare,
+            decimal expectedSssEmployerShare)
+        {
+            Mock<IPolicyHelper> policy = new Mock<IPolicyHelper>();
+            policy
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
+
+            decimal workPayPerCutOff = salaryBracket / 2;
+
+            var calculator = new SssCalculator(policy.Object, _socialSecurityBrackets, _payPeriod);
+
+            var paystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, paystub);
+
+            PaystubHelper.SetPayDeductionsValue(paystub);
+
+            // In monthly, RegularPay still has AbsenceDeduction, LateDeduction, and UndertimeDeduction
+            paystub.RegularPay +=
+                paystub.AbsenceDeduction +
+                paystub.LateDeduction +
+                paystub.UndertimeDeduction;
+
+            var previousPaystub = new Paystub();
+            PaystubHelper.SetTotalWorkedPayWithoutOvertimeAndLeaveValue(
+                workPayPerCutOff, previousPaystub);
+
+            PaystubHelper.SetPayDeductionsValue(previousPaystub);
+
+            // In monthly, RegularPay still has AbsenceDeduction, LateDeduction, and UndertimeDeduction
+            previousPaystub.RegularPay +=
+                previousPaystub.AbsenceDeduction +
+                previousPaystub.LateDeduction +
+                previousPaystub.UndertimeDeduction;
+
+            var salary = new Salary()
+            {
+                DoPaySSSContribution = true,
+                BasicSalary = It.IsAny<decimal>(),
+                AllowanceSalary = It.IsAny<decimal>(),
+            };
+
+            // Monthly
+            var employee = EmployeeMother
+                .Simple(Employee.EmployeeTypeMonthly, OrganizationId);
+
+            calculator
+                .Calculate(paystub, previousPaystub, salary, employee, _currentSystemOwner);
+
+            Assert.AreEqual(expectedSssEmployeeShare, paystub.SssEmployeeShare);
+            Assert.AreEqual(expectedSssEmployerShare, paystub.SssEmployerShare);
+        }
+
+        #endregion BasicMinusDeductions_WithDeduction
 
         #region BasicMinusDeductionsWithoutPremium_WithoutDeduction
 
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
-        public void ShouldCalculateForDaily_WithoutDeduction(
+        public void ShouldCalculateForDaily_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedSssEmployeeShare,
             decimal expectedSssEmployerShare)
@@ -417,7 +523,7 @@ namespace AccuPay.Core.UnitTests.SSS
         }
 
         [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
-        public void ShouldCalculateForMonthly_WithoutDeduction(
+        public void ShouldCalculateForMonthly_WithBasicMinusDeductionsWithoutPremiumCalculationBasis_WithoutDeduction(
             decimal salaryBracket,
             decimal expectedSssEmployeeShare,
             decimal expectedSssEmployerShare)
