@@ -17,7 +17,7 @@ Public Class ActiveEmployeeChecklistReportProvider
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim succeed = False
-        Dim form As New SelectPayPeriodSimple
+        Dim form As New SelectPayPeriodSimpleDialog
 
         succeed = form.ShowDialog = DialogResult.OK
         If Not succeed Then Return False

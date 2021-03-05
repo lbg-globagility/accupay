@@ -57,7 +57,7 @@ Public Class DefaultShiftAndTimeLogsForm
                 month:=_currentPayPeriod.Month,
                 year:=_currentPayPeriod.Year,
                 isFirstHalf:=_currentPayPeriod.IsFirstHalf,
-                currentUserId:=z_User
+                currentlyLoggedInUserId:=z_User
             )
 
             _currentPayPeriod = NewPayPeriod

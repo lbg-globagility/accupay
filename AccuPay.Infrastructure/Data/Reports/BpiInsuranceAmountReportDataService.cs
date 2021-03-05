@@ -26,7 +26,7 @@ namespace AccuPay.Infrastructure.Data
             _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<BpiInsuranceDataSource>> GetData(int organizationId, int userId, DateTime selectedDate)
+        public async Task<ICollection<BpiInsuranceDataSource>> GetData(int organizationId, int userId, DateTime selectedDate)
         {
             var bpiInsuranceProductID = (await (_productRepository
                 .GetOrCreateAdjustmentTypeAsync(

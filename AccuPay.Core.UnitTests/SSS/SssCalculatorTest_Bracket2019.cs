@@ -1,27 +1,29 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
-using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
-using Microsoft.Extensions.DependencyInjection;
+using AccuPay.Core.TestData;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace AccuPay.Core.IntegrationTests.SSS
+namespace AccuPay.Core.UnitTests.SSS
 {
-    public class SssCalculatorTest_2019 : DatabaseTest
+    public class SssCalculatorTest_Bracket2019
     {
+        private const int OrganizationId = 1;
+
         [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_SalaryBased")]
-        public void ShouldCalculate_WithBasicPayCalculationBasis(
-        decimal basicSalary,
-        decimal expectedSssEmployeeShare,
-        decimal expectedSssEmployerShare)
+        public void ShouldCalculate_WithBasicSalaryCalculationBasis(
+            decimal basicSalary,
+            decimal expectedSssEmployeeShare,
+            decimal expectedSssEmployerShare)
         {
             Mock<IPolicyHelper> policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicSalary);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicSalary);
 
             var paystub = new Paystub();
             var previousPaystub = new Paystub();
@@ -57,7 +59,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
            decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicMinusDeductions);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -157,7 +161,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(sssCalculationBasis);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(sssCalculationBasis);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -234,7 +240,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
            decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicMinusDeductions);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -352,7 +360,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(sssCalculationBasis);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(sssCalculationBasis);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
@@ -417,7 +427,6 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 Year = 2019,
                 Month = 4
             };
-
             BaseShouldCalculate(
                 basicSalary: basicSalary,
                 paystub: paystub,
@@ -439,13 +448,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             string employeeType,
             PayPeriod payPeriod)
         {
-            var sssRepository = MainServiceProvider.GetRequiredService<ISocialSecurityBracketRepository>();
-            IEnumerable<SocialSecurityBracket> socialSecurityBrackets = sssRepository.GetAll();
+            List<SocialSecurityBracket> socialSecurityBrackets = MockSocialSecurityBrackets.Get();
 
-            if (socialSecurityBrackets.Max(x => x.EffectiveDateFrom) < new DateTime(2020, 4, 1))
-                throw new Exception("SSS brackets for 2019-2020 are not created in the database yet");
-
-            var calculator = new SssCalculator(policy, socialSecurityBrackets.ToList(), payPeriod);
+            var calculator = new SssCalculator(policy, socialSecurityBrackets, payPeriod);
 
             var salary = new Salary()
             {
@@ -454,18 +459,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 AllowanceSalary = 0,
             };
 
-            var employee = new Employee()
-            {
-                EmployeeType = employeeType,
-                WorkDaysPerYear = 312,
-                Position = new Position()
-                {
-                    Division = new Division()
-                    {
-                        SssDeductionSchedule = ContributionSchedule.FIRST_HALF
-                    }
-                }
-            };
+            var employee = EmployeeMother.Simple(employeeType, OrganizationId);
 
             string currentSystemOwner = string.Empty;
 

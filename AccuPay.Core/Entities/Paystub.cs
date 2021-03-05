@@ -160,13 +160,15 @@ namespace AccuPay.Core.Entities
             SpecialHolidayRestDayOTHours +
             RegularHolidayRestDayOTHours;
 
-        public decimal TotalWorkedHoursWithoutOvertimeAndLeave =>
+        // needed to be virtual to be overriden in unit test
+        public virtual decimal TotalWorkedHoursWithoutOvertimeAndLeave =>
             RegularHoursAndTotalRestDay +
             SpecialHolidayHours +
             RegularHolidayHours;
 
         public decimal TotalWorkedHoursWithoutLeave => TotalWorkedHoursWithoutOvertimeAndLeave + TotalOvertimeHours;
 
+        // needed to be virtual to be overriden in unit test
         public virtual decimal TotalDaysPayWithOutOvertimeAndLeave =>
             RegularPay +
             RestDayPay +

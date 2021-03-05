@@ -1,9 +1,9 @@
 using AccuPay.Core.Entities;
 using System.Collections.Generic;
 
-namespace AccuPay.Core.UnitTests.Mothers
+namespace AccuPay.Core.UnitTests
 {
-    public class LoanTransactionMother
+    public static class LoanTransactionMother
     {
         public static LoanTransaction Simple(
             int loanId = 0,

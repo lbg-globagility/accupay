@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using System.Collections;
 
-namespace AccuPay.Core.UnitTests.SSS
+namespace AccuPay.Core.TestData
 {
     public class SSSTestSource_2019
     {

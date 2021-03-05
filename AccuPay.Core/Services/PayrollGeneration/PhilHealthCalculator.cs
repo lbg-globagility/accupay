@@ -2,7 +2,6 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AccuPay.Core.Services
@@ -107,7 +106,7 @@ namespace AccuPay.Core.Services
             Employee employee,
             string currentSystemOwner)
         {
-            var calculationBasis = _policy.CalculationBasis;
+            var calculationBasis = _policy.CalculationBasis(employee.OrganizationID.Value);
 
             var basisPay = 0M;
 

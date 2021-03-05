@@ -51,7 +51,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BenchmarkAlphalistReport\BenchmarkAlphalist.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BenchmarkAlphalist.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="BaseReportBuilder.cs" />
+    <Compile Include="BenchmarkAlphalistReport\BenchmarkAlphalistBuilder.cs" />
+    <Compile Include="BenchmarkAlphalistReport\IBenchmarkAlphalistBuilder.cs" />
     <Compile Include="IBaseReportBuilder.cs" />
     <Compile Include="IPdfGenerator.cs" />
     <Compile Include="LoanSummaryByEmployeeReport\ILoanSummaryByEmployeeReportBuilder.cs" />
@@ -154,6 +162,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BenchmarkAlphalistReport\BenchmarkAlphalist.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BenchmarkAlphalist.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoanSummaryByEmployeeReport\LoanReports.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>LoanReports.cs</LastGenOutput>

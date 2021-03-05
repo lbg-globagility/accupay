@@ -68,11 +68,18 @@ namespace AccuPay.Core.Entities
         public bool IsPending => Status == PayPeriodStatus.Pending;
 
         /// <summary>
-        /// The actual first day of the month of the pay period when the salary will be given. Not the attendance that the salary will be based from.
+        /// The actual first day of the month of the pay period when the salary will be given.
+        /// Not the attendance that the salary will be based from.
         /// </summary>
         public DateTime DateMonth => new DateTime(Year, Month, 1);
 
-        public static PayPeriod NewPayPeriod(int organizationId, int payrollMonth, int payrollYear, bool isFirstHalf, IPolicyHelper policy, int? currentUserId)
+        public static PayPeriod NewPayPeriod(
+            int organizationId,
+            int payrollMonth,
+            int payrollYear,
+            bool isFirstHalf,
+            IPolicyHelper policy,
+            int? currentlyLoggedInUserId)
         {
             var ordinalValue = payrollMonth * 2;
 
@@ -104,7 +111,7 @@ namespace AccuPay.Core.Entities
                 OrdinalValue = ordinalValue,
                 PayFromDate = payFromDate,
                 PayToDate = payToDate,
-                CreatedBy = currentUserId
+                CreatedBy = currentlyLoggedInUserId
             };
         }
     }

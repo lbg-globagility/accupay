@@ -103,7 +103,9 @@ Public Class ReportsList
             New ThirteenthMonthDetailedReportProvider(),
             New ThirteenthMonthSummaryReportProvider(),
             New LoanLedgerReportProvider(),
-            New PayrollSummaryExcelFormatReportProvider()
+            New PayrollSummaryExcelFormatReportProvider(),
+            New BenchmarkAlphalistReportProvider(),
+            New PayrollLedgerExcelFormatReportProvider()
         }
     End Function
 
