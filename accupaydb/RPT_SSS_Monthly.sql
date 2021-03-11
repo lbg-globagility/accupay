@@ -45,7 +45,8 @@ BEGIN
         SELECT
             SUM(paystub.TotalEmpSSS) AS TotalEmpSSS,
             SUM(paystub.TotalCompSSS) AS TotalCompSSS,
-            paystub.EmployeeID
+            paystub.EmployeeID,
+            COUNT(paystub.RowID) `Count` # Counts the pay period within the month, it can be 1, 2 or 3
         FROM paystub
         INNER JOIN payperiod
         ON payperiod.RowID = paystub.PayPeriodID
@@ -57,7 +58,7 @@ BEGIN
     ) paystubsummary
     ON paystubsummary.EmployeeID = employee.RowID
     LEFT JOIN paysocialsecurity
-    ON paysocialsecurity.EmployeeContributionAmount = IF(IF(employee.AgencyID IS NULL, d.SSSDeductSched, d.SSSDeductSchedAgency)='Per pay period',
+    ON paysocialsecurity.EmployeeContributionAmount = IF(IF(employee.AgencyID IS NULL, d.SSSDeductSched, d.SSSDeductSchedAgency)='Per pay period' AND paystubsummary.`Count` = 1,
 	 																		((paystubsummary.TotalEmpSSS * 2) - paysocialsecurity.EmployeeMPFAmount),
 																			(paystubsummary.TotalEmpSSS - paysocialsecurity.EmployeeMPFAmount))
     AND paramDate BETWEEN paysocialsecurity.EffectiveDateFrom AND paysocialsecurity.EffectiveDateTo
