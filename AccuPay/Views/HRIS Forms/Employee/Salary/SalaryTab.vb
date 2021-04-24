@@ -370,6 +370,11 @@ Public Class SalaryTab
                     id:=_currentSalary.RowID.Value,
                     currentlyLoggedInUserId:=z_User)
 
+                If _isSystemOwnerBenchMark Then
+                    Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of IAllowanceRepository)
+                    Await allowanceRepository.DeleteAsync(_ecolaAllowance)
+                End If
+
                 Await LoadSalaries()
 
                 ShowBalloonInfo($"Salary successfully deleted.", "Delete Salary")
