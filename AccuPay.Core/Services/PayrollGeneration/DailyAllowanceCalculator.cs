@@ -74,7 +74,12 @@ namespace AccuPay.Core.Services
                     else if (allowance.Product.Fixed)
                         allowanceAmount = dailyRate;
                     else
-                        allowanceAmount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate;
+                    {
+                        var allowanceWorkedHours = _allowancePolicy.IsLeavePaid ?
+                            timeEntry.RegularHours + timeEntry.TotalLeaveHours :
+                            timeEntry.RegularHours;
+                        allowanceAmount = allowanceWorkedHours * hourlyRate;
+                    }
                 }
                 else if (payrate.IsSpecialNonWorkingHoliday)
                 {
