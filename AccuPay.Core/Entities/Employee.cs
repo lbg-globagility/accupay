@@ -112,6 +112,8 @@ namespace AccuPay.Core.Entities
         [ForeignKey("OriginalImageId")]
         public virtual File OriginalImage { get; set; }
 
+        public bool GracePeriodAsBuffer { get; set; }
+
         public string MiddleInitial
             => string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
 
