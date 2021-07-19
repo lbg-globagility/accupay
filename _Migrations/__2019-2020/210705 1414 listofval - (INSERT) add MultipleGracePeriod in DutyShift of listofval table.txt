@@ -1,0 +1,6 @@
+
+SET @userId=(SELECT Id FROM aspnetusers LIMIT 1);
+SET @_type='DutyShift';
+SET @_lic='MultipleGracePeriod';
+SET @id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC=@_lic);
+INSERT INTO `listofval` (`RowID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@id, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), @userId, '0', @_lic, @_type, NULL, 'Yes', NULL, 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();

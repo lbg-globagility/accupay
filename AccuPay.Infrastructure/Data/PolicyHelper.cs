@@ -68,6 +68,8 @@ namespace AccuPay.Infrastructure.Data
 
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
 
+        public bool UseGracePeriodAsBuffer => _settings.GetBoolean("Employee Policy.GracePeriodAsBuffer", false);
+
         public bool UseDefaultShiftAndTimeLogs => _settings.GetBoolean("Data Policy.UseDefaultShiftAndTimeLogs", false);
 
         public bool UseCostCenter => _settings.GetBoolean("Policy.UseCostCenter", false);
