@@ -246,7 +246,8 @@ namespace AccuPay.Core.Entities
             Employee employee,
             IReadOnlyCollection<TimeEntry> previousTimeEntries,
             IReadOnlyCollection<TimeEntry> timeEntries,
-            IReadOnlyCollection<Allowance> allowances)
+            IReadOnlyCollection<Allowance> allowances,
+            IReadOnlyCollection<Shift> shifts)
         {
             var dailyCalculator = new DailyAllowanceCalculator(
                 new AllowancePolicy(settings),
@@ -256,6 +257,7 @@ namespace AccuPay.Core.Entities
                 calendarCollection,
                 timeEntries: timeEntries,
                 previousTimeEntries: previousTimeEntries,
+                shifts: shifts,
                 currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             var semiMonthlyCalculator = new SemiMonthlyAllowanceCalculator(
