@@ -92,5 +92,9 @@ namespace AccuPay.Core.Helpers
         {
             return $"{Start:yyyy-MM-dd hh:mm tt} - {End:yyyy-MM-dd hh:mm tt} | {BreaktimeStart?.ToString("yyyy-MM-dd hh:mm tt")} - {BreaktimeEnd?.ToString("yyyy-MM-dd hh:mm tt")} ";
         }
+
+        public bool MarkedAsWholeDay => _shift?.MarkedAsWholeDay ?? false;
+
+        public int GracePeriod => _shift?.GracePeriod ?? 0;
     }
 }

@@ -60,6 +60,8 @@ namespace AccuPay.Core.Services
 
         public IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; private set; }
 
+        public IReadOnlyCollection<Shift> Shifts { get; private set; }
+
         public IPolicyHelper Policy { get; }
 
         private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
@@ -96,6 +98,8 @@ namespace AccuPay.Core.Services
 
         private readonly IWithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
+        private readonly IShiftRepository _shiftRepository;
+
         public PayrollResources(
             IPolicyHelper policy,
             ICalendarService calendarService,
@@ -114,7 +118,8 @@ namespace AccuPay.Core.Services
             ISalaryRepository salaryRepository,
             ISocialSecurityBracketRepository socialSecurityBracketRepository,
             ITimeEntryRepository timeEntryRepository,
-            IWithholdingTaxBracketRepository withholdingTaxBracketRepository)
+            IWithholdingTaxBracketRepository withholdingTaxBracketRepository,
+            IShiftRepository shiftRepository)
         {
             Policy = policy;
             _calendarService = calendarService;
@@ -134,6 +139,7 @@ namespace AccuPay.Core.Services
             _socialSecurityBracketRepository = socialSecurityBracketRepository;
             _timeEntryRepository = timeEntryRepository;
             _withholdingTaxBracketRepository = withholdingTaxBracketRepository;
+            _shiftRepository = shiftRepository;
         }
 
         public async Task Load(int payPeriodId, int organizationId, int userId)
@@ -169,6 +175,7 @@ namespace AccuPay.Core.Services
             await LoadTimeEntries();
             await LoadVacationLeaveProduct();
             await LoadWithholdingTaxBrackets();
+            await LoadShiftSchedules();
         }
 
         private async Task LoadAllowances()
@@ -441,6 +448,21 @@ namespace AccuPay.Core.Services
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("WithholdingTaxBrackets", ex);
+            }
+        }
+
+        private async Task LoadShiftSchedules()
+        {
+            try
+            {
+                var datePeriod = new TimePeriod(_payDateFrom, _payDateTo);
+                Shifts = (await _shiftRepository
+                    .GetByDatePeriodAsync(_organizationId, datePeriod))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("ShiftSchedules", ex);
             }
         }
 

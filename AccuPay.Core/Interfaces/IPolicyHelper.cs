@@ -34,6 +34,8 @@ namespace AccuPay.Core.Interfaces
         bool UseAgency { get; }
         bool UseBonus { get; }
         bool UseBPIInsurance { get; }
+        bool UseGracePeriodAsBuffer { get; }
+
         bool UseCostCenter { get; }
         bool UseDefaultShiftAndTimeLogs { get; }
         bool UseEmailPayslip { get; }
