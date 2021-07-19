@@ -11,6 +11,7 @@ namespace AccuPay.Core.Services
         private readonly Paystub _paystub;
         private readonly PayPeriod _payperiod;
         private readonly IReadOnlyCollection<TimeEntry> _previousTimeEntries;
+        private readonly IReadOnlyCollection<Shift> _shifts;
         private readonly IReadOnlyCollection<TimeEntry> _timeEntries;
 
         private readonly AllowancePolicy _allowancePolicy;
@@ -25,7 +26,8 @@ namespace AccuPay.Core.Services
             CalendarCollection calendarCollection,
             IReadOnlyCollection<TimeEntry> timeEntries,
             IReadOnlyCollection<TimeEntry> previousTimeEntries,
-            int currentlyLoggedInUserId)
+            int currentlyLoggedInUserId,
+            IReadOnlyCollection<Shift> shifts = null)
         {
             _allowancePolicy = allowancePolicy;
             _employee = employee;
@@ -34,6 +36,7 @@ namespace AccuPay.Core.Services
             _calendarCollection = calendarCollection;
             _timeEntries = timeEntries;
             _previousTimeEntries = previousTimeEntries;
+            _shifts = shifts;
             _userId = currentlyLoggedInUserId;
         }
 
@@ -64,6 +67,10 @@ namespace AccuPay.Core.Services
                 var allowanceAmount = 0M;
                 var payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID);
                 var payrate = payrateCalendar.Find(timeEntry.Date);
+                var shift = _shifts.
+                    Where(s => s.DateSched == timeEntry.Date).
+                    FirstOrDefault();
+                var markedAsWholeDay = shift?.MarkedAsWholeDay ?? false;
 
                 if (payrate.IsRegularDay)
                 {
@@ -73,6 +80,14 @@ namespace AccuPay.Core.Services
                         allowanceAmount = dailyRate;
                     else if (allowance.Product.Fixed)
                         allowanceAmount = dailyRate;
+                    else if (markedAsWholeDay)
+                    {
+                        if (timeEntry.RegularHours > 0)
+                            allowanceAmount =
+                                timeEntry.BasicHours == shift.WorkHours ?
+                                dailyRate :
+                                dailyRate - ((shift.WorkHours - timeEntry.RegularHours) * hourlyRate);
+                    }
                     else
                     {
                         var allowanceWorkedHours = _allowancePolicy.IsLeavePaid ?
