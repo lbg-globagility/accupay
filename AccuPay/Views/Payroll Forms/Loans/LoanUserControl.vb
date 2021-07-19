@@ -68,10 +68,10 @@ Public Class LoanUserControl
 
             If Me._currentLoan IsNot Nothing Then
 
-                Dim loanTypes = CType(cboLoanType.DataSource, List(Of LookUpItem))
+                Dim loanTypes = DirectCast(cboLoanType.DataSource, List(Of Product))
 
                 Dim newLoanType = loanTypes.
-                    Where(Function(l) l.Id IsNot Nothing AndAlso l.Id.Value = form.NewLoanType.RowID.Value).
+                    Where(Function(p) p.RowID.HasValue AndAlso p.RowID.Value = form.NewLoanType.RowID.Value).
                     FirstOrDefault()
 
                 cboLoanType.SelectedIndex = loanTypes.IndexOf(newLoanType)
