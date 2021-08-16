@@ -106,6 +106,26 @@ namespace AccuPay.Core.Services
                 case SssCalculationBasis.BasicSalary:
                     return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
 
+                case SssCalculationBasis.GrossPayWithBasicDeductions:
+                    var grandTotalAllowance = (previousPaystub?.GrandTotalAllowance ?? 0) +
+                                paystub.GrandTotalAllowance;
+
+                    var basicDeductions = (previousPaystub?.BasicDeductions ?? 0) +
+                                paystub.BasicDeductions;
+
+                    var grandTotalGrossPay = (previousPaystub?.GrossPay ?? 0) +
+                                paystub.GrossPay;
+
+                    if (employee.IsFixed)
+                    {
+                        return PayrollTools.GetEmployeeMonthlyRate(employee, salary) +
+                            grandTotalAllowance;
+                    }
+
+                    return grandTotalGrossPay +
+                        basicDeductions +
+                        grandTotalAllowance;
+
                 case SssCalculationBasis.BasicMinusDeductions:
 
                     if (employee.IsFixed)
