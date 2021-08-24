@@ -53,14 +53,22 @@ namespace AccuPay.Infrastructure.Data
 
         public bool IsPolicyByOrganization => _settings.GetBoolean("Policy.ByOrganization", false);
 
-        public SssCalculationBasis SssCalculationBasis =>
-            _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary, IsPolicyByOrganization);
+        public SssCalculationBasis SssCalculationBasis(int organizationId)
+        {
+            return _settings.GetEnum(
+                "SocialSecuritySystem.CalculationBasis",
+                Core.Enums.SssCalculationBasis.BasicSalary,
+                IsPolicyByOrganization,
+                organizationId);
+        }
 
         public bool UseUserLevel => _settings.GetBoolean("User Policy.UseUserLevel", false);
 
         public bool UseEmailPayslip => _settings.GetBoolean("Payroll Policy.EmailPayslip", false);
 
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
+
+        public bool UseGracePeriodAsBuffer => _settings.GetBoolean("Employee Policy.GracePeriodAsBuffer", false);
 
         public bool UseDefaultShiftAndTimeLogs => _settings.GetBoolean("Data Policy.UseDefaultShiftAndTimeLogs", false);
 

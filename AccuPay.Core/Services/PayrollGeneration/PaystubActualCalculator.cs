@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AccuPay.Core.Services
@@ -14,8 +13,7 @@ namespace AccuPay.Core.Services
             ListOfValueCollection settings,
             PayPeriod payperiod,
             Paystub paystub,
-            string currentSystemOwner,
-            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries)
+            string currentSystemOwner)
         {
             decimal totalEarnings = 0;
 
@@ -23,10 +21,7 @@ namespace AccuPay.Core.Services
             // can both use this formula
             if (employee.IsDaily || currentSystemOwner == SystemOwner.Benchmark)
             {
-                totalEarnings =
-                    paystub.Actual.RegularPay +
-                    paystub.Actual.LeavePay +
-                    paystub.Actual.AdditionalPay;
+                totalEarnings = paystub.Actual.TotalEarningForDaily;
             }
             else if (employee.IsFixed)
             {
@@ -41,10 +36,7 @@ namespace AccuPay.Core.Services
 
                 if (employee.IsFirstPay(payperiod) && isFirstPayAsDailyRule)
                 {
-                    totalEarnings =
-                        paystub.Actual.RegularPay +
-                        paystub.Actual.LeavePay +
-                        paystub.Actual.AdditionalPay;
+                    totalEarnings = paystub.Actual.TotalEarningForDaily;
                 }
                 else
                 {
@@ -63,7 +55,6 @@ namespace AccuPay.Core.Services
                 }
             }
 
-            paystub.Actual.ComputeBasicPay(employee.IsDaily, salary.TotalSalary, actualTimeEntries);
             paystub.Actual.GrossPay = AccuMath.CommercialRound(totalEarnings + paystub.TotalBonus + paystub.GrandTotalAllowance);
             paystub.Actual.TotalAdjustments = AccuMath.CommercialRound(paystub.TotalAdjustments + paystub.ActualAdjustments.Sum(a => a.Amount));
             paystub.Actual.NetPay = AccuMath.CommercialRound(paystub.Actual.GrossPay - paystub.NetDeductions + paystub.Actual.TotalAdjustments);

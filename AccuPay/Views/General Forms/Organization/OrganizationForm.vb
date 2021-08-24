@@ -77,6 +77,10 @@ Public Class OrganizationForm
             SplitContainer1.Panel1.Enabled = False
 
         End If
+
+        OrganizationUserRolesControl.Visible = Not _policy.UseUserLevel
+        UserRoleLabel.Visible = Not _policy.UseUserLevel
+
     End Function
 
     Private Async Function ClearTextBoxes() As Task
@@ -124,7 +128,7 @@ Public Class OrganizationForm
 
         Dim list = Await _organizationRepository.List(OrganizationPageOptions.AllData, Z_Client)
 
-        Dim organizations = list.organizations.
+        _organizations = list.organizations.
             OrderBy(Function(o) o.Name).
             ToList()
 
@@ -136,9 +140,13 @@ Public Class OrganizationForm
             Select(Function(o) o.Key).
             ToArray()
 
-        _organizations = organizations.
-        Where(Function(o) allowedOrganizations.Contains(o.RowID.Value)).
-        ToList()
+        If Not _policy.UseUserLevel Then
+
+            _organizations = _organizations.
+                Where(Function(o) allowedOrganizations.Contains(o.RowID.Value)).
+                ToList()
+
+        End If
 
         OrganizationGridView.DataSource = _organizations
 
@@ -316,7 +324,8 @@ Public Class OrganizationForm
 
         Dim userRoles = OrganizationUserRolesControl.GetUserRoles(allowNullUserId:=isNew)
 
-        If Not userRoles.Any(Function(r) r.RoleId.HasValue AndAlso r.RoleId.Value > 0) Then
+        If Not _policy.UseUserLevel AndAlso
+            Not userRoles.Any(Function(r) r.RoleId.HasValue AndAlso r.RoleId.Value > 0) Then
             MessageBoxHelper.Warning("Should have at least one user with access to this organization.", messageTitle)
             Return
         End If
@@ -379,10 +388,6 @@ Public Class OrganizationForm
     End Sub
 
     Private Async Function SaveOrganzation(isNew As Boolean, userRoles As List(Of UserRoleIdData), messageTitle As String) As Task
-
-        If userRoles.Any(Function(r) r.RoleId.HasValue AndAlso r.RoleId.Value > 0) Then
-
-        End If
 
         SaveButton.Enabled = False
         Me.Cursor = Cursors.WaitCursor

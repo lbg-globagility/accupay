@@ -1,0 +1,30 @@
+
+DELIMITER $$
+
+/*****************PLEASE TYPE HERE YOUR DATABASE NAME
+                  👇 👇 👇 👇 👇 👇 👇 👇 👇 👇 👇 👇 👇 👇 */
+SET @datbaseName='PLEASE TYPE HERE YOUR DATABASE NAME';
+
+SET @_isSatisfied=EXISTS(SELECT
+i.*
+FROM information_schema.`COLUMNS` i
+WHERE i.TABLE_NAME='shiftschedules'
+AND i.COLUMN_NAME='GracePeriod'
+AND i.TABLE_SCHEMA=@datbaseName);
+
+IF @_isSatisfied THEN
+	UPDATE shiftschedules ss
+	INNER JOIN employee e ON e.RowID=ss.EmployeeID AND e.OrganizationID=ss.OrganizationID
+	SET ss.GracePeriod=e.LateGracePeriod
+	WHERE ss.GracePeriod != e.LateGracePeriod
+	;
+END IF;
+
+$$
+
+SELECT ss.*
+FROM shiftschedules ss
+INNER JOIN employee e ON e.RowID=ss.EmployeeID AND e.LateGracePeriod > 0
+LIMIT 1000
+;
+

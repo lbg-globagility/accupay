@@ -160,12 +160,12 @@ Public Class StartNewPayPeriodDialog
 
                 Me.Cursor = Cursors.WaitCursor
 
-                Await dataService.StartStatusAsync(
+                Await dataService.OpenAsync(
                     organizationId:=z_OrganizationID,
                     month:=_currentPayperiod.Month,
                     year:=_currentPayperiod.Year,
                     isFirstHalf:=_currentPayperiod.IsFirstHalf,
-                    currentUserId:=z_User)
+                    currentlyLoggedInUserId:=z_User)
 
                 Await TimeEntrySummaryForm.LoadPayPeriods()
 

@@ -29,5 +29,6 @@ namespace AccuPay.Core.Interfaces
         IReadOnlyCollection<TimeEntry> TimeEntries { get; }
         Product VacationLeaveProduct { get; }
         IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; }
+        IReadOnlyCollection<Shift> Shifts { get; }
     }
 }

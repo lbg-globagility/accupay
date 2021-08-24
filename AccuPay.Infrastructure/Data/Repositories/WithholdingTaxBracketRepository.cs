@@ -15,9 +15,12 @@ namespace AccuPay.Infrastructure.Data
             _context = context;
         }
 
-        public async Task<IEnumerable<WithholdingTaxBracket>> GetAllAsync()
+        public async Task<ICollection<WithholdingTaxBracket>> GetAllAsync()
         {
-            return await _context.WithholdingTaxBrackets.ToListAsync();
+            return await _context
+                .WithholdingTaxBrackets
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

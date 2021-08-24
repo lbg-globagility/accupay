@@ -1,27 +1,29 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
-using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
-using Microsoft.Extensions.DependencyInjection;
+using AccuPay.Core.TestData;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace AccuPay.Core.IntegrationTests.SSS
+namespace AccuPay.Core.UnitTests.SSS
 {
-    public class SssCalculatorTest_2019 : DatabaseTest
+    public class SssCalculatorTest_Bracket2021
     {
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_SalaryBased")]
-        public void ShouldCalculate_WithBasicPayCalculationBasis(
-        decimal basicSalary,
-        decimal expectedSssEmployeeShare,
-        decimal expectedSssEmployerShare)
+        private const int OrganizationId = 2;
+
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
+        public void ShouldCalculate_WithBasicSalaryCalculationBasis(
+            decimal basicSalary,
+            decimal expectedSssEmployeeShare,
+            decimal expectedSssEmployerShare)
         {
             Mock<IPolicyHelper> policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicSalary);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicSalary);
 
             var paystub = new Paystub();
             var previousPaystub = new Paystub();
@@ -45,7 +47,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 Employee.EmployeeTypeFixed);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithBasicMinusDeductionsCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -57,11 +59,13 @@ namespace AccuPay.Core.IntegrationTests.SSS
            decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicMinusDeductions);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -69,7 +73,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;
@@ -86,8 +90,8 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 policyHelper.Object,
                 Employee.EmployeeTypeMonthly);
 
-            decimal expectedSssEmployeeShareForFixed = 600m;
-            decimal expectedSssEmployerShareForFixed = 1_230m;
+            decimal expectedSssEmployeeShareForFixed = 675m;
+            decimal expectedSssEmployerShareForFixed = 1_305m;
 
             BaseShouldCalculate(
                 basicSalary: basicSalary,
@@ -99,7 +103,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 Employee.EmployeeTypeFixed);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
+        // TODO: BasicMinusDeductionsWithoutPremium
+
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithEarningsCalculationBasis(
             decimal previousTotalDaysPayWithOutOvertimeAndLeave,
             decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -122,7 +128,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 expectedSssEmployerShare: expectedSssEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithGrossPayCalculationBasis(
             decimal previousTotalDaysPayWithOutOvertimeAndLeave,
             decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -157,11 +163,13 @@ namespace AccuPay.Core.IntegrationTests.SSS
             decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(sssCalculationBasis);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(sssCalculationBasis);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -169,7 +177,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;
@@ -193,6 +201,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 policyHelper.Object,
                 Employee.EmployeeTypeFixed);
 
+            // TODO: add unit tests for daily
             //BaseShouldCalculate(
             //    basicSalary: 0,
             //    paystub: paystub,
@@ -203,7 +212,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
             //    Employee.EmployeeTypeDaily);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_SalaryBased")]
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_SalaryBased")]
         public void ShouldCalculate__WithIrregularPayPeriodAndBasicPayCalculationBasis(
             decimal basicSalary,
             decimal expectedSssEmployeeShare,
@@ -222,7 +231,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 expectedSssEmployerShare: expectedSssEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithIrregularPayPeriodAndBasicMinusDeductionsCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -234,11 +243,13 @@ namespace AccuPay.Core.IntegrationTests.SSS
            decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(SssCalculationBasis.BasicMinusDeductions);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(SssCalculationBasis.BasicMinusDeductions);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -246,7 +257,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;
@@ -254,11 +265,11 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var payPeriod = new PayPeriod()
             {
-                PayFromDate = new DateTime(2019, 3, 16),
-                PayToDate = new DateTime(2019, 3, 31),
+                PayFromDate = new DateTime(2020, 12, 16),
+                PayToDate = new DateTime(2020, 12, 31),
                 Half = PayPeriod.FirstHalfValue,
-                Year = 2019,
-                Month = 4
+                Year = 2021,
+                Month = 1
             };
 
             decimal basicSalary = 15_000m;
@@ -273,8 +284,8 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 Employee.EmployeeTypeMonthly,
                 payPeriod);
 
-            decimal expectedSssEmployeeShareForFixed = 600m;
-            decimal expectedSssEmployerShareForFixed = 1_230m;
+            decimal expectedSssEmployeeShareForFixed = 675m;
+            decimal expectedSssEmployerShareForFixed = 1_305m;
 
             BaseShouldCalculate(
                 basicSalary: basicSalary,
@@ -287,7 +298,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 payPeriod);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithIrregularPayPeriodAndGrossPayCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -311,7 +322,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 expectedSssEmployerShare: expectedSssEmployerShare);
         }
 
-        [TestCaseSource(typeof(SSSTestSource_2019), "Brackets_PaystubBased")]
+        [TestCaseSource(typeof(SSSTestSource_2021), "Brackets_PaystubBased")]
         public void ShouldCalculate_WithIrregularPayPeriodAndEarningsCalculationBasis(
            decimal previousTotalDaysPayWithOutOvertimeAndLeave,
            decimal totalDaysPayWithOutOvertimeAndLeave,
@@ -352,11 +363,13 @@ namespace AccuPay.Core.IntegrationTests.SSS
             decimal expectedSssEmployerShare)
         {
             var policyHelper = new Mock<IPolicyHelper>();
-            policyHelper.Setup(x => x.SssCalculationBasis).Returns(sssCalculationBasis);
+            policyHelper
+                .Setup(x => x.SssCalculationBasis(OrganizationId))
+                .Returns(sssCalculationBasis);
 
             var paystubMock = new Mock<Paystub>();
             paystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(totalDaysPayWithOutOvertimeAndLeave);
             Paystub paystub = paystubMock.Object;
             paystub.TotalEarnings = currentTotalEarnings;
@@ -364,7 +377,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var previousPaystubMock = new Mock<Paystub>();
             previousPaystubMock
-                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave)
+                .Setup(x => x.TotalDaysPayWithOutOvertimeAndLeave(true))
                 .Returns(previousTotalDaysPayWithOutOvertimeAndLeave);
             Paystub previousPaystub = previousPaystubMock.Object;
             previousPaystub.TotalEarnings = previousTotalEarnings;
@@ -372,11 +385,11 @@ namespace AccuPay.Core.IntegrationTests.SSS
 
             var payPeriod = new PayPeriod()
             {
-                PayFromDate = new DateTime(2019, 3, 16),
-                PayToDate = new DateTime(2019, 3, 31),
+                PayFromDate = new DateTime(2020, 12, 16),
+                PayToDate = new DateTime(2020, 12, 31),
                 Half = PayPeriod.FirstHalfValue,
-                Year = 2019,
-                Month = 4
+                Year = 2021,
+                Month = 1
             };
 
             BaseShouldCalculate(
@@ -411,11 +424,11 @@ namespace AccuPay.Core.IntegrationTests.SSS
         {
             var payPeriod = new PayPeriod()
             {
-                PayFromDate = new DateTime(2019, 4, 1),
-                PayToDate = new DateTime(2019, 4, 15),
+                PayFromDate = new DateTime(2021, 1, 1),
+                PayToDate = new DateTime(2021, 1, 15),
                 Half = PayPeriod.FirstHalfValue,
-                Year = 2019,
-                Month = 4
+                Year = 2021,
+                Month = 1
             };
 
             BaseShouldCalculate(
@@ -439,13 +452,9 @@ namespace AccuPay.Core.IntegrationTests.SSS
             string employeeType,
             PayPeriod payPeriod)
         {
-            var sssRepository = MainServiceProvider.GetRequiredService<ISocialSecurityBracketRepository>();
-            IEnumerable<SocialSecurityBracket> socialSecurityBrackets = sssRepository.GetAll();
+            List<SocialSecurityBracket> socialSecurityBrackets = MockSocialSecurityBrackets.Get();
 
-            if (socialSecurityBrackets.Max(x => x.EffectiveDateFrom) < new DateTime(2020, 4, 1))
-                throw new Exception("SSS brackets for 2019-2020 are not created in the database yet");
-
-            var calculator = new SssCalculator(policy, socialSecurityBrackets.ToList(), payPeriod);
+            var calculator = new SssCalculator(policy, socialSecurityBrackets, payPeriod);
 
             var salary = new Salary()
             {
@@ -454,18 +463,7 @@ namespace AccuPay.Core.IntegrationTests.SSS
                 AllowanceSalary = 0,
             };
 
-            var employee = new Employee()
-            {
-                EmployeeType = employeeType,
-                WorkDaysPerYear = 312,
-                Position = new Position()
-                {
-                    Division = new Division()
-                    {
-                        SssDeductionSchedule = ContributionSchedule.FIRST_HALF
-                    }
-                }
-            };
+            var employee = EmployeeMother.Simple(employeeType, OrganizationId);
 
             string currentSystemOwner = string.Empty;
 

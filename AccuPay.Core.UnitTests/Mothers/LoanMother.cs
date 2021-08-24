@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AccuPay.Core.UnitTests.Mothers
+namespace AccuPay.Core.UnitTests
 {
-    public class LoanMother
+    public static class LoanMother
     {
         public static Loan Simple()
         {

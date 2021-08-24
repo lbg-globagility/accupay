@@ -38,6 +38,8 @@ Public Class ShiftForm
     Private _currentRolePermission As RolePermission
     Private _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
     Private _isShiftBasedAutoOvertimeEnabled As Boolean
+    Private _markAsWholeDay As Boolean
+    Private _multipleGracePeriod As Boolean
 
     Private WriteOnly Property ChangesCount As Integer
         Set(value As Integer)
@@ -71,6 +73,11 @@ Public Class ShiftForm
         _isShiftBasedAutoOvertimeEnabled = _shiftBasedAutoOvertimePolicy.Enabled
 
         txtBreakLength.Value = _dutyShiftPolicy.BreakHour
+
+        _markAsWholeDay = _dutyShiftPolicy.MarkAsWholeDay
+
+        _multipleGracePeriod = _dutyShiftPolicy.MultipleGracePeriod
+
     End Function
 
     Private Sub LoadWeek()
@@ -108,6 +115,19 @@ Public Class ShiftForm
             Else
                 .BreakLength = txtBreakLength.Value
             End If
+
+            If _markAsWholeDay Then
+                Dim chkMarkedAsWholeDayChecked = chkMarkedAsWholeDay.Checked
+                Dim satisfied = chkMarkedAsWholeDayChecked AndAlso ssm.IsLesserWorkingHours
+                Dim result = chkMarkedAsWholeDayChecked AndAlso satisfied
+                chkMarkedAsWholeDay.Checked = result
+
+                .MarkedAsWholeDay = result
+            Else
+                .MarkedAsWholeDay = False
+            End If
+
+            .GracePeriod = CInt(numGracePeriod.Value)
         End With
     End Sub
 
@@ -118,6 +138,8 @@ Public Class ShiftForm
             .BreakFrom = update.BreakFrom
             .BreakLength = update.BreakLength
             .IsRestDay = update.IsRestDay
+            .MarkedAsWholeDay = update.MarkedAsWholeDay
+            .GracePeriod = update.GracePeriod
         End With
     End Sub
 
@@ -187,12 +209,12 @@ Public Class ShiftForm
 
     Private Sub ShiftProper(dataGrid As DataGridView, e As DataGridViewCellEventArgs)
         Dim _currRow = dataGrid.Rows(e.RowIndex)
-        If Not IsStartTimeCellParseable(dataGrid, e.ColumnIndex) Then
+        If Not IsShiftSchedCellParseable(dataGrid, e.ColumnIndex) Then
             TransformTouchedRow(_currRow)
             Return
         End If
 
-        Dim model = DirectCast(_currRow.DataBoundItem, ShiftModel)
+        Dim model = GetShiftModel(_currRow)
 
         AutomaticShiftCompute(model)
 
@@ -201,7 +223,7 @@ Public Class ShiftForm
 
     Private Sub TransformTouchedRow(dataGridCurrentRow As DataGridViewRow)
         Dim currRow = dataGridCurrentRow
-        Dim ssm = DirectCast(currRow.DataBoundItem, ShiftModel)
+        Dim ssm = GetShiftModel(currRow)
 
         If ssm.HasChanged Then
             currRow.DefaultCellStyle.Font = New Font("Segoe UI", 8.25!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
@@ -291,7 +313,8 @@ Public Class ShiftForm
     End Sub
 
     Private Sub AffectedRows(_newSource As List(Of ShiftModel))
-        ChangesCount = _newSource.Where(Function(data) data.HasChanged).Count
+        Dim list = _newSource.Where(Function(data) data.HasChanged).ToList
+        ChangesCount = list.Count
     End Sub
 
     Private Sub NoAffectedRows()
@@ -336,17 +359,17 @@ Public Class ShiftForm
         Return timeColumnIndexes.Any(Function(i) Equals(i, columnIndexNumber))
     End Function
 
-    Private Function IsStartTimeCellParseable(dataGrid As DataGridView, columnIndexNumber As Integer) As Boolean
-        Dim timeColumnIndexes() = New Integer() {}
+    Private Function IsShiftSchedCellParseable(dataGrid As DataGridView, columnIndexNumber As Integer) As Boolean
+        Dim editableColumnIndexes() = New Integer() {}
         If dataGrid.Name = grid.Name Then
-            timeColumnIndexes = New Integer() {colTimeFrom.Index, colBreakTimeFrom.Index, colBreakLength.Index, colIsRestDay.Index}
-            If _isShiftBasedAutoOvertimeEnabled Then timeColumnIndexes = timeColumnIndexes.Concat({colTimeTo.Index}).ToArray()
+            editableColumnIndexes = New Integer() {colTimeFrom.Index, colBreakTimeFrom.Index, colBreakLength.Index, colIsRestDay.Index, colMarkAsWholeDay.Index, colGracePeriod.Index}
+            If _isShiftBasedAutoOvertimeEnabled Then editableColumnIndexes = editableColumnIndexes.Concat({colTimeTo.Index}).ToArray()
         ElseIf dataGrid.Name = gridWeek.Name Then
-            timeColumnIndexes = New Integer() {colStartTime.Index, Column5.Index, gridWeekBreakLength.Index, Column7.Index}
-            If _isShiftBasedAutoOvertimeEnabled Then timeColumnIndexes = timeColumnIndexes.Concat({colEndTime.Index}).ToArray()
+            editableColumnIndexes = New Integer() {colStartTime.Index, Column5.Index, gridWeekBreakLength.Index, Column7.Index, MarkedAsWholeDay.Index, GracePeriod.Index}
+            If _isShiftBasedAutoOvertimeEnabled Then editableColumnIndexes = editableColumnIndexes.Concat({colEndTime.Index}).ToArray()
         End If
 
-        Return timeColumnIndexes.Any(Function(i) Equals(i, columnIndexNumber))
+        Return editableColumnIndexes.Any(Function(i) Equals(i, columnIndexNumber))
     End Function
 
     Private Function ShortTimeSpan(ts As TimeSpan?) As String
@@ -460,7 +483,7 @@ Public Class ShiftForm
 
             _weekCycleRows = _weekCycleRows.Where(Function(r) satisfied(r))
         End If
-        Return _weekCycleRows.Select(Function(r) DirectCast(r.DataBoundItem, ShiftModel)).ToList
+        Return _weekCycleRows.Select(Function(r) GetShiftModel(r)).ToList
     End Function
 
     Private Function TimeSpanToString(text As String) As String
@@ -486,11 +509,14 @@ Public Class ShiftForm
         Implements IShift
         Private Const ONE_DAY_HOURS As Integer = 24
         Private Const MINUTES_PER_HOUR As Integer = 60
-        Private origStartTime, origEndTime, origBreakStart As String
-        Private origOffset As Boolean
-        Private origBreakLength As Decimal
+        Private _origStartTime, _origEndTime, _origBreakStart As String
+        Private _origOffset As Boolean
+        Private _origMarkAsWholeDay As Boolean
+        Private _origGracePeriod As Integer
+        Private _origBreakLength As Decimal
         Private _isNew, _madeChanges, _isValid As Boolean
         Private _eds As Shift
+        Private _markedAsWholeDay As Boolean
 
         Public Sub New()
         End Sub
@@ -500,10 +526,6 @@ Public Class ShiftForm
         End Sub
 
         Public Sub New(ess As Shift)
-            InitModel(ess)
-        End Sub
-
-        Private Sub InitModel(ess As Shift)
             _eds = ess
 
             _RowID = ess.RowID
@@ -529,13 +551,20 @@ Public Class ShiftForm
 
             _IsRestDay = ess.IsRestDay
 
-            origStartTime = _TimeFrom
-            origEndTime = _TimeTo
+            _markedAsWholeDay = ess.MarkedAsWholeDay
 
-            origBreakStart = _BreakFrom
-            origBreakLength = _BreakLength
+            _GracePeriod = ess.GracePeriod
 
-            origOffset = _IsRestDay
+            _origStartTime = _TimeFrom
+            _origEndTime = _TimeTo
+
+            _origBreakStart = _BreakFrom
+            _origBreakLength = _BreakLength
+
+            _origOffset = _IsRestDay
+
+            _origMarkAsWholeDay = _markedAsWholeDay
+            _origGracePeriod = _GracePeriod
         End Sub
 
         Private Sub AssignEmployee(employee As Employee)
@@ -561,6 +590,21 @@ Public Class ShiftForm
 
         Public Property IsRestDay As Boolean Implements IShift.IsRestDay
 
+        Public Property MarkedAsWholeDay As Boolean
+            Get
+                Return _markedAsWholeDay
+            End Get
+            Set(value As Boolean)
+                If IsLesserWorkingHours Then
+                    _markedAsWholeDay = value
+                Else
+                    _markedAsWholeDay = False
+                End If
+            End Set
+        End Property
+
+        Public Property GracePeriod As Integer
+
         Public ReadOnly Property DayName As String
             Get
                 Return GetDayName(DateValue)
@@ -574,6 +618,12 @@ Public Class ShiftForm
             Return machineCulture.DateTimeFormat.GetDayName(dayOfWeek)
         End Function
 
+        Public ReadOnly Property IsLesserWorkingHours As Boolean
+            Get
+                Return WorkHours > 0 AndAlso WorkHours < PayrollTools.WorkHoursPerDay
+            End Get
+        End Property
+
         Public ReadOnly Property IsExisting As Boolean
             Get
                 Return BaseEntity.CheckIfNewEntity(_RowID)
@@ -582,11 +632,13 @@ Public Class ShiftForm
 
         Public ReadOnly Property HasChanged As Boolean
             Get
-                _madeChanges = Not Equals(origStartTime, TimeFrom) _
-                    OrElse Not Equals(origEndTime, TimeTo) _
-                    OrElse Not Equals(origBreakStart, BreakFrom) _
-                    OrElse Not Equals(origBreakLength, _BreakLength) _
-                    OrElse Not Equals(origOffset, _IsRestDay)
+                _madeChanges = Not Equals(_origStartTime, TimeFrom) _
+                    OrElse Not Equals(_origEndTime, TimeTo) _
+                    OrElse Not Equals(_origBreakStart, BreakFrom) _
+                    OrElse Not Equals(_origBreakLength, _BreakLength) _
+                    OrElse Not Equals(_origOffset, _IsRestDay) _
+                    OrElse _origMarkAsWholeDay <> _markedAsWholeDay _
+                    OrElse _origGracePeriod <> _GracePeriod
 
                 Return _madeChanges
             End Get
@@ -653,6 +705,8 @@ Public Class ShiftForm
                     .BreakStartTime = BreakFromTimeSpan
                     .BreakLength = _BreakLength
                     .IsRestDay = _IsRestDay
+                    .MarkedAsWholeDay = _markedAsWholeDay
+                    .GracePeriod = _GracePeriod
                 End With
 
                 Return _eds
@@ -660,13 +714,13 @@ Public Class ShiftForm
         End Property
 
         Public Sub CommitChanges()
-            origStartTime = _TimeFrom
-            origEndTime = _TimeTo
+            _origStartTime = _TimeFrom
+            _origEndTime = _TimeTo
 
-            origBreakStart = _BreakFrom
-            origBreakLength = _BreakLength
+            _origBreakStart = _BreakFrom
+            _origBreakLength = _BreakLength
 
-            origOffset = _IsRestDay
+            _origOffset = _IsRestDay
         End Sub
 
         Public ReadOnly Property IsEmptyTimeTo As Boolean
@@ -718,6 +772,22 @@ Public Class ShiftForm
             End Get
         End Property
 
+        Public ReadOnly Property WorkHours As Decimal
+            Get
+                If Not TimeFromTimeSpan.HasValue AndAlso Not TimeToTimeSpan.HasValue Then
+                    Return 0
+                End If
+
+                Dim trueEndTime = If(TimeFromTimeSpan > TimeToTimeSpan, TimeToTimeSpan.Value.AddOneDay(), TimeToTimeSpan.Value)
+
+                Dim totalMinutes = (trueEndTime - TimeFromTimeSpan).Value.TotalMinutes
+
+                Dim result = Convert.ToDecimal(totalMinutes / PayrollTools.MinutesPerHour)
+
+                Return If(result > BreakLength, result - BreakLength, 0)
+            End Get
+        End Property
+
     End Class
 
     Private Class DutyShiftPolicy
@@ -756,7 +826,12 @@ Public Class ShiftForm
             _defaultWorkHour = settings.GetDecimal("DefaultShiftHour", DEFAULT_SHIFT_HOUR)
             _breakHour = settings.GetDecimal("BreakHour", DEFAULT_BREAK_HOUR)
 
+            _MarkAsWholeDay = settings.GetBoolean("DutyShift.MarkAsWholeDay")
+
+            _MultipleGracePeriod = settings.GetBoolean("DutyShift.MultipleGracePeriod")
+
             _shiftBasedAutoOvertimePolicy = New ShiftBasedAutomaticOvertimePolicy(settings)
+
         End Function
 
         Public ReadOnly Property DefaultWorkHour() As Decimal
@@ -789,6 +864,8 @@ Public Class ShiftForm
             End Get
         End Property
 
+        Public Property MarkAsWholeDay As Boolean
+        Public Property MultipleGracePeriod As Boolean
     End Class
 
 #End Region
@@ -1033,6 +1110,13 @@ Public Class ShiftForm
 
         End If
 
+        colMarkAsWholeDay.Visible = _markAsWholeDay
+        MarkedAsWholeDay.Visible = _markAsWholeDay
+        chkMarkedAsWholeDay.Visible = _markAsWholeDay
+
+        colGracePeriod.Visible = _multipleGracePeriod
+        GracePeriod.Visible = _multipleGracePeriod
+        numGracePeriod.Visible = _multipleGracePeriod
     End Sub
 
     Private Async Function CheckRolePermissions() As Task
@@ -1066,6 +1150,10 @@ Public Class ShiftForm
     Private Sub grid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellContentClick
 
     End Sub
+
+    Private Function GetShiftModel(row As DataGridViewRow) As ShiftModel
+        Return DirectCast(row.DataBoundItem, ShiftModel)
+    End Function
 
     Private Sub grid_DataSourceChanged(sender As Object, e As EventArgs) Handles grid.DataSourceChanged
         ZebraliseEmployeeRows()
@@ -1160,7 +1248,7 @@ Public Class ShiftForm
     End Sub
 
     Private Sub grid_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles grid.CellPainting
-        Dim isSatisfy = e.ColumnIndex = colIsRestDay.Index AndAlso e.RowIndex > -1
+        Dim isSatisfy = {colIsRestDay.Index, colMarkAsWholeDay.Index}.Contains(e.ColumnIndex) AndAlso e.RowIndex > -1
         If isSatisfy Then
             Dim isFormattedValue = If(CBool(e.FormattedValue), ButtonState.Checked, ButtonState.Normal)
 
@@ -1172,7 +1260,7 @@ Public Class ShiftForm
     End Sub
 
     Private Sub gridWeek_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles gridWeek.CellPainting
-        Dim isSatisfy = e.ColumnIndex = Column7.Index AndAlso e.RowIndex > -1
+        Dim isSatisfy = {Column7.Index, MarkedAsWholeDay.Index}.Contains(e.ColumnIndex) AndAlso e.RowIndex > -1
         If isSatisfy Then
             Dim isFormattedValue = If(CBool(e.FormattedValue), ButtonState.Checked, ButtonState.Normal)
 
@@ -1205,9 +1293,25 @@ Public Class ShiftForm
         Dim _dataGrid = DirectCast(sender, DataGridView)
         ShiftProper(_dataGrid, e)
 
+        Dim shiftModel = GetShiftModel(_dataGrid.Rows(e.RowIndex))
+
+        Dim isGridName = _dataGrid.Name = grid.Name
+        Dim isGridWeekName = _dataGrid.Name = gridWeek.Name
+
+        If _markAsWholeDay Then
+            Dim satisfied = _markAsWholeDay AndAlso shiftModel.IsLesserWorkingHours
+            If isGridName Then
+                _dataGrid.Item(colMarkAsWholeDay.Index, e.RowIndex).ReadOnly = Not satisfied
+                _dataGrid.Item(colMarkAsWholeDay.Index, e.RowIndex).Value = shiftModel.MarkedAsWholeDay AndAlso satisfied
+            ElseIf isGridWeekName Then
+                _dataGrid.Item(MarkedAsWholeDay.Index, e.RowIndex).ReadOnly = Not satisfied
+                _dataGrid.Item(MarkedAsWholeDay.Index, e.RowIndex).Value = shiftModel.MarkedAsWholeDay AndAlso satisfied
+            End If
+        End If
+
         _dataGrid.Refresh()
 
-        If _dataGrid.Name = grid.Name Then
+        If isGridName Then
             Dim shiftModels = ConvertGridRowsToShiftModels(grid)
             AffectedRows(shiftModels)
         End If

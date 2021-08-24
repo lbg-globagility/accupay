@@ -316,13 +316,22 @@ namespace AccuPay.Core.Services
 
             if (currentShift.HasShift)
             {
-                var graceTime = _employmentPolicy.GracePeriod;
+                var graceTime = currentShift?.GracePeriod ?? _employmentPolicy.GracePeriod;
 
                 var shiftStart = currentShift.ShiftPeriod.Start;
                 var gracePeriod = new TimePeriod(shiftStart, shiftStart.AddMinutes((double)graceTime));
 
-                if (gracePeriod.Contains(logPeriod.Start))
+                bool withinGracePeriod = gracePeriod.Contains(logPeriod.Start);
+
+                if (withinGracePeriod)
                     logPeriod = TimePeriod.FromTime(shiftStart.TimeOfDay, appliedOut.Value, currentDate);
+                else if (!withinGracePeriod &&
+                    graceTime > 0 &&
+                    _employee.GracePeriodAsBuffer)
+                {
+                    var appliedIn1 = appliedIn.Value;
+                    logPeriod = TimePeriod.FromTime(appliedIn1.Subtract(new TimeSpan(0, graceTime, 0)), appliedOut.Value, currentDate);
+                }
             }
 
             return logPeriod;
@@ -731,12 +740,31 @@ namespace AccuPay.Core.Services
             var dailyRate = PayrollTools.GetDailyRate(salary, _employee);
             var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
 
-            timeEntry.BasicDayPay = timeEntry.BasicHours * hourlyRate;
-            timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate;
+            if (currentShift.MarkedAsWholeDay)
+            {
+                if (timeEntry.BasicHours > 0)
+                    timeEntry.BasicDayPay =
+                        timeEntry.BasicHours == currentShift.WorkingHours ?
+                        dailyRate :
+                        dailyRate - ((currentShift.WorkingHours - timeEntry.BasicHours) * hourlyRate);
+
+                if (timeEntry.RegularHours > 0)
+                    timeEntry.RegularPay =
+                        timeEntry.RegularHours == currentShift.WorkingHours ?
+                        dailyRate :
+                        dailyRate - ((currentShift.WorkingHours - timeEntry.RegularHours) * hourlyRate);
+            }
+            else
+            {
+                timeEntry.BasicDayPay = timeEntry.BasicHours * hourlyRate;
+                timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate;
+            }
 
             timeEntry.LateDeduction = timeEntry.LateHours * hourlyRate;
             timeEntry.UndertimeDeduction = timeEntry.UndertimeHours * hourlyRate;
             timeEntry.AbsentDeduction = timeEntry.AbsentHours * hourlyRate;
+            if (currentShift.MarkedAsWholeDay && timeEntry.AbsentDeduction > 0)
+                timeEntry.AbsentDeduction = dailyRate;
 
             timeEntry.OvertimePay = timeEntry.OvertimeHours * hourlyRate * payrate.OvertimeRate;
 

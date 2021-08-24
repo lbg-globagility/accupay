@@ -9,15 +9,15 @@ namespace AccuPay.Core.Interfaces
     {
         Task CancelAsync(int payPeriodId, int currentlyLoggedInUserId);
 
-        Task CloseAsync(int payPeriodId, int userId);
+        Task CloseAsync(int payPeriodId, int currentlyLoggedInUserId);
 
-        Task<PayPeriod> CreateAsync(int organizationId, int month, int year, bool isFirstHalf, int currentUserId);
+        Task<PayPeriod> CreateAsync(int organizationId, int month, int year, bool isFirstHalf, int currentlyLoggedInUserId);
 
-        Task ReopenAsync(int payPeriodId, int userId);
+        Task ReopenAsync(int payPeriodId, int currentlyLoggedInUserId);
 
-        Task<PayPeriod> StartStatusAsync(int organizationId, int month, int year, bool isFirstHalf, int currentUserId);
+        Task<PayPeriod> OpenAsync(int organizationId, int month, int year, bool isFirstHalf, int currentlyLoggedInUserId);
 
-        Task<PayPeriod> UpdateStatusAsync(int payPeriodId, int userId, PayPeriodStatus status);
+        Task<PayPeriod> UpdateStatusAsync(int payPeriodId, int currentlyLoggedInUserId, PayPeriodStatus status);
 
         Task UpdateStatusAsync(PayPeriod payPeriod, int currentlyLoggedInUserId, PayPeriodStatus status);
 

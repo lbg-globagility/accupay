@@ -1,9 +1,9 @@
 using AccuPay.Core.Entities;
 using System;
 
-namespace AccuPay.Core.UnitTests.Mothers
+namespace AccuPay.Core.UnitTests
 {
-    public class PayPeriodMother
+    public static class PayPeriodMother
     {
         public static PayPeriod StartDateOnly(DateTime payFromDate)
         {

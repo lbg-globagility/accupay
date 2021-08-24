@@ -3,7 +3,6 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
-Imports AccuPay.Core.ValueObjects
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -45,21 +44,15 @@ Namespace Benchmark
 
         End Sub
 
-        Public Shared Async Function GetEcola(
-            employeeId As Integer,
-            payDateFrom As Date,
-            payDateTo As Date) As Task(Of Allowance)
+        Public Shared Async Function GetEcola(employeeId As Integer, payDateFrom As Date) _
+            As Task(Of Allowance)
 
-            'TODO: check if the effectivity date matters in benchmark payroll generation
-            'better if there is a change in ECOLA value, a new allowance should be created.
-            Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
-
-            Dim productService = MainServiceProvider.GetRequiredService(Of IAllowanceDataService)
-            Return Await productService.GetOrCreateEmployeeEcola(
+            Dim service = MainServiceProvider.GetRequiredService(Of IAllowanceDataService)
+            Return Await service.GetOrCreateEmployeeEcola(
                 employeeId:=employeeId,
                 organizationId:=z_OrganizationID,
                 currentlyLoggedInUserId:=z_User,
-                timePeriod:=timePeriod,
+                startDate:=payDateFrom,
                 allowanceFrequency:=Allowance.FREQUENCY_DAILY,
                 amount:=0)
 

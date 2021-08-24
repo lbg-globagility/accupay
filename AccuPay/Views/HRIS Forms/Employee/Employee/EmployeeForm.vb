@@ -67,6 +67,8 @@ Public Class EmployeeForm
 
         PrepareForm(user)
 
+        chkGracePeriodAsBuffer.Visible = _policy.UseGracePeriodAsBuffer
+
         previousForm = Me
 
         Await LoadEmployee()
@@ -913,7 +915,8 @@ Public Class EmployeeForm
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            BranchComboBox.SelectedValue,
-                           ValNoComma(BPIinsuranceText.Text))
+                           ValNoComma(BPIinsuranceText.Text),
+                           chkGracePeriodAsBuffer.Checked)
             succeed = new_eRowID IsNot Nothing
 
             Dim employeeId = If(isNew, new_eRowID, employee_RowID)
@@ -1060,6 +1063,7 @@ Public Class EmployeeForm
             .Cells("CalcRestDay").Value = Convert.ToInt16(chkcalcRestDay.Checked)
 
             .Cells("LateGracePeriod").Value = txtUTgrace.Text
+            .Cells(GracePeriodAsBuffer.Name).Value = Convert.ToInt16(chkGracePeriodAsBuffer.Checked)
             .Cells("AgencyName").Value = cboAgency.Text
 
             .Cells("BranchID").Value = BranchComboBox.SelectedValue
@@ -1435,6 +1439,14 @@ Public Class EmployeeForm
             {
                 .EntityId = oldEmployee.RowID,
                 .Description = $"Updated grace period from '{oldEmployee.LateGracePeriod}' to '{txtUTgrace.Text}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
+        End If
+        If _policy.UseGracePeriodAsBuffer AndAlso oldEmployee.GracePeriodAsBuffer <> chkGracePeriodAsBuffer.Checked Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated `GracePeriodAsBuffer` from '{oldEmployee.GracePeriodAsBuffer}' to '{chkGracePeriodAsBuffer.Checked}' of employee.",
                 .ChangedEmployeeId = oldEmployee.RowID.Value
             })
         End If
@@ -1981,6 +1993,8 @@ Public Class EmployeeForm
 
         txtUTgrace.Text = dgvEmp.CurrentRow.Cells("LateGracePeriod").Value 'AgencyName
         cboAgency.Text = dgvEmp.CurrentRow.Cells("AgencyName").Value
+
+        chkGracePeriodAsBuffer.Checked = Convert.ToInt16(Convert.ToInt16(dgvEmp.CurrentRow.Cells("GracePeriodAsBuffer").Value))
 
         Dim dataRow = DirectCast(dgvEmp.CurrentRow.Tag, DataRow)
         If dataRow IsNot Nothing Then

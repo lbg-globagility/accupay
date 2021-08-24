@@ -99,6 +99,7 @@ namespace AccuPay.Infrastructure.Data
         private IQueryable<TimeEntry> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
             return _context.TimeEntries
+                .AsNoTracking()
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(x => datePeriod.Start <= x.Date)
                 .Where(x => x.Date <= datePeriod.End);

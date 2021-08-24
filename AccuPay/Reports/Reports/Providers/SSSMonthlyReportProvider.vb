@@ -22,7 +22,7 @@ Public Class SSSMonthlyReportProvider
         Dim sssMonthlyReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 
         Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = sssMonthlyReport.GetReportDocument
+        crvwr.crysrepvwr.ReportSource = sssMonthlyReport.GetReportDocument()
         crvwr.Show()
 
     End Sub

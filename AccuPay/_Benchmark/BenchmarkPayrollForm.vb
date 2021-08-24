@@ -18,7 +18,7 @@ Public Class BenchmarkPayrollForm
 
     Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
 
-    Private _currentPayPeriod As IPayPeriod
+    Private _currentPayPeriod As PayPeriod
     Private _salaries As List(Of Salary)
     Private _employees As List(Of Employee)
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
@@ -27,10 +27,6 @@ Public Class BenchmarkPayrollForm
     Private _selectedIncomes As List(Of AdjustmentInput)
 
     Private _overtimeRate As OvertimeRate
-
-    Private _currentPaystub As Paystub
-
-    Public _loanTransanctions As List(Of LoanTransaction)
 
     Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
 
@@ -64,7 +60,7 @@ Public Class BenchmarkPayrollForm
 
     Private ReadOnly _overtimeRateService As IOvertimeRateService
 
-    Private _payrollGenerator As IPayrollGenerator
+    Private _benchmarkPayrollGenerationOutput As BenchmarkPayrollGeneration.DoProcessOutput
 
     Sub New()
 
@@ -202,6 +198,7 @@ Public Class BenchmarkPayrollForm
             _employees = (Await _employeeRepository.GetAllActiveWithoutPayrollAsync(
                     _currentPayPeriod.RowID.Value,
                     z_OrganizationID)).
+                OrderBy(Function(e) e.FullNameLastNameFirst).
                 ToList()
         Else
             _employees = New List(Of Employee)
@@ -230,8 +227,8 @@ Public Class BenchmarkPayrollForm
             Await _benchmarkPayrollHelper.CleanEmployee(employeeId.Value)
 
             Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID.Value)).
-                            FirstOrDefault
+                Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID.Value)).
+                FirstOrDefault
 
             If salary Is Nothing Then
 
@@ -243,7 +240,8 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            _leaveBalance = Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
+            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+            _leaveBalance = Await employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
 
             If _employeeRate.IsInvalid Then Return
 
@@ -278,8 +276,7 @@ Public Class BenchmarkPayrollForm
     Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
         _ecola = Await BenchmarkPayrollHelper.GetEcola(
             employeeId.Value,
-            payDateFrom:=_currentPayPeriod.PayFromDate,
-            payDateTo:=_currentPayPeriod.PayToDate)
+            payDateFrom:=_currentPayPeriod.PayFromDate)
 
         If _ecola Is Nothing Then
 
@@ -431,11 +428,11 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod()
+        Dim form As New SelectPayPeriodDialog()
 
-        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
+        If form.ShowDialog() <> DialogResult.OK OrElse form.SelectedPayPeriod Is Nothing Then Return
 
-        _currentPayPeriod = form.PayPeriod
+        _currentPayPeriod = form.SelectedPayPeriod
 
         If _currentPayPeriod Is Nothing Then
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
@@ -495,6 +492,7 @@ Public Class BenchmarkPayrollForm
 
         Dim output = BenchmarkPayrollGeneration.DoProcess(
             employee,
+            _currentPayPeriod,
             _payrollResources,
             _currentPayPeriod,
             _employeeRate,
@@ -509,30 +507,24 @@ Public Class BenchmarkPayrollForm
             ecola:=_ecola)
 
         'TODO
-        '#1. Extract the generator here and put it in a global field DONE
-        '#2. Save paystub DONE
-        '#3. Test save paystub from database DONE
-        '#4. Show payroll summary (test OT)
-        '#5. Paystub values should be correct in payroll summary
-        '#6.  Hide reports that would now work. (Do this first in master branch)
-        '#7. Resolve bugs from master branch like employee saving with 0  workdays per year.
-        'BONUS
         '#1. Resign employee
-        '#2. Payslip
 
-        _currentPaystub = output.Paystub
-        _payrollGenerator = output.PayrollGenerator
+        _benchmarkPayrollGenerationOutput = output
+        Dim currentPaystub = output.Paystub
 
         'Get loans data
-        _loanTransanctions = output.LoanTransanctions.CloneListJson()
-        Dim loans = output.LoanTransanctions
+        Dim loans As New List(Of LoanTransaction)
+
+        For Each loan In output.LoanTransanctions
+            loans.Add(loan.Clone())
+        Next
 
         Dim pagIbigLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_pagibigLoan Is Nothing, 0, Nothing)
         Dim sssLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_sssLoan Is Nothing, 0, Nothing)
 
         Dim loanIndex As Integer = 0
 
-        While (loans.Any)
+        While (loans.Any())
 
             Dim loan = loans(loanIndex)
 
@@ -571,32 +563,32 @@ Public Class BenchmarkPayrollForm
         End While
 
         'Show data from paystub
-        TotalDeductionsLabel.Text = "Php " & Math.Abs(_currentPaystub.TotalDeductionAdjustments).RoundToString()
-        TotalOtherIncomeLabel.Text = "Php " & _currentPaystub.TotalAdditionAdjustments.RoundToString()
+        TotalDeductionsLabel.Text = "Php " & Math.Abs(currentPaystub.TotalDeductionAdjustments).RoundToString()
+        TotalOtherIncomeLabel.Text = "Php " & currentPaystub.TotalAdditionAdjustments.RoundToString()
 
-        BasicPaySummaryTextBox.Text = _currentPaystub.BasicPay.RoundToString()
-        PhilhealthAmountTextBox.Text = _currentPaystub.PhilHealthEmployeeShare.RoundToString()
-        SssAmountTextBox.Text = _currentPaystub.SssEmployeeShare.RoundToString()
-        PagibigAmountTextBox.Text = _currentPaystub.HdmfEmployeeShare.RoundToString()
-        WithholdingTaxTextBox.Text = _currentPaystub.WithholdingTax.RoundToString()
+        BasicPaySummaryTextBox.Text = currentPaystub.BasicPay.RoundToString()
+        PhilhealthAmountTextBox.Text = currentPaystub.PhilHealthEmployeeShare.RoundToString()
+        SssAmountTextBox.Text = currentPaystub.SssEmployeeShare.RoundToString()
+        PagibigAmountTextBox.Text = currentPaystub.HdmfEmployeeShare.RoundToString()
+        WithholdingTaxTextBox.Text = currentPaystub.WithholdingTax.RoundToString()
         PagibigLoanTextBox.Text = If(pagIbigLoan, 0).RoundToString()
         SssLoanTextBox.Text = If(sssLoan, 0).RoundToString()
 
-        EcolaAmountTextBox.Text = _currentPaystub.Ecola.RoundToString()
-        ThirteenthMonthPayTextBox.Text = _currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()
-        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((_leaveBalance - _currentPaystub.LeaveHours)).ToString
+        EcolaAmountTextBox.Text = currentPaystub.Ecola.RoundToString()
+        ThirteenthMonthPayTextBox.Text = currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((_leaveBalance - currentPaystub.LeaveHours)).ToString
 
-        GrossPayTextBox.Text = _currentPaystub.GrossPay.RoundToString()
-        TotalLeaveTextBox.Text = _currentPaystub.LeavePay.RoundToString()
+        GrossPayTextBox.Text = currentPaystub.GrossPay.RoundToString()
+        TotalLeaveTextBox.Text = currentPaystub.LeavePay.RoundToString()
 
         TotalDeductionTextBox.Text = (
-                _currentPaystub.NetDeductions +
-                Math.Abs(_currentPaystub.TotalDeductionAdjustments)).
+                currentPaystub.NetDeductions +
+                Math.Abs(currentPaystub.TotalDeductionAdjustments)).
             RoundToString()
 
-        TotalOtherIncomeTextBox.Text = _currentPaystub.TotalAdditionAdjustments.RoundToString()
-        TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(_currentPaystub).RoundToString()
-        NetPayTextBox.Text = _currentPaystub.NetPay.RoundToString()
+        TotalOtherIncomeTextBox.Text = currentPaystub.TotalAdditionAdjustments.RoundToString()
+        TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(currentPaystub).RoundToString()
+        NetPayTextBox.Text = currentPaystub.NetPay.RoundToString()
 
         SummaryGroupBox.Enabled = True
     End Sub
@@ -673,7 +665,7 @@ Public Class BenchmarkPayrollForm
         Await FunctionUtils.TryCatchFunctionAsync($"Payroll Generation for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}]",
             Async Function()
 
-                BenchmarkPayrollGeneration.Save(_currentPaystub, _payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
+                Await BenchmarkPayrollGeneration.Save(_benchmarkPayrollGenerationOutput)
 
                 Await RefreshForm(refreshPayPeriod:=False)
 

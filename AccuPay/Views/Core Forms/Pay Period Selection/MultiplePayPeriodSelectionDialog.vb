@@ -291,7 +291,7 @@ Public Class MultiplePayPeriodSelectionDialog
             month:=startPayPeriod.Month,
             year:=startPayPeriod.Year,
             isFirstHalf:=startPayPeriod.IsFirstHalf,
-            currentUserId:=z_User)
+            currentlyLoggedInUserId:=z_User)
 
         Return newPayPeriod.RowID
     End Function

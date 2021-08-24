@@ -1,8 +1,6 @@
 Option Strict On
 
-Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
-Imports AccuPay.Benchmark
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
@@ -11,14 +9,12 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddSalaryForm
 
-    Public Property isSaved As Boolean
-    Public Property showBalloon As Boolean
+    Public Property IsSaved As Boolean
+    Public Property ShowBalloon As Boolean
 
     Private _employee As Employee
 
     Private _isSystemOwnerBenchMark As Boolean
-
-    Private _ecolaAllowance As Allowance
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
@@ -34,7 +30,7 @@ Public Class AddSalaryForm
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
     End Sub
 
-    Private Async Sub AddSalaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub AddSalaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         txtFullName.Text = _employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = _employee.EmployeeIdWithPositionAndEmployeeType
         pbEmployee.Image = ConvByteToImage(_employee.Image)
@@ -46,48 +42,8 @@ Public Class AddSalaryForm
 
         ToggleBenchmarkEcola()
 
-        Await InitializeBenchmarkData()
-
         ClearForm()
     End Sub
-
-    Private Async Function InitializeBenchmarkData() As Task(Of Boolean)
-        If _isSystemOwnerBenchMark Then
-
-            Dim employeeId = _employee?.RowID
-
-            Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
-
-            Dim currentPayPeriod = Await _payPeriodRepository.GetOrCreateCurrentPayPeriodAsync(
-                organizationId:=z_OrganizationID,
-                currentUserId:=z_User)
-
-            If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
-                MessageBoxHelper.ErrorMessage(errorMessage)
-
-                Return False
-            End If
-
-            'If we are going to enable this as a policy, check its employee type.
-            'If Daily then its allowance frequency should also be Daily.
-            'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
-            'If _employee.IsDaily Then
-            'End If
-            _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
-                employeeId.Value,
-                payDateFrom:=currentPayPeriod.PayFromDate,
-                payDateTo:=currentPayPeriod.PayToDate)
-
-            If _ecolaAllowance Is Nothing Then
-                MessageBoxHelper.ErrorMessage(errorMessage)
-                Return False
-            End If
-
-        End If
-
-        Return True
-
-    End Function
 
     Private Sub ClearForm()
 
@@ -131,7 +87,7 @@ Public Class AddSalaryForm
             Async Function()
                 Dim newSalary = New Salary
                 With newSalary
-                    .EffectiveFrom = dtpEffectiveFrom.Value
+                    .EffectiveFrom = dtpEffectiveFrom.Value.Date
                     .IsMinimumWage = chkIsMinimumWage.Checked
                     .BasicSalary = txtAmount.Text.ToDecimal
                     .AllowanceSalary = txtAllowance.Text.ToDecimal
@@ -147,23 +103,25 @@ Public Class AddSalaryForm
                 Dim dataService = MainServiceProvider.GetRequiredService(Of ISalaryDataService)
                 Await dataService.SaveAsync(newSalary, z_User)
 
-                If _isSystemOwnerBenchMark AndAlso _ecolaAllowance?.RowID IsNot Nothing Then
+                If _isSystemOwnerBenchMark Then
 
-                    Await EcolaHelper.SaveEcola(_ecolaAllowance.RowID.Value, txtEcola.Text.ToDecimal)
-
+                    Await EcolaHelper.CreateEcola(
+                        employeeId:=_employee.RowID.Value,
+                        ecolaAmount:=txtEcola.Text.ToDecimal,
+                        startDate:=newSalary.EffectiveFrom)
                 End If
 
                 succeed = True
             End Function)
 
         If succeed Then
-            isSaved = True
+            IsSaved = True
 
             If sender Is AddAndNewButton Then
                 ShowBalloonInfo("Salary successfully added.", "Saved")
                 ClearForm()
             Else
-                showBalloon = True
+                ShowBalloon = True
                 Me.Close()
             End If
         End If

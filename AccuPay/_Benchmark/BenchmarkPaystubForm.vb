@@ -151,6 +151,7 @@ Public Class BenchmarkPaystubForm
             _employees = (Await _employeeRepository.GetAllWithPayrollAsync(
                     payPeriodId:=_currentPayPeriod.RowID.Value,
                     organizationId:=z_OrganizationID)).
+                OrderBy(Function(e) e.FullNameLastNameFirst).
                 ToList()
         Else
             _employees = New List(Of Employee)
@@ -298,7 +299,13 @@ Public Class BenchmarkPaystubForm
     Private Sub ShowUndeclaredSalaryBreakdown(payStub As Paystub, employeeRate As BenchmarkPaystubRate)
         Dim rawUndeclaredRate = employeeRate.ActualDailyRate - employeeRate.DailyRate
         Dim regularDays = BenchmarkPayrollHelper.ConvertHoursToDays(payStub.RegularHours)
-        Dim holidayAndLeaveDays = BenchmarkPayrollHelper.ConvertHoursToDays((payStub.TotalWorkedHoursWithoutOvertimeAndLeave - payStub.RegularHours) + payStub.LeaveHours)
+
+        Dim totalWorkedHoursWithoutOvertimeAndLeave =
+            payStub.RegularHoursAndTotalRestDay +
+            payStub.SpecialHolidayHours +
+            payStub.RegularHolidayHours
+
+        Dim holidayAndLeaveDays = BenchmarkPayrollHelper.ConvertHoursToDays((totalWorkedHoursWithoutOvertimeAndLeave - payStub.RegularHours) + payStub.LeaveHours)
 
         Dim undeclaredRegularPay = rawUndeclaredRate * regularDays
         Dim undeclaredHolidayAndLeavePay = ComputeHolidayAndLeavePays(payStub, rawUndeclaredRate)
@@ -771,11 +778,11 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod()
+        Dim form As New SelectPayPeriodDialog()
 
-        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
+        If form.ShowDialog() <> DialogResult.OK OrElse form.SelectedPayPeriod Is Nothing Then Return
 
-        _currentPayPeriod = form.PayPeriod
+        _currentPayPeriod = form.SelectedPayPeriod
 
         If _currentPayPeriod Is Nothing Then
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")

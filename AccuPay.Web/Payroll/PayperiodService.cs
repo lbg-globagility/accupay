@@ -93,24 +93,24 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PayPeriodDto> Start(StartPayrollDto dto)
         {
-            var newPayPeriod = await _payPeriodDataService.StartStatusAsync(
+            var newPayPeriod = await _payPeriodDataService.OpenAsync(
                 organizationId: _currentUser.OrganizationId,
                 month: dto.Month,
                 year: dto.Year,
                 isFirstHalf: dto.IsFirstHalf,
-                currentUserId: _currentUser.UserId);
+                currentlyLoggedInUserId: _currentUser.UserId);
 
             return ConvertToDto(newPayPeriod);
         }
 
         public async Task Close(int payPeriodId)
         {
-            await _payPeriodDataService.CloseAsync(payPeriodId: payPeriodId, userId: _currentUser.UserId);
+            await _payPeriodDataService.CloseAsync(payPeriodId: payPeriodId, currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         public async Task Reopen(int payPeriodId)
         {
-            await _payPeriodDataService.ReopenAsync(payPeriodId: payPeriodId, userId: _currentUser.UserId);
+            await _payPeriodDataService.ReopenAsync(payPeriodId: payPeriodId, currentlyLoggedInUserId: _currentUser.UserId);
         }
 
         public async Task Delete(int payPeriodId)

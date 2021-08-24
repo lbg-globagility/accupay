@@ -53,6 +53,10 @@ namespace AccuPay.Core.Entities
             set => BreakStartTime = value == null ? null : value?.TimeOfDay;
         }
 
+        public bool MarkedAsWholeDay { get; set; }
+
+        public int GracePeriod { get; set; }
+
         /// <summary>
         /// Computes the shift hours and also update the work hours.
         /// </summary>

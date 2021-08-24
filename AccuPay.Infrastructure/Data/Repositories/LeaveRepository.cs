@@ -159,6 +159,7 @@ namespace AccuPay.Infrastructure.Data
         private IQueryable<Leave> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
             return _context.Leaves
+                .AsNoTracking()
                 .Where(l => l.OrganizationID == organizationId)
                 .Where(l => datePeriod.Start <= l.StartDate)
                 .Where(l => l.EndDate <= datePeriod.End);

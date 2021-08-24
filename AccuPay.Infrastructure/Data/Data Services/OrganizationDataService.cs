@@ -54,7 +54,7 @@ namespace AccuPay.Infrastructure.Data
         {
             var clientOrganizations = await _organizationRepository.List(OrganizationPageOptions.AllData, entity.ClientId);
 
-            if (clientOrganizations.organizations.Count <= 1)
+            if (!_policy.UseUserLevel && clientOrganizations.organizations.Count <= 1)
             {
                 throw new BusinessLogicException("There should be at least one active organization!");
             }

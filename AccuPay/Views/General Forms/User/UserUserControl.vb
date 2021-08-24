@@ -16,13 +16,14 @@ Public Class UserUserControl
 
     Private ReadOnly _encryptor As IEncryption
 
-    Private ReadOnly _policyHelper As IPolicyHelper
+    Private ReadOnly _policy As IPolicyHelper
 
     Private _organizations As ICollection(Of Organization)
 
     Private _currentUser As AspNetUser
 
     Private _formMode As FormMode
+    Private _roles As List(Of AspNetRole)
 
     Sub New()
 
@@ -32,7 +33,7 @@ Public Class UserUserControl
 
             _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
 
-            _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+            _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
         End If
 
     End Sub
@@ -41,8 +42,10 @@ Public Class UserUserControl
 
         UserRoleGrid.AutoGenerateColumns = False
 
-        UserLevelComboBox.Visible = _policyHelper.UseUserLevel
-        UserLevelLabel.Visible = _policyHelper.UseUserLevel
+        UserLevelComboBox.Visible = _policy.UseUserLevel
+        UserLevelLabel.Visible = _policy.UseUserLevel
+        UserRoleGrid.Visible = Not _policy.UseUserLevel
+        UserRoleLabel.Visible = Not _policy.UseUserLevel
 
         Await GetOrganizations()
 
@@ -57,8 +60,8 @@ Public Class UserUserControl
 
         _formMode = formMode
 
-        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.DoesAllowCreateAsync(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) OrElse
-           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.DoesAllowUpdateAsync(PermissionConstant.USER, policyHelper:=_policyHelper)) = False) Then
+        If (_formMode = FormMode.Creating AndAlso (Await PermissionHelper.DoesAllowCreateAsync(PermissionConstant.USER, policyHelper:=_policy)) = False) OrElse
+           (_formMode = FormMode.Editing AndAlso (Await PermissionHelper.DoesAllowUpdateAsync(PermissionConstant.USER, policyHelper:=_policy)) = False) Then
 
             SetFormToReadOnly()
         End If
@@ -111,12 +114,12 @@ Public Class UserUserControl
     Private Async Function PopulateRoleComboBox() As Task
 
         Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
-        Dim roles = (Await roleRepository.List(PageOptions.AllData, Z_Client)).
+        _roles = (Await roleRepository.List(PageOptions.AllData, Z_Client)).
             roles.
             OrderBy(Function(r) r.Name).
             ToList()
 
-        roles.Insert(0, New AspNetRole() With
+        _roles.Insert(0, New AspNetRole() With
         {
             .Name = "<UNAUTHORIZED>"
         })
@@ -124,7 +127,7 @@ Public Class UserUserControl
         RoleColumn.DisplayMember = "Name"
         RoleColumn.ValueMember = "Id"
 
-        RoleColumn.DataSource = roles
+        RoleColumn.DataSource = _roles
     End Function
 
     Private Sub PopulateUserFields(user As AspNetUser)
@@ -146,6 +149,10 @@ Public Class UserUserControl
 
     Private Async Function PopulateUserRoleGrid(user As AspNetUser) As Task
 
+        If RoleColumn.Items.Count = 0 Then
+            Await PopulateRoleComboBox()
+        End If
+
         Dim userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
         Dim userRoles = Await userRepository.GetUserRolesAsync(user.Id)
 
@@ -155,20 +162,27 @@ Public Class UserUserControl
             Await GetOrganizations()
         End If
 
+        Dim defaultRoleId = _roles.FirstOrDefault(Function(r) r.IsAdmin)?.Id
+
         For Each organization In _organizations
 
             Dim userRole = userRoles.FirstOrDefault(Function(o) o.OrganizationId = organization.RowID.Value)
 
+            'since VB cannot handle ternary operators well
+            'we have to do this sh*t
+            Dim roleId As Integer?
+            If _policy.UseUserLevel Then
+                roleId = defaultRoleId
+            Else
+                roleId = userRole?.Role?.Id
+            End If
+
             models.Add(New UserRoleViewModel(
                 userId:=user.Id,
-                roleId:=userRole?.Role?.Id,
+                roleId:=roleId,
                 organization:=organization))
 
         Next
-
-        If RoleColumn.Items.Count = 0 Then
-            Await PopulateRoleComboBox()
-        End If
 
         UserRoleGrid.DataSource = models
     End Function

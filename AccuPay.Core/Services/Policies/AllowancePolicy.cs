@@ -1,4 +1,4 @@
-﻿namespace AccuPay.Core.Services
+namespace AccuPay.Core.Services
 {
     public class AllowancePolicy
     {
@@ -17,5 +17,11 @@
         public bool IsSpecialHolidayPaid => _settings.GetBoolean("AllowancePolicy.IsSpecialHolidayPaid");
 
         public bool IsRegularHolidayPaid => _settings.GetBoolean("AllowancePolicy.IsRegularHolidayPaid");
+
+        public bool HolidayAllowanceForMonthly => _settings.GetBoolean("AllowancePolicy.HolidayAllowanceForMonthly");
+
+        public bool NoPremium => _settings.GetBoolean("AllowancePolicy.NoPremium");
+
+        public string CalculationType => _settings.GetString("AllowancePolicy.CalculationType");
     }
 }

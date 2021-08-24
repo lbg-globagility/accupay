@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
@@ -20,6 +21,8 @@ Public Class PayrollForm
 
     Private ReadOnly _roleRepository As IRoleRepository
 
+    Private ReadOnly _userRepository As IAspNetUserRepository
+
     Sub New()
 
         InitializeComponent()
@@ -29,12 +32,17 @@ Public Class PayrollForm
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
     End Sub
 
     Private Async Sub PayrollForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetProperInterfaceBaseOnCurrentSystemOwner()
 
-        If Not _policyHelper.UseUserLevel Then
+        If _policyHelper.UseUserLevel Then
+
+            Await RestrictByUserLevel()
+        Else
 
             Await CheckRolePermissions()
         End If
@@ -45,6 +53,25 @@ Public Class PayrollForm
         End If
     End Sub
 
+    Private Async Function RestrictByUserLevel() As Task
+
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
+
+        If user Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
+
+        If Not _policyHelper.UseUserLevel Then Return
+
+        If user.UserLevel = UserLevel.Four Then
+            PayrollToolStripMenuItem.Visible = False
+            WithholdingTaxToolStripMenuItem.Visible = False
+            PaystubExperimentalToolStripMenuItem.Visible = False
+            BenchmarkPaystubToolStripMenuItem.Visible = False
+        End If
+    End Function
+
     Private Async Function CheckRolePermissions() As Task
         USER_ROLE = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
 
@@ -52,13 +79,13 @@ Public Class PayrollForm
         Dim loanPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LOAN).FirstOrDefault()
         Dim payPeriodPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.PAYPERIOD).FirstOrDefault()
 
-        AllowanceToolStripMenuItem.Visible = If(allowancePermission?.Read, False)
         LoanToolStripMenuItem.Visible = If(loanPermission?.Read, False)
 
         'Payroll only overrides the visibility if Read is False
         'since they are already checked by other policies above
         If payPeriodPermission Is Nothing OrElse payPeriodPermission.Read = False Then
 
+            AllowanceToolStripMenuItem.Visible = False
             PayrollToolStripMenuItem.Visible = False
             BenchmarkPaystubToolStripMenuItem.Visible = False
             WithholdingTaxToolStripMenuItem.Visible = False

@@ -28,10 +28,14 @@ namespace AccuPay.Core.Interfaces
         bool RestDayInclusive { get; }
         ShiftBasedAutomaticOvertimePolicy ShiftBasedAutomaticOvertimePolicy { get; }
         bool ShowActual { get; }
-        SssCalculationBasis SssCalculationBasis { get; }
+
+        SssCalculationBasis SssCalculationBasis(int organizationId);
+
         bool UseAgency { get; }
         bool UseBonus { get; }
         bool UseBPIInsurance { get; }
+        bool UseGracePeriodAsBuffer { get; }
+
         bool UseCostCenter { get; }
         bool UseDefaultShiftAndTimeLogs { get; }
         bool UseEmailPayslip { get; }

@@ -533,6 +533,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
+    <Compile Include="Reports\Reports\Providers\BenchmarkAlphalistReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\ActiveEmployeeChecklistReportProvider.vb" />
@@ -689,10 +690,10 @@
     <Compile Include="Views\Time Attendance Form\Leaves\ViewLeaveLedgerTypeSelector.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodSimple.Designer.vb">
-      <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodSimpleDialog.Designer.vb">
+      <DependentUpon>SelectPayPeriodSimpleDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodSimple.vb">
+    <Compile Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodSimpleDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\Employee\Bonus\AddBonusForm.Designer.vb">
@@ -737,15 +738,15 @@
     <Compile Include="Views\Core Forms\SelectBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\DefaultShiftAndTimeLogsForm.Designer.vb">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\DefaultShiftAndTimeLogsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\Generators\DefaultShiftAndTimeLogsGeneration.vb" />
-    <Compile Include="Views\Time Attendance Form\TimeEntry\Generators\DeleteDefaultShiftAndTimeLogsGeneration.vb" />
-    <Compile Include="Views\Time Attendance Form\TimeEntry\Generators\TimeEntryGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\Time Entry\Generators\DefaultShiftAndTimeLogsGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\Time Entry\Generators\DeleteDefaultShiftAndTimeLogsGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\Time Entry\Generators\TimeEntryGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\TripTicket\NewTripTicketDialog.Designer.vb">
       <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
     </Compile>
@@ -971,10 +972,10 @@
     <Compile Include="Views\Payroll Forms\Paystub\SelectPayslipEmployeesForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\TimeAttendanceLogListForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\TimeAttendanceLogListForm.Designer.vb">
       <DependentUpon>TimeAttendanceLogListForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\TimeAttendanceLogListForm.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\TimeAttendanceLogListForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\DivisionUserControl.Designer.vb">
@@ -1112,16 +1113,16 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\Employee\Salary\SalaryRowRecord.vb" />
-    <Compile Include="Views\Time Attendance Form\TimeEntry\StartNewPayPeriodDialog.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\StartNewPayPeriodDialog.Designer.vb">
       <DependentUpon>StartNewPayPeriodDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\StartNewPayPeriodDialog.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\StartNewPayPeriodDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\PreviewLeaveBalanceForm.Designer.vb">
       <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\PreviewLeaveBalanceForm.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\PreviewLeaveBalanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\ProgressDialog.Designer.vb">
@@ -1130,13 +1131,13 @@
     <Compile Include="Views\Core Forms\ProgressDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\TimeEntrySummaryForm.Designer.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\TimeEntrySummaryForm.Designer.vb">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\TimeEntrySummaryForm.vb">
+    <Compile Include="Views\Time Attendance Form\Time Entry\TimeEntrySummaryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\TimeEntry\TimeEntrySummaryPresenter.vb" />
+    <Compile Include="Views\Time Attendance Form\Time Entry\TimeEntrySummaryPresenter.vb" />
     <Compile Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </Compile>
@@ -1381,6 +1382,12 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="Reports\Reports\BenchmarkAlphalist.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BenchmarkAlphalist.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Employee%27s Employment Record.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1448,10 +1455,10 @@
     <Compile Include="Views\Core Forms\selectMonth.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Pay Period Selection\selectPayPeriod.Designer.vb">
-      <DependentUpon>selectPayPeriod.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodDialog.Designer.vb">
+      <DependentUpon>SelectPayPeriodDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\Pay Period Selection\selectPayPeriod.vb">
+    <Compile Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\Employee\Employee\SetEmployeeEndDate.Designer.vb">
@@ -1762,8 +1769,8 @@
     <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ViewLeaveLedgerTypeSelector.resx">
       <DependentUpon>ViewLeaveLedgerTypeSelector.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodSimple.resx">
-      <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodSimpleDialog.resx">
+      <DependentUpon>SelectPayPeriodSimpleDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Bonus\AddBonusForm.resx">
       <DependentUpon>AddBonusForm.vb</DependentUpon>
@@ -1786,7 +1793,7 @@
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TripTicket\Import\ImportTripTicketForm.resx">
@@ -1967,19 +1974,19 @@
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Salary\ImportSalaryForm.resx">
       <DependentUpon>ImportSalaryForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\StartNewPayPeriodDialog.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\StartNewPayPeriodDialog.resx">
       <DependentUpon>StartNewPayPeriodDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\PreviewLeaveBalanceForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\PreviewLeaveBalanceForm.resx">
       <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\TimeAttendanceLogListForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\TimeAttendanceLogListForm.resx">
       <DependentUpon>TimeAttendanceLogListForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\ProgressDialog.resx">
       <DependentUpon>ProgressDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\TimeEntry\TimeEntrySummaryForm.resx">
+    <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\TimeEntrySummaryForm.resx">
       <DependentUpon>TimeEntrySummaryForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TIme Logs\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.resx">
@@ -2093,6 +2100,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Attendance Sheet.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\BenchmarkAlphalist.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BenchmarkAlphalist.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\Employee%27s Employment Record.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Employee%27s Employment Record.vb</LastGenOutput>
@@ -2137,8 +2148,8 @@
     <EmbeddedResource Include="Views\Core Forms\selectMonth.resx">
       <DependentUpon>selectMonth.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Pay Period Selection\selectPayPeriod.resx">
-      <DependentUpon>selectPayPeriod.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\Pay Period Selection\SelectPayPeriodDialog.resx">
+      <DependentUpon>SelectPayPeriodDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Employee\Employee\SetEmployeeEndDate.resx">
       <DependentUpon>SetEmployeeEndDate.vb</DependentUpon>

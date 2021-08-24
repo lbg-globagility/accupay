@@ -27,6 +27,8 @@ namespace AccuPay.Core.Helpers
 
         private const int PotentialLastWorkDay = 7;
 
+        public const double MinutesPerHour = 60;
+
         public static decimal GetEmployeeMonthlyRate(
             Employee employee,
             Salary salary,
@@ -62,8 +64,10 @@ namespace AccuPay.Core.Helpers
             if (salary == null)
                 return 0;
 
-            var basicSalary = isActual ? salary.BasicSalary + salary.AllowanceSalary :
-                                        salary.BasicSalary;
+            var basicSalary =
+                isActual ?
+                salary.BasicSalary + salary.AllowanceSalary :
+                salary.BasicSalary;
 
             if (employee.IsDaily)
                 dailyRate = basicSalary;
@@ -87,23 +91,25 @@ namespace AccuPay.Core.Helpers
             return dailyRate / WorkHoursPerDay;
         }
 
-        public static decimal GetHourlyRateByDailyRate(Salary salary,
-                                                        Employee employee,
-                                                        bool isActual = false)
+        public static decimal GetHourlyRateByDailyRate(
+            Salary salary,
+            Employee employee,
+            bool isActual = false)
         {
             return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay;
         }
 
-        public static bool HasWorkedLastWorkingDay(DateTime currentDate,
-                                                    IReadOnlyCollection<TimeEntry> currentTimeEntries,
-                                                    CalendarCollection calendarCollection)
+        public static bool HasWorkedLastWorkingDay(
+            DateTime currentDate,
+            IReadOnlyCollection<TimeEntry> currentTimeEntries,
+            CalendarCollection calendarCollection)
         {
             var lastPotentialEntry = currentDate.Date.AddDays(-PotentialLastWorkDay);
 
-            var lastTimeEntries = currentTimeEntries.
-                                    Where(t => lastPotentialEntry <= t.Date && t.Date <= currentDate.Date).
-                                    OrderByDescending(t => t.Date).
-                                    ToList();
+            var lastTimeEntries = currentTimeEntries
+                .Where(t => lastPotentialEntry <= t.Date && t.Date <= currentDate.Date)
+                .OrderByDescending(t => t.Date)
+                .ToList();
 
             foreach (var lastTimeEntry in lastTimeEntries)
             {
@@ -137,17 +143,18 @@ namespace AccuPay.Core.Helpers
             return false;
         }
 
-        public static bool HasWorkAfterLegalHoliday(DateTime legalHolidayDate,
-                                                    DateTime endOfCutOff,
-                                                    IList<TimeEntry> currentTimeEntries,
-                                                    CalendarCollection calendarCollection)
+        public static bool HasWorkAfterLegalHoliday(
+            DateTime legalHolidayDate,
+            DateTime endOfCutOff,
+            IList<TimeEntry> currentTimeEntries,
+            CalendarCollection calendarCollection)
         {
             var lastPotentialEntry = legalHolidayDate.Date.AddDays(PotentialLastWorkDay);
 
-            var postTimeEntries = currentTimeEntries.
-                                    Where(t => legalHolidayDate.Date < t.Date && t.Date <= lastPotentialEntry).
-                                    OrderBy(t => t.Date).
-                                    ToList();
+            var postTimeEntries = currentTimeEntries
+                .Where(t => legalHolidayDate.Date < t.Date && t.Date <= lastPotentialEntry)
+                .OrderBy(t => t.Date)
+                .ToList();
 
             foreach (var timeEntry in postTimeEntries)
             {

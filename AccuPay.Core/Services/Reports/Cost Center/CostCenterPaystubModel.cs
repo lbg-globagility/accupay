@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
 using System.Collections.Generic;
@@ -48,7 +48,8 @@ namespace AccuPay.Core.Services
                 // If the employee worked for 200 hours in total for the whole month, and he worked 40 hours
                 // in this branch this cutoff, then he worked 40% of his total worked hours
                 // in this branch this cutoff.
-                var totalWorhkedHoursThisMonth = monthlyPaystubs.Sum(x => x.TotalWorkedHoursWithoutLeave);
+                var totalWorhkedHoursThisMonth = monthlyPaystubs
+                    .Sum(x => x.TotalWorkedHoursWithoutLeave(employee.IsMonthly));
                 var workedPercentage = AccuMath
                     .CommercialRound(paystubModel.TotalWorkedHoursWithoutLeave / totalWorhkedHoursThisMonth); // 40 / 200
 
@@ -103,22 +104,20 @@ namespace AccuPay.Core.Services
             List<TimeEntry> branchTimeEntries)
         {
             var allowanceCalculator = new DailyAllowanceCalculator(
-                settings,
+                new AllowancePolicy(settings),
+                employee,
+                currentPaystub,
+                payPeriod,
                 calendarCollection,
-                allTimeEntries,
-                organizationId: employee.OrganizationID.Value,
+                previousTimeEntries: allTimeEntries,
+                timeEntries: branchTimeEntries,
                 currentlyLoggedInUserId: userId);
 
             decimal totalAllowance = 0;
 
             foreach (var allowance in dailyAllowances)
             {
-                var allowanceItem = allowanceCalculator.Compute(
-                    payPeriod,
-                    allowance,
-                    employee,
-                    currentPaystub,
-                    branchTimeEntries);
+                var allowanceItem = allowanceCalculator.Compute(allowance);
 
                 if (allowanceItem != null)
                 {

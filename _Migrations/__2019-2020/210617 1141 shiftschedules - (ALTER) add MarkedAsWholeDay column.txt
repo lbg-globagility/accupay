@@ -1,0 +1,3 @@
+
+ALTER TABLE `shiftschedules`
+	ADD COLUMN IF NOT EXISTS `MarkedAsWholeDay` TINYINT(1) NOT NULL DEFAULT '0' AFTER `WorkHours`;

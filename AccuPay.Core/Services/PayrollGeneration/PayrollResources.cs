@@ -60,6 +60,8 @@ namespace AccuPay.Core.Services
 
         public IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; private set; }
 
+        public IReadOnlyCollection<Shift> Shifts { get; private set; }
+
         public IPolicyHelper Policy { get; }
 
         private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
@@ -96,6 +98,8 @@ namespace AccuPay.Core.Services
 
         private readonly IWithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
+        private readonly IShiftRepository _shiftRepository;
+
         public PayrollResources(
             IPolicyHelper policy,
             ICalendarService calendarService,
@@ -114,7 +118,8 @@ namespace AccuPay.Core.Services
             ISalaryRepository salaryRepository,
             ISocialSecurityBracketRepository socialSecurityBracketRepository,
             ITimeEntryRepository timeEntryRepository,
-            IWithholdingTaxBracketRepository withholdingTaxBracketRepository)
+            IWithholdingTaxBracketRepository withholdingTaxBracketRepository,
+            IShiftRepository shiftRepository)
         {
             Policy = policy;
             _calendarService = calendarService;
@@ -134,6 +139,7 @@ namespace AccuPay.Core.Services
             _socialSecurityBracketRepository = socialSecurityBracketRepository;
             _timeEntryRepository = timeEntryRepository;
             _withholdingTaxBracketRepository = withholdingTaxBracketRepository;
+            _shiftRepository = shiftRepository;
         }
 
         public async Task Load(int payPeriodId, int organizationId, int userId)
@@ -169,6 +175,7 @@ namespace AccuPay.Core.Services
             await LoadTimeEntries();
             await LoadVacationLeaveProduct();
             await LoadWithholdingTaxBrackets();
+            await LoadShiftSchedules();
         }
 
         private async Task LoadAllowances()
@@ -187,33 +194,33 @@ namespace AccuPay.Core.Services
             }
         }
 
-        private async Task LoadBpiInsuranceProduct()
-        {
-            try
-            {
-                BpiInsuranceProduct = await _productRepository.
-                    GetOrCreateAdjustmentTypeAsync(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
-                                                    organizationId: _organizationId,
-                                                    userId: _userId);
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("BPI Insurance Adjustment Product", ex);
-            }
-        }
-
         private async Task LoadActualTimeEntries()
         {
             try
             {
                 var datePeriod = new TimePeriod(_payDateFrom, _payDateTo);
-                ActualTimeEntries = (await _actualTimeEntryRepository.
-                                        GetByDatePeriodAsync(_organizationId, datePeriod)).
-                                        ToList();
+                ActualTimeEntries = (await _actualTimeEntryRepository
+                    .GetByDatePeriodAsync(_organizationId, datePeriod))
+                    .ToList();
             }
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("ActualTimeEntries", ex);
+            }
+        }
+
+        private async Task LoadBpiInsuranceProduct()
+        {
+            try
+            {
+                BpiInsuranceProduct = await _productRepository.GetOrCreateAdjustmentTypeAsync(
+                    ProductConstant.BPI_INSURANCE_ADJUSTMENT,
+                    organizationId: _organizationId,
+                    userId: _userId);
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("BPI Insurance Adjustment Product", ex);
             }
         }
 
@@ -238,9 +245,9 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                Employees = (await _employeeRepository.
-                                GetAllActiveWithDivisionAndPositionAsync(_organizationId)).
-                                ToList();
+                Employees = (await _employeeRepository
+                    .GetAllActiveWithDivisionAndPositionAsync(_organizationId))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -280,7 +287,7 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+                // LoadPayPeriod() should be executed before LoadLoans()
                 Loans = (await _loanRepository
                     .GetCurrentPayrollLoansAsync(_organizationId, PayPeriod, Paystubs))
                     .ToList();
@@ -354,8 +361,8 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                SickLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(
+                SickLeaveProduct = await _productRepository
+                    .GetOrCreateLeaveTypeAsync(
                         ProductConstant.SICK_LEAVE,
                         organizationId: _organizationId,
                         userId: _userId);
@@ -400,12 +407,13 @@ namespace AccuPay.Core.Services
 
             try
             {
-                var datePeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay,
-                                                _payDateTo);
+                var datePeriod = new TimePeriod(
+                    previousCutoffDateForCheckingLastWorkingDay,
+                    _payDateTo);
 
-                TimeEntries = (await _timeEntryRepository.
-                                    GetByDatePeriodAsync(_organizationId, datePeriod)).
-                                    ToList();
+                TimeEntries = (await _timeEntryRepository
+                    .GetByDatePeriodAsync(_organizationId, datePeriod))
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -417,10 +425,11 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                VacationLeaveProduct = await _productRepository.
-                    GetOrCreateLeaveTypeAsync(ProductConstant.VACATION_LEAVE,
-                                                organizationId: _organizationId,
-                                                userId: _userId);
+                VacationLeaveProduct = await _productRepository
+                    .GetOrCreateLeaveTypeAsync(
+                        ProductConstant.VACATION_LEAVE,
+                        organizationId: _organizationId,
+                        userId: _userId);
             }
             catch (Exception ex)
             {
@@ -439,6 +448,21 @@ namespace AccuPay.Core.Services
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("WithholdingTaxBrackets", ex);
+            }
+        }
+
+        private async Task LoadShiftSchedules()
+        {
+            try
+            {
+                var datePeriod = new TimePeriod(_payDateFrom, _payDateTo);
+                Shifts = (await _shiftRepository
+                    .GetByDatePeriodAsync(_organizationId, datePeriod))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("ShiftSchedules", ex);
             }
         }
 

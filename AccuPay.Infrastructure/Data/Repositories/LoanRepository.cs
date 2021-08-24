@@ -161,6 +161,7 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<Loan>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId)
         {
             return await _context.Loans
+                .AsNoTracking()
                 .Include(l => l.LoanType)
                 .Include(l => l.LoanType.CategoryEntity)
                 .Where(l => l.LoanType.CategoryEntity.CategoryName.Trim().ToUpper() == ProductConstant.LOAN_TYPE_CATEGORY.Trim().ToUpper())
@@ -209,6 +210,7 @@ namespace AccuPay.Infrastructure.Data
             // before the regeneration if the user chose to exclude it this pay period. On payroll regeneration,
             // this loan's balance should be reset and this will not apply to the current payroll.
             var loans = await _context.Loans
+                .AsNoTracking()
                 .Include(l => l.LoanPaymentFromBonuses)
                     .ThenInclude(l => l.Items)
                 .Include(l => l.LoanType)

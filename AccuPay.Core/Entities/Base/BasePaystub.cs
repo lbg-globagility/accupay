@@ -78,15 +78,7 @@ namespace AccuPay.Core.Entities
 
         public decimal BasicDeductions => LateDeduction + UndertimeDeduction + AbsenceDeduction;
 
-        public decimal GetOrComputeBasicPay(bool isDaily, decimal salary, IReadOnlyCollection<BaseTimeEntry> timeEntries)
-        {
-            if (BasicPay == 0)
-            {
-                ComputeBasicPay(isDaily, salary, timeEntries);
-            }
-
-            return BasicPay;
-        }
+        public decimal TotalEarningForDaily => RegularPay + LeavePay + AdditionalPay;
 
         public void ComputeBasicPay(bool isDaily, decimal salary, IReadOnlyCollection<BaseTimeEntry> timeEntries)
         {
