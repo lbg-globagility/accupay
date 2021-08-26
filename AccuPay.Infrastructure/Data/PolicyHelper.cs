@@ -84,6 +84,8 @@ namespace AccuPay.Infrastructure.Data
 
         public bool UseMassOvertime => _settings.GetBoolean("Policy.UseMassOvertime", false);
 
+        public bool OverrideOvertimeRateEligibility => _settings.GetBoolean("Employee Policy.OverrideOvertimeRateEligibility", false);
+
         public bool UseAgency => CurrentSystemOwner == SystemOwner.Hyundai || CurrentSystemOwner == SystemOwner.Goldwings;
 
         public bool UseBonus => CurrentSystemOwner == SystemOwner.Goldwings;

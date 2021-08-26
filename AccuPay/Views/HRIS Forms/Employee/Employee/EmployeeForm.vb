@@ -68,6 +68,7 @@ Public Class EmployeeForm
         PrepareForm(user)
 
         chkGracePeriodAsBuffer.Visible = _policy.UseGracePeriodAsBuffer
+        chkOvertimeOverride.Visible = _policy.OverrideOvertimeRateEligibility
 
         previousForm = Me
 
@@ -916,7 +917,8 @@ Public Class EmployeeForm
                            agensi_rowid,
                            BranchComboBox.SelectedValue,
                            ValNoComma(BPIinsuranceText.Text),
-                           chkGracePeriodAsBuffer.Checked)
+                           chkGracePeriodAsBuffer.Checked,
+                           chkOvertimeOverride.Checked)
             succeed = new_eRowID IsNot Nothing
 
             Dim employeeId = If(isNew, new_eRowID, employee_RowID)
@@ -1064,6 +1066,7 @@ Public Class EmployeeForm
 
             .Cells("LateGracePeriod").Value = txtUTgrace.Text
             .Cells(GracePeriodAsBuffer.Name).Value = Convert.ToInt16(chkGracePeriodAsBuffer.Checked)
+            .Cells(OvertimeOverride.Name).Value = Convert.ToInt16(chkOvertimeOverride.Checked)
             .Cells("AgencyName").Value = cboAgency.Text
 
             .Cells("BranchID").Value = BranchComboBox.SelectedValue
@@ -1531,6 +1534,14 @@ Public Class EmployeeForm
                 .ChangedEmployeeId = oldEmployee.RowID.Value
             })
         End If
+        If _policy.OverrideOvertimeRateEligibility AndAlso oldEmployee.OvertimeOverride <> chkOvertimeOverride.Checked Then
+            changes.Add(New UserActivityItem() With
+            {
+                .EntityId = oldEmployee.RowID,
+                .Description = $"Updated `OvertimeRateEligibility` from '{oldEmployee.OvertimeOverride}' to '{chkOvertimeOverride.Checked}' of employee.",
+                .ChangedEmployeeId = oldEmployee.RowID.Value
+            })
+        End If
 
         If changes.Any() Then
             Dim repo = MainServiceProvider.GetRequiredService(Of IUserActivityRepository)
@@ -1994,7 +2005,8 @@ Public Class EmployeeForm
         txtUTgrace.Text = dgvEmp.CurrentRow.Cells("LateGracePeriod").Value 'AgencyName
         cboAgency.Text = dgvEmp.CurrentRow.Cells("AgencyName").Value
 
-        chkGracePeriodAsBuffer.Checked = Convert.ToInt16(Convert.ToInt16(dgvEmp.CurrentRow.Cells("GracePeriodAsBuffer").Value))
+        chkGracePeriodAsBuffer.Checked = Convert.ToInt16(Convert.ToInt16(dgvEmp.CurrentRow.Cells(GracePeriodAsBuffer.Name).Value))
+        chkOvertimeOverride.Checked = Convert.ToInt16(Convert.ToInt16(dgvEmp.CurrentRow.Cells(OvertimeOverride.Name).Value))
 
         Dim dataRow = DirectCast(dgvEmp.CurrentRow.Tag, DataRow)
         If dataRow IsNot Nothing Then

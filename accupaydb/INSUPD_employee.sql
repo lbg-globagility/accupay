@@ -62,7 +62,8 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employee`(
 	`emplo_AgencyID` INT,
 	`emplo_BranchID` INT,
 	`emplo_BPIInsurance` DECIMAL(10,2),
-	`emplo_GracePeriodAsBuffer` TINYINT
+	`emplo_GracePeriodAsBuffer` TINYINT,
+	`employe_OvertimeOverride` TINYINT
 )
 RETURNS int(11)
 LANGUAGE SQL
@@ -177,7 +178,7 @@ INSERT INTO employee
     ,1 #PayFrequencySemiMonthlyId
     ,0
     ,FALSE
-    ,FALSE
+    ,employe_OvertimeOverride
     ,'1'
     ,emplo_LeaveBalance
     ,emplo_SickLeaveBalance
@@ -266,7 +267,8 @@ UPDATE
     ,OtherLeaveBalance=emplo_OtherLeaveBalance
 	,BranchID=emplo_BranchID
 	,BPIInsurance=emplo_BPIInsurance
-	,GracePeriodAsBuffer=emplo_GracePeriodAsBuffer;SELECT @@Identity AS id INTO emploRowID;
+	,GracePeriodAsBuffer=emplo_GracePeriodAsBuffer
+	,OvertimeOverride=employe_OvertimeOverride;SELECT @@Identity AS id INTO emploRowID;
 
 RETURN emploRowID;
 

@@ -114,6 +114,8 @@ namespace AccuPay.Core.Entities
 
         public bool GracePeriodAsBuffer { get; set; }
 
+        public bool OvertimeOverride { get; set; }
+
         public string MiddleInitial
             => string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
 

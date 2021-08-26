@@ -48,6 +48,7 @@ namespace AccuPay.Core.Interfaces
         bool UseOffset { get; }
         bool UseUserLevel { get; }
         bool ValidateLeaveBalance { get; }
+        bool OverrideOvertimeRateEligibility { get; }
 
         DayValueSpan DefaultEndOfTheMonthDaysSpan(int? organizationId);
 

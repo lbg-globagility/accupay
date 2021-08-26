@@ -766,20 +766,24 @@ namespace AccuPay.Core.Services
             if (currentShift.MarkedAsWholeDay && timeEntry.AbsentDeduction > 0)
                 timeEntry.AbsentDeduction = dailyRate;
 
-            timeEntry.OvertimePay = timeEntry.OvertimeHours * hourlyRate * payrate.OvertimeRate;
+            var payrateOvertime = _employee.OvertimeOverride ? payrate.RegularRate : payrate.OvertimeRate;
+            timeEntry.OvertimePay = timeEntry.OvertimeHours * hourlyRate * payrateOvertime;
 
             var restDayRate = payrate.RestDayRate;
             if (_policy.RestDayInclusive && _employee.IsPremiumInclusive)
                 restDayRate -= 1;
             timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * restDayRate;
 
-            timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrate.RestDayOTRate;
+            var payrateRestDayOTRate = _employee.OvertimeOverride ? restDayRate : payrate.RestDayOTRate;
+            timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrateRestDayOTRate;
             timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate;
 
             if (currentShift.IsWorkingDay)
             {
                 var nightDiffRate = payrate.NightDiffRate - payrate.RegularRate;
-                var nightDiffOTRate = payrate.NightDiffOTRate - payrate.OvertimeRate;
+                var nightDiffOTRate = _employee.OvertimeOverride ?
+                    (payrate.NightDiffOTRate / payrate.OvertimeRate) - payrateOvertime :
+                    payrate.NightDiffOTRate - payrate.OvertimeRate;
 
                 var notEntitledForLegalHolidayRate = _employmentPolicy.ComputeRegularHoliday == false && payrate.IsSpecialNonWorkingHoliday;
                 var notEntitledForSpecialNonWorkingHolidayRate = _employmentPolicy.ComputeSpecialHoliday == false && payrate.IsSpecialNonWorkingHoliday;
@@ -787,7 +791,9 @@ namespace AccuPay.Core.Services
                 if (notEntitledForLegalHolidayRate || notEntitledForSpecialNonWorkingHolidayRate)
                 {
                     nightDiffRate = (payrate.NightDiffRate / payrate.RegularRate) % 1;
-                    nightDiffOTRate = (payrate.NightDiffOTRate / payrate.OvertimeRate) % 1;
+                    nightDiffOTRate = _employee.OvertimeOverride ?
+                        (payrate.NightDiffOTRate / payrate.OvertimeRate) - payrateOvertime % 1 :
+                        (payrate.NightDiffOTRate / payrate.OvertimeRate) % 1;
                 }
 
                 timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * nightDiffRate;
@@ -796,7 +802,9 @@ namespace AccuPay.Core.Services
             else if (currentShift.IsRestDay)
             {
                 var restDayNDRate = payrate.RestDayNDRate - payrate.RestDayRate;
-                var restDayNDOTRate = payrate.RestDayNDOTRate - payrate.RestDayOTRate;
+                var restDayNDOTRate = _employee.OvertimeOverride ?
+                    restDayNDRate :
+                    payrate.RestDayNDOTRate - payrate.RestDayOTRate;
 
                 timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * restDayNDRate;
                 timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * restDayNDOTRate;
@@ -810,12 +818,12 @@ namespace AccuPay.Core.Services
                 if (currentShift.IsWorkingDay || _employmentPolicy.ComputeRestDay == false)
                 {
                     holidayRate = payrate.RegularRate;
-                    holidayOTRate = payrate.OvertimeRate;
+                    holidayOTRate = _employee.OvertimeOverride ? holidayRate : payrate.OvertimeRate;
                 }
                 else if (currentShift.IsRestDay)
                 {
                     holidayRate = payrate.RestDayRate;
-                    holidayOTRate = payrate.RestDayOTRate;
+                    holidayOTRate = _employee.OvertimeOverride ? holidayRate : payrate.RestDayOTRate;
                 }
 
                 timeEntry.SpecialHolidayOTPay = timeEntry.SpecialHolidayOTHours * hourlyRate * holidayOTRate;
