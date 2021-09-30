@@ -187,7 +187,8 @@ namespace AccupayWindowsService
         {
             // only supports semi-monthly. no weekly
             var currentMonth = new DateTime(currentPayPeriod.Year, currentPayPeriod.Month, 1);
-            var day = currentPayPeriod.IsFirstHalf ? 15 : currentMonth.AddMonths(1).AddDays(-1).Day;
+            //var day = currentPayPeriod.IsFirstHalf ? 15 : currentMonth.AddMonths(1).AddDays(-1).Day;
+            var day = currentPayPeriod.IsFirstHalf ? 15 : DateTime.DaysInMonth(currentPayPeriod.Year, currentMonth.AddMonths(1).AddDays(-1).Month);
 
             return new DateTime(currentMonth.Year, currentMonth.Month, day);
         }
