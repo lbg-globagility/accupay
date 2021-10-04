@@ -68,8 +68,8 @@ SELECT
     e.RowID,
     CONCAT(e.EmployeeID, ' / ', e.LastName, ', ', e.FirstName, ' ', LEFT(e.MiddleName, 1)) `COL1`,
     CONCAT_WS(', ', e.LastName, e.FirstName, e.MiddleName) `COL69`,
-    ROUND(GetBasicPay(e.RowID, paydate_from, paydat_to, IsActualFlag, ps.BasicHours), 2) `COL70`,
-    ps.BasicHours `COL71`,
+    IF(e.EmployeeType='Daily', ps.RegularPay, ROUND(GetBasicPay(e.RowID, paydate_from, paydat_to, IsActualFlag, ps.BasicHours), 2)) `COL70`,
+    IF(e.EmployeeType='Daily', ps.RegularHours, ps.BasicHours) `COL71`,
     IFNULL(ps.AbsentHours + IF(e.EmployeeType = 'Monthly', ps.LeaveHours, 0), 0) `COL72`,
     IF(IsActualFlag, es.TrueSalary, es.Salary) `COL80`,
     IF(
