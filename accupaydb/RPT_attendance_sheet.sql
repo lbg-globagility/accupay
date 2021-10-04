@@ -33,7 +33,11 @@ SELECT
 	, IFNULL(ete.NightDifferentialHours,0) `DatCol12`
 	, IFNULL(ete.OvertimeHoursWorked,0) `DatCol13`
 	, IFNULL(ete.NightDifferentialOTHours,0) `DatCol14`
-	,etd.TimeScheduleType `DatCol15`
+	, etd.TimeScheduleType `DatCol15`
+	, IF(((ete.RegularHoursWorked + ete.VacationLeaveHours + ete.SickLeaveHours + ete.SpecialHolidayHours + ete.RegularHolidayHours) > 0 AND ete.TotalDayPay > 0) OR
+			((ete.RestDayHours + ete.SpecialHolidayHours + ete.RegularHolidayHours) > 0 AND ete.TotalDayPay > 0),
+		(ete.RegularHoursWorked + ete.VacationLeaveHours + ete.SickLeaveHours + ete.RestDayHours + ete.RegularHolidayHours + ete.SpecialHolidayHours) / shiftschedules.WorkHours,
+		0) `DatCol16`
 FROM employeetimeentry ete
 LEFT JOIN (
     SELECT EmployeeID, DATE,
