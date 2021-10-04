@@ -23,5 +23,7 @@ namespace AccuPay.Core.Services
         public bool NoPremium => _settings.GetBoolean("AllowancePolicy.NoPremium");
 
         public string CalculationType => _settings.GetString("AllowancePolicy.CalculationType");
+
+        public bool AllowHalfPayForFixedAllowance => _settings.GetBoolean("AllowancePolicy.AllowHalfPayForFixedAllowance");
     }
 }

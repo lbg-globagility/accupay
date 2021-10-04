@@ -1,0 +1,7 @@
+
+SET @userId=(SELECT Id FROM aspnetusers LIMIT 1);
+SET @_type='AllowancePolicy';
+SET @_lic='AllowHalfPayForFixedAllowance';
+SET @id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC=@_lic LIMIT 1);
+
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@id, NULL, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), @userId, 'False', @_lic, @_type, '', 'Yes', '', 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();

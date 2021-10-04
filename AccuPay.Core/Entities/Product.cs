@@ -47,6 +47,8 @@ namespace AccuPay.Core.Entities
 
         public bool ActiveData { get; set; }
 
+        public bool IsPaidWhenOvertime { get; set; }
+
         public string DisplayName => PartNo;
 
         public bool IsTaxable => Status == "1";
