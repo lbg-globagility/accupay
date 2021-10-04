@@ -28,12 +28,16 @@ namespace AccuPay.Core.Services
 
             var currentTaxableIncome = 0M;
 
+            var taxablePolicy = _settings.GetString("Payroll Policy.paystub.taxableincome") ?? "Basic Pay";
+
             if (employee.EmployeeType == SalaryType.Fixed)
-                currentTaxableIncome = paystub.BasicPay;
+                if (taxablePolicy == "Gross Income")
+                    // Adds those taxable allowances to the taxable income
+                    currentTaxableIncome = paystub.BasicPay + paystub.TotalTaxableAllowance;
+                else
+                    currentTaxableIncome = paystub.BasicPay;
             else if (employee.EmployeeType == SalaryType.Monthly)
             {
-                var taxablePolicy = _settings.GetString("Payroll Policy.paystub.taxableincome") ?? "Basic Pay";
-
                 if (taxablePolicy == "Gross Income")
                     // Adds those taxable allowances to the taxable income
                     currentTaxableIncome = paystub.TotalEarnings + paystub.TotalTaxableAllowance;
