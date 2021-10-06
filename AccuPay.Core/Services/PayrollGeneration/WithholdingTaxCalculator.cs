@@ -44,6 +44,12 @@ namespace AccuPay.Core.Services
                 else
                     currentTaxableIncome = paystub.BasicPay;
             }
+            else if (employee.EmployeeType == SalaryType.Daily)
+            {
+                if (taxablePolicy == "Gross Income")
+                    // Adds those taxable allowances to the taxable income
+                    currentTaxableIncome = paystub.TotalEarnings + paystub.TotalTaxableAllowance;
+            }
 
             // Government contributions are tax deductible
             currentTaxableIncome -= paystub.GovernmentDeductions;
