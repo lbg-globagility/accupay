@@ -1,4 +1,4 @@
-﻿Imports MySql.Data.MySqlClient
+Imports MySql.Data.MySqlClient
 Imports System.Text.RegularExpressions
 
 Public Class MySQLExecuteCommand
@@ -93,6 +93,10 @@ Public Class MySQLExecuteCommand
 
             Dim mysql_transac As MySqlTransaction
 
+            If prepared_mysqlcmd.Connection.State = ConnectionState.Closed Then
+                prepared_mysqlcmd.Connection.Open()
+            End If
+
             mysql_transac = prepared_mysqlcmd.Connection.BeginTransaction
 
             Try
@@ -154,7 +158,7 @@ Public Class MySQLExecuteCommand
 
         Try
 
-            Dim mysql_connectn = New MySqlConnection(mysql_conn_text) 'dbserver_connstring
+            Dim mysql_connectn = New MySqlConnection(String.Concat(mysql_conn_text, "default command timeout=120;")) 'dbserver_connstring
 
             prepared_mysqlcmd =
                 New MySqlCommand(mysql_cmd.CommandQuery,
@@ -225,6 +229,7 @@ Public Class MySQLExecuteCommand
 
                 End If
 
+                .Connection.Close()
             End With
         Catch ex As Exception
 
