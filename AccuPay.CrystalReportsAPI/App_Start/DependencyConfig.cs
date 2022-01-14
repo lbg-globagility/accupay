@@ -2,6 +2,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.CrystalReports;
 using AccuPay.CrystalReportsAPI.Services;
 using AccuPay.Infrastructure.Data;
+using AccuPay.Infrastructure.Reports.Customize;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -64,6 +65,8 @@ namespace AccuPay.CrystalReportsAPI
             services.AddScoped<ITaxMonthlyReportBuilder, TaxMonthlyReportBuilder>();
             services.AddScoped<IThirteenthMonthSummaryReportDataService, ThirteenthMonthSummaryReportDataService>();
             services.AddScoped<IThirteenthMonthSummaryReportBuilder, ThirteenthMonthSummaryReportBuilder>();
+            services.AddScoped<ILaGlobalAlphaListReportDataService, LaGlobalAlphaListReportDataService>();
+            services.AddScoped<ILaGlobalAlphaListReportBuilder, LaGlobalAlphaListReportBuilder>();
             services.AddScoped<IPaystubRepository, PaystubRepository>();
 
             var serviceProvider = services.BuildServiceProvider();

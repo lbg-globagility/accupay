@@ -7,6 +7,7 @@ Imports AccuPay.Core.Services.Imports
 Imports AccuPay.CrystalReports
 Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Infrastructure.Reports
+Imports AccuPay.Infrastructure.Reports.Customize
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
@@ -163,6 +164,8 @@ Public Class ServiceProvider
         services.AddTransient(Of ITaxMonthlyReportBuilder, TaxMonthlyReportBuilder)
         services.AddTransient(Of IThirteenthMonthSummaryReportDataService, ThirteenthMonthSummaryReportDataService)
         services.AddTransient(Of IThirteenthMonthSummaryReportBuilder, ThirteenthMonthSummaryReportBuilder)
+        services.AddTransient(Of ILaGlobalAlphaListReportDataService, LaGlobalAlphaListReportDataService)
+        services.AddTransient(Of ILaGlobalAlphaListReportBuilder, LaGlobalAlphaListReportBuilder)
 
         services.AddTransient(Of PaystubDataHelper)
         services.AddTransient(Of TimeEntryDataHelper)
