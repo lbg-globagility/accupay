@@ -55,6 +55,8 @@ Public Class ReportsList
             providers = GetBenchmarkReports()
         End If
 
+        If curr_sys_owner_name = SystemOwner.LAGlobal Then providers.Add(New LaGlobalAlphaListReportProvider())
+
         Dim allowedProviders = Await _listOfValueRepository.GetDutyReportProvidersAsync()
 
         For Each provider In providers
