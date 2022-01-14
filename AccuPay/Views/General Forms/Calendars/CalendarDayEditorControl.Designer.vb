@@ -28,6 +28,7 @@ Partial Class CalendarDayEditorControl
         Me.DayTypesComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.OkButton2 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'DayLabel
@@ -89,12 +90,22 @@ Partial Class CalendarDayEditorControl
         Me.Label2.Text = "Day Type"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
+        'OkButton2
+        '
+        Me.OkButton2.Location = New System.Drawing.Point(96, 3)
+        Me.OkButton2.Name = "OkButton2"
+        Me.OkButton2.Size = New System.Drawing.Size(56, 23)
+        Me.OkButton2.TabIndex = 4
+        Me.OkButton2.Text = "Ok"
+        Me.OkButton2.UseVisualStyleBackColor = True
+        '
         'CalendarDayEditorControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Controls.Add(Me.OkButton2)
         Me.Controls.Add(Me.DayTypesComboBox)
         Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.DescriptionTextBox)
@@ -115,4 +126,5 @@ Partial Class CalendarDayEditorControl
     Friend WithEvents DayTypesComboBox As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
+    Friend WithEvents OkButton2 As Button
 End Class

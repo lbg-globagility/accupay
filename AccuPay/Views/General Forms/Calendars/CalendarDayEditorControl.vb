@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Globalization
 Imports AccuPay.Core.Entities
@@ -43,7 +43,7 @@ Public Class CalendarDayEditorControl
         End If
     End Sub
 
-    Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+    Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click, OkButton2.Click
         _calendarDay.Description = DescriptionTextBox.Text
         _calendarDay.DayTypeID = DirectCast(DayTypesComboBox.SelectedValue, Integer?)
         _calendarDay.DayType = DirectCast(DayTypesComboBox.SelectedItem, DayType)
