@@ -5,6 +5,7 @@ using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
+using AccuPay.Infrastructure.Reports.Models;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Extensions;
 using OfficeOpenXml;
@@ -605,24 +606,6 @@ namespace AccuPay.Infrastructure.Reports
             public string DivisionName { get; set; }
 
             public ICollection<DataRow> Employees { get; set; }
-        }
-
-        private class SelectedPayPeriod
-        {
-            public PayPeriod From { get; set; }
-            public PayPeriod To { get; set; }
-
-            public int FromId => From.RowID.Value;
-            public int ToId => To.RowID.Value;
-
-            public DateTime DateFrom => From.PayFromDate;
-            public DateTime DateTo => To.PayToDate;
-
-            public SelectedPayPeriod(PayPeriod from, PayPeriod to)
-            {
-                From = from;
-                To = to;
-            }
         }
     }
 }
