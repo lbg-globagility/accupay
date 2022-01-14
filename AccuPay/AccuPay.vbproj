@@ -428,6 +428,7 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
     </Compile>
