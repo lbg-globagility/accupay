@@ -140,7 +140,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Private Shared Function GetPayrollSelector() As MultiplePayPeriodSelectionDialog
 
         Dim payrollSelector = New MultiplePayPeriodSelectionDialog With {
-            .SHowPayrollSummaryPanel = True,
+            .ShowPayrollSummaryPanel = True,
             .ShowDeclaredOrActualOptionsPanel = True
         }
 

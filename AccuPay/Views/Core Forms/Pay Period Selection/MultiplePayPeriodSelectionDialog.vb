@@ -12,7 +12,7 @@ Public Class MultiplePayPeriodSelectionDialog
     Public Property ReportIndex As Integer
 
     Public Property ShowLoanTypePanel As Boolean = False
-    Public Property SHowPayrollSummaryPanel As Boolean = False
+    Public Property ShowPayrollSummaryPanel As Boolean = False
     Public Property ShowDeclaredOrActualOptionsPanel As Boolean = False
 
     Private _currentYear As Integer = CDate(dbnow).Year
@@ -120,7 +120,7 @@ Public Class MultiplePayPeriodSelectionDialog
 
         End If
 
-        If SHowPayrollSummaryPanel Then
+        If ShowPayrollSummaryPanel Then
 
             PayrollSummaryPanel.Visible = True
             ReminderLabel.Visible = True
@@ -130,6 +130,7 @@ Public Class MultiplePayPeriodSelectionDialog
                 .Items.Add(PayrollSummaryCategory.All)
                 .Items.Add(PayrollSummaryCategory.Cash)
                 .Items.Add(PayrollSummaryCategory.DirectDeposit)
+                .SelectedIndex = 0
             End With
 
             desiredHeight += PayrollSummaryPanel.Height
