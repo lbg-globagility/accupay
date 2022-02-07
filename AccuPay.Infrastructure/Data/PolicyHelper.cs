@@ -136,7 +136,13 @@ namespace AccuPay.Infrastructure.Data
 
         #endregion TimeEntryPolicy
 
+        #region Shift
+
         public ShiftBasedAutomaticOvertimePolicy ShiftBasedAutomaticOvertimePolicy => _timeEntryPolicy.ShiftBasedAutomaticOvertimePolicy;
+
+        public bool IsMultipleGracePeriod => _settings.GetBoolean("DutyShift.MultipleGracePeriod");
+
+        #endregion Shift
 
         #region Pay Period Default Dates Policy ("16,31,false,true,false,false" means cutoff start day is "16", cutoff end day is "31", first day "is NOT last day of the month", second day "is last day of the month", first day "is not previous month", second day "is not previous month"
 
