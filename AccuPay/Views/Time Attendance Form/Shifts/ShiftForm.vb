@@ -553,7 +553,7 @@ Public Class ShiftForm
 
             _markedAsWholeDay = ess.MarkedAsWholeDay
 
-            _GracePeriod = ess.GracePeriod
+            _GracePeriod = If(ess.GracePeriod, 0)
 
             _origStartTime = _TimeFrom
             _origEndTime = _TimeTo
