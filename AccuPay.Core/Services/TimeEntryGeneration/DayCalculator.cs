@@ -316,7 +316,8 @@ namespace AccuPay.Core.Services
 
             if (currentShift.HasShift)
             {
-                var graceTime = currentShift?.GracePeriod ?? _employmentPolicy.GracePeriod;
+                var isMultipleGracePeriod = _policy.IsMultipleGracePeriod;
+                var graceTime = isMultipleGracePeriod ? currentShift?.GracePeriod ?? 0 : _employmentPolicy.GracePeriod;
 
                 var shiftStart = currentShift.ShiftPeriod.Start;
                 var gracePeriod = new TimePeriod(shiftStart, shiftStart.AddMinutes((double)graceTime));
