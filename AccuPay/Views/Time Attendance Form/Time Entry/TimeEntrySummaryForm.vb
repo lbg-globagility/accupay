@@ -221,8 +221,11 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
+        Dim periodEndDate = If(_selectedPayPeriod Is Nothing, Date.Now(), _selectedPayPeriod.PayToDate)
 
-        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
+        Dim unsortedList = Await _employeeRepository.GetAllWithinServicePeriodWithPositionAsync(
+            organizationId:=z_OrganizationID,
+            currentDate:=periodEndDate)
         Dim list = unsortedList.
             OrderBy(Function(e) e.LastName).
             ToList()
