@@ -168,6 +168,8 @@ namespace AccuPay.Core.Entities
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
 
+        public bool IsWithinServicePeriod(DateTime currentDate) => TerminationDate == null ? IsActive : currentDate <= TerminationDate.Value;
+
         public bool IsFirstPay(PayPeriod payPeriod)
         {
             return payPeriod != null &&
