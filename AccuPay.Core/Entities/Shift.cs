@@ -55,7 +55,7 @@ namespace AccuPay.Core.Entities
 
         public bool MarkedAsWholeDay { get; set; }
 
-        public int GracePeriod { get; set; }
+        public int? GracePeriod { get; set; }
 
         /// <summary>
         /// Computes the shift hours and also update the work hours.
