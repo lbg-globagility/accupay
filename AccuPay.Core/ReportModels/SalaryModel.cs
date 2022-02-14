@@ -1,0 +1,37 @@
+using System;
+using System.Data;
+
+namespace AccuPay.Core.ReportModels
+{
+    public class SalaryModel
+    {
+        public SalaryModel(DataRow dataRow)
+        {
+            PositionID = (int?)dataRow["EmployeeID"];
+            PositionID = (int?)dataRow["PositionID"];
+            PhilHealthDeduction = (decimal)dataRow["PhilHealthDeduction"];
+            HDMFAmount = (decimal)dataRow["HDMFAmount"];
+            BasicSalary = (decimal)dataRow["BasicSalary"];
+            AllowanceSalary = (decimal)dataRow["AllowanceSalary"];
+            MaritalStatus = (string)dataRow["MaritalStatus"];
+            EffectiveFrom = (DateTime)dataRow["EffectiveFrom"];
+            DoPaySSSContribution = (bool) dataRow["DoPaySSSContribution"];
+            AutoComputePhilHealthContribution = (bool) dataRow["AutoComputePhilHealthContribution"];
+            AutoComputeHDMFContribution = (bool) dataRow["AutoComputeHDMFContribution"];
+            IsMinimumWage = (bool) dataRow["IsMinimumWage"];
+        }
+
+        public int? EmployeeID { get; internal set; }
+        public int? PositionID { get; internal set; }
+        public decimal PhilHealthDeduction { get; internal set; }
+        public decimal HDMFAmount { get; internal set; }
+        public decimal BasicSalary { get; internal set; }
+        public decimal AllowanceSalary { get; internal set; }
+        public string MaritalStatus { get; internal set; }
+        public DateTime EffectiveFrom { get; internal set; }
+        public bool DoPaySSSContribution { get; internal set; }
+        public bool AutoComputePhilHealthContribution { get; internal set; }
+        public bool AutoComputeHDMFContribution { get; internal set; }
+        public bool IsMinimumWage { get; internal set; }
+    }
+}
