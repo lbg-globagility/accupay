@@ -1,5 +1,6 @@
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Interfaces.Reports;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Core.Services.Imports.Allowances;
@@ -158,6 +159,7 @@ namespace AccuPay.Web
             services.AddScoped<IDisciplinaryActionDataService, DisciplinaryActionDataService>();
             services.AddScoped<IEducationalBackgroundDataService, EducationalBackgroundDataService>();
             services.AddScoped<IPreviousEmployerDataService, PreviousEmployerDataService>();
+            services.AddScoped<IAlphalistReportBuilder, AlphalistReportBuilder>();
 
             return services;
         }

@@ -3,10 +3,12 @@ Option Strict On
 Imports AccuPay.Benchmark
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Interfaces.Reports
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.Services.Imports
 Imports AccuPay.CrystalReports
 Imports AccuPay.Infrastructure.Data
+Imports AccuPay.Infrastructure.Data.Reports
 Imports AccuPay.Infrastructure.Reports
 Imports AccuPay.Infrastructure.Reports.Customize
 Imports AccuPay.Infrastructure.Services.Encryption
@@ -166,6 +168,8 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of IThirteenthMonthSummaryReportBuilder, ThirteenthMonthSummaryReportBuilder)
         services.AddTransient(Of ILaGlobalAlphaListReportDataService, LaGlobalAlphaListReportDataService)
         services.AddTransient(Of ILaGlobalAlphaListReportBuilder, LaGlobalAlphaListReportBuilder)
+        services.AddTransient(Of IAlphaListReportDataService, AlphaListReportDataService)
+        services.AddTransient(Of IAlphalistReportBuilder, AlphalistReportBuilder)
 
         services.AddTransient(Of PaystubDataHelper)
         services.AddTransient(Of TimeEntryDataHelper)
@@ -186,6 +190,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of IDisciplinaryActionDataService, DisciplinaryActionDataService)
         services.AddTransient(Of IEducationalBackgroundDataService, EducationalBackgroundDataService)
         services.AddTransient(Of IPreviousEmployerDataService, PreviousEmployerDataService)
+        services.AddTransient(Of IAlphalistReportBuilder, AlphalistReportBuilder)
     End Sub
 
     Private Shared Sub ConfigureDbContextOptions(dbContextOptionsBuilder As DbContextOptionsBuilder)
