@@ -428,6 +428,7 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
@@ -1197,19 +1198,6 @@
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\HRIS Forms\Employee\Employee\EmployeeForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\AlphalistGeneration.vb" />
-    <Compile Include="Views\Payroll Forms\Alphalist\TaxYearDialog.Designer.vb">
-      <DependentUpon>TaxYearDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\TaxYearDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\WithholdingTax.Designer.vb">
-      <DependentUpon>WithholdingTax.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\WithholdingTax.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationEvents.vb" />
@@ -1999,12 +1987,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\Employee\_New\SalaryTab2.resx">
       <DependentUpon>SalaryTab2.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Alphalist\TaxYearDialog.resx">
-      <DependentUpon>TaxYearDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Alphalist\WithholdingTax.resx">
-      <DependentUpon>WithholdingTax.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\Agency\AgencyForm.resx">
       <DependentUpon>AgencyForm.vb</DependentUpon>

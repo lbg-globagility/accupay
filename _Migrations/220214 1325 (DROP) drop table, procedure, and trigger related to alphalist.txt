@@ -1,0 +1,12 @@
+DROP TRIGGER IF EXISTS `BEFINS_withholdingtaxreport`;
+DROP TRIGGER IF EXISTS `BEFUPD_withholdingtaxreport`;
+
+DROP TABLE IF EXISTS `withholdingtaxreport`;
+DROP TABLE IF EXISTS `withholdingtaxbatch`;
+
+DROP PROCEDURE IF EXISTS `RPT_getGrossCompensation`;
+DROP PROCEDURE IF EXISTS `CreateWithholdingTaxBatch`;
+DROP PROCEDURE IF EXISTS `RPT_AnnualizedWithholdingTax`;
+DROP PROCEDURE IF EXISTS `RPT_AlphaListemployee`;
+DROP PROCEDURE IF EXISTS `CreateWithholdingTaxReport`;
+DROP PROCEDURE IF EXISTS `LoadWithholdingTaxReports`;

@@ -49,7 +49,6 @@ Public Class PayrollForm
 
         If Not Debugger.IsAttached Then
             PaystubExperimentalToolStripMenuItem.Visible = False
-            WithholdingTaxToolStripMenuItem.Visible = False
         End If
     End Sub
 
@@ -66,7 +65,6 @@ Public Class PayrollForm
 
         If user.UserLevel = UserLevel.Four Then
             PayrollToolStripMenuItem.Visible = False
-            WithholdingTaxToolStripMenuItem.Visible = False
             PaystubExperimentalToolStripMenuItem.Visible = False
             BenchmarkPaystubToolStripMenuItem.Visible = False
         End If
@@ -88,7 +86,6 @@ Public Class PayrollForm
             AllowanceToolStripMenuItem.Visible = False
             PayrollToolStripMenuItem.Visible = False
             BenchmarkPaystubToolStripMenuItem.Visible = False
-            WithholdingTaxToolStripMenuItem.Visible = False
         End If
 
     End Function
@@ -101,7 +98,6 @@ Public Class PayrollForm
 
             BenchmarkPaystubToolStripMenuItem.Visible = True
 
-            WithholdingTaxToolStripMenuItem.Visible = False
             PaystubExperimentalToolStripMenuItem.Visible = False
             AllowanceToolStripMenuItem.Visible = False
         Else
@@ -161,11 +157,6 @@ Public Class PayrollForm
 
         End If
 
-    End Sub
-
-    Private Async Sub WithholdingTaxToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WithholdingTaxToolStripMenuItem.Click
-        Await ChangeForm(WithholdingTax, PermissionConstant.PAYPERIOD)
-        previousForm = WithholdingTax
     End Sub
 
     Private Async Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
