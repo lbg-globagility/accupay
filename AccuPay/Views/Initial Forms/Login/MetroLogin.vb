@@ -88,15 +88,20 @@ Public Class MetroLogin
     End Sub
 
     Public Async Function CheckAppVersion() As Task
+        'Const warningMessage As String = "Please install the latest version of AccuPay. Contact your IT Department or Globagility Inc. for assistance."
 
-        Const warningMessage As String = "Please install the latest version of AccuPay. Contact your IT Department or Globagility Inc. for assistance."
+        'Dim fsdfsd = Function(userVersion As String, systemVersion As String) As String
+        '                 Return 
+        '             End Function
+        Dim warningMessage As String = String.Empty
 
         Try
-
             Dim appSettings = ConfigurationManager.AppSettings
             Dim currentVersion = appSettings.Get("payroll.version")
 
             Dim latestVersion = Await _systemInfoRepository.GetDesktopVersion()
+
+            warningMessage = $"Please install the AccuPay version {latestVersion} (yours: {currentVersion}). Contact your IT Department or Globagility Inc. for assistance."
 
             If currentVersion <> latestVersion Then
 
@@ -106,18 +111,15 @@ Public Class MetroLogin
 
             End If
         Catch ex As Exception
-
             MessageBoxHelper.Warning(warningMessage)
             _logger.Error("Exception in checking app version in desktop login.", ex)
             Me.Close()
-
         End Try
-
     End Function
 
     Public Sub AssignDefaultCredentials()
         UserNameTextBox.Text = "admin"
-        PasswordTextBox.Text = "admin"
+        PasswordTextBox.Text = "adminqwerty"
     End Sub
 
     Private Sub OrganizationComboBox_DropDown(sender As Object, e As EventArgs) Handles OrganizationComboBox.DropDown
