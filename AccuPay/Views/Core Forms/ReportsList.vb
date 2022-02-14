@@ -47,7 +47,8 @@ Public Class ReportsList
             New LateUTAbsentSummaryReportProvider(),
             New PayrollLedgerExcelFormatReportProvider(),
             New LoanLedgerReportProvider(),
-            New Cinema2000TardinessReportProvider()
+            New Cinema2000TardinessReportProvider(),
+            New AlphalistExcelFormatReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 
