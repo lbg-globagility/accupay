@@ -50,7 +50,9 @@ namespace AccuPay.Core.Interfaces
         bool ValidateLeaveBalance { get; }
         bool OverrideOvertimeRateEligibility { get; }
         bool IsMultipleGracePeriod { get; }
-
+        ILeavePolicy GetLeavePolicy { get; }
+        ILeaveResetPolicy GetLeaveResetPolicy { get; }
+        bool IsEnableCashoutUnusedLeaves { get; }
         DayValueSpan DefaultEndOfTheMonthDaysSpan(int? organizationId);
 
         DayValueSpan DefaultFirstHalfDaysSpan(int? organizationId);
