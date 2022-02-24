@@ -33,11 +33,20 @@ WHILE iterator < rowCount DO
 	
 	SELECT
 	es.EmployeeID
-	FROM employeesalary es
-	INNER JOIN employee e ON e.RowID=es.EmployeeID
-	WHERE es.OrganizationID=@orgId
-	ORDER BY CONCAT(e.LastName, e.FirstName), es.EffectiveDateFrom DESC
+	FROM (SELECT
+			CONCAT(e.LastName, e.FirstName) `FullName`,
+			es.*
+			FROM employeesalary es
+			INNER JOIN employee e ON e.RowID=es.EmployeeID
+			WHERE es.OrganizationID=@orgId
+			GROUP BY es.EmployeeID
+			ORDER BY CONCAT(e.LastName, e.FirstName)#, es.EffectiveDateFrom DESC
+			) es
+#	WHERE es.OrganizationID=@orgId
+#	WHERE FIND_IN_SET(es.RowID, @salaryIds) = 0
+	ORDER BY es.`FullName`
 	LIMIT iterator, 1
+#	LIMIT 1
 	INTO @eId
 	;
 	
@@ -46,10 +55,9 @@ WHILE iterator < rowCount DO
 	SELECT
 	es.RowID
 	FROM employeesalary es
-	INNER JOIN employee e ON e.RowID=es.EmployeeID
 	WHERE es.OrganizationID=@orgId
 	AND es.EmployeeID=@eId
-	ORDER BY CONCAT(e.LastName, e.FirstName), es.EffectiveDateFrom DESC
+	ORDER BY es.EffectiveDateFrom DESC
 	LIMIT 1
 	INTO @salaryId
 	;
