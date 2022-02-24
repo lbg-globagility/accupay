@@ -61,6 +61,13 @@ namespace AccuPay.Infrastructure.Data
 
             await SaveManyAsync(employees, userId);
 
+            var leaveTypes = await _productRepository.GetLeaveTypesAsync(organizationId);
+            int[] defaultLeaveTypeIds = { vacationLeaveProduct.RowID.Value , sickLeaveProduct.RowID.Value };
+            var leaveTypeIds = leaveTypes.
+                Where(p => !defaultLeaveTypeIds.Contains(p.RowID.Value)).
+                Select(p => p.RowID.Value).
+                ToArray();
+
             foreach (var model in employeeWithLeaveBalanceModels)
             {
                 // vacation leave balance
@@ -78,6 +85,18 @@ namespace AccuPay.Infrastructure.Data
                     userId: userId,
                     organizationId: organizationId,
                     balance: model.SickLeaveBalance);
+
+                var employeeRowId = model.Employee.RowID.Value;
+                foreach (var leaveTypeId in leaveTypeIds)
+                {
+                    await _leaveLedgerRepository.CreateBeginningBalanceAsync(
+                        employeeId: employeeRowId,
+                        leaveTypeId: leaveTypeId,
+                        userId: userId,
+                        organizationId: organizationId,
+                        balance: 0);
+                }
+
             }
         }
 
