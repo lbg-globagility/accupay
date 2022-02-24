@@ -1669,11 +1669,6 @@ Public Class TimeEntrySummaryForm
         End If
     End Sub
 
-    Private Sub tstbnResetLeaveBalance_Click(sender As Object, e As EventArgs) Handles tstbnResetLeaveBalance.Click
-        Dim form As New PreviewLeaveBalanceForm
-        form.ShowDialog()
-    End Sub
-
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
         Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(_selectedPayPeriod.RowID)
