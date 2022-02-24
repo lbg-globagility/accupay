@@ -50,9 +50,20 @@ namespace AccuPay.Infrastructure.Data.Reports
                     ToList();
         }
 
-        private List<SalaryModel> GetLatestSalaries(int organizationId)
+        public List<SalaryModel> GetLatestSalaries(int organizationId)
         {
             string procedureSql = $"CALL `GetLatestSalaries`({organizationId});";
+            var result = CallRawSql(procedureSql);
+
+            return result.Rows.
+                OfType<DataRow>().
+                Select(r => new SalaryModel(dataRow: r)).
+                ToList();
+        }
+
+        public List<SalaryModel> GetLatestSalaries2(int organizationId)
+        {
+            string procedureSql = $"CALL `GetLatestSalaries`({organizationId}); SELECT * FROM `latestsalaries`;";
             var result = CallRawSql(procedureSql);
 
             return result.Rows.
