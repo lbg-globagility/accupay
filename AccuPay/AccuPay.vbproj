@@ -430,6 +430,7 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
     </Compile>
@@ -451,6 +452,12 @@
     <Compile Include="Views\Payroll Forms\Loans\LoanUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Payroll Forms\Paystub\Leave\Cashout Unused Leave\CashOutUnusedLeavesForm.Designer.vb">
+      <DependentUpon>CashOutUnusedLeavesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Payroll Forms\Paystub\Leave\Cashout Unused Leave\CashOutUnusedLeavesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\ThirteenthMonthEmployeeModel.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\Generators\PayrollGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\Generators\ReleaseThirteenthMonthGeneration.vb" />
@@ -460,6 +467,7 @@
     <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveBalanceResetGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\Official Business\OBRowRecord.vb" />
     <Compile Include="Views\Time Attendance Form\Overtimes\OvertimeRowRecord.vb" />
     <Compile Include="Core\Parser\TimelogRegexParser.vb" />
@@ -741,6 +749,12 @@
     <Compile Include="Views\Time Attendance Form\Time Entry\Generators\DefaultShiftAndTimeLogsGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\Time Entry\Generators\DeleteDefaultShiftAndTimeLogsGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\Time Entry\Generators\TimeEntryGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.Designer.vb">
+      <DependentUpon>LeaveResetForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\TripTicket\NewTripTicketDialog.Designer.vb">
       <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
     </Compile>
@@ -1741,6 +1755,9 @@
     <EmbeddedResource Include="Views\Payroll Forms\Loans\LoanUserControl.resx">
       <DependentUpon>LoanUserControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\Leave\Cashout Unused Leave\CashOutUnusedLeavesForm.resx">
+      <DependentUpon>CashOutUnusedLeavesForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.resx">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -1776,6 +1793,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.resx">
+      <DependentUpon>LeaveResetForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TripTicket\Import\ImportTripTicketForm.resx">
       <DependentUpon>ImportTripTicketForm.vb</DependentUpon>
