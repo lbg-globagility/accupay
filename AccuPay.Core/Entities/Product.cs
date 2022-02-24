@@ -1,5 +1,7 @@
+using AccuPay.Core.Entities.LeaveReset;
 using AccuPay.Core.Helpers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -48,6 +50,8 @@ namespace AccuPay.Core.Entities
         public bool ActiveData { get; set; }
 
         public bool IsPaidWhenOvertime { get; set; }
+
+        public virtual ICollection<LeaveTypeRenewable> LeaveTypeRenewables { get; set; }
 
         public string DisplayName => PartNo;
 
