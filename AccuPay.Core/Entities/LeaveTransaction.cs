@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,6 +14,37 @@ namespace AccuPay.Core.Entities
     [Table("leavetransaction")]
     public class LeaveTransaction
     {
+        public LeaveTransaction() {
+
+        }
+
+        public LeaveTransaction(int? userId,
+            int? organizationId,
+            int? employeeId,
+            int? leaveLedgerId,
+            int? payPeriodId,
+            int? paystubId,
+            int? referenceId,
+            DateTime transactionDate,
+            string description,
+            string type,
+            decimal amount,
+            decimal balance)
+        {
+            LeaveLedgerID = leaveLedgerId;
+            EmployeeID = employeeId;
+            CreatedBy = userId;
+            OrganizationID = organizationId;
+            PayPeriodID = payPeriodId;
+            PaystubID = paystubId;
+            ReferenceID = referenceId;
+            Type = type;
+            TransactionDate = transactionDate;
+            Amount = amount;
+            Description = description;
+            Balance = balance;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual int? RowID { get; set; }
@@ -68,5 +99,32 @@ namespace AccuPay.Core.Entities
         public bool IsCredit => Type.Trim().ToUpper() == LeaveTransactionType.Credit.ToUpper();
 
         public bool IsDebit => Type.Trim().ToUpper() == LeaveTransactionType.Debit.ToUpper();
+
+        public static LeaveTransaction NewLeaveTransaction(int? userId,
+            int? organizationId,
+            int? employeeId,
+            int? leaveLedgerId,
+            int? payPeriodId,
+            int? paystubId,
+            int? referenceId,
+            DateTime transactionDate,
+            string description,
+            string type,
+            decimal amount,
+            decimal balance)
+        {
+            return new LeaveTransaction(userId: userId,
+                organizationId: organizationId,
+                employeeId: employeeId,
+                leaveLedgerId: leaveLedgerId,
+                payPeriodId: payPeriodId,
+                paystubId: paystubId,
+                referenceId: referenceId,
+                transactionDate: transactionDate,
+                description: description,
+                type: type,
+                amount: amount,
+                balance: balance);
+        }
     }
 }
