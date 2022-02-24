@@ -12,5 +12,9 @@ namespace AccuPay.Core.Interfaces.Reports
             bool actualSwitch,
             PayPeriod startPeriod,
             PayPeriod endPeriod);
+
+        List<SalaryModel> GetLatestSalaries(int organizationId);
+
+        List<SalaryModel> GetLatestSalaries2(int organizationId);
     }
 }
