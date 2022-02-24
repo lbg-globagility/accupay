@@ -270,6 +270,24 @@ UPDATE
 	,GracePeriodAsBuffer=emplo_GracePeriodAsBuffer
 	,OvertimeOverride=employe_OvertimeOverride;SELECT @@Identity AS id INTO emploRowID;
 
+SET @eId=IF(emplo_RowID IS NULL, emploRowID, emplo_RowID);
+
+INSERT INTO `leaveledger` (`OrganizationID`, `Created`, `CreatedBy`, `EmployeeID`, `ProductID`)
+SELECT
+emplo_OrganizationID, CURRENT_TIMESTAMP(), emplo_UserID, @eId, i.RowID
+FROM (SELECT
+		p.*,
+		ll.RowID `LeaveLedgerId`
+		FROM product p
+		INNER JOIN category c ON c.RowID=p.CategoryID AND c.CategoryName='Leave type' AND c.OrganizationID=p.OrganizationID
+		LEFT JOIN leaveledger ll ON ll.EmployeeID=@eId
+			AND ll.ProductID=p.RowID
+		WHERE p.OrganizationID=emplo_OrganizationID
+		) i
+WHERE i.LeaveLedgerId IS NULL
+ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP()
+;
+
 RETURN emploRowID;
 
 END//
