@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Entities.LeaveReset;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Policies;
@@ -15,7 +16,7 @@ namespace AccuPay.Core.Services
         private readonly Organization _organization;
         private readonly Employee _employee;
         private readonly IEmploymentPolicy _employmentPolicy;
-
+        private readonly ILeavePolicy _leavePolicy;
         private static IPolicyHelper _policy;
 
         public DayCalculator(
@@ -28,6 +29,7 @@ namespace AccuPay.Core.Services
             _employee = employee;
             _policy = policy;
             _employmentPolicy = employmentPolicy;
+            _leavePolicy = _policy.GetLeavePolicy;
         }
 
         public TimeEntry Compute(
@@ -621,7 +623,15 @@ namespace AccuPay.Core.Services
                 return;
 
             if (leaves.Any())
-                return;
+            {
+                var leaveDates = leaves.Select(l => l.StartDate);
+                var startDate = (_leavePolicy.AnniversaryDateBasis() == BasisStartDateEnum.StartDate ?
+                    _employee.StartDate :
+                    _employee.DateRegularized ?? _employee.StartDate).
+                    AddYears((int)_leavePolicy.GetLeavePrematureYear);
+                if (_leavePolicy.IsAllowedPrematureLeave && leaveDates.Any(d => d >= startDate))
+                    return;
+            }
 
             if (timeEntry.BasicHours > 0)
                 return;
@@ -921,7 +931,7 @@ namespace AccuPay.Core.Services
             var endTime = leave.EndTime ?? currentShift.EndTime.Value;
 
             var leavePeriod = TimePeriod.FromTime(startTime, endTime, currentShift.Date);
-
+            
             if (!currentShift.HasShift)
                 return leavePeriod;
 
