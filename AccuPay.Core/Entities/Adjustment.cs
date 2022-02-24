@@ -43,5 +43,20 @@ namespace AccuPay.Core.Entities
                 Is13thMonthPay = Is13thMonthPay,
             };
         }
+
+        public static Adjustment NewAdjustment(decimal amount,
+            string comment,
+            int? productId = null,
+            int? paystubId = null)
+        {
+            return new Adjustment()
+            {
+                ProductID = productId,
+                PaystubID = paystubId,
+                Amount = amount,
+                Comment = comment,
+                IsActual = false
+            };
+        }
     }
 }
