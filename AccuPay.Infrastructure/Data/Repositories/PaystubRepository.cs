@@ -365,19 +365,32 @@ namespace AccuPay.Infrastructure.Data
             decimal totalLeaveHours,
             DateTime transactionDate)
         {
-            var newTransaction = new LeaveTransaction()
-            {
-                OrganizationID = paystub.OrganizationID,
-                Created = DateTime.Now,
-                EmployeeID = paystub.EmployeeID,
-                PayPeriodID = payPeriod.RowID,
-                ReferenceID = leaveId,
-                TransactionDate = transactionDate,
-                Type = LeaveTransactionType.Debit,
-                Amount = totalLeaveHours,
-                Paystub = paystub,
-                Balance = (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours
-            };
+            //var newTransaction = new LeaveTransaction()
+            //{
+            //    OrganizationID = paystub.OrganizationID,
+            //    Created = DateTime.Now,
+            //    EmployeeID = paystub.EmployeeID,
+            //    PayPeriodID = payPeriod.RowID,
+            //    ReferenceID = leaveId,
+            //    TransactionDate = transactionDate,
+            //    Type = LeaveTransactionType.Debit,
+            //    Amount = totalLeaveHours,
+            //    Paystub = paystub,
+            //    Balance = (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours
+            //};
+            var newTransaction = LeaveTransaction.NewLeaveTransaction(leaveLedgerId: null,
+                employeeId: paystub.EmployeeID,
+                userId: null,
+                organizationId: paystub.OrganizationID,
+                type: LeaveTransactionType.Debit,
+                transactionDate: transactionDate,
+                amount: totalLeaveHours,
+                description: string.Empty,
+                balance: (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours,
+                payPeriodId: payPeriod.RowID,
+                paystubId: null,
+                referenceId: null);
+            newTransaction.Paystub = paystub;
 
             ledger.LeaveTransactions.Add(newTransaction);
             ledger.LastTransaction = newTransaction;
