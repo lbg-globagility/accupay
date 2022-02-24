@@ -53,7 +53,9 @@ namespace AccuPay.Core.Entities
 
         public decimal SickLeaveAllowance { get; set; }
         public decimal MaternityLeaveAllowance { get; set; }
+        public decimal MaternityLeaveBalance { get; internal set; }
         public decimal OtherLeaveAllowance { get; set; }
+        public decimal OtherLeaveBalance { get; internal set; }
         public bool AlphalistExempted { get; set; }
 
         [Obsolete("Moved to employment policy")]
@@ -168,7 +170,9 @@ namespace AccuPay.Core.Entities
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
 
-        public bool IsWithinServicePeriod(DateTime currentDate) => TerminationDate == null ? IsActive : currentDate <= TerminationDate.Value;
+        public bool IsWithinServicePeriod(DateTime currentDate) => IsActive ? IsActive :
+            TerminationDate == null ? IsActive :
+                currentDate <= TerminationDate.Value;
 
         public bool IsFirstPay(PayPeriod payPeriod)
         {
@@ -207,6 +211,16 @@ namespace AccuPay.Core.Entities
                 CalcRestDay = true,
                 CalcSpecialHoliday = true
             };
+        }
+
+        public void SetOtherLeaveBalance(decimal otherLeaveBalance)
+        {
+            OtherLeaveBalance = otherLeaveBalance;
+        }
+
+        public void SetParentalLeaveBalance(decimal parentalLeaveBalance)
+        {
+            MaternityLeaveBalance = parentalLeaveBalance;
         }
     }
 }
