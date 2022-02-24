@@ -47,7 +47,7 @@ namespace AccuPay.Core.Entities
         public bool WTaxWeeklyAgentContribSched { get; set; }
 
         public virtual ICollection<Paystub> Paystubs { get; set; }
-
+        public virtual ICollection<CashoutUnusedLeave> CashoutUnusedLeaves { get; internal set; }
         public bool IsSemiMonthly => PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId;
         public bool IsWeekly => PayFrequencyID == PayrollTools.PayFrequencyWeeklyId;
         public bool IsFirstHalf => Half == FirstHalfValue;
