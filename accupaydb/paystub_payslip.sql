@@ -19,6 +19,8 @@ DECLARE paydat_to DATE;
 
 DECLARE v_hours_per_day INT(2) DEFAULT 8;
 
+CALL GetLeaveTransaction(OrganizID, PayPeriodRowID);
+
 SET @ppIds = (SELECT GROUP_CONCAT(pp.RowID)
 					
 					
@@ -180,36 +182,7 @@ LEFT JOIN (
 ) payStubLoans
 ON payStubLoans.PayStubID = ps.RowID
 
-LEFT JOIN (SELECT ROUND((lt.Balance / v_hours_per_day), 2) AS 'Balance'
-				, lt.EmployeeID
-				, p.PartNo `Names`
-				, et.`VacationLeaveHours` `Availed`
-				
-				FROM (SELECT lt.*
-						, MAX(lt.TransactionDate) `MaxTransactionDate`
-						FROM leavetransaction lt
-						WHERE FIND_IN_SET(lt.PayPeriodID, @ppIds) > 0
-						AND lt.OrganizationID = OrganizID
-						GROUP BY lt.EmployeeID) i
-				
-				INNER JOIN leavetransaction lt ON lt.EmployeeID=i.EmployeeID AND lt.TransactionDate=i.`MaxTransactionDate`
-				INNER JOIN leaveledger ll ON ll.RowID=lt.LeaveLedgerID
-				INNER JOIN product p ON p.RowID=ll.ProductID AND p.PartNo='Vacation Leave'
-				INNER JOIN category c ON c.RowID=p.CategoryID AND c.CategoryName='Leave Type'
-				
-				LEFT JOIN (SELECT
-								ete.EmployeeID
-								, SUM(ete.VacationLeaveHours / 8) `VacationLeaveHours`
-								, SUM(ete.SickLeaveHours / 8) `SickLeaveHours`
-								FROM employeetimeentry ete
-								INNER JOIN payperiod pp ON pp.RowID = PayPeriodRowID
-								WHERE ete.OrganizationID = OrganizID
-								AND ete.`Date` BETWEEN pp.PayFromDate AND pp.PayToDate
-								GROUP BY ete.EmployeeID
-								) et ON et.EmployeeID = i.EmployeeID
-) psiLeave
-
-ON psiLeave.EmployeeID = ps.EmployeeID
+LEFT JOIN (SELECT lt.RowID,lt.EmployeeID,lt.ReferenceID,lt.LeaveLedgerID,lt.PayPeriodID,lt.PaystubID,lt.TransactionDate,lt.Description,lt.`Type`,ROUND(lt.Balance / 8, 2) `Balance`,lt.Amount,lt.Comments, lt.`Names`, lt.VacationLeaveHours `Availed` FROM `currentleavetransaction` lt WHERE lt.IsVacation=TRUE) psiLeave ON psiLeave.EmployeeID = ps.EmployeeID
 
 LEFT JOIN (
     SELECT
