@@ -24,9 +24,9 @@ Partial Class EmployeeLeavesForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeLeavesForm))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
@@ -41,6 +41,7 @@ Partial Class EmployeeLeavesForm
         Me.LeaveHistoryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ResetLeaveToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
@@ -194,7 +195,7 @@ Partial Class EmployeeLeavesForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.ImportToolStripButton, Me.ToolStripSeparator9, Me.LeaveHistoryToolStripButton, Me.CloseButton, Me.UserActivityToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.ImportToolStripButton, Me.ToolStripSeparator9, Me.LeaveHistoryToolStripButton, Me.CloseButton, Me.UserActivityToolStripButton, Me.ResetLeaveToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -271,6 +272,16 @@ Partial Class EmployeeLeavesForm
         Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
         Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
         Me.UserActivityToolStripButton.Text = "&User Activity"
+        '
+        'ResetLeaveToolStripButton
+        '
+        Me.ResetLeaveToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ResetLeaveToolStripButton.Image = CType(resources.GetObject("ResetLeaveToolStripButton.Image"), System.Drawing.Image)
+        Me.ResetLeaveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ResetLeaveToolStripButton.Name = "ResetLeaveToolStripButton"
+        Me.ResetLeaveToolStripButton.Size = New System.Drawing.Size(85, 22)
+        Me.ResetLeaveToolStripButton.Text = "Reset leave"
+        Me.ResetLeaveToolStripButton.ToolTipText = "Reset leave balance"
         '
         'pnlSearch
         '
@@ -350,14 +361,14 @@ Partial Class EmployeeLeavesForm
         Me.LeaveGridView.BackgroundColor = System.Drawing.Color.White
         Me.LeaveGridView.ColumnHeadersHeight = 34
         Me.LeaveGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.LeaveGridView.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.LeaveGridView.DefaultCellStyle = DataGridViewCellStyle4
         Me.LeaveGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.LeaveGridView.Location = New System.Drawing.Point(28, 350)
         Me.LeaveGridView.MultiSelect = False
@@ -621,6 +632,7 @@ Partial Class EmployeeLeavesForm
         Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
         Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.StartTimePicker.Name = "StartTimePicker"
+        Me.StartTimePicker.ShowCheckBox = True
         Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
         Me.StartTimePicker.TabIndex = 8
         Me.StartTimePicker.Value = New Date(2020, 2, 18, 13, 57, 0, 0)
@@ -630,6 +642,7 @@ Partial Class EmployeeLeavesForm
         Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
         Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.ShowCheckBox = True
         Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
         Me.EndTimePicker.TabIndex = 8
         Me.EndTimePicker.Value = New Date(2020, 2, 18, 13, 55, 0, 0)
@@ -682,7 +695,7 @@ Partial Class EmployeeLeavesForm
         Me.Label7.Location = New System.Drawing.Point(383, 0)
         Me.Label7.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(60, 13)
+        Me.Label7.Size = New System.Drawing.Size(61, 13)
         Me.Label7.TabIndex = 516
         Me.Label7.Text = "Leave Type"
         '
@@ -882,14 +895,14 @@ Partial Class EmployeeLeavesForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle5
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -978,10 +991,10 @@ Partial Class EmployeeLeavesForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "N2"
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle6.Format = "N2"
+        DataGridViewCellStyle6.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -1148,4 +1161,5 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents EndTimePicker As NullableTimePicker
     Friend WithEvents UserActivityToolStripButton As ToolStripButton
     Friend WithEvents LeaveHistoryToolStripButton As ToolStripButton
+    Friend WithEvents ResetLeaveToolStripButton As ToolStripButton
 End Class

@@ -136,6 +136,17 @@
         TgDQASA1MVpwzwAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="ResetLeaveToolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEuSURBVDhPvdK9K0VhAMfx4y3XYKKMuLGSMig7g5TSnZBQ
+        XgayG8xWE0Yb/wAls7Igg8FL8jJ4Wwgx4Pu9PVfnujpdi199Ouf53XOee85znqjIlIRj0fGGRoxjBWvh
+        OIEGJE6YwgD28YbPGMf2Q6hEQUoxhjt48SamkcEMNmB/j1GUIS9tOMML5lCLeGowj0ccoxPf8b0W8IFV
+        VOO32Pu7r7RokYv/to1n9FokpAc+xVF2FNKEPZyj3SIhzbjFU3YUYnmAE7RaJMS1esCNg3pMoQt+IhfH
+        R7RL42dcq1m8Y8tiCa/YxRWcdSd0y6hCPC04hGs1aTEMP118w+gaI6hAPK6PE6yjzsLN04dT5G6+hLux
+        YKMQr+9A3utZ9sNJLjCIcvwpTtIN94Dn/5Eo+gKwNEXP6CoNHgAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="Column8.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

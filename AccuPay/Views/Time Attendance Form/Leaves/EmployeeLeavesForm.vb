@@ -2,8 +2,10 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Entities.LeaveReset
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Interfaces.Repositories
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -26,7 +28,7 @@ Public Class EmployeeLeavesForm
     Private ReadOnly _productRepository As IProductRepository
 
     Private ReadOnly _textBoxDelayedAction As DelayedAction(Of Boolean)
-
+    Private ReadOnly _leaveResetRepository As ILeaveResetRepository
     Private _currentRolePermission As RolePermission
 
     Sub New()
@@ -47,6 +49,8 @@ Public Class EmployeeLeavesForm
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
+        _leaveResetRepository = MainServiceProvider.GetRequiredService(Of ILeaveResetRepository)
+
     End Sub
 
     Private Async Sub EmployeeLeavesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -63,6 +67,8 @@ Public Class EmployeeLeavesForm
 
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
+        Dim leaveResetPolicy = Await _leaveResetRepository.GetLeaveResetPolicyAsync()
+        ResetLeaveToolStripButton.Visible = leaveResetPolicy.IsLeaveResetEnable
     End Sub
 
     Private Async Function CheckRolePermissions() As Task
@@ -639,4 +645,26 @@ Public Class EmployeeLeavesForm
         dialog.ShowDialog()
     End Sub
 
+    Private Async Sub ResetLeaveToolStripButto_Click(sender As Object, e As EventArgs) Handles ResetLeaveToolStripButton.Click
+        Dim leaveResetPolicy = Await _leaveResetRepository.GetLeaveResetPolicyAsync()
+        Dim leaveResetBaseScheme = leaveResetPolicy.GetLeaveResetBaseScheme()
+        Dim dialogResult As DialogResult
+        Select Case leaveResetBaseScheme
+            Case LeaveResetBaseScheme.ServiceYears
+                Dim form As New LeaveResetForm
+                dialogResult = form.ShowDialog()
+            Case LeaveResetBaseScheme.EmployeeProfile
+                Dim form As New PreviewLeaveBalanceForm
+                dialogResult = form.ShowDialog()
+            Case Else
+                Dim form As New PreviewLeaveBalanceForm
+                dialogResult = form.ShowDialog()
+        End Select
+
+        'If dialogResult = DialogResult.OK Or
+        '    dialogResult = DialogResult.Cancel Or
+        '    dialogResult = DialogResult.Abort Then
+        ShowAllCheckBox_CheckedChanged(ShowAllCheckBox, New EventArgs)
+        'End If
+    End Sub
 End Class
