@@ -26,5 +26,7 @@ namespace AccuPay.Core.Interfaces
         List<string> GetStatusList();
 
         Task<ICollection<Leave>> GetUnusedApprovedLeavesByTypeAsync(int employeeId, Leave leave, DateTime firstDayOfTheYear, DateTime lastDayOfTheYear);
+
+        Task<ILeavePolicy> GetLeavePolicyAsync();
     }
 }
