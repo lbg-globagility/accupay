@@ -7,20 +7,22 @@ namespace AccuPay.Core.ReportModels
     {
         public SalaryModel(DataRow dataRow)
         {
+            RowID = (int)dataRow["RowID"];
             PositionID = (int?)dataRow["EmployeeID"];
-            PositionID = (int?)dataRow["PositionID"];
+            //PositionID = (int?)dataRow["PositionID"];
             PhilHealthDeduction = (decimal)dataRow["PhilHealthDeduction"];
             HDMFAmount = (decimal)dataRow["HDMFAmount"];
-            BasicSalary = (decimal)dataRow["BasicSalary"];
-            AllowanceSalary = (decimal)dataRow["AllowanceSalary"];
-            MaritalStatus = (string)dataRow["MaritalStatus"];
-            EffectiveFrom = (DateTime)dataRow["EffectiveFrom"];
-            DoPaySSSContribution = (bool) dataRow["DoPaySSSContribution"];
-            AutoComputePhilHealthContribution = (bool) dataRow["AutoComputePhilHealthContribution"];
-            AutoComputeHDMFContribution = (bool) dataRow["AutoComputeHDMFContribution"];
-            IsMinimumWage = (bool) dataRow["IsMinimumWage"];
+            BasicSalary = (decimal)dataRow["BasicPay"];
+            AllowanceSalary = (decimal)dataRow["TrueSalary"];
+            //MaritalStatus = dataRow["MaritalStatus"];
+            //EffectiveFrom = (DateTime)dataRow["EffectiveDateFrom"];
+            //DoPaySSSContribution = (bool)dataRow["DoPaySSSContribution"];
+            //AutoComputePhilHealthContribution = (bool)dataRow["AutoComputePhilHealthContribution"];
+            //AutoComputeHDMFContribution = (bool)dataRow["AutoComputeHDMFContribution"];
+            //IsMinimumWage = (bool)dataRow["IsMinimumWage"];
         }
 
+        public int RowID { get; }
         public int? EmployeeID { get; internal set; }
         public int? PositionID { get; internal set; }
         public decimal PhilHealthDeduction { get; internal set; }
