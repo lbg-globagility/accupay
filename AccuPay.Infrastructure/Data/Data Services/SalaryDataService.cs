@@ -229,6 +229,11 @@ namespace AccuPay.Infrastructure.Data
             return await _paystubRepository.HasPaystubsAfterDateAsync(salaryFirstCutOffStartDate, salary.EmployeeID.Value);
         }
 
+        public async Task<List<Salary>> GetSalariesByIds(int[] rowIds)
+        {
+            return await _salaryRepository.GetSalariesByIds(rowIds: rowIds);
+        }
+
         #endregion Private Methods
     }
 }
