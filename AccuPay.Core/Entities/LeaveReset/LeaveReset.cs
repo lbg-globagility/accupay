@@ -91,12 +91,7 @@ namespace AccuPay.Core.Entities.LeaveReset
         public BasisStartDateEnum OthersLeaveBasisStartDate() => GetLeaveType(LeaveTypeEnum.Others)?.BasisStartDate ?? BasisStartDateEnum.StartDate;
         public BasisStartDateEnum ParentalLeaveBasisStartDate() => GetLeaveType(LeaveTypeEnum.Parental)?.BasisStartDate ?? BasisStartDateEnum.StartDate;
 
-        public TimePeriod GetTimePeriod(int year)
-        {
-            var startPeriodDate = new DateTime(year: year, month: StartPeriodDate.Month, day: StartPeriodDate.Day);
-            var endPeriodDate = new DateTime(year: year + 1, month: EndPeriodDate.Month, day: EndPeriodDate.Day, hour: 23, minute: 59, second: 59);
-            return new TimePeriod(startPeriodDate, endPeriodDate);
-        }
+        public TimePeriod GetTimePeriod() => new TimePeriod(StartPeriodDate, EndPeriodDate);
         //internal static LeaveReset NewLeaveReset(int organizationId,
         //    string name,
         //    DateTime effectiveDate,

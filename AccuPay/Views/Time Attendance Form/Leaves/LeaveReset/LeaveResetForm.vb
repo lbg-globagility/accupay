@@ -42,7 +42,6 @@ Public Class LeaveResetForm
 
         _timePeriod = MakeTimePeriod(Date.Now, Date.Now)
         Dim leaveReset = Await GetLeaveReset(_timePeriod)
-        _timePeriod = leaveReset.GetTimePeriod(Date.Now.Year)
 
         Dim isVacationLeaveSupported = leaveReset.IsVacationLeaveSupported
         eVacationLeaveAllowance.Visible = isVacationLeaveSupported
@@ -68,6 +67,7 @@ Public Class LeaveResetForm
         eDateRegularized.Visible = hasDateRegularized
 
         leaveReset.ChangeDateAccordingToYear()
+        _timePeriod = leaveReset.GetTimePeriod()
 
         UpdateLeaveResetPeriodRange(leaveReset)
 
