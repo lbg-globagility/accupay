@@ -661,10 +661,8 @@ Public Class EmployeeLeavesForm
                 dialogResult = form.ShowDialog()
         End Select
 
-        'If dialogResult = DialogResult.OK Or
-        '    dialogResult = DialogResult.Cancel Or
-        '    dialogResult = DialogResult.Abort Then
+        Await LoadEmployees()
+
         ShowAllCheckBox_CheckedChanged(ShowAllCheckBox, New EventArgs)
-        'End If
     End Sub
 End Class
