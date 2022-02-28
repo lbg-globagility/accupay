@@ -43,8 +43,16 @@ namespace AccuPay.Core.Entities.LeaveReset
 
             if (LeaveTenures == null) return null;
 
-            var timePeriod = new TimePeriod(StartPeriodDate, EndPeriodDate);
+            //var timePeriod = new TimePeriod(StartPeriodDate, EndPeriodDate);
+            var timePeriod = GetTimePeriod();
+            var firstYear = LeaveTenures.
+                Where(l => l.IsFirstOrdinal).
+                //Where(l => l.OrdinalValue == l.IsProrated).
+                FirstOrDefault(l => l.IsMatch(hireDate: employee.StartDate, yearRangePeriod: timePeriod));
+            if (firstYear != null) return firstYear;
+
             return LeaveTenures.
+                OrderByDescending(l => l.OrdinalValue).
                 FirstOrDefault(l => l.IsMatch(hireDate: employee.StartDate, yearRangePeriod: timePeriod));
         }
 
