@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -103,6 +104,12 @@ namespace AccuPay.Infrastructure.Data
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(x => datePeriod.Start <= x.Date)
                 .Where(x => x.Date <= datePeriod.End);
+        }
+
+        public async Task<TimeEntryPolicy> GetTimeEntryPolicy()
+        {
+            var listOfValues = await _context.ListOfValues.AsNoTracking().ToListAsync();
+            return new TimeEntryPolicy(new ListOfValueCollection(listOfValues));
         }
     }
 }
