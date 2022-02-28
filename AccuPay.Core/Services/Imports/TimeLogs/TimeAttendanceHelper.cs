@@ -461,7 +461,8 @@ namespace AccuPay.Core.Services
             {
                 var compareA = timeAttendanceLogs.Where(i => i.DateTime.Date == shiftBounds.Start.Date).ToList();
                 var compareB = timeAttendanceLogs.Where(i => i.DateTime.Date == shiftBounds.End.Date).ToList();
-                if (compareA.Count() == compareB.Count() ||
+                var bothHas = compareA.Count() > 0 && compareB.Count() > 0;
+                if ((bothHas && compareA.Count() == compareB.Count()) ||
                     (logRecords.Count() < compareA.Count() && compareB.Count() == 0))
                 {
                     logRecords = timeAttendanceLogs.
@@ -473,7 +474,8 @@ namespace AccuPay.Core.Services
                     logRecords = compareA;
                 }
 
-                if (compareA.Count() == 0 && compareB.Count() >= 1) return null;
+                if (compareA.Count() == 0 && compareB.Count() >= 1 ||
+                    logRecords.Count() == 0) return null;
             }
 
             if (lastDayLogRecord?.ShiftTimeOutBounds != null && lastDayLogRecord?.ShiftTimeOutBounds == shiftBounds.Start && lastDayLogRecord?.LogRecords != null)
