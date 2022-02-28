@@ -46,6 +46,8 @@ namespace AccuPay.Core.Entities.LeaveReset
 
         public bool IsProrated => OrdinalValue == 1;
 
+        public bool IsFirstOrdinal => OrdinalValue == 1;
+
         public decimal GetVacationLeaveHours(Employee employee, TimePeriod yearRangePeriod)
         {
             var leaveType = LeaveTypeEnum.Vacation;
