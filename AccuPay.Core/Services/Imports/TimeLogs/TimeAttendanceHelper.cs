@@ -31,6 +31,7 @@ namespace AccuPay.Core.Services
 
         private readonly int _organizationId;
         private readonly int _userId;
+        private readonly TimeEntryPolicy _timeEntryPolicy;
 
         public TimeAttendanceHelper(
             List<TimeLogImportModel> importedTimeLogs,
@@ -38,7 +39,8 @@ namespace AccuPay.Core.Services
             List<Shift> employeeShifts,
             List<Overtime> employeeOvertimes,
             int organizationId,
-            int userId)
+            int userId,
+            TimeEntryPolicy timeEntryPolicy)
         {
             _importedTimeAttendanceLogs = importedTimeLogs;
             _employees = employees;
@@ -51,6 +53,8 @@ namespace AccuPay.Core.Services
                 .GroupByEmployee(_importedTimeAttendanceLogs);
 
             GetEmployeeObjectOfLogs();
+
+            _timeEntryPolicy = timeEntryPolicy;
         }
 
         public List<TimeLogImportModel> Analyze()
@@ -313,15 +317,31 @@ namespace AccuPay.Core.Services
 
             var dayBounds = new TimePeriod(timeInBounds, timeOutBounds);
 
-            return new DayLogRecord()
+            var logRecords = GetTimeLogsFromBounds(dayBounds, employeeLogs, lastDayLogRecord);
+
+            var dayLogRecord = new DayLogRecord()
             {
                 EmployeeId = employeeId,
                 LogDate = currentDate,
-                LogRecords = GetTimeLogsFromBounds(dayBounds, employeeLogs, lastDayLogRecord),
+                LogRecords = logRecords,
                 ShiftTimeInBounds = dayBounds.Start,
                 ShiftTimeOutBounds = dayBounds.End,
                 Shift = currentShift
             };
+
+            var dateTimes = logRecords?.Select(i => i.DateTime);
+            if (dateTimes != null)
+            {
+                var min = dateTimes.Min();
+                var max = dateTimes.Max();
+                if (min < dayBounds.Start) dayLogRecord.ShiftTimeInBounds = min;
+                if (max > dayBounds.End) dayLogRecord.ShiftTimeOutBounds = max;
+            } else
+            {
+                return null;
+            }
+
+            return dayLogRecord;
         }
 
         /// <summary>
@@ -436,6 +456,27 @@ namespace AccuPay.Core.Services
                 .Where(t => t.DateTime >= shiftBounds.Start)
                 .Where(t => t.DateTime <= shiftBounds.End)
                 .ToList();
+
+            if (_timeEntryPolicy.PaidAsLongAsHasTimeLog)
+            {
+                var compareA = timeAttendanceLogs.Where(i => i.DateTime.Date == shiftBounds.Start.Date).ToList();
+                var compareB = timeAttendanceLogs.Where(i => i.DateTime.Date == shiftBounds.End.Date).ToList();
+                var bothHas = compareA.Count() > 0 && compareB.Count() > 0;
+                if ((bothHas && compareA.Count() == compareB.Count()) ||
+                    (logRecords.Count() < compareA.Count() && compareB.Count() == 0))
+                {
+                    logRecords = timeAttendanceLogs.
+                        Where(t => t.DateTime.Date == shiftBounds.Start.Date).
+                        ToList();
+                } else if(logRecords.Count() > 0 && compareA.Count() > 0 &&
+                    (logRecords.Count() == compareA.Count()))
+                {
+                    logRecords = compareA;
+                }
+
+                if (compareA.Count() == 0 && compareB.Count() >= 1 ||
+                    logRecords.Count() == 0) return null;
+            }
 
             if (lastDayLogRecord?.ShiftTimeOutBounds != null && lastDayLogRecord?.ShiftTimeOutBounds == shiftBounds.Start && lastDayLogRecord?.LogRecords != null)
             {
