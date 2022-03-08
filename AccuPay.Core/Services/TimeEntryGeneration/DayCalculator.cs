@@ -631,6 +631,7 @@ namespace AccuPay.Core.Services
                     AddYears((int)_leavePolicy.GetLeavePrematureYear);
                 if (_leavePolicy.IsAllowedPrematureLeave && leaveDates.Any(d => d >= startDate))
                     return;
+                return;
             }
 
             if (timeEntry.BasicHours > 0)
