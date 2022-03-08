@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,5 +15,7 @@ namespace AccuPay.Core.Interfaces
         Task<ICollection<TimeEntry>> GetByDatePeriodAsync(int organizationId, TimePeriod datePeriod);
 
         Task<ICollection<TimeEntry>> GetByEmployeeAndDatePeriodAsync(int organizationId, int employeeId, TimePeriod datePeriod);
+
+        Task<TimeEntryPolicy> GetTimeEntryPolicy();
     }
 }
