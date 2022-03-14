@@ -389,7 +389,7 @@ namespace AccuPay.Infrastructure.Data
                 balance: (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours,
                 payPeriodId: payPeriod.RowID,
                 paystubId: null,
-                referenceId: null);
+                referenceId: leaveId);
             newTransaction.Paystub = paystub;
 
             ledger.LeaveTransactions.Add(newTransaction);
