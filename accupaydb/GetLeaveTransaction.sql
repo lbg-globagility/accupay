@@ -17,17 +17,29 @@ SET @firstDatefrom='';
 SET @datefrom='2022-01-21'; SET @dateto='2022-02-05';
 SET @orgId = orgId;
 SET @ppId = periodId;
+SET @_year = 2022;
 SET @_count=0;
 
 SELECT
 COUNT(ps.RowID),
 #NULL,
 MIN(pp1.PayFromDate),
-ps.PayFromDate, ps.PayToDate
+ps.PayFromDate, ps.PayToDate,
+pp.Year
 FROM paystub ps
 INNER JOIN payperiod pp ON pp.RowID=ps.PayPeriodID AND pp.RowID=@ppId
 INNER JOIN payperiod pp1 ON pp1.OrganizationID=pp.OrganizationID AND pp1.Year=pp.Year AND pp1.TotalGrossSalary=pp.TotalGrossSalary AND pp1.OrdinalValue=1
-INTO @_count, @firstDatefrom, @datefrom, @dateto
+INTO @_count, @firstDatefrom, @datefrom, @dateto, @_year
+;
+
+SELECT
+DATE_FORMAT(lr.StartPeriodDate, CONCAT(@_year, '-%m-%d')) `StartPeriod`
+FROM leavereset lr
+WHERE lr.OrganizationId=orgId
+AND lr.EffectiveDate <= @datefrom
+ORDER BY lr.EffectiveDate DESC
+LIMIT 1
+INTO @firstDatefrom
 ;
 
 SET @vacationLtIds='';
@@ -57,7 +69,8 @@ WHILE @iter < @_count DO
 	
 	SET @vacLtIds='';
 	SELECT
-	GROUP_CONCAT(lt.RowID)
+#	GROUP_CONCAT(lt.RowID)
+	lt.RowID
 	FROM leavetransaction lt
 	INNER JOIN leaveledger ll ON ll.RowID=lt.LeaveLedgerID
 	INNER JOIN product p ON p.RowID=ll.ProductID AND p.PartNo='Vacation leave'
@@ -72,7 +85,8 @@ WHILE @iter < @_count DO
 	
 	SET @sicLtIds='';
 	SELECT
-	GROUP_CONCAT(lt.RowID)
+#	GROUP_CONCAT(lt.RowID)
+	lt.RowID
 	FROM leavetransaction lt
 	INNER JOIN leaveledger ll ON ll.RowID=lt.LeaveLedgerID
 	INNER JOIN product p ON p.RowID=ll.ProductID AND p.PartNo='Sick leave'
@@ -87,7 +101,8 @@ WHILE @iter < @_count DO
 	
 	SET @othLtIds='';
 	SELECT
-	GROUP_CONCAT(lt.RowID)
+#	GROUP_CONCAT(lt.RowID)
+	lt.RowID
 	FROM leavetransaction lt
 	INNER JOIN leaveledger ll ON ll.RowID=lt.LeaveLedgerID
 	INNER JOIN product p ON p.RowID=ll.ProductID AND p.PartNo='Others'
@@ -102,7 +117,8 @@ WHILE @iter < @_count DO
 	
 	SET @parLtIds='';
 	SELECT
-	GROUP_CONCAT(lt.RowID)
+#	GROUP_CONCAT(lt.RowID)
+	lt.RowID
 	FROM leavetransaction lt
 	INNER JOIN leaveledger ll ON ll.RowID=lt.LeaveLedgerID
 	INNER JOIN product p ON p.RowID=ll.ProductID AND p.PartNo='Maternity/paternity leave'
@@ -118,7 +134,7 @@ WHILE @iter < @_count DO
 	SET @iter = @iter + 1;
 END WHILE;
 
-SET @_ltIds=CONCAT(@vacationLtIds, @sickLtIds, @othersLtIds, @parentalLtIds);
+SET @_ltIds=CONCAT_WS(',', @vacationLtIds, @sickLtIds, @othersLtIds, @parentalLtIds);
 
 DROP TEMPORARY TABLE IF EXISTS `currenttimeentry`;
 CREATE TEMPORARY TABLE IF NOT EXISTS `currenttimeentry`
@@ -132,6 +148,7 @@ FROM employeetimeentry et
 WHERE et.OrganizationID=@orgId
 AND FIND_IN_SET(et.EmployeeID, @eIds)
 AND (et.`Date` BETWEEN @datefrom AND @dateto)
+#AND (et.`Date` BETWEEN @firstDatefrom AND @dateto)
 AND (et.VacationLeaveHours + et.SickLeaveHours + et.OtherLeaveHours + et.MaternityLeaveHours) > 0
 GROUP BY et.EmployeeID
 ;
@@ -142,7 +159,7 @@ SELECT
 #@_ltIds `Result`,
 #@_count, @firstDatefrom, @datefrom, @dateto, @orgId, @eIds,
 #lt.RowID,lt.OrganizationID,lt.Created,lt.CreatedBy,lt.LastUpd,lt.LastUpdBy,lt.EmployeeID,lt.ReferenceID,lt.LeaveLedgerID,lt.PayPeriodID,lt.PaystubID,lt.TransactionDate,lt.Description,lt.`Type`,ROUND(lt.Balance / 8, 2) `Balance`,lt.Amount,lt.Comments,
-lt.*,
+lt.`RowID`, lt.`OrganizationID`, lt.`Created`, lt.`CreatedBy`, lt.`LastUpd`, lt.`LastUpdBy`, lt.`EmployeeID`, lt.`ReferenceID`, lt.`LeaveLedgerID`, lt.`PayPeriodID`, lt.`PaystubID`, lt.`TransactionDate`, lt.`Description`, lt.`Type`, lt.`Balance`, lt.`Amount`, lt.`Comments`,
 p.PartNo `Names`,
 p.PartNo = 'Vacation leave' `IsVacation`,
 IFNULL(i.VacationLeaveHours, 0) `VacationLeaveHours`,
