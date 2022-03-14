@@ -313,7 +313,7 @@ namespace AccuPay.Infrastructure.Data
 
             var employeeId = employee.RowID;
             var ledgers = await _context.LeaveLedgers
-                .AsNoTracking()
+                //.AsNoTracking()
                 .Include(x => x.Product)
                 .Include(x => x.LeaveTransactions)
                 .Include(x => x.LastTransaction)
