@@ -182,7 +182,7 @@ LEFT JOIN (
 ) payStubLoans
 ON payStubLoans.PayStubID = ps.RowID
 
-LEFT JOIN (SELECT lt.RowID,lt.EmployeeID,lt.ReferenceID,lt.LeaveLedgerID,lt.PayPeriodID,lt.PaystubID,lt.TransactionDate,lt.Description,lt.`Type`,ROUND(lt.Balance / 8, 2) `Balance`,lt.Amount,lt.Comments, lt.`Names`, lt.VacationLeaveHours `Availed` FROM `currentleavetransaction` lt WHERE lt.IsVacation=TRUE) psiLeave ON psiLeave.EmployeeID = ps.EmployeeID
+LEFT JOIN (SELECT lt.RowID,lt.EmployeeID,lt.ReferenceID,lt.LeaveLedgerID,lt.PayPeriodID,lt.PaystubID,lt.TransactionDate,lt.Description,lt.`Type`,ROUND(lt.Balance / 8, 2) `Balance`,ROUND(lt.Amount / 8, 2) `Amount`,lt.Comments, lt.`Names`, ROUND(lt.VacationLeaveHours / 8, 2) `Availed` FROM `currentleavetransaction` lt WHERE lt.IsVacation=TRUE) psiLeave ON psiLeave.EmployeeID = ps.EmployeeID
 
 LEFT JOIN (
     SELECT
