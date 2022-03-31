@@ -35,11 +35,19 @@ namespace AccuPay.Infrastructure.Reports
                 startPeriod: startPeriod,
                 endPeriod: endPeriod);
 
-            var alphalistGenerator = new AlphalistGenerator(models: models,
+            var properModels = models.
+                Where(t => t.StartDate < t.EndDate).
+                ToList();
+
+            var organization = await _organizationRepository.GetByIdAsync(organizationId);
+
+            var alphalistGenerator = new AlphalistGenerator(models: properModels,
                 year: 0,
                 dateFrom: periodRange.Start,
                 dateTo: periodRange.End,
-                saveFileDiretory: saveFileDiretory);
+                saveFileDiretory: saveFileDiretory,
+                organization: organization,
+                endPeriod: endPeriod);
             alphalistGenerator.Start();
 
             return alphalistGenerator.OutputDirectory;
