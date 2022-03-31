@@ -2185,6 +2185,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="app.manifest" />
+    <None Include="Resources\SCHEDULE1.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\SCHEDULE2.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Core Forms\Dataset\AlphalistDataset.xsc">
       <DependentUpon>AlphalistDataset.xsd</DependentUpon>
     </None>
