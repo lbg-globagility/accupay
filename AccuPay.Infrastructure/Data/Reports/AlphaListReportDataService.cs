@@ -14,11 +14,14 @@ namespace AccuPay.Infrastructure.Data.Reports
     public class AlphaListReportDataService : StoredProcedureDataService, IAlphaListReportDataService
     {
         private readonly IPaystubRepository _paystubRepository;
+        private readonly IWithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
         public AlphaListReportDataService(PayrollContext context,
-            IPaystubRepository paystubRepository) : base(context)
+            IPaystubRepository paystubRepository,
+            IWithholdingTaxBracketRepository withholdingTaxBracketRepository) : base(context)
         {
             _paystubRepository = paystubRepository;
+            _withholdingTaxBracketRepository = withholdingTaxBracketRepository;
         }
 
         public async Task<List<AlphalistModel>> GetData(int organizationId,
@@ -41,18 +44,25 @@ namespace AccuPay.Infrastructure.Data.Reports
 
             var latestSalaries = GetLatestSalaries(organizationId);
 
+            var withholdingTaxBrackets = (await _withholdingTaxBracketRepository.GetAllAsync()).
+                Where(w => w.IsMonthly).
+                Where(w => w.EffectiveDateFrom <= periodRange.Start).
+                Where(w => periodRange.Start <= w.EffectiveDateTo).
+                ToList();
+
             return paystubs.GroupBy(p => p.EmployeeID).
                 OrderBy(p => p.FirstOrDefault().Employee.FullNameLastNameFirst).
                 Select(p => new AlphalistModel(paystubs: p,
-                    startingDate: periodRange.Start,
+                    periodRange: periodRange,
                     latestSalaries: latestSalaries,
-                    actualSwitch: actualSwitch)).
+                    actualSwitch: actualSwitch,
+                    withholdingTaxBrackets: withholdingTaxBrackets)).
                     ToList();
         }
 
         public List<SalaryModel> GetLatestSalaries(int organizationId)
         {
-            string procedureSql = $"CALL `GetLatestSalaries`({organizationId});";
+            string procedureSql = $"CALL `GetLatestSalaries`({organizationId}); SELECT * FROM latestsalaries;";
             var result = CallRawSql(procedureSql);
 
             return result.Rows.

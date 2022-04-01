@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace AccuPay.Core.ReportModels
 {
     public class AlphalistModel
     {
+        private const decimal ALLOWABLE_13TH_MONTH_PAY = 90000;
+        private const decimal OTHER_FORMS_OF_COMPENSATION_CEILING = 250000;
         private const decimal BASIC_TAX_EXEMPTION = 0; //50000
         private const string SCHEDULE_71 = "Schedule 7.1";
         private const string SCHEDULE_73 = "Schedule 7.3";
@@ -15,11 +18,12 @@ namespace AccuPay.Core.ReportModels
         private const string SCHEDULE_75 = "Schedule 7.5";
         private readonly bool _actualSwitch;
         private readonly List<Paystub> _paystubs;
-
+        
         public AlphalistModel(IGrouping<int?, Paystub> paystubs,
-            DateTime startingDate,
+            TimePeriod periodRange,
             List<SalaryModel> latestSalaries,
-            bool actualSwitch)
+            bool actualSwitch,
+            List<WithholdingTaxBracket> withholdingTaxBrackets)
         {
             var employeeId = paystubs.Key;
 
@@ -27,7 +31,7 @@ namespace AccuPay.Core.ReportModels
                 FirstOrDefault(p => p.EmployeeID == employeeId).
                 Employee;
 
-            _startingDate = startingDate;
+            _startingDate = periodRange.Start;
 
             var salary = latestSalaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
             
@@ -38,8 +42,9 @@ namespace AccuPay.Core.ReportModels
             LastName = employee.LastName;
             TinNo = employee.TinNo;
             //RdoCode = _employee.;
-            StartDate = employee.StartDate;
-            EndDate = employee.TerminationDate;
+            DateTime[] dates1 = { employee.StartDate, periodRange.Start };
+            StartDate = dates1.Max();
+            EndDate = employee.TerminationDate ?? periodRange.End;
             Category = GetCategory(employee: employee, IsMinimumWageEarner: salary?.IsMinimumWage ?? false);
             EmploymentStatus = employee.EmploymentStatus;
             RegisteredAddress = employee.HomeAddress;
@@ -60,11 +65,17 @@ namespace AccuPay.Core.ReportModels
             var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee,
                 dummySalary,
                 actualSwitch);
-            if(salary?.IsMinimumWage??false) MinimumWagePerDay = PayrollTools.GetDailyRate(monthlyRate,
+            MonthlyRate = monthlyRate;
+            AnnualRate = monthlyRate * 12;
+            var isMinimumWage = salary?.IsMinimumWage ?? false;
+            if (isMinimumWage)
+            {
+                MinimumWagePerDay = PayrollTools.GetDailyRate(monthlyRate,
                 employee.WorkDaysPerYear);
-            //MinimumWagePerMonth = _paystub;
-            IsMinimumWageEarner = salary?.IsMinimumWage ?? false;
-            WorkDaysPerYear = employee.WorkDaysPerYear;
+                MinimumWagePerMonth = monthlyRate;
+                IsMinimumWageEarner = isMinimumWage;
+                WorkDaysPerYear = employee.WorkDaysPerYear;
+            }
             //PresentEmployerTinNo = _paystub;
             //PresentEmployerName = _paystub;
             //PresentEmployerAddress = _paystub;
@@ -79,26 +90,42 @@ namespace AccuPay.Core.ReportModels
                 Where(p => p.EmployeeID == employeeId).
                 ToList();
 
+            TotalNonTaxableAllowance = GetValue(PaystubProperty.TotalNonTaxableAllowance);
+            TotalTaxableAllowance = GetValue(PaystubProperty.TotalTaxableAllowance);
+
+            SssEmployeeShare = GetValue(PaystubProperty.SssEmployeeShare);
+            SssEmployerShare = GetValue(PaystubProperty.SssEmployerShare);
+            PhilHealthEmployeeShare = GetValue(PaystubProperty.PhilHealthEmployeeShare);
+            PhilHealthEmployerShare = GetValue(PaystubProperty.PhilHealthEmployerShare);
+            HdmfEmployeeShare = GetValue(PaystubProperty.HdmfEmployeeShare);
+            HdmfEmployerShare = GetValue(PaystubProperty.HdmfEmployerShare);
+
+            TotalEmployeePremium = SssEmployeeShare + PhilHealthEmployeeShare + HdmfEmployeeShare;
+            TotalEmployerPremium = SssEmployerShare + PhilHealthEmployerShare + HdmfEmployerShare;
+
             //var totalEmpWithholdingTax = _paystubs.Sum(t => t.WithholdingTax);
             //Category = GetCategory(employee: employee, IsMinimumWageEarner: totalEmpWithholdingTax==0);
 
-            GrossCompensationIncome = GetValue(PaystubProperty.GrossPay);
-            TaxableIncome = GetValue(PaystubProperty.TaxableIncome);
-
-            TotalExemptions = BASIC_TAX_EXEMPTION;
-            TaxDue = GetValue(PaystubProperty.WithholdingTax);
+            //GrossCompensationIncome = GetValue(PaystubProperty.GrossPay);
+            GrossCompensationIncome = GetValue(PaystubProperty.BasicPay);
+            if (GrossCompensationIncome < OTHER_FORMS_OF_COMPENSATION_CEILING) OtherFormsOfCompensation250K = GrossCompensationIncome;
 
             var basicSalary = GetValue(PaystubProperty.GrossPay) +
                 GetValue(PaystubProperty.GrandTotalAllowance) +
                 GetValue(PaystubProperty.TotalBonus);
-            if(salary?.IsMinimumWage ?? false)
-            {
-                BasicSalary = basicSalary;
-            }
-            else
-            {
-                TaxableBasicSalary = basicSalary;
-            }
+            //if(salary?.IsMinimumWage ?? false)
+            //{
+            NonTaxableBasicSalary = GetValue(PaystubProperty.BasicPay);
+            //}
+            //else
+            //{
+            TaxableBasicSalary = GrossCompensationIncome - TotalEmployeePremium;
+            //}
+
+            TaxableIncome = GetValue(PaystubProperty.TaxableIncome);
+
+            TotalExemptions = BASIC_TAX_EXEMPTION;
+            TaxDue = GetValue(PaystubProperty.WithholdingTax);
 
             HolidayPay = GetValue(PaystubProperty.RegularHolidayPay) +
                 GetValue(PaystubProperty.SpecialHolidayPay) +
@@ -111,55 +138,109 @@ namespace AccuPay.Core.ReportModels
                 GetValue(PaystubProperty.RegularHolidayNightDiffPay) +
                 GetValue(PaystubProperty.SpecialHolidayNightDiffPay) +
                 GetValue(PaystubProperty.RestDayNightDiffPay);
-            _13thMonthPay = GetValue(PaystubProperty.ThirteenMonthPay);
+
+             var thirteenthMonthPay = GetValue(PaystubProperty.ThirteenMonthPay);
+            if(thirteenthMonthPay > ALLOWABLE_13TH_MONTH_PAY)
+            {
+                var inExcessThreshold = thirteenthMonthPay - ALLOWABLE_13TH_MONTH_PAY;
+                var taxBracket = withholdingTaxBrackets.
+                    Where(w => w.TaxableIncomeFromAmount < inExcessThreshold).
+                    Where(w => inExcessThreshold <= w.TaxableIncomeToAmount).
+                    FirstOrDefault();
+                Taxable13thMonthPay = inExcessThreshold;
+                //Taxable13thMonthPay = taxBracket.ExemptionAmount + (inExcessThreshold * taxBracket.ExemptionInExcessAmount);
+                NonTaxable13thMonthPay = ALLOWABLE_13TH_MONTH_PAY;
+            } else
+            {
+                Taxable13thMonthPay = 0M;
+                NonTaxable13thMonthPay = thirteenthMonthPay;
+            }
+
             GovernmentInsurance = GetValue(PaystubProperty.GovernmentDeductions);
             CostOfLivingAllowance = GetValue(PaystubProperty.Ecola);
+
+            string[] separationReasons = { "terminated", "resigned", "retired", "transferred", "death" };
+            var employmentStatus = EmploymentStatus.ToLower();
+            if (separationReasons.Contains(employmentStatus))
+            {
+                if (employmentStatus == "terminated" || employmentStatus == "resigned")
+                    SeparationReason = "T";
+                else if (employmentStatus == "retired")
+                    SeparationReason = "R";
+                else if (employmentStatus == "transferred")
+                    SeparationReason = "TR";
+                else if (employmentStatus == "death")
+                    SeparationReason = "D";
+            }
+
+            GrandTotalHolidayPay = GetValue(PaystubProperty.SpecialHolidayPay) +
+                GetValue(PaystubProperty.RegularHolidayPay) +
+                GetValue(PaystubProperty.SpecialHolidayRestDayPay) +
+                GetValue(PaystubProperty.RegularHolidayRestDayPay);
+            GrandTotalOvertimePay = GetValue(PaystubProperty.RestDayOTPay) +
+                GetValue(PaystubProperty.SpecialHolidayOTPay) +
+                GetValue(PaystubProperty.RegularHolidayOTPay) +
+                GetValue(PaystubProperty.SpecialHolidayRestDayOTPay) +
+                GetValue(PaystubProperty.RegularHolidayRestDayOTPay);
+            GrandTotalNightDiffPay = GetValue(PaystubProperty.NightDiffPay) +
+                GetValue(PaystubProperty.NightDiffOvertimePay) +
+                GetValue(PaystubProperty.SpecialHolidayRestDayNightDiffPay) +
+                GetValue(PaystubProperty.SpecialHolidayRestDayNightDiffOTPay) +
+                GetValue(PaystubProperty.RegularHolidayNightDiffPay) +
+                GetValue(PaystubProperty.RegularHolidayNightDiffOTPay) +
+                GetValue(PaystubProperty.RegularHolidayRestDayNightDiffPay) +
+                GetValue(PaystubProperty.RegularHolidayRestDayNightDiffOTPay) +
+                GetValue(PaystubProperty.RestDayNightDiffPay) +
+                GetValue(PaystubProperty.RestDayNightDiffOTPay) +
+                GetValue(PaystubProperty.SpecialHolidayNightDiffPay) +
+                GetValue(PaystubProperty.SpecialHolidayNightDiffOTPay);
         }
 
         private readonly DateTime _startingDate;
+        public decimal OtherFormsOfCompensation250K { get; }
 
-        public string EmployeeID { get; internal set; }
-        public string FirstName { get; internal set; }
-        public string MiddleName { get; internal set; }
-        public string LastName { get; internal set; }
-        public string TinNo { get; internal set; }
-        public string RdoCode { get; internal set; }
-        public DateTime StartDate { get; internal set; }
-        public DateTime? EndDate { get; internal set; }
-        public string Category { get; internal set; }
-        public string EmploymentStatus { get; internal set; }
-        public string RegisteredAddress { get; internal set; }
-        public string RegisteredZipCode { get; internal set; }
-        public string LocalAddress { get; internal set; }
-        public string LocalZipCode { get; internal set; }
-        public string ForeignAddress { get; internal set; }
-        public string ForeignZipCode { get; internal set; }
-        public DateTime Birthdate { get; internal set; }
-        public string TelephoneNo { get; internal set; }
-        public string ExemptionStatus { get; internal set; }
-        public string ExemptionCode { get; internal set; }
-        public string WifeClaim { get; internal set; }
-        public string DependentsName { get; internal set; }
-        public string DependentsBirthday { get; internal set; }
-        public decimal MinimumWagePerDay { get; internal set; }
-        public string MinimumWagePerMonth { get; internal set; }
-        public bool IsMinimumWageEarner { get; internal set; }
-        public decimal WorkDaysPerYear { get; internal set; }
-        public string PresentEmployerTinNo { get; internal set; }
-        public string PresentEmployerName { get; internal set; }
-        public string PresentEmployerAddress { get; internal set; }
-        public string PresentEmployerZipCode { get; internal set; }
-        public string PreviousEmployerTinNo { get; internal set; }
-        public string PreviousEmployerName { get; internal set; }
-        public string PreviousEmployerAddress { get; internal set; }
-        public string PreviousEmployerZipCode { get; internal set; }
-        public decimal GrossCompensationIncome { get; internal set; }
-        public decimal NonTaxableIncome => BasicSalary + HolidayPay + OvertimePay + NightDiffPay + HazardPay + _13thMonthPay + DeMinimisBenefits + GovernmentInsurance + SalariesAndOtherCompensation;
-        public decimal TaxableIncome { get; internal set; }
-        public decimal PreviousTaxableIncome { get; internal set; }
+        public string EmployeeID { get; }
+        public string FirstName { get; }
+        public string MiddleName { get; }
+        public string LastName { get; }
+        public string TinNo { get; }
+        public string RdoCode { get; }
+        public DateTime StartDate { get; }
+        public DateTime? EndDate { get; }
+        public string Category { get; }
+        public string EmploymentStatus { get; }
+        public string RegisteredAddress { get; }
+        public string RegisteredZipCode { get; }
+        public string LocalAddress { get; }
+        public string LocalZipCode { get; }
+        public string ForeignAddress { get; }
+        public string ForeignZipCode { get; }
+        public DateTime Birthdate { get; }
+        public string TelephoneNo { get; }
+        public string ExemptionStatus { get; }
+        public string ExemptionCode { get; }
+        public string WifeClaim { get; }
+        public string DependentsName { get; }
+        public string DependentsBirthday { get; }
+        public decimal MinimumWagePerDay { get; }
+        public decimal MinimumWagePerMonth { get; }
+        public bool IsMinimumWageEarner { get; }
+        public decimal WorkDaysPerYear { get; }
+        public string PresentEmployerTinNo { get; }
+        public string PresentEmployerName { get; }
+        public string PresentEmployerAddress { get; }
+        public string PresentEmployerZipCode { get; }
+        public string PreviousEmployerTinNo { get; }
+        public string PreviousEmployerName { get; }
+        public string PreviousEmployerAddress { get; }
+        public string PreviousEmployerZipCode { get; }
+        public decimal GrossCompensationIncome { get; }
+        public decimal NonTaxableIncome => NonTaxableBasicSalary + HolidayPay + OvertimePay + NightDiffPay + HazardPay + NonTaxable13thMonthPay + DeMinimisBenefits + GovernmentInsurance + SalariesAndOtherCompensation;
+        public decimal TaxableIncome { get; }
+        public decimal PreviousTaxableIncome { get; }
         public decimal GrossTaxableIncome => TaxableIncome + PreviousTaxableIncome;
-        public decimal TotalExemptions { get; internal set; }
-        public decimal PremiumPaidOnHealth { get; internal set; }
+        public decimal TotalExemptions { get; }
+        public decimal PremiumPaidOnHealth { get; }
         public decimal NetTaxableIncome {
             get
             {
@@ -167,47 +248,48 @@ namespace AccuPay.Core.ReportModels
                 return difference < 0 ? 0 : difference;
             }
         }
-        public decimal TaxDue { get; internal set; }
+        public decimal TaxDue { get; }
         public decimal PresentTaxWithheld => TaxDue;
-        public decimal PreviousTaxWithheld { get; internal set; }
+        public decimal PreviousTaxWithheld { get; }
         public decimal TotalTaxWithheld => PreviousTaxWithheld + PresentTaxWithheld;
-        public decimal BasicSalary { get; internal set; }
-        public decimal HolidayPay { get; internal set; }
-        public decimal OvertimePay { get; internal set; }
-        public decimal NightDiffPay { get; internal set; }
-        public decimal HazardPay { get; internal set; }
-        public decimal _13thMonthPay { get; internal set; }
-        public decimal DeMinimisBenefits { get; internal set; }
-        public decimal GovernmentInsurance { get; internal set; }
-        public decimal SalariesAndOtherCompensation { get; internal set; }
-        public decimal TotalNonTaxableIncome => BasicSalary +
+        public decimal NonTaxableBasicSalary { get; }
+        public decimal HolidayPay { get; }
+        public decimal OvertimePay { get; }
+        public decimal NightDiffPay { get; }
+        public decimal HazardPay { get; }
+        public decimal NonTaxable13thMonthPay { get;  }
+        public decimal DeMinimisBenefits { get; }
+        public decimal GovernmentInsurance { get; }
+        public decimal SalariesAndOtherCompensation { get; }
+        public decimal TotalNonTaxableIncome => NonTaxableBasicSalary +
             HolidayPay +
             OvertimePay +
             NightDiffPay +
             HazardPay +
-            _13thMonthPay +
+            NonTaxable13thMonthPay +
             DeMinimisBenefits +
             GovernmentInsurance +
             SalariesAndOtherCompensation;
-        public decimal TaxableBasicSalary { get; internal set; }
-        public decimal Representation { get; internal set; }
-        public decimal Transportation { get; internal set; }
-        public decimal CostOfLivingAllowance { get; internal set; }
-        public decimal FixedHousingAllowance { get; internal set; }
-        public decimal OthersAName { get; internal set; }
-        public decimal OthersAAmount { get; internal set; }
-        public decimal OthersBName { get; internal set; }
-        public decimal OthersBAmount { get; internal set; }
-        public decimal Commission { get; internal set; }
-        public decimal ProfitSharing { get; internal set; }
-        public decimal FeesInclDirectorsFees { get; internal set; }
-        public decimal Taxable13thMonthPay { get; internal set; }
-        public decimal TaxableHazardPay { get; internal set; }
-        public decimal TaxableOvertimePay { get; internal set; }
-        public string SupplementaryAName { get; internal set; }
-        public decimal SupplementaryAAmount { get; internal set; }
-        public decimal SupplementaryBName { get; internal set; }
-        public decimal SupplementaryBAmount { get; internal set; }
+        public decimal TaxableBasicSalary { get; }
+        public decimal Representation { get; }
+        public decimal Transportation { get; }
+        public decimal CostOfLivingAllowance { get; }
+        public string SeparationReason { get; }
+        public decimal FixedHousingAllowance { get; }
+        public decimal OthersAName { get; }
+        public decimal OthersAAmount { get; }
+        public decimal OthersBName { get; }
+        public decimal OthersBAmount { get; }
+        public decimal Commission { get; }
+        public decimal ProfitSharing { get; }
+        public decimal FeesInclDirectorsFees { get; }
+        public decimal Taxable13thMonthPay { get; }
+        public decimal TaxableHazardPay { get; }
+        public decimal TaxableOvertimePay { get; }
+        public string SupplementaryAName { get; }
+        public decimal SupplementaryAAmount { get; }
+        public decimal SupplementaryBName { get; }
+        public decimal SupplementaryBAmount { get; }
         public decimal TotalTaxableIncome => TaxableBasicSalary +
             Representation +
             Transportation +
@@ -223,9 +305,9 @@ namespace AccuPay.Core.ReportModels
             TaxableOvertimePay +
             SupplementaryAAmount +
             SupplementaryBAmount;
-        public string CtcNo { get; internal set; }
-        public string CtcPlace { get; internal set; }
-        public string CtcDate { get; internal set; }
+        public string CtcNo { get; }
+        public string CtcPlace { get; }
+        public string CtcDate { get; }
         public string FullNameLastNameFirst => $"{LastName}, {FirstName}".Trim();
 
         private decimal GetValue(PaystubProperty p)
@@ -377,6 +459,45 @@ namespace AccuPay.Core.ReportModels
         public bool IsSchedule73 => Category == SCHEDULE_73;
         public bool IsSchedule74 => Category == SCHEDULE_74;
         public bool IsSchedule75 => Category == SCHEDULE_75;
+
+        public string EmploymentStatusLegend
+        {
+            get
+            {
+                var status = EmploymentStatus.ToLower();
+                if (status == "consultant")
+                    return "CO";
+                else if (status == "probationary")
+                    return "P";
+                else if (status == "contractual" || status == "service contract" ||
+                    status == "project based" || status == "project-based")
+                    return "CP";
+                else if (status == "regular")
+                    return "R";
+                else if (status == "resigned")
+                    return "RE";
+                else if (status == "terminated")
+                    return "T";
+
+                return string.Empty;
+            }
+        }
+
+        public decimal SssEmployeeShare { get; }
+        public decimal SssEmployerShare { get; }
+        public decimal PhilHealthEmployeeShare { get; }
+        public decimal PhilHealthEmployerShare { get; }
+        public decimal HdmfEmployeeShare { get; }
+        public decimal HdmfEmployerShare { get; }
+        public decimal TotalEmployeePremium { get; }
+        public decimal TotalEmployerPremium { get; }
+        public decimal TotalNonTaxableAllowance { get; }
+        public decimal TotalTaxableAllowance { get; }
+        public decimal MonthlyRate { get; }
+        public decimal AnnualRate { get; }
+        public decimal GrandTotalHolidayPay { get; }
+        public decimal GrandTotalOvertimePay { get; }
+        public decimal GrandTotalNightDiffPay { get; }
     }
 
     enum PaystubProperty

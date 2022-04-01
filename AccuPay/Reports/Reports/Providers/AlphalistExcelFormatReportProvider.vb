@@ -1,3 +1,4 @@
+Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Reports
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -8,9 +9,11 @@ Public Class AlphalistExcelFormatReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private ReadOnly _reportBuilder As IAlphalistReportBuilder
+    Private ReadOnly _policy As IPolicyHelper
 
     Public Sub New()
         _reportBuilder = MainServiceProvider.GetRequiredService(Of IAlphalistReportBuilder)
+        _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
     End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run
@@ -45,7 +48,7 @@ Public Class AlphalistExcelFormatReportProvider
     Private Function GetPayrollSelector() As MultiplePayPeriodSelectionDialog
         Dim payrollSelector = New MultiplePayPeriodSelectionDialog With {
             .ShowPayrollSummaryPanel = False,
-            .ShowDeclaredOrActualOptionsPanel = True
+            .ShowDeclaredOrActualOptionsPanel = _policy.ShowActual
         }
 
         If payrollSelector.ShowDialog() <> DialogResult.OK Then

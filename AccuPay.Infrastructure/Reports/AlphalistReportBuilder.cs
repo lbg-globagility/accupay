@@ -1,7 +1,9 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Reports;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Infrastructure.Reports.Service;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Infrastructure.Reports
@@ -9,10 +11,13 @@ namespace AccuPay.Infrastructure.Reports
     public class AlphalistReportBuilder : IAlphalistReportBuilder
     {
         private readonly IAlphaListReportDataService _alphaListReportDataService;
+        private readonly IOrganizationRepository _organizationRepository;
 
-        public AlphalistReportBuilder(IAlphaListReportDataService alphaListReportDataService)
+        public AlphalistReportBuilder(IAlphaListReportDataService alphaListReportDataService,
+            IOrganizationRepository organizationRepository)
         {
             _alphaListReportDataService = alphaListReportDataService;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task<string> GenerateReportAsync(
@@ -30,11 +35,19 @@ namespace AccuPay.Infrastructure.Reports
                 startPeriod: startPeriod,
                 endPeriod: endPeriod);
 
-            var alphalistGenerator = new AlphalistGenerator(models: models,
+            var properModels = models.
+                Where(t => t.StartDate < t.EndDate).
+                ToList();
+
+            var organization = await _organizationRepository.GetByIdAsync(organizationId);
+
+            var alphalistGenerator = new AlphalistGenerator(models: properModels,
                 year: 0,
                 dateFrom: periodRange.Start,
                 dateTo: periodRange.End,
-                saveFileDiretory: saveFileDiretory);
+                saveFileDiretory: saveFileDiretory,
+                organization: organization,
+                endPeriod: endPeriod);
             alphalistGenerator.Start();
 
             return alphalistGenerator.OutputDirectory;
