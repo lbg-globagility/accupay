@@ -7,6 +7,7 @@ namespace AccuPay.Core.ReportModels
     {
         public SalaryModel(DataRow dataRow)
         {
+            RowID = (int)dataRow["RowID"];
             EmployeeID = (int?)dataRow["EmployeeID"];
             BasicSalary = (decimal)dataRow["Salary"];
             AllowanceSalary = (decimal)dataRow["UndeclaredSalary"];
@@ -22,6 +23,7 @@ namespace AccuPay.Core.ReportModels
             //AutoComputeHDMFContribution = (bool)dataRow["AutoComputeHDMFContribution"];
         }
 
+        public int RowID { get; internal set; }
         public int? EmployeeID { get; internal set; }
         public int? PositionID { get; internal set; }
         public decimal PhilHealthDeduction { get; internal set; }
