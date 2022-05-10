@@ -330,7 +330,7 @@ namespace AccuPay.Core.Services
             };
 
             var dateTimes = logRecords?.Select(i => i.DateTime);
-            if (dateTimes != null)
+            if (dateTimes != null && dateTimes.Any())
             {
                 var min = dateTimes.Min();
                 var max = dateTimes.Max();
