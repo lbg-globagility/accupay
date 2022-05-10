@@ -65,6 +65,7 @@ Partial Class PayrollForm
         Me.PaystubExperimentalToolStripMenuItem.Name = "PaystubExperimentalToolStripMenuItem"
         Me.PaystubExperimentalToolStripMenuItem.Size = New System.Drawing.Size(141, 20)
         Me.PaystubExperimentalToolStripMenuItem.Text = "Paystub (Experimental)"
+        Me.PaystubExperimentalToolStripMenuItem.Visible = False
         '
         'BenchmarkPaystubToolStripMenuItem
         '
