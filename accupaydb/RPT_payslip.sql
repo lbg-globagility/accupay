@@ -209,7 +209,7 @@ INNER JOIN employeesalary esa
 		                  FROM employeesalary esa
 								WHERE esa.EmployeeID=ps.EmployeeID
 								AND esa.OrganizationID=og_rowid
-								AND esa.EffectiveDateFrom <= date_from
+								AND (esa.EffectiveDateFrom <= date_from OR esa.EffectiveDateFrom BETWEEN date_from AND date_to)
 								ORDER BY esa.EffectiveDateFrom DESC
 								LIMIT 1)
 
