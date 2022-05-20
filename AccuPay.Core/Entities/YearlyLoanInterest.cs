@@ -153,7 +153,8 @@ namespace AccuPay.Core.Entities
 
                 decimal totalAmountWithInterest = AccuMath.CommercialRound(loan.TotalLoanAmount) - AccuMath.CommercialRound(loan.BasicMonthlySalary); // 5_000, 165_000
 
-                if (totalAmountWithInterest - totalPaidPrincipalAmount <= loan.OriginalDeductionAmount)
+                var differenceOfPaidPrincipalAndAmountWithInterest = totalAmountWithInterest - totalPaidPrincipalAmount;
+                if (differenceOfPaidPrincipalAndAmountWithInterest > -1 && differenceOfPaidPrincipalAndAmountWithInterest <= loan.OriginalDeductionAmount)
                 {
                     // this is the last principal payment for the whole loan
                     principalThisCutOff = totalAmountWithInterest - totalPaidPrincipalAmount;
