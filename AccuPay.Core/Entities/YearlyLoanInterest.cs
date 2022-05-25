@@ -157,7 +157,12 @@ namespace AccuPay.Core.Entities
                 if (differenceOfPaidPrincipalAndAmountWithInterest > -1 && differenceOfPaidPrincipalAndAmountWithInterest <= loan.OriginalDeductionAmount)
                 {
                     // this is the last principal payment for the whole loan
-                    principalThisCutOff = totalAmountWithInterest - totalPaidPrincipalAmount;
+                    var raminderInterestThisCutOff = totalAmountWithInterest - totalPaidPrincipalAmount;
+                    decimal[] interestsThisCutOff = { raminderInterestThisCutOff, interestThisCutOff };
+                    var properInterestThisCutOff = interestsThisCutOff.Min();
+                    return (
+                        deductionAmount: principalThisCutOff + properInterestThisCutOff,
+                        interestAmount: properInterestThisCutOff);
                 }
 
                 return (
