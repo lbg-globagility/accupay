@@ -47,7 +47,8 @@ namespace AccuPay.Core.Services
             CalendarCollection calendarCollection,
             int? branchId,
             ICollection<TripTicket> tripTickets,
-            IReadOnlyCollection<RoutePayRate> routeRates)
+            IReadOnlyCollection<RoutePayRate> routeRates,
+            IEnumerable<Salary> salaries)
         {
             var timeEntry = oldTimeEntries.Where(t => t.Date == currentDate).SingleOrDefault();
 
@@ -61,7 +62,9 @@ namespace AccuPay.Core.Services
 
             timeEntry.Reset();
 
-            bool hasSalaryForThisDate = salary != null && currentDate.Date >= salary.EffectiveFrom;
+            bool hasSalaryForThisDate = _employee.IsDaily ?
+                salaries != null && salaries.Any(s => currentDate.Date >= s.EffectiveFrom) :
+                salary != null && currentDate.Date >= salary.EffectiveFrom;
 
             // TODO: return this as one the list of warnings of Time entry generation
             // No covered salary for this date
@@ -83,7 +86,7 @@ namespace AccuPay.Core.Services
             var hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries.ToList(), calendarCollection);
 
             ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate, tripTickets, routeRates);
-            ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay);
+            ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay, salaries: salaries);
 
             return timeEntry;
         }
@@ -738,7 +741,8 @@ namespace AccuPay.Core.Services
             CurrentShift currentShift,
             Salary salary,
             IPayrate payrate,
-            bool hasWorkedLastDay)
+            bool hasWorkedLastDay,
+            IEnumerable<Salary> salaries)
         {
             // TODO: return this as one of the list of warnings of Time entry generation
             // Employee has not started yet according to the employee's Start Date
@@ -749,7 +753,11 @@ namespace AccuPay.Core.Services
                 return;
             }
 
-            var dailyRate = PayrollTools.GetDailyRate(salary, _employee);
+            var salaryThisDate = salaries
+                .Where(s => s.EffectiveFrom <= currentDate)
+                .Where(s => s.EffectiveTo >= currentDate)
+                .FirstOrDefault();
+            var dailyRate = PayrollTools.GetDailyRate(salaryThisDate, _employee);
             var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
 
             if (currentShift.MarkedAsWholeDay)

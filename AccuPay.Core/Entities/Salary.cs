@@ -49,5 +49,42 @@ namespace AccuPay.Core.Entities
         public string AutoComputePhilHealthDisplay => AutoComputePhilHealthContribution ? "AUTO" : PhilHealthDeduction.ToString("N", CultureInfo.CurrentCulture);
 
         public string AutoComputeHDMFDisplay => AutoComputeHDMFContribution ? "AUTO" : HDMFAmount.ToString("N", CultureInfo.CurrentCulture);
+
+        [NotMapped]
+        public DateTime? EffectiveTo { get; set; }
+
+        public static Salary NewSalary(int employeeId,
+                int organizationId,
+                int? positionID,
+                decimal philHealthDeduction,
+                decimal hDMFAmount,
+                decimal basicSalary,
+                decimal allowanceSalary,
+                decimal totalSalary,
+                DateTime effectiveFrom,
+                int doPaySSSContribution,
+                int autoComputePhilHealthContribution,
+                int autoComputeHDMFContribution,
+                int isMinimumWage,
+                DateTime? effectiveTo = null)
+        {
+            return new Salary()
+            {
+                EmployeeID = employeeId,
+                OrganizationID = organizationId,
+                PositionID = positionID,
+                PhilHealthDeduction = philHealthDeduction,
+                HDMFAmount = hDMFAmount,
+                BasicSalary = basicSalary,
+                AllowanceSalary = allowanceSalary,
+                TotalSalary = totalSalary,
+                EffectiveFrom = effectiveFrom,
+                DoPaySSSContribution = doPaySSSContribution == 1,
+                AutoComputePhilHealthContribution = autoComputePhilHealthContribution == 1,
+                AutoComputeHDMFContribution = autoComputeHDMFContribution == 1,
+                IsMinimumWage = isMinimumWage == 1,
+                EffectiveTo = effectiveTo
+            };
+        }
     }
 }

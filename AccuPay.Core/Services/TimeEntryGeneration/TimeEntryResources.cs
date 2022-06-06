@@ -36,6 +36,8 @@ namespace AccuPay.Core.Services
         public IReadOnlyCollection<TimeLog> TimeLogs { get; private set; }
         public IReadOnlyCollection<TripTicket> TripTickets { get; private set; }
 
+        public IReadOnlyCollection<Salary> Salaries2 { get; private set; }
+
         private readonly ICalendarService _calendarService;
 
         private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
@@ -125,6 +127,7 @@ namespace AccuPay.Core.Services
             await LoadTimeEntries(organizationId, previousCutoff, cutoffEnd);
             await LoadTimeLogs(organizationId, cuttOffPeriod);
             await LoadTripTickets(cuttOffPeriod);
+            await LoadSalaries2(organizationId, cuttOffPeriod: cuttOffPeriod);
         }
 
         private async Task LoadActualTimeEntries(int organizationId, TimePeriod cuttOffPeriod)
@@ -242,6 +245,12 @@ namespace AccuPay.Core.Services
             Salaries = (await _salaryRepository
                 .GetByCutOffAsync(organizationId, cutoffEnd))
                 .ToList();
+        }
+
+        private async Task LoadSalaries2(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            Salaries2 = await _salaryRepository
+                .GetMultipleSalariesAsync(organizationId, dateFrom: cuttOffPeriod.Start, dateTo: cuttOffPeriod.End);
         }
 
         private async Task LoadShifts(int organizationId, TimePeriod cuttOffPeriod)

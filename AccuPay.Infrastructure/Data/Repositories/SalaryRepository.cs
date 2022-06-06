@@ -1,9 +1,12 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -142,6 +145,43 @@ namespace AccuPay.Infrastructure.Data
                 .AsNoTracking()
                 .GroupBy(x => x.EmployeeID)
                 .Select(g => g.FirstOrDefault());
+        }
+
+        public Task<List<Salary>> GetMultipleSalariesAsync(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+            var startDate = $"'{dateFrom:yyyy-MM-dd}'";
+            var endDate = $"'{dateTo:yyyy-MM-dd}'";
+            var sql = $"CALL `GetMultipleSalaries`({organizationId}, {startDate}, {endDate}); SELECT * FROM `temposalary` WHERE(({startDate} BETWEEN EffectiveDateFrom AND EffectiveDateTo) OR ({endDate} BETWEEN EffectiveDateFrom AND EffectiveDateTo));";
+
+            var dataTable = new DataTable();
+            var connection = (MySqlConnection)_context.Database.GetDbConnection();
+            var cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = sql;
+
+            var adapter = new MySqlDataAdapter();
+            adapter.SelectCommand = cmd;
+            adapter.Fill(dataTable);
+
+            var salaries = dataTable.Rows.OfType<DataRow>()
+                .Select(r => Salary.NewSalary(employeeId: (int)r["EmployeeID"],
+                    organizationId: (int)r["OrganizationID"],
+                    positionID: (int?)r["PositionID"],
+                    philHealthDeduction: (decimal)r["PhilHealthDeduction"],
+                    hDMFAmount: (decimal)r["HDMFAmount"],
+                    basicSalary: (decimal)r["Salary"],
+                    allowanceSalary: (decimal)r["UndeclaredSalary"],
+                    totalSalary: (decimal)r["TrueSalary"],
+                    effectiveFrom: (DateTime)r["EffectiveDateFrom"],
+                    doPaySSSContribution: (int)r["DoPaySSSContribution"],
+                    autoComputePhilHealthContribution: (int)r["AutoComputePhilHealthContribution"],
+                    autoComputeHDMFContribution: (int)r["AutoComputeHDMFContribution"],
+                    isMinimumWage: (int)r["IsMinimumWage"],
+                    effectiveTo: (DateTime)r["EffectiveDateTo"]))
+                .ToList();
+
+            return Task.FromResult(salaries);
         }
     }
 }

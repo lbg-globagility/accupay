@@ -49,6 +49,7 @@ namespace AccuPay.Infrastructure.Data
                 .ToList();
 
             var salary = resources.Salaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
+            var salaries = resources.Salaries2.Where(s => s.EmployeeID == employee.RowID);
 
             IEmploymentPolicy employmentPolicy = resources.EmploymentPolicies.FirstOrDefault(t => t.Id == employee.EmploymentPolicyId);
             if (employmentPolicy is null)
@@ -162,7 +163,8 @@ namespace AccuPay.Infrastructure.Data
                         resources.CalendarCollection,
                         branchId,
                         tripTicketsForDate,
-                        resources.RouteRates);
+                        resources.RouteRates,
+                        salaries: salaries);
 
                     if (payrate.IsRegularHoliday)
                     {

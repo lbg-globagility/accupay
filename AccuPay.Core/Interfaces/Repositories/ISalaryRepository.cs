@@ -25,5 +25,9 @@ namespace AccuPay.Core.Interfaces
         Task<PaginatedList<Salary>> List(PageOptions options, int organizationId, string searchTerm = "", int? employeeId = null);
 
         Task<List<Salary>> GetSalariesByIds(int[] rowIds);
+
+        Task<List<Salary>> GetMultipleSalariesAsync(int organizationId,
+            DateTime dateFrom,
+            DateTime dateTo);
     }
 }
