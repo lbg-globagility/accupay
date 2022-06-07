@@ -56,11 +56,10 @@ namespace AccuPay.Core.Services
             ActualHourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee, isActual: true);
 
             //RegularPay = HourlyRate * RegularHours;
-            RegularPay = timeEntries.Sum(t => t.RegularPay);
-            ActualRegularPay = ActualHourlyRate * RegularHours;
 
             if (timeEntries != null && timeEntries.Any())
             {
+                RegularPay = timeEntries.Sum(t => t.RegularPay);
                 OvertimePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.OvertimePay));
                 NightDiffPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.NightDiffPay));
                 NightDiffOvertimePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.NightDiffOTPay));
@@ -78,6 +77,7 @@ namespace AccuPay.Core.Services
 
             if (actualTimeEntries != null && actualTimeEntries.Any())
             {
+                ActualRegularPay = actualTimeEntries.Sum(t => t.RegularPay);
                 ActualOvertimePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.OvertimePay));
                 ActualNightDiffPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.NightDiffPay));
                 ActualNightDiffOvertimePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.NightDiffOTPay));
