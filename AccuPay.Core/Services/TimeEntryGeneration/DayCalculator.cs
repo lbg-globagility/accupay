@@ -62,8 +62,9 @@ namespace AccuPay.Core.Services
 
             timeEntry.Reset();
 
+            var salariesThisDate = salaries.Where(s => currentDate.Date >= s.EffectiveFrom);
             bool hasSalaryForThisDate = _employee.IsDaily ?
-                salaries != null && salaries.Any(s => currentDate.Date >= s.EffectiveFrom) :
+                salariesThisDate != null && salariesThisDate.Any() :
                 salary != null && currentDate.Date >= salary.EffectiveFrom;
 
             // TODO: return this as one the list of warnings of Time entry generation
@@ -86,7 +87,7 @@ namespace AccuPay.Core.Services
             var hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries.ToList(), calendarCollection);
 
             ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate, tripTickets, routeRates);
-            ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay, salaries: salaries);
+            ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay, salaries: salariesThisDate);
 
             return timeEntry;
         }
@@ -753,10 +754,11 @@ namespace AccuPay.Core.Services
                 return;
             }
 
-            var salaryThisDate = salaries
-                .Where(s => s.EffectiveFrom <= currentDate)
-                .Where(s => s.EffectiveTo >= currentDate)
-                .FirstOrDefault();
+            var salaryThisDate = _employee.IsDaily ?
+                salaries.Where(s => s.EffectiveFrom <= currentDate)
+                    .Where(s => s.EffectiveTo >= currentDate)
+                    .FirstOrDefault() ?? salary :
+                salary;
             var dailyRate = PayrollTools.GetDailyRate(salaryThisDate, _employee);
             var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
 
