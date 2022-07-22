@@ -149,8 +149,10 @@ namespace AccuPay.Core.Entities
         public decimal GovernmentDeductions => SssEmployeeShare + PhilHealthEmployeeShare + HdmfEmployeeShare;
 
         public decimal TotalRestDayHours => RestDayHours + SpecialHolidayRestDayHours + RegularHolidayRestDayHours;
+        public decimal TotalRestDayPay => RestDayPay + SpecialHolidayRestDayPay + RegularHolidayRestDayPay;
 
         public decimal RegularHoursAndTotalRestDay => RegularHours + TotalRestDayHours;
+        public decimal RegularPayAndTotalRestDayPay => RegularPay + TotalRestDayPay;
 
         public decimal TotalOvertimeHours =>
             OvertimeHours +
@@ -165,6 +167,10 @@ namespace AccuPay.Core.Entities
             RegularHoursAndTotalRestDay +
             SpecialHolidayHours +
             RegularHolidayHours;
+        public virtual decimal TotalWorkedPayWithoutOvertimeAndLeave =>
+            RegularPayAndTotalRestDayPay +
+            SpecialHolidayPay +
+            RegularHolidayPay;
 
         public decimal TotalWorkedHoursWithoutLeave => TotalWorkedHoursWithoutOvertimeAndLeave + TotalOvertimeHours;
 
