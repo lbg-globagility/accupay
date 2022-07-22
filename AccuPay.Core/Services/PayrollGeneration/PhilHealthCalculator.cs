@@ -137,20 +137,14 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
-                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                        basisPay = (previousPaystub?.TotalWorkedPayWithoutOvertimeAndLeave ?? 0) +
+                            paystub.TotalWorkedPayWithoutOvertimeAndLeave;
 
                         if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {
-                            totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
-                                paystub.RegularHoursAndTotalRestDay;
+                            basisPay = (previousPaystub?.RegularPayAndTotalRestDayPay ?? 0) +
+                                paystub.RegularPayAndTotalRestDayPay;
                         }
-
-                        var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
-                        var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
-                        var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
-
-                        basisPay = totalHours * hourlyRate;
                     }
                     break;
 
