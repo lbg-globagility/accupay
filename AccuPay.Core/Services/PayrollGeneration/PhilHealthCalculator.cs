@@ -137,8 +137,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        basisPay = (previousPaystub?.TotalWorkedPayWithoutOvertimeAndLeave ?? 0) +
-                            paystub.TotalWorkedPayWithoutOvertimeAndLeave;
+                        basisPay = (previousPaystub?.TotalWorkedPayWithoutOvertimeAndLeaveForDailyType(employee) ?? 0) +
+                            paystub.TotalWorkedPayWithoutOvertimeAndLeaveForDailyType(employee);// TotalWorkedPayWithoutOvertimeAndLeave
 
                         if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {

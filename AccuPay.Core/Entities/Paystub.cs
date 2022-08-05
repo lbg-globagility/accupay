@@ -171,6 +171,10 @@ namespace AccuPay.Core.Entities
             RegularPayAndTotalRestDayPay +
             SpecialHolidayPay +
             RegularHolidayPay;
+        public virtual decimal TotalWorkedPayWithoutOvertimeAndLeaveForDailyType(Employee employee) =>
+            RegularPayAndTotalRestDayPay +
+            (employee.CalcSpecialHoliday ? SpecialHolidayPay * (1 - (.3M / 1.3M)) : SpecialHolidayPay) +
+            (employee.CalcHoliday ? RegularHolidayPay * .5M : RegularHolidayPay);
 
         public decimal TotalWorkedHoursWithoutLeave => TotalWorkedHoursWithoutOvertimeAndLeave + TotalOvertimeHours;
 
