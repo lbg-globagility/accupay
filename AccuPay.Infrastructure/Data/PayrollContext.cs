@@ -95,7 +95,9 @@ namespace AccuPay.Infrastructure.Data
         internal virtual DbSet<LeaveTenure> LeaveTenures { get; set; }
         internal virtual DbSet<LeaveTypeRenewable> LeaveTypeRenewables { get; set; }
         internal virtual DbSet<CashoutUnusedLeave> CashoutUnusedLeaves { get; set; }
-        
+        internal virtual DbSet<ResetLeaveCredit> ResetLeaveCredits { get; set; }
+        internal virtual DbSet<ResetLeaveCreditItem> ResetLeaveCreditItems { get; set; }
+
         public PayrollContext(DbContextOptions options)
             : base(options)
         {
