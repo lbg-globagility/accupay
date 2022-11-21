@@ -468,6 +468,18 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveBalanceResetGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.Designer.vb">
+      <DependentUpon>ResetLeaveCreditApplyPreviewForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditsForm.Designer.vb">
+      <DependentUpon>ResetLeaveCreditsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\Official Business\OBRowRecord.vb" />
     <Compile Include="Views\Time Attendance Form\Overtimes\OvertimeRowRecord.vb" />
     <Compile Include="Core\Parser\TimelogRegexParser.vb" />
@@ -1760,6 +1772,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.resx">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.resx">
+      <DependentUpon>ResetLeaveCreditApplyPreviewForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditsForm.resx">
+      <DependentUpon>ResetLeaveCreditsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ViewLeaveLedgerDialog.resx">
       <DependentUpon>ViewLeaveLedgerDialog.vb</DependentUpon>
