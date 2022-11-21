@@ -151,6 +151,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ITimeLogDataService, TimeLogDataService)
         services.AddTransient(Of ITripTicketDataService, TripTicketDataService)
         services.AddTransient(Of IUserDataService, UserDataService)
+        services.AddTransient(Of IResetLeaveCreditDataService, ResetLeaveCreditDataService)
 
         services.AddTransient(Of IShiftImportParser, ShiftImportParser)
         services.AddTransient(Of ITimeLogImportParser, TimeLogImportParser)
