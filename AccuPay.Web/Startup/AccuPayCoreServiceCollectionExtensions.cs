@@ -86,6 +86,7 @@ namespace AccuPay.Web
             services.AddScoped<IUserActivityRepository, UserActivityRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IWithholdingTaxBracketRepository, WithholdingTaxBracketRepository>();
+            services.AddScoped<IResetLeaveCreditRepository, ResetLeaveCreditRepository>();
 
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IListOfValueService, ListOfValueService>();
