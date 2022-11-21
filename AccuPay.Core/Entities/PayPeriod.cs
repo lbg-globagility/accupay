@@ -73,6 +73,8 @@ namespace AccuPay.Core.Entities
         /// </summary>
         public DateTime DateMonth => new DateTime(Year, Month, 1);
 
+        public virtual ICollection<ResetLeaveCredit> ResetLeaveCredits { get; set; }
+
         public static PayPeriod NewPayPeriod(
             int organizationId,
             int payrollMonth,
