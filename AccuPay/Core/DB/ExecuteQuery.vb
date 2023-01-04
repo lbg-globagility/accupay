@@ -1,5 +1,6 @@
-﻿Option Strict On
+Option Strict On
 
+Imports System.Text.RegularExpressions
 Imports MySql.Data.MySqlClient
 
 Public Class ExecuteQuery
@@ -39,6 +40,8 @@ Public Class ExecuteQuery
 
             priv_cmd = New MySqlCommand
 
+            Dim isContainsCallClause = False
+
             With priv_cmd
 
                 .CommandType = CommandType.Text
@@ -51,7 +54,11 @@ Public Class ExecuteQuery
                     .CommandTimeout = cmd_time_out
                 End If
 
-                If cmdsql.Contains("CALL") Then
+                Dim pattern As String = "'[^']*'"
+                Dim text = Regex.Replace(cmdsql, pattern, "")
+                isContainsCallClause = text.Contains("CALL")
+
+                If isContainsCallClause Then
 
                     .ExecuteNonQuery()
 
@@ -67,7 +74,7 @@ Public Class ExecuteQuery
 
             End With
 
-            If cmdsql.Contains("CALL") Then
+            If isContainsCallClause Then
                 getResult = Nothing
             ElseIf FindingWordsInString(cmdsql,
                                         except_this_string) Then
