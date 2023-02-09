@@ -16,6 +16,7 @@ namespace AccuPay.Core.Services
         private readonly PaystubDataHelper _paystubDataHelper;
         private readonly TimeEntryDataHelper _timeEntryDataHelper;
         private readonly IUserActivityRepository _userActivityRepository;
+        private readonly IOrganizationRepository _organizationRepository;
         private readonly IPayPeriodRepository _payPeriodRepository;
         private readonly IPaystubRepository _paystubRepository;
         private readonly ITimeEntryRepository _timeEntryRepository;
@@ -29,7 +30,8 @@ namespace AccuPay.Core.Services
             IPolicyHelper policy,
             PaystubDataHelper paystubDataHelper,
             TimeEntryDataHelper timeEntryDataHelper,
-            IUserActivityRepository userActivityRepository)
+            IUserActivityRepository userActivityRepository,
+            IOrganizationRepository organizationRepository)
         {
             _payPeriodRepository = payPeriodRepository;
             _paystubRepository = paystubRepository;
@@ -39,6 +41,7 @@ namespace AccuPay.Core.Services
             _paystubDataHelper = paystubDataHelper;
             _timeEntryDataHelper = timeEntryDataHelper;
             _userActivityRepository = userActivityRepository;
+            _organizationRepository = organizationRepository;
         }
 
         // TODO: maybe not make this static
@@ -112,9 +115,8 @@ namespace AccuPay.Core.Services
             int userId,
             PayPeriod payPeriod)
         {
-            var thisPayPeriod = await _payPeriodRepository.GetAsync(organizationId: organizationId,
-                startDate: payPeriod.PayFromDate,
-                endDate: payPeriod.PayToDate);
+            var organization = await _organizationRepository.GetByIdWithAddressAsync(organizationId);
+            var thisPayPeriod = await _payPeriodRepository.GetAsync(organization: organization, payPeriod: payPeriod);
             if (thisPayPeriod == null)
             {
                 await _payPeriodRepository.CreateAsync(payPeriod);
