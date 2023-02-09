@@ -102,6 +102,7 @@ namespace AccuPay.Infrastructure.Data
         {
             return await _context.Organizations
                 .Include(x => x.Address)
+                .Include(x => x.PayFrequency)
                 .FirstOrDefaultAsync(x => x.RowID == id);
         }
 

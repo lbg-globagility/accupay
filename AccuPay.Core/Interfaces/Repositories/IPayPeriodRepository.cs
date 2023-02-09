@@ -15,13 +15,15 @@ namespace AccuPay.Core.Interfaces
 
         Task<PayPeriod> GetAsync(int organizationId, DateTime startDate, DateTime endDate);
 
+        Task<PayPeriod> GetAsync(Organization organization, PayPeriod payPeriod);
+
         Task<PayPeriod> GetAsync(int organizationId, int month, int year, bool isFirstHalf);
 
-        ICollection<PayPeriod> GetByMonthYearAndPayPrequency(int organizationId, int month, int year, int payFrequencyId);
+        ICollection<PayPeriod> GetByMonthYearAndPayFrequency(int organizationId, int month, int year, int payFrequencyId);
 
-        Task<ICollection<PayPeriod>> GetByMonthYearAndPayPrequencyAsync(int organizationId, int month, int year, int payFrequencyId);
+        Task<ICollection<PayPeriod>> GetByMonthYearAndPayFrequencyAsync(int organizationId, int month, int year, int payFrequencyId);
 
-        Task<ICollection<PayPeriod>> GetByYearAndPayPrequencyAsync(int organizationId, int year, int payFrequencyId);
+        Task<ICollection<PayPeriod>> GetByYearAndPayFrequencyAsync(int organizationId, int year, int payFrequencyId);
 
         Task<ICollection<PayPeriod>> GetClosedPayPeriodsAsync(int organizationId, TimePeriod dateRange = null);
 
@@ -29,7 +31,11 @@ namespace AccuPay.Core.Interfaces
 
         Task<PayPeriod> GetCurrentOpenAsync(int organizationId);
 
+        Task<PayPeriod> GetCurrentOpenAsync(Organization organization);
+
         Task<PayPeriod> GetCurrentPayPeriodAsync(int organizationId, int currentUserId);
+
+        //Task<PayPeriod> GetCurrentPayPeriodAsync(Organization organization, int currentUserId);
 
         Task<DateTime?> GetFirstDayOfTheYear(int currentPayPeriodYear, int organizationId);
 
@@ -47,14 +53,20 @@ namespace AccuPay.Core.Interfaces
 
         Task<PayPeriod> GetOpenOrCurrentPayPeriodAsync(int organizationId, int currentUserId);
 
+        Task<PayPeriod> GetOpenOrCurrentPayPeriodAsync(Organization organization, int currentUserId);
+
         Task<PayPeriod> GetOrCreateCurrentPayPeriodAsync(int organizationId, int currentUserId);
 
         Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, int? year = null, string searchTerm = "");
+
+        Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, Organization organization, int? year = null, string searchTerm = "");
 
         Task<ICollection<PayPeriod>> GetPeriodsFromThisPeriodOnwardsAsync(PayPeriod currentPayPeriod);
 
         Task<ICollection<PayPeriod>> GetYearlyPayPeriodsAsync(int organizationId, int year, int currentUserId);
 
         Task<bool> HasClosedPayPeriodAfterDateAsync(int organizationId, DateTime date);
+
+        Task<ICollection<PayPeriod>> GetYearlyPayPeriodsOfWeeklyAsync(Organization organization, int year, int currentUserId);
     }
 }

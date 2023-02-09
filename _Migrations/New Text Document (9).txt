@@ -1,0 +1,16 @@
+ALTER TABLE `employeeloanschedule`
+	ADD COLUMN IF NOT EXISTS `SssEmployeeShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `BasicMonthlySalary`,
+	ADD COLUMN IF NOT EXISTS `SssEmployerShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `SssEmployeeShare`,
+	ADD COLUMN IF NOT EXISTS `SssEcEmployerShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `SssEmployerShare`,
+	ADD COLUMN IF NOT EXISTS `SssWispEmployeeShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `SssEcEmployerShare`,
+	ADD COLUMN IF NOT EXISTS `SssWispEmployerShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `SssWispEmployeeShare`,
+	ADD COLUMN IF NOT EXISTS `PhilHealthEmployeeShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `SssWispEmployerShare`,
+	ADD COLUMN IF NOT EXISTS `PhilHealthEmployerShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `PhilHealthEmployeeShare`,
+	ADD COLUMN IF NOT EXISTS `HdmfEmployeeShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `PhilHealthEmployerShare`,
+	ADD COLUMN IF NOT EXISTS `HdmfEmployerShare` DECIMAL(10,2) NULL DEFAULT '0.00' AFTER `HdmfEmployeeShare`;
+
+ALTER TABLE `employeeloanschedule`
+	ADD COLUMN IF NOT EXISTS `ParentLoanId` INT NULL AFTER `HdmfEmployerShare`;
+
+ALTER TABLE `employeeloanschedule`
+	ADD CONSTRAINT `FK_employeeloanschedule_employeeloanschedule` FOREIGN KEY (`ParentLoanId`) REFERENCES `employeeloanschedule` (`RowID`) ON UPDATE NO ACTION ON DELETE SET NULL;

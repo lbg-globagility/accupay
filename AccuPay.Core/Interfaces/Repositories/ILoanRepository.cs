@@ -1,5 +1,7 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,7 +13,7 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Loan>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId);
 
-        Task<ICollection<Loan>> GetByEmployeeAsync(int employeeId);
+        Task<ICollection<Loan>> GetByEmployeeAsync(int employeeId, LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All);
 
         Task<Loan> GetByIdWithEmployeeAndProductAsync(int id);
 
@@ -26,5 +28,7 @@ namespace AccuPay.Core.Interfaces
         Task<PaginatedList<Loan>> GetPaginatedListAsync(LoanPageOptions options, int organizationId);
 
         List<string> GetStatusList();
+
+        Task<ICollection<Loan>> GetManyByIdsAsTrackableAsync(int[] ids);
     }
 }

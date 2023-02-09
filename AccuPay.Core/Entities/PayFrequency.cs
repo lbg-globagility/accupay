@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -34,5 +35,7 @@ namespace AccuPay.Core.Entities
 
         public static int SemiMonthlyTypeId = 1;
         public static int MonthlyTypeId = 2;
+
+        public virtual ICollection<Organization> Organizations { get; set; }
     }
 }

@@ -11,5 +11,7 @@ namespace AccuPay.Core.Interfaces
         Task SaveDefaultPayPeriodData(int organizationId, int currentlyLoggedInUserId, TimePeriod firstHalf, TimePeriod endOfTheMonth);
 
         void ValidateDefaultPayPeriodData(TimePeriod firstHalf, TimePeriod endOfTheMonth);
+
+        Task CreateOrUpdateDefaultWeeklyPayPeriod(int organizationId, int currentlyLoggedInUserId, TimePeriod firstHalf, TimePeriod endOfTheMonth);
     }
 }

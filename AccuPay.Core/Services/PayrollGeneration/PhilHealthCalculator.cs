@@ -3,6 +3,7 @@ using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AccuPay.Core.Services
@@ -22,7 +23,8 @@ namespace AccuPay.Core.Services
             Paystub previousPaystub,
             Employee employee,
             PayPeriod payperiod,
-            string currentSystemOwner)
+            string currentSystemOwner,
+            ICollection<LoanTransaction> loanTransactions)
         {
             // Reset the PhilHealth to zero
             paystub.PhilHealthEmployeeShare = 0;
@@ -39,7 +41,8 @@ namespace AccuPay.Core.Services
                     paystub,
                     previousPaystub,
                     employee,
-                    currentSystemOwner);
+                    currentSystemOwner,
+                    loanTransactions: loanTransactions);
             }
             else
             {
@@ -69,16 +72,16 @@ namespace AccuPay.Core.Services
 
             if (employee.IsWeeklyPaid)
             {
-                var is_deduct_sched_to_thisperiod =
-                        employee.IsUnderAgency ?
-                        payperiod.PhHWeeklyAgentContribSched :
-                        payperiod.PhHWeeklyContribSched;
+                //var is_deduct_sched_to_thisperiod =
+                //        employee.IsUnderAgency ?
+                //        payperiod.PhHWeeklyAgentContribSched :
+                //        payperiod.PhHWeeklyContribSched;
 
-                if (is_deduct_sched_to_thisperiod)
-                {
-                    paystub.PhilHealthEmployeeShare = employeeShare;
-                    paystub.PhilHealthEmployerShare = employerShare;
-                }
+                //if (is_deduct_sched_to_thisperiod)
+                //{
+                paystub.PhilHealthEmployeeShare = employeeShare;
+                paystub.PhilHealthEmployerShare = employerShare;
+                //}
             }
             else
             {
@@ -105,9 +108,13 @@ namespace AccuPay.Core.Services
             Paystub paystub,
             Paystub previousPaystub,
             Employee employee,
-            string currentSystemOwner)
+            string currentSystemOwner,
+            ICollection<LoanTransaction> loanTransactions)
         {
             var calculationBasis = _policy.CalculationBasis(employee.OrganizationID.Value);
+            if (_policy.ImplementsInPayFrequency(employee.OrganizationID.Value) == PayFrequencyType.Weekly &&
+                employee.IsWeeklyPaid)
+                calculationBasis = PhilHealthCalculationBasis.BasedOnLoan;
 
             var basisPay = 0M;
 
@@ -162,6 +169,11 @@ namespace AccuPay.Core.Services
                 case PhilHealthCalculationBasis.GrossPay:
                     basisPay = (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
                     break;
+
+                case PhilHealthCalculationBasis.BasedOnLoan:
+                    return loanTransactions
+                        .Where(t => t.IsPhilHealthLoanOfMorningSun)?
+                        .Sum(t => t.DeductionAmount) ?? 0;
 
                 default:
                     break;

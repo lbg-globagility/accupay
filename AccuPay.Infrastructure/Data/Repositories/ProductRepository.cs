@@ -75,14 +75,14 @@ namespace AccuPay.Infrastructure.Data
             return await AddProductAsync(allowanceName, product, organizationId, userId);
         }
 
-        public async Task<Product> AddLoanTypeAsync(string loanName, int organizationId, int userId)
+        public async Task<Product> AddLoanTypeAsync(string loanName, int organizationId, int userId, GovernmentDeductionTypeEnum governmentDeductionType = GovernmentDeductionTypeEnum.None)
         {
             Product product = new Product
             {
                 Category = ProductConstant.LOAN_TYPE_CATEGORY
             };
 
-            return await AddProductAsync(loanName, product, organizationId, userId);
+            return await AddProductAsync(loanName, product, organizationId, userId, governmentDeductionType: governmentDeductionType);
         }
 
         public async Task<List<Product>> AddManyLoanTypeAsync(List<string> loanNames, int organizationId, int userId)
@@ -115,14 +115,14 @@ namespace AccuPay.Infrastructure.Data
             return await AddProductAsync(adjustmentName, product, organizationId, userId);
         }
 
-        private async Task<Product> AddProductAsync(string productName, Product product, int organizationId, int userId, bool isTaxable = false)
+        private async Task<Product> AddProductAsync(string productName, Product product, int organizationId, int userId, bool isTaxable = false, GovernmentDeductionTypeEnum governmentDeductionType = GovernmentDeductionTypeEnum.None)
         {
             var categoryId = (await GetOrCreateCategoryByName(product.Category, organizationId))?.RowID;
 
             if (categoryId == null)
                 throw new ArgumentException("There was a problem on saving the data. Please try again.");
 
-            if (await CheckIfProductExists(productName, categoryId.Value, organizationId))
+            if (await CheckIfProductExists(productName, categoryId.Value, organizationId, governmentDeductionType: governmentDeductionType))
                 throw new ArgumentException("Product already exists.");
 
             product.CategoryID = categoryId;
@@ -134,6 +134,7 @@ namespace AccuPay.Infrastructure.Data
             product.Created = DateTime.Now;
             product.CreatedBy = userId;
             product.OrganizationID = organizationId;
+            product.GovernmentDeductionType = governmentDeductionType;
 
             _context.Products.Add(product);
 
@@ -331,10 +332,27 @@ namespace AccuPay.Infrastructure.Data
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<ICollection<Product>> GetLoanTypesAsync(int organizationId)
+        public async Task<ICollection<Product>> GetLoanTypesAsync(int organizationId, LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All)
         {
-            return await (await GetLoanTypesBaseQuery(organizationId))
-                .ToListAsync();
+            var loanTypesBaseQuery = await GetLoanTypesBaseQuery(organizationId);
+            switch (loanTypeGrouping)
+            {
+                case LoanTypeGroupingEnum.Government:
+                    return loanTypesBaseQuery
+                        .AsEnumerable()
+                        .Where(p => p.IsSssLoanOfMorningSun || p.IsPhilHealthLoanOfMorningSun || p.IsHDMFLoanOfMorningSun)
+                        .ToList();
+
+                case LoanTypeGroupingEnum.NonGovernment:
+                    return loanTypesBaseQuery
+                        .AsEnumerable()
+                        .Where(p => p.IsNotLoanOfMorningSun)
+                        .ToList();
+
+                default:
+                    return await loanTypesBaseQuery
+                        .ToListAsync();
+            }
         }
 
         public async Task<ICollection<Product>> GetGovernmentLoanTypesAsync(int organizationId)
@@ -423,25 +441,27 @@ namespace AccuPay.Infrastructure.Data
 
         #region Private helper methods
 
-        private async Task<Product> GetProductByNameAndCategory(string productName, int categoryId, int organizationId)
+        private async Task<Product> GetProductByNameAndCategory(string productName, int categoryId, int organizationId, GovernmentDeductionTypeEnum governmentDeductionType = GovernmentDeductionTypeEnum.None)
         {
             return await CreateBaseQueryByCategory(categoryId, organizationId)
                 .Where(p => p.PartNo.Trim().ToLower() == productName.ToTrimmedLowerCase())
+                .Where(p => p.GovernmentDeductionType == governmentDeductionType)
                 .FirstOrDefaultAsync();
         }
 
-        private async Task<bool> CheckIfProductExists(string productName, int categoryId, int organizationId)
+        private async Task<bool> CheckIfProductExists(string productName, int categoryId, int organizationId, GovernmentDeductionTypeEnum governmentDeductionType = GovernmentDeductionTypeEnum.None)
         {
             var product = await GetProductByNameAndCategory(
                 productName,
                 categoryId: categoryId,
-                organizationId: organizationId);
+                organizationId: organizationId,
+                governmentDeductionType: governmentDeductionType);
 
             return product != null;
         }
 
         // this may only apply to "Loan Type" use with caution
-        private async Task<Category> GetOrCreateCategoryByName(string categoryName, int organizationId)
+        private async Task<Category> GetOrCreateCategoryByName(string categoryName, int organizationId, LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All)
         {
             var categoryProduct = await _context.Categories
                 .AsNoTracking()
@@ -553,6 +573,21 @@ namespace AccuPay.Infrastructure.Data
                 return ProductConstant.ADJUSTMENT_TYPE_ADDITION;
             else
                 return string.Empty;
+        }
+
+        public async Task<List<Product>> AddManyLoanTypeAsync(List<(string, GovernmentDeductionTypeEnum)> loanTypeItems, int organizationId, int userId)
+        {
+            var products = new List<Product>();
+
+            foreach (var loanItem in loanTypeItems)
+            {
+                var loanName = loanItem.Item1;
+                var governmentDeductionType = loanItem.Item2;
+                var product = await GetOrCreateLoanTypeAsync(loanTypeName: loanName, organizationId: organizationId, userId: userId);
+                products.Add(product);
+            }
+
+            return products;
         }
 
         #endregion Private helper methods

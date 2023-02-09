@@ -1,3 +1,4 @@
+using AccuPay.Core.Entities;
 using System.Threading.Tasks;
 
 namespace AccuPay.Core.Interfaces
@@ -7,5 +8,7 @@ namespace AccuPay.Core.Interfaces
         string GetCurrentSystemOwner();
 
         Task<string> GetCurrentSystemOwnerAsync();
+
+        Task<SystemOwner> GetCurrentSystemOwnerEntityAsync();
     }
 }

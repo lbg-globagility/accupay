@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Namespace Global.AccuPay.Desktop.Helpers
 
@@ -13,6 +13,7 @@ Namespace Global.AccuPay.Desktop.Helpers
         Salary
         Shift
         TripTicket
+        GovernmentPremium
     End Enum
 
     Public Class TemplatesHelper
@@ -26,6 +27,7 @@ Namespace Global.AccuPay.Desktop.Helpers
         Public Shared ReadOnly SALARY As String = "accupay-salary-template.xlsx"
         Public Shared ReadOnly SHIFT As String = "accupay-shiftschedule-template.xlsx"
         Public Shared ReadOnly TRIP_TICKET As String = "accupay-trip-ticket-template.xlsx"
+        Public Shared ReadOnly GOVERNMENT_PREMIUM As String = "accupay-govt-premium-template.xlsx"
 
         Private Const FILE_PATH As String = "ImportTemplates/"
 
@@ -59,6 +61,9 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Case ExcelTemplates.TripTicket
                     Return TRIP_TICKET
+
+                Case ExcelTemplates.GovernmentPremium
+                    Return GOVERNMENT_PREMIUM
 
                 Case Else
 
@@ -100,6 +105,9 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Case ExcelTemplates.TripTicket
                     fileName = TRIP_TICKET
+
+                Case ExcelTemplates.GovernmentPremium
+                    fileName = GOVERNMENT_PREMIUM
 
                 Case Else
 

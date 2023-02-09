@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
@@ -139,5 +140,32 @@ Public Class AddSalaryForm
     Private Sub txtAllowance_txtAmount_TextChanged(sender As Object, e As EventArgs) Handles txtAmount.TextChanged, txtAllowance.TextChanged
         txtTotalSalary.Text = Decimal.Round((txtAllowance.Text.ToDecimal + txtAmount.Text.ToDecimal), 2).ToString("#.##")
     End Sub
+
+    Private Async Function ShowOrHideGovernmentFields() As Task
+        Dim currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+        If Not currentSystemOwner.IsMorningSun Then Return
+
+        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
+        Dim settings = Await listOfValueService.CreateAsync()
+
+        Dim hdmfPolicy = New Core.Services.Policies.HdmfPolicy(settings)
+        Dim hdmfBool = Not hdmfPolicy.HdmfCalculationBasis(z_OrganizationID) = Core.Enums.HdmfCalculationBasis.BasedOnLoan
+        Label11.Visible = hdmfBool
+        ChkPagIbig.Visible = hdmfBool
+        Label217.Visible = hdmfBool
+        txtPagIbig.Visible = hdmfBool
+
+        Dim philHealthPolicy = New Core.Services.PhilHealthPolicy(settings)
+        Dim philHealthBool = Not philHealthPolicy.CalculationBasis(z_OrganizationID) = Core.Enums.PhilHealthCalculationBasis.BasedOnLoan
+        Label8.Visible = philHealthBool
+        chkPayPhilHealth.Visible = philHealthBool
+        Label215.Visible = philHealthBool
+        txtPhilHealth.Visible = philHealthBool
+
+        Dim sssPolicy = New Core.Services.Policies.SssPolicy(settings)
+        Dim sssBool = Not sssPolicy.SssCalculationBasis(z_OrganizationID) = Core.Enums.SssCalculationBasis.BasedOnLoan
+        Label9.Visible = sssBool
+        chkPaySSS.Visible = sssBool
+    End Function
 
 End Class

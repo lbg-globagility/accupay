@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Utilities.Extensions;
@@ -12,8 +13,12 @@ namespace AccuPay.Infrastructure.Data
 {
     public class LoanRepository : SavableRepository<Loan>, ILoanRepository
     {
-        public LoanRepository(PayrollContext context) : base(context)
+        private readonly IProductRepository _productRepository;
+
+        public LoanRepository(PayrollContext context,
+            IProductRepository productRepository) : base(context)
         {
+            _productRepository = productRepository;
         }
 
         /// <summary>
@@ -79,12 +84,30 @@ namespace AccuPay.Infrastructure.Data
 
         #region List of entities
 
-        public async Task<ICollection<Loan>> GetByEmployeeAsync(int employeeId)
+        public async Task<ICollection<Loan>> GetByEmployeeAsync(int employeeId, LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All)
         {
+            if (loanTypeGrouping == LoanTypeGroupingEnum.NonGovernment ||
+                loanTypeGrouping == LoanTypeGroupingEnum.Government)
+            {
+                var employee = await _context.Employees.FindAsync(employeeId);
+                int[] loanTypeIds = (await _productRepository.GetLoanTypesAsync(employee.OrganizationID.Value, loanTypeGrouping))
+                    .Select(p => p.RowID.Value)
+                    .ToArray();
+
+                return await _context.Loans
+                    .AsNoTracking()
+                    .Include(x => x.LoanType)
+                    .Where(x => x.EmployeeID == employeeId)
+                    .Where(x => loanTypeIds.Contains(x.LoanTypeID.Value))
+                    //.Where(l => l.ParentLoanId == null)
+                    .ToListAsync();
+            }
+
             return await _context.Loans
                 .AsNoTracking()
                 .Include(x => x.LoanType)
                 .Where(x => x.EmployeeID == employeeId)
+                //.Where(l => l.ParentLoanId == null)
                 .ToListAsync();
         }
 
@@ -217,10 +240,12 @@ namespace AccuPay.Infrastructure.Data
                 .Include(l => l.YearlyLoanInterests)
                 .Include(l => l.LoanTransactions)
                     .ThenInclude(t => t.PayPeriod)
+                .Include(l => l.ParentLoan)
                 .Where(l => l.OrganizationID == organizationId)
                 .Where(l => l.DedEffectiveDateFrom <= payPeriod.PayToDate)
                 .Where(l => acceptedLoans.Contains(l.DeductionSchedule.Trim().ToUpper()))
                 .Where(l => l.BonusID == null)
+                //.Where(l => l.ParentLoanId == null)
                 .ToListAsync();
 
             var currentLoans = new List<Loan>();
@@ -243,6 +268,10 @@ namespace AccuPay.Infrastructure.Data
 
             return currentLoans;
         }
+
+        public async Task<ICollection<Loan>> GetManyByIdsAsTrackableAsync(int[] ids) => await _context.Loans
+            .Where(x => ids.Contains(x.RowID.Value))
+            .ToListAsync();
 
         #endregion List of entities
 

@@ -68,6 +68,22 @@ namespace AccuPay.Core.Entities
 
         public bool HasTransactions => LoanTransactions != null && LoanTransactions.Any();
 
+        public decimal? SssEmployeeShare { get; set; }
+        public decimal? SssEmployerShare { get; set; }
+        public decimal? SssEcEmployerShare { get; set; }
+        public decimal? SssWispEmployeeShare { get; set; }
+        public decimal? SssWispEmployerShare { get; set; }
+        public decimal? PhilHealthEmployeeShare { get; set; }
+        public decimal? PhilHealthEmployerShare { get; set; }
+        public decimal? HdmfEmployeeShare { get; set; }
+        public decimal? HdmfEmployerShare { get; set; }
+        public int? ParentLoanId { get; set; }
+
+        [ForeignKey("ParentLoanId")]
+        public virtual Loan ParentLoan { get; set; }
+
+        //public virtual ICollection<Loan> ParentLoans { get; set; }
+
         /// <summary>
         /// Recomputes TotalPayPeriod. Call this everytime TotalLoanAmount has changed.
         /// </summary>
@@ -103,6 +119,16 @@ namespace AccuPay.Core.Entities
             RecomputePayPeriodLeft();
         }
 
+        public void SetEmployee(Employee employee)
+        {
+            Employee = employee;
+        }
+
+        public void SetLoanType(Product loanType)
+        {
+            LoanType = loanType;
+        }
+
         public bool IsEligibleForGoldwingsInterest()
         {
             return TotalLoanAmount > BasicMonthlySalary &&
@@ -119,5 +145,39 @@ namespace AccuPay.Core.Entities
 
             return Convert.ToInt32(Math.Ceiling(baseAmount / DeductionAmount));
         }
+
+        public static Loan NewLoan(int organizationId,
+            int userId,
+            int employeeId,
+            int loanTypeId,
+            decimal totalLoanAmount,
+            decimal totalBalance,
+            DateTime effectiveFrom,
+            decimal deductionAmount,
+            string status,
+            string deductionSchedule,
+            int? parentLoanId = null) => new Loan()
+            {
+                OrganizationID = organizationId,
+                CreatedBy = userId,
+                EmployeeID = employeeId,
+                LoanTypeID = loanTypeId,
+                TotalLoanAmount = totalLoanAmount,
+                TotalBalanceLeft = totalBalance,
+                DedEffectiveDateFrom = effectiveFrom,
+                DeductionAmount = deductionAmount,
+                Status = status,
+                DeductionSchedule = deductionSchedule,
+                ParentLoanId = parentLoanId
+            };
+
+        public bool HasParentLoan => ParentLoanId.HasValue;
+
+        public bool IsHDMFLoanOfMorningSun => LoanType?.IsHDMFLoanOfMorningSun ?? false;
+        public bool IsPhilHealthLoanOfMorningSun => LoanType?.IsPhilHealthLoanOfMorningSun ?? false;
+        public bool IsSssLoanOfMorningSun => LoanType?.IsSssLoanOfMorningSun ?? false;
+        public string LoanNameText => LoanType?.PartNo;
+        public string FullNameLastNameFirst => Employee?.FullNameLastNameFirst;
+        public string EmployeeIDText => Employee?.EmployeeNo;
     }
 }

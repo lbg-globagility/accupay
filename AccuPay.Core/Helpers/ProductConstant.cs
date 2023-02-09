@@ -22,5 +22,10 @@ namespace AccuPay.Core.Helpers
         public const string SSS_LOAN = "SSS Loan";
         public const string VACATION_LEAVE = "Vacation leave";
         public const string PARENT_LEAVE = "Maternity/paternity leave";
+
+        public const string SSS_LOAN_MORNINGSUN = "SSS";
+        public const string PHILHEALTH_LOAN_MORNINGSUN = "PhilHealth";
+        public const string HDMF_LOAN_MORNINGSUN = "HDMF";
+        public const string ADVANCE_VALE_LOAN_MORNINGSUN = "ADV. Vale";
     }
 }

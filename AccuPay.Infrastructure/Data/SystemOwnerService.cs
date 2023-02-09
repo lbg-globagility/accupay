@@ -1,3 +1,4 @@
+using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -31,6 +32,13 @@ namespace AccuPay.Infrastructure.Data
             return _context.SystemOwners
                     .Where(x => x.IsCurrentOwner == "1")
                     .Select(x => x.Name);
+        }
+
+        public async Task<SystemOwner> GetCurrentSystemOwnerEntityAsync()
+        {
+            return await _context.SystemOwners
+                .Where(x => x.IsCurrentOwner == "1")
+                .FirstOrDefaultAsync();
         }
     }
 }

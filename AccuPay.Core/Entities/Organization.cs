@@ -47,6 +47,19 @@ namespace AccuPay.Core.Entities
 
         public ICollection<Category> Categories { get; set; }
 
+        public int PayFrequencyID { get; set; }
+
+        [ForeignKey("PayFrequencyID")]
+        public virtual PayFrequency PayFrequency { get; set; }
+
+        public bool IsWeekly => PayFrequency != null && PayFrequency.IsWeekly;
+
+        public bool IsSemiMonthly => PayFrequency != null && PayFrequency.IsSemiMonthly;
+
+        public bool IsAtm => Name.ToLower().Contains("atm");
+
+        public bool IsCash => Name.ToLower().Contains("cash");
+
         public static Organization NewOrganization(int clientId)
         {
             return new Organization()

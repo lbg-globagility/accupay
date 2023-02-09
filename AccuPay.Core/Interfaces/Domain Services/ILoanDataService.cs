@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Services.Imports.Loans;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,5 +13,7 @@ namespace AccuPay.Core.Interfaces
         Task DeleteAllLoansExceptGovernmentLoansAsync(int employeeId, int pagibigLoanId, int ssLoanId);
 
         Task<ICollection<Loan>> GetCurrentPayrollLoansAsync(int organizationId, PayPeriod payPeriod, IReadOnlyCollection<Paystub> paystubs);
+
+        Task<ICollection<Loan>> GetLoansByMonthPeriodAsync(int organizationId, DateTime dateTime);
     }
 }

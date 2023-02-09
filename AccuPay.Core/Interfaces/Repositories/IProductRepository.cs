@@ -18,7 +18,7 @@ namespace AccuPay.Core.Interfaces
 
         Task<Product> AddLeaveTypeAsync(string leaveName, int organizationId, int userId);
 
-        Task<Product> AddLoanTypeAsync(string loanName, int organizationId, int userId);
+        Task<Product> AddLoanTypeAsync(string loanName, int organizationId, int userId, GovernmentDeductionTypeEnum governmentDeductionType = GovernmentDeductionTypeEnum.None);
 
         Task<List<Product>> AddManyLoanTypeAsync(List<string> loanNames, int organizationId, int userId);
 
@@ -48,7 +48,7 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Product>> GetLeaveTypesAsync(int organizationId);
 
-        Task<ICollection<Product>> GetLoanTypesAsync(int organizationId);
+        Task<ICollection<Product>> GetLoanTypesAsync(int organizationId, LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All);
 
         Task<ICollection<Product>> GetManyByIdsAsync(int[] ids);
 
@@ -67,5 +67,7 @@ namespace AccuPay.Core.Interfaces
         Task<Product> UpdateDisciplinaryTypeAsync(int id, int userId, string adjustmentName, string description);
 
         Task UpdateLoanTypeAsync(int id, string loanTypeName);
+
+        Task<List<Product>> AddManyLoanTypeAsync(List<(string, GovernmentDeductionTypeEnum)> loanTypeItems, int organizationId, int userId);
     }
 }

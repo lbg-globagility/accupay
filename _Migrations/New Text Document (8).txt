@@ -1,0 +1,18 @@
+ALTER TABLE `product`
+	ADD COLUMN IF NOT EXISTS `GovtDeductionType` ENUM('None','SSS','PhilHealth','HDMF') NOT NULL DEFAULT 'None' AFTER `IsPaidWhenOvertime`;
+
+UPDATE product p
+SET p.GovtDeductionType='SSS'
+WHERE p.PartNo='SSS'
+AND p.`Category`='Loan Type'
+;
+UPDATE product p
+SET p.GovtDeductionType='PhilHealth'
+WHERE p.PartNo='PhilHealth'
+AND p.`Category`='Loan Type'
+;
+UPDATE product p
+SET p.GovtDeductionType='HDMF'
+WHERE p.PartNo='HDMF'
+AND p.`Category`='Loan Type'
+;

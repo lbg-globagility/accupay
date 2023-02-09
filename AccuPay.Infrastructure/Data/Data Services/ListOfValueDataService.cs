@@ -12,8 +12,10 @@ namespace AccuPay.Infrastructure.Data
     public class ListOfValueDataService : BaseSavableDataService<ListOfValue>, IListOfValueDataService
     {
         private readonly IListOfValueRepository _listOfValueRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public ListOfValueDataService(
+            IOrganizationRepository organizationRepository,
             IListOfValueRepository listOfValueRepository,
             IPayPeriodRepository payPeriodRepository,
             PayrollContext payrollContext,
@@ -26,6 +28,7 @@ namespace AccuPay.Infrastructure.Data
                 "List of value")
         {
             _listOfValueRepository = listOfValueRepository;
+            _organizationRepository = organizationRepository;
         }
 
         protected override async Task SanitizeEntity(ListOfValue entity, ListOfValue oldEntity, int currentlyLoggedInUserId)
@@ -49,6 +52,33 @@ namespace AccuPay.Infrastructure.Data
                 currentlyLoggedInUserId: currentlyLoggedInUserId,
                 firstHalf: firstHalf,
                 endOfTheMonth: endOfTheMonth);
+        }
+
+        public async Task CreateOrUpdateDefaultWeeklyPayPeriod(int organizationId,
+            int currentlyLoggedInUserId,
+            TimePeriod firstHalf,
+            TimePeriod endOfTheMonth)
+        {
+            var weeklyPayPeriodPolicy = await _listOfValueRepository.GetListOfValueOfWeeklyPayPeriodPolicyByOrganization(organizationId: organizationId);
+            var organization = await _organizationRepository.GetByIdAsync(organizationId);
+
+            if (weeklyPayPeriodPolicy == null)
+                weeklyPayPeriodPolicy = ListOfValue.NewPolicy(value: null,
+                    lic: WeeklyPayPeriodPolicy.LIC,
+                    type: WeeklyPayPeriodPolicy.TYPE,
+                    organizationId: organizationId);
+
+            if (organization.IsAtm)
+                weeklyPayPeriodPolicy.DisplayValue = WeeklyPayPeriodPolicy.ATM_DISPLAY_VALUE;
+
+            if (organization.IsCash)
+                weeklyPayPeriodPolicy.DisplayValue = WeeklyPayPeriodPolicy.CASH_DISPLAY_VALUE;
+
+            await SaveManyAsync(new List<ListOfValue>()
+            {
+                weeklyPayPeriodPolicy,
+            },
+            currentlyLoggedInUserId);
         }
 
         public async Task SaveDefaultPayPeriodData(int organizationId, int currentlyLoggedInUserId, TimePeriod firstHalf, TimePeriod endOfTheMonth)

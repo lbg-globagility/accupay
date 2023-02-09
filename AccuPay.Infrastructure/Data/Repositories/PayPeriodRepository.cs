@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Interfaces.Repositories;
 using AccuPay.Core.Services.Policies;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -17,10 +18,17 @@ namespace AccuPay.Infrastructure.Data
     public class PayPeriodRepository : SavableRepository<PayPeriod>, IPayPeriodRepository
     {
         private readonly IPolicyHelper _policy;
+        private readonly IListOfValueRepository _listOfValueRepository;
+        private readonly IDateEntityRepository _dateEntityRepository;
 
-        public PayPeriodRepository(PayrollContext context, IPolicyHelper policy) : base(context)
+        public PayPeriodRepository(PayrollContext context,
+            IDateEntityRepository dateEntityRepository,
+            IPolicyHelper policy,
+            IListOfValueRepository listOfValueRepository) : base(context)
         {
             _policy = policy;
+            _listOfValueRepository = listOfValueRepository;
+            _dateEntityRepository = dateEntityRepository;
         }
 
         #region Queries
@@ -64,6 +72,26 @@ namespace AccuPay.Infrastructure.Data
             return await query.FirstOrDefaultAsync();
         }
 
+        public async Task<PayPeriod> GetCurrentOpenAsync(Organization organization)
+        {
+            IOrderedQueryable<PayPeriod> query;
+
+            if (organization.IsWeekly)
+            {
+                query = CreateBaseQueryWeekly(organization.RowID.Value)
+                    .Where(p => p.Status == PayPeriodStatus.Open)
+                    .OrderByDescending(p => p.PayFromDate);
+            }
+            else // if (organization.IsSemiMonthly)
+            {
+                query = CreateBaseQuery(organization.RowID.Value)
+                    .Where(p => p.Status == PayPeriodStatus.Open)
+                    .OrderByDescending(p => p.PayFromDate);
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
+
         /// <summary>
         /// Gets the current open pay period.
         /// </summary>
@@ -89,6 +117,26 @@ namespace AccuPay.Infrastructure.Data
             if (payPeriod == null)
             {
                 payPeriod = await GetCurrentPayPeriodAsync(organizationId, currentUserId);
+            }
+
+            return payPeriod;
+        }
+
+        public async Task<PayPeriod> GetOpenOrCurrentPayPeriodAsync(Organization organization, int currentUserId)
+        {
+            var payPeriod = await GetCurrentOpenAsync(organization);
+
+            if (payPeriod == null)
+            {
+                var currentDateTimeNow = DateTime.Now.Date;
+
+                var payperiodLists = await GetYearlyPayPeriodsOfWeeklyAsync(organization: organization, year: currentDateTimeNow.Year, currentUserId: currentUserId);
+
+                var currentPayPeriod = payperiodLists
+                    .Where(t => t.PayFromDate <= currentDateTimeNow)
+                    .Where(t => t.PayToDate >= currentDateTimeNow)
+                    .FirstOrDefault();
+                if (currentPayPeriod != null) payPeriod = currentPayPeriod;
             }
 
             return payPeriod;
@@ -179,6 +227,31 @@ namespace AccuPay.Infrastructure.Data
                 .Where(x => x.PayFromDate == startDate)
                 .Where(x => x.PayToDate == endDate)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<PayPeriod> GetAsync(Organization organization, PayPeriod payPeriod)
+        {
+            var organizationId = organization.RowID.Value;
+            var startDate = payPeriod.PayFromDate;
+            var endDate = payPeriod.PayToDate;
+
+            if (organization.IsWeekly)
+            {
+                var thisPayPeriod = await CreateBaseQueryWeekly(organizationId)
+                    .Where(x => x.PayFromDate == startDate)
+                    .Where(x => x.PayToDate == endDate)
+                    .FirstOrDefaultAsync();
+
+                if (thisPayPeriod == null)
+                {
+                    await CreateAsync(payPeriod);
+                    return payPeriod;
+                }
+
+                return thisPayPeriod;
+            }
+
+            return await GetAsync(organizationId: organizationId, startDate: startDate, endDate: endDate);
         }
 
         /// <summary>
@@ -285,25 +358,25 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
-        public async Task<ICollection<PayPeriod>> GetByYearAndPayPrequencyAsync(
+        public async Task<ICollection<PayPeriod>> GetByYearAndPayFrequencyAsync(
             int organizationId,
             int year,
             int payFrequencyId)
         {
-            return await CreateBaseQueryByPayPrequency(
+            return await CreateBaseQueryByPayFrequency(
                     organizationId: organizationId,
                     payFrequencyId: payFrequencyId)
                 .Where(x => x.Year == year)
                 .ToListAsync();
         }
 
-        public ICollection<PayPeriod> GetByMonthYearAndPayPrequency(
+        public ICollection<PayPeriod> GetByMonthYearAndPayFrequency(
             int organizationId,
             int month,
             int year,
             int payFrequencyId)
         {
-            return CreateBaseQueryByMonthYearAndPayPrequency(
+            return CreateBaseQueryByMonthYearAndPayFrequency(
                     organizationId: organizationId,
                     month: month,
                     year: year,
@@ -311,13 +384,13 @@ namespace AccuPay.Infrastructure.Data
                 .ToList();
         }
 
-        public async Task<ICollection<PayPeriod>> GetByMonthYearAndPayPrequencyAsync(
+        public async Task<ICollection<PayPeriod>> GetByMonthYearAndPayFrequencyAsync(
             int organizationId,
             int month,
             int year,
             int payFrequencyId)
         {
-            return await CreateBaseQueryByMonthYearAndPayPrequency(
+            return await CreateBaseQueryByMonthYearAndPayFrequency(
                     organizationId: organizationId,
                     month: month,
                     year: year,
@@ -369,9 +442,115 @@ namespace AccuPay.Infrastructure.Data
             return yearlyPayPeriods;
         }
 
+        public async Task<ICollection<PayPeriod>> GetYearlyPayPeriodsOfWeeklyAsync(Organization organization,
+            int year,
+            int currentUserId)
+        {
+            var organizationId = organization.RowID.Value;
+            var yearlyPayPeriods = new List<PayPeriod>();
+
+            var payPeriods = await CreateBaseQueryWeekly(organizationId)
+                .Where(x => x.Year == year)
+                .ToListAsync();
+
+            var weeklyPayPeriodPolicy = await _listOfValueRepository.GetWeeklyPayPeriodPolicyByOrganization(organizationId: organizationId, year: year);
+
+            var baseDates = await _dateEntityRepository.GetByYearAsync(WeeklyPayPeriodPolicy.INITIAL_YEAR);
+            var baseWeeks = baseDates
+                .Where(d => d.DayOfWeek == weeklyPayPeriodPolicy.StartDayOfWeek)
+                .OrderBy(d => d.Value)
+                .ToList();
+
+            var currentBaseDates = await _dateEntityRepository.GetByYearAsync(year);
+            var currentWeekCount = currentBaseDates
+                .Where(d => d.DayOfWeek == weeklyPayPeriodPolicy.StartDayOfWeek)
+                .Count();
+            if (year == WeeklyPayPeriodPolicy.INITIAL_YEAR)
+            {
+                var intialDate = organization.IsAtm ? WeeklyPayPeriodPolicy.ATM_INITIAL_DATE :
+                    WeeklyPayPeriodPolicy.CASH_INITIAL_DATE;
+                var endingDate = organization.IsAtm ? WeeklyPayPeriodPolicy.ATM_ENDING_DATE :
+                    WeeklyPayPeriodPolicy.CASH_ENDING_DATE;
+
+                currentWeekCount = currentBaseDates
+                    .Where(d => d.DayOfWeek == weeklyPayPeriodPolicy.StartDayOfWeek)
+                    .Where(d => d.Value >= intialDate)
+                    .Where(d => d.Value <= endingDate)
+                    .Count();
+            }
+
+            var currentWeekCountMultiplier = currentWeekCount * (year - WeeklyPayPeriodPolicy.INITIAL_YEAR);
+
+            foreach (var baseWeek in baseWeeks)
+            {
+                var startDate = WeeklyPayPeriodPolicy.AddWeeks(baseWeek.Value.Date, currentWeekCountMultiplier);
+                var addedPeriod = new PayPeriod()
+                {
+                    OrganizationID = organizationId,
+                    PayFrequencyID = PayrollTools.PayFrequencyWeeklyId,
+                    Month = baseWeek.Month,
+                    Year = year,
+                    Half = 0,
+                    Status = PayPeriodStatus.Pending,
+                    OrdinalValue = 1,
+                    PayFromDate = startDate,
+                    PayToDate = startDate.AddDays(6),
+                    CreatedBy = currentUserId
+                };
+
+                var existingPeriod = payPeriods
+                    .Where(t => t.PayFromDate == addedPeriod.PayFromDate)
+                    .Where(t => t.PayToDate == addedPeriod.PayToDate)
+                    .FirstOrDefault();
+                if (existingPeriod != null)
+                {
+                    yearlyPayPeriods.Add(existingPeriod);
+                    continue;
+                }
+
+                yearlyPayPeriods.Add(addedPeriod);
+            }
+
+            return yearlyPayPeriods
+                .Take(currentWeekCount)
+                .ToList();
+        }
+
         public async Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, int? year = null, string searchTerm = "")
         {
             var query = CreateBaseQuery(organizationId)
+                .AsNoTracking()
+                .Where(t => t.Status != PayPeriodStatus.Pending)
+                .OrderByDescending(t => t.PayFromDate)
+                .AsQueryable();
+
+            if (year != null)
+            {
+                query = query.Where(x => x.Year == year);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.PayFromDate.ToString(), searchTerm) ||
+                    EF.Functions.Like(x.PayToDate.ToString(), searchTerm));
+            }
+
+            var payperiods = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedList<PayPeriod>(payperiods, count);
+        }
+
+        public async Task<PaginatedList<PayPeriod>> GetPaginatedListAsync(PageOptions options, Organization organization, int? year = null, string searchTerm = "")
+        {
+            var organizationId = organization.RowID.Value;
+            if (organization.IsSemiMonthly)
+                return await GetPaginatedListAsync(options: options, organizationId: organizationId, year: year, searchTerm: searchTerm);
+
+            var query = CreateBaseQueryWeekly(organizationId)
                 .AsNoTracking()
                 .Where(t => t.Status != PayPeriodStatus.Pending)
                 .OrderByDescending(t => t.PayFromDate)
@@ -529,20 +708,20 @@ namespace AccuPay.Infrastructure.Data
 
         #region Private helper methods
 
-        private IQueryable<PayPeriod> CreateBaseQueryByMonthYearAndPayPrequency(
+        private IQueryable<PayPeriod> CreateBaseQueryByMonthYearAndPayFrequency(
             int organizationId,
             int month,
             int year,
             int payFrequencyId)
         {
-            return CreateBaseQueryByPayPrequency(
+            return CreateBaseQueryByPayFrequency(
                     organizationId: organizationId,
                     payFrequencyId: payFrequencyId)
                 .Where(x => x.Year == year)
                 .Where(x => x.Month == month);
         }
 
-        private IQueryable<PayPeriod> CreateBaseQueryByPayPrequency(
+        private IQueryable<PayPeriod> CreateBaseQueryByPayFrequency(
             int organizationId,
             int payFrequencyId)
         {
@@ -557,6 +736,14 @@ namespace AccuPay.Infrastructure.Data
                 .AsNoTracking()
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(p => p.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId);
+        }
+
+        private IQueryable<PayPeriod> CreateBaseQueryWeekly(int organizationId)
+        {
+            return _context.PayPeriods
+                .AsNoTracking()
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(p => p.PayFrequencyID == PayrollTools.PayFrequencyWeeklyId);
         }
 
         private IQueryable<PayPeriod> CreateBaseQueryGetCurrentOpen(int organizationId)

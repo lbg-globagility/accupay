@@ -360,6 +360,7 @@ namespace AccuPay.Core.Entities
                     DeductionAmount = deductionAmount,
                     InterestAmount = interestAmount
                 };
+                loanTransaction.SetProduct(product: loan.LoanType);
 
                 loanTransactions.Add(loanTransaction);
 
@@ -465,13 +466,13 @@ namespace AccuPay.Core.Entities
             }
 
             var socialSecurityCalculator = new SssCalculator(resources.Policy, resources.SocialSecurityBrackets, payPeriod);
-            socialSecurityCalculator.Calculate(this, previousPaystub, salary, employee, currentSystemOwner);
+            socialSecurityCalculator.Calculate(this, previousPaystub, salary, employee, currentSystemOwner, loanTransactions: loanTransactions);
 
             var philHealthCalculator = new PhilHealthCalculator(new PhilHealthPolicy(settings));
-            philHealthCalculator.Calculate(salary, this, previousPaystub, employee, payPeriod, currentSystemOwner);
+            philHealthCalculator.Calculate(salary, this, previousPaystub, employee, payPeriod, currentSystemOwner, loanTransactions: loanTransactions);
 
             var hdmfCalculator = new HdmfCalculator();
-            hdmfCalculator.Calculate(salary, this, employee, settings, payPeriod);
+            hdmfCalculator.Calculate(salary, this, employee, settings, payPeriod, loanTransactions: loanTransactions);
 
             var withholdingTaxCalculator = new WithholdingTaxCalculator(settings, resources.WithholdingTaxBrackets);
             withholdingTaxCalculator.Calculate(this, previousPaystub, employee, payPeriod, salary);

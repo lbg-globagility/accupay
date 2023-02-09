@@ -43,6 +43,7 @@ namespace AccuPay.Web
             services.AddScoped<ICertificationRepository, CertificationRepository>();
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IDayTypeRepository, DayTypeRepository>();
+            services.AddScoped<IDateEntityRepository, DateEntityRepository>();
             services.AddScoped<IDisciplinaryActionRepository, DisciplinaryActionRepository>();
             services.AddScoped<IDivisionRepository, DivisionRepository>();
             services.AddScoped<IEducationalBackgroundRepository, EducationalBackgroundRepository>();

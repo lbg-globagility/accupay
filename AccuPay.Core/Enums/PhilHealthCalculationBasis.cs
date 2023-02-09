@@ -6,6 +6,7 @@ namespace AccuPay.Core.Enums
         GrossPay,
         BasicSalary,
         BasicMinusDeductions,
-        BasicMinusDeductionsWithoutPremium
+        BasicMinusDeductionsWithoutPremium,
+        BasedOnLoan
     }
 }

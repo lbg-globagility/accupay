@@ -25,6 +25,7 @@ Partial Class PayrollForm
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.AllowanceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GovernmentDeductionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PaystubExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BenchmarkPaystubToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -35,7 +36,7 @@ Partial Class PayrollForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AllowanceToolStripMenuItem, Me.LoanToolStripMenuItem, Me.PayrollToolStripMenuItem, Me.PaystubExperimentalToolStripMenuItem, Me.BenchmarkPaystubToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AllowanceToolStripMenuItem, Me.LoanToolStripMenuItem, Me.GovernmentDeductionToolStripMenuItem, Me.PayrollToolStripMenuItem, Me.PaystubExperimentalToolStripMenuItem, Me.BenchmarkPaystubToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -53,6 +54,12 @@ Partial Class PayrollForm
         Me.LoanToolStripMenuItem.Name = "LoanToolStripMenuItem"
         Me.LoanToolStripMenuItem.Size = New System.Drawing.Size(50, 20)
         Me.LoanToolStripMenuItem.Text = "Loans"
+        '
+        'GovernmentDeductionToolStripMenuItem
+        '
+        Me.GovernmentDeductionToolStripMenuItem.Name = "GovernmentDeductionToolStripMenuItem"
+        Me.GovernmentDeductionToolStripMenuItem.Size = New System.Drawing.Size(137, 20)
+        Me.GovernmentDeductionToolStripMenuItem.Text = "Government Premium"
         '
         'PayrollToolStripMenuItem
         '
@@ -105,4 +112,5 @@ Partial Class PayrollForm
     Friend WithEvents AllowanceToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LoanToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents BenchmarkPaystubToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents GovernmentDeductionToolStripMenuItem As ToolStripMenuItem
 End Class

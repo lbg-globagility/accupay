@@ -13,11 +13,14 @@ namespace AccuPay.Infrastructure.Data
         public const string PayPeriodPolicyType = "Pay Period Policy";
         public const string DefaultFirstHalfDaysSpanPolicyLIC = "DefaultFirstHalfDaysSpan";
         public const string DefaultEndOfTheMonthDaysSpanPolicyLIC = "DefaultEndOfTheMonthDaysSpan";
+        public const string WeeklyPayPeriodPolicyType = "WeeklyPayPeriodPolicy";
 
         private readonly IListOfValueService _listOfValueService;
         private readonly string CurrentSystemOwner;
         private ActualTimeEntryPolicy _actualTimeEntryPolicy;
         private TimeEntryPolicy _timeEntryPolicy;
+        private SssPolicy _sssPolicy;
+        private HdmfPolicy _hdmfPolicy;
         private ListOfValueCollection _settings;
 
         public PolicyHelper(
@@ -41,6 +44,8 @@ namespace AccuPay.Infrastructure.Data
         {
             _actualTimeEntryPolicy = new ActualTimeEntryPolicy(_settings);
             _timeEntryPolicy = new TimeEntryPolicy(_settings);
+            _sssPolicy = new SssPolicy(_settings);
+            _hdmfPolicy = new HdmfPolicy(_settings);
         }
 
         public decimal DefaultBPIInsurance => _settings.GetDecimal("Default.BPIInsurance");
@@ -220,5 +225,9 @@ namespace AccuPay.Infrastructure.Data
         public ILeaveResetPolicy GetLeaveResetPolicy => new LeaveResetPolicy(settings: _settings);
 
         public bool IsEnableCashoutUnusedLeaves => _settings.GetBoolean("LeaveConvertiblePolicy.Enable");
+
+        public SssPolicy SssPolicy => _sssPolicy;
+
+        public HdmfPolicy HdmfPolicy => _hdmfPolicy;
     }
 }

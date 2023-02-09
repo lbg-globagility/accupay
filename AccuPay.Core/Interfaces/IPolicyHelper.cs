@@ -53,10 +53,14 @@ namespace AccuPay.Core.Interfaces
         ILeavePolicy GetLeavePolicy { get; }
         ILeaveResetPolicy GetLeaveResetPolicy { get; }
         bool IsEnableCashoutUnusedLeaves { get; }
+
         DayValueSpan DefaultEndOfTheMonthDaysSpan(int? organizationId);
 
         DayValueSpan DefaultFirstHalfDaysSpan(int? organizationId);
 
         Task Refresh();
+
+        SssPolicy SssPolicy { get; }
+        HdmfPolicy HdmfPolicy { get; }
     }
 }

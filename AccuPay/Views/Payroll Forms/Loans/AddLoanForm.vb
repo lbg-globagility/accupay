@@ -17,7 +17,7 @@ Public Class AddLoanForm
 
     Private ReadOnly _policy As IPolicyHelper
 
-    Sub New(employee As Employee)
+    Sub New(employee As Employee, loanTypeGrouping As Core.Enums.LoanTypeGroupingEnum)
 
         InitializeComponent()
 
@@ -27,6 +27,9 @@ Public Class AddLoanForm
 
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
+        LoanUserControl1.LoanTypeGrouping = loanTypeGrouping
+
+        If loanTypeGrouping = Core.Enums.LoanTypeGroupingEnum.Government Then Me.Text = String.Empty
     End Sub
 
     Private Sub AddLoanForm_Load(sender As Object, e As EventArgs) Handles Me.Load

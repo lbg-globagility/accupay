@@ -23,6 +23,12 @@ Public Class PayrollForm
 
     Private ReadOnly _userRepository As IAspNetUserRepository
 
+    Private employeeNonGovernmentLoansForm As EmployeeLoansForm =
+        New EmployeeLoansForm(LoanTypeGroupingEnum.NonGovernment)
+
+    Private employeeGovernmentLoansForm As EmployeeLoansForm =
+        New EmployeeLoansForm(LoanTypeGroupingEnum.Government)
+
     Sub New()
 
         InitializeComponent()
@@ -170,8 +176,63 @@ Public Class PayrollForm
     End Sub
 
     Private Async Sub LoanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanToolStripMenuItem.Click
+        Dim currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+        If currentSystemOwner.IsMorningSun Then
+            employeeNonGovernmentLoansForm.Name = "EmployeeNonGovernmentLoansForm"
+            employeeNonGovernmentLoansForm.Text = employeeNonGovernmentLoansForm.Name
+
+            ReInitializationLoansForm(employeeNonGovernmentLoansForm,
+                "EmployeeNonGovernmentLoansForm",
+                LoanTypeGroupingEnum.NonGovernment)
+
+            Await ChangeForm(employeeNonGovernmentLoansForm, PermissionConstant.LOAN)
+            previousForm = employeeNonGovernmentLoansForm
+        Else
+            Await LoadDefaultLoansForm()
+        End If
+    End Sub
+
+    Private Sub ReInitializationLoansForm(ByRef form As EmployeeLoansForm,
+        formName As String,
+        loanTypeGrouping As LoanTypeGroupingEnum)
+
+        Static employeeLoansFormList As List(Of String) = New List(Of String)
+
+        employeeLoansFormList.Add(formName)
+
+        Dim controls = employeeLoansFormList.
+            Where(Function(text) text = formName).
+            ToList()
+        If controls.Count > 1 AndAlso
+            Not PanelPayroll.Controls.OfType(Of EmployeeLoansForm).Any(Function(t) t.Name = formName) Then
+            form.Dispose()
+
+            form = New EmployeeLoansForm(loanTypeGrouping)
+            form.Name = formName
+            form.Text = form.Name
+        End If
+    End Sub
+
+    Private Async Function LoadDefaultLoansForm() As Task
         Await ChangeForm(EmployeeLoansForm, PermissionConstant.LOAN)
         previousForm = EmployeeLoansForm
+    End Function
+
+    Private Async Sub GovernmentDeductionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GovernmentDeductionToolStripMenuItem.Click
+        Dim currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+        If currentSystemOwner.IsMorningSun Then
+            employeeGovernmentLoansForm.Name = "EmployeeGovernmentLoansForm"
+            employeeGovernmentLoansForm.Text = employeeGovernmentLoansForm.Name
+
+            ReInitializationLoansForm(employeeGovernmentLoansForm,
+                "EmployeeGovernmentLoansForm",
+                LoanTypeGroupingEnum.Government)
+
+            Await ChangeForm(employeeGovernmentLoansForm, PermissionConstant.LOAN)
+            previousForm = employeeGovernmentLoansForm
+        Else
+            Await LoadDefaultLoansForm()
+        End If
     End Sub
 
     Private Async Sub BenchmarkPaystubToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BenchmarkPaystubToolStripMenuItem.Click

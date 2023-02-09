@@ -20,6 +20,8 @@ namespace AccuPay.Core.Entities
 
         private const string text_itc = "ITC";
 
+        private const string text_morningsun = "MorningSun";
+
         public static string Goldwings => text_goldwings;
 
         public static string Hyundai => text_hyundai;
@@ -33,6 +35,10 @@ namespace AccuPay.Core.Entities
         public static string DefaultOwner => text_default;
 
         public static string ITC => text_itc;
+
+        public static string MorningSun => text_morningsun;
+
+        public bool IsMorningSun => Name == text_morningsun;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

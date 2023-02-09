@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Services.Policies;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -29,5 +30,16 @@ namespace AccuPay.Core.Interfaces
         Task<ICollection<ListOfValue>> GetListOfValuesAsync(string type, bool checkIfActive = true);
 
         Task<ListOfValue> GetPolicyAsync(string type, string lic, int organizationId);
+
+        Task<WeeklyPayPeriodPolicy> GetWeeklyPayPeriodPolicyByOrganization(int organizationId, int year);
+
+        Task<ListOfValue> GetListOfValueOfWeeklyPayPeriodPolicyByOrganization(int organizationId);
+
+        Task CreateIfNotExistsAsync(int userId,
+            string type,
+            string lic,
+            string displayValue,
+            bool isByOrganization = false,
+            int? organizationId = null);
     }
 }

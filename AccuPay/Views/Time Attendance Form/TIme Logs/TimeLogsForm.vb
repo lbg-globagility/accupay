@@ -41,7 +41,7 @@ Public Class TimeLogsForm
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
 
     Private ReadOnly _shiftRepository As IShiftRepository
-
+    Private ReadOnly _organizationRepository As IOrganizationRepository
     Private _currentRolePermission As RolePermission
 
     Public Enum TimeLogsFormat
@@ -64,6 +64,8 @@ Public Class TimeLogsForm
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
         _shiftRepository = MainServiceProvider.GetRequiredService(Of IShiftRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
 #Region "Methods"
@@ -683,8 +685,10 @@ Public Class TimeLogsForm
 
         BindGridCurrentCellChanged()
 
+        Dim organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
         Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
-            organizationId:=z_OrganizationID,
+            organization:=organization,
             currentUserId:=z_User)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then

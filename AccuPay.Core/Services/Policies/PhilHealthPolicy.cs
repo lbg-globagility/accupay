@@ -5,6 +5,10 @@ namespace AccuPay.Core.Services
 {
     public class PhilHealthPolicy : IPhilHealthPolicy
     {
+        public const string TYPE = "PhilHealth";
+        public const string LIC_CALCULATION_BASIS = "CalculationBasis";
+        public const string LIC_IMPLEMENTS_IN_PAYFREQUENCY = "ImplementsInPayFrequency";
+
         private readonly ListOfValueCollection _settings;
 
         public PhilHealthPolicy(ListOfValueCollection settings) => _settings = settings;
@@ -17,15 +21,18 @@ namespace AccuPay.Core.Services
 
         public decimal Rate => _settings.GetDecimal("PhilHealth.Rate");
 
-        public PhilHealthCalculationBasis CalculationBasis(int organizationId)
-        {
-            var policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", false);
+        private bool IsPolicyByOrganization => _settings.GetBoolean("Policy.ByOrganization", false);
 
-            return _settings.GetEnum(
-                "PhilHealth.CalculationBasis",
-                PhilHealthCalculationBasis.BasicSalary,
-                policyByOrganization,
-                organizationId);
-        }
+        public PhilHealthCalculationBasis CalculationBasis(int organizationId) => _settings.GetEnum(
+            $"{TYPE}.{LIC_CALCULATION_BASIS}",
+            PhilHealthCalculationBasis.BasicSalary,
+            IsPolicyByOrganization,
+            organizationId);
+
+        public PayFrequencyType ImplementsInPayFrequency(int organizationId) => _settings.GetEnum(
+            $"{TYPE}.{LIC_IMPLEMENTS_IN_PAYFREQUENCY}",
+            PayFrequencyType.SemiMonthly,
+            IsPolicyByOrganization,
+            organizationId);
     }
 }

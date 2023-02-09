@@ -234,9 +234,12 @@ Public Class ImportEmployeeForm
 
         Dim employees = New List(Of EmployeeWithLeaveBalanceData)
 
+        Dim organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+        Dim organization = Await organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
         For Each model In _okModels
 
-            Dim newEmployee = Employee.NewEmployee(z_OrganizationID)
+            Dim newEmployee = Employee.NewEmployee(organization)
 
             AssignChanges(model, newEmployee)
 

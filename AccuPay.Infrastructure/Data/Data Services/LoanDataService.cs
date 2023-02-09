@@ -5,6 +5,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Imports.Loans;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,13 @@ namespace AccuPay.Infrastructure.Data
         private readonly ILoanRepository _loanRepository;
         private readonly IProductRepository _productRepository;
         private readonly ISystemOwnerService _systemOwnerService;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public LoanDataService(
             IEmployeeRepository employeeRepository,
             ILoanRepository loanRepository,
             IListOfValueRepository listOfValueRepository,
+            IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
             IProductRepository productRepository,
             IUserActivityRepository userActivityRepository,
@@ -45,6 +48,7 @@ namespace AccuPay.Infrastructure.Data
             _listOfValueRepository = listOfValueRepository;
             _productRepository = productRepository;
             _systemOwnerService = systemOwnerService;
+            _organizationRepository = organizationRepository;
         }
 
         #region Save
@@ -199,7 +203,7 @@ namespace AccuPay.Infrastructure.Data
             }
         }
 
-        protected async override Task AdditionalSaveManyValidation(List<Loan> loans, List<Loan> oldLoans, SaveType saveType)
+        protected override async Task AdditionalSaveManyValidation(List<Loan> loans, List<Loan> oldLoans, SaveType saveType)
         {
             var updatedLoanIds = loans
                 .Where(x => !x.IsNewEntity)
@@ -320,7 +324,7 @@ namespace AccuPay.Infrastructure.Data
             await base.PostSaveManyAction(entities, oldEntities, saveType, currentlyLoggedInUserId);
         }
 
-        protected async override Task RecordUpdate(Loan newValue, Loan oldValue)
+        protected override async Task RecordUpdate(Loan newValue, Loan oldValue)
         {
             if (oldValue == null) return;
 
@@ -606,6 +610,50 @@ namespace AccuPay.Infrastructure.Data
                 organizationId: organizationId,
                 payPeriod: payPeriod,
                 paystubs: paystubs);
+        }
+
+        public async Task<ICollection<Loan>> GetLoansByMonthPeriodAsync(int organizationId, DateTime dateTime)
+        {
+            var selectedYear = dateTime.Date.Year;
+            var selectedMonth = dateTime.Date.Month;
+            var organization = await _organizationRepository.GetByIdWithAddressAsync(organizationId);
+
+            var payPeriods = (await _payPeriodRepository.GetYearlyPayPeriodsAsync(organizationId: organizationId,
+                year: selectedYear,
+                currentUserId: 0))
+                .Where(p => p.Month == selectedMonth)
+                .ToList();
+            if (organization.IsWeekly)
+                payPeriods = (await _payPeriodRepository.GetYearlyPayPeriodsOfWeeklyAsync(organization: organization,
+                    year: selectedYear,
+                    currentUserId: 0))
+                    .Where(p => p.Month == selectedMonth)
+                    .ToList();
+
+            //var payPeriods = await _payPeriodRepository.GetByMonthYearAndPayFrequencyAsync(
+            //    organizationId: organizationId,
+            //    month: dateTime.Date.Month,
+            //    year: selectedYear,
+            //    payFrequencyId: organization.PayFrequencyID);
+            var firstPayPeriod = payPeriods
+                .Where(l => !l.IsClosed)
+                .OrderBy(l => l.PayFromDate)
+                .FirstOrDefault();
+            var lastPayPeriod = payPeriods
+                .Where(l => !l.IsClosed)
+                .OrderByDescending(l => l.PayFromDate)
+                .FirstOrDefault();
+
+            return await _context.Loans
+                .AsNoTracking()
+                .Include(l => l.LoanType)
+                .Include(l => l.Employee)
+                .Where(l => l.OrganizationID == organizationId)
+                .Where(l => l.DedEffectiveDateFrom >= firstPayPeriod.PayFromDate)
+                .Where(l => l.DedEffectiveDateFrom <= lastPayPeriod.PayToDate)
+                .Where(l => !l.IsUnEditable)
+                .Where(l => !l.HasParentLoan)
+                .ToListAsync();
         }
 
         #endregion List of entities

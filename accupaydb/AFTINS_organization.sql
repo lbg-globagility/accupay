@@ -83,6 +83,7 @@ INSERT INTO product
     ,TaxVAT
     ,WithholdingTax
     ,ActiveData
+    ,GovtDeductionType
 )  SELECT
     p.Name
     ,NEW.RowID
@@ -132,6 +133,7 @@ INSERT INTO product
     ,p.TaxVAT
     ,p.WithholdingTax
     ,p.ActiveData
+    ,p.GovtDeductionType
 FROM product p
 LEFT JOIN category c ON c.CategoryName=p.Category
 GROUP BY p.PartNo

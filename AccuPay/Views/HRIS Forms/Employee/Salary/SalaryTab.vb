@@ -31,6 +31,10 @@ Public Class SalaryTab
 
     Private ReadOnly _systemOwnerService As ISystemOwnerService
 
+    Private ReadOnly _organizationRepository As IOrganizationRepository
+
+    Private ReadOnly _listOfValueService As IListOfValueService
+
     Public Sub New()
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
@@ -38,6 +42,10 @@ Public Class SalaryTab
         If MainServiceProvider IsNot Nothing Then
 
             _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
+            _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+            _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
         End If
 
     End Sub
@@ -107,6 +115,8 @@ Public Class SalaryTab
         ChangeMode(FormMode.Disabled)
         Await LoadSalaries()
 
+        Await ShowOrHideGovernmentFields()
+
         Await CheckRolePermissions()
 
         _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwner.Benchmark
@@ -148,6 +158,31 @@ Public Class SalaryTab
             End If
 
         End If
+    End Function
+
+    Private Async Function ShowOrHideGovernmentFields() As Task
+        Dim currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+        If Not currentSystemOwner.IsMorningSun Then Return
+
+        Dim settings = Await _listOfValueService.CreateAsync()
+        Dim hdmfPolicy = New Core.Services.Policies.HdmfPolicy(settings)
+        Dim hdmfBool = Not hdmfPolicy.HdmfCalculationBasis(z_OrganizationID) = Core.Enums.HdmfCalculationBasis.BasedOnLoan
+        Label11.Visible = hdmfBool
+        ChkPagIbig.Visible = hdmfBool
+        Label217.Visible = hdmfBool
+        txtPagIbig.Visible = hdmfBool
+
+        Dim philHealthPolicy = New Core.Services.PhilHealthPolicy(settings)
+        Dim philHealthBool = Not philHealthPolicy.CalculationBasis(z_OrganizationID) = Core.Enums.PhilHealthCalculationBasis.BasedOnLoan
+        Label8.Visible = philHealthBool
+        chkPayPhilHealth.Visible = philHealthBool
+        Label215.Visible = philHealthBool
+        txtPhilHealth.Visible = philHealthBool
+
+        Dim sssPolicy = New Core.Services.Policies.SssPolicy(settings)
+        Dim sssBool = Not sssPolicy.SssCalculationBasis(z_OrganizationID) = Core.Enums.SssCalculationBasis.BasedOnLoan
+        Label9.Visible = sssBool
+        chkPaySSS.Visible = sssBool
     End Function
 
     Private Sub ChangeMode(mode As FormMode)

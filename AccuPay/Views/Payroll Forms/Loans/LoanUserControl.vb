@@ -3,6 +3,8 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.AccuPay.Desktop.Helpers
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
+Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -16,6 +18,8 @@ Public Class LoanUserControl
     Private _isNew As Boolean
 
     Private if_sysowner_is_benchmark As Boolean
+
+    Public Property LoanTypeGrouping As LoanTypeGroupingEnum
 
     Private Async Sub LoanUserControl_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -190,7 +194,7 @@ Public Class LoanUserControl
         cboLoanStatus.DataSource = statusLookUpList
     End Sub
 
-    Private Async Function LoadLoanTypes() As Task
+    Public Async Function LoadLoanTypes() As Task
 
         Dim productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
@@ -200,7 +204,7 @@ Public Class LoanUserControl
 
             loanTypeList = New List(Of Product)(Await productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID))
         Else
-            loanTypeList = New List(Of Product)(Await productRepository.GetLoanTypesAsync(z_OrganizationID))
+            loanTypeList = New List(Of Product)(Await productRepository.GetLoanTypesAsync(z_OrganizationID, loanTypeGrouping:=LoanTypeGrouping))
 
         End If
 
@@ -210,6 +214,8 @@ Public Class LoanUserControl
     End Function
 
     Private Async Function LoadDeductionSchedules() As Task
+        Dim organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+        Dim organization = Await organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
 
         Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
@@ -217,6 +223,7 @@ Public Class LoanUserControl
             ConvertToStringList(Await listOfValueRepository.GetDeductionSchedulesAsync())
 
         Dim deductionSchedulesList = LookUpStringItem.Convert(deductionSchedules, hasDefaultItem:=True)
+        If organization.IsWeekly Then deductionSchedulesList = LookUpStringItem.Convert(New List(Of String), hasDefaultItem:=True, ContributionSchedule.PER_PAY_PERIOD)
 
         cboDeductionSchedule.ValueMember = "Item"
         cboDeductionSchedule.DisplayMember = "Item"

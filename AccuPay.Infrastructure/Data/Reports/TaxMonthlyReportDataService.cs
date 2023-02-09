@@ -16,7 +16,7 @@ namespace AccuPay.Infrastructure.Data
 
         public DataTable GetData(int organizationId, int month, int year)
         {
-            var payPeriods = _repository.GetByMonthYearAndPayPrequency(
+            var payPeriods = _repository.GetByMonthYearAndPayFrequency(
                 organizationId,
                 month: month,
                 year: year,

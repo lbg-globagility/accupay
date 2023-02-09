@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities.LeaveReset;
+using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using System;
 using System.Collections.Generic;
@@ -74,5 +75,16 @@ namespace AccuPay.Core.Entities
         public bool IsSssLoan => PartNo.Trim().ToUpper() == ProductConstant.SSS_LOAN.ToUpper();
 
         public bool IsThirteenthMonthPay => AllocateBelowSafetyFlag == '1';
+
+        [Column("GovtDeductionType")]
+        public GovernmentDeductionTypeEnum GovernmentDeductionType { get; set; }
+
+        public bool IsNotLoanOfMorningSun => GovernmentDeductionType == GovernmentDeductionTypeEnum.None;
+
+        public bool IsSssLoanOfMorningSun => GovernmentDeductionType == GovernmentDeductionTypeEnum.Sss;
+
+        public bool IsPhilHealthLoanOfMorningSun => GovernmentDeductionType == GovernmentDeductionTypeEnum.PhilHealth;
+
+        public bool IsHDMFLoanOfMorningSun => GovernmentDeductionType == GovernmentDeductionTypeEnum.Hdmf;
     }
 }

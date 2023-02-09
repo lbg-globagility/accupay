@@ -95,7 +95,8 @@ namespace AccuPay.Infrastructure.Data
         internal virtual DbSet<LeaveTenure> LeaveTenures { get; set; }
         internal virtual DbSet<LeaveTypeRenewable> LeaveTypeRenewables { get; set; }
         internal virtual DbSet<CashoutUnusedLeave> CashoutUnusedLeaves { get; set; }
-        
+        internal virtual DbSet<DateEntity> Dates { get; set; }
+
         public PayrollContext(DbContextOptions options)
             : base(options)
         {
@@ -254,7 +255,8 @@ namespace AccuPay.Infrastructure.Data
                     HasConversion<string>();
             });
 
-            modelBuilder.Entity<CashoutUnusedLeave>(t => {
+            modelBuilder.Entity<CashoutUnusedLeave>(t =>
+            {
                 t.HasKey(x => x.Id);
 
                 t.HasOne(c => c.LeaveLedger).
@@ -265,6 +267,25 @@ namespace AccuPay.Infrastructure.Data
                     WithMany(p => p.CashoutUnusedLeaves).
                     HasForeignKey(c => c.PayPeriodID);
             });
+
+            modelBuilder.Entity<DateEntity>(t =>
+            {
+                t.HasKey(x => x.Value);
+            });
+
+            modelBuilder.Entity<Product>()
+                .Property(t => t.GovernmentDeductionType)
+                .HasConversion(new EnumToStringConverter<GovernmentDeductionTypeEnum>());
+
+            modelBuilder.Entity<Loan>()
+                .HasOne(p => p.ParentLoan)
+                .WithMany()
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasForeignKey(l => l.ParentLoanId);
+            //.HasOne(l => l.ParentLoan)
+            //.WithOne(l => l.ParentLoan)
+            //.HasForeignKey(l => l.ParentLoanId);
         }
 
         private static void SetGeneratedColumnsToReadOnly(ModelBuilder modelBuilder)

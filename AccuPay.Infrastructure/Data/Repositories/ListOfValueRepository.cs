@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Services.Policies;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -109,6 +110,62 @@ namespace AccuPay.Infrastructure.Data
             }
 
             return stringList;
+        }
+
+        public async Task<ListOfValue> GetListOfValueOfWeeklyPayPeriodPolicyByOrganization(int organizationId) =>
+            await _context.ListOfValues
+            .AsNoTracking()
+            .Where(f => f.Type == PolicyHelper.WeeklyPayPeriodPolicyType)
+            .Where(f => f.OrganizationID == organizationId)
+            .FirstOrDefaultAsync();
+
+        public async Task<WeeklyPayPeriodPolicy> GetWeeklyPayPeriodPolicyByOrganization(int organizationId, int year)
+        {
+            var listOfValue = await GetListOfValueOfWeeklyPayPeriodPolicyByOrganization(organizationId: organizationId);
+            return new WeeklyPayPeriodPolicy(listOfValue: listOfValue, year: year);
+        }
+
+        public async Task CreateIfNotExistsAsync(int userId,
+            string type,
+            string lic,
+            string displayValue,
+            bool isByOrganization = false,
+            int? organizationId = null)
+        {
+            ListOfValue listOfValue;
+
+            if (isByOrganization)
+            {
+                listOfValue = await _context.ListOfValues
+                    .AsNoTracking()
+                    .Where(l => l.OrganizationID == organizationId)
+                    .Where(l => l.Type == type)
+                    .Where(l => l.LIC == lic)
+                    .FirstOrDefaultAsync();
+            }
+            else
+            {
+                listOfValue = await _context.ListOfValues
+                    .AsNoTracking()
+                    .Where(l => l.Type == type)
+                    .Where(l => l.LIC == lic)
+                    .FirstOrDefaultAsync();
+            }
+
+            if (listOfValue == null)
+            {
+                listOfValue = new ListOfValue()
+                {
+                    LIC = lic,
+                    DisplayValue = displayValue,
+                    Type = type,
+                    CreatedBy = userId
+                };
+
+                if (isByOrganization) listOfValue.OrganizationID = organizationId;
+
+                await CreateAsync(listOfValue);
+            }
         }
     }
 }

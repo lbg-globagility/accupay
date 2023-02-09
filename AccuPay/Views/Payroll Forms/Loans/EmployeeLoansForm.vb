@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
@@ -31,6 +32,39 @@ Public Class EmployeeLoansForm
     Private _currentRolePermission As RolePermission
 
     Private ReadOnly _policyHelper As IPolicyHelper
+    Private ReadOnly _loanTypeGrouping As LoanTypeGroupingEnum
+
+    Sub New(loanTypeGrouping As LoanTypeGroupingEnum)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentloans = New List(Of LoanModel)
+
+        _changedLoans = New List(Of LoanModel)
+
+        _currentLoanTransactions = New List(Of LoanTransaction)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _loanTypeGrouping = loanTypeGrouping
+
+        LoanUserControl1.LoanTypeGrouping = loanTypeGrouping
+
+        If loanTypeGrouping = LoanTypeGroupingEnum.Government Then
+            lblFormTitle.Text = "Government Premium"
+        End If
+    End Sub
 
     Sub New()
 
@@ -51,6 +85,8 @@ Public Class EmployeeLoansForm
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _loanTypeGrouping = LoanTypeGroupingEnum.All
     End Sub
 
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -214,7 +250,7 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim form As New AddLoanForm(employee)
+        Dim form As New AddLoanForm(employee, loanTypeGrouping:=_loanTypeGrouping)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -371,6 +407,26 @@ Public Class EmployeeLoansForm
     End Function
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
+        If _loanTypeGrouping = LoanTypeGroupingEnum.Government Then
+            Using form = New ImportGovernmentPremiumForm()
+                form.ShowDialog()
+
+                If form.IsSaved Then
+
+                    Dim currentEmployee = GetSelectedEmployee()
+
+                    If currentEmployee IsNot Nothing Then
+                        Await LoadLoans(currentEmployee)
+                    End If
+
+                    ShowBalloonInfo("Government premium successfully imported", "Import Government Premium")
+
+                End If
+
+            End Using
+
+            Return
+        End If
 
         Using form = New ImportLoansForm()
             form.ShowDialog()
@@ -463,7 +519,7 @@ Public Class EmployeeLoansForm
         Dim completeChecked = chkCompleteFilter.Checked
 
         Dim repository = MainServiceProvider.GetRequiredService(Of ILoanRepository)
-        Dim loans = Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value)
+        Dim loans = Await repository.GetByEmployeeAsync(currentEmployee.RowID.Value, _loanTypeGrouping)
 
         Dim loanModels = loans.
             Select(Function(l) LoanModel.Create(l)).
@@ -673,6 +729,12 @@ Public Class EmployeeLoansForm
         If from.ShowDialog() = DialogResult.OK Then
             EmployeesDataGridView_SelectionChanged(EmployeesDataGridView, New EventArgs)
         End If
+    End Sub
+
+    Private Sub AdvValeToolStripButton_Click(sender As Object, e As EventArgs) Handles AdvValeToolStripButton.Click
+        Dim form = New AdvanceValeForm
+        If Not form.ShowDialog() = DialogResult.OK Then Return
+
     End Sub
 
 #End Region

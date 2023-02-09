@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Services.Policies
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -24,8 +25,11 @@ Public Class StartNewPayPeriodDialog
     Private _rowId As Integer?
 
     Private _passedPayPeriod As IPayPeriod
-
+    Private _currentSystemOwner As SystemOwner
+    Private _organization As Organization
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Sub New(Optional passedPayPeriod As IPayPeriod = Nothing)
 
@@ -35,6 +39,9 @@ Public Class StartNewPayPeriodDialog
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -55,8 +62,18 @@ Public Class StartNewPayPeriodDialog
         End Get
     End Property
 
+    Public ReadOnly Property CurrentPayperiod As PayPeriod
+        Get
+            Return _currentPayperiod
+        End Get
+    End Property
+
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsGridView.AutoGenerateColumns = False
+
+        _currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+
+        _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
 
         Await LoadPayPeriods()
 
@@ -105,13 +122,21 @@ Public Class StartNewPayPeriodDialog
     End Function
 
     Private Async Function LoadPayPeriods() As Task
+        If _currentSystemOwner.IsMorningSun AndAlso
+            _organization.IsWeekly Then
 
-        _payPeriods = (Await _payPeriodRepository.
-            GetYearlyPayPeriodsAsync(
+            _payPeriods = (Await _payPeriodRepository.GetYearlyPayPeriodsOfWeeklyAsync(
+                    organization:=_organization,
+                    year:=Year,
+                    currentUserId:=z_User)).
+                ToList()
+        Else
+            _payPeriods = (Await _payPeriodRepository.GetYearlyPayPeriodsAsync(
                 organizationId:=z_OrganizationID,
                 year:=Me.Year,
                 currentUserId:=z_User)).
             ToList()
+        End If
 
         _payperiodModels = _payPeriods.Select(Function(p) New PayperiodModel(p)).ToList()
 
@@ -160,12 +185,19 @@ Public Class StartNewPayPeriodDialog
 
                 Me.Cursor = Cursors.WaitCursor
 
-                Await dataService.OpenAsync(
-                    organizationId:=z_OrganizationID,
-                    month:=_currentPayperiod.Month,
-                    year:=_currentPayperiod.Year,
-                    isFirstHalf:=_currentPayperiod.IsFirstHalf,
-                    currentlyLoggedInUserId:=z_User)
+                If _organization.IsWeekly Then
+                    Await dataService.OpenAsync(
+                        organizationId:=z_OrganizationID,
+                        userId:=z_User,
+                        payPeriod:=_currentPayperiod)
+                Else
+                    Await dataService.OpenAsync(
+                        organizationId:=z_OrganizationID,
+                        month:=_currentPayperiod.Month,
+                        year:=_currentPayperiod.Year,
+                        isFirstHalf:=_currentPayperiod.IsFirstHalf,
+                        currentlyLoggedInUserId:=z_User)
+                End If
 
                 Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -227,8 +259,8 @@ Public Class StartNewPayPeriodDialog
 
         Public ReadOnly Property Period As String
             Get
+                Dim month = New Date(PayPeriod.Year, PayPeriod.Month, 1)
                 If PayPeriod.IsSemiMonthly Then
-                    Dim month = New Date(PayPeriod.Year, PayPeriod.Month, 1)
                     Dim halfNo = String.Empty
 
                     If PayPeriod.IsFirstHalf Then
@@ -239,8 +271,8 @@ Public Class StartNewPayPeriodDialog
 
                     Return $"{month:MMM} {halfNo}"
                 ElseIf PayPeriod.IsWeekly Then
-                    ' Not implemented yet
-                    Return String.Empty
+
+                    Return $"{month:MMM}, week {WeeklyPayPeriodPolicy.GetWeekOfYear(PayPeriod.PayFromDate.Date)}"
                 Else
                     Return String.Empty
                 End If

@@ -15,17 +15,29 @@ Public Class SelectPayPeriodDialog
     Private _currentYear As Integer = Date.Now.Year
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
-
+    Private _organization As Organization
+    Private _currentSystemOwner As SystemOwner
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Sub New()
 
         InitializeComponent()
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
     End Sub
 
     Private Async Sub SelectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
+        _currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+
         PayPeriodGridView.AutoGenerateColumns = False
 
         _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(
@@ -46,6 +58,16 @@ Public Class SelectPayPeriodDialog
                 year:=year,
                 currentUserId:=z_User)).
             ToList()
+
+        If _currentSystemOwner.IsMorningSun AndAlso
+            _organization.IsWeekly Then
+
+            payPeriods = (Await _payPeriodRepository.GetYearlyPayPeriodsOfWeeklyAsync(
+                    organization:=_organization,
+                    year:=year,
+                    currentUserId:=z_User)).
+                ToList()
+        End If
 
         PayPeriodGridView.DataSource = payPeriods
         Dim index As Integer = 0

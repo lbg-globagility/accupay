@@ -54,6 +54,7 @@ Public Class ShiftForm
     End Property
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
 
 #End Region
 
@@ -62,6 +63,8 @@ Public Class ShiftForm
         InitializeComponent()
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
 #Region "Methods"
@@ -1099,8 +1102,10 @@ Public Class ShiftForm
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
 
+        Dim organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
         Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetOpenOrCurrentPayPeriodAsync(
-            organizationId:=z_OrganizationID,
+            organization:=organization,
             currentUserId:=z_User)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then

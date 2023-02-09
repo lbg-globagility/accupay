@@ -24,8 +24,11 @@ Public Class MultiplePayPeriodSelectionDialog
     Private ReadOnly _productRepository As IProductRepository
 
     Private ReadOnly _policy As IPolicyHelper
-
+    Private ReadOnly _organizationRepository As IOrganizationRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
     Private _selectedPayPeriods As List(Of PayPeriod)
+    Private _organization As Organization
+    Private _currentSystemOwner As SystemOwner
 
     Sub New(Optional startingPayPeriod As PayPeriod = Nothing, Optional endingPayPeriod As PayPeriod = Nothing)
 
@@ -36,6 +39,10 @@ Public Class MultiplePayPeriodSelectionDialog
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _selectedPayPeriods = New List(Of PayPeriod)
 
@@ -165,6 +172,9 @@ Public Class MultiplePayPeriodSelectionDialog
 #End Region
 
     Private Async Sub PayrollSummaDateSelection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
+        _currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
 
         PayperiodsGridView.AutoGenerateColumns = False
 
@@ -330,6 +340,17 @@ Public Class MultiplePayPeriodSelectionDialog
                 currentUserId:=z_User)).
             Select(Function(p) New PayPeriodWrapper(p)).
             ToList()
+
+        If _currentSystemOwner.IsMorningSun AndAlso
+            _organization.IsWeekly Then
+
+            payPeriods = (Await _payPeriodRepository.GetYearlyPayPeriodsOfWeeklyAsync(
+                    organization:=_organization,
+                    year:=Me._currentYear,
+                    currentUserId:=z_User)).
+                Select(Function(p) New PayPeriodWrapper(p)).
+                ToList()
+        End If
 
         Dim focusedPayPeriod As PayPeriodWrapper = Nothing
 

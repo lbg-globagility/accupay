@@ -37,7 +37,7 @@ namespace AccuPay.Infrastructure.Data
             if (bpiInsuranceProductID.HasValue == false)
                 throw new Exception("Cannot get BPI Insurance data.");
 
-            var periods = (await _payPeriodRepository.GetByMonthYearAndPayPrequencyAsync(
+            var periods = (await _payPeriodRepository.GetByMonthYearAndPayFrequencyAsync(
                                     organizationId: organizationId,
                                     month: selectedDate.Month,
                                     year: selectedDate.Year,

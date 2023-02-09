@@ -61,7 +61,8 @@ Public Class TimeEntrySummaryForm
     Private _regenerateTimeEntryButtonHidden As Boolean
 
     Private _tsBtnDeleteTimeEntryHidden As Boolean
-
+    Private _currentSystemOwner As SystemOwner
+    Private _organization As Organization
     Private ReadOnly _policy As IPolicyHelper
 
     Private ReadOnly _payPeriodService As IPayPeriodDataService
@@ -79,6 +80,8 @@ Public Class TimeEntrySummaryForm
     Private ReadOnly _timeAttendanceLogRepository As ITimeAttendanceLogRepository
 
     Private ReadOnly _userRepository As IAspNetUserRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
+    Private ReadOnly _organizationRepository As IOrganizationRepository
 
     Sub New()
 
@@ -102,9 +105,15 @@ Public Class TimeEntrySummaryForm
 
         _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
     End Sub
 
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+        _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
 
         _formHasLoaded = True
 
@@ -241,9 +250,18 @@ Public Class TimeEntrySummaryForm
 
         Dim currentSelectedPayPeriodInGridView = DirectCast(payPeriodsDataGridView.CurrentCell?.Value, PayPeriod)
 
+        Dim payPeriods = Await GetPayPeriods(_selectedYear)
+
         Dim numOfRows = 2
 
-        Dim payPeriods = Await GetPayPeriods(_selectedYear)
+        If _currentSystemOwner.IsMorningSun AndAlso
+            payPeriods.Any(Function(p) p.IsWeekly) Then
+
+            numOfRows = payPeriods.
+                GroupBy(Function(p) p.Month).
+                Max(Function(p) p.Count())
+        End If
+
         payPeriodsDataGridView.Rows.Clear()
         payPeriodsDataGridView.Rows.Add(numOfRows)
 
@@ -352,6 +370,17 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetPayPeriods(year As Integer) As Task(Of ICollection(Of PayPeriod))
 
+        If _currentSystemOwner.IsMorningSun AndAlso
+            _organization.IsWeekly Then
+
+            Return (Await _payPeriodRepository.GetYearlyPayPeriodsOfWeeklyAsync(
+                    organization:=_organization,
+                    year:=year,
+                    currentUserId:=z_User)).
+                Select(Function(p) New PayPeriod(p)).
+                ToList()
+        End If
+
         Return (Await _payPeriodRepository.
             GetYearlyPayPeriodsAsync(
                 organizationId:=z_OrganizationID,
@@ -443,6 +472,16 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim sql = <![CDATA[
+            DROP TEMPORARY TABLE IF EXISTS `latesttimelogs`;
+            CREATE TEMPORARY TABLE IF NOT EXISTS `latesttimelogs`
+            SELECT RowID, `Date`, EmployeeID, MAX(LastUpd) `UpdatedTimeLog`
+            FROM employeetimeentrydetails
+            WHERE EmployeeID=@EmployeeID
+            AND Date BETWEEN @DateFrom AND @DateTo
+            GROUP BY EmployeeID, `Date`, LastUpd
+            ORDER BY EmployeeID, `Date`, LastUpd DESC
+            ;
+
             SELECT
                 ete.RowID,
                 ete.Date,
@@ -497,25 +536,14 @@ Public Class TimeEntrySummaryForm
                 ete.BranchID,
                 branch.BranchName
             FROM employeetimeentry ete
-            LEFT JOIN (
-                SELECT EmployeeID, DATE,
-				    (SELECT RowID
-				    FROM employeetimeentrydetails
-				    WHERE EmployeeID = groupedEtd.EmployeeID
-				    AND DATE = groupedEtd.Date
-				    ORDER BY LastUpd DESC
-				    LIMIT 1) RowID
-				FROM employeetimeentrydetails groupedEtd
-				WHERE Date BETWEEN @DateFrom AND @DateTo
-				GROUP BY EmployeeID, Date
-            ) latest
-                ON latest.EmployeeID = ete.EmployeeID AND
-                    latest.Date = ete.Date
+            LEFT JOIN `latesttimelogs`
+                ON `latesttimelogs`.EmployeeID = ete.EmployeeID AND
+                    `latesttimelogs`.Date = ete.Date
             LEFT JOIN employeetimeentrydetails etd
                 ON etd.Date = ete.Date AND
                     etd.OrganizationID = ete.OrganizationID AND
                     etd.EmployeeID = ete.EmployeeID AND
-                    etd.RowID = latest.RowID
+                    etd.RowID = `latesttimelogs`.RowID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -673,6 +701,16 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim sql = <![CDATA[
+            DROP TEMPORARY TABLE IF EXISTS `latesttimelogs`;
+            CREATE TEMPORARY TABLE IF NOT EXISTS `latesttimelogs`
+            SELECT RowID, `Date`, EmployeeID, MAX(LastUpd) `UpdatedTimeLog`
+            FROM employeetimeentrydetails
+            WHERE EmployeeID=@EmployeeID
+            AND Date BETWEEN @DateFrom AND @DateTo
+            GROUP BY EmployeeID, `Date`, LastUpd
+            ORDER BY EmployeeID, `Date`, LastUpd DESC
+            ;
+
             SELECT
                 eta.RowID,
                 eta.Date,
@@ -723,25 +761,14 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN employeetimeentry ete
                 ON ete.EmployeeID = eta.EmployeeID AND
                     ete.Date = eta.Date
-            LEFT JOIN (
-                SELECT EmployeeID, DATE,
-				    (SELECT RowID
-				    FROM employeetimeentrydetails
-				    WHERE EmployeeID = groupedEtd.EmployeeID
-				    AND DATE = groupedEtd.Date
-				    ORDER BY LastUpd DESC
-				    LIMIT 1) RowID
-				FROM employeetimeentrydetails groupedEtd
-				WHERE Date BETWEEN @DateFrom AND @DateTo
-				GROUP BY EmployeeID, Date
-            ) latest
-                ON latest.EmployeeID = eta.EmployeeID AND
-                    latest.Date = eta.Date
+            LEFT JOIN `latesttimelogs`
+                ON `latesttimelogs`.EmployeeID = ete.EmployeeID AND
+                    `latesttimelogs`.Date = ete.Date
             LEFT JOIN employeetimeentrydetails
                 ON employeetimeentrydetails.Date = eta.Date AND
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
-                employeetimeentrydetails.RowID = latest.RowID
+                employeetimeentrydetails.RowID = `latesttimelogs`.RowID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -902,6 +929,7 @@ Public Class TimeEntrySummaryForm
         Dim startDate As Date
         Dim endDate As Date
         Dim result As DialogResult
+        Dim currentPayperiod As Entities.PayPeriod
 
         Using dialog = New StartNewPayPeriodDialog(_selectedPayPeriod)
             result = dialog.ShowDialog()
@@ -909,12 +937,13 @@ Public Class TimeEntrySummaryForm
             If result = DialogResult.OK Then
                 startDate = dialog.Start
                 endDate = dialog.End
+                currentPayperiod = dialog.CurrentPayperiod
             End If
         End Using
 
         If result = DialogResult.OK Then
 
-            Dim payPeriod = Await _payPeriodRepository.GetAsync(z_OrganizationID, startDate, endDate)
+            Dim payPeriod = Await _payPeriodRepository.GetAsync(organization:=_organization, payPeriod:=currentPayperiod)
 
             If payPeriod Is Nothing OrElse payPeriod.RowID Is Nothing OrElse Not payPeriod.IsOpen Then
                 MessageBoxHelper.Warning("Pay period does not exists or is not ""Open"" yet.")
@@ -1207,6 +1236,7 @@ Public Class TimeEntrySummaryForm
         Public Property OrdinalValue As Integer
         Public Property Status As PayPeriodStatus
         Public Property IsFirstHalf As Boolean Implements IPayPeriod.IsFirstHalf
+        Public ReadOnly Property IsWeekly As Boolean
 
         Sub New(payPeriodData As Entities.PayPeriod)
 
@@ -1218,7 +1248,7 @@ Public Class TimeEntrySummaryForm
             OrdinalValue = payPeriodData.OrdinalValue
             Status = payPeriodData.Status
             IsFirstHalf = payPeriodData.IsFirstHalf
-
+            IsWeekly = payPeriodData.IsWeekly
         End Sub
 
         Public Overrides Function ToString() As String

@@ -62,6 +62,7 @@ Public Class ServiceProvider
         services.AddTransient(Of ICategoryRepository, CategoryRepository)
         services.AddTransient(Of ICertificationRepository, CertificationRepository)
         services.AddTransient(Of IDayTypeRepository, DayTypeRepository)
+        services.AddTransient(Of IDateEntityRepository, DateEntityRepository)
         services.AddTransient(Of IDisciplinaryActionRepository, DisciplinaryActionRepository)
         services.AddTransient(Of IDivisionRepository, DivisionRepository)
         services.AddTransient(Of IEducationalBackgroundRepository, EducationalBackgroundRepository)

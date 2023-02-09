@@ -32,7 +32,8 @@ namespace AccuPay.Core.Services
             Paystub previousPaystub,
             Salary salary,
             Employee employee,
-            string currentSystemOwner)
+            string currentSystemOwner,
+            ICollection<LoanTransaction> loanTransactions)
         {
             // Reset SSS values to zero
             paystub.SssEmployeeShare = 0;
@@ -48,25 +49,41 @@ namespace AccuPay.Core.Services
                 previousPaystub,
                 salary,
                 employee,
-                currentSystemOwner);
+                currentSystemOwner,
+                loanTransactions: loanTransactions);
             var socialSecurityBracket = FindMatchingBracket(amount);
 
-            // If no bracket was matched/found, then there's nothing to compute.
-            if (socialSecurityBracket == null)
-                return;
+            var sssPolicy = _policy.SssPolicy;
+            var satisfiedForMorningSunRequirements = sssPolicy.ImplementsInPayFrequency(employee.OrganizationID.Value) == PayFrequencyType.Weekly &&
+                employee.IsWeeklyPaid;
 
-            var employeeShare = socialSecurityBracket.EmployeeContributionAmount + socialSecurityBracket.EmployeeMPFAmount;
-            var employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployerECAmount + socialSecurityBracket.EmployerMPFAmount;
+            if (satisfiedForMorningSunRequirements == false)
+                if (socialSecurityBracket == null)// If no bracket was matched/found, then there's nothing to compute.
+                    return;
+
+            var employeeShare = 0M;
+            var employerShare = 0M;
+
+            if (satisfiedForMorningSunRequirements)
+            {
+                employeeShare = amount;
+                employerShare = amount;
+            }
+            else
+            {
+                employeeShare = socialSecurityBracket.EmployeeContributionAmount + socialSecurityBracket.EmployeeMPFAmount;
+                employerShare = socialSecurityBracket.EmployerContributionAmount + socialSecurityBracket.EmployerECAmount + socialSecurityBracket.EmployerMPFAmount;
+            }
 
             if (employee.IsWeeklyPaid)
             {
-                var shouldDeduct = employee.IsUnderAgency ? _payPeriod.SSSWeeklyAgentContribSched : _payPeriod.SSSWeeklyContribSched;
+                //var shouldDeduct = employee.IsUnderAgency ? _payPeriod.SSSWeeklyAgentContribSched : _payPeriod.SSSWeeklyContribSched;
 
-                if (shouldDeduct)
-                {
-                    paystub.SssEmployeeShare = employeeShare;
-                    paystub.SssEmployerShare = employerShare;
-                }
+                //if (shouldDeduct)
+                //{
+                paystub.SssEmployeeShare = employeeShare;
+                paystub.SssEmployerShare = employerShare;
+                //}
             }
             else
             {
@@ -99,9 +116,16 @@ namespace AccuPay.Core.Services
             Paystub previousPaystub,
             Salary salary,
             Employee employee,
-            string currentSystemOwner)
+            string currentSystemOwner,
+            ICollection<LoanTransaction> loanTransactions)
         {
-            switch (_policy.SssCalculationBasis(employee.OrganizationID.Value))
+            var sssCalculationBasis = _policy.SssCalculationBasis(employee.OrganizationID.Value);
+            var sssPolicy = _policy.SssPolicy;
+            if (sssPolicy.ImplementsInPayFrequency(employee.OrganizationID.Value) == PayFrequencyType.Weekly &&
+                employee.IsWeeklyPaid)
+                sssCalculationBasis = SssCalculationBasis.BasedOnLoan;
+
+            switch (sssCalculationBasis)
             {
                 case SssCalculationBasis.BasicSalary:
                     return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
@@ -167,6 +191,11 @@ namespace AccuPay.Core.Services
 
                 case SssCalculationBasis.GrossPay:
                     return (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
+
+                case SssCalculationBasis.BasedOnLoan:
+                    return loanTransactions
+                        .Where(t => t.IsSssLoanOfMorningSun)?
+                        .Sum(t => t.DeductionAmount) ?? 0;
 
                 default:
                     return 0;

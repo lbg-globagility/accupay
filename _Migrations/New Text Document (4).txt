@@ -1,0 +1,3 @@
+ALTER TABLE `listofval`
+	DROP INDEX `Unique`,
+	ADD UNIQUE INDEX `Unique` (`LIC`, `ParentLIC`, `Type`, `OrganizationID`) USING BTREE;

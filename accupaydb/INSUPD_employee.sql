@@ -74,6 +74,12 @@ COMMENT ''
 BEGIN
 
 DECLARE emploRowID INT(11);
+DECLARE payFrequencyId INT(11) DEFAULT 1;
+
+SET @isMorningSun=EXISTS(SELECT * FROM systemowner WHERE `Name`='MorningSun');
+IF @isMorningSun=TRUE THEN
+	SET payFrequencyId=(SELECT og.PayFrequencyID FROM organization og WHERE og.RowID=emplo_OrganizationID LIMIT 1);
+END IF;
 
 INSERT INTO employee
 (

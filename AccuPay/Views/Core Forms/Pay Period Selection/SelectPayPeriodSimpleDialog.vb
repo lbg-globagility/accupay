@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
@@ -7,7 +8,8 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class SelectPayPeriodSimpleDialog
 
     Private _currentYear As Integer
-
+    Private _organization As Organization
+    Private _currentSystemOwner As SystemOwner
     Public Property RowID As Integer
 
     Public Property PayFromDate As Date
@@ -15,6 +17,8 @@ Public Class SelectPayPeriodSimpleDialog
     Public Property PayToDate As Date
 
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Sub New()
 
@@ -22,9 +26,17 @@ Public Class SelectPayPeriodSimpleDialog
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of IPayPeriodRepository)
 
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
     End Sub
 
-    Private Sub SelectPayPeriodSimple_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub SelectPayPeriodSimple_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
+        _currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+
         gridPeriods.AutoGenerateColumns = False
 
         _currentYear = Date.UtcNow.Year
@@ -43,11 +55,21 @@ Public Class SelectPayPeriodSimpleDialog
 
     Private Async Sub LoadPeriods()
 
-        Dim periods = (Await _payPeriodRepository.GetByYearAndPayPrequencyAsync(
+        Dim periods = (Await _payPeriodRepository.GetByYearAndPayFrequencyAsync(
             organizationId:=z_OrganizationID,
             year:=_currentYear,
             payFrequencyId:=PayrollTools.PayFrequencySemiMonthlyId)).
         ToList()
+
+        If _currentSystemOwner.IsMorningSun AndAlso
+            _organization.IsWeekly Then
+
+            periods = (Await _payPeriodRepository.GetYearlyPayPeriodsOfWeeklyAsync(
+                    organization:=_organization,
+                    year:=_currentYear,
+                    currentUserId:=z_User)).
+                ToList()
+        End If
 
         Dim ascOrder = periods.OrderBy(Function(p) p.OrdinalValue).ToList()
 

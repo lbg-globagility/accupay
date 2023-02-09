@@ -2,9 +2,11 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Policies
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -20,9 +22,12 @@ Public Class OrganizationForm
     Private _currentRolePermission As RolePermission
     Private _currentOrganization As Organization
     Private _organizations As List(Of Organization)
+    Private _currentSystemOwner As SystemOwner
     Private ReadOnly _addressRepository As IAddressRepository
     Private ReadOnly _organizationRepository As IOrganizationRepository
     Private ReadOnly _policy As IPolicyHelper
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Sub New()
 
@@ -31,6 +36,9 @@ Public Class OrganizationForm
         _addressRepository = MainServiceProvider.GetRequiredService(Of IAddressRepository)
         _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
     End Sub
 
@@ -52,6 +60,9 @@ Public Class OrganizationForm
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
         chkTimeLogsOnlyRequirement.Visible = _policy.PaidAsLongAsHasTimeLog
+
+        _currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+
     End Sub
 
     Private Async Function RestrictByRole() As Task
@@ -407,6 +418,18 @@ Public Class OrganizationForm
                 Dim organizationService = MainServiceProvider.GetRequiredService(Of IOrganizationDataService)
                 Dim roleService = MainServiceProvider.GetRequiredService(Of IRoleDataService)
 
+                If isNew Then
+                    _currentOrganization.PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId
+
+                    If _currentSystemOwner.IsMorningSun AndAlso
+                        (_currentOrganization.IsAtm Or _currentOrganization.IsCash) Then
+
+                        _currentOrganization.PayFrequencyID = PayrollTools.PayFrequencyWeeklyId
+                    End If
+                End If
+
+                Dim isOrganiztionOptWeeklyPayFrequency = _currentOrganization.PayFrequencyID = PayrollTools.PayFrequencyWeeklyId
+
                 Await organizationService.SaveAsync(_currentOrganization, z_User)
 
                 If isNew Then
@@ -418,14 +441,37 @@ Public Class OrganizationForm
                     Next
 
                     If _policy.HasDifferentPayPeriodDates Then
-                        Await dataService.CreateOrUpdateDefaultPayPeriod(
-                            organizationId:=_currentOrganization.RowID.Value,
-                            currentlyLoggedInUserId:=z_User,
-                            firstHalf:=firstHalf,
-                            endOfTheMonth:=endOfTheMonth)
+
+                        If isOrganiztionOptWeeklyPayFrequency Then
+                            Await dataService.CreateOrUpdateDefaultWeeklyPayPeriod(
+                                    organizationId:=_currentOrganization.RowID.Value,
+                                    currentlyLoggedInUserId:=z_User,
+                                    firstHalf:=firstHalf,
+                                    endOfTheMonth:=endOfTheMonth)
+                        Else
+                            Await dataService.CreateOrUpdateDefaultPayPeriod(
+                                organizationId:=_currentOrganization.RowID.Value,
+                                currentlyLoggedInUserId:=z_User,
+                                firstHalf:=firstHalf,
+                                endOfTheMonth:=endOfTheMonth)
+                        End If
 
                         Await _policy.Refresh()
+                    Else
+
+                        If isOrganiztionOptWeeklyPayFrequency Then
+                            Await dataService.CreateOrUpdateDefaultWeeklyPayPeriod(
+                                organizationId:=_currentOrganization.RowID.Value,
+                                currentlyLoggedInUserId:=z_User,
+                                firstHalf:=firstHalf,
+                                endOfTheMonth:=endOfTheMonth)
+
+                            Await _policy.Refresh()
+                        End If
                     End If
+
+                    Await SetMorningSunCalculationBasisOfGovtDeductions(organizationId:=_currentOrganization.RowID.Value,
+                    isWeekly:=isOrganiztionOptWeeklyPayFrequency)
 
                 End If
 
@@ -451,6 +497,56 @@ Public Class OrganizationForm
         SaveButton.Enabled = True
         Me.Cursor = Cursors.Default
 
+    End Function
+
+    Private Async Function SetMorningSunCalculationBasisOfGovtDeductions(organizationId As Integer,
+        isWeekly As Boolean) As Task
+        If Not _currentSystemOwner.IsMorningSun Then Return
+
+        Dim payFrequencyTypeText = If(isWeekly, PayFrequencyType.Weekly.ToString(), PayFrequencyType.SemiMonthly.ToString())
+        ' PhilHealth
+        Await _listOfValueRepository.CreateIfNotExistsAsync(userId:=z_User,
+            type:=PhilHealthPolicy.TYPE,
+            lic:=PhilHealthPolicy.LIC_CALCULATION_BASIS,
+            displayValue:=PhilHealthCalculationBasis.BasedOnLoan.ToString(),
+            isByOrganization:=_policy.IsPolicyByOrganization,
+            organizationId:=organizationId)
+        Await _listOfValueRepository.CreateIfNotExistsAsync(userId:=z_User,
+            type:=PhilHealthPolicy.TYPE,
+            lic:=PhilHealthPolicy.LIC_IMPLEMENTS_IN_PAYFREQUENCY,
+            displayValue:=payFrequencyTypeText,
+            isByOrganization:=_policy.IsPolicyByOrganization,
+            organizationId:=organizationId)
+
+        ' Social Security System
+        Await _listOfValueRepository.CreateIfNotExistsAsync(userId:=z_User,
+            type:=SssPolicy.TYPE,
+            lic:=SssPolicy.LIC_CALCULATION_BASIS,
+            displayValue:=SssCalculationBasis.BasedOnLoan.ToString(),
+            isByOrganization:=_policy.IsPolicyByOrganization,
+            organizationId:=organizationId)
+        Await _listOfValueRepository.CreateIfNotExistsAsync(userId:=z_User,
+            type:=SssPolicy.TYPE,
+            lic:=SssPolicy.LIC_IMPLEMENTS_IN_PAYFREQUENCY,
+            displayValue:=payFrequencyTypeText,
+            isByOrganization:=_policy.IsPolicyByOrganization,
+            organizationId:=organizationId)
+
+        ' HDMF
+        Await _listOfValueRepository.CreateIfNotExistsAsync(userId:=z_User,
+            type:=HdmfPolicy.TYPE,
+            lic:=HdmfPolicy.LIC_CALCULATION_BASIS,
+            displayValue:=HdmfCalculationBasis.BasedOnLoan.ToString(),
+            isByOrganization:=_policy.IsPolicyByOrganization,
+            organizationId:=organizationId)
+        Await _listOfValueRepository.CreateIfNotExistsAsync(userId:=z_User,
+            type:=HdmfPolicy.TYPE,
+            lic:=HdmfPolicy.LIC_IMPLEMENTS_IN_PAYFREQUENCY,
+            displayValue:=payFrequencyTypeText,
+            isByOrganization:=_policy.IsPolicyByOrganization,
+            organizationId:=organizationId)
+
+        Await _policy.Refresh()
     End Function
 
     Private Sub txtcompFaxNumTxt_TextChanged(sender As Object, e As EventArgs) Handles txtcompFaxNumTxt.TextChanged

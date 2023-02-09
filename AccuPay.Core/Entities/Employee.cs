@@ -213,6 +213,20 @@ namespace AccuPay.Core.Entities
             };
         }
 
+        public static Employee NewEmployee(Organization organization)
+        {
+            return new Employee
+            {
+                RowID = null,
+                OrganizationID = organization.RowID,
+                PayFrequencyID = organization.IsWeekly ? PayrollTools.PayFrequencyWeeklyId : PayrollTools.PayFrequencySemiMonthlyId,
+                CalcHoliday = true,
+                CalcNightDiff = true,
+                CalcRestDay = true,
+                CalcSpecialHoliday = true
+            };
+        }
+
         public void SetOtherLeaveBalance(decimal otherLeaveBalance)
         {
             OtherLeaveBalance = otherLeaveBalance;

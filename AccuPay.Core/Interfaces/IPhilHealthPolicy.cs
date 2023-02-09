@@ -10,5 +10,7 @@ namespace AccuPay.Core.Interfaces
         decimal Rate { get; }
 
         PhilHealthCalculationBasis CalculationBasis(int organizationId);
+
+        PayFrequencyType ImplementsInPayFrequency(int organizationId);
     }
 }

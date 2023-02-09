@@ -1,5 +1,8 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
+using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Services.Policies;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -11,11 +14,32 @@ namespace AccuPay.Core.Services
 
         private const decimal StandardEmployerContribution = 100;
 
-        public void Calculate(Salary salary, Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payperiod)
+        public void Calculate(Salary salary,
+            Paystub paystub,
+            Employee employee,
+            ListOfValueCollection settings,
+            PayPeriod payperiod,
+            ICollection<LoanTransaction> loanTransactions)
         {
             // Reset HDMF contribution
             paystub.HdmfEmployeeShare = 0;
             paystub.HdmfEmployerShare = 0;
+
+            var hdmfPolicyPolicy = new HdmfPolicy(settings);
+            var hdmfCalculationBasis = hdmfPolicyPolicy.HdmfCalculationBasis(employee.OrganizationID.Value);
+
+            if (hdmfPolicyPolicy.ImplementsInPayFrequency(employee.OrganizationID.Value) == PayFrequencyType.Weekly &&
+                employee.IsWeeklyPaid &&
+                hdmfCalculationBasis == HdmfCalculationBasis.BasedOnLoan)
+            {
+                var hdmfEmployeeShare = loanTransactions
+                    .Where(t => t.IsHDMFLoanOfMorningSun)?
+                    .Sum(t => t.DeductionAmount) ?? 0;
+                paystub.HdmfEmployeeShare = hdmfEmployeeShare;
+                paystub.HdmfEmployerShare = hdmfEmployeeShare;// hdmfEmployerShare
+
+                return;
+            }
 
             decimal employeeShare;
 

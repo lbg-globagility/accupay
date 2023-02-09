@@ -47,7 +47,7 @@ Public Class PayStubForm
     Dim unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Private _currentSystemOwner As String
-
+    Private _organization As Organization
     Private ReadOnly _policy As IPolicyHelper
 
     Private ReadOnly _systemOwnerService As ISystemOwnerService
@@ -67,6 +67,7 @@ Public Class PayStubForm
     End Property
 
     Private ReadOnly _productRepository As IProductRepository
+    Private ReadOnly _organizationRepository As IOrganizationRepository
 
     Sub New()
 
@@ -85,6 +86,8 @@ Public Class PayStubForm
         _paystubRepository = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -114,7 +117,7 @@ Public Class PayStubForm
     End Sub
 
     Private Async Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
         AdjustmentGridView.AutoGenerateColumns = False
         PayPeriodGridView.AutoGenerateColumns = False
 
@@ -234,9 +237,11 @@ Public Class PayStubForm
 
         RemoveHandler PayPeriodGridView.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
+        If _organization Is Nothing Then _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
         Dim payPeriodList = Await _payPeriodRepository.GetPaginatedListAsync(
             PageOptions.AllData,
-            organizationId:=z_OrganizationID,
+            organization:=_organization,
             year:=CurrentYear)
 
         Dim payPeriods = payPeriodList.Items

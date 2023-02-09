@@ -79,6 +79,7 @@ Partial Class EmployeeLoansForm
         Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.AdvValeToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -566,7 +567,7 @@ Partial Class EmployeeLoansForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.ImportToolStripButton, Me.ToolStripSeparator9, Me.btnClose, Me.UserActivityToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.ImportToolStripButton, Me.AdvValeToolStripButton, Me.ToolStripSeparator9, Me.btnClose, Me.UserActivityToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -613,6 +614,14 @@ Partial Class EmployeeLoansForm
         Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
         Me.ImportToolStripButton.Text = "&Import"
         Me.ImportToolStripButton.ToolTipText = "Import loans"
+        '
+        'AdvValeToolStripButton
+        '
+        Me.AdvValeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.AdvValeToolStripButton.Name = "AdvValeToolStripButton"
+        Me.AdvValeToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.AdvValeToolStripButton.Text = "ADV. Vale"
+        Me.AdvValeToolStripButton.ToolTipText = "ADV. Vale"
         '
         'ToolStripSeparator9
         '
@@ -702,6 +711,7 @@ Partial Class EmployeeLoansForm
     Friend WithEvents CancelToolStripButton As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
     Friend WithEvents ImportToolStripButton As ToolStripButton
+    Friend WithEvents AdvValeToolStripButton As ToolStripButton
     Friend WithEvents Panel10 As Panel
     Friend WithEvents EmployeePictureBox As PictureBox
     Friend WithEvents LoanGridView As DevComponents.DotNetBar.Controls.DataGridViewX

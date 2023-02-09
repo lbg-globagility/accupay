@@ -17,6 +17,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<PayPeriod> OpenAsync(int organizationId, int month, int year, bool isFirstHalf, int currentlyLoggedInUserId);
 
+        Task<PayPeriod> OpenAsync(int organizationId, int userId, PayPeriod payPeriod);
+
         Task<PayPeriod> UpdateStatusAsync(int payPeriodId, int currentlyLoggedInUserId, PayPeriodStatus status);
 
         Task UpdateStatusAsync(PayPeriod payPeriod, int currentlyLoggedInUserId, PayPeriodStatus status);

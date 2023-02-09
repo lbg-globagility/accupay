@@ -108,6 +108,24 @@ namespace AccuPay.Core.Services
             return payPeriod;
         }
 
+        public async Task<PayPeriod> OpenAsync(int organizationId,
+            int userId,
+            PayPeriod payPeriod)
+        {
+            var thisPayPeriod = await _payPeriodRepository.GetAsync(organizationId: organizationId,
+                startDate: payPeriod.PayFromDate,
+                endDate: payPeriod.PayToDate);
+            if (thisPayPeriod == null)
+            {
+                await _payPeriodRepository.CreateAsync(payPeriod);
+                thisPayPeriod = payPeriod;
+            }
+
+            await UpdateStatusAsync(thisPayPeriod, userId, PayPeriodStatus.Open);
+
+            return payPeriod;
+        }
+
         public async Task CloseAsync(int payPeriodId, int currentlyLoggedInUserId)
         {
             await UpdateStatusAsync(payPeriodId, currentlyLoggedInUserId, PayPeriodStatus.Closed);

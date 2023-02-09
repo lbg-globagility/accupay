@@ -1,0 +1,8 @@
+USE accupaydb_morningsun
+;
+
+UPDATE employee e
+INNER JOIN organization og ON og.RowID=e.OrganizationID AND og.NoPurpose=FALSE
+SET e.PayFrequencyID=og.PayFrequencyID
+WHERE e.PayFrequencyID!=og.PayFrequencyID
+;
