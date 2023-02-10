@@ -478,7 +478,7 @@ Public Class TimeEntrySummaryForm
             FROM employeetimeentrydetails
             WHERE EmployeeID=@EmployeeID
             AND Date BETWEEN @DateFrom AND @DateTo
-            GROUP BY EmployeeID, `Date`, LastUpd
+            GROUP BY EmployeeID, `Date`
             ORDER BY EmployeeID, `Date`, LastUpd DESC
             ;
 
@@ -707,7 +707,7 @@ Public Class TimeEntrySummaryForm
             FROM employeetimeentrydetails
             WHERE EmployeeID=@EmployeeID
             AND Date BETWEEN @DateFrom AND @DateTo
-            GROUP BY EmployeeID, `Date`, LastUpd
+            GROUP BY EmployeeID, `Date`
             ORDER BY EmployeeID, `Date`, LastUpd DESC
             ;
 
