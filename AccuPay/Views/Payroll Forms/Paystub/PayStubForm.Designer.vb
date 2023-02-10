@@ -388,7 +388,7 @@ Partial Class PayStubForm
         Me.PayDateFrom.Name = "PayDateFrom"
         Me.PayDateFrom.ReadOnly = True
         Me.PayDateFrom.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PayDateFrom.Width = 154
+        Me.PayDateFrom.Width = 97
         '
         'PayDateTo
         '
@@ -397,7 +397,7 @@ Partial Class PayStubForm
         Me.PayDateTo.Name = "PayDateTo"
         Me.PayDateTo.ReadOnly = True
         Me.PayDateTo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.PayDateTo.Width = 153
+        Me.PayDateTo.Width = 97
         '
         'Label25
         '

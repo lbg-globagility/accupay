@@ -94,17 +94,6 @@ Public Class PayStubForm
 
         SplitContainer1.SplitterWidth = 6
 
-        Dim dgvVisibleRows = PayPeriodGridView.Columns.Cast(Of DataGridViewColumn).Where(Function(ii) ii.Visible = True)
-
-        Dim scrollbarwidth = 19
-
-        Dim mincolwidth As Integer = CInt((PayPeriodGridView.Width - (PayPeriodGridView.RowHeadersWidth + scrollbarwidth)) / dgvVisibleRows.Count)
-
-        For Each dgvcol In dgvVisibleRows
-            dgvcol.Width = mincolwidth
-            dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
-        Next
-
         _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
         SetProperInterfaceBaseOnCurrentSystemOwner()
 
