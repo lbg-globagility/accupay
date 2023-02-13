@@ -443,6 +443,15 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim sql = <![CDATA[
+            DROP TEMPORARY TABLE IF EXISTS `latesttimelogs`;
+            CREATE TEMPORARY TABLE IF NOT EXISTS `latesttimelogs`
+            SELECT RowID, `Date`, EmployeeID, MAX(LastUpd) `UpdatedTimeLog`
+            FROM employeetimeentrydetails
+            WHERE EmployeeID=@EmployeeID
+            AND Date BETWEEN @DateFrom AND @DateTo
+            GROUP BY `Date`
+            ORDER BY `Date`, LastUpd DESC;
+
             SELECT
                 ete.RowID,
                 ete.Date,
@@ -497,25 +506,14 @@ Public Class TimeEntrySummaryForm
                 ete.BranchID,
                 branch.BranchName
             FROM employeetimeentry ete
-            LEFT JOIN (
-                SELECT EmployeeID, DATE,
-				    (SELECT RowID
-				    FROM employeetimeentrydetails
-				    WHERE EmployeeID = groupedEtd.EmployeeID
-				    AND DATE = groupedEtd.Date
-				    ORDER BY LastUpd DESC
-				    LIMIT 1) RowID
-				FROM employeetimeentrydetails groupedEtd
-				WHERE Date BETWEEN @DateFrom AND @DateTo
-				GROUP BY EmployeeID, Date
-            ) latest
-                ON latest.EmployeeID = ete.EmployeeID AND
-                    latest.Date = ete.Date
+            LEFT JOIN `latesttimelogs`
+                ON `latesttimelogs`.EmployeeID = ete.EmployeeID AND
+                    `latesttimelogs`.Date = ete.Date
             LEFT JOIN employeetimeentrydetails etd
                 ON etd.Date = ete.Date AND
                     etd.OrganizationID = ete.OrganizationID AND
                     etd.EmployeeID = ete.EmployeeID AND
-                    etd.RowID = latest.RowID
+                    etd.RowID = `latesttimelogs`.RowID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -673,6 +671,15 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim sql = <![CDATA[
+            DROP TEMPORARY TABLE IF EXISTS `latesttimelogs`;
+            CREATE TEMPORARY TABLE IF NOT EXISTS `latesttimelogs`
+            SELECT RowID, `Date`, EmployeeID, MAX(LastUpd) `UpdatedTimeLog`
+            FROM employeetimeentrydetails
+            WHERE EmployeeID=@EmployeeID
+            AND Date BETWEEN @DateFrom AND @DateTo
+            GROUP BY `Date`
+            ORDER BY `Date`, LastUpd DESC;
+
             SELECT
                 eta.RowID,
                 eta.Date,
@@ -723,25 +730,14 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN employeetimeentry ete
                 ON ete.EmployeeID = eta.EmployeeID AND
                     ete.Date = eta.Date
-            LEFT JOIN (
-                SELECT EmployeeID, DATE,
-				    (SELECT RowID
-				    FROM employeetimeentrydetails
-				    WHERE EmployeeID = groupedEtd.EmployeeID
-				    AND DATE = groupedEtd.Date
-				    ORDER BY LastUpd DESC
-				    LIMIT 1) RowID
-				FROM employeetimeentrydetails groupedEtd
-				WHERE Date BETWEEN @DateFrom AND @DateTo
-				GROUP BY EmployeeID, Date
-            ) latest
-                ON latest.EmployeeID = eta.EmployeeID AND
-                    latest.Date = eta.Date
+            LEFT JOIN `latesttimelogs`
+                ON `latesttimelogs`.EmployeeID = ete.EmployeeID AND
+                    `latesttimelogs`.Date = ete.Date
             LEFT JOIN employeetimeentrydetails
                 ON employeetimeentrydetails.Date = eta.Date AND
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
-                employeetimeentrydetails.RowID = latest.RowID
+                employeetimeentrydetails.RowID = `latesttimelogs`.RowID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
