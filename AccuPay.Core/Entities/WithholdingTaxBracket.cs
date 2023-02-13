@@ -36,5 +36,8 @@ namespace AccuPay.Core.Entities
 
         public bool IsSemiMonthly => PayFrequencyID == PayFrequency.SemiMonthlyTypeId;
         public bool IsMonthly => PayFrequencyID == PayFrequency.MonthlyTypeId;
+
+        public bool Is2023Onwards => EffectiveDateFrom.Year >= 2023;
+        public decimal ConstantTaxAmount { get; set; }
     }
 }

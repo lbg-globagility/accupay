@@ -96,6 +96,8 @@ namespace AccuPay.Infrastructure.Data
         internal virtual DbSet<LeaveTypeRenewable> LeaveTypeRenewables { get; set; }
         internal virtual DbSet<CashoutUnusedLeave> CashoutUnusedLeaves { get; set; }
         internal virtual DbSet<DateEntity> Dates { get; set; }
+        internal virtual DbSet<ResetLeaveCredit> ResetLeaveCredits { get; set; }
+        internal virtual DbSet<ResetLeaveCreditItem> ResetLeaveCreditItems { get; set; }
 
         public PayrollContext(DbContextOptions options)
             : base(options)
@@ -286,6 +288,27 @@ namespace AccuPay.Infrastructure.Data
             //.HasOne(l => l.ParentLoan)
             //.WithOne(l => l.ParentLoan)
             //.HasForeignKey(l => l.ParentLoanId);
+            modelBuilder.Entity<ResetLeaveCredit>(t =>
+            {
+                t.HasKey(x => x.RowID);
+
+                t.HasOne(x => x.PayPeriod)
+                    .WithMany(p => p.ResetLeaveCredits)
+                    .HasForeignKey(r => r.StartPeriodId);
+
+                t.HasMany(x => x.ResetLeaveCreditItems)
+                    .WithOne(r => r.ResetLeaveCredit)
+                    .HasForeignKey(x => x.ResetLeaveCreditId);
+            });
+
+            modelBuilder.Entity<ResetLeaveCreditItem>(t =>
+            {
+                t.HasKey(x => x.RowID);
+
+                t.HasOne(x => x.Employee)
+                    .WithMany(e => e.ResetLeaveCreditItems)
+                    .HasForeignKey(x => x.EmployeeID);
+            });
         }
 
         private static void SetGeneratedColumnsToReadOnly(ModelBuilder modelBuilder)

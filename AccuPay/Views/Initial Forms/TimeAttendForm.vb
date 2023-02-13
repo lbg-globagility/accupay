@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
@@ -17,6 +18,7 @@ Public Class TimeAttendForm
     Private ReadOnly _roleRepository As IRoleRepository
 
     Private ReadOnly _userRepository As IAspNetUserRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
 
     Sub New()
 
@@ -28,10 +30,13 @@ Public Class TimeAttendForm
 
         _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
     End Sub
 
     Private Async Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MassOvertimeToolStripMenuItem.Visible = _policyHelper.UseMassOvertime
+        ResetLeaveCreditsToolStripMenuItem.Visible = (Await _systemOwnerService.GetCurrentSystemOwnerAsync()) = SystemOwner.Cinema2000
 
         If Not _policyHelper.UseUserLevel Then
 
@@ -209,4 +214,8 @@ Public Class TimeAttendForm
         previousForm = TripTicketForm
     End Sub
 
+    Private Async Sub ResetLeaveCreditsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ResetLeaveCreditsToolStripMenuItem.Click
+        Await ChangeForm(ResetLeaveCreditsForm, PermissionConstant.RESET_LEAVE_CREDIT)
+        previousForm = ResetLeaveCreditsForm
+    End Sub
 End Class

@@ -106,6 +106,9 @@ namespace AccuPay.Core.Services
             if (bracket == null)
                 return 0;
 
+            if (bracket.Is2023Onwards)
+                return AccuMath.CommercialRound(bracket.ConstantTaxAmount + (bracket.ExemptionInExcessAmount * (taxableIncome - bracket.TaxableIncomeFromAmount)));
+
             var excessAmount = taxableIncome - bracket.TaxableIncomeFromAmount;
             var taxWithheld = bracket.ExemptionAmount + (excessAmount * bracket.ExemptionInExcessAmount);
 

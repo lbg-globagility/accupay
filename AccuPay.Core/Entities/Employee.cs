@@ -109,6 +109,8 @@ namespace AccuPay.Core.Entities
 
         public virtual ICollection<Paystub> Paystubs { get; set; }
 
+        public virtual ICollection<ResetLeaveCreditItem> ResetLeaveCreditItems { get; set; }
+
         public int? OriginalImageId { get; set; }
 
         [ForeignKey("OriginalImageId")]

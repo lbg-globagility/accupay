@@ -1,8 +1,10 @@
 Imports System.IO
+Imports System.Text.RegularExpressions
 Imports AccuPay.Core.Entities
 Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
+Imports Pomelo.EntityFrameworkCore
 
 Module myModule
     Public conn As New MySqlConnection
@@ -852,9 +854,12 @@ Module myModule
 
         FullStringToCompare = FullStringToCompare.ToUpper
 
+        Dim pattern As String = "'[^']*'"
+        Dim sql = Regex.Replace(FullStringToCompare, pattern, "")
+
         For Each strval In AnArrayOfWords
 
-            If FullStringToCompare.Contains(strval.ToUpper) Then
+            If sql.Contains(strval.ToUpper) Then
                 returnvalue = True
                 Exit For
             End If
