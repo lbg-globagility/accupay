@@ -48,7 +48,8 @@ Public Class ReportsList
             New PayrollLedgerExcelFormatReportProvider(),
             New LoanLedgerReportProvider(),
             New Cinema2000TardinessReportProvider(),
-            New AlphalistExcelFormatReportProvider()
+            New AlphalistExcelFormatReportProvider(),
+            New BankFileTextFormatReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 

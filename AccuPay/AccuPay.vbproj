@@ -428,7 +428,17 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Reports\Reports\Bank File\BankFileHeaderModel.vb" />
+    <Compile Include="Reports\Reports\Bank File\BankFileHeaderDataManager.vb" />
+    <Compile Include="Reports\Reports\Bank File\BankFileModel.vb" />
+    <Compile Include="Reports\Reports\Bank File\BankFileTextFormatForm.Designer.vb">
+      <DependentUpon>BankFileTextFormatForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Reports\Bank File\BankFileTextFormatForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\BankFileTextFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Government Premium\AdvanceValeForm.Designer.vb">
@@ -1666,6 +1676,9 @@
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
+    <EmbeddedResource Include="Reports\Reports\Bank File\BankFileTextFormatForm.resx">
+      <DependentUpon>BankFileTextFormatForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Government Premium\AdvanceValeForm.resx">
       <DependentUpon>AdvanceValeForm.vb</DependentUpon>
     </EmbeddedResource>
