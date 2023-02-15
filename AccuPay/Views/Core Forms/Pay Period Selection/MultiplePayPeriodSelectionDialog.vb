@@ -295,16 +295,11 @@ Public Class MultiplePayPeriodSelectionDialog
         End If
     End Function
 
-    Private Shared Async Function CreateNewPayPeriod(startPayPeriod As PayPeriod) As Task(Of Integer?)
-        Dim dataService = MainServiceProvider.GetRequiredService(Of IPayPeriodDataService)
-        Dim newPayPeriod = Await dataService.CreateAsync(
-            organizationId:=z_OrganizationID,
-            month:=startPayPeriod.Month,
-            year:=startPayPeriod.Year,
-            isFirstHalf:=startPayPeriod.IsFirstHalf,
-            currentlyLoggedInUserId:=z_User)
-
-        Return newPayPeriod.RowID
+    Private Async Function CreateNewPayPeriod(startPayPeriod As PayPeriod) As Task(Of Integer?)
+        Dim thisPayPeriod = Await _payPeriodRepository.GetAsync(
+            organization:=_organization,
+            payPeriod:=startPayPeriod)
+        Return thisPayPeriod.RowID
     End Function
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
