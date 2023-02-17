@@ -38,6 +38,7 @@ Public Class BankFileTextFormatForm
         numCeilingAmount.Controls(0).Hide()
         numPresentingOffice.Controls(0).Hide()
         numBatchNo.Controls(0).Hide()
+        chkSelectAll.ThreeState = True
 
         Dim bankFileHeaderModel = bankFileHeaderDataManager.GetBankFileHeaderModel
         If bankFileHeaderModel IsNot Nothing Then
@@ -52,24 +53,32 @@ Public Class BankFileTextFormatForm
         Dim payPeriod = Await _payPeriodRepository.GetCurrentOpenAsync(organization:=_organization)
 
         If payPeriod Is Nothing Then
-            dtpPayrollDate.Value = Date.Now
-        Else
-            dtpPayrollDate.Value = payPeriod.PayFromDate.Date
-            dtpPayrollDate.MinDate = payPeriod.PayFromDate.Date
-            dtpPayrollDate.MaxDate = payPeriod.PayToDate.Date
+            Dim payPeriods = Await _payPeriodRepository.GetYearlyPayPeriodsOfWeeklyAsync(organization:=_organization, year:=Date.Now.Year, currentUserId:=z_User)
+            payPeriod = payPeriods.
+                Where(Function(p) p.PayFromDate <= Date.Now.Date).
+                Where(Function(p) p.PayToDate >= Date.Now.Date).
+                FirstOrDefault()
         End If
+        dtpPayrollDate.Value = payPeriod.PayFromDate.Date
+        dtpPayrollDate.MinDate = payPeriod.PayFromDate.Date
+        dtpPayrollDate.MaxDate = payPeriod.PayToDate.Date
 
         Await LoadPaystubs(payPeriod)
 
         AddHandler chkSelectAll.CheckedChanged, AddressOf chkSelectAll_CheckedChanged
 
         chkSelectAll.Checked = True
+        chkSelectAll.CheckState = CheckState.Checked
 
-        AddHandler gridPayroll.CellValueChanged, AddressOf gridPayroll_CellValueChanged
+        'AddHandler gridPayroll.CellValueChanged, AddressOf gridPayroll_CellValueChanged
     End Sub
 
     Private Async Function LoadPaystubs(payPeriod As PayPeriod) As Task
-        Dim paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeAsync(payPeriodId:=payPeriod.RowID.Value)
+        Dim paystubs = Enumerable.Empty(Of Paystub)
+        If payPeriod.RowID IsNot Nothing Then
+            paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeAsync(payPeriodId:=payPeriod.RowID.Value)
+        End If
+
         Dim models = paystubs.Select(Function(p) New BankFileModel(p)).ToList()
 
         Dim summaryModel As BankFileModel = BankFileModel.BankFileModelSummary(models:=models)
@@ -80,17 +89,28 @@ Public Class BankFileTextFormatForm
         gridPayroll.DataSource = models
     End Function
 
+    Private Sub chkSelectAll_CheckedChanged_1(sender As Object, e As EventArgs) Handles chkSelectAll.CheckedChanged
+
+    End Sub
+
     Private Sub chkSelectAll_CheckedChanged(sender As Object, e As EventArgs)
+        RemoveHandler gridPayroll.CellValueChanged, AddressOf gridPayroll_CellValueChanged
         Dim rows = gridPayroll.Rows.OfType(Of DataGridViewRow).ToList()
-        For Each item In rows
-            item.Cells(Column1.Name).Value = chkSelectAll.Checked
-        Next
+
+        If Not chkSelectAll.CheckState = CheckState.Indeterminate Then
+            For Each item In rows
+                item.Cells(Column1.Name).Value = chkSelectAll.Checked
+            Next
+        End If
 
         UpdateCeiling()
+        UpdateTriStateCheckBox()
+        AddHandler gridPayroll.CellValueChanged, AddressOf gridPayroll_CellValueChanged
     End Sub
 
     Private Sub UpdateCeiling()
-        Dim models = gridPayroll.Rows.OfType(Of DataGridViewRow).
+        Dim rows = gridPayroll.Rows.OfType(Of DataGridViewRow)
+        Dim models = rows.
             Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
             Where(Function(p) p.IsSelected).
             ToList()
@@ -102,24 +122,47 @@ Public Class BankFileTextFormatForm
         If result <= THOUSAND_VALUE Then numCeilingAmount.Value = 0
     End Sub
 
+    Private Sub UpdateTriStateCheckBox()
+        Dim rows = gridPayroll.Rows.OfType(Of DataGridViewRow)
+        Dim models = rows.
+            Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
+            Where(Function(p) p.IsSelected).
+            ToList()
+
+        Dim totalCount = rows.Count - 1
+        Dim selectedCount = models.Count
+        chkSelectAll.Text = $"Select All ({selectedCount}/{totalCount})"
+        If Not selectedCount = 0 AndAlso selectedCount < totalCount Then
+            chkSelectAll.CheckState = CheckState.Indeterminate
+        ElseIf Not selectedCount = 0 AndAlso selectedCount = totalCount Then
+            chkSelectAll.CheckState = CheckState.Checked
+        ElseIf selectedCount = 0 Then
+            chkSelectAll.CheckState = CheckState.Unchecked
+        End If
+    End Sub
+
     Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
         If Not numCompanyCode.Value > 0 OrElse Not numCompanyCode.Value.ToString("00000").Length = 5 Then
             ValidationMessagePrompt($"Invalid Company Code.{Environment.NewLine}It is the 5 digit code.")
+            numCompanyCode.Focus()
             Return
         End If
 
         If Not numFundingAccountNo.Value > 0 OrElse Not numFundingAccountNo.Value.ToString("0000000000").Length = 10 Then
             ValidationMessagePrompt($"Invalid Funding Account No.{Environment.NewLine}It is the 10 digit code.")
+            numFundingAccountNo.Focus()
             Return
         End If
 
         If Not numPresentingOffice.Value > 0 OrElse Not numPresentingOffice.Value.ToString("000").Length = 3 Then
             ValidationMessagePrompt($"Invalid Presenting Office.{Environment.NewLine}It is the 3 digit code.")
+            numPresentingOffice.Focus()
             Return
         End If
 
         If Not numBatchNo.Value > 0 OrElse Not numBatchNo.Value.ToString("00").Length = 2 Then
             ValidationMessagePrompt($"Invalid Batch No.{Environment.NewLine}It is the 2 digit code.")
+            numBatchNo.Focus()
             Return
         End If
 
@@ -198,7 +241,10 @@ Public Class BankFileTextFormatForm
     End Sub
 
     Private Sub gridPayroll_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs)
-        If e.ColumnIndex = Column1.Index Then UpdateCeiling()
+        If e.ColumnIndex = Column1.Index Then
+            UpdateCeiling()
+            UpdateTriStateCheckBox()
+        End If
     End Sub
 
     Private Function GetPayrollSelector() As MultiplePayPeriodSelectionDialog

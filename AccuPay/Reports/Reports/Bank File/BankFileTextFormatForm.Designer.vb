@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class BankFileTextFormatForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,11 +20,11 @@ Partial Class BankFileTextFormatForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -46,6 +46,7 @@ Partial Class BankFileTextFormatForm
         Me.numCeilingAmount = New System.Windows.Forms.NumericUpDown()
         Me.numFundingAccountNo = New System.Windows.Forms.NumericUpDown()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Panel4 = New System.Windows.Forms.Panel()
         Me.chkSelectAll = New System.Windows.Forms.CheckBox()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.btnClose = New System.Windows.Forms.Button()
@@ -65,6 +66,7 @@ Partial Class BankFileTextFormatForm
         CType(Me.numCeilingAmount, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numFundingAccountNo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
+        Me.Panel4.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -139,14 +141,14 @@ Partial Class BankFileTextFormatForm
         Me.gridPayroll.ColumnHeadersHeight = 34
         Me.gridPayroll.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.gridPayroll.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column5})
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.gridPayroll.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.gridPayroll.DefaultCellStyle = DataGridViewCellStyle2
         Me.gridPayroll.Dock = System.Windows.Forms.DockStyle.Fill
         Me.gridPayroll.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.gridPayroll.Location = New System.Drawing.Point(0, 0)
@@ -154,7 +156,7 @@ Partial Class BankFileTextFormatForm
         Me.gridPayroll.Name = "gridPayroll"
         Me.gridPayroll.RowHeadersWidth = 25
         Me.gridPayroll.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.gridPayroll.Size = New System.Drawing.Size(636, 260)
+        Me.gridPayroll.Size = New System.Drawing.Size(636, 262)
         Me.gridPayroll.TabIndex = 0
         '
         'Column1
@@ -188,10 +190,10 @@ Partial Class BankFileTextFormatForm
         'Column5
         '
         Me.Column5.DataPropertyName = "Amount"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.Format = "N2"
-        DataGridViewCellStyle4.NullValue = Nothing
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle1
         Me.Column5.HeaderText = "Amount"
         Me.Column5.Name = "Column5"
         Me.Column5.ReadOnly = True
@@ -220,12 +222,12 @@ Partial Class BankFileTextFormatForm
         'lnkSelectPeriod
         '
         Me.lnkSelectPeriod.AutoSize = True
-        Me.lnkSelectPeriod.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lnkSelectPeriod.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lnkSelectPeriod.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
         Me.lnkSelectPeriod.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.lnkSelectPeriod.Location = New System.Drawing.Point(531, 25)
+        Me.lnkSelectPeriod.Location = New System.Drawing.Point(531, 27)
         Me.lnkSelectPeriod.Name = "lnkSelectPeriod"
-        Me.lnkSelectPeriod.Size = New System.Drawing.Size(89, 15)
+        Me.lnkSelectPeriod.Size = New System.Drawing.Size(83, 13)
         Me.lnkSelectPeriod.TabIndex = 277
         Me.lnkSelectPeriod.TabStop = True
         Me.lnkSelectPeriod.Text = "Change Period"
@@ -280,19 +282,28 @@ Partial Class BankFileTextFormatForm
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.gridPayroll)
-        Me.Panel2.Controls.Add(Me.chkSelectAll)
+        Me.Panel2.Controls.Add(Me.Panel4)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 126)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(636, 286)
         Me.Panel2.TabIndex = 9
         '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.chkSelectAll)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel4.Location = New System.Drawing.Point(0, 262)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(636, 24)
+        Me.Panel4.TabIndex = 9
+        '
         'chkSelectAll
         '
-        Me.chkSelectAll.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.chkSelectAll.Location = New System.Drawing.Point(0, 260)
+        Me.chkSelectAll.Dock = System.Windows.Forms.DockStyle.Left
+        Me.chkSelectAll.Location = New System.Drawing.Point(0, 0)
         Me.chkSelectAll.Name = "chkSelectAll"
-        Me.chkSelectAll.Size = New System.Drawing.Size(636, 26)
+        Me.chkSelectAll.Size = New System.Drawing.Size(378, 24)
         Me.chkSelectAll.TabIndex = 8
         Me.chkSelectAll.Text = "Select All"
         Me.chkSelectAll.UseVisualStyleBackColor = True
@@ -358,10 +369,10 @@ Partial Class BankFileTextFormatForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "Amount"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "N2"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn4.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -403,6 +414,7 @@ Partial Class BankFileTextFormatForm
         CType(Me.numCeilingAmount, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numFundingAccountNo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
+        Me.Panel4.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         Me.ResumeLayout(False)
 
@@ -439,4 +451,5 @@ Partial Class BankFileTextFormatForm
     Friend WithEvents Column4 As DataGridViewTextBoxColumn
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents Panel4 As Panel
 End Class
