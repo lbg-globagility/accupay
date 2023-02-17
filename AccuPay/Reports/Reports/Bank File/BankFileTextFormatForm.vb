@@ -156,6 +156,7 @@ Public Class BankFileTextFormatForm
     End Sub
 
     Private Function GetHeader(models As List(Of BankFileModel)) As String
+        Dim totalSummary = Math.Round(models.Sum(Function(p) p.Amount), 2).ToString().Replace(".", String.Empty)
         Return String.Concat("H",
             numCompanyCode.Value.ToString("00000"),
             dtpPayrollDate.Value.ToString("MMddyy"),
@@ -164,7 +165,7 @@ Public Class BankFileTextFormatForm
             numFundingAccountNo.Value.ToString("0000000000"),
             numPresentingOffice.Value.ToString("000"),
             numCeilingAmount.Value.ToString("0000000000"),
-            models.Sum(Function(p) p.Amount).ToString("00000000000000"),
+            CInt(totalSummary).ToString("00000000000000"),
             "1",
             Space(75))
     End Function
@@ -174,6 +175,7 @@ Public Class BankFileTextFormatForm
     End Sub
 
     Private Function GetTrailer(models As List(Of BankFileModel)) As String
+        Dim totalSummary = Math.Round(models.Sum(Function(p) p.Amount), 2).ToString().Replace(".", String.Empty)
         Return String.Concat("T",
             numCompanyCode.Value.ToString("00000"),
             dtpPayrollDate.Value.ToString("MMddyy"),
@@ -181,7 +183,7 @@ Public Class BankFileTextFormatForm
             "2",
             numFundingAccountNo.Value.ToString("0000000000"),
             models.Sum(Function(p) p.AccountNumberDecimal).ToString("000000000000000"),
-            models.Sum(Function(p) p.Amount).ToString("000000000000000"),
+            CInt(totalSummary).ToString("000000000000000"),
             models.Sum(Function(p) p.DataHashInt).ToString("000000000000000000"),
             models.Count.ToString("00000"),
             Space(50))

@@ -66,13 +66,15 @@ Public Class BankFileModel
             payrollDate As String,
             batchNo As String) As String
 
+        Dim totalSummary = Math.Round(Amount, 2).ToString().Replace(".", String.Empty)
+
         Return String.Concat("D",
             companyCode,
             payrollDate,
             batchNo,
             "3",
             AccountNumberDecimal.ToString("0000000000"),
-            Amount.ToString("000000000000"),
+            CInt(totalSummary).ToString("000000000000"),
             DataHash,
             Space(79))
     End Function
