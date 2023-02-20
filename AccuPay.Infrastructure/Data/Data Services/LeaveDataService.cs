@@ -91,9 +91,6 @@ namespace AccuPay.Infrastructure.Data
 
         private async Task SaveLeavesAsync(List<Leave> leaves, int organizationId)
         {
-            // TODO: Urgent!!! - should not access repository directly like this!
-            var leaveRepository = new LeaveRepository(_context);
-
             var shifts = new List<Shift>();
             var employees = new List<Employee>();
 
@@ -121,14 +118,14 @@ namespace AccuPay.Infrastructure.Data
                 {
                     foreach (var leave in leaves)
                     {
-                        await leaveRepository.SaveAsync(leave);
+                        await _leaveRepository.SaveAsync(leave);
 
                         if (Validatable(leave))
                         {
                             var employee = employees.FirstOrDefault(e => e.RowID == leave.EmployeeID);
 
                             var unusedApprovedLeaves = await GetUnusedApprovedLeavesByType(
-                                leaveRepository,
+                                _leaveRepository,
                                 employee.RowID,
                                 leave,
                                 organizationId);
@@ -673,10 +670,12 @@ namespace AccuPay.Infrastructure.Data
         #endregion Overrides
 
         #region Others
+
         public async Task<ILeavePolicy> GetLeavePolicyAsync()
         {
             return await _leaveRepository.GetLeavePolicyAsync();
         }
+
         #endregion Others
     }
 }
