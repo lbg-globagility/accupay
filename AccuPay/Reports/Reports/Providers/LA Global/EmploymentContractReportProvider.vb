@@ -43,7 +43,7 @@ Public Class EmploymentContractReportProvider
             Dim latestSalary = Await employeeRepository.GetCurrentSalaryAsync(e.RowID.Value)
 
             .SetParameter("salary", If(latestSalary?.BasicSalary, 0))
-            .SetParameter("companyName", orgNam)
+            .SetParameter("companyName", z_OrganizationName)
 
             Dim area = If(String.IsNullOrWhiteSpace(e.Branch?.Name), String.Empty, e.Branch?.Name)
             .SetParameter("area", area)

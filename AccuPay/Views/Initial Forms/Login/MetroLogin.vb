@@ -91,7 +91,7 @@ Public Class MetroLogin
         'Const warningMessage As String = "Please install the latest version of AccuPay. Contact your IT Department or Globagility Inc. for assistance."
 
         'Dim fsdfsd = Function(userVersion As String, systemVersion As String) As String
-        '                 Return 
+        '                 Return
         '             End Function
         Dim warningMessage As String = String.Empty
 
@@ -281,9 +281,9 @@ Public Class MetroLogin
 
         PhotoImages.Image = Nothing
 
-        orgNam = organization.Name
+        z_OrganizationName = organization.Name
 
-        z_CompanyName = orgNam
+        z_CompanyName = z_OrganizationName
 
         orgztnID = organization.RowID.ToString()
 

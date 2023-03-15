@@ -10,6 +10,7 @@ Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class GeneralForm
+    Implements IInitialForm
 
     Public listGeneralForm As New List(Of String)
 
@@ -213,6 +214,10 @@ Public Class GeneralForm
             pb.Enabled = True
             Exit For
         Next
+    End Sub
+
+    Public Sub Reload() Implements IInitialForm.Reload
+        GeneralForm_Load(sender:=Me, e:=New EventArgs())
     End Sub
 
 End Class

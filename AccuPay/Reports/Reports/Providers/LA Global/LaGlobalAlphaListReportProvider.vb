@@ -71,7 +71,7 @@ Public Class LaGlobalAlphaListReportProvider
         payrollSelector As MultiplePayPeriodSelectionDialog) As String
 
         Return String.Concat(
-            orgNam, "_",
+            z_OrganizationName, "_",
             reportName, "_",
             payrollSelector.SalaryDistributionComboBox.Text.Replace(" ", ""),
             "Report_",

@@ -479,7 +479,7 @@ Public Class OrganizationForm
 
                 If _currentOrganization.RowID = z_OrganizationID Then
                     MDIPrimaryForm.Text = _currentOrganization.Name
-                    orgNam = MDIPrimaryForm.Text
+                    z_OrganizationName = MDIPrimaryForm.Text
                 End If
 
                 OrganizationGridView.Enabled = True

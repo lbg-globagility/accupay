@@ -39,26 +39,12 @@ Partial Class MDIPrimaryForm
         Me.CollapsibleGroupBox3 = New Indigo.CollapsibleGroupBox()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.dgvfrequentabsent = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BirthdayCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.dgvBDayCeleb = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LoanBalanceCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.dgvLoanBalance = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.Panel9 = New System.Windows.Forms.Panel()
         Me.CollapsibleGroupBox5 = New Indigo.CollapsibleGroupBox()
@@ -66,45 +52,22 @@ Partial Class MDIPrimaryForm
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.dgvRegularization = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.ColumEmpID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ColumEmpFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.NegativePayslipsCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
         Me.Panel14 = New System.Windows.Forms.Panel()
         Me.dgvnegaPaySlip = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel10 = New System.Windows.Forms.Panel()
         Me.CollapsibleGroupBox6 = New Indigo.CollapsibleGroupBox()
         Me.Panel15 = New System.Windows.Forms.Panel()
         Me.dgvpendingleave = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.elvEmpID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elvFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elvTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elvStartDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.elvDays = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CollapsibleGroupBox4 = New Indigo.CollapsibleGroupBox()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.dgvfrequentleave = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PendingOvertimeCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.dgvOTPending = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PendingOfficialBusinessCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
         Me.Panel12 = New System.Windows.Forms.Panel()
         Me.dgvOBPending = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
@@ -127,6 +90,7 @@ Partial Class MDIPrimaryForm
         Me.TimeAndAttendanceToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.PayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ReportsToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.SwitchCompanyToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
@@ -135,6 +99,18 @@ Partial Class MDIPrimaryForm
         Me.bgDashBoardReloader = New System.ComponentModel.BackgroundWorker()
         Me.ctxtmenNothing = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.EmailStatusTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -160,6 +136,34 @@ Partial Class MDIPrimaryForm
         Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColumEmpID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColumEmpFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elvEmpID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elvFullName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elvTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elvStartDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.elvDays = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -301,30 +305,6 @@ Partial Class MDIPrimaryForm
         Me.dgvfrequentabsent.Size = New System.Drawing.Size(296, 196)
         Me.dgvfrequentabsent.TabIndex = 121
         '
-        'Column1
-        '
-        Me.Column1.HeaderText = "Employee ID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.HeaderText = "Full Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.HeaderText = "Frequency"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column15
-        '
-        Me.Column15.HeaderText = "Cut off"
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        '
         'BirthdayCollapsibleGroupBox
         '
         Me.BirthdayCollapsibleGroupBox.AccessibleDescription = "Cinema 2000"
@@ -378,33 +358,6 @@ Partial Class MDIPrimaryForm
         Me.dgvBDayCeleb.Size = New System.Drawing.Size(296, 196)
         Me.dgvBDayCeleb.TabIndex = 121
         '
-        'Column5
-        '
-        Me.Column5.FillWeight = 99.74425!
-        Me.Column5.HeaderText = "Employee ID"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column5.Width = 130
-        '
-        'Column6
-        '
-        Me.Column6.FillWeight = 100.6077!
-        Me.Column6.HeaderText = "Employee Full Name"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column6.Width = 131
-        '
-        'Column7
-        '
-        Me.Column7.FillWeight = 99.64806!
-        Me.Column7.HeaderText = "Birthdate"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column7.Width = 130
-        '
         'LoanBalanceCollapsibleGroupBox
         '
         Me.LoanBalanceCollapsibleGroupBox.AccessibleDescription = "Cinema 2000"
@@ -457,62 +410,6 @@ Partial Class MDIPrimaryForm
         Me.dgvLoanBalance.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvLoanBalance.Size = New System.Drawing.Size(296, 196)
         Me.dgvLoanBalance.TabIndex = 130
-        '
-        'Column8
-        '
-        Me.Column8.FillWeight = 179.0281!
-        Me.Column8.HeaderText = "Employee ID"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        Me.Column8.Width = 120
-        '
-        'Column9
-        '
-        Me.Column9.FillWeight = 139.5578!
-        Me.Column9.HeaderText = "Full Name"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        Me.Column9.Width = 104
-        '
-        'Column10
-        '
-        Me.Column10.FillWeight = 110.1821!
-        Me.Column10.HeaderText = "Loan Status"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        Me.Column10.Width = 112
-        '
-        'Column11
-        '
-        Me.Column11.FillWeight = 88.31944!
-        Me.Column11.HeaderText = "Loan start date"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        Me.Column11.Width = 135
-        '
-        'Column12
-        '
-        Me.Column12.FillWeight = 72.04824!
-        Me.Column12.HeaderText = "Loan end date"
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        Me.Column12.Width = 131
-        '
-        'Column13
-        '
-        Me.Column13.FillWeight = 59.93846!
-        Me.Column13.HeaderText = "Remaining balance"
-        Me.Column13.Name = "Column13"
-        Me.Column13.ReadOnly = True
-        Me.Column13.Width = 164
-        '
-        'Column14
-        '
-        Me.Column14.FillWeight = 50.92582!
-        Me.Column14.HeaderText = "Remaining pay period"
-        Me.Column14.Name = "Column14"
-        Me.Column14.ReadOnly = True
-        Me.Column14.Width = 185
         '
         'SplitContainer2
         '
@@ -618,29 +515,6 @@ Partial Class MDIPrimaryForm
         Me.dgvRegularization.Size = New System.Drawing.Size(293, 289)
         Me.dgvRegularization.TabIndex = 123
         '
-        'ColumEmpID
-        '
-        Me.ColumEmpID.HeaderText = "Employee ID"
-        Me.ColumEmpID.Name = "ColumEmpID"
-        Me.ColumEmpID.ReadOnly = True
-        Me.ColumEmpID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.ColumEmpID.Width = 127
-        '
-        'ColumEmpFullName
-        '
-        Me.ColumEmpFullName.HeaderText = "Employee Full Name"
-        Me.ColumEmpFullName.Name = "ColumEmpFullName"
-        Me.ColumEmpFullName.ReadOnly = True
-        Me.ColumEmpFullName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.ColumEmpFullName.Width = 127
-        '
-        'Column16
-        '
-        Me.Column16.HeaderText = "Date hired"
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        Me.Column16.Width = 127
-        '
         'NegativePayslipsCollapsibleGroupBox
         '
         Me.NegativePayslipsCollapsibleGroupBox.AccessibleDescription = "Cinema 2000"
@@ -693,30 +567,6 @@ Partial Class MDIPrimaryForm
         Me.dgvnegaPaySlip.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvnegaPaySlip.Size = New System.Drawing.Size(293, 196)
         Me.dgvnegaPaySlip.TabIndex = 130
-        '
-        'DataGridViewTextBoxColumn10
-        '
-        Me.DataGridViewTextBoxColumn10.FillWeight = 179.0281!
-        Me.DataGridViewTextBoxColumn10.HeaderText = "Employee ID"
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        Me.DataGridViewTextBoxColumn10.ReadOnly = True
-        Me.DataGridViewTextBoxColumn10.Width = 130
-        '
-        'DataGridViewTextBoxColumn11
-        '
-        Me.DataGridViewTextBoxColumn11.FillWeight = 139.5578!
-        Me.DataGridViewTextBoxColumn11.HeaderText = "Full Name"
-        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
-        Me.DataGridViewTextBoxColumn11.ReadOnly = True
-        Me.DataGridViewTextBoxColumn11.Width = 130
-        '
-        'DataGridViewTextBoxColumn12
-        '
-        Me.DataGridViewTextBoxColumn12.FillWeight = 110.1821!
-        Me.DataGridViewTextBoxColumn12.HeaderText = "Pay period"
-        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
-        Me.DataGridViewTextBoxColumn12.ReadOnly = True
-        Me.DataGridViewTextBoxColumn12.Width = 130
         '
         'Panel10
         '
@@ -785,36 +635,6 @@ Partial Class MDIPrimaryForm
         Me.dgvpendingleave.Size = New System.Drawing.Size(302, 196)
         Me.dgvpendingleave.TabIndex = 121
         '
-        'elvEmpID
-        '
-        Me.elvEmpID.HeaderText = "Employee ID"
-        Me.elvEmpID.Name = "elvEmpID"
-        Me.elvEmpID.ReadOnly = True
-        '
-        'elvFullName
-        '
-        Me.elvFullName.HeaderText = "Full Name"
-        Me.elvFullName.Name = "elvFullName"
-        Me.elvFullName.ReadOnly = True
-        '
-        'elvTime
-        '
-        Me.elvTime.HeaderText = "Time"
-        Me.elvTime.Name = "elvTime"
-        Me.elvTime.ReadOnly = True
-        '
-        'elvStartDate
-        '
-        Me.elvStartDate.HeaderText = "StartDate"
-        Me.elvStartDate.Name = "elvStartDate"
-        Me.elvStartDate.ReadOnly = True
-        '
-        'elvDays
-        '
-        Me.elvDays.HeaderText = "No. of day(s)"
-        Me.elvDays.Name = "elvDays"
-        Me.elvDays.ReadOnly = True
-        '
         'CollapsibleGroupBox4
         '
         Me.CollapsibleGroupBox4.Controls.Add(Me.Panel7)
@@ -866,30 +686,6 @@ Partial Class MDIPrimaryForm
         Me.dgvfrequentleave.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvfrequentleave.Size = New System.Drawing.Size(302, 196)
         Me.dgvfrequentleave.TabIndex = 121
-        '
-        'Column17
-        '
-        Me.Column17.HeaderText = "Employee ID"
-        Me.Column17.Name = "Column17"
-        Me.Column17.ReadOnly = True
-        '
-        'Column20
-        '
-        Me.Column20.HeaderText = "Full Name"
-        Me.Column20.Name = "Column20"
-        Me.Column20.ReadOnly = True
-        '
-        'Column21
-        '
-        Me.Column21.HeaderText = "Frequency"
-        Me.Column21.Name = "Column21"
-        Me.Column21.ReadOnly = True
-        '
-        'Column22
-        '
-        Me.Column22.HeaderText = "Cut off"
-        Me.Column22.Name = "Column22"
-        Me.Column22.ReadOnly = True
         '
         'PendingOvertimeCollapsibleGroupBox
         '
@@ -944,40 +740,6 @@ Partial Class MDIPrimaryForm
         Me.dgvOTPending.Size = New System.Drawing.Size(302, 196)
         Me.dgvOTPending.TabIndex = 121
         '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.FillWeight = 102.5126!
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Employee ID"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn4.Width = 136
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.FillWeight = 99.67702!
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Employee Full Name"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        Me.DataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn5.Width = 132
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.FillWeight = 97.8104!
-        Me.DataGridViewTextBoxColumn6.HeaderText = "No. of OT hrs"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        Me.DataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn6.Width = 130
-        '
-        'Column18
-        '
-        Me.Column18.HeaderText = "RowID"
-        Me.Column18.Name = "Column18"
-        Me.Column18.ReadOnly = True
-        Me.Column18.Visible = False
-        '
         'PendingOfficialBusinessCollapsibleGroupBox
         '
         Me.PendingOfficialBusinessCollapsibleGroupBox.AccessibleDescription = "Cinema 2000"
@@ -1030,38 +792,6 @@ Partial Class MDIPrimaryForm
         Me.dgvOBPending.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvOBPending.Size = New System.Drawing.Size(302, 196)
         Me.dgvOBPending.TabIndex = 130
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.FillWeight = 102.5126!
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Employee ID"
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        Me.DataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn7.Width = 136
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.FillWeight = 99.67702!
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Full Name"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
-        Me.DataGridViewTextBoxColumn8.Width = 132
-        '
-        'DataGridViewTextBoxColumn9
-        '
-        Me.DataGridViewTextBoxColumn9.FillWeight = 97.8104!
-        Me.DataGridViewTextBoxColumn9.HeaderText = "No. of OB hrs"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        Me.DataGridViewTextBoxColumn9.ReadOnly = True
-        Me.DataGridViewTextBoxColumn9.Width = 130
-        '
-        'Column19
-        '
-        Me.Column19.HeaderText = "RowID"
-        Me.Column19.Name = "Column19"
-        Me.Column19.ReadOnly = True
-        Me.Column19.Visible = False
         '
         'ToolStrip1
         '
@@ -1180,7 +910,7 @@ Partial Class MDIPrimaryForm
         Me.Showmainbutton.Dock = System.Windows.Forms.DockStyle.Left
         Me.Showmainbutton.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
         Me.Showmainbutton.ImageScalingSize = New System.Drawing.Size(20, 20)
-        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HomeToolStripButton, Me.GeneralToolStripButton, Me.HrisToolStripButton, Me.TimeAndAttendanceToolStripButton, Me.PayrollToolStripButton, Me.ReportsToolStripButton})
+        Me.Showmainbutton.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HomeToolStripButton, Me.GeneralToolStripButton, Me.HrisToolStripButton, Me.TimeAndAttendanceToolStripButton, Me.PayrollToolStripButton, Me.ReportsToolStripButton, Me.SwitchCompanyToolStripButton})
         Me.Showmainbutton.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow
         Me.Showmainbutton.Location = New System.Drawing.Point(0, 0)
         Me.Showmainbutton.Name = "Showmainbutton"
@@ -1272,6 +1002,20 @@ Partial Class MDIPrimaryForm
         Me.ReportsToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.ReportsToolStripButton.ToolTipText = "Reports"
         '
+        'SwitchCompanyToolStripButton
+        '
+        Me.SwitchCompanyToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.SwitchCompanyToolStripButton.AutoSize = False
+        Me.SwitchCompanyToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.SwitchCompanyToolStripButton.Image = Global.AccuPay.My.Resources.Resources.application_view_list_icon
+        Me.SwitchCompanyToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SwitchCompanyToolStripButton.Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+        Me.SwitchCompanyToolStripButton.Name = "SwitchCompanyToolStripButton"
+        Me.SwitchCompanyToolStripButton.Size = New System.Drawing.Size(85, 80)
+        Me.SwitchCompanyToolStripButton.Text = "Switch Company"
+        Me.SwitchCompanyToolStripButton.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage
+        Me.SwitchCompanyToolStripButton.ToolTipText = "Switch Company"
+        '
         'Timer1
         '
         Me.Timer1.Enabled = True
@@ -1316,6 +1060,100 @@ Partial Class MDIPrimaryForm
         '
         Me.EmailStatusTimer.Interval = 5000
         '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Frequency"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.FillWeight = 102.5126!
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn4.Width = 136
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.FillWeight = 99.67702!
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Employee Full Name"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn5.Width = 132
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.FillWeight = 97.8104!
+        Me.DataGridViewTextBoxColumn6.HeaderText = "No. of OT hrs"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        Me.DataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn6.Width = 130
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.FillWeight = 102.5126!
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        Me.DataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn7.Width = 136
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.FillWeight = 99.67702!
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
+        Me.DataGridViewTextBoxColumn8.Width = 132
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.FillWeight = 97.8104!
+        Me.DataGridViewTextBoxColumn9.HeaderText = "No. of OB hrs"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
+        Me.DataGridViewTextBoxColumn9.Width = 130
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.FillWeight = 179.0281!
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        Me.DataGridViewTextBoxColumn10.Width = 130
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.FillWeight = 139.5578!
+        Me.DataGridViewTextBoxColumn11.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
+        Me.DataGridViewTextBoxColumn11.Width = 130
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.FillWeight = 110.1821!
+        Me.DataGridViewTextBoxColumn12.HeaderText = "Pay period"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
+        Me.DataGridViewTextBoxColumn12.Width = 130
+        '
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.FillWeight = 59.93846!
@@ -1357,24 +1195,30 @@ Partial Class MDIPrimaryForm
         '
         'DataGridViewTextBoxColumn18
         '
+        Me.DataGridViewTextBoxColumn18.FillWeight = 179.0281!
         Me.DataGridViewTextBoxColumn18.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.ReadOnly = True
         Me.DataGridViewTextBoxColumn18.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn18.Width = 130
         '
         'DataGridViewTextBoxColumn19
         '
+        Me.DataGridViewTextBoxColumn19.FillWeight = 139.5578!
         Me.DataGridViewTextBoxColumn19.HeaderText = "Employee Full Name"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.ReadOnly = True
         Me.DataGridViewTextBoxColumn19.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn19.Width = 130
         '
         'DataGridViewTextBoxColumn20
         '
+        Me.DataGridViewTextBoxColumn20.FillWeight = 110.1821!
         Me.DataGridViewTextBoxColumn20.HeaderText = "Dependent Full Name"
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
         Me.DataGridViewTextBoxColumn20.ReadOnly = True
         Me.DataGridViewTextBoxColumn20.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn20.Width = 130
         '
         'DataGridViewTextBoxColumn21
         '
@@ -1439,27 +1283,37 @@ Partial Class MDIPrimaryForm
         '
         'DataGridViewTextBoxColumn30
         '
+        Me.DataGridViewTextBoxColumn30.FillWeight = 102.5126!
         Me.DataGridViewTextBoxColumn30.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
         Me.DataGridViewTextBoxColumn30.ReadOnly = True
+        Me.DataGridViewTextBoxColumn30.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn30.Width = 136
         '
         'DataGridViewTextBoxColumn31
         '
+        Me.DataGridViewTextBoxColumn31.FillWeight = 99.67702!
         Me.DataGridViewTextBoxColumn31.HeaderText = "Full Name"
         Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
         Me.DataGridViewTextBoxColumn31.ReadOnly = True
+        Me.DataGridViewTextBoxColumn31.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn31.Width = 132
         '
         'DataGridViewTextBoxColumn32
         '
+        Me.DataGridViewTextBoxColumn32.FillWeight = 97.8104!
         Me.DataGridViewTextBoxColumn32.HeaderText = "Frequency"
         Me.DataGridViewTextBoxColumn32.Name = "DataGridViewTextBoxColumn32"
         Me.DataGridViewTextBoxColumn32.ReadOnly = True
+        Me.DataGridViewTextBoxColumn32.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn32.Width = 130
         '
         'DataGridViewTextBoxColumn33
         '
         Me.DataGridViewTextBoxColumn33.HeaderText = "Cut off"
         Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
         Me.DataGridViewTextBoxColumn33.ReadOnly = True
+        Me.DataGridViewTextBoxColumn33.Visible = False
         '
         'DataGridViewTextBoxColumn34
         '
@@ -1494,6 +1348,204 @@ Partial Class MDIPrimaryForm
         Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
         Me.DataGridViewTextBoxColumn37.ReadOnly = True
         Me.DataGridViewTextBoxColumn37.Visible = False
+        '
+        'Column1
+        '
+        Me.Column1.HeaderText = "Employee ID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.HeaderText = "Full Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.HeaderText = "Frequency"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column15
+        '
+        Me.Column15.HeaderText = "Cut off"
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.FillWeight = 99.74425!
+        Me.Column5.HeaderText = "Employee ID"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        Me.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Column5.Width = 130
+        '
+        'Column6
+        '
+        Me.Column6.FillWeight = 100.6077!
+        Me.Column6.HeaderText = "Employee Full Name"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        Me.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Column6.Width = 131
+        '
+        'Column7
+        '
+        Me.Column7.FillWeight = 99.64806!
+        Me.Column7.HeaderText = "Birthdate"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        Me.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Column7.Width = 130
+        '
+        'Column8
+        '
+        Me.Column8.FillWeight = 179.0281!
+        Me.Column8.HeaderText = "Employee ID"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        Me.Column8.Width = 120
+        '
+        'Column9
+        '
+        Me.Column9.FillWeight = 139.5578!
+        Me.Column9.HeaderText = "Full Name"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        Me.Column9.Width = 104
+        '
+        'Column10
+        '
+        Me.Column10.FillWeight = 110.1821!
+        Me.Column10.HeaderText = "Loan Status"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        Me.Column10.Width = 112
+        '
+        'Column11
+        '
+        Me.Column11.FillWeight = 88.31944!
+        Me.Column11.HeaderText = "Loan start date"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        Me.Column11.Width = 135
+        '
+        'Column12
+        '
+        Me.Column12.FillWeight = 72.04824!
+        Me.Column12.HeaderText = "Loan end date"
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        Me.Column12.Width = 131
+        '
+        'Column13
+        '
+        Me.Column13.FillWeight = 59.93846!
+        Me.Column13.HeaderText = "Remaining balance"
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        Me.Column13.Width = 164
+        '
+        'Column14
+        '
+        Me.Column14.FillWeight = 50.92582!
+        Me.Column14.HeaderText = "Remaining pay period"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        Me.Column14.Width = 185
+        '
+        'ColumEmpID
+        '
+        Me.ColumEmpID.HeaderText = "Employee ID"
+        Me.ColumEmpID.Name = "ColumEmpID"
+        Me.ColumEmpID.ReadOnly = True
+        Me.ColumEmpID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ColumEmpID.Width = 127
+        '
+        'ColumEmpFullName
+        '
+        Me.ColumEmpFullName.HeaderText = "Employee Full Name"
+        Me.ColumEmpFullName.Name = "ColumEmpFullName"
+        Me.ColumEmpFullName.ReadOnly = True
+        Me.ColumEmpFullName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.ColumEmpFullName.Width = 127
+        '
+        'Column16
+        '
+        Me.Column16.HeaderText = "Date hired"
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        Me.Column16.Width = 127
+        '
+        'elvEmpID
+        '
+        Me.elvEmpID.HeaderText = "Employee ID"
+        Me.elvEmpID.Name = "elvEmpID"
+        Me.elvEmpID.ReadOnly = True
+        '
+        'elvFullName
+        '
+        Me.elvFullName.HeaderText = "Full Name"
+        Me.elvFullName.Name = "elvFullName"
+        Me.elvFullName.ReadOnly = True
+        '
+        'elvTime
+        '
+        Me.elvTime.HeaderText = "Time"
+        Me.elvTime.Name = "elvTime"
+        Me.elvTime.ReadOnly = True
+        '
+        'elvStartDate
+        '
+        Me.elvStartDate.HeaderText = "StartDate"
+        Me.elvStartDate.Name = "elvStartDate"
+        Me.elvStartDate.ReadOnly = True
+        '
+        'elvDays
+        '
+        Me.elvDays.HeaderText = "No. of day(s)"
+        Me.elvDays.Name = "elvDays"
+        Me.elvDays.ReadOnly = True
+        '
+        'Column17
+        '
+        Me.Column17.HeaderText = "Employee ID"
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        '
+        'Column20
+        '
+        Me.Column20.HeaderText = "Full Name"
+        Me.Column20.Name = "Column20"
+        Me.Column20.ReadOnly = True
+        '
+        'Column21
+        '
+        Me.Column21.HeaderText = "Frequency"
+        Me.Column21.Name = "Column21"
+        Me.Column21.ReadOnly = True
+        '
+        'Column22
+        '
+        Me.Column22.HeaderText = "Cut off"
+        Me.Column22.Name = "Column22"
+        Me.Column22.ReadOnly = True
+        '
+        'Column18
+        '
+        Me.Column18.HeaderText = "RowID"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        Me.Column18.Visible = False
+        '
+        'Column19
+        '
+        Me.Column19.HeaderText = "RowID"
+        Me.Column19.Name = "Column19"
+        Me.Column19.ReadOnly = True
+        Me.Column19.Visible = False
         '
         'DataGridViewTextBoxColumn38
         '
@@ -1721,4 +1773,8 @@ Partial Class MDIPrimaryForm
     Friend WithEvents DataGridViewTextBoxColumn40 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn41 As DataGridViewTextBoxColumn
     Friend WithEvents EmailStatusTimer As Timer
+    Friend WithEvents SwitchCompanyToolStripButton As ToolStripButton
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
 End Class

@@ -10,6 +10,7 @@ Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TimeAttendForm
+    Implements IInitialForm
 
     Public listTimeAttendForm As New List(Of String)
 
@@ -20,7 +21,7 @@ Public Class TimeAttendForm
     Private ReadOnly _userRepository As IAspNetUserRepository
     Private ReadOnly _systemOwnerService As ISystemOwnerService
 
-    Sub New()
+    Public Sub New()
 
         InitializeComponent()
 
@@ -218,4 +219,9 @@ Public Class TimeAttendForm
         Await ChangeForm(ResetLeaveCreditsForm, PermissionConstant.RESET_LEAVE_CREDIT)
         previousForm = ResetLeaveCreditsForm
     End Sub
+
+    Public Sub Reload() Implements IInitialForm.Reload
+        TimeAttendForm_Load(sender:=Me, e:=New EventArgs())
+    End Sub
+
 End Class

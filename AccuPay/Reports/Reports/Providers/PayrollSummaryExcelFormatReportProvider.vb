@@ -76,7 +76,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         payrollSelector As MultiplePayPeriodSelectionDialog) As String
 
         Return String.Concat(
-            orgNam,
+            z_OrganizationName,
             reportName,
             payrollSelector.SalaryDistributionComboBox.Text.Replace(" ", ""),
             "Report",

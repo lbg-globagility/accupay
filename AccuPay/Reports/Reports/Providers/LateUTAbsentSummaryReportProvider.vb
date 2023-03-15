@@ -52,7 +52,7 @@ Public Class LateUTAbsentSummaryReportProvider
 
                     objText = DirectCast(rptdoc.ReportDefinition.Sections(1).ReportObjects("txtOrganizationName"), TextObject)
 
-                    objText.Text = orgNam.ToUpper
+                    objText.Text = z_OrganizationName.ToUpper
 
                     crvwr.crysrepvwr.ReportSource = rptdoc
 

@@ -297,7 +297,9 @@ Public Class MDIPrimaryForm
         End If
         TimeAndAttendanceToolStripButton.Text = "Time &&" & vbNewLine & "Attendance"
         TimeAndAttendanceToolStripButton.ToolTipText = "Time & Attendance"
-        '123, 24
+
+        SwitchCompanyToolStripButton.Text = "Switch" & vbNewLine & "Company"
+
         lblTime.Text = TimeOfDay
         lblUser.Text = userFirstName &
                        If(userLastName = Nothing, "", " " & userLastName)
@@ -309,6 +311,7 @@ Public Class MDIPrimaryForm
         If _policyHelper.UseEmailPayslip Then
 
             EmailServiceStatusToolStripLabel.Visible = True
+            RemoveHandler EmailStatusTimer.Tick, AddressOf EmailStatusTimer_Tick
             AddHandler EmailStatusTimer.Tick, AddressOf EmailStatusTimer_Tick
 
             EmailStatusTimer.Start()
@@ -415,7 +418,7 @@ Public Class MDIPrimaryForm
         Static once As SByte = 0
         If once = 0 Then
             once = 1
-            Me.Text = orgNam
+            Me.Text = z_OrganizationName
         End If
 
     End Sub
@@ -459,7 +462,16 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
+        'Dim fsdfsd = My.Application.OpenForms.
+        '    OfType(Of Form).
+        '    Where(Function(f) f.Name = TimeAttendForm.Name).
+        '    ToList()
+
+        'If fsdfsd.Any() Then
+        '    ChangeForm(fsdfsd.FirstOrDefault())
+        'Else
         ChangeForm(TimeAttendForm)
+        'End If
 
         GeneralForm.Hide()
         HRISForm.Hide()
@@ -507,7 +519,16 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
+        'Dim fsdfsd = My.Application.OpenForms.
+        '    OfType(Of Form).
+        '    Where(Function(f) f.Name = PayrollForm.Name).
+        '    ToList()
+
+        'If fsdfsd.Any() Then
+        '    ChangeForm(fsdfsd.FirstOrDefault())
+        'Else
         ChangeForm(PayrollForm)
+        'End If
 
         GeneralForm.Hide()
         HRISForm.Hide()
@@ -862,23 +883,27 @@ Public Class MDIPrimaryForm
         Dim organizationPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ORGANIZATION).FirstOrDefault()
         Dim branchPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.BRANCH).FirstOrDefault()
         Dim rolePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.ROLE).FirstOrDefault()
-        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
         Dim calendarPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.CALENDAR).FirstOrDefault()
         Dim agencyPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.AGENCY).FirstOrDefault()
+
+        Dim setGeneralToolStripButtonVisible =
+            Sub()
+                If _policyHelper.UseAgency AndAlso CheckReadPermission(agencyPermission) Then
+                    GeneralToolStripButton.Visible = True
+                End If
+            End Sub
 
         If Not CheckReadPermission(userPermission) AndAlso
             Not CheckReadPermission(organizationPermission) AndAlso
             Not CheckReadPermission(branchPermission) AndAlso
             Not CheckReadPermission(rolePermission) AndAlso
-            Not CheckReadPermission(shiftPermission) AndAlso
             Not CheckReadPermission(calendarPermission) Then
 
             GeneralToolStripButton.Visible = False
 
-            If _policyHelper.UseAgency AndAlso CheckReadPermission(agencyPermission) Then
-                GeneralToolStripButton.Visible = True
-            End If
-
+            setGeneralToolStripButtonVisible()
+        Else
+            setGeneralToolStripButtonVisible()
         End If
 
         'HRIS
@@ -893,13 +918,15 @@ Public Class MDIPrimaryForm
             Not CheckReadPermission(positionPermission) Then
 
             HrisToolStripButton.Visible = False
+        Else
+            HrisToolStripButton.Visible = True
         End If
 
         'Time & Attendance
         Dim leavePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.LEAVE).FirstOrDefault()
         Dim officialBusinessPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OFFICIALBUSINESS).FirstOrDefault()
         Dim overtimePermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.OVERTIME).FirstOrDefault()
-        'shiftPermission
+        Dim shiftPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.SHIFT).FirstOrDefault()
         Dim timeLogPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMELOG).FirstOrDefault()
         Dim timeEntryPermission = USER_ROLE?.RolePermissions?.Where(Function(r) r.Permission.Name = PermissionConstant.TIMEENTRY).FirstOrDefault()
 
@@ -911,6 +938,8 @@ Public Class MDIPrimaryForm
             Not CheckReadPermission(timeEntryPermission) Then
 
             TimeAndAttendanceToolStripButton.Visible = False
+        Else
+            TimeAndAttendanceToolStripButton.Visible = True
         End If
 
         'Payroll
@@ -923,6 +952,8 @@ Public Class MDIPrimaryForm
             Not CheckReadPermission(payPeriodPermission) Then
 
             PayrollToolStripButton.Visible = False
+        Else
+            PayrollToolStripButton.Visible = True
         End If
 
         ShowOrHideDashboardWidgets(
@@ -1100,6 +1131,58 @@ Public Class MDIPrimaryForm
         Dim form As New EmailDashboardForm()
         form.ShowDialog()
 
+    End Sub
+
+    Private Async Sub SwitchCompanyToolStripButton_Click(sender As Object, e As EventArgs) Handles SwitchCompanyToolStripButton.Click
+        Dim organizationListDialog = New OrganizationListDialog(currentOrganizationId:=z_OrganizationID)
+        If organizationListDialog.ShowDialog() = DialogResult.OK Then
+            Dim exemptedNames = {KnownForms.PrimaryFormName,
+                KnownForms.LoginFormName,
+                KnownForms.CompanySwitcherFormName,
+                String.Empty}
+            Dim openedForms = My.Application.OpenForms.
+                OfType(Of Form).
+                Where(Function(f) Not exemptedNames.Contains(f.Name)).
+                Where(Function(f) Not KnownForms.SecondaryFormNames.Contains(f.Name)).
+                ToList()
+
+            For Each openedForm In openedForms
+                Dim formName = openedForm.Name
+                If KnownForms.GeneralFormNames.Contains(formName) Then
+                    GeneralForm.listGeneralForm.Remove(formName)
+                ElseIf KnownForms.HrisFormNames.Contains(formName) Then
+                    HRISForm.listHRISForm.Remove(formName)
+                ElseIf KnownForms.TimeAndAttendanceFormNames.Contains(formName) Then
+                    TimeAttendForm.listTimeAttendForm.Remove(formName)
+                ElseIf KnownForms.PayrollFormNames.Contains(formName) Then
+                    PayrollForm.listPayrollForm.Remove(formName)
+                ElseIf KnownForms.ReportFormNames.Contains(formName) Then
+                    Continue For
+                End If
+
+                openedForm.Close()
+                openedForm.Dispose()
+            Next
+
+            z_OrganizationID = organizationListDialog.SelectedOrganizationId
+            z_CompanyName = organizationListDialog.SelectedOrganizationName
+            z_OrganizationName = organizationListDialog.SelectedOrganizationName
+            USER_ROLE = organizationListDialog.UserRoleForSelectedOrganization
+
+            Me.Text = z_OrganizationName
+
+            PrepareForm()
+
+            Await RestrictDashboardByPermission()
+
+            Dim subInitialForms = Panel1.Controls.OfType(Of IInitialForm).ToList()
+            For Each item In subInitialForms
+                'Panel1.Controls.Remove(item)
+                item.Reload()
+            Next
+
+            Me.Refresh()
+        End If
     End Sub
 
 End Class

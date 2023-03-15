@@ -29,7 +29,7 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
         Dim txtOrganizationName As TextObject = DirectCast(detailsSection.ReportObjects("txtOrganizationName"), TextObject)
         Dim txtPayPeriod As TextObject = DirectCast(detailsSection.ReportObjects("txtPayPeriod"), TextObject)
 
-        txtOrganizationName.Text = orgNam.ToUpper
+        txtOrganizationName.Text = z_OrganizationName.ToUpper
         txtPayPeriod.Text = $"Payslip for the period of {payPeriod.PayFromDate.ToShortDateString} to {payPeriod.PayToDate.ToShortDateString}"
 
         Dim viewer As New CrysRepForm()

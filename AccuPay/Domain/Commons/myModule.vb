@@ -24,7 +24,7 @@ Module myModule
 
     Public sys_servername, sys_userid, sys_password, sys_db, sys_apppath As String
     Public orgztnID As String
-    Public orgNam As String
+    Public z_OrganizationName As String
 
     Public TimeTick As SByte = 0
 

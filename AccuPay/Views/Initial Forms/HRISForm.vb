@@ -10,6 +10,7 @@ Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class HRISForm
+    Implements IInitialForm
 
     Public listHRISForm As New List(Of String)
 
@@ -364,6 +365,10 @@ Public Class HRISForm
             pb.Enabled = True
             Exit For
         Next
+    End Sub
+
+    Public Sub Reload() Implements IInitialForm.Reload
+        HRISForm_Load(sender:=Me, e:=New EventArgs())
     End Sub
 
 End Class

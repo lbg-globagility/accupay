@@ -39,7 +39,7 @@ Public Class AttendanceSheetReportProvider
         objText.Text = String.Concat("for the period of ", d_from, " to ", d_to)
 
         objText = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtorgname"), TextObject)
-        objText.Text = orgNam
+        objText.Text = z_OrganizationName
 
         objText = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtorgaddress"), TextObject)
         objText.Text = CStr(EXECQUER(

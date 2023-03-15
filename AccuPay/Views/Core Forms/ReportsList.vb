@@ -6,6 +6,7 @@ Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ReportsList
+    Implements IInitialForm
 
     Private ReadOnly curr_sys_owner_name As String
 
@@ -52,6 +53,8 @@ Public Class ReportsList
             New BankFileTextFormatReportProvider()
         }
         'New PayrollLedgerReportProvider(),
+
+        lvMainMenu.Items.Clear()
 
         If curr_sys_owner_name = SystemOwner.Benchmark Then
             providers = GetBenchmarkReports()
@@ -147,6 +150,10 @@ Public Class ReportsList
                 MsgBox($"Report Is Not Yet Done: {ex.Message}", MsgBoxStyle.OkOnly)
             End Try
         End If
+    End Sub
+
+    Public Sub Reload() Implements IInitialForm.Reload
+        ReportsList_Load(sender:=Me, e:=New EventArgs())
     End Sub
 
 End Class

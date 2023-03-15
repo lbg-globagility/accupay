@@ -10,6 +10,7 @@ Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayrollForm
+    Implements IInitialForm
 
     Public listPayrollForm As New List(Of String)
 
@@ -262,6 +263,10 @@ Public Class PayrollForm
 
     Private Sub PanelPayroll_Paint(sender As Object, e As PaintEventArgs) Handles PanelPayroll.Paint
 
+    End Sub
+
+    Public Sub Reload() Implements IInitialForm.Reload
+        PayrollForm_Load(sender:=Me, e:=New EventArgs())
     End Sub
 
 End Class

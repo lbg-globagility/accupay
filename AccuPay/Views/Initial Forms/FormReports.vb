@@ -1,8 +1,7 @@
 Option Strict On
 
-Imports Microsoft.Extensions.DependencyInjection
-
 Public Class FormReports
+    Implements IInitialForm
 
     Public listReportsForm As New List(Of String)
 
@@ -51,6 +50,11 @@ Public Class FormReports
 
         previousForm = ReportsList
 
+    End Sub
+
+    Public Sub Reload() Implements IInitialForm.Reload
+        Dim form As IInitialForm = ReportsList
+        form.Reload()
     End Sub
 
 End Class

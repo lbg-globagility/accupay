@@ -152,7 +152,7 @@ Public Class PayrollLedgerExcelFormatReportProvider
 
             Dim temp_file As String =
                         String.Concat(temp_path,
-                                      orgNam,
+                                      z_OrganizationName,
                                       "Report",
                                       String.Concat(short_dates(0).Replace("/", "-"), "TO", short_dates(1).Replace("/", "-")),
                                       ".xlsx")
@@ -176,7 +176,7 @@ Public Class PayrollLedgerExcelFormatReportProvider
                 worksheet.Cells.Style.Font.Size = FontSize
 
                 Dim organizationCell = worksheet.Cells(1, 1)
-                organizationCell.Value = orgNam.ToUpper
+                organizationCell.Value = z_OrganizationName.ToUpper
                 organizationCell.Style.Font.Bold = True
 
                 Dim dateCell = worksheet.Cells(2, 1)
