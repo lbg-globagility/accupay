@@ -28,6 +28,8 @@ Public Class MetroLogin
 
     Private Shared ReadOnly _logger As ILog = LogManager.GetLogger("LoginLogger")
 
+    Private IsLoadedFirstTime As Boolean = False
+
     Sub New()
 
         InitializeComponent()
@@ -45,6 +47,8 @@ Public Class MetroLogin
         _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
         _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
+
+        IsLoadedFirstTime = True
     End Sub
 
     Protected Overrides Async Sub OnLoad(e As EventArgs)
@@ -218,9 +222,21 @@ Public Class MetroLogin
 
         If Await CheckIfAuthorizedByUserLevel() Then
             MDIPrimaryForm.Show()
+
+            ReloadPrimaryForm()
         End If
 
         enableButton()
+    End Sub
+
+    Private Sub ReloadPrimaryForm()
+        If Not IsLoadedFirstTime Then
+            'Dim primaryForms = My.Application.OpenForms.OfType(Of IPrimaryForm).ToList()
+            'If primaryForms.Any() Then primaryForms.FirstOrDefault().Reload()
+
+            Dim primaryForm As IPrimaryForm = MDIPrimaryForm
+            primaryForm.Reload()
+        End If
     End Sub
 
     Private Async Function CheckIfAuthorizedByUserLevel() As Task(Of Boolean)
@@ -319,5 +335,10 @@ Public Class MetroLogin
 
         End If
     End Function
+
+    Public Overloads Sub Show()
+        IsLoadedFirstTime = False
+        MyBase.Show()
+    End Sub
 
 End Class

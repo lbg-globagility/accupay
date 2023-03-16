@@ -441,7 +441,8 @@
     <Compile Include="Reports\Reports\Providers\BankFileTextFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
-    <Compile Include="Views\Initial Forms\IInitialForm.vb" />
+    <Compile Include="Views\Initial Forms\Interface\IInitialForm.vb" />
+    <Compile Include="Views\Initial Forms\Interface\IPrimaryForm.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Government Premium\AdvanceValeForm.Designer.vb">
       <DependentUpon>AdvanceValeForm.vb</DependentUpon>
     </Compile>

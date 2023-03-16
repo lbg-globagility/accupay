@@ -14,6 +14,7 @@ Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class MDIPrimaryForm
+    Implements IPrimaryForm
 
     Dim DefaultFontStyle = New Font("Microsoft Sans Serif", 8.25!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
@@ -1183,6 +1184,10 @@ Public Class MDIPrimaryForm
 
             Me.Refresh()
         End If
+    End Sub
+
+    Public Sub Reload() Implements IPrimaryForm.Reload
+        MDIPrimaryForm_Load(sender:=Me, e:=New EventArgs())
     End Sub
 
 End Class
