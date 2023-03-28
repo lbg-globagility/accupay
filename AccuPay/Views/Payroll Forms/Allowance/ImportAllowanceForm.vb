@@ -286,10 +286,9 @@ Public Class ImportAllowanceForm
                     OrderBy(Function(p) p).
                     ToList()
 
-                Dim lastIndex = 0
-                For index = 0 To allowanceTypes.Count - 1
+                Dim count = allowanceTypes.Count - 1
+                For index = 0 To count
                     optionsWorksheet.Cells(index + 2, 2).Value = allowanceTypes(index)
-                    lastIndex = index
                 Next
 
                 Dim defaultWorksheet = package.Workbook.
@@ -297,7 +296,7 @@ Public Class ImportAllowanceForm
                     OfType(Of ExcelWorksheet).
                     FirstOrDefault()
                 Dim validation = defaultWorksheet.DataValidations.AddListValidation("$B$2:$B$1048576")
-                validation.Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${lastIndex}"
+                validation.Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${allowanceTypes.Count + 1}"
 
                 package.Save()
 
