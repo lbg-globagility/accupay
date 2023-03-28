@@ -1,10 +1,10 @@
-﻿using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Utilities.Attributes;
 using System;
 
 namespace AccuPay.Core.Services.Imports.Overtimes
 {
-    public class OvertimeRowRecord : IExcelRowRecord
+    public class OvertimeRowRecord : ExcelEmployeeRowRecord, IExcelRowRecord
     {
         public int LineNumber { get; set; }
 

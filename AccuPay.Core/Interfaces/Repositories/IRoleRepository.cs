@@ -19,6 +19,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<AspNetRole> GetByUserAndOrganizationAsync(int userId, int organizationId);
 
+        Task<List<UserRole>> GetUserRolesByUserAsync(int userId);
+
         Task<ICollection<UserRole>> GetUserRoles();
 
         Task<ICollection<UserRole>> GetUserRoles(int organizationId);

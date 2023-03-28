@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Attributes;
 using AccuPay.Utilities.Extensions;
@@ -141,9 +141,14 @@ namespace AccuPay.Infrastructure.Services.Excel
 
             var rows = new List<List<object>>();
 
+            var firstColumn = columns.FirstOrDefault();
+
             for (var i = firstRow; i <= endRow; i++)
             {
                 var row = new List<object>();
+
+                var cellValue = worksheet.Cells[$"{firstColumn?.Letter}{i}"].Value;
+                if (firstColumn != null && string.IsNullOrEmpty(cellValue?.ToString())) continue;
 
                 foreach (var column in columns)
                     row.Add(worksheet.Cells[$"{column.Letter}{i}"].Value);

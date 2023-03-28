@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Core.Entities
 {
@@ -17,5 +18,8 @@ namespace AccuPay.Core.Entities
             RoleId = roleId;
             OrganizationId = organizationId;
         }
+
+        [ForeignKey("RoleId")]
+        public virtual AspNetRole Role { get; set; }
     }
 }

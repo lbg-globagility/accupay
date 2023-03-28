@@ -156,5 +156,12 @@ namespace AccuPay.Infrastructure.Data
                 .Any(p => p.EmployeeID == e.RowID && p.PayPeriodID == payPeriodId)
                 == expected;
         }
+
+        public IEmployeeQueryBuilder IncludeOrganization()
+        {
+            _query = _query.Include(x => x.Organization)
+                .Where(x => !x.Organization.IsInactive);
+            return this;
+        }
     }
 }

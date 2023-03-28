@@ -323,20 +323,20 @@ Public Class ImportGovernmentPremiumForm
 
         If fileInfo Is Nothing Then Return
 
-        Using package As New ExcelPackage(fileInfo)
-            Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Sheet1")
-            Dim validation = worksheet.DataValidations.AddListValidation("A2:A999")
+        'Using package As New ExcelPackage(fileInfo)
+        '    Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Sheet1")
+        '    Dim validation = worksheet.DataValidations.AddListValidation("A2:A999")
 
-            validation.ErrorStyle = ExcelDataValidationWarningStyle.stop
-            validation.ErrorTitle = "Invalid Employee ID"
-            validation.Error = "Employee ID doesn't exists."
-            validation.ShowErrorMessage = True
-            validation.Formula.ExcelFormula = "Options!$A$2:$A$999"
+        '    validation.ErrorStyle = ExcelDataValidationWarningStyle.stop
+        '    validation.ErrorTitle = "Invalid Employee ID"
+        '    validation.Error = "Employee ID doesn't exists."
+        '    validation.ShowErrorMessage = True
+        '    validation.Formula.ExcelFormula = "Options!$A$2:$A$999"
 
-            package.Save()
+        '    package.Save()
 
-            Process.Start(fileInfo.FullName)
-        End Using
+        Process.Start(fileInfo.FullName)
+        'End Using
     End Sub
 
 End Class

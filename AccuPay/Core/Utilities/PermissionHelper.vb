@@ -13,10 +13,11 @@ Namespace Desktop.Helpers
         Public Shared Async Function DoesAllowReadAsync(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As IPolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing,
+            Optional organizationId As Integer? = Nothing) _
             As Task(Of Boolean)
 
-            Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper)
+            Dim roleData = Await GetRoleAsync(permissionName, userRole, policyHelper, organizationId:=organizationId)
 
             If roleData.Success Then
                 Return roleData.RolePermission.Read
@@ -109,12 +110,13 @@ Namespace Desktop.Helpers
         Public Shared Async Function GetRoleAsync(
             permissionName As String,
             Optional userRole As AspNetRole = Nothing,
-            Optional policyHelper As IPolicyHelper = Nothing) _
+            Optional policyHelper As IPolicyHelper = Nothing,
+            Optional organizationId As Integer? = Nothing) _
             As Task(Of (Success As Boolean, RolePermission As RolePermission))
 
             If String.IsNullOrWhiteSpace(permissionName) Then Return (False, Nothing)
 
-            Dim role = Await GetRolePermissionAsync(permissionName, userRole)
+            Dim role = Await GetRolePermissionAsync(permissionName, userRole, organizationId:=organizationId)
 
             Return GetRoleBase(permissionName, policyHelper, role)
         End Function
@@ -148,10 +150,11 @@ Namespace Desktop.Helpers
             Return (If(role Is Nothing, False, True), role)
         End Function
 
-        Private Shared Async Function GetRolePermissionAsync(permissionName As String, userRole As AspNetRole) As Task(Of RolePermission)
+        Private Shared Async Function GetRolePermissionAsync(permissionName As String, userRole As AspNetRole, Optional organizationId As Integer? = Nothing) As Task(Of RolePermission)
             If userRole Is Nothing Then
                 Dim roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
-                USER_ROLE = Await roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+                USER_ROLE = Await roleRepository.GetByUserAndOrganizationAsync(userId:=z_User,
+                    organizationId:=If(organizationId, z_OrganizationID))
                 userRole = USER_ROLE
             End If
 

@@ -191,7 +191,7 @@ Public Class TripTicketController
     End Function
 
     Private Async Function LoadEmployees() As Task
-        Dim employees = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
+        Dim employees = Await _employeeRepository.GetAllByOrganizationWithPositionAsync(z_OrganizationID)
 
         _employees = employees.ToList()
         View.cboEmployees.DataSource = _employees

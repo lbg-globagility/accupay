@@ -143,7 +143,7 @@ namespace AccuPay.Infrastructure.Data
                 HasKey(t => new { t.EmployeeId, t.Year });
 
             modelBuilder.Entity<Organization>()
-                .Property(x => x.IsInActive)
+                .Property(x => x.IsInactive)
                 .IsUnicode(false)
                 .HasConversion(typeof(string));
 

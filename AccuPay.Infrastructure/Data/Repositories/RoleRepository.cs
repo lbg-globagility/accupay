@@ -179,5 +179,12 @@ namespace AccuPay.Infrastructure.Data
                 select userRole.UserId
             ).AnyAsync();
         }
+
+        public async Task<List<UserRole>> GetUserRolesByUserAsync(int userId) => await _context.UserRoles
+            .Include(ur => ur.Role)
+                .ThenInclude(r => r.RolePermissions)
+                    .ThenInclude(rp => rp.Permission)
+            .Where(t => t.UserId == userId)
+            .ToListAsync();
     }
 }

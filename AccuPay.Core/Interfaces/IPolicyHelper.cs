@@ -1,4 +1,5 @@
 using AccuPay.Core.Enums;
+using AccuPay.Core.Services.Imports.Policy;
 using AccuPay.Core.Services.Policies;
 using System.Threading.Tasks;
 
@@ -62,5 +63,6 @@ namespace AccuPay.Core.Interfaces
 
         SssPolicy SssPolicy { get; }
         HdmfPolicy HdmfPolicy { get; }
+        ImportPolicy ImportPolicy { get; }
     }
 }

@@ -211,6 +211,7 @@ Public Class ImportLeaveForm
 #End Region
 
     Private Class LeaveModel
+        Inherits ExcelEmployeeRowRecord
         Implements IExcelRowRecord
         Private Const PENDING_STATUS As String = Core.Entities.Leave.StatusPending
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"

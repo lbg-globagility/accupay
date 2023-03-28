@@ -624,7 +624,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
+        Me._allEmployees = (Await _employeeRepository.GetAllByOrganizationWithPositionAsync(z_OrganizationID)).
             OrderBy(Function(e) e.LastName).
             ToList
 

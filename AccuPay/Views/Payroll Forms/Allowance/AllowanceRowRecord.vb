@@ -5,6 +5,7 @@ Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
 
 Public Class AllowanceRowRecord
+    Inherits ExcelEmployeeRowRecord
     Implements IExcelRowRecord
 
     <ColumnName("EmployeeID")>
@@ -36,13 +37,13 @@ Public Class AllowanceRowRecord
     <Ignore>
     Public Property AllowanceType As Product
 
-    Friend Function ToAllowance(employeeId As Integer) As Allowance
+    Friend Function ToAllowance(employeeId As Integer, organizationId As Integer) As Allowance
 
         If EffectiveStartDate Is Nothing Then Return Nothing
 
         Return New Allowance With {
             .RowID = Nothing,
-            .OrganizationID = z_OrganizationID,
+            .OrganizationID = organizationId,
             .EmployeeID = employeeId,
             .AllowanceFrequency = AllowanceFrequency,
             .Amount = Amount.Value,

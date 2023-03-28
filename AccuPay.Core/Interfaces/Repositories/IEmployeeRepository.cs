@@ -28,7 +28,9 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Employee>> GetAllWithPayrollAsync(int payPeriodId, int organizationId);
 
-        Task<ICollection<Employee>> GetAllWithPositionAsync(int organizationId);
+        Task<ICollection<Employee>> GetAllByOrganizationWithPositionAsync(int organizationId);
+
+        Task<ICollection<Employee>> GetAllAcrossOrganizationWithPositionAsync();
 
         Task<ICollection<Employee>> GetByBranchAsync(int branchId);
 

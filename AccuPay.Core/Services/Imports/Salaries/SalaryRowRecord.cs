@@ -1,12 +1,10 @@
-﻿using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Utilities.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AccuPay.Core.Services.Imports.Salaries
 {
-    public class SalaryRowRecord : IExcelRowRecord
+    public class SalaryRowRecord : ExcelEmployeeRowRecord, IExcelRowRecord
     {
         public int LineNumber { get; set; }
 

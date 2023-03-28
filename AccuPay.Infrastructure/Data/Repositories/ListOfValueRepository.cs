@@ -1,5 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Services.Imports.Policy;
 using AccuPay.Core.Services.Policies;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -166,6 +167,11 @@ namespace AccuPay.Infrastructure.Data
 
                 await CreateAsync(listOfValue);
             }
+        }
+
+        public Task<ImportPolicy> GetImportPolicy(int? organizationId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

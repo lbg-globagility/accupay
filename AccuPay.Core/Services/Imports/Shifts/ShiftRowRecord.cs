@@ -4,7 +4,7 @@ using System;
 
 namespace AccuPay.Core.Services.Imports
 {
-    public class ShiftRowRecord : IExcelRowRecord
+    public class ShiftRowRecord : ExcelEmployeeRowRecord, IExcelRowRecord
     {
         [ColumnName("Employee No")]
         public string EmployeeNo { get; set; }

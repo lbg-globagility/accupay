@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Services.Imports.Base;
 using AccuPay.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Core.Services.Imports.Allowances
 {
-    public class AllowanceImportParser : IAllowanceImportParser
+    public class AllowanceImportParser : EmployeeImporter, IAllowanceImportParser
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IAllowanceRepository _allowanceRepository;
@@ -22,9 +23,12 @@ namespace AccuPay.Core.Services.Imports.Allowances
 
         public AllowanceImportParser(
             IEmployeeRepository employeeRepository,
+            IOrganizationRepository organizationRepository,
+            IProductRepository productRepository,
+            IListOfValueService settings,
             IAllowanceRepository allowanceRepository,
             IExcelParser<AllowanceRowRecord> parser,
-            IAllowanceTypeRepository allowanceTypeRepository)
+            IAllowanceTypeRepository allowanceTypeRepository) : base(employeeRepository, organizationRepository, productRepository, settings)
         {
             _employeeRepository = employeeRepository;
             _allowanceRepository = allowanceRepository;
@@ -52,6 +56,11 @@ namespace AccuPay.Core.Services.Imports.Allowances
             var employees = (await _employeeRepository
                             .GetByMultipleEmployeeNumberAsync(employeeNumberList, organizationId)
                             ).ToList();
+            if (IsOpenToAllImportation)
+            {
+                var employeeIdList = parsedRecords.Select(t => t.EmployeeRowId).ToArray();
+                employees = (await _employeeRepository.GetByMultipleIdAsync(employeeIdList: employeeIdList)).ToList();
+            }
 
             var allowanceTypes = (await _allowanceTypeRepository.GetAllAsync()).ToList();
 
@@ -60,7 +69,10 @@ namespace AccuPay.Core.Services.Imports.Allowances
             bool isEqualToLowerCase(string dataText, string parsedText) => string.IsNullOrWhiteSpace(parsedText) ? false : dataText.ToLower() == parsedText.ToLower();
 
             var employeeIds = employees.Select(e => e.RowID.Value).ToList();
-            var allowanceTypeNames = parsedRecords.GroupBy(p => p.AllowanceName).Select(p => p.FirstOrDefault().AllowanceName).ToList();
+            var allowanceTypeNames = parsedRecords
+                .GroupBy(p => p.AllowanceName)
+                .Select(p => p.FirstOrDefault().AllowanceName)
+                .ToList();
             var minStartDate = parsedRecords.Where(p => p.EffectiveStartDate.HasValue).Min(p => p.EffectiveStartDate.Value);
             var minEndDate = parsedRecords.Where(p => p.EffectiveEndDate.HasValue).Any() ? parsedRecords.Where(p => p.EffectiveEndDate.HasValue).Max(p => p.EffectiveEndDate.Value) : DateTime.UtcNow;
             DateTime[] effectiveDates = { minStartDate, minEndDate };
@@ -72,7 +84,7 @@ namespace AccuPay.Core.Services.Imports.Allowances
             foreach (var parsedRecord in parsedRecords)
             {
                 var employee = employees
-                    .Where(ee => isEqualToLowerCase(ee.EmployeeNo, parsedRecord.EmployeeNo))
+                    .Where(e => IsEqualToEmployeeIdentifier(comparedEmployee: e, parsedEmployeeIdentifier: parsedRecord.EmployeeNo))
                     .FirstOrDefault();
 
                 var allowanceType = allowanceTypes
@@ -82,7 +94,7 @@ namespace AccuPay.Core.Services.Imports.Allowances
                 var effectiveDate = parsedRecord.EffectiveEndDate == null ? minEndDate : parsedRecord.EffectiveEndDate.Value;
 
                 var allowance = allowances
-                    .Where(a => isEqualToLowerCase(a.Employee.EmployeeNo, parsedRecord.EmployeeNo))
+                    .Where(a => IsEqualToEmployeeIdentifier(comparedEmployee: a.Employee, parsedEmployeeIdentifier: parsedRecord.EmployeeNo))
                     .Where(a => isEqualToLowerCase(a.Type, parsedRecord.AllowanceName))
                     .Where(a => a.EffectiveStartDate >= parsedRecord.EffectiveStartDate)
                     .Where(a => a.EffectiveEndDate <= effectiveDate)

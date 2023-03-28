@@ -2,6 +2,7 @@ using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
+using AccuPay.Core.Services.Imports.Policy;
 using AccuPay.Core.Services.Policies;
 using AccuPay.Utilities;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace AccuPay.Infrastructure.Data
         private TimeEntryPolicy _timeEntryPolicy;
         private SssPolicy _sssPolicy;
         private HdmfPolicy _hdmfPolicy;
+        private ImportPolicy _importPolicy;
         private ListOfValueCollection _settings;
 
         public PolicyHelper(
@@ -46,6 +48,7 @@ namespace AccuPay.Infrastructure.Data
             _timeEntryPolicy = new TimeEntryPolicy(_settings);
             _sssPolicy = new SssPolicy(_settings);
             _hdmfPolicy = new HdmfPolicy(_settings);
+            _importPolicy = new ImportPolicy(_settings);
         }
 
         public decimal DefaultBPIInsurance => _settings.GetDecimal("Default.BPIInsurance");
@@ -229,5 +232,7 @@ namespace AccuPay.Infrastructure.Data
         public SssPolicy SssPolicy => _sssPolicy;
 
         public HdmfPolicy HdmfPolicy => _hdmfPolicy;
+
+        public ImportPolicy ImportPolicy => _importPolicy;
     }
 }

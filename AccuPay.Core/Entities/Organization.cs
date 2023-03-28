@@ -25,7 +25,7 @@ namespace AccuPay.Core.Entities
         public int ClientId { get; set; }
 
         [Column("NoPurpose")]
-        public bool IsInActive { get; set; }
+        public bool IsInactive { get; set; }
 
         public Byte[] Image { get; set; }
 
@@ -66,7 +66,7 @@ namespace AccuPay.Core.Entities
             {
                 ClientId = clientId,
                 IsAgency = false,
-                IsInActive = false,
+                IsInactive = false,
                 NightDifferentialTimeFrom = DefaultNightDifferentialTimeFrom,
                 NightDifferentialTimeTo = DefaultNightDifferentialTimeTo,
             };

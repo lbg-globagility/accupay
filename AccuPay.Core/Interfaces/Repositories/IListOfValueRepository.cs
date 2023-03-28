@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Services.Imports.Policy;
 using AccuPay.Core.Services.Policies;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace AccuPay.Core.Interfaces
         Task<WeeklyPayPeriodPolicy> GetWeeklyPayPeriodPolicyByOrganization(int organizationId, int year);
 
         Task<ListOfValue> GetListOfValueOfWeeklyPayPeriodPolicyByOrganization(int organizationId);
+
+        Task<ImportPolicy> GetImportPolicy(int? organizationId);
 
         Task CreateIfNotExistsAsync(int userId,
             string type,

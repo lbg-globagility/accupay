@@ -1,10 +1,10 @@
-﻿using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Utilities.Attributes;
 using System;
 
 namespace AccuPay.Core.Services.Imports.OfficialBusiness
 {
-    public class OfficialBusinessRowRecord : IExcelRowRecord
+    public class OfficialBusinessRowRecord : ExcelEmployeeRowRecord, IExcelRowRecord
     {
         public int LineNumber { get; set; }
 

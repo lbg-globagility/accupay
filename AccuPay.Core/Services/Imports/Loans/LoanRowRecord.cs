@@ -1,13 +1,11 @@
-﻿using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Utilities.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace AccuPay.Core.Services.Imports.Loans
 {
-    public class LoanRowRecord : IExcelRowRecord
+    public class LoanRowRecord : ExcelEmployeeRowRecord, IExcelRowRecord
     {
         [Required]
         [ColumnName("Employee ID")]

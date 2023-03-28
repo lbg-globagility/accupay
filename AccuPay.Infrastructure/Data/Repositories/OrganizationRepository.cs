@@ -110,7 +110,7 @@ namespace AccuPay.Infrastructure.Data
         {
             return await _context.Organizations
                 .Where(o => o.ClientId == clientId)
-                .Where(o => o.IsInActive == false)
+                .Where(o => o.IsInactive == false)
                 .FirstOrDefaultAsync();
         }
 
@@ -118,7 +118,7 @@ namespace AccuPay.Infrastructure.Data
         {
             var query = _context.Organizations
                 .AsNoTracking()
-                .Where(o => o.IsInActive == false);
+                .Where(o => o.IsInactive == false);
 
             if (options.HasClientId)
             {

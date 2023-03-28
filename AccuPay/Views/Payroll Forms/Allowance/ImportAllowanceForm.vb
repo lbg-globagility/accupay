@@ -5,6 +5,7 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -25,6 +26,8 @@ Public Class ImportAllowanceForm
     Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Private ReadOnly _productRepository As IProductRepository
+    Private ReadOnly _policyHelper As IPolicyHelper
+    Private ReadOnly _importPolicy As ImportPolicy
 
     Sub New()
 
@@ -36,6 +39,9 @@ Public Class ImportAllowanceForm
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
+        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = _policyHelper.ImportPolicy
     End Sub
 
     Private Async Sub ImportAllowanceForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -81,8 +87,25 @@ Public Class ImportAllowanceForm
         Dim rejectedRecords As New List(Of AllowanceRowRecord)
         Dim acceptedRecords As New List(Of AllowanceRowRecord)
 
-        Dim _okEmployees As New List(Of String)
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport(records, rejectedRecords, acceptedRecords)
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport2(records, rejectedRecords, acceptedRecords)
+        End If
 
+        UpdateStatusLabel(rejectedRecords.Count)
+
+        ParsedTabControl.Text = $"Ok ({_allowances.Count})"
+        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+
+        SaveButton.Enabled = _allowances.Count > 0
+
+        AllowancesDataGrid.DataSource = acceptedRecords
+        RejectedRecordsGrid.DataSource = rejectedRecords
+
+    End Sub
+
+    Private Async Function StandardImport(records As List(Of AllowanceRowRecord), rejectedRecords As List(Of AllowanceRowRecord), acceptedRecords As List(Of AllowanceRowRecord)) As Task
         For Each record In records
             Dim employee = Await _employeeRepository.
                                 GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
@@ -99,7 +122,7 @@ Public Class ImportAllowanceForm
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeNumber = employee.EmployeeNo
 
-            Dim allowance = Await ConvertToAllowance(record, employee.RowID.Value)
+            Dim allowance = Await ConvertToAllowance(record, employeeId:=employee.RowID.Value, organizationId:=z_OrganizationID)
 
             If allowance Is Nothing Then
 
@@ -123,20 +146,9 @@ Public Class ImportAllowanceForm
             _allowances.Add(allowance)
             acceptedRecords.Add(record)
         Next
+    End Function
 
-        UpdateStatusLabel(rejectedRecords.Count)
-
-        ParsedTabControl.Text = $"Ok ({_allowances.Count})"
-        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
-
-        SaveButton.Enabled = _allowances.Count > 0
-
-        AllowancesDataGrid.DataSource = acceptedRecords
-        RejectedRecordsGrid.DataSource = rejectedRecords
-
-    End Sub
-
-    Private Async Function ConvertToAllowance(record As AllowanceRowRecord, employeeId As Integer) As Task(Of Allowance)
+    Private Async Function ConvertToAllowance(record As AllowanceRowRecord, employeeId As Integer, organizationId As Integer) As Task(Of Allowance)
 
         If record.EffectiveStartDate Is Nothing Then
 
@@ -165,7 +177,7 @@ Public Class ImportAllowanceForm
         End If
 
         'TODO: this is an N+1 query problem. Refactor this
-        Dim allowanceType = Await _productRepository.GetOrCreateAllowanceTypeAsync(record.Type, z_OrganizationID, z_User)
+        Dim allowanceType = Await _productRepository.GetOrCreateAllowanceTypeAsync(record.Type, organizationId, z_User)
 
         If allowanceType Is Nothing Then
 
@@ -197,7 +209,7 @@ Public Class ImportAllowanceForm
 
         End If
 
-        Return record.ToAllowance(employeeId)
+        Return record.ToAllowance(employeeId:=employeeId, organizationId:=organizationId)
     End Function
 
     Private Function ValidateAllowance(allowance As Allowance, allowanceType As Product) As String
@@ -267,16 +279,25 @@ Public Class ImportAllowanceForm
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)
-                Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
+                Dim optionsWorksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
                 Dim allowanceTypes = _allowanceTypeList.
                     Select(Function(p) p.PartNo).
                     OrderBy(Function(p) p).
                     ToList()
 
+                Dim lastIndex = 0
                 For index = 0 To allowanceTypes.Count - 1
-                    worksheet.Cells(index + 2, 2).Value = allowanceTypes(index)
+                    optionsWorksheet.Cells(index + 2, 2).Value = allowanceTypes(index)
+                    lastIndex = index
                 Next
+
+                Dim defaultWorksheet = package.Workbook.
+                    Worksheets.
+                    OfType(Of ExcelWorksheet).
+                    FirstOrDefault()
+                Dim validation = defaultWorksheet.DataValidations.AddListValidation("$B$2:$B$1048576")
+                validation.Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${lastIndex}"
 
                 package.Save()
 
@@ -284,5 +305,51 @@ Public Class ImportAllowanceForm
             End Using
         End If
     End Sub
+
+    Private Async Function StandardImport2(records As List(Of AllowanceRowRecord), rejectedRecords As List(Of AllowanceRowRecord), acceptedRecords As List(Of AllowanceRowRecord)) As Task
+
+        Dim employeeIdList = records.Select(Function(t) t.EmployeeRowId).ToArray()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIdList:=employeeIdList)).ToList()
+
+        For Each record In records
+            Dim employee = employees.FirstOrDefault(Function(e) Integer.Equals(e.RowID, record.EmployeeRowId))
+
+            If employee?.RowID Is Nothing Then
+
+                record.ErrorMessage = "Employee number does not exist."
+                rejectedRecords.Add(record)
+
+                Continue For
+            End If
+
+            'For displaying on datagrid view; placed here in case record is rejected soon
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
+            record.EmployeeNumber = employee.EmployeeNo
+
+            Dim allowance = Await ConvertToAllowance(record, employeeId:=employee.RowID.Value, organizationId:=employee.OrganizationID.Value)
+
+            If allowance Is Nothing Then
+
+                If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                    record.ErrorMessage = "Cannot parse data."
+
+                End If
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            Dim validationErrorMessage = ValidateAllowance(allowance, record.AllowanceType)
+
+            If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+
+                record.ErrorMessage = validationErrorMessage
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            _allowances.Add(allowance)
+            acceptedRecords.Add(record)
+        Next
+    End Function
 
 End Class

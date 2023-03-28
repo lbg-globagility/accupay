@@ -19,10 +19,14 @@ namespace AccuPay.Infrastructure.Data
         private readonly IAllowanceRepository _allowanceRepository;
         private readonly IProductRepository _productRepository;
         private readonly IAllowanceTypeRepository _allowanceTypeRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public AllowanceDataService(
             IAllowanceRepository allowanceRepository,
             IAllowanceTypeRepository allowanceTypeRepository,
+            IRoleRepository roleRepository,
+            IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
             IProductRepository productRepository,
             IUserActivityRepository userActivityRepository,
@@ -39,6 +43,8 @@ namespace AccuPay.Infrastructure.Data
             _allowanceRepository = allowanceRepository;
             _productRepository = productRepository;
             _allowanceTypeRepository = allowanceTypeRepository;
+            _roleRepository = roleRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task BatchApply(
@@ -194,7 +200,16 @@ namespace AccuPay.Infrastructure.Data
                     throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
             }
 
-            await CheckForClosedPayPeriod(allowances, oldAllowances);
+            if (saveType == SaveType.Insert || saveType == SaveType.Update)
+            {
+                var userId = allowances.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
+                await CheckForClosedPayPeriod(allowances, oldAllowances, userRoles: userRoles);
+            }
+            else
+            {
+                await CheckForClosedPayPeriod(allowances, oldAllowances);
+            }
         }
 
         protected override async Task PostDeleteAction(Allowance entity, int currentlyLoggedInUserId)
@@ -304,10 +319,10 @@ namespace AccuPay.Infrastructure.Data
 
         #region Private Methods
 
-        private async Task CheckForClosedPayPeriod(List<Allowance> allowances, List<Allowance> oldAllowances)
+        private async Task CheckForClosedPayPeriod(List<Allowance> allowances, List<Allowance> oldAllowances, List<UserRole> userRoles = null)
         {
             // validate allowances that are for update
-            int? organizationId = await ValidateStartDates(allowances, oldAllowances);
+            List<int?> organizationIds = await ValidateStartDates(allowances, oldAllowances, userRoles: userRoles);
 
             var forUpdateAllowances = allowances
                 .Where(x => !x.IsNewEntity)
@@ -345,17 +360,46 @@ namespace AccuPay.Infrastructure.Data
                  .Select(x => x.EffectiveEndDate.Value)
                  .ToArray();
 
-            if (await CheckIfDataIsWithinClosedPayPeriod(endDates, organizationId.Value, throwException: false))
-                throw new BusinessLogicException("Cannot update End Date into a date in a Closed Payroll.");
+            foreach (var orgId in organizationIds)
+                if (await CheckIfDataIsWithinClosedPayPeriod(endDates, orgId.Value, throwException: false))
+                    throw new BusinessLogicException("Cannot update End Date into a date in a Closed Payroll.");
         }
 
-        private async Task<int?> ValidateStartDates(List<Allowance> allowances, List<Allowance> oldAllowances)
+        private async Task<List<int?>> ValidateStartDates(List<Allowance> allowances, List<Allowance> oldAllowances, List<UserRole> userRoles = null)
         {
-            int? organizationId = null;
-            allowances.ForEach(x =>
+            var organizationIds = new List<int?>();
+            if (userRoles != null && userRoles.Any())
             {
-                organizationId = ValidateOrganization(organizationId, x.OrganizationID);
-            });
+                foreach (var x in allowances)
+                {
+                    var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == x.OrganizationID);
+
+                    var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.ALLOWANCE, action: "create");
+                    if (!hasCreatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
+                    }
+
+                    var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.ALLOWANCE, action: "update");
+                    if (!hasUpdatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot update data for company: {organization.Name}.");
+                    }
+
+                    organizationIds.Add(x.OrganizationID);
+                }
+            }
+            else
+            {
+                int? organizationId = null;
+                allowances.ForEach(x =>
+                {
+                    organizationId = ValidateOrganization(organizationId, x.OrganizationID);
+                });
+                organizationIds = new List<int?>() { organizationId };
+            }
 
             // cannot create a new allowance or change the Start Date of an
             // existing allowance into a date on a "Closed" pay period.
@@ -367,8 +411,10 @@ namespace AccuPay.Infrastructure.Data
                  .Select(x => x.EffectiveStartDate)
                  .ToArray();
 
-            await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, organizationId.Value);
-            return organizationId;
+            foreach (var orgId in organizationIds)
+                await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, orgId.Value);
+
+            return organizationIds;
         }
 
         private bool CheckIfStartDateNeedsToBeValidated(List<Allowance> oldAllowances, Allowance allowance)

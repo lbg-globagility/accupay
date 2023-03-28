@@ -169,7 +169,7 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync(organizationId);
         }
 
-        public async Task<ICollection<Employee>> GetAllWithPositionAsync(int organizationId)
+        public async Task<ICollection<Employee>> GetAllByOrganizationWithPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
             return await builder
@@ -410,6 +410,16 @@ namespace AccuPay.Infrastructure.Data
             };
 
             return await Task.Run(() => employees.Where(matchCriteria).ToList());
+        }
+
+        public async Task<ICollection<Employee>> GetAllAcrossOrganizationWithPositionAsync()
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return await builder
+                .IncludePosition()
+                .IncludeOrganization()
+                .IsActive()
+                .ToListAsync(organizationId: new int?());
         }
 
         #endregion TODO: Move to service

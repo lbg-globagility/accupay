@@ -1,0 +1,14 @@
+# 2:14 PM 3/20/2023
+SET @_type='ImportPolicy';
+
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND `LIC`='IsSpecificToOrganization' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP(), 1, 'True', 'IsSpecificToOrganization', 'ImportPolicy', '', 'Yes', 'True or False', 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
+
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND `LIC`='EmployeeIdentifier' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP(), 1, 'EmployeeNo', 'EmployeeIdentifier', 'ImportPolicy', '', 'Yes', 'EmployeeId/FullnameEmployeeIdCompanyname', 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
+
+SET @_id=(SELECT RowID FROM `accupaydb_morningsun`.`listofval` WHERE `Type`=@_type AND `LIC`='IsSpecificToOrganization' LIMIT 1);
+INSERT INTO `accupaydb_morningsun`.`listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP(), 1, 'False', 'IsSpecificToOrganization', 'ImportPolicy', '', 'Yes', 'True or False', 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
+
+SET @_id=(SELECT RowID FROM `accupaydb_morningsun`.`listofval` WHERE `Type`=@_type AND `LIC`='EmployeeIdentifier' LIMIT 1);
+INSERT INTO `accupaydb_morningsun`.`listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP(), 1, 'FullnameEmployeeIdCompanyname', 'EmployeeIdentifier', 'ImportPolicy', '', 'Yes', 'EmployeeId/FullnameEmployeeIdCompanyname', 1) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
