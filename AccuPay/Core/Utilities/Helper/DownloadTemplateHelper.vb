@@ -141,7 +141,7 @@ Namespace Global.AccuPay.Desktop.Helpers
                 End Function)
         End Function
 
-        Private Shared Sub SetEmployeeDataValidationList(package As ExcelPackage,
+        Public Shared Sub SetEmployeeDataValidationList(package As ExcelPackage,
             excelTemplate As ExcelTemplates,
             lastIndex As Integer)
 
@@ -187,12 +187,12 @@ Namespace Global.AccuPay.Desktop.Helpers
                 lastIndex:=lastIndex)
         End Sub
 
-        Private Shared Sub SetEmployeeDataValidationList(employeeValidatedWorksheet As ExcelWorksheet,
+        Public Shared Sub SetEmployeeDataValidationList(employeeValidatedWorksheet As ExcelWorksheet,
             employeeSourceListWorksheet As ExcelWorksheet,
             lastIndex As Integer)
 
             Dim employeeRowIdColumnHeaderAddress = GetColumnAddressByName(excelWorksheet:=employeeValidatedWorksheet, columnName:="EmployeeRowId")
-            Dim columnLetter = GetColumnLetterOfColumnAddressByName(excelWorksheet:=employeeValidatedWorksheet, columnName:="EmployeeRowId")
+            Dim columnLetter = GetColumnLetterByName(excelWorksheet:=employeeValidatedWorksheet, columnName:="EmployeeRowId")
             Dim rowIndexs = Enumerable.Range(2, 999) '1048575
             'Dim lastIndex2 = lastIndex
             For Each i In rowIndexs
@@ -211,19 +211,19 @@ Namespace Global.AccuPay.Desktop.Helpers
 
         End Sub
 
-        Private Shared Function GetColumnIndexByName(excelWorksheet As ExcelWorksheet, columnName As String) As Integer
+        Public Shared Function GetColumnIndexByName(excelWorksheet As ExcelWorksheet, columnName As String) As Integer
             If excelWorksheet Is Nothing Then Throw New ArgumentNullException(NameOf(excelWorksheet))
             Dim cellStart = excelWorksheet.Cells("1:1").First(Function(c) c.Value.ToString() = columnName).Start
             Return cellStart.Column
         End Function
 
-        Private Shared Function GetColumnAddressByName(excelWorksheet As ExcelWorksheet, columnName As String) As String
+        Public Shared Function GetColumnAddressByName(excelWorksheet As ExcelWorksheet, columnName As String) As String
             If excelWorksheet Is Nothing Then Throw New ArgumentNullException(NameOf(excelWorksheet))
             Dim cellStart = excelWorksheet.Cells("1:1").First(Function(c) c.Value.ToString() = columnName).Start
             Return cellStart.Address
         End Function
 
-        Private Shared Function GetColumnLetterOfColumnAddressByName(excelWorksheet As ExcelWorksheet, columnName As String) As String
+        Public Shared Function GetColumnLetterByName(excelWorksheet As ExcelWorksheet, columnName As String) As String
             If excelWorksheet Is Nothing Then Throw New ArgumentNullException(NameOf(excelWorksheet))
             Dim cellStart = excelWorksheet.Cells("1:1").First(Function(c) c.Value.ToString() = columnName).Start
             Dim columnIndex = cellStart.Column

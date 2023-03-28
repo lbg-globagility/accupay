@@ -285,15 +285,26 @@ Public Class ImportLoansForm
         If fileInfo Is Nothing Then Return
 
         Using package As New ExcelPackage(fileInfo)
-            Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
+            Dim optionsWorksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
             Dim loanTypes = _productRepository.
                 ConvertToStringList(Me._loanTypeList).
                 OrderBy(Function(t) t).
                 ToList()
 
-            For index = 0 To loanTypes.Count - 1
-                worksheet.Cells(index + 2, 2).Value = loanTypes(index)
+            Dim count = loanTypes.Count - 1
+            For index = 0 To count
+                optionsWorksheet.Cells(index + 2, 2).Value = loanTypes(index)
             Next
+
+            Dim defaultWorksheet = package.Workbook.
+                Worksheets.
+                OfType(Of ExcelWorksheet).
+                FirstOrDefault()
+            Dim validation = defaultWorksheet.DataValidations.AddListValidation("$C$2:$C$1048576")
+            validation.Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${loanTypes.Count + 1}"
+
+            Dim loanNameColumnIndex = DownloadTemplateHelper.GetColumnIndexByName(defaultWorksheet, "Employee Name")
+            defaultWorksheet.Column(loanNameColumnIndex).Hidden = True
 
             package.Save()
 
