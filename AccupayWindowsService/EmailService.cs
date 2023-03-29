@@ -228,7 +228,7 @@ namespace AccupayWindowsService
             if (systemOwnerService.GetCurrentSystemOwner() == SystemOwner.Cinema2000)
             {
                 body += $"\n\n" +
-                $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at hrd@cinema2000.com.ph for any inquiries or corrections regarding your salary.";
+                $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at {ConfigurationManager.AppSettings["CareMail"]} for any inquiries or corrections regarding your salary.";
             }
 
             if (systemOwnerService.GetCurrentSystemOwner() == SystemOwner.Goldwings)
