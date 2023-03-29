@@ -5,6 +5,7 @@ Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
 
 Public Class LoanRowRecord
+    Inherits ExcelEmployeeRowRecord
     Implements IExcelRowRecord
 
     <ColumnName("Employee Name")>
@@ -42,11 +43,11 @@ Public Class LoanRowRecord
     <Ignore>
     Public Property LoanType As Product
 
-    Public Function ToLoan(employeeId As Integer) As Loan
+    Public Function ToLoan(employeeId As Integer, organizationId As Integer) As Loan
 
         Dim newLoan = New Loan With {
             .RowID = Nothing,
-            .OrganizationID = z_OrganizationID,
+            .OrganizationID = organizationId,
             .EmployeeID = employeeId,
             .LoanNumber = LoanNumber,
             .Comments = Comments,

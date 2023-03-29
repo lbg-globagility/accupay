@@ -23,10 +23,12 @@ namespace AccuPay.Infrastructure.Data
         private readonly IProductRepository _productRepository;
         private readonly ISystemOwnerService _systemOwnerService;
         private readonly IOrganizationRepository _organizationRepository;
+        private readonly IRoleRepository _roleRepository;
 
         public LoanDataService(
             IEmployeeRepository employeeRepository,
             ILoanRepository loanRepository,
+            IRoleRepository roleRepository,
             IListOfValueRepository listOfValueRepository,
             IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
@@ -49,6 +51,7 @@ namespace AccuPay.Infrastructure.Data
             _productRepository = productRepository;
             _systemOwnerService = systemOwnerService;
             _organizationRepository = organizationRepository;
+            _roleRepository = roleRepository;
         }
 
         #region Save
@@ -226,22 +229,21 @@ namespace AccuPay.Infrastructure.Data
                 }
             }
 
-            // validate start date should not be in a Closed Payroll
-            int? organizationId = null;
-            loans.ForEach(x =>
+            if (saveType == SaveType.Insert || saveType == SaveType.Update)
             {
-                organizationId = ValidateOrganization(organizationId, x.OrganizationID);
-            });
+                var userId = loans.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
+                await CheckForClosedPayPeriod(loans, oldLoans, userRoles: userRoles);
+            }
+            else
+            {
+                await CheckForClosedPayPeriod(loans, oldLoans);
+            }
+        }
 
-            var validatableStartDates = loans
-                 .Where(loan =>
-                 {
-                     return CheckIfStartDateNeedsToBeValidated(oldLoans, loan);
-                 })
-                 .Select(x => x.DedEffectiveDateFrom)
-                 .ToArray();
-
-            await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, organizationId.Value);
+        private async Task CheckForClosedPayPeriod(List<Loan> loans, List<Loan> oldLoans, List<UserRole> userRoles = null)
+        {
+            List<int?> organizationIds = await ValidateStartDates(loans, oldLoans, userRoles: userRoles);
 
             // validate deduction schedules then sanitize Loan Name and Basic Monthly Salary
             var deductionSchedules = _listOfValueRepository
@@ -272,6 +274,68 @@ namespace AccuPay.Infrastructure.Data
                     await AddBasicMonthlySalaryData(loan);
                 }
             }
+
+            // start date cannot be in a closed pay period
+            var startDates = loans
+                 .Where(x => !x.IsNewEntity)
+                 .Select(x => x.DedEffectiveDateFrom)
+                 .ToArray();
+
+            foreach (var orgId in organizationIds)
+                if (await CheckIfDataIsWithinClosedPayPeriod(startDates, orgId.Value, throwException: false))
+                    throw new BusinessLogicException("Cannot update Start Date into a date in a Closed Payroll.");
+        }
+
+        private async Task<List<int?>> ValidateStartDates(List<Loan> loans, List<Loan> oldLoans, List<UserRole> userRoles)
+        {
+            var organizationIds = new List<int?>();
+            if (userRoles != null && userRoles.Any())
+            {
+                foreach (var x in loans)
+                {
+                    var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == x.OrganizationID);
+
+                    var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.LOAN, action: "create");
+                    if (!hasCreatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
+                    }
+
+                    var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.LOAN, action: "update");
+                    if (!hasUpdatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot update data for company: {organization.Name}.");
+                    }
+
+                    organizationIds.Add(x.OrganizationID);
+                }
+            }
+            else
+            {
+                int? organizationId = null;
+                loans.ForEach(x =>
+                {
+                    organizationId = ValidateOrganization(organizationId, x.OrganizationID);
+                });
+                organizationIds = new List<int?>() { organizationId };
+            }
+
+            // cannot create a new loan or change the Start Date of an
+            // existing loan into a date on a "Closed" pay period.
+            var validatableStartDates = loans
+                 .Where(loan =>
+                 {
+                     return CheckIfStartDateNeedsToBeValidated(oldLoans, loan);
+                 })
+                 .Select(x => x.DedEffectiveDateFrom)
+                 .ToArray();
+
+            foreach (var orgId in organizationIds)
+                await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, orgId.Value);
+
+            return organizationIds;
         }
 
         protected override async Task PostDeleteAction(Loan entity, int currentlyLoggedInUserId)
@@ -304,21 +368,21 @@ namespace AccuPay.Infrastructure.Data
             if (!entities.Any()) return;
 
             // supplying LoanType data for saving useractivity
-            var allowanceTypeIds = entities.Select(x => x.LoanTypeID.Value).ToList();
-            allowanceTypeIds.AddRange(oldEntities.Select(x => x.LoanTypeID.Value).ToList());
+            var loanTypeIds = entities.Select(x => x.LoanTypeID.Value).ToList();
+            loanTypeIds.AddRange(oldEntities.Select(x => x.LoanTypeID.Value).ToList());
 
-            allowanceTypeIds = allowanceTypeIds.Distinct().ToList();
+            loanTypeIds = loanTypeIds.Distinct().ToList();
 
-            var allowanceTypes = await _productRepository.GetManyByIdsAsync(allowanceTypeIds.ToArray());
+            var loanTypes = await _productRepository.GetManyByIdsAsync(loanTypeIds.ToArray());
 
             foreach (var entity in entities)
             {
-                entity.LoanType = allowanceTypes.Where(x => x.RowID.Value == entity.LoanTypeID).FirstOrDefault();
+                entity.LoanType = loanTypes.Where(x => x.RowID.Value == entity.LoanTypeID).FirstOrDefault();
             }
 
             foreach (var entity in oldEntities)
             {
-                entity.LoanType = allowanceTypes.Where(x => x.RowID.Value == entity.LoanTypeID).FirstOrDefault();
+                entity.LoanType = loanTypes.Where(x => x.RowID.Value == entity.LoanTypeID).FirstOrDefault();
             }
 
             await base.PostSaveManyAction(entities, oldEntities, saveType, currentlyLoggedInUserId);

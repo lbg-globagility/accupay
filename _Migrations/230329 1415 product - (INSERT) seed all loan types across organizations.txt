@@ -1,0 +1,25 @@
+
+DROP TEMPORARY TABLE IF EXISTS `allloantypes`;
+CREATE TEMPORARY TABLE IF NOT EXISTS `allloantypes`
+SELECT
+p.PartNo
+FROM product p
+INNER JOIN category c ON c.RowID=p.CategoryID AND c.CategoryName='Loan type'
+WHERE p.GovtDeductionType='None'
+GROUP BY p.PartNo
+;
+
+SET @userId=(SELECT Id FROM aspnetusers LIMIT 1);
+
+#
+INSERT INTO `product` (RowID,OrganizationID,PartNo,Created,CreatedBy,LastUpdBy,`Category`,CategoryID) 
+SELECT
+p.RowID,og.RowID,i.PartNo,CURRENT_TIMESTAMP(),@userId,@userId,c.CategoryName,c.RowID
+FROM `allloantypes` i
+INNER JOIN organization og ON og.RowID IS NOT NULL AND og.NoPurpose=FALSE
+INNER JOIN category c ON c.CategoryName='Loan type' AND c.OrganizationID=og.RowID
+LEFT JOIN product p ON p.PartNo=i.PartNo AND p.CategoryID=c.RowID
+#
+ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP()
+;
+

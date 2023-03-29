@@ -79,7 +79,7 @@ namespace AccuPay.Infrastructure.Data
 
         #region Public Virtual Methods
 
-        public async virtual Task DeleteAsync(int id, int currentlyLoggedInUserId)
+        public virtual async Task DeleteAsync(int id, int currentlyLoggedInUserId)
         {
             var entity = await _repository.GetByIdAsync(id);
 
@@ -147,9 +147,9 @@ namespace AccuPay.Infrastructure.Data
                 throw new BusinessLogicException($"No {EntityNamePlural} to be saved.");
 
             var allEntities = new List<T>();
-            if (added != null) allEntities.AddRange(added);
-            if (updated != null) allEntities.AddRange(updated);
-            if (deleted != null) allEntities.AddRange(deleted);
+            if (added != null && added.Any()) allEntities.AddRange(added);
+            if (updated != null && updated.Any()) allEntities.AddRange(updated);
+            if (deleted != null && deleted.Any()) allEntities.AddRange(deleted);
 
             ICollection<T> oldEntities = await ValidateMultipleEntities(
                 currentlyLoggedInUserId,

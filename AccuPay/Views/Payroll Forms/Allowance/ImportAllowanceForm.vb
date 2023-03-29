@@ -10,6 +10,7 @@ Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
+Imports OfficeOpenXml.DataValidation
 
 Public Class ImportAllowanceForm
 
@@ -296,7 +297,13 @@ Public Class ImportAllowanceForm
                     OfType(Of ExcelWorksheet).
                     FirstOrDefault()
                 Dim validation = defaultWorksheet.DataValidations.AddListValidation("$B$2:$B$1048576")
-                validation.Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${allowanceTypes.Count + 1}"
+                With validation
+                    .ShowErrorMessage = True
+                    .ErrorStyle = ExcelDataValidationWarningStyle.stop
+                    .ErrorTitle = "An invalid value was entered"
+                    .Error = "Select a value from the list"
+                    .Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${allowanceTypes.Count + 1}"
+                End With
 
                 package.Save()
 
