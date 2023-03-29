@@ -50,6 +50,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Product>> GetLoanTypesAsync(int organizationId, LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All);
 
+        Task<ICollection<Product>> GetLoanTypesAllOrganizationsAsync(LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All);
+
         Task<ICollection<Product>> GetManyByIdsAsync(int[] ids);
 
         Task<Product> GetOrCreateAdjustmentTypeAsync(string adjustmentTypeName, int organizationId, int userId);

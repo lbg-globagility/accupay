@@ -28,9 +28,9 @@ Public Class ImportLoansForm
     Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
     Private ReadOnly _productRepository As IProductRepository
-    Private ReadOnly _policyHelper As IPolicyHelper
     Private ReadOnly _importPolicy As ImportPolicy
     Private ReadOnly _loanService As ILoanDataService
+    Private ReadOnly _loanTypeGrouping As LoanTypeGroupingEnum = LoanTypeGroupingEnum.NonGovernment
 
     Sub New()
 
@@ -44,9 +44,9 @@ Public Class ImportLoansForm
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _importPolicy = _policyHelper.ImportPolicy
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
     Private Async Sub ImportLoansForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -56,8 +56,13 @@ Public Class ImportLoansForm
         Me._deductionSchedulesList = _listOfValueRepository.
             ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
-        Me._loanTypeList = New List(Of Product) _
-                (Await _productRepository.GetLoanTypesAsync(organizationId:=z_OrganizationID, loanTypeGrouping:=LoanTypeGroupingEnum.NonGovernment))
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            Me._loanTypeList = New List(Of Product) _
+                (Await _productRepository.GetLoanTypesAsync(organizationId:=z_OrganizationID, _loanTypeGrouping))
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            Me._loanTypeList = New List(Of Product) _
+                (Await _productRepository.GetLoanTypesAllOrganizationsAsync(_loanTypeGrouping))
+        End If
 
         LoansDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -247,7 +252,7 @@ Public Class ImportLoansForm
 
         Dim loanType = Await Me._productRepository.GetOrCreateLoanTypeAsync(
             record.LoanName,
-            organizationId:=z_OrganizationID,
+            organizationId:=employee.OrganizationID.Value,
             userId:=z_User)
 
         If loanType Is Nothing Then

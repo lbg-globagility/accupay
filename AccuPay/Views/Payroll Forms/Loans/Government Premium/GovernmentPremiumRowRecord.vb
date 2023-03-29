@@ -6,6 +6,7 @@ Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
 
 Public Class GovernmentPremiumRowRecord
+    Inherits ExcelEmployeeRowRecord
     Implements IExcelRowRecord
 
     <ColumnName("Employee Name")>
@@ -98,10 +99,15 @@ Public Class GovernmentPremiumRowRecord
         End Get
     End Property
 
-    Public Function ToLoans(employeeId As Integer,
+    Public Function ToLoans(employee As Employee,
         loanTypes As ICollection(Of Product),
         startDate As Date,
         payPeriods As List(Of PayPeriod)) As List(Of Loan)
+
+        Dim employeeId = employee.RowID.Value
+        Dim organizationId = employee.OrganizationID.Value
+
+        Dim thisLoanTypes = loanTypes.Where(Function(l) l.OrganizationID.Value = organizationId)
 
         Const divisorForWeekly As Integer = 4
 
@@ -117,13 +123,13 @@ Public Class GovernmentPremiumRowRecord
             'If(SssWispEmployerShare, 0) > 0) AndAlso
 
             'SSS
-            Dim sssLoanType = loanTypes.FirstOrDefault(Function(l) l.IsSssLoanOfMorningSun)
+            Dim sssLoanType = thisLoanTypes.FirstOrDefault(Function(l) l.IsSssLoanOfMorningSun)
             For Each count In counter
                 Dim index = count - 1
                 Dim deductionAmount = SssEmployeeShare.Value / divisorForWeekly
                 Dim sssLoan = New Loan With {
                     .RowID = Nothing,
-                    .OrganizationID = z_OrganizationID,
+                    .OrganizationID = organizationId,
                     .EmployeeID = employeeId,
                     .TotalLoanAmount = deductionAmount,
                     .TotalBalanceLeft = deductionAmount,
@@ -151,13 +157,13 @@ Public Class GovernmentPremiumRowRecord
 
         If bothPhilHealthShareHasValue AndAlso PhilHealthTotal > 0 Then
             'PhilHealth
-            Dim philHealthLoanType = loanTypes.FirstOrDefault(Function(l) l.IsPhilHealthLoanOfMorningSun)
+            Dim philHealthLoanType = thisLoanTypes.FirstOrDefault(Function(l) l.IsPhilHealthLoanOfMorningSun)
             For Each count In counter
                 Dim index = count - 1
                 Dim deductionAmount = PhilHealthEmployeeShare.Value / divisorForWeekly
                 Dim philHealthLoan = New Loan With {
                     .RowID = Nothing,
-                    .OrganizationID = z_OrganizationID,
+                    .OrganizationID = organizationId,
                     .EmployeeID = employeeId,
                     .TotalLoanAmount = deductionAmount,
                     .TotalBalanceLeft = deductionAmount,
@@ -183,13 +189,13 @@ Public Class GovernmentPremiumRowRecord
 
         If bothHdmfShareHasValue AndAlso HdmfTotal > 0 Then
             'HDMF
-            Dim hdmfLoanType = loanTypes.FirstOrDefault(Function(l) l.IsHDMFLoanOfMorningSun)
+            Dim hdmfLoanType = thisLoanTypes.FirstOrDefault(Function(l) l.IsHDMFLoanOfMorningSun)
             For Each count In counter
                 Dim index = count - 1
                 Dim deductionAmount = HdmfEmployeeShare.Value / divisorForWeekly
                 Dim hdmfLoan = New Loan With {
                     .RowID = Nothing,
-                    .OrganizationID = z_OrganizationID,
+                    .OrganizationID = organizationId,
                     .EmployeeID = employeeId,
                     .TotalLoanAmount = deductionAmount,
                     .TotalBalanceLeft = deductionAmount,

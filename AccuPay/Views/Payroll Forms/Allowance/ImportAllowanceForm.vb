@@ -27,7 +27,6 @@ Public Class ImportAllowanceForm
     Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Private ReadOnly _productRepository As IProductRepository
-    Private ReadOnly _policyHelper As IPolicyHelper
     Private ReadOnly _importPolicy As ImportPolicy
 
     Sub New()
@@ -40,9 +39,9 @@ Public Class ImportAllowanceForm
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
-        _policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
-        _importPolicy = _policyHelper.ImportPolicy
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
     Private Async Sub ImportAllowanceForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

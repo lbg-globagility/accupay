@@ -7,14 +7,13 @@ Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
-Imports OfficeOpenXml
-Imports OfficeOpenXml.DataValidation
 
 Public Class ImportGovernmentPremiumForm
-
+    Private Const _loanTypeGrouping As LoanTypeGroupingEnum = LoanTypeGroupingEnum.Government
     Private _loans As List(Of Loan)
 
     Private _deductionSchedulesList As List(Of String)
@@ -32,6 +31,7 @@ Public Class ImportGovernmentPremiumForm
     Private ReadOnly _organizationRepository As IOrganizationRepository
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
     Private ReadOnly _systemOwnerService As ISystemOwnerService
+    Private ReadOnly _importPolicy As ImportPolicy
     Private ReadOnly _loanService As ILoanDataService
 
     Sub New()
@@ -52,6 +52,9 @@ Public Class ImportGovernmentPremiumForm
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
     Private Async Sub ImportGovernmentPremiumForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -69,8 +72,13 @@ Public Class ImportGovernmentPremiumForm
                 ToList()
         End If
 
-        Me._loanTypeList = New List(Of Product) _
-                (Await _productRepository.GetLoanTypesAsync(z_OrganizationID, LoanTypeGroupingEnum.Government))
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            Me._loanTypeList = New List(Of Product) _
+                (Await _productRepository.GetLoanTypesAsync(organizationId:=z_OrganizationID, _loanTypeGrouping))
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            Me._loanTypeList = New List(Of Product) _
+                (Await _productRepository.GetLoanTypesAllOrganizationsAsync(_loanTypeGrouping))
+        End If
 
         LoansDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -131,7 +139,6 @@ Public Class ImportGovernmentPremiumForm
         Dim rejectedRecords As New List(Of GovernmentPremiumRowRecord)
 
         Dim productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
-        Dim loanTypes = Await productRepository.GetLoanTypesAsync(z_OrganizationID, LoanTypeGroupingEnum.Government)
 
         Dim payPeriodsOfMonth = (Await GetPayPeriods(year:=selectedMonthDate.Year)).
             Where(Function(p) p.Month = selectedMonthDate.Month).
@@ -142,10 +149,43 @@ Public Class ImportGovernmentPremiumForm
             ToList()
         Dim startDate = payPeriods.FirstOrDefault().PayFromDate
 
-        For Each record In records
+        Dim loanTypes As ICollection(Of Product) = New List(Of Product)
 
-            'TODO: this is an N+1 query problem. Refactor this
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            loanTypes = Await productRepository.GetLoanTypesAsync(z_OrganizationID, _loanTypeGrouping)
+            Await StandardImport(records, rejectedRecords, loanTypes, payPeriods, startDate)
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            loanTypes = Await productRepository.GetLoanTypesAllOrganizationsAsync(_loanTypeGrouping)
+            Await StandardImport2(records, rejectedRecords, loanTypes, payPeriods, startDate)
+        End If
+
+        Dim rejectedRecordLineNumbers = rejectedRecords.Select(Function(r) r.LineNumber).ToArray()
+
+        acceptedRecords.AddRange(records.Where(Function(r) Not rejectedRecordLineNumbers.Contains(r.LineNumber)).ToList())
+
+        UpdateStatusLabel(rejectedRecords.Count)
+
+        ParsedTabControl.Text = $"Ok ({acceptedRecords.Count})"
+        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+
+        SaveButton.Enabled = _loans.Count > 0
+
+        LoansDataGrid.DataSource = acceptedRecords
+        RejectedRecordsGrid.DataSource = rejectedRecords
+
+    End Sub
+
+    Private Async Function StandardImport2(records As List(Of GovernmentPremiumRowRecord),
+        rejectedRecords As List(Of GovernmentPremiumRowRecord),
+        loanTypes As ICollection(Of Product),
+        payPeriods As List(Of PayPeriod),
+        startDate As Date) As Task
+
+        Dim employeeIdList = records.Select(Function(t) t.EmployeeRowId).ToArray()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIdList:=employeeIdList)).ToList()
+
+        For Each record In records
+            Dim employee = employees.FirstOrDefault(Function(e) Integer.Equals(e.RowID, record.EmployeeRowId))
 
             If employee?.RowID Is Nothing Then
 
@@ -162,7 +202,7 @@ Public Class ImportGovernmentPremiumForm
 
             Dim convertedLoans = ConvertToLoans(rejectedRecords:=rejectedRecords,
                 record,
-                employee.RowID.Value,
+                employee:=employee,
                 loanTypes:=loanTypes,
                 startDate:=startDate,
                 payPeriods:=payPeriods)
@@ -190,22 +230,63 @@ Public Class ImportGovernmentPremiumForm
                 _loans.Add(loan)
             Next
         Next
+    End Function
 
-        Dim rejectedRecordLineNumbers = rejectedRecords.Select(Function(r) r.LineNumber).ToArray()
+    Private Async Function StandardImport(records As List(Of GovernmentPremiumRowRecord),
+        rejectedRecords As List(Of GovernmentPremiumRowRecord),
+        loanTypes As ICollection(Of Product),
+        payPeriods As List(Of PayPeriod),
+        startDate As Date) As Task
 
-        acceptedRecords.AddRange(records.Where(Function(r) Not rejectedRecordLineNumbers.Contains(r.LineNumber)).ToList())
+        For Each record In records
 
-        UpdateStatusLabel(rejectedRecords.Count)
+            'TODO: this is an N+1 query problem. Refactor this
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
-        ParsedTabControl.Text = $"Ok ({acceptedRecords.Count})"
-        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+            If employee?.RowID Is Nothing Then
 
-        SaveButton.Enabled = _loans.Count > 0
+                record.ErrorMessage = "Employee number does not exists in the database."
 
-        LoansDataGrid.DataSource = acceptedRecords
-        RejectedRecordsGrid.DataSource = rejectedRecords
+                rejectedRecords.Add(record)
 
-    End Sub
+                Continue For
+            End If
+
+            'For displaying on datagrid view; placed here in case record is rejected soon
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
+            record.EmployeeNumber = employee.EmployeeNo
+
+            Dim convertedLoans = ConvertToLoans(rejectedRecords:=rejectedRecords,
+                record,
+                employee:=employee,
+                loanTypes:=loanTypes,
+                startDate:=startDate,
+                payPeriods:=payPeriods)
+            If rejectedRecords.Any(Function(r) r.LineNumber = record.LineNumber) Then Continue For
+            For Each loan In convertedLoans
+                If loan Is Nothing Then
+
+                    If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                        record.ErrorMessage = "Cannot parse data."
+
+                    End If
+                    rejectedRecords.Add(record)
+                    Continue For
+                End If
+
+                Dim validationErrorMessage = ValidateLoan(loan)
+
+                If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+
+                    record.ErrorMessage = validationErrorMessage
+                    rejectedRecords.Add(record)
+                    Continue For
+                End If
+
+                _loans.Add(loan)
+            Next
+        Next
+    End Function
 
     Private Function ValidateLoan(loan As Loan) As String
 
@@ -228,7 +309,7 @@ Public Class ImportGovernmentPremiumForm
 
     Private Function ConvertToLoans(ByRef rejectedRecords As List(Of GovernmentPremiumRowRecord),
         record As GovernmentPremiumRowRecord,
-        employeeId As Integer,
+        employee As Employee,
         loanTypes As ICollection(Of Product),
         startDate As Date,
         payPeriods As List(Of PayPeriod)) As List(Of Loan)
@@ -273,7 +354,7 @@ Public Class ImportGovernmentPremiumForm
             rejectedRecords.Add(record)
         End If
 
-        Return record.ToLoans(employeeId, loanTypes:=loanTypes, startDate:=startDate, payPeriods:=payPeriods)
+        Return record.ToLoans(employee:=employee, loanTypes:=loanTypes, startDate:=startDate, payPeriods:=payPeriods)
     End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)

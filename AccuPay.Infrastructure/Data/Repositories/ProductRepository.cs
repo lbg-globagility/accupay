@@ -590,6 +590,35 @@ namespace AccuPay.Infrastructure.Data
             return products;
         }
 
+        public async Task<ICollection<Product>> GetLoanTypesAllOrganizationsAsync(LoanTypeGroupingEnum loanTypeGrouping = LoanTypeGroupingEnum.All)
+        {
+            var categoryName = ProductConstant.LOAN_TYPE_CATEGORY;
+
+            var loanTypesBaseQuery = _context.Products
+                .Include(p => p.CategoryEntity)
+                .AsNoTracking()
+                .Where(p => p.CategoryEntity.CategoryName == categoryName);
+
+            switch (loanTypeGrouping)
+            {
+                case LoanTypeGroupingEnum.Government:
+                    return loanTypesBaseQuery
+                        .AsEnumerable()
+                        .Where(p => p.IsSssLoanOfMorningSun || p.IsPhilHealthLoanOfMorningSun || p.IsHDMFLoanOfMorningSun)
+                        .ToList();
+
+                case LoanTypeGroupingEnum.NonGovernment:
+                    return loanTypesBaseQuery
+                        .AsEnumerable()
+                        .Where(p => p.IsNotLoanOfMorningSun)
+                        .ToList();
+
+                default:
+                    return await loanTypesBaseQuery
+                        .ToListAsync();
+            }
+        }
+
         #endregion Private helper methods
     }
 }
