@@ -28,11 +28,15 @@ namespace AccuPay.Infrastructure.Data
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
         private readonly IShiftRepository _shiftRepository;
         private readonly ILeaveRepository _leaveRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public LeaveDataService(
             PayrollContext context,
             IPolicyHelper policy,
             IEmployeeRepository employeeRepository,
+            IRoleRepository roleRepository,
+            IOrganizationRepository organizationRepository,
             ILeaveRepository leaveRepository,
             ILeaveLedgerRepository leaveLedgerRepository,
             IPayPeriodRepository payPeriodRepository,
@@ -50,6 +54,8 @@ namespace AccuPay.Infrastructure.Data
             _leaveLedgerRepository = leaveLedgerRepository;
             _shiftRepository = shiftRepository;
             _leaveRepository = leaveRepository;
+            _roleRepository = roleRepository;
+            _organizationRepository = organizationRepository;
         }
 
         #region SaveManyAsync
@@ -82,11 +88,48 @@ namespace AccuPay.Infrastructure.Data
 
             var newLeaves = leaves.Where(x => x.IsNewEntity).ToList();
             var updatedLeaves = leaves.Where(x => !x.IsNewEntity).ToList();
+            await ValidateUserRolePrivilegeAsync(newLeaves, updatedLeaves);
 
             await SaveLeavesAsync(leaves, organizationId);
 
             await PostSaveManyAction(newLeaves, new List<Leave>(), SaveType.Insert, changedByUserId);
             await PostSaveManyAction(updatedLeaves, oldLeaves.ToList(), SaveType.Update, changedByUserId);
+        }
+
+        private async Task ValidateUserRolePrivilegeAsync(List<Leave> newLeaves, List<Leave> updatedLeaves)
+        {
+            var createUserId = newLeaves.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+            var updateUserId = newLeaves.Where(a => a.LastUpdBy.HasValue).Select(a => a.LastUpdBy).FirstOrDefault();
+            var userId = updateUserId ?? createUserId;
+            var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
+            if (userRoles.Any())
+            {
+                if (newLeaves != null & newLeaves.Any())
+                    foreach (var newLeave in newLeaves)
+                    {
+                        var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == newLeave.OrganizationID);
+
+                        var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.ALLOWANCE, action: "create");
+                        if (!hasCreatePermission)
+                        {
+                            var organization = await _organizationRepository.GetByIdAsync(newLeave.OrganizationID.Value);
+                            throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
+                        }
+                    }
+
+                if (updatedLeaves != null & updatedLeaves.Any())
+                    foreach (var updatedLeave in updatedLeaves)
+                    {
+                        var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == updatedLeave.OrganizationID);
+
+                        var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.ALLOWANCE, action: "update");
+                        if (!hasUpdatePermission)
+                        {
+                            var organization = await _organizationRepository.GetByIdAsync(updatedLeave.OrganizationID.Value);
+                            throw new BusinessLogicException($"Insufficient permission. You cannot update data for company: {organization.Name}.");
+                        }
+                    }
+            }
         }
 
         private async Task SaveLeavesAsync(List<Leave> leaves, int organizationId)

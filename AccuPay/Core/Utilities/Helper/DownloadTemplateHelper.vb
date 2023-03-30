@@ -203,7 +203,7 @@ Namespace Global.AccuPay.Desktop.Helpers
             Dim validation = employeeValidatedWorksheet.DataValidations.AddListValidation("$A$2:$A$1048576")
             With validation
                 .ShowErrorMessage = True
-                .ErrorStyle = ExcelDataValidationWarningStyle.warning
+                .ErrorStyle = ExcelDataValidationWarningStyle.stop
                 .ErrorTitle = "An invalid value was entered"
                 .Error = "Select a value from the list"
                 .Formula.ExcelFormula = $"{employeeSourceListWorksheet.Name}!$A$2:$A${lastIndex}"

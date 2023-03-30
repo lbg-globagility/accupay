@@ -5,12 +5,14 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Attributes
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
+Imports OfficeOpenXml.DataValidation
 
 Public Class ImportLeaveForm
 
@@ -21,6 +23,7 @@ Public Class ImportLeaveForm
     Private ReadOnly _categoryRepository As ICategoryRepository
     Private ReadOnly _employeeRepository As IEmployeeRepository
     Private ReadOnly _productRepository As IProductRepository
+    Private ReadOnly _importPolicy As ImportPolicy
 
     Sub New()
 
@@ -30,6 +33,9 @@ Public Class ImportLeaveForm
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
 #Region "Properties"
@@ -70,12 +76,11 @@ Public Class ImportLeaveForm
             Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
             ToList()
 
-        For Each model In models
-
-            Dim employee = employees.Where(Function(e) e.EmployeeNo = model.EmployeeNo).FirstOrDefault
-
-            dataSource.Add(CreateLeaveModel(model, employee))
-        Next
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            StandardImport(models, dataSource, employees)
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport2(models, dataSource)
+        End If
 
         _okModels = dataSource.Where(Function(ee) Not ee.ConsideredFailed).ToList()
         _failModels = dataSource.Where(Function(ee) ee.ConsideredFailed).ToList()
@@ -89,6 +94,26 @@ Public Class ImportLeaveForm
 
         UpdateStatusLabel(_failModels.Count)
 
+    End Sub
+
+    Private Async Function StandardImport2(models As List(Of LeaveModel), dataSource As List(Of LeaveModel)) As Task
+
+        Dim employeeIdList = models.Select(Function(t) t.EmployeeRowId).ToArray()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIdList:=employeeIdList)).ToList()
+
+        For Each model In models
+            Dim employee = employees.FirstOrDefault(Function(e) Integer.Equals(e.RowID, model.EmployeeRowId))
+
+            dataSource.Add(CreateLeaveModel(model, employee))
+        Next
+    End Function
+
+    Private Shared Sub StandardImport(models As List(Of LeaveModel), dataSource As List(Of LeaveModel), employees As List(Of Employee))
+        For Each model In models
+            Dim employee = employees.Where(Function(e) e.EmployeeNo = model.EmployeeNo).FirstOrDefault
+
+            dataSource.Add(CreateLeaveModel(model, employee))
+        Next
     End Sub
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
@@ -188,7 +213,6 @@ Public Class ImportLeaveForm
                         .StartDate = model.StartDate.Value
                         .EndDate = model.EndDate
                         .EndTime = model.EndTime
-                        .IsNew = False
                     End With
 
                     leaves.Add(leave)
@@ -200,7 +224,7 @@ Public Class ImportLeaveForm
         Else
             For Each model In _okModels
                 Dim newLeave = model.ToLeave()
-                leaves.Add(model.ToLeave())
+                leaves.Add(newLeave)
             Next
 
         End If
@@ -387,7 +411,7 @@ Public Class ImportLeaveForm
         Public Function ToLeave(Optional isNew As Boolean = True) As Leave
 
             Return New Leave With {
-                .OrganizationID = z_OrganizationID,
+                .OrganizationID = _employee?.OrganizationID.Value,
                 .StartDate = StartDate.Value,
                 .EndDate = EndDate.Value,
                 .StartTime = StartTime,
@@ -396,8 +420,7 @@ Public Class ImportLeaveForm
                 .Status = Status,
                 .LeaveType = LeaveType,
                 .Reason = Reason,
-                .Comments = Comment,
-                .IsNew = isNew
+                .Comments = Comment
             }
         End Function
 
@@ -445,7 +468,7 @@ Public Class ImportLeaveForm
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)
-                Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
+                Dim optionsWorksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
                 Dim leaveTypes = (Await _productRepository.GetLeaveTypesAsync(z_OrganizationID)).
                             Select(Function(p) p.PartNo).
@@ -453,8 +476,31 @@ Public Class ImportLeaveForm
                             ToList()
 
                 For index = 0 To leaveTypes.Count - 1
-                    worksheet.Cells(index + 2, 2).Value = leaveTypes(index)
+                    optionsWorksheet.Cells(index + 2, 2).Value = leaveTypes(index)
                 Next
+
+                Dim defaultWorksheet = package.Workbook.
+                    Worksheets.
+                    OfType(Of ExcelWorksheet).
+                    FirstOrDefault(Function(s) s.Name = "Employee Leave")
+
+                Dim validationLeaveType = defaultWorksheet.DataValidations.AddListValidation("$B$2:$B$1048576")
+                With validationLeaveType
+                    .ShowErrorMessage = True
+                    .ErrorStyle = ExcelDataValidationWarningStyle.stop
+                    .ErrorTitle = "An invalid value was entered"
+                    .Error = "Select a value from the list"
+                    .Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${leaveTypes.Count + 1}"
+                End With
+
+                Dim validationLeaveStatus = defaultWorksheet.DataValidations.AddListValidation("$C$2:$C$1048576")
+                With validationLeaveStatus
+                    .ShowErrorMessage = True
+                    .ErrorStyle = ExcelDataValidationWarningStyle.stop
+                    .ErrorTitle = "An invalid value was entered"
+                    .Error = "Select a value from the list"
+                    .Formula.ExcelFormula = $"{optionsWorksheet.Name}!$D$2:$D$3"
+                End With
 
                 package.Save()
 
