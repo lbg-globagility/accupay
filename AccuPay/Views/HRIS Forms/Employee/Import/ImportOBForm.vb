@@ -1,19 +1,24 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
+Imports OfficeOpenXml
+Imports OfficeOpenXml.DataValidation
 
 Public Class ImportOBForm
-
+    Private ReadOnly STATUSES As String() = {OfficialBusiness.StatusApproved, OfficialBusiness.StatusPending}
     Private _officialBusinesses As List(Of OfficialBusiness)
 
     Public IsSaved As Boolean
 
     Private ReadOnly _employeeRepository As IEmployeeRepository
+    Private ReadOnly _importPolicy As ImportPolicy
 
     Sub New()
 
@@ -21,6 +26,9 @@ Public Class ImportOBForm
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
     Private Sub ImportOBForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -64,9 +72,31 @@ Public Class ImportOBForm
 
         Dim _okEmployees As New List(Of String)
 
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport(records, acceptedRecords, rejectedRecords)
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport2(records, acceptedRecords, rejectedRecords)
+        End If
+
+        UpdateStatusLabel(rejectedRecords.Count)
+
+        ParsedTabControl.Text = $"Ok ({_officialBusinesses.Count})"
+        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+
+        SaveButton.Enabled = _officialBusinesses.Count > 0
+
+        OBDataGrid.DataSource = acceptedRecords
+        RejectedRecordsGrid.DataSource = rejectedRecords
+
+    End Sub
+
+    Private Async Function StandardImport2(records As List(Of OBRowRecord), acceptedRecords As List(Of OBRowRecord), rejectedRecords As List(Of OBRowRecord)) As Task
+
+        Dim employeeIdList = records.Select(Function(t) t.EmployeeRowId).ToArray()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIdList:=employeeIdList)).ToList()
+
         For Each record In records
-            'TODO: this is an N+1 query problem. Refactor this
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
+            Dim employee = employees.FirstOrDefault(Function(e) Integer.Equals(e.RowID, record.EmployeeRowId))
 
             If employee?.RowID Is Nothing Then
                 record.ErrorMessage = "Employee number does not exist."
@@ -78,7 +108,7 @@ Public Class ImportOBForm
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeNumber = employee.EmployeeNo
 
-            Dim officialBusiness = ConvertToOfficialBusiness(record, employee.RowID.Value)
+            Dim officialBusiness = ConvertToOfficialBusiness(record, employee:=employee)
 
             If officialBusiness Is Nothing Then
 
@@ -102,20 +132,50 @@ Public Class ImportOBForm
             acceptedRecords.Add(record)
             _officialBusinesses.Add(officialBusiness)
         Next
+    End Function
 
-        UpdateStatusLabel(rejectedRecords.Count)
+    Private Async Function StandardImport(records As List(Of OBRowRecord), acceptedRecords As List(Of OBRowRecord), rejectedRecords As List(Of OBRowRecord)) As Task
+        For Each record In records
+            'TODO: this is an N+1 query problem. Refactor this
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
-        ParsedTabControl.Text = $"Ok ({_officialBusinesses.Count})"
-        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+            If employee?.RowID Is Nothing Then
+                record.ErrorMessage = "Employee number does not exist."
+                rejectedRecords.Add(record)
+                Continue For
+            End If
 
-        SaveButton.Enabled = _officialBusinesses.Count > 0
+            'For displaying on datagrid view; placed here in case record is rejected soon
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
+            record.EmployeeNumber = employee.EmployeeNo
 
-        OBDataGrid.DataSource = acceptedRecords
-        RejectedRecordsGrid.DataSource = rejectedRecords
+            Dim officialBusiness = ConvertToOfficialBusiness(record, employee:=employee)
 
-    End Sub
+            If officialBusiness Is Nothing Then
 
-    Private Function ConvertToOfficialBusiness(record As OBRowRecord, employeeId As Integer) As OfficialBusiness
+                If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                    record.ErrorMessage = "Cannot parse data."
+
+                End If
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            Dim validationErrorMessage = ValidateOfficialBusiness(officialBusiness)
+
+            If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+
+                record.ErrorMessage = validationErrorMessage
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            acceptedRecords.Add(record)
+            _officialBusinesses.Add(officialBusiness)
+        Next
+    End Function
+
+    Private Function ConvertToOfficialBusiness(record As OBRowRecord, employee As Employee) As OfficialBusiness
 
         If record.StartDate Is Nothing Then
 
@@ -129,7 +189,7 @@ Public Class ImportOBForm
             Return Nothing
         End If
 
-        Return record.ToOfficialBusiness(employeeId)
+        Return record.ToOfficialBusiness(employee:=employee)
     End Function
 
     Private Function ValidateOfficialBusiness(officialBusiness As OfficialBusiness) As String
@@ -140,7 +200,7 @@ Public Class ImportOBForm
         If officialBusiness.StartTime Is Nothing Then Return "Start Time is required."
         If officialBusiness.EndTime Is Nothing Then Return "End Time is required."
 
-        If {OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved}.Contains(officialBusiness.Status) = False Then
+        If STATUSES.Contains(officialBusiness.Status) = False Then
             Return "Status is not valid."
         End If
 
@@ -194,9 +254,7 @@ Public Class ImportOBForm
     End Sub
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-
         DownloadTemplateHelper.DownloadExcel(ExcelTemplates.OfficialBusiness)
-
     End Sub
 
 End Class

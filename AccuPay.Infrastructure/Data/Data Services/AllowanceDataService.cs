@@ -200,9 +200,12 @@ namespace AccuPay.Infrastructure.Data
                     throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
             }
 
-            if (saveType == SaveType.Insert || saveType == SaveType.Update)
+            if (_policy.ImportPolicy.IsOpenToAllImportMethod &&
+                (saveType == SaveType.Insert || saveType == SaveType.Update))
             {
-                var userId = allowances.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var createUserId = allowances.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var updateUserId = allowances.Where(a => a.LastUpdBy.HasValue).Select(a => a.LastUpdBy).FirstOrDefault();
+                var userId = updateUserId ?? createUserId;
                 var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
                 await CheckForClosedPayPeriod(allowances, oldAllowances, userRoles: userRoles);
             }

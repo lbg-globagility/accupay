@@ -94,11 +94,11 @@ Namespace Global.AccuPay.Desktop.Helpers
                         Dim listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
                         'Import employee numbers
                         Using package As New ExcelPackage(fileInfo)
-                            Dim worksheet = package.Workbook.
+                            Dim optionWorksheet = package.Workbook.
                                 Worksheets.
                                 OfType(Of ExcelWorksheet).
                                 FirstOrDefault(Function(s) s.Name = OPTION_WORKSHEET_NAME)
-                            If worksheet Is Nothing Then worksheet = package.Workbook.Worksheets.Add(Name:=OPTION_WORKSHEET_NAME)
+                            If optionWorksheet Is Nothing Then optionWorksheet = package.Workbook.Worksheets.Add(Name:=OPTION_WORKSHEET_NAME)
 
                             Dim importPolicy1 = New ImportPolicy(settings:=listOfValueService.Create(type:=ImportPolicy.TYPE))
 
@@ -111,7 +111,7 @@ Namespace Global.AccuPay.Desktop.Helpers
                                     ToList()
                                 Dim count = allEmployeIds.Count - 1
                                 For index As Integer = 0 To count
-                                    worksheet.Cells(index + 2, 1).Value = allEmployeIds(index)
+                                    optionWorksheet.Cells(index + 2, 1).Value = allEmployeIds(index)
                                 Next
                             ElseIf importPolicy1.IsOpenToAllImportMethod Then
                                 Dim allEmployees = (Await employeeRepository.GetAllAcrossOrganizationWithPositionAsync()).
@@ -124,8 +124,8 @@ Namespace Global.AccuPay.Desktop.Helpers
                                 For index As Integer = 0 To count
                                     Dim employee = allEmployees(index)
                                     Dim currentIndex = index + 2
-                                    worksheet.Cells(currentIndex, 1).Value = employee.FullnameEmployeeIdCompanyname
-                                    worksheet.Cells(currentIndex, 3).Value = employee.RowID.Value
+                                    optionWorksheet.Cells(currentIndex, 1).Value = employee.FullnameEmployeeIdCompanyname
+                                    optionWorksheet.Cells(currentIndex, 3).Value = employee.RowID.Value
                                     lastIndex = currentIndex
                                 Next
 
@@ -134,6 +134,9 @@ Namespace Global.AccuPay.Desktop.Helpers
                                     lastIndex:=lastIndex)
 
                             End If
+
+                            ' would not want to allow end-user to access the source
+                            optionWorksheet.Hidden = eWorkSheetHidden.VeryHidden
 
                             package.Save()
                         End Using
@@ -154,16 +157,16 @@ Namespace Global.AccuPay.Desktop.Helpers
 
             Dim sheet As ExcelWorksheet = sheets.FirstOrDefault()
             Select Case excelTemplate
-                'Case ExcelTemplates.Allowance Or
-                '    ExcelTemplates.Loan Or
+                'Case ExcelTemplates.Allowance✔ Orn
+                '    ExcelTemplates.Loan✔ Or
                 '    ExcelTemplates.OfficialBusiness Or
                 '    ExcelTemplates.Overtime
 
-                'Case ExcelTemplates.GovernmentPremium
+                'Case ExcelTemplates.GovernmentPremium✔
                 '    sheet = sheets.FirstOrDefault()
                 '    sheet.DataValidations.Clear()
 
-                Case ExcelTemplates.Leave
+                Case ExcelTemplates.Leave '✔
                     sheet = sheets.FirstOrDefault(Function(s) s.Name = "Employee Leave")
 
                 Case ExcelTemplates.Salary

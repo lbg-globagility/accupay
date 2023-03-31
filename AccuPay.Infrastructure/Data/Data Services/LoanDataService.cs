@@ -229,9 +229,12 @@ namespace AccuPay.Infrastructure.Data
                 }
             }
 
-            if (saveType == SaveType.Insert || saveType == SaveType.Update)
+            if (_policy.ImportPolicy.IsOpenToAllImportMethod &&
+                (saveType == SaveType.Insert || saveType == SaveType.Update))
             {
-                var userId = loans.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var createUserId = loans.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var updateUserId = loans.Where(a => a.LastUpdBy.HasValue).Select(a => a.LastUpdBy).FirstOrDefault();
+                var userId = updateUserId ?? createUserId;
                 var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
                 await CheckForClosedPayPeriod(loans, oldLoans, userRoles: userRoles);
             }

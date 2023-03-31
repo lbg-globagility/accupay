@@ -5,6 +5,7 @@ Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
 
 Public Class OBRowRecord
+    Inherits ExcelEmployeeRowRecord
     Implements IExcelRowRecord
 
     <Ignore>
@@ -28,13 +29,14 @@ Public Class OBRowRecord
     <Ignore>
     Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
-    Friend Function ToOfficialBusiness(employeeId As Integer) As OfficialBusiness
+    Friend Function ToOfficialBusiness(employee As Employee) As OfficialBusiness
+        Dim employeeId = employee.RowID
 
         If StartDate Is Nothing Then Return Nothing
 
         Dim newOfficialBusiness = New OfficialBusiness With {
             .RowID = Nothing,
-            .OrganizationID = z_OrganizationID,
+            .OrganizationID = employee.OrganizationID,
             .EmployeeID = employeeId,
             .StartDate = StartDate.Value,
             .StartTime = StartTime,
