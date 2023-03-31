@@ -5,6 +5,7 @@ Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
 
 Public Class OvertimeRowRecord
+    Inherits ExcelEmployeeRowRecord
     Implements IExcelRowRecord
 
     <Ignore>
@@ -28,12 +29,14 @@ Public Class OvertimeRowRecord
     <Ignore>
     Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
-    Public Function ToOvertime(employeeId As Integer) As Overtime
+    Public Function ToOvertime(employee As Employee) As Overtime
+        Dim employeeId = employee.RowID.Value
+        Dim organizationId = employee.OrganizationID.Value
 
         If StartDate Is Nothing Then Return Nothing
 
         Return Overtime.NewOvertime(
-            organizationId:=z_OrganizationID,
+            organizationId:=organizationId,
             employeeId:=employeeId,
             startDate:=StartDate.Value,
             startTime:=StartTime,

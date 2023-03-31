@@ -1,8 +1,10 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -14,6 +16,7 @@ Public Class ImportOvertimeForm
     Public IsSaved As Boolean
 
     Private ReadOnly _employeeRepository As IEmployeeRepository
+    Private ReadOnly _importPolicy As ImportPolicy
 
     Sub New()
 
@@ -21,6 +24,9 @@ Public Class ImportOvertimeForm
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
     Private Sub ImportOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -64,9 +70,31 @@ Public Class ImportOvertimeForm
 
         Dim _okEmployees As New List(Of String)
 
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport(records, acceptedRecords, rejectedRecords)
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport2(records, acceptedRecords, rejectedRecords)
+        End If
+
+        UpdateStatusLabel(rejectedRecords.Count)
+
+        ParsedTabControl.Text = $"Ok ({_overtimes.Count})"
+        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+
+        SaveButton.Enabled = _overtimes.Count > 0
+
+        OvertimeDataGrid.DataSource = acceptedRecords
+        RejectedRecordsGrid.DataSource = rejectedRecords
+
+    End Sub
+
+    Private Async Function StandardImport2(records As List(Of OvertimeRowRecord), acceptedRecords As List(Of OvertimeRowRecord), rejectedRecords As List(Of OvertimeRowRecord)) As Task
+
+        Dim employeeIdList = records.Select(Function(t) t.EmployeeRowId).ToArray()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIdList:=employeeIdList)).ToList()
+
         For Each record In records
-            'TODO: this is an N+1 query problem. Refactor this
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
+            Dim employee = employees.FirstOrDefault(Function(e) Integer.Equals(e.RowID, record.EmployeeRowId))
 
             If employee?.RowID Is Nothing Then
 
@@ -80,7 +108,7 @@ Public Class ImportOvertimeForm
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeNumber = employee.EmployeeNo
 
-            Dim overtime = ConvertToOvertime(record, employee.RowID.Value)
+            Dim overtime = ConvertToOvertime(record, employee)
 
             If overtime Is Nothing Then
 
@@ -104,20 +132,52 @@ Public Class ImportOvertimeForm
             acceptedRecords.Add(record)
             _overtimes.Add(overtime)
         Next
+    End Function
 
-        UpdateStatusLabel(rejectedRecords.Count)
+    Private Async Function StandardImport(records As List(Of OvertimeRowRecord), acceptedRecords As List(Of OvertimeRowRecord), rejectedRecords As List(Of OvertimeRowRecord)) As Task
+        For Each record In records
+            'TODO: this is an N+1 query problem. Refactor this
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
-        ParsedTabControl.Text = $"Ok ({_overtimes.Count})"
-        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+            If employee?.RowID Is Nothing Then
 
-        SaveButton.Enabled = _overtimes.Count > 0
+                record.ErrorMessage = "Employee number does not exist."
+                rejectedRecords.Add(record)
 
-        OvertimeDataGrid.DataSource = acceptedRecords
-        RejectedRecordsGrid.DataSource = rejectedRecords
+                Continue For
+            End If
 
-    End Sub
+            'For displaying on datagrid view; placed here in case record is rejected soon
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
+            record.EmployeeNumber = employee.EmployeeNo
 
-    Private Function ConvertToOvertime(record As OvertimeRowRecord, employeeId As Integer) As Overtime
+            Dim overtime = ConvertToOvertime(record, employee)
+
+            If overtime Is Nothing Then
+
+                If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                    record.ErrorMessage = "Cannot parse data."
+
+                End If
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            Dim validationErrorMessage = ValidateOvertime(overtime)
+
+            If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+
+                record.ErrorMessage = validationErrorMessage
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            acceptedRecords.Add(record)
+            _overtimes.Add(overtime)
+        Next
+    End Function
+
+    Private Function ConvertToOvertime(record As OvertimeRowRecord, employee As Employee) As Overtime
 
         If record.StartDate Is Nothing Then
 
@@ -131,7 +191,7 @@ Public Class ImportOvertimeForm
             Return Nothing
         End If
 
-        Return record.ToOvertime(employeeId)
+        Return record.ToOvertime(employee)
     End Function
 
     Private Function ValidateOvertime(ByVal overtime As Overtime) As String

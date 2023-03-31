@@ -17,9 +17,13 @@ namespace AccuPay.Infrastructure.Data
         private const string UserActivityName = "Overtime";
 
         private readonly IOvertimeRepository _overtimeRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public OvertimeDataService(
             IOvertimeRepository overtimeRepository,
+            IRoleRepository roleRepository,
+            IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
             IUserActivityRepository userActivityRepository,
             PayrollContext context,
@@ -33,6 +37,8 @@ namespace AccuPay.Infrastructure.Data
                 entityName: "Overtime")
         {
             _overtimeRepository = overtimeRepository;
+            _roleRepository = roleRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task DeleteManyAsync(IEnumerable<int> overtimeIds, int currentlyLoggedInUserId)
@@ -266,6 +272,90 @@ namespace AccuPay.Infrastructure.Data
             return (
                 saveOvertimes: saveOvertimes,
                 deleteOvertimes: deleteOvertimes);
+        }
+
+        protected override async Task AdditionalSaveManyValidation(List<Overtime> entities, List<Overtime> oldEntities, SaveType saveType)
+        {
+            if (_policy.ImportPolicy.IsOpenToAllImportMethod &&
+                (saveType == SaveType.Insert || saveType == SaveType.Update))
+            {
+                var createUserId = entities.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var updateUserId = entities.Where(a => a.LastUpdBy.HasValue).Select(a => a.LastUpdBy).FirstOrDefault();
+                var userId = updateUserId ?? createUserId;
+                var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
+                await CheckForClosedPayPeriod(entities, oldEntities, userRoles: userRoles);
+            }
+            else
+            {
+                await CheckForClosedPayPeriod(entities, oldEntities);
+            }
+        }
+
+        private async Task CheckForClosedPayPeriod(List<Overtime> entities, List<Overtime> oldEntities, List<UserRole> userRoles = null)
+        {
+            List<int?> organizationIds = await ValidateStartDates(entities, oldEntities, userRoles: userRoles);
+        }
+
+        private async Task<List<int?>> ValidateStartDates(List<Overtime> entities, List<Overtime> oldEntities, List<UserRole> userRoles)
+        {
+            var organizationIds = new List<int?>();
+            if (userRoles != null && userRoles.Any())
+            {
+                foreach (var x in entities)
+                {
+                    var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == x.OrganizationID);
+
+                    var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.OFFICIALBUSINESS, action: "create");
+                    if (!hasCreatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
+                    }
+
+                    var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.OFFICIALBUSINESS, action: "update");
+                    if (!hasUpdatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot update data for company: {organization.Name}.");
+                    }
+
+                    organizationIds.Add(x.OrganizationID);
+                }
+            }
+            else
+            {
+                int? organizationId = null;
+                entities.ForEach(x =>
+                {
+                    organizationId = ValidateOrganization(organizationId, x.OrganizationID);
+                });
+                organizationIds = new List<int?>() { organizationId };
+            }
+
+            var validatableStartDates = entities
+                 .Where(officialBusiness =>
+                 {
+                     return CheckIfStartDateNeedsToBeValidated(oldEntities, officialBusiness);
+                 })
+                 .Select(x => x.OTStartDate)
+                 .ToArray();
+
+            foreach (var orgId in organizationIds)
+                await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, orgId.Value);
+
+            return organizationIds;
+        }
+
+        private bool CheckIfStartDateNeedsToBeValidated(List<Overtime> oldEntities, Overtime officialBusiness)
+        {
+            if (officialBusiness.IsNewEntity) return true;
+
+            var oldAllowance = oldEntities.Where(o => o.RowID == officialBusiness.RowID).FirstOrDefault();
+
+            if (officialBusiness.OTStartDate.ToMinimumHourValue() != oldAllowance.OTStartDate.ToMinimumHourValue())
+                return true;
+
+            return false;
         }
 
         #endregion Private Methods

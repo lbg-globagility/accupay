@@ -159,7 +159,7 @@ Namespace Global.AccuPay.Desktop.Helpers
             Select Case excelTemplate
                 'Case ExcelTemplates.Allowance✔ Orn
                 '    ExcelTemplates.Loan✔ Or
-                '    ExcelTemplates.OfficialBusiness Or
+                '    ExcelTemplates.OfficialBusiness✔ Or
                 '    ExcelTemplates.Overtime
 
                 'Case ExcelTemplates.GovernmentPremium✔
