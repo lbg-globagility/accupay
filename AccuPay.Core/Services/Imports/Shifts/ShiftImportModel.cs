@@ -1,7 +1,6 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Services.Policies;
-using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ namespace AccuPay.Core.Services.Imports
     {
         private ShiftBasedAutomaticOvertimePolicy _shiftBasedAutoOvertimePolicy;
         private bool _isShiftBasedAutoOvertimePolicyEnabled;
+        public readonly Employee Employee;
 
         public string EmployeeNo { get; set; }
         public string FullName { get; set; }
@@ -20,6 +20,8 @@ namespace AccuPay.Core.Services.Imports
         {
             _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy;
             _isShiftBasedAutoOvertimePolicyEnabled = _shiftBasedAutoOvertimePolicy != null ? _shiftBasedAutoOvertimePolicy.Enabled : false;
+
+            Employee = employee;
 
             AssignEmployee(employee);
         }

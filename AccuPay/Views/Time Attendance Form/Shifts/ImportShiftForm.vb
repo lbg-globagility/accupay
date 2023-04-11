@@ -1,8 +1,10 @@
 Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services.[Imports]
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Core.Services.Policies
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -20,6 +22,8 @@ Public Class ImportShiftForm
 
     Private ReadOnly _importParser As IShiftImportParser
     Private ReadOnly _shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy
+    Private ReadOnly _importPolicy As ImportPolicy
+    Private ReadOnly _employeeRepository As IEmployeeRepository
 
     Sub New(shiftBasedAutoOvertimePolicy As ShiftBasedAutomaticOvertimePolicy)
 
@@ -31,6 +35,12 @@ Public Class ImportShiftForm
 
         _shiftBasedAutoOvertimePolicy = shiftBasedAutoOvertimePolicy
         _importParser.SetShiftBasedAutoOvertimePolicy(_shiftBasedAutoOvertimePolicy)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
 #End Region
@@ -88,21 +98,100 @@ Public Class ImportShiftForm
                 If result.IsSuccess = False Then Return
 
                 Dim filePath = result.Result
-                Dim parsedResult = Await _importParser.Parse(filePath, z_OrganizationID)
 
-                _dataSourceOk = parsedResult.ValidRecords.
-                    OrderBy(Function(s) s.FullName).
-                    ThenBy(Function(s) s.Date).
-                    ToList()
+                If _importPolicy.IsOpenToAllImportMethod Then
+                    Await ParseShiftRowRecords(fileName:=filePath)
+                Else
+                    Dim parsedResult = Await _importParser.Parse(filePath, z_OrganizationID)
 
-                _dataSourceFailed = parsedResult.InvalidRecords
+                    _dataSourceOk = parsedResult.ValidRecords.
+                        OrderBy(Function(s) s.FullName).
+                        ThenBy(Function(s) s.Date).
+                        ToList()
+
+                    _dataSourceFailed = parsedResult.InvalidRecords
+                End If
 
                 gridOK.DataSource = _dataSourceOk
                 gridFailed.DataSource = _dataSourceFailed
 
             End Function)
-
     End Sub
+
+    Private Async Function ParseShiftRowRecords(fileName As String) As Task
+        Dim records As New List(Of ShiftRowRecord)
+
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
+                                Sub()
+                                    records = ExcelService(Of ShiftRowRecord).Read(fileName, "ShiftSchedule").ToList
+                                End Sub)
+
+        If parsedSuccessfully = False Then Return
+
+        If records Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot read the template.")
+
+            Return
+        End If
+
+        Dim shiftImportModels = New List(Of ShiftImportModel)
+
+        Await StandardImport2(records, shiftImportModels)
+
+        _dataSourceOk = shiftImportModels.Where(Function(t) t.IsValidToSave).ToList()
+
+        _dataSourceFailed = shiftImportModels.Where(Function(t) Not t.IsValidToSave).ToList()
+    End Function
+
+    Private Async Function StandardImport2(records As List(Of ShiftRowRecord),
+        shiftImportModels As List(Of ShiftImportModel)) As Task
+
+        Dim employeeIdList = records.Select(Function(t) t.EmployeeRowId).ToArray()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIdList:=employeeIdList)).ToList()
+
+        For Each record In records
+            Dim employee = employees.FirstOrDefault(Function(e) Integer.Equals(e.RowID, record.EmployeeRowId))
+
+            If employee Is Nothing Then
+                record.ErrorMessage = "Employee does not exist!"
+                Continue For
+            End If
+
+            If record.StartDate < PayrollTools.SqlServerMinimumDate Then
+                record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+                Continue For
+            End If
+
+            If CheckIfRecordIsValid(record) = False Then
+                Continue For
+            End If
+
+            shiftImportModels.Add(New ShiftImportModel(employee:=employee, _shiftBasedAutoOvertimePolicy) With {
+                .Date = record.StartDate,
+                .BreakTime = record.BreakStartTime,
+                .BreakLength = record.BreakLength,
+                .IsRestDay = record.IsRestDay,
+                .StartTime = record.StartTime,
+                .EndTime = record.EndTime
+            })
+        Next
+    End Function
+
+    Private Function CheckIfRecordIsValid(record As ShiftRowRecord) As Boolean
+        If record.BreakStartTime Is Nothing And record.BreakLength = 0 Then Return False
+
+        If (record.BreakStartTime IsNot Nothing AndAlso
+            record.BreakLength <= 0) OrElse (
+            record.BreakLength > 0 AndAlso
+            record.BreakStartTime Is Nothing) Then
+
+            record.ErrorMessage = "Invalid break time"
+            Return False
+        End If
+
+        Return True
+    End Function
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
 
@@ -112,10 +201,18 @@ Public Class ImportShiftForm
                 If _shiftBasedAutoOvertimePolicy.Enabled Then Await SaveShiftBasedOvertimes()
 
                 Dim dataService = MainServiceProvider.GetRequiredService(Of IShiftDataService)
-                Dim result = Await dataService.BatchApply(
-                    _dataSourceOk,
-                    organizationId:=z_OrganizationID,
-                    currentlyLoggedInUserId:=z_User)
+
+                If _importPolicy.IsOpenToAllImportMethod Then
+                    Dim shiftSchedules = _dataSourceOk.
+                        Select(Function(t) t.ToShift(t.Employee.OrganizationID.Value)).
+                        ToList()
+                    Await dataService.SaveManyAsync(entities:=shiftSchedules, z_User)
+                Else
+                    Await dataService.BatchApply(
+                        _dataSourceOk,
+                        organizationId:=z_OrganizationID,
+                        currentlyLoggedInUserId:=z_User)
+                End If
 
                 Me.IsSaved = True
                 DialogResult = DialogResult.OK

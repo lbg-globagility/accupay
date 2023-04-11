@@ -16,10 +16,14 @@ namespace AccuPay.Infrastructure.Data
         private const string UserActivityName = "Shift Schedule";
 
         private readonly IShiftRepository _shiftRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public ShiftDataService(
             IPayPeriodRepository payPeriodRepository,
             IShiftRepository shiftRepository,
+            IRoleRepository roleRepository,
+            IOrganizationRepository organizationRepository,
             IUserActivityRepository userActivityRepository,
             PayrollContext context,
             IPolicyHelper policy) :
@@ -32,6 +36,8 @@ namespace AccuPay.Infrastructure.Data
                 entityName: "Shift")
         {
             _shiftRepository = shiftRepository;
+            _roleRepository = roleRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task<BatchApplyResult<Shift>> BatchApply(
@@ -117,13 +123,71 @@ namespace AccuPay.Infrastructure.Data
 
         protected override async Task AdditionalSaveManyValidation(List<Shift> entities, List<Shift> oldEntities, SaveType saveType)
         {
-            var organizationEntities = entities.GroupBy(x => x.OrganizationID);
-
-            foreach (var organization in organizationEntities)
+            if (_policy.ImportPolicy.IsOpenToAllImportMethod &&
+                (saveType == SaveType.Insert || saveType == SaveType.Update))
             {
-                if (organization.Key != null)
-                    await CheckIfDataIsWithinClosedPayPeriod(organization.ToList().Select(x => x.DateSched).Distinct(), organization.Key.Value);
+                var createUserId = entities.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var updateUserId = entities.Where(a => a.LastUpdBy.HasValue).Select(a => a.LastUpdBy).FirstOrDefault();
+                var userId = updateUserId ?? createUserId;
+                var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
+                await CheckForClosedPayPeriod(entities, oldEntities, userRoles: userRoles);
             }
+            else
+            {
+                await CheckForClosedPayPeriod(entities, oldEntities);
+            }
+        }
+
+        private async Task CheckForClosedPayPeriod(List<Shift> entities, List<Shift> oldEntities, List<UserRole> userRoles = null)
+        {
+            List<int?> organizationIds = await ValidateStartDates(entities, oldEntities, userRoles: userRoles);
+
+            var startDates = entities
+                 .Where(x => !x.IsNewEntity)
+                 .Select(x => x.DateSched)
+                 .ToList();
+
+            foreach (var organizationId in organizationIds)
+                await CheckIfDataIsWithinClosedPayPeriod(startDates, organizationId: organizationId.Value);
+        }
+
+        private async Task<List<int?>> ValidateStartDates(List<Shift> entities, List<Shift> oldEntities, List<UserRole> userRoles)
+        {
+            var organizationIds = new List<int?>();
+            if (userRoles != null && userRoles.Any())
+            {
+                foreach (var x in entities)
+                {
+                    var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == x.OrganizationID);
+
+                    var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.SHIFT, action: "create");
+                    if (!hasCreatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
+                    }
+
+                    var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.SHIFT, action: "update");
+                    if (!hasUpdatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot update data for company: {organization.Name}.");
+                    }
+
+                    organizationIds.Add(x.OrganizationID);
+                }
+            }
+            else
+            {
+                int? organizationId = null;
+                entities.ForEach(x =>
+                {
+                    organizationId = ValidateOrganization(organizationId, x.OrganizationID);
+                });
+                organizationIds = new List<int?>() { organizationId };
+            }
+
+            return organizationIds;
         }
 
         protected override async Task RecordUpdate(Shift newValue, Shift oldValue)

@@ -12,7 +12,7 @@ namespace AccuPay.Core.Services.Imports
         [ColumnName("Effective Date From")]
         public DateTime StartDate { get; set; }
 
-        [ColumnName("Effective Date To (Optional)")]
+        [Ignore]
         public DateTime? EndDate { get; set; }
 
         [ColumnName("Time From")]
@@ -31,5 +31,8 @@ namespace AccuPay.Core.Services.Imports
         public bool IsRestDay { get; set; }
 
         public int LineNumber { get; set; }
+
+        [Ignore]
+        public string ErrorMessage { get; set; }
     }
 }
