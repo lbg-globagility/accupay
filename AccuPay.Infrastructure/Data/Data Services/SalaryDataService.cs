@@ -17,9 +17,13 @@ namespace AccuPay.Infrastructure.Data
 
         private readonly IPaystubRepository _paystubRepository;
         private readonly ISalaryRepository _salaryRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public SalaryDataService(
             ISalaryRepository salaryRepository,
+            IRoleRepository roleRepository,
+            IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
             IPaystubRepository paystubRepository,
             IUserActivityRepository userActivityRepository,
@@ -36,6 +40,8 @@ namespace AccuPay.Infrastructure.Data
         {
             _paystubRepository = paystubRepository;
             _salaryRepository = salaryRepository;
+            _roleRepository = roleRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int currentlyLoggedInUserId)
@@ -114,12 +120,91 @@ namespace AccuPay.Infrastructure.Data
 
         protected override async Task AdditionalSaveManyValidation(List<Salary> salaries, List<Salary> oldSalaries, SaveType saveType)
         {
-            foreach (var salary in salaries)
+            if (_policy.ImportPolicy.IsOpenToAllImportMethod &&
+                (saveType == SaveType.Insert || saveType == SaveType.Update))
             {
-                var oldSalary = oldSalaries.FirstOrDefault(x => x.RowID == salary.RowID);
-                // TODO: think of a better way to not call this query for every salary
-                await ValidateSalaryIfAlreadyUsed(salary, oldSalary);
+                var createUserId = salaries.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var updateUserId = salaries.Where(a => a.LastUpdBy.HasValue).Select(a => a.LastUpdBy).FirstOrDefault();
+                var userId = updateUserId ?? createUserId;
+                var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
+                await CheckForClosedPayPeriod(salaries, oldSalaries, userRoles: userRoles);
             }
+            else
+            {
+                foreach (var salary in salaries)
+                {
+                    var oldSalary = oldSalaries.FirstOrDefault(x => x.RowID == salary.RowID);
+                    // TODO: think of a better way to not call this query for every salary
+                    await ValidateSalaryIfAlreadyUsed(salary, oldSalary);
+                }
+            }
+        }
+
+        private async Task CheckForClosedPayPeriod(List<Salary> salaries, List<Salary> oldSalaries, List<UserRole> userRoles)
+        {
+            List<int?> organizationIds = await ValidateStartDates(salaries, oldSalaries, userRoles: userRoles);
+        }
+
+        private async Task<List<int?>> ValidateStartDates(List<Salary> salaries, List<Salary> oldSalaries, List<UserRole> userRoles)
+        {
+            var organizationIds = new List<int?>();
+            if (userRoles != null && userRoles.Any())
+            {
+                foreach (var x in salaries)
+                {
+                    var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == x.OrganizationID);
+
+                    var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.SALARY, action: "create");
+                    if (!hasCreatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
+                    }
+
+                    var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.SALARY, action: "update");
+                    if (!hasUpdatePermission)
+                    {
+                        var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                        throw new BusinessLogicException($"Insufficient permission. You cannot update data for company: {organization.Name}.");
+                    }
+
+                    organizationIds.Add(x.OrganizationID);
+                }
+            }
+            else
+            {
+                int? organizationId = null;
+                salaries.ForEach(x =>
+                {
+                    organizationId = ValidateOrganization(organizationId, x.OrganizationID);
+                });
+                organizationIds = new List<int?>() { organizationId };
+            }
+
+            var validatableStartDates = salaries
+                 .Where(salary =>
+                 {
+                     return CheckIfStartDateNeedsToBeValidated(oldSalaries, salary);
+                 })
+                 .Select(x => x.EffectiveFrom)
+                 .ToArray();
+
+            foreach (var orgId in organizationIds)
+                await CheckIfDataIsWithinClosedPayPeriod(validatableStartDates, orgId.Value);
+
+            return organizationIds;
+        }
+
+        private bool CheckIfStartDateNeedsToBeValidated(List<Salary> oldSalaries, Salary salary)
+        {
+            if (salary.IsNewEntity) return true;
+
+            var oldSalary = oldSalaries.Where(o => o.RowID == salary.RowID).FirstOrDefault();
+
+            if (salary.EffectiveFrom.ToMinimumHourValue() != oldSalary.EffectiveFrom.ToMinimumHourValue())
+                return true;
+
+            return false;
         }
 
         protected override async Task RecordUpdate(Salary newValue, Salary oldValue)

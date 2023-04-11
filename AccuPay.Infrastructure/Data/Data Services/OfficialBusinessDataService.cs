@@ -260,9 +260,9 @@ namespace AccuPay.Infrastructure.Data
         {
             if (officialBusiness.IsNewEntity) return true;
 
-            var oldAllowance = oldEntities.Where(o => o.RowID == officialBusiness.RowID).FirstOrDefault();
+            var oldOfficialBusiness = oldEntities.Where(o => o.RowID == officialBusiness.RowID).FirstOrDefault();
 
-            if (officialBusiness.StartDate.ToMinimumHourValue() != oldAllowance.StartDate.ToMinimumHourValue())
+            if (officialBusiness.StartDate.ToMinimumHourValue() != oldOfficialBusiness.StartDate.ToMinimumHourValue())
                 return true;
 
             return false;

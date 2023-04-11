@@ -305,14 +305,14 @@ namespace AccuPay.Infrastructure.Data
                 {
                     var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == x.OrganizationID);
 
-                    var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.OFFICIALBUSINESS, action: "create");
+                    var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.OVERTIME, action: "create");
                     if (!hasCreatePermission)
                     {
                         var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
                         throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
                     }
 
-                    var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.OFFICIALBUSINESS, action: "update");
+                    var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.OVERTIME, action: "update");
                     if (!hasUpdatePermission)
                     {
                         var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
@@ -333,9 +333,9 @@ namespace AccuPay.Infrastructure.Data
             }
 
             var validatableStartDates = entities
-                 .Where(officialBusiness =>
+                 .Where(overtime =>
                  {
-                     return CheckIfStartDateNeedsToBeValidated(oldEntities, officialBusiness);
+                     return CheckIfStartDateNeedsToBeValidated(oldEntities, overtime);
                  })
                  .Select(x => x.OTStartDate)
                  .ToArray();
@@ -346,13 +346,13 @@ namespace AccuPay.Infrastructure.Data
             return organizationIds;
         }
 
-        private bool CheckIfStartDateNeedsToBeValidated(List<Overtime> oldEntities, Overtime officialBusiness)
+        private bool CheckIfStartDateNeedsToBeValidated(List<Overtime> oldEntities, Overtime overtime)
         {
-            if (officialBusiness.IsNewEntity) return true;
+            if (overtime.IsNewEntity) return true;
 
-            var oldAllowance = oldEntities.Where(o => o.RowID == officialBusiness.RowID).FirstOrDefault();
+            var oldOvertime = oldEntities.Where(o => o.RowID == overtime.RowID).FirstOrDefault();
 
-            if (officialBusiness.OTStartDate.ToMinimumHourValue() != oldAllowance.OTStartDate.ToMinimumHourValue())
+            if (overtime.OTStartDate.ToMinimumHourValue() != oldOvertime.OTStartDate.ToMinimumHourValue())
                 return true;
 
             return false;

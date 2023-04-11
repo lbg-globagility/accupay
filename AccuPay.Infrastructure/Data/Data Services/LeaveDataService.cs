@@ -109,7 +109,7 @@ namespace AccuPay.Infrastructure.Data
                     {
                         var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == newLeave.OrganizationID);
 
-                        var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.ALLOWANCE, action: "create");
+                        var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.LEAVE, action: "create");
                         if (!hasCreatePermission)
                         {
                             var organization = await _organizationRepository.GetByIdAsync(newLeave.OrganizationID.Value);
@@ -122,7 +122,7 @@ namespace AccuPay.Infrastructure.Data
                     {
                         var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == updatedLeave.OrganizationID);
 
-                        var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.ALLOWANCE, action: "update");
+                        var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.LEAVE, action: "update");
                         if (!hasUpdatePermission)
                         {
                             var organization = await _organizationRepository.GetByIdAsync(updatedLeave.OrganizationID.Value);

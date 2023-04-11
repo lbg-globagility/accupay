@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Utilities.Attributes
@@ -6,6 +6,7 @@ Imports AccuPay.Utilities.Attributes
 Namespace Global.Globagility.AccuPay.Salaries
 
     Public Class SalaryRowRecord
+        Inherits ExcelEmployeeRowRecord
         Implements IExcelRowRecord
 
         <ColumnName("Employee No")>

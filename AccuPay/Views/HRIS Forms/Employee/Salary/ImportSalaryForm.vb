@@ -1,9 +1,11 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Globagility.AccuPay.Salaries
@@ -16,6 +18,7 @@ Public Class ImportSalaryForm
     Public Property IsSaved As Boolean
 
     Private ReadOnly _employeeRepository As IEmployeeRepository
+    Private ReadOnly _importPolicy As ImportPolicy
 
     Sub New()
 
@@ -24,6 +27,10 @@ Public Class ImportSalaryForm
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
         Me.IsSaved = False
+
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
     Private Async Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
@@ -61,8 +68,82 @@ Public Class ImportSalaryForm
 
         Dim employeeNos = records.Select(Function(s) s.EmployeeNo).ToArray()
 
-        Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
+        If Not _importPolicy.IsOpenToAllImportMethod Then
+            Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
+            Await StandardImport(records, rejectedRecords, salaryViewModels, employees)
+        ElseIf _importPolicy.IsOpenToAllImportMethod Then
+            Await StandardImport2(records, rejectedRecords, salaryViewModels)
+        End If
 
+        UpdateStatusLabel(rejectedRecords.Count)
+
+        ParsedTabControl.Text = $"Ok ({salaryViewModels.Count})"
+        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
+
+        SaveButton.Enabled = _salaries.Count > 0
+
+        SalaryDataGrid.DataSource = salaryViewModels
+        RejectedRecordsGrid.AutoGenerateColumns = False
+        RejectedRecordsGrid.DataSource = rejectedRecords
+    End Sub
+
+    Private Async Function StandardImport2(records As List(Of SalaryRowRecord), rejectedRecords As List(Of SalaryRowRecord), salaryViewModels As List(Of SalaryViewModel)) As Task
+
+        Dim employeeIdList = records.Select(Function(t) t.EmployeeRowId).ToArray()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIdList:=employeeIdList)).ToList()
+
+        For Each record In records
+            Dim employee = employees.FirstOrDefault(Function(e) Integer.Equals(e.RowID, record.EmployeeRowId))
+
+            If employee Is Nothing Then
+                record.ErrorMessage = "Employee does not exist!"
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            If record.EffectiveFrom IsNot Nothing AndAlso
+                record.EffectiveFrom.Value < PayrollTools.SqlServerMinimumDate Then
+                record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+                rejectedRecords.Add(record)
+                Continue For
+            End If
+
+            Dim lastSalary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value)
+
+            Dim doPaySSSContribution = True
+
+            If lastSalary IsNot Nothing Then
+                doPaySSSContribution = lastSalary.DoPaySSSContribution
+            End If
+
+            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
+
+                Continue For
+
+            End If
+
+            Dim salary = New Salary With {
+                .OrganizationID = z_OrganizationID,
+                .EmployeeID = employee.RowID,
+                .PositionID = employee.PositionID,
+                .EffectiveFrom = record.EffectiveFrom.Value,
+                .BasicSalary = record.BasicSalary.Value,
+                .AllowanceSalary = record.AllowanceSalary,
+                .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
+                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
+                .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
+                .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
+                .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
+            }
+
+            salary.UpdateTotalSalary()
+
+            _salaries.Add(salary)
+            salaryViewModels.Add(New SalaryViewModel(salary, employee))
+        Next
+    End Function
+
+    Private Async Function StandardImport(records As List(Of SalaryRowRecord), rejectedRecords As List(Of SalaryRowRecord), salaryViewModels As List(Of SalaryViewModel), employees As ICollection(Of Employee)) As Task
         For Each record In records
 
             Dim employee = employees.FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo))
@@ -113,18 +194,7 @@ Public Class ImportSalaryForm
             _salaries.Add(salary)
             salaryViewModels.Add(New SalaryViewModel(salary, employee))
         Next
-
-        UpdateStatusLabel(rejectedRecords.Count)
-
-        ParsedTabControl.Text = $"Ok ({salaryViewModels.Count})"
-        ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
-
-        SaveButton.Enabled = _salaries.Count > 0
-
-        SalaryDataGrid.DataSource = salaryViewModels
-        RejectedRecordsGrid.AutoGenerateColumns = False
-        RejectedRecordsGrid.DataSource = rejectedRecords
-    End Sub
+    End Function
 
     Private Function CheckIfRecordIsValid(record As SalaryRowRecord, rejectedRecords As List(Of SalaryRowRecord)) As Boolean
 

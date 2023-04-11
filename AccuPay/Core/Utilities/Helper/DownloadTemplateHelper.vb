@@ -160,7 +160,7 @@ Namespace Global.AccuPay.Desktop.Helpers
                 'Case ExcelTemplates.Allowance✔ Orn
                 '    ExcelTemplates.Loan✔ Or
                 '    ExcelTemplates.OfficialBusiness✔ Or
-                '    ExcelTemplates.Overtime
+                '    ExcelTemplates.Overtime✔
 
                 'Case ExcelTemplates.GovernmentPremium✔
                 '    sheet = sheets.FirstOrDefault()
@@ -169,7 +169,7 @@ Namespace Global.AccuPay.Desktop.Helpers
                 Case ExcelTemplates.Leave '✔
                     sheet = sheets.FirstOrDefault(Function(s) s.Name = "Employee Leave")
 
-                Case ExcelTemplates.Salary
+                Case ExcelTemplates.Salary '✔
                     sheet = sheets.FirstOrDefault(Function(s) s.Name = "Employee Salary")
 
                 Case ExcelTemplates.Shift
