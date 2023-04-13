@@ -52,6 +52,7 @@ namespace AccuPay.Core.Entities
         public decimal VacationLeaveAllowance { get; set; }
 
         public decimal SickLeaveAllowance { get; set; }
+        public decimal SingleParentLeaveAllowance { get; set; }
         public decimal MaternityLeaveAllowance { get; set; }
         public decimal MaternityLeaveBalance { get; internal set; }
         public decimal OtherLeaveAllowance { get; set; }

@@ -6,6 +6,7 @@ Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Imports.Policy
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Attributes
@@ -25,6 +26,7 @@ Public Class ImportEmployeeForm
     Private ReadOnly _branchRepository As IBranchRepository
     Private ReadOnly _employeeRepository As IEmployeeRepository
     Private ReadOnly _userActivityRepository As IUserActivityRepository
+    Private ReadOnly _importPolicy As ImportPolicy
 
 #End Region
 
@@ -40,9 +42,13 @@ Public Class ImportEmployeeForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of IUserActivityRepository)
 
+        Dim policyHelper = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
+
+        _importPolicy = policyHelper.ImportPolicy
     End Sub
 
     Private Class EmployeeModel
+        Inherits ExcelOrganizationRowRecord
         Implements IExcelRowRecord
 
         Private FIXED_AND_MONTHLY_TYPES As String() = {"monthly", "fixed"}
@@ -127,6 +133,9 @@ Public Class ImportEmployeeForm
         <ColumnName("SL allowance per year (hours)")>
         Public Property SickLeaveAllowance As Decimal
 
+        <ColumnName("Single parent leave allowance per year (hours)")>
+        Public Property SingleParentLeaveAllowance As Decimal
+
         <ColumnName("Branch")>
         Public Property Branch As String
 
@@ -141,6 +150,9 @@ Public Class ImportEmployeeForm
 
         <ColumnName("Current SL balance (hours)")>
         Public Property SickLeaveBalance As Decimal
+
+        <ColumnName("Current Single parent leave balance (hours)")>
+        Public Property SingleParentLeaveBalance As Decimal
 
         <ColumnName("ATM No./Account No.")>
         Public Property AtmNumber As String
@@ -235,21 +247,42 @@ Public Class ImportEmployeeForm
         Dim employees = New List(Of EmployeeWithLeaveBalanceData)
 
         Dim organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
-        Dim organization = Await organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
 
-        For Each model In _okModels
+        If _importPolicy.IsOpenToAllImportMethod Then
+            Dim organizations = Await organizationRepository.GetAllAsync()
 
-            Dim newEmployee = Employee.NewEmployee(organization)
+            For Each model In _okModels
+                Dim organization = organizations.FirstOrDefault(Function(o) If(o.RowID = model.OrganizationRowId, False))
+                Dim newEmployee = Employee.NewEmployee(organization)
 
-            AssignChanges(model, newEmployee)
+                AssignChanges(model, newEmployee)
 
-            employees.Add(
+                employees.Add(
                 New EmployeeWithLeaveBalanceData(
                     newEmployee,
                     vacationLeaveBalance:=model.VacationLeaveBalance,
-                    sickLeaveBalance:=model.SickLeaveBalance))
+                    sickLeaveBalance:=model.SickLeaveBalance,
+                    singleParentLeaveBalance:=model.SingleParentLeaveBalance))
 
-        Next
+            Next
+        Else
+            Dim organization = Await organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+
+            For Each model In _okModels
+
+                Dim newEmployee = Employee.NewEmployee(organization)
+
+                AssignChanges(model, newEmployee)
+
+                employees.Add(
+                    New EmployeeWithLeaveBalanceData(
+                        newEmployee,
+                        vacationLeaveBalance:=model.VacationLeaveBalance,
+                        sickLeaveBalance:=model.SickLeaveBalance,
+                        singleParentLeaveBalance:=model.SingleParentLeaveBalance))
+
+            Next
+        End If
 
         Await SaveToDatabase(employees)
     End Function
@@ -260,10 +293,16 @@ Public Class ImportEmployeeForm
 
             Dim service = MainServiceProvider.GetRequiredService(Of IEmployeeDataService)
 
-            Await service.ImportAsync(
-                employees,
-                organizationId:=z_OrganizationID,
-                userId:=z_User)
+            If _importPolicy.IsOpenToAllImportMethod Then
+                Await service.ImportAsync(
+                    employees,
+                    userId:=z_User)
+            Else
+                Await service.ImportAsync(
+                    employees,
+                    organizationId:=z_OrganizationID,
+                    userId:=z_User)
+            End If
         End If
     End Function
 
@@ -302,6 +341,8 @@ Public Class ImportEmployeeForm
             If em.VacationLeaveAllowance > 0 Then .VacationLeaveAllowance = em.VacationLeaveAllowance
 
             If em.SickLeaveAllowance > 0 Then .SickLeaveAllowance = em.SickLeaveAllowance
+
+            If em.SingleParentLeaveAllowance > 0 Then .SingleParentLeaveAllowance = em.SingleParentLeaveAllowance
 
             If Not String.IsNullOrWhiteSpace(em.MaritalStatus) Then .MaritalStatus = em.MaritalStatus?.Trim()
 
@@ -380,10 +421,35 @@ Public Class ImportEmployeeForm
             Return
         End If
 
-        Dim allEmployees = Await _employeeRepository.GetAllAsync(z_OrganizationID)
+        Dim allEmployees = Enumerable.Empty(Of Employee)
+        If _importPolicy.IsOpenToAllImportMethod Then
+            Dim organizationIds = models.
+                Where(Function(t) t.OrganizationRowId.HasValue).
+                Select(Function(t) t.OrganizationRowId.Value).
+                ToArray()
+            allEmployees = Await _employeeRepository.GetAllAsync(organizationIds)
 
-        _okModels = models.Where(Function(ee) Not ee.ConsideredFailed(allEmployees)).ToList()
-        _failModels = models.Where(Function(ee) ee.ConsideredFailed(allEmployees)).ToList()
+            Dim consideredFailed =
+                Function(ee As EmployeeModel)
+                    Dim selectedEmployees = allEmployees.
+                        Where(Function(e) e.EmployeeNo = ee.EmployeeNo).
+                        Where(Function(e) If(e.OrganizationID = ee.OrganizationRowId, False)).
+                        ToList()
+
+                    If 0 = 1 Then Console.WriteLine(String.Empty)
+
+                    Return ee.ConsideredFailed(selectedEmployees) Or
+                        Not ee.OrganizationRowId.HasValue
+                End Function
+
+            _okModels = models.Where(Function(ee) Not consideredFailed(ee)).ToList()
+            _failModels = models.Where(Function(ee) consideredFailed(ee)).ToList()
+        Else
+            allEmployees = Await _employeeRepository.GetAllAsync(z_OrganizationID)
+
+            _okModels = models.Where(Function(ee) Not ee.ConsideredFailed(allEmployees)).ToList()
+            _failModels = models.Where(Function(ee) ee.ConsideredFailed(allEmployees)).ToList()
+        End If
 
         Await AddPositionIdToModels(_okModels)
 
@@ -529,7 +595,11 @@ Public Class ImportEmployeeForm
     End Sub
 
     Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
-        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.Employee)
+        Dim excelTemplate = ExcelTemplates.Employee
+
+        If _importPolicy.IsOpenToAllImportMethod Then excelTemplate = ExcelTemplates.Employee2
+
+        DownloadTemplateHelper.DownloadExcel(excelTemplate)
     End Sub
 
 #End Region

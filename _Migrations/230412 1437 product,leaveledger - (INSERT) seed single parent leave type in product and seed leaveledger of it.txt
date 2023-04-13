@@ -1,0 +1,32 @@
+# 2:37 PM 4/12/2023
+
+SET @partNo='Single parent leave';
+
+DROP TEMPORARY TABLE IF EXISTS `soloparentleavetype`;
+CREATE TEMPORARY TABLE IF NOT EXISTS `soloparentleavetype`
+SELECT
+@partNo `PartNo`
+;
+
+SET @userId=(SELECT Id FROM aspnetusers LIMIT 1);
+
+#
+INSERT INTO `product` (RowID,OrganizationID,PartNo,Created,CreatedBy,LastUpdBy,`Category`,CategoryID) 
+SELECT
+p.RowID,og.RowID `OrganizationID`,i.PartNo,CURRENT_TIMESTAMP() `Created`,@userId `CreatedBy`,@userId `LastUpdBy`,c.CategoryName `Category`,c.RowID `CategoryID`
+FROM `soloparentleavetype` i
+INNER JOIN organization og ON og.RowID IS NOT NULL AND og.NoPurpose=FALSE
+INNER JOIN category c ON c.CategoryName='Leave type' AND c.OrganizationID=og.RowID
+LEFT JOIN product p ON p.PartNo=i.PartNo AND p.CategoryID=c.RowID
+#
+ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP()
+;
+
+INSERT INTO `leaveledger` (`OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `EmployeeID`, `ProductID`) SELECT og.RowID, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), @userId, e.RowID, p.RowID
+FROM `organization` og
+INNER JOIN employee e ON e.OrganizationID=og.RowID
+INNER JOIN product p ON p.OrganizationID=og.RowID AND p.PartNo=@partNo
+WHERE og.NoPurpose=FALSE
+ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP()
+;
+

@@ -17,10 +17,14 @@ namespace AccuPay.Infrastructure.Data
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IPositionRepository _positionRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IOrganizationRepository _organizationRepository;
 
         public EmployeeDataService(
             IEmployeeRepository employeeRepository,
             ILeaveLedgerRepository leaveLedgerRepository,
+            IRoleRepository roleRepository,
+            IOrganizationRepository organizationRepository,
             IPayPeriodRepository payPeriodRepository,
             IProductRepository productRepository,
             IPositionRepository positionRepository,
@@ -38,6 +42,8 @@ namespace AccuPay.Infrastructure.Data
             _leaveLedgerRepository = leaveLedgerRepository;
             _productRepository = productRepository;
             _positionRepository = positionRepository;
+            _roleRepository = roleRepository;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId)
@@ -54,7 +60,14 @@ namespace AccuPay.Infrastructure.Data
                     organizationId: organizationId,
                     userId: userId);
 
-            if (vacationLeaveProduct?.RowID == null || sickLeaveProduct?.RowID == null)
+            var singleParentLeaveProduct = await _productRepository
+                .GetOrCreateLeaveTypeAsync(
+                    ProductConstant.SINGLE_PARENT_LEAVE,
+                    organizationId: organizationId,
+                    userId: userId);
+
+            if (vacationLeaveProduct?.RowID == null || sickLeaveProduct?.RowID == null
+                || singleParentLeaveProduct?.RowID == null)
                 throw new BusinessLogicException("Error accessing leave type data.");
 
             var employees = employeeWithLeaveBalanceModels.Select(x => x.Employee).ToList();
@@ -62,7 +75,7 @@ namespace AccuPay.Infrastructure.Data
             await SaveManyAsync(employees, userId);
 
             var leaveTypes = await _productRepository.GetLeaveTypesAsync(organizationId);
-            int[] defaultLeaveTypeIds = { vacationLeaveProduct.RowID.Value , sickLeaveProduct.RowID.Value };
+            int[] defaultLeaveTypeIds = { vacationLeaveProduct.RowID.Value, sickLeaveProduct.RowID.Value, singleParentLeaveProduct.RowID.Value };
             var leaveTypeIds = leaveTypes.
                 Where(p => !defaultLeaveTypeIds.Contains(p.RowID.Value)).
                 Select(p => p.RowID.Value).
@@ -86,6 +99,14 @@ namespace AccuPay.Infrastructure.Data
                     organizationId: organizationId,
                     balance: model.SickLeaveBalance);
 
+                // single parent leave balance
+                await _leaveLedgerRepository.CreateBeginningBalanceAsync(
+                    employeeId: model.Employee.RowID.Value,
+                    leaveTypeId: singleParentLeaveProduct.RowID.Value,
+                    userId: userId,
+                    organizationId: organizationId,
+                    balance: model.SingleParentLeaveBalance);
+
                 var employeeRowId = model.Employee.RowID.Value;
                 foreach (var leaveTypeId in leaveTypeIds)
                 {
@@ -96,7 +117,142 @@ namespace AccuPay.Infrastructure.Data
                         organizationId: organizationId,
                         balance: 0);
                 }
+            }
+        }
 
+        public async Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels,
+            int userId)
+        {
+            var organizationIds = employeeWithLeaveBalanceModels
+                .Select(e => e.Employee.OrganizationID.Value)
+                .ToArray();
+
+            var vacationLeaveProducts = new List<Product>();
+            var sickLeaveProducts = new List<Product>();
+            var singleParentLeaveProducts = new List<Product>();
+
+            foreach (var organizationId in organizationIds)
+            {
+                vacationLeaveProducts.Add(item: await _productRepository
+                .GetOrCreateLeaveTypeAsync(
+                    ProductConstant.VACATION_LEAVE,
+                    organizationId: organizationId,
+                    userId: userId));
+
+                sickLeaveProducts.Add(item: await _productRepository
+                    .GetOrCreateLeaveTypeAsync(
+                        ProductConstant.SICK_LEAVE,
+                        organizationId: organizationId,
+                        userId: userId));
+
+                singleParentLeaveProducts.Add(item: await _productRepository
+                    .GetOrCreateLeaveTypeAsync(
+                        ProductConstant.SINGLE_PARENT_LEAVE,
+                        organizationId: organizationId,
+                        userId: userId));
+            }
+
+            var employees = employeeWithLeaveBalanceModels.Select(x => x.Employee).ToList();
+
+            await SaveManyAsync(employees, userId);
+
+            foreach (var organizationId in organizationIds)
+            {
+                var leaveTypes = await _productRepository.GetLeaveTypesAsync(organizationId);
+
+                var vacationLeaveProduct = leaveTypes.FirstOrDefault(p => p.IsVacationLeave);
+                var sickLeaveProduct = leaveTypes.FirstOrDefault(p => p.IsSickLeave);
+                var singleParentLeaveProduct = leaveTypes.FirstOrDefault(p => p.IsSingleParentLeave);
+
+                int[] defaultLeaveTypeIds = { vacationLeaveProduct.RowID.Value,
+                    sickLeaveProduct.RowID.Value,
+                    singleParentLeaveProduct.RowID.Value };
+
+                var leaveTypeIds = leaveTypes.
+                    Where(p => !defaultLeaveTypeIds.Contains(p.RowID.Value)).
+                    Select(p => p.RowID.Value).
+                    ToArray();
+
+                var models = employeeWithLeaveBalanceModels
+                    .Where(t => t.Employee.OrganizationID == organizationId)
+                    .ToList();
+
+                foreach (var model in models)
+                {
+                    var employee = model.Employee;
+
+                    // vacation leave balance
+                    await _leaveLedgerRepository.CreateBeginningBalanceAsync(
+                        employeeId: employee.RowID.Value,
+                        leaveTypeId: vacationLeaveProduct.RowID.Value,
+                        userId: userId,
+                        organizationId: organizationId,
+                        balance: model.VacationLeaveBalance);
+
+                    // sick leave balance
+                    await _leaveLedgerRepository.CreateBeginningBalanceAsync(
+                        employeeId: employee.RowID.Value,
+                        leaveTypeId: sickLeaveProduct.RowID.Value,
+                        userId: userId,
+                        organizationId: organizationId,
+                        balance: model.SickLeaveBalance);
+
+                    // single parent leave balance
+                    await _leaveLedgerRepository.CreateBeginningBalanceAsync(
+                        employeeId: employee.RowID.Value,
+                        leaveTypeId: singleParentLeaveProduct.RowID.Value,
+                        userId: userId,
+                        organizationId: organizationId,
+                        balance: model.SingleParentLeaveBalance);
+
+                    var employeeRowId = employee.RowID.Value;
+                    foreach (var leaveTypeId in leaveTypeIds)
+                    {
+                        await _leaveLedgerRepository.CreateBeginningBalanceAsync(
+                            employeeId: employeeRowId,
+                            leaveTypeId: leaveTypeId,
+                            userId: userId,
+                            organizationId: organizationId,
+                            balance: 0);
+                    }
+                }
+            }
+        }
+
+        protected override async Task AdditionalSaveManyValidation(List<Employee> entities, List<Employee> oldEntities, SaveType saveType)
+        {
+            if (_policy.ImportPolicy.IsOpenToAllImportMethod &&
+                (saveType == SaveType.Insert || saveType == SaveType.Update))
+            {
+                var createUserId = entities.Where(a => a.CreatedBy.HasValue).Select(a => a.CreatedBy).FirstOrDefault();
+                var updateUserId = entities.Where(a => a.LastUpdBy.HasValue).Select(a => a.LastUpdBy).FirstOrDefault();
+                var userId = updateUserId ?? createUserId;
+                var userRoles = await _roleRepository.GetUserRolesByUserAsync(userId: userId ?? 0);
+
+                var organizationIds = new List<int?>();
+                if (userRoles != null && userRoles.Any())
+                {
+                    foreach (var x in entities)
+                    {
+                        var userRole = userRoles.FirstOrDefault(ur => ur.OrganizationId == x.OrganizationID);
+
+                        var hasCreatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.EMPLOYEE, action: "create");
+                        if (!hasCreatePermission)
+                        {
+                            var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                            throw new BusinessLogicException($"Insufficient permission. You cannot create data for company: {organization.Name}.");
+                        }
+
+                        var hasUpdatePermission = userRole.Role.HasPermission(permissionName: PermissionConstant.EMPLOYEE, action: "update");
+                        if (!hasUpdatePermission)
+                        {
+                            var organization = await _organizationRepository.GetByIdAsync(x.OrganizationID.Value);
+                            throw new BusinessLogicException($"Insufficient permission. You cannot update data for company: {organization.Name}.");
+                        }
+
+                        organizationIds.Add(x.OrganizationID);
+                    }
+                }
             }
         }
 

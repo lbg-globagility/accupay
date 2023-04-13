@@ -60,15 +60,23 @@ namespace AccuPay.Core.Entities
 
         public bool IsVacationOrSickLeave => IsVacationLeave || IsSickLeave;
 
-        public bool IsVacationLeave => PartNo.Trim().ToUpper() == ProductConstant.VACATION_LEAVE.ToUpper();
+        public bool IsVacationLeave => PartNo.Trim().ToUpper() == ProductConstant.VACATION_LEAVE.ToUpper() &&
+            Category == ProductConstant.LEAVE_TYPE_CATEGORY;
 
-        public bool IsSickLeave => PartNo.Trim().ToUpper() == ProductConstant.SICK_LEAVE.ToUpper();
+        public bool IsSickLeave => PartNo.Trim().ToUpper() == ProductConstant.SICK_LEAVE.ToUpper() &&
+            Category == ProductConstant.LEAVE_TYPE_CATEGORY;
 
-        public bool IsMaternityLeave => PartNo.Trim().ToUpper() == ProductConstant.MATERNITY_LEAVE.ToUpper();
+        public bool IsSingleParentLeave => PartNo.Trim().ToUpper() == ProductConstant.SINGLE_PARENT_LEAVE.ToUpper() &&
+            Category == ProductConstant.LEAVE_TYPE_CATEGORY;
 
-        public bool IsParentalLeave => PartNo.Trim().ToUpper() == ProductConstant.PARENTAL_LEAVE.ToUpper();
+        public bool IsMaternityLeave => PartNo.Trim().ToUpper() == ProductConstant.MATERNITY_LEAVE.ToUpper() &&
+            Category == ProductConstant.LEAVE_TYPE_CATEGORY;
 
-        public bool IsOthersLeave => PartNo.Trim().ToUpper() == ProductConstant.OTHERS_LEAVE.ToUpper();
+        public bool IsParentalLeave => PartNo.Trim().ToUpper() == ProductConstant.PARENTAL_LEAVE.ToUpper() &&
+            Category == ProductConstant.LEAVE_TYPE_CATEGORY;
+
+        public bool IsOthersLeave => PartNo.Trim().ToUpper() == ProductConstant.OTHERS_LEAVE.ToUpper() &&
+            Category == ProductConstant.LEAVE_TYPE_CATEGORY;
 
         public bool IsPagibigLoan => PartNo.Trim().ToUpper() == ProductConstant.PAG_IBIG_LOAN.ToUpper();
 

@@ -15,7 +15,7 @@ Namespace Global.AccuPay.Desktop.Helpers
 
         Private Const excelFileExtension As String = "xlsx"
         Private Const excelFileFilter As String = "Excel Files|*.xls;*.xlsx;"
-        Private Const OPTION_WORKSHEET_NAME = "Options"
+        Public Const OPTION_WORKSHEET_NAME = "Options"
 
         Public Shared ReadOnly EMPLOYEE_IMPORTER_EXCEL_TEMPLATES As ExcelTemplates() = {
             ExcelTemplates.Allowance,
@@ -45,6 +45,8 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Await AssignEmployeeSelectionAsync(excelTemplate, fileInfo)
 
+                Await AssignOrganizationSelectionAsync(excelTemplate:=excelTemplate, fileInfo:=fileInfo)
+
                 Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
             Catch ex As IOException
 
@@ -57,7 +59,7 @@ Namespace Global.AccuPay.Desktop.Helpers
 
         End Sub
 
-        Public Shared Async Function DownloadExcelWithData(excelTemplate As ExcelTemplates) As Threading.Tasks.Task(Of FileInfo)
+        Public Shared Async Function DownloadExcelWithData(excelTemplate As ExcelTemplates) As Task(Of FileInfo)
             Dim excelName = TemplatesHelper.GetFileName(excelTemplate)
             Dim template = TemplatesHelper.GetFullPath(excelTemplate)
 
@@ -73,6 +75,8 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Await AssignEmployeeSelectionAsync(excelTemplate, fileInfo)
 
+                Await AssignOrganizationSelectionAsync(excelTemplate:=excelTemplate, fileInfo:=fileInfo)
+
                 Return fileInfo
             Catch ex As IOException
 
@@ -84,6 +88,62 @@ Namespace Global.AccuPay.Desktop.Helpers
             End Try
 
             Return Nothing
+        End Function
+
+        Private Shared Async Function AssignOrganizationSelectionAsync(excelTemplate As ExcelTemplates, fileInfo As FileInfo) As Task
+            If excelTemplate = ExcelTemplates.Employee2 Then
+                Using package As New ExcelPackage(fileInfo)
+                    Dim optionWorksheet = package.Workbook.
+                        Worksheets.
+                        OfType(Of ExcelWorksheet).
+                        FirstOrDefault(Function(s) s.Name = OPTION_WORKSHEET_NAME)
+                    If optionWorksheet Is Nothing Then optionWorksheet = package.Workbook.Worksheets.Add(Name:=OPTION_WORKSHEET_NAME)
+
+                    Dim organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+                    Dim allOrganization = (Await organizationRepository.GetAllAsync()).
+                        Where(Function(org) Not org.IsInactive).
+                        OrderBy(Function(org) org.Name).
+                        ToList()
+
+                    Dim count = allOrganization.Count - 1
+                    Dim lastIndex = 0
+                    For index As Integer = 0 To count
+                        Dim organization = allOrganization(index)
+                        Dim currentIndex = index + 2
+                        optionWorksheet.Cells(currentIndex, 1).Value = organization.Name
+                        optionWorksheet.Cells(currentIndex, 3).Value = organization.RowID.Value
+                        lastIndex = currentIndex
+                    Next
+
+                    Dim employeeValidatedWorksheet = package.Workbook.
+                        Worksheets.
+                        OfType(Of ExcelWorksheet).
+                        FirstOrDefault(Function(s) s.Name = "Employees")
+
+                    Dim columnLetter = GetColumnLetterByName(excelWorksheet:=employeeValidatedWorksheet, columnName:="OrganizationRowId")
+                    Dim rowIndexs = Enumerable.Range(2, 999) '1048575
+
+                    For Each i In rowIndexs
+                        Dim cellAddress = $"{columnLetter}{i}"
+                        employeeValidatedWorksheet.Cells(cellAddress).Formula = $"VLOOKUP(A{i},{optionWorksheet.Name}!A2:C{lastIndex},3,TRUE)"
+                    Next
+
+                    Dim validation = employeeValidatedWorksheet.DataValidations.AddListValidation("$A$2:$A$1048576")
+                    With validation
+                        .ShowErrorMessage = True
+                        .ErrorStyle = ExcelDataValidationWarningStyle.stop
+                        .ErrorTitle = "An invalid value was entered"
+                        .Error = "Select a value from the list"
+                        .Formula.ExcelFormula = $"{optionWorksheet.Name}!$A$2:$A${lastIndex}"
+                    End With
+
+                    ' would not want to allow end-user to access the source
+                    optionWorksheet.Hidden = eWorkSheetHidden.VeryHidden
+
+                    package.Save()
+                End Using
+            End If
         End Function
 
         Private Shared Async Function AssignEmployeeSelectionAsync(excelTemplate As ExcelTemplates, fileInfo As FileInfo) As Task

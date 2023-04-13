@@ -1,0 +1,4 @@
+
+ALTER TABLE `employee`
+	ADD COLUMN IF NOT EXISTS `SingleParentLeaveAllowance` DECIMAL(20,6) NOT NULL DEFAULT 0 AFTER `GracePeriodAsBuffer`,
+	ADD COLUMN IF NOT EXISTS `SingleParentLeaveBalance` DECIMAL(20,6) NOT NULL DEFAULT 0 AFTER `SingleParentLeaveAllowance`;

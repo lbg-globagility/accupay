@@ -142,6 +142,11 @@ namespace AccuPay.Infrastructure.Data
             return await query.Where(x => x.OrganizationId == organizationId).ToListAsync();
         }
 
+        public override async Task<ICollection<Organization>> GetAllAsync() => await _context.Organizations
+            .AsNoTracking()
+            .Include(x => x.PayFrequency)
+            .ToListAsync();
+
         #endregion Queries
     }
 }

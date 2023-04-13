@@ -66,6 +66,12 @@ namespace AccuPay.Infrastructure.Data
             return await builder.ToListAsync(organizationId);
         }
 
+        public async Task<ICollection<Employee>> GetAllAsync(int[] organizationIds)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return await builder.ToListAsync(organizationIds);
+        }
+
         public async Task<ICollection<Employee>> GetAllActiveAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);
@@ -233,7 +239,7 @@ namespace AccuPay.Infrastructure.Data
             var builder = new EmployeeQueryBuilder(_context);
             return await builder
                 .Filter(x => employeeIdList.Contains(x.RowID.Value))
-                .ToListAsync(null);
+                .ToListAsync(organizationId: null);
         }
 
         public async Task<ICollection<Employee>> GetByPositionAsync(int positionId)
@@ -241,7 +247,7 @@ namespace AccuPay.Infrastructure.Data
             var builder = new EmployeeQueryBuilder(_context);
             return await builder
                 .Filter(x => x.PositionID == positionId)
-                .ToListAsync(null);
+                .ToListAsync(organizationId: null);
         }
 
         public async Task<ICollection<Employee>> GetByBranchAsync(int branchId)
@@ -249,7 +255,7 @@ namespace AccuPay.Infrastructure.Data
             var builder = new EmployeeQueryBuilder(_context);
             return await builder
                 .Filter(x => x.BranchID == branchId)
-                .ToListAsync(null);
+                .ToListAsync(organizationId: null);
         }
 
         public async Task<ICollection<Employee>> GetEmployeesWithoutImageAsync()
@@ -354,6 +360,11 @@ namespace AccuPay.Infrastructure.Data
         public async Task<decimal> GetSickLeaveBalance(int employeeId)
         {
             return await GetLeaveBalance(employeeId, ProductConstant.SICK_LEAVE);
+        }
+
+        public async Task<decimal> GetSingleParentLeaveBalance(int employeeId)
+        {
+            return await GetLeaveBalance(employeeId, ProductConstant.SINGLE_PARENT_LEAVE);
         }
 
         private async Task<decimal> GetLeaveBalance(int employeeId, string partNo)

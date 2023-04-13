@@ -21,7 +21,8 @@ namespace AccuPay.Infrastructure.Data
         private List<string> VALIDATABLE_TYPES = new List<string>()
         {
             ProductConstant.SICK_LEAVE,
-            ProductConstant.VACATION_LEAVE
+            ProductConstant.VACATION_LEAVE,
+            ProductConstant.SINGLE_PARENT_LEAVE
         };
 
         private readonly IEmployeeRepository _employeeRepository;
@@ -263,6 +264,13 @@ namespace AccuPay.Infrastructure.Data
 
                     if (totalLeaveHours > vacationLeaveBalance)
                         throw new BusinessLogicException("Employee will exceed the allowable vacation leave hours.");
+                }
+                else if (leave.LeaveType.ToTrimmedLowerCase() == ProductConstant.SINGLE_PARENT_LEAVE.ToTrimmedLowerCase())
+                {
+                    var vacationLeaveBalance = await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value);
+
+                    if (totalLeaveHours > vacationLeaveBalance)
+                        throw new BusinessLogicException("Employee will exceed the allowable single parent leave hours.");
                 }
             }
         }

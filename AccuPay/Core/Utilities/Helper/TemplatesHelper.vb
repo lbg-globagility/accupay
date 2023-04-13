@@ -6,6 +6,7 @@ Namespace Global.AccuPay.Desktop.Helpers
 
         Allowance
         Employee
+        Employee2
         Leave
         Loan
         OfficialBusiness
@@ -20,6 +21,7 @@ Namespace Global.AccuPay.Desktop.Helpers
 
         Public Shared ReadOnly ALLOWANCE As String = "accupay-allowance-template.xlsx"
         Public Shared ReadOnly EMPLOYEE As String = "accupay-employeelist-template.xlsx"
+        Public Shared ReadOnly EMPLOYEE2 As String = "accupay-employeelist-template(2).xlsx"
         Public Shared ReadOnly LEAVE As String = "accupay-leave-template.xlsx"
         Public Shared ReadOnly LOAN As String = "accupay-loan-template.xlsx"
         Public Shared ReadOnly OFFICIAL_BUSINESS As String = "accupay-officialbus-template.xlsx"
@@ -40,6 +42,9 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Case ExcelTemplates.Employee
                     Return EMPLOYEE
+
+                Case ExcelTemplates.Employee2
+                    Return EMPLOYEE2
 
                 Case ExcelTemplates.Leave
                     Return LEAVE
@@ -84,6 +89,9 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Case ExcelTemplates.Employee
                     fileName = EMPLOYEE
+
+                Case ExcelTemplates.Employee2
+                    fileName = EMPLOYEE2
 
                 Case ExcelTemplates.Leave
                     fileName = LEAVE

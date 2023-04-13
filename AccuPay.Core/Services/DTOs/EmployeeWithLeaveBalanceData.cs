@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using System;
 
 namespace AccuPay.Core.Services
@@ -11,7 +11,9 @@ namespace AccuPay.Core.Services
 
         public decimal SickLeaveBalance { get; set; }
 
-        public EmployeeWithLeaveBalanceData(Employee employee, decimal vacationLeaveBalance, decimal sickLeaveBalance)
+        public decimal SingleParentLeaveBalance { get; set; }
+
+        public EmployeeWithLeaveBalanceData(Employee employee, decimal vacationLeaveBalance, decimal sickLeaveBalance, decimal singleParentLeaveBalance)
         {
             if (employee == null)
                 throw new ArgumentNullException();
@@ -19,6 +21,7 @@ namespace AccuPay.Core.Services
             Employee = employee;
             VacationLeaveBalance = vacationLeaveBalance;
             SickLeaveBalance = sickLeaveBalance;
+            SingleParentLeaveBalance = singleParentLeaveBalance;
         }
     }
 }

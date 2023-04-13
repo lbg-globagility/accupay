@@ -123,6 +123,15 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
+        public async Task<List<Employee>> ToListAsync(int[] organizationIds)
+        {
+            ResolveOrganizationIdQuery(organizationIds: organizationIds);
+
+            return await _query
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<Employee> GetByIdAsync(int employeeId, int? organizationId)
         {
             ResolveOrganizationIdQuery(organizationId);
@@ -146,6 +155,13 @@ namespace AccuPay.Infrastructure.Data
             {
                 _query = _query.Where(e => e.OrganizationID == organizationId);
             }
+
+            return this;
+        }
+
+        private IEmployeeQueryBuilder ResolveOrganizationIdQuery(int[] organizationIds)
+        {
+            _query = _query.Where(e => organizationIds.Contains(e.OrganizationID.Value));
 
             return this;
         }

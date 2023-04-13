@@ -12,6 +12,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<List<Employee>> ToListAsync(int? organizationId);
 
+        Task<List<Employee>> ToListAsync(int[] organizationIds);
+
         Task<Employee> FirstOrDefaultAsync(int organizationId);
 
         Task<Employee> GetByIdAsync(int employeeId, int? organizationId);
