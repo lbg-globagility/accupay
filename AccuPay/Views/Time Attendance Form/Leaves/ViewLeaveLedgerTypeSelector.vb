@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Core.Entities
 
@@ -22,6 +22,8 @@ Public Class ViewLeaveLedgerTypeSelector
             Dim button = New Button()
             button.Text = leaveType.PartNo
             button.Tag = leaveType
+            button.AutoSize = True
+            'button.AutoSizeMode = AutoSizeMode.GrowAndShrink
 
             AddHandler button.Click, AddressOf Selected
 

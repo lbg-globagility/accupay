@@ -309,6 +309,13 @@ namespace AccuPay.Infrastructure.Data
                     .WithMany(e => e.ResetLeaveCreditItems)
                     .HasForeignKey(x => x.EmployeeID);
             });
+
+            modelBuilder.Entity<PayPeriod>(t =>
+            {
+                t.HasOne(p => p.Organization)
+                    .WithMany(o => o.PayPeriods)
+                    .HasForeignKey(p => p.OrganizationID);
+            });
         }
 
         private static void SetGeneratedColumnsToReadOnly(ModelBuilder modelBuilder)

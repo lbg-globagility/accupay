@@ -155,6 +155,7 @@ Namespace Benchmark
                 bpiInsuranceProduct:=output.Resources.BpiInsuranceProduct,
                 sickLeaveProduct:=output.Resources.SickLeaveProduct,
                 vacationLeaveProduct:=output.Resources.VacationLeaveProduct,
+                singleParentLeaveProduct:=output.Resources.SingleParentLeaveProduct,
                 loans:=output.Loans,
                 allowanceItems:=output.AllowanceItems,
                 loanTransactions:=output.LoanTransactions,

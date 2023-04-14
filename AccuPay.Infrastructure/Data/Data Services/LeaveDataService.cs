@@ -168,11 +168,15 @@ namespace AccuPay.Infrastructure.Data
                         {
                             var employee = employees.FirstOrDefault(e => e.RowID == leave.EmployeeID);
 
+                            var organization = await _context.Organizations
+                                .Include(x => x.PayFrequency)
+                                .FirstOrDefaultAsync(x => x.RowID == organizationId);
+
                             var unusedApprovedLeaves = await GetUnusedApprovedLeavesByType(
                                 _leaveRepository,
                                 employee.RowID,
                                 leave,
-                                organizationId);
+                                organization: organization);
 
                             var earliestUnusedApprovedLeave = unusedApprovedLeaves
                                 .OrderBy(l => l.StartDate)
@@ -267,9 +271,9 @@ namespace AccuPay.Infrastructure.Data
                 }
                 else if (leave.LeaveType.ToTrimmedLowerCase() == ProductConstant.SINGLE_PARENT_LEAVE.ToTrimmedLowerCase())
                 {
-                    var vacationLeaveBalance = await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value);
+                    var singleParentLeaveBalance = await _employeeRepository.GetSingleParentLeaveBalance(employee.RowID.Value);
 
-                    if (totalLeaveHours > vacationLeaveBalance)
+                    if (totalLeaveHours > singleParentLeaveBalance)
                         throw new BusinessLogicException("Employee will exceed the allowable single parent leave hours.");
                 }
             }
@@ -320,9 +324,11 @@ namespace AccuPay.Infrastructure.Data
             ILeaveRepository leaveRepository,
             int? employeeId,
             Leave leave,
-            int organizationId)
+            Organization organization)
         {
-            var currentPayPeriod = await _payPeriodRepository.GetAsync(organizationId, leave.StartDate);
+            var organizationId = organization.RowID.Value;
+
+            var currentPayPeriod = await _payPeriodRepository.GetAsync(organization: organization, leave.StartDate);
 
             if (currentPayPeriod == null)
                 return new List<Leave>();

@@ -509,6 +509,7 @@ Public Class TimeEntrySummaryForm
                 ete.VacationLeaveHours,
                 ete.SickLeaveHours,
                 ete.OtherLeaveHours,
+                ete.SingleParentLeaveHours,
                 ete.Leavepayment,
                 ete.SpecialHolidayHours,
                 ete.SpecialHolidayPay,
@@ -627,6 +628,7 @@ Public Class TimeEntrySummaryForm
                     .VacationLeaveHours = reader.GetValue(Of Decimal)("VacationLeaveHours"),
                     .SickLeaveHours = reader.GetValue(Of Decimal)("SickLeaveHours"),
                     .OtherLeaveHours = reader.GetValue(Of Decimal)("OtherLeaveHours"),
+                    .SingleParentLeaveHours = reader.GetValue(Of Decimal)("SingleParentLeaveHours"),
                     .LeavePay = reader.GetValue(Of Decimal)("Leavepayment"),
                     .SpecialHolidayHours = reader.GetValue(Of Decimal)("SpecialHolidayHours"),
                     .SpecialHolidayPay = reader.GetValue(Of Decimal)("SpecialHolidayPay"),
@@ -676,6 +678,7 @@ Public Class TimeEntrySummaryForm
                         .VacationLeaveHours += timeEntry.VacationLeaveHours
                         .SickLeaveHours += timeEntry.SickLeaveHours
                         .OtherLeaveHours += timeEntry.OtherLeaveHours
+                        .SingleParentLeaveHours += timeEntry.SingleParentLeaveHours
                         .LeavePay += timeEntry.LeavePay
                         .LateHours += timeEntry.LateHours
                         .LateAmount += timeEntry.LateAmount
@@ -1313,6 +1316,7 @@ Public Class TimeEntrySummaryForm
         Public Property VacationLeaveHours As Decimal
         Public Property SickLeaveHours As Decimal
         Public Property OtherLeaveHours As Decimal
+        Public Property SingleParentLeaveHours As Decimal
         Public Property LeavePay As Decimal
         Public Property UndertimeHours As Decimal
         Public Property UndertimeAmount As Decimal

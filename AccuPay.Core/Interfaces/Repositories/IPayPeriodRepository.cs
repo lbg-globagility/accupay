@@ -19,6 +19,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<PayPeriod> GetAsync(int organizationId, int month, int year, bool isFirstHalf);
 
+        Task<PayPeriod> GetAsync(Organization organization, DateTime date);
+
         ICollection<PayPeriod> GetByMonthYearAndPayFrequency(int organizationId, int month, int year, int payFrequencyId);
 
         Task<ICollection<PayPeriod>> GetByMonthYearAndPayFrequencyAsync(int organizationId, int month, int year, int payFrequencyId);

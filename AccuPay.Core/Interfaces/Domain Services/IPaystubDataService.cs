@@ -24,6 +24,7 @@ namespace AccuPay.Core.Interfaces
             Product bpiInsuranceProduct,
             Product sickLeaveProduct,
             Product vacationLeaveProduct,
+            Product singleParentLeaveProduct,
             IReadOnlyCollection<Loan> loans,
             ICollection<AllowanceItem> allowanceItems,
             ICollection<LoanTransaction> loanTransactions,

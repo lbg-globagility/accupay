@@ -132,6 +132,33 @@ namespace AccuPay.Infrastructure.Data
                             leaveType: LeaveType.Sick);
         }
 
+        private static LeaveLedgerReportModel GetSingleParentLeave(
+            List<LeaveTransaction> oldLeaveTransactions,
+            List<LeaveTransaction> currentLeaveTransactions,
+            List<TimeEntry> timeEntries,
+            Employee employee)
+        {
+            var currentEmployeeLeaveTransactions = currentLeaveTransactions.
+                                                    Where(l => l.EmployeeID == employee.RowID).
+                                                    Where(l => l.LeaveLedger?.Product?.IsSingleParentLeave ?? false).
+                                                    ToList();
+
+            var oldEmployeeLeaveTransactions = oldLeaveTransactions.
+                                                    Where(l => l.EmployeeID == employee.RowID).
+                                                    Where(l => l.LeaveLedger?.Product?.IsSingleParentLeave ?? false).
+                                                    ToList();
+
+            var employeeTimeEntries = timeEntries.Where(t => t.EmployeeID == employee.RowID).
+                                                    Where(t => t.SingleParentLeaveHours > 0).
+                                                    ToList();
+
+            return GetLeave(oldLeaveTransactions: oldEmployeeLeaveTransactions,
+                            currentLeaveTransactions: currentEmployeeLeaveTransactions,
+                            timeEntries: employeeTimeEntries,
+                            employee: employee,
+                            leaveType: LeaveType.SingleParent);
+        }
+
         private static LeaveLedgerReportModel GetLeave(List<LeaveTransaction> oldLeaveTransactions,
                                                     List<LeaveTransaction> currentLeaveTransactions,
                                                     List<TimeEntry> timeEntries,
@@ -162,6 +189,8 @@ namespace AccuPay.Infrastructure.Data
                 totalAvailedLeave = timeEntries.Sum(t => t.VacationLeaveHours);
             else if (leaveType == LeaveType.Sick)
                 totalAvailedLeave = timeEntries.Sum(t => t.SickLeaveHours);
+            else if (leaveType == LeaveType.SingleParent)
+                totalAvailedLeave = timeEntries.Sum(t => t.SingleParentLeaveHours);
 
             // return LeaveLedgerReportModel object
             return new LeaveLedgerReportModel(employeeNumber: employee.EmployeeNo,

@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Helpers;
+using AccuPay.Core.Helpers;
 using AccuPay.Utilities.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,6 +31,8 @@ namespace AccuPay.Core.Entities
         public decimal MaternityLeaveHours { get; set; }
 
         public decimal OtherLeaveHours { get; set; }
+
+        public decimal SingleParentLeaveHours { get; set; }
 
         public decimal SpecialHolidayHours { get; set; }
 
@@ -89,6 +91,10 @@ namespace AccuPay.Core.Entities
                 case var type when string.Equals(type, ProductConstant.OTHERS_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
                     OtherLeaveHours = leaveHours;
                     break;
+
+                case var type when string.Equals(type, ProductConstant.SINGLE_PARENT_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
+                    SingleParentLeaveHours = leaveHours;
+                    break;
             }
         }
 
@@ -102,7 +108,8 @@ namespace AccuPay.Core.Entities
             VacationLeaveHours +
             SickLeaveHours +
             MaternityLeaveHours +
-            OtherLeaveHours;
+            OtherLeaveHours +
+            SingleParentLeaveHours;
 
         public void ComputeTotalHours()
         {
@@ -155,6 +162,7 @@ namespace AccuPay.Core.Entities
             SickLeaveHours = 0;
             MaternityLeaveHours = 0;
             OtherLeaveHours = 0;
+            SingleParentLeaveHours = 0;
             SpecialHolidayHours = 0;
             SpecialHolidayOTHours = 0;
             RegularHolidayHours = 0;

@@ -24,9 +24,9 @@ Partial Class EmployeeLeavesForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeLeavesForm))
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
@@ -59,6 +59,9 @@ Partial Class EmployeeLeavesForm
         Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl4 = New System.Windows.Forms.TabControl()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.SingleParentLeaveBalanceTextBox = New System.Windows.Forms.TextBox()
         Me.Label131 = New System.Windows.Forms.Label()
         Me.Label132 = New System.Windows.Forms.Label()
         Me.VacationLeaveBalanceTextBox = New System.Windows.Forms.TextBox()
@@ -66,6 +69,9 @@ Partial Class EmployeeLeavesForm
         Me.Label118 = New System.Windows.Forms.Label()
         Me.SickLeaveBalanceTextBox = New System.Windows.Forms.TextBox()
         Me.TabPage6 = New System.Windows.Forms.TabPage()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.SinglParentLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.VacationLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
@@ -361,14 +367,14 @@ Partial Class EmployeeLeavesForm
         Me.LeaveGridView.BackgroundColor = System.Drawing.Color.White
         Me.LeaveGridView.ColumnHeadersHeight = 34
         Me.LeaveGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.LeaveGridView.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.LeaveGridView.DefaultCellStyle = DataGridViewCellStyle1
         Me.LeaveGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.LeaveGridView.Location = New System.Drawing.Point(28, 350)
         Me.LeaveGridView.MultiSelect = False
@@ -442,11 +448,14 @@ Partial Class EmployeeLeavesForm
         Me.TabControl4.Location = New System.Drawing.Point(540, 100)
         Me.TabControl4.Name = "TabControl4"
         Me.TabControl4.SelectedIndex = 0
-        Me.TabControl4.Size = New System.Drawing.Size(190, 148)
+        Me.TabControl4.Size = New System.Drawing.Size(190, 182)
         Me.TabControl4.TabIndex = 5
         '
         'TabPage7
         '
+        Me.TabPage7.Controls.Add(Me.Label15)
+        Me.TabPage7.Controls.Add(Me.Label8)
+        Me.TabPage7.Controls.Add(Me.SingleParentLeaveBalanceTextBox)
         Me.TabPage7.Controls.Add(Me.Label131)
         Me.TabPage7.Controls.Add(Me.Label132)
         Me.TabPage7.Controls.Add(Me.VacationLeaveBalanceTextBox)
@@ -456,10 +465,37 @@ Partial Class EmployeeLeavesForm
         Me.TabPage7.Location = New System.Drawing.Point(4, 22)
         Me.TabPage7.Name = "TabPage7"
         Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7.Size = New System.Drawing.Size(182, 122)
+        Me.TabPage7.Size = New System.Drawing.Size(182, 156)
         Me.TabPage7.TabIndex = 1
         Me.TabPage7.Text = "Leave balance"
         Me.TabPage7.UseVisualStyleBackColor = True
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(108, 119)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(43, 13)
+        Me.Label15.TabIndex = 165
+        Me.Label15.Text = "hour(s)"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(15, 101)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(76, 13)
+        Me.Label8.TabIndex = 164
+        Me.Label8.Text = "Single parent"
+        '
+        'SingleParentLeaveBalanceTextBox
+        '
+        Me.SingleParentLeaveBalanceTextBox.BackColor = System.Drawing.Color.White
+        Me.SingleParentLeaveBalanceTextBox.Location = New System.Drawing.Point(18, 117)
+        Me.SingleParentLeaveBalanceTextBox.Name = "SingleParentLeaveBalanceTextBox"
+        Me.SingleParentLeaveBalanceTextBox.ReadOnly = True
+        Me.SingleParentLeaveBalanceTextBox.Size = New System.Drawing.Size(87, 22)
+        Me.SingleParentLeaveBalanceTextBox.TabIndex = 163
         '
         'Label131
         '
@@ -519,6 +555,9 @@ Partial Class EmployeeLeavesForm
         '
         'TabPage6
         '
+        Me.TabPage6.Controls.Add(Me.Label16)
+        Me.TabPage6.Controls.Add(Me.Label17)
+        Me.TabPage6.Controls.Add(Me.SinglParentLeaveAllowanceTextBox)
         Me.TabPage6.Controls.Add(Me.Label11)
         Me.TabPage6.Controls.Add(Me.Label12)
         Me.TabPage6.Controls.Add(Me.VacationLeaveAllowanceTextBox)
@@ -528,10 +567,37 @@ Partial Class EmployeeLeavesForm
         Me.TabPage6.Location = New System.Drawing.Point(4, 22)
         Me.TabPage6.Name = "TabPage6"
         Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6.Size = New System.Drawing.Size(182, 122)
+        Me.TabPage6.Size = New System.Drawing.Size(182, 156)
         Me.TabPage6.TabIndex = 0
         Me.TabPage6.Text = "Leave allowance"
         Me.TabPage6.UseVisualStyleBackColor = True
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(108, 119)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(43, 13)
+        Me.Label16.TabIndex = 171
+        Me.Label16.Text = "hour(s)"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(15, 101)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(76, 13)
+        Me.Label17.TabIndex = 170
+        Me.Label17.Text = "Single parent"
+        '
+        'SinglParentLeaveAllowanceTextBox
+        '
+        Me.SinglParentLeaveAllowanceTextBox.BackColor = System.Drawing.Color.White
+        Me.SinglParentLeaveAllowanceTextBox.Location = New System.Drawing.Point(18, 117)
+        Me.SinglParentLeaveAllowanceTextBox.Name = "SinglParentLeaveAllowanceTextBox"
+        Me.SinglParentLeaveAllowanceTextBox.ReadOnly = True
+        Me.SinglParentLeaveAllowanceTextBox.Size = New System.Drawing.Size(87, 22)
+        Me.SinglParentLeaveAllowanceTextBox.TabIndex = 169
         '
         'Label11
         '
@@ -895,14 +961,14 @@ Partial Class EmployeeLeavesForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -991,10 +1057,10 @@ Partial Class EmployeeLeavesForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "N2"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -1162,4 +1228,10 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents UserActivityToolStripButton As ToolStripButton
     Friend WithEvents LeaveHistoryToolStripButton As ToolStripButton
     Friend WithEvents ResetLeaveToolStripButton As ToolStripButton
+    Friend WithEvents SingleParentLeaveBalanceTextBox As TextBox
+    Friend WithEvents Label15 As Label
+    Friend WithEvents Label8 As Label
+    Friend WithEvents Label16 As Label
+    Friend WithEvents Label17 As Label
+    Friend WithEvents SinglParentLeaveAllowanceTextBox As TextBox
 End Class

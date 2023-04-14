@@ -60,6 +60,8 @@ namespace AccuPay.Core.Entities
 
         public bool IsCash => Name.ToLower().Contains("cash");
 
+        public virtual ICollection<PayPeriod> PayPeriods { get; set; }
+
         public static Organization NewOrganization(int clientId)
         {
             return new Organization()

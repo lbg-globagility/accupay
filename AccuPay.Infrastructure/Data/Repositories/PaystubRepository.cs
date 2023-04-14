@@ -69,6 +69,7 @@ namespace AccuPay.Infrastructure.Data
             Product bpiInsuranceProduct,
             Product sickLeaveProduct,
             Product vacationLeaveProduct,
+            Product singleParentLeaveProduct,
             IReadOnlyCollection<Loan> loans,
             ICollection<AllowanceItem> allowanceItems,
             ICollection<LoanTransaction> loanTransactions,
@@ -98,14 +99,14 @@ namespace AccuPay.Infrastructure.Data
 
             SaveLoanTransactions(paystub, loanTransactions);
 
-            await UpdateLeaveLedgerAndPaystubItems(currentlyLoggedInUserId, currentSystemOwner, payPeriod, paystub, employee, sickLeaveProduct, vacationLeaveProduct, timeEntries, leaves);
+            await UpdateLeaveLedgerAndPaystubItems(currentlyLoggedInUserId, currentSystemOwner, payPeriod, paystub, employee, sickLeaveProduct, vacationLeaveProduct, singleParentLeaveProduct: singleParentLeaveProduct, timeEntries, leaves);
 
             DetachInvalidEntities();
 
             await _context.SaveChangesAsync();
         }
 
-        private async Task UpdateLeaveLedgerAndPaystubItems(int currentlyLoggedInUserId, string currentSystemOwner, PayPeriod payPeriod, Paystub paystub, Employee employee, Product sickLeaveProduct, Product vacationLeaveProduct, IReadOnlyCollection<TimeEntry> timeEntries, IReadOnlyCollection<Leave> leaves)
+        private async Task UpdateLeaveLedgerAndPaystubItems(int currentlyLoggedInUserId, string currentSystemOwner, PayPeriod payPeriod, Paystub paystub, Employee employee, Product sickLeaveProduct, Product vacationLeaveProduct, Product singleParentLeaveProduct, IReadOnlyCollection<TimeEntry> timeEntries, IReadOnlyCollection<Leave> leaves)
         {
             if (currentSystemOwner != SystemOwner.Benchmark)
             {
@@ -117,6 +118,7 @@ namespace AccuPay.Infrastructure.Data
                     employee,
                     sickLeaveProduct: sickLeaveProduct,
                     vacationLeaveProduct: vacationLeaveProduct,
+                    singleParentLeaveProduct: singleParentLeaveProduct,
                     timeEntries);
             }
             else
@@ -402,6 +404,7 @@ namespace AccuPay.Infrastructure.Data
             Employee employee,
             Product sickLeaveProduct,
             Product vacationLeaveProduct,
+            Product singleParentLeaveProduct,
             IReadOnlyCollection<TimeEntry> timeEntries)
         {
             _context.Entry(paystub).Collection(p => p.PaystubItems).Load();
@@ -448,6 +451,27 @@ namespace AccuPay.Infrastructure.Data
             };
 
             paystub.PaystubItems.Add(sickLeaveBalance);
+
+            var singleParentLeaveBalance = await _context.PaystubItems
+                .AsNoTracking()
+                .Where(p => p.Product.PartNo == ProductConstant.SINGLE_PARENT_LEAVE)
+                .Where(p => p.Paystub.RowID == paystub.RowID)
+                .FirstOrDefaultAsync();
+
+            decimal singleParentLeaveUsed = timeEntries?.Sum(t => t.SingleParentLeaveHours) ?? 0;
+            decimal newBalance3 = employee.LeaveBalance - vacationLeaveUsed;
+
+            singleParentLeaveBalance = new PaystubItem()
+            {
+                OrganizationID = paystub.OrganizationID,
+                Created = DateTime.Now,
+                CreatedBy = currentlyLoggedInUserId,
+                ProductID = singleParentLeaveProduct.RowID,
+                PayAmount = newBalance3,
+                Paystub = paystub
+            };
+
+            paystub.PaystubItems.Add(singleParentLeaveBalance);
         }
 
         #endregion Create or Update Paystub

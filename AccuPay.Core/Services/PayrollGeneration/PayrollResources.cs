@@ -36,6 +36,8 @@ namespace AccuPay.Core.Services
 
         public Product VacationLeaveProduct { get; private set; }
 
+        public Product SingleParentLeaveProduct { get; private set; }
+
         public IReadOnlyCollection<ActualTimeEntry> ActualTimeEntries { get; private set; }
 
         public IReadOnlyCollection<Allowance> Allowances { get; private set; }
@@ -174,6 +176,7 @@ namespace AccuPay.Core.Services
             await LoadSystemOwner();
             await LoadTimeEntries();
             await LoadVacationLeaveProduct();
+            await LoadSingleLeaveProduct();
             await LoadWithholdingTaxBrackets();
             await LoadShiftSchedules();
         }
@@ -428,6 +431,22 @@ namespace AccuPay.Core.Services
                 VacationLeaveProduct = await _productRepository
                     .GetOrCreateLeaveTypeAsync(
                         ProductConstant.VACATION_LEAVE,
+                        organizationId: _organizationId,
+                        userId: _userId);
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Vacation Leave Product", ex);
+            }
+        }
+
+        private async Task LoadSingleLeaveProduct()
+        {
+            try
+            {
+                SingleParentLeaveProduct = await _productRepository
+                    .GetOrCreateLeaveTypeAsync(
+                        ProductConstant.SINGLE_PARENT_LEAVE,
                         organizationId: _organizationId,
                         userId: _userId);
             }

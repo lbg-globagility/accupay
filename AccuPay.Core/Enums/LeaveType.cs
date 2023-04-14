@@ -1,4 +1,4 @@
-﻿namespace AccuPay.Core.Enums
+namespace AccuPay.Core.Enums
 {
     public enum LeaveType
     {
@@ -6,6 +6,7 @@
         Vacation = 1,
         Others = 2,
         Maternity = 3,
-        Parental = 4
+        Parental = 4,
+        SingleParent = 5
     }
 }

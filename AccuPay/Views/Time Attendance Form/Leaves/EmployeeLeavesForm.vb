@@ -307,6 +307,7 @@ Public Class EmployeeLeavesForm
 
         VacationLeaveAllowanceTextBox.Text = currentEmployee.VacationLeaveAllowance.ToString()
         SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance.ToString()
+        SinglParentLeaveAllowanceTextBox.Text = currentEmployee.SingleParentLeaveAllowance.ToString("#,##0.00")
 
         VacationLeaveBalanceTextBox.Text = (Await _employeeRepository.
             GetVacationLeaveBalance(currentEmployee.RowID.Value)).
@@ -315,6 +316,10 @@ Public Class EmployeeLeavesForm
         SickLeaveBalanceTextBox.Text = (Await _employeeRepository.
             GetSickLeaveBalance(currentEmployee.RowID.Value)).
             ToString()
+
+        SingleParentLeaveBalanceTextBox.Text = (Await _employeeRepository.
+            GetSingleParentLeaveBalance(currentEmployee.RowID.Value)).
+            ToString("#,##0.00")
 
         Await LoadLeaves(currentEmployee)
     End Function
@@ -665,4 +670,5 @@ Public Class EmployeeLeavesForm
 
         ShowAllCheckBox_CheckedChanged(ShowAllCheckBox, New EventArgs)
     End Sub
+
 End Class

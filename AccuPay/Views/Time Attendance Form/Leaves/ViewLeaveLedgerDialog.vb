@@ -37,7 +37,7 @@ Namespace Global.AccuPay
                     OrderByDescending(Function(t) t.PartNo).
                     ToList()
 
-                Dim trackedLeaves = {ProductConstant.SICK_LEAVE, ProductConstant.VACATION_LEAVE}
+                Dim trackedLeaves = {ProductConstant.SICK_LEAVE, ProductConstant.VACATION_LEAVE, ProductConstant.SINGLE_PARENT_LEAVE}
                 _leaveTypes = _leaveTypes.Where(Function(l) trackedLeaves.Contains(l.PartNo)).ToList()
 
                 ViewLeaveLedgerTypeSelector.LeaveTypes = _leaveTypes

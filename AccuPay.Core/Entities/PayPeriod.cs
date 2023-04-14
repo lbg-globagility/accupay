@@ -75,6 +75,8 @@ namespace AccuPay.Core.Entities
 
         public virtual ICollection<ResetLeaveCredit> ResetLeaveCredits { get; set; }
 
+        public virtual Organization Organization { get; set; }
+
         public static PayPeriod NewPayPeriod(
             int organizationId,
             int payrollMonth,
