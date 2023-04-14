@@ -23,7 +23,6 @@ Public Class ViewLeaveLedgerTypeSelector
             button.Text = leaveType.PartNo
             button.Tag = leaveType
             button.AutoSize = True
-            'button.AutoSizeMode = AutoSizeMode.GrowAndShrink
 
             AddHandler button.Click, AddressOf Selected
 
