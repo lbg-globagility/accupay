@@ -55,6 +55,8 @@ Public Class EmployeeAllowanceForm
 
         InitializeComponentSettings()
 
+        Await AllowanceAmountDiscretionAsync()
+
         Await CheckRolePermissions()
 
         LoadFrequencyList()
@@ -68,6 +70,18 @@ Public Class EmployeeAllowanceForm
         AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
+
+    Private Async Function AllowanceAmountDiscretionAsync() As Task
+        Dim _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
+        Dim role = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+
+        Dim isAdmin = role.IsAdmin
+
+        Label4.Visible = isAdmin
+        Label163.Visible = isAdmin
+        txtallowamt.Visible = isAdmin
+        eall_Amount.Visible = isAdmin
+    End Function
 
     Private Async Function CheckRolePermissions() As Task
         Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.ALLOWANCE)

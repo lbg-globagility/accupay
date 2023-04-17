@@ -42,6 +42,7 @@ Public Class AddAllowanceForm
     End Sub
 
     Private Async Sub AddAllowanceForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Await AllowanceAmountDiscretionAsync()
 
         PopulateEmployeeData()
 
@@ -52,6 +53,17 @@ Public Class AddAllowanceForm
         ResetForm()
 
     End Sub
+
+    Private Async Function AllowanceAmountDiscretionAsync() As Task
+        Dim _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
+        Dim role = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+
+        Dim isAdmin = role.IsAdmin
+
+        Label4.Visible = isAdmin
+        Label163.Visible = isAdmin
+        txtallowamt.Visible = isAdmin
+    End Function
 
     Private Sub PopulateEmployeeData()
 

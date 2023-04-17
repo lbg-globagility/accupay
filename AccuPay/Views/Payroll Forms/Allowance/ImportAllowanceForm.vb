@@ -304,6 +304,15 @@ Public Class ImportAllowanceForm
                     .Formula.ExcelFormula = $"{optionsWorksheet.Name}!$B$2:$B${allowanceTypes.Count + 1}"
                 End With
 
+                Dim _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
+                Dim role = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+
+                Dim isAdmin = role.IsAdmin
+
+                Dim allowanceAmountColumnIndex = DownloadTemplateHelper.GetColumnIndexByName(defaultWorksheet, "Allowance amount")
+
+                defaultWorksheet.Column(allowanceAmountColumnIndex).Hidden = True
+
                 package.Save()
 
                 Process.Start(fileInfo.FullName)

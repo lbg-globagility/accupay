@@ -808,6 +808,12 @@ Public Class PayStubForm
     End Sub
 
     Private Async Sub ShowAllowanceButton_Click(sender As Object, e As EventArgs) Handles ShowNonTaxableAllowanceButton.Click, ShowTaxableAllowanceButton.Click
+        Dim _roleRepository = MainServiceProvider.GetRequiredService(Of IRoleRepository)
+        Dim role = Await _roleRepository.GetByUserAndOrganizationAsync(userId:=z_User, organizationId:=z_OrganizationID)
+
+        Dim isAdmin = role.IsAdmin
+        If Not isAdmin Then Return
+
         Dim isTaxable = sender Is ShowTaxableAllowanceButton
 
         Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
