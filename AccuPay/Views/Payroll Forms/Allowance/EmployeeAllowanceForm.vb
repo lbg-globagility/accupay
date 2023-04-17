@@ -548,6 +548,8 @@ Public Class EmployeeAllowanceForm
             DetailsTabLayout.Enabled = True
         End If
 
+        txtremarks.DataBindings.Clear()
+        txtremarks.DataBindings.Add("Text", Me._currentAllowance, "Remarks")
     End Sub
 
     Private Sub ResetForm()
@@ -583,6 +585,8 @@ Public Class EmployeeAllowanceForm
         txtallowamt.Clear()
         txtallowamt.DataBindings.Clear()
 
+        txtremarks.Clear()
+        txtremarks.DataBindings.Clear()
     End Sub
 
     Private Function GetSelectedAllowance() As Allowance
@@ -613,7 +617,8 @@ Public Class EmployeeAllowanceForm
             newAllowance.Type <> oldAllowance.Type OrElse
             newAllowance.Amount <> oldAllowance.Amount OrElse
             newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate OrElse
-            Nullable.Equals(newAllowance.EffectiveEndDate, oldAllowance.EffectiveEndDate) = False Then
+            Nullable.Equals(newAllowance.EffectiveEndDate, oldAllowance.EffectiveEndDate) = False OrElse
+            Not String.Equals(newAllowance.Remarks, oldAllowance.Remarks) Then
 
             hasChanged = True
         End If

@@ -100,6 +100,8 @@ Public Class AddAllowanceForm
         txtallowamt.DataBindings.Clear()
         txtallowamt.DataBindings.Add("Text", Me._newAllowance, "Amount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
+        txtremarks.DataBindings.Clear()
+        txtremarks.DataBindings.Add("Text", Me._newAllowance, "Remarks")
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

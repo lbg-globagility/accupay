@@ -76,6 +76,7 @@ Partial Class ImportAllowanceForm
         Me.ok5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ok6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ok7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.errors1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.errors2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.errors4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -85,6 +86,7 @@ Partial Class ImportAllowanceForm
         Me.errors7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.errors8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.errors9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.ParsedTabControl.SuspendLayout()
         CType(Me.AllowancesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -171,7 +173,7 @@ Partial Class ImportAllowanceForm
         Me.AllowancesDataGrid.BackgroundColor = System.Drawing.Color.White
         Me.AllowancesDataGrid.ColumnHeadersHeight = 34
         Me.AllowancesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.AllowancesDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ok2, Me.ok1, Me.ok3, Me.ok4, Me.ok5, Me.ok6, Me.ok7})
+        Me.AllowancesDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ok2, Me.ok1, Me.ok3, Me.ok4, Me.ok5, Me.ok6, Me.ok7, Me.ok8})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -223,7 +225,7 @@ Partial Class ImportAllowanceForm
         Me.RejectedRecordsGrid.BackgroundColor = System.Drawing.Color.White
         Me.RejectedRecordsGrid.ColumnHeadersHeight = 34
         Me.RejectedRecordsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.RejectedRecordsGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.errors1, Me.errors2, Me.errors4, Me.errors3, Me.errors5, Me.errors6, Me.errors7, Me.errors8, Me.errors9})
+        Me.RejectedRecordsGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.errors1, Me.errors2, Me.errors4, Me.errors3, Me.errors5, Me.errors6, Me.errors7, Me.errors8, Me.errors9, Me.errors10})
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -494,6 +496,13 @@ Partial Class ImportAllowanceForm
         Me.ok7.Name = "ok7"
         Me.ok7.ReadOnly = True
         '
+        'ok8
+        '
+        Me.ok8.DataPropertyName = "Remarks"
+        Me.ok8.HeaderText = "Remarks"
+        Me.ok8.Name = "ok8"
+        Me.ok8.ReadOnly = True
+        '
         'errors1
         '
         Me.errors1.DataPropertyName = "LineNumber"
@@ -565,6 +574,13 @@ Partial Class ImportAllowanceForm
         Me.errors9.Name = "errors9"
         Me.errors9.ReadOnly = True
         '
+        'errors10
+        '
+        Me.errors10.DataPropertyName = "Remarks"
+        Me.errors10.HeaderText = "Remarks"
+        Me.errors10.Name = "errors10"
+        Me.errors10.ReadOnly = True
+        '
         'ImportAllowanceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -624,6 +640,7 @@ Partial Class ImportAllowanceForm
     Friend WithEvents ok5 As DataGridViewTextBoxColumn
     Friend WithEvents ok6 As DataGridViewTextBoxColumn
     Friend WithEvents ok7 As DataGridViewTextBoxColumn
+    Friend WithEvents ok8 As DataGridViewTextBoxColumn
     Friend WithEvents errors1 As DataGridViewTextBoxColumn
     Friend WithEvents errors2 As DataGridViewTextBoxColumn
     Friend WithEvents errors4 As DataGridViewTextBoxColumn
@@ -633,4 +650,5 @@ Partial Class ImportAllowanceForm
     Friend WithEvents errors7 As DataGridViewTextBoxColumn
     Friend WithEvents errors8 As DataGridViewTextBoxColumn
     Friend WithEvents errors9 As DataGridViewTextBoxColumn
+    Friend WithEvents errors10 As DataGridViewTextBoxColumn
 End Class

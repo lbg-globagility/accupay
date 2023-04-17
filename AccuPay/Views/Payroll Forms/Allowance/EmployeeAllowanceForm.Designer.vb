@@ -56,6 +56,8 @@ Partial Class EmployeeAllowanceForm
         Me.AllowancesBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.txtremarks = New System.Windows.Forms.TextBox()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
         Me.txtallowamt = New System.Windows.Forms.TextBox()
@@ -85,6 +87,7 @@ Partial Class EmployeeAllowanceForm
         Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.employeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -281,6 +284,8 @@ Partial Class EmployeeAllowanceForm
         '
         Me.pnlForm.AutoScroll = True
         Me.pnlForm.BackColor = System.Drawing.Color.Transparent
+        Me.pnlForm.Controls.Add(Me.Label5)
+        Me.pnlForm.Controls.Add(Me.txtremarks)
         Me.pnlForm.Controls.Add(Me.DetailsTabLayout)
         Me.pnlForm.Controls.Add(Me.AllowanceGridView)
         Me.pnlForm.Controls.Add(Me.EmployeeInfoTabLayout)
@@ -289,6 +294,24 @@ Partial Class EmployeeAllowanceForm
         Me.pnlForm.Name = "pnlForm"
         Me.pnlForm.Size = New System.Drawing.Size(842, 478)
         Me.pnlForm.TabIndex = 509
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(276, 103)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(50, 13)
+        Me.Label5.TabIndex = 382
+        Me.Label5.Text = "Remarks"
+        '
+        'txtremarks
+        '
+        Me.txtremarks.Location = New System.Drawing.Point(279, 119)
+        Me.txtremarks.MaxLength = 255
+        Me.txtremarks.Multiline = True
+        Me.txtremarks.Name = "txtremarks"
+        Me.txtremarks.Size = New System.Drawing.Size(240, 164)
+        Me.txtremarks.TabIndex = 381
         '
         'DetailsTabLayout
         '
@@ -510,7 +533,7 @@ Partial Class EmployeeAllowanceForm
         Me.Label156.Location = New System.Drawing.Point(20, 0)
         Me.Label156.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label156.Name = "Label156"
-        Me.Label156.Size = New System.Drawing.Size(29, 13)
+        Me.Label156.Size = New System.Drawing.Size(30, 13)
         Me.Label156.TabIndex = 365
         Me.Label156.Text = "Type"
         '
@@ -523,7 +546,7 @@ Partial Class EmployeeAllowanceForm
         Me.AllowanceGridView.AllowUserToResizeRows = False
         Me.AllowanceGridView.BackgroundColor = System.Drawing.Color.White
         Me.AllowanceGridView.ColumnHeadersHeight = 34
-        Me.AllowanceGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_RowID, Me.eall_Type, Me.eall_Frequency, Me.eall_Start, Me.eall_End, Me.eall_Amount, Me.allow_taxab, Me.eall_ProdID})
+        Me.AllowanceGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eall_RowID, Me.eall_Type, Me.eall_Frequency, Me.eall_Start, Me.eall_End, Me.eall_Amount, Me.allow_taxab, Me.eall_ProdID, Me.eall_Remarks})
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -658,7 +681,6 @@ Partial Class EmployeeAllowanceForm
         Me.eall_Amount.Name = "eall_Amount"
         Me.eall_Amount.ReadOnly = True
         Me.eall_Amount.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Amount.Width = 180
         '
         'allow_taxab
         '
@@ -673,6 +695,14 @@ Partial Class EmployeeAllowanceForm
         Me.eall_ProdID.Name = "eall_ProdID"
         Me.eall_ProdID.ReadOnly = True
         Me.eall_ProdID.Visible = False
+        '
+        'eall_Remarks
+        '
+        Me.eall_Remarks.DataPropertyName = "Remarks"
+        Me.eall_Remarks.HeaderText = "Remarks"
+        Me.eall_Remarks.Name = "eall_Remarks"
+        Me.eall_Remarks.ReadOnly = True
+        Me.eall_Remarks.Width = 192
         '
         'employeesDataGridView
         '
@@ -988,6 +1018,7 @@ Partial Class EmployeeAllowanceForm
         Me.pnlMain.ResumeLayout(False)
         Me.pnlMain.PerformLayout()
         Me.pnlForm.ResumeLayout(False)
+        Me.pnlForm.PerformLayout()
         Me.DetailsTabLayout.ResumeLayout(False)
         Me.DetailsTabLayout.PerformLayout()
         Me.pnlTxtLoanBalance.ResumeLayout(False)
@@ -1050,14 +1081,6 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents AllowanceGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Label156 As Label
     Friend WithEvents cboallowfreq As ComboBox
-    Friend WithEvents eall_RowID As DataGridViewTextBoxColumn
-    Friend WithEvents eall_Type As DataGridViewTextBoxColumn
-    Friend WithEvents eall_Frequency As DataGridViewTextBoxColumn
-    Friend WithEvents eall_Start As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
-    Friend WithEvents eall_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
-    Friend WithEvents eall_Amount As DataGridViewTextBoxColumn
-    Friend WithEvents allow_taxab As DataGridViewTextBoxColumn
-    Friend WithEvents eall_ProdID As DataGridViewTextBoxColumn
     Friend WithEvents ShowAllCheckBox As CheckBox
     Friend WithEvents cboallowtype As ComboBox
     Friend WithEvents DetailsTabLayout As TableLayoutPanel
@@ -1077,4 +1100,15 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents txtallowamt As TextBox
     Friend WithEvents Label4 As Label
     Friend WithEvents UserActivityToolStripButton As ToolStripButton
+    Friend WithEvents Label5 As Label
+    Friend WithEvents txtremarks As TextBox
+    Friend WithEvents eall_RowID As DataGridViewTextBoxColumn
+    Friend WithEvents eall_Type As DataGridViewTextBoxColumn
+    Friend WithEvents eall_Frequency As DataGridViewTextBoxColumn
+    Friend WithEvents eall_Start As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
+    Friend WithEvents eall_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
+    Friend WithEvents eall_Amount As DataGridViewTextBoxColumn
+    Friend WithEvents allow_taxab As DataGridViewTextBoxColumn
+    Friend WithEvents eall_ProdID As DataGridViewTextBoxColumn
+    Friend WithEvents eall_Remarks As DataGridViewTextBoxColumn
 End Class

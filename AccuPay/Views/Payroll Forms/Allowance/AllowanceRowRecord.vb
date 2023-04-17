@@ -26,6 +26,8 @@ Public Class AllowanceRowRecord
     <ColumnName("Allowance amount")>
     Public Property Amount As Decimal?
 
+    Public Property Remarks As String
+
     Public Property EmployeeFullName As String
 
     <Ignore>
@@ -49,7 +51,8 @@ Public Class AllowanceRowRecord
             .Amount = Amount.Value,
             .EffectiveStartDate = EffectiveStartDate.Value,
             .EffectiveEndDate = EffectiveEndDate,
-            .ProductID = AllowanceType.RowID
+            .ProductID = AllowanceType.RowID,
+            .Remarks = Remarks
         }
 
     End Function

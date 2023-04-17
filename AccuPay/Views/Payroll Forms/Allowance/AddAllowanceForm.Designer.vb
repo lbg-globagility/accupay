@@ -49,6 +49,8 @@ Partial Class AddAllowanceForm
         Me.lblEndDate = New System.Windows.Forms.Label()
         Me.Label163 = New System.Windows.Forms.Label()
         Me.dtpallowenddate = New NullableDatePicker()
+        Me.txtremarks = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         Me.AllowanceDetailsTabLayout.SuspendLayout()
@@ -159,7 +161,7 @@ Partial Class AddAllowanceForm
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.lblEndDate, 0, 6)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 8)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.dtpallowenddate, 0, 7)
-        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(141, 108)
+        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(28, 108)
         Me.AllowanceDetailsTabLayout.Name = "AllowanceDetailsTabLayout"
         Me.AllowanceDetailsTabLayout.RowCount = 10
         Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
@@ -370,12 +372,32 @@ Partial Class AddAllowanceForm
         Me.dtpallowenddate.TabIndex = 380
         Me.dtpallowenddate.Value = New Date(2019, 5, 24, 10, 35, 13, 830)
         '
+        'txtremarks
+        '
+        Me.txtremarks.Location = New System.Drawing.Point(291, 126)
+        Me.txtremarks.MaxLength = 255
+        Me.txtremarks.Multiline = True
+        Me.txtremarks.Name = "txtremarks"
+        Me.txtremarks.Size = New System.Drawing.Size(240, 164)
+        Me.txtremarks.TabIndex = 15
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(288, 110)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(49, 13)
+        Me.Label5.TabIndex = 16
+        Me.Label5.Text = "Remarks"
+        '
         'AddAllowanceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(557, 429)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.txtremarks)
         Me.Controls.Add(Me.AllowanceDetailsTabLayout)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnAddAndNew)
@@ -397,6 +419,7 @@ Partial Class AddAllowanceForm
         Me.plnCboLoanType.ResumeLayout(False)
         Me.plnCboLoanType.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents txtEmployeeNumber As TextBox
@@ -426,4 +449,6 @@ Partial Class AddAllowanceForm
     Friend WithEvents pnlTxtLoanBalance As Panel
     Friend WithEvents txtallowamt As TextBox
     Friend WithEvents Label4 As Label
+    Friend WithEvents txtremarks As TextBox
+    Friend WithEvents Label5 As Label
 End Class

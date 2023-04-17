@@ -306,6 +306,13 @@ namespace AccuPay.Infrastructure.Data
                     Description = $"Updated amount from '{oldValue.Amount}' to '{newValue.Amount}' {suffixIdentifier}",
                     ChangedEmployeeId = oldValue.EmployeeID.Value
                 });
+            if (newValue.Remarks != oldValue.Remarks)
+                changes.Add(new UserActivityItem()
+                {
+                    EntityId = oldValue.RowID.Value,
+                    Description = $"Updated `Remarks` from '{oldValue.Remarks}' to '{newValue.Remarks}' {suffixIdentifier}",
+                    ChangedEmployeeId = oldValue.EmployeeID.Value
+                });
 
             if (changes.Any())
             {

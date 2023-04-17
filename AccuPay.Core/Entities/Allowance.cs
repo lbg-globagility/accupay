@@ -36,6 +36,8 @@ namespace AccuPay.Core.Entities
         [ForeignKey("AllowanceTypeId")]
         public virtual AllowanceType AllowanceType { get; set; }
 
+        public string Remarks { get; set; }
+
         [NotMapped]
         public string Type
         {
