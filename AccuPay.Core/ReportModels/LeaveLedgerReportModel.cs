@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Enums;
+using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
 
@@ -36,6 +36,9 @@ namespace AccuPay.Core.ReportModels
 
                     case LeaveType.Vacation:
                         return "VL";
+
+                    case LeaveType.SingleParent:
+                        return "Single parent";
 
                     default:
                         return "";

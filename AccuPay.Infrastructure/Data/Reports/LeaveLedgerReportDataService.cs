@@ -74,6 +74,10 @@ namespace AccuPay.Infrastructure.Data
                 leaveLedgerReportModels.Add(vacationLeave);
 
                 leaveLedgerReportModels.Add(sickLeave);
+
+                var singleParentLeave = GetSingleParentLeave(oldLeaveTransactions, currentLeaveTransactions, timeEntries, employee);
+
+                leaveLedgerReportModels.Add(singleParentLeave);
             }
 
             return leaveLedgerReportModels;
