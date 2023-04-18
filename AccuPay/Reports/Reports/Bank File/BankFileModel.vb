@@ -10,6 +10,7 @@ Public Class BankFileModel
     Public ReadOnly Property LastName As String
     Public ReadOnly Property FirstName As String
     Public ReadOnly Property Amount As Decimal
+    Public ReadOnly Property CompanyName As String
 
     Public Sub New(paystub As Paystub)
         _paystub = paystub
@@ -18,6 +19,7 @@ Public Class BankFileModel
         LastName = _paystub.Employee.LastName
         FirstName = _paystub.Employee.FirstName
         Amount = _paystub.NetPay
+        CompanyName = _paystub.Employee.Organization.Name
     End Sub
 
     Public Sub New(models As List(Of BankFileModel))

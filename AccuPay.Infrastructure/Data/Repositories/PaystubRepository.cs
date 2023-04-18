@@ -901,11 +901,32 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
-        public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
-        {
-            return await _context.Paystubs
+        public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId) => await _context.Paystubs
                 .Include(x => x.Employee)
                 .Where(x => x.PayPeriodID == payPeriodId)
+                .ToListAsync();
+
+        public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeesOfSamePayFrequencyAsync(int payPeriodId)
+        {
+            var payPeriod = await _context.PayPeriods.FindAsync(payPeriodId);
+            var organizationsOfSamePayFrequency = await _context.Organizations
+                .Where(o => o.PayFrequencyID == payPeriod.PayFrequencyID)
+                .ToListAsync();
+            var organizationIds = organizationsOfSamePayFrequency.Select(o => o.RowID.Value)
+                .ToArray();
+
+            var payPeriods = await _context.PayPeriods
+                .Where(p => organizationIds.Contains(p.OrganizationID.Value))
+                .Where(p => p.Month == payPeriod.Month)
+                .Where(p => p.Year == payPeriod.Year)
+                .Where(p => p.OrdinalValue == payPeriod.OrdinalValue)
+                .ToListAsync();
+            var payPeriodIds = payPeriods.Select(p => p.RowID.Value).ToArray();
+
+            return await _context.Paystubs
+                .Include(x => x.Employee)
+                    .ThenInclude(e => e.Organization)
+                .Where(x => payPeriodIds.Contains(x.PayPeriodID.Value))
                 .ToListAsync();
         }
 

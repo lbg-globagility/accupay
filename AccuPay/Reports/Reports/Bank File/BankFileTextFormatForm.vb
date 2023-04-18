@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BankFileTextFormatForm
@@ -76,10 +77,13 @@ Public Class BankFileTextFormatForm
     Private Async Function LoadPaystubs(payPeriod As PayPeriod) As Task
         Dim paystubs = Enumerable.Empty(Of Paystub)
         If payPeriod.RowID IsNot Nothing Then
-            paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeAsync(payPeriodId:=payPeriod.RowID.Value)
+            paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeesOfSamePayFrequencyAsync(payPeriodId:=payPeriod.RowID.Value)
         End If
 
-        Dim models = paystubs.Select(Function(p) New BankFileModel(p)).ToList()
+        Dim models = paystubs.Select(Function(p) New BankFileModel(p)).
+            OrderBy(Function(t) t.CompanyName).
+            ThenBy(Function(t) String.Concat(t.LastName, t.FirstName)).
+            ToList()
 
         Dim summaryModel As BankFileModel = BankFileModel.BankFileModelSummary(models:=models)
 
@@ -183,7 +187,14 @@ Public Class BankFileTextFormatForm
 
         Dim trailer As String = GetTrailer(models:=models)
 
-        Dim pathAndFileName = Path.Combine(Path.GetTempPath, $"{companyCode}-{payrollDate}-{batchNo}.01")
+        Dim defaultFileName = $"{companyCode}-{payrollDate}-{batchNo}.01"
+        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName:=defaultFileName,
+                                defaultExtension:="01",
+                                filter:="Bank File|*.01;")
+
+        If saveFileDialogHelperOutPut.IsSuccess = False Then Return
+
+        Dim pathAndFileName = saveFileDialogHelperOutPut.FileInfo.FullName 'Path.Combine(Path.GetTempPath, )
         Using sw As New StreamWriter(pathAndFileName)
             sw.WriteLine(header)
             sw.WriteLine(details)

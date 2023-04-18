@@ -51,6 +51,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId);
 
+        Task<ICollection<Paystub>> GetByPayPeriodWithEmployeesOfSamePayFrequencyAsync(int payPeriodId);
+
         Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(int payPeriodId);
 
         Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeDivisionAsync(int payPeriodId);
