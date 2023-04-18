@@ -902,20 +902,41 @@ namespace AccuPay.Infrastructure.Data
         }
 
         public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId) => await _context.Paystubs
-                .Include(x => x.Employee)
-                .Where(x => x.PayPeriodID == payPeriodId)
-                .ToListAsync();
+            .AsNoTracking()
+            .Include(x => x.Employee)
+            .Where(x => x.PayPeriodID == payPeriodId)
+            .ToListAsync();
 
         public async Task<ICollection<Paystub>> GetByPayPeriodWithEmployeesOfSamePayFrequencyAsync(int payPeriodId)
         {
-            var payPeriod = await _context.PayPeriods.FindAsync(payPeriodId);
-            var organizationsOfSamePayFrequency = await _context.Organizations
-                .Where(o => o.PayFrequencyID == payPeriod.PayFrequencyID)
-                .ToListAsync();
+            var payPeriod = await _context.PayPeriods
+                .AsNoTracking()
+                .Include(p => p.Organization)
+                    .ThenInclude(o => o.PayFrequency)
+                .FirstOrDefaultAsync(p => p.RowID == payPeriodId);
+            var originOrganization = payPeriod.Organization;
+            var organizationsOfSamePayFrequency = Enumerable.Empty<Organization>();
+            if (originOrganization.IsWeekly)
+            {
+                organizationsOfSamePayFrequency = await _context.Organizations
+                    .AsNoTracking()
+                    .Where(o => o.PayFrequencyID == payPeriod.PayFrequencyID)
+                    .Where(o => o.IsAtm == originOrganization.IsAtm)
+                    .Where(o => o.IsCash == originOrganization.IsCash)
+                    .ToListAsync();
+            }
+            else
+            {
+                organizationsOfSamePayFrequency = await _context.Organizations
+                    .AsNoTracking()
+                    .Where(o => o.PayFrequencyID == payPeriod.PayFrequencyID)
+                    .ToListAsync();
+            }
             var organizationIds = organizationsOfSamePayFrequency.Select(o => o.RowID.Value)
                 .ToArray();
 
             var payPeriods = await _context.PayPeriods
+                .AsNoTracking()
                 .Where(p => organizationIds.Contains(p.OrganizationID.Value))
                 .Where(p => p.Month == payPeriod.Month)
                 .Where(p => p.Year == payPeriod.Year)
@@ -924,6 +945,7 @@ namespace AccuPay.Infrastructure.Data
             var payPeriodIds = payPeriods.Select(p => p.RowID.Value).ToArray();
 
             return await _context.Paystubs
+                .AsNoTracking()
                 .Include(x => x.Employee)
                     .ThenInclude(e => e.Organization)
                 .Where(x => payPeriodIds.Contains(x.PayPeriodID.Value))
