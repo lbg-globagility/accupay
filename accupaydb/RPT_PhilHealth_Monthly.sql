@@ -15,9 +15,14 @@ BEGIN
 
     DECLARE year INT(11);
     DECLARE month INT(11);
+    DECLARE isMorningSunOwner BOOL DEFAULT FALSE;
+
+    SET isMorningSunOwner = EXISTS(SELECT RowID FROM systemowner WHERE NAME='MorningSun' AND IsCurrentOwner='1');
 
     SET year = DATE_FORMAT(paramDate, '%Y');
     SET month = DATE_FORMAT(paramDate, '%m');
+
+IF NOT isMorningSunOwner THEN
 
     SELECT
         emp.PhilHealthNo `DatCol1`,
@@ -48,6 +53,25 @@ BEGIN
     ON paystubsummary.EmployeeID = emp.RowID
     WHERE emp.OrganizationID = OrganizID
     ORDER BY emp.LastName, emp.FirstName;
+
+ELSE
+
+    SELECT
+        e.PhilHealthNo `DatCol1`,
+        CONCAT_WS(', ', e.LastName, e.FirstName) `DatCol2`,
+        SUM(ps.TotalEmpPhilhealth) `DatCol3`,
+        SUM(ps.TotalCompPhilhealth) `DatCol4`,
+        (SUM(ps.TotalEmpPhilhealth) + SUM(ps.TotalCompPhilhealth)) `DatCol5`
+        FROM employee e
+        LEFT JOIN paystub ps ON ps.EmployeeID=e.RowID
+        LEFT JOIN payperiod pp ON pp.RowID=ps.PayPeriodID AND pp.`Month`=month AND pp.`Year`=year AND pp.TotalGrossSalary=e.PayFrequencyID 
+
+        WHERE e.OrganizationID=OrganizID
+        GROUP BY e.RowID
+        ORDER BY CONCAT(e.LastName, e.FirstName)
+        ;
+
+END IF;
 
 END//
 DELIMITER ;
