@@ -938,9 +938,8 @@ namespace AccuPay.Infrastructure.Data
             var payPeriods = await _context.PayPeriods
                 .AsNoTracking()
                 .Where(p => organizationIds.Contains(p.OrganizationID.Value))
-                .Where(p => p.Month == payPeriod.Month)
-                .Where(p => p.Year == payPeriod.Year)
-                .Where(p => p.OrdinalValue == payPeriod.OrdinalValue)
+                .Where(p => p.PayFromDate == payPeriod.PayFromDate)
+                .Where(p => p.PayToDate == payPeriod.PayToDate)
                 .ToListAsync();
             var payPeriodIds = payPeriods.Select(p => p.RowID.Value).ToArray();
 
