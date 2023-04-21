@@ -9,5 +9,7 @@ namespace AccuPay.Core.Interfaces
         DataTable GetDefaultData(int organizationId, int payPeriodId, bool isActual);
 
         DataTable GetGoldWingsData(int organizationId, int payPeriodId, bool isActual);
+
+        DataTable GetMorningSunData(int organizationId, int payPeriodId, bool isActual);
     }
 }

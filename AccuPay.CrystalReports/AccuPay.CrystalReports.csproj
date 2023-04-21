@@ -105,6 +105,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Payslip\IPayslipBuilder.cs" />
+    <Compile Include="Payslip\MorningSunPayslipFormat.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MorningSunPayslipFormat.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Payslip\OfficialPaySlipFormat.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -189,6 +195,10 @@
     <EmbeddedResource Include="Payslip\DefaultPayslipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaultPayslipFormat.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Payslip\MorningSunPayslipFormat.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MorningSunPayslipFormat.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Payslip\OfficialPaySlipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

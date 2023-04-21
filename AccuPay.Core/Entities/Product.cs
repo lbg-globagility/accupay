@@ -87,7 +87,7 @@ namespace AccuPay.Core.Entities
         [Column("GovtDeductionType")]
         public GovernmentDeductionTypeEnum GovernmentDeductionType { get; set; }
 
-        public bool IsNotLoanOfMorningSun => GovernmentDeductionType == GovernmentDeductionTypeEnum.None;
+        public bool IsGovernmentDeductionTypeNone => GovernmentDeductionType == GovernmentDeductionTypeEnum.None;
 
         public bool IsSssLoanOfMorningSun => GovernmentDeductionType == GovernmentDeductionTypeEnum.Sss;
 

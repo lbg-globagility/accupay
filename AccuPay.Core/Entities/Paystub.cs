@@ -442,7 +442,8 @@ namespace AccuPay.Core.Entities
             TotalBonus = AccuMath.CommercialRound(bonuses.Sum(b => b.BonusAmount));
 
             // Loans
-            TotalLoans = loanTransactions.Sum(t => t.DeductionAmount);
+            TotalLoans = loanTransactions.Where(l => l.Product.IsGovernmentDeductionTypeNone)
+                .Sum(t => t.DeductionAmount);
 
             // gross pay and total earnings should be higher than the goverment deduction calculators
             // since it is sometimes used in computing the basis pay for the deductions

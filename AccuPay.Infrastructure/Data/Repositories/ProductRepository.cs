@@ -346,7 +346,7 @@ namespace AccuPay.Infrastructure.Data
                 case LoanTypeGroupingEnum.NonGovernment:
                     return loanTypesBaseQuery
                         .AsEnumerable()
-                        .Where(p => p.IsNotLoanOfMorningSun)
+                        .Where(p => p.IsGovernmentDeductionTypeNone)
                         .ToList();
 
                 default:
@@ -610,7 +610,7 @@ namespace AccuPay.Infrastructure.Data
                 case LoanTypeGroupingEnum.NonGovernment:
                     return loanTypesBaseQuery
                         .AsEnumerable()
-                        .Where(p => p.IsNotLoanOfMorningSun)
+                        .Where(p => p.IsGovernmentDeductionTypeNone)
                         .ToList();
 
                 default:

@@ -30,5 +30,12 @@ namespace AccuPay.Infrastructure.Data
 
             return CallRawSql(procedureCall);
         }
+
+        public DataTable GetMorningSunData(int organizationId, int payPeriodId, bool isActual)
+        {
+            var procedureCall = "CALL PrintMorningSunPayslip(" + organizationId + "," + payPeriodId + "," + Convert.ToSByte(isActual) + ");";
+
+            return CallRawSql(procedureCall);
+        }
     }
 }

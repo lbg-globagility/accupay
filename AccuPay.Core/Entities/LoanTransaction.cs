@@ -57,7 +57,7 @@ namespace AccuPay.Core.Entities
         [NotMapped]
         public Product Product { get; private set; }
 
-        public bool IsNotLoanOfMorningSun => Product != null ? Product.IsNotLoanOfMorningSun : false;
+        public bool IsNotLoanOfMorningSun => Product != null ? Product.IsGovernmentDeductionTypeNone : false;
         public bool IsSssLoanOfMorningSun => Product != null ? Product.IsSssLoanOfMorningSun : false;
         public bool IsPhilHealthLoanOfMorningSun => Product != null ? Product.IsPhilHealthLoanOfMorningSun : false;
         public bool IsHDMFLoanOfMorningSun => Product != null ? Product.IsHDMFLoanOfMorningSun : false;

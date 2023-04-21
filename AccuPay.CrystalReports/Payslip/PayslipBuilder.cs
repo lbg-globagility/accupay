@@ -85,6 +85,8 @@ namespace AccuPay.CrystalReports
 
             var organization = await _organizationRepository.GetByIdWithAddressAsync(payPeriod.OrganizationID.Value);
 
+            var currentSystemOwnerEntity = await _systemOwnerService.GetCurrentSystemOwnerEntityAsync();
+
             if (_currentSystemOwner == SystemOwner.Goldwings)
             {
                 _payslipDatatable = CreateGoldWingsDataSource(
@@ -102,6 +104,15 @@ namespace AccuPay.CrystalReports
                     employeeIds);
                 _reportDocument = CreateCinemaReport(organization, payPeriodId);
             }
+            else if (currentSystemOwnerEntity.IsMorningSun)
+            {
+                _payslipDatatable = CreateMorningSunDataSource(
+                    organizationId: organization.RowID.Value,
+                    payPeriodId: payPeriod.RowID.Value,
+                    isActual,
+                    employeeIds);
+                _reportDocument = CreateMorningSunReport(organization, payPeriod);
+            }
             else
             {
                 _payslipDatatable = CreateDefaultDataSource(
@@ -115,6 +126,26 @@ namespace AccuPay.CrystalReports
             _reportDocument.SetDataSource(_payslipDatatable);
 
             return this;
+        }
+
+        private ReportClass CreateMorningSunReport(Organization organization, PayPeriod payPeriod)
+        {
+            var rptdoc = new MorningSunPayslipFormat();
+
+            var txtOrganizName = (TextObject)rptdoc.Section2.ReportObjects["txtOrganizName"];
+            txtOrganizName.Text = organization.Name.ToUpper();
+
+            var txtPayPeriod = (TextObject)rptdoc.Section2.ReportObjects["txtPayPeriod"];
+            txtPayPeriod.Text = $"{payPeriod.PayFromDate.ToString(customDateFormat)} to {payPeriod.PayToDate.ToString(customDateFormat)}";
+
+            return rptdoc;
+        }
+
+        private DataTable CreateMorningSunDataSource(int organizationId, int payPeriodId, bool isActual, int[] employeeIds)
+        {
+            var result = _dataService.GetMorningSunData(organizationId, payPeriodId, isActual);
+
+            return FilterData(result, DefaultEmployeeIdColumn, employeeIds);
         }
 
         private ReportClass CreateGoldWingsReport(Organization organization, PayPeriod payPeriod)
