@@ -1168,6 +1168,7 @@ Public Class MDIPrimaryForm
             z_OrganizationID = organizationListDialog.SelectedOrganizationId
             z_CompanyName = organizationListDialog.SelectedOrganizationName
             z_OrganizationName = organizationListDialog.SelectedOrganizationName
+            orgztnID = z_OrganizationID
             USER_ROLE = organizationListDialog.UserRoleForSelectedOrganization
 
             Me.Text = z_OrganizationName
