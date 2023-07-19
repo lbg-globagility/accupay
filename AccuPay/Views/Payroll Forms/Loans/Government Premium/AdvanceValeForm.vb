@@ -84,7 +84,7 @@ Public Class AdvanceValeForm
                 For Each parentLoan In parentLoans
                     Dim convertedAdvValeLoan = convertedAdvValeLoans.FirstOrDefault(Function(l) l.ParentLoanId.Value = parentLoan.RowID.Value)
                     If convertedAdvValeLoan Is Nothing Then Continue For
-                    parentLoan.TotalLoanAmount -= convertedAdvValeLoan.TotalLoanAmount
+                    'parentLoan.TotalLoanAmount -= convertedAdvValeLoan.TotalLoanAmount
                     parentLoan.TotalBalanceLeft -= convertedAdvValeLoan.TotalBalanceLeft
                     parentLoan.RecomputeTotalPayPeriod()
                     parentLoan.RecomputePayPeriodLeft()
