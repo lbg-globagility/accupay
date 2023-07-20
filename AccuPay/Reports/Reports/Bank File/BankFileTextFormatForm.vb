@@ -119,7 +119,8 @@ Public Class BankFileTextFormatForm
             Where(Function(p) p.IsSelected).
             ToList()
 
-        Dim given = Math.Ceiling(models.Max(Function(p) p.Amount))
+        Dim amountList = models?.Select(Function(p) p.Amount)
+        Dim given = Math.Ceiling(If(amountList.Any(), amountList.Max(), 0M))
         Dim caught = THOUSAND_VALUE - (given Mod THOUSAND_VALUE)
         Dim result = given + caught
         numCeilingAmount.Value = result
