@@ -265,7 +265,7 @@ Public Class ProductControlForm
                                  drow("PartNo"),
                                  drow("Category"),
                                  drow("CategoryID"),
-                                 (CShort(drow("Status")) = 1),
+                                 If(drow("Status") Is DBNull.Value, False, (CShort(drow("Status")) = 1)),
                                  CBool(drow("Fixed")), Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing,
                                  CBool(drow("AllocateBelowSafetyFlag")), Nothing, Nothing, Nothing, Nothing, Nothing, Nothing,
                                  CBool(drow(IsPaidWhenOvertime.Name)))
