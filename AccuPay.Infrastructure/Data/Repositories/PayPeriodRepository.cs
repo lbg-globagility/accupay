@@ -709,7 +709,20 @@ namespace AccuPay.Infrastructure.Data
                     new TimePeriod(date, date),
                     organizationId)
                 .Start;
-            query = query.Where(x => x.PayFromDate >= cutOffStart);
+            var organization = await _context.Organizations
+                .Include(o => o.PayFrequency)
+                .AsNoTracking()
+                .Where(o => o.RowID == organizationId)
+                .FirstOrDefaultAsync();
+
+            if (organization.IsWeekly)
+            {
+                query = query.Where(x => x.PayFromDate >= date);
+            }
+            else
+            {
+                query = query.Where(x => x.PayFromDate >= cutOffStart);
+            }
 
             return await query.AnyAsync();
         }
