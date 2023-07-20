@@ -100,7 +100,8 @@ SELECT
     ps.NightDiffHours `COL14`,
     IF(IsActualFlag, psa.NightDiffPay, ps.NightDiffPay) `COL15`,
     (ps.TotalAllowance + ps.TotalTaxableAllowance - IFNULL(psiECOLA.PayAmount, 0)) `COL18`,
-    IF(IsActualFlag = TRUE, psa.TotalAdjustments, ps.TotalAdjustments) `COL19`,
+#    IF(IsActualFlag = TRUE, psa.TotalAdjustments, ps.TotalAdjustments) `COL19`,
+    positiveAdjustments.`TotalPositiveAdjustment` `COL19`,
     IF(
         IsActualFlag,
         psa.TotalGrossSalary + psa.TotalAdjustments,
@@ -117,7 +118,7 @@ SELECT
     payStubLoans.`Names` AS `COL31`,
     payStubLoans.PayAmounts AS `COL32`,
     payStubLoans.TotalBalanceLeft AS `COl36`,
-    adjustments.`Names` AS `COL37`, -- Deprecated
+    negativeAdjustments.`TotalNegativeAdjustment` AS `COL37`,
     adjustments.PayAmounts AS `COL38`,-- Deprecated
     ps.LeaveHours `COL40`,
     IF(IsActualFlag, psa.LeavePay, ps.LeavePay) `COL41`,
@@ -258,22 +259,23 @@ ON psiECOLA.PayStubID=ps.RowID
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(adjustment.ItemName, '')), ',', '\n') `Names`,
-        REPLACE(GROUP_CONCAT(IFNULL(ROUND(adjustment.PayAmount, 2), '')), ',', '\n') `PayAmounts`,
+        REPLACE(GROUP_CONCAT(IFNULL(adjustment.PayAmount, '')), ',', '\n') `PayAmounts`,
         adjustment.PayStubID
     FROM (
             SELECT
                 paystubadjustment.PayStubID,
-                paystubadjustment.PayAmount,
+                IF(paystubadjustment.PayAmount < 0, CONCAT('(', ROUND(paystubadjustment.PayAmount * -1, 2), ')'), ROUND(paystubadjustment.PayAmount, 2)) `PayAmount`,
                 product.PartNo AS ItemName
             FROM paystubadjustment
             INNER JOIN product
             ON product.RowID = paystubadjustment.ProductID
-            WHERE paystubadjustment.OrganizationID = OrganizID AND
+            WHERE IsActualFlag = 0 AND
+                paystubadjustment.OrganizationID = OrganizID AND
                 paystubadjustment.PayAmount != 0
         UNION
             SELECT
                 paystubadjustmentactual.PayStubID,
-                paystubadjustmentactual.PayAmount,
+                IF(paystubadjustmentactual.PayAmount < 0, CONCAT('(', ROUND(paystubadjustmentactual.PayAmount * -1, 2), ')'), ROUND(paystubadjustmentactual.PayAmount, 2)) `PayAmount`,
                 product.PartNo AS ItemName
             FROM paystubadjustmentactual
             INNER JOIN product
@@ -285,6 +287,88 @@ LEFT JOIN (
     GROUP BY adjustment.PayStubID
 ) adjustments
 ON adjustments.PayStubID = ps.RowID
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+LEFT JOIN (
+    SELECT
+        REPLACE(GROUP_CONCAT(IFNULL(adjustment.ItemName, '')), ',', '\n') `Names`,
+        REPLACE(GROUP_CONCAT(IFNULL(ROUND(adjustment.PayAmount, 2), '')), ',', '\n') `PayAmounts`,
+        adjustment.PayStubID,
+        SUM(adjustment.PayAmount) `TotalNegativeAdjustment`
+    FROM (
+            SELECT
+                paystubadjustment.PayStubID,
+                paystubadjustment.PayAmount,
+                product.PartNo AS ItemName
+            FROM paystubadjustment
+            INNER JOIN product
+            ON product.RowID = paystubadjustment.ProductID
+            WHERE IsActualFlag = 0 AND
+                paystubadjustment.OrganizationID = OrganizID AND
+                paystubadjustment.PayAmount < 0
+        UNION
+            SELECT
+                paystubadjustmentactual.PayStubID,
+                paystubadjustmentactual.PayAmount,
+                product.PartNo AS ItemName
+            FROM paystubadjustmentactual
+            INNER JOIN product
+            ON product.RowID = paystubadjustmentactual.ProductID
+            WHERE IsActualFlag = 1 AND
+                paystubadjustmentactual.OrganizationID = OrganizID AND
+                paystubadjustmentactual.PayAmount < 0
+    ) adjustment
+    GROUP BY adjustment.PayStubID
+) negativeAdjustments
+ON negativeAdjustments.PayStubID = ps.RowID
+
+LEFT JOIN (
+    SELECT
+        REPLACE(GROUP_CONCAT(IFNULL(adjustment.ItemName, '')), ',', '\n') `Names`,
+        REPLACE(GROUP_CONCAT(IFNULL(ROUND(adjustment.PayAmount, 2), '')), ',', '\n') `PayAmounts`,
+        adjustment.PayStubID,
+        SUM(adjustment.PayAmount) `TotalPositiveAdjustment`
+    FROM (
+            SELECT
+                paystubadjustment.PayStubID,
+                paystubadjustment.PayAmount,
+                product.PartNo AS ItemName
+            FROM paystubadjustment
+            INNER JOIN product
+            ON product.RowID = paystubadjustment.ProductID
+            WHERE IsActualFlag = 0 AND
+                paystubadjustment.OrganizationID = OrganizID AND
+                paystubadjustment.PayAmount > 0
+        UNION
+            SELECT
+                paystubadjustmentactual.PayStubID,
+                paystubadjustmentactual.PayAmount,
+                product.PartNo AS ItemName
+            FROM paystubadjustmentactual
+            INNER JOIN product
+            ON product.RowID = paystubadjustmentactual.ProductID
+            WHERE IsActualFlag = 1 AND
+                paystubadjustmentactual.OrganizationID = OrganizID AND
+                paystubadjustmentactual.PayAmount > 0
+    ) adjustment
+    GROUP BY adjustment.PayStubID
+) positiveAdjustments
+ON positiveAdjustments.PayStubID = ps.RowID
 
 
 
