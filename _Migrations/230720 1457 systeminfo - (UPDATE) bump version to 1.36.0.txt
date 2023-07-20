@@ -1,0 +1,3 @@
+
+UPDATE systeminfo SET Value='1.36.0' WHERE Name='desktop.version'
+;
