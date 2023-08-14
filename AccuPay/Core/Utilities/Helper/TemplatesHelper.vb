@@ -31,7 +31,7 @@ Namespace Global.AccuPay.Desktop.Helpers
         Public Shared ReadOnly SHIFT As String = "accupay-shiftschedule-template.xlsx"
         Public Shared ReadOnly TRIP_TICKET As String = "accupay-trip-ticket-template.xlsx"
         Public Shared ReadOnly GOVERNMENT_PREMIUM As String = "accupay-govt-premium-template.xlsx"
-        Public Shared ReadOnly TIMELOGS_OPTIMIZE_FORMAT As String = "optimize time logs format.xlsx"
+        Public Shared ReadOnly TIMELOGS_OPTIMIZE_FORMAT As String = "optimize time logs format.xlsm"
 
         Private Const FILE_PATH As String = "ImportTemplates/"
 
