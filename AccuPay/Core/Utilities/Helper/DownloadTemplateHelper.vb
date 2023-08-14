@@ -26,7 +26,8 @@ Namespace Global.AccuPay.Desktop.Helpers
             ExcelTemplates.Salary,
             ExcelTemplates.Shift,
             ExcelTemplates.TripTicket,
-            ExcelTemplates.GovernmentPremium}
+            ExcelTemplates.GovernmentPremium,
+            ExcelTemplates.TimeLogsOptimize}
 
         Public Shared Async Sub DownloadExcel(excelTemplate As ExcelTemplates)
 

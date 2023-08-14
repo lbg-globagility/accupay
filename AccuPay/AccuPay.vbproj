@@ -805,6 +805,13 @@
     <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\TIme Logs\ImportTimeLogsOptimizedForm.Designer.vb">
+      <DependentUpon>ImportTimeLogsOptimizedForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\TIme Logs\ImportTimeLogsOptimizedForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\TIme Logs\TimeLogsOptimizedRowRecord.vb" />
     <Compile Include="Views\Time Attendance Form\TripTicket\NewTripTicketDialog.Designer.vb">
       <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
     </Compile>
@@ -1691,6 +1698,9 @@
     <None Include="ImportTemplates\accupay-trip-ticket-template.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="ImportTemplates\optimize time logs format.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
@@ -1873,6 +1883,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.resx">
       <DependentUpon>LeaveResetForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\TIme Logs\ImportTimeLogsOptimizedForm.resx">
+      <DependentUpon>ImportTimeLogsOptimizedForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TripTicket\Import\ImportTripTicketForm.resx">
       <DependentUpon>ImportTripTicketForm.vb</DependentUpon>

@@ -15,6 +15,7 @@ Namespace Global.AccuPay.Desktop.Helpers
         Shift
         TripTicket
         GovernmentPremium
+        TimeLogsOptimize
     End Enum
 
     Public Class TemplatesHelper
@@ -30,6 +31,7 @@ Namespace Global.AccuPay.Desktop.Helpers
         Public Shared ReadOnly SHIFT As String = "accupay-shiftschedule-template.xlsx"
         Public Shared ReadOnly TRIP_TICKET As String = "accupay-trip-ticket-template.xlsx"
         Public Shared ReadOnly GOVERNMENT_PREMIUM As String = "accupay-govt-premium-template.xlsx"
+        Public Shared ReadOnly TIMELOGS_OPTIMIZE_FORMAT As String = "optimize time logs format.xlsx"
 
         Private Const FILE_PATH As String = "ImportTemplates/"
 
@@ -69,6 +71,9 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Case ExcelTemplates.GovernmentPremium
                     Return GOVERNMENT_PREMIUM
+
+                Case ExcelTemplates.TimeLogsOptimize
+                    Return TIMELOGS_OPTIMIZE_FORMAT
 
                 Case Else
 
@@ -116,6 +121,9 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Case ExcelTemplates.GovernmentPremium
                     fileName = GOVERNMENT_PREMIUM
+
+                Case ExcelTemplates.TimeLogsOptimize
+                    fileName = TIMELOGS_OPTIMIZE_FORMAT
 
                 Case Else
 

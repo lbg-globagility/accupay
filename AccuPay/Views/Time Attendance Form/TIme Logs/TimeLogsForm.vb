@@ -42,6 +42,7 @@ Public Class TimeLogsForm
 
     Private ReadOnly _shiftRepository As IShiftRepository
     Private ReadOnly _organizationRepository As IOrganizationRepository
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
     Private _currentRolePermission As RolePermission
 
     Public Enum TimeLogsFormat
@@ -66,6 +67,8 @@ Public Class TimeLogsForm
         _shiftRepository = MainServiceProvider.GetRequiredService(Of IShiftRepository)
 
         _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
     End Sub
 
 #Region "Methods"
@@ -1115,6 +1118,17 @@ Public Class TimeLogsForm
     End Sub
 
     Private Async Sub btnImport_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
+        Dim currentSystemOwner = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
+        Dim isMorningSun = currentSystemOwner.IsMorningSun
+
+        If isMorningSun Then
+            Dim form = New ImportTimeLogsOptimizedForm()
+            If form.ShowDialog() = DialogResult.OK Then
+                Await ReloadAsync()
+            End If
+
+            Return
+        End If
 
         Dim timeLogsFormat_ As TimeLogsFormat? = TimeLogsImportOption()
 
