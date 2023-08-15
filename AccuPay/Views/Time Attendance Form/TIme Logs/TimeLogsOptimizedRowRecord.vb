@@ -79,4 +79,24 @@ Public Class TimeLogsOptimizedRowRecord
         End Get
     End Property
 
+    <Ignore>
+    <ColumnName("Time IN (USER)")>
+    Public Property TimeInUser As TimeSpan?
+
+    <Ignore>
+    <ColumnName("Time OUT (USER)")>
+    Public Property TimeOutUser As TimeSpan?
+
+    Public ReadOnly Property TimeInText As String
+        Get
+            Return If(TimeIn Is Nothing, String.Empty, New DateTime(TimeIn.Value.Ticks).ToShortTimeString())
+        End Get
+    End Property
+
+    Public ReadOnly Property TimeOutText As String
+        Get
+            Return If(TimeOut Is Nothing, String.Empty, New DateTime(TimeOut.Value.Ticks).ToShortTimeString())
+        End Get
+    End Property
+
 End Class

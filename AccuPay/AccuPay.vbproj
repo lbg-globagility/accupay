@@ -1698,7 +1698,7 @@
     <None Include="ImportTemplates\accupay-trip-ticket-template.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ImportTemplates\optimize time logs format.xlsx">
+    <None Include="ImportTemplates\optimize time logs format.xlsm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\baseline_undo_black_24dp.png" />
