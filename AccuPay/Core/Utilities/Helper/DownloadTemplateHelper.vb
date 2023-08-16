@@ -29,14 +29,18 @@ Namespace Global.AccuPay.Desktop.Helpers
             ExcelTemplates.GovernmentPremium,
             ExcelTemplates.TimeLogsOptimize}
 
-        Public Shared Async Sub DownloadExcel(excelTemplate As ExcelTemplates)
+        Public Shared Async Sub DownloadExcel(excelTemplate As ExcelTemplates,
+            Optional defaultExtension As String = Nothing,
+            Optional filter As String = Nothing)
 
             Dim excelName = TemplatesHelper.GetFileName(excelTemplate)
             Dim template = TemplatesHelper.GetFullPath(excelTemplate)
 
             Try
 
-                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(excelName, excelFileExtension, excelFileFilter)
+                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(excelName,
+                    defaultExtension:=If(String.IsNullOrEmpty(defaultExtension), excelFileExtension, defaultExtension),
+                    filter:=If(String.IsNullOrEmpty(excelFileFilter), excelFileFilter, filter))
 
                 If saveFileDialogHelperOutPut.IsSuccess = False Then Return
 

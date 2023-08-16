@@ -27,7 +27,9 @@ Public Class ImportTimeLogsOptimizedForm
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.TimeLogsOptimize)
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.TimeLogsOptimize,
+            defaultExtension:="*.xlsm",
+            filter:="Excel Macro-Enabled Workbook (*.xlsm)|*.xlsm")
 
     End Sub
 
