@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AccuPay"
-#define MyAppVersion "1.36.0"
+#define MyAppVersion "1.36.2"
 #define MyAppPublisher "Globagility, Inc."
 #define MyAppURL "http://www.globagilityinc.com/"
 #define MyAppExeName "AccuPay.exe"
@@ -236,6 +236,7 @@ Source: ".\AccuPay\bin\Debug\System.Xml.XPath.dll"; DestDir: "{app}"; Flags: ign
 
 Source: ".\AccuPay\Resources\*.xlsx"; DestDir: "{app}\Resources"; Flags: ignoreversion
 Source: ".\AccuPay\ImportTemplates\*.xlsx"; DestDir: "{app}\ImportTemplates"; Flags: ignoreversion
+Source: ".\AccuPay\ImportTemplates\*.xlsm"; DestDir: "{app}\ImportTemplates"; Flags: ignoreversion
 Source: ".\AccuPay\Resources\SourceSansPro-Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Source Sans Pro"; Flags: onlyifdoesntexist uninsneveruninstall
 ; Source: ".\AccuPay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Source: ".\AccuPay\bin\Debug\Core Forms\rpt\*.rpt"; DestDir: "{app}\Core Forms\rpt"; Flags: ignoreversion
