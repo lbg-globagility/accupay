@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Services.Policies;
+using AccuPay.Core.Services.Policies;
 
 namespace AccuPay.Core.Services
 {
@@ -56,5 +56,13 @@ namespace AccuPay.Core.Services
                         _settings.GetBoolean("HolidayPolicy.PostLegalHolidayCheck");
 
         public ShiftBasedAutomaticOvertimePolicy ShiftBasedAutomaticOvertimePolicy { get; }
+
+        public bool AllowanceSalaryNotAffectedByRestDayRate => _settings.GetBoolean("TimeEntry Policy.AllowanceSalaryNotAffectedByRestDayRate");
+
+        public bool AllowanceSalaryNotAffectedByHolidayRate => _settings.GetBoolean("TimeEntry Policy.AllowanceSalaryNotAffectedByHolidayRate");
+
+        public bool AllowanceSalaryNotAffectedByOvertimeRate => _settings.GetBoolean("TimeEntry Policy.AllowanceSalaryNotAffectedByOvertimeRate");
+
+        public bool AllowanceSalaryNotAffectedByNightDifferentialRate => _settings.GetBoolean("TimeEntry Policy.AllowanceSalaryNotAffectedByNightDifferentialRate");
     }
 }
