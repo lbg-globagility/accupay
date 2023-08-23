@@ -168,7 +168,7 @@ Public Class ImportGovernmentPremiumForm
         ParsedTabControl.Text = $"Ok ({acceptedRecords.Count})"
         ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
 
-        SaveButton.Enabled = _loans.Count > 0
+        SaveButton.Enabled = acceptedRecords.Count > 0
 
         LoansDataGrid.DataSource = acceptedRecords
         RejectedRecordsGrid.DataSource = rejectedRecords
