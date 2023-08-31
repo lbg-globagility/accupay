@@ -35,6 +35,7 @@ namespace AccuPay.Core.Services
         public IReadOnlyCollection<TimeEntry> TimeEntries { get; private set; }
         public IReadOnlyCollection<TimeLog> TimeLogs { get; private set; }
         public IReadOnlyCollection<TripTicket> TripTickets { get; private set; }
+        public IReadOnlyCollection<AllowanceSalaryTimeEntry> AllowanceSalaryTimeEntries { get; private set; }
 
         private readonly ICalendarService _calendarService;
 
@@ -55,6 +56,7 @@ namespace AccuPay.Core.Services
         private readonly ITimeEntryRepository _timeEntryRepository;
         private readonly ITimeLogRepository _timeLogRepository;
         private readonly ITripTicketRepository _tripTicketRepository;
+        private readonly IAllowanceSalaryTimeEntryRepository _allowanceSalaryTimeEntryRepository;
 
         public TimeEntryResources(
             ICalendarService calendarService,
@@ -75,7 +77,8 @@ namespace AccuPay.Core.Services
             ITimeAttendanceLogRepository timeAttendanceLogRepository,
             ITimeEntryRepository timeEntryRepository,
             ITimeLogRepository timeLogRepository,
-            ITripTicketRepository tripTicketRepository)
+            ITripTicketRepository tripTicketRepository,
+            IAllowanceSalaryTimeEntryRepository allowanceSalaryTimeEntryRepository)
         {
             _calendarService = calendarService;
             Policy = policy;
@@ -97,6 +100,7 @@ namespace AccuPay.Core.Services
             _timeEntryRepository = timeEntryRepository;
             _timeLogRepository = timeLogRepository;
             _tripTicketRepository = tripTicketRepository;
+            _allowanceSalaryTimeEntryRepository = allowanceSalaryTimeEntryRepository;
         }
 
         public async Task Load(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
@@ -125,6 +129,7 @@ namespace AccuPay.Core.Services
             await LoadTimeEntries(organizationId, previousCutoff, cutoffEnd);
             await LoadTimeLogs(organizationId, cuttOffPeriod);
             await LoadTripTickets(cuttOffPeriod);
+            await LoadAllowanceSalaryTimeEntries(organizationId, cuttOffPeriod);
         }
 
         private async Task LoadActualTimeEntries(int organizationId, TimePeriod cuttOffPeriod)
@@ -289,6 +294,13 @@ namespace AccuPay.Core.Services
         {
             TripTickets = (await _tripTicketRepository
                 .GetByDateRangeAsync(cuttOffPeriod))
+                .ToList();
+        }
+
+        private async Task LoadAllowanceSalaryTimeEntries(int organizationId, TimePeriod cuttOffPeriod)
+        {
+            AllowanceSalaryTimeEntries = (await _allowanceSalaryTimeEntryRepository
+                .GetByDatePeriodAsync(organizationId, cuttOffPeriod))
                 .ToList();
         }
     }

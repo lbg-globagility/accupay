@@ -14,8 +14,9 @@ Public Class TimeEntryGeneration
     Private ReadOnly _employees As IEnumerable(Of Employee)
 
     Private _results As BlockingCollection(Of EmployeeResult)
+    Private ReadOnly _isMorningSun As Boolean
 
-    Public Sub New(employees As IEnumerable(Of Employee), Optional additionalProgressCount As Integer = 0)
+    Public Sub New(employees As IEnumerable(Of Employee), Optional additionalProgressCount As Integer = 0, Optional isMorningSun As Boolean = False)
 
         MyBase.New(employees.Where(Function(e) e IsNot Nothing AndAlso e.RowID IsNot Nothing).Count() + additionalProgressCount)
 
@@ -24,6 +25,8 @@ Public Class TimeEntryGeneration
             OrderBy(Function(e) e.FullNameWithMiddleInitialLastNameFirst)
 
         _results = New BlockingCollection(Of EmployeeResult)()
+
+        _isMorningSun = isMorningSun
     End Sub
 
     Public Async Function Start(resources As ITimeEntryResources, payPeriod As TimePeriod, payPeriodId As Integer) As Task
@@ -40,7 +43,8 @@ Public Class TimeEntryGeneration
                     currentlyLoggedInUserId:=z_User,
                     employeeId:=employee.RowID.Value,
                     resources:=resources,
-                    payPeriod:=payPeriod)
+                    payPeriod:=payPeriod,
+                    isMorningSun:=_isMorningSun)
 
                 _results.Add(result)
 

@@ -967,7 +967,7 @@ Public Class TimeEntrySummaryForm
         'later, we can let the user choose the employees that they want to generate.
         Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
 
-        Dim generator As New TimeEntryGeneration(employees, additionalProgressCount:=1)
+        Dim generator As New TimeEntryGeneration(employees, additionalProgressCount:=1, isMorningSun:=_currentSystemOwner.IsMorningSun)
         Dim progressDialog = New ProgressDialog(generator, "Generating time entries...")
 
         Dim payPeriod As New TimePeriod(startDate, endDate)

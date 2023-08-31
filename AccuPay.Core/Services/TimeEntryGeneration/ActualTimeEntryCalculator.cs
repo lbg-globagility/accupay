@@ -20,7 +20,6 @@ namespace AccuPay.Core.Services
 
         public ICollection<ActualTimeEntry> Compute(ICollection<TimeEntry> timeEntries)
         {
-            // Changes here should also reflect in BenchmarkPayrollForm.vb
             var actualTimeEntries = new List<ActualTimeEntry>();
 
             var allowanceRate = (_salary?.BasicSalary ?? 0M) == 0M ?

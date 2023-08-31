@@ -48,6 +48,7 @@ Public Class PayStubForm
 
     Private _currentSystemOwner As String
     Private _organization As Organization
+    Private _currentSystemOwnerEntity As SystemOwner
     Private ReadOnly _policy As IPolicyHelper
 
     Private ReadOnly _systemOwnerService As ISystemOwnerService
@@ -107,6 +108,7 @@ Public Class PayStubForm
 
     Private Async Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         _organization = Await _organizationRepository.GetByIdWithAddressAsync(z_OrganizationID)
+        _currentSystemOwnerEntity = Await _systemOwnerService.GetCurrentSystemOwnerEntityAsync()
         AdjustmentGridView.AutoGenerateColumns = False
         PayPeriodGridView.AutoGenerateColumns = False
 
@@ -208,6 +210,9 @@ Public Class PayStubForm
 
         End If
 
+        Label1.Visible = _currentSystemOwnerEntity.IsMorningSun
+        Label13.Visible = _currentSystemOwnerEntity.IsMorningSun
+        txtAllowanceSalary.Visible = _currentSystemOwnerEntity.IsMorningSun
     End Sub
 
     Private Sub ShowOrHideEmailPayslip()
@@ -1240,6 +1245,9 @@ Public Class PayStubForm
         txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
 
         Await LoadAdjustmentsAsync()
+
+        txtAllowanceSalary.Text = FormatNumber(paystub.AllowanceSalary, 2)
+        txtRestDayPay.Text = FormatNumber(paystub.RestDayPay + paystub.AllowanceSalaryRestDay, 2)
     End Function
 
     Private Async Sub ActualTabPage_Enter(sender As Object, e As EventArgs)

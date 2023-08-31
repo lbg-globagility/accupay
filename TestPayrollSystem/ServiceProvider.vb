@@ -105,6 +105,7 @@ Public Class ServiceProvider
         services.AddTransient(Of IUserActivityRepository, UserActivityRepository)
         services.AddTransient(Of IVehicleRepository, VehicleRepository)
         services.AddTransient(Of IWithholdingTaxBracketRepository, WithholdingTaxBracketRepository)
+        services.AddTransient(Of IAllowanceSalaryTimeEntryRepository, AllowanceSalaryTimeEntryRepository)
 
         services.AddTransient(Of ICalendarService, CalendarService)
         services.AddTransient(Of IListOfValueService, ListOfValueService)

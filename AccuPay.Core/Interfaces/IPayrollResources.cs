@@ -31,5 +31,6 @@ namespace AccuPay.Core.Interfaces
         Product SingleParentLeaveProduct { get; }
         IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; }
         IReadOnlyCollection<Shift> Shifts { get; }
+        IReadOnlyCollection<AllowanceSalaryTimeEntry> AllowanceSalaryTimeEntries { get; }
     }
 }

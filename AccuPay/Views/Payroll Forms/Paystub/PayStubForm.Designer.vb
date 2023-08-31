@@ -69,6 +69,8 @@ Partial Class PayStubForm
         Me.LinkLabel4 = New System.Windows.Forms.LinkLabel()
         Me.Label59 = New System.Windows.Forms.Label()
         Me.pbEmpPicChk = New System.Windows.Forms.PictureBox()
+        Me.txtAllowanceSalary = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.lblPaidLeavePesoSign = New System.Windows.Forms.Label()
         Me.txtLeaveHours = New System.Windows.Forms.TextBox()
         Me.txtGrandTotalAllowance = New System.Windows.Forms.TextBox()
@@ -219,6 +221,7 @@ Partial Class PayStubForm
         Me.Label46 = New System.Windows.Forms.Label()
         Me.Label45 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
         Me.lblTotalBonusPesoSign = New System.Windows.Forms.Label()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
@@ -517,7 +520,7 @@ Partial Class PayStubForm
         '
         Me.lblGrossIncome.AutoSize = True
         Me.lblGrossIncome.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGrossIncome.Location = New System.Drawing.Point(14, 574)
+        Me.lblGrossIncome.Location = New System.Drawing.Point(14, 613)
         Me.lblGrossIncome.Name = "lblGrossIncome"
         Me.lblGrossIncome.Size = New System.Drawing.Size(92, 13)
         Me.lblGrossIncome.TabIndex = 170
@@ -697,6 +700,8 @@ Partial Class PayStubForm
         'SplitContainer1.Panel2
         '
         Me.SplitContainer1.Panel2.AutoScroll = True
+        Me.SplitContainer1.Panel2.Controls.Add(Me.txtAllowanceSalary)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblPaidLeavePesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtLeaveHours)
         Me.SplitContainer1.Panel2.Controls.Add(Me.txtGrandTotalAllowance)
@@ -742,6 +747,7 @@ Partial Class PayStubForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label46)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label45)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label44)
+        Me.SplitContainer1.Panel2.Controls.Add(Me.Label13)
         Me.SplitContainer1.Panel2.Controls.Add(Me.lblTotalBonusPesoSign)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label41)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label40)
@@ -862,6 +868,30 @@ Partial Class PayStubForm
         Me.pbEmpPicChk.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.pbEmpPicChk.TabIndex = 164
         Me.pbEmpPicChk.TabStop = False
+        '
+        'txtAllowanceSalary
+        '
+        Me.txtAllowanceSalary.BackColor = System.Drawing.Color.White
+        Me.txtAllowanceSalary.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtAllowanceSalary.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.txtAllowanceSalary.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.txtAllowanceSalary.Location = New System.Drawing.Point(253, 567)
+        Me.txtAllowanceSalary.Name = "txtAllowanceSalary"
+        Me.txtAllowanceSalary.ReadOnly = True
+        Me.txtAllowanceSalary.ShortcutsEnabled = False
+        Me.txtAllowanceSalary.Size = New System.Drawing.Size(100, 16)
+        Me.txtAllowanceSalary.TabIndex = 543
+        Me.txtAllowanceSalary.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(14, 568)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(112, 13)
+        Me.Label1.TabIndex = 542
+        Me.Label1.Text = "Allowance Salary :"
         '
         'lblPaidLeavePesoSign
         '
@@ -2529,6 +2559,15 @@ Partial Class PayStubForm
         Me.Label44.TabIndex = 265
         Me.Label44.Text = "₱"
         '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(233, 568)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(14, 13)
+        Me.Label13.TabIndex = 264
+        Me.Label13.Text = "₱"
+        '
         'lblTotalBonusPesoSign
         '
         Me.lblTotalBonusPesoSign.AutoSize = True
@@ -2667,7 +2706,7 @@ Partial Class PayStubForm
         'lblGrossIncomeDivider
         '
         Me.lblGrossIncomeDivider.Font = New System.Drawing.Font("Segoe UI", 6.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblGrossIncomeDivider.Location = New System.Drawing.Point(15, 549)
+        Me.lblGrossIncomeDivider.Location = New System.Drawing.Point(15, 588)
         Me.lblGrossIncomeDivider.Name = "lblGrossIncomeDivider"
         Me.lblGrossIncomeDivider.Size = New System.Drawing.Size(365, 13)
         Me.lblGrossIncomeDivider.TabIndex = 240
@@ -2858,7 +2897,7 @@ Partial Class PayStubForm
         Me.txtGrossPay.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.txtGrossPay.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
         Me.txtGrossPay.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.txtGrossPay.Location = New System.Drawing.Point(253, 573)
+        Me.txtGrossPay.Location = New System.Drawing.Point(253, 612)
         Me.txtGrossPay.Name = "txtGrossPay"
         Me.txtGrossPay.ReadOnly = True
         Me.txtGrossPay.ShortcutsEnabled = False
@@ -2878,7 +2917,7 @@ Partial Class PayStubForm
         'lblGrossIncomePesoSign
         '
         Me.lblGrossIncomePesoSign.AutoSize = True
-        Me.lblGrossIncomePesoSign.Location = New System.Drawing.Point(233, 576)
+        Me.lblGrossIncomePesoSign.Location = New System.Drawing.Point(233, 615)
         Me.lblGrossIncomePesoSign.Name = "lblGrossIncomePesoSign"
         Me.lblGrossIncomePesoSign.Size = New System.Drawing.Size(14, 13)
         Me.lblGrossIncomePesoSign.TabIndex = 260
@@ -2954,13 +2993,13 @@ Partial Class PayStubForm
         'ManagePrintPayslipsToolStripMenuItem
         '
         Me.ManagePrintPayslipsToolStripMenuItem.Name = "ManagePrintPayslipsToolStripMenuItem"
-        Me.ManagePrintPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ManagePrintPayslipsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ManagePrintPayslipsToolStripMenuItem.Text = "Print Payslips"
         '
         'ManageEmailPayslipsToolStripMenuItem
         '
         Me.ManageEmailPayslipsToolStripMenuItem.Name = "ManageEmailPayslipsToolStripMenuItem"
-        Me.ManageEmailPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ManageEmailPayslipsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.ManageEmailPayslipsToolStripMenuItem.Text = "Email Payslips"
         '
         'PrintPaySlipToolStripMenuItem
@@ -3756,4 +3795,7 @@ Partial Class PayStubForm
     Friend WithEvents CostCenterReportByBranchActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RecalculateThirteenthMonthPayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PayLoansUsing13thMonthToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Label13 As Label
+    Friend WithEvents txtAllowanceSalary As TextBox
 End Class

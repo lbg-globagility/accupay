@@ -66,6 +66,8 @@ namespace AccuPay.Core.Services
 
         public IPolicyHelper Policy { get; }
 
+        public IReadOnlyCollection<AllowanceSalaryTimeEntry> AllowanceSalaryTimeEntries { get; private set; }
+
         private readonly IActualTimeEntryRepository _actualTimeEntryRepository;
 
         private readonly IAllowanceRepository _allowanceRepository;
@@ -101,6 +103,7 @@ namespace AccuPay.Core.Services
         private readonly IWithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
         private readonly IShiftRepository _shiftRepository;
+        private readonly IAllowanceSalaryTimeEntryRepository _allowanceSalaryTimeEntryRepository;
 
         public PayrollResources(
             IPolicyHelper policy,
@@ -121,7 +124,8 @@ namespace AccuPay.Core.Services
             ISocialSecurityBracketRepository socialSecurityBracketRepository,
             ITimeEntryRepository timeEntryRepository,
             IWithholdingTaxBracketRepository withholdingTaxBracketRepository,
-            IShiftRepository shiftRepository)
+            IShiftRepository shiftRepository,
+            IAllowanceSalaryTimeEntryRepository allowanceSalaryTimeEntryRepository)
         {
             Policy = policy;
             _calendarService = calendarService;
@@ -142,6 +146,7 @@ namespace AccuPay.Core.Services
             _timeEntryRepository = timeEntryRepository;
             _withholdingTaxBracketRepository = withholdingTaxBracketRepository;
             _shiftRepository = shiftRepository;
+            _allowanceSalaryTimeEntryRepository = allowanceSalaryTimeEntryRepository;
         }
 
         public async Task Load(int payPeriodId, int organizationId, int userId)
@@ -179,6 +184,15 @@ namespace AccuPay.Core.Services
             await LoadSingleLeaveProduct();
             await LoadWithholdingTaxBrackets();
             await LoadShiftSchedules();
+            await LoadAllowanceSalaryTimeEntries();
+        }
+
+        private async Task LoadAllowanceSalaryTimeEntries()
+        {
+            AllowanceSalaryTimeEntries = (await _allowanceSalaryTimeEntryRepository.GetByDatePeriodAsync(
+                organizationId: _organizationId,
+                timePeriod: _payPeriodSpan))
+                .ToList();
         }
 
         private async Task LoadAllowances()

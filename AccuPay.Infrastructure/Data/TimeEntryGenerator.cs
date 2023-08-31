@@ -28,7 +28,8 @@ namespace AccuPay.Infrastructure.Data
             int employeeId,
             ITimeEntryResources resources,
             int currentlyLoggedInUserId,
-            TimePeriod payPeriod)
+            TimePeriod payPeriod,
+            bool isMorningSun = false)
         {
             // we use the employee data from resources.Employees instead of just passing the employee
             // entity in the Start method because we can be sure that the data in resources.Employees
@@ -45,6 +46,10 @@ namespace AccuPay.Infrastructure.Data
                 .ToList();
 
             ICollection<ActualTimeEntry> actualTimeEntries = resources.ActualTimeEntries
+                .Where(a => a.EmployeeID == employee.RowID)
+                .ToList();
+
+            ICollection<AllowanceSalaryTimeEntry> allowanceSalaryTimeEntries = resources.AllowanceSalaryTimeEntries
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
@@ -211,12 +216,29 @@ namespace AccuPay.Infrastructure.Data
             AddTimeEntriesToContext(currentlyLoggedInUserId, timeEntries);
             AddActualTimeEntriesToContext(actualTimeEntries);
             AddAgencyFeesToContext(currentlyLoggedInUserId, agencyFees);
+            AddAllowanceSalaryTimeEntryToContext(employee: employee, policy: resources.Policy, isMorningSun: isMorningSun, allowanceSalaryTimeEntries: allowanceSalaryTimeEntries, salary: salary, timeEntries: timeEntries);
             await _context.SaveChangesAsync();
 
             await _timeEntryDataService.RecordCreateByEmployee(currentlyLoggedInUserId, newTimeEntries);
             await _timeEntryDataService.RecordEditByEmployee(currentlyLoggedInUserId, updatedTimeEntries);
 
             return EmployeeResult.Success(employee);
+        }
+
+        private void AddAllowanceSalaryTimeEntryToContext(Employee employee, IPolicyHelper policy, bool isMorningSun, ICollection<AllowanceSalaryTimeEntry> allowanceSalaryTimeEntries, Salary salary, List<TimeEntry> timeEntries)
+        {
+            if (!isMorningSun) return;
+
+            var allowanceSalaryTimeEntryCalculator = new AllowanceSalaryTimeEntryCalculator(employee: employee, salary: salary, allowanceSalaryTimeEntries: allowanceSalaryTimeEntries, policy: policy);
+            allowanceSalaryTimeEntries = allowanceSalaryTimeEntryCalculator.Compute(timeEntries: timeEntries);
+
+            foreach (var allowanceSalaryTimeEntry in allowanceSalaryTimeEntries)
+            {
+                if (allowanceSalaryTimeEntry.RowID.HasValue)
+                    _context.Entry(allowanceSalaryTimeEntry).State = EntityState.Modified;
+                else
+                    _context.AllowanceSalaryTimeEntries.Add(allowanceSalaryTimeEntry);
+            }
         }
 
         private void PostLegalHolidayCheck(

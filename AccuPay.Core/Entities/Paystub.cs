@@ -422,7 +422,8 @@ namespace AccuPay.Core.Entities
             IReadOnlyCollection<TimeEntry> timeEntries,
             IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
             IReadOnlyCollection<AllowanceItem> allowanceItems,
-            IReadOnlyCollection<Bonus> bonuses)
+            IReadOnlyCollection<Bonus> bonuses,
+            IReadOnlyCollection<AllowanceSalaryTimeEntry> allowanceSalaryTimeEntries = null)
         {
             if (currentSystemOwner != SystemOwner.Benchmark)
             {
@@ -432,6 +433,8 @@ namespace AccuPay.Core.Entities
 
                 var isFirstPayAsDailyRule = settings.GetBoolean("Payroll Policy", "isfirstsalarydaily");
                 ComputeTotalEarnings(employee, isFirstPayAsDailyRule, payPeriod, currentSystemOwner);
+
+                ComputeAllowanceSalary(allowanceSalaryTimeEntries: allowanceSalaryTimeEntries);
             }
 
             // Allowances
@@ -451,7 +454,7 @@ namespace AccuPay.Core.Entities
             if (TotalEarnings < 0)
                 TotalEarnings = 0;
 
-            GrossPay = TotalEarnings + TotalBonus + GrandTotalAllowance;
+            GrossPay = TotalEarnings + TotalBonus + GrandTotalAllowance + TotalAllowanceSalary;
 
             TotalAdjustments = Adjustments.Sum(a => a.Amount);
 
@@ -488,6 +491,14 @@ namespace AccuPay.Core.Entities
                 currentlyLoggedInUserId: currentlyLoggedInUserId);
 
             thirteenthMonthPayCalculator.Calculate(employee, this, timeEntries, actualTimeEntries, salary, settings, allowanceItems.ToList(), currentSystemOwner);
+        }
+
+        private void ComputeAllowanceSalary(IReadOnlyCollection<AllowanceSalaryTimeEntry> allowanceSalaryTimeEntries = null)
+        {
+            if (allowanceSalaryTimeEntries == null) return;
+
+            AllowanceSalary = allowanceSalaryTimeEntries.Where(t => !t.IsRestDay).Sum(t => t.TotalDayPay);
+            AllowanceSalaryRestDay = allowanceSalaryTimeEntries.Where(t => t.IsRestDay).Sum(t => t.TotalDayPay);
         }
 
         public void ComputeTotalEarnings(Employee employee, bool isFirstPayAsDailyRule, PayPeriod payPeriod, string currentSystemOwner)
@@ -666,5 +677,11 @@ namespace AccuPay.Core.Entities
         }
 
         #endregion Composite Keys
+
+        public decimal AllowanceSalary { get; set; }
+
+        public decimal AllowanceSalaryRestDay { get; set; }
+
+        public decimal TotalAllowanceSalary => AllowanceSalary + AllowanceSalaryRestDay;
     }
 }

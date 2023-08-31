@@ -94,6 +94,10 @@ namespace AccuPay.Infrastructure.Data
                 .Where(a => a.EmployeeID == employee.RowID)
                 .ToList();
 
+            var allowanceSalaryTimeEntries = resources.AllowanceSalaryTimeEntries
+                .Where(t => t.EmployeeID == employee.RowID)
+                .ToList();
+
             try
             {
                 var result = await GeneratePayStub(
@@ -120,7 +124,8 @@ namespace AccuPay.Infrastructure.Data
                     leaves: leaves,
                     bonuses: bonuses,
                     shifts: shifts,
-                    policy: resources.Policy);
+                    policy: resources.Policy,
+                    allowanceSalaryTimeEntries: allowanceSalaryTimeEntries);
 
                 return result;
             }
@@ -159,7 +164,8 @@ namespace AccuPay.Infrastructure.Data
             IReadOnlyCollection<Leave> leaves,
             IReadOnlyCollection<Bonus> bonuses,
             IPolicyHelper policy,
-            IReadOnlyCollection<Shift> shifts)
+            IReadOnlyCollection<Shift> shifts,
+            IReadOnlyCollection<AllowanceSalaryTimeEntry> allowanceSalaryTimeEntries = null)
         {
             if (salary == null)
                 return PaystubEmployeeResult.Error(employee, "Employee has no salary for this cutoff.");
@@ -231,7 +237,8 @@ namespace AccuPay.Infrastructure.Data
                 timeEntries: timeEntries,
                 actualTimeEntries: actualTimeEntries,
                 allowanceItems: allowanceItems.ToList(),
-                bonuses: bonuses);
+                bonuses: bonuses,
+                allowanceSalaryTimeEntries: allowanceSalaryTimeEntries);
 
             await _paystubDataService.SaveAsync(
                 currentlyLoggedInUserId: currentlyLoggedInUserId,
