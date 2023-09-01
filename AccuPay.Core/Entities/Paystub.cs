@@ -497,8 +497,13 @@ namespace AccuPay.Core.Entities
         {
             if (allowanceSalaryTimeEntries == null) return;
 
-            AllowanceSalary = allowanceSalaryTimeEntries.Where(t => !t.IsRestDay).Sum(t => t.TotalDayPay);
-            AllowanceSalaryRestDay = allowanceSalaryTimeEntries.Where(t => t.IsRestDay).Sum(t => t.TotalDayPay);
+            var regularQuery = allowanceSalaryTimeEntries.Where(t => !t.IsRestDay);
+            AllowanceSalary = regularQuery.Sum(t => t.RegularPay);
+            AllowanceSalaryOvertime = regularQuery.Sum(t => t.OvertimePay);
+
+            var restDayQuery = allowanceSalaryTimeEntries.Where(t => t.IsRestDay);
+            AllowanceSalaryRestDay = restDayQuery.Sum(t => t.RestDayPay);
+            AllowanceSalaryRestDayOvertime = restDayQuery.Sum(t => t.RestDayOTPay);
         }
 
         public void ComputeTotalEarnings(Employee employee, bool isFirstPayAsDailyRule, PayPeriod payPeriod, string currentSystemOwner)
@@ -679,8 +684,10 @@ namespace AccuPay.Core.Entities
         #endregion Composite Keys
 
         public decimal AllowanceSalary { get; set; }
+        public decimal AllowanceSalaryOvertime { get; set; }
 
         public decimal AllowanceSalaryRestDay { get; set; }
+        public decimal AllowanceSalaryRestDayOvertime { get; set; }
 
         public decimal TotalAllowanceSalary => AllowanceSalary + AllowanceSalaryRestDay;
     }

@@ -152,6 +152,20 @@ namespace AccuPay.Infrastructure.Reports
                     allowanceColumn.Name = "Ecola";
             }
 
+            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.MorningSun)
+            {
+                var allowanceColumn = reportColumns
+                    .Where(r => r.Name == allowanceColumnName)
+                    .FirstOrDefault();
+
+                var allowanceColumnIndex = reportColumns.IndexOf(allowanceColumn);
+
+                if (allowanceColumn != null)
+                    allowanceColumn.Name = "Others";
+
+                reportColumns.Insert(allowanceColumnIndex, new ExcelReportColumn(name: "AllowanceSalary", source: "AllowanceSalary"));
+            }
+
             return new ReadOnlyCollection<ExcelReportColumn>(reportColumns);
         }
 
