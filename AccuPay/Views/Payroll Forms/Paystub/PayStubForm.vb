@@ -210,9 +210,10 @@ Public Class PayStubForm
 
         End If
 
-        Label1.Visible = _currentSystemOwnerEntity.IsMorningSun
-        Label13.Visible = _currentSystemOwnerEntity.IsMorningSun
-        txtAllowanceSalary.Visible = _currentSystemOwnerEntity.IsMorningSun
+        Dim isMorningSun = _currentSystemOwnerEntity.IsMorningSun
+        Label1.Visible = isMorningSun
+        Label13.Visible = isMorningSun
+        txtAllowanceSalary.Visible = isMorningSun
     End Sub
 
     Private Sub ShowOrHideEmailPayslip()
