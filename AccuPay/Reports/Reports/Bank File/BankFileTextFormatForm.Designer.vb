@@ -23,8 +23,8 @@ Partial Class BankFileTextFormatForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -33,6 +33,12 @@ Partial Class BankFileTextFormatForm
         Me.Label7 = New System.Windows.Forms.Label()
         Me.dtpPayrollDate = New System.Windows.Forms.DateTimePicker()
         Me.gridPayroll = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lnkSelectPeriod = New System.Windows.Forms.LinkLabel()
         Me.numCompanyCode = New System.Windows.Forms.NumericUpDown()
@@ -53,12 +59,7 @@ Partial Class BankFileTextFormatForm
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnExportExcel = New System.Windows.Forms.Button()
         CType(Me.gridPayroll, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         CType(Me.numCompanyCode, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -159,6 +160,52 @@ Partial Class BankFileTextFormatForm
         Me.gridPayroll.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.gridPayroll.Size = New System.Drawing.Size(636, 262)
         Me.gridPayroll.TabIndex = 0
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "IsSelected"
+        Me.Column1.HeaderText = ""
+        Me.Column1.Name = "Column1"
+        Me.Column1.Width = 24
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "CompanyName"
+        Me.Column6.HeaderText = "Company Name"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "AccountNumber"
+        Me.Column2.HeaderText = "Account Number"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "LastName"
+        Me.Column3.HeaderText = "Last Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "FirstName"
+        Me.Column4.HeaderText = "First Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Amount"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column5.HeaderText = "Amount"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
         '
         'Panel1
         '
@@ -272,6 +319,7 @@ Partial Class BankFileTextFormatForm
         '
         'Panel3
         '
+        Me.Panel3.Controls.Add(Me.btnExportExcel)
         Me.Panel3.Controls.Add(Me.btnClose)
         Me.Panel3.Controls.Add(Me.btnExport)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -353,51 +401,15 @@ Partial Class BankFileTextFormatForm
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
         '
-        'Column1
+        'btnExportExcel
         '
-        Me.Column1.DataPropertyName = "IsSelected"
-        Me.Column1.HeaderText = ""
-        Me.Column1.Name = "Column1"
-        Me.Column1.Width = 24
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "CompanyName"
-        Me.Column6.HeaderText = "Company Name"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "AccountNumber"
-        Me.Column2.HeaderText = "Account Number"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "LastName"
-        Me.Column3.HeaderText = "Last Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "FirstName"
-        Me.Column4.HeaderText = "First Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Amount"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle1.Format = "N2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle1
-        Me.Column5.HeaderText = "Amount"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
+        Me.btnExportExcel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnExportExcel.Location = New System.Drawing.Point(12, 7)
+        Me.btnExportExcel.Name = "btnExportExcel"
+        Me.btnExportExcel.Size = New System.Drawing.Size(76, 23)
+        Me.btnExportExcel.TabIndex = 2
+        Me.btnExportExcel.Text = "Export Excel"
+        Me.btnExportExcel.UseVisualStyleBackColor = True
         '
         'BankFileTextFormatForm
         '
@@ -461,4 +473,5 @@ Partial Class BankFileTextFormatForm
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
     Friend WithEvents Column4 As DataGridViewTextBoxColumn
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
+    Friend WithEvents btnExportExcel As Button
 End Class

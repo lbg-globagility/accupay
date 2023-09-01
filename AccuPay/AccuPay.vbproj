@@ -428,6 +428,12 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Reports\Reports\Bank File\BankFileCompanySelector.Designer.vb">
+      <DependentUpon>BankFileCompanySelector.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Reports\Bank File\BankFileCompanySelector.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Bank File\BankFileHeaderModel.vb" />
     <Compile Include="Reports\Reports\Bank File\BankFileHeaderDataManager.vb" />
     <Compile Include="Reports\Reports\Bank File\BankFileModel.vb" />
@@ -1704,6 +1710,9 @@
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
+    <EmbeddedResource Include="Reports\Reports\Bank File\BankFileCompanySelector.resx">
+      <DependentUpon>BankFileCompanySelector.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\Bank File\BankFileTextFormatForm.resx">
       <DependentUpon>BankFileTextFormatForm.vb</DependentUpon>
     </EmbeddedResource>

@@ -6,6 +6,7 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
+Imports OfficeOpenXml
 
 Public Class BankFileTextFormatForm
     Private Const THOUSAND_VALUE As Integer = 1000
@@ -293,6 +294,88 @@ Public Class BankFileTextFormatForm
 
         chkSelectAll.Checked = True
 
+    End Sub
+
+    Private Sub btnExportExcel_Click(sender As Object, e As EventArgs) Handles btnExportExcel.Click
+
+        Dim models = gridPayroll.Rows.OfType(Of DataGridViewRow).
+            Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
+            Where(Function(p) p.IsSelected).
+            ToList()
+
+        Dim groupCompany = models.GroupBy(Function(t) t.CompanyName).ToList()
+        Dim companyNames = groupCompany.Select(Function(t) t.FirstOrDefault().CompanyName).ToArray()
+
+        If companyNames.Any() AndAlso companyNames.Count > 1 Then
+            Dim form = New BankFileCompanySelector(companyNames:=companyNames)
+            If form.ShowDialog() = DialogResult.OK Then
+                If Not form.IsAll Then
+                    models = models.
+                        Where(Function(t) t.CompanyName = form.SelectedCompanyName).
+                        ToList()
+                End If
+            ElseIf form.ShowDialog() = DialogResult.Cancel Then
+                Return
+            End If
+        End If
+
+        Dim now = DateTime.Now.ToString("HHmm")
+        Dim payrollDate = dtpPayrollDate.Value.ToString("MMddyy")
+
+        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName:=$"BankFile_{payrollDate}~{now}", ".xlsx")
+
+        If saveFileDialogHelperOutPut.IsSuccess = False Then
+            Return
+        End If
+
+        Using excel = New ExcelPackage(newFile:=saveFileDialogHelperOutPut.FileInfo)
+            Dim defaultWorksheet = excel.Workbook.
+                Worksheets.
+                OfType(Of ExcelWorksheet).
+                FirstOrDefault()
+            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add(Name:="Sheet1")
+
+            Dim initialRowIndex = 1
+            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Company Code"
+            defaultWorksheet.Cells(initialRowIndex, 2).Value = numCompanyCode.Value.ToString("00000")
+            defaultWorksheet.Cells(initialRowIndex, 4).Value = "Payroll Date"
+            defaultWorksheet.Cells(initialRowIndex, 5).Value = dtpPayrollDate.Value.ToShortDateString()
+            initialRowIndex += 1
+
+            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Funding Account No."
+            defaultWorksheet.Cells(initialRowIndex, 2).Value = numFundingAccountNo.Value.ToString("0000000000")
+            defaultWorksheet.Cells(initialRowIndex, 4).Value = "Presenting Office"
+            defaultWorksheet.Cells(initialRowIndex, 5).Value = numPresentingOffice.Value.ToString("000")
+            initialRowIndex += 1
+
+            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Ceiling Amount"
+            defaultWorksheet.Cells(initialRowIndex, 2).Value = numCeilingAmount.Value.ToString("N")
+            defaultWorksheet.Cells(initialRowIndex, 4).Value = "Batch No."
+            defaultWorksheet.Cells(initialRowIndex, 5).Value = numBatchNo.Value.ToString("00")
+            initialRowIndex += 2
+
+            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Company Name"
+            defaultWorksheet.Cells(initialRowIndex, 2).Value = "Account No."
+            defaultWorksheet.Cells(initialRowIndex, 3).Value = "Last Name"
+            defaultWorksheet.Cells(initialRowIndex, 4).Value = "First Name"
+            defaultWorksheet.Cells(initialRowIndex, 5).Value = "Amount"
+            initialRowIndex += 1
+
+            Dim rowIndex = initialRowIndex
+            For Each model In models
+                defaultWorksheet.Cells(rowIndex, 1).Value = model.CompanyName
+                defaultWorksheet.Cells(rowIndex, 2).Value = model.AccountNumber
+                defaultWorksheet.Cells(rowIndex, 3).Value = model.LastName
+                defaultWorksheet.Cells(rowIndex, 4).Value = model.FirstName
+                defaultWorksheet.Cells(rowIndex, 5).Value = model.Amount.ToString("N")
+
+                rowIndex += 1
+            Next
+
+            excel.Save()
+        End Using
+
+        Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
     End Sub
 
 End Class
