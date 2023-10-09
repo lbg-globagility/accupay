@@ -40,10 +40,10 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -123,6 +123,7 @@ Partial Class EmployeeForm
         Me.txtEmpIDChk = New System.Windows.Forms.TextBox()
         Me.tbpEmployee = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.LabelResignedDate = New System.Windows.Forms.TextBox()
         Me.chkOvertimeOverride = New System.Windows.Forms.CheckBox()
         Me.chkGracePeriodAsBuffer = New System.Windows.Forms.CheckBox()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -520,13 +521,13 @@ Partial Class EmployeeForm
         Me.dtpbonstartdate = New System.Windows.Forms.DateTimePicker()
         Me.txtFNameBon = New System.Windows.Forms.TextBox()
         Me.dgvempbon = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Frequency = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn111 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewComboBoxColumn2 = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DataGridViewTextBoxColumn112 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewComboBoxColumn3 = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DataGridViewDateTimeInputColumn1 = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.DataGridViewDateTimeInputColumn2 = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.DataGridViewTextBoxColumn113 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label184 = New System.Windows.Forms.Label()
         Me.Label179 = New System.Windows.Forms.Label()
         Me.cbobontype = New System.Windows.Forms.ComboBox()
@@ -546,8 +547,6 @@ Partial Class EmployeeForm
         Me.tsbtnDelBon = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityBonusToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.imglstQuestMark = New System.Windows.Forms.ImageList(Me.components)
-        Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.imglstchklist = New System.Windows.Forms.ImageList(Me.components)
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.SaveFileDialog1 = New System.Windows.Forms.SaveFileDialog()
@@ -569,6 +568,73 @@ Partial Class EmployeeForm
         Me.Label29 = New System.Windows.Forms.Label()
         Me.TextBox17 = New System.Windows.Forms.TextBox()
         Me.dgvEmp = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colstartdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OvertimeOverride = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.slbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.mlbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.slallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.mlallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.slpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.mlpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.fstatRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AlphaExempted = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.WorkDaysPerYear = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DayOfRest = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ATMNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BankName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OtherPayP = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OtherLeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OtherLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcSpecialHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcNightDiff = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcNightDiffOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcRestDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalcRestDayOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LateGracePeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.GracePeriodAsBuffer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RevealInPayroll = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AgencyName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AgencyRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BranchID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BPIInsuranceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Last = New System.Windows.Forms.LinkLabel()
         Me.Nxt = New System.Windows.Forms.LinkLabel()
         Me.Prev = New System.Windows.Forms.LinkLabel()
@@ -578,6 +644,7 @@ Partial Class EmployeeForm
         Me.Button3 = New System.Windows.Forms.Button()
         Me.bgworkImporting = New System.ComponentModel.BackgroundWorker()
         Me.Panel7 = New System.Windows.Forms.Panel()
+        Me.Label21 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -655,6 +722,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn75 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn76 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn77 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewComboBoxColumn1 = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.DataGridViewTextBoxColumn78 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn79 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn80 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -663,6 +731,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn83 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn84 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn85 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewButtonColumn1 = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.DataGridViewTextBoxColumn86 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn87 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn88 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -688,9 +757,15 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn108 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn109 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn110 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn111 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn112 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn113 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_Frequency = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.DataGridViewTextBoxColumn114 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn115 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn116 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -792,73 +867,6 @@ Partial Class EmployeeForm
         Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colstartdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OvertimeOverride = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.slbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.mlbalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.slallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.mlallowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column33 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.slpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.mlpayp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.fstatRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AlphaExempted = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.WorkDaysPerYear = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DayOfRest = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ATMNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BankName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OtherPayP = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OtherLeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OtherLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcSpecialHoliday = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcNightDiff = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcNightDiffOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcRestDay = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CalcRestDayOT = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LateGracePeriod = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.GracePeriodAsBuffer = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RevealInPayroll = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AgencyName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AgencyRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BranchID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BPIInsuranceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -914,7 +922,6 @@ Partial Class EmployeeForm
         CType(Me.pbEmpPicAwar, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvempawar, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip2.SuspendLayout
-        Me.Panel3.SuspendLayout
         CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip20.SuspendLayout
@@ -989,7 +996,7 @@ Partial Class EmployeeForm
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(8, 126)
+        Me.Label3.Location = New System.Drawing.Point(8, 154)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(54, 13)
         Me.Label3.TabIndex = 6
@@ -997,7 +1004,7 @@ Partial Class EmployeeForm
         '
         'txtFName
         '
-        Me.txtFName.Location = New System.Drawing.Point(128, 171)
+        Me.txtFName.Location = New System.Drawing.Point(128, 199)
         Me.txtFName.MaxLength = 100
         Me.txtFName.Name = "txtFName"
         Me.txtFName.Size = New System.Drawing.Size(168, 20)
@@ -1006,7 +1013,7 @@ Partial Class EmployeeForm
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(8, 179)
+        Me.Label4.Location = New System.Drawing.Point(8, 207)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(57, 13)
         Me.Label4.TabIndex = 6
@@ -1014,7 +1021,7 @@ Partial Class EmployeeForm
         '
         'txtLName
         '
-        Me.txtLName.Location = New System.Drawing.Point(128, 227)
+        Me.txtLName.Location = New System.Drawing.Point(128, 255)
         Me.txtLName.MaxLength = 100
         Me.txtLName.Name = "txtLName"
         Me.txtLName.Size = New System.Drawing.Size(168, 20)
@@ -1023,7 +1030,7 @@ Partial Class EmployeeForm
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(8, 235)
+        Me.Label5.Location = New System.Drawing.Point(8, 263)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(58, 13)
         Me.Label5.TabIndex = 6
@@ -1031,7 +1038,7 @@ Partial Class EmployeeForm
         '
         'txtMName
         '
-        Me.txtMName.Location = New System.Drawing.Point(128, 199)
+        Me.txtMName.Location = New System.Drawing.Point(128, 227)
         Me.txtMName.MaxLength = 100
         Me.txtMName.Name = "txtMName"
         Me.txtMName.Size = New System.Drawing.Size(168, 20)
@@ -1040,7 +1047,7 @@ Partial Class EmployeeForm
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(8, 207)
+        Me.Label6.Location = New System.Drawing.Point(8, 235)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(69, 13)
         Me.Label6.TabIndex = 6
@@ -1048,7 +1055,7 @@ Partial Class EmployeeForm
         '
         'txtNName
         '
-        Me.txtNName.Location = New System.Drawing.Point(128, 255)
+        Me.txtNName.Location = New System.Drawing.Point(128, 283)
         Me.txtNName.MaxLength = 50
         Me.txtNName.Name = "txtNName"
         Me.txtNName.Size = New System.Drawing.Size(168, 20)
@@ -1057,7 +1064,7 @@ Partial Class EmployeeForm
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(8, 263)
+        Me.Label7.Location = New System.Drawing.Point(8, 291)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(55, 13)
         Me.Label7.TabIndex = 6
@@ -1238,7 +1245,7 @@ Partial Class EmployeeForm
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(8, 154)
+        Me.Label19.Location = New System.Drawing.Point(8, 182)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(42, 13)
         Me.Label19.TabIndex = 15
@@ -1401,7 +1408,6 @@ Partial Class EmployeeForm
         'SplitContainer2
         '
         Me.SplitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.SplitContainer2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
         Me.SplitContainer2.IsSplitterFixed = True
@@ -1411,7 +1417,7 @@ Partial Class EmployeeForm
         '
         'SplitContainer2.Panel1
         '
-        Me.SplitContainer2.Panel1.AutoScroll = True
+        Me.SplitContainer2.Panel1.Controls.Add(Me.LabelResignedDate)
         Me.SplitContainer2.Panel1.Controls.Add(Me.chkOvertimeOverride)
         Me.SplitContainer2.Panel1.Controls.Add(Me.chkGracePeriodAsBuffer)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtFName)
@@ -1503,18 +1509,23 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label365)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label32)
         Me.SplitContainer2.Panel1MinSize = 0
-        '
-        'SplitContainer2.Panel2
-        '
-        Me.SplitContainer2.Panel2.AutoScroll = True
-        Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
-        Me.SplitContainer2.Panel2.Enabled = False
         Me.SplitContainer2.Panel2Collapsed = True
         Me.SplitContainer2.Panel2MinSize = 0
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
         Me.SplitContainer2.SplitterDistance = 418
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
+        '
+        'LabelResignedDate
+        '
+        Me.LabelResignedDate.BackColor = System.Drawing.Color.White
+        Me.LabelResignedDate.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.LabelResignedDate.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelResignedDate.Location = New System.Drawing.Point(128, 86)
+        Me.LabelResignedDate.Name = "LabelResignedDate"
+        Me.LabelResignedDate.ReadOnly = True
+        Me.LabelResignedDate.Size = New System.Drawing.Size(168, 15)
+        Me.LabelResignedDate.TabIndex = 546
         '
         'chkOvertimeOverride
         '
@@ -1541,14 +1552,14 @@ Partial Class EmployeeForm
         '
         Me.Panel4.Controls.Add(Me.rdFMale)
         Me.Panel4.Controls.Add(Me.rdMale)
-        Me.Panel4.Location = New System.Drawing.Point(128, 142)
+        Me.Panel4.Location = New System.Drawing.Point(128, 170)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(168, 28)
         Me.Panel4.TabIndex = 542
         '
         'BPIinsuranceText
         '
-        Me.BPIinsuranceText.Location = New System.Drawing.Point(128, 614)
+        Me.BPIinsuranceText.Location = New System.Drawing.Point(128, 642)
         Me.BPIinsuranceText.Name = "BPIinsuranceText"
         Me.BPIinsuranceText.Size = New System.Drawing.Size(168, 20)
         Me.BPIinsuranceText.TabIndex = 541
@@ -1556,7 +1567,7 @@ Partial Class EmployeeForm
         'BPIinsuranceLabel
         '
         Me.BPIinsuranceLabel.AutoSize = True
-        Me.BPIinsuranceLabel.Location = New System.Drawing.Point(8, 622)
+        Me.BPIinsuranceLabel.Location = New System.Drawing.Point(8, 650)
         Me.BPIinsuranceLabel.Name = "BPIinsuranceLabel"
         Me.BPIinsuranceLabel.Size = New System.Drawing.Size(74, 13)
         Me.BPIinsuranceLabel.TabIndex = 539
@@ -1566,7 +1577,7 @@ Partial Class EmployeeForm
         '
         Me.dtpRegularizationDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtpRegularizationDate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpRegularizationDate.Location = New System.Drawing.Point(128, 364)
+        Me.dtpRegularizationDate.Location = New System.Drawing.Point(128, 392)
         Me.dtpRegularizationDate.Name = "dtpRegularizationDate"
         Me.dtpRegularizationDate.ShowCheckBox = True
         Me.dtpRegularizationDate.Size = New System.Drawing.Size(168, 20)
@@ -1576,7 +1587,7 @@ Partial Class EmployeeForm
         '
         Me.dtpEvaluationDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dtpEvaluationDate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpEvaluationDate.Location = New System.Drawing.Point(128, 336)
+        Me.dtpEvaluationDate.Location = New System.Drawing.Point(128, 364)
         Me.dtpEvaluationDate.Name = "dtpEvaluationDate"
         Me.dtpEvaluationDate.ShowCheckBox = True
         Me.dtpEvaluationDate.Size = New System.Drawing.Size(168, 20)
@@ -1636,7 +1647,7 @@ Partial Class EmployeeForm
         Me.AddBranchLinkButton.AutoSize = True
         Me.AddBranchLinkButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.AddBranchLinkButton.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.AddBranchLinkButton.Location = New System.Drawing.Point(300, 588)
+        Me.AddBranchLinkButton.Location = New System.Drawing.Point(300, 616)
         Me.AddBranchLinkButton.Name = "AddBranchLinkButton"
         Me.AddBranchLinkButton.Size = New System.Drawing.Size(33, 16)
         Me.AddBranchLinkButton.TabIndex = 520
@@ -1647,7 +1658,7 @@ Partial Class EmployeeForm
         '
         Me.BranchComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.BranchComboBox.DropDownWidth = 400
-        Me.BranchComboBox.Location = New System.Drawing.Point(128, 586)
+        Me.BranchComboBox.Location = New System.Drawing.Point(128, 614)
         Me.BranchComboBox.Name = "BranchComboBox"
         Me.BranchComboBox.Size = New System.Drawing.Size(168, 21)
         Me.BranchComboBox.TabIndex = 538
@@ -1655,7 +1666,7 @@ Partial Class EmployeeForm
         'BranchLabel
         '
         Me.BranchLabel.AutoSize = True
-        Me.BranchLabel.Location = New System.Drawing.Point(8, 594)
+        Me.BranchLabel.Location = New System.Drawing.Point(8, 622)
         Me.BranchLabel.Name = "BranchLabel"
         Me.BranchLabel.Size = New System.Drawing.Size(41, 13)
         Me.BranchLabel.TabIndex = 537
@@ -1736,7 +1747,7 @@ Partial Class EmployeeForm
         'Label363
         '
         Me.Label363.AutoSize = True
-        Me.Label363.Location = New System.Drawing.Point(8, 344)
+        Me.Label363.Location = New System.Drawing.Point(8, 372)
         Me.Label363.Name = "Label363"
         Me.Label363.Size = New System.Drawing.Size(95, 13)
         Me.Label363.TabIndex = 526
@@ -1745,7 +1756,7 @@ Partial Class EmployeeForm
         'Label362
         '
         Me.Label362.AutoSize = True
-        Me.Label362.Location = New System.Drawing.Point(8, 372)
+        Me.Label362.Location = New System.Drawing.Point(8, 400)
         Me.Label362.Name = "Label362"
         Me.Label362.Size = New System.Drawing.Size(112, 13)
         Me.Label362.TabIndex = 525
@@ -1762,7 +1773,7 @@ Partial Class EmployeeForm
         Me.GroupBox2.Controls.Add(Me.Label353)
         Me.GroupBox2.Controls.Add(Me.Label359)
         Me.GroupBox2.Controls.Add(Me.Label360)
-        Me.GroupBox2.Location = New System.Drawing.Point(11, 426)
+        Me.GroupBox2.Location = New System.Drawing.Point(11, 454)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(285, 148)
         Me.GroupBox2.TabIndex = 20
@@ -1864,7 +1875,7 @@ Partial Class EmployeeForm
         Me.cboDayOfRest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboDayOfRest.FormattingEnabled = True
         Me.cboDayOfRest.Items.AddRange(New Object() {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"})
-        Me.cboDayOfRest.Location = New System.Drawing.Point(128, 308)
+        Me.cboDayOfRest.Location = New System.Drawing.Point(128, 336)
         Me.cboDayOfRest.Name = "cboDayOfRest"
         Me.cboDayOfRest.Size = New System.Drawing.Size(168, 21)
         Me.cboDayOfRest.TabIndex = 15
@@ -1872,7 +1883,7 @@ Partial Class EmployeeForm
         'Label352
         '
         Me.Label352.AutoSize = True
-        Me.Label352.Location = New System.Drawing.Point(8, 316)
+        Me.Label352.Location = New System.Drawing.Point(8, 344)
         Me.Label352.Name = "Label352"
         Me.Label352.Size = New System.Drawing.Size(51, 13)
         Me.Label352.TabIndex = 511
@@ -1919,7 +1930,7 @@ Partial Class EmployeeForm
         'Label211
         '
         Me.Label211.AutoSize = True
-        Me.Label211.Location = New System.Drawing.Point(8, 98)
+        Me.Label211.Location = New System.Drawing.Point(8, 126)
         Me.Label211.Name = "Label211"
         Me.Label211.Size = New System.Drawing.Size(53, 13)
         Me.Label211.TabIndex = 358
@@ -1930,7 +1941,7 @@ Partial Class EmployeeForm
         Me.Label212.AutoSize = True
         Me.Label212.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label212.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label212.Location = New System.Drawing.Point(59, 89)
+        Me.Label212.Location = New System.Drawing.Point(59, 117)
         Me.Label212.Name = "Label212"
         Me.Label212.Size = New System.Drawing.Size(18, 24)
         Me.Label212.TabIndex = 359
@@ -1977,7 +1988,7 @@ Partial Class EmployeeForm
         'dtpempstartdate
         '
         Me.dtpempstartdate.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.dtpempstartdate.Location = New System.Drawing.Point(128, 90)
+        Me.dtpempstartdate.Location = New System.Drawing.Point(128, 118)
         Me.dtpempstartdate.Name = "dtpempstartdate"
         Me.dtpempstartdate.Size = New System.Drawing.Size(168, 20)
         Me.dtpempstartdate.TabIndex = 3
@@ -2260,7 +2271,7 @@ Partial Class EmployeeForm
         'Label27
         '
         Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(8, 288)
+        Me.Label27.Location = New System.Drawing.Point(8, 316)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(71, 13)
         Me.Label27.TabIndex = 112
@@ -2271,7 +2282,7 @@ Partial Class EmployeeForm
         Me.Label23.AutoSize = True
         Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label23.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label23.Location = New System.Drawing.Point(62, 226)
+        Me.Label23.Location = New System.Drawing.Point(62, 254)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(18, 24)
         Me.Label23.TabIndex = 105
@@ -2282,7 +2293,7 @@ Partial Class EmployeeForm
         Me.Label22.AutoSize = True
         Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label22.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label22.Location = New System.Drawing.Point(62, 170)
+        Me.Label22.Location = New System.Drawing.Point(62, 198)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(18, 24)
         Me.Label22.TabIndex = 104
@@ -2291,7 +2302,7 @@ Partial Class EmployeeForm
         'cboMaritStat
         '
         Me.cboMaritStat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboMaritStat.Location = New System.Drawing.Point(128, 280)
+        Me.cboMaritStat.Location = New System.Drawing.Point(128, 308)
         Me.cboMaritStat.Name = "cboMaritStat"
         Me.cboMaritStat.Size = New System.Drawing.Size(168, 21)
         Me.cboMaritStat.TabIndex = 12
@@ -2302,7 +2313,7 @@ Partial Class EmployeeForm
         Me.cboSalut.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cboSalut.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboSalut.FormattingEnabled = True
-        Me.cboSalut.Location = New System.Drawing.Point(128, 118)
+        Me.cboSalut.Location = New System.Drawing.Point(128, 146)
         Me.cboSalut.MaxLength = 50
         Me.cboSalut.Name = "cboSalut"
         Me.cboSalut.Size = New System.Drawing.Size(168, 21)
@@ -2341,7 +2352,7 @@ Partial Class EmployeeForm
         Me.Label124.AutoSize = True
         Me.Label124.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label124.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label124.Location = New System.Drawing.Point(47, 145)
+        Me.Label124.Location = New System.Drawing.Point(47, 173)
         Me.Label124.Name = "Label124"
         Me.Label124.Size = New System.Drawing.Size(18, 24)
         Me.Label124.TabIndex = 158
@@ -2386,7 +2397,7 @@ Partial Class EmployeeForm
         Me.Label130.AutoSize = True
         Me.Label130.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label130.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label130.Location = New System.Drawing.Point(76, 279)
+        Me.Label130.Location = New System.Drawing.Point(76, 307)
         Me.Label130.Name = "Label130"
         Me.Label130.Size = New System.Drawing.Size(18, 24)
         Me.Label130.TabIndex = 161
@@ -5320,28 +5331,6 @@ Partial Class EmployeeForm
         'Panel3
         '
         Me.Panel3.AutoScroll = True
-        Me.Panel3.Controls.Add(Me.Label342)
-        Me.Panel3.Controls.Add(Me.pbEmpPicBon)
-        Me.Panel3.Controls.Add(Me.LinkLabel1)
-        Me.Panel3.Controls.Add(Me.Label218)
-        Me.Panel3.Controls.Add(Me.Label177)
-        Me.Panel3.Controls.Add(Me.lblbonenddate)
-        Me.Panel3.Controls.Add(Me.Label178)
-        Me.Panel3.Controls.Add(Me.lblbonstartdate)
-        Me.Panel3.Controls.Add(Me.dtpbonenddate)
-        Me.Panel3.Controls.Add(Me.txtEmpIDBon)
-        Me.Panel3.Controls.Add(Me.dtpbonstartdate)
-        Me.Panel3.Controls.Add(Me.txtFNameBon)
-        Me.Panel3.Controls.Add(Me.dgvempbon)
-        Me.Panel3.Controls.Add(Me.Label184)
-        Me.Panel3.Controls.Add(Me.Label179)
-        Me.Panel3.Controls.Add(Me.cbobontype)
-        Me.Panel3.Controls.Add(Me.Label180)
-        Me.Panel3.Controls.Add(Me.Label183)
-        Me.Panel3.Controls.Add(Me.Label181)
-        Me.Panel3.Controls.Add(Me.cbobonfreq)
-        Me.Panel3.Controls.Add(Me.txtbonamt)
-        Me.Panel3.Controls.Add(Me.Label182)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel3.Location = New System.Drawing.Point(3, 28)
         Me.Panel3.Name = "Panel3"
@@ -5487,149 +5476,152 @@ Partial Class EmployeeForm
         DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
         Me.dgvempbon.ColumnHeadersHeight = 34
-        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID})
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle18
+        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn111, Me.DataGridViewComboBoxColumn2, Me.DataGridViewTextBoxColumn112, Me.DataGridViewComboBoxColumn3, Me.DataGridViewDateTimeInputColumn1, Me.DataGridViewDateTimeInputColumn2, Me.DataGridViewTextBoxColumn113})
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle19
         Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempbon.Location = New System.Drawing.Point(32, 225)
         Me.dgvempbon.MultiSelect = False
         Me.dgvempbon.Name = "dgvempbon"
         Me.dgvempbon.ReadOnly = True
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle20
         Me.dgvempbon.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempbon.Size = New System.Drawing.Size(783, 345)
         Me.dgvempbon.TabIndex = 5
         '
-        'bon_RowID
+        'DataGridViewTextBoxColumn111
         '
-        Me.bon_RowID.HeaderText = "RowID"
-        Me.bon_RowID.Name = "bon_RowID"
-        Me.bon_RowID.ReadOnly = True
-        Me.bon_RowID.Visible = False
-        Me.bon_RowID.Width = 50
+        Me.DataGridViewTextBoxColumn111.HeaderText = "Status"
+        Me.DataGridViewTextBoxColumn111.Name = "DataGridViewTextBoxColumn111"
+        Me.DataGridViewTextBoxColumn111.ReadOnly = True
+        Me.DataGridViewTextBoxColumn111.Visible = False
+        Me.DataGridViewTextBoxColumn111.Width = 117
         '
-        'bon_Type
+        'DataGridViewComboBoxColumn2
         '
-        Me.bon_Type.HeaderText = "Type"
-        Me.bon_Type.Name = "bon_Type"
-        Me.bon_Type.ReadOnly = True
-        Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.bon_Type.Width = 180
+        Me.DataGridViewComboBoxColumn2.HeaderText = "Type"
+        Me.DataGridViewComboBoxColumn2.Name = "DataGridViewComboBoxColumn2"
+        Me.DataGridViewComboBoxColumn2.ReadOnly = True
+        Me.DataGridViewComboBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewComboBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewComboBoxColumn2.Width = 180
         '
-        'bon_Amount
+        'DataGridViewTextBoxColumn112
         '
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle17
-        Me.bon_Amount.HeaderText = "Amount"
-        Me.bon_Amount.Name = "bon_Amount"
-        Me.bon_Amount.ReadOnly = True
-        Me.bon_Amount.Width = 180
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn112.DefaultCellStyle = DataGridViewCellStyle17
+        Me.DataGridViewTextBoxColumn112.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn112.Name = "DataGridViewTextBoxColumn112"
+        Me.DataGridViewTextBoxColumn112.ReadOnly = True
+        Me.DataGridViewTextBoxColumn112.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn112.Visible = False
+        Me.DataGridViewTextBoxColumn112.Width = 190
         '
-        'bon_Frequency
+        'DataGridViewComboBoxColumn3
         '
-        Me.bon_Frequency.HeaderText = "Frequency"
-        Me.bon_Frequency.Name = "bon_Frequency"
-        Me.bon_Frequency.ReadOnly = True
-        Me.bon_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Frequency.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.bon_Frequency.Width = 180
+        Me.DataGridViewComboBoxColumn3.HeaderText = "Frequency"
+        Me.DataGridViewComboBoxColumn3.Name = "DataGridViewComboBoxColumn3"
+        Me.DataGridViewComboBoxColumn3.ReadOnly = True
+        Me.DataGridViewComboBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewComboBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewComboBoxColumn3.Width = 180
         '
-        'bon_Start
-        '
-        '
-        '
-        '
-        Me.bon_Start.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
-        Me.bon_Start.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
-        Me.bon_Start.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.bon_Start.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
-        Me.bon_Start.HeaderText = "Effective start date"
-        Me.bon_Start.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
-        '
-        '
-        '
-        Me.bon_Start.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.bon_Start.MonthCalendar.BackgroundStyle.Class = ""
-        Me.bon_Start.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        '
-        '
-        '
-        Me.bon_Start.MonthCalendar.CommandsBackgroundStyle.Class = ""
-        Me.bon_Start.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.bon_Start.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
-        Me.bon_Start.MonthCalendar.MarkedDates = New Date(-1) {}
-        Me.bon_Start.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.bon_Start.MonthCalendar.NavigationBackgroundStyle.Class = ""
-        Me.bon_Start.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.bon_Start.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
-        Me.bon_Start.Name = "bon_Start"
-        Me.bon_Start.ReadOnly = True
-        Me.bon_Start.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'bon_End
+        'DataGridViewDateTimeInputColumn1
         '
         '
         '
         '
-        Me.bon_End.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
-        Me.bon_End.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
-        Me.bon_End.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.bon_End.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
-        Me.bon_End.HeaderText = "Effective end date"
-        Me.bon_End.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        Me.DataGridViewDateTimeInputColumn1.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.DataGridViewDateTimeInputColumn1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.DataGridViewDateTimeInputColumn1.HeaderText = "Effective start date"
+        Me.DataGridViewDateTimeInputColumn1.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
         '
         '
         '
-        Me.bon_End.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
         '
         '
         '
-        Me.bon_End.MonthCalendar.BackgroundStyle.Class = ""
-        Me.bon_End.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.BackgroundStyle.Class = ""
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         '
         '
         '
-        Me.bon_End.MonthCalendar.CommandsBackgroundStyle.Class = ""
-        Me.bon_End.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.bon_End.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
-        Me.bon_End.MonthCalendar.MarkedDates = New Date(-1) {}
-        Me.bon_End.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.DisplayMonth = New Date(2023, 10, 1, 0, 0, 0, 0)
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
         '
         '
         '
-        Me.bon_End.MonthCalendar.NavigationBackgroundStyle.Class = ""
-        Me.bon_End.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.bon_End.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
-        Me.bon_End.Name = "bon_End"
-        Me.bon_End.ReadOnly = True
-        Me.bon_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.DataGridViewDateTimeInputColumn1.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.DataGridViewDateTimeInputColumn1.Name = "DataGridViewDateTimeInputColumn1"
+        Me.DataGridViewDateTimeInputColumn1.ReadOnly = True
+        Me.DataGridViewDateTimeInputColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
-        'bon_ProdID
+        'DataGridViewDateTimeInputColumn2
         '
-        Me.bon_ProdID.HeaderText = "ProductID"
-        Me.bon_ProdID.Name = "bon_ProdID"
-        Me.bon_ProdID.ReadOnly = True
-        Me.bon_ProdID.Visible = False
+        '
+        '
+        '
+        Me.DataGridViewDateTimeInputColumn2.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.DataGridViewDateTimeInputColumn2.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.DataGridViewDateTimeInputColumn2.HeaderText = "Effective end date"
+        Me.DataGridViewDateTimeInputColumn2.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        '
+        '
+        '
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.BackgroundStyle.Class = ""
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        '
+        '
+        '
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.DisplayMonth = New Date(2023, 10, 1, 0, 0, 0, 0)
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.DataGridViewDateTimeInputColumn2.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.DataGridViewDateTimeInputColumn2.Name = "DataGridViewDateTimeInputColumn2"
+        Me.DataGridViewDateTimeInputColumn2.ReadOnly = True
+        Me.DataGridViewDateTimeInputColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'DataGridViewTextBoxColumn113
+        '
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn113.DefaultCellStyle = DataGridViewCellStyle18
+        Me.DataGridViewTextBoxColumn113.HeaderText = "Comments"
+        Me.DataGridViewTextBoxColumn113.MaxInputLength = 499
+        Me.DataGridViewTextBoxColumn113.Name = "DataGridViewTextBoxColumn113"
+        Me.DataGridViewTextBoxColumn113.ReadOnly = True
+        Me.DataGridViewTextBoxColumn113.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn113.Visible = False
+        Me.DataGridViewTextBoxColumn113.Width = 190
         '
         'Label184
         '
@@ -5802,80 +5794,6 @@ Partial Class EmployeeForm
         Me.imglstQuestMark.ImageStream = CType(resources.GetObject("imglstQuestMark.ImageStream"), System.Windows.Forms.ImageListStreamer)
         Me.imglstQuestMark.TransparentColor = System.Drawing.Color.Transparent
         Me.imglstQuestMark.Images.SetKeyName(0, "question-mark-32.ico")
-        '
-        'ecert_DateIssued
-        '
-        '
-        '
-        '
-        Me.ecert_DateIssued.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
-        Me.ecert_DateIssued.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
-        Me.ecert_DateIssued.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_DateIssued.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
-        Me.ecert_DateIssued.HeaderText = "Date issued"
-        Me.ecert_DateIssued.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.Class = ""
-        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.Class = ""
-        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_DateIssued.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
-        Me.ecert_DateIssued.MonthCalendar.MarkedDates = New Date(-1) {}
-        Me.ecert_DateIssued.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.Class = ""
-        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_DateIssued.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
-        Me.ecert_DateIssued.Name = "ecert_DateIssued"
-        Me.ecert_DateIssued.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'ecert_Expiration
-        '
-        '
-        '
-        '
-        Me.ecert_Expiration.BackgroundStyle.BackColor = System.Drawing.SystemColors.Window
-        Me.ecert_Expiration.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
-        Me.ecert_Expiration.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_Expiration.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
-        Me.ecert_Expiration.HeaderText = "Date of expiration"
-        Me.ecert_Expiration.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.Class = ""
-        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.Class = ""
-        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_Expiration.MonthCalendar.DisplayMonth = New Date(2015, 5, 1, 0, 0, 0, 0)
-        Me.ecert_Expiration.MonthCalendar.MarkedDates = New Date(-1) {}
-        Me.ecert_Expiration.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
-        '
-        '
-        '
-        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.Class = ""
-        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.ecert_Expiration.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
-        Me.ecert_Expiration.Name = "ecert_Expiration"
-        Me.ecert_Expiration.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
         'imglstchklist
         '
@@ -6063,24 +5981,24 @@ Partial Class EmployeeForm
         Me.dgvEmp.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgvEmp.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvEmp.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvEmp.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle21
         Me.dgvEmp.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvEmp.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.Column1, Me.Column4, Me.Column2, Me.Column3, Me.Column21, Me.Column5, Me.Column31, Me.Column32, Me.Column6, Me.colstartdate, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column14, Me.Column19, Me.Column20, Me.Column22, Me.Column23, Me.OvertimeOverride, Me.Column25, Me.Column26, Me.Column27, Me.Column28, Me.Column29, Me.Column30, Me.Column34, Me.Column35, Me.slbalance, Me.mlbalance, Me.Column36, Me.slallowance, Me.mlallowance, Me.Column33, Me.slpayp, Me.mlpayp, Me.fstatRowID, Me.AlphaExempted, Me.WorkDaysPerYear, Me.DayOfRest, Me.ATMNo, Me.BankName, Me.OtherPayP, Me.OtherLeaveAllowance, Me.OtherLeaveBalance, Me.CalcHoliday, Me.CalcSpecialHoliday, Me.CalcNightDiff, Me.CalcNightDiffOT, Me.CalcRestDay, Me.CalcRestDayOT, Me.LateGracePeriod, Me.GracePeriodAsBuffer, Me.RevealInPayroll, Me.AgencyName, Me.AgencyRowID, Me.BranchID, Me.BPIInsuranceColumn, Me.Column37})
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle22
         Me.dgvEmp.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvEmp.Location = New System.Drawing.Point(2, 208)
         Me.dgvEmp.MultiSelect = False
@@ -6091,6 +6009,438 @@ Partial Class EmployeeForm
         Me.dgvEmp.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvEmp.Size = New System.Drawing.Size(350, 296)
         Me.dgvEmp.TabIndex = 101
+        '
+        'RowID
+        '
+        Me.RowID.HeaderText = "RowID"
+        Me.RowID.Name = "RowID"
+        Me.RowID.ReadOnly = True
+        Me.RowID.Visible = False
+        '
+        'Column1
+        '
+        Me.Column1.HeaderText = "Employee ID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.HeaderText = "Last Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.HeaderText = "First Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.HeaderText = "Middle Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column21
+        '
+        Me.Column21.HeaderText = "Surname"
+        Me.Column21.Name = "Column21"
+        Me.Column21.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.HeaderText = "Nickname"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column31
+        '
+        Me.Column31.HeaderText = "Marital Status"
+        Me.Column31.Name = "Column31"
+        Me.Column31.ReadOnly = True
+        '
+        'Column32
+        '
+        Me.Column32.HeaderText = "No. of Dependents"
+        Me.Column32.Name = "Column32"
+        Me.Column32.ReadOnly = True
+        Me.Column32.ToolTipText = "No. of Dependents"
+        '
+        'Column6
+        '
+        Me.Column6.HeaderText = "Birthdate"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'colstartdate
+        '
+        Me.colstartdate.HeaderText = "Start date"
+        Me.colstartdate.Name = "colstartdate"
+        Me.colstartdate.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.HeaderText = "Job Title"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column8
+        '
+        Me.Column8.HeaderText = "Position"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column9
+        '
+        Me.Column9.HeaderText = "Salutation"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        '
+        'Column10
+        '
+        Me.Column10.HeaderText = "TIN"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        '
+        'Column11
+        '
+        Me.Column11.HeaderText = "SSS No."
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        '
+        'Column12
+        '
+        Me.Column12.HeaderText = "PAGIBIG No."
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        '
+        'Column13
+        '
+        Me.Column13.HeaderText = "PhilHealth No."
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        '
+        'Column15
+        '
+        Me.Column15.HeaderText = "Work Phone No."
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        '
+        'Column16
+        '
+        Me.Column16.HeaderText = "Home Phone No."
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        '
+        'Column17
+        '
+        Me.Column17.HeaderText = "Mobile Phone No."
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        '
+        'Column18
+        '
+        Me.Column18.HeaderText = "Home address"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        '
+        'Column14
+        '
+        Me.Column14.HeaderText = "Email address"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        '
+        'Column19
+        '
+        Me.Column19.HeaderText = "Gender"
+        Me.Column19.Name = "Column19"
+        Me.Column19.ReadOnly = True
+        '
+        'Column20
+        '
+        Me.Column20.HeaderText = "Employment Status"
+        Me.Column20.Name = "Column20"
+        Me.Column20.ReadOnly = True
+        '
+        'Column22
+        '
+        Me.Column22.HeaderText = "Pay Frequency"
+        Me.Column22.Name = "Column22"
+        Me.Column22.ReadOnly = True
+        '
+        'Column23
+        '
+        Me.Column23.HeaderText = "UndertimeOverride"
+        Me.Column23.Name = "Column23"
+        Me.Column23.ReadOnly = True
+        Me.Column23.Visible = False
+        '
+        'OvertimeOverride
+        '
+        Me.OvertimeOverride.HeaderText = "OvertimeOverride"
+        Me.OvertimeOverride.Name = "OvertimeOverride"
+        Me.OvertimeOverride.ReadOnly = True
+        Me.OvertimeOverride.Visible = False
+        '
+        'Column25
+        '
+        Me.Column25.HeaderText = "Creation Date"
+        Me.Column25.Name = "Column25"
+        Me.Column25.ReadOnly = True
+        '
+        'Column26
+        '
+        Me.Column26.HeaderText = "Created by"
+        Me.Column26.Name = "Column26"
+        Me.Column26.ReadOnly = True
+        '
+        'Column27
+        '
+        Me.Column27.HeaderText = "Last Update"
+        Me.Column27.Name = "Column27"
+        Me.Column27.ReadOnly = True
+        '
+        'Column28
+        '
+        Me.Column28.HeaderText = "Last Update by"
+        Me.Column28.Name = "Column28"
+        Me.Column28.ReadOnly = True
+        '
+        'Column29
+        '
+        Me.Column29.HeaderText = "PositionID"
+        Me.Column29.Name = "Column29"
+        Me.Column29.ReadOnly = True
+        Me.Column29.Visible = False
+        '
+        'Column30
+        '
+        Me.Column30.HeaderText = "PayFrequencyID"
+        Me.Column30.Name = "Column30"
+        Me.Column30.ReadOnly = True
+        Me.Column30.Visible = False
+        '
+        'Column34
+        '
+        Me.Column34.HeaderText = "EmployeeType"
+        Me.Column34.Name = "Column34"
+        Me.Column34.ReadOnly = True
+        '
+        'Column35
+        '
+        Me.Column35.HeaderText = "LeaveBalance"
+        Me.Column35.Name = "Column35"
+        Me.Column35.ReadOnly = True
+        Me.Column35.Visible = False
+        '
+        'slbalance
+        '
+        Me.slbalance.HeaderText = "Sick leave balance"
+        Me.slbalance.Name = "slbalance"
+        Me.slbalance.ReadOnly = True
+        Me.slbalance.Visible = False
+        '
+        'mlbalance
+        '
+        Me.mlbalance.HeaderText = "Maternity leave balance"
+        Me.mlbalance.Name = "mlbalance"
+        Me.mlbalance.ReadOnly = True
+        Me.mlbalance.Visible = False
+        '
+        'Column36
+        '
+        Me.Column36.HeaderText = "LeaveAllowance"
+        Me.Column36.Name = "Column36"
+        Me.Column36.ReadOnly = True
+        Me.Column36.Visible = False
+        '
+        'slallowance
+        '
+        Me.slallowance.HeaderText = "Sick leave allowance"
+        Me.slallowance.Name = "slallowance"
+        Me.slallowance.ReadOnly = True
+        Me.slallowance.Visible = False
+        '
+        'mlallowance
+        '
+        Me.mlallowance.HeaderText = "Maternity leave allowance"
+        Me.mlallowance.Name = "mlallowance"
+        Me.mlallowance.ReadOnly = True
+        Me.mlallowance.Visible = False
+        '
+        'Column33
+        '
+        Me.Column33.HeaderText = "LeavePerPayPeriod"
+        Me.Column33.Name = "Column33"
+        Me.Column33.ReadOnly = True
+        Me.Column33.Visible = False
+        '
+        'slpayp
+        '
+        Me.slpayp.HeaderText = "Sick leave per pay period"
+        Me.slpayp.Name = "slpayp"
+        Me.slpayp.ReadOnly = True
+        Me.slpayp.Visible = False
+        '
+        'mlpayp
+        '
+        Me.mlpayp.HeaderText = "Maternity leavle per pay period"
+        Me.mlpayp.Name = "mlpayp"
+        Me.mlpayp.ReadOnly = True
+        Me.mlpayp.Visible = False
+        '
+        'fstatRowID
+        '
+        Me.fstatRowID.HeaderText = "flingstatusRowID"
+        Me.fstatRowID.Name = "fstatRowID"
+        Me.fstatRowID.ReadOnly = True
+        Me.fstatRowID.Visible = False
+        '
+        'AlphaExempted
+        '
+        Me.AlphaExempted.HeaderText = "Is included in Alpha list"
+        Me.AlphaExempted.Name = "AlphaExempted"
+        Me.AlphaExempted.ReadOnly = True
+        Me.AlphaExempted.Visible = False
+        '
+        'WorkDaysPerYear
+        '
+        Me.WorkDaysPerYear.HeaderText = "Work Days Per Year"
+        Me.WorkDaysPerYear.Name = "WorkDaysPerYear"
+        Me.WorkDaysPerYear.ReadOnly = True
+        '
+        'DayOfRest
+        '
+        Me.DayOfRest.HeaderText = "Rest Day"
+        Me.DayOfRest.Name = "DayOfRest"
+        Me.DayOfRest.ReadOnly = True
+        '
+        'ATMNo
+        '
+        Me.ATMNo.HeaderText = "ATM No."
+        Me.ATMNo.Name = "ATMNo"
+        Me.ATMNo.ReadOnly = True
+        '
+        'BankName
+        '
+        Me.BankName.HeaderText = "Bank Name"
+        Me.BankName.Name = "BankName"
+        Me.BankName.ReadOnly = True
+        '
+        'OtherPayP
+        '
+        Me.OtherPayP.HeaderText = "Other leave per pay period"
+        Me.OtherPayP.Name = "OtherPayP"
+        Me.OtherPayP.ReadOnly = True
+        '
+        'OtherLeaveAllowance
+        '
+        Me.OtherLeaveAllowance.HeaderText = "Other Leave Allowance"
+        Me.OtherLeaveAllowance.Name = "OtherLeaveAllowance"
+        Me.OtherLeaveAllowance.ReadOnly = True
+        '
+        'OtherLeaveBalance
+        '
+        Me.OtherLeaveBalance.HeaderText = "Other Leave Balance"
+        Me.OtherLeaveBalance.Name = "OtherLeaveBalance"
+        Me.OtherLeaveBalance.ReadOnly = True
+        '
+        'CalcHoliday
+        '
+        Me.CalcHoliday.HeaderText = "CalcHoliday"
+        Me.CalcHoliday.Name = "CalcHoliday"
+        Me.CalcHoliday.ReadOnly = True
+        Me.CalcHoliday.Visible = False
+        '
+        'CalcSpecialHoliday
+        '
+        Me.CalcSpecialHoliday.HeaderText = "CalcSpecialHoliday"
+        Me.CalcSpecialHoliday.Name = "CalcSpecialHoliday"
+        Me.CalcSpecialHoliday.ReadOnly = True
+        Me.CalcSpecialHoliday.Visible = False
+        '
+        'CalcNightDiff
+        '
+        Me.CalcNightDiff.HeaderText = "CalcNightDiff"
+        Me.CalcNightDiff.Name = "CalcNightDiff"
+        Me.CalcNightDiff.ReadOnly = True
+        Me.CalcNightDiff.Visible = False
+        '
+        'CalcNightDiffOT
+        '
+        Me.CalcNightDiffOT.HeaderText = "CalcNightDiffOT"
+        Me.CalcNightDiffOT.Name = "CalcNightDiffOT"
+        Me.CalcNightDiffOT.ReadOnly = True
+        Me.CalcNightDiffOT.Visible = False
+        '
+        'CalcRestDay
+        '
+        Me.CalcRestDay.HeaderText = "CalcRestDay"
+        Me.CalcRestDay.Name = "CalcRestDay"
+        Me.CalcRestDay.ReadOnly = True
+        Me.CalcRestDay.Visible = False
+        '
+        'CalcRestDayOT
+        '
+        Me.CalcRestDayOT.HeaderText = "CalcRestDayOT"
+        Me.CalcRestDayOT.Name = "CalcRestDayOT"
+        Me.CalcRestDayOT.ReadOnly = True
+        Me.CalcRestDayOT.Visible = False
+        '
+        'LateGracePeriod
+        '
+        Me.LateGracePeriod.HeaderText = "LateGracePeriod"
+        Me.LateGracePeriod.Name = "LateGracePeriod"
+        Me.LateGracePeriod.ReadOnly = True
+        '
+        'GracePeriodAsBuffer
+        '
+        Me.GracePeriodAsBuffer.HeaderText = "GracePeriodAsBuffer"
+        Me.GracePeriodAsBuffer.Name = "GracePeriodAsBuffer"
+        Me.GracePeriodAsBuffer.ReadOnly = True
+        Me.GracePeriodAsBuffer.Visible = False
+        '
+        'RevealInPayroll
+        '
+        Me.RevealInPayroll.HeaderText = "RevealInPayroll"
+        Me.RevealInPayroll.Name = "RevealInPayroll"
+        Me.RevealInPayroll.ReadOnly = True
+        Me.RevealInPayroll.Visible = False
+        '
+        'AgencyName
+        '
+        Me.AgencyName.HeaderText = "AgencyName"
+        Me.AgencyName.Name = "AgencyName"
+        Me.AgencyName.ReadOnly = True
+        Me.AgencyName.Visible = False
+        '
+        'AgencyRowID
+        '
+        Me.AgencyRowID.HeaderText = "AgencyRowID"
+        Me.AgencyRowID.Name = "AgencyRowID"
+        Me.AgencyRowID.ReadOnly = True
+        Me.AgencyRowID.Visible = False
+        '
+        'BranchID
+        '
+        Me.BranchID.HeaderText = "BranchID"
+        Me.BranchID.Name = "BranchID"
+        Me.BranchID.ReadOnly = True
+        Me.BranchID.Visible = False
+        '
+        'BPIInsuranceColumn
+        '
+        Me.BPIInsuranceColumn.HeaderText = "BPI Insurance"
+        Me.BPIInsuranceColumn.Name = "BPIInsuranceColumn"
+        Me.BPIInsuranceColumn.ReadOnly = True
+        '
+        'Column37
+        '
+        Me.Column37.HeaderText = "IMAGE"
+        Me.Column37.Name = "Column37"
+        Me.Column37.ReadOnly = True
+        Me.Column37.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column37.Visible = False
         '
         'Last
         '
@@ -6186,6 +6536,15 @@ Partial Class EmployeeForm
         Me.Panel7.Size = New System.Drawing.Size(1231, 523)
         Me.Panel7.TabIndex = 151
         '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(607, 98)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(45, 13)
+        Me.Label21.TabIndex = 546
+        Me.Label21.Text = "Label21"
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
@@ -6256,6 +6615,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
         Me.DataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn9.ToolTipText = "No. of Dependents"
         Me.DataGridViewTextBoxColumn9.Width = 160
         '
         'DataGridViewTextBoxColumn10
@@ -6384,8 +6744,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn25
         '
-        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn25.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn25.DefaultCellStyle = DataGridViewCellStyle23
         Me.DataGridViewTextBoxColumn25.HeaderText = "Pay Frequency"
         Me.DataGridViewTextBoxColumn25.MaxInputLength = 500
         Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
@@ -6395,8 +6755,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn26
         '
-        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle24
         Me.DataGridViewTextBoxColumn26.HeaderText = "UndertimeOverride"
         Me.DataGridViewTextBoxColumn26.MaxInputLength = 500
         Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
@@ -6407,8 +6767,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn27
         '
-        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn27.DefaultCellStyle = DataGridViewCellStyle25
         Me.DataGridViewTextBoxColumn27.HeaderText = "OvertimeOverride"
         Me.DataGridViewTextBoxColumn27.MaxInputLength = 499
         Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
@@ -6462,17 +6822,19 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn33.MaxInputLength = 50
         Me.DataGridViewTextBoxColumn33.Name = "DataGridViewTextBoxColumn33"
         Me.DataGridViewTextBoxColumn33.ReadOnly = True
+        Me.DataGridViewTextBoxColumn33.Visible = False
         Me.DataGridViewTextBoxColumn33.Width = 180
         '
         'DataGridViewTextBoxColumn34
         '
-        DataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn34.DefaultCellStyle = DataGridViewCellStyle25
+        DataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn34.DefaultCellStyle = DataGridViewCellStyle26
         Me.DataGridViewTextBoxColumn34.HeaderText = "LeavePerPayPeriod"
         Me.DataGridViewTextBoxColumn34.MaxInputLength = 50
         Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
         Me.DataGridViewTextBoxColumn34.ReadOnly = True
         Me.DataGridViewTextBoxColumn34.ToolTipText = "No. of Dependents"
+        Me.DataGridViewTextBoxColumn34.Visible = False
         Me.DataGridViewTextBoxColumn34.Width = 180
         '
         'DataGridViewTextBoxColumn35
@@ -6485,13 +6847,14 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn36
         '
-        DataGridViewCellStyle26.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn36.DefaultCellStyle = DataGridViewCellStyle26
+        DataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn36.DefaultCellStyle = DataGridViewCellStyle27
         Me.DataGridViewTextBoxColumn36.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn36.MaxInputLength = 2000
         Me.DataGridViewTextBoxColumn36.Name = "DataGridViewTextBoxColumn36"
         Me.DataGridViewTextBoxColumn36.ReadOnly = True
         Me.DataGridViewTextBoxColumn36.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn36.Visible = False
         Me.DataGridViewTextBoxColumn36.Width = 190
         '
         'DataGridViewTextBoxColumn37
@@ -6542,6 +6905,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn42.ReadOnly = True
         Me.DataGridViewTextBoxColumn42.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn42.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn42.Visible = False
         Me.DataGridViewTextBoxColumn42.Width = 150
         '
         'DataGridViewTextBoxColumn43
@@ -6550,6 +6914,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
         Me.DataGridViewTextBoxColumn43.ReadOnly = True
         Me.DataGridViewTextBoxColumn43.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn43.Visible = False
         '
         'DataGridViewTextBoxColumn44
         '
@@ -6557,11 +6922,12 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
         Me.DataGridViewTextBoxColumn44.ReadOnly = True
         Me.DataGridViewTextBoxColumn44.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn44.Visible = False
         '
         'DataGridViewTextBoxColumn45
         '
-        DataGridViewCellStyle27.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn45.DefaultCellStyle = DataGridViewCellStyle27
+        DataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn45.DefaultCellStyle = DataGridViewCellStyle28
         Me.DataGridViewTextBoxColumn45.HeaderText = "SSS No."
         Me.DataGridViewTextBoxColumn45.Name = "DataGridViewTextBoxColumn45"
         Me.DataGridViewTextBoxColumn45.ReadOnly = True
@@ -6571,13 +6937,14 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn46
         '
-        DataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn46.DefaultCellStyle = DataGridViewCellStyle28
+        DataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn46.DefaultCellStyle = DataGridViewCellStyle29
         Me.DataGridViewTextBoxColumn46.HeaderText = "PAGIBIG No."
         Me.DataGridViewTextBoxColumn46.MaxInputLength = 499
         Me.DataGridViewTextBoxColumn46.Name = "DataGridViewTextBoxColumn46"
         Me.DataGridViewTextBoxColumn46.ReadOnly = True
         Me.DataGridViewTextBoxColumn46.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn46.Visible = False
         Me.DataGridViewTextBoxColumn46.Width = 190
         '
         'DataGridViewTextBoxColumn47
@@ -6662,13 +7029,14 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn56
         '
-        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn56.DefaultCellStyle = DataGridViewCellStyle29
+        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn56.DefaultCellStyle = DataGridViewCellStyle30
         Me.DataGridViewTextBoxColumn56.HeaderText = "Creation Date"
         Me.DataGridViewTextBoxColumn56.MaxInputLength = 200
         Me.DataGridViewTextBoxColumn56.Name = "DataGridViewTextBoxColumn56"
         Me.DataGridViewTextBoxColumn56.ReadOnly = True
         Me.DataGridViewTextBoxColumn56.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn56.Visible = False
         Me.DataGridViewTextBoxColumn56.Width = 117
         '
         'DataGridViewTextBoxColumn57
@@ -6748,8 +7116,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn66
         '
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle30
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle31
         Me.DataGridViewTextBoxColumn66.HeaderText = "Date To"
         Me.DataGridViewTextBoxColumn66.Name = "DataGridViewTextBoxColumn66"
         Me.DataGridViewTextBoxColumn66.ReadOnly = True
@@ -6762,6 +7130,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn67.HeaderText = "Remarks"
         Me.DataGridViewTextBoxColumn67.Name = "DataGridViewTextBoxColumn67"
         Me.DataGridViewTextBoxColumn67.ReadOnly = True
+        Me.DataGridViewTextBoxColumn67.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn67.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn67.Visible = False
         '
@@ -6774,19 +7143,20 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn69
         '
-        DataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn69.DefaultCellStyle = DataGridViewCellStyle31
+        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn69.DefaultCellStyle = DataGridViewCellStyle32
         Me.DataGridViewTextBoxColumn69.HeaderText = "Column6"
         Me.DataGridViewTextBoxColumn69.Name = "DataGridViewTextBoxColumn69"
         Me.DataGridViewTextBoxColumn69.ReadOnly = True
+        Me.DataGridViewTextBoxColumn69.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn69.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn69.Visible = False
         Me.DataGridViewTextBoxColumn69.Width = 190
         '
         'DataGridViewTextBoxColumn70
         '
-        DataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn70.DefaultCellStyle = DataGridViewCellStyle32
+        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn70.DefaultCellStyle = DataGridViewCellStyle33
         Me.DataGridViewTextBoxColumn70.HeaderText = "Column7"
         Me.DataGridViewTextBoxColumn70.MaxInputLength = 499
         Me.DataGridViewTextBoxColumn70.Name = "DataGridViewTextBoxColumn70"
@@ -6813,8 +7183,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn73
         '
-        DataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn73.DefaultCellStyle = DataGridViewCellStyle33
+        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn73.DefaultCellStyle = DataGridViewCellStyle34
         Me.DataGridViewTextBoxColumn73.HeaderText = "Alt Phone"
         Me.DataGridViewTextBoxColumn73.Name = "DataGridViewTextBoxColumn73"
         Me.DataGridViewTextBoxColumn73.ReadOnly = True
@@ -6824,8 +7194,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn74
         '
-        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn74.DefaultCellStyle = DataGridViewCellStyle34
+        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn74.DefaultCellStyle = DataGridViewCellStyle35
         Me.DataGridViewTextBoxColumn74.HeaderText = "Fax No."
         Me.DataGridViewTextBoxColumn74.MaxInputLength = 499
         Me.DataGridViewTextBoxColumn74.Name = "DataGridViewTextBoxColumn74"
@@ -6840,6 +7210,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn75.MaxInputLength = 1999
         Me.DataGridViewTextBoxColumn75.Name = "DataGridViewTextBoxColumn75"
         Me.DataGridViewTextBoxColumn75.ReadOnly = True
+        Me.DataGridViewTextBoxColumn75.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn75.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn75.Visible = False
         '
@@ -6858,12 +7229,22 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn77.Name = "DataGridViewTextBoxColumn77"
         Me.DataGridViewTextBoxColumn77.ReadOnly = True
         Me.DataGridViewTextBoxColumn77.Visible = False
+        Me.DataGridViewTextBoxColumn77.Width = 128
+        '
+        'DataGridViewComboBoxColumn1
+        '
+        Me.DataGridViewComboBoxColumn1.HeaderText = "Type"
+        Me.DataGridViewComboBoxColumn1.Name = "DataGridViewComboBoxColumn1"
+        Me.DataGridViewComboBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewComboBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewComboBoxColumn1.Width = 200
         '
         'DataGridViewTextBoxColumn78
         '
-        DataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn78.DefaultCellStyle = DataGridViewCellStyle35
+        DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn78.DefaultCellStyle = DataGridViewCellStyle36
         Me.DataGridViewTextBoxColumn78.HeaderText = "TIN No."
+        Me.DataGridViewTextBoxColumn78.MaxInputLength = 200
         Me.DataGridViewTextBoxColumn78.Name = "DataGridViewTextBoxColumn78"
         Me.DataGridViewTextBoxColumn78.ReadOnly = True
         Me.DataGridViewTextBoxColumn78.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
@@ -6872,8 +7253,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn79
         '
-        DataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn79.DefaultCellStyle = DataGridViewCellStyle36
+        DataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn79.DefaultCellStyle = DataGridViewCellStyle37
         Me.DataGridViewTextBoxColumn79.HeaderText = "Job Title"
         Me.DataGridViewTextBoxColumn79.MaxInputLength = 499
         Me.DataGridViewTextBoxColumn79.Name = "DataGridViewTextBoxColumn79"
@@ -6900,8 +7281,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn82
         '
-        DataGridViewCellStyle37.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn82.DefaultCellStyle = DataGridViewCellStyle37
+        DataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn82.DefaultCellStyle = DataGridViewCellStyle38
         Me.DataGridViewTextBoxColumn82.HeaderText = "Column9"
         Me.DataGridViewTextBoxColumn82.Name = "DataGridViewTextBoxColumn82"
         Me.DataGridViewTextBoxColumn82.ReadOnly = True
@@ -6911,8 +7292,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn83
         '
-        DataGridViewCellStyle38.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn83.DefaultCellStyle = DataGridViewCellStyle38
+        DataGridViewCellStyle39.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn83.DefaultCellStyle = DataGridViewCellStyle39
         Me.DataGridViewTextBoxColumn83.HeaderText = "Column10"
         Me.DataGridViewTextBoxColumn83.MaxInputLength = 499
         Me.DataGridViewTextBoxColumn83.Name = "DataGridViewTextBoxColumn83"
@@ -6923,8 +7304,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn84
         '
-        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn84.DefaultCellStyle = DataGridViewCellStyle39
+        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn84.DefaultCellStyle = DataGridViewCellStyle40
         Me.DataGridViewTextBoxColumn84.HeaderText = "Column11"
         Me.DataGridViewTextBoxColumn84.MaxInputLength = 1999
         Me.DataGridViewTextBoxColumn84.Name = "DataGridViewTextBoxColumn84"
@@ -6939,6 +7320,14 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn85.Name = "DataGridViewTextBoxColumn85"
         Me.DataGridViewTextBoxColumn85.ReadOnly = True
         Me.DataGridViewTextBoxColumn85.Visible = False
+        '
+        'DataGridViewButtonColumn1
+        '
+        Me.DataGridViewButtonColumn1.HeaderText = ""
+        Me.DataGridViewButtonColumn1.Name = "DataGridViewButtonColumn1"
+        Me.DataGridViewButtonColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewButtonColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewButtonColumn1.Width = 120
         '
         'DataGridViewTextBoxColumn86
         '
@@ -6960,8 +7349,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn88
         '
-        DataGridViewCellStyle40.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn88.DefaultCellStyle = DataGridViewCellStyle40
+        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn88.DefaultCellStyle = DataGridViewCellStyle41
         Me.DataGridViewTextBoxColumn88.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn88.Name = "DataGridViewTextBoxColumn88"
         Me.DataGridViewTextBoxColumn88.ReadOnly = True
@@ -6975,6 +7364,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn89.Name = "DataGridViewTextBoxColumn89"
         Me.DataGridViewTextBoxColumn89.ReadOnly = True
         Me.DataGridViewTextBoxColumn89.Visible = False
+        Me.DataGridViewTextBoxColumn89.Width = 117
         '
         'DataGridViewTextBoxColumn90
         '
@@ -7027,8 +7417,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn96
         '
-        DataGridViewCellStyle41.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn96.DefaultCellStyle = DataGridViewCellStyle41
+        DataGridViewCellStyle42.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn96.DefaultCellStyle = DataGridViewCellStyle42
         Me.DataGridViewTextBoxColumn96.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn96.Name = "DataGridViewTextBoxColumn96"
         Me.DataGridViewTextBoxColumn96.ReadOnly = True
@@ -7087,8 +7477,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn103
         '
-        DataGridViewCellStyle42.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn103.DefaultCellStyle = DataGridViewCellStyle42
+        DataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn103.DefaultCellStyle = DataGridViewCellStyle43
         Me.DataGridViewTextBoxColumn103.HeaderText = "Reason"
         Me.DataGridViewTextBoxColumn103.Name = "DataGridViewTextBoxColumn103"
         Me.DataGridViewTextBoxColumn103.ReadOnly = True
@@ -7098,8 +7488,8 @@ Partial Class EmployeeForm
         '
         'DataGridViewTextBoxColumn104
         '
-        DataGridViewCellStyle43.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn104.DefaultCellStyle = DataGridViewCellStyle43
+        DataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn104.DefaultCellStyle = DataGridViewCellStyle44
         Me.DataGridViewTextBoxColumn104.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn104.MaxInputLength = 499
         Me.DataGridViewTextBoxColumn104.Name = "DataGridViewTextBoxColumn104"
@@ -7160,36 +7550,189 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn110.Visible = False
         Me.DataGridViewTextBoxColumn110.Width = 117
         '
-        'DataGridViewTextBoxColumn111
+        'bon_RowID
         '
-        Me.DataGridViewTextBoxColumn111.HeaderText = "Status"
-        Me.DataGridViewTextBoxColumn111.Name = "DataGridViewTextBoxColumn111"
-        Me.DataGridViewTextBoxColumn111.ReadOnly = True
-        Me.DataGridViewTextBoxColumn111.Visible = False
-        Me.DataGridViewTextBoxColumn111.Width = 117
+        Me.bon_RowID.HeaderText = "RowID"
+        Me.bon_RowID.Name = "bon_RowID"
+        Me.bon_RowID.ReadOnly = True
+        Me.bon_RowID.Visible = False
+        Me.bon_RowID.Width = 50
         '
-        'DataGridViewTextBoxColumn112
+        'bon_Type
         '
-        DataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn112.DefaultCellStyle = DataGridViewCellStyle44
-        Me.DataGridViewTextBoxColumn112.HeaderText = "Reason"
-        Me.DataGridViewTextBoxColumn112.Name = "DataGridViewTextBoxColumn112"
-        Me.DataGridViewTextBoxColumn112.ReadOnly = True
-        Me.DataGridViewTextBoxColumn112.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn112.Visible = False
-        Me.DataGridViewTextBoxColumn112.Width = 190
+        Me.bon_Type.HeaderText = "Type"
+        Me.bon_Type.Name = "bon_Type"
+        Me.bon_Type.ReadOnly = True
+        Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.bon_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.bon_Type.Width = 180
         '
-        'DataGridViewTextBoxColumn113
+        'bon_Amount
         '
-        DataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn113.DefaultCellStyle = DataGridViewCellStyle45
-        Me.DataGridViewTextBoxColumn113.HeaderText = "Comments"
-        Me.DataGridViewTextBoxColumn113.MaxInputLength = 499
-        Me.DataGridViewTextBoxColumn113.Name = "DataGridViewTextBoxColumn113"
-        Me.DataGridViewTextBoxColumn113.ReadOnly = True
-        Me.DataGridViewTextBoxColumn113.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn113.Visible = False
-        Me.DataGridViewTextBoxColumn113.Width = 190
+        DataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle45
+        Me.bon_Amount.HeaderText = "Amount"
+        Me.bon_Amount.Name = "bon_Amount"
+        Me.bon_Amount.ReadOnly = True
+        Me.bon_Amount.Width = 180
+        '
+        'bon_Frequency
+        '
+        Me.bon_Frequency.HeaderText = "Frequency"
+        Me.bon_Frequency.Name = "bon_Frequency"
+        Me.bon_Frequency.ReadOnly = True
+        Me.bon_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.bon_Frequency.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.bon_Frequency.Width = 180
+        '
+        'bon_Start
+        '
+        '
+        '
+        '
+        Me.bon_Start.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.bon_Start.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.bon_Start.HeaderText = "Effective start date"
+        Me.bon_Start.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        '
+        '
+        '
+        Me.bon_Start.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.bon_Start.MonthCalendar.BackgroundStyle.Class = ""
+        Me.bon_Start.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        '
+        '
+        '
+        Me.bon_Start.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.bon_Start.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.bon_Start.MonthCalendar.DisplayMonth = New Date(2023, 10, 1, 0, 0, 0, 0)
+        Me.bon_Start.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.bon_Start.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.bon_Start.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.bon_Start.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.bon_Start.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.bon_Start.Name = "bon_Start"
+        Me.bon_Start.ReadOnly = True
+        Me.bon_Start.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'bon_End
+        '
+        '
+        '
+        '
+        Me.bon_End.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.bon_End.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.bon_End.HeaderText = "Effective end date"
+        Me.bon_End.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        '
+        '
+        '
+        Me.bon_End.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.bon_End.MonthCalendar.BackgroundStyle.Class = ""
+        Me.bon_End.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        '
+        '
+        '
+        Me.bon_End.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.bon_End.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.bon_End.MonthCalendar.DisplayMonth = New Date(2023, 10, 1, 0, 0, 0, 0)
+        Me.bon_End.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.bon_End.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.bon_End.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.bon_End.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.bon_End.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.bon_End.Name = "bon_End"
+        Me.bon_End.ReadOnly = True
+        Me.bon_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'bon_ProdID
+        '
+        Me.bon_ProdID.HeaderText = "ProductID"
+        Me.bon_ProdID.Name = "bon_ProdID"
+        Me.bon_ProdID.ReadOnly = True
+        Me.bon_ProdID.Visible = False
+        '
+        'ecert_DateIssued
+        '
+        '
+        '
+        '
+        Me.ecert_DateIssued.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.ecert_DateIssued.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_DateIssued.HeaderText = "Date issued"
+        Me.ecert_DateIssued.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.Class = ""
+        Me.ecert_DateIssued.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.ecert_DateIssued.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_DateIssued.MonthCalendar.DisplayMonth = New Date(2023, 10, 1, 0, 0, 0, 0)
+        Me.ecert_DateIssued.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.ecert_DateIssued.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.ecert_DateIssued.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_DateIssued.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.ecert_DateIssued.Name = "ecert_DateIssued"
+        Me.ecert_DateIssued.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'ecert_Expiration
+        '
+        '
+        '
+        '
+        Me.ecert_Expiration.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
+        Me.ecert_Expiration.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_Expiration.HeaderText = "Date of expiration"
+        Me.ecert_Expiration.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.AnnuallyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.Class = ""
+        Me.ecert_Expiration.MonthCalendar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.Class = ""
+        Me.ecert_Expiration.MonthCalendar.CommandsBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_Expiration.MonthCalendar.DisplayMonth = New Date(2023, 10, 1, 0, 0, 0, 0)
+        Me.ecert_Expiration.MonthCalendar.MarkedDates = New Date(-1) {}
+        Me.ecert_Expiration.MonthCalendar.MonthlyMarkedDates = New Date(-1) {}
+        '
+        '
+        '
+        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.Class = ""
+        Me.ecert_Expiration.MonthCalendar.NavigationBackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.ecert_Expiration.MonthCalendar.WeeklyMarkedDays = New System.DayOfWeek(-1) {}
+        Me.ecert_Expiration.Name = "ecert_Expiration"
+        Me.ecert_Expiration.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
         'DataGridViewTextBoxColumn114
         '
@@ -7876,438 +8419,6 @@ Partial Class EmployeeForm
         Me.c_RowID1.ReadOnly = True
         Me.c_RowID1.Visible = False
         '
-        'RowID
-        '
-        Me.RowID.HeaderText = "RowID"
-        Me.RowID.Name = "RowID"
-        Me.RowID.ReadOnly = True
-        Me.RowID.Visible = False
-        '
-        'Column1
-        '
-        Me.Column1.HeaderText = "Employee ID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.HeaderText = "Last Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.HeaderText = "First Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.HeaderText = "Middle Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column21
-        '
-        Me.Column21.HeaderText = "Surname"
-        Me.Column21.Name = "Column21"
-        Me.Column21.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.HeaderText = "Nickname"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column31
-        '
-        Me.Column31.HeaderText = "Marital Status"
-        Me.Column31.Name = "Column31"
-        Me.Column31.ReadOnly = True
-        '
-        'Column32
-        '
-        Me.Column32.HeaderText = "No. of Dependents"
-        Me.Column32.Name = "Column32"
-        Me.Column32.ReadOnly = True
-        Me.Column32.ToolTipText = "No. of Dependents"
-        '
-        'Column6
-        '
-        Me.Column6.HeaderText = "Birthdate"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'colstartdate
-        '
-        Me.colstartdate.HeaderText = "Start date"
-        Me.colstartdate.Name = "colstartdate"
-        Me.colstartdate.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.HeaderText = "Job Title"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column8
-        '
-        Me.Column8.HeaderText = "Position"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column9
-        '
-        Me.Column9.HeaderText = "Salutation"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        '
-        'Column10
-        '
-        Me.Column10.HeaderText = "TIN"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        '
-        'Column11
-        '
-        Me.Column11.HeaderText = "SSS No."
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        '
-        'Column12
-        '
-        Me.Column12.HeaderText = "PAGIBIG No."
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        '
-        'Column13
-        '
-        Me.Column13.HeaderText = "PhilHealth No."
-        Me.Column13.Name = "Column13"
-        Me.Column13.ReadOnly = True
-        '
-        'Column15
-        '
-        Me.Column15.HeaderText = "Work Phone No."
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        '
-        'Column16
-        '
-        Me.Column16.HeaderText = "Home Phone No."
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        '
-        'Column17
-        '
-        Me.Column17.HeaderText = "Mobile Phone No."
-        Me.Column17.Name = "Column17"
-        Me.Column17.ReadOnly = True
-        '
-        'Column18
-        '
-        Me.Column18.HeaderText = "Home address"
-        Me.Column18.Name = "Column18"
-        Me.Column18.ReadOnly = True
-        '
-        'Column14
-        '
-        Me.Column14.HeaderText = "Email address"
-        Me.Column14.Name = "Column14"
-        Me.Column14.ReadOnly = True
-        '
-        'Column19
-        '
-        Me.Column19.HeaderText = "Gender"
-        Me.Column19.Name = "Column19"
-        Me.Column19.ReadOnly = True
-        '
-        'Column20
-        '
-        Me.Column20.HeaderText = "Employment Status"
-        Me.Column20.Name = "Column20"
-        Me.Column20.ReadOnly = True
-        '
-        'Column22
-        '
-        Me.Column22.HeaderText = "Pay Frequency"
-        Me.Column22.Name = "Column22"
-        Me.Column22.ReadOnly = True
-        '
-        'Column23
-        '
-        Me.Column23.HeaderText = "UndertimeOverride"
-        Me.Column23.Name = "Column23"
-        Me.Column23.ReadOnly = True
-        Me.Column23.Visible = False
-        '
-        'OvertimeOverride
-        '
-        Me.OvertimeOverride.HeaderText = "OvertimeOverride"
-        Me.OvertimeOverride.Name = "OvertimeOverride"
-        Me.OvertimeOverride.ReadOnly = True
-        Me.OvertimeOverride.Visible = False
-        '
-        'Column25
-        '
-        Me.Column25.HeaderText = "Creation Date"
-        Me.Column25.Name = "Column25"
-        Me.Column25.ReadOnly = True
-        '
-        'Column26
-        '
-        Me.Column26.HeaderText = "Created by"
-        Me.Column26.Name = "Column26"
-        Me.Column26.ReadOnly = True
-        '
-        'Column27
-        '
-        Me.Column27.HeaderText = "Last Update"
-        Me.Column27.Name = "Column27"
-        Me.Column27.ReadOnly = True
-        '
-        'Column28
-        '
-        Me.Column28.HeaderText = "Last Update by"
-        Me.Column28.Name = "Column28"
-        Me.Column28.ReadOnly = True
-        '
-        'Column29
-        '
-        Me.Column29.HeaderText = "PositionID"
-        Me.Column29.Name = "Column29"
-        Me.Column29.ReadOnly = True
-        Me.Column29.Visible = False
-        '
-        'Column30
-        '
-        Me.Column30.HeaderText = "PayFrequencyID"
-        Me.Column30.Name = "Column30"
-        Me.Column30.ReadOnly = True
-        Me.Column30.Visible = False
-        '
-        'Column34
-        '
-        Me.Column34.HeaderText = "EmployeeType"
-        Me.Column34.Name = "Column34"
-        Me.Column34.ReadOnly = True
-        '
-        'Column35
-        '
-        Me.Column35.HeaderText = "LeaveBalance"
-        Me.Column35.Name = "Column35"
-        Me.Column35.ReadOnly = True
-        Me.Column35.Visible = False
-        '
-        'slbalance
-        '
-        Me.slbalance.HeaderText = "Sick leave balance"
-        Me.slbalance.Name = "slbalance"
-        Me.slbalance.ReadOnly = True
-        Me.slbalance.Visible = False
-        '
-        'mlbalance
-        '
-        Me.mlbalance.HeaderText = "Maternity leave balance"
-        Me.mlbalance.Name = "mlbalance"
-        Me.mlbalance.ReadOnly = True
-        Me.mlbalance.Visible = False
-        '
-        'Column36
-        '
-        Me.Column36.HeaderText = "LeaveAllowance"
-        Me.Column36.Name = "Column36"
-        Me.Column36.ReadOnly = True
-        Me.Column36.Visible = False
-        '
-        'slallowance
-        '
-        Me.slallowance.HeaderText = "Sick leave allowance"
-        Me.slallowance.Name = "slallowance"
-        Me.slallowance.ReadOnly = True
-        Me.slallowance.Visible = False
-        '
-        'mlallowance
-        '
-        Me.mlallowance.HeaderText = "Maternity leave allowance"
-        Me.mlallowance.Name = "mlallowance"
-        Me.mlallowance.ReadOnly = True
-        Me.mlallowance.Visible = False
-        '
-        'Column33
-        '
-        Me.Column33.HeaderText = "LeavePerPayPeriod"
-        Me.Column33.Name = "Column33"
-        Me.Column33.ReadOnly = True
-        Me.Column33.Visible = False
-        '
-        'slpayp
-        '
-        Me.slpayp.HeaderText = "Sick leave per pay period"
-        Me.slpayp.Name = "slpayp"
-        Me.slpayp.ReadOnly = True
-        Me.slpayp.Visible = False
-        '
-        'mlpayp
-        '
-        Me.mlpayp.HeaderText = "Maternity leavle per pay period"
-        Me.mlpayp.Name = "mlpayp"
-        Me.mlpayp.ReadOnly = True
-        Me.mlpayp.Visible = False
-        '
-        'fstatRowID
-        '
-        Me.fstatRowID.HeaderText = "flingstatusRowID"
-        Me.fstatRowID.Name = "fstatRowID"
-        Me.fstatRowID.ReadOnly = True
-        Me.fstatRowID.Visible = False
-        '
-        'AlphaExempted
-        '
-        Me.AlphaExempted.HeaderText = "Is included in Alpha list"
-        Me.AlphaExempted.Name = "AlphaExempted"
-        Me.AlphaExempted.ReadOnly = True
-        Me.AlphaExempted.Visible = False
-        '
-        'WorkDaysPerYear
-        '
-        Me.WorkDaysPerYear.HeaderText = "Work Days Per Year"
-        Me.WorkDaysPerYear.Name = "WorkDaysPerYear"
-        Me.WorkDaysPerYear.ReadOnly = True
-        '
-        'DayOfRest
-        '
-        Me.DayOfRest.HeaderText = "Rest Day"
-        Me.DayOfRest.Name = "DayOfRest"
-        Me.DayOfRest.ReadOnly = True
-        '
-        'ATMNo
-        '
-        Me.ATMNo.HeaderText = "ATM No."
-        Me.ATMNo.Name = "ATMNo"
-        Me.ATMNo.ReadOnly = True
-        '
-        'BankName
-        '
-        Me.BankName.HeaderText = "Bank Name"
-        Me.BankName.Name = "BankName"
-        Me.BankName.ReadOnly = True
-        '
-        'OtherPayP
-        '
-        Me.OtherPayP.HeaderText = "Other leave per pay period"
-        Me.OtherPayP.Name = "OtherPayP"
-        Me.OtherPayP.ReadOnly = True
-        '
-        'OtherLeaveAllowance
-        '
-        Me.OtherLeaveAllowance.HeaderText = "Other Leave Allowance"
-        Me.OtherLeaveAllowance.Name = "OtherLeaveAllowance"
-        Me.OtherLeaveAllowance.ReadOnly = True
-        '
-        'OtherLeaveBalance
-        '
-        Me.OtherLeaveBalance.HeaderText = "Other Leave Balance"
-        Me.OtherLeaveBalance.Name = "OtherLeaveBalance"
-        Me.OtherLeaveBalance.ReadOnly = True
-        '
-        'CalcHoliday
-        '
-        Me.CalcHoliday.HeaderText = "CalcHoliday"
-        Me.CalcHoliday.Name = "CalcHoliday"
-        Me.CalcHoliday.ReadOnly = True
-        Me.CalcHoliday.Visible = False
-        '
-        'CalcSpecialHoliday
-        '
-        Me.CalcSpecialHoliday.HeaderText = "CalcSpecialHoliday"
-        Me.CalcSpecialHoliday.Name = "CalcSpecialHoliday"
-        Me.CalcSpecialHoliday.ReadOnly = True
-        Me.CalcSpecialHoliday.Visible = False
-        '
-        'CalcNightDiff
-        '
-        Me.CalcNightDiff.HeaderText = "CalcNightDiff"
-        Me.CalcNightDiff.Name = "CalcNightDiff"
-        Me.CalcNightDiff.ReadOnly = True
-        Me.CalcNightDiff.Visible = False
-        '
-        'CalcNightDiffOT
-        '
-        Me.CalcNightDiffOT.HeaderText = "CalcNightDiffOT"
-        Me.CalcNightDiffOT.Name = "CalcNightDiffOT"
-        Me.CalcNightDiffOT.ReadOnly = True
-        Me.CalcNightDiffOT.Visible = False
-        '
-        'CalcRestDay
-        '
-        Me.CalcRestDay.HeaderText = "CalcRestDay"
-        Me.CalcRestDay.Name = "CalcRestDay"
-        Me.CalcRestDay.ReadOnly = True
-        Me.CalcRestDay.Visible = False
-        '
-        'CalcRestDayOT
-        '
-        Me.CalcRestDayOT.HeaderText = "CalcRestDayOT"
-        Me.CalcRestDayOT.Name = "CalcRestDayOT"
-        Me.CalcRestDayOT.ReadOnly = True
-        Me.CalcRestDayOT.Visible = False
-        '
-        'LateGracePeriod
-        '
-        Me.LateGracePeriod.HeaderText = "LateGracePeriod"
-        Me.LateGracePeriod.Name = "LateGracePeriod"
-        Me.LateGracePeriod.ReadOnly = True
-        '
-        'GracePeriodAsBuffer
-        '
-        Me.GracePeriodAsBuffer.HeaderText = "GracePeriodAsBuffer"
-        Me.GracePeriodAsBuffer.Name = "GracePeriodAsBuffer"
-        Me.GracePeriodAsBuffer.ReadOnly = True
-        Me.GracePeriodAsBuffer.Visible = False
-        '
-        'RevealInPayroll
-        '
-        Me.RevealInPayroll.HeaderText = "RevealInPayroll"
-        Me.RevealInPayroll.Name = "RevealInPayroll"
-        Me.RevealInPayroll.ReadOnly = True
-        Me.RevealInPayroll.Visible = False
-        '
-        'AgencyName
-        '
-        Me.AgencyName.HeaderText = "AgencyName"
-        Me.AgencyName.Name = "AgencyName"
-        Me.AgencyName.ReadOnly = True
-        Me.AgencyName.Visible = False
-        '
-        'AgencyRowID
-        '
-        Me.AgencyRowID.HeaderText = "AgencyRowID"
-        Me.AgencyRowID.Name = "AgencyRowID"
-        Me.AgencyRowID.ReadOnly = True
-        Me.AgencyRowID.Visible = False
-        '
-        'BranchID
-        '
-        Me.BranchID.HeaderText = "BranchID"
-        Me.BranchID.Name = "BranchID"
-        Me.BranchID.ReadOnly = True
-        Me.BranchID.Visible = False
-        '
-        'BPIInsuranceColumn
-        '
-        Me.BPIInsuranceColumn.HeaderText = "BPI Insurance"
-        Me.BPIInsuranceColumn.Name = "BPIInsuranceColumn"
-        Me.BPIInsuranceColumn.ReadOnly = True
-        '
-        'Column37
-        '
-        Me.Column37.HeaderText = "IMAGE"
-        Me.Column37.Name = "Column37"
-        Me.Column37.ReadOnly = True
-        Me.Column37.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column37.Visible = False
-        '
         'EmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -8401,8 +8512,6 @@ Partial Class EmployeeForm
         CType(Me.dgvempawar, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip2.ResumeLayout(False)
         Me.ToolStrip2.PerformLayout
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout
         CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip20.ResumeLayout(False)
@@ -9205,4 +9314,12 @@ Partial Class EmployeeForm
     Friend WithEvents BranchID As DataGridViewTextBoxColumn
     Friend WithEvents BPIInsuranceColumn As DataGridViewTextBoxColumn
     Friend WithEvents Column37 As DataGridViewTextBoxColumn
+    Friend WithEvents Label21 As Label
+    Friend WithEvents LabelResignedDate As TextBox
+    Friend WithEvents DataGridViewComboBoxColumn2 As DataGridViewComboBoxColumn
+    Friend WithEvents DataGridViewComboBoxColumn3 As DataGridViewComboBoxColumn
+    Friend WithEvents DataGridViewDateTimeInputColumn1 As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
+    Friend WithEvents DataGridViewDateTimeInputColumn2 As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
+    Friend WithEvents DataGridViewComboBoxColumn1 As DataGridViewComboBoxColumn
+    Friend WithEvents DataGridViewButtonColumn1 As DataGridViewButtonColumn
 End Class

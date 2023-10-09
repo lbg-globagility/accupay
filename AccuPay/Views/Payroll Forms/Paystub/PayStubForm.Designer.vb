@@ -2993,13 +2993,13 @@ Partial Class PayStubForm
         'ManagePrintPayslipsToolStripMenuItem
         '
         Me.ManagePrintPayslipsToolStripMenuItem.Name = "ManagePrintPayslipsToolStripMenuItem"
-        Me.ManagePrintPayslipsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ManagePrintPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ManagePrintPayslipsToolStripMenuItem.Text = "Print Payslips"
         '
         'ManageEmailPayslipsToolStripMenuItem
         '
         Me.ManageEmailPayslipsToolStripMenuItem.Name = "ManageEmailPayslipsToolStripMenuItem"
-        Me.ManageEmailPayslipsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ManageEmailPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.ManageEmailPayslipsToolStripMenuItem.Text = "Email Payslips"
         '
         'PrintPaySlipToolStripMenuItem

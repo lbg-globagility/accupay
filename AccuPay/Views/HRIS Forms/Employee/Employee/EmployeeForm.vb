@@ -2026,6 +2026,14 @@ Public Class EmployeeForm
 
         BPIinsuranceText.Text = dgvEmp.CurrentRow.Cells("BPIInsuranceColumn").Value
 
+        Dim employee = Await GetCurrentEmployeeEntity(employeeID:=CInt(dgvEmp.CurrentRow.Cells(RowID.Name).Value))
+        If employee.TerminationDate IsNot Nothing Then
+            Dim resignedDate As String = $"{employee.TerminationDate.Value.Date:MMM d, yyyy}"
+            LabelResignedDate.Text = resignedDate
+        Else
+            LabelResignedDate.Clear()
+        End If
+
         AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
     End Function
 
