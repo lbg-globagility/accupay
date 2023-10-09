@@ -35,6 +35,7 @@ namespace AccuPay.Core.Services
         public IReadOnlyCollection<TimeEntry> TimeEntries { get; private set; }
         public IReadOnlyCollection<TimeLog> TimeLogs { get; private set; }
         public IReadOnlyCollection<TripTicket> TripTickets { get; private set; }
+        public IReadOnlyCollection<Salary2> Salaries2 { get; private set; }
 
         private readonly ICalendarService _calendarService;
 
@@ -290,6 +291,11 @@ namespace AccuPay.Core.Services
             TripTickets = (await _tripTicketRepository
                 .GetByDateRangeAsync(cuttOffPeriod))
                 .ToList();
+        }
+
+        public void SetSalaries2(IReadOnlyCollection<Salary2> salaries2)
+        {
+            Salaries2 = salaries2;
         }
     }
 }
