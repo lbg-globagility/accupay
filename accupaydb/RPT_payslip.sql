@@ -1,12 +1,20 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 DROP PROCEDURE IF EXISTS `RPT_payslip`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `RPT_payslip`(IN `og_rowid` INT, IN `pperiod_id` INT, IN `is_actual` BOOL, IN `emp_rowid` INT)
+CREATE PROCEDURE `RPT_payslip`(
+	IN `og_rowid` INT,
+	IN `pperiod_id` INT,
+	IN `is_actual` BOOL,
+	IN `emp_rowid` INT
+)
     DETERMINISTIC
 BEGIN
 
@@ -51,6 +59,63 @@ INTO date_from
 	  ,min_date_thisyear
 	  ,max_date_thisyear;
 
+CALL GetAccupaySalary(og_rowid, date_from, date_to);
+
+DROP TEMPORARY TABLE IF EXISTS `salaries2`;
+CREATE TEMPORARY TABLE IF NOT EXISTS `salaries2`
+SELECT
+t.*
+FROM (SELECT
+		t.*, 1 `SelectClause`
+		FROM (SELECT
+				i.*,
+				IFNULL(SUBDATE(ii.EffectiveDateFrom, INTERVAL 1 DAY), date_to) `EffectiveDateTo`		
+				FROM `accupaysalary` i
+				LEFT JOIN `accupaysalary` ii ON ii.EmployeeID=i.EmployeeID AND ii.SetNewDay=i.SetNewDay+1
+				) t
+		WHERE (t.EffectiveDateFrom < LEAST(`EffectiveDateTo`, date_to))
+		UNION
+		SELECT
+		t.*, 2 `SelectClause`
+		FROM (SELECT
+				i.*,
+				IFNULL(SUBDATE(ii.EffectiveDateFrom, INTERVAL 1 DAY), date_to) `EffectiveDateTo`
+				FROM `accupaysalary` i
+				LEFT JOIN `accupaysalary` ii ON ii.EmployeeID=i.EmployeeID AND ii.SetNewDay=i.SetNewDay+1
+				) t
+		WHERE t.`EffectiveDateTo` BETWEEN date_from AND date_to
+		) t
+GROUP BY t.RowID
+ORDER BY t.EmployeeID, t.EffectiveDateFrom, t.`EffectiveDateTo`
+;
+
+DROP TEMPORARY TABLE IF EXISTS `salarywitheffectiveenddate`;
+CREATE TEMPORARY TABLE IF NOT EXISTS `salarywitheffectiveenddate`
+SELECT
+k.*,
+d.DateValue
+,ss.ShiftHours, ss.WorkHours, ss.IsRestDay
+FROM `salaries2` k
+INNER JOIN dates d ON d.DateValue BETWEEN k.EffectiveDateFrom AND k.EffectiveDateTo
+INNER JOIN shiftschedules ss ON ss.EmployeeID=k.EmployeeID AND ss.Date=d.DateValue AND ss.IsRestDay=FALSE
+AND d.DateValue BETWEEN date_from and date_to
+;
+
+DROP TEMPORARY TABLE IF EXISTS `multiratesalary`;
+CREATE TEMPORARY TABLE IF NOT EXISTS `multiratesalary`
+SELECT
+k.*,
+COUNT(k.RowID) `Count`
+FROM (SELECT
+		DISTINCT i.RowID,
+		i.EmployeeID
+		FROM `salarywitheffectiveenddate` i) k
+GROUP BY k.EmployeeID
+HAVING COUNT(k.RowID) > 1
+;
+
+SET @_hasMultiRateSalary=FALSE;
+
 SELECT ps.RowID
 ,e.EmployeeID `COL1`
 ,CONCAT_WS(', ', e.LastName, e.FirstName) `COL69`
@@ -70,16 +135,19 @@ SELECT ps.RowID
                          , (@basic_sal - (ps.LateDeduction + ps.UndertimeDeduction + ps.AbsenceDeduction))
                          , IFNULL(ps.RegularPay, 0)))
 						  ) `ActualRegular`
-/*,FORMAT(@act_regular, 2) `COL3`
-,IFNULL(FORMAT(et.RegularHoursWorked, 2), 0) `COL2`*/
+
 , IF(LCASE(e.EmployeeType)='daily', ps.BasicHours, ps.RegularHours) `COL2`
-, ROUND(GetBasicPay(e.RowID,
+
+, @_hasMultiRateSalary:=EXISTS(SELECT RowID FROM `multiratesalary` WHERE LCASE(e.EmployeeType)='daily' AND EmployeeID=ps.EmployeeID LIMIT 1) `IsMultiRateSalary`
+, IF(@_hasMultiRateSalary=TRUE,
+	(SELECT IF(is_actual=TRUE, SUM(TrueSalary), SUM(Salary))  FROM salarywitheffectiveenddate i WHERE EmployeeID=ps.EmployeeID),
+	ROUND(GetBasicPay(e.RowID,
 							ps.PayFromDate,
 							ps.PayToDate,
 							is_actual,
-							ps.BasicHours), 2) `COL3`
+							ps.BasicHours), 2)) `COL3`
 
-#,IFNULL(FORMAT(et.Absent, 2), 0) `COL5`
+
 , ps.AbsentHours `COL4`
 , ps.AbsenceDeduction `COL5`
 
@@ -321,19 +389,7 @@ LEFT JOIN (
 			  ) semimonth_allow
        ON semimonth_allow.EmployeeID=ps.EmployeeID
 
-/*INNER JOIN (SELECT ps.RowID
-            ,ps.EmployeeID
-            ,SUM(ps.TotalTaxableSalary) `TotalTaxableSalary`
-            ,SUM(ps.TotalEmpWithholdingTax) `TotalEmpWithholdingTax`
-            ,SUM(ps.TotalEmpSSS) `TotalEmpSSS`
-            ,SUM(ps.TotalEmpPhilhealth) `TotalEmpPhilhealth`
-            ,SUM(ps.TotalEmpHDMF) `TotalEmpHDMF`
-            FROM paystubactual ps
-            WHERE ps.OrganizationID=og_rowid
-            AND (ps.PayFromDate >= min_date_thisyear AND ps.PayToDate <= max_date_thisyear)
-            GROUP BY ps.EmployeeID
-            ) pstub
-        ON pstub.EmployeeID=ps.EmployeeID*/
+
 
 LEFT JOIN (SELECT lt.*
 			  , GROUP_CONCAT(p.PartNo) `LeaveTypes`
@@ -357,6 +413,8 @@ ORDER BY CONCAT(e.LastName, e.FirstName)
 END//
 DELIMITER ;
 
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
