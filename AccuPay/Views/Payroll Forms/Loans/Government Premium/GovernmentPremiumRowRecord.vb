@@ -115,7 +115,7 @@ Public Class GovernmentPremiumRowRecord
 
         Dim loanList = New List(Of Loan)
 
-        Dim bothSssShareHasValue = If(SssEmployeeShare, 0) > 0 AndAlso If(SssEmployerShare, 0) > 0
+        Dim bothSssShareHasValue = If(SssEmployeeShare, 0) > 0 'AndAlso If(SssEmployerShare, 0) > 0
 
         If bothSssShareHasValue AndAlso SssTotal > 0 Then
             'If(SssEcEmployerShare, 0) > 0 AndAlso
@@ -153,7 +153,7 @@ Public Class GovernmentPremiumRowRecord
             Next
         End If
 
-        Dim bothPhilHealthShareHasValue = If(PhilHealthEmployeeShare, 0) > 0 AndAlso If(PhilHealthEmployerShare, 0) > 0
+        Dim bothPhilHealthShareHasValue = If(PhilHealthEmployeeShare, 0) > 0 'AndAlso If(PhilHealthEmployerShare, 0) > 0
 
         If bothPhilHealthShareHasValue AndAlso PhilHealthTotal > 0 Then
             'PhilHealth
@@ -185,7 +185,7 @@ Public Class GovernmentPremiumRowRecord
 
         End If
 
-        Dim bothHdmfShareHasValue = If(HdmfEmployeeShare, 0) > 0 AndAlso If(HdmfEmployerShare, 0) > 0
+        Dim bothHdmfShareHasValue = If(HdmfEmployeeShare, 0) > 0 'AndAlso If(HdmfEmployerShare, 0) > 0
 
         If bothHdmfShareHasValue AndAlso HdmfTotal > 0 Then
             'HDMF
