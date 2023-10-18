@@ -66,6 +66,41 @@ WHERE DATEDIFF(paydat_to, EffectiveDateFrom) > -1
 GROUP BY EmployeeID
 ;
 
+DROP TEMPORARY TABLE if EXISTS `employeegovtcontribution`;
+CREATE TEMPORARY TABLE if NOT EXISTS `employeegovtcontribution`
+SELECT
+s.*,
+p.GovtDeductionType = 'SSS' `IsSss`,
+p.GovtDeductionType = 'PhilHealth' `IsPhilHealth`,
+p.GovtDeductionType = 'HDMF' `IsHdmf`
+FROM scheduledloansperpayperiod s
+INNER JOIN employeeloanschedule els ON els.RowID=s.EmployeeLoanRecordID
+INNER JOIN product p ON p.RowID=els.LoanTypeID AND p.GovtDeductionType != 'None'
+WHERE s.PayPeriodID = PayPeriodRowID
+;
+
+DROP TEMPORARY TABLE if EXISTS `specificloans`;
+CREATE TEMPORARY TABLE if NOT EXISTS `specificloans`
+SELECT
+s.*,
+p.PartNo = 'Vale' `IsVale`,
+p.PartNo = 'Adv. Vale' `IsAdvVale`,
+p.PartNo = 'SSS Salary Loan' `IsSssSalaryLoan`,
+p.PartNo = 'SSS Calamity Loan' `IsSssCalamityLoan`,
+p.PartNo = 'Pag-ibig Salary Loan' `IsPagibigSalaryLoan`,
+p.PartNo = 'Pag-ibig Calamity Loan' `IsPagibigCalamityLoan`
+FROM scheduledloansperpayperiod s
+INNER JOIN employeeloanschedule els ON els.RowID=s.EmployeeLoanRecordID
+INNER JOIN product p ON p.RowID=els.LoanTypeID AND p.GovtDeductionType = 'None'
+AND p.PartNo IN ('Vale',
+'Adv. Vale',
+'SSS Salary Loan',
+'SSS Calamity Loan',
+'Pag-ibig Salary Loan',
+'Pag-ibig Calamity Loan')
+WHERE s.PayPeriodID = PayPeriodRowID
+;
+
 SELECT
     e.RowID,
     CONCAT(e.EmployeeID, ' / ', e.LastName, ', ', e.FirstName, ' ', LEFT(e.MiddleName, 1)) `COL1`,
@@ -108,8 +143,11 @@ SELECT
         ps.TotalGrossSalary + ps.TotalAdjustments
     ) `COL20`,
     ps.TotalEmpSSS `COL21`,
+#    IFNULL(SUM(sssgovtcontri.DeductionAmount), 0.00) `COL21`,
     ps.TotalEmpPhilhealth `COL22`,
+#    IFNULL(SUM(phhgovtcontri.DeductionAmount), 0.00) `COL22`,
     ps.TotalEmpHDMF `COL23`,
+#    IFNULL(SUM(hdmfgovtcontri.DeductionAmount), 0.00) `COL23`,
     ps.TotalEmpWithholdingTax `COL25`,
     ps.TotalLoans `COL26`,
     IF(IsActualFlag, psa.TotalNetSalary, ps.TotalNetSalary) `COL27`,
@@ -151,12 +189,19 @@ SELECT
     IFNULL(adjustments.`Names`, '') `COL90`,
     IFNULL(adjustments.`PayAmounts`, '') `COL91`,
 
-    payStubLoans.`Vale` `COL10`,
+/*    payStubLoans.`Vale` `COL10`,
     payStubLoans.`AdvVale` `COL11`,
     payStubLoans.`SssSalaryLoan` `COL58`,
     payStubLoans.`SssCalamityLoan` `COL59`,
     payStubLoans.`HdmfSalaryLoan` `COL60`,
-    payStubLoans.`HdmfCalamityLoan` `COL61`
+    payStubLoans.`HdmfCalamityLoan` `COL61`,*/
+    
+    IFNULL(SUM(valeloan.DeductionAmount), 0) `COL10`,
+    IFNULL(SUM(advvaleloan.DeductionAmount), 0) `COL11`,
+    IFNULL(SUM(ssssalaryloan.DeductionAmount), 0) `COL58`,
+    IFNULL(SUM(ssscalamityloan.DeductionAmount), 0) `COL59`,
+    IFNULL(SUM(hdmfsalaryloan.DeductionAmount), 0) `COL60`,
+    IFNULL(SUM(hdmfcalamityloan.DeductionAmount), 0) `COL61`
 
 FROM paystub ps
 INNER JOIN paystubactual psa
@@ -287,6 +332,24 @@ LEFT JOIN (
 ) adjustments
 ON adjustments.PayStubID = ps.RowID
 
+
+
+LEFT JOIN `employeegovtcontribution` sssgovtcontri ON sssgovtcontri.`IsSss`=TRUE AND sssgovtcontri.EmployeeID = ps.EmployeeID
+LEFT JOIN `employeegovtcontribution` phhgovtcontri ON phhgovtcontri.`IsPhilHealth`=TRUE AND phhgovtcontri.EmployeeID = ps.EmployeeID
+LEFT JOIN `employeegovtcontribution` hdmfgovtcontri ON hdmfgovtcontri.`IsHdmf`=TRUE AND hdmfgovtcontri.EmployeeID = ps.EmployeeID
+
+LEFT JOIN `specificloans` valeloan ON valeloan.`IsVale`=TRUE AND valeloan.EmployeeID = ps.EmployeeID
+LEFT JOIN `specificloans` advvaleloan ON advvaleloan.`IsAdvVale`=TRUE AND advvaleloan.EmployeeID = ps.EmployeeID
+LEFT JOIN `specificloans` ssssalaryloan ON ssssalaryloan.`IsSssSalaryLoan`=TRUE AND ssssalaryloan.EmployeeID = ps.EmployeeID
+LEFT JOIN `specificloans` ssscalamityloan ON ssscalamityloan.`IsSssCalamityLoan`=TRUE AND ssscalamityloan.EmployeeID = ps.EmployeeID
+LEFT JOIN `specificloans` hdmfsalaryloan ON hdmfsalaryloan.`IsPagibigSalaryLoan`=TRUE AND hdmfsalaryloan.EmployeeID = ps.EmployeeID
+LEFT JOIN `specificloans` hdmfcalamityloan ON hdmfcalamityloan.`IsPagibigCalamityLoan`=TRUE AND hdmfcalamityloan.EmployeeID = ps.EmployeeID
+/*'Vale',
+'Adv. Vale',
+'SSS Salary Loan',
+'SSS Calamity Loan',
+'Pag-ibig Salary Loan',
+'Pag-ibig Calamity Loan'*/
 
 
 
