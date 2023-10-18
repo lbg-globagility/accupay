@@ -356,7 +356,9 @@ Public Class ImportLoansForm
             Dim optionsWorksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
             Dim loanTypes = _productRepository.
                 ConvertToStringList(Me._loanTypeList).
-                OrderBy(Function(t) t).
+                GroupBy(Function(t) t).
+                OrderBy(Function(t) t.Key).
+                Select(Function(t) t.FirstOrDefault()).
                 ToList()
 
             Dim count = loanTypes.Count - 1
