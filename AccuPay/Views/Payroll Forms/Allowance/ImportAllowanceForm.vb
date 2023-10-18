@@ -282,8 +282,9 @@ Public Class ImportAllowanceForm
                 Dim optionsWorksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
                 Dim allowanceTypes = _allowanceTypeList.
-                    Select(Function(p) p.PartNo).
-                    OrderBy(Function(p) p).
+                    GroupBy(Function(p) p.PartNo).
+                    OrderBy(Function(p) p.Key).
+                    Select(Function(p) p.FirstOrDefault().PartNo).
                     ToList()
 
                 Dim count = allowanceTypes.Count - 1
