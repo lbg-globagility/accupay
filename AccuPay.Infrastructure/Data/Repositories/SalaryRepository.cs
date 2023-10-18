@@ -28,6 +28,7 @@ namespace AccuPay.Infrastructure.Data
         #endregion Save
 
         #region Queries
+
         #region Single entity
 
         public async Task<Salary> GetByIdWithEmployeeAsync(int id)
@@ -108,12 +109,8 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
-        public async Task<ICollection<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffEnd)
-        {
-            return await CreateBaseQueryByCutOff(cutoffEnd)
-                .Where(x => x.OrganizationID == organizationId)
+        public async Task<ICollection<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffEnd) => await CreateBaseQueryByCutOff2(organizationId, cutoffEnd)
                 .ToListAsync();
-        }
 
         public async Task<ICollection<Salary>> GetByMultipleEmployeeAsync(int[] employeeIds, DateTime cutoffEnd)
         {
@@ -128,6 +125,7 @@ namespace AccuPay.Infrastructure.Data
                 Where(s => rowIds.Contains(s.RowID.Value)).
                 ToListAsync();
         }
+
         #endregion List of entities
 
         #endregion Queries
@@ -138,10 +136,26 @@ namespace AccuPay.Infrastructure.Data
 
             query = SalaryQueryHelper.GetLatestSalaryQuery(query, cutoffEnd);
 
-            return query
+            var result = query
                 .AsNoTracking()
                 .GroupBy(x => x.EmployeeID)
                 .Select(g => g.FirstOrDefault());
+
+            return result;
+        }
+
+        private IQueryable<Salary> CreateBaseQueryByCutOff2(int organizationId, DateTime cutoffEnd)
+        {
+            var query = _context.Salaries.Where(t => t.OrganizationID == organizationId).AsQueryable();
+
+            query = SalaryQueryHelper.GetLatestSalaryQuery(query, cutoffEnd);
+
+            var result = query
+                .AsNoTracking()
+                .GroupBy(x => x.EmployeeID)
+                .Select(g => g.FirstOrDefault());
+
+            return result;
         }
     }
 }
