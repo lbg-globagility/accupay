@@ -153,7 +153,7 @@ namespace AccuPay.Infrastructure.Data
             var result = query
                 .AsNoTracking()
                 .GroupBy(x => x.EmployeeID)
-                .Select(g => g.FirstOrDefault());
+                .Select(g => g.OrderByDescending(t => t.EffectiveFrom).FirstOrDefault());
 
             return result;
         }
