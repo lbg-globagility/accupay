@@ -332,7 +332,7 @@ namespace AccuPay.Infrastructure.Data
                 }
                 else
                 {
-                    var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo == leave.LeaveType);
+                    var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo.ToLower() == leave.LeaveType.ToLower());
 
                     // retrieves the time entries within leave date range
                     var timeEntry = timeEntries?.Where(t => leave.StartDate == t.Date);

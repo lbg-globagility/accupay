@@ -30,5 +30,7 @@ namespace AccuPay.Core.Interfaces
         IReadOnlyCollection<TimeLog> TimeLogs { get; }
         IReadOnlyCollection<TripTicket> TripTickets { get; }
         IReadOnlyCollection<AllowanceSalaryTimeEntry> AllowanceSalaryTimeEntries { get; }
+        IReadOnlyCollection<Salary2> Salaries2 { get; }
+        void SetSalaries2(IReadOnlyCollection<Salary2> salaries2);
     }
 }

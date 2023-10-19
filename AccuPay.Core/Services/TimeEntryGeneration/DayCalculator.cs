@@ -47,7 +47,8 @@ namespace AccuPay.Core.Services
             CalendarCollection calendarCollection,
             int? branchId,
             ICollection<TripTicket> tripTickets,
-            IReadOnlyCollection<RoutePayRate> routeRates)
+            IReadOnlyCollection<RoutePayRate> routeRates,
+            IList<Salary2> salaries2 = null)
         {
             var timeEntry = oldTimeEntries.Where(t => t.Date == currentDate).SingleOrDefault();
 
@@ -61,6 +62,9 @@ namespace AccuPay.Core.Services
 
             timeEntry.Reset();
 
+            salary = salaries2?.Where(t => currentDate >= t.EffectiveFrom)
+                .Where(t => currentDate <= t.EffectiveTo)
+                .FirstOrDefault();
             bool hasSalaryForThisDate = salary != null && currentDate.Date >= salary.EffectiveFrom;
 
             // TODO: return this as one the list of warnings of Time entry generation

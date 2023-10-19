@@ -136,7 +136,8 @@ SELECT
     psiLeave.Availed `COl45`,
     psiLeave.Balance `COL46`,
     IFNULL(adjustments.`Names`, '') `COL90`,
-    IFNULL(adjustments.`PayAmounts`, '') `COL91`
+    IFNULL(adjustments.`PayAmounts`, '') `COL91`,
+    ps.TotalBonus `COL92`
 FROM paystub ps
 INNER JOIN paystubactual psa
 ON psa.EmployeeID = ps.EmployeeID AND

@@ -580,7 +580,7 @@ namespace AccuPay.Core.Entities
             OvertimePay = totalTimeEntries.OvertimePay;
             Actual.OvertimePay = totalTimeEntries.ActualOvertimePay;
 
-            NightDiffHours = totalTimeEntries.NightDifferentialOvertimeHours;
+            NightDiffHours = totalTimeEntries.NightDifferentialHours;
             NightDiffPay = totalTimeEntries.NightDiffPay;
             Actual.NightDiffPay = totalTimeEntries.ActualNightDiffPay;
 

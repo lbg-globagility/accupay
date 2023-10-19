@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -87,5 +87,11 @@ namespace AccuPay.Utilities.Extensions
 
             return input;
         }
+
+        public static bool IsEqualTo(this string input, string comparableText, bool ignoreCase = false) =>
+            ignoreCase ? String.Compare(input?.ToLower(), comparableText?.ToLower()) == 0 :
+                String.Compare(input, comparableText) == 0;
+
+        public static bool Like(this string source, string toCheck, StringComparison comp = StringComparison.OrdinalIgnoreCase) => (source?.IndexOf(toCheck, comp) ?? -1) >= 0;
     }
 }
