@@ -122,7 +122,7 @@ Public Class ImportAllowanceForm
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeNumber = employee.EmployeeNo
 
-            Dim allowance = Await ConvertToAllowance(record, employeeId:=employee.RowID.Value, organizationId:=z_OrganizationID)
+            Dim allowance = Await ConvertToAllowance(record, employeeId:=employee.RowID.Value, organizationId:=employee.OrganizationID.Value)
 
             If allowance Is Nothing Then
 

@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Core
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
@@ -122,19 +123,17 @@ Public Class ImportSalaryForm
 
             End If
 
-            Dim salary = New Salary With {
-                .OrganizationID = z_OrganizationID,
-                .EmployeeID = employee.RowID,
-                .PositionID = employee.PositionID,
-                .EffectiveFrom = record.EffectiveFrom.Value,
-                .BasicSalary = record.BasicSalary.Value,
-                .AllowanceSalary = record.AllowanceSalary,
-                .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
-                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
-                .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
-                .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
-                .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
-            }
+            Dim salary = Entities.Salary.NewSalary(organizationId:=lastSalary.OrganizationID,
+                employeeId:=employee.RowID,
+                positionId:=employee.PositionID,
+                effectiveFrom:=record.EffectiveFrom.Value,
+                basicSalary:=record.BasicSalary.Value,
+                allowanceSalary:=record.AllowanceSalary,
+                doPaySSSContribution:=If(lastSalary?.DoPaySSSContribution, True),
+                autoComputeHDMFContribution:=If(lastSalary?.AutoComputeHDMFContribution, True),
+                autoComputePhilHealthContribution:=If(lastSalary?.AutoComputePhilHealthContribution, True),
+                hdmfAmount:=If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
+                philHealthDeduction:=If(lastSalary?.PhilHealthDeduction, 0))
 
             salary.UpdateTotalSalary()
 
@@ -175,19 +174,17 @@ Public Class ImportSalaryForm
 
             End If
 
-            Dim salary = New Salary With {
-                .OrganizationID = z_OrganizationID,
-                .EmployeeID = employee.RowID,
-                .PositionID = employee.PositionID,
-                .EffectiveFrom = record.EffectiveFrom.Value,
-                .BasicSalary = record.BasicSalary.Value,
-                .AllowanceSalary = record.AllowanceSalary,
-                .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
-                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
-                .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
-                .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
-                .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
-            }
+            Dim salary = Entities.Salary.NewSalary(organizationId:=lastSalary.OrganizationID,
+                employeeId:=employee.RowID,
+                positionId:=employee.PositionID,
+                effectiveFrom:=record.EffectiveFrom.Value,
+                basicSalary:=record.BasicSalary.Value,
+                allowanceSalary:=record.AllowanceSalary,
+                doPaySSSContribution:=If(lastSalary?.DoPaySSSContribution, True),
+                autoComputeHDMFContribution:=If(lastSalary?.AutoComputeHDMFContribution, True),
+                autoComputePhilHealthContribution:=If(lastSalary?.AutoComputePhilHealthContribution, True),
+                hdmfAmount:=If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
+                philHealthDeduction:=If(lastSalary?.PhilHealthDeduction, 0))
 
             salary.UpdateTotalSalary()
 

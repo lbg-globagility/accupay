@@ -5,7 +5,7 @@ using System.Globalization;
 namespace AccuPay.Core.Entities
 {
     [Table("employeesalary")]
-    public class Salary : EmployeeDataEntity
+    public partial class Salary : EmployeeDataEntity
     {
         public int? PositionID { get; set; }
 
@@ -38,6 +38,60 @@ namespace AccuPay.Core.Entities
         public bool AutoComputeHDMFContribution { get; set; }
 
         public bool IsMinimumWage { get; set; }
+    }
+
+    public partial class Salary
+    {
+        public Salary()
+        {
+        }
+
+        public Salary(int? organizationId,
+            int? employeeId,
+            int? positionId,
+            DateTime effectiveFrom,
+            decimal basicSalary,
+            decimal allowanceSalary,
+            bool doPaySSSContribution,
+            bool autoComputeHDMFContribution,
+            bool autoComputePhilHealthContribution,
+            decimal hdmfAmount,
+            decimal philHealthDeduction)
+        {
+            OrganizationID = organizationId;
+            EmployeeID = employeeId;
+            PositionID = positionId;
+            EffectiveFrom = effectiveFrom;
+            BasicSalary = basicSalary;
+            AllowanceSalary = allowanceSalary;
+            DoPaySSSContribution = doPaySSSContribution;
+            AutoComputeHDMFContribution = autoComputeHDMFContribution;
+            AutoComputePhilHealthContribution = autoComputePhilHealthContribution;
+            HDMFAmount = hdmfAmount;
+            PhilHealthDeduction = philHealthDeduction;
+        }
+
+        public static Salary NewSalary(int? organizationId,
+            int? employeeId,
+            int? positionId,
+            DateTime effectiveFrom,
+            decimal basicSalary,
+            decimal allowanceSalary,
+            bool doPaySSSContribution,
+            bool autoComputeHDMFContribution,
+            bool autoComputePhilHealthContribution,
+            decimal hdmfAmount,
+            decimal philHealthDeduction) => new Salary(organizationId: organizationId,
+                employeeId: employeeId,
+                positionId: positionId,
+                effectiveFrom: effectiveFrom,
+                basicSalary: basicSalary,
+                allowanceSalary: allowanceSalary,
+                doPaySSSContribution: doPaySSSContribution,
+                autoComputeHDMFContribution: autoComputeHDMFContribution,
+                autoComputePhilHealthContribution: autoComputePhilHealthContribution,
+                hdmfAmount: hdmfAmount,
+                philHealthDeduction: philHealthDeduction);
 
         /// <summary>
         /// Updates TotalSalary. Call this everytime BasicSalary or AllowanceSalary has changed.
