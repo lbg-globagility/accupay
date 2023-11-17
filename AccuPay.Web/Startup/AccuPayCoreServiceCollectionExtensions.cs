@@ -15,6 +15,7 @@ using AccuPay.Core.Services.Imports.Salaries;
 using AccuPay.Core.Services.LeaveBalanceReset;
 using AccuPay.Infrastructure.Data;
 using AccuPay.Infrastructure.Data.Data_Services;
+using AccuPay.Infrastructure.Data.Reports;
 using AccuPay.Infrastructure.Data.Repositories;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
@@ -136,6 +137,8 @@ namespace AccuPay.Web
             services.AddScoped<ITripTicketDataService, TripTicketDataService>();
             services.AddScoped<IUserDataService, UserDataService>();
             services.AddScoped<IResetLeaveCreditDataService, ResetLeaveCreditDataService>();
+            services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
+            services.AddScoped<IAlphaListReportDataService, AlphaListReportDataService>();
 
             services.AddScoped<IAllowanceImportParser, AllowanceImportParser>();
             services.AddScoped<IEmployeeImportParser, EmployeeImportParser>();
@@ -174,8 +177,9 @@ namespace AccuPay.Web
             services.AddScoped<ILeaveBalanceResetCalculator, LeaveBalanceResetCalculator>();
             services.AddScoped<ILeavePolicy, LeavePolicy>();
             services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
-            services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
+            services.AddScoped<IListOfValueCollection, ListOfValueCollection>();
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
+            services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
 
             return services;
         }
