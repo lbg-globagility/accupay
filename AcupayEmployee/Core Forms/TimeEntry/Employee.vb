@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
@@ -137,7 +137,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property LateGracePeriod As Decimal
 
-        Public Property OffsetBalance As Decimal
+        'Public Property OffsetBalance As Decimal
 
         Public ReadOnly Property MiddleInitial As String
             Get

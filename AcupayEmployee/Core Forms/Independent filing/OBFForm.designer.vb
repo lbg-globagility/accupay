@@ -24,8 +24,6 @@ Partial Class OBFForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.txtOBFEndTime = New System.Windows.Forms.TextBox()
-        Me.txtOBFStartTime = New System.Windows.Forms.TextBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.dtpOBFStartTime = New System.Windows.Forms.DateTimePicker()
         Me.chkOBTimeOut = New System.Windows.Forms.CheckBox()
@@ -34,7 +32,6 @@ Partial Class OBFForm
         Me.cboxEmployees = New System.Windows.Forms.ComboBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.TxtEmployeeFullName1 = New Acupay.txtEmployeeFullName()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cboOrganization = New System.Windows.Forms.ComboBox()
@@ -44,9 +41,6 @@ Partial Class OBFForm
         Me.Label198 = New System.Windows.Forms.Label()
         Me.Label195 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.cboOBFStatus = New Acupay.cboListOfValue()
-        Me.cboOBFtype = New Acupay.cboListOfValue()
-        Me.TxtEmployeeNumber1 = New Acupay.txtEmployeeNumber()
         Me.dtpOBFEndDate = New System.Windows.Forms.DateTimePicker()
         Me.dtpOBFStartDate = New System.Windows.Forms.DateTimePicker()
         Me.Label186 = New System.Windows.Forms.Label()
@@ -65,6 +59,14 @@ Partial Class OBFForm
         Me.bgwSaving = New System.ComponentModel.BackgroundWorker()
         Me.bgwEmpNames = New System.ComponentModel.BackgroundWorker()
         Me.ErrorProvider1 = New System.Windows.Forms.ErrorProvider(Me.components)
+        Me.TxtEmployeeFullName1 = New Acupay.txtEmployeeFullName()
+        Me.cboOBFStatus = New Acupay.cboListOfValue()
+        Me.cboOBFtype = New Acupay.cboListOfValue()
+        Me.TxtEmployeeNumber1 = New Acupay.txtEmployeeNumber()
+        Me.txtOBFStartTime = New System.Windows.Forms.DateTimePicker()
+        Me.txtOBFEndTime = New System.Windows.Forms.DateTimePicker()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.ErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -73,6 +75,8 @@ Partial Class OBFForm
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.White
+        Me.Panel1.Controls.Add(Me.Label9)
+        Me.Panel1.Controls.Add(Me.Label8)
         Me.Panel1.Controls.Add(Me.txtOBFEndTime)
         Me.Panel1.Controls.Add(Me.txtOBFStartTime)
         Me.Panel1.Controls.Add(Me.Panel2)
@@ -111,20 +115,6 @@ Partial Class OBFForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(895, 427)
         Me.Panel1.TabIndex = 0
-        '
-        'txtOBFEndTime
-        '
-        Me.txtOBFEndTime.Location = New System.Drawing.Point(158, 257)
-        Me.txtOBFEndTime.Name = "txtOBFEndTime"
-        Me.txtOBFEndTime.Size = New System.Drawing.Size(196, 25)
-        Me.txtOBFEndTime.TabIndex = 6
-        '
-        'txtOBFStartTime
-        '
-        Me.txtOBFStartTime.Location = New System.Drawing.Point(158, 223)
-        Me.txtOBFStartTime.Name = "txtOBFStartTime"
-        Me.txtOBFStartTime.Size = New System.Drawing.Size(196, 25)
-        Me.txtOBFStartTime.TabIndex = 5
         '
         'Panel2
         '
@@ -210,22 +200,6 @@ Partial Class OBFForm
         Me.Label3.Size = New System.Drawing.Size(66, 17)
         Me.Label3.TabIndex = 261
         Me.Label3.Text = "Full Name"
-        '
-        'TxtEmployeeFullName1
-        '
-        Me.TxtEmployeeFullName1.BackColor = System.Drawing.SystemColors.Window
-        Me.TxtEmployeeFullName1.BorderColor = System.Drawing.Color.LightSteelBlue
-        Me.TxtEmployeeFullName1.EmployeeTableColumnName = ""
-        Me.TxtEmployeeFullName1.Enabled = False
-        Me.TxtEmployeeFullName1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
-        Me.TxtEmployeeFullName1.Location = New System.Drawing.Point(158, 24)
-        Me.TxtEmployeeFullName1.Name = "TxtEmployeeFullName1"
-        Me.TxtEmployeeFullName1.Padding = New System.Windows.Forms.Padding(4)
-        Me.TxtEmployeeFullName1.PopupWidth = 120
-        Me.TxtEmployeeFullName1.SelectedItemBackColor = System.Drawing.SystemColors.Highlight
-        Me.TxtEmployeeFullName1.SelectedItemForeColor = System.Drawing.SystemColors.HighlightText
-        Me.TxtEmployeeFullName1.Size = New System.Drawing.Size(465, 40)
-        Me.TxtEmployeeFullName1.TabIndex = 0
         '
         'Label5
         '
@@ -326,42 +300,6 @@ Partial Class OBFForm
         Me.Label1.Size = New System.Drawing.Size(81, 17)
         Me.Label1.TabIndex = 249
         Me.Label1.Text = "Employee ID"
-        '
-        'cboOBFStatus
-        '
-        Me.cboOBFStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboOBFStatus.DropDownWidth = 121
-        Me.cboOBFStatus.FormattingEnabled = True
-        Me.cboOBFStatus.ListOfValueType = "Leave Status"
-        Me.cboOBFStatus.Location = New System.Drawing.Point(158, 291)
-        Me.cboOBFStatus.Name = "cboOBFStatus"
-        Me.cboOBFStatus.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cboOBFStatus.Size = New System.Drawing.Size(196, 25)
-        Me.cboOBFStatus.TabIndex = 7
-        '
-        'cboOBFtype
-        '
-        Me.cboOBFtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cboOBFtype.DropDownWidth = 121
-        Me.cboOBFtype.FormattingEnabled = True
-        Me.cboOBFtype.ListOfValueType = "Official Business Type"
-        Me.cboOBFtype.Location = New System.Drawing.Point(158, 121)
-        Me.cboOBFtype.Name = "cboOBFtype"
-        Me.cboOBFtype.OrderByColumn = CType(CSByte(0), SByte)
-        Me.cboOBFtype.Size = New System.Drawing.Size(196, 25)
-        Me.cboOBFtype.TabIndex = 2
-        '
-        'TxtEmployeeNumber1
-        '
-        Me.TxtEmployeeNumber1.BackColor = System.Drawing.Color.White
-        Me.TxtEmployeeNumber1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
-        Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(158, 73)
-        Me.TxtEmployeeNumber1.MaxLength = 50
-        Me.TxtEmployeeNumber1.Name = "TxtEmployeeNumber1"
-        Me.TxtEmployeeNumber1.ReadOnly = True
-        Me.TxtEmployeeNumber1.RowIDValue = ""
-        Me.TxtEmployeeNumber1.Size = New System.Drawing.Size(196, 39)
-        Me.TxtEmployeeNumber1.TabIndex = 1
         '
         'dtpOBFEndDate
         '
@@ -507,6 +445,100 @@ Partial Class OBFForm
         '
         Me.ErrorProvider1.ContainerControl = Me
         '
+        'TxtEmployeeFullName1
+        '
+        Me.TxtEmployeeFullName1.BackColor = System.Drawing.SystemColors.Window
+        Me.TxtEmployeeFullName1.BorderColor = System.Drawing.Color.LightSteelBlue
+        Me.TxtEmployeeFullName1.EmployeeTableColumnName = ""
+        Me.TxtEmployeeFullName1.Enabled = False
+        Me.TxtEmployeeFullName1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
+        Me.TxtEmployeeFullName1.Location = New System.Drawing.Point(158, 24)
+        Me.TxtEmployeeFullName1.Name = "TxtEmployeeFullName1"
+        Me.TxtEmployeeFullName1.Padding = New System.Windows.Forms.Padding(4)
+        Me.TxtEmployeeFullName1.PopupWidth = 120
+        Me.TxtEmployeeFullName1.SelectedItemBackColor = System.Drawing.SystemColors.Highlight
+        Me.TxtEmployeeFullName1.SelectedItemForeColor = System.Drawing.SystemColors.HighlightText
+        Me.TxtEmployeeFullName1.Size = New System.Drawing.Size(465, 40)
+        Me.TxtEmployeeFullName1.TabIndex = 0
+        '
+        'cboOBFStatus
+        '
+        Me.cboOBFStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboOBFStatus.DropDownWidth = 121
+        Me.cboOBFStatus.FormattingEnabled = True
+        Me.cboOBFStatus.ListOfValueType = "Leave Status"
+        Me.cboOBFStatus.Location = New System.Drawing.Point(158, 291)
+        Me.cboOBFStatus.Name = "cboOBFStatus"
+        Me.cboOBFStatus.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cboOBFStatus.Size = New System.Drawing.Size(196, 25)
+        Me.cboOBFStatus.TabIndex = 7
+        '
+        'cboOBFtype
+        '
+        Me.cboOBFtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboOBFtype.DropDownWidth = 121
+        Me.cboOBFtype.FormattingEnabled = True
+        Me.cboOBFtype.ListOfValueType = "Official Business Type"
+        Me.cboOBFtype.Location = New System.Drawing.Point(158, 121)
+        Me.cboOBFtype.Name = "cboOBFtype"
+        Me.cboOBFtype.OrderByColumn = CType(CSByte(0), SByte)
+        Me.cboOBFtype.Size = New System.Drawing.Size(196, 25)
+        Me.cboOBFtype.TabIndex = 2
+        '
+        'TxtEmployeeNumber1
+        '
+        Me.TxtEmployeeNumber1.BackColor = System.Drawing.Color.White
+        Me.TxtEmployeeNumber1.Font = New System.Drawing.Font("Segoe UI Semilight", 18.0!)
+        Me.TxtEmployeeNumber1.Location = New System.Drawing.Point(158, 73)
+        Me.TxtEmployeeNumber1.MaxLength = 50
+        Me.TxtEmployeeNumber1.Name = "TxtEmployeeNumber1"
+        Me.TxtEmployeeNumber1.ReadOnly = True
+        Me.TxtEmployeeNumber1.RowIDValue = ""
+        Me.TxtEmployeeNumber1.Size = New System.Drawing.Size(196, 39)
+        Me.TxtEmployeeNumber1.TabIndex = 1
+        '
+        'txtOBFStartTime
+        '
+        Me.txtOBFStartTime.CustomFormat = "hh:mm tt"
+        Me.txtOBFStartTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.txtOBFStartTime.Location = New System.Drawing.Point(158, 225)
+        Me.txtOBFStartTime.Name = "txtOBFStartTime"
+        Me.txtOBFStartTime.ShowUpDown = True
+        Me.txtOBFStartTime.Size = New System.Drawing.Size(196, 25)
+        Me.txtOBFStartTime.TabIndex = 360
+        '
+        'txtOBFEndTime
+        '
+        Me.txtOBFEndTime.CustomFormat = "hh:mm tt"
+        Me.txtOBFEndTime.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.txtOBFEndTime.Location = New System.Drawing.Point(158, 259)
+        Me.txtOBFEndTime.Name = "txtOBFEndTime"
+        Me.txtOBFEndTime.ShowUpDown = True
+        Me.txtOBFEndTime.Size = New System.Drawing.Size(196, 25)
+        Me.txtOBFEndTime.TabIndex = 361
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label8.Location = New System.Drawing.Point(134, 258)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(18, 24)
+        Me.Label8.TabIndex = 362
+        Me.Label8.Text = "*"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label9.Location = New System.Drawing.Point(134, 226)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(18, 24)
+        Me.Label9.TabIndex = 363
+        Me.Label9.Text = "*"
+        '
         'OBFForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -565,7 +597,9 @@ Partial Class OBFForm
     Friend WithEvents chkOBTimeOut As CheckBox
     Friend WithEvents chkOBTimeIn As CheckBox
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents txtOBFEndTime As TextBox
-    Friend WithEvents txtOBFStartTime As TextBox
     Friend WithEvents ErrorProvider1 As ErrorProvider
+    Friend WithEvents Label9 As Label
+    Friend WithEvents Label8 As Label
+    Friend WithEvents txtOBFEndTime As DateTimePicker
+    Friend WithEvents txtOBFStartTime As DateTimePicker
 End Class

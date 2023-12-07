@@ -1,4 +1,4 @@
-﻿Imports Femiani.Forms.UI.Input
+Imports Femiani.Forms.UI.Input
 Imports System.Threading
 
 Public Class OverTimeForm
@@ -183,18 +183,23 @@ Public Class OverTimeForm
 
         param(0, 1) = If(n_OverTimeRowID = Nothing, DBNull.Value, n_OverTimeRowID)
         param(1, 1) = EXECQUER("SELECT OrganizationID FROM employee WHERE RowID='" & e_rowid & "';") 'TxtEmployeeNumber1.RowIDValue
-        param(2, 1) = If(z_User = 0, DBNull.Value, z_User)
+        param(2, 1) = 1
         param(3, 1) = param(2, 1) 'z_User
         param(4, 1) = e_rowid 'TxtEmployeeNumber1.RowIDValue
         param(5, 1) = OTTypeString
 
         Dim iii = Format(CDate(dtpstarttime.Value), "hh:mm tt")
 
-        param(6, 1) = MilitTime(iii)
+        Dim militaryTime = Format(CDate(dtpstarttime.Value), "HH:mm")
+
+        'param(6, 1) = MilitTime(iii)
+        param(6, 1) = militaryTime
 
         iii = Format(CDate(dtpendtime.Value), "hh:mm tt")
+        militaryTime = Format(CDate(dtpendtime.Value), "HH:mm")
 
-        param(7, 1) = MilitTime(iii)
+        'param(7, 1) = MilitTime(iii)
+        param(7, 1) = militaryTime
 
         param(8, 1) = Format(CDate(dtpstartdateEmpOT.Value), "yyyy-MM-dd")
 
@@ -212,7 +217,7 @@ Public Class OverTimeForm
 
         Return _
                 EXEC_INSUPD_PROCEDURE(param,
-                                      "INSUPD_employeeOT_indepen",
+                                      "INSUPD_employeeOT",
                                       "eot_ID")
 
     End Function
