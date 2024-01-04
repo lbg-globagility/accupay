@@ -40,7 +40,10 @@ Public Class EmployeeForm
 
     Sub New()
 
+
         InitializeComponent()
+
+        enlistToCboBox(q_empstat, ComboBoxSearchStatus)
 
         _policy = MainServiceProvider.GetRequiredService(Of IPolicyHelper)
 
@@ -2243,7 +2246,8 @@ Public Class EmployeeForm
             TextBox1.Text,
             TextBox15.Text,
             TextBox16.Text,
-            pagination}
+            pagination,
+            ComboBoxSearchStatus.Text}
 
         Dim n_ReadSQLProcedureToDatatable As New _
             ReadSQLProcedureToDatatable("SEARCH_employeeprofile", param_array)
