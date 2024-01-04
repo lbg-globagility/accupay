@@ -1,0 +1,19 @@
+
+UPDATE paysocialsecurity ss
+SET ss.EffectiveDateTo='2024-12-31',
+ss.LastUpd=CURRENT_TIMESTAMP()
+WHERE ss.EffectiveDateFrom='2023-01-01' AND ss.EffectiveDateTo='2023-12-31'
+;
+
+SET @id=(SELECT l.RowID FROM listofval l WHERE l.`Type`='PhilHealth' AND LIC='Rate' LIMIT 1);
+UPDATE `listofval` SET `DisplayValue`='5' WHERE  `RowID`=@id;
+
+SET @id=(SELECT l.RowID FROM listofval l WHERE l.`Type`='PhilHealth' AND LIC='MinimumContribution' LIMIT 1);
+UPDATE `listofval` SET `DisplayValue`='500' WHERE  `RowID`=@id;
+
+SET @id=(SELECT l.RowID FROM listofval l WHERE l.`Type`='PhilHealth' AND LIC='MaximumContribution' LIMIT 1);
+UPDATE `listofval` SET `DisplayValue`='5000' WHERE  `RowID`=@id;
+
+SET @id=(SELECT l.RowID FROM listofval l WHERE l.`Type`='Default Government Contribution' AND LIC='HDMF' LIMIT 1);
+UPDATE `accupaydb_cinema2k`.`listofval` SET `DisplayValue`='200.0' WHERE  `RowID`=@id;
+
