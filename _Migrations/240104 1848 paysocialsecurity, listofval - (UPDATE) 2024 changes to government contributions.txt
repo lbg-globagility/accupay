@@ -15,5 +15,5 @@ SET @id=(SELECT l.RowID FROM listofval l WHERE l.`Type`='PhilHealth' AND LIC='Ma
 UPDATE `listofval` SET `DisplayValue`='5000' WHERE  `RowID`=@id;
 
 SET @id=(SELECT l.RowID FROM listofval l WHERE l.`Type`='Default Government Contribution' AND LIC='HDMF' LIMIT 1);
-UPDATE `accupaydb_cinema2k`.`listofval` SET `DisplayValue`='200.0' WHERE  `RowID`=@id;
+UPDATE `listofval` SET `DisplayValue`='200.0' WHERE  `RowID`=@id;
 
