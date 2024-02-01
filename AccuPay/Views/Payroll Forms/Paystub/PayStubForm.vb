@@ -60,6 +60,12 @@ Public Class PayStubForm
 
     Private ReadOnly _paystubRepository As IPaystubRepository
 
+    Public ReadOnly Property PaystubRepository As IPaystubRepository
+        Get
+            Return _paystubRepository
+        End Get
+    End Property
+
     Private ReadOnly _productRepository As IProductRepository
 
     Sub New()
@@ -409,6 +415,8 @@ Public Class PayStubForm
         'OthersToolStripMenuItem.Visible = enable
         Include13thMonthPayToolStripMenuItem.Visible = enable
         PayLoansUsing13thMonthToolStripMenuItem.Visible = enable AndAlso _policy.UseLoanDeductFromThirteenthMonthPay
+        'GetLeaveConvertiblePolicies
+        'CashOutUnusedLeavesToolStripMenuItem.Visible = enable AndAlso _policy.IsEnableCashoutUnusedLeaves
     End Sub
 
     Private Sub EnableAdjustmentsInput(Optional enable As Boolean = True)
@@ -702,6 +710,11 @@ Public Class PayStubForm
                 )
             End Sub)
 
+    End Function
+
+    Public Async Function GeneratePayroll(payPeriodId As Integer) As Task
+        _currentPayperiodId = payPeriodId
+        Await GeneratePayroll()
     End Function
 
     Private Async Sub GeneratePayrollOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
@@ -1564,23 +1577,27 @@ Public Class PayStubForm
     End Sub
 
     Private Sub CashOutUnusedLeavesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CashOutUnusedLeavesToolStripMenuItem.Click
-        If _currentPayperiodId Is Nothing Then
-            MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
-            Return
-        End If
+        ''If _currentPayperiodId Is Nothing Then
+        ''    MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
+        ''    Return
+        ''End If
 
-        Dim payPeriodSelector = New MultiplePayPeriodSelectionDialog()
+        ''Dim payPeriodSelector = New MultiplePayPeriodSelectionDialog()
 
-        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
-            Return
-        End If
+        ''If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
+        ''    Return
+        ''End If
 
-        Dim dateFromId = payPeriodSelector.PayPeriodFromID
-        Dim dateToId = payPeriodSelector.PayPeriodToID
+        ''Dim dateFromId = payPeriodSelector.PayPeriodFromID
+        ''Dim dateToId = payPeriodSelector.PayPeriodToID
 
-        ' Code not tested
-        'Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID, z_OrganizationID, z_User)
-        'cashOut.Execute()
+        ''' Code not tested
+        '''Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID, z_OrganizationID, z_User)
+        '''cashOut.Execute()
+
+        'If _currentPayperiodId Is Nothing Then Return
+        'Dim form = New CashOutUnusedLeavesForm(payPerioId:=_currentPayperiodId.Value, payStubForm:=Me)
+        'form.ShowDialog()
     End Sub
 
     Private Async Sub DeletePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeletePaystubsToolStripMenuItem.Click

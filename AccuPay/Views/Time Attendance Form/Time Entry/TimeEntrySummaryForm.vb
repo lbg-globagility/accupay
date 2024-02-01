@@ -221,8 +221,11 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
+        Dim periodEndDate = If(_selectedPayPeriod Is Nothing, Date.Now(), _selectedPayPeriod.PayToDate)
 
-        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
+        Dim unsortedList = Await _employeeRepository.GetAllWithinServicePeriodWithPositionAsync(
+            organizationId:=z_OrganizationID,
+            currentDate:=periodEndDate)
         Dim list = unsortedList.
             OrderBy(Function(e) e.LastName).
             ToList()
@@ -440,6 +443,15 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim sql = <![CDATA[
+            DROP TEMPORARY TABLE IF EXISTS `latesttimelogs`;
+            CREATE TEMPORARY TABLE IF NOT EXISTS `latesttimelogs`
+            SELECT RowID, `Date`, EmployeeID, MAX(LastUpd) `UpdatedTimeLog`
+            FROM employeetimeentrydetails
+            WHERE EmployeeID=@EmployeeID
+            AND Date BETWEEN @DateFrom AND @DateTo
+            GROUP BY `Date`
+            ORDER BY `Date`, LastUpd DESC;
+
             SELECT
                 ete.RowID,
                 ete.Date,
@@ -494,25 +506,14 @@ Public Class TimeEntrySummaryForm
                 ete.BranchID,
                 branch.BranchName
             FROM employeetimeentry ete
-            LEFT JOIN (
-                SELECT EmployeeID, DATE,
-				    (SELECT RowID
-				    FROM employeetimeentrydetails
-				    WHERE EmployeeID = groupedEtd.EmployeeID
-				    AND DATE = groupedEtd.Date
-				    ORDER BY LastUpd DESC
-				    LIMIT 1) RowID
-				FROM employeetimeentrydetails groupedEtd
-				WHERE Date BETWEEN @DateFrom AND @DateTo
-				GROUP BY EmployeeID, Date
-            ) latest
-                ON latest.EmployeeID = ete.EmployeeID AND
-                    latest.Date = ete.Date
+            LEFT JOIN `latesttimelogs`
+                ON `latesttimelogs`.EmployeeID = ete.EmployeeID AND
+                    `latesttimelogs`.Date = ete.Date
             LEFT JOIN employeetimeentrydetails etd
                 ON etd.Date = ete.Date AND
                     etd.OrganizationID = ete.OrganizationID AND
                     etd.EmployeeID = ete.EmployeeID AND
-                    etd.RowID = latest.RowID
+                    etd.RowID = `latesttimelogs`.RowID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -670,6 +671,15 @@ Public Class TimeEntrySummaryForm
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim sql = <![CDATA[
+            DROP TEMPORARY TABLE IF EXISTS `latesttimelogs`;
+            CREATE TEMPORARY TABLE IF NOT EXISTS `latesttimelogs`
+            SELECT RowID, `Date`, EmployeeID, MAX(LastUpd) `UpdatedTimeLog`
+            FROM employeetimeentrydetails
+            WHERE EmployeeID=@EmployeeID
+            AND Date BETWEEN @DateFrom AND @DateTo
+            GROUP BY `Date`
+            ORDER BY `Date`, LastUpd DESC;
+
             SELECT
                 eta.RowID,
                 eta.Date,
@@ -720,25 +730,14 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN employeetimeentry ete
                 ON ete.EmployeeID = eta.EmployeeID AND
                     ete.Date = eta.Date
-            LEFT JOIN (
-                SELECT EmployeeID, DATE,
-				    (SELECT RowID
-				    FROM employeetimeentrydetails
-				    WHERE EmployeeID = groupedEtd.EmployeeID
-				    AND DATE = groupedEtd.Date
-				    ORDER BY LastUpd DESC
-				    LIMIT 1) RowID
-				FROM employeetimeentrydetails groupedEtd
-				WHERE Date BETWEEN @DateFrom AND @DateTo
-				GROUP BY EmployeeID, Date
-            ) latest
-                ON latest.EmployeeID = eta.EmployeeID AND
-                    latest.Date = eta.Date
+            LEFT JOIN `latesttimelogs`
+                ON `latesttimelogs`.EmployeeID = ete.EmployeeID AND
+                    `latesttimelogs`.Date = ete.Date
             LEFT JOIN employeetimeentrydetails
                 ON employeetimeentrydetails.Date = eta.Date AND
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
-                employeetimeentrydetails.RowID = latest.RowID
+                employeetimeentrydetails.RowID = `latesttimelogs`.RowID
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -939,6 +938,10 @@ Public Class TimeEntrySummaryForm
 
         Dim payPeriod As New TimePeriod(startDate, endDate)
 
+        Dim salaries2 = Await GetSalaries2(organizationId:=z_OrganizationID,
+            dateFrom:=payPeriod.Start,
+            dateTo:=payPeriod.End)
+
         MDIPrimaryForm.Enabled = False
         progressDialog.Show()
 
@@ -946,6 +949,7 @@ Public Class TimeEntrySummaryForm
         GetResources(
             progressDialog,
             payPeriod,
+            salaries2:=salaries2,
             Sub(resourcesTask)
 
                 If resourcesTask Is Nothing Then
@@ -1016,7 +1020,7 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub GetResources(progressDialog As ProgressDialog, payPeriod As TimePeriod, callBackAfterLoadResources As Action(Of Task(Of ITimeEntryResources)))
+    Private Sub GetResources(progressDialog As ProgressDialog, payPeriod As TimePeriod, salaries2 As ICollection(Of Salary2), callBackAfterLoadResources As Action(Of Task(Of ITimeEntryResources)))
         Dim resources = MainServiceProvider.GetRequiredService(Of ITimeEntryResources)
 
         Dim loadTask = Task.Run(
@@ -1025,6 +1029,8 @@ Public Class TimeEntrySummaryForm
                     organizationId:=z_OrganizationID,
                     cutoffStart:=payPeriod.Start,
                     cutoffEnd:=payPeriod.End)
+
+                resources.SetSalaries2(salaries2:=salaries2.AsReadOnly())
 
                 resourcesTask.Wait()
 
@@ -1666,11 +1672,6 @@ Public Class TimeEntrySummaryForm
         End If
     End Sub
 
-    Private Sub tstbnResetLeaveBalance_Click(sender As Object, e As EventArgs) Handles tstbnResetLeaveBalance.Click
-        Dim form As New PreviewLeaveBalanceForm
-        form.ShowDialog()
-    End Sub
-
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
         Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(_selectedPayPeriod.RowID)
@@ -1757,4 +1758,98 @@ Public Class TimeEntrySummaryForm
         userActivity.ShowDialog()
     End Sub
 
+    Private Async Function GetSalaries2(organizationId As Integer,
+        dateFrom As Date,
+        dateTo As Date) As Task(Of ICollection(Of Salary2))
+
+        Dim sql = <![CDATA[
+            CALL GetAccupaySalary(@orgId, @datefrom, @dateto);
+
+            SELECT
+            t.*
+            FROM (
+		        SELECT
+		        t.*, 1 `SelectClause`
+		        FROM (SELECT
+				        i.*,
+				        IFNULL(SUBDATE(ii.EffectiveDateFrom, INTERVAL 1 DAY), @dateto) `EffectiveDateTo`		
+				        FROM `accupaysalary` i
+				        LEFT JOIN `accupaysalary` ii ON ii.EmployeeID=i.EmployeeID AND ii.SetNewDay=i.SetNewDay+1
+				        ) t
+		        WHERE (t.EffectiveDateFrom < LEAST(`EffectiveDateTo`, @dateto))
+		        UNION
+		        SELECT
+		        t.*, 2 `SelectClause`
+		        FROM (SELECT
+				        i.*,
+				        IFNULL(SUBDATE(ii.EffectiveDateFrom, INTERVAL 1 DAY), @dateto) `EffectiveDateTo`
+				        FROM `accupaysalary` i
+				        LEFT JOIN `accupaysalary` ii ON ii.EmployeeID=i.EmployeeID AND ii.SetNewDay=i.SetNewDay+1
+				        ) t
+		        WHERE t.`EffectiveDateTo` BETWEEN @datefrom AND @dateto
+            ) t
+            GROUP BY t.RowID
+            ORDER BY t.EmployeeID, t.EffectiveDateFrom, t.`EffectiveDateTo`
+            ;
+        ]]>.Value
+
+        Dim salaries2 = New List(Of Salary2)
+
+        Using connection As New MySqlConnection(connectionString),
+            command As New MySqlCommand(sql, connection)
+
+            With command.Parameters
+                .AddWithValue("@orgId", organizationId)
+                .AddWithValue("@datefrom", dateFrom)
+                .AddWithValue("@dateto", dateTo)
+
+                'SET @_count=0;
+                'SET @_curdate='1775-01-01';
+                'SET @_isNewDay=FALSE;
+                'SET @_eId=0;
+                'SET @_isNewEmployee=FALSE;
+                '.AddWithValue("@_count", 0)
+                '.AddWithValue("@_curdate", New Date(1775, 1, 1))
+                '.AddWithValue("@_isNewDay", False)
+                '.AddWithValue("@_eId", 0)
+                '.AddWithValue("@_isNewEmployee", False)
+
+            End With
+
+            Await connection.OpenAsync()
+            Dim reader = Await command.ExecuteReaderAsync()
+
+            While Await reader.ReadAsync()
+                Dim salary2 = New Salary2() With {
+                    .RowID = reader.GetValue(Of Integer)("RowID"),
+                    .OrganizationID = reader.GetValue(Of Integer)("OrganizationID"),
+                    .EmployeeID = reader.GetValue(Of Integer)("EmployeeID"),
+                    .PhilHealthDeduction = reader.GetValue(Of Decimal)("PhilHealthDeduction"),
+                    .HDMFAmount = reader.GetValue(Of Decimal)("HDMFAmount"),
+                    .BasicSalary = reader.GetValue(Of Decimal)("Salary"),
+                    .AllowanceSalary = reader.GetValue(Of Decimal)("UndeclaredSalary"),
+                    .PositionID = reader.GetValue(Of Integer)("PositionID"),
+                    .EffectiveTo = reader.GetValue(Of Date)("EffectiveDateTo"),
+                    .EffectiveFrom = reader.GetValue(Of Date)("EffectiveDateFrom"),
+                    .DoPaySSSContribution = reader.GetValue(Of Boolean)("DoPaySSSContribution"),
+                    .AutoComputePhilHealthContribution = reader.GetValue(Of Boolean)("AutoComputePhilHealthContribution"),
+                    .AutoComputeHDMFContribution = reader.GetValue(Of Boolean)("AutoComputeHDMFContribution"),
+                    .IsMinimumWage = reader.GetValue(Of Boolean)("IsMinimumWage")
+                }
+                '.OverrideDiscardSSSContrib = reader.GetValue(Of Boolean)("OverrideDiscardSSSContrib"),
+                '.OverrideDiscardPhilHealthContrib = reader.GetValue(Of Boolean)("OverrideDiscardPhilHealthContrib"),
+                '.BasicDailyPay = reader.GetValue(Of Decimal)("BasicDailyPay"),
+                '.BasicHourlyPay = reader.GetValue(Of Decimal)("BasicHourlyPay"),
+                '.NoofDependents = reader.GetValue(Of Integer)("NoofDependents"),
+                '.MaritalStatus = reader.GetValue(Of varchar)("MaritalStatus"),
+                '.BasicPay = reader.GetValue(Of Decimal)("BasicPay"),
+                salary2.UpdateTotalSalary()
+
+                salaries2.Add(salary2)
+            End While
+
+        End Using
+
+        Return salaries2
+    End Function
 End Class

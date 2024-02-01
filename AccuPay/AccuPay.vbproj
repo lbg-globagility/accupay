@@ -122,18 +122,10 @@
     <Reference Include="CollapsibleGroupBox">
       <HintPath>References\CollapsibleGroupBox.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="DevComponents.DotNetBar2">
       <HintPath>References\DevComponents.DotNetBar2.dll</HintPath>
     </Reference>
@@ -436,6 +428,9 @@
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
+    <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
     </Compile>
@@ -457,6 +452,12 @@
     <Compile Include="Views\Payroll Forms\Loans\LoanUserControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Payroll Forms\Paystub\Leave\Cashout Unused Leave\CashOutUnusedLeavesForm.Designer.vb">
+      <DependentUpon>CashOutUnusedLeavesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Payroll Forms\Paystub\Leave\Cashout Unused Leave\CashOutUnusedLeavesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\ThirteenthMonthEmployeeModel.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\Generators\PayrollGeneration.vb" />
     <Compile Include="Views\Payroll Forms\Paystub\Generators\ReleaseThirteenthMonthGeneration.vb" />
@@ -464,6 +465,19 @@
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveBalanceResetGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.Designer.vb">
+      <DependentUpon>ResetLeaveCreditApplyPreviewForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditsForm.Designer.vb">
+      <DependentUpon>ResetLeaveCreditsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditsForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\Official Business\OBRowRecord.vb" />
@@ -747,6 +761,12 @@
     <Compile Include="Views\Time Attendance Form\Time Entry\Generators\DefaultShiftAndTimeLogsGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\Time Entry\Generators\DeleteDefaultShiftAndTimeLogsGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\Time Entry\Generators\TimeEntryGeneration.vb" />
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.Designer.vb">
+      <DependentUpon>LeaveResetForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\TripTicket\NewTripTicketDialog.Designer.vb">
       <DependentUpon>NewTripTicketDialog.vb</DependentUpon>
     </Compile>
@@ -1204,19 +1224,6 @@
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\HRIS Forms\Employee\Employee\EmployeeForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\AlphalistGeneration.vb" />
-    <Compile Include="Views\Payroll Forms\Alphalist\TaxYearDialog.Designer.vb">
-      <DependentUpon>TaxYearDialog.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\TaxYearDialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\WithholdingTax.Designer.vb">
-      <DependentUpon>WithholdingTax.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Payroll Forms\Alphalist\WithholdingTax.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ApplicationEvents.vb" />
@@ -1760,8 +1767,17 @@
     <EmbeddedResource Include="Views\Payroll Forms\Loans\LoanUserControl.resx">
       <DependentUpon>LoanUserControl.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Payroll Forms\Paystub\Leave\Cashout Unused Leave\CashOutUnusedLeavesForm.resx">
+      <DependentUpon>CashOutUnusedLeavesForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.resx">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.resx">
+      <DependentUpon>ResetLeaveCreditApplyPreviewForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditsForm.resx">
+      <DependentUpon>ResetLeaveCreditsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ViewLeaveLedgerDialog.resx">
       <DependentUpon>ViewLeaveLedgerDialog.vb</DependentUpon>
@@ -1795,6 +1811,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveResetForm.resx">
+      <DependentUpon>LeaveResetForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\TripTicket\Import\ImportTripTicketForm.resx">
       <DependentUpon>ImportTripTicketForm.vb</DependentUpon>
@@ -2007,12 +2026,6 @@
     <EmbeddedResource Include="Views\HRIS Forms\Employee\_New\SalaryTab2.resx">
       <DependentUpon>SalaryTab2.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Alphalist\TaxYearDialog.resx">
-      <DependentUpon>TaxYearDialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Payroll Forms\Alphalist\WithholdingTax.resx">
-      <DependentUpon>WithholdingTax.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\Agency\AgencyForm.resx">
       <DependentUpon>AgencyForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -2210,6 +2223,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="app.manifest" />
+    <None Include="Resources\SCHEDULE1.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\SCHEDULE2.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Core Forms\Dataset\AlphalistDataset.xsc">
       <DependentUpon>AlphalistDataset.xsd</DependentUpon>
     </None>

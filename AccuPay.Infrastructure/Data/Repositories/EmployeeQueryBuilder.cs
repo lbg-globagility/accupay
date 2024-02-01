@@ -30,6 +30,13 @@ namespace AccuPay.Infrastructure.Data
             return this;
         }
 
+        public IEmployeeQueryBuilder WithinServicePeriod(DateTime currentDate)
+        {
+            _query = _query.
+                Where(e => e.IsWithinServicePeriod(currentDate));
+            return this;
+        }
+
         public IEmployeeQueryBuilder ByEmployeeNumber(string employeeNumber)
         {
             _query = _query.Where(x => x.EmployeeNo.Trim().ToLower() == employeeNumber.ToTrimmedLowerCase());

@@ -19,7 +19,7 @@ DECLARE MONTHS_IN_YEAR INT(10) DEFAULT 12;
 DECLARE SEMIMONTHLY_PAYPERIODS_PER_MONTH INT(10) DEFAULT 2;
 
 DECLARE salary DECIMAL(15, 4) DEFAULT 0.0;
-DECLARE workDaysPerYear INT(10) DEFAULT 0;
+DECLARE workDaysPerYear DECIMAL(10, 4) DEFAULT 0;
 DECLARE workDaysPerMonth DECIMAL(10, 4);
 DECLARE workDaysPerPayPeriod DECIMAL(10, 4);
 DECLARE employeeType VARCHAR(50);
@@ -43,7 +43,7 @@ SELECT IF(
 )
 FROM employeesalary es
 WHERE es.EmployeeID = employeeID
-AND es.EffectiveDateFrom  <= payDateFrom
+AND es.EffectiveDateFrom  <= payDateTo
 ORDER BY es.EffectiveDateFrom DESC
 LIMIT 1
 INTO salary;

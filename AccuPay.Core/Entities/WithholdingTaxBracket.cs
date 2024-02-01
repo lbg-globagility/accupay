@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -33,5 +33,11 @@ namespace AccuPay.Core.Entities
         public decimal TaxableIncomeFromAmount { get; set; }
 
         public decimal TaxableIncomeToAmount { get; set; }
+
+        public bool IsSemiMonthly => PayFrequencyID == PayFrequency.SemiMonthlyTypeId;
+        public bool IsMonthly => PayFrequencyID == PayFrequency.MonthlyTypeId;
+
+        public bool Is2023Onwards => EffectiveDateFrom.Year >= 2023;
+        public decimal ConstantTaxAmount { get; set; }
     }
 }

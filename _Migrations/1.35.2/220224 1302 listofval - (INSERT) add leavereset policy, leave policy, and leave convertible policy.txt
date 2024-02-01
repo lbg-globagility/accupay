@@ -1,0 +1,22 @@
+SET @userId=(SELECT Id FROM aspnetusers LIMIT 1);
+
+SET @_type='LeaveResetPolicy';
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='BaseScheme' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), NULL, 'ServiceYears', 'BaseScheme', @_type, NULL, 'Yes', '\'ServiceYears\',\'EmployeeProfile\'', 1) ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP();
+
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='Enable' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), NULL, 'False', 'Enable', @_type, NULL, 'Yes', NULL, 1) ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP();
+
+SET @_type='LeavePolicy';
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='PrematureYear' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), NULL, '1', 'PrematureYear', @_type, NULL, 'Yes', 'from 0 to {DisplayValue}', 1) ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP();
+
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='AllowPrematureLeave' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), NULL, '0', 'AllowPrematureLeave', @_type, NULL, 'Yes', 'FALSE/0: automatically recognized as absent; TRUE/1: leave granted based on employee\'s leave balance', 1) ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP();
+
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='AnniversaryDateBasis' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), NULL, 'StartDate', 'AnniversaryDateBasis', @_type, NULL, 'Yes', '\'StartDate\',\'DateRegularized\'', 1) ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP();
+
+SET @_type='LeaveConvertiblePolicy';
+SET @_id=(SELECT RowID FROM listofval WHERE `Type`=@_type AND LIC='PrematureYear' LIMIT 1);
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@_id, NULL, CURRENT_TIMESTAMP(), @userId, CURRENT_TIMESTAMP(), NULL, 'FALSE', 'Enable', @_type, NULL, 'Yes', 'from 0 to {DisplayValue}', 1) ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP();

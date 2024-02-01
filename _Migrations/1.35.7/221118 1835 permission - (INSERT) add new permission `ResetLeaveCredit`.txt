@@ -1,0 +1,4 @@
+SET @id=(SELECT `Id` FROM `accupaydb_cinema2k`.`permission` WHERE `Name`='ResetLeaveCredit' LIMIT 1);
+
+INSERT INTO `accupaydb_cinema2k`.`permission` (`Id`, `Name`, `ForDesktopOnly`) VALUES (@id, 'ResetLeaveCredit', b'0') ON DUPLICATE KEY UPDATE `Name`='ResetLeaveCredit';
+

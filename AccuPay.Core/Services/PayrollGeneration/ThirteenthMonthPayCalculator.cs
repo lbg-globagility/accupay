@@ -80,7 +80,7 @@ namespace AccuPay.Core.Services
                     return ComputeByRegularPayAndAllowance(employee, timeEntries, actualtimeentries, salary, settings, allowanceItems);
 
                 case ThirteenthMonthCalculationBasis.DailyRate:
-                    var hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                    var hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly);
 
                     if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                     {

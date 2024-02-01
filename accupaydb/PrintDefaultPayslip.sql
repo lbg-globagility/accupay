@@ -40,12 +40,36 @@ INTO
     paydate_from,
     paydat_to;
 
+DROP TEMPORARY TABLE if EXISTS activesalary;
+CREATE TEMPORARY TABLE if NOT EXISTS activesalary
+SELECT
+d.DateValue,
+es.*
+FROM employeesalary es
+INNER JOIN employee e ON e.RowID=es.EmployeeID
+INNER JOIN dates d ON d.DateValue BETWEEN es.EffectiveDateFrom AND paydat_to
+AND d.DateValue BETWEEN paydate_from AND paydat_to
+INNER JOIN payperiod pp ON pp.OrganizationID=es.OrganizationID AND pp.TotalGrossSalary=e.PayFrequencyID AND pp.RowID=PayPeriodRowID
+AND pp.PayToDate=d.DateValue
+WHERE es.OrganizationID=OrganizID
+;
+
+DROP TEMPORARY TABLE if EXISTS latestsalary;
+CREATE TEMPORARY TABLE if NOT EXISTS latestsalary
+SELECT
+EmployeeID
+, MIN(DATEDIFF(paydat_to, EffectiveDateFrom)) `Result`
+FROM activesalary
+WHERE DATEDIFF(paydat_to, EffectiveDateFrom) > -1
+GROUP BY EmployeeID
+;
+
 SELECT
     e.RowID,
     CONCAT(e.EmployeeID, ' / ', e.LastName, ', ', e.FirstName, ' ', LEFT(e.MiddleName, 1)) `COL1`,
     CONCAT_WS(', ', e.LastName, e.FirstName, e.MiddleName) `COL69`,
-    ROUND(GetBasicPay(e.RowID, paydate_from, paydat_to, IsActualFlag, ps.BasicHours), 2) `COL70`,
-    ps.BasicHours `COL71`,
+    IF(e.EmployeeType='Daily', ps.RegularPay, ROUND(GetBasicPay(e.RowID, paydate_from, paydat_to, IsActualFlag, ps.BasicHours), 2)) `COL70`,
+    IF(e.EmployeeType='Daily', ps.RegularHours, ps.BasicHours) `COL71`,
     IFNULL(ps.AbsentHours + IF(e.EmployeeType = 'Monthly', ps.LeaveHours, 0), 0) `COL72`,
     IF(IsActualFlag, es.TrueSalary, es.Salary) `COL80`,
     IF(
@@ -130,11 +154,13 @@ ON psa.EmployeeID = ps.EmployeeID AND
 INNER JOIN employee e
 ON e.RowID = ps.EmployeeID AND
     e.OrganizationID = ps.OrganizationID
-INNER JOIN employeesalary es
+INNER JOIN (SELECT
+				ii.*
+				FROM latestsalary i
+				INNER JOIN activesalary ii ON ii.EmployeeID=i.EmployeeID AND DATEDIFF(paydat_to, EffectiveDateFrom)=i.Result
+				) es
 ON es.EmployeeID = ps.EmployeeID AND
-    es.OrganizationID=ps.OrganizationID AND
-    (es.EffectiveDateFrom >= ps.PayFromDate OR ps.PayToDate >= ps.PayFromDate) AND
-    (es.EffectiveDateFrom <= ps.PayToDate OR ps.PayToDate <= ps.PayToDate)
+    es.OrganizationID=ps.OrganizationID
 LEFT JOIN (
     SELECT
         REPLACE(GROUP_CONCAT(IFNULL(product.PartNo, '')), ',', '\n') 'Names',

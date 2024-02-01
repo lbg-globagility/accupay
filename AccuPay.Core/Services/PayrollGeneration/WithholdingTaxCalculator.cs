@@ -28,17 +28,27 @@ namespace AccuPay.Core.Services
 
             var currentTaxableIncome = 0M;
 
+            var taxablePolicy = _settings.GetString("Payroll Policy.paystub.taxableincome") ?? "Basic Pay";
+
             if (employee.EmployeeType == SalaryType.Fixed)
-                currentTaxableIncome = paystub.BasicPay;
+                if (taxablePolicy == "Gross Income")
+                    // Adds those taxable allowances to the taxable income
+                    currentTaxableIncome = paystub.BasicPay + paystub.TotalTaxableAllowance;
+                else
+                    currentTaxableIncome = paystub.BasicPay;
             else if (employee.EmployeeType == SalaryType.Monthly)
             {
-                var taxablePolicy = _settings.GetString("Payroll Policy.paystub.taxableincome") ?? "Basic Pay";
-
                 if (taxablePolicy == "Gross Income")
                     // Adds those taxable allowances to the taxable income
                     currentTaxableIncome = paystub.TotalEarnings + paystub.TotalTaxableAllowance;
                 else
                     currentTaxableIncome = paystub.BasicPay;
+            }
+            else if (employee.EmployeeType == SalaryType.Daily)
+            {
+                if (taxablePolicy == "Gross Income")
+                    // Adds those taxable allowances to the taxable income
+                    currentTaxableIncome = paystub.TotalEarnings + paystub.TotalTaxableAllowance;
             }
 
             // Government contributions are tax deductible
@@ -95,6 +105,9 @@ namespace AccuPay.Core.Services
         {
             if (bracket == null)
                 return 0;
+
+            if (bracket.Is2023Onwards)
+                return AccuMath.CommercialRound(bracket.ConstantTaxAmount + (bracket.ExemptionInExcessAmount * (taxableIncome - bracket.TaxableIncomeFromAmount)));
 
             var excessAmount = taxableIncome - bracket.TaxableIncomeFromAmount;
             var taxWithheld = bracket.ExemptionAmount + (excessAmount * bracket.ExemptionInExcessAmount);

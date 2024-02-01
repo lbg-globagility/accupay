@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace AccuPay.Core.TestData
 {
-    public class SSSTestSource_2021
+    public static class SSSTestSource_2021
     {
         public static IEnumerable Brackets_SalaryBased
         {

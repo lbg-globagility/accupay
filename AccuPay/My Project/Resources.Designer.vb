@@ -652,6 +652,26 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Byte[].
         '''</summary>
+        Friend ReadOnly Property SCHEDULE1() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("SCHEDULE1", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
+        Friend ReadOnly Property SCHEDULE2() As Byte()
+            Get
+                Dim obj As Object = ResourceManager.GetObject("SCHEDULE2", resourceCulture)
+                Return CType(obj,Byte())
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Byte[].
+        '''</summary>
         Friend ReadOnly Property SourceSansPro_Regular() As Byte()
             Get
                 Dim obj As Object = ResourceManager.GetObject("SourceSansPro_Regular", resourceCulture)

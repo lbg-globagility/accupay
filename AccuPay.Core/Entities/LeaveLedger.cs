@@ -1,4 +1,5 @@
-﻿using System;
+using AccuPay.Core.Entities.LeaveReset;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -38,5 +39,13 @@ namespace AccuPay.Core.Entities
 
         [InverseProperty("LeaveLedger")]
         public virtual IList<LeaveTransaction> LeaveTransactions { get; set; }
+
+        public string LeaveTypeName => Product?.PartNo ?? string.Empty;
+        public virtual ICollection<CashoutUnusedLeave> CashoutUnusedLeaves { get; internal set; }
+
+        public bool IsVacation => Product != null ? Product?.PartNo == LeaveTypeEnum.Vacation.Type : false;
+        public bool IsSick => Product != null ? Product?.PartNo == LeaveTypeEnum.Sick.Type : false;
+        public bool IsOthers => Product != null ? Product?.PartNo == LeaveTypeEnum.Others.Type : false;
+        public bool IsParental => Product != null ? Product?.PartNo == LeaveTypeEnum.Parental.Type : false;
     }
 }

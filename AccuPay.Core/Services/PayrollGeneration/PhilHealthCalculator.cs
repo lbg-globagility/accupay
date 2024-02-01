@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
+using AccuPay.Core.Interfaces;
 using AccuPay.Utilities;
 using System.Linq;
 
@@ -8,9 +9,9 @@ namespace AccuPay.Core.Services
 {
     public class PhilHealthCalculator
     {
-        private readonly PhilHealthPolicy _policy;
+        private readonly IPhilHealthPolicy _policy;
 
-        public PhilHealthCalculator(PhilHealthPolicy policy)
+        public PhilHealthCalculator(IPhilHealthPolicy policy)
         {
             _policy = policy;
         }
@@ -124,8 +125,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        basisPay = (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
-                        paystub.TotalDaysPayWithOutOvertimeAndLeave;
+                        basisPay = (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
+                        paystub.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly);
                     }
                     break;
 
@@ -137,8 +138,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        basisPay = (previousPaystub?.TotalWorkedPayWithoutOvertimeAndLeaveForDailyType(employee) ?? 0) +
-                            paystub.TotalWorkedPayWithoutOvertimeAndLeaveForDailyType(employee);// TotalWorkedPayWithoutOvertimeAndLeave
+                        var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
+                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly);
 
                         if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {

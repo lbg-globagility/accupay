@@ -8,5 +8,7 @@ namespace AccuPay.Core.Interfaces
     public interface ISalaryDataService : IBaseSavableDataService<Salary>
     {
         Task<List<Salary>> BatchApply(IReadOnlyCollection<SalaryImportModel> validRecords, int organizationId, int currentlyLoggedInUserId);
+
+        Task<List<Salary>> GetSalariesByIds(int[] rowIds);
     }
 }

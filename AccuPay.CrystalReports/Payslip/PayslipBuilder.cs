@@ -119,7 +119,7 @@ namespace AccuPay.CrystalReports
 
         private ReportClass CreateGoldWingsReport(Organization organization, PayPeriod payPeriod)
         {
-            OfficialPaySlipFormat rptdoc = new OfficialPaySlipFormat();
+            var rptdoc = new OfficialPaySlipFormat();
 
             var txtOrganizName = (TextObject)rptdoc.ReportDefinition.Sections[2].ReportObjects["txtOrganizName"];
             txtOrganizName.Text = organization.Name.ToUpper();

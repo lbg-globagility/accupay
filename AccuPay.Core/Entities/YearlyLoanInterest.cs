@@ -190,16 +190,6 @@ namespace AccuPay.Core.Entities
 
             decimal interestForThisYear = AccuMath.CommercialRound(amountWithInterestForThisYear * interestRate / 100); // 200, 6_600~840
 
-            decimal remainingInterestSemiMonthlyCutOffs =
-                    CountSemiMonthlyCutOffInterestPaymentOfTheYear(principalDeductionAmount, amountWithInterestForThisYear); // 4, 24~14
-
-            if (remainingInterestSemiMonthlyCutOffs < CalendarConstant.SemiMonthlyPayPeriodsPerYear)
-            {
-                interestForThisYear = // 33.33, 490
-                    interestForThisYear *
-                    (GetRemainingCutOffPercentage(remainingInterestSemiMonthlyCutOffs)); // (200 * 4 / 24), (840 * 14 / 24)
-            }
-
             return AccuMath.CommercialRound(interestForThisYear);
         }
 

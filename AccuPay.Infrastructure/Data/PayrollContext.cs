@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Entities.LeaveReset;
 using AccuPay.Core.Enums;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -90,6 +91,12 @@ namespace AccuPay.Infrastructure.Data
         public virtual DbSet<Vehicle> Vehicles { get; set; }
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
+        internal virtual DbSet<LeaveReset> LeaveResets { get; set; }
+        internal virtual DbSet<LeaveTenure> LeaveTenures { get; set; }
+        internal virtual DbSet<LeaveTypeRenewable> LeaveTypeRenewables { get; set; }
+        internal virtual DbSet<CashoutUnusedLeave> CashoutUnusedLeaves { get; set; }
+        internal virtual DbSet<ResetLeaveCredit> ResetLeaveCredits { get; set; }
+        internal virtual DbSet<ResetLeaveCreditItem> ResetLeaveCreditItems { get; set; }
 
         public PayrollContext(DbContextOptions options)
             : base(options)
@@ -220,6 +227,66 @@ namespace AccuPay.Infrastructure.Data
                 b.HasOne(x => x.Loan)
                     .WithMany(l => l.YearlyLoanInterests)
                     .HasForeignKey(x => x.LoanId);
+            });
+
+            modelBuilder.Entity<LeaveTenure>(
+            b =>
+            {
+                b.HasKey(x => new { x.LeaveResetId, x.OrdinalValue });
+
+                b.HasOne(x => x.LeaveReset).
+                    WithMany(x => x.LeaveTenures).
+                    HasForeignKey(x => x.LeaveResetId);
+            });
+
+            modelBuilder.Entity<LeaveTypeRenewable>(
+            b =>
+            {
+                b.HasKey(x => new { x.LeaveResetId, x.LeaveTypeId });
+
+                b.HasOne(x => x.LeaveReset).
+                    WithMany(x => x.LeaveTypeRenewables).
+                    HasForeignKey(x => x.LeaveResetId);
+
+                b.HasOne(x => x.Product).
+                    WithMany(x => x.LeaveTypeRenewables).
+                    HasForeignKey(x => x.LeaveTypeId);
+
+                b.Property(x => x.BasisStartDate).
+                    HasConversion<string>();
+            });
+
+            modelBuilder.Entity<CashoutUnusedLeave>(t => {
+                t.HasKey(x => x.Id);
+
+                t.HasOne(c => c.LeaveLedger).
+                    WithMany(l => l.CashoutUnusedLeaves).
+                    HasForeignKey(c => c.LeaveLedgerID);
+
+                t.HasOne(c => c.PayPeriod).
+                    WithMany(p => p.CashoutUnusedLeaves).
+                    HasForeignKey(c => c.PayPeriodID);
+            });
+
+            modelBuilder.Entity<ResetLeaveCredit>(t => {
+                t.HasKey(x => x.RowID);
+
+                t.HasOne(x => x.PayPeriod)
+                    .WithMany(p => p.ResetLeaveCredits)
+                    .HasForeignKey(r => r.StartPeriodId);
+
+                t.HasMany(x => x.ResetLeaveCreditItems)
+                    .WithOne(r => r.ResetLeaveCredit)
+                    .HasForeignKey(x => x.ResetLeaveCreditId);
+
+            });
+
+            modelBuilder.Entity<ResetLeaveCreditItem>(t => {
+                t.HasKey(x => x.RowID);
+
+                t.HasOne(x => x.Employee)
+                    .WithMany(e => e.ResetLeaveCreditItems)
+                    .HasForeignKey(x => x.EmployeeID);
             });
         }
 

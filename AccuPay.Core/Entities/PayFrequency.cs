@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,5 +31,8 @@ namespace AccuPay.Core.Entities
         public bool IsWeekly => Type.ToUpper() == WeeklyType;
 
         public bool IsSemiMonthly => Type.ToUpper() == SemiMonthlyType;
+
+        public static int SemiMonthlyTypeId = 1;
+        public static int MonthlyTypeId = 2;
     }
 }

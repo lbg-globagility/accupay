@@ -2,6 +2,7 @@ Option Strict On
 
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Services
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -13,6 +14,7 @@ Public Class ProductControlForm
     Public Property IsSaved As Boolean
 
     Private ReadOnly _productDataService As IProductDataService
+    Private ReadOnly _listOfValueService As IListOfValueService
 
     Sub New()
 
@@ -20,6 +22,7 @@ Public Class ProductControlForm
 
         _productDataService = MainServiceProvider.GetRequiredService(Of IProductDataService)
 
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of IListOfValueService)
     End Sub
 
     Public Overloads Function ShowDialog(ByVal someValue As String) As DialogResult
@@ -75,7 +78,10 @@ Public Class ProductControlForm
 
     End Sub
 
-    Private Sub ProductControlForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub ProductControlForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim listOfValueService = Await _listOfValueService.CreateAsync("AllowancePolicy")
+        Dim allowancePolicy = New AllowancePolicy(listOfValueService)
+        IsPaidWhenOvertime.Visible = allowancePolicy.IsOvertimePaid
 
         ToolStripButton3_Click(sender, e)
 
@@ -87,7 +93,8 @@ Public Class ProductControlForm
                          Optional p_CategName As Object = Nothing,
                          Optional p_Status As Object = "Active",
                          Optional p_IsFixed As Object = "0",
-                         Optional p_IsIncludedIn13th As Object = "0") As Object
+                         Optional p_IsIncludedIn13th As Object = "0",
+                         Optional p_IsPaidWhenOvertime As Boolean = False) As Object
 
         'Dim _naw As Object = EXECQUER("SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %h:%i:%s');")
 
@@ -118,7 +125,6 @@ Public Class ProductControlForm
                 .Parameters.AddWithValue("p_Name", p_Name)
                 .Parameters.AddWithValue("p_OrganizationID", orgztnID) 'orgztnID
                 .Parameters.AddWithValue("p_PartNo", p_PartNo)
-                .Parameters.AddWithValue("p_LastUpd", DBNull.Value)
                 .Parameters.AddWithValue("p_CreatedBy", z_User)
                 .Parameters.AddWithValue("p_LastUpdBy", z_User)
                 .Parameters.AddWithValue("p_Category", p_CategName)
@@ -128,6 +134,7 @@ Public Class ProductControlForm
                 .Parameters.AddWithValue("p_UnitOfMeasure", 0)
                 .Parameters.AddWithValue("p_IsFixed", p_IsFixed)
                 .Parameters.AddWithValue("p_IsIncludedIn13th", p_IsIncludedIn13th)
+                .Parameters.AddWithValue("p_IsPaidWhenOvertime", p_IsPaidWhenOvertime)
 
                 .Parameters("prod_RowID").Direction = ParameterDirection.ReturnValue
 
@@ -183,13 +190,14 @@ Public Class ProductControlForm
             Dim has_no_rowid = allowanceTypeId Is Nothing
 
             Dim returnval =
-                    INS_product(If(has_no_rowid, Nothing, drow.Cells("RowID").Value),
-                                drow.Cells("PartNo").Value,
-                                drow.Cells("PartNo").Value,
-                                n_categname,
-                                datastatus,
-                                Convert.ToInt16(drow.Cells("Fixed").Value),
-                                Convert.ToInt16(drow.Cells("AllocateBelowSafetyFlag").Value))
+                    INS_product(prod_rowID:=If(has_no_rowid, Nothing, drow.Cells("RowID").Value),
+                                p_Name:=drow.Cells("PartNo").Value,
+                                p_PartNo:=drow.Cells("PartNo").Value,
+                                p_CategName:=n_categname,
+                                p_Status:=datastatus,
+                                p_IsFixed:=Convert.ToInt16(drow.Cells("Fixed").Value),
+                                p_IsIncludedIn13th:=Convert.ToInt16(drow.Cells("AllocateBelowSafetyFlag").Value),
+                                p_IsPaidWhenOvertime:=CBool(drow.Cells(IsPaidWhenOvertime.Name).Value))
 
             If has_no_rowid Then
                 drow.Cells("RowID").Value = returnval
@@ -228,7 +236,7 @@ Public Class ProductControlForm
         '                               " AND p.ActiveData='1';")
 
         Dim allowance_typequery As String =
-            String.Concat("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') `IStatus`",
+            String.Concat("SELECT p.*, IF(p.`Status` = '0', 'No', 'Yes') `IStatus`, p.IsPaidWhenOvertime",
                           " FROM product p",
                           " INNER JOIN category c ON c.RowID=p.CategoryID AND c.OrganizationID=p.OrganizationID AND CategoryName=?categ_name",
                           " WHERE p.OrganizationID=?og_id",
@@ -259,7 +267,8 @@ Public Class ProductControlForm
                                  drow("CategoryID"),
                                  (CShort(drow("Status")) = 1),
                                  CBool(drow("Fixed")), Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing,
-                                 CBool(drow("AllocateBelowSafetyFlag")))
+                                 CBool(drow("AllocateBelowSafetyFlag")), Nothing, Nothing, Nothing, Nothing, Nothing, Nothing,
+                                 CBool(drow(IsPaidWhenOvertime.Name)))
 
             'RowID,SupplierID,ProdName,Description,PartNo,Category,CategoryID
             ',Status,Fixed,UnitPrice,VATPercent,FirstBillFlag,SecondBillFlag,ThirdBillFlag

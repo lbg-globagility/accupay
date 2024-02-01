@@ -39,5 +39,7 @@ namespace AccuPay.Core.Interfaces
         IEmployeeQueryBuilder IncludePosition();
 
         IEmployeeQueryBuilder IsActive();
+
+        IEmployeeQueryBuilder WithinServicePeriod(DateTime currentDate);
     }
 }

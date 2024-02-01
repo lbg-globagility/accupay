@@ -16,18 +16,21 @@ namespace AccuPay.Infrastructure.Data
         private readonly ITimeLogsReader _reader;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IOvertimeRepository _overtimeRepository;
+        private readonly ITimeEntryRepository _timeEntryRepository;
         private readonly IShiftRepository _shiftRepository;
 
         public TimeLogImportParser(
             ITimeLogsReader reader,
             IEmployeeRepository employeeRepository,
             IOvertimeRepository overtimeRepository,
-            IShiftRepository shiftRepository)
+            IShiftRepository shiftRepository,
+            ITimeEntryRepository timeEntryRepository)
         {
             _reader = reader;
             _employeeRepository = employeeRepository;
             _shiftRepository = shiftRepository;
             _overtimeRepository = overtimeRepository;
+            _timeEntryRepository = timeEntryRepository;
         }
 
         public async Task<TimeLogImportParserOutput> Parse(string importFile, int organizationId, int userId)
@@ -94,7 +97,9 @@ namespace AccuPay.Infrastructure.Data
 
             List<Overtime> employeeOvertimes = await GetEmployeeOvertime(datePeriod, organizationId);
 
-            timeAttendanceHelper = new TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId: organizationId, userId: userId);
+            var timeEntryPolicy = await _timeEntryRepository.GetTimeEntryPolicy();
+
+            timeAttendanceHelper = new TimeAttendanceHelper(logs, employees, employeeShifts, employeeOvertimes, organizationId: organizationId, userId: userId, timeEntryPolicy: timeEntryPolicy);
 
             return timeAttendanceHelper;
         }

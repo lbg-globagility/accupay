@@ -236,8 +236,8 @@ namespace AccuPay.Infrastructure.Data
 
                 nextPayPeriod = PayPeriod.NewPayPeriod(
                     organizationId: organizationId,
-                    payrollMonth: year,
-                    payrollYear: month,
+                    payrollMonth: month,
+                    payrollYear: year,
                     isFirstHalf: isFirstHalf,
                     policy: _policy,
                     currentlyLoggedInUserId: null);

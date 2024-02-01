@@ -47,13 +47,16 @@ Public Class ReportsList
             New LateUTAbsentSummaryReportProvider(),
             New PayrollLedgerExcelFormatReportProvider(),
             New LoanLedgerReportProvider(),
-            New Cinema2000TardinessReportProvider()
+            New Cinema2000TardinessReportProvider(),
+            New AlphalistExcelFormatReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 
         If curr_sys_owner_name = SystemOwner.Benchmark Then
             providers = GetBenchmarkReports()
         End If
+
+        If curr_sys_owner_name = SystemOwner.LAGlobal Then providers.Add(New LaGlobalAlphaListReportProvider())
 
         Dim allowedProviders = Await _listOfValueRepository.GetDutyReportProvidersAsync()
 

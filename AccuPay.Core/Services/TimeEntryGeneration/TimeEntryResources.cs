@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Entities.LeaveReset;
 using AccuPay.Core.Enums;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
@@ -34,6 +35,7 @@ namespace AccuPay.Core.Services
         public IReadOnlyCollection<TimeEntry> TimeEntries { get; private set; }
         public IReadOnlyCollection<TimeLog> TimeLogs { get; private set; }
         public IReadOnlyCollection<TripTicket> TripTickets { get; private set; }
+        public IReadOnlyCollection<Salary2> Salaries2 { get; private set; }
 
         private readonly ICalendarService _calendarService;
 
@@ -181,9 +183,33 @@ namespace AccuPay.Core.Services
 
         private async Task LoadLeaves(int organizationId, TimePeriod cuttOffPeriod)
         {
-            Leaves = (await _leaveRepository
+            var leaves = (await _leaveRepository
                 .GetAllApprovedByDatePeriodAsync(organizationId, cuttOffPeriod))
                 .ToList();
+
+            var leavePolicy = await _leaveRepository.GetLeavePolicyAsync();
+            var prematureYear = (int)leavePolicy.GetLeavePrematureYear;
+
+            if (!leavePolicy.IsAllowedPrematureLeave)
+            {
+                var validLeaves = new List<Leave>();
+
+                foreach (var e in Employees)
+                {
+                    var annivDate = (leavePolicy.AnniversaryDateBasis() == BasisStartDateEnum.StartDate ?
+                        e.StartDate :
+                        e.DateRegularized ?? e.StartDate).
+                        AddYears(prematureYear);
+
+                    var notPrematureLeaves = leaves.
+                        Where(l => l.EmployeeID == e.RowID).
+                        Where(l => l.StartDate > annivDate);
+                    validLeaves.AddRange(notPrematureLeaves);
+                }
+                leaves = validLeaves;
+            }
+
+            Leaves = leaves;
         }
 
         private async Task LoadOfficialBusinesses(int organizationId, TimePeriod cuttOffPeriod)
@@ -265,6 +291,11 @@ namespace AccuPay.Core.Services
             TripTickets = (await _tripTicketRepository
                 .GetByDateRangeAsync(cuttOffPeriod))
                 .ToList();
+        }
+
+        public void SetSalaries2(IReadOnlyCollection<Salary2> salaries2)
+        {
+            Salaries2 = salaries2;
         }
     }
 }

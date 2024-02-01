@@ -16,7 +16,8 @@ namespace AccuPay.Core.UnitTests
                 {
                     Division = new Division()
                     {
-                        SssDeductionSchedule = ContributionSchedule.FIRST_HALF
+                        SssDeductionSchedule = ContributionSchedule.FIRST_HALF,
+                        PhilHealthDeductionSchedule = ContributionSchedule.FIRST_HALF,
                     }
                 }
             };

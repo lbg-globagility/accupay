@@ -1,12 +1,21 @@
 Option Strict On
 
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Interfaces.Domain_Services
 Imports AccuPay.Core.Interfaces.Excel
+Imports AccuPay.Core.Interfaces.Reports
+Imports AccuPay.Core.Interfaces.Repositories
 Imports AccuPay.Core.Services
+Imports AccuPay.Core.Services.Domain_Services
 Imports AccuPay.Core.Services.Imports
+Imports AccuPay.Core.Services.LeaveBalanceReset
 Imports AccuPay.CrystalReports
 Imports AccuPay.Infrastructure.Data
+Imports AccuPay.Infrastructure.Data.Data_Services
+Imports AccuPay.Infrastructure.Data.Reports
+Imports AccuPay.Infrastructure.Data.Repositories
 Imports AccuPay.Infrastructure.Reports
+Imports AccuPay.Infrastructure.Reports.Customize
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
@@ -163,6 +172,10 @@ Public Class ServiceProvider
         services.AddTransient(Of ITaxMonthlyReportBuilder, TaxMonthlyReportBuilder)
         services.AddTransient(Of IThirteenthMonthSummaryReportDataService, ThirteenthMonthSummaryReportDataService)
         services.AddTransient(Of IThirteenthMonthSummaryReportBuilder, ThirteenthMonthSummaryReportBuilder)
+        services.AddTransient(Of ILaGlobalAlphaListReportDataService, LaGlobalAlphaListReportDataService)
+        services.AddTransient(Of ILaGlobalAlphaListReportBuilder, LaGlobalAlphaListReportBuilder)
+        services.AddTransient(Of IAlphaListReportDataService, AlphaListReportDataService)
+        services.AddTransient(Of IAlphalistReportBuilder, AlphalistReportBuilder)
 
         services.AddTransient(Of PaystubDataHelper)
         services.AddTransient(Of TimeEntryDataHelper)
@@ -183,6 +196,16 @@ Public Class ServiceProvider
         services.AddTransient(Of IDisciplinaryActionDataService, DisciplinaryActionDataService)
         services.AddTransient(Of IEducationalBackgroundDataService, EducationalBackgroundDataService)
         services.AddTransient(Of IPreviousEmployerDataService, PreviousEmployerDataService)
+        services.AddTransient(Of IAlphalistReportBuilder, AlphalistReportBuilder)
+        services.AddTransient(Of ILeaveResetDataService, LeaveResetDataService)
+        services.AddTransient(Of ILeaveResetRepository, LeaveResetRepository)
+        services.AddTransient(Of ILeaveResetResources, LeaveResetResources)
+        services.AddTransient(Of ILeaveBalanceResetCalculator, LeaveBalanceResetCalculator)
+        services.AddTransient(Of ILeavePolicy, LeavePolicy)
+        services.AddTransient(Of ILeaveResetPolicy, LeaveResetPolicy)
+        services.AddTransient(Of IAdjustmentDataService, AdjustmentDataService)
+        services.AddTransient(Of IAdjustmentRepository, AdjustmentRepository)
+        services.AddTransient(Of ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository)
     End Sub
 
     Private Shared Function GetDbContextOptions() As DbContextOptions

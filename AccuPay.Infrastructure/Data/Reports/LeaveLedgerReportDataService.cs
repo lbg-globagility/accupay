@@ -138,10 +138,10 @@ namespace AccuPay.Infrastructure.Data
                                                     Employee employee,
                                                     LeaveType leaveType)
         {
-            LeaveTransaction leaveBeginningTransaction = new LeaveTransaction();
+            //LeaveTransaction leaveBeginningTransaction = new LeaveTransaction();
 
             // check first if leave was reset during the report period
-            leaveBeginningTransaction = currentLeaveTransactions.Where(l => l.IsCredit).LastOrDefault();
+            var leaveBeginningTransaction = currentLeaveTransactions.Where(l => l.IsCredit).LastOrDefault();
 
             if (leaveBeginningTransaction != null)
             {

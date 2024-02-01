@@ -53,7 +53,9 @@ namespace AccuPay.Core.Entities
 
         public decimal SickLeaveAllowance { get; set; }
         public decimal MaternityLeaveAllowance { get; set; }
+        public decimal MaternityLeaveBalance { get; internal set; }
         public decimal OtherLeaveAllowance { get; set; }
+        public decimal OtherLeaveBalance { get; internal set; }
         public bool AlphalistExempted { get; set; }
 
         [Obsolete("Moved to employment policy")]
@@ -107,10 +109,16 @@ namespace AccuPay.Core.Entities
 
         public virtual ICollection<Paystub> Paystubs { get; set; }
 
+        public virtual ICollection<ResetLeaveCreditItem> ResetLeaveCreditItems { get; set; }
+
         public int? OriginalImageId { get; set; }
 
         [ForeignKey("OriginalImageId")]
         public virtual File OriginalImage { get; set; }
+
+        public bool GracePeriodAsBuffer { get; set; }
+
+        public bool OvertimeOverride { get; set; }
 
         public string MiddleInitial
             => string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
@@ -164,6 +172,10 @@ namespace AccuPay.Core.Entities
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
 
+        public bool IsWithinServicePeriod(DateTime currentDate) => IsActive ? IsActive :
+            TerminationDate == null ? IsActive :
+                currentDate <= TerminationDate.Value;
+
         public bool IsFirstPay(PayPeriod payPeriod)
         {
             return payPeriod != null &&
@@ -201,6 +213,16 @@ namespace AccuPay.Core.Entities
                 CalcRestDay = true,
                 CalcSpecialHoliday = true
             };
+        }
+
+        public void SetOtherLeaveBalance(decimal otherLeaveBalance)
+        {
+            OtherLeaveBalance = otherLeaveBalance;
+        }
+
+        public void SetParentalLeaveBalance(decimal parentalLeaveBalance)
+        {
+            MaternityLeaveBalance = parentalLeaveBalance;
         }
     }
 }

@@ -1,20 +1,21 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 DROP PROCEDURE IF EXISTS `PAYROLLSUMMARY2`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `PAYROLLSUMMARY2`(
+CREATE PROCEDURE `PAYROLLSUMMARY2`(
 	IN `ps_OrganizationID` INT,
 	IN `ps_PayPeriodID1` INT,
 	IN `ps_PayPeriodID2` INT,
 	IN `psi_undeclared` CHAR(1),
-	IN `strSalaryDistrib` VARCHAR(50)
-,
+	IN `strSalaryDistrib` VARCHAR(50),
 	IN `is_keep_in_onesheet` BOOL
-
 )
 BEGIN
 
@@ -59,6 +60,14 @@ INNER JOIN payperiod ppd ON ppd.RowID = ps_PayPeriodID2
 WHERE pp.RowID = ps_PayPeriodID1
 INTO min_paydatefrom, max_paydateto;
 
+CALL GetAccupaySalary(ps_OrganizationID, min_paydatefrom, max_paydateto);
+
+SET @_hasMultiRateSalary=FALSE;
+SET @_datefrom=CURDATE();
+SET @_dateto=CURDATE();
+SET @_eId=0;
+SET @_isDaily=FALSE;
+
 SELECT
 	e.RowID 'EmployeeRowID',
 	e.EmployeeID `DatCol2`,
@@ -69,13 +78,51 @@ SELECT
 		GET_employeerateperday(e.RowID, e.OrganizationID, paystub.PayFromDate)
 	), decimal_size) `Rate`,
 	ROUND(paystub.BasicHours, decimal_size) `BasicHours`,
-	ROUND(GetBasicPay(
+
+	@_datefrom:=paystub.PayFromDate `DateFrom`,
+	@_dateto:=paystub.PayToDate `DateTo`,
+	@_eId:=paystub.EmployeeID `AssignEmployeeID`,
+	@_isDaily:=e.EmployeeType = 'Daily' `IsDaily`,
+	@_hasMultiRateSalary:=(SELECT
+			GROUP_CONCAT(k.RowID)
+			FROM (
+					SELECT
+					t.*
+					FROM (SELECT
+					     i.*,
+					     IFNULL(SUBDATE(ii.EffectiveDateFrom, INTERVAL 1 DAY), LAST_DAY(i.EffectiveDateFrom)) `EffectiveDateTo`
+					     FROM `accupaysalary` i
+					     LEFT JOIN `accupaysalary` ii ON ii.EmployeeID=i.EmployeeID AND ii.SetNewDay=i.SetNewDay+1
+					     ) t
+					WHERE (t.`EffectiveDateTo` BETWEEN @_datefrom AND @_dateto) = TRUE
+					) k
+			WHERE k.EmployeeID=@_eId
+			AND @_isDaily
+			HAVING COUNT(k.RowID) > 1
+			) `HasMultiRateSalary`,
+
+	IF(@_hasMultiRateSalary,
+		(SELECT
+		IF(psi_undeclared=0, SUM(k.Salary), SUM(k.TrueSalary))
+		FROM (SELECT
+				i.*,
+				IFNULL(SUBDATE(ii.EffectiveDateFrom, INTERVAL 1 DAY), @_dateto) `EffectiveDateTo`
+				FROM `accupaysalary` i
+				LEFT JOIN `accupaysalary` ii ON ii.EmployeeID=i.EmployeeID AND ii.SetNewDay=i.SetNewDay+1      
+				WHERE FIND_IN_SET(i.RowID, @_hasMultiRateSalary) > 0
+				) k
+		INNER JOIN dates d ON d.DateValue BETWEEN k.EffectiveDateFrom AND k.EffectiveDateTo
+		INNER JOIN shiftschedules ss ON ss.EmployeeID=k.EmployeeID AND ss.Date=d.DateValue AND ss.IsRestDay=FALSE
+		WHERE ss.Date BETWEEN @_datefrom AND @_dateto
+		),
+		ROUND(GetBasicPay(
 					e.RowID,
 					paystub.PayFromDate,
 					paystub.PayToDate,
 					psi_undeclared,
 					paystub.BasicHours),
-					decimal_size) `BasicPay`,
+					decimal_size))
+	 `BasicPay`,
 
 	ROUND(paystub.RegularHours, decimal_size) `RegularHours`,
 	ROUND(IF(psi_undeclared, paystubactual.RegularPay, paystub.RegularPay), decimal_size) `RegularPay`,
@@ -214,6 +261,8 @@ ORDER BY CONCAT(e.LastName, e.FirstName), paystub.PayFromDate, paystub.PayToDate
 END//
 DELIMITER ;
 
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

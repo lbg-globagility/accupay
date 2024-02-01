@@ -1,0 +1,5 @@
+
+SET @id=(SELECT RowID FROM listofval WHERE `Type`='ReportProviders' AND DisplayValue='AlphalistExcelFormatReportProvider' LIMIT 1);
+
+INSERT INTO `listofval` (`RowID`, `OrganizationID`, `Created`, `CreatedBy`, `LastUpd`, `LastUpdBy`, `DisplayValue`, `LIC`, `Type`, `ParentLIC`, `Active`, `Description`, `OrderBy`) VALUES (@id, NULL, CURRENT_TIMESTAMP(), 4, CURRENT_TIMESTAMP(), 4, 'AlphalistExcelFormatReportProvider', 'AlphalistExcelFormatReportProvider', 'ReportProviders', NULL, 'Yes', NULL, 4) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP();
+

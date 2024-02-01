@@ -1,6 +1,10 @@
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Interfaces.Domain_Services;
 using AccuPay.Core.Interfaces.Excel;
+using AccuPay.Core.Interfaces.Reports;
+using AccuPay.Core.Interfaces.Repositories;
 using AccuPay.Core.Services;
+using AccuPay.Core.Services.Domain_Services;
 using AccuPay.Core.Services.Imports;
 using AccuPay.Core.Services.Imports.Allowances;
 using AccuPay.Core.Services.Imports.Employees;
@@ -8,7 +12,10 @@ using AccuPay.Core.Services.Imports.Loans;
 using AccuPay.Core.Services.Imports.OfficialBusiness;
 using AccuPay.Core.Services.Imports.Overtimes;
 using AccuPay.Core.Services.Imports.Salaries;
+using AccuPay.Core.Services.LeaveBalanceReset;
 using AccuPay.Infrastructure.Data;
+using AccuPay.Infrastructure.Data.Data_Services;
+using AccuPay.Infrastructure.Data.Repositories;
 using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
@@ -79,6 +86,7 @@ namespace AccuPay.Web
             services.AddScoped<IUserActivityRepository, UserActivityRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IWithholdingTaxBracketRepository, WithholdingTaxBracketRepository>();
+            services.AddScoped<IResetLeaveCreditRepository, ResetLeaveCreditRepository>();
 
             services.AddScoped<ICalendarService, CalendarService>();
             services.AddScoped<IListOfValueService, ListOfValueService>();
@@ -127,6 +135,7 @@ namespace AccuPay.Web
             services.AddScoped<ITimeLogDataService, TimeLogDataService>();
             services.AddScoped<ITripTicketDataService, TripTicketDataService>();
             services.AddScoped<IUserDataService, UserDataService>();
+            services.AddScoped<IResetLeaveCreditDataService, ResetLeaveCreditDataService>();
 
             services.AddScoped<IAllowanceImportParser, AllowanceImportParser>();
             services.AddScoped<IEmployeeImportParser, EmployeeImportParser>();
@@ -158,6 +167,15 @@ namespace AccuPay.Web
             services.AddScoped<IDisciplinaryActionDataService, DisciplinaryActionDataService>();
             services.AddScoped<IEducationalBackgroundDataService, EducationalBackgroundDataService>();
             services.AddScoped<IPreviousEmployerDataService, PreviousEmployerDataService>();
+            services.AddScoped<IAlphalistReportBuilder, AlphalistReportBuilder>();
+            services.AddScoped<ILeaveResetRepository, LeaveResetRepository>();
+            services.AddScoped<ILeaveResetDataService, LeaveResetDataService>();
+            services.AddScoped<ILeaveResetResources, LeaveResetResources>();
+            services.AddScoped<ILeaveBalanceResetCalculator, LeaveBalanceResetCalculator>();
+            services.AddScoped<ILeavePolicy, LeavePolicy>();
+            services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
+            services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
+            services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
 
             return services;
         }

@@ -18,6 +18,16 @@ namespace AccuPay.Infrastructure.Data
             _context = context;
         }
 
+        public async Task<ICollection<LeaveLedger>> GetAll(int organizationId)
+        {
+            return await _context.LeaveLedgers
+                //.AsNoTracking()
+                .Include(t => t.Product)
+                .Include(t => t.LeaveTransactions)
+                .Where(t => t.OrganizationID == organizationId)
+                .ToListAsync();
+        }
+
         public async Task<ICollection<LeaveLedger>> GetAllByEmployee(int? employeeId)
         {
             return await _context.LeaveLedgers
@@ -76,7 +86,13 @@ namespace AccuPay.Infrastructure.Data
             return query;
         }
 
-        public async Task CreateBeginningBalanceAsync(int employeeId, int leaveTypeId, int userId, int organizationId, decimal balance)
+        public async Task CreateBeginningBalanceAsync(int employeeId,
+            int leaveTypeId,
+            int userId,
+            int organizationId,
+            decimal balance,
+            string description = "",
+            DateTime? transactionDate = null)
         {
             // this should be get or create leave ledger
             var ledger = await _context.LeaveLedgers
@@ -87,21 +103,52 @@ namespace AccuPay.Infrastructure.Data
 
             if (ledger == null) return;
 
-            var newTransaction = new LeaveTransaction()
-            {
-                LeaveLedgerID = ledger.RowID,
-                EmployeeID = employeeId,
-                CreatedBy = userId,
-                OrganizationID = organizationId,
-                Type = LeaveTransactionType.Credit,
-                TransactionDate = DateTime.Now,
-                Amount = balance,
-                Description = "Beginning Balance",
-                Balance = balance
-            };
+            var newTransaction = LeaveTransaction.NewLeaveTransaction(userId: userId,
+                organizationId: organizationId,
+                employeeId: employeeId,
+                leaveLedgerId: ledger.RowID,
+                payPeriodId: null,
+                paystubId: null,
+                referenceId: null,
+                transactionDate: transactionDate ?? DateTime.Now,
+                description: description,
+                type: LeaveTransactionType.Credit,
+                amount: balance,
+                balance: balance);
 
             _context.LeaveTransactions.Add(newTransaction);
             ledger.LastTransaction = newTransaction;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateManyLeaveTransactionsAsync(IList<LeaveTransaction> leaveTransactions)
+        {
+            if (leaveTransactions == null) return;
+
+            //if (leaveLedger == null && leaveLedger?.LeaveTransactions == null) throw new LeaveResetException(message: "leaveLedger doesn't exists");
+
+            await _context.LeaveTransactions.AddRangeAsync(leaveTransactions);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateManyAsync(IList<LeaveLedger> leaveLedgers)
+        {
+            foreach (var leaveLedger in leaveLedgers)
+            {
+                _context.Entry(leaveLedger).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteManyLeaveTransactionsAsync(IList<LeaveTransaction> leaveTransactions)
+        {
+            foreach (var leaveTransaction in leaveTransactions)
+            {
+                _context.Entry(leaveTransaction).State = EntityState.Deleted;
+            }
 
             await _context.SaveChangesAsync();
         }

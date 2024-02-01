@@ -1,0 +1,25 @@
+
+INSERT INTO `leaveledger` (`OrganizationID`, `Created`, `CreatedBy`, `EmployeeID`, `ProductID`)
+SELECT
+i.OrganizationID,
+i.`CurrDateTime`,
+i.CreatedBy,
+i.`EmployeeId`,
+i.`ProductId`
+FROM (SELECT
+	e.OrganizationID,
+	CURRENT_TIMESTAMP() `CurrDateTime`,
+	og.CreatedBy,
+	e.RowID `EmployeeId`,
+	p.RowID `ProductId`,
+	ll.RowID `LeaveLedgerId`
+	FROM organization og
+	INNER JOIN employee e ON e.OrganizationID=og.RowID #AND e.RowID=796
+	INNER JOIN category c ON c.OrganizationID=og.RowID AND c.CategoryName='Leave Type'
+	INNER JOIN product p ON p.OrganizationID=og.RowID AND p.CategoryID=c.RowID
+	LEFT JOIN leaveledger ll ON ll.EmployeeID=e.RowID AND ll.ProductID=p.RowID
+	WHERE og.NoPurpose=FALSE) i
+WHERE i.LeaveLedgerId IS NULL
+ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP()
+;
+

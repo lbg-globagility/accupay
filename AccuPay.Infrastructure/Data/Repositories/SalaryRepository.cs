@@ -28,7 +28,6 @@ namespace AccuPay.Infrastructure.Data
         #endregion Save
 
         #region Queries
-
         #region Single entity
 
         public async Task<Salary> GetByIdWithEmployeeAsync(int id)
@@ -123,6 +122,12 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
+        public async Task<List<Salary>> GetSalariesByIds(int[] rowIds)
+        {
+            return await _context.Salaries.
+                Where(s => rowIds.Contains(s.RowID.Value)).
+                ToListAsync();
+        }
         #endregion List of entities
 
         #endregion Queries

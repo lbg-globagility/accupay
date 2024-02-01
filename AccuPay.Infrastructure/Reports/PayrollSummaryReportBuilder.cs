@@ -5,6 +5,7 @@ using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
+using AccuPay.Infrastructure.Reports.Models;
 using AccuPay.Utilities;
 using AccuPay.Utilities.Extensions;
 using OfficeOpenXml;
@@ -296,6 +297,17 @@ namespace AccuPay.Infrastructure.Reports
 
                 var payrollPeriodCell = worksheet.Cells[3, 1];
                 var payrollPeriodDescription = $"Payroll Period: {(payFromNextCutOff?.PayFromDate == null ? "" : payFromNextCutOff.PayFromDate.ToShortDateString())} to {(payToNextCutOff?.PayToDate == null ? "" : payToNextCutOff.PayToDate.ToShortDateString())}";
+
+                if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.ITC)
+                {
+                    payFromNextCutOff = _payPeriodRepository.GetById(payPeriod.FromId);
+                    payToNextCutOff = _payPeriodRepository.GetById(payPeriod.ToId);
+
+                    payrollPeriodDescription = $"Payroll Period: {(payFromNextCutOff?.PayFromDate == null ? "" : new DateTime(payFromNextCutOff.Year, payFromNextCutOff.Month, payFromNextCutOff.IsFirstHalf ? 1 : 16).ToShortDateString())} to {(payToNextCutOff?.PayToDate == null ? "" : new DateTime(payToNextCutOff.Year, payToNextCutOff.Month, payToNextCutOff.IsFirstHalf ? 15 : DateTime.DaysInMonth(payToNextCutOff.Year, payToNextCutOff.Month)).ToShortDateString())}";
+
+                    payrollPeriodCell.Value = payrollPeriodDescription;
+                }
+
                 payrollPeriodCell.Value = payrollPeriodDescription;
 
                 rowIndex = 5;
@@ -594,24 +606,6 @@ namespace AccuPay.Infrastructure.Reports
             public string DivisionName { get; set; }
 
             public ICollection<DataRow> Employees { get; set; }
-        }
-
-        private class SelectedPayPeriod
-        {
-            public PayPeriod From { get; set; }
-            public PayPeriod To { get; set; }
-
-            public int FromId => From.RowID.Value;
-            public int ToId => To.RowID.Value;
-
-            public DateTime DateFrom => From.PayFromDate;
-            public DateTime DateTo => To.PayToDate;
-
-            public SelectedPayPeriod(PayPeriod from, PayPeriod to)
-            {
-                From = from;
-                To = to;
-            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Entities.LeaveReset;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Policies;
@@ -15,7 +16,7 @@ namespace AccuPay.Core.Services
         private readonly Organization _organization;
         private readonly Employee _employee;
         private readonly IEmploymentPolicy _employmentPolicy;
-
+        private readonly ILeavePolicy _leavePolicy;
         private static IPolicyHelper _policy;
 
         public DayCalculator(
@@ -28,6 +29,7 @@ namespace AccuPay.Core.Services
             _employee = employee;
             _policy = policy;
             _employmentPolicy = employmentPolicy;
+            _leavePolicy = _policy.GetLeavePolicy;
         }
 
         public TimeEntry Compute(
@@ -45,7 +47,8 @@ namespace AccuPay.Core.Services
             CalendarCollection calendarCollection,
             int? branchId,
             ICollection<TripTicket> tripTickets,
-            IReadOnlyCollection<RoutePayRate> routeRates)
+            IReadOnlyCollection<RoutePayRate> routeRates,
+            IList<Salary2> salaries2 = null)
         {
             var timeEntry = oldTimeEntries.Where(t => t.Date == currentDate).SingleOrDefault();
 
@@ -59,6 +62,9 @@ namespace AccuPay.Core.Services
 
             timeEntry.Reset();
 
+            salary = salaries2?.Where(t => currentDate >= t.EffectiveFrom)
+                .Where(t => currentDate <= t.EffectiveTo)
+                .FirstOrDefault();
             bool hasSalaryForThisDate = salary != null && currentDate.Date >= salary.EffectiveFrom;
 
             // TODO: return this as one the list of warnings of Time entry generation
@@ -316,13 +322,23 @@ namespace AccuPay.Core.Services
 
             if (currentShift.HasShift)
             {
-                var graceTime = _employmentPolicy.GracePeriod;
+                var isMultipleGracePeriod = _policy.IsMultipleGracePeriod;
+                var graceTime = isMultipleGracePeriod ? currentShift?.GracePeriod ?? 0 : _employmentPolicy.GracePeriod;
 
                 var shiftStart = currentShift.ShiftPeriod.Start;
                 var gracePeriod = new TimePeriod(shiftStart, shiftStart.AddMinutes((double)graceTime));
 
-                if (gracePeriod.Contains(logPeriod.Start))
+                bool withinGracePeriod = gracePeriod.Contains(logPeriod.Start);
+
+                if (withinGracePeriod)
                     logPeriod = TimePeriod.FromTime(shiftStart.TimeOfDay, appliedOut.Value, currentDate);
+                else if (!withinGracePeriod &&
+                    graceTime > 0 &&
+                    _employee.GracePeriodAsBuffer)
+                {
+                    var appliedIn1 = appliedIn.Value;
+                    logPeriod = TimePeriod.FromTime(appliedIn1.Subtract(new TimeSpan(0, graceTime, 0)), appliedOut.Value, currentDate);
+                }
             }
 
             return logPeriod;
@@ -611,7 +627,16 @@ namespace AccuPay.Core.Services
                 return;
 
             if (leaves.Any())
+            {
+                var leaveDates = leaves.Select(l => l.StartDate);
+                var startDate = (_leavePolicy.AnniversaryDateBasis() == BasisStartDateEnum.StartDate ?
+                    _employee.StartDate :
+                    _employee.DateRegularized ?? _employee.StartDate).
+                    AddYears((int)_leavePolicy.GetLeavePrematureYear);
+                if (_leavePolicy.IsAllowedPrematureLeave && leaveDates.Any(d => d >= startDate))
+                    return;
                 return;
+            }
 
             if (timeEntry.BasicHours > 0)
                 return;
@@ -731,27 +756,50 @@ namespace AccuPay.Core.Services
             var dailyRate = PayrollTools.GetDailyRate(salary, _employee);
             var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
 
-            timeEntry.BasicDayPay = timeEntry.BasicHours * hourlyRate;
-            timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate;
+            if (currentShift.MarkedAsWholeDay)
+            {
+                if (timeEntry.BasicHours > 0)
+                    timeEntry.BasicDayPay =
+                        timeEntry.BasicHours == currentShift.WorkingHours ?
+                        dailyRate :
+                        dailyRate - ((currentShift.WorkingHours - timeEntry.BasicHours) * hourlyRate);
+
+                if (timeEntry.RegularHours > 0)
+                    timeEntry.RegularPay =
+                        timeEntry.RegularHours == currentShift.WorkingHours ?
+                        dailyRate :
+                        dailyRate - ((currentShift.WorkingHours - timeEntry.RegularHours) * hourlyRate);
+            }
+            else
+            {
+                timeEntry.BasicDayPay = timeEntry.BasicHours * hourlyRate;
+                timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate;
+            }
 
             timeEntry.LateDeduction = timeEntry.LateHours * hourlyRate;
             timeEntry.UndertimeDeduction = timeEntry.UndertimeHours * hourlyRate;
             timeEntry.AbsentDeduction = timeEntry.AbsentHours * hourlyRate;
+            if (currentShift.MarkedAsWholeDay && timeEntry.AbsentDeduction > 0)
+                timeEntry.AbsentDeduction = dailyRate;
 
-            timeEntry.OvertimePay = timeEntry.OvertimeHours * hourlyRate * payrate.OvertimeRate;
+            var payrateOvertime = _employee.OvertimeOverride ? payrate.RegularRate : payrate.OvertimeRate;
+            timeEntry.OvertimePay = timeEntry.OvertimeHours * hourlyRate * payrateOvertime;
 
             var restDayRate = payrate.RestDayRate;
             if (_policy.RestDayInclusive && _employee.IsPremiumInclusive)
                 restDayRate -= 1;
             timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * restDayRate;
 
-            timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrate.RestDayOTRate;
+            var payrateRestDayOTRate = _employee.OvertimeOverride ? restDayRate : payrate.RestDayOTRate;
+            timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrateRestDayOTRate;
             timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate;
 
             if (currentShift.IsWorkingDay)
             {
                 var nightDiffRate = payrate.NightDiffRate - payrate.RegularRate;
-                var nightDiffOTRate = payrate.NightDiffOTRate - payrate.OvertimeRate;
+                var nightDiffOTRate = _employee.OvertimeOverride ?
+                    (payrate.NightDiffOTRate / payrate.OvertimeRate) - payrateOvertime :
+                    payrate.NightDiffOTRate - payrate.OvertimeRate;
 
                 var notEntitledForLegalHolidayRate = _employmentPolicy.ComputeRegularHoliday == false && payrate.IsSpecialNonWorkingHoliday;
                 var notEntitledForSpecialNonWorkingHolidayRate = _employmentPolicy.ComputeSpecialHoliday == false && payrate.IsSpecialNonWorkingHoliday;
@@ -759,7 +807,9 @@ namespace AccuPay.Core.Services
                 if (notEntitledForLegalHolidayRate || notEntitledForSpecialNonWorkingHolidayRate)
                 {
                     nightDiffRate = (payrate.NightDiffRate / payrate.RegularRate) % 1;
-                    nightDiffOTRate = (payrate.NightDiffOTRate / payrate.OvertimeRate) % 1;
+                    nightDiffOTRate = _employee.OvertimeOverride ?
+                        (payrate.NightDiffOTRate / payrate.OvertimeRate) - payrateOvertime % 1 :
+                        (payrate.NightDiffOTRate / payrate.OvertimeRate) % 1;
                 }
 
                 timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * nightDiffRate;
@@ -768,7 +818,9 @@ namespace AccuPay.Core.Services
             else if (currentShift.IsRestDay)
             {
                 var restDayNDRate = payrate.RestDayNDRate - payrate.RestDayRate;
-                var restDayNDOTRate = payrate.RestDayNDOTRate - payrate.RestDayOTRate;
+                var restDayNDOTRate = _employee.OvertimeOverride ?
+                    restDayNDRate :
+                    payrate.RestDayNDOTRate - payrate.RestDayOTRate;
 
                 timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * restDayNDRate;
                 timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * restDayNDOTRate;
@@ -782,12 +834,12 @@ namespace AccuPay.Core.Services
                 if (currentShift.IsWorkingDay || _employmentPolicy.ComputeRestDay == false)
                 {
                     holidayRate = payrate.RegularRate;
-                    holidayOTRate = payrate.OvertimeRate;
+                    holidayOTRate = _employee.OvertimeOverride ? holidayRate : payrate.OvertimeRate;
                 }
                 else if (currentShift.IsRestDay)
                 {
                     holidayRate = payrate.RestDayRate;
-                    holidayOTRate = payrate.RestDayOTRate;
+                    holidayOTRate = _employee.OvertimeOverride ? holidayRate : payrate.RestDayOTRate;
                 }
 
                 timeEntry.SpecialHolidayOTPay = timeEntry.SpecialHolidayOTHours * hourlyRate * holidayOTRate;
@@ -884,7 +936,7 @@ namespace AccuPay.Core.Services
             var endTime = leave.EndTime ?? currentShift.EndTime.Value;
 
             var leavePeriod = TimePeriod.FromTime(startTime, endTime, currentShift.Date);
-
+            
             if (!currentShift.HasShift)
                 return leavePeriod;
 

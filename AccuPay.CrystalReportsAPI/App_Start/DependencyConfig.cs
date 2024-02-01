@@ -1,7 +1,13 @@
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Interfaces.Reports;
+using AccuPay.Core.Interfaces.Repositories;
 using AccuPay.CrystalReports;
 using AccuPay.CrystalReportsAPI.Services;
 using AccuPay.Infrastructure.Data;
+using AccuPay.Infrastructure.Data.Reports;
+using AccuPay.Infrastructure.Data.Repositories;
+using AccuPay.Infrastructure.Reports;
+using AccuPay.Infrastructure.Reports.Customize;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -64,7 +70,12 @@ namespace AccuPay.CrystalReportsAPI
             services.AddScoped<ITaxMonthlyReportBuilder, TaxMonthlyReportBuilder>();
             services.AddScoped<IThirteenthMonthSummaryReportDataService, ThirteenthMonthSummaryReportDataService>();
             services.AddScoped<IThirteenthMonthSummaryReportBuilder, ThirteenthMonthSummaryReportBuilder>();
+            services.AddScoped<ILaGlobalAlphaListReportDataService, LaGlobalAlphaListReportDataService>();
+            services.AddScoped<ILaGlobalAlphaListReportBuilder, LaGlobalAlphaListReportBuilder>();
+            services.AddScoped<IAlphaListReportDataService, AlphaListReportDataService>();
+            services.AddScoped<IAlphalistReportBuilder, AlphalistReportBuilder>();
             services.AddScoped<IPaystubRepository, PaystubRepository>();
+            services.AddScoped<ICashoutUnusedLeaveRepository, CashoutUnusedLeaveRepository>();
 
             var serviceProvider = services.BuildServiceProvider();
 

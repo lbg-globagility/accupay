@@ -336,8 +336,12 @@ Public Class MDIPrimaryForm
 
         If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
+            If user.UserLevel = UserLevel.Five Then
+
+                PayrollToolStripButton.Visible = False
+
+            End If
             GeneralToolStripButton.Visible = False
-            PayrollToolStripButton.Visible = False
             ReportsToolStripButton.Visible = False
 
             LoanBalanceCollapsibleGroupBox.Visible = False

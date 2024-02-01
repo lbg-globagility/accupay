@@ -299,7 +299,13 @@ Public Class BenchmarkPaystubForm
     Private Sub ShowUndeclaredSalaryBreakdown(payStub As Paystub, employeeRate As BenchmarkPaystubRate)
         Dim rawUndeclaredRate = employeeRate.ActualDailyRate - employeeRate.DailyRate
         Dim regularDays = BenchmarkPayrollHelper.ConvertHoursToDays(payStub.RegularHours)
-        Dim holidayAndLeaveDays = BenchmarkPayrollHelper.ConvertHoursToDays((payStub.TotalWorkedHoursWithoutOvertimeAndLeave - payStub.RegularHours) + payStub.LeaveHours)
+
+        Dim totalWorkedHoursWithoutOvertimeAndLeave =
+            payStub.RegularHoursAndTotalRestDay +
+            payStub.SpecialHolidayHours +
+            payStub.RegularHolidayHours
+
+        Dim holidayAndLeaveDays = BenchmarkPayrollHelper.ConvertHoursToDays((totalWorkedHoursWithoutOvertimeAndLeave - payStub.RegularHours) + payStub.LeaveHours)
 
         Dim undeclaredRegularPay = rawUndeclaredRate * regularDays
         Dim undeclaredHolidayAndLeavePay = ComputeHolidayAndLeavePays(payStub, rawUndeclaredRate)

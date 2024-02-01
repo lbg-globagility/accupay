@@ -1,6 +1,7 @@
 using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Core.Interfaces;
+using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace AccuPay.Infrastructure.Data
 {
     public class LeaveRepository : SavableRepository<Leave>, ILeaveRepository
     {
+        private const string LEAVE_POLICY = "LeavePolicy";
         public LeaveRepository(PayrollContext context) : base(context)
         {
         }
@@ -150,6 +152,15 @@ namespace AccuPay.Infrastructure.Data
             };
         }
 
+        public async Task<ILeavePolicy> GetLeavePolicyAsync()
+        {
+            var leaveResets = await _context.ListOfValues.
+                AsNoTracking().
+                Where(l => l.Type == LEAVE_POLICY).
+                ToListAsync();
+            return new LeavePolicy(
+                new ListOfValueCollection(leaveResets));
+        }
         #endregion Others
 
         #endregion Queries

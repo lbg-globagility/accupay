@@ -1,0 +1,3 @@
+
+ALTER TABLE `employee`
+	ADD COLUMN IF NOT EXISTS `GracePeriodAsBuffer` TINYINT(1) NOT NULL DEFAULT '0' AFTER `EmploymentPolicyId`;

@@ -27,6 +27,8 @@ namespace AccuPay.Core.Helpers
 
         private const int PotentialLastWorkDay = 7;
 
+        public const double MinutesPerHour = 60;
+
         public static decimal GetEmployeeMonthlyRate(
             Employee employee,
             Salary salary,

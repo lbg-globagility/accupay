@@ -31,6 +31,7 @@ Partial Class TimeAttendForm
         Me.TimeLogsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TripTicketsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ResetLeaveCreditsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelTimeAttend = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -38,7 +39,7 @@ Partial Class TimeAttendForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MassOvertimeToolStripMenuItem, Me.LeaveToolStripMenuItem, Me.OfficialBusinessToolStripMenuItem, Me.OvertimeToolStripMenuItem, Me.ShiftToolStripMenuItem, Me.TimeLogsToolStripMenuItem, Me.TripTicketsToolStripMenuItem, Me.SummaryToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MassOvertimeToolStripMenuItem, Me.LeaveToolStripMenuItem, Me.OfficialBusinessToolStripMenuItem, Me.OvertimeToolStripMenuItem, Me.ShiftToolStripMenuItem, Me.TimeLogsToolStripMenuItem, Me.TripTicketsToolStripMenuItem, Me.SummaryToolStripMenuItem, Me.ResetLeaveCreditsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -78,13 +79,13 @@ Partial Class TimeAttendForm
         'TimeLogsToolStripMenuItem
         '
         Me.TimeLogsToolStripMenuItem.Name = "TimeLogsToolStripMenuItem"
-        Me.TimeLogsToolStripMenuItem.Size = New System.Drawing.Size(74, 20)
+        Me.TimeLogsToolStripMenuItem.Size = New System.Drawing.Size(73, 20)
         Me.TimeLogsToolStripMenuItem.Text = "Time Logs"
         '
         'TripTicketsToolStripMenuItem
         '
         Me.TripTicketsToolStripMenuItem.Name = "TripTicketsToolStripMenuItem"
-        Me.TripTicketsToolStripMenuItem.Size = New System.Drawing.Size(79, 20)
+        Me.TripTicketsToolStripMenuItem.Size = New System.Drawing.Size(77, 20)
         Me.TripTicketsToolStripMenuItem.Text = "Trip Tickets"
         '
         'SummaryToolStripMenuItem
@@ -92,6 +93,13 @@ Partial Class TimeAttendForm
         Me.SummaryToolStripMenuItem.Name = "SummaryToolStripMenuItem"
         Me.SummaryToolStripMenuItem.Size = New System.Drawing.Size(70, 20)
         Me.SummaryToolStripMenuItem.Text = "Summary"
+        '
+        'ResetLeaveCreditsToolStripMenuItem
+        '
+        Me.ResetLeaveCreditsToolStripMenuItem.Name = "ResetLeaveCreditsToolStripMenuItem"
+        Me.ResetLeaveCreditsToolStripMenuItem.Size = New System.Drawing.Size(120, 20)
+        Me.ResetLeaveCreditsToolStripMenuItem.Text = "Reset Leave Credits"
+        Me.ResetLeaveCreditsToolStripMenuItem.Visible = False
         '
         'PanelTimeAttend
         '
@@ -128,4 +136,5 @@ Partial Class TimeAttendForm
     Friend WithEvents LeaveToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OvertimeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents TripTicketsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ResetLeaveCreditsToolStripMenuItem As ToolStripMenuItem
 End Class

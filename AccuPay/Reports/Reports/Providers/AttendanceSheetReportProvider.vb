@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports CrystalDecisions.CrystalReports.Engine
 
@@ -43,7 +43,7 @@ Public Class AttendanceSheetReportProvider
 
         objText = DirectCast(report.ReportDefinition.Sections(2).ReportObjects("txtorgaddress"), TextObject)
         objText.Text = CStr(EXECQUER(
-            String.Concat("SELECT CONCAT_WS(', ', a.StreetAddress1, a.StreetAddress2, a.Barangay, a.CityTown, a.Country, a.State) `Result`",
+            String.Concat("SELECT CONCAT_WS(', ', NULLIF(a.StreetAddress1, ''), NULLIF(a.StreetAddress2, ''), NULLIF(a.Barangay, ''), NULLIF(a.CityTown, ''), NULLIF(a.Country, ''), NULLIF(a.State, '')) `Result`",
                           " FROM organization o LEFT JOIN address a ON a.RowID = o.PrimaryAddressID",
                           " WHERE o.RowID=", orgztnID, ";")))
 

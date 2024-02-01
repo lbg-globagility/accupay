@@ -1,4 +1,4 @@
-﻿namespace AccuPay.Core.Helpers
+namespace AccuPay.Core.Helpers
 {
     public class PermissionConstant
     {
@@ -23,5 +23,6 @@
         public const string TIMELOG = "TimeLog";
         public const string TRIPTICKET = "TripTicket";
         public const string USER = "User";
+        public const string RESET_LEAVE_CREDIT = "ResetLeaveCredit";
     }
 }

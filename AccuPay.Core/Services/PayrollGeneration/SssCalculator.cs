@@ -106,6 +106,26 @@ namespace AccuPay.Core.Services
                 case SssCalculationBasis.BasicSalary:
                     return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
 
+                case SssCalculationBasis.GrossPayWithBasicDeductions:
+                    var grandTotalAllowance = (previousPaystub?.GrandTotalAllowance ?? 0) +
+                                paystub.GrandTotalAllowance;
+
+                    var basicDeductions = (previousPaystub?.BasicDeductions ?? 0) +
+                                paystub.BasicDeductions;
+
+                    var grandTotalGrossPay = (previousPaystub?.GrossPay ?? 0) +
+                                paystub.GrossPay;
+
+                    if (employee.IsFixed)
+                    {
+                        return PayrollTools.GetEmployeeMonthlyRate(employee, salary) +
+                            grandTotalAllowance;
+                    }
+
+                    return grandTotalGrossPay +
+                        basicDeductions +
+                        grandTotalAllowance;
+
                 case SssCalculationBasis.BasicMinusDeductions:
 
                     if (employee.IsFixed)
@@ -114,8 +134,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        return (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
-                            paystub.TotalDaysPayWithOutOvertimeAndLeave;
+                        return (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
+                            paystub.TotalDaysPayWithOutOvertimeAndLeave(employee.IsMonthly);
                     }
 
                 case SssCalculationBasis.BasicMinusDeductionsWithoutPremium:
@@ -126,8 +146,8 @@ namespace AccuPay.Core.Services
                     }
                     else
                     {
-                        var basisPay = (previousPaystub?.TotalWorkedPayWithoutOvertimeAndLeaveForDailyType(employee) ?? 0) +
-                            paystub.TotalWorkedPayWithoutOvertimeAndLeaveForDailyType(employee);// TotalWorkedPayWithoutOvertimeAndLeave
+                        var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly) ?? 0) +
+                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave(employee.IsMonthly);
 
                         if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {

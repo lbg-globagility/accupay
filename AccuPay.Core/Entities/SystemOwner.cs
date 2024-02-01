@@ -18,6 +18,8 @@ namespace AccuPay.Core.Entities
 
         public const string text_default = "Default";
 
+        private const string text_itc = "ITC";
+
         public static string Goldwings => text_goldwings;
 
         public static string Hyundai => text_hyundai;
@@ -29,6 +31,8 @@ namespace AccuPay.Core.Entities
         public static string LAGlobal => text_laglobal;
 
         public static string DefaultOwner => text_default;
+
+        public static string ITC => text_itc;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

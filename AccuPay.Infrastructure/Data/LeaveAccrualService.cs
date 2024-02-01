@@ -90,18 +90,18 @@ namespace AccuPay.Infrastructure.Data
 
             var leaveHours = _calculator.Calculate(employee, payperiod, employee.VacationLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear);
 
-            var newTransaction = new LeaveTransaction()
-            {
-                LeaveLedgerID = ledger.RowID,
-                EmployeeID = employee.RowID,
-                CreatedBy = z_User,
-                OrganizationID = z_OrganizationID,
-                Type = LeaveTransactionType.Credit,
-                TransactionDate = payperiod.PayToDate,
-                Amount = leaveHours,
-                Description = "Accrual",
-                Balance = (lastTransaction?.Balance ?? 0) + leaveHours
-            };
+            var newTransaction = LeaveTransaction.NewLeaveTransaction(leaveLedgerId: ledger.RowID,
+                employeeId: employee.RowID,
+                userId: z_User,
+                organizationId: z_OrganizationID,
+                type: LeaveTransactionType.Credit,
+                transactionDate: payperiod.PayToDate,
+                amount: leaveHours,
+                description: "Accrual",
+                balance: (lastTransaction?.Balance ?? 0) + leaveHours,
+                payPeriodId: null,
+                paystubId: null,
+                referenceId: null);
 
             context.LeaveTransactions.Add(newTransaction);
             ledger.LastTransaction = newTransaction;
@@ -139,18 +139,18 @@ namespace AccuPay.Infrastructure.Data
 
             var leaveHours = _calculator.Calculate(employee, payperiod, employee.SickLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear);
 
-            var newTransaction = new LeaveTransaction()
-            {
-                LeaveLedgerID = ledger.RowID,
-                EmployeeID = employee.RowID,
-                CreatedBy = z_User,
-                OrganizationID = z_OrganizationID,
-                Type = LeaveTransactionType.Credit,
-                TransactionDate = payperiod.PayToDate,
-                Amount = leaveHours,
-                Description = "Accrual",
-                Balance = lastTransaction.Balance + leaveHours
-            };
+            var newTransaction = LeaveTransaction.NewLeaveTransaction(leaveLedgerId: ledger.RowID,
+                employeeId: employee.RowID,
+                userId: z_User,
+                organizationId: z_OrganizationID,
+                type: LeaveTransactionType.Credit,
+                transactionDate: payperiod.PayToDate,
+                amount: leaveHours,
+                description: "Accrual",
+                balance: lastTransaction.Balance + leaveHours,
+                payPeriodId: null,
+                paystubId: null,
+                referenceId: null);
 
             context.LeaveTransactions.Add(newTransaction);
             ledger.LastTransaction = newTransaction;
@@ -222,18 +222,18 @@ namespace AccuPay.Infrastructure.Data
                 if (leaveHours == 0)
                     return;
 
-                var newTransaction = new LeaveTransaction()
-                {
-                    LeaveLedgerID = ledger.RowID,
-                    EmployeeID = employee.RowID,
-                    CreatedBy = userId,
-                    OrganizationID = organizationId,
-                    Type = LeaveTransactionType.Credit,
-                    TransactionDate = nextAccrualDate,
-                    Amount = leaveHours,
-                    Description = "Accrual",
-                    Balance = (lastTransaction?.Balance ?? 0) + leaveHours
-                };
+                var newTransaction = LeaveTransaction.NewLeaveTransaction(leaveLedgerId: ledger.RowID,
+                    employeeId: employee.RowID,
+                    userId: userId,
+                    organizationId: organizationId,
+                    type: LeaveTransactionType.Credit,
+                    transactionDate: nextAccrualDate,
+                    amount: leaveHours,
+                    description: "Accrual",
+                    balance: (lastTransaction?.Balance ?? 0) + leaveHours,
+                    payPeriodId: null,
+                    paystubId: null,
+                    referenceId: null);
 
                 employee.LeaveBalance += leaveHours;
                 context.LeaveTransactions.Add(newTransaction);

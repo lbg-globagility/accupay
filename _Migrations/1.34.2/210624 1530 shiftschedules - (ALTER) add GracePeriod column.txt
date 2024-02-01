@@ -1,0 +1,3 @@
+
+ALTER TABLE `shiftschedules`
+	ADD COLUMN IF NOT EXISTS `GracePeriod` INT NULL DEFAULT '0' AFTER `MarkedAsWholeDay`;

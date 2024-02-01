@@ -313,7 +313,7 @@ namespace AccuPay.Infrastructure.Data
 
             var employeeId = employee.RowID;
             var ledgers = await _context.LeaveLedgers
-                .AsNoTracking()
+                //.AsNoTracking()
                 .Include(x => x.Product)
                 .Include(x => x.LeaveTransactions)
                 .Include(x => x.LastTransaction)
@@ -330,7 +330,7 @@ namespace AccuPay.Infrastructure.Data
                 }
                 else
                 {
-                    var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo == leave.LeaveType);
+                    var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo.ToLower() == leave.LeaveType.ToLower());
 
                     // retrieves the time entries within leave date range
                     var timeEntry = timeEntries?.Where(t => leave.StartDate == t.Date);
@@ -365,19 +365,32 @@ namespace AccuPay.Infrastructure.Data
             decimal totalLeaveHours,
             DateTime transactionDate)
         {
-            var newTransaction = new LeaveTransaction()
-            {
-                OrganizationID = paystub.OrganizationID,
-                Created = DateTime.Now,
-                EmployeeID = paystub.EmployeeID,
-                PayPeriodID = payPeriod.RowID,
-                ReferenceID = leaveId,
-                TransactionDate = transactionDate,
-                Type = LeaveTransactionType.Debit,
-                Amount = totalLeaveHours,
-                Paystub = paystub,
-                Balance = (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours
-            };
+            //var newTransaction = new LeaveTransaction()
+            //{
+            //    OrganizationID = paystub.OrganizationID,
+            //    Created = DateTime.Now,
+            //    EmployeeID = paystub.EmployeeID,
+            //    PayPeriodID = payPeriod.RowID,
+            //    ReferenceID = leaveId,
+            //    TransactionDate = transactionDate,
+            //    Type = LeaveTransactionType.Debit,
+            //    Amount = totalLeaveHours,
+            //    Paystub = paystub,
+            //    Balance = (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours
+            //};
+            var newTransaction = LeaveTransaction.NewLeaveTransaction(leaveLedgerId: null,
+                employeeId: paystub.EmployeeID,
+                userId: null,
+                organizationId: paystub.OrganizationID,
+                type: LeaveTransactionType.Debit,
+                transactionDate: transactionDate,
+                amount: totalLeaveHours,
+                description: string.Empty,
+                balance: (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours,
+                payPeriodId: payPeriod.RowID,
+                paystubId: null,
+                referenceId: leaveId);
+            newTransaction.Paystub = paystub;
 
             ledger.LeaveTransactions.Add(newTransaction);
             ledger.LastTransaction = newTransaction;

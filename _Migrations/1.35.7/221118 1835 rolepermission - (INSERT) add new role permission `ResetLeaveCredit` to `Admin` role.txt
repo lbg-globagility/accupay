@@ -1,0 +1,4 @@
+SET @id=(SELECT `Id` FROM `accupaydb_cinema2k`.`permission` WHERE `Name`='ResetLeaveCredit' LIMIT 1);
+
+INSERT INTO `accupaydb_cinema2k`.`rolepermission` (`RoleId`, `PermissionId`, `Read`, `Create`, `Update`, `Delete`) VALUES ('1', @id, '1', '1', '1', '1');
+

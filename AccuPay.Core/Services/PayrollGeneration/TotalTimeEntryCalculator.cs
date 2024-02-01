@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using AccuPay.Utilities;
 using System.Collections.Generic;
@@ -55,7 +55,8 @@ namespace AccuPay.Core.Services
             HourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee);
             ActualHourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee, isActual: true);
 
-            RegularPay = HourlyRate * RegularHours;
+            //RegularPay = HourlyRate * RegularHours;
+            RegularPay = timeEntries.Sum(t => t.RegularPay);
             ActualRegularPay = ActualHourlyRate * RegularHours;
 
             if (timeEntries != null && timeEntries.Any())

@@ -27,6 +27,7 @@ namespace AccuPay.Infrastructure.Data
         private readonly IEmployeeRepository _employeeRepository;
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
         private readonly IShiftRepository _shiftRepository;
+        private readonly ILeaveRepository _leaveRepository;
 
         public LeaveDataService(
             PayrollContext context,
@@ -48,6 +49,7 @@ namespace AccuPay.Infrastructure.Data
             _employeeRepository = employeeRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
             _shiftRepository = shiftRepository;
+            _leaveRepository = leaveRepository;
         }
 
         #region SaveManyAsync
@@ -89,9 +91,6 @@ namespace AccuPay.Infrastructure.Data
 
         private async Task SaveLeavesAsync(List<Leave> leaves, int organizationId)
         {
-            // TODO: Urgent!!! - should not access repository directly like this!
-            var leaveRepository = new LeaveRepository(_context);
-
             var shifts = new List<Shift>();
             var employees = new List<Employee>();
 
@@ -119,14 +118,14 @@ namespace AccuPay.Infrastructure.Data
                 {
                     foreach (var leave in leaves)
                     {
-                        await leaveRepository.SaveAsync(leave);
+                        await _leaveRepository.SaveAsync(leave);
 
                         if (Validatable(leave))
                         {
                             var employee = employees.FirstOrDefault(e => e.RowID == leave.EmployeeID);
 
                             var unusedApprovedLeaves = await GetUnusedApprovedLeavesByType(
-                                leaveRepository,
+                                _leaveRepository,
                                 employee.RowID,
                                 leave,
                                 organizationId);
@@ -370,17 +369,29 @@ namespace AccuPay.Infrastructure.Data
             int? lastTransactionId = null;
 
             // #2.1
-            LeaveTransaction beginningTransaction = new LeaveTransaction();
-            beginningTransaction.OrganizationID = organizationId;
-            beginningTransaction.CreatedBy = userId;
-            beginningTransaction.EmployeeID = employeeId;
-            beginningTransaction.ReferenceID = null;
-            beginningTransaction.LeaveLedgerID = leaveLedgerId;
-            beginningTransaction.PayPeriodID = firstPayPeriodOfTheYear.RowID;
-            beginningTransaction.TransactionDate = firstDayOfTheWorkingYear.Value;
-            beginningTransaction.Type = LeaveTransactionType.Credit;
-            beginningTransaction.Amount = newAllowance;
-            beginningTransaction.Balance = newAllowance;
+            //LeaveTransaction beginningTransaction = new LeaveTransaction();
+            //beginningTransaction.OrganizationID = organizationId;
+            //beginningTransaction.CreatedBy = userId;
+            //beginningTransaction.EmployeeID = employeeId;
+            //beginningTransaction.ReferenceID = null;
+            //beginningTransaction.LeaveLedgerID = leaveLedgerId;
+            //beginningTransaction.PayPeriodID = firstPayPeriodOfTheYear.RowID;
+            //beginningTransaction.TransactionDate = firstDayOfTheWorkingYear.Value;
+            //beginningTransaction.Type = LeaveTransactionType.Credit;
+            //beginningTransaction.Amount = newAllowance;
+            //beginningTransaction.Balance = newAllowance;
+            var beginningTransaction = LeaveTransaction.NewLeaveTransaction(leaveLedgerId: leaveLedgerId,
+                employeeId: employee.RowID,
+                userId: userId,
+                organizationId: organizationId,
+                type: LeaveTransactionType.Credit,
+                transactionDate: firstDayOfTheWorkingYear.Value,
+                amount: newAllowance,
+                description: string.Empty,
+                balance: newAllowance,
+                payPeriodId: null,
+                paystubId: null,
+                referenceId: null);
 
             _context.LeaveTransactions.Add(beginningTransaction);
 
@@ -657,5 +668,14 @@ namespace AccuPay.Infrastructure.Data
         }
 
         #endregion Overrides
+
+        #region Others
+
+        public async Task<ILeavePolicy> GetLeavePolicyAsync()
+        {
+            return await _leaveRepository.GetLeavePolicyAsync();
+        }
+
+        #endregion Others
     }
 }

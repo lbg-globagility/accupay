@@ -23,5 +23,7 @@ namespace AccuPay.Core.Interfaces
         Task<Salary> GetLatest(int employeeId);
 
         Task<PaginatedList<Salary>> List(PageOptions options, int organizationId, string searchTerm = "", int? employeeId = null);
+
+        Task<List<Salary>> GetSalariesByIds(int[] rowIds);
     }
 }

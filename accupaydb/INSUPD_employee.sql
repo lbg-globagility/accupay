@@ -61,7 +61,9 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employee`(
 	`emplo_LateGracePeriod` DECIMAL(10,2),
 	`emplo_AgencyID` INT,
 	`emplo_BranchID` INT,
-	`emplo_BPIInsurance` DECIMAL(10,2)
+	`emplo_BPIInsurance` DECIMAL(10,2),
+	`emplo_GracePeriodAsBuffer` TINYINT,
+	`employe_OvertimeOverride` TINYINT
 )
 RETURNS int(11)
 LANGUAGE SQL
@@ -141,6 +143,7 @@ INSERT INTO employee
     ,AgencyID
     ,BranchID
     ,BPIInsurance
+    ,GracePeriodAsBuffer
 ) VALUES (
     emplo_RowID
     ,emplo_UserID
@@ -175,7 +178,7 @@ INSERT INTO employee
     ,1 #PayFrequencySemiMonthlyId
     ,0
     ,FALSE
-    ,FALSE
+    ,employe_OvertimeOverride
     ,'1'
     ,emplo_LeaveBalance
     ,emplo_SickLeaveBalance
@@ -208,6 +211,7 @@ INSERT INTO employee
     ,emplo_AgencyID
     ,emplo_BranchID
     ,emplo_BPIInsurance
+    ,emplo_GracePeriodAsBuffer
 ) ON
 DUPLICATE
 KEY
@@ -262,7 +266,27 @@ UPDATE
     ,MaternityLeaveBalance=emplo_MaternityLeaveBalance
     ,OtherLeaveBalance=emplo_OtherLeaveBalance
 	,BranchID=emplo_BranchID
-	,BPIInsurance=emplo_BPIInsurance;SELECT @@Identity AS id INTO emploRowID;
+	,BPIInsurance=emplo_BPIInsurance
+	,GracePeriodAsBuffer=emplo_GracePeriodAsBuffer
+	,OvertimeOverride=employe_OvertimeOverride;SELECT @@Identity AS id INTO emploRowID;
+
+SET @eId=IF(emplo_RowID IS NULL, emploRowID, emplo_RowID);
+
+INSERT INTO `leaveledger` (`OrganizationID`, `Created`, `CreatedBy`, `EmployeeID`, `ProductID`)
+SELECT
+emplo_OrganizationID, CURRENT_TIMESTAMP(), emplo_UserID, @eId, i.RowID
+FROM (SELECT
+		p.*,
+		ll.RowID `LeaveLedgerId`
+		FROM product p
+		INNER JOIN category c ON c.RowID=p.CategoryID AND c.CategoryName='Leave type' AND c.OrganizationID=p.OrganizationID
+		LEFT JOIN leaveledger ll ON ll.EmployeeID=@eId
+			AND ll.ProductID=p.RowID
+		WHERE p.OrganizationID=emplo_OrganizationID
+		) i
+WHERE i.LeaveLedgerId IS NULL
+ON DUPLICATE KEY UPDATE `LastUpd`=CURRENT_TIMESTAMP()
+;
 
 RETURN emploRowID;
 

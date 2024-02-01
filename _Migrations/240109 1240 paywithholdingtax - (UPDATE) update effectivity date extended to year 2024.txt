@@ -1,0 +1,6 @@
+
+UPDATE paywithholdingtax t
+SET t.EffectiveDateTo='2024-12-31',
+t.LastUpd=CURRENT_TIMESTAMP()
+WHERE t.EffectiveDateFrom='2023-01-01' AND t.EffectiveDateTo='2023-12-31'
+;

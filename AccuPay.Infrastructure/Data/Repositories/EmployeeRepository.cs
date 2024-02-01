@@ -186,6 +186,23 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync(organizationId);
         }
 
+        public async Task<ICollection<Employee>> GetAllWithinServicePeriodAsync(int organizationId, DateTime currentDate)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return await builder
+                .WithinServicePeriod(currentDate)
+                .ToListAsync(organizationId);
+        }
+
+        public async Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(int organizationId, DateTime currentDate)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return await builder
+                .IncludePosition()
+                .WithinServicePeriod(currentDate)
+                .ToListAsync(organizationId);
+        }
+
         public async Task<ICollection<Employee>> GetAllWithDivisionAndPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);

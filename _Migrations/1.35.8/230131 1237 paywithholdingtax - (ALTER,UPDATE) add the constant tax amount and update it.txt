@@ -1,0 +1,35 @@
+ALTER TABLE `paywithholdingtax`
+	ADD COLUMN IF NOT EXISTS `ConstantTaxAmount` DECIMAL(10,2) NOT NULL DEFAULT '0' AFTER `TaxableIncomeToAmount`;
+
+
+
+
+
+
+
+
+
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=0 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=685 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=61.65 WHERE t.TaxableIncomeFromAmount=1096 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=280.85 WHERE t.TaxableIncomeFromAmount=2192 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=1102.6 WHERE t.TaxableIncomeFromAmount=5479 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=6034.3 WHERE t.TaxableIncomeFromAmount=21918 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=0 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=4808 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=432.6 WHERE t.TaxableIncomeFromAmount=7692 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=1971.2 WHERE t.TaxableIncomeFromAmount=15385 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=7740.45 WHERE t.TaxableIncomeFromAmount=38462 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=42355.65 WHERE t.TaxableIncomeFromAmount=153846 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=0 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=10417 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=937.5 WHERE t.TaxableIncomeFromAmount=16667 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=4270.7 WHERE t.TaxableIncomeFromAmount=33333 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=16770.7 WHERE t.TaxableIncomeFromAmount=83333 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=91770.7 WHERE t.TaxableIncomeFromAmount=333333 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=0 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=0 WHERE t.TaxableIncomeFromAmount=20833 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=1875 WHERE t.TaxableIncomeFromAmount=33333 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=8541.8 WHERE t.TaxableIncomeFromAmount=66667 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=33541.8 WHERE t.TaxableIncomeFromAmount=166667 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
+UPDATE paywithholdingtax t SET t.ConstantTaxAmount=183541.8 WHERE t.TaxableIncomeFromAmount=666667 AND '2023-01-01' BETWEEN t.EffectiveDateFrom AND t.EffectiveDateTo;
