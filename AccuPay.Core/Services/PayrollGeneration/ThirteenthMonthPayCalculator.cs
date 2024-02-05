@@ -84,7 +84,7 @@ namespace AccuPay.Core.Services
 
                     if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                     {
-                        hoursWorked = paystub.RegularHoursAndTotalRestDay;
+                        hoursWorked = paystub.RegularHoursAndTotalRestDayHours;
                     }
 
                     return ComputeByDailyRate(employee, salary, hoursWorked);

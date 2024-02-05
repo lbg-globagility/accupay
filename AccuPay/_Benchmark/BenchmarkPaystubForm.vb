@@ -301,7 +301,7 @@ Public Class BenchmarkPaystubForm
         Dim regularDays = BenchmarkPayrollHelper.ConvertHoursToDays(payStub.RegularHours)
 
         Dim totalWorkedHoursWithoutOvertimeAndLeave =
-            payStub.RegularHoursAndTotalRestDay +
+            payStub.RegularHoursAndTotalRestDayHours +
             payStub.SpecialHolidayHours +
             payStub.RegularHolidayHours
 

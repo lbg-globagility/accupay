@@ -153,8 +153,7 @@ namespace AccuPay.Core.Entities
 
         public decimal TotalRestDayPay => RestDayPay + SpecialHolidayRestDayPay + RegularHolidayRestDayPay;
 
-        public decimal RegularHoursAndTotalRestDay => RegularHours + TotalRestDayHours;
-        public decimal RegularPayAndTotalRestDayPay => RegularPay + TotalRestDayPay;
+        public decimal RegularHoursAndTotalRestDayHours => RegularHours + TotalRestDayHours;
 
         public decimal RegularPayAndTotalRestDay => RegularPay + TotalRestDayPay;
 
@@ -170,7 +169,7 @@ namespace AccuPay.Core.Entities
         public virtual decimal TotalWorkedHoursWithoutOvertimeAndLeave(bool isMonthly)
         {
             decimal totalHours =
-                RegularHoursAndTotalRestDay +
+                RegularHoursAndTotalRestDayHours +
                 SpecialHolidayHours +
                 RegularHolidayHours;
 
@@ -198,7 +197,7 @@ namespace AccuPay.Core.Entities
         public virtual decimal TotalDaysPayWithOutOvertimeAndLeave(bool isMonthly)
         {
             decimal totalPay =
-                RegularPayAndTotalRestDay +
+                RegularPayAndTotalRestDayPay +
                 SpecialHolidayPay +
                 RegularHolidayPay;
 
