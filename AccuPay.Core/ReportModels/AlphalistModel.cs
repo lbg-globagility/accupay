@@ -353,7 +353,7 @@ namespace AccuPay.Core.ReportModels
                 case PaystubProperty.TotalRestDayPay:
                     return _paystubs.Sum(t => t.TotalRestDayPay);
                 case PaystubProperty.RegularPayAndTotalRestDay:
-                    return _paystubs.Sum(t => t.RegularPayAndTotalRestDay);
+                    return _paystubs.Sum(t => t.RegularPayAndTotalRestDayPay);
                 case PaystubProperty.TotalDeductionAdjustments:
                     return _paystubs.Sum(t => t.TotalDeductionAdjustments);
                 case PaystubProperty.TotalAdditionAdjustments:
