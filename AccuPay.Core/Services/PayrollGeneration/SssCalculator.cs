@@ -151,12 +151,17 @@ namespace AccuPay.Core.Services
 
                         if (currentSystemOwner == SystemOwner.Benchmark && employee.IsPremiumInclusive)
                         {
-                            basisPay = (previousPaystub?.RegularPayAndTotalRestDayPay ?? 0) +
-                                paystub.RegularPayAndTotalRestDayPay;
+                            totalHours = (previousPaystub?.RegularHoursAndTotalRestDayHours ?? 0) +
+                                paystub.RegularHoursAndTotalRestDayHours;
                         }
 
-                        return basisPay;
+                        var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                        var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
+                        var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
+
+                        return totalHours * hourlyRate;
                     }
+
 
                 case SssCalculationBasis.Earnings:
                     return (previousPaystub?.TotalEarnings ?? 0) + paystub.TotalEarnings;
