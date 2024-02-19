@@ -7,6 +7,7 @@ using AccuPay.Core.Services;
 using AccuPay.Core.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -501,7 +502,10 @@ namespace AccuPay.Infrastructure.Data
                 // get the beginning balance transaction geting it from the first payperiod of the year
                 // that we added earlier [using GUID as rowids would have made this easier]
                 var updatedBeginningTransaction = await _context.LeaveTransactions
-                    .Where(t => t.PayPeriodID == firstPayPeriodOfTheYear.RowID)
+                    .Where(t => !(t.PayPeriodID == firstPayPeriodOfTheYear.RowID) ? (t.Type == "Credit" &&
+                    t.TransactionDate.Date.Year == firstPayPeriodOfTheYear.Year &&
+                    t.TransactionDate.Date.Month == firstPayPeriodOfTheYear.Month) :
+                    t.PayPeriodID == firstPayPeriodOfTheYear.RowID)
                     .Where(t => t.LeaveLedgerID == updatedLeaveLedger.RowID)
                     .Where(t => t.IsCredit).OrderByDescending(t => t.Amount)
                     .FirstOrDefaultAsync();
