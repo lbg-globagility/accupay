@@ -70,7 +70,7 @@ Public Class MassOvertimeForm
                 }
 
                 Dim childEmployees = employees.
-                    Where(Function(e) Nullable.Equals(e.Position?.Division.RowID, childDivision.RowID))
+                    Where(Function(e) Nullable.Equals(e.Position?.Division?.RowID, childDivision.RowID))
                 For Each childEmployee In childEmployees
                     Dim employeeNode = New TreeNode() With {
                         .Name = childEmployee.FullNameWithMiddleInitialLastNameFirst,
