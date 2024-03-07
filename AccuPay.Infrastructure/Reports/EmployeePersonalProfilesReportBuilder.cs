@@ -1,3 +1,4 @@
+using AccuPay.Core.Entities;
 using AccuPay.Core.Interfaces;
 using AccuPay.Core.Services.Reports.Employees_Personal_Information;
 using OfficeOpenXml;
@@ -19,15 +20,22 @@ namespace AccuPay.Infrastructure.Reports
         private readonly IReadOnlyCollection<ExcelReportColumn> _reportColumns;
         protected new const float FontSize = 11;
 
+        private readonly ISystemOwnerService _systemOwnerService;
+        private readonly IListOfValueRepository _listOfValueRepository;
+
         public EmployeePersonalProfilesReportBuilder(
             IOrganizationRepository organizationRepository,
             IEmployeePersonalProfilesExcelFormatReportDataService reportDataService,
-            IPolicyHelper policy)
+            IPolicyHelper policy,
+            ISystemOwnerService systemOwnerService,
+            IListOfValueRepository listOfValueRepository)
         {
             _organizationRepository = organizationRepository;
             _reportDataService = reportDataService;
             _policy = policy;
             _reportColumns = GetReportColumns();
+            _systemOwnerService = systemOwnerService;
+            _listOfValueRepository = listOfValueRepository;
         }
 
         private ReadOnlyCollection<ExcelReportColumn> GetReportColumns()
@@ -108,6 +116,13 @@ namespace AccuPay.Infrastructure.Reports
             using (var excel = new ExcelPackage(newFile))
             {
                 var worksheet = excel.Workbook.Worksheets.Add(REPORT_NAME);
+
+                if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.RGI)
+                {
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Protection.SetPassword(_listOfValueRepository.GetExcelPassword());
+                }
+
                 worksheet.Cells.Style.Font.Size = FontSize;
 
                 int rowIndex = 1;

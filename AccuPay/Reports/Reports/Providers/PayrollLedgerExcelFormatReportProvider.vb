@@ -2,6 +2,9 @@ Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Interfaces
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -14,6 +17,8 @@ Public Class PayrollLedgerExcelFormatReportProvider
 
     Public Property Name As String = "Payroll Ledger" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
@@ -82,7 +87,9 @@ Public Class PayrollLedgerExcelFormatReportProvider
     Public Property IsActual As Boolean
 
     Public Sub New()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
     End Sub
 
     Public Sub New(FromPayPeriodId As Integer, ToPayPeriodId As Integer, IsActual As Boolean, PayDateFrom As Date, PayDateTo As Date)
@@ -174,6 +181,11 @@ Public Class PayrollLedgerExcelFormatReportProvider
 
                 Dim worksheet = excel.Workbook.Worksheets.Add(report_name)
                 worksheet.Cells.Style.Font.Size = FontSize
+
+                If (_systemOwnerService.GetCurrentSystemOwner = SystemOwner.RGI) Then
+                    worksheet.Protection.IsProtected = True
+                    worksheet.Protection.SetPassword(_listOfValueRepository.GetExcelPassword)
+                End If
 
                 Dim organizationCell = worksheet.Cells(1, 1)
                 organizationCell.Value = orgNam.ToUpper
