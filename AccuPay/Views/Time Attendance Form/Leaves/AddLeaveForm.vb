@@ -2,7 +2,9 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -18,6 +20,10 @@ Public Class AddLeaveForm
 
     Private ReadOnly _productRepository As IProductRepository
 
+    Private _currentRolePermission As RolePermission
+
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
+
     Sub New(employee As Employee)
 
         InitializeComponent()
@@ -28,12 +34,17 @@ Public Class AddLeaveForm
 
         _productRepository = MainServiceProvider.GetRequiredService(Of IProductRepository)
 
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
         Me.IsSaved = False
 
     End Sub
 
     Private Async Sub AddLeaveForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwner.RGI Then
+            Await CheckRolePermissions()
+        End If
         PopulateEmployeeData()
 
         LoadStatusList()
@@ -43,6 +54,22 @@ Public Class AddLeaveForm
         ResetForm()
 
     End Sub
+
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.LEAVE)
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If _currentRolePermission.Update Then
+                Panel5.Enabled = True
+            Else
+                Panel5.Enabled = False
+            End If
+
+        End If
+    End Function
 
     Private Sub PopulateEmployeeData()
 
@@ -87,8 +114,14 @@ Public Class AddLeaveForm
 
         Me._newLeave.Reason = String.Empty
         Me._newLeave.Comments = String.Empty
-        Me._newLeave.Status = Nothing
+
         Me._newLeave.LeaveType = Nothing
+
+        If Panel5.Enabled Then
+            Me._newLeave.Status = Nothing
+        Else
+            Me._newLeave.Status = "Pending"
+        End If
 
         CreateDataBindings()
     End Sub
