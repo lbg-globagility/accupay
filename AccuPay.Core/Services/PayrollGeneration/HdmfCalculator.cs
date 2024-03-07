@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Entities;
+using AccuPay.Core.Entities;
 using AccuPay.Core.Helpers;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -22,11 +22,11 @@ namespace AccuPay.Core.Services
             // If HDMF autocomputation is true, employee share is the Standard contribution.
             // Otherwise, use whatever is set in the hdmf contribution in the salary
             if (salary.AutoComputeHDMFContribution)
-                employeeShare = StandardEmployeeContribution;
+                employeeShare = settings.GetDecimal(name: "Default Government Contribution.HDMF", @default: StandardEmployeeContribution);
             else
                 employeeShare = salary.HDMFAmount;
 
-            var employerShare = employeeShare == 0 ? 0 : StandardEmployerContribution;
+            var employerShare = employeeShare == 0 ? 0 : settings.GetDecimal(name: "Default Government Contribution.HDMF", @default: StandardEmployerContribution);
 
             if (employee.IsWeeklyPaid)
             {

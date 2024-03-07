@@ -391,15 +391,13 @@ LEFT JOIN (
 
 
 
-LEFT JOIN (SELECT lt.*
+LEFT JOIN (SELECT ll.EmployeeID
 			  , GROUP_CONCAT(p.PartNo) `LeaveTypes`
            , GROUP_CONCAT(lt.Balance) `BalanceLeave`
-			  FROM leavetransaction lt
-			  INNER JOIN leaveledger ll ON ll.LastTransactionID=lt.RowID
+			  FROM leaveledger ll
+			  LEFT JOIN leavetransaction lt ON ll.LastTransactionID=lt.RowID AND FIND_IN_SET(lt.RowID, CONCAT(ll.LastTransactionID, ',', leave_transac_rowids)) > 0 AND lt.Balance > -1 AND IF(lt.`Type`='Credit', lt.Balance != 0 OR lt.Balance > 0, lt.Balance > -1)
 			  INNER JOIN product p ON p.RowID=ll.ProductID
-			  WHERE FIND_IN_SET(lt.RowID, leave_transac_rowids) > 0
-			  AND lt.OrganizationID = og_rowid
-			  AND lt.Balance > -1
+			  WHERE ll.OrganizationID = og_rowid			  
 			  GROUP BY lt.EmployeeID
            ) lt ON lt.EmployeeID = e.RowID
 
