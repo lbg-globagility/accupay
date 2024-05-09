@@ -115,6 +115,12 @@ Public Class PayStubForm
 
     Private Async Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        If _currentSystemOwner = SystemOwner.RGI Then
+            CertificationOfDTRToolStripMenuItem.Visible = True
+        Else
+            CertificationOfDTRToolStripMenuItem.Visible = False
+        End If
+
         AdjustmentGridView.AutoGenerateColumns = False
         PayPeriodGridView.AutoGenerateColumns = False
 
@@ -1958,4 +1964,21 @@ Public Class PayStubForm
         End If
     End Sub
 
+    Private Sub CertificationOfDTRToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CertificationOfDTRToolStripMenuItem.Click
+        Dim form As SelectPayslipEmployeesForm
+
+        If _currentPayperiodId Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return
+        End If
+
+        If sender Is ManageEmailPayslipsToolStripMenuItem Then
+            form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=True, isPaySlip:=False)
+        Else
+            form = New SelectPayslipEmployeesForm(_currentPayperiodId.Value, isEmail:=False, isPaySlip:=False)
+        End If
+
+        form.ShowDialog()
+    End Sub
 End Class

@@ -290,6 +290,7 @@ Partial Class PayStubForm
         Me.CashOutUnusedLeavesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayLoansUsing13thMonthToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CertificationOfDTRToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GeneratePayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -3130,7 +3131,7 @@ Partial Class PayStubForm
         '
         'OthersToolStripMenuItem
         '
-        Me.OthersToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Include13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.PayLoansUsing13thMonthToolStripMenuItem})
+        Me.OthersToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Include13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem, Me.RecalculateThirteenthMonthPayToolStripMenuItem, Me.PayLoansUsing13thMonthToolStripMenuItem, Me.CertificationOfDTRToolStripMenuItem})
         Me.OthersToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
         Me.OthersToolStripMenuItem.Name = "OthersToolStripMenuItem"
         Me.OthersToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
@@ -3160,6 +3161,12 @@ Partial Class PayStubForm
         Me.PayLoansUsing13thMonthToolStripMenuItem.Name = "PayLoansUsing13thMonthToolStripMenuItem"
         Me.PayLoansUsing13thMonthToolStripMenuItem.Size = New System.Drawing.Size(224, 22)
         Me.PayLoansUsing13thMonthToolStripMenuItem.Text = "Pay Loans using 13th Month"
+        '
+        'CertificationOfDTRToolStripMenuItem
+        '
+        Me.CertificationOfDTRToolStripMenuItem.Name = "CertificationOfDTRToolStripMenuItem"
+        Me.CertificationOfDTRToolStripMenuItem.Size = New System.Drawing.Size(224, 22)
+        Me.CertificationOfDTRToolStripMenuItem.Text = "Certification Of DTR"
         '
         'GeneratePayrollToolStripButton
         '
@@ -3756,4 +3763,5 @@ Partial Class PayStubForm
     Friend WithEvents CostCenterReportByBranchActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RecalculateThirteenthMonthPayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PayLoansUsing13thMonthToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CertificationOfDTRToolStripMenuItem As ToolStripMenuItem
 End Class

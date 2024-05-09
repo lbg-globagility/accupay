@@ -5,6 +5,7 @@ Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.Interfaces.Domain_Services
 Imports AccuPay.Core.Interfaces.Excel
 Imports AccuPay.Core.Interfaces.Reports
+Imports AccuPay.Core.Interfaces.Reports.Customize
 Imports AccuPay.Core.Interfaces.Repositories
 Imports AccuPay.Core.Services
 Imports AccuPay.Core.Services.Domain_Services
@@ -14,6 +15,7 @@ Imports AccuPay.CrystalReports
 Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Infrastructure.Data.Data_Services
 Imports AccuPay.Infrastructure.Data.Reports
+Imports AccuPay.Infrastructure.Data.Reports.Customize
 Imports AccuPay.Infrastructure.Data.Repositories
 Imports AccuPay.Infrastructure.Reports
 Imports AccuPay.Infrastructure.Reports.Customize
@@ -187,6 +189,8 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of IPayrollSummaryExcelFormatReportDataService, PayrollSummaryExcelFormatReportDataService)
         services.AddTransient(Of IPayrollSummaryReportBuilder, PayrollSummaryReportBuilder)
+        services.AddTransient(Of ICertificationOfDTR, CertificationOFDTR)
+        services.AddTransient(Of IRGIPayslip, RGIPayslip)
         services.AddTransient(Of IEmployeePersonalProfilesExcelFormatReportDataService, EmployeePersonalProfilesExcelFormatReportDataService)
         services.AddTransient(Of IEmployeePersonalProfilesReportBuilder, EmployeePersonalProfilesReportBuilder)
         services.AddTransient(Of ICostCenterReportBuilder, CostCenterReportBuilder)

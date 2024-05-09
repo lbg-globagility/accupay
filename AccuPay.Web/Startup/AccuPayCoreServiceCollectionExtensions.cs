@@ -2,6 +2,7 @@ using AccuPay.Core.Interfaces;
 using AccuPay.Core.Interfaces.Domain_Services;
 using AccuPay.Core.Interfaces.Excel;
 using AccuPay.Core.Interfaces.Reports;
+using AccuPay.Core.Interfaces.Reports.Customize;
 using AccuPay.Core.Interfaces.Repositories;
 using AccuPay.Core.Services;
 using AccuPay.Core.Services.Domain_Services;
@@ -176,6 +177,10 @@ namespace AccuPay.Web
             services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
             services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
+
+
+            services.AddScoped<ICertificationOfDTR, Infrastructure.Data.Reports.Customize.CertificationOFDTR>();
+            services.AddScoped<IRGIPayslip, IRGIPayslip>();
 
             return services;
         }
