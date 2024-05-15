@@ -1562,7 +1562,7 @@ Public Class EmployeeForm
 
     Private Async Function SetEmployeeGridDataRow(rowIndex As Integer) As Task
         Dim gridRow = dgvEmp.Rows(rowIndex)
-        Using command = New MySqlCommand("CALL `SEARCH_employeeprofile`(@organizationID, @employeeID, '', '', 0);",
+        Using command = New MySqlCommand("CALL `SEARCH_employeeprofile`(@organizationID, @employeeID, '', '', 0, '');",
                                          New MySqlConnection(mysql_conn_text))
             With command.Parameters
                 .AddWithValue("@organizationID", orgztnID)
