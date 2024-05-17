@@ -1721,6 +1721,8 @@ Public Class EmployeeForm
     Dim sameEmpID As Integer = -1
     Dim LastFirstMidName As String = Nothing
     Dim publicEmpRowID = Nothing
+    Dim publicEmpPosition = Nothing
+    Dim publicEmpStatus = Nothing
 
     Async Sub dgvEmp_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvEmp.SelectionChanged
 
@@ -1741,6 +1743,8 @@ Public Class EmployeeForm
             With dgvEmp.CurrentRow
                 Dim empPix() As DataRow
                 publicEmpRowID = .Cells("RowID").Value
+                publicEmpPosition = .Cells("Column8").Value
+                publicEmpStatus = .Cells("Column20").Value
                 If IsDBNull(.Cells("RowID").Value) = False AndAlso sameEmpID <> .Cells("RowID").Value Then
 
                     sameEmpID = .Cells("RowID").Value
@@ -2243,7 +2247,7 @@ Public Class EmployeeForm
             TextBox1.Text,
             TextBox15.Text,
             TextBox16.Text,
-            pagination}
+            pagination, TextBox17.Text}
 
         Dim n_ReadSQLProcedureToDatatable As New _
             ReadSQLProcedureToDatatable("SEARCH_employeeprofile", param_array)
@@ -3198,6 +3202,15 @@ Public Class EmployeeForm
 
     Dim indentifyGender As Dictionary(Of Gender, String) =
         New Dictionary(Of Gender, String) From {{Gender.Male, Gender.Male.ToString()}, {Gender.Female, Gender.Female.ToString()}}
+
+    Private Sub TextBox17_TextChanged(sender As Object, e As EventArgs) Handles TextBox17.TextChanged
+
+    End Sub
+
+    Private Sub printIdLayoutBtn_Click(sender As Object, e As EventArgs) Handles printIdLayoutBtn.Click
+        Dim frm As New EmployeeIDLayoutForm(publicEmpRowID, publicEmpPosition, publicEmpStatus)
+        frm.Show()
+    End Sub
 
     Private Async Function LoadSalutation(gender As Gender) As Task
         Dim genderList = {"Neutral", indentifyGender(gender)}
