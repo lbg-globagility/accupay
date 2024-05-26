@@ -2077,6 +2077,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\MDIPrimaryForm.resx">
       <DependentUpon>MDIPrimaryForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\PayrollForm.resx">
       <DependentUpon>PayrollForm.vb</DependentUpon>

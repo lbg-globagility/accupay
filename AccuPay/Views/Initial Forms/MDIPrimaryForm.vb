@@ -103,6 +103,8 @@ Public Class MDIPrimaryForm
         CollapsibleGroupBox6.Visible = if_sysowner_is_hyundai
         Panel15.Font = DefaultFontStyle
 
+        Panel13.Font = DefaultFontStyle
+
         setProperDashBoardAccordingToSystemOwner()
 
         Await RunLeaveAccrual()
@@ -692,6 +694,8 @@ Public Class MDIPrimaryForm
 
     Dim n_bgwForRegularization = Nothing
 
+    Dim n_bgwTardiness = Nothing
+
     Dim dt_pend_leave As New DataTable
 
     Private Sub bgDashBoardReloader_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgDashBoardReloader.DoWork
@@ -732,6 +736,10 @@ Public Class MDIPrimaryForm
         n_bgwForRegularization = New DashBoardDataExtractor(params, "DBoard_ForRegularization")
 
         n_bgwForRegularization = n_bgwForRegularization.getDataTable
+
+        n_bgwTardiness = New DashBoardDataExtractor(params, "DBoard_FrequentTardiness")
+
+        n_bgwTardiness = n_bgwTardiness.getDataTable
 
         dgvfrequentabsent.Tag = New SQLQueryToDatatable("CALL `FREQUENT_absent`('" & orgztnID & "');").ResultTable
 
@@ -801,6 +809,11 @@ Public Class MDIPrimaryForm
         PopulateDGVwithDatTbl(dgvRegularization,
                               dattbl)
 
+        dattbl = InstantiateDatatable(n_bgwTardiness)
+
+        PopulateDGVwithDatTbl(dgvTardiness,
+                              dattbl)
+
         Dim new_dt As New DataTable
         new_dt = DirectCast(dgvfrequentabsent.Tag, DataTable)
         PopulateDGVwithDatTbl(dgvfrequentabsent,
@@ -827,6 +840,7 @@ Public Class MDIPrimaryForm
         dgvRegularization.Enabled = True
         dgvfrequentabsent.Enabled = True
         dgvfrequentleave.Enabled = True
+        dgvTardiness.Enabled = True
 
         If once = 0 Then
             once = 1
