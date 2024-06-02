@@ -1,30 +1,35 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.4.28-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             11.3.0.6295
+-- --------------------------------------------------------
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP PROCEDURE IF EXISTS `SEARCH_employeeprofile`;
+-- Dumping structure for procedure accupaydb_rgi.SEARCH_employeeprofile
 DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employeeprofile`(
+CREATE PROCEDURE `SEARCH_employeeprofile`(
 	IN `og_id` INT,
 	IN `emp_id` VARCHAR(50),
 	IN `emp_fname` VARCHAR(50),
 	IN `emp_lname` VARCHAR(50),
-	IN `page_number` INT
+	IN `page_number` INT,
+	IN `emp_status` VARCHAR(50)
 )
-LANGUAGE SQL
-DETERMINISTIC
-CONTAINS SQL
-SQL SECURITY DEFINER
-COMMENT ''
+    DETERMINISTIC
 BEGIN
 
 DECLARE max_count_per_page INT(11) DEFAULT 50;
 DECLARE leaveTypeCategoryId INT(11);
 DECLARE isLaglobal BOOLEAN DEFAULT FALSE;
 
-SET isLaglobal=EXISTS(SELECT * FROM systemowner so WHERE so.`Name`='LA Global' AND so.IsCurrentOwner='1' LIMTI 1);
+SET isLaglobal=EXISTS(SELECT * FROM systemowner so WHERE so.`Name`='LA Global' AND so.IsCurrentOwner='1' LIMIT 1);
 
 IF isLaglobal=TRUE THEN
 
@@ -54,7 +59,7 @@ IF isLaglobal=TRUE THEN
             ,e.HomeAddress                                  `Home address`
             ,e.EmailAddress                             `Email address`
             ,IF(e.Gender='M','Male','Female')       `Gender`
-            ,e.EmploymentStatus                         `Employment Status`
+            ,if(employmentstatus='PROBATIONARY' ,CONCAT(IF(TIMESTAMPDIFF(MONTH, startdate, CURDATE())>=5,"5 MONTHS ",IF(TIMESTAMPDIFF(MONTH, startdate, CURDATE())=1,"1 MONTH",CONCAT(TIMESTAMPDIFF(MONTH, startdate, CURDATE()),' MONTHS'))),employmentstatus),employmentstatus)                         `Employment Status`
             ,IFNULL(pf.PayFrequencyType,'')         `Pay Frequency`
             ,e.UndertimeOverride
             ,e.OvertimeOverride
@@ -110,7 +115,9 @@ IF isLaglobal=TRUE THEN
         UNION
             SELECT * FROM employee WHERE OrganizationID=og_id AND LastName      =emp_lname  AND LENGTH(emp_lname) > 0
         UNION
-            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0
+    			SELECT * FROM employee WHERE OrganizationID=og_id AND EmploymentStatus =emp_status  AND LENGTH(emp_status) > 0
+        UNION
+            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0 AND LENGTH(TRIM(emp_status))=0
             ) e
 
     LEFT JOIN `aspnetusers` u              ON e.CreatedBy=u.Id
@@ -166,7 +173,7 @@ ELSE
             ,e.HomeAddress                                  `Home address`
             ,e.EmailAddress                             `Email address`
             ,IF(e.Gender='M','Male','Female')       `Gender`
-            ,e.EmploymentStatus                         `Employment Status`
+            ,if(employmentstatus='PROBATIONARY' ,CONCAT(IF(TIMESTAMPDIFF(MONTH, startdate, CURDATE())>=5,"5 MONTHS ",IF(TIMESTAMPDIFF(MONTH, startdate, CURDATE())=1,"1 MONTH",CONCAT(TIMESTAMPDIFF(MONTH, startdate, CURDATE()),' MONTHS'))),employmentstatus),employmentstatus)                        `Employment Status`
             ,IFNULL(pf.PayFrequencyType,'')         `Pay Frequency`
             ,e.UndertimeOverride
             ,e.OvertimeOverride
@@ -220,9 +227,11 @@ ELSE
         UNION
             SELECT * FROM employee WHERE OrganizationID=og_id AND FirstName =emp_fname  AND LENGTH(emp_fname) > 0
         UNION
-            SELECT * FROM employee WHERE OrganizationID=og_id AND LastName      =emp_lname  AND LENGTH(emp_lname) > 0
+            SELECT * FROM employee WHERE OrganizationID=og_id AND LastName      =emp_lname  AND LENGTH(emp_lname) > 0.
         UNION
-            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0
+    			SELECT * FROM employee WHERE OrganizationID=og_id AND EmploymentStatus =emp_status  AND LENGTH(emp_status) > 0
+        UNION 
+            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0 AND LENGTH(TRIM(emp_status))=0
             ) e
 
     LEFT JOIN `aspnetusers` u              ON e.CreatedBy=u.Id
@@ -258,5 +267,6 @@ END//
 DELIMITER ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

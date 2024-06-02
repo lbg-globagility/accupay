@@ -105,6 +105,8 @@ Public Class MDIPrimaryForm
 
         Panel13.Font = DefaultFontStyle
 
+        Panel16.Font = DefaultFontStyle
+
         setProperDashBoardAccordingToSystemOwner()
 
         Await RunLeaveAccrual()
@@ -696,6 +698,8 @@ Public Class MDIPrimaryForm
 
     Dim n_bgwTardiness = Nothing
 
+    Dim n_employmentStatus = Nothing
+
     Dim dt_pend_leave As New DataTable
 
     Private Sub bgDashBoardReloader_DoWork(sender As Object, e As DoWorkEventArgs) Handles bgDashBoardReloader.DoWork
@@ -744,6 +748,8 @@ Public Class MDIPrimaryForm
         dgvfrequentabsent.Tag = New SQLQueryToDatatable("CALL `FREQUENT_absent`('" & orgztnID & "');").ResultTable
 
         dgvfrequentleave.Tag = New SQLQueryToDatatable("CALL `FREQUENT_leave`('" & orgztnID & "');").ResultTable
+
+        dgvEmploymentStatus.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_employment_status`('" & orgztnID & "');").ResultTable
 
         'dgvfrequentleave
 
@@ -823,7 +829,10 @@ Public Class MDIPrimaryForm
         n_dt = DirectCast(dgvfrequentleave.Tag, DataTable)
         PopulateDGVwithDatTbl(dgvfrequentleave,
                               n_dt)
-
+        Dim ems_dt As New DataTable
+        ems_dt = DirectCast(dgvEmploymentStatus.Tag, DataTable)
+        PopulateDGVwithDatTbl(dgvEmploymentStatus,
+                              ems_dt)
         If if_sysowner_is_hyundai Then
             dgvpendingleave.Rows.Clear()
             For Each drow As DataRow In dt_pend_leave.Rows
@@ -841,6 +850,7 @@ Public Class MDIPrimaryForm
         dgvfrequentabsent.Enabled = True
         dgvfrequentleave.Enabled = True
         dgvTardiness.Enabled = True
+        dgvEmploymentStatus.Enabled = True
 
         If once = 0 Then
             once = 1
