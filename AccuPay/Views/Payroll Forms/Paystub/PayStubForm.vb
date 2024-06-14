@@ -674,7 +674,9 @@ Public Class PayStubForm
         'We are using a fresh instance of EmployeeRepository
         Dim repository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
         'later, we can let the user choose the employees that they want to generate.
-        Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
+        Dim employees = If(_currentSystemOwner = SystemOwner.RGI, Await repository.GetAllWithinServicePeriodWithPositionAsync(z_OrganizationID, payPeriod.PayFromDate), Await repository.GetAllActiveAsync(z_OrganizationID))
+
+
 
         Dim generator As New PayrollGeneration(employees, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating payroll...")
@@ -702,7 +704,7 @@ Public Class PayStubForm
                 )
 
                 generationTask.ContinueWith(
-                    Sub() GeneratePayrollOnSuccess(generator.Results, progressDialog),
+                    Sub() GeneratePayrollOnSuccess(generator.Results, progressDialog, resourcesTask.Result),
                     CancellationToken.None,
                     TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext
@@ -723,7 +725,17 @@ Public Class PayStubForm
         Await GeneratePayroll()
     End Function
 
-    Private Async Sub GeneratePayrollOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog)
+    Private Async Sub GeneratePayrollOnSuccess(results As IReadOnlyCollection(Of ProgressGenerator.IResult), progressDialog As ProgressDialog, Optional result As IPayrollResources = Nothing)
+
+        If (_currentSystemOwner = SystemOwner.RGI) Then
+
+            Await GenerateLoanBalancesForLastPay(result:=result)
+
+            Await GenerateThirteenthMonthForLastPay(result:=result)
+
+        End If
+
+
 
         CloseProgressDialog(progressDialog)
 
@@ -743,6 +755,116 @@ Public Class PayStubForm
         Await TimeEntrySummaryForm.LoadPayPeriods()
 
     End Sub
+
+    Private Async Function GenerateLoanBalancesForLastPay(Optional result As IPayrollResources = Nothing) As Task
+
+        Dim employees = result.Employees.Where(Function(i) CBool(i.TerminationDate IsNot Nothing And i.TerminationDate > result.PayPeriod.PayFromDate And i.TerminationDate < result.PayPeriod.PayToDate))
+
+        If (employees.Count > 0) Then
+            For Each employee In employees
+
+                Dim paystubRepo = MainServiceProvider.GetRequiredService(Of IPaystubRepository)
+
+                Dim paystub = Await _paystubRepository.GetByPayPeriodAndEmployeeFullPaystubAsync(payPeriodId:=CInt(result.PayPeriod.RowID), employeeId:=CInt(employee.RowID))
+
+                If paystub.Adjustments.Where(Function(t) t.Product.Name = "Loan Balance Payment").FirstOrDefault IsNot Nothing Then
+                    Continue For
+                End If
+
+                Dim loanTransactionsList = Await paystubRepo.
+                    GetLoanTransactionsAsync(CInt(paystub.RowID))
+
+
+                Dim totalBalance = loanTransactionsList.Sum(Function(t) t.TotalBalance)
+
+                'TODO
+                'Save total balance as adjustment
+
+                Dim loanProduct = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
+
+                If loanProduct.Where(Function(t) t.Name = "Loan Balance Payment").FirstOrDefault Is Nothing Then
+                    Await _productRepository.AddAdjustmentTypeAsync("Loan Balance Payment", z_OrganizationID, z_User)
+                    loanProduct = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
+                End If
+
+                Dim adjustment As New Adjustment() With
+                {
+                    .Comment = "Remaining Balance",
+                    .IsActual = False,
+                    .OrganizationID = z_OrganizationID,
+                    .Amount = totalBalance,
+                    .PaystubID = paystub.RowID.Value,
+                    .ProductID = loanProduct.Where(Function(t) t.Name = "Loan Balance Payment").FirstOrDefault.RowID,
+                    .Is13thMonthPay = False
+                }
+
+                paystub.Adjustments.Add(adjustment)
+
+                Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
+
+                Await dataService.UpdateAdjustmentsAsync(
+                    CInt(paystub.RowID),
+                     paystub.Adjustments,
+                    z_User)
+            Next
+        End If
+
+    End Function
+
+    Private Async Function GenerateThirteenthMonthForLastPay(Optional result As IPayrollResources = Nothing) As Task
+
+        Dim employees = result.Employees.Where(Function(i) CBool(i.TerminationDate IsNot Nothing And i.TerminationDate > result.PayPeriod.PayFromDate And i.TerminationDate < result.PayPeriod.PayToDate))
+
+        If (employees.Count > 0) Then
+
+            Dim _startingPayPeriod = Await _payPeriodRepository.GetFirstPayPeriodOfTheYear(
+                    currentPayPeriodYear:=result.PayPeriod.Year,
+                    organizationId:=z_OrganizationID)
+
+
+            Dim thirteenthMonthPaystubs = (Await _paystubRepository.GetByTimePeriodWithThirteenthMonthPayAndEmployeeAsync(New TimePeriod(start:=_startingPayPeriod.PayFromDate, [end]:=result.PayPeriod.PayToDate), z_OrganizationID)).
+                    Where(Function(p) p.EmployeeID IsNot Nothing).
+                    GroupBy(Function(p) p.EmployeeID.Value)
+
+
+
+            Dim selectedEmployees As List(Of ThirteenthMonthEmployeeModel) = New List(Of ThirteenthMonthEmployeeModel)
+            For Each employee In employees
+
+
+
+                Dim paystub = Await _paystubRepository.GetByPayPeriodAndEmployeeFullPaystubAsync(payPeriodId:=CInt(result.PayPeriod.RowID), employeeId:=CInt(employee.RowID))
+
+                selectedEmployees.Add(New ThirteenthMonthEmployeeModel(paystub))
+            Next
+
+            For Each selectedEmployee In selectedEmployees
+
+                Dim thirteenthMonthPay = thirteenthMonthPaystubs.Where(Function(t) t.Key = selectedEmployee.EmployeeId).FirstOrDefault()
+
+                Dim amount As Decimal = 0
+                Dim basicPay As Decimal = 0
+
+                If thirteenthMonthPay IsNot Nothing Then
+                    amount = thirteenthMonthPay.Sum(Function(t) t.ThirteenthMonthPay.Amount)
+                    basicPay = thirteenthMonthPay.Sum(Function(t) t.ThirteenthMonthPay.BasicPay)
+                End If
+
+                selectedEmployee.UpdateThirteenthMonthPayAmount(
+                        amount:=amount,
+                        basicPay:=basicPay)
+            Next
+
+            Dim generator As New ReleaseThirteenthMonthGeneration(selectedEmployees, 11) '11 is for 13th Month Pay
+            Dim progressDialogNew = New ProgressDialog(generator, "Creating 13th month pay adjustments...")
+
+            Dim generationTask = Task.Run(
+                Async Function()
+                    Await generator.Start()
+                End Function
+                )
+        End If
+    End Function
 
     Private Sub GeneratePayrollOnError(t As Task, progressDialog As ProgressDialog)
 

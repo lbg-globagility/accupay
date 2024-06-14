@@ -26,7 +26,7 @@ Public Class TimeEntryGeneration
         _results = New BlockingCollection(Of EmployeeResult)()
     End Sub
 
-    Public Async Function Start(resources As ITimeEntryResources, payPeriod As TimePeriod, payPeriodId As Integer) As Task
+    Public Async Function Start(resources As ITimeEntryResources, payPeriod As TimePeriod, payPeriodId As Integer, Optional systemOwner As String = Nothing) As Task
 
         If resources Is Nothing Then
             Throw New ArgumentNullException("Resources cannot be null.")
@@ -40,7 +40,8 @@ Public Class TimeEntryGeneration
                     currentlyLoggedInUserId:=z_User,
                     employeeId:=employee.RowID.Value,
                     resources:=resources,
-                    payPeriod:=payPeriod)
+                    payPeriod:=payPeriod,
+                    systemOwner:=systemOwner)
 
                 _results.Add(result)
 
