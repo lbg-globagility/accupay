@@ -16,6 +16,8 @@ namespace AccuPay.Core.Entities
 
         public const string text_laglobal = "LA Global";
 
+        public const string text_rgi = "RGI";
+
         public const string text_default = "Default";
 
         private const string text_itc = "ITC";
@@ -29,6 +31,8 @@ namespace AccuPay.Core.Entities
         public static string Benchmark => text_benchmark;
 
         public static string LAGlobal => text_laglobal;
+
+        public static string RGI => text_rgi;
 
         public static string DefaultOwner => text_default;
 

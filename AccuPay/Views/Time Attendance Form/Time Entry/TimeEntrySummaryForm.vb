@@ -80,6 +80,10 @@ Public Class TimeEntrySummaryForm
 
     Private ReadOnly _userRepository As IAspNetUserRepository
 
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
+
+    Private ReadOnly curr_sys_owner_name As String
+
     Sub New()
 
         InitializeComponent()
@@ -102,6 +106,10 @@ Public Class TimeEntrySummaryForm
 
         _userRepository = MainServiceProvider.GetRequiredService(Of IAspNetUserRepository)
 
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
+        curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
+
     End Sub
 
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -118,8 +126,13 @@ Public Class TimeEntrySummaryForm
         RegenerateTimeEntryButton.Visible = False
         GenerateDefaultShiftAndTimeLogsButton.Visible = False
 
-        Await LoadEmployees()
-        Await LoadPayPeriods()
+        If curr_sys_owner_name = SystemOwner.RGI Then
+            Await LoadPayPeriods()
+            Await LoadEmployees()
+        Else
+            Await LoadEmployees()
+            Await LoadPayPeriods()
+        End If
 
         _breakTimeBrackets = New List(Of BreakTimeBracket)
         If _policy.ComputeBreakTimeLate Then
@@ -222,6 +235,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
         Dim periodEndDate = If(_selectedPayPeriod Is Nothing, Date.Now(), _selectedPayPeriod.PayToDate)
+        periodEndDate = If(curr_sys_owner_name = SystemOwner.RGI, _selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
         Dim unsortedList = Await _employeeRepository.GetAllWithinServicePeriodWithPositionAsync(
             organizationId:=z_OrganizationID,
@@ -927,11 +941,11 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date, payPeriodId As Integer) As Task
-
+        Dim periodEndDate = If(_selectedPayPeriod Is Nothing, Date.Now(), _selectedPayPeriod.PayFromDate)
         'We are using a fresh instance of EmployeeRepository
         Dim repository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
         'later, we can let the user choose the employees that they want to generate.
-        Dim employees = Await repository.GetAllActiveAsync(z_OrganizationID)
+        Dim employees = If(curr_sys_owner_name = SystemOwner.RGI, Await repository.GetAllWithinServicePeriodAsync(z_OrganizationID, periodEndDate), Await repository.GetAllActiveAsync(z_OrganizationID))
 
         Dim generator As New TimeEntryGeneration(employees, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating time entries...")
@@ -962,7 +976,7 @@ Public Class TimeEntrySummaryForm
 
                 Dim generationTask = Task.Run(
                     Async Function()
-                        Await generator.Start(resourcesTask.Result, payPeriod, payPeriodId)
+                        Await generator.Start(resourcesTask.Result, payPeriod, payPeriodId, curr_sys_owner_name)
                     End Function
                 )
 
@@ -1028,7 +1042,8 @@ Public Class TimeEntrySummaryForm
                 Dim resourcesTask = resources.Load(
                     organizationId:=z_OrganizationID,
                     cutoffStart:=payPeriod.Start,
-                    cutoffEnd:=payPeriod.End)
+                    cutoffEnd:=payPeriod.End,
+                    isRGI:=curr_sys_owner_name = SystemOwner.RGI)
 
                 resources.SetSalaries2(salaries2:=salaries2.AsReadOnly())
 
@@ -1135,6 +1150,10 @@ Public Class TimeEntrySummaryForm
         End If
 
         Await LoadTimeEntries()
+
+        If curr_sys_owner_name = SystemOwner.RGI Then
+            Await LoadEmployees()
+        End If
     End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click

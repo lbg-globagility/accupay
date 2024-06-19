@@ -13,9 +13,16 @@ namespace AccuPay.Infrastructure.Reports
         private readonly IAlphaListReportDataService _alphaListReportDataService;
         private readonly IOrganizationRepository _organizationRepository;
 
+        private readonly ISystemOwnerService _systemOwnerService;
+        private readonly IListOfValueRepository _listOfValueRepository;
+
         public AlphalistReportBuilder(IAlphaListReportDataService alphaListReportDataService,
-            IOrganizationRepository organizationRepository)
+            IOrganizationRepository organizationRepository,
+            ISystemOwnerService systemOwnerService,
+            IListOfValueRepository listOfValueRepository)
         {
+            _systemOwnerService = systemOwnerService;
+            _listOfValueRepository = listOfValueRepository;
             _alphaListReportDataService = alphaListReportDataService;
             _organizationRepository = organizationRepository;
         }
@@ -47,7 +54,10 @@ namespace AccuPay.Infrastructure.Reports
                 dateTo: periodRange.End,
                 saveFileDiretory: saveFileDiretory,
                 organization: organization,
-                endPeriod: endPeriod);
+                endPeriod: endPeriod,
+                systemOwnerService : _systemOwnerService,
+                listOfValueRepository: _listOfValueRepository
+                );
             alphalistGenerator.Start();
 
             return alphalistGenerator.OutputDirectory;

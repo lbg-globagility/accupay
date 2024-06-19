@@ -6,6 +6,6 @@ namespace AccuPay.Core.Interfaces
 {
     public interface ITimeEntryGenerator
     {
-        Task<EmployeeResult> Start(int employeeId, ITimeEntryResources resources, int currentlyLoggedInUserId, TimePeriod payPeriod);
+        Task<EmployeeResult> Start(int employeeId, ITimeEntryResources resources, int currentlyLoggedInUserId, TimePeriod payPeriod, string systemOwner = null);
     }
 }

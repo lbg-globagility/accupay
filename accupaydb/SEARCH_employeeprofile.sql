@@ -11,7 +11,8 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employeeprofile`(
 	IN `emp_id` VARCHAR(50),
 	IN `emp_fname` VARCHAR(50),
 	IN `emp_lname` VARCHAR(50),
-	IN `page_number` INT
+	IN `page_number` INT,
+	IN `emp_status` VARCHAR(50)
 )
 LANGUAGE SQL
 DETERMINISTIC
@@ -24,7 +25,7 @@ DECLARE max_count_per_page INT(11) DEFAULT 50;
 DECLARE leaveTypeCategoryId INT(11);
 DECLARE isLaglobal BOOLEAN DEFAULT FALSE;
 
-SET isLaglobal=EXISTS(SELECT * FROM systemowner so WHERE so.`Name`='LA Global' AND so.IsCurrentOwner='1' LIMTI 1);
+SET isLaglobal=EXISTS(SELECT * FROM systemowner so WHERE so.`Name`='LA Global' AND so.IsCurrentOwner='1' LIMIT 1);
 
 IF isLaglobal=TRUE THEN
 
@@ -110,7 +111,9 @@ IF isLaglobal=TRUE THEN
         UNION
             SELECT * FROM employee WHERE OrganizationID=og_id AND LastName      =emp_lname  AND LENGTH(emp_lname) > 0
         UNION
-            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0
+    			SELECT * FROM employee WHERE OrganizationID=og_id AND EmploymentStatus =emp_status  AND LENGTH(emp_status) > 0
+        UNION
+            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0 AND LENGTH(TRIM(emp_status))=0
             ) e
 
     LEFT JOIN `aspnetusers` u              ON e.CreatedBy=u.Id
@@ -220,9 +223,11 @@ ELSE
         UNION
             SELECT * FROM employee WHERE OrganizationID=og_id AND FirstName =emp_fname  AND LENGTH(emp_fname) > 0
         UNION
-            SELECT * FROM employee WHERE OrganizationID=og_id AND LastName      =emp_lname  AND LENGTH(emp_lname) > 0
+            SELECT * FROM employee WHERE OrganizationID=og_id AND LastName      =emp_lname  AND LENGTH(emp_lname) > 0.
         UNION
-            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0
+    			SELECT * FROM employee WHERE OrganizationID=og_id AND EmploymentStatus =emp_status  AND LENGTH(emp_status) > 0
+        UNION 
+            SELECT * FROM employee WHERE OrganizationID=og_id AND LENGTH(TRIM(emp_id))=0 AND LENGTH(TRIM(emp_fname))=0 AND LENGTH(TRIM(emp_lname))=0 AND LENGTH(TRIM(emp_status))=0
             ) e
 
     LEFT JOIN `aspnetusers` u              ON e.CreatedBy=u.Id

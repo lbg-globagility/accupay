@@ -102,6 +102,10 @@ namespace AccuPay.CrystalReports
                     employeeIds);
                 _reportDocument = CreateCinemaReport(organization, payPeriodId);
             }
+            else if (_currentSystemOwner == SystemOwner.RGI)
+            {
+
+            }
             else
             {
                 _payslipDatatable = CreateDefaultDataSource(

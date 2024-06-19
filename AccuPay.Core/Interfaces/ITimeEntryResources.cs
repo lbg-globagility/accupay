@@ -8,7 +8,7 @@ namespace AccuPay.Core.Interfaces
 {
     public interface ITimeEntryResources
     {
-        Task Load(int organizationId, DateTime cutoffStart, DateTime cutoffEnd);
+        Task Load(int organizationId, DateTime cutoffStart, DateTime cutoffEnd, bool isRGI = false);
 
         IReadOnlyCollection<ActualTimeEntry> ActualTimeEntries { get; }
         IReadOnlyCollection<Agency> Agencies { get; }

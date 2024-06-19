@@ -15,6 +15,20 @@ namespace AccuPay.Infrastructure.Data
         {
         }
 
+        public string GetExcelPassword()
+        {
+            var values = GetListOfValues("Excel Report Password");
+
+            if(values.Count <= 0)
+            {
+                return "";
+            }
+            else
+            {
+                return values.First().DisplayValue;
+            }
+        }
+
         public ICollection<ListOfValue> GetLeaveConvertiblePolicies()
         {
             return GetListOfValues("LeaveConvertiblePolicy");

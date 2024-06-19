@@ -1,7 +1,10 @@
 Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
+Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -15,6 +18,10 @@ Public Class AddOvertimeForm
 
     Private ReadOnly _overtimeRepository As IOvertimeRepository
 
+    Private _currentRolePermission As RolePermission
+
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
+
     Sub New(employee As Employee)
 
         InitializeComponent()
@@ -23,11 +30,17 @@ Public Class AddOvertimeForm
 
         _overtimeRepository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
 
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
         Me.IsSaved = False
 
     End Sub
 
-    Private Sub AddLeaveForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub AddLeaveForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwner.RGI Then
+            Await CheckRolePermissions()
+        End If
 
         PopulateEmployeeData()
 
@@ -36,6 +49,22 @@ Public Class AddOvertimeForm
         ResetForm()
 
     End Sub
+
+    Private Async Function CheckRolePermissions() As Task
+        Dim role = Await PermissionHelper.GetRoleAsync(PermissionConstant.OVERTIME)
+
+        If role.Success Then
+
+            _currentRolePermission = role.RolePermission
+
+            If _currentRolePermission.Update Then
+                Panel1.Enabled = True
+            Else
+                Panel1.Enabled = False
+            End If
+
+        End If
+    End Function
 
     Private Sub LoadStatusList()
 
@@ -55,6 +84,7 @@ Public Class AddOvertimeForm
 
     Private Sub ResetForm()
 
+
         Me._newOvertime = Overtime.NewOvertime(
             organizationId:=z_OrganizationID,
             employeeId:=_currentEmployee.RowID.Value,
@@ -64,6 +94,10 @@ Public Class AddOvertimeForm
             reason:=String.Empty,
             comments:=String.Empty,
             status:=Nothing)
+
+        If Panel1.Enabled = False Then
+            Me._newOvertime.Status = "Pending"
+        End If
 
         CreateDataBindings()
     End Sub

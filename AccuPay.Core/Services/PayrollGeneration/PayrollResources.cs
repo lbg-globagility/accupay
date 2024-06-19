@@ -156,6 +156,8 @@ namespace AccuPay.Core.Services
 
             _payPeriodSpan = new TimePeriod(_payDateFrom, _payDateTo);
 
+
+            await LoadSystemOwner();
             await LoadActualTimeEntries();
             await LoadAllowances();
             await LoadBonuses();
@@ -171,7 +173,6 @@ namespace AccuPay.Core.Services
             await LoadSalaries();
             await LoadSickLeaveProduct();
             await LoadSocialSecurityBrackets();
-            await LoadSystemOwner();
             await LoadTimeEntries();
             await LoadVacationLeaveProduct();
             await LoadWithholdingTaxBrackets();
@@ -245,9 +246,20 @@ namespace AccuPay.Core.Services
         {
             try
             {
-                Employees = (await _employeeRepository
+                if (CurrentSystemOwner == SystemOwner.RGI) {
+                    Employees = (await _employeeRepository
+                    .GetAllWithinServicePeriodWithPositionAsync(_organizationId, _payDateFrom))
+                    .ToList();
+                }
+                else
+                {
+                    Employees = (await _employeeRepository
                     .GetAllActiveWithDivisionAndPositionAsync(_organizationId))
                     .ToList();
+                }
+
+
+                
             }
             catch (Exception ex)
             {

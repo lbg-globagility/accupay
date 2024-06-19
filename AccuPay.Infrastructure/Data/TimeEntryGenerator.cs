@@ -28,7 +28,8 @@ namespace AccuPay.Infrastructure.Data
             int employeeId,
             ITimeEntryResources resources,
             int currentlyLoggedInUserId,
-            TimePeriod payPeriod)
+            TimePeriod payPeriod,
+            string systemOwner = null)
         {
             // we use the employee data from resources.Employees instead of just passing the employee
             // entity in the Start method because we can be sure that the data in resources.Employees
@@ -94,7 +95,8 @@ namespace AccuPay.Infrastructure.Data
                     .Any(u => u.EmployeeID == employee.RowID))
                 .ToList();
 
-            if (employee.IsActive == false)
+
+            if (employee.IsActive == false && !(systemOwner != null && systemOwner == SystemOwner.RGI))
             {
                 var currentTimeEntries = previousTimeEntries
                     .Where(t => payPeriod.Start <= t.Date && t.Date <= payPeriod.End);
