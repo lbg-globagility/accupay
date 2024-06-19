@@ -180,7 +180,10 @@ Public Class UserUserControl
             models.Add(New UserRoleViewModel(
                 userId:=user.Id,
                 roleId:=roleId,
-                organization:=organization))
+                organization:=organization,
+                isDepartmentManager:=If(userRole?.IsDepartmentManager, False),
+                isHighTierApprover:=If(userRole?.IsHighTierApprover, False))
+            )
 
         Next
 
@@ -285,7 +288,6 @@ Public Class UserUserControl
     Public Class UserRoleViewModel
 
         Public Property RoleId As Integer
-
         Private ReadOnly _originalRoleId As Integer
 
         Private ReadOnly Property _userId As Integer?
@@ -298,13 +300,15 @@ Public Class UserUserControl
             End Get
         End Property
 
-        Sub New(userId As Integer?, roleId As Integer?, organization As Organization)
+        Sub New(userId As Integer?, roleId As Integer?, organization As Organization, Optional isDepartmentManager As Boolean = False, Optional isHighTierApprover As Boolean = False)
 
             _originalRoleId = If(roleId, 0)
             _organization = organization
 
             _userId = userId
             Me.RoleId = _originalRoleId
+            _IsDepartmentManager = isDepartmentManager
+            _IsHighTierApprover = isHighTierApprover
         End Sub
 
         Public Function ToUserRole(allowNullUserId As Boolean) As UserRoleIdData
@@ -321,6 +325,10 @@ Public Class UserUserControl
             Return Me.RoleId <> _originalRoleId
 
         End Function
+
+        Public Property IsDepartmentManager As Boolean
+
+        Public Property IsHighTierApprover As Boolean
 
     End Class
 

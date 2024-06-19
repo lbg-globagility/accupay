@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace AccuPay.Core.Entities
 {
@@ -17,5 +16,7 @@ namespace AccuPay.Core.Entities
             RoleId = roleId;
             OrganizationId = organizationId;
         }
+
+        public bool IsDepartmentManager { get; private set; }
     }
 }

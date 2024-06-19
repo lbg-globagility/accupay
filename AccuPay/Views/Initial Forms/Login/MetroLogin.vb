@@ -7,6 +7,7 @@ Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Helpers
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.SelfFilingForm
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -320,4 +321,18 @@ Public Class MetroLogin
         End If
     End Function
 
+    Private Sub SelfFiling_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklblleave.LinkClicked,
+            lnklblovertime.LinkClicked,
+            lnklblobf.LinkClicked
+
+        Dim link = DirectCast(sender, LinkLabel)
+
+        Dim filingFormType As FilingFormType =
+            If(link.Name = lnklblleave.Name, FilingFormType.Leave,
+                If(link.Name = lnklblovertime.Name, FilingFormType.Overtime,
+                FilingFormType.OfficialBusiness))
+
+        Dim form As New SelfFilingForm(filingFormType)
+        form.Show()
+    End Sub
 End Class

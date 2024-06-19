@@ -3295,4 +3295,23 @@ Public Class EmployeeForm
         report.Print(selectedReport)
     End Sub
 
+    Private Sub btnShowDeptMngr_Click(sender As Object, e As EventArgs) Handles btnShowDeptMngr.Click
+
+        Dim emp_data As New DeptManagerPool
+
+        If IsDBNull(txtboxDeptMngr.Tag) = False Then
+            emp_data.PositionID = txtboxDeptMngr.Tag
+            emp_data.PositionName = txtboxDeptMngr.Text
+        End If
+
+        If emp_data.ShowDialog = Windows.Forms.DialogResult.OK Then
+
+            txtboxDeptMngr.Tag = emp_data.PositionID
+
+            txtboxDeptMngr.Text = emp_data.PositionName
+
+        End If
+
+    End Sub
+
 End Class

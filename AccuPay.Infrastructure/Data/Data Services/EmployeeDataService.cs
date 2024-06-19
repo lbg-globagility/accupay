@@ -13,10 +13,11 @@ namespace AccuPay.Infrastructure.Data
     public class EmployeeDataService : BaseOrganizationDataService<Employee>, IEmployeeDataService
     {
         private const string UserActivityName = "Employee";
-
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly ILeaveLedgerRepository _leaveLedgerRepository;
         private readonly IProductRepository _productRepository;
         private readonly IPositionRepository _positionRepository;
+        private readonly ISystemOwnerService _systemOwnerService;
 
         public EmployeeDataService(
             IEmployeeRepository employeeRepository,
@@ -25,6 +26,7 @@ namespace AccuPay.Infrastructure.Data
             IProductRepository productRepository,
             IPositionRepository positionRepository,
             IUserActivityRepository userActivityRepository,
+            ISystemOwnerService systemOwnerService,
             PayrollContext context,
             IPolicyHelper policy) :
 
@@ -35,9 +37,11 @@ namespace AccuPay.Infrastructure.Data
                 policy,
                 entityName: "Employee")
         {
+            _employeeRepository = employeeRepository;
             _leaveLedgerRepository = leaveLedgerRepository;
             _productRepository = productRepository;
             _positionRepository = positionRepository;
+            _systemOwnerService = systemOwnerService;
         }
 
         public async Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId)
@@ -155,6 +159,18 @@ namespace AccuPay.Infrastructure.Data
                 suffixIdentifier: CreateUserActivitySuffixIdentifier(entity),
                 organizationId: entity.OrganizationID.Value,
                 changedEmployeeId: entity.RowID.Value);
+        }
+
+        public async Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(
+            int organizationId,
+            PayPeriod payPeriod)
+        {
+            var currentSystemOwner = await _systemOwnerService.GetCurrentSystemOwnerAsync();
+
+            //if (currentSystemOwner == SystemOwner.RGI)
+                return await _employeeRepository.GetAllWithinServicePeriodWithPositionAsync(organizationId, payPeriod.PayFromDate);
+
+            //return await _employeeRepository.GetAllActiveAsync(organizationId);
         }
 
         #endregion Overrides

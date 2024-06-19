@@ -35,8 +35,13 @@ Partial Class MetroLogin
         Me.MetroLabel3 = New MetroFramework.Controls.MetroLabel()
         Me.PhotoImages = New System.Windows.Forms.PictureBox()
         Me.MetroLink1 = New MetroFramework.Controls.MetroLink()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lnklblobf = New System.Windows.Forms.LinkLabel()
+        Me.lnklblovertime = New System.Windows.Forms.LinkLabel()
+        Me.lnklblleave = New System.Windows.Forms.LinkLabel()
         CType(Me.MetroStyleManager1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PhotoImages, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MetroStyleManager1
@@ -121,7 +126,7 @@ Partial Class MetroLogin
         '
         'PhotoImages
         '
-        Me.PhotoImages.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.PhotoImages.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PhotoImages.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
         Me.PhotoImages.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.PhotoImages.Location = New System.Drawing.Point(242, 89)
@@ -141,11 +146,62 @@ Partial Class MetroLogin
         Me.MetroLink1.UseSelectable = True
         Me.MetroLink1.Visible = False
         '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.lnklblobf)
+        Me.Panel1.Controls.Add(Me.lnklblovertime)
+        Me.Panel1.Controls.Add(Me.lnklblleave)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel1.Location = New System.Drawing.Point(20, 302)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(504, 51)
+        Me.Panel1.TabIndex = 20
+        '
+        'lnklblobf
+        '
+        Me.lnklblobf.AutoSize = True
+        Me.lnklblobf.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lnklblobf.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.lnklblobf.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.lnklblobf.Location = New System.Drawing.Point(3, 30)
+        Me.lnklblobf.Name = "lnklblobf"
+        Me.lnklblobf.Size = New System.Drawing.Size(126, 15)
+        Me.lnklblobf.TabIndex = 9
+        Me.lnklblobf.TabStop = True
+        Me.lnklblobf.Text = "O&fficial Business filing"
+        '
+        'lnklblovertime
+        '
+        Me.lnklblovertime.AutoSize = True
+        Me.lnklblovertime.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lnklblovertime.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.lnklblovertime.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.lnklblovertime.Location = New System.Drawing.Point(3, 15)
+        Me.lnklblovertime.Name = "lnklblovertime"
+        Me.lnklblovertime.Size = New System.Drawing.Size(85, 15)
+        Me.lnklblovertime.TabIndex = 8
+        Me.lnklblovertime.TabStop = True
+        Me.lnklblovertime.Text = "Over&time filing"
+        '
+        'lnklblleave
+        '
+        Me.lnklblleave.AutoSize = True
+        Me.lnklblleave.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lnklblleave.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
+        Me.lnklblleave.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.lnklblleave.Location = New System.Drawing.Point(3, 0)
+        Me.lnklblleave.Name = "lnklblleave"
+        Me.lnklblleave.Size = New System.Drawing.Size(69, 15)
+        Me.lnklblleave.TabIndex = 7
+        Me.lnklblleave.TabStop = True
+        Me.lnklblleave.Text = "Lea&ve filing"
+        '
         'MetroLogin
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(544, 371)
+        Me.ClientSize = New System.Drawing.Size(544, 373)
+        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.MetroLink1)
         Me.Controls.Add(Me.PhotoImages)
         Me.Controls.Add(Me.MetroLabel3)
@@ -166,6 +222,8 @@ Partial Class MetroLogin
         Me.Text = "Welcome"
         CType(Me.MetroStyleManager1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PhotoImages, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -180,4 +238,8 @@ Partial Class MetroLogin
     Friend WithEvents MetroLabel3 As MetroFramework.Controls.MetroLabel
     Friend WithEvents PhotoImages As System.Windows.Forms.PictureBox
     Friend WithEvents MetroLink1 As MetroFramework.Controls.MetroLink
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents lnklblobf As LinkLabel
+    Friend WithEvents lnklblovertime As LinkLabel
+    Friend WithEvents lnklblleave As LinkLabel
 End Class

@@ -123,6 +123,9 @@ Partial Class EmployeeForm
         Me.txtEmpIDChk = New System.Windows.Forms.TextBox()
         Me.tbpEmployee = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.btnShowDeptMngr = New System.Windows.Forms.Button()
+        Me.Label385 = New System.Windows.Forms.Label()
+        Me.txtboxDeptMngr = New System.Windows.Forms.TextBox()
         Me.chkOvertimeOverride = New System.Windows.Forms.CheckBox()
         Me.chkGracePeriodAsBuffer = New System.Windows.Forms.CheckBox()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -239,21 +242,21 @@ Partial Class EmployeeForm
         Me.WorkOrderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UserActivityEmployeeToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tbpAwards = New System.Windows.Forms.TabPage()
-        Me.AwardTab = New AwardTab()
+        Me.AwardTab = New AccuPay.AwardTab()
         Me.tbpCertifications = New System.Windows.Forms.TabPage()
-        Me.CertificationTab = New CertificationTab()
+        Me.CertificationTab = New AccuPay.CertificationTab()
         Me.tbpDiscipAct = New System.Windows.Forms.TabPage()
-        Me.DisciplinaryActionTab = New DisciplinaryActionTab()
+        Me.DisciplinaryActionTab = New AccuPay.DisciplinaryActionTab()
         Me.tbpEducBG = New System.Windows.Forms.TabPage()
-        Me.EducationalBackgroundTab = New EducationalBackgroundTab()
+        Me.EducationalBackgroundTab = New AccuPay.EducationalBackgroundTab()
         Me.tbpPrevEmp = New System.Windows.Forms.TabPage()
-        Me.PreviousEmployerTab = New PreviousEmployerTab()
+        Me.PreviousEmployerTab = New AccuPay.PreviousEmployerTab()
         Me.tbpBonus = New System.Windows.Forms.TabPage()
-        Me.BonusTab = New BonusTab()
+        Me.BonusTab = New AccuPay.BonusTab()
         Me.tbpAttachment = New System.Windows.Forms.TabPage()
-        Me.AttachmentTab = New AttachmentTab()
+        Me.AttachmentTab = New AccuPay.AttachmentTab()
         Me.tbpSalary = New System.Windows.Forms.TabPage()
-        Me.SalaryTab = New SalaryTab()
+        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.Label331 = New System.Windows.Forms.Label()
         Me.Label330 = New System.Windows.Forms.Label()
@@ -944,7 +947,7 @@ Partial Class EmployeeForm
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
         Me.Label1.Location = New System.Drawing.Point(8, 13)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(97, 16)
+        Me.Label1.Size = New System.Drawing.Size(96, 16)
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Employee ID"
         '
@@ -1414,6 +1417,9 @@ Partial Class EmployeeForm
         'SplitContainer2.Panel1
         '
         Me.SplitContainer2.Panel1.AutoScroll = True
+        Me.SplitContainer2.Panel1.Controls.Add(Me.btnShowDeptMngr)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.Label385)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.txtboxDeptMngr)
         Me.SplitContainer2.Panel1.Controls.Add(Me.chkOvertimeOverride)
         Me.SplitContainer2.Panel1.Controls.Add(Me.chkGracePeriodAsBuffer)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtFName)
@@ -1517,6 +1523,38 @@ Partial Class EmployeeForm
         Me.SplitContainer2.SplitterDistance = 418
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
+        '
+        'btnShowDeptMngr
+        '
+        Me.btnShowDeptMngr.AccessibleDescription = "Loans"
+        Me.btnShowDeptMngr.Font = New System.Drawing.Font("Segoe UI Light", 6.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnShowDeptMngr.Location = New System.Drawing.Point(373, 390)
+        Me.btnShowDeptMngr.Name = "btnShowDeptMngr"
+        Me.btnShowDeptMngr.Size = New System.Drawing.Size(20, 20)
+        Me.btnShowDeptMngr.TabIndex = 548
+        Me.btnShowDeptMngr.Tag = "Loan Type"
+        Me.btnShowDeptMngr.Text = "...show more"
+        Me.btnShowDeptMngr.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnShowDeptMngr.UseVisualStyleBackColor = True
+        '
+        'Label385
+        '
+        Me.Label385.Location = New System.Drawing.Point(301, 393)
+        Me.Label385.Name = "Label385"
+        Me.Label385.Size = New System.Drawing.Size(63, 30)
+        Me.Label385.TabIndex = 546
+        Me.Label385.Text = "Department Manager"
+        '
+        'txtboxDeptMngr
+        '
+        Me.txtboxDeptMngr.BackColor = System.Drawing.Color.White
+        Me.txtboxDeptMngr.Location = New System.Drawing.Point(399, 390)
+        Me.txtboxDeptMngr.MaxLength = 50
+        Me.txtboxDeptMngr.Multiline = True
+        Me.txtboxDeptMngr.Name = "txtboxDeptMngr"
+        Me.txtboxDeptMngr.ReadOnly = True
+        Me.txtboxDeptMngr.Size = New System.Drawing.Size(168, 26)
+        Me.txtboxDeptMngr.TabIndex = 547
         '
         'chkOvertimeOverride
         '
@@ -1640,7 +1678,7 @@ Partial Class EmployeeForm
         Me.AddBranchLinkButton.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.AddBranchLinkButton.Location = New System.Drawing.Point(300, 588)
         Me.AddBranchLinkButton.Name = "AddBranchLinkButton"
-        Me.AddBranchLinkButton.Size = New System.Drawing.Size(33, 16)
+        Me.AddBranchLinkButton.Size = New System.Drawing.Size(32, 16)
         Me.AddBranchLinkButton.TabIndex = 520
         Me.AddBranchLinkButton.TabStop = True
         Me.AddBranchLinkButton.Text = "Add"
@@ -1779,7 +1817,7 @@ Partial Class EmployeeForm
         Me.lnklblAddBank.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.lnklblAddBank.Location = New System.Drawing.Point(240, 97)
         Me.lnklblAddBank.Name = "lnklblAddBank"
-        Me.lnklblAddBank.Size = New System.Drawing.Size(33, 16)
+        Me.lnklblAddBank.Size = New System.Drawing.Size(32, 16)
         Me.lnklblAddBank.TabIndex = 4
         Me.lnklblAddBank.TabStop = True
         Me.lnklblAddBank.Text = "Add"
@@ -9228,4 +9266,7 @@ Partial Class EmployeeForm
     Friend WithEvents Column37 As DataGridViewTextBoxColumn
     Friend WithEvents ComboBoxSearchStatus As ComboBox
     Friend WithEvents Label21 As Label
+    Friend WithEvents btnShowDeptMngr As Button
+    Friend WithEvents Label385 As Label
+    Friend WithEvents txtboxDeptMngr As TextBox
 End Class

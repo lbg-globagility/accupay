@@ -24,8 +24,6 @@ Partial Class UserUserControl
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.UserRoleGrid = New System.Windows.Forms.DataGridView()
-        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RoleColumn = New System.Windows.Forms.DataGridViewComboBoxColumn()
         Me.UserRoleLabel = New System.Windows.Forms.Label()
         Me.DetailsGroup = New System.Windows.Forms.GroupBox()
         Me.UserLevelComboBox = New System.Windows.Forms.ComboBox()
@@ -49,6 +47,13 @@ Partial Class UserUserControl
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewComboBoxColumn1 = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.DataGridViewCheckBoxColumn1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RoleColumn = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.ColumnIsDepartmentManager = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.ColumnIsHighTierApprover = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.UserRoleGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsGroup.SuspendLayout()
@@ -74,29 +79,12 @@ Partial Class UserUserControl
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.UserRoleGrid.BackgroundColor = System.Drawing.Color.White
         Me.UserRoleGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.UserRoleGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Modules, Me.RoleColumn})
+        Me.UserRoleGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Modules, Me.RoleColumn, Me.ColumnIsDepartmentManager, Me.ColumnIsHighTierApprover})
         Me.UserRoleGrid.Location = New System.Drawing.Point(8, 233)
         Me.UserRoleGrid.Name = "UserRoleGrid"
         Me.UserRoleGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.UserRoleGrid.Size = New System.Drawing.Size(769, 321)
         Me.UserRoleGrid.TabIndex = 160
-        '
-        'Modules
-        '
-        Me.Modules.DataPropertyName = "OrganizationName"
-        Me.Modules.HeaderText = "Organization"
-        Me.Modules.Name = "Modules"
-        Me.Modules.ReadOnly = True
-        Me.Modules.Width = 450
-        '
-        'RoleColumn
-        '
-        Me.RoleColumn.DataPropertyName = "RoleId"
-        Me.RoleColumn.HeaderText = "Role"
-        Me.RoleColumn.Name = "RoleColumn"
-        Me.RoleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.RoleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.RoleColumn.Width = 250
         '
         'UserRoleLabel
         '
@@ -324,10 +312,65 @@ Partial Class UserUserControl
         '
         'DataGridViewTextBoxColumn1
         '
+        Me.DataGridViewTextBoxColumn1.DataPropertyName = "OrganizationName"
         Me.DataGridViewTextBoxColumn1.HeaderText = ""
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 150
+        '
+        'DataGridViewComboBoxColumn1
+        '
+        Me.DataGridViewComboBoxColumn1.DataPropertyName = "RoleId"
+        Me.DataGridViewComboBoxColumn1.HeaderText = "Role"
+        Me.DataGridViewComboBoxColumn1.Name = "DataGridViewComboBoxColumn1"
+        Me.DataGridViewComboBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewComboBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.DataGridViewComboBoxColumn1.Width = 250
+        '
+        'DataGridViewCheckBoxColumn1
+        '
+        Me.DataGridViewCheckBoxColumn1.DataPropertyName = "IsDepartmentManager"
+        Me.DataGridViewCheckBoxColumn1.HeaderText = "Is Department Manager?"
+        Me.DataGridViewCheckBoxColumn1.Name = "DataGridViewCheckBoxColumn1"
+        Me.DataGridViewCheckBoxColumn1.Width = 182
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Is High TierApprover?"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.Width = 181
+        '
+        'Modules
+        '
+        Me.Modules.DataPropertyName = "OrganizationName"
+        Me.Modules.HeaderText = "Organization"
+        Me.Modules.Name = "Modules"
+        Me.Modules.ReadOnly = True
+        Me.Modules.Width = 182
+        '
+        'RoleColumn
+        '
+        Me.RoleColumn.DataPropertyName = "RoleId"
+        Me.RoleColumn.HeaderText = "Role"
+        Me.RoleColumn.Name = "RoleColumn"
+        Me.RoleColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.RoleColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.RoleColumn.Width = 181
+        '
+        'ColumnIsDepartmentManager
+        '
+        Me.ColumnIsDepartmentManager.DataPropertyName = "IsDepartmentManager"
+        Me.ColumnIsDepartmentManager.HeaderText = "Is Department Manager?"
+        Me.ColumnIsDepartmentManager.Name = "ColumnIsDepartmentManager"
+        Me.ColumnIsDepartmentManager.Width = 182
+        '
+        'ColumnIsHighTierApprover
+        '
+        Me.ColumnIsHighTierApprover.HeaderText = "Is High Tier Approver?"
+        Me.ColumnIsHighTierApprover.Name = "ColumnIsHighTierApprover"
+        Me.ColumnIsHighTierApprover.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ColumnIsHighTierApprover.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.ColumnIsHighTierApprover.Width = 181
         '
         'UserUserControl
         '
@@ -370,6 +413,11 @@ Partial Class UserUserControl
     Friend WithEvents Label13 As Label
     Friend WithEvents Label12 As Label
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewComboBoxColumn1 As DataGridViewComboBoxColumn
+    Friend WithEvents DataGridViewCheckBoxColumn1 As DataGridViewCheckBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents Modules As DataGridViewTextBoxColumn
     Friend WithEvents RoleColumn As DataGridViewComboBoxColumn
+    Friend WithEvents ColumnIsDepartmentManager As DataGridViewCheckBoxColumn
+    Friend WithEvents ColumnIsHighTierApprover As DataGridViewCheckBoxColumn
 End Class

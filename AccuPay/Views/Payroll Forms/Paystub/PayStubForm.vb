@@ -671,12 +671,10 @@ Public Class PayStubForm
             Return
         End If
 
-        'We are using a fresh instance of EmployeeRepository
-        Dim repository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+        'We are using a fresh instance of EmployeeDataService
+        Dim employeeDataService = MainServiceProvider.GetRequiredService(Of IEmployeeDataService)
         'later, we can let the user choose the employees that they want to generate.
-        Dim employees = If(_currentSystemOwner = SystemOwner.RGI, Await repository.GetAllWithinServicePeriodWithPositionAsync(z_OrganizationID, payPeriod.PayFromDate), Await repository.GetAllActiveAsync(z_OrganizationID))
-
-
+        Dim employees = Await employeeDataService.GetAllWithinServicePeriodWithPositionAsync(organizationId:=z_OrganizationID, payPeriod:=payPeriod)
 
         Dim generator As New PayrollGeneration(employees, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating payroll...")
