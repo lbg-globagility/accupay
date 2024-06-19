@@ -9,7 +9,9 @@ namespace AccuPay.Core.Interfaces
     public interface IEmployeeDataService : IBaseSavableDataService<Employee>
     {
         Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, List<string> jobNames, int organizationId, int changedByUserId);
-        Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(int organizationId, PayPeriod payPeriod);
+
+        Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(int organizationId, PayPeriod payPeriod = null);
+
         Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId);
     }
 }

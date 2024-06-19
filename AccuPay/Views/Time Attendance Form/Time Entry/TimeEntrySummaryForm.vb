@@ -234,17 +234,16 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
-        Dim periodEndDate = If(_selectedPayPeriod Is Nothing, Date.Now(), _selectedPayPeriod.PayToDate)
-        periodEndDate = If(curr_sys_owner_name = SystemOwner.RGI, _selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
+        Dim employeeDataService = MainServiceProvider.GetRequiredService(Of IEmployeeDataService)
 
-        Dim unsortedList = Await _employeeRepository.GetAllWithinServicePeriodWithPositionAsync(
-            organizationId:=z_OrganizationID,
-            currentDate:=periodEndDate)
+        Dim unsortedList = Await employeeDataService.GetAllWithinServicePeriodWithPositionAsync(
+            organizationId:=z_OrganizationID)
+
         Dim list = unsortedList.
             OrderBy(Function(e) e.LastName).
             ToList()
-        Return CType(list, ICollection(Of Employee))
 
+        Return CType(list, ICollection(Of Employee))
     End Function
 
     Public Async Function LoadPayPeriods() As Task
