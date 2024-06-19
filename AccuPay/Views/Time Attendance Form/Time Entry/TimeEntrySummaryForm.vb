@@ -237,10 +237,11 @@ Public Class TimeEntrySummaryForm
         Dim employeeDataService = MainServiceProvider.GetRequiredService(Of IEmployeeDataService)
 
         Dim unsortedList = Await employeeDataService.GetAllWithinServicePeriodWithPositionAsync(
-            organizationId:=z_OrganizationID)
+            organizationId:=z_OrganizationID,
+            userId:=z_User)
 
         Dim list = unsortedList.
-            OrderBy(Function(e) e.LastName).
+            OrderBy(Function(e) e.FullNameLastNameFirst).
             ToList()
 
         Return CType(list, ICollection(Of Employee))

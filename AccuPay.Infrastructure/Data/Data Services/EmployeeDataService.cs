@@ -18,7 +18,6 @@ namespace AccuPay.Infrastructure.Data
         private readonly IProductRepository _productRepository;
         private readonly IPositionRepository _positionRepository;
         private readonly ISystemOwnerService _systemOwnerService;
-        private readonly IPayPeriodRepository _payPeriodRepository;
 
         public EmployeeDataService(
             IEmployeeRepository employeeRepository,
@@ -43,7 +42,6 @@ namespace AccuPay.Infrastructure.Data
             _productRepository = productRepository;
             _positionRepository = positionRepository;
             _systemOwnerService = systemOwnerService;
-            _payPeriodRepository = payPeriodRepository;
         }
 
         public async Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId)
@@ -165,17 +163,24 @@ namespace AccuPay.Infrastructure.Data
 
         public async Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(
             int organizationId,
+            int userId,
             PayPeriod payPeriod = null)
         {
             var currentSystemOwner = await _systemOwnerService.GetCurrentSystemOwnerAsync();
 
-            if(payPeriod == null)
-                payPeriod = await _payPeriodRepository.GetCurrentOpenAsync(organizationId);
 
-            //if (currentSystemOwner == SystemOwner.RGI)
+            if (currentSystemOwner == SystemOwner.RGI)
+            {
+                if (payPeriod == null)
+                    payPeriod = await _payPeriodRepository.GetCurrentOpenAsync(organizationId);
+
+                if (payPeriod == null)
+                    payPeriod = await _payPeriodRepository.GetCurrentPayPeriodAsync(organizationId: organizationId, currentUserId: userId);
+
                 return await _employeeRepository.GetAllWithinServicePeriodWithPositionAsync(organizationId, payPeriod.PayFromDate);
+            }
 
-            //return await _employeeRepository.GetAllActiveAsync(organizationId);
+            return await _employeeRepository.GetAllActiveAsync(organizationId);
         }
 
         #endregion Overrides

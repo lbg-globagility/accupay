@@ -10,7 +10,7 @@ namespace AccuPay.Core.Interfaces
     {
         Task<List<Employee>> BatchApply(IReadOnlyCollection<EmployeeImportModel> validRecords, List<string> jobNames, int organizationId, int changedByUserId);
 
-        Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(int organizationId, PayPeriod payPeriod = null);
+        Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(int organizationId, int userId, PayPeriod payPeriod = null);
 
         Task ImportAsync(ICollection<EmployeeWithLeaveBalanceData> employeeWithLeaveBalanceModels, int organizationId, int userId);
     }

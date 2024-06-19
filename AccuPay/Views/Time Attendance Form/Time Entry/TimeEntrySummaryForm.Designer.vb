@@ -545,7 +545,7 @@ Partial Class TimeEntrySummaryForm
         Me.tsBtnDeleteTimeEntry.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.tsBtnDeleteTimeEntry.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsBtnDeleteTimeEntry.Name = "tsBtnDeleteTimeEntry"
-        Me.tsBtnDeleteTimeEntry.Size = New System.Drawing.Size(156, 20)
+        Me.tsBtnDeleteTimeEntry.Size = New System.Drawing.Size(156, 22)
         Me.tsBtnDeleteTimeEntry.Text = "Delete Time Entry Period"
         Me.tsBtnDeleteTimeEntry.ToolTipText = "Deletes employee's time" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "entry of the selected period"
         '
@@ -554,7 +554,7 @@ Partial Class TimeEntrySummaryForm
         Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
         Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
-        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 20)
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
         Me.UserActivityToolStripButton.Text = "&User Activity"
         '
         'Label29

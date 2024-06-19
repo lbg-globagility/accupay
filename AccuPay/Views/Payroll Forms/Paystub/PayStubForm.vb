@@ -674,7 +674,9 @@ Public Class PayStubForm
         'We are using a fresh instance of EmployeeDataService
         Dim employeeDataService = MainServiceProvider.GetRequiredService(Of IEmployeeDataService)
         'later, we can let the user choose the employees that they want to generate.
-        Dim employees = Await employeeDataService.GetAllWithinServicePeriodWithPositionAsync(organizationId:=z_OrganizationID, payPeriod:=payPeriod)
+        Dim employees = Await employeeDataService.GetAllWithinServicePeriodWithPositionAsync(organizationId:=z_OrganizationID,
+            userId:=z_User,
+            payPeriod:=payPeriod)
 
         Dim generator As New PayrollGeneration(employees, additionalProgressCount:=1)
         Dim progressDialog = New ProgressDialog(generator, "Generating payroll...")
