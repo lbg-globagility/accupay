@@ -66,7 +66,7 @@ Partial Class EmployeeIDLayoutForm
         'PictureBox1
         '
         Me.PictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox1.Image = Global.AccuPay.My.Resources.Resources.TraineeID
+        Me.PictureBox1.Image = Global.AccuPay.My.Resources.Resources.TraineeID_F
         Me.PictureBox1.Location = New System.Drawing.Point(35, 83)
         Me.PictureBox1.Name = "PictureBox1"
         Me.PictureBox1.Size = New System.Drawing.Size(206, 327)

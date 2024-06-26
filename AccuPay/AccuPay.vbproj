@@ -430,6 +430,7 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\PBCOMReportProvider.vb" />
     <Compile Include="Views\Core Forms\EmployeeIDLayoutForm.Designer.vb">
       <DependentUpon>EmployeeIDLayoutForm.vb</DependentUpon>
     </Compile>

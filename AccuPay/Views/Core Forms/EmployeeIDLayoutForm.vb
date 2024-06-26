@@ -41,25 +41,28 @@ Public Class EmployeeIDLayoutForm
         gp.AddEllipse(0, 0, EmpPicture.Width - 3, EmpPicture.Height - 3)
         Dim rg = New Region(gp)
         EmpPicture.Region = rg
+        PictureBox1.Image = My.Resources.Resources.RegularID_F
+        PictureBox2.Image = My.Resources.Resources.RegularID
+        EmpExpireDate.BackColor = Color.FromArgb(42, 55, 75)
+        EmpIDNo.BackColor = Color.FromArgb(1, 2, 18)
+        'If (status.ToLower() = "regular") Then
+        '    PictureBox1.Image = My.Resources.Resources.RegularID_F
+        '    PictureBox2.Image = My.Resources.Resources.RegularID
+        '    EmpExpireDate.BackColor = Color.FromArgb(42, 55, 75)
+        '    EmpIDNo.BackColor = Color.FromArgb(1, 2, 18)
+        'ElseIf (status.ToLower() = "probationary") Then
 
-        If (status.ToLower() = "regular") Then
-            PictureBox1.Image = My.Resources.Resources.RegularID_F
-            PictureBox2.Image = My.Resources.Resources.RegularID
-            EmpExpireDate.BackColor = Color.FromArgb(42, 55, 75)
-            EmpIDNo.BackColor = Color.FromArgb(1, 2, 18)
-        ElseIf (status.ToLower() = "probationary") Then
-
-            PictureBox1.Image = My.Resources.Resources.ProbitionaryID_F
-            PictureBox2.Image = My.Resources.Resources.ProbitionaryID
-            EmpExpireDate.BackColor = Color.FromArgb(247, 167, 27)
-            EmpIDNo.BackColor = Color.FromArgb(56, 33, 0)
-        ElseIf (status.ToLower() = "seasonal") Then
-            'trainee
-            PictureBox1.Image = My.Resources.Resources.TraineeID_F
-            PictureBox2.Image = My.Resources.Resources.TraineeID
-            EmpExpireDate.BackColor = Color.FromArgb(237, 28, 36)
-            EmpIDNo.BackColor = Color.FromArgb(55, 0, 0)
-        End If
+        '    PictureBox1.Image = My.Resources.Resources.ProbitionaryID_F
+        '    PictureBox2.Image = My.Resources.Resources.ProbitionaryID
+        '    EmpExpireDate.BackColor = Color.FromArgb(247, 167, 27)
+        '    EmpIDNo.BackColor = Color.FromArgb(56, 33, 0)
+        'ElseIf (status.ToLower() = "seasonal") Then
+        '    'trainee
+        '    PictureBox1.Image = My.Resources.Resources.TraineeID_F
+        '    PictureBox2.Image = My.Resources.Resources.TraineeID
+        '    EmpExpireDate.BackColor = Color.FromArgb(237, 28, 36)
+        '    EmpIDNo.BackColor = Color.FromArgb(55, 0, 0)
+        'End If
 
         ' Add any initialization after the InitializeComponent() call.
 

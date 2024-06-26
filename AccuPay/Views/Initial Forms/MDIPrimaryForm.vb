@@ -107,6 +107,8 @@ Public Class MDIPrimaryForm
 
         Panel16.Font = DefaultFontStyle
 
+        Panel17.Font = DefaultFontStyle
+
         setProperDashBoardAccordingToSystemOwner()
 
         Await RunLeaveAccrual()
@@ -749,7 +751,9 @@ Public Class MDIPrimaryForm
 
         dgvfrequentleave.Tag = New SQLQueryToDatatable("CALL `FREQUENT_leave`('" & orgztnID & "');").ResultTable
 
-        dgvEmploymentStatus.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_employment_status`('" & orgztnID & "');").ResultTable
+        dgvThreeMonthsProb.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_3monthsprobitionary`('" & orgztnID & "');").ResultTable
+
+        dgvFiveMonthsProb.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_5monthsprobitionary`('" & orgztnID & "');").ResultTable
 
         'dgvfrequentleave
 
@@ -829,10 +833,15 @@ Public Class MDIPrimaryForm
         n_dt = DirectCast(dgvfrequentleave.Tag, DataTable)
         PopulateDGVwithDatTbl(dgvfrequentleave,
                               n_dt)
-        Dim ems_dt As New DataTable
-        ems_dt = DirectCast(dgvEmploymentStatus.Tag, DataTable)
-        PopulateDGVwithDatTbl(dgvEmploymentStatus,
-                              ems_dt)
+        Dim tmp_dt As New DataTable
+        tmp_dt = DirectCast(dgvThreeMonthsProb.Tag, DataTable)
+        PopulateDGVwithDatTbl(dgvThreeMonthsProb,
+                              tmp_dt)
+
+        Dim fmp_dt As New DataTable
+        fmp_dt = DirectCast(dgvFiveMonthsProb.Tag, DataTable)
+        PopulateDGVwithDatTbl(dgvFiveMonthsProb,
+                              fmp_dt)
         If if_sysowner_is_hyundai Then
             dgvpendingleave.Rows.Clear()
             For Each drow As DataRow In dt_pend_leave.Rows
@@ -850,7 +859,8 @@ Public Class MDIPrimaryForm
         dgvfrequentabsent.Enabled = True
         dgvfrequentleave.Enabled = True
         dgvTardiness.Enabled = True
-        dgvEmploymentStatus.Enabled = True
+        dgvThreeMonthsProb.Enabled = True
+        dgvFiveMonthsProb.Enabled = True
 
         If once = 0 Then
             once = 1

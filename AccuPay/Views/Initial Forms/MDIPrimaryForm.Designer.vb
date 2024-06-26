@@ -34,16 +34,11 @@ Partial Class MDIPrimaryForm
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MDIPrimaryForm))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.Panel8 = New System.Windows.Forms.Panel()
-        Me.EmployeeStatusCollapsibleGroup = New Indigo.CollapsibleGroupBox()
-        Me.Panel16 = New System.Windows.Forms.Panel()
-        Me.dgvEmploymentStatus = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.DataGridViewTextBoxColumn42 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn43 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn44 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CollapsibleGroupBox3 = New Indigo.CollapsibleGroupBox()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.dgvfrequentabsent = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -69,12 +64,12 @@ Partial Class MDIPrimaryForm
         Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.Panel9 = New System.Windows.Forms.Panel()
-        Me.TardinessCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
-        Me.Panel13 = New System.Windows.Forms.Panel()
-        Me.dgvTardiness = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.FiveMonthsProbCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
+        Me.Panel17 = New System.Windows.Forms.Panel()
+        Me.dgvFiveMonthsProb = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.ThreeMonthsProbCollapsibleGroup = New Indigo.CollapsibleGroupBox()
+        Me.Panel16 = New System.Windows.Forms.Panel()
+        Me.dgvThreeMonthsProb = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.CollapsibleGroupBox5 = New Indigo.CollapsibleGroupBox()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
@@ -90,6 +85,12 @@ Partial Class MDIPrimaryForm
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.TardinessCollapsibleGroupBox = New Indigo.CollapsibleGroupBox()
+        Me.Panel13 = New System.Windows.Forms.Panel()
+        Me.dgvTardiness = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CollapsibleGroupBox6 = New Indigo.CollapsibleGroupBox()
         Me.Panel15 = New System.Windows.Forms.Panel()
         Me.dgvpendingleave = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -178,15 +179,20 @@ Partial Class MDIPrimaryForm
         Me.DataGridViewTextBoxColumn39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn41 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn42 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn43 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn44 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DateEvaluated = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn45 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn47 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn48 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         Me.Panel8.SuspendLayout()
-        Me.EmployeeStatusCollapsibleGroup.SuspendLayout()
-        Me.Panel16.SuspendLayout()
-        CType(Me.dgvEmploymentStatus, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CollapsibleGroupBox3.SuspendLayout()
         Me.Panel5.SuspendLayout()
         CType(Me.dgvfrequentabsent, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -201,9 +207,12 @@ Partial Class MDIPrimaryForm
         Me.SplitContainer2.Panel2.SuspendLayout()
         Me.SplitContainer2.SuspendLayout()
         Me.Panel9.SuspendLayout()
-        Me.TardinessCollapsibleGroupBox.SuspendLayout()
-        Me.Panel13.SuspendLayout()
-        CType(Me.dgvTardiness, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.FiveMonthsProbCollapsibleGroupBox.SuspendLayout()
+        Me.Panel17.SuspendLayout()
+        CType(Me.dgvFiveMonthsProb, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ThreeMonthsProbCollapsibleGroup.SuspendLayout()
+        Me.Panel16.SuspendLayout()
+        CType(Me.dgvThreeMonthsProb, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CollapsibleGroupBox5.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.Panel6.SuspendLayout()
@@ -212,6 +221,9 @@ Partial Class MDIPrimaryForm
         Me.Panel14.SuspendLayout()
         CType(Me.dgvnegaPaySlip, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel10.SuspendLayout()
+        Me.TardinessCollapsibleGroupBox.SuspendLayout()
+        Me.Panel13.SuspendLayout()
+        CType(Me.dgvTardiness, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CollapsibleGroupBox6.SuspendLayout()
         Me.Panel15.SuspendLayout()
         CType(Me.dgvpendingleave, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -260,7 +272,6 @@ Partial Class MDIPrimaryForm
         '
         Me.Panel8.AutoScroll = True
         Me.Panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel8.Controls.Add(Me.EmployeeStatusCollapsibleGroup)
         Me.Panel8.Controls.Add(Me.CollapsibleGroupBox3)
         Me.Panel8.Controls.Add(Me.BirthdayCollapsibleGroupBox)
         Me.Panel8.Controls.Add(Me.LoanBalanceCollapsibleGroupBox)
@@ -269,80 +280,6 @@ Partial Class MDIPrimaryForm
         Me.Panel8.Name = "Panel8"
         Me.Panel8.Size = New System.Drawing.Size(321, 537)
         Me.Panel8.TabIndex = 138
-        '
-        'EmployeeStatusCollapsibleGroup
-        '
-        Me.EmployeeStatusCollapsibleGroup.Controls.Add(Me.Panel16)
-        Me.EmployeeStatusCollapsibleGroup.Dock = System.Windows.Forms.DockStyle.Top
-        Me.EmployeeStatusCollapsibleGroup.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.EmployeeStatusCollapsibleGroup.Location = New System.Drawing.Point(0, 698)
-        Me.EmployeeStatusCollapsibleGroup.Name = "EmployeeStatusCollapsibleGroup"
-        Me.EmployeeStatusCollapsibleGroup.Size = New System.Drawing.Size(302, 249)
-        Me.EmployeeStatusCollapsibleGroup.TabIndex = 208
-        Me.EmployeeStatusCollapsibleGroup.TabStop = False
-        Me.EmployeeStatusCollapsibleGroup.Text = "EMPLOYEE STATUS"
-        '
-        'Panel16
-        '
-        Me.Panel16.Controls.Add(Me.dgvEmploymentStatus)
-        Me.Panel16.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel16.Location = New System.Drawing.Point(3, 23)
-        Me.Panel16.Name = "Panel16"
-        Me.Panel16.Size = New System.Drawing.Size(296, 223)
-        Me.Panel16.TabIndex = 0
-        '
-        'dgvEmploymentStatus
-        '
-        Me.dgvEmploymentStatus.AllowUserToAddRows = False
-        Me.dgvEmploymentStatus.AllowUserToDeleteRows = False
-        Me.dgvEmploymentStatus.AllowUserToOrderColumns = True
-        Me.dgvEmploymentStatus.AllowUserToResizeColumns = False
-        Me.dgvEmploymentStatus.AllowUserToResizeRows = False
-        Me.dgvEmploymentStatus.BackgroundColor = System.Drawing.Color.White
-        Me.dgvEmploymentStatus.ColumnHeadersHeight = 48
-        Me.dgvEmploymentStatus.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvEmploymentStatus.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn42, Me.DataGridViewTextBoxColumn43, Me.DataGridViewTextBoxColumn44})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvEmploymentStatus.DefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvEmploymentStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvEmploymentStatus.Enabled = False
-        Me.dgvEmploymentStatus.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvEmploymentStatus.Location = New System.Drawing.Point(0, 0)
-        Me.dgvEmploymentStatus.MultiSelect = False
-        Me.dgvEmploymentStatus.Name = "dgvEmploymentStatus"
-        Me.dgvEmploymentStatus.ReadOnly = True
-        Me.dgvEmploymentStatus.RowHeadersWidth = 30
-        Me.dgvEmploymentStatus.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvEmploymentStatus.Size = New System.Drawing.Size(296, 223)
-        Me.dgvEmploymentStatus.TabIndex = 121
-        '
-        'DataGridViewTextBoxColumn42
-        '
-        Me.DataGridViewTextBoxColumn42.HeaderText = "Employee ID"
-        Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
-        Me.DataGridViewTextBoxColumn42.ReadOnly = True
-        Me.DataGridViewTextBoxColumn42.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn42.Width = 127
-        '
-        'DataGridViewTextBoxColumn43
-        '
-        Me.DataGridViewTextBoxColumn43.HeaderText = "Full Name"
-        Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
-        Me.DataGridViewTextBoxColumn43.ReadOnly = True
-        Me.DataGridViewTextBoxColumn43.Width = 127
-        '
-        'DataGridViewTextBoxColumn44
-        '
-        Me.DataGridViewTextBoxColumn44.HeaderText = "Employment Status"
-        Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
-        Me.DataGridViewTextBoxColumn44.ReadOnly = True
-        Me.DataGridViewTextBoxColumn44.Width = 127
         '
         'CollapsibleGroupBox3
         '
@@ -376,14 +313,14 @@ Partial Class MDIPrimaryForm
         Me.dgvfrequentabsent.ColumnHeadersHeight = 48
         Me.dgvfrequentabsent.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvfrequentabsent.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column15})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvfrequentabsent.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvfrequentabsent.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvfrequentabsent.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvfrequentabsent.Enabled = False
         Me.dgvfrequentabsent.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -454,14 +391,14 @@ Partial Class MDIPrimaryForm
         Me.dgvBDayCeleb.ColumnHeadersHeight = 48
         Me.dgvBDayCeleb.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvBDayCeleb.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column5, Me.Column6, Me.Column7})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvBDayCeleb.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvBDayCeleb.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvBDayCeleb.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvBDayCeleb.Enabled = False
         Me.dgvBDayCeleb.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -534,14 +471,14 @@ Partial Class MDIPrimaryForm
         Me.dgvLoanBalance.ColumnHeadersHeight = 48
         Me.dgvLoanBalance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvLoanBalance.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvLoanBalance.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvLoanBalance.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvLoanBalance.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvLoanBalance.Enabled = False
         Me.dgvLoanBalance.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -631,7 +568,8 @@ Partial Class MDIPrimaryForm
         '
         Me.Panel9.AutoScroll = True
         Me.Panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel9.Controls.Add(Me.TardinessCollapsibleGroupBox)
+        Me.Panel9.Controls.Add(Me.FiveMonthsProbCollapsibleGroupBox)
+        Me.Panel9.Controls.Add(Me.ThreeMonthsProbCollapsibleGroup)
         Me.Panel9.Controls.Add(Me.CollapsibleGroupBox5)
         Me.Panel9.Controls.Add(Me.NegativePayslipsCollapsibleGroupBox)
         Me.Panel9.Dock = System.Windows.Forms.DockStyle.Fill
@@ -640,38 +578,90 @@ Partial Class MDIPrimaryForm
         Me.Panel9.Size = New System.Drawing.Size(318, 537)
         Me.Panel9.TabIndex = 139
         '
-        'TardinessCollapsibleGroupBox
+        'FiveMonthsProbCollapsibleGroupBox
         '
-        Me.TardinessCollapsibleGroupBox.Controls.Add(Me.Panel13)
-        Me.TardinessCollapsibleGroupBox.Dock = System.Windows.Forms.DockStyle.Top
-        Me.TardinessCollapsibleGroupBox.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        Me.TardinessCollapsibleGroupBox.Location = New System.Drawing.Point(0, 511)
-        Me.TardinessCollapsibleGroupBox.Name = "TardinessCollapsibleGroupBox"
-        Me.TardinessCollapsibleGroupBox.Size = New System.Drawing.Size(299, 222)
-        Me.TardinessCollapsibleGroupBox.TabIndex = 207
-        Me.TardinessCollapsibleGroupBox.TabStop = False
-        Me.TardinessCollapsibleGroupBox.Text = "FREQUENT TARDINESS"
+        Me.FiveMonthsProbCollapsibleGroupBox.Controls.Add(Me.Panel17)
+        Me.FiveMonthsProbCollapsibleGroupBox.Dock = System.Windows.Forms.DockStyle.Top
+        Me.FiveMonthsProbCollapsibleGroupBox.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        Me.FiveMonthsProbCollapsibleGroupBox.Location = New System.Drawing.Point(0, 760)
+        Me.FiveMonthsProbCollapsibleGroupBox.Name = "FiveMonthsProbCollapsibleGroupBox"
+        Me.FiveMonthsProbCollapsibleGroupBox.Size = New System.Drawing.Size(299, 249)
+        Me.FiveMonthsProbCollapsibleGroupBox.TabIndex = 210
+        Me.FiveMonthsProbCollapsibleGroupBox.TabStop = False
+        Me.FiveMonthsProbCollapsibleGroupBox.Text = "5 MONTHS PROBITIONARY"
         '
-        'Panel13
+        'Panel17
         '
-        Me.Panel13.Controls.Add(Me.dgvTardiness)
-        Me.Panel13.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel13.Location = New System.Drawing.Point(3, 23)
-        Me.Panel13.Name = "Panel13"
-        Me.Panel13.Size = New System.Drawing.Size(293, 196)
-        Me.Panel13.TabIndex = 0
+        Me.Panel17.Controls.Add(Me.dgvFiveMonthsProb)
+        Me.Panel17.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel17.Location = New System.Drawing.Point(3, 23)
+        Me.Panel17.Name = "Panel17"
+        Me.Panel17.Size = New System.Drawing.Size(293, 223)
+        Me.Panel17.TabIndex = 0
         '
-        'dgvTardiness
+        'dgvFiveMonthsProb
         '
-        Me.dgvTardiness.AllowUserToAddRows = False
-        Me.dgvTardiness.AllowUserToDeleteRows = False
-        Me.dgvTardiness.AllowUserToOrderColumns = True
-        Me.dgvTardiness.AllowUserToResizeColumns = False
-        Me.dgvTardiness.AllowUserToResizeRows = False
-        Me.dgvTardiness.BackgroundColor = System.Drawing.Color.White
-        Me.dgvTardiness.ColumnHeadersHeight = 48
-        Me.dgvTardiness.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvTardiness.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3})
+        Me.dgvFiveMonthsProb.AllowUserToAddRows = False
+        Me.dgvFiveMonthsProb.AllowUserToDeleteRows = False
+        Me.dgvFiveMonthsProb.AllowUserToOrderColumns = True
+        Me.dgvFiveMonthsProb.AllowUserToResizeColumns = False
+        Me.dgvFiveMonthsProb.AllowUserToResizeRows = False
+        Me.dgvFiveMonthsProb.BackgroundColor = System.Drawing.Color.White
+        Me.dgvFiveMonthsProb.ColumnHeadersHeight = 48
+        Me.dgvFiveMonthsProb.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvFiveMonthsProb.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn45, Me.DataGridViewTextBoxColumn46, Me.DataGridViewTextBoxColumn47, Me.DataGridViewTextBoxColumn48})
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvFiveMonthsProb.DefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvFiveMonthsProb.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvFiveMonthsProb.Enabled = False
+        Me.dgvFiveMonthsProb.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvFiveMonthsProb.Location = New System.Drawing.Point(0, 0)
+        Me.dgvFiveMonthsProb.MultiSelect = False
+        Me.dgvFiveMonthsProb.Name = "dgvFiveMonthsProb"
+        Me.dgvFiveMonthsProb.ReadOnly = True
+        Me.dgvFiveMonthsProb.RowHeadersWidth = 30
+        Me.dgvFiveMonthsProb.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvFiveMonthsProb.Size = New System.Drawing.Size(293, 223)
+        Me.dgvFiveMonthsProb.TabIndex = 121
+        '
+        'ThreeMonthsProbCollapsibleGroup
+        '
+        Me.ThreeMonthsProbCollapsibleGroup.Controls.Add(Me.Panel16)
+        Me.ThreeMonthsProbCollapsibleGroup.Dock = System.Windows.Forms.DockStyle.Top
+        Me.ThreeMonthsProbCollapsibleGroup.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        Me.ThreeMonthsProbCollapsibleGroup.Location = New System.Drawing.Point(0, 511)
+        Me.ThreeMonthsProbCollapsibleGroup.Name = "ThreeMonthsProbCollapsibleGroup"
+        Me.ThreeMonthsProbCollapsibleGroup.Size = New System.Drawing.Size(299, 249)
+        Me.ThreeMonthsProbCollapsibleGroup.TabIndex = 209
+        Me.ThreeMonthsProbCollapsibleGroup.TabStop = False
+        Me.ThreeMonthsProbCollapsibleGroup.Text = "3 MONTHS PROBITIONARY"
+        '
+        'Panel16
+        '
+        Me.Panel16.Controls.Add(Me.dgvThreeMonthsProb)
+        Me.Panel16.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel16.Location = New System.Drawing.Point(3, 23)
+        Me.Panel16.Name = "Panel16"
+        Me.Panel16.Size = New System.Drawing.Size(293, 223)
+        Me.Panel16.TabIndex = 0
+        '
+        'dgvThreeMonthsProb
+        '
+        Me.dgvThreeMonthsProb.AllowUserToAddRows = False
+        Me.dgvThreeMonthsProb.AllowUserToDeleteRows = False
+        Me.dgvThreeMonthsProb.AllowUserToOrderColumns = True
+        Me.dgvThreeMonthsProb.AllowUserToResizeColumns = False
+        Me.dgvThreeMonthsProb.AllowUserToResizeRows = False
+        Me.dgvThreeMonthsProb.BackgroundColor = System.Drawing.Color.White
+        Me.dgvThreeMonthsProb.ColumnHeadersHeight = 48
+        Me.dgvThreeMonthsProb.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvThreeMonthsProb.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn42, Me.DataGridViewTextBoxColumn43, Me.DataGridViewTextBoxColumn44, Me.DateEvaluated})
         DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
@@ -679,40 +669,18 @@ Partial Class MDIPrimaryForm
         DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvTardiness.DefaultCellStyle = DataGridViewCellStyle5
-        Me.dgvTardiness.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvTardiness.Enabled = False
-        Me.dgvTardiness.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvTardiness.Location = New System.Drawing.Point(0, 0)
-        Me.dgvTardiness.MultiSelect = False
-        Me.dgvTardiness.Name = "dgvTardiness"
-        Me.dgvTardiness.ReadOnly = True
-        Me.dgvTardiness.RowHeadersWidth = 30
-        Me.dgvTardiness.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvTardiness.Size = New System.Drawing.Size(293, 196)
-        Me.dgvTardiness.TabIndex = 121
-        '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Employee ID"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        Me.DataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn1.Width = 127
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.HeaderText = "Full Name"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        Me.DataGridViewTextBoxColumn2.Width = 127
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Total Hours Late"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        Me.DataGridViewTextBoxColumn3.Width = 127
+        Me.dgvThreeMonthsProb.DefaultCellStyle = DataGridViewCellStyle5
+        Me.dgvThreeMonthsProb.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvThreeMonthsProb.Enabled = False
+        Me.dgvThreeMonthsProb.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvThreeMonthsProb.Location = New System.Drawing.Point(0, 0)
+        Me.dgvThreeMonthsProb.MultiSelect = False
+        Me.dgvThreeMonthsProb.Name = "dgvThreeMonthsProb"
+        Me.dgvThreeMonthsProb.ReadOnly = True
+        Me.dgvThreeMonthsProb.RowHeadersWidth = 30
+        Me.dgvThreeMonthsProb.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvThreeMonthsProb.Size = New System.Drawing.Size(293, 223)
+        Me.dgvThreeMonthsProb.TabIndex = 121
         '
         'CollapsibleGroupBox5
         '
@@ -731,7 +699,7 @@ Partial Class MDIPrimaryForm
         '
         Me.Panel4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel4.Controls.Add(Me.LinkLabel1)
-        Me.Panel4.Location = New System.Drawing.Point(198, 263)
+        Me.Panel4.Location = New System.Drawing.Point(181, 263)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(101, 20)
         Me.Panel4.TabIndex = 2
@@ -755,7 +723,7 @@ Partial Class MDIPrimaryForm
         Me.Panel6.Controls.Add(Me.dgvRegularization)
         Me.Panel6.Location = New System.Drawing.Point(3, 23)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(293, 237)
+        Me.Panel6.Size = New System.Drawing.Size(276, 237)
         Me.Panel6.TabIndex = 0
         '
         'dgvRegularization
@@ -786,7 +754,7 @@ Partial Class MDIPrimaryForm
         Me.dgvRegularization.ReadOnly = True
         Me.dgvRegularization.RowHeadersWidth = 30
         Me.dgvRegularization.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvRegularization.Size = New System.Drawing.Size(293, 237)
+        Me.dgvRegularization.Size = New System.Drawing.Size(276, 237)
         Me.dgvRegularization.TabIndex = 123
         '
         'ColumEmpID
@@ -894,6 +862,7 @@ Partial Class MDIPrimaryForm
         Me.Panel10.AutoScroll = True
         Me.Panel10.BackColor = System.Drawing.Color.White
         Me.Panel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Panel10.Controls.Add(Me.TardinessCollapsibleGroupBox)
         Me.Panel10.Controls.Add(Me.CollapsibleGroupBox6)
         Me.Panel10.Controls.Add(Me.CollapsibleGroupBox4)
         Me.Panel10.Controls.Add(Me.PendingOvertimeCollapsibleGroupBox)
@@ -904,6 +873,80 @@ Partial Class MDIPrimaryForm
         Me.Panel10.Size = New System.Drawing.Size(327, 537)
         Me.Panel10.TabIndex = 140
         '
+        'TardinessCollapsibleGroupBox
+        '
+        Me.TardinessCollapsibleGroupBox.Controls.Add(Me.Panel13)
+        Me.TardinessCollapsibleGroupBox.Dock = System.Windows.Forms.DockStyle.Top
+        Me.TardinessCollapsibleGroupBox.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        Me.TardinessCollapsibleGroupBox.Location = New System.Drawing.Point(0, 881)
+        Me.TardinessCollapsibleGroupBox.Name = "TardinessCollapsibleGroupBox"
+        Me.TardinessCollapsibleGroupBox.Size = New System.Drawing.Size(308, 222)
+        Me.TardinessCollapsibleGroupBox.TabIndex = 209
+        Me.TardinessCollapsibleGroupBox.TabStop = False
+        Me.TardinessCollapsibleGroupBox.Text = "FREQUENT TARDINESS"
+        '
+        'Panel13
+        '
+        Me.Panel13.Controls.Add(Me.dgvTardiness)
+        Me.Panel13.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel13.Location = New System.Drawing.Point(3, 23)
+        Me.Panel13.Name = "Panel13"
+        Me.Panel13.Size = New System.Drawing.Size(302, 196)
+        Me.Panel13.TabIndex = 0
+        '
+        'dgvTardiness
+        '
+        Me.dgvTardiness.AllowUserToAddRows = False
+        Me.dgvTardiness.AllowUserToDeleteRows = False
+        Me.dgvTardiness.AllowUserToOrderColumns = True
+        Me.dgvTardiness.AllowUserToResizeColumns = False
+        Me.dgvTardiness.AllowUserToResizeRows = False
+        Me.dgvTardiness.BackgroundColor = System.Drawing.Color.White
+        Me.dgvTardiness.ColumnHeadersHeight = 48
+        Me.dgvTardiness.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvTardiness.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3})
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvTardiness.DefaultCellStyle = DataGridViewCellStyle8
+        Me.dgvTardiness.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvTardiness.Enabled = False
+        Me.dgvTardiness.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvTardiness.Location = New System.Drawing.Point(0, 0)
+        Me.dgvTardiness.MultiSelect = False
+        Me.dgvTardiness.Name = "dgvTardiness"
+        Me.dgvTardiness.ReadOnly = True
+        Me.dgvTardiness.RowHeadersWidth = 30
+        Me.dgvTardiness.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvTardiness.Size = New System.Drawing.Size(302, 196)
+        Me.dgvTardiness.TabIndex = 121
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn1.Width = 127
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.Width = 127
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Total Hours Late"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.Width = 127
+        '
         'CollapsibleGroupBox6
         '
         Me.CollapsibleGroupBox6.Controls.Add(Me.Panel15)
@@ -911,7 +954,7 @@ Partial Class MDIPrimaryForm
         Me.CollapsibleGroupBox6.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
         Me.CollapsibleGroupBox6.Location = New System.Drawing.Point(0, 666)
         Me.CollapsibleGroupBox6.Name = "CollapsibleGroupBox6"
-        Me.CollapsibleGroupBox6.Size = New System.Drawing.Size(308, 222)
+        Me.CollapsibleGroupBox6.Size = New System.Drawing.Size(308, 215)
         Me.CollapsibleGroupBox6.TabIndex = 206
         Me.CollapsibleGroupBox6.TabStop = False
         Me.CollapsibleGroupBox6.Text = "PENDING LEAVES"
@@ -922,7 +965,7 @@ Partial Class MDIPrimaryForm
         Me.Panel15.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel15.Location = New System.Drawing.Point(3, 23)
         Me.Panel15.Name = "Panel15"
-        Me.Panel15.Size = New System.Drawing.Size(302, 196)
+        Me.Panel15.Size = New System.Drawing.Size(302, 189)
         Me.Panel15.TabIndex = 0
         '
         'dgvpendingleave
@@ -936,14 +979,14 @@ Partial Class MDIPrimaryForm
         Me.dgvpendingleave.ColumnHeadersHeight = 48
         Me.dgvpendingleave.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvpendingleave.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.elvEmpID, Me.elvFullName, Me.elvTime, Me.elvStartDate, Me.elvDays})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpendingleave.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvpendingleave.DefaultCellStyle = DataGridViewCellStyle9
         Me.dgvpendingleave.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvpendingleave.Enabled = False
         Me.dgvpendingleave.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -953,7 +996,7 @@ Partial Class MDIPrimaryForm
         Me.dgvpendingleave.ReadOnly = True
         Me.dgvpendingleave.RowHeadersWidth = 30
         Me.dgvpendingleave.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvpendingleave.Size = New System.Drawing.Size(302, 196)
+        Me.dgvpendingleave.Size = New System.Drawing.Size(302, 189)
         Me.dgvpendingleave.TabIndex = 121
         '
         'elvEmpID
@@ -1018,14 +1061,14 @@ Partial Class MDIPrimaryForm
         Me.dgvfrequentleave.ColumnHeadersHeight = 48
         Me.dgvfrequentleave.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvfrequentleave.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column17, Me.Column20, Me.Column21, Me.Column22})
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvfrequentleave.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvfrequentleave.DefaultCellStyle = DataGridViewCellStyle10
         Me.dgvfrequentleave.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvfrequentleave.Enabled = False
         Me.dgvfrequentleave.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -1095,14 +1138,14 @@ Partial Class MDIPrimaryForm
         Me.dgvOTPending.ColumnHeadersHeight = 48
         Me.dgvOTPending.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvOTPending.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.Column18})
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvOTPending.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvOTPending.DefaultCellStyle = DataGridViewCellStyle11
         Me.dgvOTPending.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvOTPending.Enabled = False
         Me.dgvOTPending.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -1182,14 +1225,14 @@ Partial Class MDIPrimaryForm
         Me.dgvOBPending.ColumnHeadersHeight = 48
         Me.dgvOBPending.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvOBPending.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn8, Me.DataGridViewTextBoxColumn9, Me.Column19})
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvOBPending.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI Semibold", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvOBPending.DefaultCellStyle = DataGridViewCellStyle12
         Me.dgvOBPending.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvOBPending.Enabled = False
         Me.dgvOBPending.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -1698,6 +1741,62 @@ Partial Class MDIPrimaryForm
         Me.DataGridViewTextBoxColumn41.ReadOnly = True
         Me.DataGridViewTextBoxColumn41.Visible = False
         '
+        'DataGridViewTextBoxColumn42
+        '
+        Me.DataGridViewTextBoxColumn42.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
+        Me.DataGridViewTextBoxColumn42.ReadOnly = True
+        Me.DataGridViewTextBoxColumn42.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn42.Width = 127
+        '
+        'DataGridViewTextBoxColumn43
+        '
+        Me.DataGridViewTextBoxColumn43.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
+        Me.DataGridViewTextBoxColumn43.ReadOnly = True
+        Me.DataGridViewTextBoxColumn43.Width = 127
+        '
+        'DataGridViewTextBoxColumn44
+        '
+        Me.DataGridViewTextBoxColumn44.HeaderText = "Employment Status"
+        Me.DataGridViewTextBoxColumn44.Name = "DataGridViewTextBoxColumn44"
+        Me.DataGridViewTextBoxColumn44.ReadOnly = True
+        Me.DataGridViewTextBoxColumn44.Width = 150
+        '
+        'DateEvaluated
+        '
+        Me.DateEvaluated.HeaderText = "Date"
+        Me.DateEvaluated.Name = "DateEvaluated"
+        Me.DateEvaluated.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn45
+        '
+        Me.DataGridViewTextBoxColumn45.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn45.Name = "DataGridViewTextBoxColumn45"
+        Me.DataGridViewTextBoxColumn45.ReadOnly = True
+        Me.DataGridViewTextBoxColumn45.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn45.Width = 127
+        '
+        'DataGridViewTextBoxColumn46
+        '
+        Me.DataGridViewTextBoxColumn46.HeaderText = "Full Name"
+        Me.DataGridViewTextBoxColumn46.Name = "DataGridViewTextBoxColumn46"
+        Me.DataGridViewTextBoxColumn46.ReadOnly = True
+        Me.DataGridViewTextBoxColumn46.Width = 127
+        '
+        'DataGridViewTextBoxColumn47
+        '
+        Me.DataGridViewTextBoxColumn47.HeaderText = "Employment Status"
+        Me.DataGridViewTextBoxColumn47.Name = "DataGridViewTextBoxColumn47"
+        Me.DataGridViewTextBoxColumn47.ReadOnly = True
+        Me.DataGridViewTextBoxColumn47.Width = 150
+        '
+        'DataGridViewTextBoxColumn48
+        '
+        Me.DataGridViewTextBoxColumn48.HeaderText = "Date"
+        Me.DataGridViewTextBoxColumn48.Name = "DataGridViewTextBoxColumn48"
+        Me.DataGridViewTextBoxColumn48.ReadOnly = True
+        '
         'MDIPrimaryForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1717,9 +1816,6 @@ Partial Class MDIPrimaryForm
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
         Me.Panel8.ResumeLayout(False)
-        Me.EmployeeStatusCollapsibleGroup.ResumeLayout(False)
-        Me.Panel16.ResumeLayout(False)
-        CType(Me.dgvEmploymentStatus, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CollapsibleGroupBox3.ResumeLayout(False)
         Me.Panel5.ResumeLayout(False)
         CType(Me.dgvfrequentabsent, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1734,9 +1830,12 @@ Partial Class MDIPrimaryForm
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer2.ResumeLayout(False)
         Me.Panel9.ResumeLayout(False)
-        Me.TardinessCollapsibleGroupBox.ResumeLayout(False)
-        Me.Panel13.ResumeLayout(False)
-        CType(Me.dgvTardiness, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.FiveMonthsProbCollapsibleGroupBox.ResumeLayout(False)
+        Me.Panel17.ResumeLayout(False)
+        CType(Me.dgvFiveMonthsProb, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ThreeMonthsProbCollapsibleGroup.ResumeLayout(False)
+        Me.Panel16.ResumeLayout(False)
+        CType(Me.dgvThreeMonthsProb, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CollapsibleGroupBox5.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
@@ -1746,6 +1845,9 @@ Partial Class MDIPrimaryForm
         Me.Panel14.ResumeLayout(False)
         CType(Me.dgvnegaPaySlip, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel10.ResumeLayout(False)
+        Me.TardinessCollapsibleGroupBox.ResumeLayout(False)
+        Me.Panel13.ResumeLayout(False)
+        CType(Me.dgvTardiness, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CollapsibleGroupBox6.ResumeLayout(False)
         Me.Panel15.ResumeLayout(False)
         CType(Me.dgvpendingleave, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1898,16 +2000,24 @@ Partial Class MDIPrimaryForm
     Friend WithEvents DataGridViewTextBoxColumn40 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn41 As DataGridViewTextBoxColumn
     Friend WithEvents EmailStatusTimer As Timer
-    Friend WithEvents EmployeeStatusCollapsibleGroup As Indigo.CollapsibleGroupBox
+    Friend WithEvents FiveMonthsProbCollapsibleGroupBox As Indigo.CollapsibleGroupBox
+    Friend WithEvents Panel17 As Panel
+    Friend WithEvents dgvFiveMonthsProb As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents ThreeMonthsProbCollapsibleGroup As Indigo.CollapsibleGroupBox
     Friend WithEvents Panel16 As Panel
-    Friend WithEvents dgvEmploymentStatus As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents DataGridViewTextBoxColumn42 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn43 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn44 As DataGridViewTextBoxColumn
+    Friend WithEvents dgvThreeMonthsProb As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents TardinessCollapsibleGroupBox As Indigo.CollapsibleGroupBox
     Friend WithEvents Panel13 As Panel
     Friend WithEvents dgvTardiness As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn45 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn46 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn47 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn48 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn42 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn43 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn44 As DataGridViewTextBoxColumn
+    Friend WithEvents DateEvaluated As DataGridViewTextBoxColumn
 End Class

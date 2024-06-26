@@ -48,7 +48,8 @@ Public Class ReportsList
             New PayrollLedgerExcelFormatReportProvider(),
             New LoanLedgerReportProvider(),
             New Cinema2000TardinessReportProvider(),
-            New AlphalistExcelFormatReportProvider()
+            New AlphalistExcelFormatReportProvider(),
+            New PBCOMReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 
@@ -108,7 +109,8 @@ Public Class ReportsList
             New LoanLedgerReportProvider(),
             New PayrollSummaryExcelFormatReportProvider(),
             New BenchmarkAlphalistReportProvider(),
-            New PayrollLedgerExcelFormatReportProvider()
+            New PayrollLedgerExcelFormatReportProvider(),
+            New PBCOMReportProvider()
         }
     End Function
 

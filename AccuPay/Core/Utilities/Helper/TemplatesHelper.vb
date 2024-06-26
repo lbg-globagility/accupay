@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Namespace Global.AccuPay.Desktop.Helpers
 
@@ -13,6 +13,7 @@ Namespace Global.AccuPay.Desktop.Helpers
         Salary
         Shift
         TripTicket
+        Pbcom
     End Enum
 
     Public Class TemplatesHelper
@@ -26,6 +27,7 @@ Namespace Global.AccuPay.Desktop.Helpers
         Public Shared ReadOnly SALARY As String = "accupay-salary-template.xlsx"
         Public Shared ReadOnly SHIFT As String = "accupay-shiftschedule-template.xlsx"
         Public Shared ReadOnly TRIP_TICKET As String = "accupay-trip-ticket-template.xlsx"
+        Public Shared ReadOnly PBCOM As String = "PBCOM-TEMPLATE.xlsm"
 
         Private Const FILE_PATH As String = "ImportTemplates/"
 
@@ -60,6 +62,8 @@ Namespace Global.AccuPay.Desktop.Helpers
                 Case ExcelTemplates.TripTicket
                     Return TRIP_TICKET
 
+                Case ExcelTemplates.Pbcom
+                    Return PBCOM
                 Case Else
 
                     Return Nothing
@@ -100,6 +104,9 @@ Namespace Global.AccuPay.Desktop.Helpers
 
                 Case ExcelTemplates.TripTicket
                     fileName = TRIP_TICKET
+
+                Case ExcelTemplates.Pbcom
+                    fileName = PBCOM
 
                 Case Else
 

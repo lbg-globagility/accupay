@@ -178,6 +178,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ILaGlobalAlphaListReportBuilder, LaGlobalAlphaListReportBuilder)
         services.AddTransient(Of IAlphaListReportDataService, AlphaListReportDataService)
         services.AddTransient(Of IAlphalistReportBuilder, AlphalistReportBuilder)
+        services.AddTransient(Of IPbcomReportBuilder, PbcomReportBuilder)
 
         services.AddTransient(Of PaystubDataHelper)
         services.AddTransient(Of TimeEntryDataHelper)

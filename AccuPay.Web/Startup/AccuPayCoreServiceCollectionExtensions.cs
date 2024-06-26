@@ -176,7 +176,8 @@ namespace AccuPay.Web
             services.AddScoped<ILeaveResetPolicy, LeaveResetPolicy>();
             services.AddScoped<IAdjustmentDataService, AdjustmentDataService>();
             services.AddScoped<IAdjustmentRepository, AdjustmentRepository>();
-
+	
+            services.AddScoped<IPbcomReportBuilder, PbcomReportBuilder>();
             return services;
         }
     }
