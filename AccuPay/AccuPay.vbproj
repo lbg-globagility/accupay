@@ -1627,6 +1627,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="logo - Copy.ico" />
+    <None Include="ImportTemplates\PBCOM-TEMPLATE-RESULT.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ImportTemplates\PBCOM-TEMPLATE.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\RegularID.png" />
     <None Include="Resources\RegularID_F.png" />
     <None Include="Resources\ProbitionaryID.png" />

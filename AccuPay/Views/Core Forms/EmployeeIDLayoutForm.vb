@@ -25,7 +25,7 @@ Public Class EmployeeIDLayoutForm
         EmployeeSurName.Text = employee.LastName
         EmpPicture.Image = Nothing
         EmpPicture.Image = ConvByteToImage(DirectCast(employee.Image, Byte()))
-        EmpExpireDate.Text = If(employee.TerminationDate.HasValue, employee.TerminationDate.ToString("MMMM dd, yyyy"), "")
+        EmpExpireDate.Text = employee.TerminationDate?.ToString("MMMM dd, yyyy")
         EmpIDNo.Text = employee.EmployeeNo
         EmpBirthdate.Text = employee.BirthDate.ToString("MMMM dd, yyyy")
         EmpAddress.Text = employee.HomeAddress
@@ -76,6 +76,7 @@ Public Class EmployeeIDLayoutForm
     End Sub
 
     Private Sub PrintBtn_Click(sender As Object, e As EventArgs) Handles PrintBtn.Click
+
         PrintDocument1.Print()
     End Sub
 

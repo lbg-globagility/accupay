@@ -34,7 +34,7 @@ Public Class PBCOMReportProvider
         Dim dateTo = CDate(payperiodSelector.DateTo)
 
         Dim fileName = $"PBCOM-TEMPLATE.xlsm"
-        Dim directory = $"D:/project/accupay/AccuPay/ImportTemplates/"
+        Dim directory = $"ImportTemplates/"
         Dim directoryAndFileName = String.Concat(directory, fileName)
         Dim xcelFile = New FileInfo(directoryAndFileName)
 
@@ -55,10 +55,10 @@ Public Class PBCOMReportProvider
                 Dim allowanceTypes = Await _reportBuilder.GetData(dateFrom, dateTo)
 
                 For index = 0 To allowanceTypes.Count - 1
-                    casaDefault.Cells(index + 8, 2).Value = allowanceTypes(index).ATMNo
+                    casaDefault.Cells(index + 8, 2).Value = allowanceTypes(index)?.ATMNo
                     casaDefault.Cells(index + 8, 3).Value = allowanceTypes(index).TotalNetSalary
 
-                    casaWithName.Cells(index + 8, 2).Value = allowanceTypes(index).ATMNo
+                    casaWithName.Cells(index + 8, 2).Value = allowanceTypes(index)?.ATMNo
                     casaWithName.Cells(index + 8, 3).Value = allowanceTypes(index).TotalNetSalary
                     casaWithName.Cells(index + 8, 4).Value = allowanceTypes(index).LastName
                     casaWithName.Cells(index + 8, 5).Value = allowanceTypes(index).FirstName
