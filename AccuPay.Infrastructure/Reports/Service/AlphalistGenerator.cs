@@ -1,4 +1,5 @@
 using AccuPay.Core.Entities;
+using AccuPay.Core.Interfaces;
 using AccuPay.Core.ReportModels;
 using OfficeOpenXml;
 using System;
@@ -37,13 +38,18 @@ namespace AccuPay.Infrastructure.Reports.Service
 
         public string OutputDirectory { get; private set; }
 
+        private readonly ISystemOwnerService _systemOwnerService;
+        private readonly IListOfValueRepository _listOfValueRepository;
+
         public AlphalistGenerator(IList<AlphalistModel> models,
             int year,
             DateTime dateFrom,
             DateTime dateTo,
             string saveFileDiretory,
             Organization organization,
-            PayPeriod endPeriod)
+            PayPeriod endPeriod,
+            ISystemOwnerService systemOwnerService,
+            IListOfValueRepository listOfValueRepository)
         {
             _alphalistModels = models;
             _year = year;
@@ -52,6 +58,8 @@ namespace AccuPay.Infrastructure.Reports.Service
             _saveFilePath = saveFileDiretory;
             _organization = organization;
             _endPeriod = endPeriod;
+            _systemOwnerService = systemOwnerService;
+            _listOfValueRepository = listOfValueRepository;
         }
 
         public void Start()
@@ -91,6 +99,12 @@ namespace AccuPay.Infrastructure.Reports.Service
             using (ExcelPackage excel = new ExcelPackage(new FileInfo(fileName)))
             {
                 var worksheet = excel.Workbook.Worksheets.FirstOrDefault();
+
+                if(_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.RGI)
+                {
+                    worksheet.Protection.IsProtected = true;
+                    worksheet.Protection.SetPassword(_listOfValueRepository.GetExcelPassword());
+                }
 
                 var isFirstHalf = _endPeriod.IsFirstHalf;
                 var year = _endPeriod.Year;

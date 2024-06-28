@@ -48,6 +48,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Paystub>> GetByPayPeriodFullPaystubAsync(int payPeriodId);
 
+        Task<Paystub> GetByPayPeriodAndEmployeeFullPaystubAsync(int payPeriodId, int employeeId);
+
         Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId);
 
         Task<ICollection<Paystub>> GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(int payPeriodId);
@@ -57,6 +59,8 @@ namespace AccuPay.Core.Interfaces
         Task<ICollection<Paystub>> GetByPaystubsForLoanPaymentFrom13thMonthAsync(int payPeriodId);
 
         Task<ICollection<Paystub>> GetByTimePeriodWithThirteenthMonthPayAndEmployeeAsync(TimePeriod timePeriod, int organizationId);
+
+        Task<ICollection<Paystub>> GetByTimePeriodAndEmployeeIdWithThirteenthMonthPayAndEmployeeAsync(TimePeriod timePeriod, int organizationId, int employeeId);
 
         Task<ICollection<LoanTransaction>> GetLoanTransactionsAsync(int paystubId);
 

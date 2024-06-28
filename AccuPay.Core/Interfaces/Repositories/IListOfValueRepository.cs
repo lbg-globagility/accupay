@@ -20,6 +20,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<ListOfValue>> GetEmployeeDisciplinaryPenalties();
 
+        string GetExcelPassword();
+
         Task<ICollection<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter);
 
         ICollection<ListOfValue> GetLeaveConvertiblePolicies();

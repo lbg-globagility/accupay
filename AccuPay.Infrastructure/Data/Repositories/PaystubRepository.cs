@@ -841,12 +841,33 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
+        public async Task<Paystub> GetByPayPeriodAndEmployeeFullPaystubAsync(int payPeriodId, int employeeId)
+        {
+            return await CreateBaseQueryWithFullPaystub()
+                .Where(x => x.PayPeriodID == payPeriodId)
+                .Where (x => x.EmployeeID == employeeId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<ICollection<Paystub>> GetByTimePeriodWithThirteenthMonthPayAndEmployeeAsync(TimePeriod timePeriod, int organizationId)
         {
             return await _context.Paystubs
                 .Include(x => x.PayPeriod)
                 .Include(x => x.ThirteenthMonthPay)
                 .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.PayPeriod.PayFromDate >= timePeriod.Start)
+                .Where(x => x.PayPeriod.PayToDate <= timePeriod.End)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Paystub>> GetByTimePeriodAndEmployeeIdWithThirteenthMonthPayAndEmployeeAsync(TimePeriod timePeriod, int organizationId, int employeeId)
+        {
+            return await _context.Paystubs
+                .Include(x => x.PayPeriod)
+                .Include(x => x.ThirteenthMonthPay)
+                .Include(x => x.Employee)
+                .Where(x => x.EmployeeID == employeeId)
                 .Where(x => x.OrganizationID == organizationId)
                 .Where(x => x.PayPeriod.PayFromDate >= timePeriod.Start)
                 .Where(x => x.PayPeriod.PayToDate <= timePeriod.End)

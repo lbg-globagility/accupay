@@ -40,6 +40,7 @@ namespace AccuPay.Infrastructure.Reports
         private readonly IPaystubDataService _paystubDataService;
         private readonly ISystemOwnerService _systemOwnerService;
         private readonly IPayrollSummaryExcelFormatReportDataService _reportDataService;
+        private readonly IListOfValueRepository _listOfValueRepository;
 
         public PayrollSummaryReportBuilder(
             IOrganizationRepository organizationRepository,
@@ -47,7 +48,8 @@ namespace AccuPay.Infrastructure.Reports
             IPaystubDataService paystubDataService,
             ISystemOwnerService systemOwnerService,
             IListOfValueService listOfValueService,
-            IPayrollSummaryExcelFormatReportDataService reportDataService)
+            IPayrollSummaryExcelFormatReportDataService reportDataService,
+            IListOfValueRepository listOfValueRepository)
         {
             _organizationRepository = organizationRepository;
             _payPeriodRepository = payPeriodRepository;
@@ -55,6 +57,7 @@ namespace AccuPay.Infrastructure.Reports
             _systemOwnerService = systemOwnerService;
             _reportDataService = reportDataService;
             _settings = listOfValueService.Create();
+            _listOfValueRepository = listOfValueRepository;
 
             _reportColumns = GetReportColumns();
         }
@@ -216,12 +219,24 @@ namespace AccuPay.Infrastructure.Reports
                 {
                     var worksheet = excel.Workbook.Worksheets.Add(reportName);
 
+                    if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.RGI)
+                    {
+                        worksheet.Protection.IsProtected = true;
+                        worksheet.Protection.SetPassword(_listOfValueRepository.GetExcelPassword());
+                    }
+
                     RenderWorksheet(worksheet, employeeGroups, short_dates, viewableReportColumns, payPeriod, organization);
                 }
                 else
                     foreach (var employeeGroup in employeeGroups)
                     {
                         var worksheet = excel.Workbook.Worksheets.Add(employeeGroup.DivisionName);
+
+                        if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.RGI)
+                        {
+                            worksheet.Protection.IsProtected = true;
+                            worksheet.Protection.SetPassword(_listOfValueRepository.GetExcelPassword());
+                        }
 
                         var currentGroup = new Collection<EmployeeGroup>()
                         {

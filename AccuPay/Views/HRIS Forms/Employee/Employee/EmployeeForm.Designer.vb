@@ -557,6 +557,8 @@ Partial Class EmployeeForm
         Me.Label25 = New System.Windows.Forms.Label()
         Me.TabControl2 = New System.Windows.Forms.TabControl()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.ComboBoxSearchStatus = New System.Windows.Forms.ComboBox()
+        Me.Label21 = New System.Windows.Forms.Label()
         Me.TextBox16 = New System.Windows.Forms.TextBox()
         Me.TextBox15 = New System.Windows.Forms.TextBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
@@ -5907,7 +5909,7 @@ Partial Class EmployeeForm
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(277, 179)
+        Me.Button4.Location = New System.Drawing.Point(273, 203)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(75, 23)
         Me.Button4.TabIndex = 59
@@ -5934,11 +5936,13 @@ Partial Class EmployeeForm
         Me.TabControl2.Multiline = True
         Me.TabControl2.Name = "TabControl2"
         Me.TabControl2.SelectedIndex = 0
-        Me.TabControl2.Size = New System.Drawing.Size(350, 158)
+        Me.TabControl2.Size = New System.Drawing.Size(350, 183)
         Me.TabControl2.TabIndex = 58
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.ComboBoxSearchStatus)
+        Me.TabPage2.Controls.Add(Me.Label21)
         Me.TabPage2.Controls.Add(Me.TextBox16)
         Me.TabPage2.Controls.Add(Me.TextBox15)
         Me.TabPage2.Controls.Add(Me.TextBox1)
@@ -5954,10 +5958,27 @@ Partial Class EmployeeForm
         Me.TabPage2.Location = New System.Drawing.Point(4, 29)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(342, 125)
+        Me.TabPage2.Size = New System.Drawing.Size(342, 150)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "Search"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'ComboBoxSearchStatus
+        '
+        Me.ComboBoxSearchStatus.FormattingEnabled = True
+        Me.ComboBoxSearchStatus.Location = New System.Drawing.Point(77, 119)
+        Me.ComboBoxSearchStatus.Name = "ComboBoxSearchStatus"
+        Me.ComboBoxSearchStatus.Size = New System.Drawing.Size(259, 21)
+        Me.ComboBoxSearchStatus.TabIndex = 60
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(4, 122)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(37, 13)
+        Me.Label21.TabIndex = 59
+        Me.Label21.Text = "Status"
         '
         'TextBox16
         '
@@ -6093,14 +6114,14 @@ Partial Class EmployeeForm
         DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvEmp.DefaultCellStyle = DataGridViewCellStyle21
         Me.dgvEmp.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvEmp.Location = New System.Drawing.Point(2, 208)
+        Me.dgvEmp.Location = New System.Drawing.Point(2, 232)
         Me.dgvEmp.MultiSelect = False
         Me.dgvEmp.Name = "dgvEmp"
         Me.dgvEmp.ReadOnly = True
         Me.dgvEmp.RowHeadersWidth = 25
         Me.dgvEmp.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvEmp.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvEmp.Size = New System.Drawing.Size(350, 296)
+        Me.dgvEmp.Size = New System.Drawing.Size(350, 272)
         Me.dgvEmp.TabIndex = 101
         '
         'RowID
@@ -9217,4 +9238,6 @@ Partial Class EmployeeForm
     Friend WithEvents BPIInsuranceColumn As DataGridViewTextBoxColumn
     Friend WithEvents Column37 As DataGridViewTextBoxColumn
     Friend WithEvents printIdLayoutBtn As Button
+    Friend WithEvents ComboBoxSearchStatus As ComboBox
+    Friend WithEvents Label21 As Label
 End Class

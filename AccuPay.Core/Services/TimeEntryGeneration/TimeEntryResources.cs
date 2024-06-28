@@ -100,7 +100,7 @@ namespace AccuPay.Core.Services
             _tripTicketRepository = tripTicketRepository;
         }
 
-        public async Task Load(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
+        public async Task Load(int organizationId, DateTime cutoffStart, DateTime cutoffEnd, bool isRGI = false)
         {
             cutoffStart = cutoffStart.ToMinimumHourValue();
             cutoffEnd = cutoffEnd.ToMinimumHourValue();
@@ -114,7 +114,7 @@ namespace AccuPay.Core.Services
             await LoadBreakTimeBrackets(organizationId);
             await LoadCalendarCollection(cutoffEnd, previousCutoff);
             await LoadEmployeePolicies();
-            await LoadEmployees(organizationId);
+            await LoadEmployees(organizationId, isRGI, cutoffStart);
             await LoadLeaves(organizationId, cuttOffPeriod);
             await LoadOfficialBusinesses(organizationId, cuttOffPeriod);
             await LoadOrganization(organizationId);
@@ -174,11 +174,21 @@ namespace AccuPay.Core.Services
             EmploymentPolicies = (await _employmentPolicyRepository.GetAllAsync()).ToList();
         }
 
-        private async Task LoadEmployees(int organizationId)
+        private async Task LoadEmployees(int organizationId, bool isRGI, DateTime cutOffStart)
         {
-            Employees = (await _employeeRepository
-                .GetAllActiveWithPositionAsync(organizationId))
-                .ToList();
+            if (isRGI)
+            {
+                Employees = (await _employeeRepository
+                   .GetAllWithinServicePeriodWithPositionAsync(organizationId, cutOffStart))
+                   .ToList();
+            }
+            else
+            {
+                Employees = (await _employeeRepository
+                    .GetAllActiveWithPositionAsync(organizationId))
+                    .ToList();
+            }
+            
         }
 
         private async Task LoadLeaves(int organizationId, TimePeriod cuttOffPeriod)

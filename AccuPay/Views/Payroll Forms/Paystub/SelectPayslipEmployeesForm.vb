@@ -1,9 +1,11 @@
 Option Strict On
 
+Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Enums
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Interfaces.Reports.Customize
 Imports AccuPay.CrystalReports
 Imports AccuPay.Desktop.Helpers
 Imports AccuPay.Desktop.Utilities
@@ -34,15 +36,33 @@ Public Class SelectPayslipEmployeesForm
 
     Private ReadOnly _paystubEmailHistoryRepository As IPaystubEmailHistoryRepository
 
-    Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
+    Private _currentSystemOwner As String
+
+    Private ReadOnly _systemOwnerService As ISystemOwnerService
+
+    Private ReadOnly _isPaySlip As Boolean
+
+    Private _reportRGIPayslipBuilder As IRGIPayslip
+
+    Private _reportCertificationOfDTRBuilder As ICertificationOfDTR
+
+    Sub New(currentPayPeriodId As Integer, isEmail As Boolean, Optional isPaySlip As Boolean = True)
 
         InitializeComponent()
 
         _isEmail = isEmail
 
+        _isPaySlip = isPaySlip
+
         _currentPayPeriodId = currentPayPeriodId
 
         _employeeModels = New List(Of EmployeeModel)
+
+        _reportCertificationOfDTRBuilder = MainServiceProvider.GetRequiredService(Of ICertificationOfDTR)
+
+        _reportRGIPayslipBuilder = MainServiceProvider.GetRequiredService(Of IRGIPayslip)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
 
         _payslipCreator = MainServiceProvider.GetRequiredService(Of IPayslipBuilder)
 
@@ -59,6 +79,8 @@ Public Class SelectPayslipEmployeesForm
     End Sub
 
     Private Async Sub SelectPayslipEmployeesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
 
         EmployeeGridView.AutoGenerateColumns = False
 
@@ -290,6 +312,16 @@ Public Class SelectPayslipEmployeesForm
         Me.Close()
     End Sub
 
+    Private Function GetDefaultFileName(
+        reportName As String) As String
+
+        Return String.Concat(
+            orgNam, " ",
+            reportName, " ",
+            DateTime.Now.ToString("MMddyyyy"),
+            ".xlsx")
+    End Function
+
     Private Async Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles _
         PreviewToolStripButton.Click,
         PreviewDeclaredToolStripMenuItem.Click,
@@ -299,7 +331,81 @@ Public Class SelectPayslipEmployeesForm
 
         DisableAllButtons()
 
-        Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
+        If _currentSystemOwner = SystemOwner.RGI Then
+            If _isPaySlip Then
+                'For PaySlip
+                Try
+                    Dim reportName As String = "PaySlip"
+
+                    Dim defaultFileName = GetDefaultFileName(reportName)
+
+                    Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
+
+                    If saveFileDialogHelperOutPut.IsSuccess = False Then
+                        Return
+                    End If
+
+                    Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
+
+                    Dim employeeIds = _employeeModels.
+                    Where(Function(m) m.IsSelected).
+                    Select(Function(m) m.EmployeeId).
+                    ToArray()
+
+                    Await _reportRGIPayslipBuilder.CreateReport(
+                        organizationId:=z_OrganizationID,
+                        payPeriodId:=_currentPayPeriodId,
+                        employeeIds:=employeeIds,
+                        isActual:=isActual,
+                        saveFilePath:=saveFilePath)
+
+                    Process.Start(saveFilePath)
+                Catch ex As IOException
+
+                    MessageBoxHelper.ErrorMessage(ex.Message)
+                Catch ex As Exception
+
+                    MsgBox(getErrExcptn(ex, Me.Name))
+                End Try
+            Else
+                'For Certification Of DTR
+                Try
+                    Dim reportName As String = "CertificationOfDTR"
+
+                    Dim defaultFileName = GetDefaultFileName(reportName)
+
+                    Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
+
+                    If saveFileDialogHelperOutPut.IsSuccess = False Then
+                        Return
+                    End If
+
+                    Dim saveFilePath = saveFileDialogHelperOutPut.FileInfo.FullName
+
+                    Dim employeeIds = _employeeModels.
+                    Where(Function(m) m.IsSelected).
+                    Select(Function(m) m.EmployeeId).
+                    ToArray()
+
+                    Await _reportCertificationOfDTRBuilder.CreateReport(
+                        organizationId:=z_OrganizationID,
+                        payPeriodId:=_currentPayPeriodId,
+                        employeeIds:=employeeIds,
+                        isActual:=isActual,
+                        saveFilePath:=saveFilePath)
+
+                    Process.Start(saveFilePath)
+                Catch ex As IOException
+
+                    MessageBoxHelper.ErrorMessage(ex.Message)
+                Catch ex As Exception
+
+                    MsgBox(getErrExcptn(ex, Me.Name))
+                End Try
+            End If
+        Else
+
+            Await FunctionUtils.TryCatchFunctionAsync("Print Payslip",
             Async Function()
                 Dim employeeIds = _employeeModels.
                     Where(Function(m) m.IsSelected).
@@ -317,6 +423,8 @@ Public Class SelectPayslipEmployeesForm
 
                 DisableAllButtons(disable:=False)
             End Function)
+
+        End If
 
         DisableAllButtons(disable:=False)
 
