@@ -22,13 +22,12 @@ SELECT
 	EmployeeID,
 	CONCAT(LastName,',',FirstName, IF(MiddleName='','',','),INITIALS(MiddleName,'. ','1')) AS Fullname,
 	"3 MONTHS PROBITIONARY" AS EMP,
-	startdate
+	DATE_FORMAT(startdate,'%m/%d/%Y')
 FROM employee 
 WHERE organizationId=OrganizID AND 
-		YEAR(CURDATE())=YEAR(startdate) AND 
-		MONTH(CURDATE())-MONTH(startdate)=3 AND 
-		Day(CURDATE())-DAY(startdate)>=-7 and 
-		Day(CURDATE())-DAY(startdate)<=7;
+		
+		DATE(STARTDATE + INTERVAL 3 MONTH) >= (NOW() - INTERVAL 8 DAY) AND 
+		DATE(STARTDATE + INTERVAL 3 MONTH) <= (NOW() + INTERVAL 8 DAY);
 END//
 DELIMITER ;
 
