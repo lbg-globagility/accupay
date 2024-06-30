@@ -69,15 +69,19 @@ Public Class EmployeeIDLayoutForm
     End Sub
 
     Private Sub PrintDocument1_PrintPage(sender As Object, e As PrintPageEventArgs) Handles PrintDocument1.PrintPage
-        Dim bm = New Bitmap(DataGridView1.Width, DataGridView1.Height)
+        Dim tmpImg As New Bitmap(DataGridView1.Width, DataGridView1.Height)
+        Using g As Graphics = Graphics.FromImage(tmpImg)
+            g.CopyFromScreen(DataGridView1.PointToScreen(New Point(0, 0)), New Point(0, 0), New Size(DataGridView1.Width, DataGridView1.Height))
+        End Using
+        e.Graphics.DrawImage(tmpImg, 0, 0)
+        Dim aPS As New PageSetupDialog
+        aPS.Document = PrintDocument1
 
-        DataGridView1.DrawToBitmap(bm, New Rectangle(0, 0, DataGridView1.Width, DataGridView1.Height))
-        e.Graphics.DrawImage(bm, 0, 0)
     End Sub
 
     Private Sub PrintBtn_Click(sender As Object, e As EventArgs) Handles PrintBtn.Click
-
-        PrintDocument1.Print()
+        PrintPreviewDialog1.Document = PrintDocument1
+        PrintPreviewDialog1.ShowDialog()
     End Sub
 
 End Class
