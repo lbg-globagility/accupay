@@ -574,9 +574,9 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
             #region S. Rate Value
 
             var sRateValue = worksheet.Cells["F15"];
-            tardinessValue.Value = 0.00;
+            sRateValue.Value = 0.00;
             deductions += 0;
-            tardinessValue.Style.Font.Size = 8;
+            sRateValue.Style.Font.Size = 8;
 
             #endregion
 
