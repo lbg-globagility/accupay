@@ -777,17 +777,16 @@ Public Class PayStubForm
 
                 Dim totalBalance = loanTransactionsList.Sum(Function(t) t.TotalBalance)
 
-                'TODO
-                'Save total balance as adjustment
+                If totalBalance <> 0 Then
 
-                Dim loanProduct = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
+                    Dim loanProduct = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
 
-                If loanProduct.Where(Function(t) t.Name = "Loan Balance Payment").FirstOrDefault Is Nothing Then
-                    Await _productRepository.AddAdjustmentTypeAsync("Loan Balance Payment", z_OrganizationID, z_User)
-                    loanProduct = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
-                End If
+                    If loanProduct.Where(Function(t) t.Name = "Loan Balance Payment").FirstOrDefault Is Nothing Then
+                        Await _productRepository.AddAdjustmentTypeAsync("Loan Balance Payment", z_OrganizationID, z_User)
+                        loanProduct = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
+                    End If
 
-                Dim adjustment As New Adjustment() With
+                    Dim adjustment As New Adjustment() With
                 {
                     .Comment = "Remaining Balance",
                     .IsActual = False,
@@ -798,14 +797,17 @@ Public Class PayStubForm
                     .Is13thMonthPay = False
                 }
 
-                paystub.Adjustments.Add(adjustment)
+                    paystub.Adjustments.Add(adjustment)
 
-                Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
+                    Dim dataService = MainServiceProvider.GetRequiredService(Of IPaystubDataService)
 
-                Await dataService.UpdateAdjustmentsAsync(
-                    CInt(paystub.RowID),
-                     paystub.Adjustments,
-                    z_User)
+                    Await dataService.UpdateAdjustmentsAsync(
+                        CInt(paystub.RowID),
+                         paystub.Adjustments,
+                        z_User)
+
+                End If
+
             Next
         End If
 
