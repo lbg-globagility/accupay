@@ -505,7 +505,7 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
 
             #region Regular H. Pay Value
 
-            var regularHolidayPayValue = worksheet.Cells["E14"];
+            var regularHolidayPayValue = worksheet.Cells["F13"];
             regularHolidayPayValue.Value = Math.Round(employeePayslip.paystub.RegularHolidayPay, 2);
             adjustments += employeePayslip.paystub.RegularHolidayPay;
             regularHolidayPayValue.Style.Font.Size = 8;
@@ -641,7 +641,7 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
 
             #region Allowance Value
 
-            var allawanceValue = worksheet.Cells["H16"];
+            var allawanceValue = worksheet.Cells["F17"];
             allawanceValue.Value = Math.Round(employeePayslip.paystub.GrandTotalAllowance ,2);
             adjustments += employeePayslip.paystub.GrandTotalAllowance;
             allawanceValue.Style.Font.Size = 8;
@@ -658,7 +658,7 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
 
             #region Salary Loans Value
 
-            var salaryLoansValue = worksheet.Cells["H16"];
+            var salaryLoansValue = worksheet.Cells["H17"];
             salaryLoansValue.Value = Math.Round(employeePayslip.paystub.TotalLoans, 2);
             deductions += employeePayslip.paystub.TotalLoans;
             salaryLoansValue.Style.Font.Size = 8;
