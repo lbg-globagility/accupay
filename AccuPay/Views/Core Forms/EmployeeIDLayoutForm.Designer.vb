@@ -45,7 +45,6 @@ Partial Class EmployeeIDLayoutForm
         Me.PrintBtn = New System.Windows.Forms.Button()
         Me.PrintDocument1 = New System.Drawing.Printing.PrintDocument()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.PrintPreviewDialog1 = New System.Windows.Forms.PrintPreviewDialog()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -59,9 +58,9 @@ Partial Class EmployeeIDLayoutForm
         Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.GridColor = System.Drawing.SystemColors.Control
-        Me.DataGridView1.Location = New System.Drawing.Point(0, 39)
+        Me.DataGridView1.Location = New System.Drawing.Point(0, 43)
         Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.Size = New System.Drawing.Size(501, 440)
+        Me.DataGridView1.Size = New System.Drawing.Size(501, 433)
         Me.DataGridView1.TabIndex = 0
         '
         'PictureBox1
@@ -279,9 +278,6 @@ Partial Class EmployeeIDLayoutForm
         Me.PrintBtn.Text = "Print"
         Me.PrintBtn.UseVisualStyleBackColor = True
         '
-        'PrintDocument1
-        '
-        '
         'Panel1
         '
         Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
@@ -290,16 +286,6 @@ Partial Class EmployeeIDLayoutForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(501, 40)
         Me.Panel1.TabIndex = 20
-        '
-        'PrintPreviewDialog1
-        '
-        Me.PrintPreviewDialog1.AutoScrollMargin = New System.Drawing.Size(0, 0)
-        Me.PrintPreviewDialog1.AutoScrollMinSize = New System.Drawing.Size(0, 0)
-        Me.PrintPreviewDialog1.ClientSize = New System.Drawing.Size(400, 300)
-        Me.PrintPreviewDialog1.Enabled = True
-        Me.PrintPreviewDialog1.Icon = CType(resources.GetObject("PrintPreviewDialog1.Icon"), System.Drawing.Icon)
-        Me.PrintPreviewDialog1.Name = "PrintPreviewDialog1"
-        Me.PrintPreviewDialog1.Visible = False
         '
         'EmployeeIDLayoutForm
         '
@@ -365,5 +351,4 @@ Partial Class EmployeeIDLayoutForm
     Friend WithEvents PrintBtn As Button
     Friend WithEvents PrintDocument1 As Printing.PrintDocument
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents PrintPreviewDialog1 As PrintPreviewDialog
 End Class

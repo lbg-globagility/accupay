@@ -383,6 +383,12 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Xceed.Document.NET, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocX.3.0.0\lib\net40\Xceed.Document.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Words.NET, Version=3.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocX.3.0.0\lib\net40\Xceed.Words.NET.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -1633,8 +1639,12 @@
     <None Include="ImportTemplates\PBCOM-TEMPLATE.xlsm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\RegularID.png" />
-    <None Include="Resources\RegularID_F.png" />
+    <None Include="Resources\RegularID.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\RegularID_F.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\ProbitionaryID.png" />
     <None Include="Resources\ProbitionaryID_F.png" />
     <None Include="ImportTemplates\accupay-allowance-template.xlsx">
@@ -1669,6 +1679,7 @@
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
     <EmbeddedResource Include="Views\Core Forms\EmployeeIDLayoutForm.resx">
       <DependentUpon>EmployeeIDLayoutForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.resx">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>

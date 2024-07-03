@@ -4,6 +4,11 @@ Imports CrystalDecisions.[Shared].Json
 Imports Microsoft.Extensions.DependencyInjection
 Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Core.Entities
+Imports Xceed.Document.NET
+Imports Xceed.Words.NET
+Imports AccuPay.Desktop.Helpers
+Imports Microsoft.Office.Interop.Excel
+Imports System.Net.Mime.MediaTypeNames
 
 Public Class EmployeeIDLayoutForm
 
@@ -68,20 +73,36 @@ Public Class EmployeeIDLayoutForm
 
     End Sub
 
-    Private Sub PrintDocument1_PrintPage(sender As Object, e As PrintPageEventArgs) Handles PrintDocument1.PrintPage
-        Dim tmpImg As New Bitmap(DataGridView1.Width, DataGridView1.Height)
-        Using g As Graphics = Graphics.FromImage(tmpImg)
-            g.CopyFromScreen(DataGridView1.PointToScreen(New Point(0, 0)), New Point(0, 0), New Size(DataGridView1.Width, DataGridView1.Height))
-        End Using
-        e.Graphics.DrawImage(tmpImg, 0, 0)
-        Dim aPS As New PageSetupDialog
-        aPS.Document = PrintDocument1
-
-    End Sub
 
     Private Sub PrintBtn_Click(sender As Object, e As EventArgs) Handles PrintBtn.Click
-        PrintPreviewDialog1.Document = PrintDocument1
-        PrintPreviewDialog1.ShowDialog()
+
+
+
+
+
+        Dim tmpImg As New Bitmap(DataGridView1.Width, DataGridView1.Height)
+        Using g As Graphics = Graphics.FromImage(tmpImg)
+            g.CopyFromScreen(DataGridView1.PointToScreen(New System.Drawing.Point(0, 0)), New System.Drawing.Point(0, 0), New Size(DataGridView1.Width, DataGridView1.Height))
+        End Using
+        tmpImg.Save("Resources/IDLayout.png", System.Drawing.Imaging.ImageFormat.Png)
+
+        Dim filename = "EmployeeIDLayout.docx"
+        Dim document = DocX.Create(filename)
+        Dim p1 = document.InsertParagraph()
+        Dim imge = document.AddImage($"Resources/IDLayout.png")
+        Dim picture = imge.CreatePicture()
+        p1.AppendPicture(picture)
+
+
+        document.Save(filename)
+        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(filename, "docx", "DOCX(*.docx)|*.docx;")
+
+        If saveFileDialogHelperOutPut.IsSuccess = False Then Return
+
+        System.IO.File.Copy(filename, saveFileDialogHelperOutPut.FileInfo.FullName)
+
+        System.Diagnostics.Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
+
     End Sub
 
 End Class
