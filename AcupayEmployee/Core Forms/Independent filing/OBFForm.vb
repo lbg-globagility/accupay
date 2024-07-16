@@ -1,4 +1,4 @@
-﻿Imports Femiani.Forms.UI.Input
+Imports Femiani.Forms.UI.Input
 
 Public Class OBFForm
 
@@ -57,22 +57,22 @@ Public Class OBFForm
 
     Private Sub OBFForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;", _
+        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;",
                        cboOrganization)
 
         If n_OBFRowID <> Nothing Then
 
             Dim dtOBFRow As New DataTable
 
-            dtOBFRow = _
-            retAsDatTbl("SELECT eob.*" & _
-                        ",e.EmployeeID AS EmpID" & _
-                        ",IFNULL(og.Name,'') AS OrgName" & _
-                        ",TIME_FORMAT(eo.OTStartTime,'%r') AS OBFStartTime" & _
-                        ",TIME_FORMAT(eo.OTEndTime,'%r') AS OBFEndTime" & _
-                        " FROM employeeofficialbusiness eob" & _
-                        " LEFT JOIN employee e ON e.RowID=eob.EmployeeID" & _
-                        " LEFT JOIN organization og ON og.RowID=eob.OrganizationID" & _
+            dtOBFRow =
+            retAsDatTbl("SELECT eob.*" &
+                        ",e.EmployeeID AS EmpID" &
+                        ",IFNULL(og.Name,'') AS OrgName" &
+                        ",TIME_FORMAT(eo.OTStartTime,'%r') AS OBFStartTime" &
+                        ",TIME_FORMAT(eo.OTEndTime,'%r') AS OBFEndTime" &
+                        " FROM employeeofficialbusiness eob" &
+                        " LEFT JOIN employee e ON e.RowID=eob.EmployeeID" &
+                        " LEFT JOIN organization og ON og.RowID=eob.OrganizationID" &
                         " WHERE eob.RowID='" & n_OBFRowID & "';")
 
             If dtOBFRow IsNot Nothing Then
@@ -166,20 +166,25 @@ Public Class OBFForm
 
         param(0, 1) = If(OBFRowID = Nothing, DBNull.Value, OBFRowID)
         param(1, 1) = EXECQUER("SELECT OrganizationID FROM employee WHERE RowID='" & e_rowid & "';") 'TxtEmployeeNumber1.RowIDValue
-        param(2, 1) = If(z_User = 0, DBNull.Value, z_User)
+        param(2, 1) = 1
         param(3, 1) = param(2, 1) 'z_User
         param(4, 1) = e_rowid 'TxtEmployeeNumber1.RowIDValue
         param(5, 1) = OBFtypeString
 
-        'Dim iii = Format(CDate(dtpOBFStartTime.Value), "hh:mm tt")
+        'Dim iii = Format(CDate(txtOBFStartTime.Value), "hh:mm tt")
+
+        Dim militaryTime = Format(CDate(txtOBFStartTime.Value), "HH:mm")
 
         'param(6, 1) = MilitTime(iii)
-        param(6, 1) = If(CBool(txtOBFStartTime.Tag) = False, DBNull.Value, txtOBFStartTime.Text)
+        param(6, 1) = militaryTime
 
         'iii = Format(CDate(dtpOBFEndTime.Value), "hh:mm tt")
 
         'param(7, 1) = MilitTime(iii)
-        param(7, 1) = If(CBool(txtOBFEndTime.Tag) = False, DBNull.Value, txtOBFEndTime.Text)
+        'param(7, 1) = If(CBool(txtOBFEndTime.Tag) = False, DBNull.Value, txtOBFEndTime.Text)
+
+        militaryTime = Format(CDate(txtOBFEndTime.Value), "HH:mm")
+        param(7, 1) = militaryTime
 
         param(8, 1) = Format(CDate(dtpOBFStartDate.Value), "yyyy-MM-dd")
 
@@ -192,7 +197,7 @@ Public Class OBFForm
 
         Return _
                 EXEC_INSUPD_PROCEDURE(param,
-                                      "INSUPD_employeeoffbusi_indepen",
+                                      "INSUPD_employeeoffbusi",
                                       "obf_ID")
 
     End Function
@@ -231,13 +236,13 @@ Public Class OBFForm
 
                 'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
                                )
 
-                amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                amTime = If(getStrBetween(amTime, "", ":") = "12",
+                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                             amTime)
 
                 retrnObj = amTime
@@ -345,9 +350,9 @@ Public Class OBFForm
         '                            " FROM employee" & _
         '                            " GROUP BY CONCAT(LastName,', ',FirstName,IF(MiddleName = '', '', CONCAT(', ',MiddleName)));")
         'CONCAT(e.LastName,', ',e.FirstName, IF(e.MiddleName = '', '', CONCAT(', ',e.MiddleName)))
-        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" & _
-                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" & _
-                                    " WHERE og.NoPurpose='0'" & _
+        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" &
+                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" &
+                                    " WHERE og.NoPurpose='0'" &
                                     " GROUP BY e.OrganizationID,e.EmployeeID;").ResultTable
 
         If dtempfullname IsNot Nothing Then
@@ -384,7 +389,7 @@ Public Class OBFForm
             MessageBox.Show("Background work cancelled.")
 
         Else
-            
+
             TxtEmployeeFullName1.Enabled = True
 
             TxtEmployeeFullName1.Text = ""
@@ -490,75 +495,75 @@ Public Class OBFForm
 
     End Sub
 
-    Private Sub txtOBFStartTime_TextChanged(sender As Object, e As EventArgs) Handles txtOBFStartTime.TextChanged
-        ErrorProvider1.Clear()
-    End Sub
+    'Private Sub txtOBFStartTime_TextChanged(sender As Object, e As EventArgs)
+    '    ErrorProvider1.Clear()
+    'End Sub
 
-    Private Sub txtOBFEndTime_TextChanged(sender As Object, e As EventArgs) Handles txtOBFEndTime.TextChanged
-        ErrorProvider1.Clear()
-    End Sub
+    'Private Sub txtOBFEndTime_TextChanged(sender As Object, e As EventArgs)
+    '    ErrorProvider1.Clear()
+    'End Sub
 
-    Private Sub EventHandler_OnLeave(sender As TextBox, e As EventArgs) _
-        Handles txtOBFStartTime.Leave,
-                txtOBFEndTime.Leave
+    'Private Sub EventHandler_OnLeave(sender As TextBox, e As EventArgs) _
+    '    Handles txtOBFStartTime.Leave,
+    '            txtOBFEndTime.Leave
 
-        sender.Tag = False
+    '    sender.Tag = False
 
-        Dim text_time As String = sender.Text.Trim
+    '    Dim text_time As String = sender.Text.Trim
 
-        Dim thegetval = text_time
+    '    Dim thegetval = text_time
 
-        Dim dateobj As Object = thegetval.Replace(" ", ":")
-        Dim ampm As String = Nothing
+    '    Dim dateobj As Object = thegetval.Replace(" ", ":")
+    '    Dim ampm As String = Nothing
 
-        If thegetval.Length > 0 Then
+    '    If thegetval.Length > 0 Then
 
-            Try
+    '        Try
 
-                If dateobj.ToString.Contains("A") Or
-                    dateobj.ToString.Contains("P") Or
-                    dateobj.ToString.Contains("M") Then
+    '            If dateobj.ToString.Contains("A") Or
+    '                dateobj.ToString.Contains("P") Or
+    '                dateobj.ToString.Contains("M") Then
 
-                    ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
-                    dateobj = dateobj.ToString.Replace(":", " ")
-                    dateobj = Trim(dateobj.ToString.Substring(0, 5)) 'dateobj.ToString.Substring(0, 4)
-                    dateobj = dateobj.ToString.Replace(" ", ":")
+    '                ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
+    '                dateobj = dateobj.ToString.Replace(":", " ")
+    '                dateobj = Trim(dateobj.ToString.Substring(0, 5)) 'dateobj.ToString.Substring(0, 4)
+    '                dateobj = dateobj.ToString.Replace(" ", ":")
 
-                End If
+    '            End If
 
-                Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
+    '            Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("hh:mm tt")
 
-                sender.Text = valtime
-                sender.Tag = True
+    '            sender.Text = valtime
+    '            sender.Tag = True
 
-            Catch ex As Exception
+    '        Catch ex As Exception
 
-                Try
-                    dateobj = dateobj.ToString.Replace(":", " ")
-                    dateobj = Trim(dateobj.ToString.Substring(0, 5))
-                    dateobj = dateobj.ToString.Replace(" ", ":")
+    '            Try
+    '                dateobj = dateobj.ToString.Replace(":", " ")
+    '                dateobj = Trim(dateobj.ToString.Substring(0, 5))
+    '                dateobj = dateobj.ToString.Replace(" ", ":")
 
-                    Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
+    '                Dim valtime As DateTime = DateTime.Parse(dateobj).ToString("HH:mm")
 
-                    sender.Text = valtime
-                    sender.Tag = True
+    '                sender.Text = valtime
+    '                sender.Tag = True
 
-                Catch ex_1 As Exception
+    '            Catch ex_1 As Exception
 
-                    sender.Tag = False
-                    ErrorProvider1.SetError(sender,
-                                             ex.Message)
+    '                sender.Tag = False
+    '                ErrorProvider1.SetError(sender,
+    '                                         ex.Message)
 
-                Finally
+    '            Finally
 
-                End Try
+    '            End Try
 
-            Finally
+    '        Finally
 
-            End Try
+    '        End Try
 
-        End If
+    '    End If
 
-    End Sub
+    'End Sub
 
 End Class

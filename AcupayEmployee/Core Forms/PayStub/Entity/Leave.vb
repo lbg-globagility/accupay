@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
@@ -28,7 +28,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property LeaveType As String
 
-        Public Property LeaveHours As Decimal
+        'Public Property LeaveHours As Decimal
 
         <Column("LeaveStartTime")>
         Public Property StartTime As TimeSpan?

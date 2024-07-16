@@ -1,4 +1,4 @@
-﻿Imports System.Threading
+Imports System.Threading
 Imports Femiani.Forms.UI.Input
 Imports AccuPay.Entity
 Imports System.Data.Entity
@@ -64,7 +64,7 @@ Public Class LeaveForm
 
                 Dim leave = New Leave() With {
                     .OrganizationID = employee.OrganizationID,
-                    .CreatedBy = 0,
+                    .CreatedBy = 1,
                     .LeaveType = cboleavetypes.Tag(1),
                     .EmployeeID = employee.RowID,
                     .StartTime = dtpstarttime.Value.TimeOfDay,
