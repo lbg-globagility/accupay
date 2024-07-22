@@ -52,7 +52,7 @@ Public Class PBCOMReportProvider
                 Dim casaWithName As ExcelWorksheet = package.Workbook.Worksheets("CASA w Name")
 
 
-                Dim allowanceTypes = Await _reportBuilder.GetData(dateFrom, dateTo)
+                Dim allowanceTypes = Await _reportBuilder.GetData(dateFrom, dateTo, z_OrganizationID)
 
                 For index = 0 To allowanceTypes.Count - 1
                     casaDefault.Cells(index + 8, 2).Value = allowanceTypes(index)?.ATMNo

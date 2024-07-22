@@ -20,16 +20,16 @@ namespace AccuPay.Infrastructure.Reports
             _context = context;
         }
 
-        public async Task<List<PbcomReportModel>> GetData(DateTime startPeriod, DateTime endPeriod)
+        public async Task<List<PbcomReportModel>> GetData(DateTime startPeriod, DateTime endPeriod, int organizationId)
         {
             var query = _context.Paystubs.Include(x => x.Employee).Where(x=>x.Employee.BankName=="PB com").Where(p => p.PayFromDate >= startPeriod).
-                Where(p => p.PayToDate <= endPeriod).Select(x=>new PbcomReportModel()
+                Where(p => p.PayToDate <= endPeriod).Where(x=>x.OrganizationID==organizationId).Select(x=>new PbcomReportModel()
             {
                 ATMNo=x.Employee.AtmNo,
                 FirstName = x.Employee.FirstName,
                 LastName = x.Employee.LastName,
                 MiddleName = x.Employee.MiddleName,
-                TotalNetSalary = x.TotalNetSalary
+                TotalNetSalary = x.NetPay
             }).ToList();
             return query;
         }
