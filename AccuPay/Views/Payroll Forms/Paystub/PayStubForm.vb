@@ -758,7 +758,7 @@ Public Class PayStubForm
 
     Private Async Function GenerateLoanBalancesForLastPay(Optional result As IPayrollResources = Nothing) As Task
 
-        Dim employees = result.Employees.Where(Function(i) CBool(i.TerminationDate IsNot Nothing And i.TerminationDate > result.PayPeriod.PayFromDate And i.TerminationDate < result.PayPeriod.PayToDate))
+        Dim employees = result.Employees.Where(Function(i) CBool(i.TerminationDate IsNot Nothing And i.TerminationDate > result.PayPeriod.PayFromDate And i.TerminationDate < result.PayPeriod.PayToDate And i.IsActive = False))
 
         If (employees.Count > 0) Then
             For Each employee In employees
@@ -815,7 +815,7 @@ Public Class PayStubForm
 
     Private Async Function GenerateThirteenthMonthForLastPay(Optional result As IPayrollResources = Nothing) As Task
 
-        Dim employees = result.Employees.Where(Function(i) CBool(i.TerminationDate IsNot Nothing And i.TerminationDate > result.PayPeriod.PayFromDate And i.TerminationDate < result.PayPeriod.PayToDate))
+        Dim employees = result.Employees.Where(Function(i) CBool(i.TerminationDate IsNot Nothing And i.TerminationDate > result.PayPeriod.PayFromDate And i.TerminationDate < result.PayPeriod.PayToDate And i.IsActive = False))
 
         If (employees.Count > 0) Then
 
