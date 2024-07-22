@@ -179,7 +179,7 @@ namespace AccuPay.Core.Services
             if (isRGI)
             {
                 Employees = (await _employeeRepository
-                   .GetAllWithinServicePeriodWithPositionAsync(organizationId, cutOffStart))
+                   .GetAllWithinServicePeriodWithDivisionAndPositionAsync(organizationId, cutOffStart))
                    .ToList();
             }
             else

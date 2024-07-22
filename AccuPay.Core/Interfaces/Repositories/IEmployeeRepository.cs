@@ -22,6 +22,8 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Employee>> GetAllWithinServicePeriodWithPositionAsync(int organizationId, DateTime currentDate);
 
+        Task<ICollection<Employee>> GetAllWithinServicePeriodWithDivisionAndPositionAsync(int organizationId, DateTime currentDate);
+
         Task<ICollection<Employee>> GetAllAsync(int organizationId);
 
         Task<ICollection<Employee>> GetAllWithDivisionAndPositionAsync(int organizationId);

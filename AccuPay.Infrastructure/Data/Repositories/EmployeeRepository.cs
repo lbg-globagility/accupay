@@ -203,6 +203,15 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync(organizationId);
         }
 
+        public async Task<ICollection<Employee>> GetAllWithinServicePeriodWithDivisionAndPositionAsync(int organizationId, DateTime currentDate)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return await builder
+                .IncludeDivision()
+                .WithinServicePeriod(currentDate)
+                .ToListAsync(organizationId);
+        }
+
         public async Task<ICollection<Employee>> GetAllWithDivisionAndPositionAsync(int organizationId)
         {
             var builder = new EmployeeQueryBuilder(_context);

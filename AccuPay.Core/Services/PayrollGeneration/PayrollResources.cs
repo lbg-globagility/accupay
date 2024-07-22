@@ -248,7 +248,7 @@ namespace AccuPay.Core.Services
             {
                 if (CurrentSystemOwner == SystemOwner.RGI) {
                     Employees = (await _employeeRepository
-                    .GetAllWithinServicePeriodWithPositionAsync(_organizationId, _payDateFrom))
+                    .GetAllWithinServicePeriodWithDivisionAndPositionAsync(_organizationId, _payDateFrom))
                     .ToList();
                 }
                 else
