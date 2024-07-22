@@ -65,7 +65,7 @@ Public Class PBCOMReportProvider
                     casaWithName.Cells(index + 8, 6).Value = allowanceTypes(index).MiddleName
                 Next
                 package.SaveAs(excelResultFile)
-                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(fileName, excelFileExtension, excelFileFilter)
+                Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile("PBCOM", excelFileExtension, excelFileFilter)
 
                 If saveFileDialogHelperOutPut.IsSuccess = False Then Return
 
