@@ -87,9 +87,6 @@ namespace AccuPay.Core.Entities
         [Column("DeferredTaxableIncome")]
         public decimal DeferredTaxableIncome { get; set; }
 
-        [Column("TotalNetSalary")]
-        public decimal TotalNetSalary { get; set; }
-
         [Column("TotalTaxableSalary")]
         public decimal TaxableIncome { get; set; }
 

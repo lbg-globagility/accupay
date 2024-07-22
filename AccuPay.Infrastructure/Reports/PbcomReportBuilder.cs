@@ -29,7 +29,7 @@ namespace AccuPay.Infrastructure.Reports
                 FirstName = x.Employee.FirstName,
                 LastName = x.Employee.LastName,
                 MiddleName = x.Employee.MiddleName,
-                TotalNetSalary = x.TotalNetSalary
+                TotalNetSalary = x.NetPay
             }).ToList();
             return query;
         }
