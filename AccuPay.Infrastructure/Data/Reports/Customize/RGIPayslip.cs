@@ -80,25 +80,716 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
 
             using (var excel = new ExcelPackage(newFile))
             {
-                foreach (var employeePayslip in employeePayslips)
+                if (true)
                 {
-                    var worksheet = excel.Workbook.Worksheets.Add(employeePayslip.employee.FullNameLastNameFirst);
-
+                    var worksheet = excel.Workbook.Worksheets.Add("Payslip");
                     if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.RGI)
                     {
                         worksheet.Protection.IsProtected = true;
                         worksheet.Protection.SetPassword(_listOfValueRepository.GetExcelPassword());
                     }
 
-                    RenderWorksheet(worksheet, employeePayslip, timePeriod, payPeriodDate);
-                }
+                    int startRow = 0;
+                    int employeeIndex = 0;
+                    InitializeWorkSheetSignleSheet(worksheet);
+                    foreach (var employeePayslip in employeePayslips) {
+                        RenderWorkSheetSingleSheet(worksheet, employeePayslip, timePeriod, payPeriodDate, startRow);
 
-                excel.Save();
+                        //Add blank row every even index of employee
+                        if(startRow % 2 == 0)
+                        {
+                            startRow += 19;
+                        }
+                        else
+                        {
+                            startRow += 18;
+                        }
+                        employeeIndex++;
+                    }
+                    excel.Save();
+                }
+                else { 
+                    foreach (var employeePayslip in employeePayslips)
+                    {
+                        var worksheet = excel.Workbook.Worksheets.Add(employeePayslip.employee.FullNameLastNameFirst);
+
+                        if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.RGI)
+                        {
+                            worksheet.Protection.IsProtected = true;
+                            worksheet.Protection.SetPassword(_listOfValueRepository.GetExcelPassword());
+                        }
+
+                        RenderWorkSheetPerSheet(worksheet, employeePayslip, timePeriod, payPeriodDate);
+                    }
+
+                    excel.Save();
+                }
             }
+        }
+
+        private void InitializeWorkSheetSignleSheet(ExcelWorksheet ws)
+        {
+            #region Column Width And Row Height
+
+            ws.Column(1).Width = 9.57;
+            ws.Column(2).Width = 9.86;
+            ws.Column(3).Width = 9.14;
+            ws.Column(4).Width = 16.57;
+            ws.Column(5).Width = 14;
+            ws.Column(6).Width = 18.14;
+            ws.Column(7).Width = 15.14;
+            ws.Column(8).Width = 18.14;
+            ws.Column(9).Width = 13.29;
+            ws.Column(10).Width = 8.86;
+
+            //worksheet.Row(3).Height = 23.25;
+
+            #endregion
+
+            ws.PrinterSettings.Orientation = eOrientation.Landscape;
+            ws.PrinterSettings.FooterMargin = 0;
+            ws.PrinterSettings.HeaderMargin = 0;
+            ws.PrinterSettings.TopMargin = .4M;
+            ws.PrinterSettings.LeftMargin = .23M;
+            ws.PrinterSettings.RightMargin = .23M;
+            ws.PrinterSettings.BottomMargin = .4M;
+        }
+
+        private void RenderWorkSheetSingleSheet(ExcelWorksheet worksheet, EmployeePayslip employeePayslip, TimePeriod timePeriod, DateTime payPeriodDate, int startRow)
+        {
+            worksheet.Cells["A" + (startRow + 1) + ":J" + (startRow + 18)].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+            worksheet.Cells["A" + (startRow + 1) + ":J" + (startRow + 1)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["A" + (startRow + 2) + ":J" + (startRow + 2)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["H" + (startRow + 2)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["A" + (startRow + 4) + ":J" + (startRow + 4)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["A" + (startRow + 6) + ":G" + (startRow + 6)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["A" + (startRow + 8) + ":G" + (startRow + 8)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["H" + (startRow + 13) + ":J" + (startRow + 13)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["H" + (startRow + 14) + ":J" + (startRow + 14)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["A" + (startRow + 17) + ":J" + (startRow + 17)].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
+
+            worksheet.Cells["A" + (startRow + 9) + ":A" + (startRow + 17)].Style.Border.Right.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["B" + (startRow + 9) + ":B" + (startRow + 17)].Style.Border.Right.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["C" + (startRow + 7) + ":C" + (startRow + 17)].Style.Border.Right.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["D" + (startRow + 9) + ":D" + (startRow + 17)].Style.Border.Right.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["E" + (startRow + 7) + ":E" + (startRow + 17)].Style.Border.Right.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["F" + (startRow + 9) + ":F" + (startRow + 17)].Style.Border.Right.Style = ExcelBorderStyle.Dotted;
+            worksheet.Cells["G" + (startRow + 3) + ":G" + (startRow + 17)].Style.Border.Right.Style = ExcelBorderStyle.Dotted;
+
+            worksheet.Cells["B9:H9"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+            decimal adjustments = 0;
+            decimal deductions = 0;
+
+
+            #region Title
+
+            worksheet.Cells["E" + (startRow + 2)].Style.Font.Size = 16;
+            var titleCell = worksheet.Cells["E" + (startRow + 2)];
+            titleCell.Value = "ROCKET GLOBAL INC.";
+            titleCell.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Payslip Title
+
+            var payslipTitleCell = worksheet.Cells["A" + (startRow + 2)];
+            payslipTitleCell.Value = "PAYSLIP - SEMI-MONTHLY PAYROLL";
+            payslipTitleCell.Style.Font.Bold = true;
+            payslipTitleCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Payslip Period
+
+            var payslipPeriodCell = worksheet.Cells["E" + (startRow + 3)];
+            payslipPeriodCell.Value = "PERIOD :";
+            payslipPeriodCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Payslip Period Value From
+
+            var payslipPeriodFromValue = worksheet.Cells["F" + (startRow + 3)];
+            payslipPeriodFromValue.Value = timePeriod.Start.ToString("MMMM dd, yyyy");
+            payslipPeriodFromValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Payslip Period Value To
+
+            var payslipPeriodToValue = worksheet.Cells["G" + (startRow + 3)];
+            payslipPeriodToValue.Value = timePeriod.End.ToString("MMMM dd, yyyy");
+            payslipPeriodToValue.Style.Font.Size = 8;
+
+            #endregion
+
+
+            #region Total Number of Days Cell
+
+            var numberOfDaysCell = worksheet.Cells["H" + (startRow + 3)];
+            numberOfDaysCell.Value = "TOTAL NO. OF PRESENT DAYS";
+            numberOfDaysCell.Style.Font.Size = 8;
+            numberOfDaysCell.Style.Font.Bold = true;
+            numberOfDaysCell.Style.Font.UnderLine = true;
+
+            #endregion
+
+            #region Total Number of Days Value
+
+            var numberOfDaysValue = worksheet.Cells["J" + (startRow + 3)];
+            numberOfDaysValue.Value = Math.Round(employeePayslip.paystub.RegularHours / 8, 2);
+            numberOfDaysValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Payout Cell
+
+            var payoutCell = worksheet.Cells["E" + (startRow + 4)];
+            payoutCell.Value = "PAYOUT :";
+            payoutCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Payout Value
+
+            var payoutValue = worksheet.Cells["F" + (startRow + 4)];
+            payoutValue.Value = payPeriodDate.ToString("MMMM dd, yyyy");
+            payoutValue.Style.Font.Size = 8;
+            payoutValue.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Basic Pay Cell
+
+            var basicPayCell = worksheet.Cells["H" + (startRow + 4)];
+            basicPayCell.Value = "BASIC PAY:";
+            basicPayCell.Style.Font.Size = 8;
+            basicPayCell.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Basic Pay Value
+
+            var basicPayValue = worksheet.Cells["J" + (startRow + 4)];
+            basicPayValue.Value = Math.Round(employeePayslip.paystub.RegularPay, 2);
+            basicPayValue.Style.Font.Size = 8;
+            basicPayValue.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Employee Cell
+
+            var employeeCell = worksheet.Cells["A" + (startRow + 5)];
+            employeeCell.Value = "EMPLOYEE: ";
+            employeeCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Employee Value
+
+            var employeeValue = worksheet.Cells["B" + (startRow + 5)];
+            employeeValue.Value = employeePayslip.employee.FullNameLastNameFirst.ToUpper();
+            employeeValue.Style.Font.Size = 8;
+            employeeValue.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Status Cell
+
+            var statusCell = worksheet.Cells["E" + (startRow + 5)];
+            statusCell.Value = "STATUS:";
+            statusCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Status Value
+
+            var statusValue = worksheet.Cells["F" + (startRow + 5)];
+            statusValue.Value = employeePayslip.employee.EmploymentStatus.ToUpper();
+            statusValue.Style.Font.Size = 8;
+            statusValue.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Position Cell
+
+            var positionCell = worksheet.Cells["A" + (startRow + 6)];
+            positionCell.Value = "POSITION:";
+            positionCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Position Value
+
+            var positionValue = worksheet.Cells["B" + (startRow + 6)];
+            positionValue.Value = employeePayslip.employee.Position.Name.ToUpper();
+            positionValue.Style.Font.Size = 8;
+            positionValue.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Overtime Cell
+
+            var overtimeCell = worksheet.Cells["H" + (startRow + 6)];
+            overtimeCell.Value = "OVERTIME:";
+            overtimeCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Overtime Value
+
+            var overtimeValue = worksheet.Cells["J" + (startRow + 6)];
+            overtimeValue.Value = Math.Round(employeePayslip.paystub.OvertimePay, 2);
+            overtimeValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Overtime Column Cell
+
+            var overtimeColumnCell = worksheet.Cells["A" + (startRow + 8)];
+            overtimeColumnCell.Value = "OVERTIME";
+            overtimeColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Min Column Cell
+
+            var minColumnCell = worksheet.Cells["B" + (startRow + 8)];
+            minColumnCell.Value = "MIN";
+            minColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Pay Column Cell
+
+            var payColumnCell = worksheet.Cells["C" + (startRow + 8)];
+            minColumnCell.Value = "PAY";
+            minColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustments + Column Cell
+
+            var adjustmentsColumnCell = worksheet.Cells["D" + (startRow + 8)];
+            adjustmentsColumnCell.Value = "ADJUSTMENTS";
+            adjustmentsColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustments Amount Column Cell
+
+            var adjustmentsAmountColumnCell = worksheet.Cells["E" + (startRow + 8)];
+            adjustmentsAmountColumnCell.Value = "AMOUNT";
+            adjustmentsAmountColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Deduction Column Cell
+
+            var deductionColumnCell = worksheet.Cells["F" + (startRow + 8)];
+            deductionColumnCell.Value = "DEDUCTION";
+            deductionColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Deduction Amount Column Cell
+
+            var deductionAmountColumnCell = worksheet.Cells["G" + (startRow + 8)];
+            deductionAmountColumnCell.Value = "AMOUNT";
+            deductionAmountColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Overtime Column Value
+
+            var overtimeColumnValue = worksheet.Cells["A" + (startRow + 9)];
+            overtimeColumnValue.Value = Math.Round(employeePayslip.paystub.TotalOvertimeHours, 2);
+            overtimeColumnValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Pay Column Value
+
+            var payColumnValue = worksheet.Cells["C" + (startRow + 9)];
+            payColumnValue.Value = Math.Round(employeePayslip.paystub.OvertimePay, 2);
+            payColumnValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustments + Column
+
+            var positiveAdjustmentsColumnCell = worksheet.Cells["D" + (startRow + 9)];
+            positiveAdjustmentsColumnCell.Value = "ADJUSTMENT (+)";
+            positiveAdjustmentsColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustments + Column Value
+
+            var positiveAdjustmentsColumnValue = worksheet.Cells["E" + (startRow + 9)];
+            positiveAdjustmentsColumnValue.Value = employeePayslip.paystub.TotalAdjustments > 0 ? Math.Round(employeePayslip.paystub.TotalAdjustments, 2) : 0;
+            adjustments += employeePayslip.paystub.TotalAdjustments > 0 ? employeePayslip.paystub.TotalAdjustments : 0;
+            positiveAdjustmentsColumnValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustments - Column
+
+            var negativeAdjustmentsColumnCell = worksheet.Cells["F" + (startRow + 9)];
+            negativeAdjustmentsColumnCell.Value = "ADJUSTMENT (-)";
+            negativeAdjustmentsColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustments - Column Value
+
+            var negativeAdjustmentsColumnValue = worksheet.Cells["G" + (startRow + 9)];
+            negativeAdjustmentsColumnValue.Value = employeePayslip.paystub.TotalAdjustments < 0 ? Math.Round(employeePayslip.paystub.TotalAdjustments, 2) : 0;
+            deductions += employeePayslip.paystub.TotalAdjustments < 0 ? employeePayslip.paystub.TotalAdjustments : 0;
+            negativeAdjustmentsColumnValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Gross Pay Cell
+
+            var grossPayColumnCell = worksheet.Cells["H" + (startRow + 9)];
+            grossPayColumnCell.Value = "GROSS PAY:";
+            grossPayColumnCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Gross Pay Value
+
+            var grossPayColumnValue = worksheet.Cells["J" + (startRow + 9)];
+            grossPayColumnValue.Value = Math.Round(employeePayslip.paystub.GrossPay, 2);
+            grossPayColumnValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Paid VL Cell
+
+            var paidVLCell = worksheet.Cells["D" + (startRow + 10)];
+            paidVLCell.Value = "PAID VL";
+            paidVLCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Paid VL Cell
+
+            var paidVLValue = worksheet.Cells["E" + (startRow + 10)];
+            paidVLValue.Value = Math.Round(employeePayslip.paystub.LeavePay, 2);
+            adjustments += employeePayslip.paystub.LeavePay;
+            paidVLValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region SSS Cell
+
+            var sssCell = worksheet.Cells["F" + (startRow + 10)];
+            sssCell.Value = "SSS";
+            sssCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region SSS Value
+
+            var sssValue = worksheet.Cells["G" + (startRow + 10)];
+            sssValue.Value = Math.Round(employeePayslip.paystub.SssEmployeeShare, 2);
+            deductions += employeePayslip.paystub.SssEmployeeShare;
+            sssValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Paid SL Cell
+
+            var paidSLCell = worksheet.Cells["D" + (startRow + 11)];
+            paidSLCell.Value = "PAID SL";
+            paidSLCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Paid SL Value
+
+            var paidSLValue = worksheet.Cells["E" + (startRow + 11)];
+            paidSLValue.Value = 0.00;
+            paidSLValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region PhilHealth Cell
+
+            var philHealthCell = worksheet.Cells["F" + (startRow + 11)];
+            philHealthCell.Value = "PHILHEALTH";
+            philHealthCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region PhilHealth Value
+
+            var philHealthValue = worksheet.Cells["G" + (startRow + 11)];
+            philHealthValue.Value = Math.Round(employeePayslip.paystub.PhilHealthEmployeeShare, 2);
+            deductions += employeePayslip.paystub.PhilHealthEmployeeShare;
+            philHealthValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Regular H. Pay Cell
+
+            var regularHolidayPayCell = worksheet.Cells["D" + (startRow + 12)];
+            regularHolidayPayCell.Value = "R. HOLIDAY PAY";
+            regularHolidayPayCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Regular H. Pay Value
+
+            var regularHolidayPayValue = worksheet.Cells["E" + (startRow + 12)];
+            regularHolidayPayValue.Value = Math.Round(employeePayslip.paystub.RegularHolidayPay, 2);
+            adjustments += employeePayslip.paystub.RegularHolidayPay;
+            regularHolidayPayValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region PagIbig Cell
+
+            var pagIbigCell = worksheet.Cells["F" + (startRow + 12)];
+            pagIbigCell.Value = "PAG-IBIG";
+            pagIbigCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region PagIbig Value
+
+            var pagIbigValue = worksheet.Cells["G" + (startRow + 12)];
+            pagIbigValue.Value = Math.Round(employeePayslip.paystub.HdmfEmployeeShare, 2);
+            deductions += employeePayslip.paystub.HdmfEmployeeShare;
+            pagIbigValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region S. H. Pay Cell
+
+            var specialHolidayPayCell = worksheet.Cells["D" + (startRow + 13)];
+            specialHolidayPayCell.Value = "S. HOLIDAY (30%)";
+            specialHolidayPayCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region S. H. Pay Value
+
+            var specialHolidayPayValue = worksheet.Cells["E" + (startRow + 13)];
+            specialHolidayPayValue.Value = Math.Round(employeePayslip.paystub.SpecialHolidayPay, 2);
+            adjustments += employeePayslip.paystub.SpecialHolidayPay;
+            specialHolidayPayValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Tardiness Cell
+
+            var tardinessCell = worksheet.Cells["F" + (startRow + 13)];
+            tardinessCell.Value = "TARDINESS";
+            tardinessCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Tardiness Value
+
+            var tardinessValue = worksheet.Cells["G" + (startRow + 13)];
+            tardinessValue.Value = Math.Round(employeePayslip.paystub.LateDeduction, 2);
+            deductions += employeePayslip.paystub.LateDeduction;
+            tardinessValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region S. Rate Cell
+
+            var sRateCell = worksheet.Cells["D" + (startRow + 14)];
+            sRateCell.Value = "S. RATE (30%)";
+            sRateCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region S. Rate Value
+
+            var sRateValue = worksheet.Cells["E" + (startRow + 14)];
+            sRateValue.Value = 0.00;
+            deductions += 0;
+            sRateValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Employee Deductibles Cell
+
+            var employeeDeductiblesCell = worksheet.Cells["F" + (startRow + 14)];
+            employeeDeductiblesCell.Value = "EMPLOYEE DEDUCTIBLES";
+            employeeDeductiblesCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Employee Deductibles Value
+
+            var employeeDeductiblesValue = worksheet.Cells["G" + (startRow + 14)];
+            employeeDeductiblesValue.Value = 0.00;
+            deductions += 0;
+            employeeDeductiblesValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region NIGHT DIFFERENTIAL Cell
+
+            var nightDifferentialCell = worksheet.Cells["D" + (startRow + 15)];
+            nightDifferentialCell.Value = "NIGHT DIFFERENTIAL";
+            nightDifferentialCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region NIGHT DIFFERENTIAL Value
+
+            var nightDifferentialValue = worksheet.Cells["E" + (startRow + 15)];
+            nightDifferentialValue.Value = Math.Round(employeePayslip.paystub.NightDiffPay, 2);
+            adjustments += employeePayslip.paystub.NightDiffPay;
+            nightDifferentialValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Barracks Cell
+
+            var barracksCell = worksheet.Cells["F" + (startRow + 15)];
+            barracksCell.Value = "BARRACKS";
+            barracksCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Barracks Value
+
+            var barracksValue = worksheet.Cells["G" + (startRow + 15)];
+            barracksValue.Value = 0.00;
+            deductions += 0;
+            barracksValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Allowance Cell
+
+            var allawanceCell = worksheet.Cells["D" + (startRow + 16)];
+            allawanceCell.Value = "ALLOWANCE";
+            allawanceCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Allowance Value
+
+            var allawanceValue = worksheet.Cells["E" + (startRow + 16)];
+            allawanceValue.Value = Math.Round(employeePayslip.paystub.GrandTotalAllowance, 2);
+            adjustments += employeePayslip.paystub.GrandTotalAllowance;
+            allawanceValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Salary Loans Cell
+
+            var salaryLoansCell = worksheet.Cells["F" + (startRow + 16)];
+            salaryLoansCell.Value = "SALARY LOANS";
+            salaryLoansCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Salary Loans Value
+
+            var salaryLoansValue = worksheet.Cells["G" + (startRow + 16)];
+            salaryLoansValue.Value = Math.Round(employeePayslip.paystub.TotalLoans, 2);
+            deductions += employeePayslip.paystub.TotalLoans;
+            salaryLoansValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Pay Total Value
+
+            var payTotalValue = worksheet.Cells["C" + (startRow + 17)];
+            payTotalValue.Value = Math.Round(employeePayslip.paystub.OvertimePay, 2);
+            payTotalValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustment Total Value
+
+            var adjustmentTotalValue = worksheet.Cells["E" + (startRow + 17)];
+            adjustmentTotalValue.Value = Math.Round(adjustments);
+            adjustmentTotalValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Deduction Total Value
+
+            var deductionTotalValue = worksheet.Cells["G" + (startRow + 17)];
+            deductionTotalValue.Value = Math.Round(deductions);
+            deductionTotalValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustment Cell
+
+            var adjustmentCell = worksheet.Cells["H" + (startRow + 7)];
+            adjustmentCell.Value = "ADJUSTMENT:";
+            adjustmentCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Adjustment Value
+
+            var adjustmentValue = worksheet.Cells["J" + (startRow + 7)];
+            adjustmentValue.Value = Math.Round(adjustments);
+            adjustmentValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Deductions Cell
+
+            var deductionsCell = worksheet.Cells["H" + (startRow + 10)];
+            deductionsCell.Value = "DEDUCTION :";
+            deductionsCell.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Deductions Value
+
+            var deductionsValue = worksheet.Cells["J" + (startRow + 10)];
+            deductionsValue.Value = Math.Round(deductions);
+            deductionsValue.Style.Font.Size = 8;
+
+            #endregion
+
+            #region Net Pay Cell
+
+            var netPayCell = worksheet.Cells["H" + (startRow + 12)];
+            netPayCell.Value = "NET PAY :";
+            netPayCell.Style.Font.Size = 8;
+            netPayCell.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Net Pay Value
+
+            var netPayValue = worksheet.Cells["J" + (startRow + 12)];
+            netPayValue.Value = Math.Round(employeePayslip.paystub.NetPay, 2);
+            netPayValue.Style.Font.Size = 8;
+            netPayValue.Style.Font.Bold = true;
+
+            #endregion
+
+            #region Signature Cell
+
+            var signatureCell = worksheet.Cells["H" + (startRow + 14)];
+            signatureCell.Value = "SIGNATURE:";
+            signatureCell.Style.Font.Size = 10;
+            signatureCell.Style.Font.Bold = true;
+
+            #endregion
 
         }
 
-        private void RenderWorksheet(ExcelWorksheet worksheet, EmployeePayslip employeePayslip, TimePeriod timePeriod, DateTime payPeriodDate)
+        private void RenderWorkSheetPerSheet(ExcelWorksheet worksheet, EmployeePayslip employeePayslip, TimePeriod timePeriod, DateTime payPeriodDate)
         {
             worksheet.Cells["B2:K19"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
             worksheet.Cells["B2:K2"].Style.Border.Bottom.Style = ExcelBorderStyle.Dotted;
