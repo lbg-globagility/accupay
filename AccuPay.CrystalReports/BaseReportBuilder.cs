@@ -40,6 +40,8 @@ namespace AccuPay.CrystalReports
             _reportDocument.Export();
 
             _pdfFile = pdfFullPath;
+
+            _reportDocument.Close();
         }
     }
 }
