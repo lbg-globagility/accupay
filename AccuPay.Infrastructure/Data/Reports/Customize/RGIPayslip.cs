@@ -44,7 +44,7 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
             _context = context;
         }
 
-        public async Task CreateReport(int organizationId, int payPeriodId, int[] employeeIds, bool isActual, string saveFilePath)
+        public async Task CreateReport(int organizationId, int payPeriodId, int[] employeeIds, bool isActual, string saveFilePath, bool singleSheet)
         {
             var organization = await _organizationRepository.GetByIdAsync(organizationId);
 
@@ -80,7 +80,7 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
 
             using (var excel = new ExcelPackage(newFile))
             {
-                if (true)
+                if (singleSheet)
                 {
                     var worksheet = excel.Workbook.Worksheets.Add("Payslip");
                     if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwner.RGI)
@@ -91,7 +91,7 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
 
                     int startRow = 0;
                     int employeeIndex = 0;
-                    InitializeWorkSheetSignleSheet(worksheet);
+                    InitializeWorkSheetSingleSheet(worksheet);
                     foreach (var employeePayslip in employeePayslips) {
                         RenderWorkSheetSingleSheet(worksheet, employeePayslip, timePeriod, payPeriodDate, startRow);
 
@@ -127,7 +127,7 @@ namespace AccuPay.Infrastructure.Data.Reports.Customize
             }
         }
 
-        private void InitializeWorkSheetSignleSheet(ExcelWorksheet ws)
+        private void InitializeWorkSheetSingleSheet(ExcelWorksheet ws)
         {
             #region Column Width And Row Height
 

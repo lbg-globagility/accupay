@@ -12,6 +12,7 @@ namespace AccuPay.Core.Interfaces.Reports.Customize
             int payPeriodId,
             int[] employeeIds,
             bool isActual,
-            string saveFilePath);
+            string saveFilePath,
+            bool singleSheet);
     }
 }

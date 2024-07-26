@@ -352,12 +352,14 @@ Public Class SelectPayslipEmployeesForm
                     Select(Function(m) m.EmployeeId).
                     ToArray()
 
+                    Dim dialogResult As DialogResult = MessageBox.Show("Generate single sheet?", "Export", MessageBoxButtons.YesNo)
+
                     Await _reportRGIPayslipBuilder.CreateReport(
                         organizationId:=z_OrganizationID,
                         payPeriodId:=_currentPayPeriodId,
                         employeeIds:=employeeIds,
                         isActual:=isActual,
-                        saveFilePath:=saveFilePath)
+                        saveFilePath:=saveFilePath, singleSheet:=dialogResult = DialogResult.Yes)
 
                     Process.Start(saveFilePath)
                 Catch ex As IOException
@@ -387,12 +389,15 @@ Public Class SelectPayslipEmployeesForm
                     Select(Function(m) m.EmployeeId).
                     ToArray()
 
+                    Dim dialogResult As DialogResult = MessageBox.Show("Generate single sheet?", "Export", MessageBoxButtons.YesNo)
+
                     Await _reportCertificationOfDTRBuilder.CreateReport(
                         organizationId:=z_OrganizationID,
                         payPeriodId:=_currentPayPeriodId,
                         employeeIds:=employeeIds,
                         isActual:=isActual,
-                        saveFilePath:=saveFilePath)
+                        saveFilePath:=saveFilePath,
+                        singleSheet:=dialogResult = DialogResult.Yes)
 
                     Process.Start(saveFilePath)
                 Catch ex As IOException

@@ -9,6 +9,7 @@ namespace AccuPay.Core.Interfaces
             int payPeriodId,
             int[] employeeIds,
             bool isActual,
-            string saveFilePath);
+            string saveFilePath,
+            bool singleSheet);
     }
 }
