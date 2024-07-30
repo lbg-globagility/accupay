@@ -443,6 +443,12 @@
     <Compile Include="Views\Core Forms\EmployeeIDLayoutForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\PBCOMSelection.Designer.vb">
+      <DependentUpon>PBCOMSelection.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\PBCOMSelection.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
@@ -1680,6 +1686,9 @@
     <EmbeddedResource Include="Views\Core Forms\EmployeeIDLayoutForm.resx">
       <DependentUpon>EmployeeIDLayoutForm.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\PBCOMSelection.resx">
+      <DependentUpon>PBCOMSelection.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.resx">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
