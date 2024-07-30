@@ -1689,6 +1689,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PBCOMSelection.resx">
       <DependentUpon>PBCOMSelection.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.resx">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>

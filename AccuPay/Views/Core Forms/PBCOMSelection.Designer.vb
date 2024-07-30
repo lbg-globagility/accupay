@@ -22,35 +22,37 @@ Partial Class PBCOMSelection
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PBCOMSelection))
+        Me.PBComPayBtn = New System.Windows.Forms.Button()
+        Me.ThirteenMonthPayBtn = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
-        'Button1
+        'PBComPayBtn
         '
-        Me.Button1.Location = New System.Drawing.Point(128, 17)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(179, 23)
-        Me.Button1.TabIndex = 0
-        Me.Button1.Text = "PBCOM Pay Report "
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.PBComPayBtn.Location = New System.Drawing.Point(128, 17)
+        Me.PBComPayBtn.Name = "PBComPayBtn"
+        Me.PBComPayBtn.Size = New System.Drawing.Size(179, 23)
+        Me.PBComPayBtn.TabIndex = 0
+        Me.PBComPayBtn.Text = "PBCOM Pay Report "
+        Me.PBComPayBtn.UseVisualStyleBackColor = True
         '
-        'Button2
+        'ThirteenMonthPayBtn
         '
-        Me.Button2.Location = New System.Drawing.Point(128, 48)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(179, 23)
-        Me.Button2.TabIndex = 1
-        Me.Button2.Text = "13th Month Pay Report"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.ThirteenMonthPayBtn.Location = New System.Drawing.Point(128, 48)
+        Me.ThirteenMonthPayBtn.Name = "ThirteenMonthPayBtn"
+        Me.ThirteenMonthPayBtn.Size = New System.Drawing.Size(179, 23)
+        Me.ThirteenMonthPayBtn.TabIndex = 1
+        Me.ThirteenMonthPayBtn.Text = "13th Month Pay Report"
+        Me.ThirteenMonthPayBtn.UseVisualStyleBackColor = True
         '
         'PBCOMSelection
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(420, 96)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.ThirteenMonthPayBtn)
+        Me.Controls.Add(Me.PBComPayBtn)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "PBCOMSelection"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "PBCOM Report Selection"
@@ -58,6 +60,6 @@ Partial Class PBCOMSelection
 
     End Sub
 
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
+    Friend WithEvents PBComPayBtn As Button
+    Friend WithEvents ThirteenMonthPayBtn As Button
 End Class

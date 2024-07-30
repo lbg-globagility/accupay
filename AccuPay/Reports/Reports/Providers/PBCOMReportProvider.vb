@@ -21,11 +21,7 @@ Public Class PBCOMReportProvider
 
 
     Private Async Sub Run() Implements IReportProvider.Run
-        Dim asd = New PBCOMSelection()
-        asd.ShowDialog()
-        'If Not asd.ShowDialog() = DialogResult.OK Then
-        '    Return
-        'End If
-
+        Dim pbcomSelectionDialog = New PBCOMSelection()
+        pbcomSelectionDialog.ShowDialog()
     End Sub
 End Class

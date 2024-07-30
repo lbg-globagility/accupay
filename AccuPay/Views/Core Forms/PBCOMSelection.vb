@@ -12,24 +12,22 @@ Public Class PBCOMSelection
         InitializeComponent()
         _reportBuilder = MainServiceProvider.GetRequiredService(Of IPbcomReportBuilder)
     End Sub
+
     Private Const excelFileExtension As String = "xlsm"
     Private Const excelFileFilter As String = "Excel Files|*.xls;*.xlsx;*.xlsm"
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
+    Private Async Sub PBComPayBtn_Click(sender As Object, e As EventArgs) Handles PBComPayBtn.Click
         Dim version = "PBCOM Report"
         Dim defaultFileName = "PBCOM"
         Dim template = UsePBCOMTemplate(version, defaultFileName)
-
-
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    Private Sub ThirteenMonthPayBtn_Click(sender As Object, e As EventArgs) Handles ThirteenMonthPayBtn.Click
         Dim version = "13th Month Pay"
         Dim defaultFileName = "PBCOM 13th Month Pay"
         Dim template = UsePBCOMTemplate(version, defaultFileName)
     End Sub
     Public Async Function UsePBCOMTemplate(version As String, defaultFileName As String) As Threading.Tasks.Task
-
 
         Dim fileName = $"PBCOM-TEMPLATE.xlsm"
         Dim directory = $"ImportTemplates/"
