@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class ImportEmployeeForm
     Inherits System.Windows.Forms.Form
 
@@ -24,9 +24,21 @@ Partial Class ImportEmployeeForm
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle32 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -37,8 +49,12 @@ Partial Class ImportEmployeeForm
         Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -64,22 +80,6 @@ Partial Class ImportEmployeeForm
         Dim DataGridViewCellStyle56 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle57 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle58 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ImportEmployeeForm))
         Me.btnDownload = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
@@ -88,14 +88,45 @@ Partial Class ImportEmployeeForm
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.DataGridView1 = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SickLeaveAllowanceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VacationLeaveBalanceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SickLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BranchColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BankNameColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AtmNumberColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmailColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RestDayColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LateGracePeriodColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.DataGridView2 = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -109,12 +140,20 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SickLeaveAllowanceErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.VacationLeaveBalanceErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SickLeaveBalanceErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BranchErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AtmNumberErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmailErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RestDayErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LateGracePeriodErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -151,44 +190,6 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SickLeaveAllowanceErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VacationLeaveBalanceErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SickLeaveBalanceErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BranchErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AtmNumberErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmailErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RestDayErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LateGracePeriodErrorColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SickLeaveAllowanceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VacationLeaveBalanceColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.SickLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.BranchColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AtmNumberColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmailColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RestDayColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LateGracePeriodColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -276,7 +277,7 @@ Partial Class ImportEmployeeForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column20, Me.Column21, Me.Column22, Me.SickLeaveAllowanceColumn, Me.Column23, Me.VacationLeaveBalanceColumn, Me.SickLeaveBalance, Me.BranchColumn, Me.AtmNumberColumn, Me.EmailColumn, Me.RestDayColumn, Me.LateGracePeriodColumn})
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column20, Me.Column21, Me.Column22, Me.SickLeaveAllowanceColumn, Me.Column23, Me.VacationLeaveBalanceColumn, Me.SickLeaveBalance, Me.BranchColumn, Me.BankNameColumn, Me.AtmNumberColumn, Me.EmailColumn, Me.RestDayColumn, Me.LateGracePeriodColumn})
         DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle14.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -291,6 +292,240 @@ Partial Class ImportEmployeeForm
         Me.DataGridView1.ReadOnly = True
         Me.DataGridView1.Size = New System.Drawing.Size(890, 367)
         Me.DataGridView1.TabIndex = 0
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeNo"
+        Me.Column1.HeaderText = "Employee ID"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "LastName"
+        Me.Column2.HeaderText = "Last Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "FirstName"
+        Me.Column3.HeaderText = "First Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "MiddleName"
+        Me.Column4.HeaderText = "Middle Name"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "BirthDate"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle2
+        Me.Column6.HeaderText = "Birth Date"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Gender"
+        Me.Column7.HeaderText = "Gender"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "Nickname"
+        Me.Column8.HeaderText = "Nickname"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column9
+        '
+        Me.Column9.DataPropertyName = "MaritalStatus"
+        Me.Column9.HeaderText = "Marital Status"
+        Me.Column9.Name = "Column9"
+        Me.Column9.ReadOnly = True
+        '
+        'Column10
+        '
+        Me.Column10.DataPropertyName = "Salutation"
+        Me.Column10.HeaderText = "Salutation"
+        Me.Column10.Name = "Column10"
+        Me.Column10.ReadOnly = True
+        '
+        'Column11
+        '
+        Me.Column11.DataPropertyName = "Address"
+        Me.Column11.HeaderText = "Address"
+        Me.Column11.Name = "Column11"
+        Me.Column11.ReadOnly = True
+        '
+        'Column12
+        '
+        Me.Column12.DataPropertyName = "ContactNo"
+        Me.Column12.HeaderText = "Contact No."
+        Me.Column12.Name = "Column12"
+        Me.Column12.ReadOnly = True
+        '
+        'Column13
+        '
+        Me.Column13.DataPropertyName = "Position"
+        Me.Column13.HeaderText = "Job Position"
+        Me.Column13.Name = "Column13"
+        Me.Column13.ReadOnly = True
+        '
+        'Column14
+        '
+        Me.Column14.DataPropertyName = "TIN"
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column14.DefaultCellStyle = DataGridViewCellStyle3
+        Me.Column14.HeaderText = "TIN"
+        Me.Column14.Name = "Column14"
+        Me.Column14.ReadOnly = True
+        '
+        'Column15
+        '
+        Me.Column15.DataPropertyName = "SSSNo"
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column15.DefaultCellStyle = DataGridViewCellStyle4
+        Me.Column15.HeaderText = "SSS No."
+        Me.Column15.Name = "Column15"
+        Me.Column15.ReadOnly = True
+        '
+        'Column16
+        '
+        Me.Column16.DataPropertyName = "PhilHealthNo"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column16.DefaultCellStyle = DataGridViewCellStyle5
+        Me.Column16.HeaderText = "PhilHealth No."
+        Me.Column16.Name = "Column16"
+        Me.Column16.ReadOnly = True
+        '
+        'Column17
+        '
+        Me.Column17.DataPropertyName = "HDMFNo"
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column17.DefaultCellStyle = DataGridViewCellStyle6
+        Me.Column17.HeaderText = "HMDF No."
+        Me.Column17.Name = "Column17"
+        Me.Column17.ReadOnly = True
+        '
+        'Column18
+        '
+        Me.Column18.DataPropertyName = "DateEmployed"
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column18.DefaultCellStyle = DataGridViewCellStyle7
+        Me.Column18.HeaderText = "Date Employed"
+        Me.Column18.Name = "Column18"
+        Me.Column18.ReadOnly = True
+        '
+        'Column20
+        '
+        Me.Column20.DataPropertyName = "EmployeeType"
+        Me.Column20.HeaderText = "Employee Type"
+        Me.Column20.Name = "Column20"
+        Me.Column20.ReadOnly = True
+        '
+        'Column21
+        '
+        Me.Column21.DataPropertyName = "EmploymentStatus"
+        Me.Column21.HeaderText = "Employment Status"
+        Me.Column21.Name = "Column21"
+        Me.Column21.ReadOnly = True
+        '
+        'Column22
+        '
+        Me.Column22.DataPropertyName = "VacationLeaveAllowance"
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column22.DefaultCellStyle = DataGridViewCellStyle8
+        Me.Column22.HeaderText = "VL Allowance per year"
+        Me.Column22.Name = "Column22"
+        Me.Column22.ReadOnly = True
+        '
+        'SickLeaveAllowanceColumn
+        '
+        Me.SickLeaveAllowanceColumn.DataPropertyName = "SickLeaveAllowance"
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.SickLeaveAllowanceColumn.DefaultCellStyle = DataGridViewCellStyle9
+        Me.SickLeaveAllowanceColumn.HeaderText = "SL Allowance per year"
+        Me.SickLeaveAllowanceColumn.Name = "SickLeaveAllowanceColumn"
+        Me.SickLeaveAllowanceColumn.ReadOnly = True
+        '
+        'Column23
+        '
+        Me.Column23.DataPropertyName = "WorkDaysPerYear"
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.Column23.DefaultCellStyle = DataGridViewCellStyle10
+        Me.Column23.HeaderText = "Work Days Per Year"
+        Me.Column23.Name = "Column23"
+        Me.Column23.ReadOnly = True
+        '
+        'VacationLeaveBalanceColumn
+        '
+        Me.VacationLeaveBalanceColumn.DataPropertyName = "VacationLeaveBalance"
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.VacationLeaveBalanceColumn.DefaultCellStyle = DataGridViewCellStyle11
+        Me.VacationLeaveBalanceColumn.HeaderText = "Current VL Balance"
+        Me.VacationLeaveBalanceColumn.Name = "VacationLeaveBalanceColumn"
+        Me.VacationLeaveBalanceColumn.ReadOnly = True
+        '
+        'SickLeaveBalance
+        '
+        Me.SickLeaveBalance.DataPropertyName = "SickLeaveBalance"
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.SickLeaveBalance.DefaultCellStyle = DataGridViewCellStyle12
+        Me.SickLeaveBalance.HeaderText = "Current SL Balance"
+        Me.SickLeaveBalance.Name = "SickLeaveBalance"
+        Me.SickLeaveBalance.ReadOnly = True
+        '
+        'BranchColumn
+        '
+        Me.BranchColumn.DataPropertyName = "Branch"
+        Me.BranchColumn.HeaderText = "Branch"
+        Me.BranchColumn.Name = "BranchColumn"
+        Me.BranchColumn.ReadOnly = True
+        '
+        'BankNameColumn
+        '
+        Me.BankNameColumn.DataPropertyName = "BankName"
+        Me.BankNameColumn.HeaderText = "Bank Name"
+        Me.BankNameColumn.Name = "BankNameColumn"
+        Me.BankNameColumn.ReadOnly = True
+        '
+        'AtmNumberColumn
+        '
+        Me.AtmNumberColumn.DataPropertyName = "AtmNumber"
+        Me.AtmNumberColumn.HeaderText = "ATM #/Account #"
+        Me.AtmNumberColumn.Name = "AtmNumberColumn"
+        Me.AtmNumberColumn.ReadOnly = True
+        '
+        'EmailColumn
+        '
+        Me.EmailColumn.DataPropertyName = "Email"
+        Me.EmailColumn.HeaderText = "Email"
+        Me.EmailColumn.Name = "EmailColumn"
+        Me.EmailColumn.ReadOnly = True
+        '
+        'RestDayColumn
+        '
+        Me.RestDayColumn.DataPropertyName = "RestDay"
+        Me.RestDayColumn.HeaderText = "Rest Day"
+        Me.RestDayColumn.Name = "RestDayColumn"
+        Me.RestDayColumn.ReadOnly = True
+        '
+        'LateGracePeriodColumn
+        '
+        Me.LateGracePeriodColumn.DataPropertyName = "LateGracePeriod"
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.LateGracePeriodColumn.DefaultCellStyle = DataGridViewCellStyle13
+        Me.LateGracePeriodColumn.HeaderText = "Grace Period"
+        Me.LateGracePeriodColumn.Name = "LateGracePeriodColumn"
+        Me.LateGracePeriodColumn.ReadOnly = True
         '
         'lblStatus
         '
@@ -343,6 +578,24 @@ Partial Class ImportEmployeeForm
         Me.DataGridView2.Size = New System.Drawing.Size(890, 431)
         Me.DataGridView2.TabIndex = 1
         '
+        'Column24
+        '
+        Me.Column24.DataPropertyName = "LineNumber"
+        Me.Column24.HeaderText = "Line Number"
+        Me.Column24.Name = "Column24"
+        Me.Column24.ReadOnly = True
+        Me.Column24.Width = 60
+        '
+        'DataGridViewTextBoxColumn24
+        '
+        Me.DataGridViewTextBoxColumn24.DataPropertyName = "FailureDescription"
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn24.DefaultCellStyle = DataGridViewCellStyle16
+        Me.DataGridViewTextBoxColumn24.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        Me.DataGridViewTextBoxColumn24.ReadOnly = True
+        Me.DataGridViewTextBoxColumn24.Width = 200
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
@@ -370,15 +623,6 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn4.HeaderText = "Middle Name"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.DataPropertyName = "BirthDate"
-        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle33
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Birth Date"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
         '
         'DataGridViewTextBoxColumn6
         '
@@ -485,13 +729,6 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.ReadOnly = True
         '
-        'DataGridViewTextBoxColumn19
-        '
-        Me.DataGridViewTextBoxColumn19.DataPropertyName = "EmploymentStatus"
-        Me.DataGridViewTextBoxColumn19.HeaderText = "Employment Status"
-        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
-        Me.DataGridViewTextBoxColumn19.ReadOnly = True
-        '
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.DataPropertyName = "EmployeeType"
@@ -519,6 +756,15 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
         Me.DataGridViewTextBoxColumn22.ReadOnly = True
         '
+        'SickLeaveAllowanceErrorColumn
+        '
+        Me.SickLeaveAllowanceErrorColumn.DataPropertyName = "SickLeaveAllowance"
+        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.SickLeaveAllowanceErrorColumn.DefaultCellStyle = DataGridViewCellStyle27
+        Me.SickLeaveAllowanceErrorColumn.HeaderText = "SL Allowance per year"
+        Me.SickLeaveAllowanceErrorColumn.Name = "SickLeaveAllowanceErrorColumn"
+        Me.SickLeaveAllowanceErrorColumn.ReadOnly = True
+        '
         'DataGridViewTextBoxColumn23
         '
         Me.DataGridViewTextBoxColumn23.DataPropertyName = "WorkDaysPerYear"
@@ -529,15 +775,76 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn23.ReadOnly = True
         Me.DataGridViewTextBoxColumn23.Width = 60
         '
-        'DataGridViewTextBoxColumn24
+        'VacationLeaveBalanceErrorColumn
         '
-        Me.DataGridViewTextBoxColumn24.DataPropertyName = "FailureDescription"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn24.DefaultCellStyle = DataGridViewCellStyle16
-        Me.DataGridViewTextBoxColumn24.HeaderText = "Reason"
-        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
-        Me.DataGridViewTextBoxColumn24.ReadOnly = True
-        Me.DataGridViewTextBoxColumn24.Width = 200
+        Me.VacationLeaveBalanceErrorColumn.DataPropertyName = "VacationLeaveBalance"
+        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.VacationLeaveBalanceErrorColumn.DefaultCellStyle = DataGridViewCellStyle29
+        Me.VacationLeaveBalanceErrorColumn.HeaderText = "Current VL Balance"
+        Me.VacationLeaveBalanceErrorColumn.Name = "VacationLeaveBalanceErrorColumn"
+        Me.VacationLeaveBalanceErrorColumn.ReadOnly = True
+        '
+        'SickLeaveBalanceErrorColumn
+        '
+        Me.SickLeaveBalanceErrorColumn.DataPropertyName = "SickLeaveBalance"
+        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.SickLeaveBalanceErrorColumn.DefaultCellStyle = DataGridViewCellStyle30
+        Me.SickLeaveBalanceErrorColumn.HeaderText = "Current SL Balance"
+        Me.SickLeaveBalanceErrorColumn.Name = "SickLeaveBalanceErrorColumn"
+        Me.SickLeaveBalanceErrorColumn.ReadOnly = True
+        '
+        'BranchErrorColumn
+        '
+        Me.BranchErrorColumn.DataPropertyName = "Branch"
+        Me.BranchErrorColumn.HeaderText = "Branch"
+        Me.BranchErrorColumn.Name = "BranchErrorColumn"
+        Me.BranchErrorColumn.ReadOnly = True
+        '
+        'AtmNumberErrorColumn
+        '
+        Me.AtmNumberErrorColumn.DataPropertyName = "AtmNumber"
+        Me.AtmNumberErrorColumn.HeaderText = "ATM #/ Account #"
+        Me.AtmNumberErrorColumn.Name = "AtmNumberErrorColumn"
+        Me.AtmNumberErrorColumn.ReadOnly = True
+        '
+        'EmailErrorColumn
+        '
+        Me.EmailErrorColumn.DataPropertyName = "Email"
+        Me.EmailErrorColumn.HeaderText = "Email"
+        Me.EmailErrorColumn.Name = "EmailErrorColumn"
+        Me.EmailErrorColumn.ReadOnly = True
+        '
+        'RestDayErrorColumn
+        '
+        Me.RestDayErrorColumn.DataPropertyName = "RestDay"
+        Me.RestDayErrorColumn.HeaderText = "Rest Day"
+        Me.RestDayErrorColumn.Name = "RestDayErrorColumn"
+        Me.RestDayErrorColumn.ReadOnly = True
+        '
+        'LateGracePeriodErrorColumn
+        '
+        Me.LateGracePeriodErrorColumn.DataPropertyName = "LateGracePeriod"
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.LateGracePeriodErrorColumn.DefaultCellStyle = DataGridViewCellStyle31
+        Me.LateGracePeriodErrorColumn.HeaderText = "Grace Period"
+        Me.LateGracePeriodErrorColumn.Name = "LateGracePeriodErrorColumn"
+        Me.LateGracePeriodErrorColumn.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.DataPropertyName = "BirthDate"
+        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle33
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Birth Date"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        '
+        'DataGridViewTextBoxColumn19
+        '
+        Me.DataGridViewTextBoxColumn19.DataPropertyName = "EmploymentStatus"
+        Me.DataGridViewTextBoxColumn19.HeaderText = "Employment Status"
+        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
         '
         'DataGridViewTextBoxColumn25
         '
@@ -842,305 +1149,6 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn60.HeaderText = "Grace Period"
         Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
         '
-        'Column24
-        '
-        Me.Column24.DataPropertyName = "LineNumber"
-        Me.Column24.HeaderText = "Line Number"
-        Me.Column24.Name = "Column24"
-        Me.Column24.ReadOnly = True
-        Me.Column24.Width = 60
-        '
-        'SickLeaveAllowanceErrorColumn
-        '
-        Me.SickLeaveAllowanceErrorColumn.DataPropertyName = "SickLeaveAllowance"
-        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.SickLeaveAllowanceErrorColumn.DefaultCellStyle = DataGridViewCellStyle27
-        Me.SickLeaveAllowanceErrorColumn.HeaderText = "SL Allowance per year"
-        Me.SickLeaveAllowanceErrorColumn.Name = "SickLeaveAllowanceErrorColumn"
-        Me.SickLeaveAllowanceErrorColumn.ReadOnly = True
-        '
-        'VacationLeaveBalanceErrorColumn
-        '
-        Me.VacationLeaveBalanceErrorColumn.DataPropertyName = "VacationLeaveBalance"
-        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.VacationLeaveBalanceErrorColumn.DefaultCellStyle = DataGridViewCellStyle29
-        Me.VacationLeaveBalanceErrorColumn.HeaderText = "Current VL Balance"
-        Me.VacationLeaveBalanceErrorColumn.Name = "VacationLeaveBalanceErrorColumn"
-        Me.VacationLeaveBalanceErrorColumn.ReadOnly = True
-        '
-        'SickLeaveBalanceErrorColumn
-        '
-        Me.SickLeaveBalanceErrorColumn.DataPropertyName = "SickLeaveBalance"
-        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.SickLeaveBalanceErrorColumn.DefaultCellStyle = DataGridViewCellStyle30
-        Me.SickLeaveBalanceErrorColumn.HeaderText = "Current SL Balance"
-        Me.SickLeaveBalanceErrorColumn.Name = "SickLeaveBalanceErrorColumn"
-        Me.SickLeaveBalanceErrorColumn.ReadOnly = True
-        '
-        'BranchErrorColumn
-        '
-        Me.BranchErrorColumn.DataPropertyName = "Branch"
-        Me.BranchErrorColumn.HeaderText = "Branch"
-        Me.BranchErrorColumn.Name = "BranchErrorColumn"
-        Me.BranchErrorColumn.ReadOnly = True
-        '
-        'AtmNumberErrorColumn
-        '
-        Me.AtmNumberErrorColumn.DataPropertyName = "AtmNumber"
-        Me.AtmNumberErrorColumn.HeaderText = "ATM #/ Account #"
-        Me.AtmNumberErrorColumn.Name = "AtmNumberErrorColumn"
-        Me.AtmNumberErrorColumn.ReadOnly = True
-        '
-        'EmailErrorColumn
-        '
-        Me.EmailErrorColumn.DataPropertyName = "Email"
-        Me.EmailErrorColumn.HeaderText = "Email"
-        Me.EmailErrorColumn.Name = "EmailErrorColumn"
-        Me.EmailErrorColumn.ReadOnly = True
-        '
-        'RestDayErrorColumn
-        '
-        Me.RestDayErrorColumn.DataPropertyName = "RestDay"
-        Me.RestDayErrorColumn.HeaderText = "Rest Day"
-        Me.RestDayErrorColumn.Name = "RestDayErrorColumn"
-        Me.RestDayErrorColumn.ReadOnly = True
-        '
-        'LateGracePeriodErrorColumn
-        '
-        Me.LateGracePeriodErrorColumn.DataPropertyName = "LateGracePeriod"
-        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.LateGracePeriodErrorColumn.DefaultCellStyle = DataGridViewCellStyle31
-        Me.LateGracePeriodErrorColumn.HeaderText = "Grace Period"
-        Me.LateGracePeriodErrorColumn.Name = "LateGracePeriodErrorColumn"
-        Me.LateGracePeriodErrorColumn.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeNo"
-        Me.Column1.HeaderText = "Employee ID"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "LastName"
-        Me.Column2.HeaderText = "Last Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "FirstName"
-        Me.Column3.HeaderText = "First Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "MiddleName"
-        Me.Column4.HeaderText = "Middle Name"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "BirthDate"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle2
-        Me.Column6.HeaderText = "Birth Date"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Gender"
-        Me.Column7.HeaderText = "Gender"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "Nickname"
-        Me.Column8.HeaderText = "Nickname"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column9
-        '
-        Me.Column9.DataPropertyName = "MaritalStatus"
-        Me.Column9.HeaderText = "Marital Status"
-        Me.Column9.Name = "Column9"
-        Me.Column9.ReadOnly = True
-        '
-        'Column10
-        '
-        Me.Column10.DataPropertyName = "Salutation"
-        Me.Column10.HeaderText = "Salutation"
-        Me.Column10.Name = "Column10"
-        Me.Column10.ReadOnly = True
-        '
-        'Column11
-        '
-        Me.Column11.DataPropertyName = "Address"
-        Me.Column11.HeaderText = "Address"
-        Me.Column11.Name = "Column11"
-        Me.Column11.ReadOnly = True
-        '
-        'Column12
-        '
-        Me.Column12.DataPropertyName = "ContactNo"
-        Me.Column12.HeaderText = "Contact No."
-        Me.Column12.Name = "Column12"
-        Me.Column12.ReadOnly = True
-        '
-        'Column13
-        '
-        Me.Column13.DataPropertyName = "Position"
-        Me.Column13.HeaderText = "Job Position"
-        Me.Column13.Name = "Column13"
-        Me.Column13.ReadOnly = True
-        '
-        'Column14
-        '
-        Me.Column14.DataPropertyName = "TIN"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column14.DefaultCellStyle = DataGridViewCellStyle3
-        Me.Column14.HeaderText = "TIN"
-        Me.Column14.Name = "Column14"
-        Me.Column14.ReadOnly = True
-        '
-        'Column15
-        '
-        Me.Column15.DataPropertyName = "SSSNo"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column15.DefaultCellStyle = DataGridViewCellStyle4
-        Me.Column15.HeaderText = "SSS No."
-        Me.Column15.Name = "Column15"
-        Me.Column15.ReadOnly = True
-        '
-        'Column16
-        '
-        Me.Column16.DataPropertyName = "PhilHealthNo"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column16.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column16.HeaderText = "PhilHealth No."
-        Me.Column16.Name = "Column16"
-        Me.Column16.ReadOnly = True
-        '
-        'Column17
-        '
-        Me.Column17.DataPropertyName = "HDMFNo"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column17.DefaultCellStyle = DataGridViewCellStyle6
-        Me.Column17.HeaderText = "HMDF No."
-        Me.Column17.Name = "Column17"
-        Me.Column17.ReadOnly = True
-        '
-        'Column18
-        '
-        Me.Column18.DataPropertyName = "DateEmployed"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column18.DefaultCellStyle = DataGridViewCellStyle7
-        Me.Column18.HeaderText = "Date Employed"
-        Me.Column18.Name = "Column18"
-        Me.Column18.ReadOnly = True
-        '
-        'Column20
-        '
-        Me.Column20.DataPropertyName = "EmployeeType"
-        Me.Column20.HeaderText = "Employee Type"
-        Me.Column20.Name = "Column20"
-        Me.Column20.ReadOnly = True
-        '
-        'Column21
-        '
-        Me.Column21.DataPropertyName = "EmploymentStatus"
-        Me.Column21.HeaderText = "Employment Status"
-        Me.Column21.Name = "Column21"
-        Me.Column21.ReadOnly = True
-        '
-        'Column22
-        '
-        Me.Column22.DataPropertyName = "VacationLeaveAllowance"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column22.DefaultCellStyle = DataGridViewCellStyle8
-        Me.Column22.HeaderText = "VL Allowance per year"
-        Me.Column22.Name = "Column22"
-        Me.Column22.ReadOnly = True
-        '
-        'SickLeaveAllowanceColumn
-        '
-        Me.SickLeaveAllowanceColumn.DataPropertyName = "SickLeaveAllowance"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.SickLeaveAllowanceColumn.DefaultCellStyle = DataGridViewCellStyle9
-        Me.SickLeaveAllowanceColumn.HeaderText = "SL Allowance per year"
-        Me.SickLeaveAllowanceColumn.Name = "SickLeaveAllowanceColumn"
-        Me.SickLeaveAllowanceColumn.ReadOnly = True
-        '
-        'Column23
-        '
-        Me.Column23.DataPropertyName = "WorkDaysPerYear"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.Column23.DefaultCellStyle = DataGridViewCellStyle10
-        Me.Column23.HeaderText = "Work Days Per Year"
-        Me.Column23.Name = "Column23"
-        Me.Column23.ReadOnly = True
-        '
-        'VacationLeaveBalanceColumn
-        '
-        Me.VacationLeaveBalanceColumn.DataPropertyName = "VacationLeaveBalance"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.VacationLeaveBalanceColumn.DefaultCellStyle = DataGridViewCellStyle11
-        Me.VacationLeaveBalanceColumn.HeaderText = "Current VL Balance"
-        Me.VacationLeaveBalanceColumn.Name = "VacationLeaveBalanceColumn"
-        Me.VacationLeaveBalanceColumn.ReadOnly = True
-        '
-        'SickLeaveBalance
-        '
-        Me.SickLeaveBalance.DataPropertyName = "SickLeaveBalance"
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.SickLeaveBalance.DefaultCellStyle = DataGridViewCellStyle12
-        Me.SickLeaveBalance.HeaderText = "Current SL Balance"
-        Me.SickLeaveBalance.Name = "SickLeaveBalance"
-        Me.SickLeaveBalance.ReadOnly = True
-        '
-        'BranchColumn
-        '
-        Me.BranchColumn.DataPropertyName = "Branch"
-        Me.BranchColumn.HeaderText = "Branch"
-        Me.BranchColumn.Name = "BranchColumn"
-        Me.BranchColumn.ReadOnly = True
-        '
-        'AtmNumberColumn
-        '
-        Me.AtmNumberColumn.DataPropertyName = "AtmNumber"
-        Me.AtmNumberColumn.HeaderText = "ATM #/Account #"
-        Me.AtmNumberColumn.Name = "AtmNumberColumn"
-        Me.AtmNumberColumn.ReadOnly = True
-        '
-        'EmailColumn
-        '
-        Me.EmailColumn.DataPropertyName = "Email"
-        Me.EmailColumn.HeaderText = "Email"
-        Me.EmailColumn.Name = "EmailColumn"
-        Me.EmailColumn.ReadOnly = True
-        '
-        'RestDayColumn
-        '
-        Me.RestDayColumn.DataPropertyName = "RestDay"
-        Me.RestDayColumn.HeaderText = "Rest Day"
-        Me.RestDayColumn.Name = "RestDayColumn"
-        Me.RestDayColumn.ReadOnly = True
-        '
-        'LateGracePeriodColumn
-        '
-        Me.LateGracePeriodColumn.DataPropertyName = "LateGracePeriod"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.LateGracePeriodColumn.DefaultCellStyle = DataGridViewCellStyle13
-        Me.LateGracePeriodColumn.HeaderText = "Grace Period"
-        Me.LateGracePeriodColumn.Name = "LateGracePeriodColumn"
-        Me.LateGracePeriodColumn.ReadOnly = True
-        '
         'ImportEmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1233,6 +1241,14 @@ Partial Class ImportEmployeeForm
     Friend WithEvents EmailErrorColumn As DataGridViewTextBoxColumn
     Friend WithEvents RestDayErrorColumn As DataGridViewTextBoxColumn
     Friend WithEvents LateGracePeriodErrorColumn As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn53 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn54 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn55 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn56 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn57 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn58 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn59 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn60 As DataGridViewTextBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
@@ -1258,16 +1274,9 @@ Partial Class ImportEmployeeForm
     Friend WithEvents VacationLeaveBalanceColumn As DataGridViewTextBoxColumn
     Friend WithEvents SickLeaveBalance As DataGridViewTextBoxColumn
     Friend WithEvents BranchColumn As DataGridViewTextBoxColumn
+    Friend WithEvents BankNameColumn As DataGridViewTextBoxColumn
     Friend WithEvents AtmNumberColumn As DataGridViewTextBoxColumn
     Friend WithEvents EmailColumn As DataGridViewTextBoxColumn
     Friend WithEvents RestDayColumn As DataGridViewTextBoxColumn
     Friend WithEvents LateGracePeriodColumn As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn53 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn54 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn55 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn56 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn57 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn58 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn59 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn60 As DataGridViewTextBoxColumn
 End Class
