@@ -791,7 +791,7 @@ Public Class PayStubForm
                     .Comment = "Remaining Balance",
                     .IsActual = False,
                     .OrganizationID = z_OrganizationID,
-                    .Amount = totalBalance,
+                    .Amount = totalBalance * -1,
                     .PaystubID = paystub.RowID.Value,
                     .ProductID = loanProduct.Where(Function(t) t.Name = "Loan Balance Payment").FirstOrDefault.RowID,
                     .Is13thMonthPay = False
@@ -857,7 +857,9 @@ Public Class PayStubForm
                         basicPay:=basicPay)
             Next
 
-            Dim generator As New ReleaseThirteenthMonthGeneration(selectedEmployees, 11) '11 is for 13th Month Pay
+            Dim adjustments = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
+
+            Dim generator As New ReleaseThirteenthMonthGeneration(selectedEmployees, CInt(adjustments.Where(Function(t) t.Name = "13th Month Pay").FirstOrDefault.RowID)) '11 is for 13th Month Pay
             Dim progressDialogNew = New ProgressDialog(generator, "Creating 13th month pay adjustments...")
 
             Dim generationTask = Task.Run(
