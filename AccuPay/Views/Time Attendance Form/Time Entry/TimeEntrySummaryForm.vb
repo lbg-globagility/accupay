@@ -626,7 +626,8 @@ Public Class TimeEntrySummaryForm
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay"),
                     .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay"),
                     .BranchID = reader.GetValue(Of Integer?)("BranchID"),
-                    .BranchName = reader.GetValue(Of String)("BranchName")
+                    .BranchName = reader.GetValue(Of String)("BranchName"),
+                    .curr_system_owner = curr_sys_owner_name
                 }
 
                 timeEntry.GetHolidayType(calendarCollection)
@@ -1323,6 +1324,8 @@ Public Class TimeEntrySummaryForm
 
         Private _holidayType As String
 
+        Public Property curr_system_owner As String
+
         Public Property HolidayType As String
             Get
                 Return _holidayType
@@ -1435,6 +1438,10 @@ Public Class TimeEntrySummaryForm
             Get
                 If LeavePay > 0 Then
                     Return "w/ Leave"
+                End If
+
+                If OtherLeaveHours > 0 And curr_system_owner = SystemOwner.RGI Then
+                    Return "Leave w/o Pay"
                 End If
 
                 If AbsentAmount > 0 Then
