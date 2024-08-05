@@ -101,11 +101,11 @@ Public Class ImportSalaryForm
                 .EffectiveFrom = record.EffectiveFrom.Value,
                 .BasicSalary = record.BasicSalary.Value,
                 .AllowanceSalary = record.AllowanceSalary,
-                .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
-                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
-                .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
-                .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
-                .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
+                .DoPaySSSContribution = If(record.SSSAuto = "YES", True, False),
+                .AutoComputeHDMFContribution = If(record.HDMF_Auto = "YES", True, False),
+                .AutoComputePhilHealthContribution = If(record.PhilhealthAuto = "YES", True, False),
+                .HDMFAmount = record.HDMF,
+                .PhilHealthDeduction = record.Philhealth
             }
 
             salary.UpdateTotalSalary()
@@ -228,6 +228,32 @@ Public Class ImportSalaryForm
         Public ReadOnly Property AllowanceSalary As Decimal
             Get
                 Return _salary.AllowanceSalary
+            End Get
+        End Property
+
+        Public ReadOnly Property SSSAuto As Boolean
+            Get
+                Return _salary.DoPaySSSContribution
+            End Get
+        End Property
+        Public ReadOnly Property HDMF_Auto As Boolean
+            Get
+                Return _salary.AutoComputeHDMFContribution
+            End Get
+        End Property
+        Public ReadOnly Property PhilhealthAuto As Boolean
+            Get
+                Return _salary.AutoComputePhilHealthContribution
+            End Get
+        End Property
+        Public ReadOnly Property Philhealth As Decimal
+            Get
+                Return _salary.PhilHealthDeduction
+            End Get
+        End Property
+        Public ReadOnly Property HDMF As Decimal
+            Get
+                Return _salary.HDMFAmount
             End Get
         End Property
 
