@@ -8,6 +8,6 @@ namespace AccuPay.Core.Interfaces.Reports
 {
     public interface IPbcomReportBuilder
     {
-        Task<List<PbcomReportModel>> GetData(DateTime startPeriod, DateTime endPeriod, int organizationId);
+        Task<List<PbcomReportModel>> GetData(DateTime startPeriod, DateTime endPeriod, int organizationId, string version);
     }
 }

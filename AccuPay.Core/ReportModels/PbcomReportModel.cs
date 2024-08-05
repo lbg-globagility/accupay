@@ -9,7 +9,7 @@ namespace AccuPay.Core.ReportModels
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
-        public decimal TotalNetSalary { get; set; }
+        public decimal Amount { get; set; }
         public string ATMNo { get; set; }
     }
 }
