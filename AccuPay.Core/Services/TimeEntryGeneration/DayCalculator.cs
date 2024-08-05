@@ -48,7 +48,8 @@ namespace AccuPay.Core.Services
             int? branchId,
             ICollection<TripTicket> tripTickets,
             IReadOnlyCollection<RoutePayRate> routeRates,
-            IList<Salary2> salaries2 = null)
+            IList<Salary2> salaries2 = null,
+            string systemOwner = "")
         {
             var timeEntry = oldTimeEntries.Where(t => t.Date == currentDate).SingleOrDefault();
 
@@ -86,8 +87,8 @@ namespace AccuPay.Core.Services
 
             var hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries.ToList(), calendarCollection);
 
-            ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate, tripTickets, routeRates);
-            ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay);
+            ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate, tripTickets, routeRates, systemOwner: systemOwner);
+            ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay, systemOwner);
 
             return timeEntry;
         }
@@ -105,7 +106,8 @@ namespace AccuPay.Core.Services
             bool hasWorkedLastDay,
             IPayrate payrate,
             ICollection<TripTicket> tripTickets,
-            IReadOnlyCollection<RoutePayRate> routeRates)
+            IReadOnlyCollection<RoutePayRate> routeRates,
+            string systemOwner = "")
         {
             var previousDay = currentDate.AddDays(-1);
             var calculator = new TimeEntryCalculator();
@@ -150,7 +152,7 @@ namespace AccuPay.Core.Services
 
                     if (dutyPeriod != null)
                     {
-                        ComputeWorkingPeriodHours(timeEntry, leaves, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, dutyPeriod);
+                        ComputeWorkingPeriodHours(timeEntry, leaves, timeAttendanceLogs, breakTimeBrackets, currentShift, calculator, dutyPeriod, systemOwner: systemOwner);
 
                         ComputeExtraPeriodHours(currentDate, timeEntry, overtimes, currentShift, previousDay, calculator, logPeriod, dutyPeriod);
                     }
@@ -166,7 +168,7 @@ namespace AccuPay.Core.Services
             }
 
             ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves);
-            ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry, payrate);
+            ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry, payrate, systemOwner: systemOwner);
         }
 
         private void ComputeWorkingPeriodHours(
@@ -176,7 +178,8 @@ namespace AccuPay.Core.Services
             IList<BreakTimeBracket> breakTimeBrackets,
             CurrentShift currentShift,
             TimeEntryCalculator calculator,
-            TimePeriod dutyPeriod)
+            TimePeriod dutyPeriod,
+            string systemOwner = "")
         {
             timeEntry.RegularHours = calculator.ComputeRegularHours(dutyPeriod, currentShift, _policy.ComputeBreakTimeLate);
 
@@ -197,7 +200,7 @@ namespace AccuPay.Core.Services
                     currentShift,
                     _policy.ComputeBreakTimeLate);
 
-                timeEntry.SetLeaveHours(leave.LeaveType, leaveHours);
+                timeEntry.SetLeaveHours(leave.LeaveType, leaveHours, systemOwner:systemOwner);
             }
 
             timeEntry.LateHours = calculator.ComputeLateHours(coveredPeriod, currentShift, _policy.ComputeBreakTimeLate);
@@ -698,7 +701,8 @@ namespace AccuPay.Core.Services
             IList<Leave> leaves,
             CurrentShift currentShift,
             TimeEntry timeEntry,
-            IPayrate payrate)
+            IPayrate payrate,
+            string systemOwner = "")
         {
             if (!leaves.Any()) return;
 
@@ -717,7 +721,7 @@ namespace AccuPay.Core.Services
                     leave,
                     _policy.ComputeBreakTimeLate);
 
-                timeEntry.SetLeaveHours(leave.LeaveType, leaveHours);
+                timeEntry.SetLeaveHours(leave.LeaveType, leaveHours, systemOwner: systemOwner);
             }
 
             if (currentShift.IsWorkingDay)
@@ -742,7 +746,8 @@ namespace AccuPay.Core.Services
             CurrentShift currentShift,
             Salary salary,
             IPayrate payrate,
-            bool hasWorkedLastDay)
+            bool hasWorkedLastDay,
+            string systemOwner = "")
         {
             // TODO: return this as one of the list of warnings of Time entry generation
             // Employee has not started yet according to the employee's Start Date
@@ -792,7 +797,8 @@ namespace AccuPay.Core.Services
 
             var payrateRestDayOTRate = _employee.OvertimeOverride ? restDayRate : payrate.RestDayOTRate;
             timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrateRestDayOTRate;
-            timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate;
+
+            timeEntry.LeavePay = (systemOwner == "RGI" ? timeEntry.RGITotalPaidLeaveHours : timeEntry.TotalLeaveHours )* hourlyRate;
 
             if (currentShift.IsWorkingDay)
             {

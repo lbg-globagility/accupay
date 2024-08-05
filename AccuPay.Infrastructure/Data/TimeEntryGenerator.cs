@@ -70,8 +70,14 @@ namespace AccuPay.Infrastructure.Data
                 .Where(o => o.EmployeeID == employee.RowID)
                 .ToList();
 
-            var leavesInCutoff = resources.Leaves.Where(l => l.EmployeeID == employee.RowID)
+
+
+            var leavesInCutoff = systemOwner != SystemOwner.RGI ? resources.Leaves.Where(l => l.EmployeeID == employee.RowID)
                 .Where(l => l.LeaveType != "Leave w/o Pay")
+                .ToList()
+                :
+                resources.Leaves.Where(l => l.EmployeeID == employee.RowID)
+                .Where(l => l.LeaveType == "Leave w/o Pay" || l.LeaveType == "Leave w/ Pay")
                 .ToList();
 
             ICollection<AgencyFee> agencyFees = resources.AgencyFees
@@ -166,7 +172,8 @@ namespace AccuPay.Infrastructure.Data
                         branchId,
                         tripTicketsForDate,
                         resources.RouteRates,
-                        salaries2: salaries2);
+                        salaries2: salaries2,
+                        systemOwner: systemOwner);
 
                     if (payrate.IsRegularHoliday)
                     {

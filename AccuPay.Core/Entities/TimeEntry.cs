@@ -1,4 +1,4 @@
-﻿using AccuPay.Core.Helpers;
+using AccuPay.Core.Helpers;
 using AccuPay.Utilities.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -70,7 +70,7 @@ namespace AccuPay.Core.Entities
 
         public int? LastUpdBy { get; set; }
 
-        public void SetLeaveHours(string leaveType, decimal leaveHours)
+        public void SetLeaveHours(string leaveType, decimal leaveHours, string systemOwner = "")
         {
             switch (leaveType.ToTrimmedLowerCase())
             {
@@ -89,6 +89,14 @@ namespace AccuPay.Core.Entities
                 case var type when string.Equals(type, ProductConstant.OTHERS_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
                     OtherLeaveHours = leaveHours;
                     break;
+
+                case var type when string.Equals(type, ProductConstant.LEAVE_WO_PAY, System.StringComparison.InvariantCultureIgnoreCase) && systemOwner == SystemOwner.RGI:
+                    OtherLeaveHours = leaveHours;
+                    break;
+
+                case var type when string.Equals(type, ProductConstant.LEAVE_W_PAY, System.StringComparison.InvariantCultureIgnoreCase) && systemOwner == SystemOwner.RGI:
+                    SickLeaveHours = leaveHours;
+                    break;
             }
         }
 
@@ -103,6 +111,11 @@ namespace AccuPay.Core.Entities
             SickLeaveHours +
             MaternityLeaveHours +
             OtherLeaveHours;
+
+        public decimal RGITotalPaidLeaveHours =>
+            VacationLeaveHours +
+            SickLeaveHours +
+            MaternityLeaveHours;
 
         public void ComputeTotalHours()
         {

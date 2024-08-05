@@ -19,6 +19,8 @@ namespace AccuPay.Core.Helpers
         public const string PAG_IBIG_LOAN = "PAGIBIG Loan";
         public const string PARENTAL_LEAVE = "Parental";
         public const string SICK_LEAVE = "Sick leave";
+        public const string LEAVE_WO_PAY = "Leave w/o Pay";
+        public const string LEAVE_W_PAY = "Leave w/ Pay";
         public const string SSS_LOAN = "SSS Loan";
         public const string VACATION_LEAVE = "Vacation leave";
         public const string PARENT_LEAVE = "Maternity/paternity leave";
