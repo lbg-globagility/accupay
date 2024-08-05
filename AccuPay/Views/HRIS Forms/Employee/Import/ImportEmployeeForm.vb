@@ -142,6 +142,9 @@ Public Class ImportEmployeeForm
         <ColumnName("Current SL balance (hours)")>
         Public Property SickLeaveBalance As Decimal
 
+        <ColumnName("Bank Name")>
+        Public Property BankName As String
+
         <ColumnName("ATM No./Account No.")>
         Public Property AtmNumber As String
 
@@ -319,6 +322,8 @@ Public Class ImportEmployeeForm
             If Not String.IsNullOrWhiteSpace(em.AtmNumber) Then .AtmNo = em.AtmNumber
 
             If Not String.IsNullOrWhiteSpace(em.Email) Then .EmailAddress = em.Email
+
+            If Not String.IsNullOrWhiteSpace(em.BankName) Then .BankName = em.BankName
 
             .DayOfRest = ParseRestDay(em.RestDay)
 
