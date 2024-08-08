@@ -37,8 +37,12 @@ Namespace Global.AccuPay
                     OrderByDescending(Function(t) t.PartNo).
                     ToList()
 
-                Dim trackedLeaves = {ProductConstant.SICK_LEAVE, ProductConstant.VACATION_LEAVE}
-                _leaveTypes = _leaveTypes.Where(Function(l) trackedLeaves.Contains(l.PartNo)).ToList()
+                Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of ISystemOwnerService)
+
+                If Not If((Await systemOwnerService.GetCurrentSystemOwnerEntityAsync())?.IsRgi, False) Then
+                    Dim trackedLeaves = {ProductConstant.SICK_LEAVE, ProductConstant.VACATION_LEAVE}
+                    _leaveTypes = _leaveTypes.Where(Function(l) trackedLeaves.Contains(l.PartNo)).ToList()
+                End If
 
                 ViewLeaveLedgerTypeSelector.LeaveTypes = _leaveTypes
 
