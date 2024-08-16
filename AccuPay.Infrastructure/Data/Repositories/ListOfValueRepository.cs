@@ -15,6 +15,20 @@ namespace AccuPay.Infrastructure.Data
         {
         }
 
+        public String GetDefaultMassOvertimeStatus()
+        {
+            var values = GetListOfValues("MassOvertimePolicy").Where(x => x.LIC == "DefaultStatusMassOvertime");
+
+            if (values.Count() <= 0)
+            {
+                return "Approved";
+            }
+            else
+            {
+                return values.First().DisplayValue;
+            }
+        }
+
         public string GetExcelPassword()
         {
             var values = GetListOfValues("Excel Report Password");

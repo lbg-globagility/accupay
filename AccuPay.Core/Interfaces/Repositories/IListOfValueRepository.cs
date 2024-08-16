@@ -22,6 +22,8 @@ namespace AccuPay.Core.Interfaces
 
         string GetExcelPassword();
 
+        string GetDefaultMassOvertimeStatus();
+
         Task<ICollection<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter);
 
         ICollection<ListOfValue> GetLeaveConvertiblePolicies();

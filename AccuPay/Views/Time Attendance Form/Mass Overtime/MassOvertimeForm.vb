@@ -5,6 +5,7 @@ Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Core.ValueObjects
 Imports AccuPay.Desktop.Utilities
+Imports AccuPay.Infrastructure.Data
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -204,12 +205,16 @@ Public Class MassOvertimePresenter
 
     Private ReadOnly _employeeRepository As IEmployeeRepository
 
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
+
     Public Sub New(view As MassOvertimeForm)
         _view = view
 
         _divisionRepository = MainServiceProvider.GetRequiredService(Of IDivisionRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
     End Sub
 
@@ -218,6 +223,8 @@ Public Class MassOvertimePresenter
         _employees = Await LoadEmployees()
 
         _view.ShowEmployees(_divisions, _employees)
+
+
     End Function
 
     Private Async Function LoadDivisions() As Task(Of IList(Of Division))
@@ -314,14 +321,17 @@ Public Class MassOvertimePresenter
     End Sub
 
     Public Async Function SaveOvertimes() As Task
+
         Dim changedOvertimes = _models.
             Where(Function(ot) ot.IsNew Or ot.IsUpdate).
-            Select(Function(ot) ConverToOvertime(ot)).
+            Select(Function(ot) ConverToOvertime(ot, _listOfValueRepository.GetDefaultMassOvertimeStatus())).
             ToList()
 
         Await FunctionUtils.TryCatchFunctionAsync("Saving Mass Overtimes",
         Async Function()
             If changedOvertimes.Any Then
+
+
 
                 Dim service = MainServiceProvider.GetRequiredService(Of IOvertimeDataService)
                 Await service.SaveManyAsync(changedOvertimes, z_User)
@@ -343,10 +353,10 @@ Public Class MassOvertimePresenter
         End Function)
     End Function
 
-    Private Shared Function ConverToOvertime(model As OvertimeModel) As Overtime
-
+    Private Shared Function ConverToOvertime(model As OvertimeModel, defaultStatus As String) As Overtime
         Dim convertedOvertime = Overtime.NewOvertime(
             organizationId:=z_OrganizationID,
+            status:=defaultStatus,
             employeeId:=model.EmployeeID.Value,
             startDate:=model.Date,
             startTime:=model.StartTime,
