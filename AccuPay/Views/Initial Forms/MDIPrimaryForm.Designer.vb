@@ -588,7 +588,7 @@ Partial Class MDIPrimaryForm
         Me.FiveMonthsProbCollapsibleGroupBox.Size = New System.Drawing.Size(299, 249)
         Me.FiveMonthsProbCollapsibleGroupBox.TabIndex = 210
         Me.FiveMonthsProbCollapsibleGroupBox.TabStop = False
-        Me.FiveMonthsProbCollapsibleGroupBox.Text = "5 MONTHS PROBITIONARY"
+        Me.FiveMonthsProbCollapsibleGroupBox.Text = "5 MONTHS PROBATIONARY"
         '
         'Panel17
         '
@@ -640,7 +640,7 @@ Partial Class MDIPrimaryForm
         Me.ThreeMonthsProbCollapsibleGroup.Size = New System.Drawing.Size(299, 249)
         Me.ThreeMonthsProbCollapsibleGroup.TabIndex = 209
         Me.ThreeMonthsProbCollapsibleGroup.TabStop = False
-        Me.ThreeMonthsProbCollapsibleGroup.Text = "3 MONTHS PROBITIONARY"
+        Me.ThreeMonthsProbCollapsibleGroup.Text = "3 MONTHS PROBATIONARY"
         '
         'Panel16
         '

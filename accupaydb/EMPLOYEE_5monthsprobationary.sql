@@ -12,22 +12,20 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Dumping structure for procedure accupaydb_rgi.EMPLOYEE_3monthsprobitionary
+-- Dumping structure for procedure accupaydb_rgi.EMPLOYEE_5monthsprobationary
 DELIMITER //
-CREATE PROCEDURE `EMPLOYEE_3monthsprobitionary`(
+CREATE PROCEDURE `EMPLOYEE_5monthsprobationary`(
 	IN `OrganizID` INT
 )
 BEGIN
 SELECT 
 	EmployeeID,
 	CONCAT(LastName,',',FirstName, IF(MiddleName='','',','),INITIALS(MiddleName,'. ','1')) AS Fullname,
-	"3 MONTHS PROBITIONARY" AS EMP,
+	"5 MONTHS PROBATIONARY" AS EMP,
 	DATE_FORMAT(startdate,'%m/%d/%Y')
-FROM employee 
-WHERE organizationId=OrganizID AND 
-		
-		DATE(STARTDATE + INTERVAL 3 MONTH) >= (NOW() - INTERVAL 8 DAY) AND 
-		DATE(STARTDATE + INTERVAL 3 MONTH) <= (NOW() + INTERVAL 8 DAY);
+FROM employee WHERE organizationId=OrganizID AND
+		DATE(STARTDATE + INTERVAL 5 MONTH) >= (NOW() - INTERVAL 8 DAY) AND 
+		DATE(STARTDATE + INTERVAL 5 MONTH) <= (NOW() + INTERVAL 8 DAY);
 END//
 DELIMITER ;
 
