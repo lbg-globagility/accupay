@@ -11,7 +11,9 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class MassOvertimeForm
 
     Private _presenter As MassOvertimePresenter
-
+    Private tickedEmployees As IList(Of Employee)
+    Private tickedEmployeeIDs As IList(Of Integer)
+    Public Event EmployeeTicked(s As Object, e As EventArgs)
     Public ReadOnly Property DateFrom As Date
         Get
             Return FromDatePicker.Value
@@ -46,11 +48,23 @@ Public Class MassOvertimeForm
         InitializeComponent()
         OvertimeDataGridView.AutoGenerateColumns = False
         _presenter = New MassOvertimePresenter(Me)
+        tickedEmployees = New List(Of Employee)
+        tickedEmployeeIDs = New List(Of Integer)
     End Sub
+
+    Public Function GetTickedEmployees() As IList(Of Employee)
+        Return tickedEmployees
+    End Function
 
     Public Sub ShowEmployees(divisions As IEnumerable(Of Division), employees As IEnumerable(Of Employee))
         EmployeeTreeView.BeginUpdate()
         EmployeeTreeView.Nodes.Clear()
+
+
+        Dim rootNode = New TreeNode With {
+            .Name = "$root",
+            .Text = "All"
+        }
 
         Dim parentDivisions = divisions.Where(Function(d) d.IsRoot)
 
@@ -62,6 +76,11 @@ Public Class MassOvertimeForm
             }
 
             Dim childDivisions = divisions.Where(Function(d) d.IsParent(parentDivision))
+
+            If childDivisions.Any() Then
+                parentNode.Text = $"{parentNode.Text} ({childDivisions.Count()})"
+            End If
+
             For Each childDivision In childDivisions
                 Dim childNode = New TreeNode() With {
                     .Name = childDivision.Name,
@@ -71,11 +90,21 @@ Public Class MassOvertimeForm
 
                 Dim childEmployees = employees.
                     Where(Function(e) Nullable.Equals(e.Position?.Division?.RowID, childDivision.RowID))
+
+                If Not childEmployees.Any() Then
+                    Continue For
+                End If
+
+                childNode.Text = $"{childNode.Text} ({childEmployees.Count()})"
+
                 For Each childEmployee In childEmployees
+                    Dim shouldSetChecked = tickedEmployeeIDs.Any(Function(eID) Nullable.Equals(eID, childEmployee.RowID))
+
                     Dim employeeNode = New TreeNode() With {
                         .Name = childEmployee.FullNameWithMiddleInitialLastNameFirst,
-                        .Text = childEmployee.FullNameWithMiddleInitialLastNameFirst,
-                        .Tag = childEmployee
+                        .Text = $"{childEmployee.FullNameWithMiddleInitialLastNameFirst} #{childEmployee.EmployeeNo}",
+                        .Tag = childEmployee,
+                        .Checked = shouldSetChecked
                     }
 
                     childNode.Nodes.Add(employeeNode)
@@ -84,11 +113,18 @@ Public Class MassOvertimeForm
                 parentNode.Nodes.Add(childNode)
             Next
 
-            EmployeeTreeView.Nodes.Add(parentNode)
+            If parentNode.Nodes.Count < 1 Then
+                Continue For
+            End If
+
+            rootNode.Nodes.Add(parentNode)
         Next
+
+        EmployeeTreeView.Nodes.Add(rootNode)
 
         EmployeeTreeView.ExpandAll()
         EmployeeTreeView.EndUpdate()
+        EmployeeTreeView.Nodes(0).EnsureVisible()
     End Sub
 
     Private Sub EmployeeTreeView_AfterCheck(sender As Object, e As TreeViewEventArgs)
@@ -96,9 +132,15 @@ Public Class MassOvertimeForm
         SetCheck(e.Node)
         SetParent(e.Node)
         _presenter.RefreshOvertime()
+        CollectTickedEmployees(e.Node)
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
+    Private Sub CollectTickedEmployees(tickedNode As TreeNode)
+        _presenter.TraverseNodes(tickedNode, tickedEmployees)
+        tickedEmployeeIDs = tickedEmployees.Select(Function(e) e.RowID.Value).ToList
 
+        RaiseEvent EmployeeTicked(Me, New EventArgs)
+    End Sub
     Public Function GetActiveEmployees() As IList(Of Employee)
         Dim list = New List(Of Employee)
         For Each node As TreeNode In EmployeeTreeView.Nodes
@@ -185,7 +227,7 @@ Public Class MassOvertimeForm
     End Sub
 
     Private Async Sub EmployeeSearchTextBox_TextChanged(sender As Object, e As EventArgs)
-        Await _presenter.FilterEmployees(EmployeeSearchTextBox.Text)
+        Await _presenter.FilterEmployees(EmployeeSearchTextBox.Text, True)
     End Sub
 
 End Class
@@ -247,8 +289,34 @@ Public Class MassOvertimePresenter
             GroupBy(Function(o) o.EmployeeID).
             ToList()
     End Function
+    Public Sub TraverseNodes(node As TreeNode, list As IList(Of Employee))
+        Dim isEmployee = TypeOf node.Tag Is Employee
+        Dim isSatisfy = isEmployee And node.Checked
 
-    Public Async Function FilterEmployees(needle As String) As Task
+        If isSatisfy Then
+            EmployeeListRemover(DirectCast(node.Tag, Employee), list)
+
+            list.Add(DirectCast(node.Tag, Employee))
+        Else
+            If isEmployee Then
+                EmployeeListRemover(DirectCast(node.Tag, Employee), list)
+            End If
+        End If
+
+        If node.GetNodeCount(False) >= 1 Then
+            For Each child As TreeNode In node.Nodes
+                TraverseNodes(child, list)
+            Next
+        End If
+    End Sub
+    Private Sub EmployeeListRemover(employee As Employee, list As IList(Of Employee))
+        Dim isExists = list.Any(Function(e) Nullable.Equals(e.RowID, employee.RowID))
+        If isExists Then
+            list.Remove(employee)
+        End If
+    End Sub
+
+    Public Async Function FilterEmployees(needle As String, isActiveOnly As Boolean) As Task
         Dim match =
             Function(employee As Employee) As Boolean
                 Dim contains = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(needle)
@@ -258,11 +326,21 @@ Public Class MassOvertimePresenter
                 Return contains Or containsReverseName
             End Function
 
-        Dim employees = Await Task.Run(
-            Function()
-                Return _employees.Where(match).ToList()
-            End Function)
+        Dim filterActive =
+                Function(employee As Employee)
+                    If isActiveOnly Then
+                        Return True
+                    Else
+                        Return employee.IsActive
+                    End If
+                End Function
 
+
+
+        Dim employees = Await Task.Run(
+                Function()
+                    Return _employees.Where(match).Where(filterActive).ToList()
+                End Function)
         _view.ShowEmployees(_divisions, employees)
     End Function
 
