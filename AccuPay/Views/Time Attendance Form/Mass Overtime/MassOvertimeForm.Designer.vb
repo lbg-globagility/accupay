@@ -22,10 +22,10 @@ Partial Class MassOvertimeForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FromDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.ToDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.OvertimeDataGridView = New System.Windows.Forms.DataGridView()
@@ -98,9 +98,9 @@ Partial Class MassOvertimeForm
         'Column3
         '
         Me.Column3.DataPropertyName = "Date"
-        DataGridViewCellStyle9.Format = "MM/dd/yyyy"
-        DataGridViewCellStyle9.NullValue = Nothing
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle1.Format = "MM/dd/yyyy"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
         Me.Column3.HeaderText = "Date"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
@@ -108,8 +108,8 @@ Partial Class MassOvertimeForm
         'Column6
         '
         Me.Column6.DataPropertyName = "Date"
-        DataGridViewCellStyle10.Format = "ddd"
-        Me.Column6.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle2.Format = "ddd"
+        Me.Column6.DefaultCellStyle = DataGridViewCellStyle2
         Me.Column6.HeaderText = "Day"
         Me.Column6.Name = "Column6"
         Me.Column6.ReadOnly = True
@@ -178,9 +178,9 @@ Partial Class MassOvertimeForm
         'DataGridViewTextBoxColumn3
         '
         Me.DataGridViewTextBoxColumn3.DataPropertyName = "Date"
-        DataGridViewCellStyle11.Format = "mm/dd/yyyy"
-        DataGridViewCellStyle11.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle3.Format = "mm/dd/yyyy"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn3.HeaderText = "Date"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
@@ -188,8 +188,8 @@ Partial Class MassOvertimeForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "OTStart"
-        DataGridViewCellStyle12.Format = "ddd"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle4.Format = "ddd"
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewTextBoxColumn4.HeaderText = "OT Start"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True

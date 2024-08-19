@@ -751,9 +751,9 @@ Public Class MDIPrimaryForm
 
         dgvfrequentleave.Tag = New SQLQueryToDatatable("CALL `FREQUENT_leave`('" & orgztnID & "');").ResultTable
 
-        dgvThreeMonthsProb.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_3monthsprobitionary`('" & orgztnID & "');").ResultTable
+        dgvThreeMonthsProb.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_3monthsprobationary`('" & orgztnID & "');").ResultTable
 
-        dgvFiveMonthsProb.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_5monthsprobitionary`('" & orgztnID & "');").ResultTable
+        dgvFiveMonthsProb.Tag = New SQLQueryToDatatable("CALL `EMPLOYEE_5monthsprobationary`('" & orgztnID & "');").ResultTable
 
         'dgvfrequentleave
 
