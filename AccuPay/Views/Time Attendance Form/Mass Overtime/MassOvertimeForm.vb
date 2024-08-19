@@ -131,8 +131,8 @@ Public Class MassOvertimeForm
         RemoveHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
         SetCheck(e.Node)
         SetParent(e.Node)
-        _presenter.RefreshOvertime()
         CollectTickedEmployees(e.Node)
+        _presenter.RefreshOvertime()
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
     Private Sub CollectTickedEmployees(tickedNode As TreeNode)
@@ -144,22 +144,11 @@ Public Class MassOvertimeForm
     Public Function GetActiveEmployees() As IList(Of Employee)
         Dim list = New List(Of Employee)
         For Each node As TreeNode In EmployeeTreeView.Nodes
-            TraverseNodes(node, list)
+            _presenter.TraverseNodes(node, list)
         Next
         Return list
     End Function
 
-    Private Sub TraverseNodes(node As TreeNode, list As IList(Of Employee))
-        If TypeOf node.Tag Is Employee And node.Checked Then
-            list.Add(DirectCast(node.Tag, Employee))
-        End If
-
-        If node.GetNodeCount(False) >= 1 Then
-            For Each child As TreeNode In node.Nodes
-                TraverseNodes(child, list)
-            Next
-        End If
-    End Sub
 
     Private Sub SetCheck(node As TreeNode)
         If node.GetNodeCount(False) >= 1 Then
@@ -309,6 +298,7 @@ Public Class MassOvertimePresenter
             Next
         End If
     End Sub
+
     Private Sub EmployeeListRemover(employee As Employee, list As IList(Of Employee))
         Dim isExists = list.Any(Function(e) Nullable.Equals(e.RowID, employee.RowID))
         If isExists Then
@@ -347,7 +337,7 @@ Public Class MassOvertimePresenter
     Public Sub RefreshOvertime()
         Dim dateFrom = _view.DateFrom
         Dim dateTo = _view.DateTo
-        Dim employees = _view.GetActiveEmployees()
+        Dim employees = _view.GetTickedEmployees()
 
         Dim overtimesByEmployee = LoadOvertimes(dateFrom.Date, dateTo.Date, employees)
 
