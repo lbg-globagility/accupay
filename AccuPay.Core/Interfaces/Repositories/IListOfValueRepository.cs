@@ -24,6 +24,8 @@ namespace AccuPay.Core.Interfaces
 
         string GetDefaultMassOvertimeStatus();
 
+        Task<bool> GetApprovalPolicy(string type, string lic);
+
         Task<ICollection<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter);
 
         ICollection<ListOfValue> GetLeaveConvertiblePolicies();
@@ -33,5 +35,7 @@ namespace AccuPay.Core.Interfaces
         Task<ICollection<ListOfValue>> GetListOfValuesAsync(string type, bool checkIfActive = true);
 
         Task<ListOfValue> GetPolicyAsync(string type, string lic, int organizationId);
+
+        Task<ListOfValue> GetPolicyNoOrganizationAsync(string type, string lic);
     }
 }

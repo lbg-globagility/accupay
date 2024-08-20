@@ -33,7 +33,7 @@ namespace AccuPay.Infrastructure.Data
         {
             var values = GetListOfValues("Excel Report Password");
 
-            if(values.Count <= 0)
+            if (values.Count <= 0)
             {
                 return "";
             }
@@ -41,6 +41,29 @@ namespace AccuPay.Infrastructure.Data
             {
                 return values.First().DisplayValue;
             }
+        }
+
+        public async Task<bool>  GetApprovalPolicy(string type, string lic)
+        {
+            var policy = await GetPolicyNoOrganizationAsync(type, lic);
+
+            if(policy == null)
+            {
+                var newPolicy = ListOfValue.NewPolicy(value: "false", lic: lic, type: type, organizationId: null);
+                newPolicy.CreatedBy = 1;
+                newPolicy.Description = "Mass Approval";
+                _context.ListOfValues.Add(newPolicy);
+                _context.SaveChanges();
+
+                // TODO Insert to listofval - false DisplauValue
+                return false;
+            }
+
+            if (policy.DisplayValue == "true")
+            {
+                return true;
+            }
+            return false;
         }
 
         public ICollection<ListOfValue> GetLeaveConvertiblePolicies()
@@ -101,6 +124,15 @@ namespace AccuPay.Infrastructure.Data
                 .Where(f => f.Type == type)
                 .Where(f => f.LIC == lic)
                 .Where(f => f.OrganizationID == organizationId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ListOfValue> GetPolicyNoOrganizationAsync(string type, string lic)
+        {
+            return await _context.ListOfValues
+                .AsNoTracking()
+                .Where(f => f.Type == type)
+                .Where(f => f.LIC == lic)
                 .FirstOrDefaultAsync();
         }
 
