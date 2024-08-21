@@ -665,4 +665,10 @@ Public Class EmployeeLeavesForm
 
         ShowAllCheckBox_CheckedChanged(ShowAllCheckBox, New EventArgs)
     End Sub
+
+    Private Sub ApprovalToolStripButton1_Click(sender As Object, e As EventArgs) Handles ApprovalToolStripButton1.Click
+
+        Dim form As New LeaveApprovalForm
+        form.ShowDialog()
+    End Sub
 End Class

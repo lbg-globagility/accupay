@@ -138,7 +138,12 @@ namespace AccuPay.Infrastructure.Data
                     .Count() == 0)
                 .ToListAsync();
         }
-
+        public async Task<ICollection<Leave>> GetLeaveWithEmployee()
+        {
+            return await _context.Leaves
+                .Include(e=>e.Employee)
+                .ToListAsync();
+        }
         #endregion List of entities
 
         #region Others

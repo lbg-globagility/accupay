@@ -15,6 +15,8 @@
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,8 +32,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -485,6 +485,17 @@
     </Compile>
     <Compile Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveApprovalForm.Designer.vb">
+      <DependentUpon>LeaveApprovalForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveApprovalForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Leaves\LeaveApprovalForm1.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LeaveApprovalForm.resx</DependentUpon>
     </Compile>
     <Compile Include="Views\Time Attendance Form\Leaves\LeaveReset\LeaveBalanceResetGeneration.vb" />
     <Compile Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.Designer.vb">
@@ -1813,6 +1824,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Paystub\SelectReleaseThirteenthMonthEmployeesForm.resx">
       <DependentUpon>SelectReleaseThirteenthMonthEmployeesForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Leaves\LeaveApprovalForm.resx">
+      <DependentUpon>LeaveApprovalForm.vb</DependentUpon>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LeaveApprovalForm1.Designer.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Leaves\ResetLeaveCredit\ResetLeaveCreditApplyPreviewForm.resx">
       <DependentUpon>ResetLeaveCreditApplyPreviewForm.vb</DependentUpon>
