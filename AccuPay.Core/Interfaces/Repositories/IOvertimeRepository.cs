@@ -26,5 +26,7 @@ namespace AccuPay.Core.Interfaces
         Task<PaginatedList<Overtime>> GetPaginatedListAsync(OvertimePageOptions options, int organizationId);
 
         List<string> GetStatusList();
+
+        Task<ICollection<Overtime>> GetOTWithEmployee();
     }
 }

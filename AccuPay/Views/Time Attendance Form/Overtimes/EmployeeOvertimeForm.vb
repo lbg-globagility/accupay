@@ -716,4 +716,8 @@ Public Class EmployeeOvertimeForm
         userActivity.ShowDialog()
     End Sub
 
+    Private Sub ApprovalBtn_Click(sender As Object, e As EventArgs) Handles ApprovalBtn.Click
+        Dim form As New OvertimeApprovalForm
+        form.ShowDialog()
+    End Sub
 End Class

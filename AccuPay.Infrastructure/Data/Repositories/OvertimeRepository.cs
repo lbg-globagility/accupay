@@ -159,6 +159,13 @@ namespace AccuPay.Infrastructure.Data
                 .ToListAsync();
         }
 
+        public async Task<ICollection<Overtime>> GetOTWithEmployee()
+        {
+            return await _context.Overtimes
+                .Include(e => e.Employee)
+                .ToListAsync();
+        }
+
         #endregion List of entities
 
         #region Others
