@@ -21,5 +21,7 @@ namespace AccuPay.Core.Interfaces
         Task<PaginatedList<OfficialBusiness>> GetPaginatedListAsync(OfficialBusinessPageOptions options, int organizationId);
 
         List<string> GetStatusList();
+
+        Task<ICollection<OfficialBusiness>> GetOBWithEmployee();
     }
 }

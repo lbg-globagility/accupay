@@ -121,6 +121,13 @@ namespace AccuPay.Infrastructure.Data
                 .Where(l => l.Status == OfficialBusiness.StatusApproved);
         }
 
+        public async Task<ICollection<OfficialBusiness>> GetOBWithEmployee()
+        {
+            return await _context.OfficialBusinesses
+                .Include(e => e.Employee)
+                .ToListAsync();
+        }
+
         #endregion List of entities
 
         #region Others

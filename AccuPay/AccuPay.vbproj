@@ -511,6 +511,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\Official Business\OBRowRecord.vb" />
+    <Compile Include="Views\Time Attendance Form\Official Business\OfficialBusinessApprovalForm.Designer.vb">
+      <DependentUpon>OfficialBusinessApprovalForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Time Attendance Form\Official Business\OfficialBusinessApprovalForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\Overtimes\OvertimeRowRecord.vb" />
     <Compile Include="Core\Parser\TimelogRegexParser.vb" />
     <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.Designer.vb">
@@ -1866,6 +1872,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Time Attendance Form\Official Business\OfficialBusinessApprovalForm.resx">
+      <DependentUpon>OfficialBusinessApprovalForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\Time Entry\DefaultShiftAndTimeLogsForm.resx">
       <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>

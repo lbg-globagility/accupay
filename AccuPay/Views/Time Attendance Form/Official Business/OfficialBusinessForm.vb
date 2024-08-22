@@ -595,4 +595,8 @@ Public Class OfficialBusinessForm
         userActivity.ShowDialog()
     End Sub
 
+    Private Sub Approval_Click(sender As Object, e As EventArgs) Handles Approval.Click
+        Dim form As New OfficialBusinessApprovalForm
+        form.ShowDialog()
+    End Sub
 End Class

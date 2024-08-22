@@ -95,6 +95,7 @@ Partial Class OfficialBusinessForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Approval = New System.Windows.Forms.ToolStripButton()
         Me.pnlSearch.SuspendLayout()
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMain.SuspendLayout()
@@ -659,7 +660,7 @@ Partial Class OfficialBusinessForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.CloseButton, Me.ImportToolStripButton, Me.ToolStripSeparator9, Me.UserActivityToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.DeleteToolStripButton, Me.CancelToolStripButton, Me.CloseButton, Me.ImportToolStripButton, Me.ToolStripSeparator9, Me.Approval, Me.UserActivityToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -818,6 +819,14 @@ Partial Class OfficialBusinessForm
         Me.DataGridViewTextBoxColumn10.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         '
+        'Approval
+        '
+        Me.Approval.Image = Global.AccuPay.My.Resources.Resources.application_view_list_icon
+        Me.Approval.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.Approval.Name = "Approval"
+        Me.Approval.Size = New System.Drawing.Size(75, 22)
+        Me.Approval.Text = "&Approval"
+        '
         'OfficialBusinessForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -926,4 +935,5 @@ Partial Class OfficialBusinessForm
     Friend WithEvents Label9 As Label
     Friend WithEvents EndTimePicker As DateTimePicker
     Friend WithEvents UserActivityToolStripButton As ToolStripButton
+    Friend WithEvents Approval As ToolStripButton
 End Class
