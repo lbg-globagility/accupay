@@ -27,16 +27,6 @@ Partial Class OfficialBusinessApprovalForm
         Me.EmployeeSearchTextbox = New System.Windows.Forms.TextBox()
         Me.Leave = New System.Windows.Forms.Label()
         Me.OBDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Checked = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EmployeeName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LeaveType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.StartDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.EndDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ApproveSelectedBtn = New System.Windows.Forms.Button()
         Me.OBSelectAllCheckbox = New System.Windows.Forms.CheckBox()
         Me.OBRefreshBtn = New System.Windows.Forms.Button()
@@ -50,6 +40,15 @@ Partial Class OfficialBusinessApprovalForm
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Checked = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EmployeeName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.StartDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.EndDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Reason = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.OBDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -80,7 +79,7 @@ Partial Class OfficialBusinessApprovalForm
         Me.OBDataGridView.BackgroundColor = System.Drawing.Color.White
         Me.OBDataGridView.ColumnHeadersHeight = 34
         Me.OBDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.OBDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Checked, Me.EmployeeID, Me.EmployeeName, Me.LeaveType, Me.StartDate, Me.EndDate, Me.Reason, Me.Comment, Me.Status, Me.RowID})
+        Me.OBDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Checked, Me.EmployeeID, Me.EmployeeName, Me.StartDate, Me.EndDate, Me.Reason, Me.Comment, Me.Status, Me.RowID})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -98,88 +97,6 @@ Partial Class OfficialBusinessApprovalForm
         Me.OBDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.OBDataGridView.Size = New System.Drawing.Size(800, 326)
         Me.OBDataGridView.TabIndex = 4
-        '
-        'Checked
-        '
-        Me.Checked.DataPropertyName = "Checked"
-        Me.Checked.FillWeight = 45.68528!
-        Me.Checked.HeaderText = ""
-        Me.Checked.Name = "Checked"
-        Me.Checked.ReadOnly = True
-        Me.Checked.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Checked.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        '
-        'EmployeeID
-        '
-        Me.EmployeeID.DataPropertyName = "EmployeeID"
-        Me.EmployeeID.FillWeight = 106.7893!
-        Me.EmployeeID.HeaderText = "Employee ID"
-        Me.EmployeeID.Name = "EmployeeID"
-        Me.EmployeeID.ReadOnly = True
-        '
-        'EmployeeName
-        '
-        Me.EmployeeName.DataPropertyName = "EmployeeName"
-        Me.EmployeeName.FillWeight = 106.7893!
-        Me.EmployeeName.HeaderText = "Employee Name"
-        Me.EmployeeName.Name = "EmployeeName"
-        Me.EmployeeName.ReadOnly = True
-        '
-        'LeaveType
-        '
-        Me.LeaveType.DataPropertyName = "LeaveType"
-        Me.LeaveType.FillWeight = 106.7893!
-        Me.LeaveType.HeaderText = "LeaveType"
-        Me.LeaveType.Name = "LeaveType"
-        Me.LeaveType.ReadOnly = True
-        '
-        'StartDate
-        '
-        Me.StartDate.DataPropertyName = "StartDate"
-        Me.StartDate.FillWeight = 106.7893!
-        Me.StartDate.HeaderText = "Start Date"
-        Me.StartDate.Name = "StartDate"
-        Me.StartDate.ReadOnly = True
-        '
-        'EndDate
-        '
-        Me.EndDate.DataPropertyName = "EndDate"
-        Me.EndDate.FillWeight = 106.7893!
-        Me.EndDate.HeaderText = "End Date"
-        Me.EndDate.Name = "EndDate"
-        Me.EndDate.ReadOnly = True
-        '
-        'Reason
-        '
-        Me.Reason.DataPropertyName = "Reason"
-        Me.Reason.FillWeight = 106.7893!
-        Me.Reason.HeaderText = "Reason"
-        Me.Reason.Name = "Reason"
-        Me.Reason.ReadOnly = True
-        '
-        'Comment
-        '
-        Me.Comment.DataPropertyName = "Comment"
-        Me.Comment.FillWeight = 106.7893!
-        Me.Comment.HeaderText = "Comment"
-        Me.Comment.Name = "Comment"
-        Me.Comment.ReadOnly = True
-        '
-        'Status
-        '
-        Me.Status.DataPropertyName = "Status"
-        Me.Status.FillWeight = 106.7893!
-        Me.Status.HeaderText = "Status"
-        Me.Status.Name = "Status"
-        Me.Status.ReadOnly = True
-        '
-        'RowID
-        '
-        Me.RowID.DataPropertyName = "RowID"
-        Me.RowID.HeaderText = "RowID"
-        Me.RowID.Name = "RowID"
-        Me.RowID.ReadOnly = True
-        Me.RowID.Visible = False
         '
         'ApproveSelectedBtn
         '
@@ -295,6 +212,80 @@ Partial Class OfficialBusinessApprovalForm
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.Visible = False
         '
+        'Checked
+        '
+        Me.Checked.DataPropertyName = "Checked"
+        Me.Checked.FillWeight = 45.68528!
+        Me.Checked.HeaderText = ""
+        Me.Checked.Name = "Checked"
+        Me.Checked.ReadOnly = True
+        Me.Checked.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Checked.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        '
+        'EmployeeID
+        '
+        Me.EmployeeID.DataPropertyName = "EmployeeID"
+        Me.EmployeeID.FillWeight = 106.7893!
+        Me.EmployeeID.HeaderText = "Employee ID"
+        Me.EmployeeID.Name = "EmployeeID"
+        Me.EmployeeID.ReadOnly = True
+        '
+        'EmployeeName
+        '
+        Me.EmployeeName.DataPropertyName = "EmployeeName"
+        Me.EmployeeName.FillWeight = 106.7893!
+        Me.EmployeeName.HeaderText = "Employee Name"
+        Me.EmployeeName.Name = "EmployeeName"
+        Me.EmployeeName.ReadOnly = True
+        '
+        'StartDate
+        '
+        Me.StartDate.DataPropertyName = "StartDate"
+        Me.StartDate.FillWeight = 106.7893!
+        Me.StartDate.HeaderText = "Start Date"
+        Me.StartDate.Name = "StartDate"
+        Me.StartDate.ReadOnly = True
+        '
+        'EndDate
+        '
+        Me.EndDate.DataPropertyName = "EndDate"
+        Me.EndDate.FillWeight = 106.7893!
+        Me.EndDate.HeaderText = "End Date"
+        Me.EndDate.Name = "EndDate"
+        Me.EndDate.ReadOnly = True
+        '
+        'Reason
+        '
+        Me.Reason.DataPropertyName = "Reason"
+        Me.Reason.FillWeight = 106.7893!
+        Me.Reason.HeaderText = "Reason"
+        Me.Reason.Name = "Reason"
+        Me.Reason.ReadOnly = True
+        '
+        'Comment
+        '
+        Me.Comment.DataPropertyName = "Comment"
+        Me.Comment.FillWeight = 106.7893!
+        Me.Comment.HeaderText = "Comment"
+        Me.Comment.Name = "Comment"
+        Me.Comment.ReadOnly = True
+        '
+        'Status
+        '
+        Me.Status.DataPropertyName = "Status"
+        Me.Status.FillWeight = 106.7893!
+        Me.Status.HeaderText = "Status"
+        Me.Status.Name = "Status"
+        Me.Status.ReadOnly = True
+        '
+        'RowID
+        '
+        Me.RowID.DataPropertyName = "RowID"
+        Me.RowID.HeaderText = "RowID"
+        Me.RowID.Name = "RowID"
+        Me.RowID.ReadOnly = True
+        Me.RowID.Visible = False
+        '
         'OfficialBusinessApprovalForm
         '
         Me.ClientSize = New System.Drawing.Size(825, 429)
@@ -332,7 +323,6 @@ Partial Class OfficialBusinessApprovalForm
     Friend WithEvents Checked As DataGridViewCheckBoxColumn
     Friend WithEvents EmployeeID As DataGridViewTextBoxColumn
     Friend WithEvents EmployeeName As DataGridViewTextBoxColumn
-    Friend WithEvents LeaveType As DataGridViewTextBoxColumn
     Friend WithEvents StartDate As DataGridViewTextBoxColumn
     Friend WithEvents EndDate As DataGridViewTextBoxColumn
     Friend WithEvents Reason As DataGridViewTextBoxColumn
