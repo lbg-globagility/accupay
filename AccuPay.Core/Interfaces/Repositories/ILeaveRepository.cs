@@ -31,5 +31,9 @@ namespace AccuPay.Core.Interfaces
 
         Task<ICollection<Leave>> GetLeaveWithEmployee();
 
+        Task<ICollection<Leave>> GetPendingLeavesWithEmployee();
+
+        Task ApproveLeaves(List<int> leaveIds);
+
     }
 }

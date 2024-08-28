@@ -29,6 +29,18 @@ namespace AccuPay.Infrastructure.Data
             }
         }
 
+        public async Task ApproveLeaves(List<int> leaveIds)
+        {
+            var leaves = await _context.Leaves.Where(l => leaveIds.Contains((int)l.RowID)).ToListAsync();
+
+            foreach (var leave in leaves)
+            {
+                leave.Status = Leave.StatusApproved;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         #endregion Save
 
         #region Queries
@@ -144,6 +156,13 @@ namespace AccuPay.Infrastructure.Data
                 .Include(e=>e.Employee)
                 .ToListAsync();
         }
+        public async Task<ICollection<Leave>> GetPendingLeavesWithEmployee()
+        {
+            return await _context.Leaves
+                .Where(l => l.Status == Leave.StatusPending)
+                .Include(e => e.Employee)
+                .ToListAsync();
+        }
         #endregion List of entities
 
         #region Others
@@ -166,6 +185,8 @@ namespace AccuPay.Infrastructure.Data
             return new LeavePolicy(
                 new ListOfValueCollection(leaveResets));
         }
+
+       
         #endregion Others
 
         #endregion Queries

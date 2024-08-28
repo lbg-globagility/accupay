@@ -10,11 +10,13 @@ Public Class OvertimeApprovalForm
     Private _presenter As OTApprovalFormPresenter
     Private _model As IList(Of OvertimeModel)
     Private _tickedIDs As IList(Of Integer)
+    Private ReadOnly _overtimeRepository As IOvertimeRepository
     Public Sub New()
         InitializeComponent()
         _presenter = New OTApprovalFormPresenter(Me)
         _tickedIDs = New List(Of Integer)
         _model = New List(Of OvertimeModel)
+        _overtimeRepository = MainServiceProvider.GetRequiredService(Of IOvertimeRepository)
 
     End Sub
 
@@ -63,11 +65,14 @@ Public Class OvertimeApprovalForm
 
     End Class
 
-    Private Sub ApproveSelectedBtn_Click(sender As Object, e As EventArgs) Handles ApproveSelectedBtn.Click
-        Dim asas = _tickedIDs
+    Private Async Sub ApproveSelectedBtn_Click(sender As Object, e As EventArgs) Handles ApproveSelectedBtn.Click
 
+        Await _overtimeRepository.ApproveOvertimes(_tickedIDs)
 
-        'ApproveOB(_tickedIDs)
+        EmployeeSearchTextbox.Text = ""
+        OBSelectAllCheckbox.Checked = False
+        _tickedIDs.Clear()
+        Await _presenter.Load()
     End Sub
     Private Async Sub DataGridView_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles OBDataGridView.CellClick
         Dim checkboxCell = OBDataGridView.Item("Checked", e.RowIndex)
@@ -126,7 +131,7 @@ Public Class OTApprovalFormPresenter
 
     Private Async Function LoadList() As Task(Of IList(Of Overtime))
 
-        Return (Await _repository.GetOTWithEmployee).
+        Return (Await _repository.GetPendingOTWithEmployee).
             ToList()
     End Function
     Public Async Function FilterEmployees(needle As String) As Task

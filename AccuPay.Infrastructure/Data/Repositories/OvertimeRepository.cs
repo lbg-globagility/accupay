@@ -39,6 +39,18 @@ namespace AccuPay.Infrastructure.Data
             }
         }
 
+        public async Task ApproveOvertimes(List<int> overtimeIds)
+        {
+            var overtimes = await _context.Overtimes.Where(l => overtimeIds.Contains((int)l.RowID)).ToListAsync();
+
+            foreach (var overtime in overtimes)
+            {
+                overtime.Status = Overtime.StatusApproved;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         #endregion Save
 
         #region Queries
@@ -162,6 +174,14 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<Overtime>> GetOTWithEmployee()
         {
             return await _context.Overtimes
+                .Include(e => e.Employee)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Overtime>> GetPendingOTWithEmployee()
+        {
+            return await _context.Overtimes
+                .Where(e => e.Status == Overtime.StatusPending)
                 .Include(e => e.Employee)
                 .ToListAsync();
         }

@@ -10,8 +10,10 @@ Public Class LeaveApprovalForm
     Private _leaveModel As IList(Of LeaveModel)
     Private _selectAll As Boolean
     Private _tickedLeaveIDs As IList(Of Integer)
+    Private ReadOnly _leaveRepository As ILeaveRepository
     Public Sub New()
         InitializeComponent()
+        _leaveRepository = MainServiceProvider.GetRequiredService(Of ILeaveRepository)
         _presenter = New LeaveApprovalFormPresenter(Me)
         _tickedLeaveIDs = New List(Of Integer)
         _leaveModel = New List(Of LeaveModel)
@@ -67,12 +69,15 @@ Public Class LeaveApprovalForm
 
     End Class
 
-    Private Sub ApproveSelectedBtn_Click(sender As Object, e As EventArgs) Handles ApproveSelectedBtn.Click
-        Dim asas = _tickedLeaveIDs
-
-
-        'ApproveLeave(tickedLeaveIDs)
+    Private Async Sub ApproveSelectedBtn_Click(sender As Object, e As EventArgs) Handles ApproveSelectedBtn.Click
+        'Dim asas = _tickedLeaveIDs
+        Await _leaveRepository.ApproveLeaves(_tickedLeaveIDs)
+        EmployeeSearchTextbox.Text = ""
+        LeaveSelectAllCheckbox.Checked = False
+        _tickedLeaveIDs.Clear()
+        Await _presenter.Load()
     End Sub
+
     Private Async Sub LeavesDataGridView_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles LeavesDataGridView.CellClick
         Dim checkboxCell = LeavesDataGridView.Item("Checked", e.RowIndex)
         Dim rowIDCell = LeavesDataGridView.Item("RowID", e.RowIndex)
@@ -131,9 +136,7 @@ Public Class LeaveApprovalFormPresenter
 
     Private Async Function LoadLeaves() As Task(Of IList(Of Leave))
 
-        Return (Await _leaveRepository.
-            GetLeaveWithEmployee()).
-            ToList()
+        Return (Await _leaveRepository.GetPendingLeavesWithEmployee()).ToList()
     End Function
     Public Async Function FilterEmployees(needle As String) As Task
         Dim match =

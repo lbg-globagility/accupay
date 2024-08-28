@@ -23,5 +23,9 @@ namespace AccuPay.Core.Interfaces
         List<string> GetStatusList();
 
         Task<ICollection<OfficialBusiness>> GetOBWithEmployee();
+
+        Task<ICollection<OfficialBusiness>> GetPendingOBWithEmployee();
+
+        Task ApproveOBs(List<int> OBIds);
     }
 }

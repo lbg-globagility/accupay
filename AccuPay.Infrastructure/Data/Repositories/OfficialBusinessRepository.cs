@@ -23,6 +23,18 @@ namespace AccuPay.Infrastructure.Data
             }
         }
 
+        public async Task ApproveOBs(List<int> OBIds)
+        {
+            var OBs = await _context.OfficialBusinesses.Where(l => OBIds.Contains((int)l.RowID)).ToListAsync();
+
+            foreach (var OB in OBs)
+            {
+                OB.Status = OfficialBusiness.StatusApproved;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         #region Queries
 
         #region Single entity
@@ -124,6 +136,14 @@ namespace AccuPay.Infrastructure.Data
         public async Task<ICollection<OfficialBusiness>> GetOBWithEmployee()
         {
             return await _context.OfficialBusinesses
+                .Include(e => e.Employee)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<OfficialBusiness>> GetPendingOBWithEmployee()
+        {
+            return await _context.OfficialBusinesses
+                .Where(e => e.Status == OfficialBusiness.StatusPending)
                 .Include(e => e.Employee)
                 .ToListAsync();
         }

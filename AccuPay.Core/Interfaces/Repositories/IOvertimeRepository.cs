@@ -28,5 +28,9 @@ namespace AccuPay.Core.Interfaces
         List<string> GetStatusList();
 
         Task<ICollection<Overtime>> GetOTWithEmployee();
+
+        Task<ICollection<Overtime>> GetPendingOTWithEmployee();
+
+        Task ApproveOvertimes(List<int> overtimeIds);
     }
 }
