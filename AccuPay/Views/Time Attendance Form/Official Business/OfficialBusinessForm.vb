@@ -27,6 +27,8 @@ Public Class OfficialBusinessForm
 
     Private _currentRolePermission As RolePermission
 
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
+
     Sub New()
 
         InitializeComponent()
@@ -42,6 +44,8 @@ Public Class OfficialBusinessForm
         _employeeRepository = MainServiceProvider.GetRequiredService(Of IEmployeeRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
     End Sub
 
     Private Async Sub OfficialBusinessForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -68,6 +72,7 @@ Public Class OfficialBusinessForm
         CancelToolStripButton.Visible = False
         DeleteToolStripButton.Visible = False
         DetailsTabLayout.Enabled = False
+        Approval.Visible = False
 
         If role.Success Then
 
@@ -83,6 +88,7 @@ Public Class OfficialBusinessForm
                 SaveToolStripButton.Visible = True
                 CancelToolStripButton.Visible = True
                 DetailsTabLayout.Enabled = True
+                Approval.Visible = Await _listOfValueRepository.GetApprovalPolicy("OfficialBusinessPolicy", "OfficialBusinessApproval")
             End If
 
             If _currentRolePermission.Delete Then

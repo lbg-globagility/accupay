@@ -30,7 +30,7 @@ Public Class EmployeeOvertimeForm
 
     Private _currentRolePermission As RolePermission
 
-    'Private ReadOnly _listOfValueRepository As IListOfValueRepository
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
 
     Sub New()
 
@@ -50,7 +50,7 @@ Public Class EmployeeOvertimeForm
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
-        '_listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
 
     End Sub
 
@@ -61,8 +61,6 @@ Public Class EmployeeOvertimeForm
         InitializeComponentSettings()
 
         Await CheckRolePermissions()
-
-        'Await _listOfValueRepository.GetApprovalPolicy("OvertimePolicy", "OvertimeApproval")
 
         LoadStatusList()
 
@@ -93,6 +91,7 @@ Public Class EmployeeOvertimeForm
         CancelToolStripButton.Visible = False
         DeleteToolStripButton.Visible = False
         DetailsTabLayout.Enabled = False
+        ApprovalBtn.Visible = False
 
         If role.Success Then
 
@@ -108,6 +107,7 @@ Public Class EmployeeOvertimeForm
                 SaveToolStripButton.Visible = True
                 CancelToolStripButton.Visible = True
                 DetailsTabLayout.Enabled = True
+                ApprovalBtn.Visible = Await _listOfValueRepository.GetApprovalPolicy("OvertimePolicy", "OvertimeApproval")
             End If
 
             If _currentRolePermission.Delete Then

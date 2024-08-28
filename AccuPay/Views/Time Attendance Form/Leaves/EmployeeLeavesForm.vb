@@ -31,6 +31,8 @@ Public Class EmployeeLeavesForm
     Private ReadOnly _leaveResetRepository As ILeaveResetRepository
     Private _currentRolePermission As RolePermission
 
+    Private ReadOnly _listOfValueRepository As IListOfValueRepository
+
     Sub New()
 
         InitializeComponent()
@@ -51,11 +53,15 @@ Public Class EmployeeLeavesForm
 
         _leaveResetRepository = MainServiceProvider.GetRequiredService(Of ILeaveResetRepository)
 
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
+
     End Sub
 
     Private Async Sub EmployeeLeavesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         InitializeComponentSettings()
+
+
 
         Await CheckRolePermissions()
 
@@ -80,6 +86,7 @@ Public Class EmployeeLeavesForm
         CancelToolStripButton.Visible = False
         DeleteToolStripButton.Visible = False
         DetailsTabLayout.Enabled = False
+        ApprovalToolStripButton1.Visible = False
 
         If role.Success Then
 
@@ -95,6 +102,7 @@ Public Class EmployeeLeavesForm
                 SaveToolStripButton.Visible = True
                 CancelToolStripButton.Visible = True
                 DetailsTabLayout.Enabled = True
+                ApprovalToolStripButton1.Visible = Await _listOfValueRepository.GetApprovalPolicy("LeavePolicy", "LeaveApproval")
             End If
 
             If _currentRolePermission.Delete Then
