@@ -603,6 +603,8 @@ Public Class OfficialBusinessForm
 
     Private Sub Approval_Click(sender As Object, e As EventArgs) Handles Approval.Click
         Dim form As New OfficialBusinessApprovalForm
-        form.ShowDialog()
+        If (form.ShowDialog() = DialogResult.OK) Then
+            ShowEmployeeOfficialBusinesses()
+        End If
     End Sub
 End Class

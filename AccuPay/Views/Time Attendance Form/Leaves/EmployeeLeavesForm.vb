@@ -677,6 +677,8 @@ Public Class EmployeeLeavesForm
     Private Sub ApprovalToolStripButton1_Click(sender As Object, e As EventArgs) Handles ApprovalToolStripButton1.Click
 
         Dim form As New LeaveApprovalForm
-        form.ShowDialog()
+        If (form.ShowDialog() = DialogResult.OK) Then
+            ShowEmployeeLeaves()
+        End If
     End Sub
 End Class

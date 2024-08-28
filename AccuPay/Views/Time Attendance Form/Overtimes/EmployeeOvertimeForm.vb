@@ -724,6 +724,8 @@ Public Class EmployeeOvertimeForm
 
     Private Sub ApprovalBtn_Click(sender As Object, e As EventArgs) Handles ApprovalBtn.Click
         Dim form As New OvertimeApprovalForm
-        form.ShowDialog()
+        If (form.ShowDialog() = DialogResult.OK) Then
+            ShowEmployeeOvertimes()
+        End If
     End Sub
 End Class

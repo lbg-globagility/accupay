@@ -21,6 +21,11 @@ Public Class LeaveApprovalForm
 
     End Sub
 
+    Private Sub DialogForm_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        ' Optionally trigger an event or update the main form when this form is closed
+        Me.DialogResult = DialogResult.OK
+        Me.Close()
+    End Sub
     Private Async Sub LeaveApprovalForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Await _presenter.Load()
         'AddHandler LeavesDataGridView.CellClick, AddressOf LeavesDataGridView_SelectionChanged
