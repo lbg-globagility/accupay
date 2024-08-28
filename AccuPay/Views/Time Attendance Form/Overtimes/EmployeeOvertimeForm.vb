@@ -30,6 +30,8 @@ Public Class EmployeeOvertimeForm
 
     Private _currentRolePermission As RolePermission
 
+    'Private ReadOnly _listOfValueRepository As IListOfValueRepository
+
     Sub New()
 
         InitializeComponent()
@@ -48,6 +50,8 @@ Public Class EmployeeOvertimeForm
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
+        '_listOfValueRepository = MainServiceProvider.GetRequiredService(Of IListOfValueRepository)
+
     End Sub
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -57,6 +61,8 @@ Public Class EmployeeOvertimeForm
         InitializeComponentSettings()
 
         Await CheckRolePermissions()
+
+        'Await _listOfValueRepository.GetApprovalPolicy("OvertimePolicy", "OvertimeApproval")
 
         LoadStatusList()
 
