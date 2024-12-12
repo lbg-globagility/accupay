@@ -320,6 +320,18 @@ namespace AccuPay.Core.Services
 
             var logPeriod = TimePeriod.FromTime(appliedIn.Value, appliedOut.Value, currentDate);
 
+            /*
+            This is helpful for the timeLogs that fall between of the succeeding 24 hours.
+            Ex. shift: 2024-11-29 9PM to 2024-11-30 6AM has break 1AM to 2AM
+                time-logs: 2024-11-30 1:50AM to 2024-11-30 6AM
+                should be 4 hours late, and 4 working hours present
+             */
+            if (!currentShift.IsValidLogPeriod(logPeriod: logPeriod))
+                if (timeLog.TimeStampIn != null && timeLog.TimeStampOut != null)
+                    if (currentShift.BreakPeriod.Contains(timeLog.TimeStampIn.Value))
+                        logPeriod = new TimePeriod(start: timeLog.TimeStampIn.Value,
+                                end: timeLog.TimeStampOut.Value);
+
             if (currentShift.HasShift)
             {
                 var isMultipleGracePeriod = _policy.IsMultipleGracePeriod;
