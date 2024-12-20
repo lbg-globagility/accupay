@@ -97,6 +97,7 @@ BEGIN
 			ii.*
 			FROM `PayPeriodSchedPayroll` ii
 			) t
+	WHERE CONCAT(t.`DatCol3`, t.`DatCol4`, t.`DatCol5`, t.`DatCol7`, t.`DatCol8`) IS NOT NULL
 	ORDER BY t.`DatCol1`
 ;
 
