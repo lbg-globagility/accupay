@@ -513,7 +513,7 @@ Public Class TimeEntrySummaryForm
                 ON etd.Date = ete.Date AND
                     etd.OrganizationID = ete.OrganizationID AND
                     etd.EmployeeID = ete.EmployeeID AND
-                    etd.RowID = `latesttimelogs`.RowID
+                    etd.LastUpd = `latesttimelogs`.`UpdatedTimeLog`
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
@@ -737,7 +737,7 @@ Public Class TimeEntrySummaryForm
                 ON employeetimeentrydetails.Date = eta.Date AND
                 employeetimeentrydetails.OrganizationID = eta.OrganizationID AND
                 employeetimeentrydetails.EmployeeID = eta.EmployeeID AND
-                employeetimeentrydetails.RowID = `latesttimelogs`.RowID
+                employeetimeentrydetails.LastUpd = `latesttimelogs`.`UpdatedTimeLog`
             LEFT JOIN (
                 SELECT EmployeeID, OffBusStartDate Date, MAX(Created) Created
                 FROM employeeofficialbusiness
