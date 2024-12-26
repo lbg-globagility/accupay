@@ -24,7 +24,7 @@ DECLARE max_count_per_page INT(11) DEFAULT 50;
 DECLARE leaveTypeCategoryId INT(11);
 DECLARE isLaglobal BOOLEAN DEFAULT FALSE;
 
-SET isLaglobal=EXISTS(SELECT * FROM systemowner so WHERE so.`Name`='LA Global' AND so.IsCurrentOwner='1' LIMTI 1);
+SET isLaglobal=EXISTS(SELECT * FROM systemowner so WHERE so.`Name`='LA Global' AND so.IsCurrentOwner='1' LIMIT 1);
 
 IF isLaglobal=TRUE THEN
 
