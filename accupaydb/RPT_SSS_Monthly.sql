@@ -60,7 +60,7 @@ BEGIN
     ON paysocialsecurity.EmployeeContributionAmount = (paystubsummary.TotalEmpSSS - paysocialsecurity.EmployeeMPFAmount)
     AND paramDate BETWEEN paysocialsecurity.EffectiveDateFrom AND paysocialsecurity.EffectiveDateTo
     INNER JOIN `position` pos ON pos.RowID=employee.PositionID
-    INNER JOIN division d ON d.RowID=pos.DivisionId AND (d.SSSDeductSched!='Per pay period' OR d.SSSDeductSchedAgency!='Per pay period')
+    INNER JOIN division d ON d.RowID=pos.DivisionId AND d.SSSDeductSched!='Per pay period'
     WHERE employee.OrganizationID = OrganizID
     ORDER BY employee.LastName, employee.FirstName;
 
@@ -80,7 +80,7 @@ BEGIN
 	INNER JOIN payperiod pp ON pp.RowID=ps.PayPeriodID AND pp.`Month`=month AND pp.`Year`=year
 	INNER JOIN employee e ON e.RowID=ps.EmployeeID
 	INNER JOIN `position` pos ON pos.RowID=e.PositionID
-	INNER JOIN division d ON d.RowID=pos.DivisionId AND (d.SSSDeductSched = 'Per pay period' OR d.SSSDeductSchedAgency = 'Per pay period')
+	INNER JOIN division d ON d.RowID=pos.DivisionId AND d.SSSDeductSched = 'Per pay period'
 	LEFT JOIN paysocialsecurity sss ON ps.PayFromDate BETWEEN sss.EffectiveDateFrom AND sss.EffectiveDateTo
 	AND (sss.EmployeeContributionAmount + sss.EmployeeMPFAmount) = (ps.TotalEmpSSS * 2)
 	WHERE ps.OrganizationID=OrganizID
