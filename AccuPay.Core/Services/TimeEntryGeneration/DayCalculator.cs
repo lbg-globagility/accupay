@@ -62,6 +62,8 @@ namespace AccuPay.Core.Services
 
             timeEntry.Reset();
 
+            if(currentDate > _employee.TerminationDate) return timeEntry;
+
             salary = salaries2?.Where(t => currentDate >= t.EffectiveFrom)
                 .Where(t => currentDate <= t.EffectiveTo)
                 .FirstOrDefault();
