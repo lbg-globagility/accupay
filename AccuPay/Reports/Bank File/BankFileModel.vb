@@ -129,6 +129,10 @@ Public Class BankFileModel
         End Get
     End Property
 
-    Public ReadOnly Property HasError As Boolean = Not String.IsNullOrEmpty(ObviousErrorDescription)
+    Public ReadOnly Property HasError As Boolean
+        Get
+            Return Not String.IsNullOrEmpty(ObviousErrorDescription)
+        End Get
+    End Property
 
 End Class

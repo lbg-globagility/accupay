@@ -107,6 +107,10 @@ Public Class BankFileTextFormatForm
     End Sub
 
     Private Sub chkSelectAll_CheckedChanged(sender As Object, e As EventArgs)
+
+    End Sub
+
+    Private Sub chkSelectAll_CheckStateChanged(sender As Object, e As EventArgs) Handles chkSelectAll.CheckStateChanged
         RemoveHandler gridPayroll.CellValueChanged, AddressOf gridPayroll_CellValueChanged
         Dim rows = gridPayroll.Rows.OfType(Of DataGridViewRow).ToList()
 
@@ -114,7 +118,14 @@ Public Class BankFileTextFormatForm
             For Each item In rows
                 item.Cells(Column1.Name).Value = chkSelectAll.Checked
             Next
+        ElseIf chkSelectAll.CheckState = CheckState.Indeterminate Then
+            For Each item In rows
+                item.Cells(Column1.Name).Value = Not GetModel(item).HasError
+            Next
         End If
+
+        gridPayroll.EndEdit()
+        gridPayroll.Refresh()
 
         UpdateCeiling()
         UpdateTriStateCheckBox()
@@ -146,13 +157,13 @@ Public Class BankFileTextFormatForm
         Dim totalCount = rows.Count - 1
         Dim selectedCount = models.Count
         chkSelectAll.Text = $"Select All ({selectedCount}/{totalCount})"
-        If Not selectedCount = 0 AndAlso selectedCount < totalCount Then
-            chkSelectAll.CheckState = CheckState.Indeterminate
-        ElseIf Not selectedCount = 0 AndAlso selectedCount = totalCount Then
-            chkSelectAll.CheckState = CheckState.Checked
-        ElseIf selectedCount = 0 Then
-            chkSelectAll.CheckState = CheckState.Unchecked
-        End If
+        'If Not selectedCount = 0 AndAlso selectedCount < totalCount Then
+        '    chkSelectAll.CheckState = CheckState.Indeterminate
+        'ElseIf Not selectedCount = 0 AndAlso selectedCount = totalCount Then
+        '    chkSelectAll.CheckState = CheckState.Checked
+        'ElseIf selectedCount = 0 Then
+        '    chkSelectAll.CheckState = CheckState.Unchecked
+        'End If
     End Sub
 
     Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
@@ -460,5 +471,15 @@ Public Class BankFileTextFormatForm
 
         Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
     End Sub
+
+    Private Function GetModel(row As DataGridViewRow) As BankFileModel
+        Return CType(row.DataBoundItem, BankFileModel)
+    End Function
+
+    Private Function GetModels() As List(Of BankFileModel)
+        Return gridPayroll.Rows.OfType(Of DataGridViewRow).
+            Select(Function(t) GetModel(t)).
+            ToList()
+    End Function
 
 End Class

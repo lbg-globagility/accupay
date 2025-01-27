@@ -62,7 +62,10 @@ namespace AccuPay.Core.Entities
         public decimal WorkDaysPerYear { get; set; }
 
         public int? DayOfRest { get; set; }
+
+        [Column("ATMNo")]
         public string AtmNo { get; set; }
+
         public string BankName { get; set; }
 
         [Obsolete("Moved to employment policy")]
