@@ -18,11 +18,13 @@ Public Class BankFileTextFormatForm
     Private ReadOnly _organizationId As Integer
     Private ReadOnly _userId As Integer
     Private _organization As Organization
-    Private bankFileHeaderDataManager As BankFileHeaderDataManager = New BankFileHeaderDataManager(_organizationId)
+    Private bankFileHeaderDataManager As BankFileHeaderDataManager
 
     Public Sub New(organizationId As Integer)
 
         _organizationId = organizationId
+
+        bankFileHeaderDataManager = New BankFileHeaderDataManager(organizationId)
 
         ' This call is required by the designer.
         InitializeComponent()
