@@ -35,6 +35,7 @@ namespace AccuPay.Web
             services.AddScoped<IAspNetUserRepository, AspNetUserRepository>();
             services.AddScoped<IAttachmentRepository, AttachmentRepository>();
             services.AddScoped<IAwardRepository, AwardRepository>();
+            services.AddScoped<IBankFileHeaderRepository, BankFileHeaderRepository>();
             services.AddScoped<IBonusRepository, BonusRepository>();
             services.AddScoped<IBranchRepository, BranchRepository>();
             services.AddScoped<IBreakTimeBracketRepository, BreakTimeBracketRepository>();
@@ -114,6 +115,7 @@ namespace AccuPay.Web
             services.AddScoped<ISystemOwnerService, SystemOwnerService>();
 
             services.AddScoped<IAllowanceDataService, AllowanceDataService>();
+            services.AddScoped<IBankFileHeaderDataService, BankFileHeaderDataService>();
             services.AddScoped<IBonusDataService, BonusDataService>();
             services.AddScoped<ICalendarDataService, CalendarDataService>();
             services.AddScoped<IDivisionDataService, DivisionDataService>();

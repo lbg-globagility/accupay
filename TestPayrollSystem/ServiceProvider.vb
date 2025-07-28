@@ -55,6 +55,7 @@ Public Class ServiceProvider
         services.AddTransient(Of IAspNetUserRepository, AspNetUserRepository)
         services.AddTransient(Of IAttachmentRepository, AttachmentRepository)
         services.AddTransient(Of IAwardRepository, AwardRepository)
+        services.AddTransient(Of IBankFileHeaderRepository, BankFileHeaderRepository)
         services.AddTransient(Of IBonusRepository, BonusRepository)
         services.AddTransient(Of IBranchRepository, BranchRepository)
         services.AddTransient(Of IBreakTimeBracketRepository, BreakTimeBracketRepository)
@@ -131,6 +132,7 @@ Public Class ServiceProvider
         services.AddTransient(Of ISystemOwnerService, SystemOwnerService)
 
         services.AddTransient(Of IAllowanceDataService, AllowanceDataService)
+        services.AddTransient(Of IBankFileHeaderDataService, BankFileHeaderDataService)
         services.AddTransient(Of IBonusDataService, BonusDataService)
         services.AddTransient(Of ICalendarDataService, CalendarDataService)
         services.AddTransient(Of IDivisionDataService, DivisionDataService)
@@ -191,7 +193,6 @@ Public Class ServiceProvider
 
         services.AddTransient(Of IAttachmentDataService, AttachmentDataService)
         services.AddTransient(Of IAwardDataService, AwardDataService)
-        services.AddTransient(Of IBonusDataService, BonusDataService)
         services.AddTransient(Of ICertificationDataService, CertificationDataService)
         services.AddTransient(Of IDisciplinaryActionDataService, DisciplinaryActionDataService)
         services.AddTransient(Of IEducationalBackgroundDataService, EducationalBackgroundDataService)

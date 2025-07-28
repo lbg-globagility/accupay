@@ -1,9 +1,11 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
 Imports Microsoft.Extensions.DependencyInjection
+Imports Remotion.Linq.Clauses
 
 Public Class ReportsList
 
@@ -59,6 +61,8 @@ Public Class ReportsList
 
         If curr_sys_owner_name = SystemOwner.LAGlobal Then providers.Add(New LaGlobalAlphaListReportProvider())
 
+        Await Cinema2000BankFileReportProviders(providers)
+
         Dim allowedProviders = Await _listOfValueRepository.GetDutyReportProvidersAsync()
 
         For Each provider In providers
@@ -87,6 +91,35 @@ Public Class ReportsList
             lvMainMenu.Items.Add(CreateNewListViewItem(payslipProvider, payslipProvider.Name))
         End If
     End Sub
+
+    Private Async Function Cinema2000BankFileReportProviders(providers As Collection(Of IReportProvider)) As Task
+        If Not curr_sys_owner_name = SystemOwner.Cinema2000 Then Return
+
+        Dim defaultBankFileReportProvider = providers.FirstOrDefault(Function(t) t.Name = BankFileReportProvider.BANK_FILE_TEXT)
+        If defaultBankFileReportProvider IsNot Nothing Then providers.Remove(defaultBankFileReportProvider)
+
+        Dim bankFileSecurityBankPolicyText = BankFileTextFormatSecurityBankForm.POLICY_TYPE_NAME
+        Dim bankFileSimpleExcelPolicyText = BankFileSimpleExcelForm.POLICY_TYPE_NAME
+        Dim bankFileEasyExcelPolicyText = BankFileEasyExcelForm.POLICY_TYPE_NAME
+        Dim types = {bankFileSecurityBankPolicyText, bankFileSimpleExcelPolicyText, bankFileEasyExcelPolicyText}
+
+        Dim bankFilePolicies = (Await _listOfValueRepository.GetAllAsync()).
+            Where(Function(t) types.Contains(t.Type)).
+            ToList()
+
+        If If(bankFilePolicies?.Any(Function(t) t.Type = bankFileSecurityBankPolicyText And t.DisplayValue.Split({","c}).Contains($"{z_OrganizationID}")), False) Then
+            providers.Add(New BankFileSecurityBankReportProvider(z_OrganizationID, userId:=z_User))
+        End If
+
+        If If(bankFilePolicies?.Any(Function(t) t.Type = bankFileSimpleExcelPolicyText And t.DisplayValue.Split({","c}).Contains($"{z_OrganizationID}")), False) Then
+            providers.Add(New BankFileSimpleExcelReportProvider(z_OrganizationID, userId:=z_User))
+        End If
+
+        If If(bankFilePolicies?.Any(Function(t) t.Type = bankFileEasyExcelPolicyText And t.DisplayValue.Split({","c}).Contains($"{z_OrganizationID}")), False) Then
+            providers.Add(New BankFileEasyExcelReportProvider(z_OrganizationID, userId:=z_User))
+        End If
+
+    End Function
 
     Private Shared Function CreateNewListViewItem(reportProvider As IReportProvider, reportName As String) As ListViewItem
         Dim listItem = New ListViewItem(reportName)

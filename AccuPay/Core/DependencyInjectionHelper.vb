@@ -53,6 +53,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of IAspNetUserRepository, AspNetUserRepository)
         services.AddTransient(Of IAttachmentRepository, AttachmentRepository)
         services.AddTransient(Of IAwardRepository, AwardRepository)
+        services.AddTransient(Of IBankFileHeaderRepository, BankFileHeaderRepository)
         services.AddTransient(Of IBonusRepository, BonusRepository)
         services.AddTransient(Of IBranchRepository, BranchRepository)
         services.AddTransient(Of IBreakTimeBracketRepository, BreakTimeBracketRepository)
@@ -130,6 +131,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ISystemOwnerService, SystemOwnerService)
 
         services.AddTransient(Of IAllowanceDataService, AllowanceDataService)
+        services.AddTransient(Of IBankFileHeaderDataService, BankFileHeaderDataService)
         services.AddTransient(Of IBonusDataService, BonusDataService)
         services.AddTransient(Of ICalendarDataService, CalendarDataService)
         services.AddTransient(Of IDivisionDataService, DivisionDataService)

@@ -2,9 +2,10 @@ Option Strict On
 
 Public Class BankFileReportProvider
     Implements IReportProvider
+    Public Const BANK_FILE_TEXT As String = "Bank File"
 
     Private ReadOnly _organizationId As Integer
-    Public Property Name As String = "Bank File" Implements IReportProvider.Name
+    Public Property Name As String = BANK_FILE_TEXT Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub New(organizationId As Integer)

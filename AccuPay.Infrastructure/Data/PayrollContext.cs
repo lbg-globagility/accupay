@@ -32,6 +32,7 @@ namespace AccuPay.Infrastructure.Data
         internal virtual DbSet<AllowanceType> AllowanceTypes { get; set; }
         internal virtual DbSet<Attachment> Attachments { get; set; }
         internal virtual DbSet<Award> Awards { get; set; }
+        internal virtual DbSet<BankFileHeader> BankFileHeaders { get; set; }
         internal virtual DbSet<Bonus> Bonuses { get; set; }
         internal virtual DbSet<BreakTimeBracket> BreakTimeBrackets { get; set; }
         internal virtual DbSet<Branch> Branches { get; set; }

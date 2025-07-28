@@ -4,6 +4,9 @@ Imports System.Text.RegularExpressions
 Imports AccuPay.Core.Entities
 
 Public Class BankFileModel
+    Public Const FORMAT_13 As String = "0000000000000"
+    Public Const FORMAT_15 As String = "000000000000000"
+    Public Const FORMAT_12 As String = "000000000000"
     Private _isSelected As Boolean
     Private ReadOnly _paystub As Paystub
     Public ReadOnly Property AccountNumber As String
@@ -50,7 +53,41 @@ Public Class BankFileModel
             Dim given3 = CDec(Mid(acctNum, 9, 2)) * Amount
 
             Dim result = given1 + given2 + given3
-            Return result.ToString("000000000000")
+            Return result.ToString(FORMAT_12)
+        End Get
+    End Property
+
+    Public ReadOnly Property AccountNumberSecurityBankCompliant As String
+        Get
+            Dim sureAcctNo = If(String.IsNullOrEmpty(AccountNumber), 0, Integer.Parse(AccountNumber))
+
+            Return sureAcctNo.ToString(FORMAT_13)
+        End Get
+    End Property
+
+    Public ReadOnly Property AccountNumberSimpleExcelCompliant As String
+        Get
+            Dim sureAcctNo = If(String.IsNullOrEmpty(AccountNumber), 0, Integer.Parse(AccountNumber))
+
+            Return sureAcctNo.ToString(FORMAT_12)
+        End Get
+    End Property
+
+    Public ReadOnly Property FullNameBeginningWithLastName As String
+        Get
+            Return $"{LastName}, {FirstName}"
+        End Get
+    End Property
+
+    Public ReadOnly Property SecurityBankFormat As String
+        Get
+            Dim amountText = FlattenDecimalToText(Amount)
+
+            Return String.Join(String.Empty,
+                {"PHP10",
+                AccountNumberSecurityBankCompliant,
+                "0000007",
+                CInt(amountText).ToString(FORMAT_15)})
         End Get
     End Property
 
@@ -72,7 +109,7 @@ Public Class BankFileModel
             payrollDate As String,
             batchNo As String) As String
 
-        Dim totalSummary = Math.Round(Amount, 2).ToString().Replace(".", String.Empty)
+        Dim totalSummary = FlattenDecimalToText(Amount)
 
         Return String.Concat("D",
             companyCode,
@@ -80,7 +117,7 @@ Public Class BankFileModel
             batchNo,
             "3",
             AccountNumberDecimal.ToString("0000000000"),
-            CInt(totalSummary).ToString("000000000000"),
+            CInt(totalSummary).ToString(FORMAT_12),
             DataHash,
             Space(79))
     End Function
@@ -134,5 +171,22 @@ Public Class BankFileModel
             Return Not String.IsNullOrEmpty(ObviousErrorDescription)
         End Get
     End Property
+
+    Friend Shared Function GetFormattedSecurityBankHeader(fundingAccountNo As Integer,
+            postDate As String,
+            models As List(Of BankFileModel)) As String
+
+        Dim amountText = FlattenDecimalToText(If(models?.Sum(Function(t) t.Amount), 0))
+
+        Return String.Join(String.Empty,
+            {"PHP01",
+            fundingAccountNo.ToString(FORMAT_13),
+            $"{postDate}2",
+            CInt(amountText).ToString(FORMAT_15)})
+    End Function
+
+    Private Shared Function FlattenDecimalToText(amount As Decimal) As String
+        Return Math.Round(amount, 2).ToString().Replace(".", String.Empty)
+    End Function
 
 End Class

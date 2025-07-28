@@ -434,17 +434,38 @@
     <Compile Include="Reports\Bank File\BankFileCompanySelector.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Reports\Bank File\BankFileEasyExcelForm.Designer.vb">
+      <DependentUpon>BankFileEasyExcelForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Bank File\BankFileEasyExcelForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Bank File\BankFileHeaderDataManager.vb" />
     <Compile Include="Reports\Bank File\BankFileHeaderModel.vb" />
     <Compile Include="Reports\Bank File\BankFileModel.vb" />
+    <Compile Include="Reports\Bank File\BankFileSimpleExcelForm.Designer.vb">
+      <DependentUpon>BankFileSimpleExcelForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Bank File\BankFileSimpleExcelForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Bank File\BankFileTextFormatForm.Designer.vb">
       <DependentUpon>BankFileTextFormatForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Reports\Bank File\BankFileTextFormatForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Reports\Bank File\BankFileTextFormatSecurityBankForm.Designer.vb">
+      <DependentUpon>BankFileTextFormatSecurityBankForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Bank File\BankFileTextFormatSecurityBankForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\BankFileEasyExcelReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\BankFileReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\BankFileSecurityBankReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\BankFileSimpleExcelReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalAlphaListReportProvider.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\CheckBoxDataGridViewColumnHeaderCell.vb" />
     <Compile Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.Designer.vb">
@@ -1642,6 +1663,18 @@
     <None Include="BankTemplates\BPI-XPRESS-LINK.xlsm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="BankTemplates\EasyExcel.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="BankTemplates\SecurityBank\v1.7.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="BankTemplates\SecurityBank\v1.8.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="BankTemplates\SimpleExcel.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="ImportTemplates\accupay-allowance-template.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1675,8 +1708,17 @@
     <EmbeddedResource Include="Reports\Bank File\BankFileCompanySelector.resx">
       <DependentUpon>BankFileCompanySelector.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Bank File\BankFileEasyExcelForm.resx">
+      <DependentUpon>BankFileEasyExcelForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Bank File\BankFileSimpleExcelForm.resx">
+      <DependentUpon>BankFileSimpleExcelForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Bank File\BankFileTextFormatForm.resx">
       <DependentUpon>BankFileTextFormatForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Bank File\BankFileTextFormatSecurityBankForm.resx">
+      <DependentUpon>BankFileTextFormatSecurityBankForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Payroll Forms\Loans\Loans deducted from bonus\LoanPaymentFromThirteenthMonthForm.resx">
       <DependentUpon>LoanPaymentFromThirteenthMonthForm.vb</DependentUpon>
