@@ -261,7 +261,7 @@ Public Class BankFileTextFormatSecurityBankForm
                 OfType(Of ExcelWorksheet).
                 FirstOrDefault()
 
-            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.FirstOrDefault()
+            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add("DATA")
 
             'Posting Date
             defaultWorksheet.Cells("B3").Value = $"{dtpPostingDate.Value:MM/dd/yyyy}"

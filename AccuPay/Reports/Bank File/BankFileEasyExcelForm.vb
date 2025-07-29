@@ -174,7 +174,7 @@ Public Class BankFileEasyExcelForm
                 OfType(Of ExcelWorksheet).
                 FirstOrDefault()
 
-            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.FirstOrDefault()
+            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add("Sheet1")
 
             Dim rowIndex = 1
             For Each model In models
