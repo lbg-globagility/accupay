@@ -138,7 +138,7 @@ Public Class BankFileTextFormatSecurityBankForm
         chkSelectAll.Text = $"Select All ({selectedCount}/{totalCount})"
     End Sub
 
-    Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
+    Private Async Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
         Dim models = gridPayroll.Rows.OfType(Of DataGridViewRow).
             Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
             Where(Function(p) p.IsSelected).
@@ -169,6 +169,14 @@ Public Class BankFileTextFormatSecurityBankForm
                 sw.WriteLine(model.SecurityBankFormat)
             Next
         End Using
+
+        Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
+        Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
+
+        bankFileHeader.FundingAccountNo = $"{numFundingAccountNo.Value}"
+        bankFileHeader.LastUpdBy = _userId
+
+        Await bankFileHeaderRepository.SaveAsync(bankFileHeader)
 
         Process.Start("explorer.exe", $"/select,""{pathAndFileName}""")
     End Sub
