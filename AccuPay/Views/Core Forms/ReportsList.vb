@@ -61,7 +61,7 @@ Public Class ReportsList
 
         If curr_sys_owner_name = SystemOwner.LAGlobal Then providers.Add(New LaGlobalAlphaListReportProvider())
 
-        Await Cinema2000BankFileReportProviders(providers)
+        Await Cinema2000BankFileReportProvidersAsync(providers)
 
         Dim allowedProviders = Await _listOfValueRepository.GetDutyReportProvidersAsync()
 
@@ -92,7 +92,7 @@ Public Class ReportsList
         End If
     End Sub
 
-    Private Async Function Cinema2000BankFileReportProviders(providers As Collection(Of IReportProvider)) As Task
+    Private Async Function Cinema2000BankFileReportProvidersAsync(providers As Collection(Of IReportProvider)) As Task
         If Not curr_sys_owner_name = SystemOwner.Cinema2000 Then Return
 
         Dim defaultBankFileReportProvider = providers.FirstOrDefault(Function(t) t.Name = BankFileReportProvider.BANK_FILE_TEXT)
