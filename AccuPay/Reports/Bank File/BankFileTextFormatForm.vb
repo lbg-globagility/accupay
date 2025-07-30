@@ -1,12 +1,18 @@
 Option Strict On
 
 Imports System.IO
+Imports System.Text
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
+Imports AccuPay.Core.Interfaces.Repositories
 Imports AccuPay.Desktop.Helpers
+Imports AccuPay.Infrastructure.Data
+Imports Castle.Components.DictionaryAdapter.Xml
 Imports Microsoft.Extensions.DependencyInjection
+Imports Microsoft.Office.Interop.Excel
 Imports OfficeOpenXml
+Imports OfficeOpenXml.Style
 
 Public Class BankFileTextFormatForm
     Private Const THOUSAND_VALUE As Integer = 1000
@@ -15,6 +21,7 @@ Public Class BankFileTextFormatForm
     Private ReadOnly _paystubRepository As IPaystubRepository
     Private ReadOnly _payPeriodRepository As IPayPeriodRepository
     Private ReadOnly _organizationRepository As IOrganizationRepository
+    Private ReadOnly _bankFileHeaderRepository As IBankFileHeaderRepository
     Private ReadOnly _organizationId As Integer
     Private ReadOnly _userId As Integer
     Private _organization As Organization
@@ -23,7 +30,7 @@ Public Class BankFileTextFormatForm
     Public Sub New(organizationId As Integer)
 
         _organizationId = organizationId
-
+        _userId = z_User
         bankFileHeaderDataManager = New BankFileHeaderDataManager(organizationId)
 
         ' This call is required by the designer.
@@ -37,22 +44,19 @@ Public Class BankFileTextFormatForm
 
         _organizationRepository = MainServiceProvider.GetRequiredService(Of IOrganizationRepository)
 
+        _bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
+
     End Sub
 
     Private Async Sub BankFileTextFormatForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         gridPayroll.AutoGenerateColumns = False
         numCompanyCode.Controls(0).Hide()
-        numFundingAccountNo.Controls(0).Hide()
-        numCeilingAmount.Controls(0).Hide()
-        numPresentingOffice.Controls(0).Hide()
         numBatchNo.Controls(0).Hide()
         chkSelectAll.ThreeState = True
 
-        Dim bankFileHeaderModel = bankFileHeaderDataManager.GetBankFileHeaderModel
+        Dim bankFileHeaderModel = Await _bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, z_User)
         If bankFileHeaderModel IsNot Nothing Then
             numCompanyCode.Text = bankFileHeaderModel.CompanyCode
-            numFundingAccountNo.Text = bankFileHeaderModel.FundingAccountNo
-            numPresentingOffice.Text = bankFileHeaderModel.PresentingOfficeNo
             numBatchNo.Text = bankFileHeaderModel.BatchNo
         End If
 
@@ -145,8 +149,6 @@ Public Class BankFileTextFormatForm
         Dim given = Math.Ceiling(If(amountList.Any(), amountList.Max(), 0))
         Dim caught = THOUSAND_VALUE - (given Mod THOUSAND_VALUE)
         Dim result = given + caught
-        numCeilingAmount.Value = result
-        If result <= THOUSAND_VALUE Then numCeilingAmount.Value = 0
     End Sub
 
     Private Sub UpdateTriStateCheckBox()
@@ -168,24 +170,14 @@ Public Class BankFileTextFormatForm
         'End If
     End Sub
 
-    Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
+    Private Sub btnExport_Click(sender As Object, e As EventArgs)
         If Not numCompanyCode.Value > 0 OrElse Not numCompanyCode.Value.ToString("00000").Length = 5 Then
             ValidationMessagePrompt($"Invalid Company Code.{Environment.NewLine}It is the 5 digit code.")
             numCompanyCode.Focus()
             Return
         End If
 
-        If Not numFundingAccountNo.Value > 0 OrElse Not numFundingAccountNo.Value.ToString("0000000000").Length = 10 Then
-            ValidationMessagePrompt($"Invalid Funding Account No.{Environment.NewLine}It is the 10 digit code.")
-            numFundingAccountNo.Focus()
-            Return
-        End If
 
-        If Not numPresentingOffice.Value > 0 OrElse Not numPresentingOffice.Value.ToString("000").Length = 3 Then
-            ValidationMessagePrompt($"Invalid Presenting Office.{Environment.NewLine}It is the 3 digit code.")
-            numPresentingOffice.Focus()
-            Return
-        End If
 
         If Not numBatchNo.Value > 0 OrElse Not numBatchNo.Value.ToString("00").Length = 2 Then
             ValidationMessagePrompt($"Invalid Batch No.{Environment.NewLine}It is the 2 digit code.")
@@ -227,10 +219,7 @@ Public Class BankFileTextFormatForm
             sw.WriteLine(trailer)
         End Using
 
-        bankFileHeaderDataManager.Save(companyCode:=numCompanyCode.Value.ToString("00000"),
-            fundingAccountNo:=numFundingAccountNo.Value.ToString("0000000000"),
-            presentingOfficeNo:=numPresentingOffice.Value.ToString("000"),
-            batchNo:=numBatchNo.Value.ToString("00"))
+        bankFileHeaderDataManager.Save(companyCode:=numCompanyCode.Value.ToString("00000"), batchNo:=numBatchNo.Value.ToString("00"))
 
         Process.Start("explorer.exe", $"/select,""{pathAndFileName}""")
     End Sub
@@ -242,9 +231,6 @@ Public Class BankFileTextFormatForm
             dtpPayrollDate.Value.ToString("MMddyy"),
             numBatchNo.Value.ToString("00"),
             "1",
-            numFundingAccountNo.Value.ToString("0000000000"),
-            numPresentingOffice.Value.ToString("000"),
-            numCeilingAmount.Value.ToString("0000000000"),
             CInt(totalSummary).ToString("00000000000000"),
             "1",
             Space(75))
@@ -261,7 +247,6 @@ Public Class BankFileTextFormatForm
             dtpPayrollDate.Value.ToString("MMddyy"),
             numBatchNo.Value.ToString("00"),
             "2",
-            numFundingAccountNo.Value.ToString("0000000000"),
             models.Sum(Function(p) p.AccountNumberDecimal).ToString("000000000000000"),
             CInt(totalSummary).ToString("000000000000000"),
             models.Sum(Function(p) p.DataHashInt).ToString("000000000000000000"),
@@ -320,7 +305,7 @@ Public Class BankFileTextFormatForm
 
     End Sub
 
-    Private Sub btnExportExcel_Click(sender As Object, e As EventArgs) Handles btnExportExcel.Click
+    Private Sub btnExportTxtFile_Click(sender As Object, e As EventArgs) Handles btnExportTxtFile.Click
 
         Dim models = gridPayroll.Rows.OfType(Of DataGridViewRow).
             Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
@@ -346,58 +331,20 @@ Public Class BankFileTextFormatForm
         Dim now = DateTime.Now.ToString("HHmm")
         Dim payrollDate = dtpPayrollDate.Value.ToString("MMddyy")
 
-        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName:=$"BankFile_{payrollDate}~{now}", ".xlsx")
+        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName:=$"BankFile_{payrollDate}~{now}", ".txt")
 
         If saveFileDialogHelperOutPut.IsSuccess = False Then
             Return
         End If
+        Dim output As New StringBuilder()
 
-        Using excel = New ExcelPackage(newFile:=saveFileDialogHelperOutPut.FileInfo)
-            Dim defaultWorksheet = excel.Workbook.
-                Worksheets.
-                OfType(Of ExcelWorksheet).
-                FirstOrDefault()
-            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add(Name:="Sheet1")
+        For Each model In models
+            output.AppendLine($"{model.AccountNumber}" & vbTab & $"{model.Amount}")
+        Next
 
-            Dim initialRowIndex = 1
-            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Company Code"
-            defaultWorksheet.Cells(initialRowIndex, 2).Value = numCompanyCode.Value.ToString("00000")
-            defaultWorksheet.Cells(initialRowIndex, 4).Value = "Payroll Date"
-            defaultWorksheet.Cells(initialRowIndex, 5).Value = dtpPayrollDate.Value.ToShortDateString()
-            initialRowIndex += 1
+        IO.File.WriteAllText(saveFileDialogHelperOutPut.FileInfo.FullName, output.ToString())
 
-            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Funding Account No."
-            defaultWorksheet.Cells(initialRowIndex, 2).Value = numFundingAccountNo.Value.ToString("0000000000")
-            defaultWorksheet.Cells(initialRowIndex, 4).Value = "Presenting Office"
-            defaultWorksheet.Cells(initialRowIndex, 5).Value = numPresentingOffice.Value.ToString("000")
-            initialRowIndex += 1
-
-            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Ceiling Amount"
-            defaultWorksheet.Cells(initialRowIndex, 2).Value = numCeilingAmount.Value.ToString("N")
-            defaultWorksheet.Cells(initialRowIndex, 4).Value = "Batch No."
-            defaultWorksheet.Cells(initialRowIndex, 5).Value = numBatchNo.Value.ToString("00")
-            initialRowIndex += 2
-
-            defaultWorksheet.Cells(initialRowIndex, 1).Value = "Account No."
-            defaultWorksheet.Cells(initialRowIndex, 2).Value = "First Name"
-            defaultWorksheet.Cells(initialRowIndex, 3).Value = "Middle Initial"
-            defaultWorksheet.Cells(initialRowIndex, 4).Value = "Last Name"
-            defaultWorksheet.Cells(initialRowIndex, 5).Value = "Amount"
-            initialRowIndex += 1
-
-            Dim rowIndex = initialRowIndex
-            For Each model In models
-                defaultWorksheet.Cells(rowIndex, 1).Value = model.AccountNumber
-                defaultWorksheet.Cells(rowIndex, 2).Value = model.FirstName
-                defaultWorksheet.Cells(rowIndex, 3).Value = model.MiddleInitial
-                defaultWorksheet.Cells(rowIndex, 4).Value = model.LastName
-                defaultWorksheet.Cells(rowIndex, 5).Value = model.Amount.ToString("N")
-
-                rowIndex += 1
-            Next
-
-            excel.Save()
-        End Using
+        SaveBankFileHeader()
 
         Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
     End Sub
@@ -407,7 +354,7 @@ Public Class BankFileTextFormatForm
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles btnExportBDO.Click
 
         Dim models = gridPayroll.Rows.OfType(Of DataGridViewRow).
             Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
@@ -420,14 +367,15 @@ Public Class BankFileTextFormatForm
         Dim defaultExtension = "xlsm"
 
         Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(
-            defaultFileName:=$"BPI_{payrollDate}~{now}.{defaultExtension}",
+            defaultFileName:=$"BDO_{payrollDate}~{now}.{defaultExtension}",
             defaultExtension:=$".{defaultExtension}")
 
         If saveFileDialogHelperOutPut.IsSuccess = False Then
             Return
         End If
 
-        IO.File.Copy(sourceFileName:=$"BankTemplates/BPI-XPRESS-LINK.{defaultExtension}",
+
+        IO.File.Copy(sourceFileName:=$"BankTemplates/BDO-XPRESS-LINK.{defaultExtension}",
             destFileName:=saveFileDialogHelperOutPut.FileInfo.FullName,
             overwrite:=True)
 
@@ -440,39 +388,52 @@ Public Class BankFileTextFormatForm
             If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.FirstOrDefault()
 
             'Company Code
-            defaultWorksheet.Cells("B6").Value = numCompanyCode.Value.ToString("00000")
+            defaultWorksheet.Cells("B3").Value = numCompanyCode.Value.ToString("000")
 
             'Payroll Date
-            defaultWorksheet.Cells("D6").Value = $"{dtpPayrollDate.Value:MM/dd/yyyy}"
+            'defaultWorksheet.Cells("D6").Value = $"{dtpPayrollDate.Value:MM/dd/yyyy}"
 
             'Funding Account No.
-            defaultWorksheet.Cells("B7").Value = numFundingAccountNo.Value.ToString("0000000000")
-
-            'Presenting Office
-            defaultWorksheet.Cells("D7").Value = numPresentingOffice.Value.ToString("000")
-
-            'Ceiling Amount
-            defaultWorksheet.Cells("B8").Value = numCeilingAmount.Value.ToString("N")
+            'defaultWorksheet.Cells("B7").Value = numFundingAccountNo.Value.ToString("0000000000")
 
             'Batch No.
-            defaultWorksheet.Cells("D8").Value = numBatchNo.Value.ToString("00")
+            defaultWorksheet.Cells("B5").Value = numBatchNo.Value.ToString("00")
 
-            Dim rowIndex = 11
+            Dim rowIndex = 7
             For Each model In models
                 defaultWorksheet.Cells(rowIndex, 1).Value = model.AccountNumber
-                defaultWorksheet.Cells(rowIndex, 2).Value = model.FirstName
-                defaultWorksheet.Cells(rowIndex, 3).Value = model.MiddleInitial
-                defaultWorksheet.Cells(rowIndex, 4).Value = model.LastName
-                defaultWorksheet.Cells(rowIndex, 5).Value = model.Amount.ToString("N")
+                defaultWorksheet.Cells(rowIndex, 2).Value = model.Amount.ToString("N")
+                defaultWorksheet.Cells(rowIndex, 3).Value = $"{model.LastName}, {model.FirstName} {model.MiddleInitial}."
+                defaultWorksheet.Cells(rowIndex, 4).Value = ""
 
+                defaultWorksheet.Cells(rowIndex, 2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                defaultWorksheet.Cells(rowIndex, 1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
+                defaultWorksheet.Cells(rowIndex, 3).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
+
+                defaultWorksheet.Cells(rowIndex, 3).Style.Font.Color.SetColor(Color.Black)
+                defaultWorksheet.Cells(rowIndex, 2).Style.Font.Color.SetColor(Color.Black)
+                defaultWorksheet.Cells(rowIndex, 1).Style.Font.Color.SetColor(Color.Black)
                 rowIndex += 1
             Next
-
+            rowIndex += 10
+            defaultWorksheet.Cells(rowIndex, 2).Value = "Approved By:"
+            defaultWorksheet.Cells(rowIndex, 3).Value = "Ken Chua / Rod Chua"
+            SaveBankFileHeader()
             excel.Save()
         End Using
 
         Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
     End Sub
+    Private Async Function SaveBankFileHeader() As Task
+        Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
+        Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
+
+        bankFileHeader.CompanyCode = numCompanyCode.Value.ToString("000")
+        bankFileHeader.BatchNo = numBatchNo.Value.ToString("00")
+        bankFileHeader.LastUpdBy = _userId
+
+        Await bankFileHeaderRepository.SaveAsync(bankFileHeader)
+    End Function
 
     Private Function GetModel(row As DataGridViewRow) As BankFileModel
         Return CType(row.DataBoundItem, BankFileModel)

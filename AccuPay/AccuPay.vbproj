@@ -1639,6 +1639,9 @@
     <None Include="BankFileHeaderData.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="BankTemplates\BDO-XPRESS-LINK.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="BankTemplates\BPI-XPRESS-LINK.xlsm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

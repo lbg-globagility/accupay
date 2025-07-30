@@ -98,6 +98,8 @@ namespace AccuPay.Infrastructure.Data
         internal virtual DbSet<ResetLeaveCredit> ResetLeaveCredits { get; set; }
         internal virtual DbSet<ResetLeaveCreditItem> ResetLeaveCreditItems { get; set; }
 
+        internal virtual DbSet<BankFileHeader> BankFileHeaders { get; set; }
+
         public PayrollContext(DbContextOptions options)
             : base(options)
         {

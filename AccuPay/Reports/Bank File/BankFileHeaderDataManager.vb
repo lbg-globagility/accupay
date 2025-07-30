@@ -17,8 +17,7 @@ Public Class BankFileHeaderDataManager
             _source.Add(New BankFileHeaderModel(organizationId:=organizationId,
                 companyCode:=fields(1),
                 fundingAccountNo:=fields(2),
-                presentingOfficeNo:=fields(3),
-                batchNo:=fields(4)))
+                batchNo:=fields(3)))
         Next
     End Sub
 
@@ -27,13 +26,9 @@ Public Class BankFileHeaderDataManager
     End Function
 
     Public Sub Save(companyCode As String,
-            fundingAccountNo As String,
-            presentingOfficeNo As String,
             batchNo As String)
 
         Dim isHasChanges = HasChanges(companyCode:=companyCode,
-            fundingAccountNo:=fundingAccountNo,
-            presentingOfficeNo:=presentingOfficeNo,
             batchNo:=batchNo)
 
         If Not isHasChanges Then Return
@@ -44,19 +39,15 @@ Public Class BankFileHeaderDataManager
             Next
 
             Dim updatedData = String.Join(vbTab,
-                {_organizationId, companyCode, fundingAccountNo, presentingOfficeNo, batchNo})
+                {_organizationId, companyCode, batchNo})
             sw.WriteLine(updatedData)
         End Using
     End Sub
 
     Private Function HasChanges(companyCode As String,
-            fundingAccountNo As String,
-            presentingOfficeNo As String,
             batchNo As String) As Boolean
         Dim model = GetBankFileHeaderModel()
         Return Not model.CompanyCode = companyCode OrElse
-            Not model.FundingAccountNo = fundingAccountNo OrElse
-            Not model.PresentingOfficeNo = presentingOfficeNo OrElse
             Not model.BatchNo = batchNo
     End Function
 
