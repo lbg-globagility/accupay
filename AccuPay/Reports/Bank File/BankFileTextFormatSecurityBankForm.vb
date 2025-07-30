@@ -279,7 +279,7 @@ Public Class BankFileTextFormatSecurityBankForm
             defaultWorksheet.Cells("B3").Value = $"{dtpPostingDate.Value:MM/dd/yyyy}"
 
             'Funding Account No.
-            defaultWorksheet.Cells("B2").Value = numFundingAccountNo.Value.ToString("0000000000000")
+            defaultWorksheet.Cells("B2").Value = numFundingAccountNo.Value.ToString(BankFileModel.FORMAT_13)
 
             'Total Amount
             defaultWorksheet.Cells("B5").Value = If(models?.Sum(Function(t) t.Amount), 0)
