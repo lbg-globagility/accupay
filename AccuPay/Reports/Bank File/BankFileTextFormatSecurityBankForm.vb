@@ -170,6 +170,12 @@ Public Class BankFileTextFormatSecurityBankForm
             Next
         End Using
 
+        Await SaveBankFileHeaderChangesAsync()
+
+        Process.Start("explorer.exe", $"/select,""{pathAndFileName}""")
+    End Sub
+
+    Private Async Function SaveBankFileHeaderChangesAsync() As Task
         Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
         Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
 
@@ -177,9 +183,7 @@ Public Class BankFileTextFormatSecurityBankForm
         bankFileHeader.LastUpdBy = _userId
 
         Await bankFileHeaderRepository.SaveAsync(bankFileHeader)
-
-        Process.Start("explorer.exe", $"/select,""{pathAndFileName}""")
-    End Sub
+    End Function
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         Close()
@@ -294,6 +298,8 @@ Public Class BankFileTextFormatSecurityBankForm
 
             excel.Save()
         End Using
+
+        Await SaveBankFileHeaderChangesAsync()
 
         Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
     End Sub
