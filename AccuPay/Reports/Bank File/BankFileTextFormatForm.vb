@@ -415,7 +415,12 @@ Public Class BankFileTextFormatForm
                 defaultWorksheet.Cells(rowIndex, 1).Style.Font.Color.SetColor(Color.Black)
                 rowIndex += 1
             Next
-            rowIndex += 10
+            rowIndex += 8
+            defaultWorksheet.Cells(rowIndex, 2).Value = models.Sum(Function(x) x.Amount).ToString("N")
+            defaultWorksheet.Cells(rowIndex, 2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+
+
+            rowIndex += 2
             defaultWorksheet.Cells(rowIndex, 2).Value = "Approved By:"
             defaultWorksheet.Cells(rowIndex, 3).Value = "Ken Chua / Rod Chua"
             SaveBankFileHeader()
