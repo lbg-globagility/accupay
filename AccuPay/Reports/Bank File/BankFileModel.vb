@@ -15,6 +15,7 @@ Public Class BankFileModel
     Public ReadOnly Property FirstName As String
     Public ReadOnly Property MiddleName As String
     Public ReadOnly Property Amount As Decimal
+    Private ReadOnly _isBankFileSummary As Boolean
     Public ReadOnly Property CompanyName As String
 
     Public Sub New(paystub As Paystub)
@@ -30,6 +31,7 @@ Public Class BankFileModel
 
     Public Sub New(models As List(Of BankFileModel))
         Amount = models.Sum(Function(t) t.Amount)
+        _isBankFileSummary = True
     End Sub
 
     Public Property IsSelected As Boolean
@@ -173,6 +175,8 @@ Public Class BankFileModel
 
     Public ReadOnly Property ObviousErrorDescription As String
         Get
+            If _isBankFileSummary Then Return String.Empty
+
             Dim errorDescriptions As New List(Of String)
 
             If String.IsNullOrEmpty(AccountNumber) Then errorDescriptions.Add("Invalid Account No.")
