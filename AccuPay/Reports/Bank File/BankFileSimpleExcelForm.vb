@@ -8,7 +8,6 @@ Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class BankFileSimpleExcelForm
-    Private Const THOUSAND_VALUE As Integer = 1000
     Public Const POLICY_TYPE_NAME As String = "BankFileSimpleExcelPolicy"
     Private ReadOnly DATETIME_PICKER_MINDATE As Date = New Date(1753, 1, 1)
     Private ReadOnly DATETIME_PICKER_MAXDATE As Date = New Date(9998, 12, 31)
