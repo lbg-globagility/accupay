@@ -56,15 +56,19 @@ Partial Class BankFileTextFormatBDOForm
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.RadioButton2 = New System.Windows.Forms.RadioButton()
+        Me.RadioButton1 = New System.Windows.Forms.RadioButton()
+        Me.txtCompanyCode = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.numBatchNo = New System.Windows.Forms.NumericUpDown()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.txtCompanyCode = New System.Windows.Forms.TextBox()
         Me.Panel2.SuspendLayout()
         CType(Me.gridPayroll, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.Panel5.SuspendLayout()
         CType(Me.numBatchNo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -335,6 +339,7 @@ Partial Class BankFileTextFormatBDOForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.Panel5)
         Me.Panel1.Controls.Add(Me.txtCompanyCode)
         Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Controls.Add(Me.numBatchNo)
@@ -347,6 +352,45 @@ Partial Class BankFileTextFormatBDOForm
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(707, 126)
         Me.Panel1.TabIndex = 11
+        '
+        'Panel5
+        '
+        Me.Panel5.Controls.Add(Me.RadioButton2)
+        Me.Panel5.Controls.Add(Me.RadioButton1)
+        Me.Panel5.Location = New System.Drawing.Point(454, 46)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(166, 74)
+        Me.Panel5.TabIndex = 282
+        '
+        'RadioButton2
+        '
+        Me.RadioButton2.AutoSize = True
+        Me.RadioButton2.Location = New System.Drawing.Point(0, 23)
+        Me.RadioButton2.Name = "RadioButton2"
+        Me.RadioButton2.Size = New System.Drawing.Size(57, 17)
+        Me.RadioButton2.TabIndex = 1
+        Me.RadioButton2.TabStop = True
+        Me.RadioButton2.Text = "Actual"
+        Me.RadioButton2.UseVisualStyleBackColor = True
+        '
+        'RadioButton1
+        '
+        Me.RadioButton1.AutoSize = True
+        Me.RadioButton1.Checked = True
+        Me.RadioButton1.Location = New System.Drawing.Point(0, 0)
+        Me.RadioButton1.Name = "RadioButton1"
+        Me.RadioButton1.Size = New System.Drawing.Size(70, 17)
+        Me.RadioButton1.TabIndex = 0
+        Me.RadioButton1.TabStop = True
+        Me.RadioButton1.Text = "Declared"
+        Me.RadioButton1.UseVisualStyleBackColor = True
+        '
+        'txtCompanyCode
+        '
+        Me.txtCompanyCode.Location = New System.Drawing.Point(147, 18)
+        Me.txtCompanyCode.Name = "txtCompanyCode"
+        Me.txtCompanyCode.Size = New System.Drawing.Size(166, 22)
+        Me.txtCompanyCode.TabIndex = 281
         '
         'Label1
         '
@@ -374,13 +418,6 @@ Partial Class BankFileTextFormatBDOForm
         Me.DataGridViewTextBoxColumn8.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'txtCompanyCode
-        '
-        Me.txtCompanyCode.Location = New System.Drawing.Point(147, 18)
-        Me.txtCompanyCode.Name = "txtCompanyCode"
-        Me.txtCompanyCode.Size = New System.Drawing.Size(166, 22)
-        Me.txtCompanyCode.TabIndex = 281
-        '
         'BankFileTextFormatBDOForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -402,6 +439,8 @@ Partial Class BankFileTextFormatBDOForm
         Me.Panel3.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.Panel5.ResumeLayout(False)
+        Me.Panel5.PerformLayout()
         CType(Me.numBatchNo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -441,4 +480,7 @@ Partial Class BankFileTextFormatBDOForm
     Friend WithEvents numBatchNo As NumericUpDown
     Friend WithEvents Label1 As Label
     Friend WithEvents txtCompanyCode As TextBox
+    Friend WithEvents Panel5 As Panel
+    Friend WithEvents RadioButton2 As RadioButton
+    Friend WithEvents RadioButton1 As RadioButton
 End Class

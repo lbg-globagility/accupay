@@ -9,7 +9,7 @@ Public Class BankFileModel
     Public Const FORMAT_15 As String = "000000000000000"
     Public Const FORMAT_12 As String = "000000000000"
     Private _isSelected As Boolean
-    Private ReadOnly _paystub As Paystub
+    Private ReadOnly _paystub As BasePaystub
     Public ReadOnly Property AccountNumber As String
     Public ReadOnly Property LastName As String
     Public ReadOnly Property FirstName As String
@@ -18,14 +18,14 @@ Public Class BankFileModel
     Private ReadOnly _isBankFileSummary As Boolean
     Public ReadOnly Property CompanyName As String
 
-    Public Sub New(paystub As Paystub)
+    Public Sub New(paystub As BasePaystub)
         _paystub = paystub
 
         AccountNumber = Regex.Replace(_paystub.Employee.AtmNo, "\D", String.Empty)
         LastName = _paystub.Employee.LastName
         FirstName = _paystub.Employee.FirstName
         MiddleName = _paystub.Employee.MiddleName
-        Amount = _paystub.NetPay
+        Decimal.TryParse(_paystub.NetPay.ToString("F2"), Amount)
         CompanyName = String.Empty
     End Sub
 

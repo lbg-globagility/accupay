@@ -881,6 +881,7 @@ namespace AccuPay.Infrastructure.Data
         {
             return await _context.Paystubs
                 .Include(x => x.Employee)
+                .Include(x => x.Actual)
                 .Where(x => x.PayPeriodID == payPeriodId)
                 .ToListAsync();
         }

@@ -20,6 +20,7 @@ Public Class BankFileTextFormatBDOForm
     Private ReadOnly _organizationId As Integer
     Private ReadOnly _userId As Integer
     Private _organization As Organization
+    Private _selectedPayPeriod As PayPeriod
 
     Public Sub New(organizationId As Integer, userId As Integer)
 
@@ -64,7 +65,8 @@ Public Class BankFileTextFormatBDOForm
         dtpPayrollDate.MinDate = payPeriod.PayFromDate.Date
         dtpPayrollDate.MaxDate = payPeriod.PayToDate.Date
 
-        Await LoadPaystubs(payPeriod)
+        _selectedPayPeriod = payPeriod
+        Await LoadPaystubs(_selectedPayPeriod)
 
         AddHandler chkSelectAll.CheckedChanged, AddressOf chkSelectAll_CheckedChanged
 
@@ -76,6 +78,9 @@ Public Class BankFileTextFormatBDOForm
 
         txtCompanyCode.Text = bankFileHeader.CompanyCode
         Decimal.TryParse(bankFileHeader.BatchNo, numBatchNo.Value)
+
+        AddHandler RadioButton1.CheckedChanged, AddressOf RadioButton1_CheckedChanged
+        AddHandler RadioButton2.CheckedChanged, AddressOf RadioButton2_CheckedChanged
     End Sub
 
     Private Async Function LoadPaystubs(payPeriod As PayPeriod) As Task
@@ -85,10 +90,17 @@ Public Class BankFileTextFormatBDOForm
             paystubs = Await _paystubRepository.GetByPayPeriodWithEmployeeAsync(payPeriodId)
         End If
 
-        Dim models = paystubs.Select(Function(p) New BankFileModel(p)).
+        Dim models = paystubs.Select(Function(p) New BankFileModel(p) With {.IsSelected = True}).
             OrderBy(Function(t) t.CompanyName).
             ThenBy(Function(t) t.FullNameBeginningWithLastName).
             ToList()
+
+        If RadioButton2.Checked Then
+            models = paystubs.Select(Function(p) New BankFileModel(p.Actual) With {.IsSelected = True}).
+                OrderBy(Function(t) t.CompanyName).
+                ThenBy(Function(t) t.FullNameBeginningWithLastName).
+                ToList()
+        End If
 
         Dim summaryModel As BankFileModel = BankFileModel.BankFileModelSummary(models:=models)
 
@@ -162,7 +174,7 @@ Public Class BankFileTextFormatBDOForm
 
         Await SaveBankFileHeaderChangesAsync()
 
-        Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
+        Process.Start("explorer.exe", $"/select,""{saveFileDialogHelperOutPut.FileInfo.FullName}""")
     End Sub
 
     Private Async Function SaveBankFileHeaderChangesAsync() As Task
@@ -213,14 +225,14 @@ Public Class BankFileTextFormatBDOForm
         dtpPayrollDate.MinDate = DATETIME_PICKER_MINDATE
         dtpPayrollDate.MaxDate = DATETIME_PICKER_MAXDATE
 
-        Dim payPeriod = firstSelectedPeriod
-        dtpPayrollDate.Value = payPeriod.PayFromDate.Date
-        dtpPayrollDate.MinDate = payPeriod.PayFromDate.Date
-        dtpPayrollDate.MaxDate = payPeriod.PayToDate.Date
+        _selectedPayPeriod = firstSelectedPeriod
+        dtpPayrollDate.Value = _selectedPayPeriod.PayFromDate.Date
+        dtpPayrollDate.MinDate = _selectedPayPeriod.PayFromDate.Date
+        dtpPayrollDate.MaxDate = _selectedPayPeriod.PayToDate.Date
 
         chkSelectAll.Checked = False
 
-        Await LoadPaystubs(payPeriod)
+        Await LoadPaystubs(_selectedPayPeriod)
 
         chkSelectAll.Checked = True
 
@@ -316,4 +328,11 @@ Public Class BankFileTextFormatBDOForm
             ToList()
     End Function
 
+    Private Async Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs)
+        If RadioButton1.Checked Then Await LoadPaystubs(_selectedPayPeriod)
+    End Sub
+
+    Private Async Sub RadioButton2_CheckedChanged(sender As Object, e As EventArgs)
+        If RadioButton2.Checked Then Await LoadPaystubs(_selectedPayPeriod)
+    End Sub
 End Class
