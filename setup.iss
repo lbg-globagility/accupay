@@ -239,7 +239,8 @@ Source: ".\AccuPay\ImportTemplates\*.xlsx"; DestDir: "{app}\ImportTemplates"; Fl
 Source: ".\AccuPay\Resources\SourceSansPro-Regular.ttf"; DestDir: "{fonts}"; FontInstall: "Source Sans Pro"; Flags: onlyifdoesntexist uninsneveruninstall
 
 Source: ".\AccuPay\BankFileHeaderData.dat"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\BankTemplates\BPI-XPRESS-LINK.xlsm"; DestDir: "{app}\BankTemplates"; Flags: ignoreversion
+Source: ".\AccuPay\BankTemplates\*.xlsm"; DestDir: "{app}\BankTemplates"; Flags: ignoreversion
+Source: ".\AccuPay\BankTemplates\*.xlsx"; DestDir: "{app}\BankTemplates"; Flags: ignoreversion
 
 ; Source: ".\AccuPay\bin\Debug\Core Forms\*.rpt"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; Source: ".\AccuPay\bin\Debug\Core Forms\rpt\*.rpt"; DestDir: "{app}\Core Forms\rpt"; Flags: ignoreversion
