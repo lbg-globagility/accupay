@@ -1,16 +1,17 @@
 Option Strict On
-
-Imports System.IO
+Imports System.ServiceModel.Channels
+Imports System.Text
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
 Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
+Imports OfficeOpenXml.Style
 
-Public Class BankFileTextFormatSecurityBankForm
+Public Class BankFileTextFormatBDOForm
     Private Const THOUSAND_VALUE As Integer = 1000
-    Public Const POLICY_TYPE_NAME As String = "BankFileSecurityBankPolicy"
+    Public Const POLICY_TYPE_NAME As String = "BankFileBDOPolicy"
     Private ReadOnly DATETIME_PICKER_MINDATE As Date = New Date(1753, 1, 1)
     Private ReadOnly DATETIME_PICKER_MAXDATE As Date = New Date(9998, 12, 31)
     Private ReadOnly _paystubRepository As IPaystubRepository
@@ -43,7 +44,8 @@ Public Class BankFileTextFormatSecurityBankForm
 
     Private Async Sub BankFileTextFormatForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         gridPayroll.AutoGenerateColumns = False
-        numFundingAccountNo.Controls(0).Hide()
+        numCompanyCode.Controls(0).Hide()
+        numBatchNo.Controls(0).Hide()
         chkSelectAll.ThreeState = True
 
         _organization = Await _organizationRepository.GetByIdWithAddressAsync(_organizationId)
@@ -72,9 +74,10 @@ Public Class BankFileTextFormatSecurityBankForm
         chkSelectAll.CheckState = CheckState.Checked
 
         Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
-        Dim fundingAccountNo = (Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId))?.FundingAccountNo
+        Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
 
-        Decimal.TryParse(fundingAccountNo, numFundingAccountNo.Value)
+        Decimal.TryParse(bankFileHeader.CompanyCode, numCompanyCode.Value)
+        Decimal.TryParse(bankFileHeader.BatchNo, numBatchNo.Value)
     End Sub
 
     Private Async Function LoadPaystubs(payPeriod As PayPeriod) As Task
@@ -144,42 +147,32 @@ Public Class BankFileTextFormatSecurityBankForm
             Where(Function(p) p.IsSelected).
             ToList()
 
-        Dim fileExtension = "txt"
+        Dim now = Date.Now.ToString("HHmm")
+        Dim payrollDate = dtpPayrollDate.Value.ToString("MMddyy")
 
-        Dim postDate = dtpPostingDate.Value.ToString("MMddyy")
-
-        Dim companyInitials As String = String.Join(String.Empty, orgNam.Split(" "c).Select(Function(word) word.Substring(0, 1).ToUpper()))
-        Dim defaultFileName = $"{companyInitials}-{postDate}.{fileExtension}"
-
-        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName:=defaultFileName,
-            defaultExtension:=fileExtension,
-            filter:=$"Bank File|*.{fileExtension};")
+        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName:=$"BankFile_{payrollDate}~{now}", ".txt")
 
         If saveFileDialogHelperOutPut.IsSuccess = False Then Return
 
-        Dim pathAndFileName = saveFileDialogHelperOutPut.FileInfo.FullName
-        Using sw As New StreamWriter(pathAndFileName)
-            Dim header = BankFileModel.GetFormattedSecurityBankHeader(fundingAccountNo:=CInt(numFundingAccountNo.Value),
-                postDate:=postDate,
-                models:=models)
+        Dim output As New StringBuilder()
 
-            sw.WriteLine(header)
+        For Each model In models
+            output.AppendLine($"{model.AccountNumberBDOCompliant}{vbTab}{model.Amount}")
+        Next
 
-            For Each model In models
-                sw.WriteLine(model.SecurityBankFormat)
-            Next
-        End Using
+        IO.File.WriteAllText(path:=saveFileDialogHelperOutPut.FileInfo.FullName, contents:=output.ToString())
 
         Await SaveBankFileHeaderChangesAsync()
 
-        Process.Start("explorer.exe", $"/select,""{pathAndFileName}""")
+        Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
     End Sub
 
     Private Async Function SaveBankFileHeaderChangesAsync() As Task
         Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
         Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
 
-        bankFileHeader.FundingAccountNo = $"{numFundingAccountNo.Value}"
+        bankFileHeader.CompanyCode = $"{numCompanyCode.Value}"
+        bankFileHeader.BatchNo = $"{numBatchNo.Value}"
         bankFileHeader.LastUpdBy = _userId
 
         Await bankFileHeaderRepository.SaveAsync(bankFileHeader)
@@ -251,17 +244,17 @@ Public Class BankFileTextFormatSecurityBankForm
             ToList()
 
         Dim companyInitials As String = String.Join(String.Empty, orgNam.Split(" "c).Select(Function(word) word.Substring(0, 1).ToUpper()))
-        Dim payrollDate = dtpPostingDate.Value.ToString("MMddyy")
+        Dim payrollDate = dtpPayrollDate.Value.ToString("MMddyy")
 
         Dim defaultExtension = fileVersionName.Split({"."c}).LastOrDefault()
 
         Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(
-            defaultFileName:=$"SBC_PAYROLL_EPOST {companyInitials} {payrollDate}.{defaultExtension}",
+            defaultFileName:=$"BDO_{companyInitials} {payrollDate}.{defaultExtension}",
             defaultExtension:=$".{defaultExtension}")
 
         If saveFileDialogHelperOutPut.IsSuccess = False Then Return
 
-        IO.File.Copy(sourceFileName:=$"BankTemplates/SecurityBank/{fileVersionName}",
+        IO.File.Copy(sourceFileName:=$"BankTemplates/{fileVersionName}",
             destFileName:=saveFileDialogHelperOutPut.FileInfo.FullName,
             overwrite:=True)
 
@@ -270,29 +263,37 @@ Public Class BankFileTextFormatSecurityBankForm
                 Worksheets.
                 OfType(Of ExcelWorksheet).
                 FirstOrDefault()
+            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add("Sheet1")
 
-            If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add("DATA")
+            'Company Code
+            defaultWorksheet.Cells("B3").Value = numCompanyCode.Value.ToString("000")
 
-            'Posting Date
-            defaultWorksheet.Cells("B3").Value = $"{dtpPostingDate.Value:MM/dd/yyyy}"
+            'Batch No.
+            defaultWorksheet.Cells("B5").Value = numBatchNo.Value.ToString("00")
 
-            'Funding Account No.
-            defaultWorksheet.Cells("B2").Value = numFundingAccountNo.Value.ToString(BankFileModel.FORMAT_13)
-
-            'Total Amount
-            defaultWorksheet.Cells("B5").Value = If(models?.Sum(Function(t) t.Amount), 0)
-
-            'Total Record
-            defaultWorksheet.Cells("B6").Value = If(models?.Count(), 0)
-
-            Dim rowIndex = 9
+            Dim rowIndex = 7
             For Each model In models
-                defaultWorksheet.Cells(rowIndex, 1).Value = model.FullNameBeginningWithLastName
-                defaultWorksheet.Cells(rowIndex, 2).Value = model.AccountNumberSecurityBankCompliant
-                defaultWorksheet.Cells(rowIndex, 3).Value = model.Amount.ToString("N")
+                defaultWorksheet.Cells(rowIndex, 1).Value = model.AccountNumberBDOCompliant
+                defaultWorksheet.Cells(rowIndex, 2).Value = model.Amount.ToString("N")
+                defaultWorksheet.Cells(rowIndex, 3).Value = model.FullNameBeginningWithLastName
 
+                defaultWorksheet.Cells(rowIndex, 2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                defaultWorksheet.Cells(rowIndex, 1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center
+                defaultWorksheet.Cells(rowIndex, 3).Style.HorizontalAlignment = ExcelHorizontalAlignment.Left
+
+                defaultWorksheet.Cells(rowIndex, 3).Style.Font.Color.SetColor(Color.Black)
+                defaultWorksheet.Cells(rowIndex, 2).Style.Font.Color.SetColor(Color.Black)
+                defaultWorksheet.Cells(rowIndex, 1).Style.Font.Color.SetColor(Color.Black)
                 rowIndex += 1
             Next
+
+            rowIndex += 5
+            defaultWorksheet.Cells(rowIndex, 2).Value = models.Sum(Function(x) x.Amount).ToString("N")
+            defaultWorksheet.Cells(rowIndex, 2).Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+
+            rowIndex += 2
+            defaultWorksheet.Cells(rowIndex, 2).Value = "Approved By:"
+            defaultWorksheet.Cells(rowIndex, 3).Value = "Ken Chua / Rod Chua"
 
             excel.Save()
         End Using

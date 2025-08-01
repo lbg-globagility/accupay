@@ -449,6 +449,12 @@
     <Compile Include="Reports\Bank File\BankFileSimpleExcelForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Reports\Bank File\BankFileTextFormatBDOForm.Designer.vb">
+      <DependentUpon>BankFileTextFormatBDOForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Bank File\BankFileTextFormatBDOForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reports\Bank File\BankFileTextFormatForm.Designer.vb">
       <DependentUpon>BankFileTextFormatForm.vb</DependentUpon>
     </Compile>
@@ -462,6 +468,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reports\Reports\Providers\AlphalistExcelFormatReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\BankFileBDOReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\BankFileEasyExcelReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\BankFileReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\BankFileSecurityBankReportProvider.vb" />
@@ -1660,6 +1667,9 @@
     <None Include="BankFileHeaderData.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="BankTemplates\BDO.xlsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="BankTemplates\BPI-XPRESS-LINK.xlsm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1713,6 +1723,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Bank File\BankFileSimpleExcelForm.resx">
       <DependentUpon>BankFileSimpleExcelForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Bank File\BankFileTextFormatBDOForm.resx">
+      <DependentUpon>BankFileTextFormatBDOForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Bank File\BankFileTextFormatForm.resx">
       <DependentUpon>BankFileTextFormatForm.vb</DependentUpon>

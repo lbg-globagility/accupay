@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports System.Drawing.Imaging
 Imports System.Text.RegularExpressions
 Imports AccuPay.Core.Entities
 
@@ -59,17 +60,31 @@ Public Class BankFileModel
 
     Public ReadOnly Property AccountNumberSecurityBankCompliant As String
         Get
-            Dim sureAcctNo = If(String.IsNullOrEmpty(AccountNumber), 0, Integer.Parse(AccountNumber))
+            Dim zero = 0
+            Dim intAcctNo As Long
+            Long.TryParse(AccountNumber, intAcctNo)
 
-            Return sureAcctNo.ToString(FORMAT_13)
+            Return If(String.IsNullOrEmpty(AccountNumber), zero.ToString(FORMAT_13), Format(intAcctNo, FORMAT_13))
+        End Get
+    End Property
+
+    Public ReadOnly Property AccountNumberBDOCompliant As String
+        Get
+            Dim zero = 0
+            Dim intAcctNo As Long
+            Long.TryParse(AccountNumber, intAcctNo)
+
+            Return If(String.IsNullOrEmpty(AccountNumber), zero.ToString(FORMAT_12), Format(intAcctNo, FORMAT_12))
         End Get
     End Property
 
     Public ReadOnly Property AccountNumberSimpleExcelCompliant As String
         Get
-            Dim sureAcctNo = If(String.IsNullOrEmpty(AccountNumber), 0, Integer.Parse(AccountNumber))
+            Dim zero = 0
+            Dim intAcctNo As Long
+            Long.TryParse(AccountNumber, intAcctNo)
 
-            Return sureAcctNo.ToString(FORMAT_12)
+            Return If(String.IsNullOrEmpty(AccountNumber), zero.ToString(FORMAT_12), Format(intAcctNo, FORMAT_12))
         End Get
     End Property
 

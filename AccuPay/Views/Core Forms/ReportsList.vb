@@ -63,6 +63,8 @@ Public Class ReportsList
 
         Await Cinema2000BankFileReportProvidersAsync(providers)
 
+        Await GoldwingsBankFileReportProvidersAsync(providers)
+
         Dim allowedProviders = Await _listOfValueRepository.GetDutyReportProvidersAsync()
 
         For Each provider In providers
@@ -119,6 +121,21 @@ Public Class ReportsList
             providers.Add(New BankFileEasyExcelReportProvider(z_OrganizationID, userId:=z_User))
         End If
 
+    End Function
+
+    Private Async Function GoldwingsBankFileReportProvidersAsync(providers As Collection(Of IReportProvider)) As Task
+        If Not curr_sys_owner_name = SystemOwner.Goldwings Then Return
+
+        Dim bankFileSecurityBankPolicyText = BankFileTextFormatBDOForm.POLICY_TYPE_NAME
+        Dim types = {bankFileSecurityBankPolicyText}
+
+        Dim bankFilePolicies = (Await _listOfValueRepository.GetAllAsync()).
+            Where(Function(t) types.Contains(t.Type)).
+            ToList()
+
+        If If(bankFilePolicies?.Any(Function(t) t.Type = bankFileSecurityBankPolicyText And t.DisplayValue.Split({","c}).Contains($"{z_OrganizationID}")), False) Then
+            providers.Add(New BankFileBDOReportProvider(z_OrganizationID, userId:=z_User))
+        End If
     End Function
 
     Private Shared Function CreateNewListViewItem(reportProvider As IReportProvider, reportName As String) As ListViewItem
