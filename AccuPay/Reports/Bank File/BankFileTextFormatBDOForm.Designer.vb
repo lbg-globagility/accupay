@@ -22,10 +22,10 @@ Partial Class BankFileTextFormatBDOForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle34 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle33 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lnkSelectPeriod = New System.Windows.Forms.LinkLabel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.gridPayroll = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -56,16 +56,15 @@ Partial Class BankFileTextFormatBDOForm
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.numCompanyCode = New System.Windows.Forms.NumericUpDown()
-        Me.numBatchNo = New System.Windows.Forms.NumericUpDown()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.numBatchNo = New System.Windows.Forms.NumericUpDown()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.txtCompanyCode = New System.Windows.Forms.TextBox()
         Me.Panel2.SuspendLayout()
         CType(Me.gridPayroll, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        CType(Me.numCompanyCode, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numBatchNo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -101,14 +100,14 @@ Partial Class BankFileTextFormatBDOForm
         Me.gridPayroll.ColumnHeadersHeight = 34
         Me.gridPayroll.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.gridPayroll.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column6, Me.Column2, Me.Column4, Me.Column7, Me.Column3, Me.Column5, Me.Column8})
-        DataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle34.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle34.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle34.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.gridPayroll.DefaultCellStyle = DataGridViewCellStyle34
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.gridPayroll.DefaultCellStyle = DataGridViewCellStyle2
         Me.gridPayroll.Dock = System.Windows.Forms.DockStyle.Fill
         Me.gridPayroll.EnableHeadersVisualStyles = False
         Me.gridPayroll.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
@@ -165,10 +164,10 @@ Partial Class BankFileTextFormatBDOForm
         'Column5
         '
         Me.Column5.DataPropertyName = "Amount"
-        DataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle33.Format = "N2"
-        DataGridViewCellStyle33.NullValue = Nothing
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle33
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle1
         Me.Column5.HeaderText = "Amount"
         Me.Column5.Name = "Column5"
         Me.Column5.ReadOnly = True
@@ -270,10 +269,10 @@ Partial Class BankFileTextFormatBDOForm
         'DataGridViewTextBoxColumn4
         '
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "Amount"
-        DataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle35.Format = "N2"
-        DataGridViewCellStyle35.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle35
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn4.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.ReadOnly = True
@@ -288,10 +287,10 @@ Partial Class BankFileTextFormatBDOForm
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "RandomData"
-        DataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle36.Format = "N2"
-        DataGridViewCellStyle36.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle36
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle4.Format = "N2"
+        DataGridViewCellStyle4.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewTextBoxColumn6.HeaderText = "Column7"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
@@ -336,9 +335,9 @@ Partial Class BankFileTextFormatBDOForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.txtCompanyCode)
         Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Controls.Add(Me.numBatchNo)
-        Me.Panel1.Controls.Add(Me.numCompanyCode)
         Me.Panel1.Controls.Add(Me.lnkSelectPeriod)
         Me.Panel1.Controls.Add(Me.dtpPayrollDate)
         Me.Panel1.Controls.Add(Me.Label3)
@@ -349,22 +348,14 @@ Partial Class BankFileTextFormatBDOForm
         Me.Panel1.Size = New System.Drawing.Size(707, 126)
         Me.Panel1.TabIndex = 11
         '
-        'DataGridViewTextBoxColumn8
+        'Label1
         '
-        Me.DataGridViewTextBoxColumn8.DataPropertyName = "HasError"
-        Me.DataGridViewTextBoxColumn8.HeaderText = "HasError"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'numCompanyCode
-        '
-        Me.numCompanyCode.Location = New System.Drawing.Point(147, 18)
-        Me.numCompanyCode.Maximum = New Decimal(New Integer() {1410065407, 2, 0, 0})
-        Me.numCompanyCode.Name = "numCompanyCode"
-        Me.numCompanyCode.Size = New System.Drawing.Size(166, 22)
-        Me.numCompanyCode.TabIndex = 278
-        Me.numCompanyCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(45, 55)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(67, 13)
+        Me.Label1.TabIndex = 280
+        Me.Label1.Text = "* Batch No.:"
         '
         'numBatchNo
         '
@@ -375,14 +366,20 @@ Partial Class BankFileTextFormatBDOForm
         Me.numBatchNo.TabIndex = 279
         Me.numBatchNo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'Label1
+        'DataGridViewTextBoxColumn8
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(45, 55)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(67, 13)
-        Me.Label1.TabIndex = 280
-        Me.Label1.Text = "* Batch No.:"
+        Me.DataGridViewTextBoxColumn8.DataPropertyName = "HasError"
+        Me.DataGridViewTextBoxColumn8.HeaderText = "HasError"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'txtCompanyCode
+        '
+        Me.txtCompanyCode.Location = New System.Drawing.Point(147, 18)
+        Me.txtCompanyCode.Name = "txtCompanyCode"
+        Me.txtCompanyCode.Size = New System.Drawing.Size(166, 22)
+        Me.txtCompanyCode.TabIndex = 281
         '
         'BankFileTextFormatBDOForm
         '
@@ -405,7 +402,6 @@ Partial Class BankFileTextFormatBDOForm
         Me.Panel3.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.numCompanyCode, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numBatchNo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -442,7 +438,7 @@ Partial Class BankFileTextFormatBDOForm
     Friend WithEvents Label5 As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
-    Friend WithEvents numCompanyCode As NumericUpDown
     Friend WithEvents numBatchNo As NumericUpDown
     Friend WithEvents Label1 As Label
+    Friend WithEvents txtCompanyCode As TextBox
 End Class

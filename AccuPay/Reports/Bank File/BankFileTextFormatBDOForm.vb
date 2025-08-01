@@ -1,5 +1,5 @@
 Option Strict On
-Imports System.ServiceModel.Channels
+
 Imports System.Text
 Imports System.Threading.Tasks
 Imports AccuPay.Core.Entities
@@ -10,7 +10,6 @@ Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
 Public Class BankFileTextFormatBDOForm
-    Private Const THOUSAND_VALUE As Integer = 1000
     Public Const POLICY_TYPE_NAME As String = "BankFileBDOPolicy"
     Private ReadOnly DATETIME_PICKER_MINDATE As Date = New Date(1753, 1, 1)
     Private ReadOnly DATETIME_PICKER_MAXDATE As Date = New Date(9998, 12, 31)
@@ -44,7 +43,6 @@ Public Class BankFileTextFormatBDOForm
 
     Private Async Sub BankFileTextFormatForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         gridPayroll.AutoGenerateColumns = False
-        numCompanyCode.Controls(0).Hide()
         numBatchNo.Controls(0).Hide()
         chkSelectAll.ThreeState = True
 
@@ -76,7 +74,7 @@ Public Class BankFileTextFormatBDOForm
         Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
         Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
 
-        Decimal.TryParse(bankFileHeader.CompanyCode, numCompanyCode.Value)
+        txtCompanyCode.Text = bankFileHeader.CompanyCode
         Decimal.TryParse(bankFileHeader.BatchNo, numBatchNo.Value)
     End Sub
 
@@ -171,7 +169,7 @@ Public Class BankFileTextFormatBDOForm
         Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
         Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
 
-        bankFileHeader.CompanyCode = $"{numCompanyCode.Value}"
+        bankFileHeader.CompanyCode = txtCompanyCode.Text
         bankFileHeader.BatchNo = $"{numBatchNo.Value}"
         bankFileHeader.LastUpdBy = _userId
 
@@ -266,7 +264,7 @@ Public Class BankFileTextFormatBDOForm
             If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add("Sheet1")
 
             'Company Code
-            defaultWorksheet.Cells("B3").Value = numCompanyCode.Value.ToString("000")
+            defaultWorksheet.Cells("B3").Value = txtCompanyCode.Text
 
             'Batch No.
             defaultWorksheet.Cells("B5").Value = numBatchNo.Value.ToString("00")
