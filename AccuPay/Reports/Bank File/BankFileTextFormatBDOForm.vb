@@ -160,7 +160,11 @@ Public Class BankFileTextFormatBDOForm
         Dim now = Date.Now.ToString("HHmm")
         Dim payrollDate = dtpPayrollDate.Value.ToString("MMddyy")
 
-        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName:=$"BankFile_{payrollDate}~{now}", ".txt")
+        Dim defaultExtension = "txt"
+
+        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(
+            defaultFileName:=GetDefaultFileName(defaultExtension),
+            $".{defaultExtension}")
 
         If saveFileDialogHelperOutPut.IsSuccess = False Then Return
 
@@ -177,15 +181,23 @@ Public Class BankFileTextFormatBDOForm
         Process.Start("explorer.exe", $"/select,""{saveFileDialogHelperOutPut.FileInfo.FullName}""")
     End Sub
 
+    Private Function GetDefaultFileName(defaultExtension As String) As String
+        Return $"{txtCompanyCode.Text.Trim()}{Date.Now.ToString("MMddyy")}{GetBatchNo()}.{defaultExtension}"
+    End Function
+
     Private Async Function SaveBankFileHeaderChangesAsync() As Task
         Dim bankFileHeaderRepository = MainServiceProvider.GetRequiredService(Of IBankFileHeaderRepository)
         Dim bankFileHeader = Await bankFileHeaderRepository.GetByOrganizationOrCreateAsync(_organizationId, userId:=_userId)
 
         bankFileHeader.CompanyCode = txtCompanyCode.Text
-        bankFileHeader.BatchNo = $"{numBatchNo.Value}"
+        bankFileHeader.BatchNo = GetBatchNo()
         bankFileHeader.LastUpdBy = _userId
 
         Await bankFileHeaderRepository.SaveAsync(bankFileHeader)
+    End Function
+
+    Private Function GetBatchNo() As String
+        Return numBatchNo.Value.ToString("00")
     End Function
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -259,7 +271,7 @@ Public Class BankFileTextFormatBDOForm
         Dim defaultExtension = fileVersionName.Split({"."c}).LastOrDefault()
 
         Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(
-            defaultFileName:=$"BDO_{companyInitials} {payrollDate}.{defaultExtension}",
+            defaultFileName:=GetDefaultFileName(defaultExtension),
             defaultExtension:=$".{defaultExtension}")
 
         If saveFileDialogHelperOutPut.IsSuccess = False Then Return
@@ -275,11 +287,14 @@ Public Class BankFileTextFormatBDOForm
                 FirstOrDefault()
             If defaultWorksheet Is Nothing Then defaultWorksheet = excel.Workbook.Worksheets.Add("Sheet1")
 
+            'Company Name
+            defaultWorksheet.Cells("A1").Value = orgNam.ToUpper()
+
             'Company Code
             defaultWorksheet.Cells("B3").Value = txtCompanyCode.Text
 
             'Batch No.
-            defaultWorksheet.Cells("B5").Value = numBatchNo.Value.ToString("00")
+            defaultWorksheet.Cells("B5").Value = GetBatchNo()
 
             Dim rowIndex = 7
             For Each model In models
