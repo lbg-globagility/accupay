@@ -330,7 +330,7 @@ namespace AccuPay.Core.Services
              */
             if (!currentShift.IsValidLogPeriod(logPeriod: logPeriod))
                 if (timeLog.TimeStampIn != null && timeLog.TimeStampOut != null)
-                    if (currentShift.BreakPeriod.Contains(timeLog.TimeStampIn.Value))
+                    if (currentShift.BreakPeriod?.Contains(timeLog.TimeStampIn.Value) ?? false)
                         logPeriod = new TimePeriod(start: timeLog.TimeStampIn.Value,
                                 end: timeLog.TimeStampOut.Value);
 
