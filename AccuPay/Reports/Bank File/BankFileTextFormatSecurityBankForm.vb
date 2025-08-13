@@ -7,6 +7,7 @@ Imports AccuPay.Core.Interfaces
 Imports AccuPay.Desktop.Helpers
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
+Imports OfficeOpenXml.DataValidation
 
 Public Class BankFileTextFormatSecurityBankForm
     Public Const POLICY_TYPE_NAME As String = "BankFileSecurityBankPolicy"
@@ -276,6 +277,10 @@ Public Class BankFileTextFormatSecurityBankForm
             defaultWorksheet.Cells("B3").Value = $"{dtpPostingDate.Value:MM/dd/yyyy}"
 
             'Funding Account No.
+            Dim cellName = "B2"
+            Dim otherValidations = defaultWorksheet.DataValidations.OfType(Of ExcelDataValidation).Where(Function(t) Not t.Address.ToString() = cellName)?.ToList()
+            defaultWorksheet.DataValidations.Clear()
+            defaultWorksheet.DataValidations.Concat(otherValidations)
             defaultWorksheet.Cells("B2").Value = numFundingAccountNo.Value.ToString(BankFileModel.FORMAT_13)
 
             'Total Amount
@@ -294,6 +299,7 @@ Public Class BankFileTextFormatSecurityBankForm
             Next
 
             excel.Save()
+
         End Using
 
         Await SaveBankFileHeaderChangesAsync()
