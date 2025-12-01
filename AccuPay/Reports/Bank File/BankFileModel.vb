@@ -1,6 +1,5 @@
 Option Strict On
 
-Imports System.Drawing.Imaging
 Imports System.Text.RegularExpressions
 Imports AccuPay.Core.Entities
 
@@ -8,6 +7,7 @@ Public Class BankFileModel
     Public Const FORMAT_13 As String = "0000000000000"
     Public Const FORMAT_15 As String = "000000000000000"
     Public Const FORMAT_12 As String = "000000000000"
+    Public Const MAX_AMOUNT As Decimal = 50000D
     Private _isSelected As Boolean
     Private ReadOnly _paystub As BasePaystub
     Public ReadOnly Property AccountNumber As String
@@ -17,6 +17,10 @@ Public Class BankFileModel
     Public ReadOnly Property Amount As Decimal
     Private ReadOnly _isBankFileSummary As Boolean
     Public ReadOnly Property CompanyName As String
+
+    Private Sub New()
+
+    End Sub
 
     Public Sub New(paystub As BasePaystub)
         _paystub = paystub
@@ -206,6 +210,42 @@ Public Class BankFileModel
 
     Private Shared Function FlattenDecimalToText(amount As Decimal) As String
         Return Math.Round(amount, 2).ToString().Replace(".", String.Empty)
+    End Function
+
+    Public ReadOnly Property BasePaystub As BasePaystub
+        Get
+            Return _paystub
+        End Get
+    End Property
+
+    Friend Shared Function MergeToDistinctAccountNo(paystubs As List(Of BasePaystub)) As BankFileModel
+        Dim model = New BankFileModel()
+        Dim _paystub = paystubs?.FirstOrDefault()
+
+        model._AccountNumber = Regex.Replace(_paystub.Employee.AtmNo, "\D", String.Empty)
+        model._LastName = _paystub.Employee.LastName
+        model._FirstName = _paystub.Employee.FirstName
+        model._MiddleName = _paystub.Employee.MiddleName
+        model._Amount = If(paystubs?.Sum(Function(t) t.NetPay), 0D)
+
+        Return model
+    End Function
+
+    Friend Shared Function NewMaxxedPartialAccount(accountNo As String,
+            firstName As String,
+            lastName As String,
+            middleName As String,
+            amount As Decimal) As BankFileModel
+
+        Dim model = New BankFileModel()
+
+        model._AccountNumber = Regex.Replace(accountNo, "\D", String.Empty)
+        model._LastName = lastName
+        model._FirstName = firstName
+        model._MiddleName = middleName
+        model._Amount = amount
+
+        Return model
     End Function
 
 End Class

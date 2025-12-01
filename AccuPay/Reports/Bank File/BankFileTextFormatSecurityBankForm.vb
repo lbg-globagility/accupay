@@ -139,9 +139,43 @@ Public Class BankFileTextFormatSecurityBankForm
     End Sub
 
     Private Async Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
-        Dim models = gridPayroll.Rows.OfType(Of DataGridViewRow).
+
+        Dim allModels = gridPayroll.Rows.OfType(Of DataGridViewRow).
             Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
             Where(Function(p) p.IsSelected).
+            ToList()
+
+        Dim mergedModels = allModels.GroupBy(Function(t) t.AccountNumber).
+            Select(Function(t)
+                       Return BankFileModel.MergeToDistinctAccountNo(paystubs:=t.Select(Function(x) x.BasePaystub).ToList())
+                   End Function).
+            ToList()
+
+        Dim maxxedModels = New List(Of BankFileModel)
+        If If(mergedModels?.Where(Function(t) t.Amount > BankFileModel.MAX_AMOUNT)?.Any(), False) Then
+            Dim list = mergedModels.Where(Function(t) t.Amount > BankFileModel.MAX_AMOUNT).ToList()
+            For Each model In list
+                Dim amount = model.Amount
+
+                For Each i In Enumerable.Range(1, CInt(Math.Ceiling(model.Amount / BankFileModel.MAX_AMOUNT)))
+                    maxxedModels.Add(BankFileModel.NewMaxxedPartialAccount(accountNo:=model.AccountNumber,
+                        firstName:=model.FirstName,
+                        lastName:=model.LastName,
+                        middleName:=model.MiddleName,
+                        amount:=If(amount > BankFileModel.MAX_AMOUNT, BankFileModel.MAX_AMOUNT, amount)))
+
+                    amount -= BankFileModel.MAX_AMOUNT
+                Next
+            Next
+        Else
+            maxxedModels = Enumerable.Empty(Of BankFileModel)().ToList()
+        End If
+
+        Dim models = mergedModels?.
+            Where(Function(t) t.Amount <= BankFileModel.MAX_AMOUNT)?.
+            ToList().
+            Concat(maxxedModels).
+            OrderBy(Function(t) t.FullNameBeginningWithLastName).
             ToList()
 
         Dim fileExtension = "txt"
@@ -245,9 +279,42 @@ Public Class BankFileTextFormatSecurityBankForm
 
         Dim fileVersionName = bankFilePolicy.LIC
 
-        Dim models = gridPayroll.Rows.OfType(Of DataGridViewRow).
+        Dim allModels = gridPayroll.Rows.OfType(Of DataGridViewRow).
             Select(Function(r) DirectCast(r.DataBoundItem, BankFileModel)).
             Where(Function(p) p.IsSelected).
+            ToList()
+
+        Dim mergedModels = allModels.GroupBy(Function(t) t.AccountNumber).
+            Select(Function(t)
+                       Return BankFileModel.MergeToDistinctAccountNo(paystubs:=t.Select(Function(x) x.BasePaystub).ToList())
+                   End Function).
+            ToList()
+
+        Dim maxxedModels = New List(Of BankFileModel)
+        If If(mergedModels?.Where(Function(t) t.Amount > BankFileModel.MAX_AMOUNT)?.Any(), False) Then
+            Dim list = mergedModels.Where(Function(t) t.Amount > BankFileModel.MAX_AMOUNT).ToList()
+            For Each model In list
+                Dim amount = model.Amount
+
+                For Each i In Enumerable.Range(1, CInt(Math.Ceiling(model.Amount / BankFileModel.MAX_AMOUNT)))
+                    maxxedModels.Add(BankFileModel.NewMaxxedPartialAccount(accountNo:=model.AccountNumber,
+                        firstName:=model.FirstName,
+                        lastName:=model.LastName,
+                        middleName:=model.MiddleName,
+                        amount:=If(amount > BankFileModel.MAX_AMOUNT, BankFileModel.MAX_AMOUNT, amount)))
+
+                    amount -= BankFileModel.MAX_AMOUNT
+                Next
+            Next
+        Else
+            maxxedModels = Enumerable.Empty(Of BankFileModel)().ToList()
+        End If
+
+        Dim models = mergedModels?.
+            Where(Function(t) t.Amount <= BankFileModel.MAX_AMOUNT)?.
+            ToList().
+            Concat(maxxedModels).
+            OrderBy(Function(t) t.FullNameBeginningWithLastName).
             ToList()
 
         Dim companyInitials As String = String.Join(String.Empty, orgNam.Split(" "c).Select(Function(word) word.Substring(0, 1).ToUpper()))
