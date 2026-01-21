@@ -14,7 +14,7 @@ Public Class BenchmarkAlphalistReportProvider
 
         Dim report = New BenchmarkAlphalist
 
-        Dim year = 2020
+        Dim year = SelectedYear()
 
         Dim service = MainServiceProvider.GetRequiredService(Of IBenchmarkAlphalistBuilder)
         Dim sssMonthlyReport = Await service.CreateReportDocument(z_OrganizationID, year)
@@ -24,5 +24,18 @@ Public Class BenchmarkAlphalistReportProvider
         crvwr.Show()
 
     End Sub
+
+    Private Function SelectedYear() As Integer
+        Dim input As String = InputBox("Please enter the year:", "Alphalist: Year Selection", Date.Now.Year.ToString())
+
+        If Integer.TryParse(input, SelectedYear) Then
+            Return SelectedYear
+
+        Else
+            MsgBox("Invalid input. Please enter a number.")
+
+        End If
+
+    End Function
 
 End Class
