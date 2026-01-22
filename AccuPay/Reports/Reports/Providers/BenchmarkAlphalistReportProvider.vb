@@ -26,15 +26,14 @@ Public Class BenchmarkAlphalistReportProvider
     End Sub
 
     Private Function SelectedYear() As Integer
-        Dim input As String = InputBox("Please enter the year:", "Alphalist: Year Selection", Date.Now.Year.ToString())
+        Dim input As String = InputBox(Prompt:="Please enter the year:", Title:="Alphalist: Year Selection", DefaultResponse:=Date.Now.Year.ToString())
 
         If Integer.TryParse(input, SelectedYear) Then
             Return SelectedYear
 
-        Else
-            MsgBox("Invalid input. Please enter a number.")
-
         End If
+
+        Return Date.Now.Year
 
     End Function
 
